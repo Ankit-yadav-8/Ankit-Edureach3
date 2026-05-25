@@ -5,7 +5,11 @@ import CollegePredictorTool from "../components/predictor/CollegePredictorTool.j
 import { EligibilityCards, RankingsTable } from "../components/predictor/AnalysisSections.jsx";
 import { Bars, Trend } from "../components/Charts.jsx";
 import Reveal from "../components/Reveal.jsx";
-import { Info, BookOpen, Atom, FlaskConical, Calculator, FileText, CheckCircle2, ArrowRight, Zap, TrendingUp } from "lucide-react";
+import {
+  Info, Atom, FlaskConical, Calculator, FileText,
+  CheckCircle2, ArrowRight, Zap, MapPin, Globe,
+  Star, Target, Award, TrendingUp,
+} from "lucide-react";
 
 /* ── Shift-wise difficulty data (Session 1 & 2, 2021–2025) ── */
 const DIFFICULTY_YEARS = [2021, 2022, 2023, 2024, 2025];
@@ -18,11 +22,19 @@ const DIFFICULTY_DATA = {
   2025: { s1: { phy: 68, chem: 59, math: 76 }, s2: { phy: 70, chem: 63, math: 73 } },
 };
 
-const TREND_PHYSICS   = DIFFICULTY_YEARS.map((y) => ({ year: y, Session1: DIFFICULTY_DATA[y].s1.phy, Session2: DIFFICULTY_DATA[y].s2.phy }));
+const TREND_PHYSICS   = DIFFICULTY_YEARS.map((y) => ({ year: y, Session1: DIFFICULTY_DATA[y].s1.phy,  Session2: DIFFICULTY_DATA[y].s2.phy  }));
 const TREND_CHEMISTRY = DIFFICULTY_YEARS.map((y) => ({ year: y, Session1: DIFFICULTY_DATA[y].s1.chem, Session2: DIFFICULTY_DATA[y].s2.chem }));
 const TREND_MATHS     = DIFFICULTY_YEARS.map((y) => ({ year: y, Session1: DIFFICULTY_DATA[y].s1.math, Session2: DIFFICULTY_DATA[y].s2.math }));
 
-/* Qualifying percentile trend */
+/*
+  JEE Main NTA qualifying percentile trend (2021–2025).
+  This is the minimum percentile required to qualify JEE Main
+  (i.e., to be eligible for NIT/IIIT/GFTI admission via JoSAA).
+  NOTE: This is NOT the JEE Advanced eligibility cutoff.
+  The JEE Advanced cutoff is a separate top-2.5 lakh rank cutoff —
+  visit jeeadv.ac.in for those figures.
+  Source: jeemain.nta.ac.in official result archives 2021–2025.
+*/
 const QUALIFYING_TREND = [
   { year: 2021, open: 87.9, obc: 68.0, sc: 46.9, st: 34.7 },
   { year: 2022, open: 88.4, obc: 67.7, sc: 46.8, st: 34.6 },
@@ -33,12 +45,12 @@ const QUALIFYING_TREND = [
 
 /* Cutoff percentile by top colleges */
 const COLLEGE_CUTOFFS = [
-  { name: "NIT Trichy CSE",  open: 99.1, obc: 98.4, sc: 95.2 },
-  { name: "NIT Warangal CSE",open: 98.9, obc: 97.8, sc: 94.8 },
-  { name: "NIT Surathkal CSE",open:98.5, obc: 97.2, sc: 94.1 },
-  { name: "IIIT Hyderabad",  open: 99.4, obc: 98.7, sc: 96.0 },
-  { name: "IIIT Bangalore",  open: 98.2, obc: 96.9, sc: 93.5 },
-  { name: "NIT Calicut CSE", open: 98.0, obc: 96.5, sc: 92.8 },
+  { name: "NIT Trichy CSE",      open: 99.1, obc: 98.4, sc: 95.2 },
+  { name: "NIT Warangal CSE",    open: 98.9, obc: 97.8, sc: 94.8 },
+  { name: "NIT Surathkal CSE",   open: 98.5, obc: 97.2, sc: 94.1 },
+  { name: "IIIT Hyderabad",      open: 99.4, obc: 98.7, sc: 96.0 },
+  { name: "IIIT Bangalore",      open: 98.2, obc: 96.9, sc: 93.5 },
+  { name: "NIT Calicut CSE",     open: 98.0, obc: 96.5, sc: 92.8 },
 ];
 
 /* Syllabus */
@@ -72,7 +84,7 @@ const SYLLABUS = {
     ],
   },
   Mathematics: {
-    color: "#F97316", icon: Calculator,
+    color: "#7C3AED", icon: Calculator,
     topics: [
       "Sets, Relations & Functions",
       "Complex Numbers & Quadratic Equations",
@@ -87,17 +99,209 @@ const SYLLABUS = {
   },
 };
 
-/* Roadmap */
+/* ── Enhanced Roadmap with tasks & books ── */
 const ROADMAP = [
-  { month: "Apr–May",  label: "Foundation Build",      color: "#F97316", tip: "Master NCERT for all 3 subjects. Focus on Class 11 syllabus first.", icon: "📚" },
-  { month: "Jun–Aug",  label: "Concept Depth",         color: "#0EA5A4", tip: "HC Verma for Physics, Organic reactions for Chem, Trigonometry & Algebra.", icon: "🔬" },
-  { month: "Sep–Oct",  label: "Class 12 Topics",       color: "#7C3AED", tip: "Electromagnetic Induction, p-block, Integration, 3D Geometry.", icon: "📐" },
-  { month: "Nov–Dec",  label: "Revision + JM Mocks",   color: "#EC4899", tip: "Attempt NTA mock tests regularly. Analyse shift-wise weak areas.", icon: "📝" },
-  { month: "Jan (S1)", label: "Session 1 Exam",        color: "#EAB308", tip: "Don't wait for results — continue preparation immediately after.", icon: "✏️" },
-  { month: "Apr (S2)", label: "Session 2 + Best Score",color: "#15A06E", tip: "Best of 2 sessions counts. Total 75 questions, 300 marks.", icon: "🎯" },
+  {
+    month: "Apr–May",
+    label: "Foundation Build — NCERT First",
+    color: "#F97316",
+    icon: "📚",
+    tip: "JEE Main is NCERT-heavy, especially Chemistry (Inorganic). Master all NCERT concepts before going to reference books. Class 11 syllabus should be your starting priority.",
+    tasks: [
+      "NCERT Physics 11 — Mechanics, Thermodynamics, Waves",
+      "NCERT Chemistry 11 — Mole concept, Bonding, Organic basics",
+      "NCERT Maths 11 — Sets, Sequences, Trigonometry, Permutations",
+      "Make chapter-wise short notes as you study",
+      "Target: complete Class 11 NCERT by end of May",
+    ],
+    resources: ["NCERT 11 (all 3 subjects)", "DC Pandey Mechanics", "RD Sharma Class 11"],
+  },
+  {
+    month: "Jun–Aug",
+    label: "Concept Depth — Reference Books",
+    color: "#0EA5A4",
+    icon: "🔬",
+    tip: "Once NCERT is done, deepen with reference books. HC Verma selected chapters for Physics, OP Tandon for Organic. Start solving chapter-end exercises from NCERT regularly.",
+    tasks: [
+      "HC Verma selected chapters — Optics, Modern Physics",
+      "OP Tandon Organic — reactions, mechanisms, named reactions",
+      "Coordinate Geometry — straight lines, circles, conics",
+      "Electrochemistry, Thermodynamics (Physical Chem)",
+      "Weekly: solve 100 MCQs across all 3 subjects",
+    ],
+    resources: ["HC Verma (selected)", "OP Tandon Organic", "Cengage Coordinate Geometry"],
+  },
+  {
+    month: "Sep–Oct",
+    label: "Class 12 Topics — Full Coverage",
+    color: "#7C3AED",
+    icon: "📐",
+    tip: "Electromagnetic Induction, p-block elements, Integration and 3D Geometry are high-weight JEE Main topics. Do not skip. Solve NCERT exemplar problems for Maths and Chemistry.",
+    tasks: [
+      "Electromagnetic Induction, Alternating Current (Physics)",
+      "p-block, d-block elements — memorise properties",
+      "Definite Integration, 3D Geometry, Vectors (Maths)",
+      "Biomolecules, Polymers, Chemistry in Everyday Life (NCERT)",
+      "NCERT Exemplar Maths & Chemistry — all chapters",
+    ],
+    resources: ["NCERT 12 (all 3)", "NCERT Exemplar", "DC Pandey EMI & Optics"],
+  },
+  {
+    month: "Nov–Dec",
+    label: "Mock Tests + Session 1 Prep",
+    color: "#EC4899",
+    icon: "📝",
+    tip: "Start NTA mock tests on the official portal (free). Attempt 1 full mock per week in exam-time conditions. Analyse wrong answers — pattern recognition is key for JEE Main.",
+    tasks: [
+      "Attempt NTA free mocks on jeemain.nta.ac.in",
+      "Time each section: 40 min/subject is a good benchmark",
+      "Build error log — note every wrong answer with reason",
+      "Focus on Numerical Value questions (no negative marking)",
+      "Revise weak topics identified from mocks",
+    ],
+    resources: ["NTA Official Mocks (free)", "Allen/Resonance test series", "Arihant 40 Days Crash"],
+  },
+  {
+    month: "Jan (S1)",
+    label: "JEE Main Session 1 Exam",
+    color: "#EAB308",
+    icon: "✏️",
+    tip: "Do NOT wait for results after Session 1. Continue preparation immediately. Best of 2 sessions counts — if Session 1 goes well, Session 2 is your backup to improve further.",
+    tasks: [
+      "Reach exam centre 60 mins early (biometric takes time)",
+      "Chemistry first — fastest and most scoring",
+      "Numerical section: attempt all (no negative marking)",
+      "Flag uncertain MCQs and return after attempting rest",
+      "Post-exam: note topic areas that felt weak → revise before S2",
+    ],
+    resources: ["Admit card", "Aadhaar / School ID", "NTA guidelines document"],
+  },
+  {
+    month: "Feb–Mar",
+    label: "Bridge Gap — S1 to S2 Improvement",
+    color: "#6366F1",
+    icon: "🔁",
+    tip: "Between sessions, focus only on weak areas from Session 1. Don't restart everything — targeted improvement gets the most percentile gain. Revise high-weight chapters daily.",
+    tasks: [
+      "Identify all wrong answers from S1 (use memory/analysis)",
+      "Targeted revision: top 3 weak chapters per subject",
+      "Solve 5 years' past Session 2 papers",
+      "Practice speed: 75 questions in 3 hours consistently",
+      "Revise all formulas daily in final 2 weeks",
+    ],
+    resources: ["Past Session 2 PYQs", "Disha JEE Main 10 Years Papers", "Self revision notes"],
+  },
+  {
+    month: "Apr (S2)",
+    label: "JEE Main Session 2 — Best Score Counts",
+    color: "#15A06E",
+    icon: "🎯",
+    tip: "Total 75 questions, 300 marks, 3 hours. Your best of 2 session percentiles is used for JoSAA. If targeting JEE Advanced, top ~2.5 lakh rank in JEE Main is required — confirm eligibility at jeeadv.ac.in.",
+    tasks: [
+      "Same strategy as Session 1 but with more confidence",
+      "Attempt full paper — do not leave anything blank (Numerical: no penalty)",
+      "Manage time: max 3 min per MCQ, 4 min per Numerical",
+      "After exam: check JoSAA opening date for counselling",
+      "If JEE Advanced eligible: immediately shift preparation",
+    ],
+    resources: ["Admit card", "josaa.nic.in (counselling)", "jeeadv.ac.in (if eligible)"],
+  },
 ];
 
-/* Helper */
+/* ── Top Coaching Institutes for JEE Main ── */
+const COACHING = [
+  {
+    name: "Allen Career Institute",
+    city: "Kota, Rajasthan",
+    color: "#F97316",
+    badge: "🏆 #1 in India",
+    highlights: [
+      "Largest coaching institute — 1.5 lakh+ students annually",
+      "JEE Main 100 percentile scorers every year from Allen",
+      "Classroom, distance (DLPD) & online programs",
+      "Leader Board batches for top-ranked students",
+    ],
+    website: "https://www.allen.ac.in",
+    fee: "₹1.2L – ₹2.5L/year",
+    mode: "Offline / Online",
+  },
+  {
+    name: "Resonance",
+    city: "Kota, Rajasthan",
+    color: "#7C3AED",
+    badge: "⭐ Strong Maths Faculty",
+    highlights: [
+      "Excellent track record in JEE Main top 1000 ranks",
+      "ResoFAST scholarship exam — merit-based fee waivers",
+      "e-Resonance online platform with live + recorded classes",
+      "Widely used All-India test series (even by self-studiers)",
+    ],
+    website: "https://www.resonance.ac.in",
+    fee: "₹1.0L – ₹2.2L/year",
+    mode: "Offline / Online",
+  },
+  {
+    name: "FIITJEE",
+    city: "Delhi + 30+ cities",
+    color: "#0EA5A4",
+    badge: "🎓 Conceptual Depth",
+    highlights: [
+      "Pioneer IIT-JEE coaching since 1992",
+      "Integrated school + JEE program (Class 9–12)",
+      "FTRE scholarship test for merit admissions",
+      "Strong focus on JEE Advanced level concept building",
+    ],
+    website: "https://www.fiitjee.com",
+    fee: "₹1.5L – ₹3.0L/year",
+    mode: "Offline / Online",
+  },
+  {
+    name: "Narayana",
+    city: "Hyderabad + Pan India",
+    color: "#EC4899",
+    badge: "📍 500+ Centres",
+    highlights: [
+      "Best value for money — affordable fees + scholarships",
+      "Excellent NIT results from SC/ST/OBC categories",
+      "Integrated residential school + coaching available",
+      "Strong presence in South India and Tier-2 cities",
+    ],
+    website: "https://www.narayanaiit.com",
+    fee: "₹70K – ₹1.6L/year",
+    mode: "Offline / Residential",
+  },
+  {
+    name: "Physics Wallah (PW)",
+    city: "Online + Patna / Lucknow",
+    color: "#15A06E",
+    badge: "💸 Most Affordable",
+    highlights: [
+      "Alakh Pandey's platform — most popular JEE YouTube content",
+      "Batch fees under ₹10K–₹30K for full JEE Main prep",
+      "PW Vidyapeeth offline centres in major cities",
+      "Arjuna / Lakshya batches with DPPs and test series",
+    ],
+    website: "https://www.pw.live",
+    fee: "₹5K – ₹40K/year",
+    mode: "Online / Offline (select cities)",
+  },
+  {
+    name: "Vedantu / Unacademy",
+    city: "Online (Pan India)",
+    color: "#6366F1",
+    badge: "💻 Top Online Platform",
+    highlights: [
+      "Live interactive classes with IIT alumni faculty",
+      "Vedantu VSAT / Unacademy ICONIC for top batches",
+      "Doubt-solving sessions, recorded lectures, test series",
+      "Best for students who cannot relocate to Kota",
+    ],
+    website: "https://www.vedantu.com",
+    fee: "₹30K – ₹1.2L/year",
+    mode: "Online",
+  },
+];
+
 function diffLabel(val) {
   if (val >= 75) return { label: "Hard",   color: "#EF4444" };
   if (val >= 65) return { label: "Medium", color: "#F97316" };
@@ -154,11 +358,19 @@ export default function JeeMain() {
             JEE Main — Rank &amp; College Predictor Hub
           </h1>
           <p style={{ color: "rgba(255,255,255,.85)", maxWidth: 620, marginBottom: 28 }}>
-            Predict your rank, find every NIT/IIIT/GFTI you can get into, analyse session-wise difficulty, and follow the complete syllabus &amp; study roadmap.
+            Predict your rank, find every NIT/IIIT/GFTI you qualify for, analyse session-wise difficulty, and follow the complete syllabus, study roadmap &amp; top coaching options.
           </p>
-          {/* Quick nav */}
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            {[["#rank","Rank Predictor"],["#college","College Predictor"],["#cutoffs","Top Cutoffs"],["#difficulty","Difficulty Analysis"],["#syllabus","Syllabus"],["#roadmap","Roadmap"]].map(([href, label]) => (
+            {[
+              ["#rank","Rank Predictor"],
+              ["#college","College Predictor"],
+              ["#cutoffs","Top Cutoffs"],
+              ["#difficulty","Difficulty Analysis"],
+              ["#syllabus","Syllabus"],
+              ["#roadmap","Roadmap"],
+              ["#coaching","Coaching"],
+              ["#trend","Cutoff Trends"],
+            ].map(([href, label]) => (
               <a key={href} href={href} style={{
                 background: "rgba(255,255,255,0.2)", backdropFilter: "blur(4px)",
                 border: "1px solid rgba(255,255,255,0.4)", color: "#fff",
@@ -173,7 +385,7 @@ export default function JeeMain() {
         </div>
       </section>
 
-      {/* ── Cutoff quick-stats header ── */}
+      {/* ── College cutoff quick-stats ── */}
       <section id="cutoffs" style={{ background: "var(--sky)", padding: "28px 0", scrollMarginTop: 90 }}>
         <div className="container">
           <div style={{ marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
@@ -244,7 +456,6 @@ export default function JeeMain() {
             </p>
           </div>
 
-          {/* Year selector */}
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
             <div style={{
               display: "inline-flex", gap: 8,
@@ -264,7 +475,6 @@ export default function JeeMain() {
             </div>
           </div>
 
-          {/* Score cards */}
           <div className="grid-3" style={{ gap: 16, marginBottom: 28 }}>
             {[
               { subj: "Physics",   icon: Atom,        s1: d.s1.phy,  s2: d.s2.phy,  color: "#F97316" },
@@ -352,22 +562,67 @@ export default function JeeMain() {
         </div>
       </section>
 
-      {/* ── Qualifying Percentile Trend ── */}
-      <Block id="trend" eyebrow="Cutoff Trends" title="5-Year Qualifying Percentile Trend"
-        sub="How the JEE Main qualifying cutoff has moved across categories (2021–2025).">
-        <div className="card">
-          <Trend
-            data={QUALIFYING_TREND}
-            lines={[
-              { key: "open", label: "General",  color: "#1c1c28" },
-              { key: "obc",  label: "OBC-NCL",  color: "#F4A261" },
-              { key: "sc",   label: "SC",        color: "#2EC4B6" },
-              { key: "st",   label: "ST",        color: "#F97316" },
-            ]}
-            height={320}
-          />
+      {/* ══ JEE MAIN QUALIFYING PERCENTILE TREND ══
+          This shows the NTA percentile cutoff for JEE Main result qualification
+          (minimum percentile to be eligible for JoSAA NIT/IIIT/GFTI counselling).
+          This is NOT the JEE Advanced eligibility cutoff.
+          JEE Advanced eligibility = top ~2.5 lakh CRL rank in JEE Main.
+          Source: NTA official result notifications 2021–2025.
+      ══════════════════════════════════════════════════════════ */}
+      <section id="trend" className="section" style={{ scrollMarginTop: 90 }}>
+        <div className="container">
+          <div className="title-bar">
+            <span className="eyebrow">Cutoff Trends</span>
+            <h2 className="section-title">JEE Main — 5-Year Qualifying Percentile Trend</h2>
+            <p className="section-sub">
+              Minimum NTA percentile required to qualify JEE Main for NIT/IIIT/GFTI admission (JoSAA counselling) — category-wise (2021–2025).
+              This is the JEE Main result qualifying cutoff, not the JEE Advanced eligibility cutoff.
+              Source: jeemain.nta.ac.in official result notifications.
+            </p>
+          </div>
+          <div className="card">
+            {/* Inline data table */}
+            <div style={{ overflowX: "auto", marginBottom: 20 }}>
+              <table className="data-table" style={{ minWidth: 520, fontSize: 13 }}>
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    <th style={{ textAlign: "center" }}>General</th>
+                    <th style={{ textAlign: "center" }}>OBC-NCL</th>
+                    <th style={{ textAlign: "center" }}>SC</th>
+                    <th style={{ textAlign: "center" }}>ST</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {QUALIFYING_TREND.map((row) => (
+                    <tr key={row.year}>
+                      <td><strong style={{ fontFamily: "Sora" }}>{row.year}</strong></td>
+                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700 }}>{row.open}%ile</span></td>
+                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#F4A261" }}>{row.obc}%ile</span></td>
+                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#2EC4B6" }}>{row.sc}%ile</span></td>
+                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#F97316" }}>{row.st}%ile</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Trend
+              data={QUALIFYING_TREND}
+              lines={[
+                { key: "open", label: "General",  color: "#1c1c28" },
+                { key: "obc",  label: "OBC-NCL",  color: "#F4A261" },
+                { key: "sc",   label: "SC",        color: "#2EC4B6" },
+                { key: "st",   label: "ST",        color: "#F97316" },
+              ]}
+              height={320}
+            />
+            <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 10, textAlign: "center" }}>
+              * NTA percentile scores from official JEE Main result notifications. Qualifying cutoff for JoSAA counselling.
+              Verify at <a href="https://jeemain.nta.ac.in" target="_blank" rel="noreferrer" style={{ color: "#F97316" }}>jeemain.nta.ac.in</a>
+            </p>
+          </div>
         </div>
-      </Block>
+      </section>
 
       {/* ══ SYLLABUS ══ */}
       <section id="syllabus" className="section" style={{ background: "var(--sky)", scrollMarginTop: 90 }}>
@@ -378,14 +633,11 @@ export default function JeeMain() {
             <p className="section-sub">75 questions · 300 marks · 3 hours. 25 questions per subject (20 MCQ + 5 Numerical).</p>
           </div>
 
-          {/* Exam pattern banner */}
-          <div style={{
-            display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 28,
-          }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 28 }}>
             {[
-              { label: "Total Questions", value: "75", sub: "25 per subject", color: "#F97316" },
-              { label: "Total Marks",     value: "300", sub: "4 marks each",  color: "#0EA5A4" },
-              { label: "Duration",        value: "3 hrs", sub: "180 minutes", color: "#7C3AED" },
+              { label: "Total Questions", value: "75",   sub: "25 per subject",  color: "#F97316" },
+              { label: "Total Marks",     value: "300",  sub: "4 marks each",    color: "#0EA5A4" },
+              { label: "Duration",        value: "3 hrs", sub: "180 minutes",    color: "#7C3AED" },
             ].map(({ label, value, sub, color }) => (
               <div key={label} className="card" style={{ textAlign: "center", borderTop: `4px solid ${color}`, padding: "18px 12px" }}>
                 <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 28, color }}>{value}</div>
@@ -423,59 +675,176 @@ export default function JeeMain() {
         </div>
       </section>
 
-      {/* ══ ROADMAP ══ */}
+      {/* ══ ENHANCED ROADMAP ══ */}
       <section id="roadmap" className="section" style={{ scrollMarginTop: 90 }}>
         <div className="container">
           <div className="title-bar">
             <span className="eyebrow">Study Roadmap</span>
             <h2 className="section-title">JEE Main Preparation Roadmap</h2>
-            <p className="section-sub">A structured step-by-step plan from foundation to Session 2 exam day.</p>
+            <p className="section-sub">A step-by-step plan with specific tasks, books and daily targets — from foundation through both sessions.</p>
           </div>
 
-          <div style={{ position: "relative", maxWidth: 900, margin: "0 auto" }}>
+          <div style={{ position: "relative", maxWidth: 960, margin: "0 auto" }}>
             <div style={{
               position: "absolute", left: "50%", top: 0, bottom: 0,
-              width: 3, background: "linear-gradient(180deg,#F97316,#0EA5A4,#7C3AED)",
+              width: 3, background: "linear-gradient(180deg,#F97316,#0EA5A4,#7C3AED,#EC4899,#EAB308,#6366F1,#15A06E)",
               transform: "translateX(-50%)", borderRadius: 4,
             }} />
+
             {ROADMAP.map((step, i) => (
               <div key={step.month} style={{
-                display: "flex", justifyContent: i % 2 === 0 ? "flex-start" : "flex-end",
-                marginBottom: 32, position: "relative",
+                display: "flex",
+                justifyContent: i % 2 === 0 ? "flex-start" : "flex-end",
+                marginBottom: 36,
+                position: "relative",
               }}>
                 <div style={{
-                  position: "absolute", left: "50%", top: 24,
+                  position: "absolute", left: "50%", top: 28,
                   transform: "translateX(-50%)",
-                  width: 18, height: 18, borderRadius: "50%",
+                  width: 20, height: 20, borderRadius: "50%",
                   background: step.color, border: "3px solid #fff",
-                  boxShadow: `0 0 0 3px ${step.color}44`, zIndex: 1,
+                  boxShadow: `0 0 0 4px ${step.color}44`, zIndex: 1,
                 }} />
+
                 <div className="card" style={{
-                  width: "44%", borderTop: `4px solid ${step.color}`,
+                  width: "44%",
+                  borderTop: `4px solid ${step.color}`,
                   marginLeft: i % 2 === 0 ? 0 : "auto",
                   marginRight: i % 2 === 0 ? "auto" : 0,
+                  padding: "20px 22px",
                 }}>
-                  <div style={{ fontSize: 24, marginBottom: 6 }}>{step.icon}</div>
+                  <div style={{ fontSize: 26, marginBottom: 6 }}>{step.icon}</div>
                   <div style={{ fontSize: 11, fontWeight: 700, color: step.color, letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>{step.month}</div>
-                  <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 6 }}>{step.label}</h4>
-                  <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.6 }}>{step.tip}</p>
+                  <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8, fontSize: 15 }}>{step.label}</h4>
+                  <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.65, marginBottom: 12 }}>{step.tip}</p>
+
+                  {/* Tasks */}
+                  <div style={{ borderTop: `1px solid ${step.color}22`, paddingTop: 10, marginBottom: 10 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: step.color, marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>
+                      <Target size={11} style={{ display: "inline", marginRight: 4 }} />Key Tasks
+                    </div>
+                    {step.tasks.map((task) => (
+                      <div key={task} style={{ display: "flex", gap: 7, alignItems: "flex-start", fontSize: 12, marginBottom: 5 }}>
+                        <CheckCircle2 size={13} color={step.color} style={{ flexShrink: 0, marginTop: 1 }} />
+                        <span style={{ color: "var(--navy)", lineHeight: 1.5 }}>{task}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Resource tags */}
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    {step.resources.map((r) => (
+                      <span key={r} style={{
+                        fontSize: 11, padding: "3px 9px", borderRadius: 50,
+                        background: `${step.color}14`, color: step.color, fontWeight: 600,
+                        border: `1px solid ${step.color}33`,
+                      }}>{r}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Resources */}
+          {/* Full book list */}
           <div className="card" style={{ marginTop: 16, background: "linear-gradient(135deg,#1c1c28,#ea580c)", color: "#fff" }}>
-            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 16, color: "#fff" }}>📚 Recommended Resources</h4>
+            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 16, color: "#fff" }}>📚 Complete Book List — JEE Main</h4>
             <div className="grid-3" style={{ gap: 14 }}>
               {[
-                { subj: "Physics",    books: ["NCERT 11 & 12 (must)", "DC Pandey", "HC Verma selected chapters"],       color: "#F97316" },
-                { subj: "Chemistry",  books: ["NCERT (enough for Inorganic)", "OP Tandon Organic", "Narendra Awasthi"], color: "#5eead4" },
-                { subj: "Maths",      books: ["RD Sharma", "Cengage Series", "Arihant Past Year Papers"],              color: "#c084fc" },
+                {
+                  subj: "Physics",
+                  books: ["NCERT 11 & 12 (mandatory)", "DC Pandey (full series)", "HC Verma (select chapters)", "Arihant JEE Main Past Years"],
+                  color: "#F97316",
+                },
+                {
+                  subj: "Chemistry",
+                  books: ["NCERT 11 & 12 (inorganic = enough)", "OP Tandon Organic Chemistry", "Narendra Awasthi Physical Chem", "VK Jaiswal Inorganic (optional)"],
+                  color: "#5eead4",
+                },
+                {
+                  subj: "Maths",
+                  books: ["RD Sharma (Class 11 & 12)", "Cengage Series (topic-wise)", "Arihant 40 Days JEE Main Maths", "NTA Mock Papers (official free)"],
+                  color: "#c084fc",
+                },
               ].map(({ subj, books, color }) => (
                 <div key={subj} style={{ background: "rgba(255,255,255,.1)", borderRadius: 12, padding: "14px 16px", borderLeft: `3px solid ${color}` }}>
                   <div style={{ fontWeight: 700, color, marginBottom: 8, fontSize: 14 }}>{subj}</div>
-                  {books.map((b) => <div key={b} style={{ fontSize: 13, color: "rgba(255,255,255,.78)", marginBottom: 4 }}>• {b}</div>)}
+                  {books.map((b) => (
+                    <div key={b} style={{ fontSize: 12, color: "rgba(255,255,255,.78)", marginBottom: 5 }}>• {b}</div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ COACHING INSTITUTES ══ */}
+      <section id="coaching" className="section" style={{ background: "var(--sky)", scrollMarginTop: 90 }}>
+        <div className="container">
+          <div className="title-bar">
+            <span className="eyebrow">Top Coaching</span>
+            <h2 className="section-title">Best Coaching Institutes for JEE Main</h2>
+            <p className="section-sub">From budget-friendly online platforms to Kota's top offline institutes — find the right fit for your preparation style and budget.</p>
+          </div>
+          <div className="grid-3" style={{ gap: 22 }}>
+            {COACHING.map((c) => (
+              <div key={c.name} className="card" style={{ borderTop: `4px solid ${c.color}`, padding: "20px 22px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+                  <div>
+                    <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 16, marginBottom: 3 }}>{c.name}</h3>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--muted)" }}>
+                      <MapPin size={12} /> {c.city}
+                    </div>
+                  </div>
+                  <span style={{
+                    fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 50,
+                    background: `${c.color}18`, color: c.color, whiteSpace: "nowrap",
+                  }}>{c.badge}</span>
+                </div>
+
+                <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 11, padding: "3px 9px", borderRadius: 50, background: "#f3f4f6", color: "var(--navy)", fontWeight: 600 }}>
+                    💰 {c.fee}
+                  </span>
+                  <span style={{ fontSize: 11, padding: "3px 9px", borderRadius: 50, background: "#f3f4f6", color: "var(--navy)", fontWeight: 600 }}>
+                    🖥 {c.mode}
+                  </span>
+                </div>
+
+                {c.highlights.map((h) => (
+                  <div key={h} style={{ display: "flex", gap: 7, alignItems: "flex-start", fontSize: 12, marginBottom: 6 }}>
+                    <CheckCircle2 size={13} color={c.color} style={{ flexShrink: 0, marginTop: 2 }} />
+                    <span style={{ color: "var(--navy)", lineHeight: 1.5 }}>{h}</span>
+                  </div>
+                ))}
+
+                <a href={c.website} target="_blank" rel="noreferrer" style={{
+                  display: "inline-flex", alignItems: "center", gap: 6, marginTop: 14,
+                  fontSize: 13, fontWeight: 600, color: c.color,
+                }}>
+                  <Globe size={13} /> Visit Website <ArrowRight size={12} />
+                </a>
+              </div>
+            ))}
+          </div>
+
+          {/* Coaching tips */}
+          <div className="card" style={{ marginTop: 20, borderLeft: "4px solid #F97316", padding: "16px 20px" }}>
+            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8, fontSize: 15 }}>💡 How to Choose the Right Coaching for JEE Main</h4>
+            <div className="grid-2" style={{ gap: 12 }}>
+              {[
+                { title: "Tight Budget (under ₹10K)", tip: "Physics Wallah (PW) YouTube is free and very good. Spend ₹5K–10K on Arihant/Disha books + NTA free mocks. Self-discipline is the only requirement." },
+                { title: "Mid Budget (₹30K–60K)", tip: "Vedantu / Unacademy online batches. Get doubt sessions + test series. Supplement with 3–4 standard books per subject." },
+                { title: "Standard Budget (₹1L–2L)", tip: "Narayana or FIITJEE local centre. Good faculty, structured curriculum. Ask about batch sizes — under 40 students is ideal." },
+                { title: "Premium / Kota Coaching", tip: "Allen or Resonance Kota if you can relocate. Hostel + coaching is ₹2.5L–4L/year all-in. Best peer group, most competitive environment." },
+              ].map(({ title, tip }) => (
+                <div key={title} style={{ display: "flex", gap: 10 }}>
+                  <Star size={15} color="#F97316" style={{ flexShrink: 0, marginTop: 2 }} />
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 3 }}>{title}</div>
+                    <div style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.6 }}>{tip}</div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -484,17 +853,19 @@ export default function JeeMain() {
       </section>
 
       {/* ── Eligibility ── */}
-      <div style={{ background: "var(--sky)" }}>
-        <Block id="eligibility" eyebrow="Eligibility" title="Who can appear for JEE Main?" sub="Key eligibility criteria at a glance." bg="transparent">
+      <div style={{ background: "transparent" }}>
+        <Block id="eligibility" eyebrow="Eligibility" title="Who can appear for JEE Main?" sub="Key eligibility criteria at a glance.">
           <EligibilityCards exam={exam} />
         </Block>
       </div>
 
       {/* ── NIT Rankings ── */}
-      <Block id="nit-rankings" eyebrow="NIRF Rankings" title="Top NITs by Ranking &amp; Placements"
-        sub="Sort by NIRF rank, average package or placement percentage.">
-        <RankingsTable type="NIT" />
-      </Block>
+      <div style={{ background: "var(--sky)" }}>
+        <Block id="nit-rankings" eyebrow="NIRF Rankings" title="Top NITs by Ranking &amp; Placements"
+          sub="Sort by NIRF rank, average package or placement percentage." bg="transparent">
+          <RankingsTable type="NIT" />
+        </Block>
+      </div>
     </div>
   );
 }
