@@ -1,0 +1,288 @@
+/* ============================================================
+   exams.js — Entrance exam catalogue + per-exam detail pages
+   ============================================================ */
+
+export const EXAMS = [
+  {
+    slug: "jee-main",
+    name: "JEE Main",
+    full: "Joint Entrance Examination (Main)",
+    body: "NTA",
+    level: "National",
+    website: "https://jeemain.nta.ac.in",
+    color: "#F97316",
+    accepts: "B.Tech / B.E / B.Arch admissions to NITs, IIITs, GFTIs",
+    about:
+      "JEE Main is the national-level entrance test conducted by the NTA in two sessions, serving as the gateway to NITs, IIITs and GFTIs and as the qualifier for JEE Advanced.",
+    eligibility: [
+      "Passed 10+2 with Physics, Chemistry & Mathematics",
+      "No age limit (year-of-passing criteria applies — 2024/2025/2026)",
+      "Maximum 3 consecutive years of attempts (2 sessions each year)",
+    ],
+    pattern: [
+      "Mode: Computer Based Test (CBT)",
+      "Subjects: Physics, Chemistry, Mathematics",
+      "Questions: 75 (25 per subject) · 90 attempted",
+      "Marking: +4 correct, −1 wrong (MCQ), numeric section no negative",
+      "Duration: 3 hours · Total marks: 300",
+    ],
+    dates: [
+      ["Session 1 Registration", "Nov 2025"],
+      ["Session 1 Exam", "Jan 2026 (22–31)"],
+      ["Session 1 Result", "Feb 2026"],
+      ["Session 2 Exam", "Apr 2026 (1–10)"],
+      ["Session 2 Result", "Apr 2026"],
+    ],
+    cutoffTrend: [
+      { year: "2021", open: 87.9, obc: 68.0, sc: 46.9, st: 34.7 },
+      { year: "2022", open: 88.4, obc: 67.0, sc: 43.1, st: 26.8 },
+      { year: "2023", open: 90.8, obc: 73.6, sc: 52.0, st: 37.2 },
+      { year: "2024", open: 93.2, obc: 79.7, sc: 60.1, st: 46.7 },
+      { year: "2025", open: 93.1, obc: 79.4, sc: 61.2, st: 47.9 },
+    ],
+    papers: [
+      { label: "JEE Main 2026 Session 1 Question Paper", url: "https://jeemain.nta.ac.in" },
+      { label: "JEE Main 2026 Session 1 Answer Key", url: "https://jeemain.nta.ac.in" },
+    ],
+  },
+  {
+    slug: "jee-advanced",
+    name: "JEE Advanced",
+    full: "Joint Entrance Examination (Advanced)",
+    body: "IIT (rotating)",
+    level: "National",
+    website: "https://jeeadv.ac.in",
+    color: "#2a2a3c",
+    accepts: "Admission to all 23 IITs",
+    about:
+      "JEE Advanced is conducted by one of the zonal IITs for admission to the IITs. Only the top ~2.5 lakh JEE Main qualifiers are eligible to appear.",
+    eligibility: [
+      "Among top 2,50,000 JEE Main qualifiers (all categories combined)",
+      "Born on or after Oct 1, 2001 (5-yr relaxation for SC/ST/PwD)",
+      "Maximum 2 attempts in 2 consecutive years",
+    ],
+    pattern: [
+      "Two papers (Paper 1 & Paper 2), both compulsory",
+      "Each paper 3 hours · CBT mode",
+      "Variable marking scheme announced each year",
+      "Sections: MCQ (single/multiple), numeric, matching",
+    ],
+    dates: [
+      ["Registration", "Apr 2026 (23–May 2)"],
+      ["Admit Card", "May 2026 (11)"],
+      ["Exam Day", "May 2026 (18)"],
+      ["Result", "Jun 2026"],
+      ["JoSAA Counselling", "Jun 2026"],
+    ],
+    cutoffTrend: [
+      { year: "2021", open: 63, obc: 57, sc: 32, st: 31 },
+      { year: "2022", open: 55, obc: 50, sc: 28, st: 27 },
+      { year: "2023", open: 86, obc: 77, sc: 43, st: 41 },
+      { year: "2024", open: 109, obc: 98, sc: 55, st: 54 },
+      { year: "2025", open: 74, obc: 66, sc: 37, st: 37 },
+    ],
+    papers: [
+      { label: "JEE Advanced 2026 Paper 1", url: "https://jeeadv.ac.in" },
+      { label: "JEE Advanced 2026 Paper 2", url: "https://jeeadv.ac.in" },
+    ],
+  },
+  {
+    slug: "bitsat",
+    name: "BITSAT",
+    full: "BITS Admission Test",
+    body: "BITS Pilani",
+    level: "Institute",
+    website: "https://www.bitsadmission.com",
+    color: "#f4a261",
+    accepts: "BITS Pilani, Goa & Hyderabad campuses",
+    about:
+      "BITSAT is a computer-based test for admission to integrated first-degree programmes at the three BITS campuses, known for its speed-and-accuracy format.",
+    eligibility: [
+      "10+2 with PCM and minimum 75% aggregate",
+      "Minimum 60% in each of Physics, Chemistry & Maths",
+    ],
+    pattern: [
+      "130 questions in 3 hours (CBT)",
+      "Physics, Chemistry, Maths, English & Logical Reasoning",
+      "+3 correct, −1 wrong · optional bonus questions",
+    ],
+    dates: [
+      ["Registration", "Jan–Apr 2026"],
+      ["Session 1", "May 2026"],
+      ["Session 2", "Jun 2026"],
+      ["Admissions", "Jul 2026"],
+    ],
+    cutoffTrend: [
+      { year: "2021", open: 285, obc: 268, sc: 242, st: 223 },
+      { year: "2022", open: 297, obc: 279, sc: 252, st: 233 },
+      { year: "2023", open: 291, obc: 274, sc: 247, st: 228 },
+      { year: "2024", open: 309, obc: 290, sc: 263, st: 242 },
+      { year: "2025", open: 303, obc: 285, sc: 258, st: 237 },
+    ],
+    papers: [{ label: "BITSAT Sample Papers", url: "https://www.bitsadmission.com" }],
+  },
+  {
+    slug: "viteee",
+    name: "VITEEE",
+    full: "VIT Engineering Entrance Examination",
+    body: "VIT",
+    level: "Institute",
+    website: "https://viteee.vit.ac.in",
+    color: "#2ec4b6",
+    accepts: "VIT Vellore, Chennai, AP & Bhopal",
+    about:
+      "VITEEE is the entrance exam for B.Tech admissions across all VIT campuses, featuring an aptitude section alongside PCM/PCB.",
+    eligibility: ["10+2 with PCM/PCB and minimum 60% aggregate"],
+    pattern: [
+      "125 questions · 2.5 hours · CBT",
+      "Physics, Chemistry, Maths/Biology, Aptitude, English",
+      "No negative marking",
+    ],
+    dates: [
+      ["Registration", "Nov 2025–Mar 2026"],
+      ["Exam Window", "Apr 2026"],
+      ["Result", "May 2026 (8)"],
+      ["Counselling", "May–Jun 2026"],
+    ],
+    cutoffTrend: [
+      { year: "2021", open: 4200, obc: 11550, sc: 29400, st: 44100 },
+      { year: "2022", open: 4040, obc: 11110, sc: 28280, st: 42420 },
+      { year: "2023", open: 4120, obc: 11330, sc: 28840, st: 43260 },
+      { year: "2024", open: 3880, obc: 10670, sc: 27160, st: 40740 },
+      { year: "2025", open: 3960, obc: 10890, sc: 27720, st: 41580 },
+    ],
+    papers: [{ label: "VITEEE Practice Papers", url: "https://viteee.vit.ac.in" }],
+  },
+  {
+    slug: "mht-cet",
+    name: "MHT-CET",
+    full: "Maharashtra Common Entrance Test",
+    body: "State CET Cell, Maharashtra",
+    level: "State",
+    website: "https://cetcell.mahacet.org",
+    color: "#0EA5A4",
+    accepts: "Engineering colleges across Maharashtra",
+    about:
+      "MHT-CET is Maharashtra's state-level entrance for engineering and pharmacy admissions through the CAP (Centralised Admission Process) rounds.",
+    eligibility: ["10+2 with PCM and minimum 50% (45% reserved)"],
+    pattern: [
+      "PCM group · 3 hours · CBT",
+      "Maths 50Q (100 marks), Physics+Chemistry 100Q (100 marks)",
+      "Percentile-based normalisation, no negative marking",
+    ],
+    dates: [
+      ["Registration", "Jan–Mar 2026"],
+      ["Exam", "Apr 2026"],
+      ["Result", "May 2026"],
+      ["CAP Round 1", "Jun 2026"],
+    ],
+    cutoffTrend: [
+      { year: "2021", open: 94.8, obc: 94.2, sc: 93.1, st: 90.7 },
+      { year: "2022", open: 98.8, obc: 98.2, sc: 97, st: 94.5 },
+      { year: "2023", open: 96.8, obc: 96.2, sc: 95.1, st: 92.6 },
+      { year: "2024", open: 102.8, obc: 102.2, sc: 100.9, st: 98.4 },
+      { year: "2025", open: 100.8, obc: 100.2, sc: 99, st: 96.5 },
+    ],
+    papers: [{ label: "MHT-CET PYQs", url: "https://cetcell.mahacet.org" }],
+  },
+  {
+    slug: "kcet",
+    name: "KCET",
+    full: "Karnataka Common Entrance Test",
+    body: "KEA",
+    level: "State",
+    website: "https://cetonline.karnataka.gov.in",
+    color: "#e76f51",
+    accepts: "Engineering colleges across Karnataka",
+    about:
+      "KCET is conducted by the Karnataka Examinations Authority for admission to professional courses in the state.",
+    eligibility: ["10+2 with PCM and minimum 45% (40% reserved)"],
+    pattern: [
+      "Physics, Chemistry, Maths, Biology · separate sessions",
+      "60 questions per subject · 80 min each",
+      "No negative marking",
+    ],
+    dates: [
+      ["Registration", "Feb 2026"],
+      ["Exam", "Apr 2026"],
+      ["Result", "May 2026"],
+      ["Counselling", "Jun 2026 (28)"],
+    ],
+    cutoffTrend: [
+      { year: "2021", open: 840, obc: 4200, sc: 12600, st: 21000 },
+      { year: "2022", open: 808, obc: 4040, sc: 12120, st: 20200 },
+      { year: "2023", open: 824, obc: 4120, sc: 12360, st: 20600 },
+      { year: "2024", open: 776, obc: 3880, sc: 11640, st: 19400 },
+      { year: "2025", open: 792, obc: 3960, sc: 11880, st: 19800 },
+    ],
+    papers: [{ label: "KCET Question Papers", url: "https://cetonline.karnataka.gov.in" }],
+  },
+  {
+    slug: "wbjee",
+    name: "WBJEE",
+    full: "West Bengal Joint Entrance Examination",
+    body: "WBJEEB",
+    level: "State",
+    website: "https://wbjeeb.nic.in",
+    color: "#0EA5A4",
+    accepts: "Engineering colleges across West Bengal",
+    about:
+      "WBJEE is the gateway to undergraduate engineering and technology programmes in West Bengal government and private institutes.",
+    eligibility: ["10+2 with PCM and minimum 45%"],
+    pattern: [
+      "Two papers: Mathematics (Paper 1), Physics+Chemistry (Paper 2)",
+      "Pen-and-paper (OMR) mode",
+      "Category-wise marking (1, 2 marks) with negative marking",
+    ],
+    dates: [
+      ["Registration", "Dec 2025–Jan 2026"],
+      ["Exam", "Apr 2026"],
+      ["Result", "May 2026"],
+      ["Counselling", "Jun 2026"],
+    ],
+    cutoffTrend: [
+      { year: "2021", open: 1260, obc: 6300, sc: 16800, st: 27300 },
+      { year: "2022", open: 1212, obc: 6060, sc: 16160, st: 26260 },
+      { year: "2023", open: 1236, obc: 6180, sc: 16480, st: 26780 },
+      { year: "2024", open: 1164, obc: 5820, sc: 15520, st: 25220 },
+      { year: "2025", open: 1188, obc: 5940, sc: 15840, st: 25740 },
+    ],
+    papers: [{ label: "WBJEE Previous Papers", url: "https://wbjeeb.nic.in" }],
+  },
+  {
+    slug: "comedk",
+    name: "COMEDK UGET",
+    full: "Consortium of Medical, Engineering & Dental Colleges of Karnataka",
+    body: "COMEDK",
+    level: "Private Consortium",
+    website: "https://www.comedk.org",
+    color: "#2a9d8f",
+    accepts: "Private engineering colleges in Karnataka",
+    about:
+      "COMEDK UGET is a uniform entrance test for admission to private professional colleges under the consortium in Karnataka.",
+    eligibility: ["10+2 with PCM and minimum 45% (40% reserved)"],
+    pattern: ["180 questions · 3 hours · PCM · no negative marking"],
+    dates: [
+      ["Registration", "Feb–Apr 2026"],
+      ["Exam", "May 2026"],
+      ["Counselling", "Jun–Jul 2026"],
+    ],
+    cutoffTrend: [
+      { year: "2021", open: 1575, obc: 7350, sc: 18900, st: 31500 },
+      { year: "2022", open: 1515, obc: 7070, sc: 18180, st: 30300 },
+      { year: "2023", open: 1545, obc: 7210, sc: 18540, st: 30900 },
+      { year: "2024", open: 1455, obc: 6790, sc: 17460, st: 29100 },
+      { year: "2025", open: 1485, obc: 6930, sc: 17820, st: 29700 },
+    ],
+    papers: [{ label: "COMEDK Mock Tests", url: "https://www.comedk.org" }],
+  },
+];
+
+// Quick pill list for the home page (extra names link to View All)
+export const EXAM_PILLS = [
+  "JEE Main", "JEE Advanced", "BITSAT", "VITEEE", "MHT-CET", "KCET",
+  "AP EAPCET", "WBJEE", "UPSEE", "IISER IAT", "SRMJEEE", "MET Manipal",
+  "CUSAT CAT", "IPU CET", "KEAM", "COMEDK", "AMUEEE", "GUJCET",
+];
+
+export const EXAM_BY_SLUG = Object.fromEntries(EXAMS.map((e) => [e.slug, e]));
