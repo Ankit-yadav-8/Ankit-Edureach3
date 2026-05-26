@@ -6,6 +6,10 @@ import {
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award,
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
+import { useAuth } from "../auth/AuthContext.jsx";
+
+// Flip to false to let people browse without logging in.
+const GATE_TABS = true;
 
 const JEE_MAIN = [
   { label: "Eligibility Criteria", to: "/jee-main#eligibility", icon: BadgeCheck },
@@ -44,6 +48,7 @@ const TOOLS = [
 
 export default function Navbar({ onSearch }) {
   const { saved, compare } = useShortlist();
+  const { isLoggedIn, user, openLogin, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(null); // desktop dropdown
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -66,6 +71,7 @@ export default function Navbar({ onSearch }) {
   }, [location]);
 
   const goHash = (to) => {
+    if (GATE_TABS && !isLoggedIn) { openLogin(); return; }
     setOpen(null);
     setMobileOpen(false);
     const [path, hash] = to.split("#");
@@ -123,7 +129,7 @@ export default function Navbar({ onSearch }) {
               {item.drop ? (
                 <>
                   <button
-                    onClick={() => navigate(item.base)}
+                    onClick={() => (GATE_TABS && !isLoggedIn ? openLogin() : navigate(item.base))}
                     style={navLinkStyle(open === item.label)}
                   >
                     {item.label}
@@ -179,6 +185,20 @@ export default function Navbar({ onSearch }) {
           <button className="btn btn-coral cta-desktop" onClick={() => goHash("/jee-main#college")}>
             <Target size={16} /> Predict My College
           </button>
+          {isLoggedIn ? (
+            <button onClick={logout} title={user?.name || user?.phone || "Account"} className="cta-desktop"
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}>
+              <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#F47B20", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
+                {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
+              </span>
+              Logout
+            </button>
+          ) : (
+            <button onClick={openLogin} className="cta-desktop"
+              style={{ padding: "9px 18px", borderRadius: 10, border: "none", background: "#F47B20", color: "#fff", fontWeight: 700, cursor: "pointer" }}>
+              Login
+            </button>
+          )}
           <button className="hamburger" onClick={() => setMobileOpen(true)} aria-label="Menu" style={{ display: "none" }}>
             <Menu size={24} color="var(--navy)" />
           </button>

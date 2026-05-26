@@ -29,6 +29,7 @@ import OfficialCutoffs from "./pages/OfficialCutoffs.jsx";
 import CompareTray from "./components/CompareTray.jsx";
 import Chatbot from "./components/Chatbot.jsx";
 import WhatsAppButton from "./components/WhatsAppButton.jsx";
+import AuthModal from "./auth/AuthModal.jsx";
 import SearchResults from "./pages/SearchResults.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
@@ -103,6 +104,7 @@ export default function App() {
       <CompareTray />
       <Chatbot />
       <WhatsAppButton />
+      <AuthModal />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );

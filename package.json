@@ -7,22 +7,42 @@
   "homepage": "https://ankit-yadav-8.github.io/Ankit-Edureach3/",
   "scripts": {
     "dev": "vite",
+    "server": "cd server && node --watch index.js",
+    "dev:full": "concurrently \"npm run dev\" \"npm run server\"",
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "cors": "^2.8.6",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "framer-motion": "^11.3.19",
     "lucide-react": "^0.408.0",
+    "mongoose": "^9.6.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.0",
     "recharts": "^2.12.7"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^6.0.2",
+    "concurrently": "^9.2.1",
     "gh-pages": "^6.3.0",
+    "nodemon": "^3.1.14",
     "vite": "^8.0.14"
+  },
+  "main": "vite.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ankit-yadav-8/Ankit-Edureach3.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ankit-yadav-8/Ankit-Edureach3/issues"
   }
 }
