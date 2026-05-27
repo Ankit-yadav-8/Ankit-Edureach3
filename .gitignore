@@ -1,5 +1,21 @@
+# dependencies
 node_modules
+server/node_modules
+
+# secrets — NEVER commit these
+.env
+.env.*
+server/.env
+server/.env.*
+
+# build output
 dist
+.vite
+.vercel
+
+# one-time DB import source (73 MB; not needed at runtime). Remove this line if you want it in the repo.
+server/data/*.csv
+
+# misc
 .DS_Store
 *.log
-.vite

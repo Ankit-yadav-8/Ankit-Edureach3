@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema(
     name:         { type: String, trim: true, default: "" },
     email:        { type: String, lowercase: true, trim: true, unique: true, sparse: true },
     phone:        { type: String, trim: true, unique: true, sparse: true },
+    coaching:     { type: String, trim: true, default: "" },
     passwordHash: { type: String },          // only for email/password accounts
     resetTokenHash: { type: String },
     resetExpires:   { type: Date },

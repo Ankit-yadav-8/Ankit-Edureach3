@@ -6,6 +6,7 @@ import connectDB from "./db.js";
 import authRoutes from "./routes/auth.js";
 import otpRoutes from "./routes/otp.js";
 import userRoutes from "./routes/users.js";
+import cutoffRoutes from "./routes/cutoffs.js";
 
 dotenv.config();
 const app = express();
@@ -17,10 +18,11 @@ app.use(cors({ origin: origins.includes("*") ? "*" : origins }));
 
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 50, standardHeaders: true, legacyHeaders: false });
 
-app.get("/", (_req, res) => res.send("EduReach Auth API ✅"));
+app.get("/", (_req, res) => res.send("EduReach API ✅"));
 app.use("/api/auth", limiter, authRoutes);
 app.use("/api/otp", limiter, otpRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/cutoffs", cutoffRoutes);   // read-only cutoff data (no rate-limit — used while browsing)
 
 connectDB()
   .then(() => app.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`)))

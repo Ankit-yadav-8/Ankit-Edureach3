@@ -7,9 +7,9 @@ import TopColleges from "../components/home/TopColleges.jsx";
 import PrivateUniversities from "../components/home/PrivateUniversities.jsx";
 import NewsSection from "../components/home/NewsSection.jsx";
 import Testimonials from "../components/home/Testimonials.jsx";
-import { Trend, Bars, CenterDonut } from "../components/Charts.jsx";
+import { Bars, CenterDonut } from "../components/Charts.jsx";
 import Reveal from "../components/Reveal.jsx";
-import { TrendingUp, Users, BookOpen, Award, ArrowRight, Zap, Target, BarChart3 } from "lucide-react";
+import { Users, BookOpen, Target, BarChart3, ArrowRight, Trophy, Building2, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 /* ── Inline chart data ── */
@@ -20,46 +20,59 @@ const SEAT_DATA = [
   { name: "GFTIs",  value: 12280 },
 ];
 
-const CUTOFF_TREND = [
-  { year: 2021, IIT: 87,  NIT: 72, IIIT: 68 },
-  { year: 2022, IIT: 88,  NIT: 74, IIIT: 70 },
-  { year: 2023, IIT: 90,  NIT: 76, IIIT: 72 },
-  { year: 2024, IIT: 93,  NIT: 78, IIIT: 75 },
-  { year: 2025, IIT: 95,  NIT: 80, IIIT: 77 },
-];
-
 const BRANCH_DEMAND = [
-  { name: "CSE",          value: 98 },
-  { name: "ECE",          value: 84 },
-  { name: "Mech",         value: 72 },
-  { name: "Civil",        value: 58 },
-  { name: "Chem Engg",    value: 54 },
-  { name: "EE",           value: 80 },
+  { name: "CSE",       value: 98 },
+  { name: "ECE",       value: 84 },
+  { name: "Mech",      value: 72 },
+  { name: "Civil",     value: 58 },
+  { name: "Chem Engg", value: 54 },
+  { name: "EE",        value: 80 },
 ];
 
 const STATS = [
-  { label: "Students helped",    value: "2.4L+",   icon: Users,      color: "#F97316", bg: "#fff7f0" },
-  { label: "Colleges listed",    value: "850+",    icon: BookOpen,   color: "#0EA5A4", bg: "#f0fdfc" },
-  { label: "Rank predictions",   value: "98% acc", icon: Target,     color: "#7C3AED", bg: "#faf5ff" },
-  { label: "Cutoff data points", value: "1.2M+",   icon: BarChart3,  color: "#EC4899", bg: "#fdf2f8" },
+  { label: "Students helped",    value: "2.4L+",   icon: Users,     color: "#F97316", bg: "#fff7f0" },
+  { label: "Colleges listed",    value: "850+",    icon: BookOpen,  color: "#0EA5A4", bg: "#f0fdfc" },
+  { label: "Rank predictions",   value: "98% acc", icon: Target,    color: "#15a06e", bg: "#ecfdf3" },
+  { label: "Cutoff data points", value: "1.2M+",   icon: BarChart3, color: "#1c1c28", bg: "#f3f4f6" },
 ];
 
-const EXAM_QUICK = [
+/* ── JEE exams (parallel) — each links to its full section ── */
+const EXAMS = [
   {
+    key: "advanced",
     name: "JEE Advanced 2026",
-    badge: "IIT Admission", badgeColor: "#7C3AED",
+    tag: "Gateway to the IITs",
+    icon: Trophy,
+    accent: "#1c1c28",
     date: "May 18, 2026",
-    details: ["Paper 1: 9AM–12PM", "Paper 2: 2:30–5:30PM", "~1.8 lakh appear"],
+    blurb: "The single exam for admission to all 23 IITs. Only the top ~2.5 lakh JEE Main qualifiers are eligible to attempt it.",
+    info: [
+      ["Conducted by", "IITs (rotational)"],
+      ["Eligibility", "Top 2.5L in JEE Main"],
+      ["Attempts", "2 consecutive years"],
+      ["Papers", "Paper 1 + Paper 2 (both compulsory)"],
+      ["Seats", "~17,385 across IITs"],
+    ],
     link: "/jee-advanced",
-    color: "#7C3AED",
+    cta: "Open JEE Advanced",
   },
   {
+    key: "main",
     name: "JEE Main 2026",
-    badge: "NIT / IIIT / GFTI", badgeColor: "#F97316",
+    tag: "NITs · IIITs · GFTIs",
+    icon: Building2,
+    accent: "#F97316",
     date: "Session 1: Jan · Session 2: Apr",
-    details: ["75 Questions · 300 Marks", "Best of 2 sessions", "~13 lakh appear"],
+    blurb: "India's largest engineering entrance. Qualifies you for 31 NITs, 26 IIITs, 38 GFTIs — and is the first step to JEE Advanced.",
+    info: [
+      ["Conducted by", "NTA"],
+      ["Eligibility", "Class 12 with PCM"],
+      ["Attempts", "Both sessions · best score counts"],
+      ["Pattern", "75 questions · 300 marks"],
+      ["Seats", "~43,600 across NIT + IIIT + GFTI"],
+    ],
     link: "/jee-main",
-    color: "#F97316",
+    cta: "Open JEE Main",
   },
 ];
 
@@ -81,6 +94,55 @@ function HomeSection({ id, eyebrow, title, sub, children, bg }) {
   );
 }
 
+/* ── Parallel JEE exam card ── */
+function ExamCard({ ex }) {
+  const Icon = ex.icon;
+  return (
+    <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }}>
+      {/* accent header */}
+      <div style={{ background: ex.accent, color: "#fff", padding: "22px 24px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(255,255,255,.16)", display: "grid", placeItems: "center" }}>
+            <Icon size={22} color="#fff" />
+          </div>
+          <span style={{ fontSize: 11.5, fontWeight: 700, padding: "5px 12px", borderRadius: 50, background: "rgba(255,255,255,.18)", color: "#fff" }}>
+            {ex.tag}
+          </span>
+        </div>
+        <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 22 }}>{ex.name}</h3>
+        <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.78)", marginTop: 4 }}>📅 {ex.date}</div>
+      </div>
+
+      {/* body */}
+      <div style={{ padding: "20px 24px 24px", display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
+        <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.65 }}>{ex.blurb}</p>
+
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {ex.info.map(([k, v], i) => (
+            <div key={k} style={{
+              display: "flex", justifyContent: "space-between", gap: 16, padding: "10px 0",
+              borderTop: i === 0 ? "none" : "1px solid var(--line)",
+            }}>
+              <span style={{ fontSize: 13, color: "var(--muted)", display: "flex", alignItems: "center", gap: 7 }}>
+                <CheckCircle2 size={14} color={ex.accent} /> {k}
+              </span>
+              <span style={{ fontSize: 13, color: "var(--navy)", fontWeight: 600, textAlign: "right" }}>{v}</span>
+            </div>
+          ))}
+        </div>
+
+        <Link to={ex.link} style={{
+          marginTop: "auto", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+          background: ex.accent, color: "#fff", padding: "13px 20px", borderRadius: 12,
+          fontSize: 14.5, fontWeight: 700, textDecoration: "none",
+        }}>
+          {ex.cta} <ArrowRight size={16} />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export default function Home({ onSearch }) {
   return (
     <>
@@ -91,7 +153,7 @@ export default function Home({ onSearch }) {
       <section style={{ background: "#1c1c28", padding: "32px 0" }}>
         <div className="container">
           <div className="grid-4" style={{ gap: 16 }}>
-            {STATS.map(({ label, value, icon: Icon, color, bg }) => (
+            {STATS.map(({ label, value, icon: Icon, color }) => (
               <div key={label} style={{
                 display: "flex", alignItems: "center", gap: 14,
                 background: "rgba(255,255,255,0.06)", borderRadius: 14,
@@ -113,36 +175,28 @@ export default function Home({ onSearch }) {
       {/* ── Predictor Cards ── */}
       <PredictorCards />
 
-      {/* ── Exam Quick Overview ── */}
-      <HomeSection eyebrow="Exams 2026" title="JEE Main & Advanced — At a Glance" bg="var(--sky)"
-        sub="Everything you need to know about both exams before you start predicting.">
-        <div className="grid-2" style={{ gap: 24 }}>
-          {EXAM_QUICK.map((exam) => (
-            <div key={exam.name} className="card" style={{ borderTop: `4px solid ${exam.color}`, padding: "24px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
-                <span style={{
-                  fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 50,
-                  background: `${exam.badgeColor}18`, color: exam.badgeColor,
-                }}>{exam.badge}</span>
-                <span style={{ fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>📅 {exam.date}</span>
-              </div>
-              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 20, marginBottom: 14, color: exam.color }}>{exam.name}</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
-                {exam.details.map((d) => (
-                  <div key={d} style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 13 }}>
-                    <Zap size={13} color={exam.color} />
-                    <span style={{ color: "var(--navy)" }}>{d}</span>
-                  </div>
-                ))}
-              </div>
-              <Link to={exam.link} style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                background: exam.color, color: "#fff",
-                padding: "10px 20px", borderRadius: 50, fontSize: 13, fontWeight: 700,
-                textDecoration: "none",
-              }}>
-                Predict Now <ArrowRight size={14} />
-              </Link>
+      {/* ── JEE Main & Advanced (parallel) ── */}
+      <HomeSection
+        eyebrow="Exams 2026"
+        title="JEE Main & JEE Advanced — choose your path"
+        bg="var(--sky)"
+        sub="Two exams, two doors to the top engineering colleges. Tap either to open its full guide, rank predictor and real cutoffs."
+      >
+        <div className="grid-2" style={{ gap: 24, alignItems: "stretch" }}>
+          {EXAMS.map((ex) => <ExamCard key={ex.key} ex={ex} />)}
+        </div>
+
+        {/* quick comparison strip */}
+        <div className="card" style={{ marginTop: 24, display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "space-around", textAlign: "center", padding: "20px 24px" }}>
+          {[
+            ["1", "Clear JEE Main", "Qualify for NIT/IIIT/GFTI seats"],
+            ["2", "Top 2.5L → Advanced", "Become eligible for the IITs"],
+            ["3", "Clear JEE Advanced", "Get into one of the 23 IITs"],
+          ].map(([n, t, s]) => (
+            <div key={n} style={{ flex: "1 1 200px", minWidth: 180 }}>
+              <div style={{ width: 34, height: 34, borderRadius: "50%", background: "var(--coral)", color: "#fff", fontFamily: "Sora", fontWeight: 800, display: "grid", placeItems: "center", margin: "0 auto 8px" }}>{n}</div>
+              <div style={{ fontFamily: "Sora", fontWeight: 700, color: "var(--navy)", fontSize: 14.5 }}>{t}</div>
+              <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 2 }}>{s}</div>
             </div>
           ))}
         </div>
@@ -158,7 +212,7 @@ export default function Home({ onSearch }) {
               data={SEAT_DATA}
               centerLabel="60K+"
               centerSub="total seats"
-              colors={["#F97316", "#0EA5A4", "#7C3AED", "#EC4899"]}
+              colors={["#F97316", "#0EA5A4", "#15a06e", "#1c1c28"]}
               height={260}
               fmt={(v) => v.toLocaleString("en-IN")}
             />
@@ -172,40 +226,6 @@ export default function Home({ onSearch }) {
               height={260}
             />
           </div>
-        </div>
-      </HomeSection>
-
-      {/* ── Cutoff Trend Chart ── */}
-      <HomeSection eyebrow="5-Year Analysis" title="Qualifying Cutoff Trend (2021–2025)"
-        bg="var(--sky)"
-        sub="How the qualifying percentile for IITs, NITs and IIITs has moved over 5 years. Plan accordingly.">
-        <div className="card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, flexWrap: "wrap", gap: 8 }}>
-            <div>
-              <h4 style={{ fontFamily: "Sora", fontWeight: 700 }}>Qualifying percentile by institute type</h4>
-              <p style={{ fontSize: 12, color: "var(--muted)" }}>General category — JEE Main qualifying cutoff</p>
-            </div>
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              {[["IIT", "#1c1c28"], ["NIT", "#F97316"], ["IIIT", "#0EA5A4"]].map(([label, color]) => (
-                <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}>
-                  <div style={{ width: 12, height: 12, borderRadius: 3, background: color }} />
-                  <span style={{ color: "var(--navy)", fontWeight: 600 }}>{label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <Trend
-            data={CUTOFF_TREND}
-            lines={[
-              { key: "IIT",  label: "IIT cutoff",  color: "#1c1c28" },
-              { key: "NIT",  label: "NIT cutoff",  color: "#F97316" },
-              { key: "IIIT", label: "IIIT cutoff", color: "#0EA5A4" },
-            ]}
-            height={300}
-          />
-          <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 12, textAlign: "center" }}>
-            ⚠️ Cutoffs are illustrative. Verify on josaa.nic.in before making decisions.
-          </p>
         </div>
       </HomeSection>
 

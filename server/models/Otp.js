@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const otpSchema = new mongoose.Schema({
-  phone:     { type: String, required: true, index: true },
+  email:     { type: String, required: true, lowercase: true, trim: true, index: true },
   codeHash:  { type: String, required: true },
   name:      { type: String, default: "" },
   attempts:  { type: Number, default: 0 },
