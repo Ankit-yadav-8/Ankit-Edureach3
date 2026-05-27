@@ -6,6 +6,13 @@ import { apiForgot, apiReset, apiSendOtp, apiVerifyOtp } from "./api.js";
 const ORANGE = "#F47B20";
 const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || "").trim());
 
+const Field = ({ icon: Icon, ...props }) => (
+  <div style={{ position: "relative", marginBottom: 12 }}>
+    <Icon size={17} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#9aa0aa", pointerEvents: "none" }} />
+    <input className="input" style={{ width: "100%", paddingLeft: 42 }} {...props} />
+  </div>
+);
+
 export default function AuthModal() {
   const { loginOpen, closeLogin, login, signup, saveSession } = useAuth();
   const [mode, setMode] = useState("login"); // login | signup | otpEmail | otpCode | forgot | reset
