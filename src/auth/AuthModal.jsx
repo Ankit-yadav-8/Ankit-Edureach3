@@ -51,12 +51,7 @@ export default function AuthModal() {
   const outline= { background: "#fff", color: ORANGE, border: `1.6px solid ${ORANGE}`, justifyContent: "center", width: "100%", height: 48, borderRadius: 12, fontWeight: 700, fontSize: 15, display: "flex", gap: 8, alignItems: "center" };
   const linkBtn= { background: "none", border: "none", color: ORANGE, fontWeight: 700, cursor: "pointer", padding: 0, fontSize: 13.5 };
 
-  const Field = ({ icon: Icon, ...props }) => (
-    <div style={wrap}>
-      <Icon size={17} style={iconL} />
-      <input className="input" style={inpBase} {...props} />
-    </div>
-  );
+
 
   const HEAD = {
     login:    { icon: ShieldCheck, title: "Welcome back",          sub: "Log in to save colleges, predict ranks and track counselling." },
