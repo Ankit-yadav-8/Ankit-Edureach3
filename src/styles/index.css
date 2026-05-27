@@ -1230,6 +1230,7 @@ textarea.input { width:100%; }
 /* ════════════════════════════════════════════════
    RESPONSIVE — MOBILE  (≤ 768px)  — LIGHT THEME
 ════════════════════════════════════════════════ */
+
 @media (max-width:768px) {
   html,body,#root { overflow-x:hidden !important; width:100% !important; max-width:100vw !important; }
 
@@ -1242,6 +1243,15 @@ textarea.input { width:100%; }
     backdrop-filter:blur(18px);
     -webkit-backdrop-filter:blur(18px);
   }
+  /* Hide About Us card on mobile */
+.hero-about-col {
+  display: none !important;
+}
+
+/* Make hero grid single-column on mobile */
+.hero-grid {
+  grid-template-columns: 1fr !important;
+}
   .brand-logo             { color:#1c1c28 !important; }
   .brand-logo .dot-in     { color:#F47B20 !important; }
   .hamburger {

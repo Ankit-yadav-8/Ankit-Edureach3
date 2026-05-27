@@ -159,14 +159,16 @@ export default function Hero({ onSearch }) {
 
       {/* ══════ Content ══════ */}
       <div className="container" style={{ position: "relative", zIndex: 2, width: "100%" }}>
-        <div style={{
+
+        {/* ── Two-column grid: left = hero text, right = About Us card ── */}
+        <div className="hero-grid" style={{
           display: "grid",
           gridTemplateColumns: "1fr 380px",
           gap: "3rem",
           alignItems: "center",
         }}>
 
-          {/* ════ LEFT — hero text (unchanged layout) ════ */}
+          {/* ════ LEFT — hero text ════ */}
           <div style={{ textAlign: "center" }}>
             <motion.div
               initial={{ opacity: 0, y: 24 }}
@@ -301,15 +303,17 @@ export default function Hero({ onSearch }) {
               <Stat target={50}   suffix="K+" label="Students guided" />
             </div>
           </div>
+          {/* ════ end left column ════ */}
 
-          {/* ════ RIGHT — About Us card with Image-3 glow ════ */}
+          {/* ════ RIGHT — About Us card (hidden on mobile via .hero-about-col) ════ */}
           <motion.div
+            className="hero-about-col"
             initial={{ opacity: 0, x: 36 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.25 }}
             style={{ position: "relative" }}
           >
-            {/* Outer ambient glow — diffused orange halo (Image 3 style) */}
+            {/* Outer ambient glow — diffused orange halo */}
             <div style={{
               position: "absolute",
               inset: -24,
@@ -320,20 +324,18 @@ export default function Hero({ onSearch }) {
               pointerEvents: "none",
             }} />
 
-            {/* Card — near-square proportions, strong orange glow border (Image 3) */}
+            {/* Card */}
             <div style={{
               position: "relative", zIndex: 1,
               background: "rgba(12,10,8, 0.72)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
-              /* layered border glow like Image 3 */
               border: "1px solid rgba(249,115,22, 0.55)",
               borderRadius: 18,
               padding: "1.75rem",
               display: "flex",
               flexDirection: "column",
               gap: "1.1rem",
-              /* multi-layer box-shadow for the Image-3 glow effect */
               boxShadow: `
                 0 0 0 1px rgba(249,115,22,0.12),
                 0 0 18px rgba(249,115,22,0.30),
