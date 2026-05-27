@@ -301,8 +301,8 @@ export default function Footer() {
             <a href="mailto:support@edureachportal.in" style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <Mail size={15} /> support@edureachportal.in
             </a>
-            <a href="tel:+910000000000" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <Phone size={15} /> +91-XXXXXXXXXX
+            <a href="tel:+918118826194" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <Phone size={15} /> +91-8118826194
             </a>
             <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <MapPin size={15} /> New Delhi, India
@@ -310,10 +310,10 @@ export default function Footer() {
           </div>
           <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
             {[
-              { Icon: Instagram, url: "https://instagram.com", label: "Instagram" },
+              { Icon: Instagram, url: "https://instagram.com/ankit_1_7_", label: "Instagram" },
               { Icon: Facebook, url: "https://facebook.com", label: "Facebook" },
               { Icon: Twitter, url: "https://twitter.com", label: "Twitter / X" },
-              { Icon: Linkedin, url: "https://linkedin.com", label: "LinkedIn" },
+              { Icon: Linkedin, url: "https://www.linkedin.com/in/ankit-kumar-1b9a64387", label: "LinkedIn" },
               { Icon: Youtube, url: "https://youtube.com", label: "YouTube" },
               { Icon: Github, url: "https://github.com", label: "GitHub" },
               { Icon: Send, url: "https://telegram.org", label: "Telegram" },
