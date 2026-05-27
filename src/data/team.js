@@ -8,21 +8,58 @@
 export const TEAM = [
   {
     id: "team-head",
-    initials: "TH",
-    name: "Team Head",
+    initials: "AY",
+    name: "Ankit Yadav",
     role: "Project Lead & Full-Stack Developer",
     accent: "#F97316",
     tagline: "Building products that make engineering admissions simpler.",
-    location: "India",
-    email: "lead@edureachportal.in",
-    bio: "Led the architecture and delivery of EduReach — from the rank/college predictors to the data layer. Passionate about clean UX, performance and turning messy admission data into something students can actually use.",
-    skills: ["React", "Node.js", "System Design", "UI/UX", "Data Modelling", "Vite"],
-    projects: [
-      { name: "EduReach Portal", desc: "JEE & college discovery platform with predictors and smart search.", tag: "Lead" },
-      { name: "Cutoff Engine", desc: "Round-wise JoSAA/CSAB cutoff modelling library.", tag: "Architecture" },
-      { name: "Rank Predictor", desc: "Marks → rank/percentile estimation model.", tag: "Algorithm" },
+    location: "IIT Roorkee, Uttarakhand",
+    college: "IIT Roorkee",
+    branch: "B.Tech Electrical Engineering",
+    jeeRank: "AIR 4846",
+    exam: "JEE Advanced",
+    email: "ankityadav08022008@gmail.com",
+    phone: "8118826194",
+    bio: `Ankit Yadav is a B.Tech Electrical Engineering student at IIT Roorkee — one of India's
+most prestigious technical institutes — who secured AIR 4846 in JEE Advanced. Having
+personally lived through the gruelling JEE preparation cycle and the uncertainty of JoSAA
+counselling rounds, he understood firsthand how scattered and stressful the whole process
+feels for most students. That frustration became the seed of EduReach. Ankit leads the
+full-stack development of the platform, handling everything from the React frontend and
+component architecture to backend APIs, database modelling, and deployment pipelines.
+Every feature — the rank predictor, college explorer, cutoff engine, counselling planner —
+is built with one goal: give every JEE aspirant the clarity and confidence that data
+can provide. Beyond code, Ankit actively mentors junior aspirants, sharing the real
+strategies that helped him crack one of the toughest exams in the country. When he isn't
+shipping new features, you'll find him deep in competitive programming or mapping out the
+next big tool for the EduReach roadmap.`,
+    skills: [
+      "React", "Node.js", "MongoDB", "Express",
+      "Tailwind CSS", "Python", "System Design",
+      "Data Modelling", "Vite", "REST APIs",
     ],
-    socials: { github: "https://github.com", linkedin: "https://www.linkedin.com", website: "https://your-portfolio-link.com" },
+    projects: [
+      {
+        name: "EduReach Portal",
+        desc: "End-to-end JEE college discovery platform covering 850+ institutes — IITs, NITs, IIITs, GFTIs and private — with filters, maps and comparisons.",
+        tag: "Lead",
+      },
+      {
+        name: "JEE Rank Predictor",
+        desc: "ML-backed predictor using 8+ years of JoSAA cutoff data to forecast college and branch chances from raw marks or percentile.",
+        tag: "Algorithm",
+      },
+      {
+        name: "JoSAA Counselling Planner 2026",
+        desc: "Step-by-step counselling guide with choice-filling strategy, lock/float decisions, document checklist and round timelines.",
+        tag: "Counselling",
+      },
+    ],
+    socials: {
+      github: "https://github.com",
+      linkedin: "https://linkedin.com",
+      website: "https://edureachportal.in",
+    },
   },
   {
     id: "developer-1",
@@ -40,7 +77,11 @@ export const TEAM = [
       { name: "College Explorer UI", desc: "Filterable, searchable college directory with detail tabs.", tag: "UI" },
       { name: "Animations", desc: "Scroll reveals, particle hero and micro-interactions.", tag: "Motion" },
     ],
-    socials: { github: "https://github.com", linkedin: "https://www.linkedin.com", website: "https://your-portfolio-link.com" },
+    socials: {
+      github: "https://github.com",
+      linkedin: "https://www.linkedin.com",
+      website: "https://your-portfolio-link.com",
+    },
   },
   {
     id: "developer-2",
@@ -58,7 +99,11 @@ export const TEAM = [
       { name: "College Dataset", desc: "Structured profiles for all IITs, NITs & IIITs.", tag: "Data" },
       { name: "College Predictor", desc: "Rank → eligible-college matching engine.", tag: "Backend" },
     ],
-    socials: { github: "https://github.com", linkedin: "https://www.linkedin.com", website: "https://your-portfolio-link.com" },
+    socials: {
+      github: "https://github.com",
+      linkedin: "https://www.linkedin.com",
+      website: "https://your-portfolio-link.com",
+    },
   },
   {
     id: "designer",
@@ -76,7 +121,11 @@ export const TEAM = [
       { name: "Design System", desc: "Tokens, components and layout grid.", tag: "System" },
       { name: "User Flows", desc: "Predictor and discovery journeys.", tag: "UX" },
     ],
-    socials: { dribbble: "https://dribbble.com", linkedin: "https://www.linkedin.com", website: "https://your-portfolio-link.com" },
+    socials: {
+      dribbble: "https://dribbble.com",
+      linkedin: "https://www.linkedin.com",
+      website: "https://your-portfolio-link.com",
+    },
   },
 ];
 
