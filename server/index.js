@@ -12,6 +12,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.set("trust proxy", 1);
+
 app.use(express.json());
 const origins = (process.env.CLIENT_ORIGIN || "*").split(",").map((s) => s.trim());
 app.use(cors({ origin: origins.includes("*") ? "*" : origins }));
@@ -22,7 +24,7 @@ app.get("/", (_req, res) => res.send("EduReach API ✅"));
 app.use("/api/auth", limiter, authRoutes);
 app.use("/api/otp", limiter, otpRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/cutoffs", cutoffRoutes);   // read-only cutoff data (no rate-limit — used while browsing)
+app.use("/api/cutoffs", cutoffRoutes);
 
 connectDB()
   .then(() => app.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`)))
