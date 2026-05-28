@@ -14,11 +14,11 @@ export default function EntranceExams() {
   };
 
   return (
-    <section className="section" id="exams">
+    <section className="section" id="exams" style={{ background: "linear-gradient(160deg, #fff7ef 0%, #fff 60%)" }}>
       <div className="container">
         <div className="title-bar">
           <span className="eyebrow">Entrance Exams</span>
-          <h2 className="section-title">Every major engineering entrance, decoded</h2>
+          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif" }}>Every major engineering entrance, <span className="accent">decoded</span></h2>
           <p className="section-sub">Eligibility, pattern, important dates and 5-year cutoff trends for each exam.</p>
         </div>
 
@@ -26,11 +26,11 @@ export default function EntranceExams() {
         <div className="grid-4" style={{ marginBottom: 22 }}>
           {EXAMS.slice(0, 8).map((e, i) => (
             <Reveal key={e.slug} delay={i * 0.05}>
-              <button onClick={() => nav(`/exams/${e.slug}`)} className="card" style={{ textAlign: "left", width: "100%", cursor: "pointer", borderTop: `3px solid ${e.color}` }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.05rem", color: "var(--navy)" }}>{e.name}</div>
-                <div style={{ fontSize: 12, color: "var(--muted)", margin: "4px 0 10px" }}>{e.body} · {e.level}</div>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: e.color, fontWeight: 600, fontSize: 13 }}>
-                  View details <ArrowRight size={14} />
+              <button onClick={() => nav(`/exams/${e.slug}`)} className="card hover-glow" style={{ textAlign: "left", width: "100%", cursor: "pointer", borderTop: `3px solid ${e.color}`, padding: "18px 16px" }}>
+                <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1rem", color: "var(--navy)", letterSpacing: "-0.2px" }}>{e.name}</div>
+                <div style={{ fontSize: 12, color: "var(--muted)", margin: "5px 0 12px" }}>{e.body} · {e.level}</div>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: e.color, fontWeight: 700, fontSize: 12.5, fontFamily: "'Space Grotesk',sans-serif" }}>
+                  View details <ArrowRight size={13} />
                 </span>
               </button>
             </Reveal>

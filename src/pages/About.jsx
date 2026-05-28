@@ -31,6 +31,15 @@ const TEAM = [
     bio: "Rohit builds the predictors, data pipelines and the platform itself. He's obsessed with turning scattered cutoff data into clear, trustworthy answers.",
     socials: { linkedin: "https://linkedin.com", github: "https://github.com" },
   },
+  {
+    initials: "AP",
+    name: "Aditya Pandey",
+    role: "Frontend Developer",
+    accent: "#6366f1",
+    edu: "B.Tech Computer Science, NIT Allahabad",
+    bio: "Aditya crafts the interactive UI/UX experience — from smooth animations and data charts to the responsive mobile design. He believes great design should make complex data feel effortless.",
+    socials: { linkedin: "https://linkedin.com", github: "https://github.com" },
+  },
 ];
 
 const VALUES = [
@@ -158,10 +167,11 @@ export default function About() {
           </span>
           <h1
             style={{
-              fontFamily: "Sora",
+              fontFamily: "'Space Grotesk','Sora',sans-serif",
               fontWeight: 800,
-              fontSize: "clamp(1.9rem,4vw,2.8rem)",
+              fontSize: "clamp(2rem,4.2vw,3rem)",
               margin: "12px 0 10px",
+              letterSpacing: "-0.03em",
             }}
           >
             Made by students who've been exactly where you are

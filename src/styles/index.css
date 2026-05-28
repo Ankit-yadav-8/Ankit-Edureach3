@@ -5,7 +5,7 @@
    Mobile: light bg + #F47B20 accents
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 /* ════════════════════════════════════════════════
    CSS VARIABLES
@@ -45,7 +45,8 @@
   --radius-lg:   22px;
   --radius-pill: 50px;
   --transition:  all 0.3s cubic-bezier(0.4,0,0.2,1);
-  --maxw:        1200px;
+  --maxw:        1280px;
+  --font-display: "Space Grotesk", "Sora", sans-serif;
 }
 
 /* ════════════════════════════════════════════════
@@ -61,7 +62,7 @@ html {
 }
 body {
   font-family:"DM Sans",sans-serif;
-  background:#fdf8f4;
+  background:#faf7f4;
   color:var(--navy);
   overflow-x:hidden !important;
   width:100%;
@@ -75,7 +76,7 @@ body {
   max-width:100%;
   position:relative;
 }
-h1,h2,h3,h4,h5,h6 { font-family:"Sora",sans-serif; line-height:1.18; color:inherit; }
+h1,h2,h3,h4,h5,h6 { font-family:"Space Grotesk","Sora",sans-serif; line-height:1.18; color:inherit; }
 a   { text-decoration:none; color:inherit; }
 img { max-width:100%; display:block; }
 button { font-family:inherit; cursor:pointer; border:none; background:none; }
@@ -92,9 +93,11 @@ input,select,textarea { font-family:inherit; }
   padding-inline:1.5rem;
   box-sizing:border-box;
 }
-.section { padding:5rem 0; position:relative; }
-.section--sky  { background:linear-gradient(180deg,var(--sky) 0%,var(--warm-white) 100%); }
-.section--tint { background:linear-gradient(180deg,var(--warm-white) 0%,var(--sky) 100%); }
+.section { padding:5.5rem 0; position:relative; }
+.section--sky  { background:linear-gradient(180deg,#fff7ef 0%,#fff 100%); }
+.section--tint { background:linear-gradient(180deg,#fff 0%,#fff7ef 100%); }
+.section--dark { background:linear-gradient(135deg,#12080a 0%,#1c0e14 40%,#1a0e00 100%); }
+.section--cream{ background:linear-gradient(160deg,#fffaf5 0%,#fff3e6 50%,#fff 100%); }
 .page { padding-top:80px; min-height:70vh; }
 
 /* ════════════════════════════════════════════════
@@ -471,19 +474,21 @@ input,select,textarea { font-family:inherit; }
   background:rgba(244,123,32,.10);
   color:var(--coral);
   font-weight:700;
-  font-size:0.72rem;
-  letter-spacing:2.5px;
+  font-size:0.70rem;
+  letter-spacing:3px;
   text-transform:uppercase;
-  padding:0.38rem 1rem;
+  padding:0.42rem 1.1rem;
   border-radius:var(--radius-pill);
-  border:1px solid rgba(244,123,32,.18);
+  border:1px solid rgba(244,123,32,.22);
   margin-bottom:1.1rem;
+  font-family:"Space Grotesk","Sora",sans-serif;
 }
 .section-title {
-  font-size:clamp(1.85rem,3.8vw,2.9rem);
+  font-size:clamp(1.95rem,3.8vw,3.1rem);
   font-weight:800;
-  letter-spacing:-0.8px;
-  line-height:1.15;
+  letter-spacing:-1.2px;
+  line-height:1.12;
+  font-family:"Space Grotesk","Sora",sans-serif;
 }
 .section-title .accent { color:var(--coral); }
 .title-bar {
@@ -574,15 +579,15 @@ input,select,textarea { font-family:inherit; }
 .card {
   background:#fff;
   border-radius:var(--radius);
-  box-shadow:var(--shadow-card);
-  border:1px solid rgba(0,0,0,.07);
-  transition:box-shadow .25s ease, transform .25s ease, border-color .25s ease;
-  padding:1.25rem 1.3rem;
+  box-shadow:0 2px 14px rgba(28,28,40,.06), 0 1px 3px rgba(28,28,40,.04);
+  border:1px solid rgba(0,0,0,.06);
+  transition:box-shadow .3s ease, transform .3s ease, border-color .3s ease;
+  padding:1.3rem 1.4rem;
 }
 .card:hover {
-  box-shadow:0 16px 48px rgba(28,28,40,.12);
-  transform:translateY(-5px);
-  border-color:rgba(244,123,32,.22);
+  box-shadow:0 20px 56px rgba(28,28,40,.13);
+  transform:translateY(-6px);
+  border-color:rgba(244,123,32,.25);
 }
 
 /* ════════════════════════════════════════════════
@@ -1171,8 +1176,89 @@ table.data-table tbody tr:hover           { background:var(--sky-2); }
 @keyframes pulseGlow  { 0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,.4)} 50%{box-shadow:0 0 0 12px rgba(249,115,22,0)} }
 @keyframes shimmer    { 0%{background-position:-468px 0} 100%{background-position:468px 0} }
 @keyframes fadeSlideUp{ from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-.animate-in { animation:fadeSlideUp .5s cubic-bezier(.4,0,.2,1) both; }
+
+/* New animation keyframes */
+@keyframes gradientShift {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes rotateBorder {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes floatY {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-14px); }
+}
+@keyframes glowPulse {
+  0%,100% { box-shadow: 0 0 12px rgba(244,123,32,.3); }
+  50%     { box-shadow: 0 0 32px rgba(244,123,32,.7), 0 0 60px rgba(244,123,32,.3); }
+}
+@keyframes slideInLeft  { from{opacity:0;transform:translateX(-32px)} to{opacity:1;transform:translateX(0)} }
+@keyframes slideInRight { from{opacity:0;transform:translateX(32px)}  to{opacity:1;transform:translateX(0)} }
+@keyframes scaleIn      { from{opacity:0;transform:scale(.88)}  to{opacity:1;transform:scale(1)} }
+@keyframes bounceIn     { 0%{opacity:0;transform:scale(.3)} 50%{transform:scale(1.05)} 70%{transform:scale(.9)} 100%{opacity:1;transform:scale(1)} }
+@keyframes rippleEffect { to{transform:scale(4);opacity:0} }
+@keyframes marqueeScroll{ 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+@keyframes borderFlash  { 0%,100%{border-color:rgba(244,123,32,.25)} 50%{border-color:rgba(244,123,32,.7)} }
+@keyframes textGlow     { 0%,100%{text-shadow:0 0 0 transparent} 50%{text-shadow:0 0 18px rgba(244,123,32,.6)} }
+@keyframes orbFloat     {
+  0%  {transform:translate(-50%,-50%) scale(1)}
+  33% {transform:translate(-50%,-50%) scale(1.08) translate(20px,-15px)}
+  66% {transform:translate(-50%,-50%) scale(.95) translate(-15px,10px)}
+  100%{transform:translate(-50%,-50%) scale(1)}
+}
+@keyframes cardEnter    {
+  from{opacity:0;transform:translateY(32px) scale(.96)}
+  to  {opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* Utility animation classes */
+.animate-in   { animation:fadeSlideUp .5s cubic-bezier(.4,0,.2,1) both; }
+.float-y      { animation:floatY 4s ease-in-out infinite; }
+.glow-pulse   { animation:glowPulse 2.5s ease-in-out infinite; }
+.gradient-text{
+  background:linear-gradient(90deg,#F47B20 0%,#fbbf24 50%,#F47B20 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:gradientShift 3s linear infinite;
+}
 .skeleton { background:linear-gradient(90deg,#fef0e4 25%,#fde8d4 37%,#fef0e4 63%); background-size:800px 104px; animation:shimmer 1.4s infinite linear; border-radius:8px; }
+
+/* Card stagger animation */
+.card-stagger > * { animation:cardEnter .55s cubic-bezier(.22,1,.36,1) both; }
+.card-stagger > *:nth-child(1){animation-delay:.05s}
+.card-stagger > *:nth-child(2){animation-delay:.12s}
+.card-stagger > *:nth-child(3){animation-delay:.19s}
+.card-stagger > *:nth-child(4){animation-delay:.26s}
+.card-stagger > *:nth-child(5){animation-delay:.33s}
+.card-stagger > *:nth-child(6){animation-delay:.40s}
+
+/* Hover glow card */
+.hover-glow { transition:box-shadow .3s,transform .3s,border-color .3s; }
+.hover-glow:hover {
+  box-shadow:0 0 0 2px rgba(244,123,32,.3), 0 20px 56px rgba(244,123,32,.18);
+  transform:translateY(-6px);
+  border-color:rgba(244,123,32,.35) !important;
+}
+
+/* Shimmer button effect */
+.btn-shimmer {
+  position:relative;
+  overflow:hidden;
+}
+.btn-shimmer::after {
+  content:'';
+  position:absolute;
+  top:0;left:-100%;
+  width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  transform:skewX(-20deg);
+  transition:left .7s ease;
+}
+.btn-shimmer:hover::after { left:150%; }
 
 /* ════════════════════════════════════════════════
    UTILITIES
@@ -1566,4 +1652,88 @@ textarea.input { width:100%; }
 @media (min-width:1081px) {
   .hamburger     { display:none !important; }
   .mobile-drawer { display:none !important; }
+}
+
+/* ════════════════════════════════════════════════
+   NEWS TICKER AUTO-SCROLL
+════════════════════════════════════════════════ */
+@keyframes newsTicker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.news-ticker-track {
+  display:flex;
+  animation:newsTicker 40s linear infinite;
+  width:max-content;
+}
+.news-ticker-track:hover { animation-play-state:paused; }
+.news-ticker-wrap {
+  overflow:hidden;
+  position:relative;
+  background:linear-gradient(135deg,#1a0a00,#2d1400);
+  border-bottom:1px solid rgba(244,123,32,.20);
+  padding:10px 0;
+}
+.news-ticker-wrap::before {
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;width:100px;
+  background:linear-gradient(to right,#1a0a00,transparent);
+  z-index:2;pointer-events:none;
+}
+.news-ticker-wrap::after {
+  content:'';
+  position:absolute;
+  right:0;top:0;bottom:0;width:100px;
+  background:linear-gradient(to left,#1a0a00,transparent);
+  z-index:2;pointer-events:none;
+}
+.news-ticker-item {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:0 32px;
+  border-right:1px solid rgba(244,123,32,.18);
+  white-space:nowrap;
+  font-family:"Space Grotesk","DM Sans",sans-serif;
+  font-size:12.5px;
+  font-weight:500;
+  color:rgba(255,255,255,.75);
+}
+.news-ticker-dot {
+  width:6px;height:6px;border-radius:50%;
+  background:#F47B20;
+  box-shadow:0 0 6px #F47B20;
+  flex-shrink:0;
+}
+
+/* ════════════════════════════════════════════════
+   TIMELINE LINE
+════════════════════════════════════════════════ */
+.exam-timeline-line {
+  position:absolute;
+  left:21px;top:36px;bottom:0;
+  width:2px;
+  background:linear-gradient(to bottom,rgba(244,123,32,.4),rgba(244,123,32,.08));
+  pointer-events:none;
+}
+
+/* ════════════════════════════════════════════════
+   COLLEGE CARD IMAGE BANNER
+════════════════════════════════════════════════ */
+.college-banner-img {
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  opacity:.55;
+  transition:opacity .3s ease, transform .4s ease;
+}
+.college-card:hover .college-banner-img,
+div[style*="cursor: pointer"]:hover .college-banner-img {
+  opacity:.70;
+  transform:scale(1.04);
+}
+.college-banner-overlay {
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(15,10,40,.72) 0%,rgba(30,20,70,.55) 100%);
 }

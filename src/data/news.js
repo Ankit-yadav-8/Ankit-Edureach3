@@ -12,7 +12,7 @@ export const NEWS = [
     excerpt:
       "CBSE Class 12 results 2026 have been officially declared. Girls outperform boys with a 90.1% pass rate.",
     source: "https://results.cbse.nic.in",
-    image: "url(https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=70) center/cover, linear-gradient(135deg,#f97316,#fb923c)",
+    image: "url(https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=80) center/cover no-repeat",
     body: [
       "The Central Board of Secondary Education (CBSE) has declared the Class XII results for the 2026 academic year, recording an overall pass percentage of 87.98%.",
       "Girls once again outperformed boys, with a pass rate of 90.1% compared to 85.7% for boys. The board evaluated lakhs of answer scripts across the country.",
@@ -28,7 +28,7 @@ export const NEWS = [
     excerpt:
       "Candidates who registered for JEE Advanced 2026 can now download their admit cards from the official portal.",
     source: "https://jeeadv.ac.in",
-    image: "url(https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=900&q=70) center/cover, linear-gradient(135deg,#f97316,#fb923c)",
+    image: "url(https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=900&q=80) center/cover no-repeat",
     body: [
       "The organising IIT has released the JEE Advanced 2026 admit cards on the official website jeeadv.ac.in.",
       "Registered candidates can download the hall ticket by logging in with their JEE Advanced registration number, date of birth, mobile number and email.",
@@ -44,7 +44,7 @@ export const NEWS = [
     excerpt:
       "IIIT Hyderabad has declared UGEE 2026 results. Students can check their scores and rank on the official website.",
     source: "https://www.iiit.ac.in",
-    image: "url(https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=900&q=70) center/cover, linear-gradient(135deg,#f97316,#fb923c)",
+    image: "url(https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&w=900&q=80) center/cover no-repeat",
     body: [
       "IIIT Hyderabad has announced the results of the Undergraduate Entrance Examination (UGEE) 2026 along with the merit list for its dual-degree programmes.",
       "Qualified candidates will be invited for the counselling process, where seats across CSE, ECE and research-oriented programmes are allotted on the basis of merit and preference.",
@@ -59,7 +59,7 @@ export const NEWS = [
     excerpt:
       "VIT has released VITEEE 2026 results. Counselling for B.Tech admissions will begin from the last week of May.",
     source: "https://viteee.vit.ac.in",
-    image: "url(https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&w=900&q=70) center/cover, linear-gradient(135deg,#f97316,#fb923c)",
+    image: "url(https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=900&q=80) center/cover no-repeat",
     body: [
       "Vellore Institute of Technology has declared the VITEEE 2026 results and made score cards available on the official portal.",
       "Admission to B.Tech programmes across VIT Vellore, Chennai, AP and Bhopal campuses is based on the VITEEE rank.",
@@ -74,7 +74,7 @@ export const NEWS = [
     excerpt:
       "NTA has declared JEE Main Session 2 Paper 2 (B.Arch/B.Planning) results. Download scorecard at jeemain.nta.ac.in.",
     source: "https://jeemain.nta.ac.in",
-    image: "url(https://images.unsplash.com/photo-1473445730015-841f29a9490b?auto=format&fit=crop&w=900&q=70) center/cover, linear-gradient(135deg,#f97316,#fb923c)",
+    image: "url(https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=900&q=80) center/cover no-repeat",
     body: [
       "The National Testing Agency (NTA) has declared the JEE Main 2026 Session 2 Paper 2 results for B.Arch and B.Planning aspirants.",
       "Candidates can download their scorecards from jeemain.nta.ac.in by logging in with their application number and date of birth.",
@@ -89,7 +89,7 @@ export const NEWS = [
     excerpt:
       "The registration deadline for JEE Advanced 2026 has been extended. Late fee applicable from May 7–9, 2026.",
     source: "https://jeeadv.ac.in",
-    image: "url(https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=70) center/cover, linear-gradient(135deg,#f97316,#fb923c)",
+    image: "url(https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=80) center/cover no-repeat",
     body: [
       "The organising institute has extended the JEE Advanced 2026 registration deadline to May 9, giving eligible JEE Main qualifiers additional time to apply.",
       "A late registration fee will be applicable for candidates completing their forms between May 7 and May 9, 2026.",
@@ -104,7 +104,7 @@ export const NEWS = [
     excerpt:
       "The Joint Seat Allocation Authority has released the tentative 6-round schedule for IIT, NIT, IIIT and GFTI admissions.",
     source: "https://josaa.nic.in",
-    image: "url(https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=70) center/cover, linear-gradient(135deg,#f97316,#fb923c)",
+    image: "url(https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80) center/cover no-repeat",
     body: [
       "The Joint Seat Allocation Authority (JoSAA) has released the tentative counselling schedule for the 2026 admission cycle, comprising six rounds of seat allocation.",
       "Registration and choice-filling will open after the JEE Advanced result, with seats across all IITs, NITs, IIITs and GFTIs allotted on the basis of category-wise rank and filled preferences.",
@@ -119,7 +119,7 @@ export const NEWS = [
     excerpt:
       "CSAB will conduct two special rounds after JoSAA to fill remaining seats in NITs, IIITs and GFTIs.",
     source: "https://csab.nic.in",
-    image: "url(https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=900&q=70) center/cover, linear-gradient(135deg,#f97316,#fb923c)",
+    image: "url(https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=900&q=80) center/cover no-repeat",
     body: [
       "The Central Seat Allocation Board (CSAB) will conduct two special rounds of counselling after the conclusion of JoSAA to fill vacant seats at NITs, IIITs and GFTIs.",
       "Candidates with a valid JEE Main rank — including those who could not secure a seat through JoSAA — are eligible to participate in the CSAB special rounds.",

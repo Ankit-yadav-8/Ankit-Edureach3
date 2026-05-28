@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Gauge, Crosshair, Building2, ArrowRight } from "lucide-react";
 import { CenterDonut } from "../Charts.jsx";
+import { TiltCard, FloatingOrbs, StaggerReveal, StaggerItem, RippleButton } from "../Animations.jsx";
 
 const CARDS = [
   {
@@ -36,29 +37,38 @@ const CARDS = [
 export default function PredictorCards() {
   const nav = useNavigate();
   return (
-    <section className="section" style={{ background: "linear-gradient(180deg, #f0f4ff 0%, #fff 100%)" }}>
-      <div className="container">
+    <section className="section" style={{ background: "linear-gradient(160deg, #1a0e00 0%, #2d1600 40%, #0f0c29 100%)", position: "relative", overflow: "hidden" }}>
+      <FloatingOrbs count={5} colors={["#F47B20","#6366f1","#fbbf24","#0ea5a4","#F47B20"]} />
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
+        {/* Background grid */}
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px)", backgroundSize: "44px 44px", pointerEvents: "none" }} />
+        {/* Glow blobs */}
+        <div style={{ position: "absolute", top: -80, left: "20%", width: 400, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.18) 0%, transparent 65%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -60, right: "15%", width: 300, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.15) 0%, transparent 65%)", pointerEvents: "none" }} />
+
         <motion.div
           className="title-bar"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
+          style={{ position: "relative", zIndex: 1 }}
         >
-          <span className="eyebrow">Smart Tools</span>
-          <h2 className="section-title">Everything you need, <span className="accent">before you fill a single choice</span></h2>
-          <p className="section-sub">Three connected tools: marks → rank → the exact colleges within your reach.</p>
+          <span className="eyebrow" style={{ background: "rgba(244,123,32,.18)", border: "1px solid rgba(244,123,32,.35)", color: "#F47B20" }}>Smart Tools</span>
+          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#fff", letterSpacing: "-1.5px" }}>
+            Everything you need, <span style={{ background: "linear-gradient(90deg,#F47B20,#fbbf24)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>before you fill a single choice</span>
+          </h2>
+          <p className="section-sub" style={{ color: "rgba(255,255,255,.6)" }}>Three connected tools: marks → rank → the exact colleges within your reach.</p>
         </motion.div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
+        <StaggerReveal stagger={0.1} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20, position: "relative", zIndex: 1 }}>
           {CARDS.map((c, i) => (
+            <StaggerItem key={c.title}>
+            <TiltCard
+              intensity={8}
+              style={{ height: "100%" }}
+            >
             <motion.div
-              key={c.title}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.45, delay: i * 0.09 }}
-              whileHover={{ y: -6, transition: { duration: 0.2 } }}
               style={{
                 background: "#fff",
                 borderRadius: 18,
@@ -68,7 +78,9 @@ export default function PredictorCards() {
                 flexDirection: "column",
                 boxShadow: "0 4px 20px rgba(28,28,40,.07)",
                 cursor: "pointer",
+                height: "100%",
               }}
+              whileHover={{ boxShadow: `0 24px 60px ${c.accent}22` }}
               onClick={() => nav(c.to)}
             >
               {/* Gradient header */}
@@ -87,7 +99,7 @@ export default function PredictorCards() {
                     {c.badge}
                   </span>
                 </div>
-                <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.15rem", color: "#fff", margin: 0 }}>{c.title}</h3>
+                <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.2rem", color: "#fff", margin: 0, letterSpacing: "-0.3px" }}>{c.title}</h3>
               </div>
 
               {/* Chart */}
@@ -98,26 +110,28 @@ export default function PredictorCards() {
               {/* Description + CTA */}
               <div style={{ padding: "8px 20px 20px", display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
                 <p style={{ color: "#6b7280", fontSize: 13.5, lineHeight: 1.65, margin: 0 }}>{c.desc}</p>
-                <button
+                <RippleButton
                   style={{
                     marginTop: "auto",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
                     background: c.gradient, color: "#fff",
                     border: "none", borderRadius: 11, padding: "11px 16px",
-                    fontSize: 13.5, fontWeight: 700, fontFamily: "Sora",
+                    fontSize: 13.5, fontWeight: 700, fontFamily: "'Space Grotesk','Sora',sans-serif",
                     cursor: "pointer",
                     boxShadow: `0 4px 16px ${c.accent}44`,
-                    transition: "all .2s",
+                    transition: "filter .2s, transform .2s",
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.filter = "brightness(1.08)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.filter = ""; e.currentTarget.style.transform = ""; }}
+                  className="btn-shimmer"
+                  onClick={() => nav(c.to)}
                 >
                   {c.cta} <ArrowRight size={15} />
-                </button>
+                </RippleButton>
               </div>
             </motion.div>
+            </TiltCard>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerReveal>
       </div>
     </section>
   );

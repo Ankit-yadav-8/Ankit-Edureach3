@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import SearchOverlay from "./components/SearchOverlay.jsx";
 import { ScrollProgress, BackToTop } from "./components/ScrollUtils.jsx";
+import { ScrollProgressBar } from "./components/Animations.jsx";
 
 import Home from "./pages/Home.jsx";
 import JeeMain from "./pages/JeeMain.jsx";
@@ -69,6 +70,7 @@ export default function App() {
 
   return (
     <>
+      <ScrollProgressBar />
       <div id="progress-bar" />
       <ScrollProgress />
       <ScrollManager />

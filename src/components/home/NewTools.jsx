@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Calculator, ListChecks, Map, Sparkles, ArrowRight, Rocket } from "lucide-react";
-import Reveal from "../Reveal.jsx";
+import { TiltCard, StaggerReveal, StaggerItem } from "../Animations.jsx";
 
 const TOOLS = [
   {
@@ -40,18 +40,19 @@ export default function NewTools() {
           <p className="section-sub">From financial planning to personalised college lists — new features to help you decide better.</p>
         </div>
 
-        <div className="grid-4" style={{ gap: 20 }}>
+        <StaggerReveal stagger={0.09} className="grid-4" style={{ gap: 20 }}>
           {TOOLS.map((t, i) => (
-            <Reveal key={t.title} delay={(i % 4) * 0.06}>
-              <div className="card tool-card" style={{ height: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
+            <StaggerItem key={t.title}>
+            <TiltCard intensity={10} style={{ height: "100%" }}>
+              <div className="card tool-card hover-glow" style={{ height: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <span style={{ width: 46, height: 46, borderRadius: 13, display: "grid", placeItems: "center", background: `${t.accent}1a` }}>
+                  <span className="float-y" style={{ width: 48, height: 48, borderRadius: 13, display: "grid", placeItems: "center", background: `${t.accent}16`, border: `1.5px solid ${t.accent}28` }}>
                     <t.icon size={23} color={t.accent} />
                   </span>
                   <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: ".06em", color: "#fff", background: t.accent, padding: "3px 9px", borderRadius: 999 }}>{t.badge}</span>
                 </div>
                 <div>
-                  <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.12rem", color: "var(--navy)", marginBottom: 7 }}>{t.title}</h3>
+                  <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "1.1rem", color: "var(--navy)", marginBottom: 7, letterSpacing: "-0.2px" }}>{t.title}</h3>
                   <p style={{ color: "var(--muted)", lineHeight: 1.55, fontSize: 14 }}>{t.desc}</p>
                 </div>
                 <button
@@ -67,9 +68,10 @@ export default function NewTools() {
                   {t.cta} <ArrowRight size={16} />
                 </button>
               </div>
-            </Reveal>
+            </TiltCard>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerReveal>
       </div>
     </section>
   );

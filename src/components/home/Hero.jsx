@@ -6,7 +6,7 @@ import {
   GraduationCap, Users, Star, Award, ArrowRight,
   BookOpen, Target, MapPin, Trophy, Zap, ChevronRight,
 } from "lucide-react";
-import useCountUp from "../../utils/useCountUp.js";
+import { TypewriterText, FloatingOrbs, GradientText, RippleButton, AnimatedNumber } from "../Animations.jsx";
 
 const ABOUT_ACCENT = "#F47B20";
 
@@ -21,13 +21,12 @@ const TOP_COLLEGES = [
 ];
 
 function Stat({ target, suffix, label }) {
-  const [ref, val] = useCountUp(target);
   return (
-    <div ref={ref} style={{ textAlign: "center" }}>
-      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.4rem,3vw,2rem)", color: "#fff", lineHeight: 1 }}>
-        {val.toLocaleString("en-IN")}{suffix}
+    <div style={{ textAlign: "center" }}>
+      <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.4rem,3vw,2rem)", color: "#fff", lineHeight: 1 }}>
+        <AnimatedNumber target={target} suffix={suffix} duration={1.6} />
       </div>
-      <div style={{ fontSize: 11.5, color: "rgba(255,255,255,.5)", marginTop: 4 }}>{label}</div>
+      <div style={{ fontSize: 11.5, color: "rgba(255,255,255,.45)", marginTop: 5, fontFamily: "'DM Sans',sans-serif" }}>{label}</div>
     </div>
   );
 }
@@ -95,10 +94,10 @@ function AboutUsCard() {
         WebkitBackdropFilter: "blur(20px)",
         border: "1px solid rgba(255,255,255,.1)",
         borderRadius: 20,
-        padding: "1.6rem",
+        padding: "1.1rem 1.2rem",
         display: "flex",
         flexDirection: "column",
-        gap: "1rem",
+        gap: "0.85rem",
         boxShadow: "0 0 0 1px rgba(255,255,255,.06), 0 24px 64px rgba(0,0,0,.6)",
         position: "relative",
         overflow: "hidden",
@@ -199,10 +198,10 @@ function LiveCollegePanel() {
         WebkitBackdropFilter: "blur(20px)",
         border: "1px solid rgba(255,255,255,.1)",
         borderRadius: 20,
-        padding: "1.6rem",
+        padding: "1.1rem 1.2rem",
         display: "flex",
         flexDirection: "column",
-        gap: "1.1rem",
+        gap: "0.9rem",
         boxShadow: "0 0 0 1px rgba(255,255,255,.06), 0 24px 64px rgba(0,0,0,.6)",
         position: "relative",
         overflow: "hidden",
@@ -220,7 +219,11 @@ function LiveCollegePanel() {
           <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase" }}>Live College Data</div>
           <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: "1rem" }}>Top Institutes 2026</div>
         </div>
-        <span style={{ marginLeft: "auto", width: 8, height: 8, borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 8px #22c55e", animation: "livePulse 2s infinite" }} />
+        <motion.span
+          animate={{ boxShadow: ["0 0 0px #22c55e", "0 0 14px #22c55e", "0 0 0px #22c55e"], scale: [1,1.15,1] }}
+          transition={{ duration: 1.8, repeat: Infinity }}
+          style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block" }}
+        />
       </div>
 
       {/* Divider */}
@@ -234,10 +237,10 @@ function LiveCollegePanel() {
             animate={{ opacity: i === activeIdx ? 1 : 0.45, scale: i === activeIdx ? 1 : 0.97 }}
             transition={{ duration: 0.4 }}
             style={{
-              display: "flex", alignItems: "center", gap: 10,
+              display: "flex", alignItems: "center", gap: 8,
               background: i === activeIdx ? `${col.color}18` : "rgba(255,255,255,.03)",
               border: `1px solid ${i === activeIdx ? col.color + "44" : "rgba(255,255,255,.06)"}`,
-              borderRadius: 10, padding: "9px 12px",
+              borderRadius: 10, padding: "7px 10px",
               transition: "border .4s, background .4s",
             }}
           >
@@ -245,12 +248,12 @@ function LiveCollegePanel() {
               <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 9, color: col.color }}>{col.type}</span>
             </span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12.5, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{col.name}</div>
-              <div style={{ fontSize: 10.5, color: "#9ca3af" }}>NIRF #{col.nirf} · {col.placed}% placed</div>
+              <div style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: 12, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{col.name}</div>
+              <div style={{ fontSize: 10, color: "#9ca3af", whiteSpace: "nowrap" }}>NIRF #{col.nirf} · {col.placed}% placed</div>
             </div>
             <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: col.color }}>{col.avg}</div>
-              <div style={{ fontSize: 10, color: "#6b7280" }}>avg pkg</div>
+              <div style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 800, fontSize: 12.5, color: col.color }}>{col.avg}</div>
+              <div style={{ fontSize: 9.5, color: "#6b7280" }}>avg pkg</div>
             </div>
           </motion.div>
         ))}
@@ -341,10 +344,12 @@ export default function Hero({ onSearch }) {
 
       {/* Animated dots */}
       <MeshDots />
+      {/* Floating orbs */}
+      <FloatingOrbs count={6} colors={["#F47B20","#6366f1","#0ea5a4","#fbbf24","#8b5cf6","#F47B20"]} />
 
       {/* ═══ Content ═══ */}
-      <div className="container" style={{ position: "relative", zIndex: 2, width: "100%" }}>
-        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "300px 1fr 300px", gap: "2rem", alignItems: "center" }}>
+      <div className="container" style={{ position: "relative", zIndex: 2, width: "100%", paddingInline: "0.75rem" }}>
+        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "290px 1fr 290px", gap: "1.75rem", alignItems: "center" }}>
 
           {/* ══ ABOUT US CARD (left) ══ */}
           <AboutUsCard />
@@ -354,50 +359,56 @@ export default function Hero({ onSearch }) {
 
             {/* Badge */}
             <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <span style={{
-                display: "inline-flex", alignItems: "center", gap: 7,
-                background: "rgba(99,102,241,.18)",
-                border: "1px solid rgba(99,102,241,.35)",
-                color: "#a5b4fc",
-                fontSize: 12, fontWeight: 700, letterSpacing: "0.5px",
-                padding: "6px 16px", borderRadius: 50, marginBottom: 22,
-              }}>
+              <motion.span
+                animate={{ boxShadow: ["0 0 0px rgba(99,102,241,0)", "0 0 20px rgba(99,102,241,.4)", "0 0 0px rgba(99,102,241,0)"] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 7,
+                  background: "rgba(99,102,241,.18)",
+                  border: "1px solid rgba(99,102,241,.35)",
+                  color: "#a5b4fc",
+                  fontSize: 12, fontWeight: 700, letterSpacing: "0.5px",
+                  padding: "6px 16px", borderRadius: 50, marginBottom: 22,
+                  fontFamily: "'Space Grotesk',sans-serif",
+                }}>
                 <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 8px #22c55e", animation: "livePulse 2s infinite" }} />
                 JEE 2026 Season is Live — Start Your Journey
-              </span>
+              </motion.span>
             </motion.div>
 
             {/* Headline */}
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.05 }}>
               <h1 style={{
-                fontFamily: "Sora", fontWeight: 800,
+                fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800,
                 color: "#fff",
-                fontSize: "clamp(2.2rem,5.5vw,3.9rem)",
-                lineHeight: 1.06,
-                margin: "0 0 1rem",
-                letterSpacing: "-0.03em",
+                fontSize: "clamp(2.4rem,5.8vw,4.2rem)",
+                lineHeight: 1.04,
+                margin: "0 0 1.1rem",
+                letterSpacing: "-0.04em",
               }}>
                 Know Your Rank.{" "}
                 <br />
-                <span style={{
-                  background: "linear-gradient(90deg, #F97316 0%, #fb923c 40%, #fbbf24 80%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}>
+                <GradientText from="#F47B20" via="#fbbf24" to="#F97316">
                   Find Your College.
-                </span>
+                </GradientText>
               </h1>
 
               <p style={{
                 color: "rgba(255,255,255,.65)",
                 fontSize: "clamp(.92rem,1.7vw,1.08rem)",
-                maxWidth: 540, margin: "0 auto 2rem",
+                maxWidth: 540, margin: "0 auto 0.6rem",
                 lineHeight: 1.75,
               }}>
                 Predict your JEE rank from marks, discover every college you can get
                 into across all JoSAA &amp; CSAB rounds, and track every deadline —
                 all in one place.
               </p>
+              <div style={{ height: 32, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.4rem" }}>
+                <TypewriterText
+                  words={["8 years of JoSAA data", "850+ institutes tracked", "Real-time rank predictions", "JEE Advanced cutoffs", "NIT / IIIT / GFTI seats"]}
+                  style={{ fontSize: "clamp(.82rem,1.5vw,.96rem)", color: "#F47B20", fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, letterSpacing: "0.3px" }}
+                  cursorColor="#fbbf24"
+                /></div>
             </motion.div>
 
             {/* Search bar */}
@@ -467,33 +478,34 @@ export default function Hero({ onSearch }) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: "2.5rem" }}
+              style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: "2.8rem" }}
             >
-              <button
-                className="btn btn-coral"
+              <RippleButton
+                className="btn btn-coral btn-shimmer"
                 onClick={() => nav("/jee-main#college")}
-                style={{ padding: "12px 24px", fontSize: 14.5, fontWeight: 700, borderRadius: 12, gap: 8 }}
+                style={{ padding: "12px 24px", fontSize: 14.5, fontWeight: 700, borderRadius: 12, gap: 8, display: "inline-flex", alignItems: "center" }}
               >
                 <Crosshair size={18} /> Predict My College
-              </button>
-              <button
-                className="btn btn-light"
+              </RippleButton>
+              <RippleButton
+                className="btn btn-light btn-shimmer"
                 onClick={() => nav("/jee-main#rank")}
-                style={{ padding: "12px 24px", fontSize: 14.5, fontWeight: 700, borderRadius: 12, gap: 8 }}
+                style={{ padding: "12px 24px", fontSize: 14.5, fontWeight: 700, borderRadius: 12, gap: 8, display: "inline-flex", alignItems: "center" }}
               >
                 <TrendingUp size={18} /> Predict My Rank
-              </button>
-              <button
-                className="btn"
+              </RippleButton>
+              <RippleButton
+                className="btn btn-shimmer"
                 onClick={() => nav("/jee-resources")}
                 style={{
                   padding: "12px 24px", fontSize: 14.5, fontWeight: 700, borderRadius: 12, gap: 8,
                   background: "rgba(99,102,241,.2)", color: "#a5b4fc",
-                  border: "1.5px solid rgba(99,102,241,.35)",
+                  border: "1.5px solid rgba(99,102,241,.35)", display: "inline-flex", alignItems: "center",
                 }}
+                color="rgba(165,180,252,0.3)"
               >
                 <BookOpen size={18} /> JEE Resources
-              </button>
+              </RippleButton>
             </motion.div>
 
             {/* Stats row */}

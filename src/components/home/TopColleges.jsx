@@ -19,11 +19,56 @@ const QUICK_TABS = [
   ["Placements", "placements"],
 ];
 
-/* Gradient banners per college type */
+/* Gradient banners per college type (fallback) */
 const TYPE_BG = {
   IIT:  "linear-gradient(135deg,#2d1b5e 0%,#5c2d91 60%,#1e0e47 100%)",
   NIT:  "linear-gradient(135deg,#0d3340 0%,#1a6b7a 60%,#0a2830 100%)",
   IIIT: "linear-gradient(135deg,#0f2e1e 0%,#1c5c38 60%,#0a2118 100%)",
+};
+
+/* Unsplash campus photos per college slug */
+const COLLEGE_IMG = {
+  /* IITs */
+  "iit-bombay":    "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=70",
+  "iit-delhi":     "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=800&q=70",
+  "iit-madras":    "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=70",
+  "iit-kharagpur": "https://images.unsplash.com/photo-1519452635265-7b1fbfd1e4e0?auto=format&fit=crop&w=800&q=70",
+  "iit-kanpur":    "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&w=800&q=70",
+  "iit-roorkee":   "https://images.unsplash.com/photo-1461088945293-0c17689e48ac?auto=format&fit=crop&w=800&q=70",
+  "iit-hyderabad": "https://images.unsplash.com/photo-1496307653780-42ee777d4833?auto=format&fit=crop&w=800&q=70",
+  "iit-guwahati":  "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=70",
+  "iit-bhu":       "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=70",
+  "iit-patna":     "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=800&q=70",
+  "iit-gandhinagar":"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=70",
+  "iit-mandi":     "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=70",
+  "iit-indore":    "https://images.unsplash.com/photo-1567168544813-cc03465b4fa8?auto=format&fit=crop&w=800&q=70",
+  "iit-jodhpur":   "https://images.unsplash.com/photo-1576495199011-eb94736d05d6?auto=format&fit=crop&w=800&q=70",
+  "iit-tirupati":  "https://images.unsplash.com/photo-1579547621113-e4bb2a19bdd6?auto=format&fit=crop&w=800&q=70",
+  "iit-palakkad":  "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=70",
+  "iit-dhanbad":   "https://images.unsplash.com/photo-1513116476489-7635e79103b8?auto=format&fit=crop&w=800&q=70",
+  "iit-jammu":     "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=70",
+  "iit-dharwad":   "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=70",
+  "iit-bhilai":    "https://images.unsplash.com/photo-1546484396-fb3fc6f95f98?auto=format&fit=crop&w=800&q=70",
+  /* NITs */
+  "nit-trichy":    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=70",
+  "nit-surathkal": "https://images.unsplash.com/photo-1513116476489-7635e79103b8?auto=format&fit=crop&w=800&q=70",
+  "nit-warangal":  "https://images.unsplash.com/photo-1579547621113-e4bb2a19bdd6?auto=format&fit=crop&w=800&q=70",
+  "nit-rourkela":  "https://images.unsplash.com/photo-1461088945293-0c17689e48ac?auto=format&fit=crop&w=800&q=70",
+  "nit-calicut":   "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=70",
+  "nit-silchar":   "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=70",
+  "nit-allahabad": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=70",
+  "nit-nagpur":    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=70",
+  "nit-jaipur":    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=70",
+  "nit-bhopal":    "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&w=800&q=70",
+  "nit-hamirpur":  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=70",
+  "nit-kurukshetra":"https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=800&q=70",
+  /* IIITs */
+  "iiit-hyderabad":"https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&w=800&q=70",
+  "iiit-allahabad":"https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=800&q=70",
+  "iiit-bangalore":"https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=70",
+  "iiit-delhi":    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=70",
+  "iiit-gwalior":  "https://images.unsplash.com/photo-1579547621113-e4bb2a19bdd6?auto=format&fit=crop&w=800&q=70",
+  "iiit-kancheepuram": "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=70",
 };
 
 const TYPE_ACCENT = { IIT: "#a855f7", NIT: "#22d3ee", IIIT: "#34d399" };
@@ -31,6 +76,7 @@ const TYPE_ACCENT = { IIT: "#a855f7", NIT: "#22d3ee", IIIT: "#34d399" };
 function CollegeCard({ c, typeAccent, typeBg, index }) {
   const nav = useNavigate();
   const goTab = (slug, tab) => nav(`/colleges/${slug}?tab=${tab}`);
+  const imgUrl = COLLEGE_IMG[c.slug];
 
   return (
     <motion.div
@@ -60,32 +106,31 @@ function CollegeCard({ c, typeAccent, typeBg, index }) {
       {/* Banner */}
       <div style={{
         position: "relative",
-        height: 110,
+        height: 130,
         background: typeBg,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
       }}>
-        {/* subtle grid overlay */}
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(255,255,255,.03) 20px), repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(255,255,255,.03) 20px)`,
-        }} />
-
-        {/* Glow blob */}
-        <div style={{
-          position: "absolute", width: 100, height: 100, borderRadius: "50%",
-          background: `radial-gradient(circle, ${typeAccent}44, transparent 70%)`,
-          top: -20, right: -10,
-        }} />
+        {/* Campus photo */}
+        {imgUrl && (
+          <img
+            src={imgUrl}
+            alt={`${c.name} campus`}
+            className="college-banner-img"
+            loading="lazy"
+          />
+        )}
+        {/* Overlay */}
+        <div className="college-banner-overlay" />
 
         {/* Institute initial */}
         <span style={{
-          fontFamily: "Sora", fontWeight: 800, fontSize: "2rem",
-          color: "rgba(255,255,255,.18)",
+          fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.9rem",
+          color: "rgba(255,255,255,.28)",
           position: "relative", zIndex: 1, letterSpacing: "-2px",
-          userSelect: "none",
+          userSelect: "none", textShadow: "0 2px 8px rgba(0,0,0,.5)",
         }}>
           {c.short || c.name.split(" ").map((w) => w[0]).join("").slice(0, 4)}
         </span>
@@ -121,7 +166,7 @@ function CollegeCard({ c, typeAccent, typeBg, index }) {
       {/* Body */}
       <div style={{ padding: "16px 16px 0", display: "flex", flexDirection: "column", flex: 1, gap: 12 }}>
         <h3 style={{
-          fontFamily: "Sora", fontWeight: 700,
+          fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700,
           fontSize: "1.05rem", color: "#1c1c28",
           lineHeight: 1.3,
         }}>
@@ -216,7 +261,7 @@ export default function TopColleges() {
   const typeInfo = TYPES.find((t) => t.id === type);
 
   return (
-    <section className="section" id="colleges" style={{ background: "var(--sky)" }}>
+    <section className="section" id="colleges" style={{ background: "linear-gradient(160deg, #fff7ef 0%, #fff3e6 40%, #fff 100%)" }}>
       <div className="container">
 
         {/* Section header */}
@@ -228,7 +273,7 @@ export default function TopColleges() {
           transition={{ duration: 0.5 }}
         >
           <span className="eyebrow">Top Colleges</span>
-          <h2 className="section-title">
+          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif" }}>
             Explore India's Premier <span className="accent">Engineering Institutes</span>
           </h2>
           <p className="section-sub">
@@ -245,26 +290,28 @@ export default function TopColleges() {
           style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 32, flexWrap: "wrap" }}
         >
           {TYPES.map((t) => (
-            <button
+            <motion.button
               key={t.id}
               onClick={() => setType(t.id)}
-              style={{
-                padding: "10px 24px",
-                borderRadius: 50,
-                fontSize: 14,
-                fontWeight: 600,
-                fontFamily: "Sora",
-                cursor: "pointer",
-                transition: "all .22s ease",
-                border: type === t.id ? `2px solid ${t.color}` : "2px solid rgba(0,0,0,.10)",
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.04 }}
+              animate={{
                 background: type === t.id ? t.color : "#fff",
                 color: type === t.id ? "#fff" : "#4b5563",
-                boxShadow: type === t.id ? `0 4px 18px ${t.color}44` : "none",
-                transform: type === t.id ? "translateY(-1px)" : "none",
+                borderColor: type === t.id ? t.color : "rgba(0,0,0,.10)",
+                boxShadow: type === t.id ? `0 6px 22px ${t.color}55` : "0 2px 8px rgba(0,0,0,.06)",
+                y: type === t.id ? -2 : 0,
+              }}
+              transition={{ duration: 0.2 }}
+              style={{
+                padding: "10px 26px", borderRadius: 50,
+                fontSize: 14, fontWeight: 700,
+                fontFamily: "'Space Grotesk','Sora',sans-serif",
+                cursor: "pointer", border: "2px solid transparent",
               }}
             >
               {t.label}
-            </button>
+            </motion.button>
           ))}
         </motion.div>
 

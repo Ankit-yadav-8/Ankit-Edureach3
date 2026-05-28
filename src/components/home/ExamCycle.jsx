@@ -22,7 +22,7 @@ const EXAM_CYCLE = [
         seats: "~43,600 (NITs+IIITs+GFTIs)",
         body: "NTA",
         color: "#F47B20",
-        status: "upcoming",
+        status: "deadline_gone",
         what_you_get: [
           "NIT / IIIT / GFTI admission via JoSAA",
           "Eligibility for JEE Advanced (top 2.5L)",
@@ -40,6 +40,7 @@ const EXAM_CYCLE = [
         body: "BITS",
         color: "#1a3a5c",
         status: "upcoming",
+
         what_you_get: [
           "Admission to BITS Pilani, Goa, Hyderabad",
           "B.E./B.Pharm/M.Sc dual degree",
@@ -66,7 +67,7 @@ const EXAM_CYCLE = [
         seats: "~43,600 (NIT+IIIT+GFTI)",
         body: "NTA",
         color: "#F47B20",
-        status: "upcoming",
+        status: "deadline_gone",
         what_you_get: [
           "First attempt at qualifying rank for JEE Advanced",
           "Session 1 score used if better than Session 2",
@@ -83,7 +84,7 @@ const EXAM_CYCLE = [
         seats: "~10,000+ (SRM campuses)",
         body: "SRMIST",
         color: "#3b3b98",
-        status: "upcoming",
+        status: "deadline_gone",
         what_you_get: [
           "SRM Institute of Science & Technology admission",
           "B.Tech across all campuses",
@@ -100,7 +101,7 @@ const EXAM_CYCLE = [
         seats: "~15,000+",
         body: "LPU",
         color: "#386641",
-        status: "upcoming",
+        status: "deadline_gone",
         what_you_get: [
           "Lovely Professional University admission",
           "Merit-based scholarships up to 100%",
@@ -117,7 +118,7 @@ const EXAM_CYCLE = [
         seats: "~15,000+ (VIT Vellore + Chennai)",
         body: "VIT",
         color: "#2a2a3c",
-        status: "upcoming",
+        status: "deadline_gone",
         what_you_get: [
           "VIT Vellore & Chennai B.Tech admission",
           "Flexible Credit System (FFCS) from Year 1",
@@ -144,7 +145,7 @@ const EXAM_CYCLE = [
         seats: "~43,600 (shared with S1)",
         body: "NTA",
         color: "#F47B20",
-        status: "upcoming",
+        status: "deadline_gone",
         what_you_get: [
           "Second chance to improve JEE Main score",
           "Best of 2 sessions auto-counted",
@@ -161,7 +162,7 @@ const EXAM_CYCLE = [
         seats: "~4,000+ (KIIT Bhubaneswar)",
         body: "KIIT University",
         color: "#2d6a4f",
-        status: "upcoming",
+        status: "deadline_gone",
         what_you_get: [
           "KIIT University Bhubaneswar admission",
           "B.Tech in 20+ branches",
@@ -178,7 +179,7 @@ const EXAM_CYCLE = [
         seats: "~5,000+ (MIT Manipal + MAHE)",
         body: "MAHE",
         color: "#0b525b",
-        status: "upcoming",
+        status: "deadline_gone",
         what_you_get: [
           "Manipal Institute of Technology (MIT) admission",
           "Also valid for MAHE Manipal B.Tech",
@@ -195,7 +196,7 @@ const EXAM_CYCLE = [
         seats: "~17,385 (23 IITs)",
         body: "IIT (rotational)",
         color: "#1c1c28",
-        status: "flagship",
+        status: "deadline_gone",
         what_you_get: [
           "Admission to all 23 IITs",
           "2 papers (Paper 1 + Paper 2 both compulsory)",
@@ -270,9 +271,11 @@ const EXAM_CYCLE = [
 ];
 
 const STATUS_META = {
-  upcoming: { label: "Upcoming", bg: "rgba(14,165,164,.12)", color: "#0ea5a4" },
-  flagship: { label: "Flagship",  bg: "rgba(244,123,32,.12)", color: "#F47B20" },
-  open:     { label: "Open",      bg: "rgba(21,160,110,.12)", color: "#15a06e" },
+  upcoming:      { label: "Upcoming",      bg: "rgba(244,123,32,.13)", color: "#F47B20",  icon: "🔜" },
+  flagship:      { label: "Flagship",      bg: "rgba(244,123,32,.15)", color: "#F47B20",  icon: "⭐" },
+  open:          { label: "Open Now",      bg: "rgba(21,160,110,.13)", color: "#15a06e",  icon: "✅" },
+  deadline_gone: { label: "Deadline Gone", bg: "rgba(107,114,128,.10)", color: "#9ca3af", icon: "⏰" },
+  completed:     { label: "Completed",     bg: "rgba(99,102,241,.12)", color: "#6366f1",  icon: "✔" },
 };
 
 /* ── Exam Card ──────────────────────────────────────────────── */
@@ -320,11 +323,11 @@ function ExamCard({ exam, index }) {
         {/* Name + date */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-            <h4 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "0.92rem", color: "#1c1c28", margin: 0 }}>
+            <h4 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "0.92rem", color: "#1c1c28", margin: 0 }}>
               {exam.name}
             </h4>
-            <span style={{ padding: "2px 9px", borderRadius: 50, fontSize: 10, fontWeight: 700, background: sm.bg, color: sm.color }}>
-              {sm.label}
+            <span style={{ padding: "2px 10px", borderRadius: 50, fontSize: 10, fontWeight: 700, background: sm.bg, color: sm.color, display: "inline-flex", alignItems: "center", gap: 4 }}>
+              <span>{sm.icon}</span> {sm.label}
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "#9ca3af" }}>
@@ -424,7 +427,7 @@ export default function ExamCycle() {
   const [activePhase, setActivePhase] = useState(null);
 
   return (
-    <section id="exam-cycle" className="section" style={{ background: "linear-gradient(180deg, #fdf8f4 0%, #fff 100%)", scrollMarginTop: 80 }}>
+    <section id="exam-cycle" className="section" style={{ background: "linear-gradient(160deg, #fff 0%, #fff7ef 40%, #fffaf5 100%)", scrollMarginTop: 80 }}>
       <div className="container">
 
         {/* Header */}
@@ -438,7 +441,7 @@ export default function ExamCycle() {
           <span className="eyebrow">
             <Sparkles size={11} /> Exam Cycle 2025–2026
           </span>
-          <h2 className="section-title">
+          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif" }}>
             Complete Exam Timeline <span className="accent">Sep 2025 → Dec 2026</span>
           </h2>
           <p className="section-sub">
@@ -486,7 +489,9 @@ export default function ExamCycle() {
         </motion.div>
 
         {/* Phase blocks */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 36 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 36, position: "relative" }}>
+          {/* Vertical timeline line */}
+          <div style={{ position: "absolute", left: 21, top: 18, bottom: 18, width: 2, background: "linear-gradient(to bottom, rgba(244,123,32,.5), rgba(244,123,32,.08))", borderRadius: 2, pointerEvents: "none", zIndex: 0 }} />
           {EXAM_CYCLE
             .filter((ph) => !activePhase || ph.phase === activePhase)
             .map((phase, pi) => (
@@ -500,18 +505,23 @@ export default function ExamCycle() {
                 {/* Phase header */}
                 <div style={{
                   display: "flex", alignItems: "center", gap: 14,
-                  marginBottom: 18,
+                  marginBottom: 18, position: "relative", zIndex: 1,
                 }}>
                   <div style={{
-                    height: 36, width: 5, borderRadius: 3,
-                    background: phase.phaseColor,
-                    flexShrink: 0,
-                  }} />
+                    width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
+                    background: `linear-gradient(135deg, ${phase.phaseColor}, ${phase.phaseColor}cc)`,
+                    border: `3px solid ${phase.phaseColor}33`,
+                    boxShadow: `0 0 16px ${phase.phaseColor}44`,
+                    display: "grid", placeItems: "center",
+                    fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 15, color: "#fff",
+                  }}>
+                    {pi + 1}
+                  </div>
                   <div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: phase.phaseColor, letterSpacing: "1.5px", textTransform: "uppercase" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: phase.phaseColor, letterSpacing: "1.5px", textTransform: "uppercase", fontFamily: "'Space Grotesk','Sora',sans-serif" }}>
                       Phase {pi + 1}
                     </div>
-                    <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.1rem", color: "#1c1c28" }}>
+                    <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "1.1rem", color: "#1c1c28" }}>
                       {phase.phase} · <span style={{ color: "#9ca3af", fontSize: "0.95rem" }}>{phase.period}</span>
                     </div>
                   </div>
