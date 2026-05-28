@@ -4,11 +4,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   GraduationCap, ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
+  BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy,
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
 
 const GATE_TABS = true;
+
+const JEE_RESOURCES = [
+  { label: "Mathematics (19 chapters)", to: "/jee-resources?subject=math",     icon: Sigma,        tag: "Algebra · Calculus · Geometry" },
+  { label: "Physics (25 chapters)",     to: "/jee-resources?subject=physics",  icon: Zap,          tag: "Mechanics · Electrodynamics" },
+  { label: "Chemistry (29 chapters)",   to: "/jee-resources?subject=chemistry",icon: FlaskConical, tag: "Physical · Organic · Inorganic" },
+  { label: "Exam Cycle 2025–26",        to: "/#exam-cycle",                    icon: CalendarClock,tag: "All exams · Dates · Fees" },
+  { label: "JEE Main Guide",            to: "/jee-main",                        icon: FileText,     tag: "Pattern · Eligibility · Cutoffs" },
+  { label: "JEE Advanced Guide",        to: "/jee-advanced",                    icon: Trophy,       tag: "IIT admission · Strategy" },
+];
 
 const JEE_MAIN = [
   { label: "Eligibility Criteria", to: "/jee-main#eligibility", icon: BadgeCheck },
@@ -84,13 +94,13 @@ export default function Navbar({ onSearch }) {
 
   const navItems = [
     { label: "Home", to: "/" },
+    { label: "JEE", drop: JEE_RESOURCES, base: "/jee-resources", highlight: true },
     { label: "JEE Main", drop: JEE_MAIN, base: "/jee-main" },
     { label: "JEE Advanced", drop: JEE_ADV, base: "/jee-advanced" },
     { label: "Colleges", drop: COLLEGES, base: "/colleges" },
-    { label: "Entrance Exams", to: "/exams" },
+    { label: "Exams", to: "/exams" },
     { label: "Cutoffs", to: "/cutoffs" },
     { label: "Tools", drop: TOOLS, base: "/for-you" },
-    { label: "About Us", to: "/about" },
   ];
 
   return (
@@ -130,8 +140,9 @@ export default function Navbar({ onSearch }) {
                 <>
                   <button
                     onClick={() => (GATE_TABS && !isLoggedIn ? openLogin() : navigate(item.base))}
-                    style={navLinkStyle(open === item.label)}
+                    style={item.highlight ? navHighlightStyle(open === item.label) : navLinkStyle(open === item.label)}
                   >
+                    {item.highlight && <BookOpen size={13} />}
                     {item.label}
                     <ChevronDown size={13} style={{ transform: open === item.label ? "rotate(180deg)" : "none", transition: ".2s" }} />
                   </button>
@@ -145,15 +156,23 @@ export default function Navbar({ onSearch }) {
                         style={{
                           position: "absolute", top: "calc(100% + 6px)", left: 0,
                           background: "#fff", borderRadius: 14, boxShadow: "var(--shadow-lg)",
-                          minWidth: 252, padding: 8, border: "1px solid var(--border)",
+                          minWidth: item.highlight ? 300 : 252, padding: 8, border: "1px solid var(--border)",
                         }}
                       >
+                        {item.highlight && (
+                          <div style={{ padding: "8px 10px 6px", fontSize: 10, fontWeight: 700, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase" }}>
+                            JEE Prep Resources
+                          </div>
+                        )}
                         {item.drop.map((d) => {
                           const Ic = d.icon;
                           return (
-                            <button key={d.label} onClick={() => goHash(d.to)} style={dropItemStyle}>
-                              <Ic size={15} color="var(--coral)" />
-                              <span>{d.label}</span>
+                            <button key={d.label} onClick={() => goHash(d.to)} style={d.tag ? { ...dropItemStyle, flexDirection: "column", alignItems: "flex-start", gap: 1 } : dropItemStyle}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                <Ic size={15} color={item.highlight ? "#6366f1" : "var(--coral)"} />
+                                <span style={{ fontWeight: 600, fontSize: "0.85rem" }}>{d.label}</span>
+                              </div>
+                              {d.tag && <span style={{ fontSize: 11, color: "#9ca3af", paddingLeft: 23 }}>{d.tag}</span>}
                             </button>
                           );
                         })}
@@ -339,6 +358,16 @@ const navLinkStyle = (active) => ({
   padding: "0.5rem 0.7rem", fontSize: "0.88rem", fontWeight: 500,
   color: active ? "var(--coral)" : "var(--navy)", borderRadius: 8,
   background: active ? "var(--sky)" : "transparent", transition: "all .2s", whiteSpace: "nowrap",
+});
+
+const navHighlightStyle = (active) => ({
+  display: "flex", alignItems: "center", gap: 5,
+  padding: "0.45rem 0.8rem", fontSize: "0.86rem", fontWeight: 700,
+  color: active ? "#fff" : "#6366f1",
+  borderRadius: 8, whiteSpace: "nowrap",
+  background: active ? "#6366f1" : "rgba(99,102,241,.10)",
+  border: `1.5px solid ${active ? "#6366f1" : "rgba(99,102,241,.25)"}`,
+  transition: "all .2s",
 });
 
 const dropItemStyle = {

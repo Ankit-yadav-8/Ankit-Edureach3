@@ -7,6 +7,9 @@ import TopColleges from "../components/home/TopColleges.jsx";
 import PrivateUniversities from "../components/home/PrivateUniversities.jsx";
 import NewsSection from "../components/home/NewsSection.jsx";
 import Testimonials from "../components/home/Testimonials.jsx";
+import ExamCycle from "../components/home/ExamCycle.jsx";
+import CollegeTicker from "../components/home/CollegeTicker.jsx";
+import CollegeSnapshot from "../components/home/CollegeSnapshot.jsx";
 import { Bars, CenterDonut } from "../components/Charts.jsx";
 import Reveal from "../components/Reveal.jsx";
 import {
@@ -15,6 +18,7 @@ import {
   TrendingUp, MapPin, GraduationCap, Zap, Award,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 /* ════════════════════════════════════════════════
    INLINE DATA
@@ -601,27 +605,59 @@ export default function Home({ onSearch }) {
       <Hero onSearch={onSearch} />
 
       {/* ── Stats bar ── */}
-      <section style={{ background: "#1c1c28", padding: "32px 0" }}>
-        <div className="container">
-          <div className="grid-4" style={{ gap: 16 }}>
-            {STATS.map(({ label, value, icon: Icon, color }) => (
-              <div key={label} style={{
-                display: "flex", alignItems: "center", gap: 14,
-                background: "rgba(255,255,255,0.06)", borderRadius: 14,
-                padding: "16px 20px", border: "1px solid rgba(255,255,255,0.08)",
-              }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: `${color}22`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+      <section style={{
+        background: "linear-gradient(135deg, #0f0c29 0%, #1c1c28 50%, #2a1a0e 100%)",
+        padding: "36px 0",
+        position: "relative",
+        overflow: "hidden",
+      }}>
+        {/* Ambient glow */}
+        <div style={{ position: "absolute", top: -80, left: "25%", width: 400, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -60, right: "20%", width: 300, height: 150, borderRadius: "50%", background: "radial-gradient(circle, rgba(14,165,164,.12) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+            gap: 16,
+          }}>
+            {STATS.map(({ label, value, icon: Icon, color }, i) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.07 }}
+                style={{
+                  display: "flex", alignItems: "center", gap: 14,
+                  background: "rgba(255,255,255,0.05)",
+                  backdropFilter: "blur(8px)",
+                  borderRadius: 16,
+                  padding: "18px 20px",
+                  border: `1px solid ${color}22`,
+                  transition: "all .25s",
+                }}
+                whileHover={{ scale: 1.02, background: "rgba(255,255,255,0.08)" }}
+              >
+                <div style={{
+                  width: 48, height: 48, borderRadius: 13,
+                  background: `${color}20`,
+                  border: `1.5px solid ${color}44`,
+                  display: "grid", placeItems: "center", flexShrink: 0,
+                }}>
                   <Icon size={22} color={color} />
                 </div>
                 <div>
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 20, color: "#fff" }}>{value}</div>
-                  <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 2 }}>{label}</div>
+                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 22, color: "#fff", lineHeight: 1 }}>{value}</div>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,.5)", marginTop: 4 }}>{label}</div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* ── College Ticker ── */}
+      <CollegeTicker />
 
       {/* ── Predictor Cards ── */}
       <PredictorCards />
@@ -667,10 +703,20 @@ export default function Home({ onSearch }) {
         eyebrow="Seat Matrix"
         title="Total Seats Available (JoSAA 2025)"
         sub="Approximate seat distribution across IITs, NITs, IIITs and GFTIs via JoSAA counselling."
+        bg="var(--sky)"
       >
         <div className="grid-2" style={{ gap: 24, alignItems: "start" }}>
-          <div className="card">
-            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 16 }}>Seat distribution by institute type</h4>
+          <div style={{
+            background: "#fff",
+            borderRadius: 18, border: "1px solid rgba(0,0,0,.07)",
+            boxShadow: "0 4px 24px rgba(28,28,40,.07)",
+            padding: "24px",
+            position: "relative", overflow: "hidden",
+          }}>
+            {/* Top accent */}
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #F97316, #0EA5A4, #15a06e, #1c1c28)" }} />
+            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 6, fontSize: "1.05rem" }}>Seat distribution by institute type</h4>
+            <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Hover over segments to see exact seat counts.</p>
             <CenterDonut
               data={SEAT_DATA}
               centerLabel="60K+"
@@ -679,9 +725,29 @@ export default function Home({ onSearch }) {
               height={260}
               fmt={(v) => v.toLocaleString("en-IN")}
             />
+            {/* Legend row */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 16, justifyContent: "center" }}>
+              {SEAT_DATA.map((d, i) => {
+                const cols = ["#F97316", "#0EA5A4", "#15a06e", "#1c1c28"];
+                return (
+                  <div key={d.name} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6b7280" }}>
+                    <span style={{ width: 10, height: 10, borderRadius: 3, background: cols[i], display: "block" }} />
+                    {d.name}: <strong style={{ color: "#374151" }}>{d.value.toLocaleString("en-IN")}</strong>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="card">
-            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 16 }}>Branch-wise demand index</h4>
+
+          <div style={{
+            background: "#fff",
+            borderRadius: 18, border: "1px solid rgba(0,0,0,.07)",
+            boxShadow: "0 4px 24px rgba(28,28,40,.07)",
+            padding: "24px",
+            position: "relative", overflow: "hidden",
+          }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #F97316, #f4a261)" }} />
+            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 6, fontSize: "1.05rem" }}>Branch-wise demand index</h4>
             <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Higher index = more competitive cutoffs across top institutes.</p>
             <Bars
               data={BRANCH_DEMAND}
@@ -692,6 +758,83 @@ export default function Home({ onSearch }) {
         </div>
       </HomeSection>
 
+      {/* ── Exam Cycle 2025–26 ── */}
+      <ExamCycle />
+
+      {/* ── JEE Resources Promo Banner ── */}
+      <section style={{
+        background: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)",
+        padding: "56px 0",
+        position: "relative", overflow: "hidden",
+      }}>
+        <div style={{ position: "absolute", top: -60, left: -60, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.25) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -40, right: 60, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,.2) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
+            <Reveal>
+              <div>
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  background: "rgba(165,180,252,.15)", color: "#a5b4fc",
+                  border: "1px solid rgba(165,180,252,.25)",
+                  padding: "5px 14px", borderRadius: 50,
+                  fontSize: 11, fontWeight: 700, letterSpacing: "2px",
+                  textTransform: "uppercase", marginBottom: 16,
+                }}>
+                  JEE Study Material
+                </span>
+                <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: "clamp(1.5rem,3vw,2.2rem)", marginBottom: 12, lineHeight: 1.2 }}>
+                  73 chapters across Math,{" "}
+                  <span style={{ background: "linear-gradient(90deg, #a5b4fc, #34d399)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                    Physics & Chemistry
+                  </span>
+                </h2>
+                <p style={{ color: "rgba(255,255,255,.65)", fontSize: ".95rem", maxWidth: 480, lineHeight: 1.7 }}>
+                  Chapter-wise breakdown with difficulty ratings, JEE Main vs Advanced coverage and topic-level notes — all in one place.
+                </p>
+                <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
+                  {[
+                    { label: "Mathematics", color: "#a5b4fc", icon: "∑" },
+                    { label: "Physics",     color: "#fbbf24", icon: "⚡" },
+                    { label: "Chemistry",   color: "#34d399", icon: "🧪" },
+                  ].map(({ label, color, icon }) => (
+                    <span key={label} style={{
+                      padding: "6px 16px", borderRadius: 50,
+                      background: `${color}18`, color,
+                      border: `1px solid ${color}35`,
+                      fontSize: 13, fontWeight: 600,
+                    }}>
+                      {icon} {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <Link
+                  to="/jee-resources"
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 8,
+                    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+                    color: "#fff", padding: "14px 28px",
+                    borderRadius: 12, fontSize: 15, fontWeight: 700,
+                    textDecoration: "none",
+                    boxShadow: "0 8px 30px rgba(99,102,241,.4)",
+                    transition: "all .2s",
+                  }}
+                >
+                  Explore JEE Resources <ArrowRight size={17} />
+                </Link>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,.45)", textAlign: "center" }}>
+                  19 + 25 + 29 chapters · Free access
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
       {/* ── New Tools ── */}
       <NewTools />
 
@@ -700,6 +843,9 @@ export default function Home({ onSearch }) {
 
       {/* ── Entrance Exams ── */}
       <EntranceExams />
+
+      {/* ── College Intelligence Snapshot ── */}
+      <CollegeSnapshot />
 
       {/* ── Top Colleges ── */}
       <TopColleges />

@@ -1,4 +1,5 @@
-import { Target, Users, ShieldCheck, Mail, Phone, GraduationCap, Heart, Lightbulb, Linkedin, Github, MapPin, Quote } from "lucide-react";
+import { Target, Users, ShieldCheck, Mail, Phone, GraduationCap, Heart, Lightbulb, Linkedin, Github, MapPin, Quote, Trophy, Code2, Star } from "lucide-react";
+import { motion } from "framer-motion";
 import { COLLEGES } from "../data/colleges.js";
 import { EXAMS } from "../data/exams.js";
 import useCountUp from "../utils/useCountUp.js";
@@ -7,9 +8,9 @@ import Reveal from "../components/Reveal.jsx";
 /* ─── Team ──────────────────────────────────────────────────────── */
 const TEAM = [
   {
-    initials: "AY",
-    photo: "/assets/team/ankit.jpeg",
-    name: "Ankit Yadav",
+    initials: "AK",
+    photo: null,
+    name: "Ankit Kumar",
     role: "Project Lead & Full-Stack Developer",
     accent: "#f97316",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
@@ -19,6 +20,7 @@ const TEAM = [
       linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387",
       github: "https://github.com",
     },
+    isHead: true,
   },
   {
     initials: "TH",
@@ -72,46 +74,67 @@ function Stat({ target, suffix, label }) {
 
 const ICON = { linkedin: Linkedin, github: Github };
 
+/* ─── AK Glow Logo ───────────────────────────────────────────────── */
+function AKGlowLogo({ initials, accent, size = 120 }) {
+  return (
+    <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
+      {/* Outer glow ring */}
+      <div style={{
+        position: "absolute",
+        inset: -12,
+        borderRadius: "50%",
+        background: `radial-gradient(circle, ${accent}40 0%, ${accent}18 50%, transparent 75%)`,
+        animation: "akGlow 3s ease-in-out infinite alternate",
+      }} />
+      {/* Middle ring */}
+      <div style={{
+        position: "absolute",
+        inset: -4,
+        borderRadius: "50%",
+        border: `2px solid ${accent}44`,
+        animation: "akRing 3s ease-in-out infinite",
+      }} />
+      {/* Main logo circle */}
+      <div style={{
+        width: size, height: size,
+        borderRadius: "50%",
+        background: `linear-gradient(135deg, ${accent} 0%, #ea580c 60%, #c2410c 100%)`,
+        display: "grid", placeItems: "center",
+        fontFamily: "Sora", fontWeight: 800,
+        fontSize: size * 0.3, color: "#fff",
+        letterSpacing: "-1px",
+        boxShadow: `0 0 0 3px ${accent}33, 0 8px 32px ${accent}66, 0 0 60px ${accent}33`,
+        position: "relative", zIndex: 1,
+        userSelect: "none",
+      }}>
+        {initials}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Avatar ─────────────────────────────────────────────────────── */
 function Avatar({ member, size = 64 }) {
   const fontSize = size * 0.34;
   if (member.photo) {
     return (
-      <div
-        style={{
-          width: size,
-          height: size,
-          borderRadius: "50%",
-          overflow: "hidden",
-          flexShrink: 0,
-          border: `3px solid ${member.accent}`,
-          boxShadow: `0 0 14px ${member.accent}55`,
-        }}
-      >
-        <img
-          src={member.photo}
-          alt={member.name}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
+      <div style={{
+        width: size, height: size, borderRadius: "50%", overflow: "hidden", flexShrink: 0,
+        border: `3px solid ${member.accent}`,
+        boxShadow: `0 0 14px ${member.accent}55`,
+      }}>
+        <img src={member.photo} alt={member.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
       </div>
     );
   }
   return (
-    <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: `linear-gradient(135deg, ${member.accent}, #fb923c)`,
-        color: "#fff",
-        display: "grid",
-        placeItems: "center",
-        fontFamily: "Sora",
-        fontWeight: 800,
-        fontSize: fontSize,
-        flexShrink: 0,
-      }}
-    >
+    <div style={{
+      width: size, height: size, borderRadius: "50%",
+      background: `linear-gradient(135deg, ${member.accent}, #fb923c)`,
+      color: "#fff", display: "grid", placeItems: "center",
+      fontFamily: "Sora", fontWeight: 800, fontSize: fontSize, flexShrink: 0,
+      boxShadow: `0 0 20px ${member.accent}55`,
+    }}>
       {member.initials}
     </div>
   );
@@ -258,108 +281,146 @@ export default function About() {
             </p>
           </div>
 
-          <div
-            className="grid-2"
-            style={{ maxWidth: 820, margin: "0 auto", gap: 22 }}
-          >
-            {TEAM.map((m, i) => (
-              <Reveal key={m.name} delay={i * 0.08}>
-                <div
-                  className="card"
+          <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", flexDirection: "column", gap: 24 }}>
+
+            {/* ── Team Head — special wide card ── */}
+            {TEAM.filter((m) => m.isHead).map((m) => (
+              <Reveal key={m.name}>
+                <motion.div
+                  whileHover={{ y: -3, transition: { duration: 0.2 } }}
                   style={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 12,
-                    borderTop: `3px solid ${m.accent}`,
+                    background: "#fff",
+                    borderRadius: 20,
+                    border: `1px solid rgba(0,0,0,.08)`,
+                    borderTop: `4px solid ${m.accent}`,
+                    boxShadow: "0 4px 32px rgba(28,28,40,.08)",
+                    overflow: "hidden",
+                    display: "grid",
+                    gridTemplateColumns: "1fr auto",
+                    gap: 0,
                   }}
                 >
-                  {/* ── Header row ── */}
-                  <div
-                    style={{ display: "flex", alignItems: "center", gap: 14 }}
-                  >
-                    <Avatar member={m} size={64} />
+                  {/* Left — text content */}
+                  <div style={{ padding: "28px 28px 24px", display: "flex", flexDirection: "column", gap: 14 }}>
+
+                    {/* Leader badge */}
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      background: `${m.accent}15`, color: m.accent,
+                      border: `1px solid ${m.accent}30`,
+                      padding: "4px 14px", borderRadius: 50,
+                      fontSize: 11, fontWeight: 700, letterSpacing: "1.5px",
+                      textTransform: "uppercase", alignSelf: "flex-start",
+                    }}>
+                      <Trophy size={11} /> Project Lead
+                    </span>
+
+                    {/* Name + role */}
                     <div>
-                      <h3
-                        style={{
-                          fontFamily: "Sora",
-                          fontWeight: 700,
-                          color: "var(--navy)",
-                        }}
-                      >
+                      <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.5rem", color: "#1c1c28", marginBottom: 4 }}>
                         {m.name}
                       </h3>
-                      <div
-                        style={{
-                          color: m.accent,
-                          fontWeight: 600,
-                          fontSize: 14,
-                        }}
-                      >
-                        {m.role}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 12.5,
-                          color: "var(--muted)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 4,
-                          marginTop: 2,
-                        }}
-                      >
-                        <GraduationCap size={13} /> {m.edu}
+                      <div style={{ color: m.accent, fontWeight: 600, fontSize: 14.5 }}>{m.role}</div>
+                    </div>
+
+                    {/* Meta */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 13, color: "#6b7280" }}>
+                        <GraduationCap size={14} color={m.accent} /> {m.edu}
                       </div>
                       {m.jeeRank && (
-                        <div
-                          style={{
-                            fontSize: 12,
-                            color: m.accent,
-                            fontWeight: 600,
-                            marginTop: 3,
-                          }}
-                        >
+                        <div style={{
+                          display: "inline-flex", alignItems: "center", gap: 6,
+                          background: `${m.accent}12`, color: m.accent,
+                          padding: "3px 12px", borderRadius: 50,
+                          fontSize: 12.5, fontWeight: 700,
+                        }}>
                           🏆 {m.jeeRank}
                         </div>
                       )}
                     </div>
-                  </div>
 
-                  {/* ── Bio ── */}
-                  <p style={{ color: "var(--muted)", lineHeight: 1.65 }}>
-                    {m.bio}
-                  </p>
+                    {/* Bio */}
+                    <p style={{ color: "#6b7280", lineHeight: 1.7, fontSize: 14 }}>{m.bio}</p>
 
-                  {/* ── Socials ── */}
-                  <div style={{ display: "flex", gap: 8, marginTop: "auto" }}>
-                    {Object.entries(m.socials).map(([k, url]) => {
-                      const I = ICON[k] || Linkedin;
-                      return (
-                        <a
-                          key={k}
-                          href={url}
-                          target="_blank"
-                          rel="noreferrer"
-                          aria-label={k}
-                          style={{
-                            width: 34,
-                            height: 34,
-                            borderRadius: "50%",
-                            display: "grid",
-                            placeItems: "center",
-                            background: "var(--sky)",
-                            border: "1px solid var(--line)",
-                            color: "var(--navy)",
+                    {/* Socials */}
+                    <div style={{ display: "flex", gap: 8, marginTop: "auto" }}>
+                      {Object.entries(m.socials).map(([k, url]) => {
+                        const I = ICON[k] || Linkedin;
+                        return (
+                          <a key={k} href={url} target="_blank" rel="noreferrer" aria-label={k} style={{
+                            display: "flex", alignItems: "center", gap: 6,
+                            padding: "7px 14px", borderRadius: 50,
+                            background: "#f3f4f6", border: "1px solid #e5e7eb",
+                            color: "#374151", fontSize: 12.5, fontWeight: 600,
+                            textDecoration: "none", textTransform: "capitalize", transition: "all .2s",
                           }}
-                        >
-                          <I size={16} />
-                        </a>
-                      );
-                    })}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = m.accent; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = m.accent; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "#f3f4f6"; e.currentTarget.style.color = "#374151"; e.currentTarget.style.borderColor = "#e5e7eb"; }}
+                          >
+                            <I size={14} /> {k}
+                          </a>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+
+                  {/* Right — AK logo with glow */}
+                  <div style={{
+                    width: 200,
+                    background: `linear-gradient(135deg, #1c1c28 0%, #2a1a0e 100%)`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "relative",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                  }}>
+                    {/* Ambient glow blobs */}
+                    <div style={{ position: "absolute", top: -30, right: -30, width: 140, height: 140, borderRadius: "50%", background: `radial-gradient(circle, ${m.accent}44 0%, transparent 70%)`, pointerEvents: "none" }} />
+                    <div style={{ position: "absolute", bottom: -20, left: -20, width: 100, height: 100, borderRadius: "50%", background: `radial-gradient(circle, ${m.accent}22 0%, transparent 70%)`, pointerEvents: "none" }} />
+
+                    {/* Skills floating badges */}
+                    <div style={{ position: "absolute", top: 18, left: 12, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "rgba(255,255,255,.7)", fontWeight: 600 }}>React</div>
+                    <div style={{ position: "absolute", top: 44, right: 10, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "rgba(255,255,255,.7)", fontWeight: 600 }}>Node.js</div>
+                    <div style={{ position: "absolute", bottom: 44, left: 10, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "rgba(255,255,255,.7)", fontWeight: 600 }}>MongoDB</div>
+                    <div style={{ position: "absolute", bottom: 18, right: 14, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "rgba(255,255,255,.7)", fontWeight: 600 }}>IIT-R</div>
+
+                    {/* AK Logo */}
+                    <AKGlowLogo initials={m.initials} accent={m.accent} size={96} />
+                  </div>
+                </motion.div>
               </Reveal>
             ))}
+
+            {/* ── Other team members ── */}
+            <div className="grid-2" style={{ gap: 20 }}>
+              {TEAM.filter((m) => !m.isHead).map((m, i) => (
+                <Reveal key={m.name} delay={i * 0.08}>
+                  <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", gap: 12, borderTop: `3px solid ${m.accent}` }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                      <Avatar member={m} size={56} />
+                      <div>
+                        <h3 style={{ fontFamily: "Sora", fontWeight: 700, color: "var(--navy)" }}>{m.name}</h3>
+                        <div style={{ color: m.accent, fontWeight: 600, fontSize: 13.5 }}>{m.role}</div>
+                        <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}><GraduationCap size={12} style={{ display: "inline", marginRight: 4 }} />{m.edu}</div>
+                      </div>
+                    </div>
+                    <p style={{ color: "var(--muted)", lineHeight: 1.65, fontSize: 14 }}>{m.bio}</p>
+                    <div style={{ display: "flex", gap: 8, marginTop: "auto" }}>
+                      {Object.entries(m.socials).map(([k, url]) => {
+                        const I = ICON[k] || Linkedin;
+                        return (
+                          <a key={k} href={url} target="_blank" rel="noreferrer" aria-label={k} style={{ width: 34, height: 34, borderRadius: "50%", display: "grid", placeItems: "center", background: "var(--sky)", border: "1px solid var(--line)", color: "var(--navy)" }}>
+                            <I size={16} />
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </div>
       </section>

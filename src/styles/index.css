@@ -319,6 +319,26 @@ input,select,textarea { font-family:inherit; }
   animation:livePulse 2s infinite;
 }
 @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+/* AK Logo glow animations */
+@keyframes akGlow {
+  0%   { opacity:.6; transform:scale(1); }
+  100% { opacity:1;  transform:scale(1.08); }
+}
+@keyframes akRing {
+  0%,100% { opacity:.4; transform:scale(1); }
+  50%      { opacity:.9; transform:scale(1.06); }
+}
+@keyframes spin {
+  from { transform:rotate(0deg); }
+  to   { transform:rotate(360deg); }
+}
+
+/* Developer page & team head card — hide logo column on mobile */
+@media (max-width:768px) {
+  .dev-logo-col      { display:none !important; }
+  .team-head-logo-col { display:none !important; }
+}
 .hero h1 {
   font-family:"Sora",sans-serif;
   font-size:clamp(2rem,6vw,3.5rem);
@@ -432,22 +452,25 @@ input,select,textarea { font-family:inherit; }
    SECTION HEADINGS
 ════════════════════════════════════════════════ */
 .eyebrow {
-  display:inline-block;
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
   background:rgba(244,123,32,.10);
   color:var(--coral);
   font-weight:700;
   font-size:0.72rem;
-  letter-spacing:2px;
+  letter-spacing:2.5px;
   text-transform:uppercase;
-  padding:0.35rem 0.9rem;
+  padding:0.38rem 1rem;
   border-radius:var(--radius-pill);
-  margin-bottom:1rem;
+  border:1px solid rgba(244,123,32,.18);
+  margin-bottom:1.1rem;
 }
 .section-title {
-  font-size:clamp(1.7rem,3.4vw,2.6rem);
+  font-size:clamp(1.85rem,3.8vw,2.9rem);
   font-weight:800;
-  letter-spacing:-0.5px;
-  line-height:1.18;
+  letter-spacing:-0.8px;
+  line-height:1.15;
 }
 .section-title .accent { color:var(--coral); }
 .title-bar {
@@ -456,9 +479,15 @@ input,select,textarea { font-family:inherit; }
   align-items:center;
   text-align:center;
   max-width:760px;
-  margin:0 auto 2.6rem;
+  margin:0 auto 2.8rem;
 }
-.section-sub { color:var(--gray); max-width:640px; margin:.7rem auto 0; font-size:1.02rem; line-height:1.6; }
+.section-sub {
+  color:var(--gray);
+  max-width:580px;
+  margin:.9rem auto 0;
+  font-size:1.06rem;
+  line-height:1.7;
+}
 
 /* ════════════════════════════════════════════════
    BUTTONS
@@ -533,11 +562,15 @@ input,select,textarea { font-family:inherit; }
   background:#fff;
   border-radius:var(--radius);
   box-shadow:var(--shadow-card);
-  border:1px solid var(--line);
-  transition:var(--transition);
+  border:1px solid rgba(0,0,0,.07);
+  transition:box-shadow .25s ease, transform .25s ease, border-color .25s ease;
   padding:1.25rem 1.3rem;
 }
-.card:hover { box-shadow:var(--shadow-lg); transform:translateY(-4px); border-color:rgba(249,115,22,.28); }
+.card:hover {
+  box-shadow:0 16px 48px rgba(28,28,40,.12);
+  transform:translateY(-5px);
+  border-color:rgba(244,123,32,.22);
+}
 
 /* ════════════════════════════════════════════════
    BADGES & PILLS
@@ -607,6 +640,9 @@ table.data-table tbody tr:hover           { background:var(--sky-2); }
 .grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem; }
 .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
 .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; }
+/* Responsive auto-fill grids */
+.grid-auto-3 { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.25rem; }
+.grid-auto-4 { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1.25rem; }
 
 /* ════════════════════════════════════════════════
    COLLEGE CARDS
@@ -1299,6 +1335,10 @@ textarea.input { width:100%; }
     border-color:rgba(239,68,68,.38) !important;
   }
 
+  /* ── Hero grid single column on mobile ── */
+  .hero-grid { grid-template-columns: 1fr !important; }
+  .hero-about-col { display: none !important; }
+
   /* ── Hero: light warm background ── */
   .hero {
     background:linear-gradient(160deg,#fff7f0 0%,#fde8d4 40%,#fddcbc 72%,#fbc99a 100%) !important;
@@ -1428,7 +1468,10 @@ textarea.input { width:100%; }
   .meta-grid              { grid-template-columns:1fr; }
 
   /* Grids */
-  .grid-2,.grid-3,.grid-4 { grid-template-columns:1fr; }
+  .grid-2,.grid-3 { grid-template-columns:1fr; }
+  /* grid-4 → 2-column on mobile for better density */
+  .grid-4 { grid-template-columns:repeat(2,1fr) !important; gap:1rem; }
+  .grid-auto-3,.grid-auto-4 { grid-template-columns:repeat(2,1fr) !important; gap:1rem; }
 
   /* Promo */
   .pred-promo {
@@ -1488,9 +1531,12 @@ textarea.input { width:100%; }
 ════════════════════════════════════════════════ */
 @media (max-width:480px) {
   .college-grid   { grid-template-columns:1fr !important; }
+  .grid-4         { grid-template-columns:1fr !important; }
+  .grid-auto-3,.grid-auto-4 { grid-template-columns:1fr !important; }
   .footer-grid    { grid-template-columns:1fr !important; gap:1.5rem; }
   .container      { padding-inline:.9rem; }
-  .section-title  { font-size:1.55rem; }
+  .section-title  { font-size:1.6rem; letter-spacing:-.5px; }
+  .section-sub    { font-size:.92rem; }
   .btn            { font-size:.85rem; padding:.7rem 1.1rem; }
   .hero-stats     { grid-template-columns:repeat(2,1fr); }
   .predictor-card { padding:1.2rem 1rem 1.5rem; }
