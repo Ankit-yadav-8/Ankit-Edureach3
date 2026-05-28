@@ -74,7 +74,139 @@ function MeshDots() {
   return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 1 }} />;
 }
 
-/* ── Developer Profile Card (left panel) ── */
+/* ── About Us Card (left panel) ── */
+function AboutUsCard() {
+  const nav = useNavigate();
+  const ACCENT = ABOUT_ACCENT;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -36 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.7, delay: 0.3 }}
+      className="hero-about-col"
+      style={{
+        background: "rgba(10,10,26,0.72)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        border: "1px solid rgba(255,255,255,.1)",
+        borderRadius: 20,
+        padding: "1.1rem 1.2rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.85rem",
+        boxShadow: "0 0 0 1px rgba(255,255,255,.06), 0 24px 64px rgba(0,0,0,.6)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Top glow bar */}
+      <div style={{
+        position: "absolute", top: 0, left: 0, right: 0, height: 2,
+        background: `linear-gradient(90deg, transparent, ${ACCENT}, transparent)`,
+      }} />
+
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{
+          width: 38, height: 38, borderRadius: 10,
+          background: `${ACCENT}20`, border: `1.5px solid ${ACCENT}40`,
+          display: "grid", placeItems: "center", flexShrink: 0,
+        }}>
+          <span style={{ fontSize: 17 }}>🎓</span>
+        </div>
+        <div>
+          <div style={{ fontSize: 9, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.6px", textTransform: "uppercase" }}>About Us</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: ".97rem" }}>College Parichay</div>
+        </div>
+        <motion.span
+          animate={{ boxShadow: ["0 0 0px #22c55e", "0 0 12px #22c55e", "0 0 0px #22c55e"] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block", flexShrink: 0 }}
+        />
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
+
+      {/* Origin story */}
+      <div style={{
+        background: "rgba(255,255,255,.04)",
+        border: "1px solid rgba(255,255,255,.07)",
+        borderRadius: 11, padding: "10px 12px",
+      }}>
+        <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", marginBottom: 6 }}>Our Story</div>
+        <p style={{ fontSize: 12, color: "rgba(255,255,255,.65)", lineHeight: 1.65, margin: 0 }}>
+          Built in an <span style={{ color: ACCENT, fontWeight: 700 }}>IIT Roorkee</span> hostel room by students who lived the JoSAA chaos — and decided to fix it for everyone after them.
+        </p>
+      </div>
+
+      {/* Values */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+        {[
+          { emoji: "🛡️", label: "Honest data",     sub: "Real cutoffs, real caveats" },
+          { emoji: "❤️", label: "Student-first",   sub: "Built by students, for students" },
+          { emoji: "⚡", label: "One platform",    sub: "Rank · College · Counselling" },
+        ].map(({ emoji, label, sub }) => (
+          <div key={label} style={{
+            display: "flex", alignItems: "center", gap: 10,
+            background: "rgba(255,255,255,.03)",
+            border: "1px solid rgba(255,255,255,.06)",
+            borderRadius: 9, padding: "7px 10px",
+          }}>
+            <span style={{ fontSize: 15, flexShrink: 0 }}>{emoji}</span>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>{label}</div>
+              <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.38)" }}>{sub}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
+
+      {/* Mini stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+        {[
+          { val: "IIT-R", lbl: "Founded" },
+          { val: "3",     lbl: "Engineers" },
+          { val: "Free",  lbl: "Always" },
+        ].map(({ val, lbl }) => (
+          <div key={lbl} style={{
+            textAlign: "center",
+            background: "rgba(255,255,255,.04)",
+            border: "1px solid rgba(255,255,255,.07)",
+            borderRadius: 9, padding: "8px 4px",
+          }}>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: ACCENT }}>{val}</div>
+            <div style={{ fontSize: 9.5, color: "rgba(255,255,255,.38)", marginTop: 1 }}>{lbl}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <button
+        onClick={() => nav("/about")}
+        style={{
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+          background: `linear-gradient(135deg, ${ACCENT}, #ea580c)`,
+          color: "#fff", border: "none", borderRadius: 11,
+          padding: "10px 14px", fontSize: 12.5, fontWeight: 700,
+          fontFamily: "Sora", cursor: "pointer", marginTop: "auto",
+          boxShadow: `0 4px 20px ${ACCENT}55`,
+          transition: "all .2s",
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `0 8px 28px ${ACCENT}88`; }}
+        onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `0 4px 20px ${ACCENT}55`; }}
+      >
+        Our Story <ArrowRight size={13} />
+      </button>
+    </motion.div>
+  );
+}
+
+/* ── Developer Profile Card ── */
 function DevProfileCard() {
   const nav = useNavigate();
   const ACCENT = "#F47B20";
@@ -101,10 +233,8 @@ function DevProfileCard() {
         overflow: "hidden",
       }}
     >
-      {/* Top glow bar */}
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${ACCENT}, transparent)` }} />
 
-      {/* Section label */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <div style={{ width: 38, height: 38, borderRadius: 10, background: `${ACCENT}20`, border: `1.5px solid ${ACCENT}40`, display: "grid", placeItems: "center", flexShrink: 0 }}>
           <span style={{ fontSize: 17 }}>👨‍💻</span>
@@ -113,7 +243,6 @@ function DevProfileCard() {
           <div style={{ fontSize: 9, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.6px", textTransform: "uppercase" }}>Developer</div>
           <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: ".97rem" }}>Ankit Yadav GPT</div>
         </div>
-        {/* online indicator */}
         <motion.span
           animate={{ boxShadow: ["0 0 0px #22c55e", "0 0 12px #22c55e", "0 0 0px #22c55e"] }}
           transition={{ duration: 2, repeat: Infinity }}
@@ -121,10 +250,8 @@ function DevProfileCard() {
         />
       </div>
 
-      {/* Divider */}
       <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
 
-      {/* Avatar + info */}
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <div style={{
           width: 56, height: 56, borderRadius: 14, flexShrink: 0,
@@ -147,10 +274,8 @@ function DevProfileCard() {
         </div>
       </div>
 
-      {/* Divider */}
       <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
 
-      {/* Tech stack */}
       <div>
         <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", marginBottom: 8 }}>Tech Stack</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -169,7 +294,6 @@ function DevProfileCard() {
         </div>
       </div>
 
-      {/* Mini stats */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
         {[
           { val: "850+", lbl: "Colleges" },
@@ -188,7 +312,6 @@ function DevProfileCard() {
         ))}
       </div>
 
-      {/* CTA */}
       <button
         onClick={() => nav("/developer")}
         style={{
@@ -238,10 +361,8 @@ function LiveCollegePanel() {
         overflow: "hidden",
       }}
     >
-      {/* Top glow accent */}
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${c.color}, transparent)`, transition: "background .6s" }} />
 
-      {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <div style={{ width: 40, height: 40, borderRadius: 11, background: `${c.color}22`, border: `1.5px solid ${c.color}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
           <GraduationCap size={19} color={c.color} />
@@ -257,10 +378,8 @@ function LiveCollegePanel() {
         />
       </div>
 
-      {/* Divider */}
       <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
 
-      {/* College cards list */}
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {TOP_COLLEGES.map((col, i) => (
           <motion.div
@@ -290,10 +409,8 @@ function LiveCollegePanel() {
         ))}
       </div>
 
-      {/* Divider */}
       <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
 
-      {/* Footer stats */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
         {[
           { val: "23", lbl: "IITs" },
@@ -307,7 +424,6 @@ function LiveCollegePanel() {
         ))}
       </div>
 
-      {/* CTA */}
       <button
         onClick={() => window.location.href = "/colleges"}
         style={{
@@ -349,20 +465,12 @@ export default function Hero({ onSearch }) {
     }}>
 
       {/* ═══ Multi-color gradient backdrop ═══ */}
-
-      {/* Deep indigo sweep — top left */}
       <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
         background: "radial-gradient(ellipse 65% 55% at -5% 5%, rgba(79,70,229,.45) 0%, rgba(67,56,202,.18) 35%, transparent 65%)" }} />
-
-      {/* Orange/coral bloom — center right */}
       <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
         background: "radial-gradient(ellipse 55% 70% at 105% 20%, rgba(234,88,12,.70) 0%, rgba(249,115,22,.32) 35%, transparent 62%)" }} />
-
-      {/* Teal accent — bottom left */}
       <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
         background: "radial-gradient(ellipse 45% 40% at -5% 98%, rgba(14,165,164,.28) 0%, transparent 60%)" }} />
-
-      {/* Subtle purple mid */}
       <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
         background: "radial-gradient(ellipse 35% 50% at 50% 100%, rgba(139,92,246,.14) 0%, transparent 55%)" }} />
 
@@ -373,16 +481,14 @@ export default function Hero({ onSearch }) {
         backgroundSize: "48px 48px",
       }} />
 
-      {/* Animated dots */}
       <MeshDots />
-      {/* Floating orbs */}
       <FloatingOrbs count={6} colors={["#F47B20","#6366f1","#0ea5a4","#fbbf24","#8b5cf6","#F47B20"]} />
 
       {/* ═══ Content ═══ */}
       <div className="container" style={{ position: "relative", zIndex: 2, width: "100%", paddingInline: "0.75rem" }}>
         <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "290px 1fr 290px", gap: "1.75rem", alignItems: "center" }}>
 
-          {/* ══ ABOUT US CARD (left) ══ */}
+          {/* ══ LEFT — About Us Card ══ */}
           <AboutUsCard />
 
           {/* ══ CENTER ══ */}
