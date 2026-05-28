@@ -1,16 +1,28 @@
-// Backend URL. Set VITE_API_BASE in your .env (e.g. your Render URL).
-// Falls back to localhost for development.
 export const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 async function req(path, { method = "GET", body, token } = {}) {
-  const res = await fetch(API_BASE + path, {
-    method,
-    headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || "Something went wrong");
-  return data;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+  try {
+    const res = await fetch(API_BASE + path, {
+      method,
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    clearTimeout(timeout);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "Something went wrong");
+    return data;
+  } catch (e) {
+    clearTimeout(timeout);
+    if (e.name === "AbortError") throw new Error("Request timed out — server may be waking up, please try again");
+    throw e;
+  }
 }
 
 export const apiSignup    = (b) => req("/api/auth/signup", { method: "POST", body: b });
