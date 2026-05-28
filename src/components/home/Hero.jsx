@@ -20,14 +20,95 @@ const TOP_COLLEGES = [
   { name: "IIIT Hyd",     type: "IIIT", nirf: 24, avg: "₹18.6L", placed: 97, color: "#10b981" },
 ];
 
-function Stat({ target, suffix, label }) {
+/* ── Stats Bar (replaces old animated number row) ── */
+function StatsBar() {
+  const stats = [
+    { icon: <Users size={20} />,      val: "2.4L+",   lbl: "Students helped",     iconClass: "orange" },
+    { icon: <BookOpen size={20} />,   val: "850+",    lbl: "Colleges listed",     iconClass: "teal"   },
+    { icon: <Target size={20} />,     val: "98% acc", lbl: "Rank predictions",    iconClass: "green"  },
+    { icon: <TrendingUp size={20} />, val: "1.2M+",   lbl: "Cutoff data points",  iconClass: "orange" },
+  ];
+
+  const palette = {
+    orange: { bg: "rgba(244,123,32,.18)",  border: "rgba(244,123,32,.35)", color: "#F47B20" },
+    teal:   { bg: "rgba(14,165,164,.15)",  border: "rgba(14,165,164,.30)", color: "#0ea5a4" },
+    green:  { bg: "rgba(34,197,94,.13)",   border: "rgba(34,197,94,.28)",  color: "#22c55e" },
+  };
+
   return (
-    <div style={{ textAlign: "center" }}>
-      <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.4rem,3vw,2rem)", color: "#fff", lineHeight: 1 }}>
-        <AnimatedNumber target={target} suffix={suffix} duration={1.6} />
-      </div>
-      <div style={{ fontSize: 11.5, color: "rgba(255,255,255,.45)", marginTop: 5, fontFamily: "'DM Sans',sans-serif" }}>{label}</div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        gap: 12,
+        maxWidth: 580,
+        margin: "0 auto",
+        padding: "20px 0",
+        borderTop: "1px solid rgba(255,255,255,.08)",
+        borderBottom: "1px solid rgba(255,255,255,.08)",
+      }}
+    >
+      {stats.map(({ icon, val, lbl, iconClass }) => {
+        const c = palette[iconClass];
+        return (
+          <div
+            key={lbl}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              background: "rgba(255,255,255,.04)",
+              border: "1px solid rgba(255,255,255,.08)",
+              borderRadius: 12,
+              padding: "12px 10px",
+            }}
+          >
+            <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 9,
+                flexShrink: 0,
+                display: "grid",
+                placeItems: "center",
+                background: c.bg,
+                border: `1px solid ${c.border}`,
+                color: c.color,
+              }}
+            >
+              {icon}
+            </div>
+            <div>
+              <div
+                style={{
+                  fontFamily: "'Space Grotesk','Sora',sans-serif",
+                  fontWeight: 800,
+                  fontSize: "clamp(.9rem,1.8vw,1.05rem)",
+                  color: "#fff",
+                  lineHeight: 1.1,
+                }}
+              >
+                {val}
+              </div>
+              <div
+                style={{
+                  fontSize: 10.5,
+                  color: "rgba(255,255,255,.42)",
+                  marginTop: 3,
+                  fontFamily: "'DM Sans',sans-serif",
+                  lineHeight: 1.3,
+                }}
+              >
+                {lbl}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </motion.div>
   );
 }
 
@@ -545,7 +626,8 @@ export default function Hero({ onSearch }) {
                   words={["8 years of JoSAA data", "850+ institutes tracked", "Real-time rank predictions", "JEE Advanced cutoffs", "NIT / IIIT / GFTI seats"]}
                   style={{ fontSize: "clamp(.82rem,1.5vw,.96rem)", color: "#F47B20", fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, letterSpacing: "0.3px" }}
                   cursorColor="#fbbf24"
-                /></div>
+                />
+              </div>
             </motion.div>
 
             {/* Search bar */}
@@ -645,24 +727,9 @@ export default function Hero({ onSearch }) {
               </RippleButton>
             </motion.div>
 
-            {/* Stats row */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              style={{
-                display: "grid", gridTemplateColumns: "repeat(4,1fr)",
-                gap: 12, maxWidth: 580, margin: "0 auto",
-                padding: "20px 0",
-                borderTop: "1px solid rgba(255,255,255,.08)",
-                borderBottom: "1px solid rgba(255,255,255,.08)",
-              }}
-            >
-              <Stat target={2500} suffix="+" label="Colleges & branches" />
-              <Stat target={17}   suffix=""   label="Entrance exams" />
-              <Stat target={8}    suffix=""   label="Counselling rounds" />
-              <Stat target={50}   suffix="K+" label="Students guided" />
-            </motion.div>
+            {/* ══ STATS BAR (updated — icon + value cards) ══ */}
+            <StatsBar />
+
           </div>
           {/* ══ end CENTER ══ */}
 
