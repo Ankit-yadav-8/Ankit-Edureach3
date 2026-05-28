@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, MapPin, Trophy, ArrowRight, Wand2 } from "lucide-react";
-import { predictCollegesGrouped, TIER_COLOR } from "../utils/collegePredictor.js";
+import { Sparkles, MapPin, Trophy, ArrowRight, Wand2, Loader2 } from "lucide-react";
 import { COLLEGE_BY_SLUG, CATEGORIES } from "../data/colleges.js";
+import { TIER_COLOR } from "../utils/collegePredictor.js";
+import { useCollegePredictor } from "../hooks/useCollegePredictor.js";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { SaveButton, CompareButton } from "../components/SaveButton.jsx";
 import { fmtINR, fmtRank } from "../utils/format.js";
@@ -17,48 +18,53 @@ const GROUP_META = {
 
 const GROUP_ORDER = ["IIT", "NIT", "IIIT", "GFTI"];
 
+const LOADING_TIPS = [
+  "Scanning 1,000+ college-branch combinations…",
+  "Matching your rank against 2024 JoSAA cutoffs…",
+  "Calculating fit scores across all rounds…",
+  "Almost there — ranking results by NIRF & branch value…",
+];
+
 export default function ForYou() {
   const { saved } = useShortlist();
   const nav = useNavigate();
-  const [rank, setRank] = useState("");
-  const [category, setCategory] = useState("OPEN");
-  const [submitted, setSubmitted] = useState(false);
 
-  // grouped: { IIT: [...], NIT: [...], IIIT: [...], GFTI: [...] }
-  const grouped = useMemo(() => {
-    if (!rank || !submitted) return null;
-    return predictCollegesGrouped({ rank: Number(rank), category });
-  }, [rank, category, submitted]);
+  const [rank, setRank]         = useState("");
+  const [category, setCategory] = useState("OPEN");
+  const [tipIdx, setTipIdx]     = useState(0);
+  const tipTimer = useRef(null);
+
+  const { predict, reset, results: grouped, loading, error } = useCollegePredictor();
 
   const hasResults = grouped && GROUP_ORDER.some((g) => grouped[g]?.length > 0);
+  const savedCols  = saved.map((s) => COLLEGE_BY_SLUG[s]).filter(Boolean);
 
-  const savedCols = saved.map((s) => COLLEGE_BY_SLUG[s]).filter(Boolean);
+  function handlePredict() {
+    if (!rank || Number(rank) <= 0) return;
+
+    // Rotate loading tips every 1.5s
+    setTipIdx(0);
+    if (tipTimer.current) clearInterval(tipTimer.current);
+    tipTimer.current = setInterval(() => {
+      setTipIdx((i) => (i + 1) % LOADING_TIPS.length);
+    }, 1500);
+
+    predict({ rank: Number(rank), category });
+  }
+
+  // Clear tip timer when done
+  if (!loading && tipTimer.current) {
+    clearInterval(tipTimer.current);
+    tipTimer.current = null;
+  }
 
   return (
     <div className="page">
       {/* ── Hero ── */}
-      <section
-        style={{
-          background: "linear-gradient(135deg,#fff7f0,#ffe8d6)",
-          color: "var(--ink)",
-          padding: "44px 0",
-        }}
-      >
+      <section style={{ background: "linear-gradient(135deg,#fff7f0,#ffe8d6)", padding: "44px 0" }}>
         <div className="container">
-          <span className="eyebrow" style={{ color: "var(--coral)" }}>
-            Personalized
-          </span>
-          <h1
-            style={{
-              fontFamily: "Sora",
-              fontWeight: 800,
-              fontSize: "clamp(1.8rem,4vw,2.5rem)",
-              margin: "8px 0 4px",
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-            }}
-          >
+          <span className="eyebrow" style={{ color: "var(--coral)" }}>Personalized</span>
+          <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.5rem)", margin: "8px 0 4px", display: "flex", alignItems: "center", gap: 10 }}>
             <Wand2 size={28} /> Colleges for you
           </h1>
           <p style={{ color: "var(--muted)" }}>
@@ -69,12 +75,10 @@ export default function ForYou() {
       </section>
 
       <div className="container section">
+
         {/* ── Input card ── */}
         <div className="card" style={{ marginBottom: 28 }}>
-          <div
-            className="grid-3"
-            style={{ gap: 12, alignItems: "end" }}
-          >
+          <div className="grid-3" style={{ gap: 12, alignItems: "end" }}>
             <div className="field">
               <label>Your rank (CRL / category)</label>
               <input
@@ -82,11 +86,9 @@ export default function ForYou() {
                 type="number"
                 min="1"
                 value={rank}
-                onChange={(e) => {
-                  setRank(e.target.value);
-                  setSubmitted(false); // reset on change
-                }}
+                onChange={(e) => { setRank(e.target.value); reset(); }}
                 placeholder="e.g. 8500"
+                onKeyDown={(e) => e.key === "Enter" && handlePredict()}
               />
             </div>
             <div className="field">
@@ -94,35 +96,70 @@ export default function ForYou() {
               <select
                 className="select"
                 value={category}
-                onChange={(e) => {
-                  setCategory(e.target.value);
-                  setSubmitted(false);
-                }}
+                onChange={(e) => { setCategory(e.target.value); reset(); }}
               >
                 {CATEGORIES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
+                  <option key={c} value={c}>{c}</option>
                 ))}
               </select>
             </div>
             <button
               className="btn btn-coral"
-              style={{ justifyContent: "center" }}
-              onClick={() => setSubmitted(true)}
+              style={{ justifyContent: "center", opacity: loading ? 0.7 : 1 }}
+              onClick={handlePredict}
+              disabled={loading || !rank}
             >
-              <Sparkles size={16} /> Recommend colleges
+              {loading
+                ? <><Loader2 size={16} style={{ animation: "spin 0.8s linear infinite" }} /> Predicting…</>
+                : <><Sparkles size={16} /> Recommend colleges</>
+              }
             </button>
           </div>
         </div>
 
+        {/* ── Loading state ── */}
+        {loading && (
+          <div style={{
+            textAlign: "center", padding: "60px 24px",
+            background: "#fff", borderRadius: 16,
+            border: "1px solid var(--line)", marginBottom: 28,
+          }}>
+            <div style={{
+              width: 52, height: 52, borderRadius: "50%",
+              border: "4px solid #f3f0ec",
+              borderTop: "4px solid #F47B20",
+              animation: "spin 0.8s linear infinite",
+              margin: "0 auto 20px",
+            }} />
+            <p style={{ fontWeight: 700, color: "var(--navy)", fontSize: 15, marginBottom: 6 }}>
+              Finding your best colleges…
+            </p>
+            <p style={{ color: "var(--muted)", fontSize: 13, transition: "all .3s" }}>
+              {LOADING_TIPS[tipIdx]}
+            </p>
+            <p style={{ color: "var(--muted)", fontSize: 12, marginTop: 12 }}>
+              This runs in the background — feel free to scroll the page
+            </p>
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          </div>
+        )}
+
+        {/* ── Error state ── */}
+        {error && (
+          <div style={{
+            background: "#fff0f0", border: "1px solid #fca5a5",
+            borderRadius: 12, padding: "16px 20px", marginBottom: 24,
+            color: "#dc2626", fontSize: 14,
+          }}>
+            ⚠️ {error} — please try again.
+          </div>
+        )}
+
         {/* ── Grouped results ── */}
-        {hasResults && (
+        {hasResults && !loading && (
           <>
             <p style={{ color: "var(--muted)", marginBottom: 24, fontSize: 14 }}>
-              Showing best-fit options for rank{" "}
-              <strong>{fmtRank(Number(rank))}</strong> · {category} · 2024
-              cutoffs
+              Showing best-fit options for rank <strong>{fmtRank(Number(rank))}</strong> · {category} · 2024 cutoffs
             </p>
 
             {GROUP_ORDER.map((groupKey) => {
@@ -132,36 +169,16 @@ export default function ForYou() {
 
               return (
                 <div key={groupKey} style={{ marginBottom: 40 }}>
-                  {/* Group heading */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      marginBottom: 14,
-                      paddingBottom: 10,
-                      borderBottom: `2px solid ${meta.color}22`,
-                    }}
-                  >
+                  <div style={{
+                    display: "flex", alignItems: "center", gap: 10,
+                    marginBottom: 14, paddingBottom: 10,
+                    borderBottom: `2px solid ${meta.color}22`,
+                  }}>
                     <span style={{ fontSize: 20 }}>{meta.emoji}</span>
-                    <h3
-                      style={{
-                        fontFamily: "Sora",
-                        fontWeight: 700,
-                        color: meta.color,
-                        margin: 0,
-                      }}
-                    >
+                    <h3 style={{ fontFamily: "Sora", fontWeight: 700, color: meta.color, margin: 0 }}>
                       {meta.label}
                     </h3>
-                    <span
-                      className="badge"
-                      style={{
-                        background: `${meta.color}18`,
-                        color: meta.color,
-                        fontSize: 12,
-                      }}
-                    >
+                    <span className="badge" style={{ background: `${meta.color}18`, color: meta.color, fontSize: 12 }}>
                       {picks.length} option{picks.length > 1 ? "s" : ""}
                     </span>
                   </div>
@@ -172,56 +189,20 @@ export default function ForYou() {
                       if (!c) return null;
                       return (
                         <Reveal key={`${m.slug}-${m.branch}`} delay={(i % 3) * 0.05}>
-                          <div
-                            className="card"
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: 9,
-                              height: "100%",
-                              borderTop: `3px solid ${meta.color}`,
-                            }}
-                          >
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "flex-start",
-                                gap: 8,
-                              }}
-                            >
-                              <h4
-                                style={{
-                                  fontFamily: "Sora",
-                                  fontWeight: 700,
-                                  color: "var(--navy)",
-                                  fontSize: 14,
-                                  lineHeight: 1.3,
-                                }}
-                              >
+                          <div className="card" style={{
+                            display: "flex", flexDirection: "column", gap: 9,
+                            height: "100%", borderTop: `3px solid ${meta.color}`,
+                          }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                              <h4 style={{ fontFamily: "Sora", fontWeight: 700, color: "var(--navy)", fontSize: 14, lineHeight: 1.3 }}>
                                 {c.short}
                               </h4>
-                              <span
-                                className="badge"
-                                style={{
-                                  background: `${TIER_COLOR[m.tier]}22`,
-                                  color: TIER_COLOR[m.tier],
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
+                              <span className="badge" style={{ background: `${TIER_COLOR[m.tier]}22`, color: TIER_COLOR[m.tier], whiteSpace: "nowrap" }}>
                                 {m.tier}
                               </span>
                             </div>
 
-                            <div
-                              style={{
-                                fontSize: 12.5,
-                                color: "var(--muted)",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 4,
-                              }}
-                            >
+                            <div style={{ fontSize: 12.5, color: "var(--muted)", display: "flex", alignItems: "center", gap: 4 }}>
                               <MapPin size={12} /> {c.location}
                             </div>
 
@@ -229,41 +210,17 @@ export default function ForYou() {
                               Best fit: <strong>{m.branch}</strong>
                             </div>
 
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: 12,
-                                fontSize: 12.5,
-                                padding: "8px 0",
-                                borderTop: "1px solid var(--line)",
-                              }}
-                            >
-                              <span>
-                                Closing{" "}
-                                <strong>{fmtRank(m.closing)}</strong>
-                              </span>
-                              <span>
-                                Avg{" "}
-                                <strong>{fmtINR(m.avgPackage)}</strong>
-                              </span>
+                            <div style={{ display: "flex", gap: 12, fontSize: 12.5, padding: "8px 0", borderTop: "1px solid var(--line)" }}>
+                              <span>Closing <strong>{fmtRank(m.closing)}</strong></span>
+                              <span>Avg <strong>{fmtINR(m.avgPackage)}</strong></span>
                             </div>
 
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: 8,
-                                marginTop: "auto",
-                              }}
-                            >
+                            <div style={{ display: "flex", gap: 8, marginTop: "auto" }}>
                               <SaveButton slug={c.slug} size={15} />
                               <CompareButton slug={c.slug} label={false} />
                               <button
                                 className="btn btn-coral"
-                                style={{
-                                  flex: 1,
-                                  justifyContent: "center",
-                                  fontSize: 12.5,
-                                }}
+                                style={{ flex: 1, justifyContent: "center", fontSize: 12.5 }}
                                 onClick={() => nav(`/colleges/${c.slug}`)}
                               >
                                 Details <ArrowRight size={14} />
@@ -280,75 +237,35 @@ export default function ForYou() {
           </>
         )}
 
-        {/* No results after submit */}
-        {submitted && rank && !hasResults && (
-          <div
-            className="card"
-            style={{ textAlign: "center", padding: 44, color: "var(--muted)" }}
-          >
+        {/* ── No results ── */}
+        {!loading && grouped && !hasResults && (
+          <div className="card" style={{ textAlign: "center", padding: 44, color: "var(--muted)" }}>
             <Sparkles size={42} color="var(--line)" />
             <p style={{ marginTop: 12 }}>
-              No colleges found for rank {fmtRank(Number(rank))} in category{" "}
-              {category}. Try a higher rank or a different category.
+              No colleges found for rank {fmtRank(Number(rank))} in {category}. Try a higher rank or different category.
             </p>
           </div>
         )}
 
-        {/* ── Shortlist section ── */}
+        {/* ── Shortlist ── */}
         {savedCols.length > 0 && (
           <>
-            <h3
-              style={{
-                fontFamily: "Sora",
-                fontWeight: 700,
-                marginBottom: 14,
-                marginTop: hasResults ? 0 : 0,
-              }}
-            >
+            <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 14, marginTop: hasResults ? 40 : 0 }}>
               From your shortlist
             </h3>
             <div className="grid-3">
               {savedCols.map((c) => (
-                <div
-                  key={c.slug}
-                  className="card"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 8,
-                    height: "100%",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <h4
-                      style={{
-                        fontFamily: "Sora",
-                        fontWeight: 700,
-                        color: "var(--navy)",
-                      }}
-                    >
-                      {c.short}
-                    </h4>
-                    <span className="badge orange">
-                      <Trophy size={11} /> #{c.nirf}
-                    </span>
+                <div key={c.slug} className="card" style={{ display: "flex", flexDirection: "column", gap: 8, height: "100%" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <h4 style={{ fontFamily: "Sora", fontWeight: 700, color: "var(--navy)" }}>{c.short}</h4>
+                    <span className="badge orange"><Trophy size={11} /> #{c.nirf}</span>
                   </div>
                   <div style={{ fontSize: 12.5, color: "var(--muted)" }}>
                     {c.location} · Avg {fmtINR(c.placements.avg)}
                   </div>
                   <button
                     className="btn btn-ghost"
-                    style={{
-                      marginTop: "auto",
-                      justifyContent: "center",
-                      fontSize: 13,
-                    }}
+                    style={{ marginTop: "auto", justifyContent: "center", fontSize: 13 }}
                     onClick={() => nav(`/colleges/${c.slug}`)}
                   >
                     View <ArrowRight size={14} />
@@ -359,19 +276,16 @@ export default function ForYou() {
           </>
         )}
 
-        {/* Empty state — nothing at all */}
-        {!submitted && savedCols.length === 0 && (
-          <div
-            className="card"
-            style={{ textAlign: "center", padding: 44, color: "var(--muted)" }}
-          >
+        {/* ── Empty state ── */}
+        {!loading && !grouped && savedCols.length === 0 && (
+          <div className="card" style={{ textAlign: "center", padding: 44, color: "var(--muted)" }}>
             <Sparkles size={42} color="var(--line)" />
             <p style={{ marginTop: 12 }}>
-              Enter your rank above for personalized picks, or save colleges to
-              see them here.
+              Enter your rank above for personalized picks, or save colleges to see them here.
             </p>
           </div>
         )}
+
       </div>
     </div>
   );

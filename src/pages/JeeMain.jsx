@@ -439,11 +439,23 @@ export default function JeeMain() {
 
       {/* ── College Predictor ── */}
       <div style={{ background: "var(--sky)" }}>
-        <Block id="college" eyebrow="Tool 2" title="JEE Main College Predictor"
-          sub="Enter your rank to see every eligible NIT, IIIT & GFTI with JoSAA and CSAB round cutoffs." bg="transparent">
-          <CollegePredictorTool basePath="/jee-main" />
-        </Block>
-      </div>
+  <Block id="college" eyebrow="Tool 2" title="JEE Main College Predictor"
+    sub="Enter your rank to see every eligible NIT, IIIT & GFTI with JoSAA and CSAB round cutoffs." bg="transparent">
+    {/* ── Loading notice ── */}
+    <div style={{
+      display: "flex", alignItems: "center", gap: 10,
+      background: "#fff8ed", border: "1px solid #f97316",
+      borderRadius: 10, padding: "12px 16px", marginBottom: 20,
+      fontSize: 13, color: "#92400e",
+    }}>
+      <span style={{ fontSize: 18 }}>⏳</span>
+      <span>
+        <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a "Page Unresponsive" pop-up, click <strong>"Wait"</strong> — do <em>not</em> click "Exit Page".
+      </span>
+    </div>
+    <CollegePredictorTool basePath="/jee-main" />
+  </Block>
+</div>
 
       {/* ══ DIFFICULTY ANALYSIS ══ */}
       <section id="difficulty" className="section" style={{ scrollMarginTop: 90 }}>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-  Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound,
+  Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 
@@ -16,6 +16,15 @@ const fmtDate = (iso) => {
   });
 };
 
+const avatar = (name, phone) => (name || phone || "U").charAt(0).toUpperCase();
+
+const avatarColor = (str) => {
+  const colors = ["#6366f1","#f59e0b","#10b981","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#f97316"];
+  let hash = 0;
+  for (let i = 0; i < (str || "").length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  return colors[Math.abs(hash) % colors.length];
+};
+
 export default function Admin() {
   const [storedKey, setStoredKey] = useState(() => sessionStorage.getItem(KEY_STORAGE) || "");
   const [entering, setEntering] = useState("");
@@ -24,6 +33,7 @@ export default function Admin() {
   const [total, setTotal] = useState(0);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  const [search, setSearch] = useState("");
 
   const fetchUsers = useCallback(async (k) => {
     setBusy(true); setErr("");
@@ -53,7 +63,7 @@ export default function Admin() {
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url; a.download = "edureach-users.csv";
+      a.href = url; a.download = "collegeparichay-users.csv";
       document.body.appendChild(a); a.click(); a.remove();
       URL.revokeObjectURL(url);
     } catch (e) { setErr(e.message); }
@@ -65,25 +75,38 @@ export default function Admin() {
     setUsers([]); setTotal(0); setErr("");
   }
 
-  // ── KEY-GATE SCREEN ─────────────────────────────────────────────
+  const filtered = users.filter((u) =>
+    !search ||
+    (u.name || "").toLowerCase().includes(search.toLowerCase()) ||
+    (u.email || "").toLowerCase().includes(search.toLowerCase()) ||
+    (u.phone || "").includes(search)
+  );
+
+  // ── KEY-GATE ──────────────────────────────────────────────────
   if (!authed) {
     return (
-      <div className="page" style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "60px 16px" }}>
-        <div className="card" style={{ maxWidth: 420, width: "100%", padding: "32px 28px" }}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 22 }}>
-            <div style={{ width: 54, height: 54, borderRadius: 16, background: `${ORANGE}15`, display: "grid", placeItems: "center", marginBottom: 12 }}>
-              <ShieldCheck size={26} color={ORANGE} />
+      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: "60px 16px", background: "#f8f7f5" }}>
+        <div style={{ maxWidth: 440, width: "100%", background: "#fff", borderRadius: 20, padding: "40px 36px", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", border: "1px solid #eee" }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 28 }}>
+            <div style={{ width: 64, height: 64, borderRadius: 20, background: `${ORANGE}15`, display: "grid", placeItems: "center", marginBottom: 16 }}>
+              <ShieldCheck size={30} color={ORANGE} />
             </div>
-            <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: "var(--navy)", fontSize: "1.4rem" }}>Admin access</h2>
-            <p style={{ color: "var(--muted)", fontSize: 13.5, marginTop: 5 }}>Enter your ADMIN_KEY to view signups.</p>
+            <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: "#0d1b3e", fontSize: "1.6rem", margin: 0 }}>Admin Access</h2>
+            <p style={{ color: "#888", fontSize: 14, marginTop: 8 }}>Enter your secret key to view signups</p>
           </div>
-          <div style={{ position: "relative", marginBottom: 14 }}>
-            <KeyRound size={17} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#9aa0aa", pointerEvents: "none" }} />
+          <div style={{ position: "relative", marginBottom: 16 }}>
+            <KeyRound size={17} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#bbb", pointerEvents: "none" }} />
             <input
-              className="input" type="password" placeholder="ADMIN_KEY"
+              type="password" placeholder="Enter ADMIN_KEY"
               value={entering} onChange={(e) => setEntering(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter" && entering) fetchUsers(entering); }}
-              style={{ width: "100%", paddingLeft: 42 }} autoFocus
+              autoFocus
+              style={{
+                width: "100%", paddingLeft: 44, paddingRight: 16, height: 50,
+                borderRadius: 12, border: "1.5px solid #e5e7eb", fontSize: 15,
+                outline: "none", boxSizing: "border-box", fontFamily: "inherit",
+                transition: "border .2s",
+              }}
             />
           </div>
           <button
@@ -91,101 +114,196 @@ export default function Admin() {
             onClick={() => fetchUsers(entering)}
             style={{
               background: ORANGE, color: "#fff", width: "100%", border: "none",
-              height: 46, borderRadius: 12, fontWeight: 700, fontSize: 15, cursor: "pointer",
-              opacity: busy || !entering ? 0.6 : 1,
+              height: 50, borderRadius: 12, fontWeight: 700, fontSize: 16,
+              cursor: busy || !entering ? "not-allowed" : "pointer",
+              opacity: busy || !entering ? 0.6 : 1, transition: "opacity .2s",
             }}
           >
-            {busy ? "Checking…" : "Unlock"}
+            {busy ? "Verifying…" : "🔓 Unlock Dashboard"}
           </button>
-          {err && <p style={{ color: "#e5484d", fontSize: 12.5, marginTop: 12, textAlign: "center" }}>{err}</p>}
-          <p style={{ fontSize: 12, color: "var(--muted)", textAlign: "center", marginTop: 16 }}>
-            Set the value in <code>server/.env</code> as <code>ADMIN_KEY</code>.
-          </p>
+          {err && (
+            <div style={{ background: "#fff0f0", border: "1px solid #fca5a5", borderRadius: 10, padding: "10px 14px", marginTop: 14, color: "#dc2626", fontSize: 13, textAlign: "center" }}>
+              {err}
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
-  // ── DASHBOARD ───────────────────────────────────────────────────
+  // ── DASHBOARD ─────────────────────────────────────────────────
   return (
-    <div className="page" style={{ padding: "32px 0 60px" }}>
-      <div className="container">
+    <div style={{ minHeight: "100vh", background: "#f8f7f5", padding: "32px 0 60px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
 
-        {/* header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14, marginBottom: 24 }}>
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
           <div>
-            <h1 style={{ fontFamily: "Sora", fontWeight: 800, color: "var(--navy)", fontSize: "1.6rem" }}>EduReach Admin</h1>
-            <p style={{ color: "var(--muted)", fontSize: 13.5, marginTop: 4 }}>Live signups · pulled from your MongoDB Atlas DB</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}>
+                <ShieldCheck size={18} color={ORANGE} />
+              </div>
+              <h1 style={{ fontFamily: "Sora", fontWeight: 800, color: "#0d1b3e", fontSize: "1.5rem", margin: 0 }}>
+                Admin Dashboard
+              </h1>
+            </div>
+            <p style={{ color: "#888", fontSize: 13, margin: 0, paddingLeft: 46 }}>
+              College Parichay · Live signups from MongoDB Atlas
+            </p>
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button onClick={() => fetchUsers(storedKey)} disabled={busy}
-              style={{ background: "#fff", color: ORANGE, border: `1.6px solid ${ORANGE}`, height: 42, padding: "0 18px", borderRadius: 10, fontWeight: 700, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <RefreshCw size={15} /> {busy ? "Refreshing…" : "Refresh"}
+              style={{ background: "#fff", color: ORANGE, border: `1.5px solid ${ORANGE}`, height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+              <RefreshCw size={14} style={{ animation: busy ? "spin 1s linear infinite" : "none" }} />
+              {busy ? "Refreshing…" : "Refresh"}
             </button>
             <button onClick={downloadCsv}
-              style={{ background: ORANGE, color: "#fff", border: "none", height: 42, padding: "0 18px", borderRadius: 10, fontWeight: 700, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <Download size={15} /> Download CSV
+              style={{ background: ORANGE, color: "#fff", border: "none", height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+              <Download size={14} /> Export CSV
             </button>
-            <button onClick={logout} title="Forget admin key"
-              style={{ background: "#f4f5f7", color: "var(--muted)", border: "none", height: 42, padding: "0 14px", borderRadius: 10, fontWeight: 600, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <LogOut size={15} /> Log out
+            <button onClick={logout}
+              style={{ background: "#fff", color: "#888", border: "1.5px solid #e5e7eb", height: 40, padding: "0 14px", borderRadius: 10, fontWeight: 600, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+              <LogOut size={14} /> Logout
             </button>
           </div>
         </div>
 
-        {/* count card */}
-        <div style={{ background: "var(--navy)", borderRadius: 16, padding: "22px 24px", color: "#fff", marginBottom: 24, display: "flex", alignItems: "center", gap: 18 }}>
-          <div style={{ width: 52, height: 52, borderRadius: 14, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
-            <Users size={26} color={ORANGE} />
+        {/* Stat cards */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 28 }}>
+          <div style={{ background: "#0d1b3e", borderRadius: 16, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
+              <Users size={22} color={ORANGE} />
+            </div>
+            <div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{total}</div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Total signups</div>
+            </div>
           </div>
-          <div>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "2rem", lineHeight: 1 }}>{total.toLocaleString("en-IN")}</div>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,.65)", marginTop: 4 }}>Total signups</div>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #eee" }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+              <Calendar size={22} color="#16a34a" />
+            </div>
+            <div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                {users.filter(u => {
+                  const d = new Date(u.createdAt);
+                  const now = new Date();
+                  return d.toDateString() === now.toDateString();
+                }).length}
+              </div>
+              <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Joined today</div>
+            </div>
+          </div>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #eee" }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#fff7ed", display: "grid", placeItems: "center" }}>
+              <Clock size={22} color={ORANGE} />
+            </div>
+            <div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                {users.filter(u => {
+                  const d = new Date(u.lastLogin);
+                  const now = new Date();
+                  return (now - d) < 24 * 60 * 60 * 1000;
+                }).length}
+              </div>
+              <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Active today</div>
+            </div>
           </div>
         </div>
 
         {err && (
-          <div style={{ background: "rgba(229,72,77,.08)", border: "1px solid rgba(229,72,77,.25)", color: "#c1272d", padding: "10px 14px", borderRadius: 10, fontSize: 13.5, marginBottom: 16 }}>
+          <div style={{ background: "#fff0f0", border: "1px solid #fca5a5", borderRadius: 10, padding: "12px 16px", marginBottom: 20, color: "#dc2626", fontSize: 13 }}>
             {err}
           </div>
         )}
 
-        {/* table */}
-        <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-          {users.length === 0 ? (
-            <div style={{ padding: "60px 20px", textAlign: "center", color: "var(--muted)", fontSize: 14 }}>
-              No signups yet.
+        {/* Search + Table */}
+        <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+
+          {/* Search bar */}
+          <div style={{ padding: "16px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+            <span style={{ fontWeight: 700, color: "#0d1b3e", fontSize: 15 }}>
+              All Users
+              <span style={{ marginLeft: 8, background: "#f3f4f6", borderRadius: 20, padding: "2px 10px", fontSize: 12, color: "#666", fontWeight: 600 }}>
+                {filtered.length}
+              </span>
+            </span>
+            <input
+              placeholder="Search name, email or phone…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{
+                height: 38, padding: "0 14px", borderRadius: 10, border: "1.5px solid #e5e7eb",
+                fontSize: 13, outline: "none", minWidth: 240, fontFamily: "inherit",
+              }}
+            />
+          </div>
+
+          {filtered.length === 0 ? (
+            <div style={{ padding: "60px 20px", textAlign: "center", color: "#aaa", fontSize: 14 }}>
+              {search ? "No users match your search." : "No signups yet."}
             </div>
           ) : (
             <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", minWidth: 860, borderCollapse: "collapse" }}>
+              <table style={{ width: "100%", minWidth: 780, borderCollapse: "collapse" }}>
                 <thead>
-                  <tr style={{ background: "var(--sky)" }}>
-                    {["#", "Name", "Email", "Phone", "Joined", "Last login"].map((h) => (
-                      <th key={h} style={{ padding: "12px 14px", textAlign: "left", fontSize: 12, fontWeight: 700, color: "var(--navy)", letterSpacing: ".02em", textTransform: "uppercase" }}>{h}</th>
+                  <tr style={{ background: "#fafafa" }}>
+                    {["#", "User", "Email", "Phone", "Joined", "Last Login"].map((h) => (
+                      <th key={h} style={{
+                        padding: "12px 20px", textAlign: "left", fontSize: 11,
+                        fontWeight: 700, color: "#999", letterSpacing: ".06em",
+                        textTransform: "uppercase", borderBottom: "1px solid #f0f0f0",
+                      }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((u, i) => (
-                    <tr key={u._id} style={{ borderTop: "1px solid #eef0f3" }}>
-                      <td style={{ padding: "12px 14px", fontSize: 12, color: "var(--muted)", fontFamily: "monospace" }}>
+                  {filtered.map((u, i) => (
+                    <tr key={u._id} style={{ borderBottom: "1px solid #f8f8f8", transition: "background .15s" }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#fafafa"}
+                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                    >
+                      <td style={{ padding: "14px 20px", fontSize: 12, color: "#ccc", fontFamily: "monospace", width: 40 }}>
                         {i + 1}
                       </td>
-                      <td style={{ padding: "12px 14px", fontSize: 13.5, color: "var(--navy)", fontWeight: 600 }}>
-                        {u.name || "—"}
+                      <td style={{ padding: "14px 20px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <div style={{
+                            width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
+                            background: avatarColor(u.name || u.phone),
+                            color: "#fff", display: "grid", placeItems: "center",
+                            fontSize: 13, fontWeight: 800,
+                          }}>
+                            {avatar(u.name, u.phone)}
+                          </div>
+                          <span style={{ fontWeight: 600, color: "#0d1b3e", fontSize: 14 }}>
+                            {u.name || "—"}
+                          </span>
+                        </div>
                       </td>
-                      <td style={{ padding: "12px 14px", fontSize: 13, color: "var(--muted)" }}>
-                        {u.email || "—"}
+                      <td style={{ padding: "14px 20px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
+                          <Mail size={13} color="#bbb" />
+                          {u.email || "—"}
+                        </div>
                       </td>
-                      <td style={{ padding: "12px 14px", fontSize: 13, color: "var(--muted)" }}>
-                        {u.phone || "—"}
+                      <td style={{ padding: "14px 20px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
+                          <Phone size={13} color="#bbb" />
+                          {u.phone || "—"}
+                        </div>
                       </td>
-                      <td style={{ padding: "12px 14px", fontSize: 12.5, color: "var(--muted)" }}>
+                      <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888" }}>
                         {fmtDate(u.createdAt)}
                       </td>
-                      <td style={{ padding: "12px 14px", fontSize: 12.5, color: "var(--muted)" }}>
-                        {fmtDate(u.lastLogin)}
+                      <td style={{ padding: "14px 20px" }}>
+                        <span style={{
+                          fontSize: 12, color: "#555",
+                          background: "#f3f4f6", borderRadius: 6,
+                          padding: "4px 8px", whiteSpace: "nowrap",
+                        }}>
+                          {fmtDate(u.lastLogin)}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -196,6 +314,7 @@ export default function Admin() {
         </div>
 
       </div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
