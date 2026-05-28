@@ -16,6 +16,7 @@ import { BRANCHES }    from "../data/colleges.js";
 import {
   loadCutoffDB,
   isDBReady,
+  isPredictorReady,   // ← added: gates expandRounds on 2024-only fast load
   REAL_YEARS,
   getRealRounds,
   getRealPrograms,
@@ -35,7 +36,7 @@ const _progListCache = new Map();
 function programsFor(college) {
   if (_progListCache.has(college.slug)) return _progListCache.get(college.slug);
   const list = getRealPrograms(college);
-  if (isDBReady()) _progListCache.set(college.slug, list);
+  if (isDBReady() || isPredictorReady()) _progListCache.set(college.slug, list);
   return list;
 }
 
@@ -83,7 +84,8 @@ function programForBranch(college, branchCode) {
 }
 
 function realRounds(college, branchCode, cat, year) {
-  if (!isDBReady()) return null;
+  // ← changed: accept either the full 8-year DB or the 2024-only predictor DB
+  if (!isDBReady() && !isPredictorReady()) return null;
   const program = programForBranch(college, branchCode);
   if (!program) return null;
   for (const q of ALLINDIA_QUOTAS) {
@@ -95,6 +97,7 @@ function realRounds(college, branchCode, cat, year) {
 
 // Multi-year history that handles the NIT quota-code switch
 // (older years use OS, 2024+ use AI) by trying both per year.
+// NOTE: this still gates on isDBReady() (full 8-year DB) — intentional.
 function realHistoryMerged(college, branchCode, cat) {
   if (!isDBReady()) return [];
   const program = programForBranch(college, branchCode);
@@ -211,6 +214,7 @@ export function expandRounds(college, branch, cat, year = DEFAULT_YEAR) {
 }
 
 // ── cutoffHistory — real multi-year, modelled fallback ────────────────────────
+// Uses full 8-year DB (isDBReady) — unchanged, intentional.
 export function cutoffHistory(college, branch, cat) {
   const real = realHistoryMerged(college, branch, cat);
   if (real.length) return real;
@@ -218,6 +222,7 @@ export function cutoffHistory(college, branch, cat) {
 }
 
 // ── forecastClosing — real trend, modelled fallback ───────────────────────────
+// Uses full 8-year DB (isDBReady) — unchanged, intentional.
 export function forecastClosing(college, branch, cat) {
   const real = realHistoryMerged(college, branch, cat);
   const pts  = real.filter((h) => h.closing > 0).map((h) => [h.year, h.closing]);

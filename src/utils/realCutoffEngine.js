@@ -10,6 +10,9 @@ export const REAL_YEARS = ["2018","2019","2020","2021","2022","2023","2024","202
 const DB  = new Map();   // Map<year, Row[]>
 let _loadPromise = null;
 let _loaded      = false;
+// ── Predictor-only 2024 fast loader state ────────────────────────────────────
+let _predictorPromise = null;
+let _predictorReady   = false;
 
 // ── Caches (filled once DB is ready) ───────────────────────────────────────
 const _progCache = new Map(); // slug → string[]
@@ -128,6 +131,34 @@ export function loadCutoffDB() {
 }
 
 export const isDBReady = () => _loaded;
+
+// ── Predictor-only 2024 fast loader ─────────────────────────────────────────
+// Fetches ONLY josaa_2024.csv. Used by the college predictor worker so it
+// doesn't wait for all 8 years. Reuses the same DB map — if loadCutoffDB()
+// already ran, rows are already there and this resolves instantly.
+export function loadPredictorDB() {
+  if (_predictorPromise) return _predictorPromise;
+  _predictorPromise = fetchYear("2024")
+    .then((rows) => {
+      if (!DB.has("2024")) {
+        // Full DB hasn't loaded yet — insert 2024 rows now
+        for (const row of rows) {
+          if (!DB.has(row.year)) DB.set(row.year, []);
+          DB.get(row.year).push(row);
+        }
+      }
+      // If full DB already loaded, 2024 rows are already present — skip insert
+      _predictorReady = true;
+      _progCache.clear();
+    })
+    .catch((err) => {
+      console.error("[realCutoffEngine] 2024 fast load failed:", err);
+      _predictorPromise = null; // allow retry on next call
+    });
+  return _predictorPromise;
+}
+
+export const isPredictorReady = () => _predictorReady;
 
 /** Node/smoke-test hook: inject rows directly without fetch. */
 export function _injectRows(rows) {
@@ -268,7 +299,7 @@ export function getRealPrograms(college) {
     const d = order(a) - order(b);
     return d !== 0 ? d : a.localeCompare(b);
   });
-  if (_loaded) _progCache.set(college.slug, list);
+  if (_loaded || _predictorReady) _progCache.set(college.slug, list);
   return list;
 }
 

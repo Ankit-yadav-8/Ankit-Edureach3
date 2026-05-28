@@ -4,27 +4,64 @@ import { apiLogin, apiSignup, apiMe } from "./api.js";
 const Ctx = createContext(null);
 export const useAuth = () => useContext(Ctx);
 
+// ── helpers ───────────────────────────────────────────────────
+const TOKEN_KEY = "edureach:token";
+const USER_KEY  = "edureach:user";
+
+function readCache() {
+  try {
+    const raw = localStorage.getItem(USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+function writeCache(user) {
+  try { localStorage.setItem(USER_KEY, JSON.stringify(user)); } catch {}
+}
+function clearCache() {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+}
+
+// ── provider ──────────────────────────────────────────────────
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(() => localStorage.getItem("edureach:token") || "");
-  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || "");
+
+  // Only hydrate user from cache if a token also exists —
+  // prevents a brief isLoggedIn=true flash when token is gone but cache isn't.
+  const [user, setUser] = useState(() => {
+    const savedToken = localStorage.getItem(TOKEN_KEY);
+    return savedToken ? readCache() : null;
+  });
+
   const [loginOpen, setLoginOpen] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
-    apiMe(token).then(({ user }) => setUser(user))
-      .catch(() => { localStorage.removeItem("edureach:token"); setToken(""); });
+    if (!token) { setUser(null); return; }
+
+    // Background verify — update user silently; clear if token is stale
+    apiMe(token)
+      .then(({ user }) => { setUser(user); writeCache(user); })
+      .catch(() => { clearCache(); setToken(""); setUser(null); });
   }, [token]);
 
-  const save = ({ token, user }) => { localStorage.setItem("edureach:token", token); setToken(token); setUser(user); };
+  const save = ({ token, user }) => {
+    localStorage.setItem(TOKEN_KEY, token);
+    writeCache(user);
+    setToken(token);
+    setUser(user);
+  };
 
   const value = {
     user, token, isLoggedIn: !!user,
     saveSession: save,
-    login: async (email, password) => save(await apiLogin({ email, password })),
+    login:  async (email, password) => save(await apiLogin({ email, password })),
     signup: async (form) => save(await apiSignup(form)),
-    logout: () => { localStorage.removeItem("edureach:token"); setToken(""); setUser(null); },
-    loginOpen, openLogin: () => setLoginOpen(true), closeLogin: () => setLoginOpen(false),
-    requireAuth: (fn) => (user ? fn && fn() : setLoginOpen(true)),
+    logout: () => { clearCache(); setToken(""); setUser(null); },
+    loginOpen,
+    openLogin:   () => setLoginOpen(true),
+    closeLogin:  () => setLoginOpen(false),
+    requireAuth: (fn) => (user ? fn?.() : setLoginOpen(true)),
   };
+
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
