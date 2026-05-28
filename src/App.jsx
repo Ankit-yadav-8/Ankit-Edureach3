@@ -32,6 +32,7 @@ import WhatsAppButton from "./components/WhatsAppButton.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
 import SearchResults from "./pages/SearchResults.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import Admin from "./pages/Admin.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
 function ScrollManager() {
@@ -95,6 +96,7 @@ export default function App() {
           <Route path="/scholarships" element={<Scholarships />} />
           <Route path="/cutoffs" element={<OfficialCutoffs />} />
           <Route path="/search" element={<SearchResults />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

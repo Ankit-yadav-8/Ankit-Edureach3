@@ -1,5 +1,5 @@
 /* ============================================================
-   team.js — EduReach developer profiles + DEMO portfolio data.
+   team.js — Collegeparichay developer profiles + DEMO portfolio data.
    👉 Replace names, bios, skills, projects and links with the
       real team's details. Each person gets an in-app portfolio
       page at /team/:id (see pages/Developer.jsx).
@@ -9,6 +9,7 @@ export const TEAM = [
   {
     id: "team-head",
     initials: "AY",
+    photo: "/assets/team/ankit.jpeg",   // 👈 place the image at public/assets/team/ankit.jpeg
     name: "Ankit Yadav",
     role: "Project Lead & Full-Stack Developer",
     accent: "#F97316",
@@ -24,7 +25,7 @@ export const TEAM = [
 most prestigious technical institutes — who secured AIR 4846 in JEE Advanced. Having
 personally lived through the gruelling JEE preparation cycle and the uncertainty of JoSAA
 counselling rounds, he understood firsthand how scattered and stressful the whole process
-feels for most students. That frustration became the seed of EduReach. Ankit leads the
+feels for most students. That frustration became the seed of Collegeparichay. Ankit leads the
 full-stack development of the platform, handling everything from the React frontend and
 component architecture to backend APIs, database modelling, and deployment pipelines.
 Every feature — the rank predictor, college explorer, cutoff engine, counselling planner —
@@ -32,7 +33,7 @@ is built with one goal: give every JEE aspirant the clarity and confidence that 
 can provide. Beyond code, Ankit actively mentors junior aspirants, sharing the real
 strategies that helped him crack one of the toughest exams in the country. When he isn't
 shipping new features, you'll find him deep in competitive programming or mapping out the
-next big tool for the EduReach roadmap.`,
+next big tool for the Collegeparichay roadmap.`,
     skills: [
       "React", "Node.js", "MongoDB", "Express",
       "Tailwind CSS", "Python", "System Design",
@@ -40,7 +41,7 @@ next big tool for the EduReach roadmap.`,
     ],
     projects: [
       {
-        name: "EduReach Portal",
+        name: "Collegeparichay Portal",
         desc: "End-to-end JEE college discovery platform covering 850+ institutes — IITs, NITs, IIITs, GFTIs and private — with filters, maps and comparisons.",
         tag: "Lead",
       },
@@ -58,7 +59,7 @@ next big tool for the EduReach roadmap.`,
     socials: {
       github: "https://github.com",
       linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387",
-      website: "https://edureachportal.in",
+      website: "https://collegeparichay.in",
     },
   },
   {
@@ -69,8 +70,8 @@ next big tool for the EduReach roadmap.`,
     accent: "#2EC4B6",
     tagline: "I craft fast, accessible, delightful interfaces.",
     location: "India",
-    email: "frontend@edureachportal.in",
-    bio: "Owns the EduReach front-end — the component system, animations, charts and responsive layouts. Loves design systems and pixel-perfect, smooth interactions.",
+    email: "frontend@collegeparichay.in",
+    bio: "Owns the Collegeparichay front-end — the component system, animations, charts and responsive layouts. Loves design systems and pixel-perfect, smooth interactions.",
     skills: ["React", "Framer Motion", "Recharts", "CSS", "Accessibility", "Figma"],
     projects: [
       { name: "Component Library", desc: "Reusable cards, charts and predictors used across the site.", tag: "Frontend" },
@@ -91,7 +92,7 @@ next big tool for the EduReach roadmap.`,
     accent: "#0EA5A4",
     tagline: "Turning raw admission data into structured insight.",
     location: "India",
-    email: "data@edureachportal.in",
+    email: "data@collegeparichay.in",
     bio: "Builds and maintains the college, exam and cutoff datasets and the search index. Focused on data quality, ranking algorithms and making search feel instant.",
     skills: ["JavaScript", "Data Pipelines", "Search/Ranking", "Python", "APIs", "Algorithms"],
     projects: [
@@ -113,11 +114,11 @@ next big tool for the EduReach roadmap.`,
     accent: "#F4A261",
     tagline: "Designing calm, confident experiences for stressed students.",
     location: "India",
-    email: "design@edureachportal.in",
-    bio: "Shaped EduReach's visual identity — colour system, typography, iconography and the overall feel. Believes good design quietly removes friction.",
+    email: "design@collegeparichay.in",
+    bio: "Shaped Collegeparichay's visual identity — colour system, typography, iconography and the overall feel. Believes good design quietly removes friction.",
     skills: ["Figma", "Design Systems", "Branding", "Prototyping", "Illustration", "User Research"],
     projects: [
-      { name: "EduReach Brand", desc: "Logo, palette and typography system.", tag: "Branding" },
+      { name: "Collegeparichay Brand", desc: "Logo, palette and typography system.", tag: "Branding" },
       { name: "Design System", desc: "Tokens, components and layout grid.", tag: "System" },
       { name: "User Flows", desc: "Predictor and discovery journeys.", tag: "UX" },
     ],

@@ -165,7 +165,7 @@ export default function Footer() {
                 <GraduationCap size={20} />
               </span>
               <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.4rem" }}>
-                EduReach<span style={{ color: "var(--coral)" }}>.in</span>
+                Collegeparichay<span style={{ color: "var(--coral)" }}>.in</span>
               </span>
             </Link>
             <p style={{ color: "rgba(255,255,255,.65)", fontSize: ".9rem", maxWidth: 280, marginBottom: "1.4rem" }}>
@@ -262,7 +262,7 @@ export default function Footer() {
             <Sparkles size={14} />
             Crafted with{" "}
             <Heart size={13} fill="var(--coral)" color="var(--coral)" style={{ margin: "0 2px" }} />
-            {" "}by the EduReach Team
+            {" "}by the Collegeparichay Team
           </p>
 
           {/* Team cards grid */}
@@ -354,7 +354,7 @@ export default function Footer() {
         </div>
 
         <p style={{ textAlign: "center", padding: "0 0 1.4rem", color: "rgba(255,255,255,.45)", fontSize: ".8rem" }}>
-          © 2026 EduReach. All rights reserved. · Data is illustrative — verify on official portals.
+          © 2026 Collegeparichay. All rights reserved. · Data is illustrative — verify on official portals.
         </p>
       </div>
     </footer>

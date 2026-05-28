@@ -3,12 +3,11 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   GraduationCap, ChevronDown, Search, Target, Menu, X,
-  BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award,
+  BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
 
-// Flip to false to let people browse without logging in.
 const GATE_TABS = true;
 
 const JEE_MAIN = [
@@ -44,13 +43,14 @@ const TOOLS = [
   { label: "Compare Exams", to: "/compare-exams", icon: BarChart3 },
   { label: "College Map", to: "/map", icon: Landmark },
   { label: "Scholarships & Loans", to: "/scholarships", icon: BadgeCheck },
+  { label: "Admin Data", to: "/admin", icon: ShieldCheck },
 ];
 
 export default function Navbar({ onSearch }) {
   const { saved, compare } = useShortlist();
   const { isLoggedIn, user, openLogin, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(null); // desktop dropdown
+  const [open, setOpen] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -61,7 +61,6 @@ export default function Navbar({ onSearch }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // handle hash scrolling on route change
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.slice(1);
@@ -112,8 +111,9 @@ export default function Navbar({ onSearch }) {
           <span style={{ width: 38, height: 38, borderRadius: 10, display: "grid", placeItems: "center", background: "linear-gradient(135deg,var(--navy),var(--navy-light))", color: "#fff" }}>
             <GraduationCap size={20} />
           </span>
-          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.3rem" }}>
-            EduReach<span style={{ color: "var(--coral)" }}>.in</span>
+          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.3rem", letterSpacing: "-0.01em" }}>
+            College <span style={{ color: "var(--coral)" }}>Parichay</span>
+            <span style={{ color: "var(--coral)", fontWeight: 700 }}>.in</span>
           </span>
         </Link>
 
@@ -186,16 +186,23 @@ export default function Navbar({ onSearch }) {
             <Target size={16} /> Predict My College
           </button>
           {isLoggedIn ? (
-            <button onClick={logout} title={user?.name || user?.phone || "Account"} className="cta-desktop"
-              style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}>
+            <button
+              onClick={logout}
+              title={user?.name || user?.phone || "Account"}
+              className="cta-desktop"
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
+            >
               <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#F47B20", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
                 {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
               </span>
               Logout
             </button>
           ) : (
-            <button onClick={openLogin} className="cta-desktop"
-              style={{ padding: "9px 18px", borderRadius: 10, border: "none", background: "#F47B20", color: "#fff", fontWeight: 700, cursor: "pointer" }}>
+            <button
+              onClick={openLogin}
+              className="cta-desktop"
+              style={{ padding: "9px 18px", borderRadius: 10, border: "none", background: "#F47B20", color: "#fff", fontWeight: 700, cursor: "pointer" }}
+            >
               Login
             </button>
           )}
@@ -209,27 +216,61 @@ export default function Navbar({ onSearch }) {
       <AnimatePresence>
         {mobileOpen && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setMobileOpen(false)}
-              style={{ position: "fixed", inset: 0, background: "rgba(13,27,62,.4)", zIndex: 1100 }} />
+              style={{ position: "fixed", inset: 0, background: "rgba(13,27,62,.4)", zIndex: 1100 }}
+            />
             <motion.aside
               initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 32 }}
-              style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(320px,86vw)", background: "#fff", zIndex: 1200, padding: "1.2rem", overflowY: "auto", boxShadow: "var(--shadow-lg)" }}
+              style={{
+                position: "fixed", top: 0, right: 0, bottom: 0,
+                width: "min(320px,86vw)", background: "#fff", zIndex: 1200,
+                padding: "1.2rem", overflowY: "auto", boxShadow: "var(--shadow-lg)",
+              }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
                 <span style={{ fontFamily: "Sora", fontWeight: 800 }}>Menu</span>
                 <button onClick={() => setMobileOpen(false)}><X size={22} /></button>
               </div>
+
+              {isLoggedIn && (
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  background: "#FFF4EC", borderRadius: 10, padding: "10px 12px",
+                  marginBottom: "0.8rem", border: "1px solid #FFD9BA",
+                }}>
+                  <span style={{
+                    width: 32, height: 32, borderRadius: "50%",
+                    background: "#F47B20", color: "#fff",
+                    display: "grid", placeItems: "center",
+                    fontSize: 14, fontWeight: 800, flexShrink: 0,
+                  }}>
+                    {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
+                  </span>
+                  <span style={{ fontWeight: 600, color: "var(--navy)", fontSize: "0.9rem", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {user?.name || user?.phone || "My Account"}
+                  </span>
+                </div>
+              )}
+
               {navItems.map((item) => (
                 <div key={item.label} style={{ borderBottom: "1px solid var(--gray-light)", padding: "0.5rem 0" }}>
-                  <button onClick={() => goHash(item.to || item.base)} style={{ fontWeight: 700, color: "var(--navy)", fontSize: "1rem", padding: "0.4rem 0" }}>
+                  <button
+                    onClick={() => goHash(item.to || item.base)}
+                    style={{ fontWeight: 700, color: "var(--navy)", fontSize: "1rem", padding: "0.4rem 0" }}
+                  >
                     {item.label}
                   </button>
                   {item.drop && (
                     <div style={{ paddingLeft: 12 }}>
                       {item.drop.map((d) => (
-                        <button key={d.label} onClick={() => goHash(d.to)} style={{ display: "block", padding: "0.35rem 0", color: "var(--gray)", fontSize: "0.88rem" }}>
+                        <button
+                          key={d.label}
+                          onClick={() => goHash(d.to)}
+                          style={{ display: "block", padding: "0.35rem 0", color: "var(--gray)", fontSize: "0.88rem" }}
+                        >
                           {d.label}
                         </button>
                       ))}
@@ -237,9 +278,54 @@ export default function Navbar({ onSearch }) {
                   )}
                 </div>
               ))}
-              <button className="btn btn-coral full mt-3" style={{ justifyContent: "center" }} onClick={() => goHash("/jee-main#college")}>
+
+              <button
+                className="btn btn-coral full mt-3"
+                style={{ justifyContent: "center" }}
+                onClick={() => goHash("/jee-main#college")}
+              >
                 <Target size={16} /> Predict My College
               </button>
+
+              {isLoggedIn ? (
+                <button
+                  onClick={() => { logout(); setMobileOpen(false); }}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 10,
+                    width: "100%", marginTop: 12, padding: "12px 16px",
+                    borderRadius: 10, border: "1.5px solid #FFD9BA",
+                    background: "#fff", color: "var(--navy)",
+                    fontWeight: 700, cursor: "pointer", fontSize: "0.95rem",
+                  }}
+                >
+                  <span style={{
+                    width: 28, height: 28, borderRadius: "50%",
+                    background: "#F47B20", color: "#fff",
+                    display: "grid", placeItems: "center",
+                    fontSize: 13, fontWeight: 800, flexShrink: 0,
+                  }}>
+                    {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
+                  </span>
+                  <span style={{ flex: 1, textAlign: "left" }}>
+                    {user?.name || user?.phone || "Account"}
+                  </span>
+                  <span style={{ color: "#e5484d", fontSize: "0.85rem", fontWeight: 700 }}>
+                    Logout
+                  </span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => { setMobileOpen(false); openLogin(); }}
+                  style={{
+                    width: "100%", marginTop: 12, padding: "13px 16px",
+                    borderRadius: 10, border: "none",
+                    background: "#F47B20", color: "#fff",
+                    fontWeight: 700, cursor: "pointer", fontSize: "0.95rem",
+                  }}
+                >
+                  Login
+                </button>
+              )}
             </motion.aside>
           </>
         )}
