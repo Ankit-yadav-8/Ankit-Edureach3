@@ -1,15 +1,12 @@
 /* ============================================================
-   team.js — Collegeparichay developer profiles + DEMO portfolio data.
-   👉 Replace names, bios, skills, projects and links with the
-      real team's details. Each person gets an in-app portfolio
-      page at /team/:id (see pages/Developer.jsx).
+   team.js — Collegeparichay developer profiles + portfolio data.
    ============================================================ */
 
 export const TEAM = [
   {
     id: "team-head",
     initials: "AY",
-    photo: "/assets/team/ankit.jpeg",   // 👈 place the image at public/assets/team/ankit.jpeg
+    photo: "/assets/team/ankit.jpeg",
     name: "Ankit Yadav",
     role: "Project Lead & Full-Stack Developer",
     accent: "#F97316",
@@ -21,19 +18,7 @@ export const TEAM = [
     exam: "JEE Advanced",
     email: "ankityadav08022008@gmail.com",
     phone: "8118826194",
-    bio: `Ankit Yadav is a B.Tech Electrical Engineering student at IIT Roorkee — one of India's
-most prestigious technical institutes — who secured AIR 4846 in JEE Advanced. Having
-personally lived through the gruelling JEE preparation cycle and the uncertainty of JoSAA
-counselling rounds, he understood firsthand how scattered and stressful the whole process
-feels for most students. That frustration became the seed of Collegeparichay. Ankit leads the
-full-stack development of the platform, handling everything from the React frontend and
-component architecture to backend APIs, database modelling, and deployment pipelines.
-Every feature — the rank predictor, college explorer, cutoff engine, counselling planner —
-is built with one goal: give every JEE aspirant the clarity and confidence that data
-can provide. Beyond code, Ankit actively mentors junior aspirants, sharing the real
-strategies that helped him crack one of the toughest exams in the country. When he isn't
-shipping new features, you'll find him deep in competitive programming or mapping out the
-next big tool for the Collegeparichay roadmap.`,
+    bio: `Ankit Yadav is a B.Tech Electrical Engineering student at IIT Roorkee — one of India's most prestigious technical institutes — who secured AIR 4846 in JEE Advanced. Having personally lived through the gruelling JEE preparation cycle and the uncertainty of JoSAA counselling rounds, he understood firsthand how scattered and stressful the whole process feels for most students. That frustration became the seed of Collegeparichay. Ankit leads the full-stack development of the platform, handling everything from the React frontend and component architecture to backend APIs, database modelling, and deployment pipelines. Every feature — the rank predictor, college explorer, cutoff engine, counselling planner — is built with one goal: give every JEE aspirant the clarity and confidence that data can provide. Beyond code, Ankit actively mentors junior aspirants, sharing the real strategies that helped him crack one of the toughest exams in the country. When he isn't shipping new features, you'll find him deep in competitive programming or mapping out the next big tool for the Collegeparichay roadmap.`,
     skills: [
       "React", "Node.js", "MongoDB", "Express",
       "Tailwind CSS", "Python", "System Design",

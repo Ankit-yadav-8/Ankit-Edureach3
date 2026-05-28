@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom";
-import { GraduationCap, Github, Linkedin, Dribbble, Mail, Phone, Instagram, Facebook, Heart, Sparkles, Twitter, Youtube, Send, MessageCircle, MapPin, Code2 } from "lucide-react";
+import {
+  GraduationCap, Github, Linkedin, Dribbble, Mail, Phone,
+  Instagram, Facebook, Heart, Sparkles, Twitter, Youtube,
+  Send, MessageCircle, MapPin, Code2,
+} from "lucide-react";
 import { TEAM } from "../data/team.js";
 
 const COLLEGE_LINKS = [
@@ -39,19 +43,46 @@ const COMPANY_LINKS = [
 
 const ICON = { github: Github, linkedin: Linkedin, dribbble: Dribbble };
 
+/* ── Footer column ──────────────────────────────────────────────── */
 function Col({ title, links }) {
   return (
     <div>
-      <h4 style={{ color: "#fff", fontSize: ".95rem", letterSpacing: 1, textTransform: "uppercase", marginBottom: ".4rem" }}>{title}</h4>
-      <div style={{ width: 36, height: 3, background: "var(--coral)", borderRadius: 3, marginBottom: "1rem" }} />
+      <h4
+        style={{
+          color: "#fff",
+          fontSize: ".95rem",
+          letterSpacing: 1,
+          textTransform: "uppercase",
+          marginBottom: ".4rem",
+        }}
+      >
+        {title}
+      </h4>
+      <div
+        style={{
+          width: 36,
+          height: 3,
+          background: "var(--coral)",
+          borderRadius: 3,
+          marginBottom: "1rem",
+        }}
+      />
       <ul style={{ display: "flex", flexDirection: "column", gap: ".65rem" }}>
         {links.map(([label, to]) => (
           <li key={label}>
             <Link
               to={to}
-              style={{ color: "rgba(255,255,255,.7)", fontSize: ".88rem", transition: ".2s" }}
-              onMouseEnter={(e) => (e.target.style.color = "var(--coral-light)")}
-              onMouseLeave={(e) => (e.target.style.color = "rgba(255,255,255,.7)")}
+              style={{
+                color: "rgba(255,255,255,.7)",
+                fontSize: ".88rem",
+                transition: ".2s",
+              }}
+              onMouseEnter={(e) =>
+                (e.target.style.color = "var(--coral-light)")
+              }
+              onMouseLeave={(e) =>
+                (e.target.style.color = "rgba(255,255,255,.7)")
+              }
             >
               {label}
             </Link>
@@ -62,7 +93,7 @@ function Col({ title, links }) {
   );
 }
 
-/* ── Team member card ─────────────────────────────────────────── */
+/* ── Team member card ───────────────────────────────────────────── */
 function DevCard({ t }) {
   const social = Object.keys(t.socials || {})[0];
   const Ic = ICON[social] || Github;
@@ -89,7 +120,8 @@ function DevCard({ t }) {
       onMouseEnter={(e) => {
         e.currentTarget.style.background = "rgba(249,115,22,0.12)";
         e.currentTarget.style.border = "1px solid rgba(249,115,22,0.55)";
-        e.currentTarget.style.boxShadow = "0 0 18px rgba(249,115,22,0.28), 0 0 6px rgba(249,115,22,0.15)";
+        e.currentTarget.style.boxShadow =
+          "0 0 18px rgba(249,115,22,0.28), 0 0 6px rgba(249,115,22,0.15)";
         e.currentTarget.style.transform = "translateY(-2px)";
       }}
       onMouseLeave={(e) => {
@@ -112,7 +144,8 @@ function DevCard({ t }) {
           pointerEvents: "none",
         }}
       />
-      {/* Avatar */}
+
+      {/* ── Avatar — shows photo if available, else initials ── */}
       <span
         style={{
           width: 40,
@@ -125,21 +158,50 @@ function DevCard({ t }) {
           fontSize: ".82rem",
           flexShrink: 0,
           boxShadow: `0 0 10px ${t.accent}66`,
+          overflow: "hidden",
+          /* photo border glow */
+          border: t.photo ? `2px solid ${t.accent}99` : "none",
         }}
       >
-        {t.initials}
+        {t.photo ? (
+          <img
+            src={t.photo}
+            alt={t.name}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "50%",
+            }}
+          />
+        ) : (
+          t.initials
+        )}
       </span>
+
       {/* Name + role */}
       <span style={{ flex: 1 }}>
-        <span style={{ display: "block", fontSize: ".88rem", fontWeight: 600 }}>{t.name}</span>
-        <span style={{ display: "block", fontSize: ".72rem", color: "rgba(255,255,255,.55)" }}>{t.role}</span>
+        <span
+          style={{ display: "block", fontSize: ".88rem", fontWeight: 600 }}
+        >
+          {t.name}
+        </span>
+        <span
+          style={{
+            display: "block",
+            fontSize: ".72rem",
+            color: "rgba(255,255,255,.55)",
+          }}
+        >
+          {t.role}
+        </span>
       </span>
       <Ic size={15} color="rgba(255,255,255,.5)" />
     </Link>
   );
 }
 
-/* ── Footer ───────────────────────────────────────────────────── */
+/* ── Footer ─────────────────────────────────────────────────────── */
 export default function Footer() {
   return (
     <footer style={{ background: "var(--navy)", color: "#fff", paddingTop: "3.5rem" }}>
@@ -147,11 +209,23 @@ export default function Footer() {
 
         {/* Main link grid */}
         <div
-          style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", gap: "2.5rem" }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.4fr 1fr 1fr 1fr",
+            gap: "2.5rem",
+          }}
           className="footer-grid"
         >
           <div>
-            <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1rem" }}>
+            <Link
+              to="/"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                marginBottom: "1rem",
+              }}
+            >
               <span
                 style={{
                   width: 40,
@@ -159,17 +233,33 @@ export default function Footer() {
                   borderRadius: 10,
                   display: "grid",
                   placeItems: "center",
-                  background: "linear-gradient(135deg,var(--coral),var(--coral-light))",
+                  background:
+                    "linear-gradient(135deg,var(--coral),var(--coral-light))",
                 }}
               >
                 <GraduationCap size={20} />
               </span>
-              <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.4rem" }}>
-                Collegeparichay<span style={{ color: "var(--coral)" }}>.in</span>
+              <span
+                style={{
+                  fontFamily: "Sora",
+                  fontWeight: 800,
+                  fontSize: "1.4rem",
+                }}
+              >
+                Collegeparichay
+                <span style={{ color: "var(--coral)" }}>.in</span>
               </span>
             </Link>
-            <p style={{ color: "rgba(255,255,255,.65)", fontSize: ".9rem", maxWidth: 280, marginBottom: "1.4rem" }}>
-              India's most trusted JEE rank predictor & college discovery platform for engineering aspirants.
+            <p
+              style={{
+                color: "rgba(255,255,255,.65)",
+                fontSize: ".9rem",
+                maxWidth: 280,
+                marginBottom: "1.4rem",
+              }}
+            >
+              India's most trusted JEE rank predictor & college discovery
+              platform for engineering aspirants.
             </p>
             <Col title="College" links={COLLEGE_LINKS} />
           </div>
@@ -178,7 +268,7 @@ export default function Footer() {
           <Col title="Company" links={COMPANY_LINKS} />
         </div>
 
-        {/* ── Developer Team Section ─────────────────────────────── */}
+        {/* ── Developer Team Section ─────────────────────────── */}
         <div
           style={{
             marginTop: "2.8rem",
@@ -186,7 +276,6 @@ export default function Footer() {
             padding: "2rem 1.8rem 1.8rem",
             position: "relative",
             overflow: "hidden",
-            /* layered box shadow = glow effect */
             boxShadow:
               "0 0 0 1px rgba(249,115,22,0.22), 0 0 30px rgba(249,115,22,0.18), 0 0 60px rgba(249,115,22,0.08)",
             background:
@@ -203,7 +292,8 @@ export default function Footer() {
               width: 160,
               height: 160,
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(249,115,22,0.22), transparent 70%)",
+              background:
+                "radial-gradient(circle, rgba(249,115,22,0.22), transparent 70%)",
               pointerEvents: "none",
             }}
           />
@@ -215,13 +305,16 @@ export default function Footer() {
               width: 200,
               height: 200,
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(249,115,22,0.15), transparent 70%)",
+              background:
+                "radial-gradient(circle, rgba(249,115,22,0.15), transparent 70%)",
               pointerEvents: "none",
             }}
           />
 
           {/* "Built by developers" badge */}
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
+          <div
+            style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}
+          >
             <span
               style={{
                 display: "inline-flex",
@@ -261,8 +354,13 @@ export default function Footer() {
           >
             <Sparkles size={14} />
             Crafted with{" "}
-            <Heart size={13} fill="var(--coral)" color="var(--coral)" style={{ margin: "0 2px" }} />
-            {" "}by the Collegeparichay Team
+            <Heart
+              size={13}
+              fill="var(--coral)"
+              color="var(--coral)"
+              style={{ margin: "0 2px" }}
+            />{" "}
+            by the Collegeparichay Team
           </p>
 
           {/* Team cards grid */}
@@ -298,10 +396,16 @@ export default function Footer() {
           }}
         >
           <div style={{ display: "flex", flexWrap: "wrap", gap: "1.4rem" }}>
-            <a href="mailto:support@edureachportal.in" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <a
+              href="mailto:support@edureachportal.in"
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
               <Mail size={15} /> support@edureachportal.in
             </a>
-            <a href="tel:+918118826194" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <a
+              href="tel:+918118826194"
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
               <Phone size={15} /> +91-8118826194
             </a>
             <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -339,7 +443,8 @@ export default function Footer() {
                   transition: "box-shadow .2s, border-color .2s",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = "0 0 10px rgba(249,115,22,0.5)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 10px rgba(249,115,22,0.5)";
                   e.currentTarget.style.borderColor = "rgba(249,115,22,0.6)";
                 }}
                 onMouseLeave={(e) => {
@@ -353,8 +458,16 @@ export default function Footer() {
           </div>
         </div>
 
-        <p style={{ textAlign: "center", padding: "0 0 1.4rem", color: "rgba(255,255,255,.45)", fontSize: ".8rem" }}>
-          © 2026 Collegeparichay. All rights reserved. · Data is illustrative — verify on official portals.
+        <p
+          style={{
+            textAlign: "center",
+            padding: "0 0 1.4rem",
+            color: "rgba(255,255,255,.45)",
+            fontSize: ".8rem",
+          }}
+        >
+          © 2026 Collegeparichay. All rights reserved. · Data is illustrative
+          — verify on official portals.
         </p>
       </div>
     </footer>
