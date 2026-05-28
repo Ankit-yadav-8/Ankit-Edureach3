@@ -1,22 +1,21 @@
 /**
  * CutoffSection.jsx — Enhanced JoSAA Cutoff tab for CollegeDetail
  * ─────────────────────────────────────────────────────────────────
- * • Uses realCutoffEngine.js (loads all CSVs 2018–2025)
- * • Shows all available years for both IITs and NITs
- * • Falls back to legacy engine if no real data found
- * • Better, cleaner UI with animated transitions
- *
- * Usage inside CollegeDetail:
- *   import CutoffSection from "../components/CutoffSection.jsx";
- *   {tab === "Cutoff" && <CutoffSection college={college} />}
+ * FIX (v2):
+ *   • getMergedHistory() tries AI then OS quota per year so NITs
+ *     show full 2018–2025 trend instead of only 2024.
+ *   • getMergedRounds() similarly tries both quotas for single-year
+ *     view so CSAB rounds appear correctly for NITs.
+ *   • Trend chart and history table use merged data.
+ *   • Single-year "All Rounds" table also uses merged rounds.
  */
 
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  AreaChart, Area, BarChart, Bar, LineChart, Line,
+  AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, ReferenceLine,
+  ResponsiveContainer,
 } from "recharts";
 import {
   loadCutoffDB,
@@ -29,7 +28,6 @@ import {
   getAvailableYears,
   findProgramByBranch,
   REAL_YEARS,
-  fmtR,
 } from "../utils/realCutoffEngine.js";
 import { expandRounds, collegeBranches, cutoffHistory, forecastClosing } from "../utils/cutoffEngine.js";
 import { CATEGORIES } from "../data/colleges.js";
@@ -49,22 +47,81 @@ const T = {
   line:    "#E5E7EB",
 };
 
-// Year-specific accent colours
 const YR_COLOR = {
-  "2018": "#94A3B8",
-  "2019": "#38BDF8",
-  "2020": "#34D399",
-  "2021": "#2EC4B6",
-  "2022": "#A78BFA",
-  "2023": "#8B5CF6",
-  "2024": "#FB923C",
-  "2025": "#F97316",
+  "2018": "#94A3B8", "2019": "#38BDF8", "2020": "#34D399",
+  "2021": "#2EC4B6", "2022": "#A78BFA", "2023": "#8B5CF6",
+  "2024": "#FB923C", "2025": "#F97316",
 };
+
+// Quotas to try, in priority order (AI = 2024+ standard; OS = older NIT standard)
+const QUOTA_FALLBACK = ["AI", "OS", "HS"];
 
 const fmt = (v) => (v ? fmtRank(v) : "—");
 
-// ── Micro components ──────────────────────────────────────────────────────────
+// ── getMergedHistory ──────────────────────────────────────────────────────────
+// For each year, try quota priority order and use first that has data.
+// This ensures NITs show 2018-2025 trend even though quota changed AI↔OS.
+function getMergedHistory(college, program, cat, gender = "GN") {
+  const out = [];
+  for (const yr of REAL_YEARS) {
+    for (const q of QUOTA_FALLBACK) {
+      const rnds = getRealRounds(college, program, q, cat, yr, gender);
+      if (rnds.length) {
+        const r1 = rnds[0];
+        const rf = rnds[rnds.length - 1];
+        out.push({
+          year:    yr,
+          opening: r1.opening,
+          closing: r1.closing,
+          r6Close: rf.closing,
+          quota:   q,
+        });
+        break; // found data for this year, move to next year
+      }
+    }
+  }
+  return out;
+}
 
+// ── getMergedRounds ───────────────────────────────────────────────────────────
+// For a single year, try quota priority order; return first non-empty result.
+function getMergedRounds(college, program, preferredQuota, cat, year, gender = "GN") {
+  // Always try preferred quota first
+  const quotaOrder = [preferredQuota, ...QUOTA_FALLBACK.filter((q) => q !== preferredQuota)];
+  for (const q of quotaOrder) {
+    const rnds = getRealRounds(college, program, q, cat, year, gender);
+    if (rnds.length) return { rounds: rnds, usedQuota: q };
+  }
+  return { rounds: [], usedQuota: preferredQuota };
+}
+
+// ── getMergedForecast ─────────────────────────────────────────────────────────
+function getMergedForecast(college, program, cat, gender = "GN") {
+  const history = getMergedHistory(college, program, cat, gender);
+  const pts = history.filter((h) => h.r6Close).map((h) => [Number(h.year), h.r6Close]);
+  if (pts.length < 2) return null;
+  const n   = pts.length;
+  const sx  = pts.reduce((a, p) => a + p[0], 0);
+  const sy  = pts.reduce((a, p) => a + p[1], 0);
+  const sxy = pts.reduce((a, p) => a + p[0] * p[1], 0);
+  const sxx = pts.reduce((a, p) => a + p[0] * p[0], 0);
+  const denom = n * sxx - sx * sx;
+  if (!denom) return null;
+  const slope     = (n * sxy - sx * sy) / denom;
+  const intercept = (sy - slope * sx) / n;
+  const nextYear  = pts[pts.length - 1][0] + 1;
+  const closing   = Math.round(slope * nextYear + intercept);
+  if (closing <= 0) return null;
+  return {
+    year:    nextYear,
+    closing,
+    trend:   slope < 0 ? "tightening" : "relaxing",
+    slope:   Math.round(slope),
+    points:  n,
+  };
+}
+
+// ── Micro components ──────────────────────────────────────────────────────────
 function Badge({ children, color = T.teal }) {
   return (
     <span style={{
@@ -79,7 +136,7 @@ function Badge({ children, color = T.teal }) {
 
 function TrendArrow({ delta }) {
   if (delta === null || delta === undefined) return <span style={{ color: T.muted }}>—</span>;
-  const up = delta > 0;   // higher rank number = more seats (relaxing = good for students)
+  const up = delta > 0;
   return (
     <span style={{
       display: "inline-flex", alignItems: "center", gap: 2,
@@ -95,11 +152,8 @@ function TrendArrow({ delta }) {
 function StatCard({ label, value, color = T.navy, sub }) {
   return (
     <div style={{
-      background: "#fff",
-      border: `1px solid ${T.line}`,
-      borderRadius: 14,
-      padding: "16px 14px",
-      textAlign: "center",
+      background: "#fff", border: `1px solid ${T.line}`,
+      borderRadius: 14, padding: "16px 14px", textAlign: "center",
       boxShadow: "0 1px 8px rgba(0,0,0,.05)",
     }}>
       <div style={{ fontSize: 11, color: T.muted, fontWeight: 600, letterSpacing: ".04em", marginBottom: 6 }}>
@@ -113,18 +167,14 @@ function StatCard({ label, value, color = T.navy, sub }) {
   );
 }
 
-// ── Custom Recharts tooltip ────────────────────────────────────────────────────
 function CTip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
     <div style={{
-      background: "#fff",
-      border: `1px solid ${T.line}`,
-      borderRadius: 10,
-      padding: "10px 14px",
+      background: "#fff", border: `1px solid ${T.line}`,
+      borderRadius: 10, padding: "10px 14px",
       boxShadow: "0 6px 24px rgba(0,0,0,.10)",
-      fontSize: 13,
-      minWidth: 160,
+      fontSize: 13, minWidth: 160,
     }}>
       <div style={{ fontWeight: 700, marginBottom: 6, color: T.navy }}>{label}</div>
       {payload.map((p) => (
@@ -140,7 +190,6 @@ function CTip({ active, payload, label }) {
   );
 }
 
-// ── Select component ──────────────────────────────────────────────────────────
 function Field({ label, children }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
@@ -156,39 +205,47 @@ function Field({ label, children }) {
 }
 
 const selectStyle = {
-  padding: "9px 12px",
-  border: `1.5px solid ${T.line}`,
-  borderRadius: 10,
-  fontSize: 13,
-  color: T.navy,
-  background: "#fff",
-  cursor: "pointer",
-  outline: "none",
-  appearance: "none",
+  padding: "9px 12px", border: `1.5px solid ${T.line}`, borderRadius: 10,
+  fontSize: 13, color: T.navy, background: "#fff", cursor: "pointer",
+  outline: "none", appearance: "none",
   backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "right 10px center",
-  paddingRight: 32,
+  backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", paddingRight: 32,
 };
+
+const Card = ({ children, style }) => (
+  <div style={{
+    background: "#fff", border: `1px solid ${T.line}`,
+    borderRadius: 16, padding: "20px 22px",
+    boxShadow: "0 1px 8px rgba(0,0,0,.05)", ...style,
+  }}>
+    {children}
+  </div>
+);
+
+const Grid2 = ({ children, style }) => (
+  <div style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(340px,1fr))",
+    gap: 20, alignItems: "start", ...style,
+  }}>
+    {children}
+  </div>
+);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //  MAIN COMPONENT
-//  Props:
-//    college        – college object from colleges.js
-//    initialProgram – optional branch code or name pre-selected from Courses tab
-//                     e.g. "cse", "Computer Science", "ece"
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function CutoffSection({ college, initialProgram }) {
-  const [dbReady, setDbReady]     = useState(false);
-  const [programs, setPrograms]   = useState([]);
-  const [program,  setProgram]    = useState("");
-  const [quota,    setQuota]      = useState(getDefaultQuota(college));
-  const [cat,      setCat]        = useState("OPEN");
-  const [gender,   setGender]     = useState("GN");
-  const [viewYear, setViewYear]   = useState("trend");
+  const [dbReady, setDbReady]       = useState(false);
+  const [programs, setPrograms]     = useState([]);
+  const [program,  setProgram]      = useState("");
+  const [quota,    setQuota]        = useState("AI");
+  const [cat,      setCat]          = useState("OPEN");
+  const [gender,   setGender]       = useState("GN");
+  const [viewYear, setViewYear]     = useState("trend");
   const [availYears, setAvailYears] = useState([]);
 
-  // ── Load DB once ─────────────────────────────────────────────────────────
+  // ── Load DB ───────────────────────────────────────────────────────────────
   useEffect(() => {
     loadCutoffDB().then(() => {
       setDbReady(true);
@@ -196,57 +253,59 @@ export default function CutoffSection({ college, initialProgram }) {
       const yrs   = getAvailableYears(college);
       setPrograms(progs);
       setAvailYears(yrs);
-
-      // If a branch was passed in, try to match it; otherwise default to first
       if (progs.length) {
         const matched = initialProgram
           ? (findProgramByBranch(college, initialProgram) ?? progs[0])
           : progs[0];
         setProgram(matched);
       }
-
       setQuota(getDefaultQuota(college));
       if (yrs.length) setViewYear(yrs[yrs.length - 1]);
     });
   }, [college]);
 
-  // ── When initialProgram changes after DB is ready (tab switch) ───────────
+  // ── Re-match branch when navigating from Courses tab ─────────────────────
   useEffect(() => {
     if (!dbReady || !initialProgram || !programs.length) return;
     const matched = findProgramByBranch(college, initialProgram);
     if (matched) setProgram(matched);
   }, [initialProgram, dbReady]);
 
-  // ── Fallback ──────────────────────────────────────────────────────────────
-  const useFallback = dbReady && programs.length === 0;
+  // ── Fallback when college not in real-data index ──────────────────────────
+  const useFallback    = dbReady && programs.length === 0;
   const legacyBranches = useFallback ? collegeBranches(college) : [];
   const [legacyBranch, setLegacyBranch] = useState(legacyBranches[0]?.code || "cse");
-
-  const legacyRounds  = useFallback ? expandRounds(college, legacyBranch, cat) : [];
-  const legacyHistory = useFallback ? cutoffHistory(college, legacyBranch, cat) : [];
+  const legacyRounds   = useFallback ? expandRounds(college, legacyBranch, cat) : [];
+  const legacyHistory  = useFallback ? cutoffHistory(college, legacyBranch, cat) : [];
   const legacyForecast = useFallback ? forecastClosing(college, legacyBranch, cat) : null;
 
-  const availableQuotas = useMemo(() => getAvailableQuotas(college), [dbReady, college]);
+  const availableQuotas = useMemo(
+    () => getAvailableQuotas(college),
+    [dbReady, college]
+  );
 
-  // ── Derived data ──────────────────────────────────────────────────────────
-  const displayYear = viewYear === "trend" ? (availYears[availYears.length - 1] ?? "2025") : viewYear;
+  // ── Single-year view: merged rounds (tries preferred quota then OS/AI) ────
+  const displayYear = viewYear === "trend"
+    ? (availYears[availYears.length - 1] ?? "2025")
+    : viewYear;
 
-  const rounds = useMemo(() => {
-    if (!dbReady || !program) return [];
-    return getRealRounds(college, program, quota, cat, displayYear, gender);
+  const { rounds, usedQuota } = useMemo(() => {
+    if (!dbReady || !program) return { rounds: [], usedQuota: quota };
+    return getMergedRounds(college, program, quota, cat, displayYear, gender);
   }, [dbReady, program, quota, cat, displayYear, gender, college]);
 
+  // ── History & forecast: always merged across AI + OS ─────────────────────
   const history = useMemo(() => {
     if (!dbReady || !program) return [];
-    return getRealHistory(college, program, quota, cat, gender);
-  }, [dbReady, program, quota, cat, gender, college]);
+    return getMergedHistory(college, program, cat, gender);
+  }, [dbReady, program, cat, gender, college]);
 
   const forecast = useMemo(() => {
     if (!dbReady || !program) return null;
-    return getRealForecast(college, program, quota, cat, gender);
-  }, [dbReady, program, quota, cat, gender, college]);
+    return getMergedForecast(college, program, cat, gender);
+  }, [dbReady, program, cat, gender, college]);
 
-  // ── Loading state ─────────────────────────────────────────────────────────
+  // ── Loading ───────────────────────────────────────────────────────────────
   if (!dbReady) {
     return (
       <div style={{
@@ -255,8 +314,7 @@ export default function CutoffSection({ college, initialProgram }) {
       }}>
         <div style={{
           width: 48, height: 48, borderRadius: "50%",
-          border: `3px solid ${T.line}`,
-          borderTop: `3px solid ${T.orange}`,
+          border: `3px solid ${T.line}`, borderTop: `3px solid ${T.orange}`,
           animation: "spin 0.9s linear infinite",
         }} />
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
@@ -267,45 +325,34 @@ export default function CutoffSection({ college, initialProgram }) {
 
   // ── Year pill ─────────────────────────────────────────────────────────────
   const YearPill = ({ v, label }) => {
-    const color = v === "trend" ? T.violet : (YR_COLOR[v] ?? T.orange);
+    const color  = v === "trend" ? T.violet : (YR_COLOR[v] ?? T.orange);
     const active = viewYear === v;
     return (
-      <button
-        onClick={() => setViewYear(v)}
-        style={{
-          padding: "5px 14px",
-          borderRadius: 20,
-          border: `1.5px solid ${active ? color : T.line}`,
-          background: active ? `${color}18` : "transparent",
-          color: active ? color : T.muted,
-          fontWeight: active ? 700 : 500,
-          fontSize: 12,
-          cursor: "pointer",
-          transition: "all .15s ease",
-        }}
-      >
+      <button onClick={() => setViewYear(v)} style={{
+        padding: "5px 14px", borderRadius: 20,
+        border: `1.5px solid ${active ? color : T.line}`,
+        background: active ? `${color}18` : "transparent",
+        color: active ? color : T.muted,
+        fontWeight: active ? 700 : 500, fontSize: 12,
+        cursor: "pointer", transition: "all .15s ease",
+      }}>
         {label ?? v}
       </button>
     );
   };
 
-  // ── Controls card ─────────────────────────────────────────────────────────
+  // ── Controls ──────────────────────────────────────────────────────────────
   const ControlsCard = () => (
     <div style={{
-      background: "#fff",
-      border: `1px solid ${T.line}`,
-      borderRadius: 16,
-      padding: "20px 22px",
-      marginBottom: 22,
+      background: "#fff", border: `1px solid ${T.line}`,
+      borderRadius: 16, padding: "20px 22px", marginBottom: 22,
       boxShadow: "0 2px 12px rgba(0,0,0,.05)",
     }}>
-      {/* Deep-linked branch banner */}
       {initialProgram && program && (
         <div style={{
           display: "flex", alignItems: "center", gap: 10,
           padding: "9px 14px", marginBottom: 18,
-          background: `${T.teal}12`,
-          border: `1px solid ${T.teal}40`,
+          background: `${T.teal}12`, border: `1px solid ${T.teal}40`,
           borderRadius: 10, fontSize: 13,
         }}>
           <span style={{ fontSize: 16 }}>🎯</span>
@@ -313,24 +360,18 @@ export default function CutoffSection({ college, initialProgram }) {
             Showing cutoffs for{" "}
             <strong style={{ color: T.teal }}>
               {program.replace(/\s*\((?:B\.Tech|B\.E\.)[^)]*\)\s*/gi, " ").trim()}
-            </strong>
-            {" "}— selected from Courses tab.
+            </strong>{" "}— selected from Courses tab.
           </span>
-          <span style={{
-            marginLeft: "auto", fontSize: 11, color: T.muted,
-            cursor: "pointer", whiteSpace: "nowrap",
-          }}>
+          <span style={{ marginLeft: "auto", fontSize: 11, color: T.muted, cursor: "pointer", whiteSpace: "nowrap" }}>
             Change below ↓
           </span>
         </div>
       )}
 
-      {/* Filter row */}
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(180px,1fr))",
-        gap: 16,
-        marginBottom: 20,
+        gap: 16, marginBottom: 20,
       }}>
         <Field label={useFallback ? "Branch" : "Program"}>
           {useFallback ? (
@@ -360,8 +401,7 @@ export default function CutoffSection({ college, initialProgram }) {
 
         {!useFallback && (
           <Field label="Quota">
-            <select style={selectStyle} value={quota}
-              onChange={(e) => setQuota(e.target.value)}>
+            <select style={selectStyle} value={quota} onChange={(e) => setQuota(e.target.value)}>
               {availableQuotas.map((q) => (
                 <option key={q.value} value={q.value}>{q.label}</option>
               ))}
@@ -371,8 +411,7 @@ export default function CutoffSection({ college, initialProgram }) {
 
         {!useFallback && (
           <Field label="Gender Pool">
-            <select style={selectStyle} value={gender}
-              onChange={(e) => setGender(e.target.value)}>
+            <select style={selectStyle} value={gender} onChange={(e) => setGender(e.target.value)}>
               <option value="GN">Gender-Neutral</option>
               <option value="FO">Female-Only (Supernumerary)</option>
             </select>
@@ -380,7 +419,6 @@ export default function CutoffSection({ college, initialProgram }) {
         )}
       </div>
 
-      {/* Year selector */}
       <div>
         <div style={{
           fontSize: 11, color: T.muted, fontWeight: 700,
@@ -408,18 +446,11 @@ export default function CutoffSection({ college, initialProgram }) {
   // ── Stats banner ──────────────────────────────────────────────────────────
   const StatsBanner = ({ data }) => {
     if (!data.length) return null;
-    const r1 = data[0];
-    const rf = data[data.length - 1];
+    const r1 = data[0], rf = data[data.length - 1];
     const relaxPct = rf.closing && r1.closing
-      ? Math.round(((rf.closing - r1.closing) / r1.closing) * 100)
-      : 0;
+      ? Math.round(((rf.closing - r1.closing) / r1.closing) * 100) : 0;
     return (
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: 12,
-        marginBottom: 22,
-      }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 22 }}>
         <StatCard label="R1 Opening"    value={fmt(r1.opening)}  color={T.teal}   />
         <StatCard label="R1 Closing"    value={fmt(r1.closing)}  color={T.orange} />
         <StatCard label="Final Closing" value={fmt(rf.closing)}  color={T.violet} />
@@ -434,41 +465,33 @@ export default function CutoffSection({ college, initialProgram }) {
   };
 
   // ── Rounds table ──────────────────────────────────────────────────────────
-  const RoundsTable = ({ data, yr }) => {
+  const RoundsTable = ({ data, yr, quotaUsed }) => {
     if (!data.length) return (
       <div style={{
-        padding: "32px 20px", textAlign: "center",
-        color: T.muted, fontSize: 13,
-        background: `${T.amber}0A`,
-        borderRadius: 12,
-        border: `1px dashed ${T.amber}40`,
+        padding: "32px 20px", textAlign: "center", color: T.muted, fontSize: 13,
+        background: `${T.amber}0A`, borderRadius: 12, border: `1px dashed ${T.amber}40`,
       }}>
         <div style={{ fontSize: 22, marginBottom: 8 }}>📭</div>
         No cutoff data for this combination in {yr}.
-        <br />
-        <span style={{ fontSize: 12 }}>Try changing Category, Quota, or Year.</span>
+        <br /><span style={{ fontSize: 12 }}>Try changing Category, Quota, or Year.</span>
       </div>
     );
-
     const r1Close = data[0].closing;
     return (
       <div>
         <div style={{
-          display: "flex", justifyContent: "space-between",
-          alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8,
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          marginBottom: 14, flexWrap: "wrap", gap: 8,
         }}>
           <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 700, fontSize: 15 }}>
             All Rounds · <span style={{ color: YR_COLOR[yr] ?? T.orange }}>{yr}</span>
           </div>
           <Badge color={YR_COLOR[yr] ?? T.orange}>
-            {data.length} rounds · {college.type === "IIT" ? "AI Quota" : `${quota} Quota`}
+            {data.length} rounds · {quotaUsed ?? quota} Quota
           </Badge>
         </div>
-
         <div style={{ overflowX: "auto" }}>
-          <table style={{
-            width: "100%", borderCollapse: "collapse", fontSize: 13,
-          }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
             <thead>
               <tr style={{ borderBottom: `2px solid ${T.line}` }}>
                 {["Round", "Stage", "Opening Rank", "Closing Rank", "Δ from R1"].map((h) => (
@@ -476,42 +499,30 @@ export default function CutoffSection({ college, initialProgram }) {
                     padding: "8px 10px", textAlign: "left",
                     color: T.muted, fontWeight: 600, fontSize: 11,
                     letterSpacing: ".04em", whiteSpace: "nowrap",
-                  }}>
-                    {h}
-                  </th>
+                  }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {data.map((r, i) => {
-                const delta = r1Close ? r.closing - r1Close : null;
+                const delta  = r1Close ? r.closing - r1Close : null;
                 const isLast = i === data.length - 1;
                 return (
                   <tr key={r.round} style={{
                     background: isLast ? `${T.orange}08` : i % 2 === 0 ? "#FAFAFA" : "#fff",
-                    transition: "background .1s",
                   }}>
-                    <td style={{ padding: "10px", fontWeight: 700, color: T.navy }}>
-                      {r.round}
-                    </td>
+                    <td style={{ padding: "10px", fontWeight: 700, color: T.navy }}>{r.round}</td>
                     <td style={{ padding: "10px" }}>
-                      <Badge color={r.stage === "CSAB" ? T.violet : T.teal}>
-                        {r.stage}
-                      </Badge>
+                      <Badge color={r.stage === "CSAB" ? T.violet : T.teal}>{r.stage}</Badge>
                     </td>
                     <td style={{ padding: "10px", color: T.muted }}>{fmt(r.opening)}</td>
                     <td style={{
                       padding: "10px",
                       fontWeight: isLast ? 800 : 500,
                       color: isLast ? T.orange : T.navy,
-                    }}>
-                      {fmt(r.closing)}
-                    </td>
+                    }}>{fmt(r.closing)}</td>
                     <td style={{ padding: "10px" }}>
-                      {i === 0
-                        ? <span style={{ color: T.muted }}>—</span>
-                        : <TrendArrow delta={delta} />
-                      }
+                      {i === 0 ? <span style={{ color: T.muted }}>—</span> : <TrendArrow delta={delta} />}
                     </td>
                   </tr>
                 );
@@ -528,14 +539,10 @@ export default function CutoffSection({ college, initialProgram }) {
     );
   };
 
-  // ── Bar chart ─────────────────────────────────────────────────────────────
+  // ── Bar chart (single year) ───────────────────────────────────────────────
   const RoundsChart = ({ data, yr }) => {
     if (!data.length) return null;
-    const chartData = data.map((r) => ({
-      name: r.round,
-      Opening: r.opening,
-      Closing: r.closing,
-    }));
+    const chartData = data.map((r) => ({ name: r.round, Opening: r.opening, Closing: r.closing }));
     return (
       <div>
         <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 700, marginBottom: 10, fontSize: 14 }}>
@@ -556,12 +563,10 @@ export default function CutoffSection({ college, initialProgram }) {
     );
   };
 
-  // ── History table ─────────────────────────────────────────────────────────
+  // ── History table — uses merged data ─────────────────────────────────────
   const HistoryTable = () => {
     const data = useFallback ? legacyHistory : history;
-    if (!data.length) return (
-      <div style={{ color: T.muted, fontSize: 13 }}>No history data found.</div>
-    );
+    if (!data.length) return <div style={{ color: T.muted, fontSize: 13 }}>No history data found.</div>;
     return (
       <div>
         <div style={{ overflowX: "auto" }}>
@@ -572,53 +577,41 @@ export default function CutoffSection({ college, initialProgram }) {
                   <th key={h} style={{
                     padding: "8px 10px", textAlign: "left",
                     color: T.muted, fontWeight: 600, fontSize: 11, letterSpacing: ".04em",
-                  }}>
-                    {h}
-                  </th>
+                  }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {data.map((h, i) => {
-                const prev = data[i - 1];
-                const delta = prev && h.r6Close && prev.r6Close
-                  ? h.r6Close - prev.r6Close : null;
+                const prev  = data[i - 1];
+                const delta = prev && h.r6Close && prev.r6Close ? h.r6Close - prev.r6Close : null;
                 return (
-                  <tr key={h.year} style={{
-                    background: i % 2 === 0 ? "#FAFAFA" : "#fff",
-                  }}>
+                  <tr key={h.year} style={{ background: i % 2 === 0 ? "#FAFAFA" : "#fff" }}>
                     <td style={{ padding: "10px" }}>
                       <span style={{
                         display: "inline-block", padding: "2px 10px", borderRadius: 8,
                         background: `${YR_COLOR[String(h.year)] ?? T.orange}18`,
                         color: YR_COLOR[String(h.year)] ?? T.orange,
                         fontWeight: 700, fontSize: 12,
-                      }}>
-                        {h.year}
-                      </span>
+                      }}>{h.year}</span>
                     </td>
                     <td style={{ padding: "10px", color: T.muted }}>{fmt(h.opening)}</td>
                     <td style={{ padding: "10px" }}>{fmt(h.closing)}</td>
                     <td style={{ padding: "10px", fontWeight: 700 }}>{fmt(h.r6Close)}</td>
-                    <td style={{ padding: "10px" }}>
-                      <TrendArrow delta={delta} />
-                    </td>
+                    <td style={{ padding: "10px" }}><TrendArrow delta={delta} /></td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
         </div>
-
-        {/* Forecast banner */}
         {(useFallback ? legacyForecast : forecast) && (() => {
           const f = useFallback ? legacyForecast : forecast;
           return (
             <div style={{
               marginTop: 14, padding: "14px 16px",
               background: "linear-gradient(135deg,#F0F9FF,rgba(139,92,246,.06))",
-              border: `1.5px dashed ${T.violet}50`,
-              borderRadius: 12,
+              border: `1.5px dashed ${T.violet}50`, borderRadius: 12,
               display: "flex", justifyContent: "space-between",
               alignItems: "center", gap: 12, flexWrap: "wrap",
             }}>
@@ -647,17 +640,17 @@ export default function CutoffSection({ college, initialProgram }) {
     );
   };
 
-  // ── Trend area chart ──────────────────────────────────────────────────────
+  // ── Trend area chart — uses merged history ────────────────────────────────
   const TrendChart = () => {
     const data = useFallback ? legacyHistory : history;
     if (data.length < 2) return (
       <div style={{ color: T.muted, fontSize: 13 }}>Not enough data for trend chart.</div>
     );
     const chartData = data.map((h) => ({
-      year: String(h.year),
+      year:             String(h.year),
       "Closing (Final)": h.r6Close,
-      "Closing (R1)":   h.closing,
-      "Opening (R1)":   h.opening,
+      "Closing (R1)":    h.closing,
+      "Opening (R1)":    h.opening,
     }));
     const fc = useFallback ? legacyForecast : forecast;
     return (
@@ -704,22 +697,19 @@ export default function CutoffSection({ college, initialProgram }) {
   // ── Multi-year grouped bar chart ──────────────────────────────────────────
   const MultiYearBarChart = () => {
     if (!dbReady || !program) return null;
-
-    // Build per-round data with all available years
     const roundNums = ["1","2","3","4","5","6"];
     const chartData = roundNums.map((rnd) => {
-      const entry = { round: `R${rnd}` };
-      let anyData = false;
+      const entry  = { round: `R${rnd}` };
+      let anyData  = false;
       for (const yr of availYears) {
-        const d = getRealRounds(college, program, quota, cat, yr, gender);
+        // Use merged rounds for each year
+        const { rounds: d } = getMergedRounds(college, program, quota, cat, yr, gender);
         const r = d.find((x) => x.round === `JR ${rnd}`);
         if (r) { entry[yr] = r.closing; anyData = true; }
       }
       return anyData ? entry : null;
     }).filter(Boolean);
-
     if (!chartData.length) return null;
-
     return (
       <div>
         <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 700, marginBottom: 4, fontSize: 14 }}>
@@ -745,32 +735,6 @@ export default function CutoffSection({ college, initialProgram }) {
     );
   };
 
-  // ── Card wrapper ──────────────────────────────────────────────────────────
-  const Card = ({ children, style }) => (
-    <div style={{
-      background: "#fff",
-      border: `1px solid ${T.line}`,
-      borderRadius: 16,
-      padding: "20px 22px",
-      boxShadow: "0 1px 8px rgba(0,0,0,.05)",
-      ...style,
-    }}>
-      {children}
-    </div>
-  );
-
-  const Grid2 = ({ children, style }) => (
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(340px,1fr))",
-      gap: 20,
-      alignItems: "start",
-      ...style,
-    }}>
-      {children}
-    </div>
-  );
-
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div>
@@ -779,8 +743,7 @@ export default function CutoffSection({ college, initialProgram }) {
       {useFallback && (
         <div style={{
           padding: "10px 16px", marginBottom: 18,
-          background: `${T.amber}15`,
-          border: `1px solid ${T.amber}40`,
+          background: `${T.amber}15`, border: `1px solid ${T.amber}40`,
           borderRadius: 10, fontSize: 13, color: T.muted,
         }}>
           ⚠️ This college isn't in the JoSAA real-data index yet.
@@ -802,13 +765,11 @@ export default function CutoffSection({ college, initialProgram }) {
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <Grid2>
                 <Card>
-                  <div style={{
-                    fontFamily: "Sora,sans-serif", fontWeight: 700, marginBottom: 4, fontSize: 15,
-                  }}>
+                  <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 700, marginBottom: 4, fontSize: 15 }}>
                     Year-wise Cutoff History
                   </div>
                   <div style={{ fontSize: 12, color: T.muted, marginBottom: 16 }}>
-                    R1 &amp; final-round cutoffs · Official JoSAA data
+                    R1 &amp; final-round cutoffs · Official JoSAA data (AI + OS quotas merged)
                   </div>
                   <HistoryTable />
                 </Card>
@@ -824,11 +785,12 @@ export default function CutoffSection({ college, initialProgram }) {
               {/* Latest year rounds as reference */}
               {availYears.length > 0 && (() => {
                 const latestYr = availYears[availYears.length - 1];
-                const latestRounds = getRealRounds(college, program, quota, cat, latestYr, gender);
+                const { rounds: latestRounds, usedQuota: lq } =
+                  getMergedRounds(college, program, quota, cat, latestYr, gender);
                 return (
                   <Grid2>
                     <Card>
-                      <RoundsTable data={latestRounds} yr={latestYr} />
+                      <RoundsTable data={latestRounds} yr={latestYr} quotaUsed={lq} />
                     </Card>
                     <Card>
                       <RoundsChart data={latestRounds} yr={latestYr} />
@@ -846,7 +808,11 @@ export default function CutoffSection({ college, initialProgram }) {
 
               <Grid2>
                 <Card>
-                  <RoundsTable data={useFallback ? legacyRounds : rounds} yr={viewYear} />
+                  <RoundsTable
+                    data={useFallback ? legacyRounds : rounds}
+                    yr={viewYear}
+                    quotaUsed={usedQuota}
+                  />
                 </Card>
                 <Card>
                   <RoundsChart data={useFallback ? legacyRounds : rounds} yr={viewYear} />
@@ -856,9 +822,7 @@ export default function CutoffSection({ college, initialProgram }) {
               {history.length > 1 && (
                 <Grid2>
                   <Card>
-                    <div style={{
-                      fontFamily: "Sora,sans-serif", fontWeight: 700, marginBottom: 4, fontSize: 15,
-                    }}>
+                    <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 700, marginBottom: 4, fontSize: 15 }}>
                       How {viewYear} compares to other years
                     </div>
                     <div style={{ fontSize: 12, color: T.muted, marginBottom: 16 }}>
@@ -876,13 +840,11 @@ export default function CutoffSection({ college, initialProgram }) {
         </motion.div>
       </AnimatePresence>
 
-      {/* ── Data source footer ─────────────────────────────────────── */}
+      {/* ── Footer ──────────────────────────────────────────────────── */}
       <div style={{
         marginTop: 28, padding: "14px 18px",
-        background: "#F8F9FF",
-        border: `1px solid ${T.line}`,
-        borderRadius: 12,
-        fontSize: 12, color: T.muted,
+        background: "#F8F9FF", border: `1px solid ${T.line}`,
+        borderRadius: 12, fontSize: 12, color: T.muted,
         display: "flex", gap: 10, alignItems: "flex-start",
       }}>
         <span style={{ fontSize: 16 }}>ℹ️</span>
