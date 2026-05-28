@@ -1,12 +1,7 @@
 import { predictColleges, predictCollegesGrouped } from "../utils/collegePredictor.js";
-import { loadCutoffDB, isDBReady } from "../utils/realCutoffEngine.js";
 
-self.onmessage = async ({ data }) => {
+self.onmessage = ({ data }) => {
   try {
-    // Wait for real cutoff DB to finish loading before predicting
-    if (!isDBReady()) {
-      await loadCutoffDB();
-    }
     const { type, opts } = data;
     const result = type === "grouped"
       ? predictCollegesGrouped(opts)

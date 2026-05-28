@@ -9,10 +9,6 @@
    Default predictor year  = 2024.
    General pool quota      = AI (all-India) — standard for 2024 JoSAA.
    seatMatrix()            uses the real SEAT_MATRIX (unchanged).
-
-   FIX (v2): modelledRounds now falls back to OPEN cutoff × CAT_RELAX
-   multiplier when a category (e.g. OBC-NCL) has no explicit baseCutoff
-   entry, so modelled results always appear regardless of category.
    ============================================================ */
 
 import { SEAT_MATRIX } from "../data/seatMatrix.js";
@@ -32,17 +28,6 @@ loadCutoffDB();
 
 const DEFAULT_YEAR    = "2024";
 const ALLINDIA_QUOTAS = ["AI", "OS"]; // AI for 2024+; OS for older NIT years
-
-// ── Category relaxation multipliers for modelled fallback ─────────────────────
-// Applied to OPEN baseCutoff when a specific category entry is missing.
-// Higher rank number = more relaxed = more students eligible.
-const CAT_RELAX = {
-  "OPEN":    1.00,
-  "EWS":     1.25,
-  "OBC-NCL": 1.30,
-  "SC":      1.60,
-  "ST":      2.00,
-};
 
 // ── Real-data plumbing ────────────────────────────────────────────────────────
 
@@ -145,26 +130,12 @@ const CSAB_CLOSE_MUL  = [1.370, 1.450];
 const CSAB_OPEN_MUL   = [1.310, 1.385];
 
 function modelledRounds(college, branch, cat) {
-  // Try exact category first, then fall back to OPEN × CAT_RELAX multiplier.
-  // This ensures OBC-NCL / SC / ST / EWS always get modelled results even
-  // when baseCutoff only stores OPEN entries.
-  let base = college?.baseCutoff?.[branch]?.[cat];
-
-  if (!base) {
-    const openBase = college?.baseCutoff?.[branch]?.["OPEN"];
-    if (openBase) {
-      const relax = CAT_RELAX[cat] ?? 1.25;
-      base = openBase.map((v) => Math.round(v * relax));
-    }
-  }
-
+  const base = college?.baseCutoff?.[branch]?.[cat];
   if (!base) return [];
-
   const [baseOpen, baseClose] = base;
   const isIIT  = college.type === "IIT";
   const spread = Math.max(8, Math.round(baseClose * 0.013));
   const rounds = [];
-
   for (let i = 0; i < 6; i++) {
     const n = noise(`${college.slug}-${branch}-${cat}-jr${i}`, spread);
     rounds.push({
@@ -174,7 +145,6 @@ function modelledRounds(college, branch, cat) {
       closing: Math.max(1, Math.round(baseClose * JOSAA_CLOSE_MUL[i] + n)),
     });
   }
-
   if (!isIIT) {
     for (let i = 0; i < 2; i++) {
       const n = noise(`${college.slug}-${branch}-${cat}-csab${i}`, spread);
@@ -186,7 +156,6 @@ function modelledRounds(college, branch, cat) {
       });
     }
   }
-
   return rounds;
 }
 
@@ -195,22 +164,10 @@ const YEAR_CLOSE_MUL  = [1.22, 1.15, 1.08, 1.03, 1.00];
 const YEAR_OPEN_MUL   = [1.20, 1.13, 1.07, 1.02, 1.00];
 
 function modelledHistory(college, branch, cat) {
-  // Same fallback as modelledRounds — use OPEN × CAT_RELAX if needed
-  let base = college?.baseCutoff?.[branch]?.[cat];
-
-  if (!base) {
-    const openBase = college?.baseCutoff?.[branch]?.["OPEN"];
-    if (openBase) {
-      const relax = CAT_RELAX[cat] ?? 1.25;
-      base = openBase.map((v) => Math.round(v * relax));
-    }
-  }
-
+  const base = college?.baseCutoff?.[branch]?.[cat];
   if (!base) return [];
-
   const [baseOpen, baseClose] = base;
   const spread = Math.max(6, Math.round(baseClose * 0.018));
-
   return HISTORY_YEARS.map((year, i) => {
     const n = noise(`${college.slug}-${branch}-${cat}-hist${year}`, spread);
     return {
