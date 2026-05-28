@@ -154,7 +154,7 @@ export default function About() {
       >
         <div className="container" style={{ textAlign: "center" }}>
           <span className="eyebrow" style={{ color: "var(--coral)" }}>
-            About EduReach
+            About College Parichay
           </span>
           <h1
             style={{
@@ -175,7 +175,7 @@ export default function About() {
               lineHeight: 1.6,
             }}
           >
-            EduReach brings rank prediction, college discovery and counselling
+            College Parichay brings rank prediction, college discovery and counselling
             guidance into one clean, honest, student-first platform.
           </p>
         </div>
@@ -222,7 +222,7 @@ export default function About() {
               sit right with us.
             </p>
             <p>
-              So we built <strong>EduReach</strong>: a place where any student
+              So we built <strong>College Parichay</strong>: a place where any student
               can predict their rank, explore every IIT, NIT and IIIT with real
               data, and fill their JoSAA choices with confidence instead of
               guesswork. No hype, no fake promises — just the clarity we wish
@@ -275,7 +275,7 @@ export default function About() {
         <div className="container">
           <div className="title-bar">
             <span className="eyebrow">The team</span>
-            <h2 className="section-title">Who's behind EduReach</h2>
+            <h2 className="section-title">Who's behind College Parichay</h2>
             <p className="section-sub">
               A small team from IIT Roorkee, building the tool we needed.
             </p>

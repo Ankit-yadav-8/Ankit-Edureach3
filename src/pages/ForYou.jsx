@@ -49,7 +49,7 @@ export default function ForYou() {
       setTipIdx((i) => (i + 1) % LOADING_TIPS.length);
     }, 1500);
 
-    predict({ rank: Number(rank), category });
+    predict({ rank: Number(rank), category }, true);
   }
 
   // Clear tip timer when done

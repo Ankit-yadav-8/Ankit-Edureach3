@@ -9,46 +9,79 @@ import Reveal from "../components/Reveal.jsx";
 
 const ICON = { github: Github, linkedin: Linkedin, dribbble: Dribbble, website: Globe };
 
-/* ── AK Glow Logo ──────────────────────────────────────────────── */
-function DevGlowLogo({ initials, accent, size = 110 }) {
+/* ── Square Photo Card for Ankit (large, glowing border) ─────── */
+function SquarePhotoCard({ dev }) {
   return (
-    <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
+    <div style={{ position: "relative", flexShrink: 0 }}>
       {/* Outer ambient glow */}
       <div style={{
         position: "absolute",
         inset: -20,
-        borderRadius: "50%",
-        background: `radial-gradient(circle, ${accent}55 0%, ${accent}22 45%, transparent 72%)`,
+        borderRadius: 24,
+        background: `radial-gradient(circle, ${dev.accent}55 0%, ${dev.accent}22 50%, transparent 75%)`,
         animation: "akGlow 3s ease-in-out infinite alternate",
         pointerEvents: "none",
+        filter: "blur(10px)",
       }} />
-      {/* Rotating ring */}
+      {/* Animated border glow ring */}
       <div style={{
-        position: "absolute", inset: -6,
-        borderRadius: "50%",
-        border: `2px dashed ${accent}50`,
-        animation: "spin 8s linear infinite",
+        position: "absolute", inset: -3,
+        borderRadius: 20,
+        background: `linear-gradient(135deg, ${dev.accent}, #fbbf24, ${dev.accent}88, #ea580c, ${dev.accent})`,
+        backgroundSize: "300% 300%",
+        animation: "photoGlowBorder 3s ease infinite",
         pointerEvents: "none",
+        zIndex: 0,
       }} />
-      {/* Solid ring */}
+      {/* Photo container */}
       <div style={{
-        position: "absolute", inset: -2,
-        borderRadius: "50%",
-        border: `2px solid ${accent}55`,
-        animation: "akRing 3s ease-in-out infinite",
-        pointerEvents: "none",
+        width: 220,
+        height: 270,
+        borderRadius: 18,
+        overflow: "hidden",
+        position: "relative",
+        zIndex: 1,
+        boxShadow: `0 0 30px ${dev.accent}88, 0 0 60px ${dev.accent}44`,
+      }}>
+        <img
+          src={dev.photo}
+          alt={dev.name}
+          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
+        />
+        {/* Bottom name overlay */}
+        <div style={{
+          position: "absolute", bottom: 0, left: 0, right: 0,
+          padding: "32px 14px 14px",
+          background: `linear-gradient(to top, ${dev.accent}ee 0%, transparent 100%)`,
+        }}>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: "#fff", lineHeight: 1.2 }}>{dev.name}</div>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,.85)", marginTop: 2 }}>{dev.role}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── AK Glow Logo (fallback for non-photo devs) ─────────────────── */
+function DevGlowLogo({ initials, accent, size = 110 }) {
+  return (
+    <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
+      <div style={{
+        position: "absolute", inset: -20, borderRadius: "50%",
+        background: `radial-gradient(circle, ${accent}55 0%, ${accent}22 45%, transparent 72%)`,
+        animation: "akGlow 3s ease-in-out infinite alternate", pointerEvents: "none",
       }} />
-      {/* Main logo */}
+      <div style={{
+        position: "absolute", inset: -6, borderRadius: "50%",
+        border: `2px dashed ${accent}50`, animation: "spin 8s linear infinite", pointerEvents: "none",
+      }} />
       <div style={{
         width: size, height: size, borderRadius: "50%",
         background: `linear-gradient(135deg, ${accent} 0%, #ea580c 55%, #c2410c 100%)`,
         display: "grid", placeItems: "center",
-        fontFamily: "Sora", fontWeight: 800,
-        fontSize: size * 0.3, color: "#fff",
-        letterSpacing: "-1px",
+        fontFamily: "Sora", fontWeight: 800, fontSize: size * 0.3, color: "#fff",
         boxShadow: `0 0 0 4px rgba(255,255,255,.15), 0 8px 40px ${accent}88, 0 0 80px ${accent}44`,
-        position: "relative", zIndex: 1,
-        userSelect: "none",
+        position: "relative", zIndex: 1, userSelect: "none",
       }}>
         {initials}
       </div>
@@ -63,7 +96,7 @@ function HeroAvatar({ dev }) {
       <div style={{
         width: 92, height: 92, borderRadius: "50%", overflow: "hidden",
         border: "3px solid rgba(255,255,255,0.6)",
-        boxShadow: "0 0 24px rgba(255,255,255,0.25), 0 0 8px rgba(0,0,0,0.3)",
+        boxShadow: "0 0 24px rgba(255,255,255,0.25)",
         flexShrink: 0,
       }}>
         <img src={dev.photo} alt={dev.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -73,10 +106,8 @@ function HeroAvatar({ dev }) {
   return (
     <div style={{
       width: 92, height: 92, borderRadius: "50%",
-      background: "rgba(255,255,255,.18)",
-      border: "2px solid rgba(255,255,255,.5)",
-      display: "grid", placeItems: "center",
-      fontFamily: "Sora", fontWeight: 800, fontSize: 30,
+      background: "rgba(255,255,255,.18)", border: "2px solid rgba(255,255,255,.5)",
+      display: "grid", placeItems: "center", fontFamily: "Sora", fontWeight: 800, fontSize: 30,
     }}>
       {dev.initials}
     </div>
@@ -111,22 +142,25 @@ export default function Developer() {
     <div className="page">
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section style={{
-        background: `linear-gradient(135deg, #0f0c29 0%, #1c1c28 50%, ${dev.accent}33 100%)`,
+        background: dev.accent === "#F47B20"
+          ? "linear-gradient(135deg, #1a0a00 0%, #2d1200 35%, #3d1f05 65%, #F47B2022 100%)"
+          : `linear-gradient(135deg, #0f0c29 0%, #1c1c28 50%, ${dev.accent}33 100%)`,
         color: "#fff",
         padding: "52px 0 60px",
         position: "relative",
         overflow: "hidden",
       }}>
-        {/* Background glow */}
-        <div style={{ position: "absolute", top: -80, right: -40, width: 400, height: 400, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}30 0%, transparent 65%)`, pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -60, left: -40, width: 300, height: 300, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}18 0%, transparent 65%)`, pointerEvents: "none" }} />
+        {/* Background glow blobs */}
+        <div style={{ position: "absolute", top: -80, right: -40, width: 500, height: 500, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}38 0%, transparent 65%)`, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -60, left: -40, width: 350, height: 350, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}22 0%, transparent 65%)`, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "40%", left: "30%", width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}18 0%, transparent 70%)`, pointerEvents: "none" }} />
 
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <button onClick={() => nav(-1)} className="btn btn-light" style={{ marginBottom: 28 }}>
             <ArrowLeft size={16} /> Back
           </button>
 
-          {/* Two-column layout: left = info, right = logo */}
+          {/* Two-column layout: left = info, right = photo/logo */}
           <div style={{
             display: "grid",
             gridTemplateColumns: "1fr auto",
@@ -140,7 +174,7 @@ export default function Developer() {
               transition={{ duration: 0.55 }}
             >
               <span className="badge" style={{ background: "rgba(255,255,255,.14)", color: "#fff", marginBottom: 16, display: "inline-flex" }}>
-                <Sparkles size={12} /> Team EduReach · Project Lead
+                <Sparkles size={12} /> Team College Parichay · {dev.role.split("&")[0].trim()}
               </span>
 
               <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(2rem,4.5vw,3rem)", margin: "0 0 8px", letterSpacing: "-0.5px" }}>
@@ -159,10 +193,27 @@ export default function Developer() {
                   <div style={{
                     display: "inline-flex", alignItems: "center", gap: 6,
                     background: "rgba(255,255,255,.12)",
+                    border: `1px solid ${dev.accent}66`,
                     borderRadius: 99, padding: "4px 14px",
                     fontSize: 13, fontWeight: 600,
+                    boxShadow: `0 0 14px ${dev.accent}66, 0 0 28px ${dev.accent}33`,
+                    animation: "rankGlow 2s ease-in-out infinite alternate",
                   }}>
                     🏆 {dev.jeeRank} · {dev.exam}
+                  </div>
+                )}
+                {dev.college && (
+                  <div style={{
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    background: `${dev.accent}22`,
+                    border: `1px solid ${dev.accent}55`,
+                    borderRadius: 99, padding: "4px 14px",
+                    fontSize: 13, fontWeight: 600,
+                    color: dev.accent,
+                    boxShadow: `0 0 14px ${dev.accent}44`,
+                    animation: "rankGlow 2s ease-in-out infinite alternate",
+                  }}>
+                    🎓 {dev.college}
                   </div>
                 )}
               </div>
@@ -194,10 +245,10 @@ export default function Developer() {
               style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}
               className="dev-logo-col"
             >
-              {dev.initials === "AK" || !dev.photo ? (
-                <DevGlowLogo initials={dev.initials} accent={dev.accent} size={120} />
+              {dev.photo ? (
+                <SquarePhotoCard dev={dev} />
               ) : (
-                <HeroAvatar dev={dev} />
+                <DevGlowLogo initials={dev.initials} accent={dev.accent} size={120} />
               )}
 
               {/* Skill chips below logo */}

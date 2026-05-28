@@ -23,7 +23,7 @@ export default function CounsellingPlanner() {
 
   const download = () => {
     if (!order.length) return;
-    const head = `EduReach — My JoSAA Choice List\nExam: ${form.exam === "advanced" ? "JEE Advanced (IITs)" : "JEE Main (NITs & IIITs)"}\nRank: ${form.rank || "-"}   Category: ${form.category}\nGenerated on ${new Date().toLocaleDateString("en-IN")}\n${"=".repeat(50)}\n\n`;
+    const head = `College Parichay — My JoSAA Choice List\nExam: ${form.exam === "advanced" ? "JEE Advanced (IITs)" : "JEE Main (NITs & IIITs)"}\nRank: ${form.rank || "-"}   Category: ${form.category}\nGenerated on ${new Date().toLocaleDateString("en-IN")}\n${"=".repeat(50)}\n\n`;
     const body = order.map((o, i) => `${String(i + 1).padStart(2, " ")}. ${o.college} — ${o.branch}\n     Closing rank: ${o.closing}   |   ${o.tier}`).join("\n\n");
     const blob = new Blob([head + body + "\n\n(Illustrative — verify on josaa.nic.in)"], { type: "text/plain" });
     const url = URL.createObjectURL(blob);

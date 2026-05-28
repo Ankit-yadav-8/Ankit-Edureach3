@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import useCountUp from "../../utils/useCountUp.js";
 
+const ABOUT_ACCENT = "#F47B20";
+
 const QUICK = ["IIT Bombay", "JEE Main 2026", "College Predictor", "NIT Trichy", "VITEEE", "JEE Advanced"];
 
 const TOP_COLLEGES = [
@@ -71,6 +73,110 @@ function MeshDots() {
     return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
   }, []);
   return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 1 }} />;
+}
+
+/* ── About Us Card (left panel) ── */
+function AboutUsCard() {
+  const nav = useNavigate();
+  const STORY = [
+    { icon: "🎯", title: "The Problem", text: "JoSAA counselling felt overwhelming — scattered data, no clarity on which college to choose." },
+    { icon: "💡", title: "IIT Roorkee Dream", text: "Ankit cracked JEE Advanced (AIR 4846) and lived through the chaos of counselling firsthand." },
+    { icon: "📊", title: "How We Built It", text: "8 years of real JoSAA data · 850+ institutes · Real-time rank predictions. Built for every aspirant." },
+  ];
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -36 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.7, delay: 0.3 }}
+      className="hero-about-col"
+      style={{
+        background: "rgba(10,10,26,0.72)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        border: "1px solid rgba(255,255,255,.1)",
+        borderRadius: 20,
+        padding: "1.6rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        boxShadow: "0 0 0 1px rgba(255,255,255,.06), 0 24px 64px rgba(0,0,0,.6)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Top glow bar */}
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${ABOUT_ACCENT}, transparent)` }} />
+
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ width: 40, height: 40, borderRadius: 11, background: `${ABOUT_ACCENT}22`, border: `1.5px solid ${ABOUT_ACCENT}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+          <Sparkles size={18} color={ABOUT_ACCENT} />
+        </div>
+        <div>
+          <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase" }}>Our Story</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: "1rem" }}>Built by an IITian</div>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
+
+      {/* Founder card */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{
+          width: 54, height: 54, borderRadius: 12, overflow: "hidden", flexShrink: 0,
+          border: `2px solid ${ABOUT_ACCENT}88`,
+          boxShadow: `0 0 16px ${ABOUT_ACCENT}55`,
+        }}>
+          <img src="/assets/team/ankit.jpeg" alt="Ankit Yadav" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }} />
+        </div>
+        <div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: "#fff" }}>Ankit Yadav</div>
+          <div style={{ fontSize: 11, color: ABOUT_ACCENT, fontWeight: 700, marginTop: 2 }}>IIT Roorkee · AIR 4846 JEE Adv.</div>
+          <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.5)", marginTop: 1 }}>B.Tech EE · Founder</div>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
+
+      {/* Story bullets */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {STORY.map(({ icon, title, text }) => (
+          <div key={title} style={{
+            background: "rgba(255,255,255,.04)",
+            border: "1px solid rgba(255,255,255,.06)",
+            borderRadius: 10, padding: "9px 11px",
+            display: "flex", gap: 9, alignItems: "flex-start",
+          }}>
+            <span style={{ fontSize: 15, flexShrink: 0, marginTop: 1 }}>{icon}</span>
+            <div>
+              <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 11.5, color: "#fff" }}>{title}</div>
+              <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.55)", lineHeight: 1.45, marginTop: 2 }}>{text}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <button
+        onClick={() => nav("/team/team-head")}
+        style={{
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+          background: `linear-gradient(135deg, ${ABOUT_ACCENT}, #ea580c)`,
+          color: "#fff", border: "none", borderRadius: 11,
+          padding: "10px 14px", fontSize: 12.5, fontWeight: 700,
+          fontFamily: "Sora", cursor: "pointer", marginTop: "auto",
+          boxShadow: `0 4px 20px ${ABOUT_ACCENT}55`,
+          transition: "all .2s",
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `0 8px 28px ${ABOUT_ACCENT}88`; }}
+        onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `0 4px 20px ${ABOUT_ACCENT}55`; }}
+      >
+        Read Our Story <ArrowRight size={13} />
+      </button>
+    </motion.div>
+  );
 }
 
 /* ── Live College Card (right panel) ── */
@@ -238,9 +344,12 @@ export default function Hero({ onSearch }) {
 
       {/* ═══ Content ═══ */}
       <div className="container" style={{ position: "relative", zIndex: 2, width: "100%" }}>
-        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: "3rem", alignItems: "center" }}>
+        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "300px 1fr 300px", gap: "2rem", alignItems: "center" }}>
 
-          {/* ══ LEFT ══ */}
+          {/* ══ ABOUT US CARD (left) ══ */}
+          <AboutUsCard />
+
+          {/* ══ CENTER ══ */}
           <div style={{ textAlign: "center" }}>
 
             {/* Badge */}
@@ -406,7 +515,7 @@ export default function Hero({ onSearch }) {
               <Stat target={50}   suffix="K+" label="Students guided" />
             </motion.div>
           </div>
-          {/* ══ end LEFT ══ */}
+          {/* ══ end CENTER ══ */}
 
           {/* ══ RIGHT — Live College Panel ══ */}
           <LiveCollegePanel />

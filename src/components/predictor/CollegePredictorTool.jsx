@@ -7,7 +7,11 @@ import {
 } from "lucide-react";
 import { TIER_COLOR } from "../../utils/collegePredictor.js";
 import { expandRounds } from "../../utils/cutoffEngine.js";
+import { loadPredictorDB } from "../../utils/realCutoffEngine.js";
 import { COLLEGE_BY_SLUG, BRANCHES, CATEGORIES, STATES } from "../../data/colleges.js";
+
+// Pre-warm 2024 cutoff data for round detail display
+loadPredictorDB();
 import { useCollegePredictor } from "../../hooks/useCollegePredictor.js";
 import { Bars, PieWithLegend } from "../Charts.jsx";
 import { fmtRank, fmtINR } from "../../utils/format.js";

@@ -6,10 +6,10 @@ export const TEAM = [
   {
     id: "team-head",
     initials: "AK",
-    photo: null,
-    name: "Ankit Kumar",
+    photo: "/assets/team/ankit.jpeg",
+    name: "Ankit Yadav",
     role: "Project Lead & Full-Stack Developer",
-    accent: "#F97316",
+    accent: "#F47B20",
     tagline: "Building products that make engineering admissions simpler.",
     location: "IIT Roorkee, Uttarakhand",
     college: "IIT Roorkee",

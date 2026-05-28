@@ -2,7 +2,7 @@ export const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000"
 
 async function req(path, { method = "GET", body, token } = {}) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+  const timeout = setTimeout(() => controller.abort(), 12000); // 12 second timeout
 
   try {
     const res = await fetch(API_BASE + path, {

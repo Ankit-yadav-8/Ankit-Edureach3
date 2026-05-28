@@ -14,7 +14,7 @@ export default function Testimonials() {
         <div className="title-bar">
           <span className="eyebrow">Loved by students</span>
           <h2 className="section-title">What students &amp; parents say</h2>
-          <p className="section-sub">Real outcomes from people who used EduReach to navigate admissions.</p>
+          <p className="section-sub">Real outcomes from people who used College Parichay to navigate admissions.</p>
         </div>
         <div className="grid-3">
           {TESTIMONIALS.map((t, i) => (

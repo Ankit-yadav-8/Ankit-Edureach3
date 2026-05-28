@@ -22,10 +22,9 @@ import {
   getRealPrograms,
 } from "./realCutoffEngine.js";
 
-// Kick off the real-data load as soon as anything imports this engine.
-// expandRounds falls back to modelled until the DB is ready, then
-// returns real data on the next render.
-loadCutoffDB();
+// NOTE: loadCutoffDB() is NOT called here at module level.
+// The predictor worker only needs 2024 data via loadPredictorDB().
+// CollegeDetail and CutoffSection call loadCutoffDB() directly.
 
 const DEFAULT_YEAR    = "2024";
 const ALLINDIA_QUOTAS = ["AI", "OS"]; // AI for 2024+; OS for older NIT years

@@ -122,8 +122,17 @@ export default function Navbar({ onSearch }) {
             <GraduationCap size={20} />
           </span>
           <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.3rem", letterSpacing: "-0.01em" }}>
-            College <span style={{ color: "var(--coral)" }}>Parichay</span>
-            <span style={{ color: "var(--coral)", fontWeight: 700 }}>.in</span>
+            College{" "}
+            <span style={{
+              background: "linear-gradient(90deg, #F47B20 0%, #f97316 25%, #fbbf24 50%, #f97316 75%, #F47B20 100%)",
+              backgroundSize: "200% auto",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              animation: "brandGradient 3s linear infinite",
+              display: "inline",
+            }}>Parichay</span>
+            <span style={{ color: "#F47B20", fontWeight: 700 }}>.in</span>
           </span>
         </Link>
 

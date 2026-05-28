@@ -333,6 +333,19 @@ input,select,textarea { font-family:inherit; }
   from { transform:rotate(0deg); }
   to   { transform:rotate(360deg); }
 }
+@keyframes brandGradient {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes rankGlow {
+  from { box-shadow: 0 0 8px rgba(244,123,32,.5), 0 0 16px rgba(244,123,32,.25); }
+  to   { box-shadow: 0 0 20px rgba(244,123,32,.9), 0 0 40px rgba(244,123,32,.5), 0 0 6px #F47B20; }
+}
+@keyframes photoGlowBorder {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
 /* Developer page & team head card — hide logo column on mobile */
 @media (max-width:768px) {
@@ -1210,6 +1223,9 @@ textarea.input { width:100%; }
   .footer-grid  { grid-template-columns:repeat(2,1fr); gap:2rem; }
   .features-grid{ grid-template-columns:repeat(2,1fr); }
   .josaa-promo-inner { grid-template-columns:1fr; gap:2rem; }
+  /* On tablet, hero side cards collapse — show only right college panel */
+  .hero-grid { grid-template-columns: 1fr 280px !important; }
+  .hero-about-col:first-child { display: none !important; }
 }
 
 /* ════════════════════════════════════════════════
@@ -1279,15 +1295,14 @@ textarea.input { width:100%; }
     backdrop-filter:blur(18px);
     -webkit-backdrop-filter:blur(18px);
   }
-  /* Hide About Us card on mobile */
-.hero-about-col {
-  display: none !important;
-}
-
-/* Make hero grid single-column on mobile */
-.hero-grid {
-  grid-template-columns: 1fr !important;
-}
+  /* Hide side panels on mobile */
+  .hero-about-col {
+    display: none !important;
+  }
+  /* Make hero grid single-column on mobile */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+  }
   .brand-logo             { color:#1c1c28 !important; }
   .brand-logo .dot-in     { color:#F47B20 !important; }
   .hamburger {

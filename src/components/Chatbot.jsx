@@ -8,7 +8,7 @@ const SUGGESTIONS = ["Top IITs by package", "CSE colleges in Tamil Nadu", "Best 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState([
-    { from: "bot", text: "Hi! I'm the EduReach assistant. Ask me about colleges, packages, cutoffs or exams — e.g. \"top IITs with package above 20 lakh\"." },
+    { from: "bot", text: "Hi! I'm the College Parichay assistant. Ask me about colleges, packages, cutoffs or exams — e.g. \"top IITs with package above 20 lakh\"." },
   ]);
   const [input, setInput] = useState("");
   const nav = useNavigate();
@@ -37,7 +37,7 @@ export default function Chatbot() {
           <div style={{ background: "linear-gradient(135deg,#1c1c28,#2a2a3c)", color: "#fff", padding: "14px 16px", display: "flex", alignItems: "center", gap: 9 }}>
             <Sparkles size={18} color="var(--gold)" />
             <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 15 }}>EduReach Assistant</div>
+              <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 15 }}>College Parichay Assistant</div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,.7)" }}>Ask about colleges, exams &amp; cutoffs</div>
             </div>
           </div>
