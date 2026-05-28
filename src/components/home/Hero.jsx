@@ -74,14 +74,12 @@ function MeshDots() {
   return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 1 }} />;
 }
 
-/* ── About Us Card (left panel) ── */
-function AboutUsCard() {
+/* ── Developer Profile Card (left panel) ── */
+function DevProfileCard() {
   const nav = useNavigate();
-  const STORY = [
-    { icon: "🎯", title: "The Problem", text: "JoSAA counselling felt overwhelming — scattered data, no clarity on which college to choose." },
-    { icon: "💡", title: "IIT Roorkee Dream", text: "Ankit cracked JEE Advanced (AIR 4846) and lived through the chaos of counselling firsthand." },
-    { icon: "📊", title: "How We Built It", text: "8 years of real JoSAA data · 850+ institutes · Real-time rank predictions. Built for every aspirant." },
-  ];
+  const ACCENT = "#F47B20";
+  const SKILLS = ["React", "Node.js", "AI / GPT", "Python", "MongoDB", "REST APIs"];
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -36 }}
@@ -104,75 +102,108 @@ function AboutUsCard() {
       }}
     >
       {/* Top glow bar */}
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${ABOUT_ACCENT}, transparent)` }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${ACCENT}, transparent)` }} />
 
-      {/* Header */}
+      {/* Section label */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 11, background: `${ABOUT_ACCENT}22`, border: `1.5px solid ${ABOUT_ACCENT}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-          <Sparkles size={18} color={ABOUT_ACCENT} />
+        <div style={{ width: 38, height: 38, borderRadius: 10, background: `${ACCENT}20`, border: `1.5px solid ${ACCENT}40`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+          <span style={{ fontSize: 17 }}>👨‍💻</span>
         </div>
         <div>
-          <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase" }}>Our Story</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: "1rem" }}>Built by an IITian</div>
+          <div style={{ fontSize: 9, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.6px", textTransform: "uppercase" }}>Developer</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: ".97rem" }}>Ankit Yadav GPT</div>
         </div>
+        {/* online indicator */}
+        <motion.span
+          animate={{ boxShadow: ["0 0 0px #22c55e", "0 0 12px #22c55e", "0 0 0px #22c55e"] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block", flexShrink: 0 }}
+        />
       </div>
 
       {/* Divider */}
       <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
 
-      {/* Founder card */}
+      {/* Avatar + info */}
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <div style={{
-          width: 54, height: 54, borderRadius: 12, overflow: "hidden", flexShrink: 0,
-          border: `2px solid ${ABOUT_ACCENT}88`,
-          boxShadow: `0 0 16px ${ABOUT_ACCENT}55`,
+          width: 56, height: 56, borderRadius: 14, flexShrink: 0,
+          background: `linear-gradient(135deg, ${ACCENT}, #ea580c)`,
+          display: "grid", placeItems: "center",
+          border: `2px solid ${ACCENT}66`,
+          boxShadow: `0 0 22px ${ACCENT}44`,
+          position: "relative",
         }}>
-          <img src="/assets/team/ankit.jpeg" alt="Ankit Yadav" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }} />
+          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 20, color: "#fff" }}>AK</span>
+          <span style={{ position: "absolute", bottom: 2, right: 2, width: 11, height: 11, borderRadius: "50%", background: "#22c55e", border: "2px solid #0a0a1a", boxShadow: "0 0 8px #22c55e" }} />
         </div>
         <div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: "#fff" }}>Ankit Yadav</div>
-          <div style={{ fontSize: 11, color: ABOUT_ACCENT, fontWeight: 700, marginTop: 2 }}>IIT Roorkee · AIR 4846 JEE Adv.</div>
-          <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.5)", marginTop: 1 }}>B.Tech EE · Founder</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: "#fff" }}>Ankit Yadav GPT</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 4 }}>
+            <span style={{ fontSize: 10, background: "rgba(244,123,32,.18)", color: "#fdba74", border: "1px solid rgba(244,123,32,.32)", padding: "2px 8px", borderRadius: 50, fontWeight: 700 }}>IIT Roorkee</span>
+            <span style={{ fontSize: 10, background: "rgba(99,102,241,.18)", color: "#a5b4fc", border: "1px solid rgba(99,102,241,.28)", padding: "2px 8px", borderRadius: 50, fontWeight: 700 }}>AI Dev</span>
+          </div>
+          <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.42)", marginTop: 3 }}>AIR 4846 · JEE Advanced · Founder</div>
         </div>
       </div>
 
       {/* Divider */}
       <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
 
-      {/* Story bullets */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {STORY.map(({ icon, title, text }) => (
-          <div key={title} style={{
+      {/* Tech stack */}
+      <div>
+        <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", marginBottom: 8 }}>Tech Stack</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+          {SKILLS.map((s) => (
+            <span key={s} style={{
+              fontSize: 11, fontWeight: 600,
+              padding: "4px 10px", borderRadius: 50,
+              background: "rgba(255,255,255,.06)",
+              border: "1px solid rgba(255,255,255,.10)",
+              color: "rgba(255,255,255,.78)",
+              fontFamily: "'DM Sans', sans-serif",
+            }}>
+              {s}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Mini stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+        {[
+          { val: "850+", lbl: "Colleges" },
+          { val: "8 yrs", lbl: "Data" },
+          { val: "50K+", lbl: "Students" },
+        ].map(({ val, lbl }) => (
+          <div key={lbl} style={{
+            textAlign: "center",
             background: "rgba(255,255,255,.04)",
-            border: "1px solid rgba(255,255,255,.06)",
-            borderRadius: 10, padding: "9px 11px",
-            display: "flex", gap: 9, alignItems: "flex-start",
+            border: "1px solid rgba(255,255,255,.07)",
+            borderRadius: 9, padding: "8px 4px",
           }}>
-            <span style={{ fontSize: 15, flexShrink: 0, marginTop: 1 }}>{icon}</span>
-            <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 11.5, color: "#fff" }}>{title}</div>
-              <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.55)", lineHeight: 1.45, marginTop: 2 }}>{text}</div>
-            </div>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: ACCENT }}>{val}</div>
+            <div style={{ fontSize: 9.5, color: "rgba(255,255,255,.38)", marginTop: 1 }}>{lbl}</div>
           </div>
         ))}
       </div>
 
       {/* CTA */}
       <button
-        onClick={() => nav("/team/team-head")}
+        onClick={() => nav("/developer")}
         style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: `linear-gradient(135deg, ${ABOUT_ACCENT}, #ea580c)`,
+          background: `linear-gradient(135deg, ${ACCENT}, #ea580c)`,
           color: "#fff", border: "none", borderRadius: 11,
           padding: "10px 14px", fontSize: 12.5, fontWeight: 700,
           fontFamily: "Sora", cursor: "pointer", marginTop: "auto",
-          boxShadow: `0 4px 20px ${ABOUT_ACCENT}55`,
+          boxShadow: `0 4px 20px ${ACCENT}55`,
           transition: "all .2s",
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `0 8px 28px ${ABOUT_ACCENT}88`; }}
-        onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `0 4px 20px ${ABOUT_ACCENT}55`; }}
+        onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `0 8px 28px ${ACCENT}88`; }}
+        onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `0 4px 20px ${ACCENT}55`; }}
       >
-        Read Our Story <ArrowRight size={13} />
+        View Developer Profile <ArrowRight size={13} />
       </button>
     </motion.div>
   );

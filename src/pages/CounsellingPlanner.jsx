@@ -39,106 +39,260 @@ export default function CounsellingPlanner() {
 
   return (
     <div className="page">
-      <section style={{ background: "linear-gradient(135deg,#fff7f0,#ffe8d6)", color: "var(--ink)", padding: "40px 0" }}>
-        <div className="container">
-          <span className="eyebrow" style={{ color: "var(--coral)" }}>Counselling Planner</span>
-          <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.4rem)", margin: "8px 0 4px", display: "flex", alignItems: "center", gap: 10 }}>
-            <ListOrdered size={28} /> Plan your JoSAA choice order
+
+      {/* ── Dark cosmic header ── */}
+      <section style={{
+        background: "linear-gradient(135deg, #0d0800 0%, #1a0e00 35%, #2a1600 65%, #1c0e00 100%)",
+        padding: "52px 0 48px",
+        position: "relative",
+        overflow: "hidden",
+      }}>
+        {/* mesh grid */}
+        <div style={{
+          position: "absolute", inset: 0,
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px)," +
+            "linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px)",
+          backgroundSize: "44px 44px",
+          pointerEvents: "none",
+        }} />
+
+        {/* glow orbs */}
+        <div style={{ position: "absolute", top: -50,  left: "20%", width: 420, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.2)  0%, transparent 65%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -40, right: "8%",  width: 320, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(14,165,164,.11) 0%, transparent 65%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "30%", left: "5%",  width: 200, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,.09)  0%, transparent 65%)", pointerEvents: "none" }} />
+
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <span className="eyebrow" style={{
+            background: "rgba(244,123,32,.15)",
+            border: "1px solid rgba(244,123,32,.35)",
+            color: "#fdba74",
+          }}>
+            Counselling Planner
+          </span>
+          <h1 style={{
+            fontFamily: "Sora", fontWeight: 800,
+            fontSize: "clamp(1.7rem,4vw,2.4rem)",
+            margin: "10px 0 6px",
+            display: "flex", alignItems: "center", gap: 10,
+            color: "#fff",
+          }}>
+            <ListOrdered size={28} color="#F47B20" /> Plan your JoSAA choice order
           </h1>
-          <p style={{ color: "var(--muted)", maxWidth: 640 }}>Get your eligible options, drag them into your preferred order, and we'll show which seat you'd most likely be allotted — exactly how JoSAA fills choices.</p>
+          <p style={{ color: "rgba(255,255,255,.55)", maxWidth: 640, fontSize: "0.97rem", lineHeight: 1.7 }}>
+            Get your eligible options, drag them into your preferred order, and we'll show which seat you'd most likely be allotted — exactly how JoSAA fills choices.
+          </p>
         </div>
       </section>
 
-      <div className="container section">
-        <div className="card" style={{ marginBottom: 22 }}>
-          <div className="field" style={{ marginBottom: 14 }}>
-            <label>Which exam's counselling?</label>
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              {[
-                { id: "advanced", label: "JEE Advanced", sub: "IITs only" },
-                { id: "mains", label: "JEE Main", sub: "NITs & IIITs" },
-              ].map((e) => {
-                const on = form.exam === e.id;
-                return (
-                  <button key={e.id} onClick={() => set("exam", e.id)} className="btn"
-                    style={{ flex: "1 1 200px", justifyContent: "center", flexDirection: "column", gap: 2, padding: "10px 14px",
-                      background: on ? "var(--coral)" : "transparent", color: on ? "#fff" : "var(--ink)",
-                      border: `1.6px solid ${on ? "var(--coral)" : "var(--line)"}` }}>
-                    <span style={{ fontWeight: 800 }}>{e.label}</span>
-                    <span style={{ fontSize: 11.5, opacity: .85 }}>{e.sub}</span>
+      {/* ── Main content — warm gradient ── */}
+      <section style={{
+        background: "linear-gradient(160deg, #fff7ef 0%, #fff3e6 40%, #fff 100%)",
+        padding: "48px 0 72px",
+      }}>
+        <div className="container">
+
+          {/* Form card */}
+          <div className="card" style={{ marginBottom: 22 }}>
+            <div className="field" style={{ marginBottom: 14 }}>
+              <label>Which exam's counselling?</label>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                {[
+                  { id: "advanced", label: "JEE Advanced", sub: "IITs only" },
+                  { id: "mains",   label: "JEE Main",     sub: "NITs & IIITs" },
+                ].map((e) => {
+                  const on = form.exam === e.id;
+                  return (
+                    <button
+                      key={e.id}
+                      onClick={() => set("exam", e.id)}
+                      className="btn"
+                      style={{
+                        flex: "1 1 200px", justifyContent: "center",
+                        flexDirection: "column", gap: 2, padding: "10px 14px",
+                        background: on ? "var(--coral)" : "transparent",
+                        color: on ? "#fff" : "var(--ink)",
+                        border: `1.6px solid ${on ? "var(--coral)" : "var(--line)"}`,
+                        boxShadow: on ? "0 6px 20px rgba(244,123,32,.30)" : "none",
+                      }}
+                    >
+                      <span style={{ fontWeight: 800 }}>{e.label}</span>
+                      <span style={{ fontSize: 11.5, opacity: .85 }}>{e.sub}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="grid-4" style={{ gap: 12 }}>
+              <div className="field">
+                <label>Your rank</label>
+                <input className="input" type="number" min="1" value={form.rank} onChange={(e) => set("rank", e.target.value)} placeholder="e.g. 9000" />
+              </div>
+              <div className="field">
+                <label>Category</label>
+                <select className="select" value={form.category} onChange={(e) => set("category", e.target.value)}>
+                  {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div className="field">
+                <label>Home state</label>
+                <select className="select" value={form.state} onChange={(e) => set("state", e.target.value)}>
+                  <option value="">Any</option>
+                  {STATES.map((s) => <option key={s}>{s}</option>)}
+                </select>
+              </div>
+              <div className="field">
+                <label>Branch</label>
+                <select className="select" value={form.branch} onChange={(e) => set("branch", e.target.value)}>
+                  <option value="">All branches</option>
+                  {BRANCHES.map((b) => <option key={b.code} value={b.code}>{b.name}</option>)}
+                </select>
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+              <button className="btn btn-coral" style={{ flex: 1, justifyContent: "center" }} onClick={run}>
+                <Crosshair size={16} /> Build my choice list
+              </button>
+              <button className="btn btn-ghost" onClick={reset}><RotateCcw size={16} /></button>
+            </div>
+          </div>
+
+          {ran && order.length === 0 && (
+            <div className="card" style={{ textAlign: "center", padding: 40, color: "var(--muted)" }}>
+              No eligible options — try widening your filters or check your rank.
+            </div>
+          )}
+
+          {order.length > 0 && (
+            <div className="grid-2" style={{ gap: 22, alignItems: "start" }}>
+
+              {/* Choice list */}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
+                  <h3 style={{ fontFamily: "Sora", fontWeight: 700 }}>Your choice order</h3>
+                  <button className="btn btn-ghost" onClick={download} style={{ fontSize: 13, padding: "7px 12px" }}>
+                    <Download size={15} /> Download list
                   </button>
-                );
-              })}
-            </div>
-          </div>
-          <div className="grid-4" style={{ gap: 12 }}>
-            <div className="field"><label>Your rank</label><input className="input" type="number" min="1" value={form.rank} onChange={(e) => set("rank", e.target.value)} placeholder="e.g. 9000" /></div>
-            <div className="field"><label>Category</label><select className="select" value={form.category} onChange={(e) => set("category", e.target.value)}>{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
-            <div className="field"><label>Home state</label><select className="select" value={form.state} onChange={(e) => set("state", e.target.value)}><option value="">Any</option>{STATES.map((s) => <option key={s}>{s}</option>)}</select></div>
-            <div className="field"><label>Branch</label><select className="select" value={form.branch} onChange={(e) => set("branch", e.target.value)}><option value="">All branches</option>{BRANCHES.map((b) => <option key={b.code} value={b.code}>{b.name}</option>)}</select></div>
-          </div>
-          <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-            <button className="btn btn-coral" style={{ flex: 1, justifyContent: "center" }} onClick={run}><Crosshair size={16} /> Build my choice list</button>
-            <button className="btn btn-ghost" onClick={reset}><RotateCcw size={16} /></button>
-          </div>
-        </div>
-
-        {ran && order.length === 0 && <div className="card" style={{ textAlign: "center", padding: 40, color: "var(--muted)" }}>No eligible options — try widening your filters or check your rank.</div>}
-
-        {order.length > 0 && (
-          <div className="grid-2" style={{ gap: 22, alignItems: "start" }}>
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
-                <h3 style={{ fontFamily: "Sora", fontWeight: 700 }}>Your choice order</h3>
-                <button className="btn btn-ghost" onClick={download} style={{ fontSize: 13, padding: "7px 12px" }}><Download size={15} /> Download list</button>
-              </div>
-              <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>Drag the handle to reorder. Put your most-wanted seat at the top.</p>
-              <Reorder.Group axis="y" values={order} onReorder={setOrder} style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
-                {order.map((o, i) => (
-                  <Reorder.Item key={o._id} value={o} className="card" style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", cursor: "grab", borderLeft: `4px solid ${TIER_COLOR[o.tier]}` }}>
-                    <span style={{ fontFamily: "Sora", fontWeight: 800, color: "var(--muted)", width: 22 }}>{i + 1}</span>
-                    <GripVertical size={16} color="var(--muted)" />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 700, color: "var(--navy)" }}>{o.college} · {o.branch}</div>
-                      <div style={{ fontSize: 12, color: "var(--muted)", display: "flex", gap: 8, flexWrap: "wrap" }}>
-                        <span><MapPin size={11} style={{ verticalAlign: -1 }} /> {o.state}</span>
-                        <span>Closing {fmtRank(o.closing)}</span>
-                        <span style={{ color: TIER_COLOR[o.tier], fontWeight: 700 }}>{o.tier}</span>
+                </div>
+                <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>
+                  Drag the handle to reorder. Put your most-wanted seat at the top.
+                </p>
+                <Reorder.Group axis="y" values={order} onReorder={setOrder} style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
+                  {order.map((o, i) => (
+                    <Reorder.Item
+                      key={o._id}
+                      value={o}
+                      className="card"
+                      style={{
+                        display: "flex", alignItems: "center", gap: 12,
+                        padding: "12px 14px", cursor: "grab",
+                        borderLeft: `4px solid ${TIER_COLOR[o.tier]}`,
+                      }}
+                    >
+                      <span style={{ fontFamily: "Sora", fontWeight: 800, color: "var(--muted)", width: 22 }}>{i + 1}</span>
+                      <GripVertical size={16} color="var(--muted)" />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 700, color: "var(--navy)" }}>{o.college} · {o.branch}</div>
+                        <div style={{ fontSize: 12, color: "var(--muted)", display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          <span><MapPin size={11} style={{ verticalAlign: -1 }} /> {o.state}</span>
+                          <span>Closing {fmtRank(o.closing)}</span>
+                          <span style={{ color: TIER_COLOR[o.tier], fontWeight: 700 }}>{o.tier}</span>
+                        </div>
                       </div>
-                    </div>
-                  </Reorder.Item>
-                ))}
-              </Reorder.Group>
-            </div>
-
-            <div style={{ position: "sticky", top: 90 }}>
-              <div className="card" style={{ borderTop: "3px solid var(--green)" }}>
-                <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}><Trophy size={18} color="var(--green)" /> Likely allotment</h3>
-                {allot ? (
-                  <>
-                    <div style={{ background: "var(--sky)", borderRadius: 12, padding: 16 }}>
-                      <div style={{ fontSize: 12, color: "var(--muted)" }}>With rank {fmtRank(rank)}, JoSAA would most likely allot:</div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: "var(--navy)", margin: "4px 0" }}>{allot.college}</div>
-                      <div style={{ color: "var(--navy)", fontWeight: 600 }}>{allot.branch}</div>
-                      <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 6 }}>Choice #{allotIndex + 1} · closing {fmtRank(allot.closing)} · avg {fmtINR(allot.avgPackage)}</div>
-                      <Link to={`/colleges/${allot.slug}`} className="btn btn-coral" style={{ marginTop: 12, fontSize: 13 }}>View college <ArrowRight size={14} /></Link>
-                    </div>
-                    <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 12 }}>You'd be allotted the <strong>highest choice in your list you qualify for</strong>. Choices above #{allotIndex + 1} are currently a stretch for your rank — keep them on top only if you're willing to wait for later rounds.</p>
-                  </>
-                ) : (
-                  <p style={{ color: "var(--muted)" }}>Enter your rank above to see your likely allotment from this order.</p>
-                )}
+                    </Reorder.Item>
+                  ))}
+                </Reorder.Group>
               </div>
-              <div className="card" style={{ marginTop: 14 }}>
-                <div style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 13 }}>
-                  <CheckCircle2 size={16} color="var(--teal)" />
-                  <span style={{ color: "var(--muted)" }}>Tip: list dream colleges first, then safe ones — JoSAA never drops you to a lower choice if a higher one is available.</span>
+
+              {/* Allotment prediction */}
+              <div style={{ position: "sticky", top: 90 }}>
+                <div style={{
+                  background: allot
+                    ? "linear-gradient(135deg, #0d0800 0%, #1a0e00 50%, #2a1600 100%)"
+                    : "#fff",
+                  borderRadius: "var(--radius)",
+                  border: allot ? "1px solid rgba(244,123,32,.35)" : "1px solid rgba(0,0,0,.06)",
+                  boxShadow: allot
+                    ? "0 8px 36px rgba(0,0,0,.28), 0 0 24px rgba(244,123,32,.15)"
+                    : "0 2px 14px rgba(28,28,40,.06)",
+                  padding: "1.3rem 1.4rem",
+                  position: "relative", overflow: "hidden",
+                }}>
+                  {/* mesh grid when showing result */}
+                  {allot && (
+                    <div style={{
+                      position: "absolute", inset: 0,
+                      backgroundImage: "linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px)",
+                      backgroundSize: "36px 36px", pointerEvents: "none",
+                    }} />
+                  )}
+                  {/* top accent line */}
+                  <div style={{
+                    position: "absolute", top: 0, left: 0, right: 0, height: 3,
+                    background: allot
+                      ? "linear-gradient(90deg, #F47B20, #fbbf24, #F47B20)"
+                      : "var(--green)",
+                  }} />
+
+                  <div style={{ position: "relative", zIndex: 1 }}>
+                    <h3 style={{
+                      fontFamily: "Sora", fontWeight: 700, marginBottom: 12,
+                      display: "flex", alignItems: "center", gap: 8,
+                      color: allot ? "#fff" : "var(--navy)",
+                    }}>
+                      <Trophy size={18} color={allot ? "#F47B20" : "var(--green)"} />
+                      Likely allotment
+                    </h3>
+
+                    {allot ? (
+                      <>
+                        <div style={{
+                          background: "rgba(255,255,255,.06)", borderRadius: 12, padding: 16,
+                          border: "1px solid rgba(244,123,32,.25)",
+                        }}>
+                          <div style={{ fontSize: 12, color: "rgba(255,255,255,.5)" }}>
+                            With rank {fmtRank(rank)}, JoSAA would most likely allot:
+                          </div>
+                          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: "#fff", margin: "6px 0 2px" }}>
+                            {allot.college}
+                          </div>
+                          <div style={{ color: "#fdba74", fontWeight: 600 }}>{allot.branch}</div>
+                          <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", marginTop: 6 }}>
+                            Choice #{allotIndex + 1} · closing {fmtRank(allot.closing)} · avg {fmtINR(allot.avgPackage)}
+                          </div>
+                          <Link
+                            to={`/colleges/${allot.slug}`}
+                            className="btn btn-coral"
+                            style={{ marginTop: 14, fontSize: 13 }}
+                          >
+                            View college <ArrowRight size={14} />
+                          </Link>
+                        </div>
+                        <p style={{ fontSize: 12, color: "rgba(255,255,255,.40)", marginTop: 12 }}>
+                          You'd be allotted the <strong style={{ color: "rgba(255,255,255,.7)" }}>highest choice in your list you qualify for</strong>. Choices above #{allotIndex + 1} are currently a stretch — keep them on top only if you're willing to wait for later rounds.
+                        </p>
+                      </>
+                    ) : (
+                      <p style={{ color: "var(--muted)" }}>
+                        Enter your rank above to see your likely allotment from this order.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="card" style={{ marginTop: 14 }}>
+                  <div style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 13 }}>
+                    <CheckCircle2 size={16} color="var(--teal)" />
+                    <span style={{ color: "var(--muted)" }}>
+                      Tip: list dream colleges first, then safe ones — JoSAA never drops you to a lower choice if a higher one is available.
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
