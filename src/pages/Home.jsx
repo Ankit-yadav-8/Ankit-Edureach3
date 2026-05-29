@@ -40,13 +40,6 @@ const BRANCH_DEMAND = [
   { name: "EE",        value: 80 },
 ];
 
-const STATS = [
-  { label: "Students helped",    value: "2.4L+",   icon: Users,     color: "#F97316" },
-  { label: "Colleges listed",    value: "850+",    icon: BookOpen,  color: "#0EA5A4" },
-  { label: "Rank predictions",   value: "98% acc", icon: Target,    color: "#15a06e" },
-  { label: "Cutoff data points", value: "1.2M+",   icon: BarChart3, color: "#1c1c28" },
-];
-
 const EXAMS = [
   {
     key: "advanced",
@@ -667,63 +660,6 @@ export default function Home({ onSearch }) {
     <>
       {/* ── Hero ── */}
       <Hero onSearch={onSearch} />
-
-      {/* ── Stats bar ── */}
-      <section style={{
-        background: "linear-gradient(135deg, #fff3e8 0%, #fde8d0 30%, #fddcbc 60%, #fde8d0 100%)",
-        padding: "44px 0",
-        position: "relative",
-        overflow: "hidden",
-        borderTop: "1px solid rgba(244,123,32,.15)",
-        borderBottom: "1px solid rgba(244,123,32,.15)",
-      }}>
-        {/* Ambient glows */}
-        <div style={{ position: "absolute", top: -80, left: "15%", width: 500, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.14) 0%, transparent 65%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -60, right: "10%", width: 350, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,.1) 0%, transparent 65%)", pointerEvents: "none" }} />
-        {/* Grid overlay */}
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(244,123,32,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(244,123,32,.04) 1px,transparent 1px)", backgroundSize: "48px 48px", pointerEvents: "none" }} />
-
-        <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 16 }}>
-            {STATS.map(({ label, value, icon: Icon, color }, i) => (
-              <motion.div
-                key={label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: i * 0.08 }}
-                style={{
-                  display: "flex", alignItems: "center", gap: 16,
-                  background: "#fff",
-                  borderRadius: 18,
-                  padding: "20px 22px",
-                  border: `1px solid ${color === "#1c1c28" ? "rgba(244,123,32,.25)" : color + "28"}`,
-                  boxShadow: `0 2px 16px rgba(0,0,0,.07)`,
-                  transition: "all .3s",
-                }}
-                whileHover={{ scale: 1.03, boxShadow: `0 8px 28px rgba(244,123,32,.15)`, transition: { duration: 0.2 } }}
-              >
-                <div style={{
-                  width: 52, height: 52, borderRadius: 14,
-                  background: `${color === "#1c1c28" ? "#F47B20" : color}16`,
-                  border: `1.5px solid ${color === "#1c1c28" ? "#F47B20" : color}35`,
-                  display: "grid", placeItems: "center", flexShrink: 0,
-                  boxShadow: `0 0 12px ${color === "#1c1c28" ? "#F47B20" : color}18`,
-                }}>
-                  <Icon size={24} color={color === "#1c1c28" ? "#F47B20" : color} />
-                </div>
-                <div>
-                  <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 24, color: "#1a1a2e", lineHeight: 1, letterSpacing: "-0.5px" }}>{value}</div>
-                  <div style={{ fontSize: 12, color: "#6b7280", marginTop: 5, fontFamily: "'DM Sans',sans-serif" }}>{label}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Wave between dark stats and ticker */}
-      <WaveSeparator fillTop="#fde8d0" fillBottom="#fff7f0" />
 
       {/* ── College Ticker ── */}
       <CollegeTicker />

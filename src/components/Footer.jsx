@@ -397,6 +397,12 @@ export default function Footer() {
             >
               <Phone size={15} /> +91-8118826194
             </a>
+            <a
+              href="tel:+917877596464 "
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
+              <Phone size={15} /> +91-7877596464 
+            </a>
             <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <MapPin size={15} /> Jaipur,Rajasthan
             </span>

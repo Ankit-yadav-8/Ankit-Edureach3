@@ -57,7 +57,7 @@ const FOUNDERS = [
     jeeRank: "AIR 3846 · JEE Advanced",
     bio: "Hi, I'm Ankit Kumar, Co-Founder & CTO of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.",
     skills: ["React", "Node.js", "MongoDB", "Express", "Python", "REST APIs"],
-    socials: { linkedin: LK, instagram: IG, whatsapp: WA },
+    socials: { linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/ankit_1_7_/", whatsapp: WA },
   },
 ];
 

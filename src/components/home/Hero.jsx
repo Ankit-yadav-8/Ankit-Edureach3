@@ -67,11 +67,11 @@ const ABOUT_ACCENT = "#F47B20";
 const QUICK = ["IIT Bombay", "JEE Main 2026", "College Predictor", "NIT Trichy", "VITEEE", "JEE Advanced"];
 
 const TOP_COLLEGES = [
-  { name: "IIT Bombay",  type: "IIT",  nirf: 3,  avg: "₹21.8L", placed: 96, color: "#6366f1" },
-  { name: "IIT Delhi",   type: "IIT",  nirf: 2,  avg: "₹20.4L", placed: 95, color: "#F97316" },
-  { name: "IIT Madras",  type: "IIT",  nirf: 1,  avg: "₹24.4L", placed: 94, color: "#0ea5a4" },
-  { name: "NIT Trichy",  type: "NIT",  nirf: 10, avg: "₹11.2L", placed: 92, color: "#8b5cf6" },
-  { name: "IIIT Hyd",    type: "IIIT", nirf: 24, avg: "₹18.6L", placed: 97, color: "#10b981" },
+  { name: "IIT Bombay",  type: "IIT",  nirf: 3,  avg: "₹33.8L", placed: 96, color: "#6366f1" },
+  { name: "IIT Delhi",   type: "IIT",  nirf: 2,  avg: "₹32.3L", placed: 96, color: "#F97316" },
+  { name: "IIT Roorkee",  type: "IIT",  nirf: 6,  avg: "₹30.7L", placed: 95, color: "#0ea5a4" },
+  { name: "IIT Madras",  type: "IIT",  nirf: 1, avg: "₹31.2L", placed: 97, color: "#8b5cf6" },
+  { name: "IIT Kanpur",    type: "IIT", nirf: 4, avg: "₹32.6L", placed: 97, color: "#10b981" },
 ];
 
 /* ════════════════════════════════════════════════
@@ -274,13 +274,20 @@ function AboutUsCard() {
 
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{
-          width: 38, height: 38, borderRadius: 10,
-          background: `${ACCENT}20`, border: `1.5px solid ${ACCENT}40`,
-          display: "grid", placeItems: "center", flexShrink: 0,
-        }}>
-          <span style={{ fontSize: 17 }}>🎓</span>
-        </div>
+                <div style={{
+                  width: 38, height: 38, borderRadius: "50%",
+                  background: "#F47B20",
+                  display: "grid", placeItems: "center", flexShrink: 0,
+                  boxShadow: "0 0 12px rgba(244,123,32,.5)",
+                }}>
+                  <span style={{
+                    fontFamily: "'Sora', sans-serif",
+                    fontWeight: 800,
+                    fontSize: 13,
+                    color: "#fff",
+                    letterSpacing: "0.5px",
+                  }}>CP</span>
+                </div>
         <div>
           <div style={{ fontSize: 9, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.6px", textTransform: "uppercase" }}>About Us</div>
           <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: ".97rem" }}>College Parichay</div>
