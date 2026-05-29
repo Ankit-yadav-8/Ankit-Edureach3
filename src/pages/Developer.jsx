@@ -141,22 +141,14 @@ export default function Developer() {
   return (
     <div className="page">
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section style={{
-        background: dev.accent === "#F47B20"
-          ? "linear-gradient(135deg, #1a0a00 0%, #2d1200 35%, #3d1f05 65%, #F47B2022 100%)"
-          : `linear-gradient(135deg, #0f0c29 0%, #1c1c28 50%, ${dev.accent}33 100%)`,
-        color: "#fff",
-        padding: "52px 0 60px",
-        position: "relative",
-        overflow: "hidden",
-      }}>
+      <section className="warm-page-header" style={{ padding: "52px 0 60px" }}>
         {/* Background glow blobs */}
-        <div style={{ position: "absolute", top: -80, right: -40, width: 500, height: 500, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}38 0%, transparent 65%)`, pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -60, left: -40, width: 350, height: 350, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}22 0%, transparent 65%)`, pointerEvents: "none" }} />
-        <div style={{ position: "absolute", top: "40%", left: "30%", width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}18 0%, transparent 70%)`, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: -80, right: -40, width: 500, height: 500, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}25 0%, transparent 65%)`, pointerEvents: "none", zIndex: 0 }} />
+        <div style={{ position: "absolute", bottom: -60, left: -40, width: 350, height: 350, borderRadius: "50%", background: `radial-gradient(circle, rgba(244,162,97,.18) 0%, transparent 65%)`, pointerEvents: "none", zIndex: 0 }} />
+        <div style={{ position: "absolute", top: "40%", left: "30%", width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, rgba(244,123,32,.14) 0%, transparent 70%)`, pointerEvents: "none", zIndex: 0 }} />
 
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <button onClick={() => nav(-1)} className="btn btn-light" style={{ marginBottom: 28 }}>
+          <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 28, borderColor: "rgba(244,123,32,.4)", color: "#c75b0a" }}>
             <ArrowLeft size={16} /> Back
           </button>
 
@@ -173,11 +165,11 @@ export default function Developer() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.55 }}
             >
-              <span className="badge" style={{ background: "rgba(255,255,255,.14)", color: "#fff", marginBottom: 16, display: "inline-flex" }}>
+              <span className="eyebrow" style={{ marginBottom: 16 }}>
                 <Sparkles size={12} /> Team College Parichay · {dev.role.split("&")[0].trim()}
               </span>
 
-              <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(2rem,4.5vw,3rem)", margin: "0 0 8px", letterSpacing: "-0.5px" }}>
+              <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(2rem,4.5vw,3rem)", margin: "0 0 8px", letterSpacing: "-0.5px", color: "#1c1c28" }}>
                 {dev.name}
               </h1>
 
@@ -186,17 +178,17 @@ export default function Developer() {
               </div>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 18 }}>
-                <div style={{ color: "rgba(255,255,255,.7)", display: "flex", alignItems: "center", gap: 5, fontSize: 13.5 }}>
-                  <MapPin size={14} /> {dev.location}
+                <div style={{ color: "rgba(28,28,40,.65)", display: "flex", alignItems: "center", gap: 5, fontSize: 13.5 }}>
+                  <MapPin size={14} color="#F47B20" /> {dev.location}
                 </div>
                 {dev.jeeRank && (
                   <div style={{
                     display: "inline-flex", alignItems: "center", gap: 6,
-                    background: "rgba(255,255,255,.12)",
-                    border: `1px solid ${dev.accent}66`,
+                    background: "rgba(244,123,32,.12)",
+                    border: `1px solid rgba(244,123,32,.38)`,
                     borderRadius: 99, padding: "4px 14px",
-                    fontSize: 13, fontWeight: 600,
-                    boxShadow: `0 0 14px ${dev.accent}66, 0 0 28px ${dev.accent}33`,
+                    fontSize: 13, fontWeight: 600, color: "#c75b0a",
+                    boxShadow: `0 0 14px rgba(244,123,32,.2)`,
                     animation: "rankGlow 2s ease-in-out infinite alternate",
                   }}>
                     🏆 {dev.jeeRank} · {dev.exam}
@@ -205,12 +197,12 @@ export default function Developer() {
                 {dev.college && (
                   <div style={{
                     display: "inline-flex", alignItems: "center", gap: 6,
-                    background: `${dev.accent}22`,
-                    border: `1px solid ${dev.accent}55`,
+                    background: `rgba(244,123,32,.12)`,
+                    border: `1px solid rgba(244,123,32,.35)`,
                     borderRadius: 99, padding: "4px 14px",
                     fontSize: 13, fontWeight: 600,
-                    color: dev.accent,
-                    boxShadow: `0 0 14px ${dev.accent}44`,
+                    color: "#c75b0a",
+                    boxShadow: `0 0 14px rgba(244,123,32,.18)`,
                     animation: "rankGlow 2s ease-in-out infinite alternate",
                   }}>
                     🎓 {dev.college}
@@ -218,7 +210,7 @@ export default function Developer() {
                 )}
               </div>
 
-              <p style={{ color: "rgba(255,255,255,.8)", fontSize: "1.02rem", maxWidth: 560, fontStyle: "italic", lineHeight: 1.7, marginBottom: 22 }}>
+              <p style={{ color: "rgba(28,28,40,.62)", fontSize: "1.02rem", maxWidth: 560, fontStyle: "italic", lineHeight: 1.7, marginBottom: 22 }}>
                 "{dev.tagline}"
               </p>
 
@@ -226,7 +218,7 @@ export default function Developer() {
                 {Object.entries(dev.socials).map(([k, url]) => {
                   const I = ICON[k] || Globe;
                   return (
-                    <a key={k} href={url} target="_blank" rel="noreferrer" className="btn btn-light" style={{ fontSize: 13, textTransform: "capitalize" }}>
+                    <a key={k} href={url} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 13, textTransform: "capitalize" }}>
                       <I size={15} /> {k}
                     </a>
                   );

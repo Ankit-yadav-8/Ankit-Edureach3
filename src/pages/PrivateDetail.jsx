@@ -18,15 +18,17 @@ export default function PrivateDetail() {
 
   return (
     <div className="page">
-      <section style={{ background: `linear-gradient(135deg,${u.accent},#1c1c28)`, color: "#fff", padding: "40px 0" }}>
-        <div className="container">
-          <button onClick={() => nav(-1)} className="btn btn-light" style={{ marginBottom: 18 }}><ArrowLeft size={16} /> Back</button>
-          <span className="badge teal">Private University · {u.exam}</span>
-          <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", margin: "10px 0 4px" }}>{u.name}</h1>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(255,255,255,.85)" }}><MapPin size={16} /> {u.state} · Fees {u.fees}</div>
+      <section className="warm-page-header" style={{ padding: "40px 0" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: `radial-gradient(ellipse 60% 70% at 100% 20%, ${u.accent}30 0%, transparent 60%)` }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 100%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 18, borderColor: "rgba(244,123,32,.4)", color: "#c75b0a" }}><ArrowLeft size={16} /> Back</button>
+          <span className="eyebrow">Private University · {u.exam}</span>
+          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", margin: "10px 0 4px", color: "#1c1c28" }}>{u.name}</h1>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(28,28,40,.65)", marginTop: 6 }}><MapPin size={16} color="#F47B20" /> {u.state} · Fees {u.fees}</div>
           <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
             <a href={u.apply} target="_blank" rel="noreferrer" className="btn btn-coral">Apply Now <ExternalLink size={15} /></a>
-            <a href={u.website} target="_blank" rel="noreferrer" className="btn btn-light"><Globe size={15} /> Website</a>
+            <a href={u.website} target="_blank" rel="noreferrer" className="btn btn-ghost"><Globe size={15} /> Website</a>
           </div>
         </div>
       </section>

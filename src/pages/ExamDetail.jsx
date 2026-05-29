@@ -13,11 +13,13 @@ export default function ExamDetail() {
 
   return (
     <div className="page">
-      <section style={{ background: `linear-gradient(135deg,${exam.color},#1c1c28)`, color: "#fff", padding: "40px 0" }}>
-        <div className="container">
-          <button onClick={() => nav(-1)} className="btn btn-light" style={{ marginBottom: 18 }}><ArrowLeft size={16} /> Back</button>
-          <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)" }}>{exam.name}</h1>
-          <p style={{ color: "rgba(255,255,255,.85)", maxWidth: 640, margin: "6px 0 14px" }}>{exam.about}</p>
+      <section className="warm-page-header">
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: `radial-gradient(ellipse 60% 70% at 100% 20%, ${exam.color}30 0%, transparent 60%)` }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 100%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 18, borderColor: "rgba(244,123,32,.4)", color: "#c75b0a" }}><ArrowLeft size={16} /> Back</button>
+          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", color: "#1c1c28" }}>{exam.name}</h1>
+          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, margin: "6px 0 14px" }}>{exam.about}</p>
           <a href={exam.website} target="_blank" rel="noreferrer" className="btn btn-coral"><Globe size={16} /> Official Website</a>
         </div>
       </section>

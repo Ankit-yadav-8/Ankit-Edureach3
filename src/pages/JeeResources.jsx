@@ -310,19 +310,13 @@ export default function JeeResources() {
   });
 
   return (
-    <div className="page" style={{ background: "#fafafa", minHeight: "100vh" }}>
+    <div className="page" style={{ minHeight: "100vh" }}>
 
       {/* ── Page Header ── */}
-      <section style={{
-        background: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)",
-        padding: "60px 0 48px",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        {/* Background animated blobs */}
-        <div style={{ position: "absolute", top: -60, left: -60, width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.25) 0%, transparent 70%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -40, right: 100, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,.2) 0%, transparent 70%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", top: 20, right: -40, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(249,115,22,.18) 0%, transparent 70%)", pointerEvents: "none" }} />
+      <section className="warm-page-header" style={{ padding: "60px 0 48px" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 45% 55% at 0% 80%, rgba(244,162,97,.20) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", top: 20, right: -40, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.15) 0%, transparent 70%)", pointerEvents: "none" }} />
 
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <motion.div
@@ -330,41 +324,34 @@ export default function JeeResources() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55 }}
           >
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: 6,
-              background: "rgba(255,255,255,.1)", color: "#a5b4fc",
-              border: "1px solid rgba(165,180,252,.25)",
-              padding: "5px 14px", borderRadius: 50,
-              fontSize: 11, fontWeight: 700, letterSpacing: "2px",
-              textTransform: "uppercase", marginBottom: 18,
-            }}>
+            <span className="eyebrow" style={{ marginBottom: 18 }}>
               <BookOpen size={11} /> JEE Study Material
             </span>
 
             <h1 style={{
-              fontFamily: "Sora", fontWeight: 800,
+              fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800,
               fontSize: "clamp(1.9rem,4.5vw,3rem)",
-              color: "#fff", letterSpacing: "-0.5px",
+              color: "#1c1c28", letterSpacing: "-0.5px",
               lineHeight: 1.12, margin: "0 0 16px",
             }}>
-              Master JEE with<br />
-              <span style={{ background: "linear-gradient(90deg, #a5b4fc, #34d399)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Master JEE with{" "}
+              <span style={{ background: "linear-gradient(90deg, #F47B20, #ea580c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 Subject-wise Chapters
               </span>
             </h1>
 
-            <p style={{ color: "rgba(255,255,255,.65)", fontSize: "1rem", maxWidth: 520, lineHeight: 1.7, margin: "0 0 32px" }}>
+            <p style={{ color: "rgba(28,28,40,.62)", fontSize: "1rem", maxWidth: 520, lineHeight: 1.7, margin: "0 0 32px" }}>
               73 chapters across Mathematics, Physics &amp; Chemistry — with difficulty ratings, JEE Main vs Advanced coverage, and topic-level breakdown.
             </p>
 
             {/* Quick stats */}
             <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
               {[
-                { icon: BookOpen, label: "19 Math chapters",     color: "#a5b4fc" },
-                { icon: Zap,      label: "25 Physics chapters",  color: "#fbbf24" },
-                { icon: FlaskConical, label: "29 Chem chapters", color: "#34d399" },
+                { icon: BookOpen, label: "19 Math chapters",     color: "#F47B20" },
+                { icon: Zap,      label: "25 Physics chapters",  color: "#ea580c" },
+                { icon: FlaskConical, label: "29 Chem chapters", color: "#f97316" },
               ].map(({ icon: Icon, label, color }) => (
-                <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,.75)", fontSize: 13.5 }}>
+                <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(28,28,40,.75)", fontSize: 13.5, fontWeight: 600 }}>
                   <Icon size={15} color={color} /> {label}
                 </div>
               ))}

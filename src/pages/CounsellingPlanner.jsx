@@ -40,46 +40,26 @@ export default function CounsellingPlanner() {
   return (
     <div className="page">
 
-      {/* ── Dark cosmic header ── */}
-      <section style={{
-        background: "linear-gradient(135deg, #0d0800 0%, #1a0e00 35%, #2a1600 65%, #1c0e00 100%)",
-        padding: "52px 0 48px",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        {/* mesh grid */}
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px)," +
-            "linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px)",
-          backgroundSize: "44px 44px",
-          pointerEvents: "none",
-        }} />
-
-        {/* glow orbs */}
-        <div style={{ position: "absolute", top: -50,  left: "20%", width: 420, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.2)  0%, transparent 65%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -40, right: "8%",  width: 320, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(14,165,164,.11) 0%, transparent 65%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", top: "30%", left: "5%",  width: 200, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,.09)  0%, transparent 65%)", pointerEvents: "none" }} />
+      {/* ── Warm hero header ── */}
+      <section className="warm-page-header" style={{ padding: "52px 0 48px" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 60% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 45% 55% at 5% 80%, rgba(244,162,97,.20) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 35% 45% at 50% 110%, rgba(244,123,32,.14) 0%, transparent 55%)" }} />
 
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <span className="eyebrow" style={{
-            background: "rgba(244,123,32,.15)",
-            border: "1px solid rgba(244,123,32,.35)",
-            color: "#fdba74",
-          }}>
+          <span className="eyebrow">
             Counselling Planner
           </span>
           <h1 style={{
-            fontFamily: "Sora", fontWeight: 800,
+            fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800,
             fontSize: "clamp(1.7rem,4vw,2.4rem)",
             margin: "10px 0 6px",
             display: "flex", alignItems: "center", gap: 10,
-            color: "#fff",
+            color: "#1c1c28",
           }}>
             <ListOrdered size={28} color="#F47B20" /> Plan your JoSAA choice order
           </h1>
-          <p style={{ color: "rgba(255,255,255,.55)", maxWidth: 640, fontSize: "0.97rem", lineHeight: 1.7 }}>
+          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, fontSize: "0.97rem", lineHeight: 1.7 }}>
             Get your eligible options, drag them into your preferred order, and we'll show which seat you'd most likely be allotted — exactly how JoSAA fills choices.
           </p>
         </div>

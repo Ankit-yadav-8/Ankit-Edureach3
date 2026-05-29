@@ -341,23 +341,15 @@ export default function JeeMain() {
     <div className="page">
 
       {/* ── Hero ── */}
-      <section style={{
-        background: "linear-gradient(135deg,#FF6B35 0%,#f97316 40%,#ea580c 100%)",
-        color: "#fff", padding: "56px 0 48px", position: "relative", overflow: "hidden",
-      }}>
-        <div style={{
-          position: "absolute", inset: 0, opacity: 0.08,
-          backgroundImage: "radial-gradient(circle at 10% 80%, #fff 0%, transparent 50%), radial-gradient(circle at 90% 10%, #fbbf24 0%, transparent 50%)",
-        }} />
+      <section className="warm-page-header" style={{ padding: "56px 0 48px" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 90%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <span className="badge orange" style={{
-            marginBottom: 14, display: "inline-block",
-            background: "rgba(255,255,255,0.2)", color: "#fff", border: "1px solid rgba(255,255,255,0.4)",
-          }}>JEE Main 2026</span>
-          <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.9rem,4vw,2.8rem)", margin: "0 0 10px", lineHeight: 1.2 }}>
+          <span className="eyebrow" style={{ marginBottom: 14, display: "inline-flex" }}>JEE Main 2026</span>
+          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.9rem,4vw,2.8rem)", margin: "0 0 10px", lineHeight: 1.2, color: "#1c1c28" }}>
             JEE Main — Rank &amp; College Predictor Hub
           </h1>
-          <p style={{ color: "rgba(255,255,255,.85)", maxWidth: 620, marginBottom: 28 }}>
+          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 620, marginBottom: 28 }}>
             Predict your rank, find every NIT/IIIT/GFTI you qualify for, analyse session-wise difficulty, and follow the complete syllabus, study roadmap &amp; top coaching options.
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -372,13 +364,13 @@ export default function JeeMain() {
               ["#trend","Cutoff Trends"],
             ].map(([href, label]) => (
               <a key={href} href={href} style={{
-                background: "rgba(255,255,255,0.2)", backdropFilter: "blur(4px)",
-                border: "1px solid rgba(255,255,255,0.4)", color: "#fff",
+                background: "rgba(244,123,32,.12)", backdropFilter: "blur(4px)",
+                border: "1px solid rgba(244,123,32,.32)", color: "#c75b0a",
                 padding: "8px 16px", borderRadius: 50, fontSize: 13, fontWeight: 600,
-                transition: "all 0.2s",
+                transition: "all 0.2s", textDecoration: "none",
               }}
-              onMouseEnter={e => e.target.style.background = "rgba(0,0,0,0.2)"}
-              onMouseLeave={e => e.target.style.background = "rgba(255,255,255,0.2)"}
+              onMouseEnter={e => { e.target.style.background = "#F47B20"; e.target.style.color = "#fff"; e.target.style.borderColor = "#F47B20"; }}
+              onMouseLeave={e => { e.target.style.background = "rgba(244,123,32,.12)"; e.target.style.color = "#c75b0a"; e.target.style.borderColor = "rgba(244,123,32,.32)"; }}
               >{label}</a>
             ))}
           </div>
@@ -759,7 +751,7 @@ export default function JeeMain() {
           </div>
 
           {/* Full book list */}
-          <div className="card" style={{ marginTop: 16, background: "linear-gradient(135deg,#1c1c28,#ea580c)", color: "#fff" }}>
+          <div className="card" style={{ marginTop: 16, background: "linear-gradient(135deg,#1a0800,#F47B20)", color: "#fff" }}>
             <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 16, color: "#fff" }}>📚 Complete Book List — JEE Main</h4>
             <div className="grid-3" style={{ gap: 14 }}>
               {[

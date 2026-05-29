@@ -49,7 +49,7 @@ export default function ApplicationRadar() {
     <section
       id="radar"
       style={{
-        background: "linear-gradient(135deg, #0d0800 0%, #1a0e00 30%, #2a1600 60%, #1c0e00 100%)",
+        background: "linear-gradient(135deg, #1a0800 0%, #2d1200 30%, #3d1800 60%, #2a1000 100%)",
         padding: "72px 0",
         position: "relative",
         overflow: "hidden",

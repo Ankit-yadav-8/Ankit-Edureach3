@@ -9,11 +9,12 @@ export default function Exams() {
   const nav = useNavigate();
   return (
     <div className="page">
-      <section style={{ background: "linear-gradient(135deg,#fff7f0,#ffe8d6)", color: "var(--ink)", padding: "44px 0" }}>
-        <div className="container">
-          <span className="eyebrow" style={{ color: "var(--coral)" }}>Entrance Exams</span>
-          <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", margin: "8px 0 4px" }}>Every engineering entrance, in one place</h1>
-          <p style={{ color: "var(--muted)" }}>Eligibility, exam pattern, important dates and cutoff trends for each test.</p>
+      <section className="warm-page-header" style={{ padding: "44px 0" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 55% 65% at 100% 20%, rgba(249,115,22,.20) 0%, transparent 60%)" }} />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <span className="eyebrow">Entrance Exams</span>
+          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", margin: "8px 0 4px", color: "#1c1c28" }}>Every engineering entrance, in one place</h1>
+          <p style={{ color: "rgba(28,28,40,.62)" }}>Eligibility, exam pattern, important dates and cutoff trends for each test.</p>
         </div>
       </section>
 

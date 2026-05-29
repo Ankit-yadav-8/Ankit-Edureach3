@@ -154,7 +154,7 @@ export default function CollegeSnapshot() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           style={{
-            background: "linear-gradient(135deg, #1c1c28 0%, #2d1400 50%, #3a1800 100%)",
+            background: "linear-gradient(135deg, #1a0800 0%, #2d1200 50%, #3d1800 100%)",
             borderRadius: 24,
             padding: "28px 28px 24px",
             marginBottom: 28,
@@ -265,7 +265,7 @@ export default function CollegeSnapshot() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
           style={{
-            background: "linear-gradient(135deg, #0d2540 0%, #0f3050 50%, #0a2038 100%)",
+            background: "linear-gradient(135deg, #1a0800 0%, #2d1200 50%, #3a1a00 100%)",
             borderRadius: 24,
             padding: "28px 28px 24px",
             marginBottom: 28,

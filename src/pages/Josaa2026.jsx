@@ -51,26 +51,28 @@ export default function Josaa2026() {
   return (
     <div className="page">
       {/* HERO */}
-      <section style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg,#1c1c28 0%,#2a2a3c 55%,#3a2416 100%)", color: "#fff", padding: "110px 0 70px" }}>
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: 40, alignItems: "center" }}>
+      <section className="warm-page-header" style={{ padding: "110px 0 70px" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 50% 50% at 0% 80%, rgba(244,162,97,.20) 0%, transparent 60%)" }} />
+        <div className="container" style={{ display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: 40, alignItems: "center", position: "relative", zIndex: 1 }}>
           <div>
-            <span className="pill" style={{ background: "rgba(249,115,22,.18)", color: "#fdba74", border: "1px solid rgba(249,115,22,.4)" }}>
+            <span className="pill" style={{ background: "rgba(244,123,32,.12)", color: "#c75b0a", border: "1px solid rgba(244,123,32,.38)" }}>
               <Sparkles size={13} /> JoSAA + CSAB 2026 Counselling
             </span>
-            <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(2rem,4.5vw,3.1rem)", lineHeight: 1.12, margin: "16px 0 14px" }}>
-              Don't lose your dream college to a <span style={{ color: "#fb923c" }}>wrong choice list</span>.
+            <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(2rem,4.5vw,3.1rem)", lineHeight: 1.12, margin: "16px 0 14px", color: "#1c1c28" }}>
+              Don't lose your dream college to a <span style={{ color: "#F47B20" }}>wrong choice list</span>.
             </h1>
-            <p style={{ color: "rgba(255,255,255,.85)", fontSize: "1.1rem", maxWidth: 540, lineHeight: 1.6 }}>
+            <p style={{ color: "rgba(28,28,40,.65)", fontSize: "1.1rem", maxWidth: 540, lineHeight: 1.6 }}>
               Get a personalised, data-backed JoSAA choice-filling plan and 1-on-1 mentorship from people who've done it — for just ₹999.
             </p>
             <div style={{ display: "flex", gap: 12, marginTop: 26, flexWrap: "wrap" }}>
               <a href={PAY_LINK} className="btn btn-coral" style={{ fontSize: 16, padding: "14px 26px" }}>Enrol now — ₹999 <ArrowRight size={18} /></a>
-              <a href={WA} target="_blank" rel="noreferrer" className="btn btn-light" style={{ fontSize: 15, padding: "14px 22px" }}><MessageCircle size={17} /> Talk on WhatsApp</a>
+              <a href={WA} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 15, padding: "14px 22px" }}><MessageCircle size={17} /> Talk on WhatsApp</a>
             </div>
-            <div style={{ display: "flex", gap: 20, marginTop: 24, flexWrap: "wrap", fontSize: 13.5, color: "rgba(255,255,255,.8)" }}>
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><BadgeCheck size={15} color="#fb923c" /> Built by IITians</span>
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Users size={15} color="#fb923c" /> 2,000+ students guided</span>
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Star size={15} color="#fb923c" fill="#fb923c" /> 4.8/5 rating</span>
+            <div style={{ display: "flex", gap: 20, marginTop: 24, flexWrap: "wrap", fontSize: 13.5, color: "rgba(28,28,40,.65)" }}>
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><BadgeCheck size={15} color="#F47B20" /> Built by IITians</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Users size={15} color="#F47B20" /> 2,000+ students guided</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Star size={15} color="#F47B20" fill="#F47B20" /> 4.8/5 rating</span>
             </div>
           </div>
 

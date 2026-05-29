@@ -45,13 +45,14 @@ export default function Shortlist() {
 
   return (
     <div className="page">
-      <section style={{ background: "linear-gradient(135deg,#fff7f0,#ffe8d6)", color: "var(--ink)", padding: "40px 0" }}>
-        <div className="container">
-          <span className="eyebrow" style={{ color: "var(--coral)" }}>My Colleges</span>
-          <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.4rem)", margin: "8px 0 4px", display: "flex", alignItems: "center", gap: 10 }}>
-            <Heart size={28} fill="var(--coral)" color="var(--coral)" /> Your shortlist
+      <section className="warm-page-header" style={{ padding: "40px 0" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 55% 65% at 90% 20%, rgba(249,115,22,.20) 0%, transparent 60%)" }} />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <span className="eyebrow">My Colleges</span>
+          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.4rem)", margin: "8px 0 4px", display: "flex", alignItems: "center", gap: 10, color: "#1c1c28" }}>
+            <Heart size={28} fill="#F47B20" color="#F47B20" /> Your shortlist
           </h1>
-          <p style={{ color: "var(--muted)" }}>{cols.length ? `${cols.length} saved college${cols.length > 1 ? "s" : ""}.` : "Save colleges with the heart button to build your shortlist."}</p>
+          <p style={{ color: "rgba(28,28,40,.62)" }}>{cols.length ? `${cols.length} saved college${cols.length > 1 ? "s" : ""}.` : "Save colleges with the heart button to build your shortlist."}</p>
         </div>
       </section>
 

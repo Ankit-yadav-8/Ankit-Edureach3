@@ -236,7 +236,7 @@ function ExamCard({ ex }) {
           to={ex.link}
           style={{
             marginTop: "auto", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
-            background: isAdvanced ? "linear-gradient(135deg,#1c1c28,#2d1f3d)" : "linear-gradient(135deg,#F47B20,#ea580c)",
+            background: isAdvanced ? "linear-gradient(135deg,#1a0800,#2d1200)" : "linear-gradient(135deg,#F47B20,#ea580c)",
             color: "#fff", padding: "14px 22px", borderRadius: 12,
             fontSize: 14, fontWeight: 700, fontFamily: "'Space Grotesk','Sora',sans-serif",
             textDecoration: "none", letterSpacing: "0.2px",
@@ -630,12 +630,12 @@ function CollegePickingGuide() {
       <motion.div
         whileHover={{ scale: 1.01 }}
         style={{
-          background: "linear-gradient(135deg, #1a0e00 0%, #2d1600 60%, #3a1c00 100%)",
+          background: "linear-gradient(135deg, #1a0800 0%, #2d1200 60%, #3d1800 100%)",
           borderRadius: 18, padding: "24px 28px",
           display: "flex", alignItems: "center", justifyContent: "space-between",
           flexWrap: "wrap", gap: 18,
-          boxShadow: "0 8px 32px rgba(244,123,32,.2)",
-          border: "1px solid rgba(244,123,32,.2)",
+          boxShadow: "0 8px 32px rgba(244,123,32,.22)",
+          border: "1px solid rgba(244,123,32,.25)",
           position: "relative", overflow: "hidden",
         }}
       >
@@ -667,16 +667,16 @@ export default function Home({ onSearch }) {
 
       {/* ── Stats bar ── */}
       <section style={{
-        background: "linear-gradient(135deg, #0d0800 0%, #1a0e00 30%, #2a1600 60%, #1c0e00 100%)",
+        background: "linear-gradient(135deg, #1a0800 0%, #2d1200 30%, #3d1800 60%, #2a1000 100%)",
         padding: "44px 0",
         position: "relative",
         overflow: "hidden",
       }}>
         {/* Ambient glows */}
-        <div style={{ position: "absolute", top: -80, left: "15%", width: 500, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.18) 0%, transparent 65%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -60, right: "10%", width: 350, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,.12) 0%, transparent 65%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: -80, left: "15%", width: 500, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.22) 0%, transparent 65%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -60, right: "10%", width: 350, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,.16) 0%, transparent 65%)", pointerEvents: "none" }} />
         {/* Grid overlay */}
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px)", backgroundSize: "48px 48px", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px)", backgroundSize: "48px 48px", pointerEvents: "none" }} />
 
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 16 }}>
@@ -719,12 +719,12 @@ export default function Home({ onSearch }) {
       </section>
 
       {/* Wave between dark stats and ticker */}
-      <WaveSeparator fillTop="#1c0e00" fillBottom="#0f0c29" />
+      <WaveSeparator fillTop="#1c0e00" fillBottom="#1a0800" />
 
       {/* ── College Ticker ── */}
       <CollegeTicker />
 
-      <WaveSeparator fillTop="#0f0c29" fillBottom="#1a0e00" />
+      <WaveSeparator fillTop="#1a0800" fillBottom="#1a0e00" />
 
       {/* ── Predictor Cards ── */}
       <PredictorCards />
@@ -745,10 +745,10 @@ export default function Home({ onSearch }) {
         {/* quick path strip */}
         <div style={{
           marginTop: 24,
-          background: "linear-gradient(135deg, #1a0e00 0%, #2d1600 60%, #1c1c28 100%)",
+          background: "linear-gradient(135deg, #1a0800 0%, #2d1200 60%, #3d1800 100%)",
           borderRadius: 18, padding: "24px 28px",
           display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "space-around",
-          boxShadow: "0 8px 32px rgba(0,0,0,.2)",
+          boxShadow: "0 8px 32px rgba(244,123,32,.15)",
           position: "relative", overflow: "hidden",
         }}>
           <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px)", backgroundSize: "36px 36px", pointerEvents: "none" }} />
@@ -766,10 +766,10 @@ export default function Home({ onSearch }) {
         </div>
       </HomeSection>
 
-      <WaveSeparator fillTop="#fff" fillBottom="#0f0a00" />
+      <WaveSeparator fillTop="#fff7f0" fillBottom="#1a0800" />
       {/* ── JoSAA 2026 Counselling Promo ── */}
       <JoSAAPromoSection />
-      <WaveSeparator fillTop="#0f0a00" fillBottom="#fff7ef" />
+      <WaveSeparator fillTop="#1a0800" fillBottom="#fff7ef" />
 
       {/* ── How to Pick the Right College ── */}
       <CollegePickingGuide />
@@ -840,32 +840,25 @@ export default function Home({ onSearch }) {
       {/* ── Exam Cycle 2025–26 ── */}
       <ExamCycle />
 
-      <WaveSeparator fillTop="#faf7f4" fillBottom="#0f0c29" />
+      <WaveSeparator fillTop="#fff7f0" fillBottom="#1a0800" />
       {/* ── JEE Resources Promo Banner ── */}
       <section style={{
-        background: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)",
+        background: "linear-gradient(135deg, #1a0800 0%, #2d1200 50%, #3d1800 100%)",
         padding: "56px 0",
         position: "relative", overflow: "hidden",
       }}>
-        <div style={{ position: "absolute", top: -60, left: -60, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.25) 0%, transparent 70%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -40, right: 60, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,.2) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: -60, left: -60, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.25) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -40, right: 60, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,.18) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
             <Reveal>
               <div>
-                <span style={{
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  background: "rgba(165,180,252,.15)", color: "#a5b4fc",
-                  border: "1px solid rgba(165,180,252,.25)",
-                  padding: "5px 14px", borderRadius: 50,
-                  fontSize: 11, fontWeight: 700, letterSpacing: "2px",
-                  textTransform: "uppercase", marginBottom: 16,
-                }}>
+                <span className="eyebrow" style={{ marginBottom: 16 }}>
                   JEE Study Material
                 </span>
                 <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(1.6rem,3vw,2.3rem)", marginBottom: 12, lineHeight: 1.15, letterSpacing: "-0.5px" }}>
                   73 chapters across Math,{" "}
-                  <span style={{ background: "linear-gradient(90deg, #a5b4fc, #34d399)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  <span style={{ background: "linear-gradient(90deg, #fbbf24, #F47B20)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                     Physics & Chemistry
                   </span>
                 </h2>
@@ -874,9 +867,9 @@ export default function Home({ onSearch }) {
                 </p>
                 <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
                   {[
-                    { label: "Mathematics", color: "#a5b4fc", icon: "∑" },
-                    { label: "Physics",     color: "#fbbf24", icon: "⚡" },
-                    { label: "Chemistry",   color: "#34d399", icon: "🧪" },
+                    { label: "Mathematics", color: "#fbbf24", icon: "∑" },
+                    { label: "Physics",     color: "#fb923c", icon: "⚡" },
+                    { label: "Chemistry",   color: "#fdba74", icon: "🧪" },
                   ].map(({ label, color, icon }) => (
                     <span key={label} style={{
                       padding: "6px 16px", borderRadius: 50,
@@ -894,14 +887,14 @@ export default function Home({ onSearch }) {
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <Link
                   to="/jee-resources"
+                  className="btn btn-coral btn-shimmer"
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 8,
-                    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-                    color: "#fff", padding: "14px 28px",
+                    padding: "14px 28px",
                     borderRadius: 12, fontSize: 15, fontWeight: 700,
                     textDecoration: "none",
-                    boxShadow: "0 8px 30px rgba(99,102,241,.4)",
-                    transition: "all .2s",
+                    boxShadow: "0 8px 30px rgba(244,123,32,.45)",
+                    position: "relative", overflow: "hidden",
                   }}
                 >
                   Explore JEE Resources <ArrowRight size={17} />
@@ -915,7 +908,7 @@ export default function Home({ onSearch }) {
         </div>
       </section>
 
-      <WaveSeparator fillTop="#24243e" fillBottom="#fff7ef" />
+      <WaveSeparator fillTop="#3d1800" fillBottom="#fff7ef" />
       {/* ── New Tools ── */}
       <NewTools />
 

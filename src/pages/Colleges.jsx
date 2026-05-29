@@ -63,18 +63,10 @@ export default function Colleges() {
     <div className="page">
 
       {/* Page header */}
-      <section style={{
-        background: "linear-gradient(135deg,#1c1c28 0%,#2a2a3c 60%,#1c1c28 100%)",
-        padding: "52px 0 44px",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        {/* Background glow */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "radial-gradient(ellipse 50% 80% at 80% 50%, rgba(244,123,32,.18), transparent 65%)",
-          pointerEvents: "none",
-        }} />
+      <section className="warm-page-header">
+        {/* Warm radial glows */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 30%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 60% at 0% 100%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -83,23 +75,24 @@ export default function Colleges() {
           >
             <span style={{
               display: "inline-flex", alignItems: "center", gap: 6,
-              background: "rgba(244,123,32,.15)", color: "#F47B20",
-              border: "1px solid rgba(244,123,32,.3)",
+              background: "rgba(244,123,32,.14)", color: "#c75b0a",
+              border: "1px solid rgba(244,123,32,.38)",
               fontSize: 11, fontWeight: 700, letterSpacing: "2px",
               textTransform: "uppercase",
               padding: "5px 14px", borderRadius: 50, marginBottom: 14,
+              fontFamily: "'Space Grotesk',sans-serif",
             }}>
               College Explorer
             </span>
             <h1 style={{
-              fontFamily: "Sora", fontWeight: 800,
+              fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800,
               fontSize: "clamp(1.9rem,4.5vw,2.8rem)",
-              color: "#fff", letterSpacing: "-0.5px",
+              color: "#1c1c28", letterSpacing: "-0.5px",
               margin: "0 0 10px",
             }}>
               Discover {COLLEGES.length}+ Premier Institutes
             </h1>
-            <p style={{ color: "rgba(255,255,255,.6)", fontSize: "1rem", maxWidth: 520, lineHeight: 1.65 }}>
+            <p style={{ color: "rgba(28,28,40,.62)", fontSize: "1rem", maxWidth: 520, lineHeight: 1.65 }}>
               Filter by type, state, package and fees — save favourites or add to compare.
             </p>
           </motion.div>

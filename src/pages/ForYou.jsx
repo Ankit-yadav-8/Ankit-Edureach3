@@ -61,13 +61,14 @@ export default function ForYou() {
   return (
     <div className="page">
       {/* ── Hero ── */}
-      <section style={{ background: "linear-gradient(135deg,#fff7f0,#ffe8d6)", padding: "44px 0" }}>
-        <div className="container">
-          <span className="eyebrow" style={{ color: "var(--coral)" }}>Personalized</span>
-          <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.5rem)", margin: "8px 0 4px", display: "flex", alignItems: "center", gap: 10 }}>
-            <Wand2 size={28} /> Colleges for you
+      <section className="warm-page-header" style={{ padding: "44px 0" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 55% 65% at 100% 20%, rgba(249,115,22,.20) 0%, transparent 60%)" }} />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <span className="eyebrow">Personalized</span>
+          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.5rem)", margin: "8px 0 4px", display: "flex", alignItems: "center", gap: 10, color: "#1c1c28" }}>
+            <Wand2 size={28} color="#F47B20" /> Colleges for you
           </h1>
-          <p style={{ color: "var(--muted)" }}>
+          <p style={{ color: "rgba(28,28,40,.62)" }}>
             Enter your rank and we'll recommend the best-fit colleges across
             IITs, NITs, IIITs and GFTIs — based on 2024 JoSAA cutoffs.
           </p>

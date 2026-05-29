@@ -155,13 +155,12 @@ export default function About() {
     <div className="page">
       {/* ── Hero ────────────────────────────────────────────────── */}
       <section
-        style={{
-          background: "linear-gradient(135deg,#fff7f0,#ffe8d6)",
-          color: "var(--ink)",
-          padding: "104px 0 56px",
-        }}
+        className="warm-page-header"
+        style={{ padding: "104px 0 56px" }}
       >
-        <div className="container" style={{ textAlign: "center" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 80%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
+        <div className="container" style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
           <span className="eyebrow" style={{ color: "var(--coral)" }}>
             About College Parichay
           </span>
@@ -378,7 +377,7 @@ export default function About() {
                   {/* Right — AK logo with glow */}
                   <div style={{
                     width: 200,
-                    background: `linear-gradient(135deg, #1c1c28 0%, #2a1a0e 100%)`,
+                    background: `linear-gradient(135deg, #fde8d4 0%, #fbc99a 100%)`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -391,10 +390,10 @@ export default function About() {
                     <div style={{ position: "absolute", bottom: -20, left: -20, width: 100, height: 100, borderRadius: "50%", background: `radial-gradient(circle, ${m.accent}22 0%, transparent 70%)`, pointerEvents: "none" }} />
 
                     {/* Skills floating badges */}
-                    <div style={{ position: "absolute", top: 18, left: 12, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "rgba(255,255,255,.7)", fontWeight: 600 }}>React</div>
-                    <div style={{ position: "absolute", top: 44, right: 10, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "rgba(255,255,255,.7)", fontWeight: 600 }}>Node.js</div>
-                    <div style={{ position: "absolute", bottom: 44, left: 10, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "rgba(255,255,255,.7)", fontWeight: 600 }}>MongoDB</div>
-                    <div style={{ position: "absolute", bottom: 18, right: 14, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "rgba(255,255,255,.7)", fontWeight: 600 }}>IIT-R</div>
+                    <div style={{ position: "absolute", top: 18, left: 12, background: "rgba(244,123,32,.15)", border: "1px solid rgba(244,123,32,.25)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "#c75b0a", fontWeight: 700 }}>React</div>
+                    <div style={{ position: "absolute", top: 44, right: 10, background: "rgba(244,123,32,.15)", border: "1px solid rgba(244,123,32,.25)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "#c75b0a", fontWeight: 700 }}>Node.js</div>
+                    <div style={{ position: "absolute", bottom: 44, left: 10, background: "rgba(244,123,32,.15)", border: "1px solid rgba(244,123,32,.25)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "#c75b0a", fontWeight: 700 }}>MongoDB</div>
+                    <div style={{ position: "absolute", bottom: 18, right: 14, background: "rgba(244,123,32,.15)", border: "1px solid rgba(244,123,32,.25)", borderRadius: 8, padding: "4px 8px", fontSize: 10, color: "#c75b0a", fontWeight: 700 }}>IIT-R</div>
 
                     {/* AK Logo */}
                     <AKGlowLogo initials={m.initials} accent={m.accent} size={96} />

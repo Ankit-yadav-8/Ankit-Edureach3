@@ -338,7 +338,17 @@ export default function AuthModal() {
           position: "fixed", inset: 0, zIndex: 300,
           background: "rgba(10,12,28,.72)",
           backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
-          display: "grid", placeItems: "center", padding: "16px",
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          paddingTop: "80px",
+          paddingBottom: "24px",
+          paddingLeft: "16px",
+          paddingRight: "16px",
+          boxSizing: "border-box",
+          minHeight: "100%",
         }}
       >
         {/* ── card ── */}
@@ -355,7 +365,8 @@ export default function AuthModal() {
             overflow: "hidden",
             boxShadow: "0 40px 100px rgba(10,12,28,.55), 0 0 0 1px rgba(255,255,255,.08)",
             background: "#fff",
-            maxHeight: "92vh", overflowY: "auto",
+            flexShrink: 0,
+            position: "relative",
           }}
         >
 

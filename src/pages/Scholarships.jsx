@@ -42,13 +42,14 @@ function EMICalculator() {
 export default function Scholarships() {
   return (
     <div className="page">
-      <section style={{ background: "linear-gradient(135deg,#fff7f0,#ffe8d6)", color: "var(--ink)", padding: "40px 0" }}>
-        <div className="container">
-          <span className="eyebrow" style={{ color: "var(--coral)" }}>Scholarships &amp; Loans</span>
-          <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.4rem)", margin: "8px 0 4px", display: "flex", alignItems: "center", gap: 10 }}>
-            <Award size={28} /> Fund your engineering education
+      <section className="warm-page-header" style={{ padding: "40px 0" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.20) 0%, transparent 60%)" }} />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <span className="eyebrow">Scholarships &amp; Loans</span>
+          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.4rem)", margin: "8px 0 4px", display: "flex", alignItems: "center", gap: 10, color: "#1c1c28" }}>
+            <Award size={28} color="#F47B20" /> Fund your engineering education
           </h1>
-          <p style={{ color: "var(--muted)" }}>Major scholarships, fee waivers and an education-loan EMI calculator in one place.</p>
+          <p style={{ color: "rgba(28,28,40,.62)" }}>Major scholarships, fee waivers and an education-loan EMI calculator in one place.</p>
         </div>
       </section>
 
