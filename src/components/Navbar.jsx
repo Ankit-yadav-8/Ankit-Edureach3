@@ -150,7 +150,7 @@ export default function Navbar({ onSearch }) {
           </span>
 
           {/* Brand text */}
-          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.3rem", letterSpacing: "-0.01em" }}>
+          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.3rem", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
             College{" "}
             <span
               style={{
@@ -165,7 +165,6 @@ export default function Navbar({ onSearch }) {
             >
               Parichay
             </span>
-            <span style={{ color: "#F47B20", fontWeight: 700 }}>.in</span>
           </span>
         </Link>
 
@@ -325,7 +324,17 @@ export default function Navbar({ onSearch }) {
                       CP
                     </span>
                   </span>
-                  <span style={{ fontFamily: "Sora", fontWeight: 800 }}>Menu</span>
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", whiteSpace: "nowrap" }}>
+                    College{" "}
+                    <span style={{
+                      background: "linear-gradient(90deg, #F47B20 0%, #f97316 25%, #fbbf24 50%, #f97316 75%, #F47B20 100%)",
+                      backgroundSize: "200% auto",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      animation: "brandGradient 3s linear infinite",
+                    }}>Parichay</span>
+                  </span>
                 </div>
                 <button onClick={() => setMobileOpen(false)}><X size={22} /></button>
               </div>

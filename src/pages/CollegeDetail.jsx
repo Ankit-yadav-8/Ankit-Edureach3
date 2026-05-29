@@ -97,24 +97,35 @@ export default function CollegeDetail() {
       <section style={{
         position: "relative", color: "#fff",
         padding: "120px 0 64px", overflow: "hidden",
+        minHeight: 480,
       }}>
-        {/* Background image */}
+        {/* Background image — full visible with brightness/contrast boost */}
         <div style={{
           position: "absolute", inset: 0,
           backgroundImage: `url("${encodeURI(college.heroImage)}")`,
-          backgroundSize: "cover", backgroundPosition: "center", zIndex: 0,
+          backgroundSize: "cover",
+          backgroundPosition: "center 30%",
+          backgroundRepeat: "no-repeat",
+          zIndex: 0,
+          filter: "brightness(1.08) contrast(1.08) saturate(1.15)",
         }} />
 
-        {/* Enhanced dark gradient */}
+        {/* Light gradient — only heavy at very bottom for text readability */}
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(180deg,rgba(8,8,24,.5) 0%,rgba(8,8,24,.72) 50%,rgba(8,8,24,.96) 100%)",
+          background: "linear-gradient(180deg,rgba(8,8,24,.18) 0%,rgba(8,8,24,.28) 45%,rgba(8,8,24,.82) 78%,rgba(8,8,24,.97) 100%)",
           zIndex: 1,
         }} />
 
+        {/* Subtle vignette on left & right edges */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+          background: "linear-gradient(90deg,rgba(8,8,24,.38) 0%,transparent 18%,transparent 82%,rgba(8,8,24,.38) 100%)",
+        }} />
+
         {/* Orange corner glows */}
-        <div style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 0% 0%, rgba(244,123,32,.32), transparent 55%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "radial-gradient(ellipse 50% 60% at 100% 100%, rgba(244,123,32,.22), transparent 55%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 0% 0%, rgba(244,123,32,.22), transparent 55%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "radial-gradient(ellipse 50% 60% at 100% 100%, rgba(244,123,32,.15), transparent 55%)" }} />
 
         {/* Floating orbs */}
         <FloatingOrbs count={4} colors={["#F47B20","#fbbf24","#F97316","#f4a261"]} style={{ zIndex: 1 }} />

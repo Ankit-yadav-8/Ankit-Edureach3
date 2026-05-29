@@ -2,7 +2,7 @@ import {
   ShieldCheck, Mail, Phone, GraduationCap, Heart, Lightbulb,
   Linkedin, Github, MapPin, Quote, Trophy,
   Code2, Zap, Users, MessageCircle, Globe,
-  Sparkles, Star, ArrowRight, CheckCircle2,
+  Star, ArrowRight, CheckCircle2,
 } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
@@ -397,12 +397,21 @@ export default function About() {
             style={{ display: "inline-flex", marginBottom: 22 }}
           >
             <span style={{
-              display: "inline-flex", alignItems: "center", gap: 6,
+              display: "inline-flex", alignItems: "center", gap: 8,
               background: "rgba(244,123,32,.18)", border: "1px solid rgba(244,123,32,.35)",
-              color: "#fb923c", padding: "6px 20px", borderRadius: 50,
+              color: "#fb923c", padding: "5px 16px 5px 5px", borderRadius: 50,
               fontSize: 13, fontWeight: 700, letterSpacing: .5,
             }}>
-              <Sparkles size={13} /> About College Parichay
+              <span style={{
+                width: 26, height: 26, borderRadius: "50%",
+                background: "#F47B20", display: "grid", placeItems: "center", flexShrink: 0,
+              }}>
+                <span style={{
+                  color: "#fff", fontFamily: "Sora, sans-serif",
+                  fontWeight: 800, fontSize: "11px", letterSpacing: "-0.5px", lineHeight: 1,
+                }}>CP</span>
+              </span>
+              About College Parichay
             </span>
           </motion.div>
 
