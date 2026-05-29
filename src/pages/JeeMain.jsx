@@ -36,11 +36,11 @@ const TREND_MATHS     = DIFFICULTY_YEARS.map((y) => ({ year: y, Session1: DIFFIC
   Source: jeemain.nta.ac.in official result archives 2021–2025.
 */
 const QUALIFYING_TREND = [
-  { year: 2021, open: 87.9, obc: 68.0, sc: 46.9, st: 34.7 },
-  { year: 2022, open: 88.4, obc: 67.7, sc: 46.8, st: 34.6 },
-  { year: 2023, open: 90.0, obc: 75.6, sc: 54.4, st: 44.2 },
-  { year: 2024, open: 89.7, obc: 73.6, sc: 52.8, st: 42.0 },
-  { year: 2025, open: 91.0, obc: 76.0, sc: 55.0, st: 45.0 },
+  { year: 2021, open: 87.89, ews: 66.22, obc: 68.02, sc: 46.88, st: 34.67 },
+  { year: 2022, open: 88.41, ews: 67.00, obc: 63.11, sc: 43.08, st: 26.77 },
+  { year: 2023, open: 90.77, ews: 75.62, obc: 73.61, sc: 51.97, st: 37.23 },
+  { year: 2024, open: 93.23, ews: 81.32, obc: 79.67, sc: 60.09, st: 46.69 },
+  { year: 2025, open: 93.10, ews: 80.38, obc: 79.43, sc: 60.09, st: 46.69 },
 ];
 
 /* Cutoff percentile by top colleges */
@@ -431,23 +431,23 @@ export default function JeeMain() {
 
       {/* ── College Predictor ── */}
       <div style={{ background: "var(--sky)" }}>
-  <Block id="college" eyebrow="Tool 2" title="JEE Main College Predictor"
-    sub="Enter your rank to see every eligible NIT, IIIT & GFTI with JoSAA and CSAB round cutoffs." bg="transparent">
-    {/* ── Loading notice ── */}
-    <div style={{
-      display: "flex", alignItems: "center", gap: 10,
-      background: "#fff8ed", border: "1px solid #f97316",
-      borderRadius: 10, padding: "12px 16px", marginBottom: 20,
-      fontSize: 13, color: "#92400e",
-    }}>
-      <span style={{ fontSize: 18 }}>⏳</span>
-      <span>
-        <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a "Page Unresponsive" pop-up, click <strong>"Wait"</strong> — do <em>not</em> click "Exit Page".
-      </span>
-    </div>
-    <CollegePredictorTool basePath="/jee-main" />
-  </Block>
-</div>
+        <Block id="college" eyebrow="Tool 2" title="JEE Main College Predictor"
+          sub="Enter your rank to see every eligible NIT, IIIT & GFTI with JoSAA and CSAB round cutoffs." bg="transparent">
+          {/* ── Loading notice ── */}
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10,
+            background: "#fff8ed", border: "1px solid #f97316",
+            borderRadius: 10, padding: "12px 16px", marginBottom: 20,
+            fontSize: 13, color: "#92400e",
+          }}>
+            <span style={{ fontSize: 18 }}>⏳</span>
+            <span>
+              <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a "Page Unresponsive" pop-up, click <strong>"Wait"</strong> — do <em>not</em> click "Exit Page".
+            </span>
+          </div>
+          <CollegePredictorTool basePath="/jee-main" />
+        </Block>
+      </div>
 
       {/* ══ DIFFICULTY ANALYSIS ══ */}
       <section id="difficulty" className="section" style={{ scrollMarginTop: 90 }}>
@@ -587,11 +587,12 @@ export default function JeeMain() {
           <div className="card">
             {/* Inline data table */}
             <div style={{ overflowX: "auto", marginBottom: 20 }}>
-              <table className="data-table" style={{ minWidth: 520, fontSize: 13 }}>
+              <table className="data-table" style={{ minWidth: 580, fontSize: 13 }}>
                 <thead>
                   <tr>
                     <th>Year</th>
                     <th style={{ textAlign: "center" }}>General</th>
+                    <th style={{ textAlign: "center" }}>GEN-EWS</th>
                     <th style={{ textAlign: "center" }}>OBC-NCL</th>
                     <th style={{ textAlign: "center" }}>SC</th>
                     <th style={{ textAlign: "center" }}>ST</th>
@@ -601,10 +602,21 @@ export default function JeeMain() {
                   {QUALIFYING_TREND.map((row) => (
                     <tr key={row.year}>
                       <td><strong style={{ fontFamily: "Sora" }}>{row.year}</strong></td>
-                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700 }}>{row.open}%ile</span></td>
-                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#F4A261" }}>{row.obc}%ile</span></td>
-                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#2EC4B6" }}>{row.sc}%ile</span></td>
-                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#F97316" }}>{row.st}%ile</span></td>
+                      <td style={{ textAlign: "center" }}>
+                        <span style={{ fontFamily: "Sora", fontWeight: 700 }}>{row.open}%ile</span>
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        <span style={{ fontFamily: "Sora", fontWeight: 700, color: "#7C3AED" }}>{row.ews}%ile</span>
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        <span style={{ fontFamily: "Sora", fontWeight: 700, color: "#F4A261" }}>{row.obc}%ile</span>
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        <span style={{ fontFamily: "Sora", fontWeight: 700, color: "#2EC4B6" }}>{row.sc}%ile</span>
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        <span style={{ fontFamily: "Sora", fontWeight: 700, color: "#F97316" }}>{row.st}%ile</span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -613,7 +625,8 @@ export default function JeeMain() {
             <Trend
               data={QUALIFYING_TREND}
               lines={[
-                { key: "open", label: "General",  color: "#1c1c28" },
+                { key: "open", label: "General",  color: "#1c4fa0" },
+                { key: "ews",  label: "GEN-EWS",  color: "#7C3AED" },
                 { key: "obc",  label: "OBC-NCL",  color: "#F4A261" },
                 { key: "sc",   label: "SC",        color: "#2EC4B6" },
                 { key: "st",   label: "ST",        color: "#F97316" },
@@ -639,8 +652,8 @@ export default function JeeMain() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 28 }}>
             {[
-              { label: "Total Questions", value: "75",   sub: "25 per subject",  color: "#F97316" },
-              { label: "Total Marks",     value: "300",  sub: "4 marks each",    color: "#0EA5A4" },
+              { label: "Total Questions", value: "75",    sub: "25 per subject", color: "#F97316" },
+              { label: "Total Marks",     value: "300",   sub: "4 marks each",   color: "#0EA5A4" },
               { label: "Duration",        value: "3 hrs", sub: "180 minutes",    color: "#7C3AED" },
             ].map(({ label, value, sub, color }) => (
               <div key={label} className="card" style={{ textAlign: "center", borderTop: `4px solid ${color}`, padding: "18px 12px" }}>
@@ -870,6 +883,7 @@ export default function JeeMain() {
           <RankingsTable type="NIT" />
         </Block>
       </div>
+
     </div>
   );
 }
