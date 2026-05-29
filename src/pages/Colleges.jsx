@@ -284,10 +284,9 @@ export default function Colleges() {
                 <div style={{
                   position: "relative",
                   height: 120,
-                  backgroundImage: `url("${c.heroImage}")`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  background: !c.heroImage ? (TYPE_BG[c.type] || TYPE_BG.NIT) : undefined,
+                  background: c.heroImage
+                    ? `url("${encodeURI(c.heroImage)}") center/cover no-repeat`
+                    : (TYPE_BG[c.type] || TYPE_BG.NIT),
                 }}>
                   {c.heroImage && (
                     <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.32))" }} />

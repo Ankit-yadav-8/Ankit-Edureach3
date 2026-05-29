@@ -101,7 +101,7 @@ export default function CollegeDetail() {
         {/* Background image */}
         <div style={{
           position: "absolute", inset: 0,
-          backgroundImage: `url("${college.heroImage}")`,
+          backgroundImage: `url("${encodeURI(college.heroImage)}")`,
           backgroundSize: "cover", backgroundPosition: "center", zIndex: 0,
         }} />
 
