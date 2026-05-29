@@ -105,9 +105,9 @@ function DevCard({ t }) {
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 12,
-        padding: "10px 18px",
-        borderRadius: 14,
+        gap: 14,
+        padding: "14px 20px",
+        borderRadius: 16,
         background: "rgba(255,255,255,0.05)",
         border: "1px solid rgba(249,115,22,0.25)",
         color: "#fff",
@@ -145,38 +145,27 @@ function DevCard({ t }) {
         }}
       />
 
-      {/* ── Avatar — shows photo if available, else initials ── */}
+      {/* ── Initials logo (AY / AK) ── */}
       <span
         style={{
-          width: 40,
-          height: 40,
-          borderRadius: "50%",
+          width: 46,
+          height: 46,
+          borderRadius: 12,
           display: "grid",
           placeItems: "center",
-          background: `linear-gradient(135deg, ${t.accent}, var(--coral-light))`,
-          fontWeight: 700,
-          fontSize: ".82rem",
+          background: `linear-gradient(135deg, ${t.accent} 0%, #ea580c 100%)`,
+          fontFamily: "Sora, sans-serif",
+          fontWeight: 900,
+          fontSize: "1.05rem",
+          letterSpacing: "-0.5px",
+          color: "#fff",
           flexShrink: 0,
-          boxShadow: `0 0 10px ${t.accent}66`,
-          overflow: "hidden",
-          /* photo border glow */
-          border: t.photo ? `2px solid ${t.accent}99` : "none",
+          boxShadow: `0 0 16px ${t.accent}88, 0 0 6px ${t.accent}55, inset 0 1px 0 rgba(255,255,255,.25)`,
+          border: `1.5px solid ${t.accent}cc`,
+          userSelect: "none",
         }}
       >
-        {t.photo ? (
-          <img
-            src={t.photo}
-            alt={t.name}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-          />
-        ) : (
-          t.initials
-        )}
+        {t.initials}
       </span>
 
       {/* Name + role */}
@@ -367,9 +356,9 @@ export default function Footer() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "1rem",
-              maxWidth: 860,
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "1.2rem",
+              maxWidth: 700,
               margin: "0 auto",
             }}
           >

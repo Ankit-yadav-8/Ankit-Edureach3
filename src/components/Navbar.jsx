@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  GraduationCap, ChevronDown, Search, Target, Menu, X,
+  ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy,
 } from "lucide-react";
@@ -41,8 +41,8 @@ const COLLEGES = [
   { label: "Explore IITs", to: "/colleges?type=IIT", icon: Landmark },
   { label: "Explore NITs", to: "/colleges?type=NIT", icon: Landmark },
   { label: "Explore IIITs", to: "/colleges?type=IIIT", icon: Landmark },
-  { label: "Private Universities", to: "/#private", icon: GraduationCap },
-  { label: "State-wise Colleges", to: "/colleges", icon: GraduationCap },
+  { label: "Private Universities", to: "/#private", icon: BadgeCheck },
+  { label: "State-wise Colleges", to: "/colleges", icon: BadgeCheck },
 ];
 
 const TOOLS = [
@@ -117,21 +117,54 @@ export default function Navbar({ onSearch }) {
           transition: "all .3s ease",
         }}
       >
-        <Link to="/" onClick={() => window.scrollTo({ top: 0 })} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ width: 38, height: 38, borderRadius: 10, display: "grid", placeItems: "center", background: "linear-gradient(135deg,var(--navy),var(--navy-light))", color: "#fff" }}>
-            <GraduationCap size={20} />
+        {/* ── LOGO ── */}
+        <Link
+          to="/"
+          onClick={() => window.scrollTo({ top: 0 })}
+          style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}
+        >
+          {/* CP circle logo */}
+          <span
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: "50%",
+              background: "#F47B20",
+              display: "grid",
+              placeItems: "center",
+              flexShrink: 0,
+            }}
+          >
+            <span
+              style={{
+                color: "#fff",
+                fontFamily: "Sora, sans-serif",
+                fontWeight: 800,
+                fontSize: "15px",
+                letterSpacing: "-0.5px",
+                lineHeight: 1,
+              }}
+            >
+              CP
+            </span>
           </span>
+
+          {/* Brand text */}
           <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.3rem", letterSpacing: "-0.01em" }}>
             College{" "}
-            <span style={{
-              background: "linear-gradient(90deg, #F47B20 0%, #f97316 25%, #fbbf24 50%, #f97316 75%, #F47B20 100%)",
-              backgroundSize: "200% auto",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              animation: "brandGradient 3s linear infinite",
-              display: "inline",
-            }}>Parichay</span>
+            <span
+              style={{
+                background: "linear-gradient(90deg, #F47B20 0%, #f97316 25%, #fbbf24 50%, #f97316 75%, #F47B20 100%)",
+                backgroundSize: "200% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                animation: "brandGradient 3s linear infinite",
+                display: "inline",
+              }}
+            >
+              Parichay
+            </span>
             <span style={{ color: "#F47B20", fontWeight: 700 }}>.in</span>
           </span>
         </Link>
@@ -204,11 +237,19 @@ export default function Navbar({ onSearch }) {
           </button>
           <Link to="/compare" aria-label="Compare colleges" title="Compare" style={{ position: "relative", width: 40, height: 40, borderRadius: 10, display: "grid", placeItems: "center", background: "var(--sky)", color: "var(--navy)" }}>
             <GitCompare size={18} />
-            {compare.length > 0 && <span style={{ position: "absolute", top: -4, right: -4, minWidth: 17, height: 17, padding: "0 4px", borderRadius: 999, background: "var(--teal)", color: "#fff", fontSize: 10, fontWeight: 700, display: "grid", placeItems: "center" }}>{compare.length}</span>}
+            {compare.length > 0 && (
+              <span style={{ position: "absolute", top: -4, right: -4, minWidth: 17, height: 17, padding: "0 4px", borderRadius: 999, background: "var(--teal)", color: "#fff", fontSize: 10, fontWeight: 700, display: "grid", placeItems: "center" }}>
+                {compare.length}
+              </span>
+            )}
           </Link>
           <Link to="/shortlist" aria-label="My colleges" title="My Colleges" style={{ position: "relative", width: 40, height: 40, borderRadius: 10, display: "grid", placeItems: "center", background: "var(--sky)", color: "var(--coral)" }}>
             <Heart size={18} fill={saved.length ? "var(--coral)" : "none"} />
-            {saved.length > 0 && <span style={{ position: "absolute", top: -4, right: -4, minWidth: 17, height: 17, padding: "0 4px", borderRadius: 999, background: "var(--coral)", color: "#fff", fontSize: 10, fontWeight: 700, display: "grid", placeItems: "center" }}>{saved.length}</span>}
+            {saved.length > 0 && (
+              <span style={{ position: "absolute", top: -4, right: -4, minWidth: 17, height: 17, padding: "0 4px", borderRadius: 999, background: "var(--coral)", color: "#fff", fontSize: 10, fontWeight: 700, display: "grid", placeItems: "center" }}>
+                {saved.length}
+              </span>
+            )}
           </Link>
           <button className="btn btn-coral cta-desktop" onClick={() => goHash("/jee-main#college")}>
             <Target size={16} /> Predict My College
@@ -259,7 +300,24 @@ export default function Navbar({ onSearch }) {
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-                <span style={{ fontFamily: "Sora", fontWeight: 800 }}>Menu</span>
+                {/* Mobile drawer logo */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: "50%",
+                      background: "#F47B20",
+                      display: "grid",
+                      placeItems: "center",
+                    }}
+                  >
+                    <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: "13px", letterSpacing: "-0.5px", lineHeight: 1 }}>
+                      CP
+                    </span>
+                  </span>
+                  <span style={{ fontFamily: "Sora", fontWeight: 800 }}>Menu</span>
+                </div>
                 <button onClick={() => setMobileOpen(false)}><X size={22} /></button>
               </div>
 
