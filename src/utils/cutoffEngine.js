@@ -82,13 +82,13 @@ function programForBranch(college, branchCode) {
   return progs.find((p) => p.toLowerCase().includes(branchCode.toLowerCase())) ?? null;
 }
 
-function realRounds(college, branchCode, cat, year) {
-  // ← changed: accept either the full 8-year DB or the 2024-only predictor DB
+function realRounds(college, branchCode, cat, year, gender = "GN") {
+  // accept either the full 8-year DB or the 2024-only predictor DB
   if (!isDBReady() && !isPredictorReady()) return null;
   const program = programForBranch(college, branchCode);
   if (!program) return null;
   for (const q of ALLINDIA_QUOTAS) {
-    const rounds = getRealRounds(college, program, q, cat, year, "GN");
+    const rounds = getRealRounds(college, program, q, cat, year, gender);
     if (rounds.length) return rounds;
   }
   return null;
@@ -206,9 +206,12 @@ export function collegeBranches(college) {
 }
 
 // ── expandRounds — real 2024 data, modelled fallback ─────────────────────────
-export function expandRounds(college, branch, cat, year = DEFAULT_YEAR) {
-  const real = realRounds(college, branch, cat, year);
+// realOnly=true: skip the modelled fallback; used by predictor to avoid fake results.
+// gender: "GN" (default) or "FO" (female-only supernumerary seats).
+export function expandRounds(college, branch, cat, year = DEFAULT_YEAR, realOnly = false, gender = "GN") {
+  const real = realRounds(college, branch, cat, year, gender);
   if (real && real.length) return real;
+  if (realOnly) return [];
   return modelledRounds(college, branch, cat);
 }
 

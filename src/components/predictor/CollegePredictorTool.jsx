@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Crosshair, RotateCcw, ChevronDown, MapPin,
-  ExternalLink, ArrowRight, Loader2,
+  ExternalLink, ArrowRight, Loader2, Info,
 } from "lucide-react";
 import { TIER_COLOR } from "../../utils/collegePredictor.js";
 import { expandRounds } from "../../utils/cutoffEngine.js";
