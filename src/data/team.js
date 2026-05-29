@@ -7,7 +7,7 @@ export const TEAM = [
     id: "team-head",
     initials: "AK",
     photo: "/assets/team/ankit.jpeg",
-    name: "Ankit Yadav",
+    name: "Ankit Kumar",
     role: "Project Lead & Full-Stack Developer",
     accent: "#F47B20",
     tagline: "Building products that make engineering admissions simpler.",
