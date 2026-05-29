@@ -4,7 +4,7 @@ import { MessageCircle } from "lucide-react";
    👉 Replace WA_NUMBER with your number (country code, no +) or
       set WA_GROUP to your group-invite link. */
 const WA_NUMBER = "918118826194";
-const WA_GROUP = ""; // e.g. "https://chat.whatsapp.com/XXXXXXXX"
+const WA_GROUP = "whatsapp grp - https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t";
 const PREFILL = "Hi College Parichay! I have a question about JEE counselling.";
 
 export default function WhatsAppButton() {

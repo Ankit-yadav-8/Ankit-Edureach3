@@ -466,8 +466,6 @@ export default function Footer() {
             fontSize: ".8rem",
           }}
         >
-          © 2026 Collegeparichay. All rights reserved. · Data is illustrative
-          — verify on official portals.
         </p>
       </div>
     </footer>

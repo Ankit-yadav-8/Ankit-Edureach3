@@ -11,14 +11,14 @@ const TEAM = [
     initials: "AK",
     photo: null,
     name: "Ankit Kumar",
-    role: "Project Lead & Full-Stack Developer",
+    role: "Project Lead & Chief Technical Head ",
     accent: "#f97316",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
     jeeRank: "AIR 4846 · JEE Advanced",
     bio: "Ankit secured AIR 4846 in JEE Advanced and leads the full-stack development of Collegeparichay — from React frontend and component architecture to backend APIs, database modelling and deployment pipelines. Having personally lived through the chaos of JoSAA counselling rounds, he built the platform he wished had existed for every aspirant.",
     socials: {
       linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387",
-      github: "https://github.com",
+      whatsapp: "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t",
     },
     isHead: true,
   },
@@ -511,10 +511,10 @@ export default function About() {
               }}
             >
               <a
-                href="mailto:hello@edureachportal.in"
+                href="collegeparichay@gmail.com"
                 className="btn btn-coral"
               >
-                <Mail size={16} /> hello@edureachportal.in
+                <Mail size={16} /> collegeparichay@gmail.com
               </a>
               <a href="tel:+918118826194" className="btn btn-ghost">
                 <Phone size={16} /> +91-8118826194
