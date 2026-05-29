@@ -400,7 +400,7 @@ export default function Footer() {
               href="mailto:support@edureachportal.in"
               style={{ display: "flex", alignItems: "center", gap: 6 }}
             >
-              <Mail size={15} /> support@edureachportal.in
+              <Mail size={15} /> collegeparichay@gmail.com
             </a>
             <a
               href="tel:+918118826194"
@@ -421,7 +421,7 @@ export default function Footer() {
               { Icon: Youtube, url: "https://youtube.com", label: "YouTube" },
               { Icon: Github, url: "https://github.com", label: "GitHub" },
               { Icon: Send, url: "https://telegram.org", label: "Telegram" },
-              { Icon: MessageCircle, url: "https://whatsapp.com", label: "WhatsApp" },
+              { Icon: MessageCircle, url: "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t", label: "WhatsApp" },
             ].map(({ Icon, url, label }) => (
               <a
                 key={label}
