@@ -398,15 +398,15 @@ export default function Footer() {
               <Phone size={15} /> +91-8118826194
             </a>
             <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <MapPin size={15} /> New Delhi, India
+              <MapPin size={15} /> Jaipur,Rajasthan
             </span>
           </div>
           <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
             {[
-              { Icon: Instagram, url: "https://instagram.com/ankit_1_7_", label: "Instagram" },
+              { Icon: Instagram, url: " https://www.instagram.com/collegeparichay?igsh=YnN6eGJwMWt1a21o&utm_source=qr", label: "Instagram" },
               { Icon: Facebook, url: "https://facebook.com", label: "Facebook" },
               { Icon: Twitter, url: "https://twitter.com", label: "Twitter / X" },
-              { Icon: Linkedin, url: "https://www.linkedin.com/in/ankit-kumar-1b9a64387", label: "LinkedIn" },
+              { Icon: Linkedin, url: "https://www.linkedin.com/posts/collegeparichay-jee-neet-share-7466020237499473920--Edb?utm_medium=ios_app&rcm=ACoAADimO88BPGUt_jYMAhK8HED5w5wRkXsbCpg&utm_source=social_share_send&utm_campaign=whatsapp", label: "LinkedIn" },
               { Icon: Youtube, url: "https://youtube.com", label: "YouTube" },
               { Icon: Github, url: "https://github.com", label: "GitHub" },
               { Icon: Send, url: "https://telegram.org", label: "Telegram" },
