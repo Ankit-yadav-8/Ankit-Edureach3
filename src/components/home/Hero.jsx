@@ -17,24 +17,32 @@ import {
 /* ════════════════════════════════════════════════
    HOOK — useIsMobile / useBreakpoint
 ════════════════════════════════════════════════ */
+/*
+  Device breakpoints (CSS logical pixels / device-independent pixels):
+  xs      : ≤ 430px  — small Android, iPhone SE/14/15 mini
+  mobile  : ≤ 768px  — iPhone 14/15 Pro, Android, phablets
+  tablet  : ≤ 1024px — iPad mini/Air/10th portrait + landscape, Android tablets
+  ipadpro : ≤ 1366px — iPad Pro 11" landscape, iPad Pro 12.9" both
+  desktop : > 1366px — MacBook Air/Pro, Windows laptops, iMac
+*/
 function useBreakpoint() {
   const [bp, setBp] = useState(() => {
     if (typeof window === "undefined") return "desktop";
     const w = window.innerWidth;
-    if (w <= 480)  return "xs";
+    if (w <= 430)  return "xs";
     if (w <= 768)  return "mobile";
-    if (w <= 1080) return "tablet";
-    if (w <= 1180) return "ipadpro";
+    if (w <= 1024) return "tablet";
+    if (w <= 1366) return "ipadpro";
     return "desktop";
   });
 
   useEffect(() => {
     const update = () => {
       const w = window.innerWidth;
-      if (w <= 480)  setBp("xs");
+      if (w <= 430)  setBp("xs");
       else if (w <= 768)  setBp("mobile");
-      else if (w <= 1080) setBp("tablet");
-      else if (w <= 1180) setBp("ipadpro");
+      else if (w <= 1024) setBp("tablet");
+      else if (w <= 1366) setBp("ipadpro");
       else setBp("desktop");
     };
     window.addEventListener("resize", update);
@@ -95,8 +103,8 @@ function StatsBar({ isMobile, isXs }) {
         maxWidth: 580,
         margin: "0 auto",
         padding: isXs ? "14px 0" : "20px 0",
-        borderTop: "1px solid rgba(255,255,255,.08)",
-        borderBottom: "1px solid rgba(255,255,255,.08)",
+        borderTop: "1px solid rgba(244,123,32,.20)",
+        borderBottom: "1px solid rgba(244,123,32,.20)",
       }}
     >
       {stats.map(({ icon, val, lbl, iconClass }) => {
@@ -108,10 +116,11 @@ function StatsBar({ isMobile, isXs }) {
               display: "flex",
               alignItems: "center",
               gap: isXs ? 7 : 10,
-              background: "rgba(255,255,255,.04)",
-              border: "1px solid rgba(255,255,255,.08)",
+              background: "rgba(255,255,255,.72)",
+              border: "1px solid rgba(244,123,32,.18)",
               borderRadius: 12,
               padding: isXs ? "8px 7px" : "12px 10px",
+              backdropFilter: "blur(10px)",
             }}
           >
             <div
@@ -135,7 +144,7 @@ function StatsBar({ isMobile, isXs }) {
                   fontFamily: "'Space Grotesk','Sora',sans-serif",
                   fontWeight: 800,
                   fontSize: isXs ? "0.82rem" : "clamp(.9rem,1.8vw,1.05rem)",
-                  color: "#fff",
+                  color: "#1c1c28",
                   lineHeight: 1.1,
                 }}
               >
@@ -144,7 +153,7 @@ function StatsBar({ isMobile, isXs }) {
               <div
                 style={{
                   fontSize: isXs ? 9 : 10.5,
-                  color: "rgba(255,255,255,.42)",
+                  color: "rgba(28,28,40,.50)",
                   marginTop: 3,
                   fontFamily: "'DM Sans',sans-serif",
                   lineHeight: 1.3,
@@ -602,31 +611,29 @@ export default function Hero({ onSearch }) {
 
   /* ── Responsive heading font size ── */
   const headingSize =
-    isXs      ? "1.85rem" :
-    isMobile  ? "1.85rem" :
-    isTablet && bp === "tablet"   ? "2.2rem" :
-    isTablet && bp === "ipadpro"  ? "2.8rem" :
-    "clamp(3.2rem,5.8vw,4.2rem)";
+    isXs                          ? "1.8rem"  :
+    isMobile                      ? "2rem"    :
+    bp === "tablet"               ? "2.4rem"  :
+    bp === "ipadpro"              ? "clamp(2.8rem,4vw,3.4rem)" :
+    "clamp(3.2rem,4.8vw,4.2rem)";
 
   /* ── Grid columns ── */
   const gridCols =
     isMobile  ? "1fr" :
-    isTablet  ? "1fr minmax(0,260px)" :
-    "290px 1fr 290px";
+    isTablet  ? "1fr minmax(0,290px)" :
+    "300px 1fr 300px";
 
-  /* ── Hero background ── */
-  const heroBg = isMobile
-    ? "linear-gradient(160deg, #fff7f0 0%, #fde8d4 40%, #fddcbc 72%, #fbc99a 100%)"
-    : "#080818";
+  /* ── Hero background — warm gradient on all sizes ── */
+  const heroBg = "linear-gradient(160deg, #fff7f0 0%, #fde8d4 40%, #fddcbc 72%, #fbc99a 100%)";
 
   /* ── Dot/orb counts for performance ── */
-  const dotCount  = isMobile || isTablet ? 40 : 80;
-  const orbCount  = isMobile || isTablet ? 3  : 6;
+  const dotCount  = isMobile ? 30 : isTablet ? 50 : 80;
+  const orbCount  = isMobile ? 3 : isTablet ? 4 : 6;
 
-  /* ── Text/accent colors change on mobile (light bg) ── */
-  const textColor    = isMobile ? "#1c1c28" : "#fff";
-  const subColor     = isMobile ? "rgba(28,28,40,.62)" : "rgba(255,255,255,.65)";
-  const borderColor  = isMobile ? "rgba(244,123,32,.18)" : "rgba(255,255,255,.08)";
+  /* ── Text/accent colors — warm light theme on all sizes ── */
+  const textColor    = "#1c1c28";
+  const subColor     = "rgba(28,28,40,.62)";
+  const borderColor  = "rgba(244,123,32,.18)";
 
   return (
     <section
@@ -634,9 +641,9 @@ export default function Hero({ onSearch }) {
         position: "relative",
         overflow: "hidden",           /* ← stops framer-motion x offset from causing scroll */
         background: heroBg,
-        paddingTop: isMobile ? 90 : isTablet ? 100 : 110,
-        paddingBottom: isMobile ? 50 : 70,
-        minHeight: isMobile ? "auto" : "95vh",
+        paddingTop: isXs ? 80 : isMobile ? 90 : isTablet ? 100 : 110,
+        paddingBottom: isXs ? 40 : isMobile ? 52 : isTablet ? 60 : 70,
+        minHeight: isMobile ? "auto" : isTablet ? "90vh" : "95vh",
         display: "flex",
         alignItems: "center",
         width: "100%",
@@ -644,25 +651,23 @@ export default function Hero({ onSearch }) {
         boxSizing: "border-box",
       }}
     >
-      {/* ═══ Gradient backdrops — hidden on mobile (light bg) ═══ */}
-      {!isMobile && (
-        <>
-          <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 65% 55% at -5% 5%, rgba(79,70,229,.45) 0%, rgba(67,56,202,.18) 35%, transparent 65%)" }} />
-          <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 55% 70% at 105% 20%, rgba(234,88,12,.70) 0%, rgba(249,115,22,.32) 35%, transparent 62%)" }} />
-          <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 45% 40% at -5% 98%, rgba(14,165,164,.28) 0%, transparent 60%)" }} />
-          <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 35% 50% at 50% 100%, rgba(139,92,246,.14) 0%, transparent 55%)" }} />
-          {/* Mesh grid */}
-          <div style={{
-            position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-            backgroundImage: "linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }} />
-        </>
-      )}
+      {/* ═══ Warm radial overlays — depth & glow on all sizes ═══ */}
+      <>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 70% 60% at -5% 5%, rgba(244,123,32,.30) 0%, rgba(249,115,22,.10) 35%, transparent 65%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 108% 20%, rgba(249,115,22,.24) 0%, rgba(244,162,97,.10) 40%, transparent 65%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 50% 40% at -5% 98%, rgba(244,162,97,.20) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 50% 105%, rgba(244,123,32,.14) 0%, transparent 55%)" }} />
+        {/* Warm mesh grid */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: "linear-gradient(rgba(244,123,32,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(244,123,32,.055) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }} />
+      </>
 
       {/* Animated canvas dots — reduced on mobile/tablet */}
       <MeshDots dotCount={dotCount} />
-      <FloatingOrbs count={orbCount} colors={["#F47B20","#6366f1","#0ea5a4","#fbbf24","#8b5cf6","#F47B20"]} />
+      <FloatingOrbs count={orbCount} colors={["#F47B20","#f9953d","#fbbf24","#ea580c","#f4a261","#F47B20"]} />
 
       {/* ═══ Content wrapper ═══ */}
       <div
@@ -671,7 +676,7 @@ export default function Hero({ onSearch }) {
           position: "relative",
           zIndex: 2,
           width: "100%",
-          paddingInline: isXs ? "0.9rem" : isMobile ? "1rem" : "0.75rem",
+          paddingInline: isXs ? "0.85rem" : isMobile ? "1rem" : isTablet ? "1.25rem" : "1rem",
           boxSizing: "border-box",
         }}
       >
@@ -695,13 +700,13 @@ export default function Hero({ onSearch }) {
             {/* Badge */}
             <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <motion.span
-                animate={!isMobile ? { boxShadow: ["0 0 0px rgba(99,102,241,0)", "0 0 20px rgba(99,102,241,.4)", "0 0 0px rgba(99,102,241,0)"] } : {}}
+                animate={{ boxShadow: ["0 0 0px rgba(244,123,32,0)", "0 0 22px rgba(244,123,32,.45)", "0 0 0px rgba(244,123,32,0)"] }}
                 transition={{ duration: 2.5, repeat: Infinity }}
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 7,
-                  background: isMobile ? "rgba(244,123,32,.10)" : "rgba(99,102,241,.18)",
-                  border: isMobile ? "1px solid rgba(244,123,32,.30)" : "1px solid rgba(99,102,241,.35)",
-                  color: isMobile ? "#F47B20" : "#a5b4fc",
+                  background: "rgba(244,123,32,.13)",
+                  border: "1px solid rgba(244,123,32,.40)",
+                  color: "#F47B20",
                   fontSize: isXs ? 11 : 12, fontWeight: 700, letterSpacing: "0.5px",
                   padding: isXs ? "5px 12px" : "6px 16px", borderRadius: 50,
                   marginBottom: isXs ? 16 : 22,
@@ -721,14 +726,11 @@ export default function Hero({ onSearch }) {
                 fontSize: headingSize,
                 lineHeight: 1.04,
                 margin: "0 0 1.1rem",
-                letterSpacing: isMobile ? "-0.02em" : "-0.04em",
+                letterSpacing: "-0.03em",
               }}>
                 Know Your Rank.{" "}
                 <br />
-                {isMobile
-                  ? <span style={{ color: "#F47B20" }}>Find Your College.</span>
-                  : <GradientText from="#F47B20" via="#fbbf24" to="#F97316">Find Your College.</GradientText>
-                }
+                <GradientText from="#F47B20" via="#fbbf24" to="#F97316">Find Your College.</GradientText>
               </h1>
 
               <p style={{
@@ -827,22 +829,23 @@ export default function Hero({ onSearch }) {
                   key={t}
                   onClick={() => go(t)}
                   style={{
-                    padding: isXs ? "4px 10px" : "5px 13px",   /* ← fixed padding */
+                    padding: isXs ? "4px 10px" : "5px 13px",
                     borderRadius: 50,
-                    background: isMobile ? "rgba(244,123,32,.10)" : "rgba(255,255,255,.06)",
-                    border: isMobile ? "1px solid rgba(244,123,32,.28)" : "1px solid rgba(255,255,255,.12)",
-                    color: isMobile ? "#F47B20" : "rgba(255,255,255,.8)",
+                    background: "rgba(244,123,32,.10)",
+                    border: "1px solid rgba(244,123,32,.30)",
+                    color: "#c75b0a",
                     fontSize: isXs ? 11.5 : 12.5,
-                    fontWeight: 500,
+                    fontWeight: 600,
                     cursor: "pointer",
                     transition: "all .2s",
                     fontFamily: "DM Sans",
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(249,115,22,.2)"; e.currentTarget.style.borderColor = "rgba(249,115,22,.5)"; e.currentTarget.style.color = isMobile ? "#fff" : "#fff"; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(244,123,32,.22)"; e.currentTarget.style.borderColor = "#F47B20"; e.currentTarget.style.color = "#a04010"; e.currentTarget.style.transform = "translateY(-1px)"; }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = isMobile ? "rgba(244,123,32,.10)" : "rgba(255,255,255,.06)";
-                    e.currentTarget.style.borderColor = isMobile ? "rgba(244,123,32,.28)" : "rgba(255,255,255,.12)";
-                    e.currentTarget.style.color = isMobile ? "#F47B20" : "rgba(255,255,255,.8)";
+                    e.currentTarget.style.background = "rgba(244,123,32,.10)";
+                    e.currentTarget.style.borderColor = "rgba(244,123,32,.30)";
+                    e.currentTarget.style.color = "#c75b0a";
+                    e.currentTarget.style.transform = "";
                   }}
                 >
                   {t}
@@ -867,7 +870,7 @@ export default function Hero({ onSearch }) {
               }}
             >
               <RippleButton
-                className="btn btn-coral btn-shimmer"
+                className="btn btn-coral btn-shimmer btn-glow"
                 onClick={() => nav("/jee-main#college")}
                 style={{
                   padding: isXs ? "11px 20px" : "12px 24px",
@@ -875,6 +878,7 @@ export default function Hero({ onSearch }) {
                   fontWeight: 700,
                   borderRadius: 12,
                   gap: 8,
+                  boxShadow: "0 6px 20px rgba(244,123,32,.42)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -885,7 +889,7 @@ export default function Hero({ onSearch }) {
               </RippleButton>
 
               <RippleButton
-                className="btn btn-light btn-shimmer"
+                className="btn btn-coral btn-shimmer btn-glow"
                 onClick={() => nav("/jee-main#rank")}
                 style={{
                   padding: isXs ? "11px 20px" : "12px 24px",
@@ -893,6 +897,10 @@ export default function Hero({ onSearch }) {
                   fontWeight: 700,
                   borderRadius: 12,
                   gap: 8,
+                  background: "linear-gradient(135deg, #F47B20, #f9953d)",
+                  color: "#fff",
+                  border: "none",
+                  boxShadow: "0 6px 20px rgba(244,123,32,.42)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -911,15 +919,15 @@ export default function Hero({ onSearch }) {
                   fontWeight: 700,
                   borderRadius: 12,
                   gap: 8,
-                  background: isMobile ? "rgba(244,123,32,.12)" : "rgba(99,102,241,.2)",
-                  color: isMobile ? "#F47B20" : "#a5b4fc",
-                  border: isMobile ? "1.5px solid rgba(244,123,32,.35)" : "1.5px solid rgba(99,102,241,.35)",
+                  background: "rgba(244,123,32,.12)",
+                  color: "#c75b0a",
+                  border: "1.5px solid rgba(244,123,32,.38)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: isMobile ? "100%" : "auto",
                 }}
-                color="rgba(165,180,252,0.3)"
+                color="rgba(244,123,32,0.3)"
               >
                 <BookOpen size={isXs ? 16 : 18} /> JEE Resources
               </RippleButton>
@@ -937,14 +945,12 @@ export default function Hero({ onSearch }) {
         </div>
       </div>
 
-      {/* Bottom fade — only on dark bg */}
-      {!isMobile && (
-        <div style={{
-          position: "absolute", bottom: 0, left: 0, right: 0, height: 80,
-          background: "linear-gradient(to bottom, transparent, rgba(8,8,24,.8))",
-          pointerEvents: "none", zIndex: 2,
-        }} />
-      )}
+      {/* Bottom fade — warm glow */}
+      <div style={{
+        position: "absolute", bottom: 0, left: 0, right: 0, height: 80,
+        background: "linear-gradient(to bottom, transparent, rgba(244,162,97,.12))",
+        pointerEvents: "none", zIndex: 2,
+      }} />
     </section>
   );
 }

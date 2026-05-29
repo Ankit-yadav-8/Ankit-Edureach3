@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapPin, Globe, Trophy, ArrowLeft, ExternalLink, Crosshair, Building2 } from "lucide-react";
+import { FloatingOrbs, GradientText } from "../components/Animations.jsx";
 import { COLLEGE_BY_SLUG, CATEGORIES, BRANCHES } from "../data/colleges.js";
 import { collegeBranches, seatMatrix } from "../utils/cutoffEngine.js";
 import { loadCutoffDB } from "../utils/realCutoffEngine.js";
@@ -95,46 +96,106 @@ export default function CollegeDetail() {
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <section style={{
         position: "relative", color: "#fff",
-        padding: "120px 0 56px", overflow: "hidden",
+        padding: "120px 0 64px", overflow: "hidden",
       }}>
+        {/* Background image */}
         <div style={{
           position: "absolute", inset: 0,
           backgroundImage: `url(${college.heroImage})`,
           backgroundSize: "cover", backgroundPosition: "center", zIndex: 0,
         }} />
+
+        {/* Enhanced dark gradient */}
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(180deg,rgba(28,28,40,.6) 0%,rgba(28,28,40,.75) 55%,rgba(28,28,40,.92) 100%)",
+          background: "linear-gradient(180deg,rgba(8,8,24,.5) 0%,rgba(8,8,24,.72) 50%,rgba(8,8,24,.96) 100%)",
           zIndex: 1,
         }} />
 
-        <div className="container" style={{ position: "relative", zIndex: 2 }}>
-          <button onClick={() => nav(-1)} className="btn btn-light" style={{ marginBottom: 20 }}>
-            <ArrowLeft size={16} /> Back
-          </button>
+        {/* Orange corner glows */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 0% 0%, rgba(244,123,32,.32), transparent 55%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "radial-gradient(ellipse 50% 60% at 100% 100%, rgba(244,123,32,.22), transparent 55%)" }} />
+
+        {/* Floating orbs */}
+        <FloatingOrbs count={4} colors={["#F47B20","#fbbf24","#F97316","#f4a261"]} style={{ zIndex: 1 }} />
+
+        {/* Mesh grid overlay */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+          backgroundImage: "linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }} />
+
+        {/* Pulsing glowing accent bar at bottom */}
+        <motion.div
+          animate={{ opacity: [0.5, 1, 0.5], scaleX: [0.8, 1, 0.8] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            position: "absolute", bottom: 0, left: "10%", right: "10%", height: 2,
+            background: "linear-gradient(90deg, transparent, #F47B20, #fbbf24, #F47B20, transparent)",
+            zIndex: 3,
+            boxShadow: "0 0 24px rgba(244,123,32,.8), 0 0 48px rgba(244,123,32,.3)",
+            transformOrigin: "center",
+          }}
+        />
+
+        <div className="container" style={{ position: "relative", zIndex: 4 }}>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <button onClick={() => nav(-1)} className="btn btn-light" style={{ marginBottom: 20 }}>
+              <ArrowLeft size={16} /> Back
+            </button>
+          </motion.div>
 
           <div style={{
             display: "flex", justifyContent: "space-between",
             flexWrap: "wrap", gap: 20, alignItems: "flex-end",
           }}>
-            <div>
-              <span className="badge orange" style={{ display: "inline-flex", gap: 4, alignItems: "center" }}>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.1 }}
+            >
+              <motion.span
+                animate={{ boxShadow: ["0 0 0px rgba(244,123,32,0)", "0 0 18px rgba(244,123,32,.55)", "0 0 0px rgba(244,123,32,0)"] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+                className="badge orange"
+                style={{ display: "inline-flex", gap: 4, alignItems: "center" }}
+              >
                 <Trophy size={12} /> NIRF #{college.nirf} · {college.type}
-              </span>
-              <h1 style={{
-                fontFamily: "Sora", fontWeight: 800,
-                fontSize: "clamp(1.8rem,4vw,2.6rem)", margin: "10px 0 6px",
-                textShadow: "0 2px 18px rgba(0,0,0,.45)", lineHeight: 1.2,
-              }}>
+              </motion.span>
+              <motion.h1
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                style={{
+                  fontFamily: "Sora", fontWeight: 800,
+                  fontSize: "clamp(1.8rem,4vw,2.6rem)", margin: "10px 0 6px",
+                  textShadow: "0 2px 18px rgba(0,0,0,.45)", lineHeight: 1.2,
+                }}
+              >
                 {college.name}
-              </h1>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(255,255,255,.88)", fontSize: 15 }}>
+              </motion.h1>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.35 }}
+                style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(255,255,255,.88)", fontSize: 15 }}
+              >
                 <MapPin size={16} /> {college.location} · Estd {college.estd}
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-              <a href={college.website} target="_blank" rel="noreferrer" className="btn btn-coral">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+              style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}
+            >
+              <a href={college.website} target="_blank" rel="noreferrer" className="btn btn-coral btn-glow">
                 <Globe size={16} /> Official Website
               </a>
               <button className="btn btn-light" onClick={() => nav("/jee-main#college")}>
@@ -142,7 +203,7 @@ export default function CollegeDetail() {
               </button>
               <SaveButton slug={college.slug} label />
               <CompareButton slug={college.slug} />
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -151,15 +212,29 @@ export default function CollegeDetail() {
       <div className="container" style={{ marginTop: 24, marginBottom: 8 }}>
         <div className="grid-4" style={{ gap: 14 }}>
           {[
-            ["Avg package", fmtINR(college.placements.avg),         "var(--navy)"],
-            ["Highest",     fmtINR(college.placements.highest),      "var(--green)"],
-            ["Placed",      `${college.placements.placedPct}%`,      "var(--orange)"],
-            ["Total fees",  `${fmtINR(totalFee)}/yr`,                "var(--violet)"],
-          ].map(([l, v, c]) => (
-            <div key={l} className="card" style={{ textAlign: "center", padding: "18px 12px" }}>
+            ["Avg package", fmtINR(college.placements.avg),         "var(--navy)",   "#1c1c28"],
+            ["Highest",     fmtINR(college.placements.highest),      "var(--green)",  "#15a06e"],
+            ["Placed",      `${college.placements.placedPct}%`,      "var(--orange)", "#F47B20"],
+            ["Total fees",  `${fmtINR(totalFee)}/yr`,                "var(--violet)", "#f97316"],
+          ].map(([l, v, c, hex], i) => (
+            <motion.div
+              key={l}
+              className="card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: i * 0.08 }}
+              whileHover={{
+                y: -6,
+                boxShadow: `0 0 0 2px ${hex}44, 0 20px 50px ${hex}22`,
+                borderColor: `${hex}55`,
+              }}
+              style={{ textAlign: "center", padding: "18px 12px", position: "relative", overflow: "hidden" }}
+            >
+              {/* Top accent bar */}
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, transparent, ${hex}, transparent)`, opacity: 0.6 }} />
               <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>{l}</div>
               <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.3rem", color: c }}>{v}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

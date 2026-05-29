@@ -1260,6 +1260,14 @@ table.data-table tbody tr:hover           { background:var(--sky-2); }
 }
 .btn-shimmer:hover::after { left:150%; }
 
+/* Pulsing glow on primary CTA buttons */
+@keyframes btnGlow {
+  0%,100% { box-shadow: 0 6px 20px rgba(244,123,32,.38); }
+  50%      { box-shadow: 0 8px 32px rgba(244,123,32,.68), 0 0 48px rgba(244,123,32,.22); }
+}
+.btn-glow { animation: btnGlow 2.6s ease-in-out infinite; }
+.btn-glow:hover { animation: none; box-shadow: 0 10px 36px rgba(244,123,32,.72), 0 0 60px rgba(244,123,32,.28) !important; }
+
 /* ════════════════════════════════════════════════
    UTILITIES
 ════════════════════════════════════════════════ */
@@ -1299,9 +1307,41 @@ textarea.input { width:100%; }
 .dev-link:hover { transform:translateY(-2px); }
 
 /* ════════════════════════════════════════════════
-   RESPONSIVE — TABLET  (≤ 1080px)
+   RESPONSIVE — LARGE TABLET / iPAD PRO LANDSCAPE (1025px – 1366px)
+   iPad Pro 11" landscape (1194px), iPad Pro 12.9" portrait+landscape (1024-1366px)
 ════════════════════════════════════════════════ */
-@media (max-width:1080px) {
+@media (min-width:1025px) and (max-width:1366px) {
+  /* Hamburger still shows — no room for full nav */
+  .desktop-nav  { display:none !important; }
+  .cta-desktop  { display:none !important; }
+  .hamburger    { display:grid !important; }
+  /* Hero: center + right panel only (left About card hidden) */
+  .hero-grid { grid-template-columns: 1fr 300px !important; }
+  .hero-about-col:first-child { display: none !important; }
+  .college-grid { grid-template-columns:repeat(3,1fr); }
+  .footer-grid  { grid-template-columns:repeat(2,1fr); gap:2rem; }
+  .grid-2 { grid-template-columns:repeat(2,1fr); }
+  .grid-3 { grid-template-columns:repeat(2,1fr); }
+}
+
+/* ════════════════════════════════════════════════
+   RESPONSIVE — iPad PORTRAIT  (769px – 820px)
+   iPad 10th gen, iPad Air 5th portrait
+════════════════════════════════════════════════ */
+@media (min-width:769px) and (max-width:820px) {
+  .hero-grid { grid-template-columns: 1fr 240px !important; }
+  .hero-about-col:first-child { display: none !important; }
+  .college-grid { grid-template-columns:repeat(2,1fr) !important; }
+  .grid-3 { grid-template-columns:repeat(2,1fr); }
+  .grid-4 { grid-template-columns:repeat(2,1fr) !important; }
+}
+
+/* ════════════════════════════════════════════════
+   RESPONSIVE — TABLET  (≤ 1024px)
+   iPad mini/Air/10th portrait (820px), landscape (1024px)
+   Android tablets, small laptops
+════════════════════════════════════════════════ */
+@media (max-width:1024px) {
   .desktop-nav  { display:none !important; }
   .cta-desktop  { display:none !important; }
   .hamburger    { display:grid !important; }
@@ -1309,15 +1349,36 @@ textarea.input { width:100%; }
   .footer-grid  { grid-template-columns:repeat(2,1fr); gap:2rem; }
   .features-grid{ grid-template-columns:repeat(2,1fr); }
   .josaa-promo-inner { grid-template-columns:1fr; gap:2rem; }
-  /* On tablet, hero side cards collapse — show only right college panel */
+  /* Hero: center + right panel only */
   .hero-grid { grid-template-columns: 1fr 280px !important; }
   .hero-about-col:first-child { display: none !important; }
 }
 
 /* ════════════════════════════════════════════════
-   DESKTOP GLOW — footer team strip (≥ 1081px)
+   RESPONSIVE — NAVBAR DESKTOP  (≥ 1367px)
+   MacBook Air 13", MacBook Pro, Windows Laptops, iMac
 ════════════════════════════════════════════════ */
-@media (min-width:1081px) {
+@media (min-width:1367px) {
+  .hamburger     { display:none !important; }
+  .mobile-drawer { display:none !important; }
+  .desktop-nav   { display:flex !important; }
+  .cta-desktop   { display:flex !important; }
+  .college-grid  { grid-template-columns:repeat(4,1fr); }
+}
+
+/* ════════════════════════════════════════════════
+   LARGE SCREENS (≥ 1440px) — MacBook Pro, iMac
+════════════════════════════════════════════════ */
+@media (min-width:1440px) {
+  .container { padding-inline:2rem; }
+  .hero-grid { grid-template-columns: 300px 1fr 300px !important; }
+  .college-grid { grid-template-columns:repeat(4,1fr); }
+}
+
+/* ════════════════════════════════════════════════
+   DESKTOP GLOW — footer team strip (≥ 1025px)
+════════════════════════════════════════════════ */
+@media (min-width:1025px) {
   .footer-team-strip {
     animation:stripGlowPulse 3.5s ease-in-out infinite;
   }
@@ -1628,31 +1689,28 @@ textarea.input { width:100%; }
 }
 
 /* ════════════════════════════════════════════════
-   RESPONSIVE — SMALL MOBILE  (≤ 480px)
+   RESPONSIVE — SMALL MOBILE  (≤ 430px)
+   iPhone SE, iPhone 13 mini, small Android
 ════════════════════════════════════════════════ */
-@media (max-width:480px) {
+@media (max-width:430px) {
   .college-grid   { grid-template-columns:1fr !important; }
   .grid-4         { grid-template-columns:1fr !important; }
   .grid-auto-3,.grid-auto-4 { grid-template-columns:1fr !important; }
   .footer-grid    { grid-template-columns:1fr !important; gap:1.5rem; }
-  .container      { padding-inline:.9rem; }
-  .section-title  { font-size:1.6rem; letter-spacing:-.5px; }
-  .section-sub    { font-size:.92rem; }
-  .btn            { font-size:.85rem; padding:.7rem 1.1rem; }
+  .container      { padding-inline:.85rem; }
+  .section-title  { font-size:1.55rem; letter-spacing:-.5px; }
+  .section-sub    { font-size:.9rem; }
+  .btn            { font-size:.84rem; padding:.68rem 1rem; }
   .hero-stats     { grid-template-columns:repeat(2,1fr); }
-  .predictor-card { padding:1.2rem 1rem 1.5rem; }
-  .hero           { padding:2.2rem .9rem 2rem; }
-  .hero h1        { font-size:1.85rem; }
+  .predictor-card { padding:1.1rem .9rem 1.4rem; }
+  .hero           { padding:2rem .85rem 1.8rem; }
+  .hero h1        { font-size:1.75rem; }
   .institute-stat-row { grid-template-columns:1fr 1fr 1fr; }
+  /* Keep college grid 2-col on small phones for density */
+  .college-grid { grid-template-columns:repeat(2,1fr) !important; }
 }
 
-/* ════════════════════════════════════════════════
-   RESPONSIVE — NAVBAR DESKTOP
-════════════════════════════════════════════════ */
-@media (min-width:1081px) {
-  .hamburger     { display:none !important; }
-  .mobile-drawer { display:none !important; }
-}
+/* (navbar desktop handled in ≥ 1367px block above) */
 
 /* ════════════════════════════════════════════════
    NEWS TICKER AUTO-SCROLL
