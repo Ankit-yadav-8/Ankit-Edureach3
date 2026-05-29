@@ -751,8 +751,8 @@ export default function JeeMain() {
           </div>
 
           {/* Full book list */}
-          <div className="card" style={{ marginTop: 16, background: "linear-gradient(135deg,#1a0800,#F47B20)", color: "#fff" }}>
-            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 16, color: "#fff" }}>📚 Complete Book List — JEE Main</h4>
+          <div className="card" style={{ marginTop: 16, background: "linear-gradient(135deg,#fff3e8,#fde8d0)", color: "#1a1a2e", border: "1px solid rgba(244,123,32,.2)" }}>
+            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 16, color: "#1a1a2e" }}>📚 Complete Book List — JEE Main</h4>
             <div className="grid-3" style={{ gap: 14 }}>
               {[
                 {
@@ -763,18 +763,18 @@ export default function JeeMain() {
                 {
                   subj: "Chemistry",
                   books: ["NCERT 11 & 12 (inorganic = enough)", "OP Tandon Organic Chemistry", "Narendra Awasthi Physical Chem", "VK Jaiswal Inorganic (optional)"],
-                  color: "#5eead4",
+                  color: "#0ea5a4",
                 },
                 {
                   subj: "Maths",
                   books: ["RD Sharma (Class 11 & 12)", "Cengage Series (topic-wise)", "Arihant 40 Days JEE Main Maths", "NTA Mock Papers (official free)"],
-                  color: "#c084fc",
+                  color: "#8b5cf6",
                 },
               ].map(({ subj, books, color }) => (
-                <div key={subj} style={{ background: "rgba(255,255,255,.1)", borderRadius: 12, padding: "14px 16px", borderLeft: `3px solid ${color}` }}>
+                <div key={subj} style={{ background: "#fff", borderRadius: 12, padding: "14px 16px", borderLeft: `3px solid ${color}`, border: `1px solid ${color}22`, boxShadow: "0 1px 8px rgba(0,0,0,.05)" }}>
                   <div style={{ fontWeight: 700, color, marginBottom: 8, fontSize: 14 }}>{subj}</div>
                   {books.map((b) => (
-                    <div key={b} style={{ fontSize: 12, color: "rgba(255,255,255,.78)", marginBottom: 5 }}>• {b}</div>
+                    <div key={b} style={{ fontSize: 12, color: "#374151", marginBottom: 5 }}>• {b}</div>
                   ))}
                 </div>
               ))}

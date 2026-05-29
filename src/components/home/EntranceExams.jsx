@@ -14,12 +14,12 @@ export default function EntranceExams() {
   };
 
   return (
-    <section className="section" id="exams" style={{ background: "linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #1a0800 100%)", position: "relative", overflow: "hidden" }}>
+    <section className="section" id="exams" style={{ background: "linear-gradient(160deg, #fff7f0 0%, #fef3e8 40%, #fff7f0 100%)", position: "relative", overflow: "hidden" }}>
       <div className="container">
         <div className="title-bar">
           <span className="eyebrow">Entrance Exams</span>
-          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#fff" }}>Every major engineering entrance, <span className="accent">decoded</span></h2>
-          <p className="section-sub" style={{ color: "rgba(255,255,255,.65)" }}>Eligibility, pattern, important dates and 5-year cutoff trends for each exam.</p>
+          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#1a1a2e" }}>Every major engineering entrance, <span className="accent">decoded</span></h2>
+          <p className="section-sub" style={{ color: "#4b5563" }}>Eligibility, pattern, important dates and 5-year cutoff trends for each exam.</p>
         </div>
 
         {/* Featured exam cards */}

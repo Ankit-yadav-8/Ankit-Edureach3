@@ -219,7 +219,7 @@ export default function PrivateUniversities() {
   });
 
   return (
-    <section className="section" id="private" style={{ background: "linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #1a0800 100%)", position: "relative", overflow: "hidden" }}>
+    <section className="section" id="private" style={{ background: "linear-gradient(160deg, #fff7f0 0%, #fef3e8 40%, #fff7f0 100%)", position: "relative", overflow: "hidden" }}>
       <div className="container">
 
         {/* Section header */}
@@ -231,10 +231,10 @@ export default function PrivateUniversities() {
           transition={{ duration: 0.5 }}
         >
           <span className="eyebrow">Private Universities</span>
-          <h2 className="section-title" style={{ color: "#fff" }}>
+          <h2 className="section-title" style={{ color: "#1a1a2e" }}>
             Top Private Colleges <span className="accent">in India</span>
           </h2>
-          <p className="section-sub" style={{ color: "rgba(255,255,255,.65)" }}>
+          <p className="section-sub" style={{ color: "#4b5563" }}>
             Explore 13+ leading private universities — compare fees, placements &amp; apply directly.
           </p>
         </motion.div>

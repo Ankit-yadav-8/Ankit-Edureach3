@@ -6,6 +6,9 @@ import {
   IndianRupee, Users, Star, Zap, CheckCircle2, Flame,
 } from "lucide-react";
 
+/* IITs avg pkg INCREASED by ₹15.5L */
+
+
 const TOP_IIT = [
   { name: "IIT Madras",    nirf: 1,  loc: "Chennai",   avg: 3990000, placed: 94, cse: "83–185",    color: "#F47B20" },
   { name: "IIT Bombay",   nirf: 3,  loc: "Mumbai",    avg: 3730000, placed: 96, cse: "67–150",    color: "#6366f1" },
@@ -15,6 +18,7 @@ const TOP_IIT = [
   { name: "IIT Kharagpur",nirf: 6,  loc: "Kharagpur", avg: 3400000, placed: 91, cse: "600–900",   color: "#f59e0b" },
 ];
 
+/* NITs avg pkg INCREASED by ₹5L */
 const TOP_NIT = [
   { name: "NIT Trichy",    nirf: 10, loc: "Tamil Nadu",    avg: 1620000, placed: 92, cse: "≤5,000",  color: "#0ea5a4" },
   { name: "NIT Warangal",  nirf: 26, loc: "Telangana",     avg: 1480000, placed: 89, cse: "≤8,000",  color: "#3b3b98" },
@@ -123,7 +127,7 @@ export default function CollegeSnapshot() {
   const nav = useNavigate();
 
   return (
-    <section style={{ background: "linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #1a0800 100%)", padding: "72px 0", position: "relative", overflow: "hidden" }}>
+    <section style={{ background: "linear-gradient(160deg, #fef3e8 0%, #fde8d4 40%, #fef3e8 100%)", padding: "72px 0", position: "relative", overflow: "hidden" }}>
       <div className="container">
 
         {/* Header */}
@@ -135,10 +139,10 @@ export default function CollegeSnapshot() {
           transition={{ duration: 0.5 }}
         >
           <span className="eyebrow"><Trophy size={11} /> College Intelligence</span>
-          <h2 className="section-title" style={{ color: "#fff" }}>
+          <h2 className="section-title" style={{ color: "#1a1a2e" }}>
             Everything About <span className="accent">Top Institutes</span>
           </h2>
-          <p className="section-sub" style={{ color: "rgba(255,255,255,.65)" }}>
+          <p className="section-sub" style={{ color: "#4b5563" }}>
             NIRF rankings, avg placements, placed % and CSE cutoff ranges — updated for 2026.
           </p>
         </motion.div>
@@ -152,13 +156,14 @@ export default function CollegeSnapshot() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           style={{
-            background: "linear-gradient(135deg, #1a0800 0%, #2d1200 50%, #3d1800 100%)",
+            background: "#fff",
             borderRadius: 24,
             padding: "28px 28px 24px",
             marginBottom: 28,
             position: "relative",
             overflow: "hidden",
-            boxShadow: "0 12px 40px rgba(244,123,32,.18)",
+            boxShadow: "0 4px 24px rgba(244,123,32,.1)",
+            border: "1px solid rgba(244,123,32,.2)",
           }}
         >
           {/* Top gradient line */}
@@ -173,8 +178,8 @@ export default function CollegeSnapshot() {
                 <Flame size={22} color="#F47B20" />
               </div>
               <div>
-                <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.25rem", color: "#fff" }}>IIT Placements 2026</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,.5)" }}>23 Institutes · 17,385 seats · <span style={{ color: "#F47B20", fontWeight: 700 }}>Avg +₹15.5L from last year</span></div>
+                <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.25rem", color: "#1a1a2e" }}>IIT Placements 2026</div>
+                <div style={{ fontSize: 12, color: "#6b7280" }}>23 Institutes · 17,385 seats · <span style={{ color: "#F47B20", fontWeight: 700 }}>Avg +₹15.5L from last year</span></div>
               </div>
             </div>
             <button onClick={() => nav("/colleges?type=IIT")} style={{ display: "flex", alignItems: "center", gap: 5, background: "rgba(244,123,32,.15)", border: "1px solid rgba(244,123,32,.35)", borderRadius: 50, padding: "7px 16px", cursor: "pointer", color: "#F47B20", fontSize: 12.5, fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif" }}>
@@ -195,30 +200,30 @@ export default function CollegeSnapshot() {
                 style={{
                   display: "flex", alignItems: "center", gap: 12,
                   padding: "12px 14px", borderRadius: 12,
-                  background: "rgba(255,255,255,.06)",
-                  border: `1px solid ${c.color}33`,
+                  background: "#f9f5f2",
+                  border: `1px solid ${c.color}22`,
                   cursor: "pointer", transition: "all .2s",
                 }}
-                whileHover={{ background: "rgba(255,255,255,.1)", borderColor: `${c.color}66` }}
+                whileHover={{ background: `rgba(244,123,32,.06)`, borderColor: `${c.color}44` }}
               >
                 <div style={{ width: 34, height: 34, borderRadius: 9, background: `${c.color}28`, border: `1.5px solid ${c.color}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
                   <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 10, color: c.color }}>#{c.nirf}</span>
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 13, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{c.name}</div>
-                  <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.45)" }}>{c.loc}</div>
+                  <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 13, color: "#1a1a2e", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{c.name}</div>
+                  <div style={{ fontSize: 10.5, color: "#6b7280" }}>{c.loc}</div>
                 </div>
                 <div style={{ textAlign: "right", flexShrink: 0 }}>
                   <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 14, color: "#F47B20" }}>{fmtL(c.avg)}</div>
-                  <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)" }}>{c.placed}% placed</div>
+                  <div style={{ fontSize: 10, color: "#6b7280" }}>{c.placed}% placed</div>
                 </div>
               </motion.div>
             ))}
           </div>
 
           {/* IIT Branch Package Bars */}
-          <div style={{ background: "rgba(255,255,255,.04)", borderRadius: 14, padding: "18px 20px", border: "1px solid rgba(255,255,255,.08)" }}>
-            <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "#fff", marginBottom: 16 }}>
+          <div style={{ background: "#f9f5f2", borderRadius: 14, padding: "18px 20px", border: "1px solid rgba(0,0,0,.07)" }}>
+            <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "#1a1a2e", marginBottom: 16 }}>
               IIT Branch-wise Avg Package
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
@@ -233,8 +238,8 @@ export default function CollegeSnapshot() {
                     transition={{ duration: 0.3, delay: i * 0.05 }}
                     style={{ display: "flex", alignItems: "center", gap: 12 }}
                   >
-                    <div style={{ width: 120, fontFamily: "'Space Grotesk','DM Sans',sans-serif", fontWeight: 600, fontSize: 12, color: "rgba(255,255,255,.7)", flexShrink: 0 }}>{b.branch}</div>
-                    <div style={{ flex: 1, height: 8, background: "rgba(255,255,255,.08)", borderRadius: 50, overflow: "hidden" }}>
+                    <div style={{ width: 120, fontFamily: "'Space Grotesk','DM Sans',sans-serif", fontWeight: 600, fontSize: 12, color: "#374151", flexShrink: 0 }}>{b.branch}</div>
+                    <div style={{ flex: 1, height: 8, background: "#e5e7eb", borderRadius: 50, overflow: "hidden" }}>
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${pct}%` }}
@@ -244,7 +249,7 @@ export default function CollegeSnapshot() {
                       />
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 7, flexShrink: 0, minWidth: 105 }}>
-                      <span style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 13, color: "#fff" }}>{fmtL(b.avg)}</span>
+                      <span style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 13, color: "#1a1a2e" }}>{fmtL(b.avg)}</span>
                       <span style={{ fontSize: 11, fontWeight: 700, color: "#22c55e", background: "rgba(34,197,94,.12)", padding: "2px 7px", borderRadius: 50 }}>{b.trend}</span>
                     </div>
                   </motion.div>
@@ -263,13 +268,14 @@ export default function CollegeSnapshot() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
           style={{
-            background: "linear-gradient(135deg, #1a0800 0%, #2d1200 50%, #3a1a00 100%)",
+            background: "#fff",
             borderRadius: 24,
             padding: "28px 28px 24px",
             marginBottom: 28,
             position: "relative",
             overflow: "hidden",
-            boxShadow: "0 12px 40px rgba(14,165,164,.14)",
+            boxShadow: "0 4px 24px rgba(14,165,164,.1)",
+            border: "1px solid rgba(14,165,164,.2)",
           }}
         >
           {/* Top gradient line */}
@@ -283,8 +289,8 @@ export default function CollegeSnapshot() {
                 <Star size={22} color="#0ea5a4" />
               </div>
               <div>
-                <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.25rem", color: "#fff" }}>NIT Placements 2026</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,.5)" }}>31 Institutes · 23,954 seats · <span style={{ color: "#0ea5a4", fontWeight: 700 }}>Avg +₹5L from last year</span></div>
+                <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.25rem", color: "#1a1a2e" }}>NIT Placements 2026</div>
+                <div style={{ fontSize: 12, color: "#6b7280" }}>31 Institutes · 23,954 seats · <span style={{ color: "#0ea5a4", fontWeight: 700 }}>Avg +₹5L from last year</span></div>
               </div>
             </div>
             <button onClick={() => nav("/colleges?type=NIT")} style={{ display: "flex", alignItems: "center", gap: 5, background: "rgba(14,165,164,.15)", border: "1px solid rgba(14,165,164,.35)", borderRadius: 50, padding: "7px 16px", cursor: "pointer", color: "#0ea5a4", fontSize: 12.5, fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif" }}>
@@ -305,30 +311,30 @@ export default function CollegeSnapshot() {
                 style={{
                   display: "flex", alignItems: "center", gap: 12,
                   padding: "12px 14px", borderRadius: 12,
-                  background: "rgba(255,255,255,.05)",
-                  border: `1px solid ${c.color}33`,
+                  background: "#f9f5f2",
+                  border: `1px solid ${c.color}22`,
                   cursor: "pointer", transition: "all .2s",
                 }}
-                whileHover={{ background: "rgba(255,255,255,.09)", borderColor: `${c.color}55` }}
+                whileHover={{ background: `rgba(14,165,164,.06)`, borderColor: `${c.color}44` }}
               >
                 <div style={{ width: 34, height: 34, borderRadius: 9, background: `${c.color}28`, border: `1.5px solid ${c.color}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
                   <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 10, color: c.color }}>#{c.nirf}</span>
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 13, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{c.name}</div>
-                  <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.4)" }}>{c.loc} · CSE: {c.cse}</div>
+                  <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 13, color: "#1a1a2e", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{c.name}</div>
+                  <div style={{ fontSize: 10.5, color: "#6b7280" }}>{c.loc} · CSE: {c.cse}</div>
                 </div>
                 <div style={{ textAlign: "right", flexShrink: 0 }}>
                   <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 14, color: "#0ea5a4" }}>{fmtL(c.avg)}</div>
-                  <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)" }}>{c.placed}% placed</div>
+                  <div style={{ fontSize: 10, color: "#6b7280" }}>{c.placed}% placed</div>
                 </div>
               </motion.div>
             ))}
           </div>
 
           {/* NIT Branch Package Bars */}
-          <div style={{ background: "rgba(255,255,255,.04)", borderRadius: 14, padding: "18px 20px", border: "1px solid rgba(255,255,255,.07)" }}>
-            <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "#fff", marginBottom: 16 }}>
+          <div style={{ background: "#f9f5f2", borderRadius: 14, padding: "18px 20px", border: "1px solid rgba(0,0,0,.07)" }}>
+            <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "#1a1a2e", marginBottom: 16 }}>
               NIT Branch-wise Avg Package
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
@@ -343,8 +349,8 @@ export default function CollegeSnapshot() {
                     transition={{ duration: 0.3, delay: i * 0.05 }}
                     style={{ display: "flex", alignItems: "center", gap: 12 }}
                   >
-                    <div style={{ width: 120, fontFamily: "'Space Grotesk','DM Sans',sans-serif", fontWeight: 600, fontSize: 12, color: "rgba(255,255,255,.7)", flexShrink: 0 }}>{b.branch}</div>
-                    <div style={{ flex: 1, height: 8, background: "rgba(255,255,255,.08)", borderRadius: 50, overflow: "hidden" }}>
+                    <div style={{ width: 120, fontFamily: "'Space Grotesk','DM Sans',sans-serif", fontWeight: 600, fontSize: 12, color: "#374151", flexShrink: 0 }}>{b.branch}</div>
+                    <div style={{ flex: 1, height: 8, background: "#e5e7eb", borderRadius: 50, overflow: "hidden" }}>
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${pct}%` }}
@@ -354,7 +360,7 @@ export default function CollegeSnapshot() {
                       />
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 7, flexShrink: 0, minWidth: 105 }}>
-                      <span style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 13, color: "#fff" }}>{fmtL(b.avg)}</span>
+                      <span style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 13, color: "#1a1a2e" }}>{fmtL(b.avg)}</span>
                       <span style={{ fontSize: 11, fontWeight: 700, color: "#22c55e", background: "rgba(34,197,94,.12)", padding: "2px 7px", borderRadius: 50 }}>{b.trend}</span>
                     </div>
                   </motion.div>

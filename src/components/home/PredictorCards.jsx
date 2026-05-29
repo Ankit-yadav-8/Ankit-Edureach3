@@ -37,11 +37,10 @@ const CARDS = [
 export default function PredictorCards() {
   const nav = useNavigate();
   return (
-    <section className="section" style={{ background: "linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #3d1800 100%)", position: "relative", overflow: "hidden" }}>
-      <FloatingOrbs count={5} colors={["#F47B20","#6366f1","#fbbf24","#0ea5a4","#F47B20"]} />
+    <section className="section" style={{ background: "linear-gradient(160deg, #fff7f0 0%, #fef3e8 40%, #fff7f0 100%)", position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         {/* Background grid */}
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px)", backgroundSize: "44px 44px", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(244,123,32,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(244,123,32,.04) 1px,transparent 1px)", backgroundSize: "44px 44px", pointerEvents: "none" }} />
         {/* Glow blobs */}
         <div style={{ position: "absolute", top: -80, left: "20%", width: 400, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.18) 0%, transparent 65%)", pointerEvents: "none" }} />
         <div style={{ position: "absolute", bottom: -60, right: "15%", width: 300, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.15) 0%, transparent 65%)", pointerEvents: "none" }} />
@@ -54,11 +53,11 @@ export default function PredictorCards() {
           transition={{ duration: 0.5 }}
           style={{ position: "relative", zIndex: 1 }}
         >
-          <span className="eyebrow" style={{ background: "rgba(244,123,32,.18)", border: "1px solid rgba(244,123,32,.35)", color: "#F47B20" }}>Smart Tools</span>
-          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#fff", letterSpacing: "-1.5px" }}>
-            Everything you need, <span style={{ background: "linear-gradient(90deg,#F47B20,#fbbf24)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>before you fill a single choice</span>
+          <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F47B20" }}>Smart Tools</span>
+          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#1a1a2e", letterSpacing: "-1.5px" }}>
+            Everything you need, <span style={{ background: "linear-gradient(90deg,#F47B20,#ea580c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>before you fill a single choice</span>
           </h2>
-          <p className="section-sub" style={{ color: "rgba(255,255,255,.6)" }}>Three connected tools: marks → rank → the exact colleges within your reach.</p>
+          <p className="section-sub" style={{ color: "#4b5563" }}>Three connected tools: marks → rank → the exact colleges within your reach.</p>
         </motion.div>
 
         <StaggerReveal stagger={0.1} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20, position: "relative", zIndex: 1 }}>

@@ -249,9 +249,9 @@ export default function Developer() {
                   {dev.skills.slice(0, 4).map((s) => (
                     <span key={s} style={{
                       padding: "3px 10px", borderRadius: 50,
-                      background: "rgba(255,255,255,.1)",
-                      border: "1px solid rgba(255,255,255,.15)",
-                      fontSize: 11, color: "rgba(255,255,255,.8)", fontWeight: 600,
+                      background: "rgba(244,123,32,.1)",
+                      border: "1px solid rgba(244,123,32,.25)",
+                      fontSize: 11, color: "#c2540a", fontWeight: 600,
                     }}>{s}</span>
                   ))}
                 </div>

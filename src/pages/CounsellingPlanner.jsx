@@ -227,16 +227,16 @@ export default function CounsellingPlanner() {
                     {allot ? (
                       <>
                         <div style={{
-                          background: "rgba(255,255,255,.06)", borderRadius: 12, padding: 16,
+                          background: "rgba(244,123,32,.06)", borderRadius: 12, padding: 16,
                           border: "1px solid rgba(244,123,32,.25)",
                         }}>
-                          <div style={{ fontSize: 12, color: "rgba(255,255,255,.5)" }}>
+                          <div style={{ fontSize: 12, color: "#6b7280" }}>
                             With rank {fmtRank(rank)}, JoSAA would most likely allot:
                           </div>
-                          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: "#fff", margin: "6px 0 2px" }}>
+                          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: "#1a1a2e", margin: "6px 0 2px" }}>
                             {allot.college}
                           </div>
-                          <div style={{ color: "#fdba74", fontWeight: 600 }}>{allot.branch}</div>
+                          <div style={{ color: "#F47B20", fontWeight: 600 }}>{allot.branch}</div>
                           <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", marginTop: 6 }}>
                             Choice #{allotIndex + 1} · closing {fmtRank(allot.closing)} · avg {fmtINR(allot.avgPackage)}
                           </div>

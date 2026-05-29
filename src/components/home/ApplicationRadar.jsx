@@ -49,7 +49,7 @@ export default function ApplicationRadar() {
     <section
       id="radar"
       style={{
-        background: "linear-gradient(135deg, #1a0800 0%, #2d1200 30%, #3d1800 60%, #2a1000 100%)",
+        background: "linear-gradient(135deg, #fef3e8 0%, #fde8d4 30%, #fddcbc 60%, #fde8d4 100%)",
         padding: "72px 0",
         position: "relative",
         overflow: "hidden",
@@ -59,8 +59,8 @@ export default function ApplicationRadar() {
       <div style={{
         position: "absolute", inset: 0,
         backgroundImage:
-          "linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px)," +
-          "linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px)",
+          "linear-gradient(rgba(244,123,32,.04) 1px, transparent 1px)," +
+          "linear-gradient(90deg, rgba(244,123,32,.04) 1px, transparent 1px)",
         backgroundSize: "40px 40px",
         pointerEvents: "none",
       }} />
@@ -78,9 +78,9 @@ export default function ApplicationRadar() {
             <span
               className="eyebrow"
               style={{
-                background: "rgba(244,123,32,.15)",
-                border: "1px solid rgba(244,123,32,.35)",
-                color: "#fdba74",
+                background: "rgba(244,123,32,.1)",
+                border: "1px solid rgba(244,123,32,.28)",
+                color: "#c2540a",
                 gap: 8,
               }}
             >
@@ -91,11 +91,11 @@ export default function ApplicationRadar() {
               }} />
               Live Deadlines
             </span>
-            <h2 className="section-title" style={{ color: "#fff", letterSpacing: "-1px", marginTop: 10 }}>
+            <h2 className="section-title" style={{ color: "#1a1a2e", letterSpacing: "-1px", marginTop: 10 }}>
               Application &amp; Counselling{" "}
               <span style={{ color: "#F47B20" }}>Radar</span>
             </h2>
-            <p className="section-sub" style={{ marginLeft: 0, color: "rgba(255,255,255,.52)" }}>
+            <p className="section-sub" style={{ marginLeft: 0, color: "#4b5563" }}>
               Never miss a date — every major counselling and application window in one timeline.
             </p>
           </div>
@@ -165,26 +165,22 @@ export default function ApplicationRadar() {
                   key={`${r.name}-${idx}`}
                   style={{
                     minWidth: 276, maxWidth: 276, flexShrink: 0,
-                    background: "rgba(255,255,255,.04)",
-                    backdropFilter: "blur(16px)",
-                    WebkitBackdropFilter: "blur(16px)",
+                    background: "#fff",
                     border: `1px solid ${t.border}`,
                     borderRadius: 18,
                     padding: "20px 20px 18px",
                     display: "flex", flexDirection: "column", gap: 12,
-                    boxShadow: "0 8px 32px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.05)",
+                    boxShadow: "0 2px 16px rgba(0,0,0,.07)",
                     position: "relative", overflow: "hidden",
-                    transition: "transform .26s ease, box-shadow .26s ease, background .2s ease",
+                    transition: "transform .26s ease, box-shadow .26s ease",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform   = "translateY(-5px)";
-                    e.currentTarget.style.boxShadow   = `0 20px 52px rgba(0,0,0,.4), 0 0 32px ${t.glow}`;
-                    e.currentTarget.style.background  = "rgba(255,255,255,.075)";
+                    e.currentTarget.style.boxShadow   = `0 12px 40px ${t.glow}`;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform   = "";
-                    e.currentTarget.style.boxShadow   = "0 8px 32px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.05)";
-                    e.currentTarget.style.background  = "rgba(255,255,255,.04)";
+                    e.currentTarget.style.boxShadow   = "0 2px 16px rgba(0,0,0,.07)";
                   }}
                 >
                   {/* top colour line */}
@@ -210,19 +206,19 @@ export default function ApplicationRadar() {
                       }} />
                       {r.status}
                     </span>
-                    <CalendarClock size={16} color="rgba(255,255,255,.22)" />
+                    <CalendarClock size={16} color="#9ca3af" />
                   </div>
 
                   {/* name */}
                   <h3 style={{
                     fontFamily: "Sora", fontWeight: 700,
-                    fontSize: "0.97rem", lineHeight: 1.3, color: "#fff",
+                    fontSize: "0.97rem", lineHeight: 1.3, color: "#1a1a2e",
                   }}>
                     {r.name}
                   </h3>
 
                   {/* deadline */}
-                  <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.40)" }}>
+                  <div style={{ fontSize: 12.5, color: "#6b7280" }}>
                     Deadline:{" "}
                     <strong style={{ color: t.fg }}>{r.deadline}</strong>
                   </div>
