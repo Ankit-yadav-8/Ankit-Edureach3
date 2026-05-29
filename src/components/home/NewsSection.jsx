@@ -46,15 +46,15 @@ export default function NewsSection() {
   const shown = NEWS.slice(0, count);
 
   return (
-    <section className="section" id="news" style={{ background: "var(--sky)", paddingTop: 0 }}>
+    <section className="section" id="news" style={{ background: "linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #1a0800 100%)", paddingTop: 0, position: "relative", overflow: "hidden" }}>
       {/* Breaking news ticker */}
       <NewsTicker />
 
       <div className="container" style={{ paddingTop: "3.5rem" }}>
         <div className="title-bar">
           <span className="eyebrow"><Zap size={11} /> Latest Updates</span>
-          <h2 className="section-title">Exam & Admission Updates <span className="accent">That Matter</span></h2>
-          <p className="section-sub">Results, admit cards, counselling schedules — tap any card to read the full story.</p>
+          <h2 className="section-title" style={{ color: "#fff" }}>Exam & Admission Updates <span className="accent">That Matter</span></h2>
+          <p className="section-sub" style={{ color: "rgba(255,255,255,.65)" }}>Results, admit cards, counselling schedules — tap any card to read the full story.</p>
         </div>
 
         <div className="grid-3">
@@ -65,12 +65,12 @@ export default function NewsSection() {
                 style={{
                   textAlign: "left", width: "100%", cursor: "pointer",
                   padding: 0, overflow: "hidden", display: "flex", flexDirection: "column",
-                  height: "100%", background: "#fff", borderRadius: 16,
-                  border: "1px solid rgba(0,0,0,.07)", boxShadow: "0 2px 14px rgba(28,28,40,.07)",
+                  height: "100%", background: "rgba(255,255,255,.05)", backdropFilter: "blur(10px)", borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,.1)", boxShadow: "0 4px 24px rgba(0,0,0,.35)",
                   transition: "box-shadow .25s, transform .25s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 16px 48px rgba(28,28,40,.13)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 14px rgba(28,28,40,.07)"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 0 0 1.5px rgba(244,123,32,.4), 0 16px 48px rgba(244,123,32,.2)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 24px rgba(0,0,0,.35)"; }}
               >
                 {/* Image banner */}
                 <div style={{ height: 155, position: "relative", overflow: "hidden" }}>

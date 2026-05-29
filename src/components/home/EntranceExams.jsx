@@ -14,12 +14,12 @@ export default function EntranceExams() {
   };
 
   return (
-    <section className="section" id="exams" style={{ background: "linear-gradient(160deg, #fff7ef 0%, #fff 60%)" }}>
+    <section className="section" id="exams" style={{ background: "linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #1a0800 100%)", position: "relative", overflow: "hidden" }}>
       <div className="container">
         <div className="title-bar">
           <span className="eyebrow">Entrance Exams</span>
-          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif" }}>Every major engineering entrance, <span className="accent">decoded</span></h2>
-          <p className="section-sub">Eligibility, pattern, important dates and 5-year cutoff trends for each exam.</p>
+          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#fff" }}>Every major engineering entrance, <span className="accent">decoded</span></h2>
+          <p className="section-sub" style={{ color: "rgba(255,255,255,.65)" }}>Eligibility, pattern, important dates and 5-year cutoff trends for each exam.</p>
         </div>
 
         {/* Featured exam cards */}
@@ -39,7 +39,7 @@ export default function EntranceExams() {
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
           {EXAM_PILLS.map((p) => (
-            <button key={p} className="pill" onClick={() => open(p)} style={{ cursor: "pointer", background: "#fff", border: "1px solid var(--line)", color: "var(--navy)" }}>
+            <button key={p} className="pill" onClick={() => open(p)} style={{ cursor: "pointer" }}>
               {p}
             </button>
           ))}

@@ -6,7 +6,6 @@ import {
   IndianRupee, Users, Star, Zap, CheckCircle2, Flame,
 } from "lucide-react";
 
-/* IITs avg pkg INCREASED by ₹15.5L */
 const TOP_IIT = [
   { name: "IIT Madras",    nirf: 1,  loc: "Chennai",   avg: 3990000, placed: 94, cse: "83–185",    color: "#F47B20" },
   { name: "IIT Bombay",   nirf: 3,  loc: "Mumbai",    avg: 3730000, placed: 96, cse: "67–150",    color: "#6366f1" },
@@ -16,7 +15,6 @@ const TOP_IIT = [
   { name: "IIT Kharagpur",nirf: 6,  loc: "Kharagpur", avg: 3400000, placed: 91, cse: "600–900",   color: "#f59e0b" },
 ];
 
-/* NITs avg pkg INCREASED by ₹5L */
 const TOP_NIT = [
   { name: "NIT Trichy",    nirf: 10, loc: "Tamil Nadu",    avg: 1620000, placed: 92, cse: "≤5,000",  color: "#0ea5a4" },
   { name: "NIT Warangal",  nirf: 26, loc: "Telangana",     avg: 1480000, placed: 89, cse: "≤8,000",  color: "#3b3b98" },
@@ -125,7 +123,7 @@ export default function CollegeSnapshot() {
   const nav = useNavigate();
 
   return (
-    <section style={{ background: "linear-gradient(180deg, #fdf8f4 0%, #fff7f0 50%, #fff 100%)", padding: "72px 0" }}>
+    <section style={{ background: "linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #1a0800 100%)", padding: "72px 0", position: "relative", overflow: "hidden" }}>
       <div className="container">
 
         {/* Header */}
@@ -137,10 +135,10 @@ export default function CollegeSnapshot() {
           transition={{ duration: 0.5 }}
         >
           <span className="eyebrow"><Trophy size={11} /> College Intelligence</span>
-          <h2 className="section-title">
+          <h2 className="section-title" style={{ color: "#fff" }}>
             Everything About <span className="accent">Top Institutes</span>
           </h2>
-          <p className="section-sub">
+          <p className="section-sub" style={{ color: "rgba(255,255,255,.65)" }}>
             NIRF rankings, avg placements, placed % and CSE cutoff ranges — updated for 2026.
           </p>
         </motion.div>

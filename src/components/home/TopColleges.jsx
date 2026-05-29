@@ -261,7 +261,7 @@ export default function TopColleges() {
   const typeInfo = TYPES.find((t) => t.id === type);
 
   return (
-    <section className="section" id="colleges" style={{ background: "linear-gradient(160deg, #fff7ef 0%, #fff3e6 40%, #fff 100%)" }}>
+    <section className="section" id="colleges" style={{ background: "linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #1a0800 100%)", position: "relative", overflow: "hidden" }}>
       <div className="container">
 
         {/* Section header */}
@@ -273,10 +273,10 @@ export default function TopColleges() {
           transition={{ duration: 0.5 }}
         >
           <span className="eyebrow">Top Colleges</span>
-          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif" }}>
+          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#fff" }}>
             Explore India's Premier <span className="accent">Engineering Institutes</span>
           </h2>
-          <p className="section-sub">
+          <p className="section-sub" style={{ color: "rgba(255,255,255,.65)" }}>
             Tap any tag to jump straight to that section — rankings, cutoffs, fees or placements.
           </p>
         </motion.div>

@@ -290,11 +290,12 @@ function ExamCard({ exam, index }) {
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
       style={{
-        background: "#fff",
+        background: "rgba(255,255,255,.05)",
+        backdropFilter: "blur(10px)",
         borderRadius: 14,
-        border: "1px solid rgba(0,0,0,.08)",
+        border: "1px solid rgba(255,255,255,.1)",
         overflow: "hidden",
-        boxShadow: "0 2px 14px rgba(28,28,40,.06)",
+        boxShadow: "0 4px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06)",
       }}
     >
       {/* Card header */}
@@ -302,7 +303,7 @@ function ExamCard({ exam, index }) {
         style={{
           display: "flex", alignItems: "center", gap: 14,
           padding: "16px 18px", cursor: "pointer",
-          background: expanded ? `${exam.color}08` : "#fff",
+          background: expanded ? `${exam.color}18` : "transparent",
           transition: "background .2s",
           borderBottom: expanded ? `1px solid ${exam.color}22` : "none",
         }}
@@ -323,14 +324,14 @@ function ExamCard({ exam, index }) {
         {/* Name + date */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-            <h4 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "0.92rem", color: "#1c1c28", margin: 0 }}>
+            <h4 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "0.92rem", color: "rgba(255,255,255,.92)", margin: 0 }}>
               {exam.name}
             </h4>
             <span style={{ padding: "2px 10px", borderRadius: 50, fontSize: 10, fontWeight: 700, background: sm.bg, color: sm.color, display: "inline-flex", alignItems: "center", gap: 4 }}>
               <span>{sm.icon}</span> {sm.label}
             </span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "#9ca3af" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "rgba(255,255,255,.45)" }}>
             <Calendar size={11} /> {exam.date}
           </div>
         </div>
@@ -338,12 +339,12 @@ function ExamCard({ exam, index }) {
         {/* Quick stats */}
         <div style={{ display: "flex", gap: 14, alignItems: "center", flexShrink: 0 }}>
           <div style={{ textAlign: "center", display: "none" }} className="exam-stat-desktop">
-            <div style={{ fontSize: 11, color: "#9ca3af" }}>Seats</div>
-            <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "#374151" }}>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,.4)" }}>Seats</div>
+            <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "rgba(255,255,255,.85)" }}>
               {exam.seats.split("(")[0].trim()}
             </div>
           </div>
-          <button style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", padding: 4 }}>
+          <button style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,.5)", padding: 4 }}>
             {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
           </button>
         </div>
@@ -371,25 +372,25 @@ function ExamCard({ exam, index }) {
                   { icon: Trophy,      label: "Conducted by",     value: exam.body },
                 ].map(({ icon: Icon, label, value }) => (
                   <div key={label} style={{
-                    background: "#f9fafb", borderRadius: 10,
-                    padding: "10px 14px", border: "1px solid #f3f4f6",
+                    background: "rgba(255,255,255,.06)", borderRadius: 10,
+                    padding: "10px 14px", border: "1px solid rgba(255,255,255,.1)",
                   }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#9ca3af", marginBottom: 4 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "rgba(255,255,255,.45)", marginBottom: 4 }}>
                       <Icon size={11} /> {label}
                     </div>
-                    <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "#1c1c28" }}>{value}</div>
+                    <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "rgba(255,255,255,.9)" }}>{value}</div>
                   </div>
                 ))}
               </div>
 
               {/* What you get */}
               <div style={{ marginBottom: 16 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#6b7280", letterSpacing: "0.8px", textTransform: "uppercase", marginBottom: 10 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.45)", letterSpacing: "0.8px", textTransform: "uppercase", marginBottom: 10 }}>
                   What you get
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
                   {exam.what_you_get.map((item) => (
-                    <div key={item} style={{ display: "flex", gap: 9, alignItems: "flex-start", fontSize: 13, color: "#374151" }}>
+                    <div key={item} style={{ display: "flex", gap: 9, alignItems: "flex-start", fontSize: 13, color: "rgba(255,255,255,.75)" }}>
                       <CheckCircle2 size={14} color={exam.color} style={{ flexShrink: 0, marginTop: 1 }} />
                       {item}
                     </div>
@@ -427,7 +428,7 @@ export default function ExamCycle() {
   const [activePhase, setActivePhase] = useState(null);
 
   return (
-    <section id="exam-cycle" className="section" style={{ background: "linear-gradient(160deg, #fff 0%, #fff7ef 40%, #fffaf5 100%)", scrollMarginTop: 80 }}>
+    <section id="exam-cycle" className="section" style={{ background: "linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #1a0800 100%)", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
       <div className="container">
 
         {/* Header */}
@@ -441,10 +442,10 @@ export default function ExamCycle() {
           <span className="eyebrow">
             <Sparkles size={11} /> Exam Cycle 2025–2026
           </span>
-          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif" }}>
+          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#fff" }}>
             Complete Exam Timeline <span className="accent">Sep 2025 → Dec 2026</span>
           </h2>
-          <p className="section-sub">
+          <p className="section-sub" style={{ color: "rgba(255,255,255,.65)" }}>
             Every major engineering entrance — dates, application fees, total seats, and exactly what you unlock by qualifying.
           </p>
         </motion.div>
@@ -463,9 +464,9 @@ export default function ExamCycle() {
               padding: "9px 18px", borderRadius: 50,
               fontSize: 13, fontWeight: 600, fontFamily: "Sora",
               cursor: "pointer", transition: "all .2s",
-              border: !activePhase ? "2px solid #F47B20" : "2px solid rgba(0,0,0,.10)",
-              background: !activePhase ? "#F47B20" : "#fff",
-              color: !activePhase ? "#fff" : "#6b7280",
+              border: !activePhase ? "2px solid #F47B20" : "2px solid rgba(255,255,255,.15)",
+              background: !activePhase ? "#F47B20" : "rgba(255,255,255,.07)",
+              color: !activePhase ? "#fff" : "rgba(255,255,255,.65)",
             }}
           >
             All Phases
@@ -478,9 +479,9 @@ export default function ExamCycle() {
                 padding: "9px 18px", borderRadius: 50,
                 fontSize: 13, fontWeight: 600, fontFamily: "Sora",
                 cursor: "pointer", transition: "all .2s",
-                border: activePhase === phase.phase ? `2px solid ${phase.phaseColor}` : "2px solid rgba(0,0,0,.10)",
-                background: activePhase === phase.phase ? phase.phaseColor : "#fff",
-                color: activePhase === phase.phase ? "#fff" : "#6b7280",
+                border: activePhase === phase.phase ? `2px solid ${phase.phaseColor}` : "2px solid rgba(255,255,255,.15)",
+                background: activePhase === phase.phase ? phase.phaseColor : "rgba(255,255,255,.07)",
+                color: activePhase === phase.phase ? "#fff" : "rgba(255,255,255,.65)",
               }}
             >
               {phase.period}

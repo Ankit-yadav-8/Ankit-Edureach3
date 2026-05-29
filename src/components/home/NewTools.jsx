@@ -32,12 +32,12 @@ const TOOLS = [
 export default function NewTools() {
   const nav = useNavigate();
   return (
-    <section className="section section--sky">
+    <section className="section" style={{ background: "linear-gradient(160deg, #200a00 0%, #2d1200 40%, #200a00 100%)", position: "relative", overflow: "hidden" }}>
       <div className="container">
         <div className="title-bar">
           <span className="eyebrow"><Rocket size={13} style={{ marginRight: 5, verticalAlign: "-2px" }} /> Just launched</span>
-          <h2 className="section-title">Powerful new tools for <span className="accent">smarter decisions</span></h2>
-          <p className="section-sub">From financial planning to personalised college lists — new features to help you decide better.</p>
+          <h2 className="section-title" style={{ color: "#fff" }}>Powerful new tools for <span className="accent">smarter decisions</span></h2>
+          <p className="section-sub" style={{ color: "rgba(255,255,255,.65)" }}>From financial planning to personalised college lists — new features to help you decide better.</p>
         </div>
 
         <StaggerReveal stagger={0.09} className="grid-4" style={{ gap: 20 }}>
@@ -52,8 +52,8 @@ export default function NewTools() {
                   <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: ".06em", color: "#fff", background: t.accent, padding: "3px 9px", borderRadius: 999 }}>{t.badge}</span>
                 </div>
                 <div>
-                  <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "1.1rem", color: "var(--navy)", marginBottom: 7, letterSpacing: "-0.2px" }}>{t.title}</h3>
-                  <p style={{ color: "var(--muted)", lineHeight: 1.55, fontSize: 14 }}>{t.desc}</p>
+                  <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "1.1rem", color: "#fff", marginBottom: 7, letterSpacing: "-0.2px" }}>{t.title}</h3>
+                  <p style={{ color: "rgba(255,255,255,.6)", lineHeight: 1.55, fontSize: 14 }}>{t.desc}</p>
                 </div>
                 <button
                   onClick={() => nav(t.to)}

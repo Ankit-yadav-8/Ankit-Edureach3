@@ -165,13 +165,16 @@ const PICK_STEPS = [
 ════════════════════════════════════════════════ */
 function HomeSection({ id, eyebrow, title, sub, children, bg }) {
   return (
-    <section id={id} style={{ padding: "72px 0", background: bg || "transparent", scrollMarginTop: 80, position: "relative" }}>
-      <div className="container">
+    <section id={id} style={{ padding: "72px 0", background: bg || "transparent", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
+      {/* Ambient glow orbs for dark sections */}
+      <div style={{ position: "absolute", top: -60, left: "10%", width: 400, height: 300, borderRadius: "50%", background: "radial-gradient(circle,rgba(244,123,32,.15) 0%,transparent 65%)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: -40, right: "5%", width: 300, height: 200, borderRadius: "50%", background: "radial-gradient(circle,rgba(244,162,97,.1) 0%,transparent 65%)", pointerEvents: "none" }} />
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
         {(eyebrow || title) && (
           <div className="title-bar" style={{ marginBottom: 40 }}>
             {eyebrow && <span className="eyebrow">{eyebrow}</span>}
-            {title  && <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif" }}>{title}</h2>}
-            {sub    && <p className="section-sub">{sub}</p>}
+            {title  && <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#fff" }}>{title}</h2>}
+            {sub    && <p className="section-sub" style={{ color: "rgba(255,255,255,.65)" }}>{sub}</p>}
           </div>
         )}
         <Reveal>{children}</Reveal>
@@ -188,9 +191,10 @@ function ExamCard({ ex }) {
       whileHover={{ y: -6, transition: { duration: 0.22 } }}
       style={{
         borderRadius: 20, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%",
-        boxShadow: `0 8px 36px ${ex.accent}22`,
-        border: `1px solid ${ex.accent}22`,
-        background: "#fff",
+        boxShadow: `0 8px 36px rgba(0,0,0,.4), 0 0 0 1px ${ex.accent}33`,
+        border: `1px solid ${ex.accent}33`,
+        background: "rgba(255,255,255,.05)",
+        backdropFilter: "blur(12px)",
       }}
     >
       {/* Header — gradient with mesh pattern */}
@@ -221,14 +225,14 @@ function ExamCard({ ex }) {
       </div>
 
       <div style={{ padding: "22px 24px 24px", display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
-        <p style={{ color: "#6b7280", fontSize: 13.5, lineHeight: 1.7 }}>{ex.blurb}</p>
-        <div style={{ display: "flex", flexDirection: "column", background: "#fafafa", borderRadius: 12, border: "1px solid rgba(0,0,0,.06)", overflow: "hidden" }}>
+        <p style={{ color: "rgba(255,255,255,.65)", fontSize: 13.5, lineHeight: 1.7 }}>{ex.blurb}</p>
+        <div style={{ display: "flex", flexDirection: "column", background: "rgba(255,255,255,.04)", borderRadius: 12, border: "1px solid rgba(255,255,255,.08)", overflow: "hidden" }}>
           {ex.info.map(([k, v], i) => (
-            <div key={k} style={{ display: "flex", justifyContent: "space-between", gap: 16, padding: "10px 14px", borderTop: i === 0 ? "none" : "1px solid rgba(0,0,0,.05)" }}>
-              <span style={{ fontSize: 12.5, color: "#9ca3af", display: "flex", alignItems: "center", gap: 6, fontFamily: "'DM Sans',sans-serif" }}>
+            <div key={k} style={{ display: "flex", justifyContent: "space-between", gap: 16, padding: "10px 14px", borderTop: i === 0 ? "none" : "1px solid rgba(255,255,255,.06)" }}>
+              <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.45)", display: "flex", alignItems: "center", gap: 6, fontFamily: "'DM Sans',sans-serif" }}>
                 <CheckCircle2 size={13} color={ex.accent} /> {k}
               </span>
-              <span style={{ fontSize: 12.5, color: "#1c1c28", fontWeight: 700, textAlign: "right", fontFamily: "'Space Grotesk',sans-serif" }}>{v}</span>
+              <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.9)", fontWeight: 700, textAlign: "right", fontFamily: "'Space Grotesk',sans-serif" }}>{v}</span>
             </div>
           ))}
         </div>
@@ -374,7 +378,7 @@ function InstitutesSection() {
       eyebrow="College Guide"
       title={<>NITs &amp; IIITs — <span className="accent">Know Before You Choose</span></>}
       sub="31 NITs and 26 IIITs together offer ~31,000 seats. Here's what separates them and which ones you should target."
-      bg="linear-gradient(160deg, #f0f9ff 0%, #fff7ef 50%, #fff 100%)"
+      bg="linear-gradient(160deg, #1a0800 0%, #2d1200 50%, #1a0800 100%)"
     >
       {/* Institute type cards */}
       <div className="grid-3" style={{ marginBottom: 32 }}>
@@ -509,10 +513,10 @@ function InstitutesSection() {
       </div>
 
       {/* NIT vs IIIT comparison strip */}
-      <div className="card" style={{ padding: "1.6rem 2rem", marginBottom: 28 }}>
+      <div className="card" style={{ padding: "1.6rem 2rem", marginBottom: 28, background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.1)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
           <span className="eyebrow" style={{ margin: 0 }}>NIT vs IIIT</span>
-          <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.05rem", color: "var(--navy)" }}>
+          <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.05rem", color: "#fff" }}>
             Which should you target?
           </h3>
         </div>
@@ -520,7 +524,7 @@ function InstitutesSection() {
           {[
             {
               title: "Choose NIT if…",
-              color: "#1a4a9a",
+              color: "#60a5fa",
               points: [
                 "You want a wide range of branches (Mech, Civil, Chemical, EE)",
                 "You're from a Home State and get the HS quota advantage",
@@ -530,7 +534,7 @@ function InstitutesSection() {
             },
             {
               title: "Choose IIIT if…",
-              color: "#2d1270",
+              color: "#a78bfa",
               points: [
                 "CSE / IT / ECE is your definitive first choice",
                 "You want a specialised tech environment and CS-focused curriculum",
@@ -539,12 +543,12 @@ function InstitutesSection() {
               ],
             },
           ].map(({ title, color, points }) => (
-            <div key={title} style={{ background: "var(--sky)", borderRadius: 12, padding: "1.2rem 1.3rem", border: "1px solid var(--border)" }}>
+            <div key={title} style={{ background: "rgba(255,255,255,.06)", borderRadius: 12, padding: "1.2rem 1.3rem", border: `1px solid ${color}30` }}>
               <h4 style={{ fontFamily: "Sora", fontWeight: 700, color, marginBottom: 10, fontSize: ".95rem" }}>{title}</h4>
               {points.map((p) => (
                 <div key={p} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 6 }}>
                   <CheckCircle2 size={14} color={color} style={{ marginTop: 3, flexShrink: 0 }} />
-                  <span style={{ fontSize: ".84rem", color: "var(--navy)", lineHeight: 1.5 }}>{p}</span>
+                  <span style={{ fontSize: ".84rem", color: "rgba(255,255,255,.75)", lineHeight: 1.5 }}>{p}</span>
                 </div>
               ))}
             </div>
@@ -571,7 +575,7 @@ function CollegePickingGuide() {
       eyebrow="Step-by-step guide"
       title={<>How to pick the <span className="accent">right college</span> in JoSAA</>}
       sub="Most rank drops happen not in the exam hall — but at the choice-filling screen. Follow these 6 steps to fill smart."
-      bg="linear-gradient(160deg, #fff 0%, #fff7ef 50%, #fffaf5 100%)"
+      bg="linear-gradient(160deg, #200a00 0%, #2d1400 40%, #200a00 100%)"
     >
       <div className="grid-3" style={{ marginBottom: 28 }}>
         {PICK_STEPS.map((s, i) => {
@@ -581,13 +585,14 @@ function CollegePickingGuide() {
               <motion.div
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 style={{
-                  height: "100%", background: "#fff", borderRadius: 16,
-                  border: `1px solid ${s.color}18`,
+                  height: "100%", background: "rgba(255,255,255,.05)", borderRadius: 16,
+                  border: `1px solid ${s.color}30`,
                   borderTop: `3px solid ${s.color}`,
-                  boxShadow: "0 3px 16px rgba(28,28,40,.07)",
+                  boxShadow: `0 4px 24px rgba(0,0,0,.3), 0 0 20px ${s.color}15`,
                   padding: "20px 20px 18px",
                   display: "flex", flexDirection: "column",
                   transition: "box-shadow .25s",
+                  backdropFilter: "blur(10px)",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
@@ -607,10 +612,10 @@ function CollegePickingGuide() {
                     boxShadow: `0 4px 12px ${s.color}44`,
                   }}>{i + 1}</span>
                 </div>
-                <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "0.96rem", color: "var(--navy)", marginBottom: 8, lineHeight: 1.3 }}>
+                <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "0.96rem", color: "#fff", marginBottom: 8, lineHeight: 1.3 }}>
                   {s.title}
                 </h3>
-                <p style={{ color: "var(--muted)", fontSize: "0.84rem", lineHeight: 1.65, marginBottom: 12, flex: 1 }}>{s.desc}</p>
+                <p style={{ color: "rgba(255,255,255,.6)", fontSize: "0.84rem", lineHeight: 1.65, marginBottom: 12, flex: 1 }}>{s.desc}</p>
                 <div style={{
                   background: `${s.color}0e`, border: `1px solid ${s.color}25`,
                   borderRadius: 9, padding: "8px 11px",
@@ -729,13 +734,13 @@ export default function Home({ onSearch }) {
       {/* ── Predictor Cards ── */}
       <PredictorCards />
 
-      <WaveSeparator fillTop="#1a0e00" fillBottom="#fff7ef" />
+      <WaveSeparator fillTop="#1a0e00" fillBottom="#1a0800" />
 
       {/* ── JEE Main & Advanced ── */}
       <HomeSection
         eyebrow="Exams 2026"
         title={<>JEE Main & JEE Advanced — <span className="accent">choose your path</span></>}
-        bg="linear-gradient(160deg, #fff7ef 0%, #fff3e6 40%, #fff 100%)"
+        bg="linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #1a0800 100%)"
         sub="Two exams, two doors to the top engineering colleges. Tap either to open its full guide, rank predictor and real cutoffs."
       >
         <div className="grid-2" style={{ gap: 24, alignItems: "stretch" }}>
@@ -766,10 +771,10 @@ export default function Home({ onSearch }) {
         </div>
       </HomeSection>
 
-      <WaveSeparator fillTop="#fff7f0" fillBottom="#1a0800" />
+      <WaveSeparator fillTop="#1a0800" fillBottom="#1a0800" />
       {/* ── JoSAA 2026 Counselling Promo ── */}
       <JoSAAPromoSection />
-      <WaveSeparator fillTop="#1a0800" fillBottom="#fff7ef" />
+      <WaveSeparator fillTop="#1a0800" fillBottom="#1a0800" />
 
       {/* ── How to Pick the Right College ── */}
       <CollegePickingGuide />
@@ -782,20 +787,21 @@ export default function Home({ onSearch }) {
         eyebrow="Seat Matrix"
         title={<>Total Seats Available <span className="accent">(JoSAA 2026)</span></>}
         sub="Approximate seat distribution across IITs, NITs, IIITs and GFTIs via JoSAA counselling."
-        bg="linear-gradient(160deg, #faf7f4 0%, #fff3e6 40%, #fff 100%)"
+        bg="linear-gradient(160deg, #1a0800 0%, #2d1200 40%, #1a0800 100%)"
       >
         <div className="grid-2" style={{ gap: 24, alignItems: "start" }}>
           <div style={{
-            background: "#fff",
-            borderRadius: 18, border: "1px solid rgba(0,0,0,.07)",
-            boxShadow: "0 4px 24px rgba(28,28,40,.07)",
+            background: "rgba(255,255,255,.05)",
+            backdropFilter: "blur(12px)",
+            borderRadius: 18, border: "1px solid rgba(255,255,255,.1)",
+            boxShadow: "0 4px 24px rgba(0,0,0,.35)",
             padding: "24px",
             position: "relative", overflow: "hidden",
           }}>
             {/* Top accent */}
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #F97316, #0EA5A4, #15a06e, #1c1c28)" }} />
-            <h4 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, marginBottom: 6, fontSize: "1.05rem" }}>Seat distribution by institute type</h4>
-            <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Hover over segments to see exact seat counts.</p>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #F97316, #0EA5A4, #15a06e, #6366f1)" }} />
+            <h4 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, marginBottom: 6, fontSize: "1.05rem", color: "#fff" }}>Seat distribution by institute type</h4>
+            <p style={{ fontSize: 12, color: "rgba(255,255,255,.5)", marginBottom: 16 }}>Hover over segments to see exact seat counts.</p>
             <CenterDonut
               data={SEAT_DATA}
               centerLabel="60K+"
@@ -809,9 +815,9 @@ export default function Home({ onSearch }) {
               {SEAT_DATA.map((d, i) => {
                 const cols = ["#F97316", "#0EA5A4", "#15a06e", "#1c1c28"];
                 return (
-                  <div key={d.name} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6b7280" }}>
+                  <div key={d.name} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,.6)" }}>
                     <span style={{ width: 10, height: 10, borderRadius: 3, background: cols[i], display: "block" }} />
-                    {d.name}: <strong style={{ color: "#374151" }}>{d.value.toLocaleString("en-IN")}</strong>
+                    {d.name}: <strong style={{ color: "rgba(255,255,255,.9)" }}>{d.value.toLocaleString("en-IN")}</strong>
                   </div>
                 );
               })}
@@ -819,15 +825,16 @@ export default function Home({ onSearch }) {
           </div>
 
           <div style={{
-            background: "#fff",
-            borderRadius: 18, border: "1px solid rgba(0,0,0,.07)",
-            boxShadow: "0 4px 24px rgba(28,28,40,.07)",
+            background: "rgba(255,255,255,.05)",
+            backdropFilter: "blur(12px)",
+            borderRadius: 18, border: "1px solid rgba(255,255,255,.1)",
+            boxShadow: "0 4px 24px rgba(0,0,0,.35)",
             padding: "24px",
             position: "relative", overflow: "hidden",
           }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #F97316, #f4a261)" }} />
-            <h4 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, marginBottom: 6, fontSize: "1.05rem" }}>Branch-wise demand index</h4>
-            <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Higher index = more competitive cutoffs across top institutes.</p>
+            <h4 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, marginBottom: 6, fontSize: "1.05rem", color: "#fff" }}>Branch-wise demand index</h4>
+            <p style={{ fontSize: 12, color: "rgba(255,255,255,.5)", marginBottom: 16 }}>Higher index = more competitive cutoffs across top institutes.</p>
             <Bars
               data={BRANCH_DEMAND}
               bars={[{ key: "value", label: "Demand Index", color: "#F97316" }]}
@@ -840,7 +847,7 @@ export default function Home({ onSearch }) {
       {/* ── Exam Cycle 2025–26 ── */}
       <ExamCycle />
 
-      <WaveSeparator fillTop="#fff7f0" fillBottom="#1a0800" />
+      <WaveSeparator fillTop="#1a0800" fillBottom="#1a0800" />
       {/* ── JEE Resources Promo Banner ── */}
       <section style={{
         background: "linear-gradient(135deg, #1a0800 0%, #2d1200 50%, #3d1800 100%)",
@@ -908,7 +915,7 @@ export default function Home({ onSearch }) {
         </div>
       </section>
 
-      <WaveSeparator fillTop="#3d1800" fillBottom="#fff7ef" />
+      <WaveSeparator fillTop="#3d1800" fillBottom="#1a0800" />
       {/* ── New Tools ── */}
       <NewTools />
 
