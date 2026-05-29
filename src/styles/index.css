@@ -1962,15 +1962,15 @@ textarea.input { width:100%; }
   position:absolute;inset:0;
   width:100%;height:100%;
   object-fit:cover;
-  opacity:.55;
+  opacity:.88;
   transition:opacity .3s ease, transform .4s ease;
 }
 .college-card:hover .college-banner-img,
 div[style*="cursor: pointer"]:hover .college-banner-img {
-  opacity:.70;
+  opacity:1;
   transform:scale(1.04);
 }
 .college-banner-overlay {
   position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(15,10,40,.72) 0%,rgba(30,20,70,.55) 100%);
+  background:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.42) 100%);
 }

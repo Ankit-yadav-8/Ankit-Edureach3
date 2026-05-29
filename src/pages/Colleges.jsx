@@ -290,7 +290,7 @@ export default function Colleges() {
                   background: !c.heroImage ? (TYPE_BG[c.type] || TYPE_BG.NIT) : undefined,
                 }}>
                   {c.heroImage && (
-                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(28,28,40,.05), rgba(28,28,40,.5))" }} />
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.32))" }} />
                   )}
                   {!c.heroImage && (
                     <div style={{

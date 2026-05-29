@@ -175,7 +175,7 @@ const norm = (s) => s.replace(/\s+/g, " ").trim().toLowerCase();
 
 const INSTITUTE_ALIASES = {
   "iit-madras":          ["technology madras"],
-  "iit-delhi":           ["technology delhi"],
+  "iit-delhi":           ["indian institute of technology delhi"],
   "iit-bombay":          ["technology bombay"],
   "iit-kanpur":          ["technology kanpur"],
   "iit-kharagpur":       ["technology kharagpur"],

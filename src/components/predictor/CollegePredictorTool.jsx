@@ -212,6 +212,26 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
         </div>
       </div>
 
+      {/* ── JEE Advanced category notice ── */}
+      {basePath === "/jee-advanced" && form.category !== "OPEN" && (
+        <div style={{
+          display: "flex", alignItems: "flex-start", gap: 10,
+          background: "rgba(249,115,22,0.08)",
+          border: "1px solid rgba(249,115,22,0.30)",
+          borderRadius: 10, padding: "11px 16px", marginTop: 14,
+          fontSize: 13, color: "var(--navy)",
+        }}>
+          <Info size={16} style={{ color: "#F97316", marginTop: 1, flexShrink: 0 }} />
+          <span>
+            <strong>Note:</strong> The rank you enter is your JEE Advanced{" "}
+            <strong>CRL (General) rank</strong>. Colleges are matched against{" "}
+            <strong>{form.category}</strong> category cutoffs from JoSAA data.
+            For detailed category-rank analysis, open the{" "}
+            <strong>College Details</strong> page of any result below.
+          </span>
+        </div>
+      )}
+
       {/* ── Loading state ── */}
       {loading && (
         <div style={{
