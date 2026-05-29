@@ -284,7 +284,7 @@ export default function Colleges() {
                 <div style={{
                   position: "relative",
                   height: 120,
-                  backgroundImage: `url(${c.heroImage})`,
+                  backgroundImage: `url("${c.heroImage}")`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   background: !c.heroImage ? (TYPE_BG[c.type] || TYPE_BG.NIT) : undefined,

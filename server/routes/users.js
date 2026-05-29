@@ -4,19 +4,32 @@ import { requireAdmin } from "../middleware/admin.js";
 const router = express.Router();
 
 router.get("/count", requireAdmin, async (_req, res) => {
-  res.json({ total: await User.countDocuments() });
+  try {
+    res.json({ total: await User.countDocuments() });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
+
 router.get("/", requireAdmin, async (_req, res) => {
-  const users = await User.find().select("-passwordHash -resetTokenHash").sort({ createdAt: -1 }).limit(5000).lean();
-  res.json({ total: users.length, users });
+  try {
+    const users = await User.find().select("-passwordHash -resetTokenHash").sort({ createdAt: -1 }).limit(5000).lean();
+    res.json({ total: users.length, users });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
+
 router.get("/export.csv", requireAdmin, async (_req, res) => {
-  const users = await User.find().select("-passwordHash -resetTokenHash").sort({ createdAt: -1 }).lean();
-  const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const head = "Name,Email,Phone,Joined,Last Login\n";
-  const rows = users.map((u) => [u.name, u.email, u.phone, u.createdAt?.toISOString(), u.lastLogin?.toISOString()].map(esc).join(",")).join("\n");
-  res.setHeader("Content-Type", "text/csv");
-  res.setHeader("Content-Disposition", "attachment; filename=edureach-users.csv");
-  res.send(head + rows);
+  try {
+    const users = await User.find().select("-passwordHash -resetTokenHash").sort({ createdAt: -1 }).lean();
+    const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const head = "Name,Email,Phone,Coaching,JEE Mains Rank,JEE Advanced Rank,Joined,Last Login\n";
+    const rows = users.map((u) => [
+      u.name, u.email, u.phone, u.coaching,
+      u.jeeMainsRank, u.jeeAdvancedRank,
+      u.createdAt?.toISOString(), u.lastLogin?.toISOString(),
+    ].map(esc).join(",")).join("\n");
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", "attachment; filename=collegeparichay-users.csv");
+    res.send(head + rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
+
 export default router;

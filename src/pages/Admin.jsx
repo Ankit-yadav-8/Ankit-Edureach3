@@ -245,10 +245,10 @@ export default function Admin() {
             </div>
           ) : (
             <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", minWidth: 780, borderCollapse: "collapse" }}>
+              <table style={{ width: "100%", minWidth: 1000, borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: "#fafafa" }}>
-                    {["#", "User", "Email", "Phone", "Joined", "Last Login"].map((h) => (
+                    {["#", "User", "Email", "Phone", "JEE Mains", "JEE Adv.", "Joined", "Last Login"].map((h) => (
                       <th key={h} style={{
                         padding: "12px 20px", textAlign: "left", fontSize: 11,
                         fontWeight: 700, color: "#999", letterSpacing: ".06em",
@@ -292,6 +292,12 @@ export default function Admin() {
                           <Phone size={13} color="#bbb" />
                           {u.phone || "—"}
                         </div>
+                      </td>
+                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
+                        {u.jeeMainsRank ? u.jeeMainsRank.toLocaleString() : "—"}
+                      </td>
+                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
+                        {u.jeeAdvancedRank ? u.jeeAdvancedRank.toLocaleString() : "—"}
                       </td>
                       <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888" }}>
                         {fmtDate(u.createdAt)}

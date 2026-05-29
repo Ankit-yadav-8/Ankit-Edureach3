@@ -8,18 +8,26 @@ import { requireAuth } from "../middleware/auth.js";
 const router = express.Router();
 const sign = (u) => jwt.sign({ id: u._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 const isEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-const pub = (u) => ({ id: u._id, name: u.name, email: u.email, phone: u.phone, coaching: u.coaching });
+const pub = (u) => ({ id: u._id, name: u.name, email: u.email, phone: u.phone, coaching: u.coaching, jeeMainsRank: u.jeeMainsRank, jeeAdvancedRank: u.jeeAdvancedRank });
 
 router.post("/signup", async (req, res) => {
   try {
-    let { name, email, phone, coaching, password } = req.body || {};
-    if (!name || !email || !password) return res.status(400).json({ error: "Name, email and password are required" });
+    let { name, email, phone, coaching, password, jeeMainsRank, jeeAdvancedRank } = req.body || {};
+    if (!name || !email || !password || !phone) return res.status(400).json({ error: "Name, email, phone and password are required" });
     email = String(email).toLowerCase().trim();
     if (!isEmail(email)) return res.status(400).json({ error: "Please enter a valid email" });
     if (String(password).length < 6) return res.status(400).json({ error: "Password must be at least 6 characters" });
+    if (!/^\d{10}$/.test(String(phone))) return res.status(400).json({ error: "Enter a valid 10-digit phone number" });
     if (await User.findOne({ email })) return res.status(409).json({ error: "Email already registered" });
+    if (await User.findOne({ phone: String(phone) })) return res.status(409).json({ error: "Phone number already registered" });
     const passwordHash = await bcrypt.hash(String(password), 10);
-    const user = await User.create({ name: String(name).trim(), email, phone: phone || undefined, coaching: String(coaching || "").trim(), passwordHash, lastLogin: new Date() });
+    const user = await User.create({
+      name: String(name).trim(), email, phone: String(phone),
+      coaching: String(coaching || "").trim(),
+      jeeMainsRank:    jeeMainsRank    ? Number(jeeMainsRank)    : undefined,
+      jeeAdvancedRank: jeeAdvancedRank ? Number(jeeAdvancedRank) : undefined,
+      passwordHash, lastLogin: new Date(),
+    });
     res.status(201).json({ token: sign(user), user: pub(user) });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Mail, ArrowLeft, Lock, User, KeyRound,
   Phone, GraduationCap, CheckCircle2, AlertCircle,
   Loader2, Eye, EyeOff, Sparkles,
-  Shield, Zap, BookOpen,
+  Shield, Zap, BookOpen, Award, Trophy,
 } from "lucide-react";
 import { useAuth } from "./AuthContext.jsx";
 import { apiForgot, apiReset, apiSendOtp, apiVerifyOtp } from "./api.js";
@@ -13,7 +13,8 @@ import { apiForgot, apiReset, apiSendOtp, apiVerifyOtp } from "./api.js";
 const OR  = "#F47B20";
 const ORD = "#ea580c";
 const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || "").trim());
-const isPhone = (v) => !v || !v.length || /^\d{10}$/.test(v);
+const isPhone = (v) => /^\d{10}$/.test(v);
+const isRank  = (v) => !v || (!isNaN(Number(v)) && Number(v) > 0);
 
 /* ── client-side validation ─────────────────────────────────── */
 function validate(mode, f) {
@@ -24,10 +25,14 @@ function validate(mode, f) {
     if (!f.password)             e.password = "Password is required";
   }
   if (mode === "signup") {
-    if (!f.name.trim())          e.name     = "Full name is required";
-    if (!f.email.trim())         e.email    = "Email is required";
-    else if (!isEmail(f.email))  e.email    = "Enter a valid email";
-    if (f.phone && !isPhone(f.phone)) e.phone = "Enter a valid 10-digit number";
+    if (!f.name.trim())              e.name         = "Full name is required";
+    if (!f.email.trim())             e.email        = "Email is required";
+    else if (!isEmail(f.email))      e.email        = "Enter a valid email";
+    if (!f.phone)                    e.phone        = "Mobile number is required";
+    else if (!isPhone(f.phone))      e.phone        = "Enter a valid 10-digit number";
+    if (!f.jeeMainsRank)             e.jeeMainsRank = "JEE Mains rank is required";
+    else if (!isRank(f.jeeMainsRank)) e.jeeMainsRank = "Enter a valid rank number";
+    if (f.jeeAdvancedRank && !isRank(f.jeeAdvancedRank)) e.jeeAdvancedRank = "Enter a valid rank number";
     if (!f.password)             e.password = "Password is required";
     else if (f.password.length < 6) e.password = "Minimum 6 characters";
   }
@@ -235,14 +240,20 @@ const HEADS = {
 };
 
 export default function AuthModal() {
-  const { loginOpen, closeLogin, login, signup, saveSession } = useAuth();
+  const { loginOpen, closeLogin, login, signup, saveSession, loginMode } = useAuth();
   const [mode,    setMode]   = useState("login");
-  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "" });
-  const [fe,      setFe]     = useState({});   // field errors
+  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", jeeMainsRank: "", jeeAdvancedRank: "" });
+  const [fe,      setFe]     = useState({});
   const [banner,  setBanner] = useState({ type: "", text: "" });
   const [busy,    setBusy]   = useState(false);
   const [shake,   setShake]  = useState(false);
   const [slowNet, setSlowNet] = useState(false);
+  const prevOpen = useRef(false);
+
+  useEffect(() => {
+    if (loginOpen && !prevOpen.current) setMode(loginMode || "login");
+    prevOpen.current = loginOpen;
+  }, [loginOpen, loginMode]);
 
   if (!loginOpen) return null;
 
@@ -260,7 +271,7 @@ export default function AuthModal() {
 
   const close = () => {
     setMode("login");
-    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "" });
+    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", jeeMainsRank: "", jeeAdvancedRank: "" });
     setBanner({ type: "", text: "" });
     setFe({});
     setBusy(false);
@@ -299,7 +310,7 @@ export default function AuthModal() {
   };
 
   const doLogin   = run(async () => { await login(f.email.trim(), f.password); close(); }, "login");
-  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, password: f.password }); close(); }, "signup");
+  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, password: f.password, jeeMainsRank: f.jeeMainsRank ? Number(f.jeeMainsRank) : undefined, jeeAdvancedRank: f.jeeAdvancedRank ? Number(f.jeeAdvancedRank) : undefined }); close(); }, "signup");
   const doSendOtp = run(async () => {
     const r = await apiSendOtp({ email: f.email.trim(), name: f.name.trim() });
     setBanner({ type: "ok", text: r.devCode ? `Dev OTP: ${r.devCode}` : "Code sent! Check your inbox and spam folder." });
@@ -528,14 +539,20 @@ export default function AuthModal() {
                         error={fe.name} onChange={e => set("name", e.target.value)} autoComplete="name" />
                     </div>
                     <Field icon={Phone} type="tel" inputMode="numeric" maxLength={10}
-                      placeholder="Mobile *" value={f.phone}
+                      placeholder="Mobile number *" value={f.phone}
                       error={fe.phone} onChange={e => set("phone", e.target.value.replace(/\D/g, ""))} autoComplete="tel" />
-                    <Field icon={GraduationCap} placeholder="Coaching (opt.)" value={f.coaching}
+                    <Field icon={GraduationCap} placeholder="Coaching (optional)" value={f.coaching}
                       onChange={e => set("coaching", e.target.value)} />
                     <div style={{ gridColumn: "1/-1" }}>
                       <Field icon={Mail} type="email" placeholder="Email address *" value={f.email}
                         error={fe.email} onChange={e => set("email", e.target.value)} autoComplete="email" />
                     </div>
+                    <Field icon={Award} type="tel" inputMode="numeric"
+                      placeholder="JEE Mains rank *" value={f.jeeMainsRank}
+                      error={fe.jeeMainsRank} onChange={e => set("jeeMainsRank", e.target.value.replace(/\D/g, ""))} />
+                    <Field icon={Trophy} type="tel" inputMode="numeric"
+                      placeholder="JEE Advanced rank (opt.)" value={f.jeeAdvancedRank}
+                      error={fe.jeeAdvancedRank} onChange={e => set("jeeAdvancedRank", e.target.value.replace(/\D/g, ""))} />
                     <div style={{ gridColumn: "1/-1" }}>
                       <Field icon={Lock} type="password" placeholder="Password (min 6 chars) *" value={f.password}
                         error={fe.password} onChange={e => set("password", e.target.value)}
@@ -555,7 +572,7 @@ export default function AuthModal() {
                       </span>
                     </div>
                   )}
-                  <p style={{ fontSize: 11, color: "#94a3b8", marginBottom: 14 }}>Fields marked * are required</p>
+                  <p style={{ fontSize: 11, color: "#94a3b8", marginBottom: 14 }}>* Required fields</p>
                   <ActionBtn busy={busy} label="Create account →" busyLabel={busyLabel} onClick={doSignup} shake={shake} />
                 </>)}
 

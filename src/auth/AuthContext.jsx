@@ -34,6 +34,7 @@ export function AuthProvider({ children }) {
   });
 
   const [loginOpen, setLoginOpen] = useState(false);
+  const [loginMode, setLoginMode] = useState("login");
 
   useEffect(() => {
     if (!token) { setUser(null); return; }
@@ -57,8 +58,9 @@ export function AuthProvider({ children }) {
     login:  async (email, password) => save(await apiLogin({ email, password })),
     signup: async (form) => save(await apiSignup(form)),
     logout: () => { clearCache(); setToken(""); setUser(null); },
-    loginOpen,
-    openLogin:   () => setLoginOpen(true),
+    loginOpen, loginMode,
+    openLogin:   () => { setLoginMode("login");  setLoginOpen(true); },
+    openSignup:  () => { setLoginMode("signup"); setLoginOpen(true); },
     closeLogin:  () => setLoginOpen(false),
     requireAuth: (fn) => (user ? fn?.() : setLoginOpen(true)),
   };

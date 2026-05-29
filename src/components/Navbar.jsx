@@ -9,7 +9,7 @@ import {
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
 
-const GATE_TABS = true;
+const GATE_TABS = false;
 
 const JEE_RESOURCES = [
   { label: "Mathematics (19 chapters)", to: "/jee-resources?subject=math",     icon: Sigma,        tag: "Algebra · Calculus · Geometry" },
@@ -58,7 +58,7 @@ const TOOLS = [
 
 export default function Navbar({ onSearch }) {
   const { saved, compare } = useShortlist();
-  const { isLoggedIn, user, openLogin, logout } = useAuth();
+  const { isLoggedIn, user, openLogin, openSignup, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -264,16 +264,25 @@ export default function Navbar({ onSearch }) {
               <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#F47B20", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
                 {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
               </span>
-              Logout
+              {user?.name?.split(" ")[0] || "Account"}
             </button>
           ) : (
-            <button
-              onClick={openLogin}
-              className="cta-desktop"
-              style={{ padding: "9px 18px", borderRadius: 10, border: "none", background: "#F47B20", color: "#fff", fontWeight: 700, cursor: "pointer" }}
-            >
-              Login
-            </button>
+            <>
+              <button
+                onClick={openLogin}
+                className="cta-desktop"
+                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
+              >
+                Login
+              </button>
+              <button
+                onClick={openSignup}
+                className="cta-desktop"
+                style={{ padding: "9px 18px", borderRadius: 10, border: "none", background: "#F47B20", color: "#fff", fontWeight: 700, cursor: "pointer" }}
+              >
+                Sign Up
+              </button>
+            </>
           )}
           <button className="hamburger" onClick={() => setMobileOpen(true)} aria-label="Menu" style={{ display: "none" }}>
             <Menu size={24} color="var(--navy)" />
@@ -400,17 +409,30 @@ export default function Navbar({ onSearch }) {
                   </span>
                 </button>
               ) : (
-                <button
-                  onClick={() => { setMobileOpen(false); openLogin(); }}
-                  style={{
-                    width: "100%", marginTop: 12, padding: "13px 16px",
-                    borderRadius: 10, border: "none",
-                    background: "#F47B20", color: "#fff",
-                    fontWeight: 700, cursor: "pointer", fontSize: "0.95rem",
-                  }}
-                >
-                  Login
-                </button>
+                <>
+                  <button
+                    onClick={() => { setMobileOpen(false); openLogin(); }}
+                    style={{
+                      width: "100%", marginTop: 12, padding: "13px 16px",
+                      borderRadius: 10, border: "1.5px solid var(--line)",
+                      background: "#fff", color: "var(--navy)",
+                      fontWeight: 700, cursor: "pointer", fontSize: "0.95rem",
+                    }}
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => { setMobileOpen(false); openSignup(); }}
+                    style={{
+                      width: "100%", marginTop: 8, padding: "13px 16px",
+                      borderRadius: 10, border: "none",
+                      background: "#F47B20", color: "#fff",
+                      fontWeight: 700, cursor: "pointer", fontSize: "0.95rem",
+                    }}
+                  >
+                    Sign Up Free
+                  </button>
+                </>
               )}
             </motion.aside>
           </>
