@@ -321,7 +321,7 @@ export default function Footer() {
               }}
             >
               <Code2 size={13} />
-              Built by Developers
+              Built by IITians. Trusted by Aspirants
             </span>
           </div>
 
@@ -412,9 +412,8 @@ export default function Footer() {
               { Icon: Instagram, url: " https://www.instagram.com/collegeparichay?igsh=YnN6eGJwMWt1a21o&utm_source=qr", label: "Instagram" },
               { Icon: Facebook, url: "https://facebook.com", label: "Facebook" },
               { Icon: Twitter, url: "https://twitter.com", label: "Twitter / X" },
-              { Icon: Linkedin, url: "https://www.linkedin.com/posts/collegeparichay-jee-neet-share-7466020237499473920--Edb?utm_medium=ios_app&rcm=ACoAADimO88BPGUt_jYMAhK8HED5w5wRkXsbCpg&utm_source=social_share_send&utm_campaign=whatsapp", label: "LinkedIn" },
-              { Icon: Youtube, url: "https://youtube.com", label: "YouTube" },
-              { Icon: Github, url: "https://github.com", label: "GitHub" },
+              { Icon: Linkedin, url: "https://www.linkedin.com/company/college-parichay/", label: "LinkedIn" },
+              { Icon: Youtube, url: "https://youtube.com/@collegeparichay?si=jB_0mk8J6BSaKjzx", label: "YouTube" },
               { Icon: Send, url: "https://telegram.org", label: "Telegram" },
               { Icon: MessageCircle, url: "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t", label: "WhatsApp" },
             ].map(({ Icon, url, label }) => (

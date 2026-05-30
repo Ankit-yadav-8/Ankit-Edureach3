@@ -54,7 +54,7 @@ export const TEAM = [
     initials: "AK",
     photo: "/assets/team/ankit.jpeg",
     name: "Ankit Kumar",
-    role: "Co-Founder & CTO",
+    role: "CTO & COO",
     accent: "#F47B20",
     tagline: "Building performant, reliable tools that students can trust.",
     college: "IIT Roorkee",
@@ -63,7 +63,7 @@ export const TEAM = [
     jeeRank: "AIR 3846",
     exam: "JEE Advanced",
     email: "collegeparichay@gmail.com",
-    bio: `Hi, I'm Ankit Kumar, Co-Founder & CTO of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.`,
+    bio: `Hi, I'm Ankit Kumar, CTO & COO of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.`,
     skills: ["React", "Node.js", "MongoDB", "Express", "Tailwind CSS", "Python", "REST APIs", "Vite"],
     projects: [
       { name: "Full-Stack Platform", desc: "React frontend + Node.js backend powering all tools on College Parichay.", tag: "Full-Stack" },
