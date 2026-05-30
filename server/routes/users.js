@@ -17,7 +17,10 @@ router.get("/count", requireAdmin, async (_req, res) => {
 
 router.get("/", requireAdmin, async (_req, res) => {
   try {
-    const users = await User.find().select("-passwordHash -resetTokenHash").sort({ createdAt: -1 }).limit(5000).lean();
+    // No cap — must return every user so the portal matches the CSV export exactly.
+    // (A limit here silently dropped the oldest signups from the table while they
+    //  still appeared in the full CSV, making old records look "missing".)
+    const users = await User.find().select("-passwordHash -resetTokenHash").sort({ createdAt: -1 }).lean();
     res.json({ total: users.length, users });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
