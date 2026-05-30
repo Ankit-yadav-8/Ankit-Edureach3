@@ -79,6 +79,7 @@ function AuthBootstrap() {
 
 export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const { pathname } = useLocation();
 
   // Cmd/Ctrl+K to open search
   useEffect(() => {
@@ -91,6 +92,19 @@ export default function App() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  // Admin dashboard renders standalone — no public navbar, footer, chatbot,
+  // WhatsApp button, compare tray or auth modal bleeding into it.
+  if (pathname.startsWith("/admin")) {
+    return (
+      <>
+        <ScrollManager />
+        <Routes>
+          <Route path="/admin" element={<Admin />} />
+        </Routes>
+      </>
+    );
+  }
 
   return (
     <>
@@ -124,7 +138,6 @@ export default function App() {
           <Route path="/scholarships" element={<Scholarships />} />
           <Route path="/cutoffs" element={<OfficialCutoffs />} />
           <Route path="/search" element={<SearchResults />} />
-          <Route path="/admin" element={<Admin />} />
           <Route path="/jee-resources" element={<JeeResources />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

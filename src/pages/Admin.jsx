@@ -37,6 +37,12 @@ export default function Admin() {
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState(() => new Set());
 
+  useEffect(() => {
+    const prev = document.title;
+    document.title = "Admin · College Parichay";
+    return () => { document.title = prev; };
+  }, []);
+
   const toggleRow = (id) =>
     setExpanded((prev) => {
       const next = new Set(prev);
