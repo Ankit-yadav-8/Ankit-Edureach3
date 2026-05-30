@@ -1,6 +1,6 @@
 /* Minimal service worker — caches the app shell for offline/installable PWA.
    Paths are relative so it works under the GitHub Pages repo subpath. */
-const CACHE = "edureach-v2";
+const CACHE = "edureach-v3";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./favicon.svg"];
 
 self.addEventListener("install", (e) => {
@@ -14,6 +14,10 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const { request } = e;
   if (request.method !== "GET") return;
+  // Never cache API calls — the admin dashboard and auth must always see live
+  // data. Cache-first here served a frozen /api/users snapshot, so new signups
+  // showed up in the CSV export but never in the portal table.
+  if (new URL(request.url).pathname.startsWith("/api/")) return;
   if (request.mode === "navigate") {
     e.respondWith(fetch(request).catch(() => caches.match("./index.html")));
     return;
