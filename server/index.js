@@ -15,8 +15,22 @@ const PORT = process.env.PORT || 5000;
 app.set("trust proxy", 1);
 
 app.use(express.json());
-const origins = (process.env.CLIENT_ORIGIN || "*").split(",").map((s) => s.trim());
-app.use(cors({ origin: origins.includes("*") ? "*" : origins }));
+
+// Build allowed origins list: always include localhost for development
+const envOrigins = (process.env.CLIENT_ORIGIN || "").split(",").map((s) => s.trim()).filter(Boolean);
+const DEV_ORIGINS = ["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"];
+const allowedOrigins = [...new Set([...envOrigins, ...DEV_ORIGINS])];
+
+app.use(cors({
+  origin: (origin, cb) => {
+    // Allow requests with no origin (curl, mobile apps, same-origin server calls)
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.includes(origin) || envOrigins.includes("*") || envOrigins.length === 0)
+      return cb(null, true);
+    cb(new Error(`CORS: origin ${origin} not allowed`));
+  },
+  credentials: true,
+}));
 
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 50, standardHeaders: true, legacyHeaders: false });
 

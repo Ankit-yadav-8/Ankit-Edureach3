@@ -2,7 +2,7 @@ export const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000"
 
 async function req(path, { method = "GET", body, token } = {}) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12000); // 12 second timeout
+  const timeout = setTimeout(() => controller.abort(), 60000); // 60 s — Render free tier can take 30–50 s to cold-start
 
   try {
     const res = await fetch(API_BASE + path, {

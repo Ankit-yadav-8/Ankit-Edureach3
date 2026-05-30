@@ -245,14 +245,15 @@ export default function Admin() {
             </div>
           ) : (
             <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", minWidth: 1000, borderCollapse: "collapse" }}>
+              <table style={{ width: "100%", minWidth: 1100, borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: "#fafafa" }}>
-                    {["#", "User", "Email", "Phone", "JEE Mains", "JEE Adv.", "Joined", "Last Login"].map((h) => (
+                    {["#", "User", "Email", "Phone", "Coaching", "JEE Mains", "JEE Adv.", "Joined", "Last Login"].map((h) => (
                       <th key={h} style={{
                         padding: "12px 20px", textAlign: "left", fontSize: 11,
                         fontWeight: 700, color: "#999", letterSpacing: ".06em",
                         textTransform: "uppercase", borderBottom: "1px solid #f0f0f0",
+                        whiteSpace: "nowrap",
                       }}>{h}</th>
                     ))}
                   </tr>
@@ -293,13 +294,16 @@ export default function Admin() {
                           {u.phone || "—"}
                         </div>
                       </td>
+                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>
+                        {u.coaching || <span style={{ color: "#ddd" }}>—</span>}
+                      </td>
                       <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
                         {u.jeeMainsRank ? u.jeeMainsRank.toLocaleString() : "—"}
                       </td>
                       <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
                         {u.jeeAdvancedRank ? u.jeeAdvancedRank.toLocaleString() : "—"}
                       </td>
-                      <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888" }}>
+                      <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888", whiteSpace: "nowrap" }}>
                         {fmtDate(u.createdAt)}
                       </td>
                       <td style={{ padding: "14px 20px" }}>

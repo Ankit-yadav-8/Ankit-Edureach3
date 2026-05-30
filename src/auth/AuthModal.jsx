@@ -291,7 +291,7 @@ export default function AuthModal() {
     }
     setFe({}); setBanner({ type: "", text: "" });
     setBusy(true); setSlowNet(false);
-    const st = setTimeout(() => setSlowNet(true), 3000);
+    const st = setTimeout(() => setSlowNet(true), 1500);
     try {
       await fn();
     } catch (e) {
@@ -327,7 +327,7 @@ export default function AuthModal() {
   const BACK = ["otpEmail", "otpCode", "forgot", "reset"];
   const H    = HEADS[mode] ?? HEADS.login;
 
-  const busyLabel = slowNet ? "Server waking up…"
+  const busyLabel = slowNet ? "Server starting up — please wait…"
     : mode === "login"    ? "Logging in…"
     : mode === "signup"   ? "Creating account…"
     : mode === "otpEmail" ? "Sending code…"
@@ -337,17 +337,16 @@ export default function AuthModal() {
 
   return (
     <AnimatePresence>
-      {/* ── backdrop ── */}
+      {/* ── backdrop ── clicking outside does NOT auto-close (use Skip link below) */}
       <motion.div
         key="backdrop"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.22 }}
-        onClick={close}
         style={{
           position: "fixed", inset: 0, zIndex: 300,
-          background: "rgba(10,12,28,.72)",
+          background: "rgba(10,12,28,.82)",
           backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
           overflowY: "auto",
           display: "flex",
@@ -437,6 +436,7 @@ export default function AuthModal() {
                 style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.15)", cursor: "pointer", color: "rgba(255,255,255,.75)", display: "grid", placeItems: "center", transition: "background .15s" }}
                 onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.2)"}
                 onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.10)"}
+                title="Close"
               >
                 <X size={15} />
               </button>
@@ -666,10 +666,25 @@ export default function AuthModal() {
             {/* ── slow network hint ── */}
             <AnimatePresence>
               {slowNet && busy && (
-                <motion.p key="slow" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  style={{ fontSize: 12, color: "#94a3b8", textAlign: "center", marginTop: 10 }}>
-                  ☕ Server is waking up — usually takes ~10s on free hosting…
-                </motion.p>
+                <motion.div key="slow" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                  style={{
+                    marginTop: 10,
+                    background: "linear-gradient(135deg,#fff7ed,#fef3e8)",
+                    border: "1px solid rgba(244,123,32,.22)",
+                    borderRadius: 10,
+                    padding: "10px 14px",
+                    display: "flex", alignItems: "flex-start", gap: 8,
+                  }}>
+                  <span style={{ fontSize: 15, flexShrink: 0 }}>☕</span>
+                  <div>
+                    <p style={{ fontSize: 12.5, color: "#78350f", fontWeight: 600, margin: 0 }}>
+                      Server is waking up…
+                    </p>
+                    <p style={{ fontSize: 11.5, color: "#92400e", margin: "2px 0 0", lineHeight: 1.5 }}>
+                      Our free server sleeps when idle. First login takes 20–40 seconds. Please keep this window open.
+                    </p>
+                  </div>
+                </motion.div>
               )}
             </AnimatePresence>
 
@@ -689,6 +704,27 @@ export default function AuthModal() {
                 Free · Trusted by <strong style={{ color: "#64748b" }}>50,000+</strong> JEE aspirants
               </span>
             </div>
+
+            {/* ── skip link (guest browsing) ── */}
+            {(mode === "login" || mode === "signup") && (
+              <div style={{ textAlign: "center", marginTop: 14 }}>
+                <button
+                  onClick={close}
+                  style={{
+                    background: "none", border: "none", cursor: "pointer",
+                    color: "#b0bac8", fontSize: 12, fontWeight: 500,
+                    textDecoration: "underline", textDecorationStyle: "dotted",
+                    padding: "4px 8px", borderRadius: 6,
+                    transition: "color .15s",
+                    fontFamily: "inherit",
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.color = "#64748b"}
+                  onMouseLeave={e => e.currentTarget.style.color = "#b0bac8"}
+                >
+                  Skip for now — browse as guest
+                </button>
+              </div>
+            )}
 
           </div>
         </motion.div>

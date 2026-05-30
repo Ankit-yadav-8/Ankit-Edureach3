@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
@@ -35,6 +35,7 @@ import SearchResults from "./pages/SearchResults.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Admin from "./pages/Admin.jsx";
 import JeeResources from "./pages/JeeResources.jsx";
+import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
 function ScrollManager() {
@@ -50,6 +51,29 @@ function ScrollManager() {
       window.scrollTo({ top: 0 });
     }
   }, [pathname, hash]);
+  return null;
+}
+
+/* Show auth modal immediately on page load for guests (skip admin page). */
+function AuthBootstrap() {
+  const { openLogin } = useAuth();
+  const { pathname } = useLocation();
+  const triggered = useRef(false);
+
+  useEffect(() => {
+    if (triggered.current) return;
+    if (pathname === "/admin") return;
+
+    // If no auth token exists in this session, the user is definitely a guest
+    const hasToken = !!localStorage.getItem("edureach:token");
+    if (hasToken) return;
+
+    triggered.current = true;
+    // Brief delay so the page visually renders before the modal appears
+    const t = setTimeout(() => openLogin(), 700);
+    return () => clearTimeout(t);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return null;
 }
 
@@ -74,6 +98,7 @@ export default function App() {
       <div id="progress-bar" />
       <ScrollProgress />
       <ScrollManager />
+      <AuthBootstrap />
       <Navbar onSearch={() => setSearchOpen(true)} />
 
       <main>
