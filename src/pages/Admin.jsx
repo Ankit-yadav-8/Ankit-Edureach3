@@ -53,7 +53,7 @@ export default function Admin() {
   const fetchUsers = useCallback(async (k) => {
     setBusy(true); setErr("");
     try {
-      const res = await fetch(API_BASE + "/api/users", { headers: { "x-admin-key": k } });
+      const res = await fetch(API_BASE + "/api/users", { headers: { "x-admin-key": k }, cache: "no-store" });
       if (res.status === 401 || res.status === 403) throw new Error("Invalid admin key");
       if (!res.ok) throw new Error("Server error " + res.status);
       const data = await res.json();

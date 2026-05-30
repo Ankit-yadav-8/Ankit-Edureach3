@@ -3,6 +3,12 @@ import User from "../models/User.js";
 import { requireAdmin } from "../middleware/admin.js";
 const router = express.Router();
 
+// Admin data must always be live — never let the browser/proxy serve a stale list.
+router.use((_req, res, next) => {
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate");
+  next();
+});
+
 router.get("/count", requireAdmin, async (_req, res) => {
   try {
     res.json({ total: await User.countDocuments() });
