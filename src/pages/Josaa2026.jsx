@@ -8,7 +8,7 @@ import Reveal from "../components/Reveal.jsx";
 
 /* 👉 Replace with your real payment link (Razorpay/PhonePe) and WhatsApp number. */
 const PAY_LINK = "https://forms.gle/bgtSMjr1QXJytXHDA"; // Google Form — enrolment
-const WA = "https://wa.me/910000000000?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹999 counselling plan.");
+const WA = "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹999 counselling plan.");
 
 const INCLUDES = [
   { icon: Target, t: "Personalised choice list", d: "A ranked, college-by-college JoSAA choice-filling sheet built around your rank, category & preferences." },

@@ -252,7 +252,7 @@ function ExamCard({ ex }) {
 ════════════════════════════════════════════════ */
 function JoSAAPromoSection() {
   const PAY_LINK = "https://forms.gle/bgtSMjr1QXJytXHDA"; // Google Form — enrolment
-  const WA_LINK  = "https://wa.me/910000000000?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹999 counselling plan.");
+  const WA_LINK  = "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹999 counselling plan.");
 
   return (
     <section className="josaa-promo-section" style={{ position: "relative" }}>

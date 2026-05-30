@@ -9,6 +9,7 @@
   "background_color": "#ffffff",
   "theme_color": "#f97316",
   "icons": [
-    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "assets/team/CPlogo3.jpeg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any" },
+    { "src": "assets/team/CPlogo3.jpeg", "sizes": "192x192", "type": "image/jpeg", "purpose": "any" }
   ]
 }
