@@ -19,6 +19,40 @@ const fmtDate = (iso) => {
 
 const avatar = (name, phone) => (name || phone || "U").charAt(0).toUpperCase();
 
+// Lowercase + strip spaces/punctuation so "Vit thal" and "vitthal" compare equal.
+const norm = (s) => (s || "").toLowerCase().replace(/[^a-z0-9@.]/g, "");
+
+// Levenshtein edit distance — lets a typo'd search ("vithal") still match "Vitthal".
+const editDistance = (a, b) => {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    let cur = [i];
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+    }
+    prev = cur;
+  }
+  return prev[b.length];
+};
+
+// True if the (normalized) query matches the value as a substring or a close fuzzy match.
+const fuzzyMatch = (value, q) => {
+  const v = norm(value);
+  if (!v) return false;
+  if (v.includes(q)) return true;
+  const tol = Math.floor(q.length / 4) + 1; // allow ~1 typo per 4 chars
+  if (editDistance(v, q) <= tol) return true;
+  // also test each word/token so "vithal" matches one name in "Sai Vitthal Jadhav"
+  return String(value)
+    .split(/[\s@.]+/)
+    .map(norm)
+    .some((w) => w && (w.includes(q) || editDistance(w, q) <= tol));
+};
+
 const avatarColor = (str) => {
   const colors = ["#6366f1","#f59e0b","#10b981","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#f97316"];
   let hash = 0;
@@ -90,11 +124,13 @@ export default function Admin() {
     setUsers([]); setTotal(0); setErr("");
   }
 
+  const q = norm(search);
   const filtered = users.filter((u) =>
-    !search ||
-    (u.name || "").toLowerCase().includes(search.toLowerCase()) ||
-    (u.email || "").toLowerCase().includes(search.toLowerCase()) ||
-    (u.phone || "").includes(search)
+    !q ||
+    fuzzyMatch(u.name, q) ||
+    fuzzyMatch(u.email, q) ||
+    fuzzyMatch(u.phone, q) ||
+    fuzzyMatch(u.coaching, q)
   );
 
   // ── KEY-GATE ──────────────────────────────────────────────────
