@@ -269,12 +269,17 @@ function normProg(p) {
     .replace(/&/g, "and")
     .replace(/\s+/g, " ").trim();
 }
-function fuzzyProgram(candidate, target) {
-  const c = normProg(candidate), t = normProg(target);
-  if (c === t) return true;
-  if (c.length > 4 && t.includes(c)) return true;
-  if (t.length > 4 && c.includes(t)) return true;
-  return false;
+// Exact program match (whitespace/case-normalized on the FULL CSV program name).
+// Used by getRealRounds so a base branch (e.g. "Computer Science and Engineering")
+// never absorbs the rows of its specialisation variants ("…with Specialization in
+// Cyber Security", "…(Data Science)", dual-degree, MBA combos). Those have much
+// higher closing ranks, and getRealRounds aggregates with Math.max — so fuzzy
+// matching was inflating cutoffs (e.g. IIT Patna CSE showed ~16444 instead of
+// the real 3144). Every caller passes a verbatim CSV program string sourced from
+// getRealPrograms()/findProgramByBranch(), so exact matching always resolves.
+const _progKey = (s) => s.replace(/\s+/g, " ").trim().toLowerCase();
+function sameProgram(candidate, target) {
+  return _progKey(candidate) === _progKey(target);
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
@@ -323,7 +328,7 @@ export function getAvailableYears(college) {
 export function getRealRounds(college, program, quota, seatType, year, gender = "GN") {
   const rows = (DB.get(year) ?? []).filter((r) =>
     matchInstitute(r, college) &&
-    fuzzyProgram(r.program, program) &&
+    sameProgram(r.program, program) &&
     r.quota    === quota    &&
     r.seatType === seatType &&
     r.gender   === gender

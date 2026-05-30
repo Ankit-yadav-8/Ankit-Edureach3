@@ -251,7 +251,7 @@ function ExamCard({ ex }) {
    JOSAA 2026 PROMO SECTION
 ════════════════════════════════════════════════ */
 function JoSAAPromoSection() {
-  const PAY_LINK = "/josaa-2026";
+  const PAY_LINK = "https://forms.gle/bgtSMjr1QXJytXHDA"; // Google Form — enrolment
   const WA_LINK  = "https://wa.me/910000000000?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹999 counselling plan.");
 
   return (
@@ -287,9 +287,9 @@ function JoSAAPromoSection() {
               </div>
 
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <Link to={PAY_LINK} className="josaa-cta-btn btn-shimmer" style={{ maxWidth: 260, overflow: "hidden", position: "relative" }}>
+                <a href={PAY_LINK} target="_blank" rel="noreferrer" className="josaa-cta-btn btn-shimmer" style={{ maxWidth: 260, overflow: "hidden", position: "relative" }}>
                   Enrol now — only ₹999 <ArrowRight size={17} />
-                </Link>
+                </a>
                 <a
                   href={WA_LINK}
                   target="_blank"
@@ -345,9 +345,9 @@ function JoSAAPromoSection() {
                 ))}
               </div>
 
-              <Link to={PAY_LINK} className="josaa-cta-btn">
+              <a href={PAY_LINK} target="_blank" rel="noreferrer" className="josaa-cta-btn">
                 Enrol Now — ₹999 <ArrowRight size={17} />
-              </Link>
+              </a>
 
               <div className="josaa-secure-note">
                 <ShieldCheck size={13} />

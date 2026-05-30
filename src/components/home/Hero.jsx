@@ -914,7 +914,29 @@ export default function Hero({ onSearch }) {
                   width: isMobile ? "100%" : "auto",
                 }}
               >
-                <TrendingUp size={isXs ? 16 : 18} /> Predict My Rank
+                <TrendingUp size={isXs ? 16 : 18} /> Predict Rank — JEE Main
+              </RippleButton>
+
+              <RippleButton
+                className="btn btn-coral btn-shimmer btn-glow"
+                onClick={() => nav("/jee-advanced#rank")}
+                style={{
+                  padding: isXs ? "11px 20px" : "12px 24px",
+                  fontSize: isXs ? 13.5 : 14.5,
+                  fontWeight: 700,
+                  borderRadius: 12,
+                  gap: 8,
+                  background: "linear-gradient(135deg, #ea580c, #F47B20)",
+                  color: "#fff",
+                  border: "none",
+                  boxShadow: "0 6px 20px rgba(234,88,12,.42)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: isMobile ? "100%" : "auto",
+                }}
+              >
+                <TrendingUp size={isXs ? 16 : 18} /> Predict Rank — JEE Advanced
               </RippleButton>
 
               <RippleButton

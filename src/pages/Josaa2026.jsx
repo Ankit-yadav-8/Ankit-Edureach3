@@ -7,7 +7,7 @@ import {
 import Reveal from "../components/Reveal.jsx";
 
 /* 👉 Replace with your real payment link (Razorpay/PhonePe) and WhatsApp number. */
-const PAY_LINK = "#enroll"; // e.g. "https://rzp.io/l/your-link"
+const PAY_LINK = "https://forms.gle/bgtSMjr1QXJytXHDA"; // Google Form — enrolment
 const WA = "https://wa.me/910000000000?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹999 counselling plan.");
 
 const INCLUDES = [
@@ -66,7 +66,7 @@ export default function Josaa2026() {
               Get a personalised, data-backed JoSAA choice-filling plan and 1-on-1 mentorship from people who've done it — for just ₹999.
             </p>
             <div style={{ display: "flex", gap: 12, marginTop: 26, flexWrap: "wrap" }}>
-              <a href={PAY_LINK} className="btn btn-coral" style={{ fontSize: 16, padding: "14px 26px" }}>Enrol now — ₹999 <ArrowRight size={18} /></a>
+              <a href={PAY_LINK} target="_blank" rel="noreferrer" className="btn btn-coral" style={{ fontSize: 16, padding: "14px 26px" }}>Enrol now — ₹999 <ArrowRight size={18} /></a>
               <a href={WA} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 15, padding: "14px 22px" }}><MessageCircle size={17} /> Talk on WhatsApp</a>
             </div>
             <div style={{ display: "flex", gap: 20, marginTop: 24, flexWrap: "wrap", fontSize: 13.5, color: "rgba(28,28,40,.65)" }}>
@@ -92,7 +92,7 @@ export default function Josaa2026() {
                   <span key={x} style={{ display: "flex", gap: 9, alignItems: "center", fontSize: 14.5 }}><Check size={17} color="var(--green)" /> {x}</span>
                 ))}
               </div>
-              <a href={PAY_LINK} className="btn btn-coral" style={{ width: "100%", justifyContent: "center", marginTop: 20, fontSize: 16, padding: "13px" }}>Enrol now</a>
+              <a href={PAY_LINK} target="_blank" rel="noreferrer" className="btn btn-coral" style={{ width: "100%", justifyContent: "center", marginTop: 20, fontSize: 16, padding: "13px" }}>Enrol now</a>
               <p style={{ fontSize: 11.5, color: "var(--muted)", textAlign: "center", marginTop: 10, display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}><ShieldCheck size={13} /> Secure payment · mentor assigned within hours</p>
             </div>
           </Reveal>
@@ -194,7 +194,7 @@ export default function Josaa2026() {
           <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,3.5vw,2.3rem)", marginBottom: 10 }}>Counselling opens soon. Be ready.</h2>
           <p style={{ color: "rgba(255,255,255,.9)", maxWidth: 560, margin: "0 auto 22px" }}>Lock your ₹999 plan now and get your personalised choice list before the rush.</p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href={PAY_LINK} className="btn btn-light" style={{ fontSize: 16, padding: "14px 28px", background: "#fff", color: "var(--coral)", border: "none" }}>Enrol now — ₹999</a>
+            <a href={PAY_LINK} target="_blank" rel="noreferrer" className="btn btn-light" style={{ fontSize: 16, padding: "14px 28px", background: "#fff", color: "var(--coral)", border: "none" }}>Enrol now — ₹999</a>
             <a href={WA} target="_blank" rel="noreferrer" className="btn" style={{ fontSize: 15, padding: "14px 22px", background: "rgba(255,255,255,.15)", color: "#fff", border: "1px solid rgba(255,255,255,.5)" }}><MessageCircle size={17} /> Ask on WhatsApp</a>
           </div>
         </div>

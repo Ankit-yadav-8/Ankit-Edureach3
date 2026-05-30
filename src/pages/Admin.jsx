@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Fragment } from "react";
 import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
+  ChevronRight, ChevronDown,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 
@@ -34,6 +35,14 @@ export default function Admin() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const [search, setSearch] = useState("");
+  const [expanded, setExpanded] = useState(() => new Set());
+
+  const toggleRow = (id) =>
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
 
   const fetchUsers = useCallback(async (k) => {
     setBusy(true); setErr("");
@@ -248,8 +257,8 @@ export default function Admin() {
               <table style={{ width: "100%", minWidth: 1100, borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: "#fafafa" }}>
-                    {["#", "User", "Email", "Phone", "Coaching", "JEE Mains", "JEE Adv.", "Joined", "Last Login"].map((h) => (
-                      <th key={h} style={{
+                    {["#", "", "User", "Email", "Phone", "Coaching", "JEE Mains", "JEE Adv.", "Joined", "Last Login"].map((h, hi) => (
+                      <th key={hi} style={{
                         padding: "12px 20px", textAlign: "left", fontSize: 11,
                         fontWeight: 700, color: "#999", letterSpacing: ".06em",
                         textTransform: "uppercase", borderBottom: "1px solid #f0f0f0",
@@ -259,13 +268,20 @@ export default function Admin() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map((u, i) => (
-                    <tr key={u._id} style={{ borderBottom: "1px solid #f8f8f8", transition: "background .15s" }}
+                  {filtered.map((u, i) => {
+                    const isOpen = expanded.has(u._id);
+                    return (
+                    <Fragment key={u._id}>
+                    <tr style={{ borderBottom: isOpen ? "none" : "1px solid #f8f8f8", transition: "background .15s", cursor: "pointer", background: isOpen ? "#fafafa" : "transparent" }}
+                      onClick={() => toggleRow(u._id)}
                       onMouseEnter={e => e.currentTarget.style.background = "#fafafa"}
-                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                      onMouseLeave={e => e.currentTarget.style.background = isOpen ? "#fafafa" : "transparent"}
                     >
                       <td style={{ padding: "14px 20px", fontSize: 12, color: "#ccc", fontFamily: "monospace", width: 40 }}>
                         {i + 1}
+                      </td>
+                      <td style={{ padding: "14px 8px", width: 24, color: "#bbb" }}>
+                        {isOpen ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
                       </td>
                       <td style={{ padding: "14px 20px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -316,7 +332,24 @@ export default function Admin() {
                         </span>
                       </td>
                     </tr>
-                  ))}
+                    {isOpen && (
+                      <tr style={{ borderBottom: "1px solid #f0f0f0", background: "#fafafa" }}>
+                        <td colSpan={10} style={{ padding: "0 20px 18px 52px" }}>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: "#999", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: 8 }}>
+                            Full document (MongoDB Atlas)
+                          </div>
+                          <pre style={{
+                            margin: 0, padding: "14px 16px", background: "#0d1b3e", color: "#cdd6f4",
+                            borderRadius: 10, fontSize: 12.5, lineHeight: 1.6, overflowX: "auto",
+                            fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                          }}>
+                            {JSON.stringify(u, null, 2)}
+                          </pre>
+                        </td>
+                      </tr>
+                    )}
+                    </Fragment>
+                  );})}
                 </tbody>
               </table>
             </div>
