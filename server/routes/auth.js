@@ -14,12 +14,14 @@ router.post("/signup", async (req, res) => {
   try {
     let { name, email, phone, coaching, password, jeeMainsRank, jeeAdvancedRank } = req.body || {};
     if (!name || !email || !password || !phone) return res.status(400).json({ error: "Name, email, phone and password are required" });
+    if (!String(coaching || "").trim()) return res.status(400).json({ error: "Coaching is required" });
     email = String(email).toLowerCase().trim();
     if (!isEmail(email)) return res.status(400).json({ error: "Please enter a valid email" });
     if (String(password).length < 6) return res.status(400).json({ error: "Password must be at least 6 characters" });
     if (!/^\d{10}$/.test(String(phone))) return res.status(400).json({ error: "Enter a valid 10-digit phone number" });
-    if (await User.findOne({ email })) return res.status(409).json({ error: "Email already registered" });
-    if (await User.findOne({ phone: String(phone) })) return res.status(409).json({ error: "Phone number already registered" });
+    // Single round-trip duplicate check (email + phone) instead of two sequential queries
+    const dup = await User.findOne({ $or: [{ email }, { phone: String(phone) }] }).select("email phone");
+    if (dup) return res.status(409).json({ error: dup.email === email ? "Email already registered" : "Phone number already registered" });
     const passwordHash = await bcrypt.hash(String(password), 10);
     const user = await User.create({
       name: String(name).trim(), email, phone: String(phone),
@@ -40,8 +42,9 @@ router.post("/login", async (req, res) => {
     if (!user || !user.passwordHash) return res.status(401).json({ error: "Invalid email or password" });
     const ok = await bcrypt.compare(String(password || ""), user.passwordHash);
     if (!ok) return res.status(401).json({ error: "Invalid email or password" });
-    user.lastLogin = new Date(); await user.save();
+    // Respond immediately; update lastLogin in the background (don't block the response)
     res.json({ token: sign(user), user: pub(user) });
+    User.updateOne({ _id: user._id }, { lastLogin: new Date() }).catch(() => {});
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

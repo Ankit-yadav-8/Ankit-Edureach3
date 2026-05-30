@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useDeferredValue } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, MapPin, Trophy, ArrowRight, BadgeCheck, SlidersHorizontal, TrendingUp, Percent, X } from "lucide-react";
@@ -41,12 +41,17 @@ export default function Colleges() {
 
   useEffect(() => { setType(sp.get("type") || "All"); }, [sp]);
 
+  // Defer the search term so typing stays snappy — the heavy grid re-render
+  // runs at a lower priority instead of blocking every keystroke.
+  const dq = useDeferredValue(q);
+
   const list = useMemo(() => {
+    const needle = dq.trim().toLowerCase();
     let arr = COLLEGES.filter((c) =>
       (type === "All" || c.type === type) &&
       (!state || c.state === state) &&
       (!minPkg || c.placements.avg >= Number(minPkg)) &&
-      (!q || c.name.toLowerCase().includes(q.toLowerCase()) || c.location.toLowerCase().includes(q.toLowerCase()))
+      (!needle || c.name.toLowerCase().includes(needle) || c.location.toLowerCase().includes(needle))
     );
     arr.sort((a, b) =>
       sort === "package" ? b.placements.avg - a.placements.avg :
@@ -55,7 +60,7 @@ export default function Colleges() {
       a.nirf - b.nirf
     );
     return arr;
-  }, [type, state, q, sort, minPkg]);
+  }, [type, state, dq, sort, minPkg]);
 
   const hasFilters = type !== "All" || state || minPkg || q;
 
@@ -256,7 +261,7 @@ export default function Colleges() {
           }}
         >
           {list.map((c, i) => (
-            <Reveal key={c.slug} delay={(i % 3) * 0.04}>
+            <Reveal key={c.slug} delay={(i % 3) * 0.04} className="cv-card">
               <div
                 style={{
                   background: "#fff",

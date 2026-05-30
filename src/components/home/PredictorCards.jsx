@@ -60,7 +60,7 @@ export default function PredictorCards() {
           <p className="section-sub" style={{ color: "#4b5563" }}>Three connected tools: marks → rank → the exact colleges within your reach.</p>
         </motion.div>
 
-        <StaggerReveal stagger={0.1} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20, position: "relative", zIndex: 1 }}>
+        <StaggerReveal stagger={0.1} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, position: "relative", zIndex: 1 }}>
           {CARDS.map((c, i) => (
             <StaggerItem key={c.title}>
             <TiltCard

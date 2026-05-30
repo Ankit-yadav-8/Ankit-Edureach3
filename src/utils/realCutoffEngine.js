@@ -298,8 +298,17 @@ export function getRealPrograms(college) {
       if (l.includes("chemical"))                return 6;
       return 10;
     };
+    // Deprioritise integrated / dual-degree / joint-MBA programs so the
+    // standalone 4-year B.Tech wins the per-branch dedup in the predictor.
+    // e.g. IIT Patna's "B.Tech (CSE) - MBA (IIM Bodh Gaya)" (flat closing 3427)
+    // must NOT shadow the regular "Computer Science and Engineering" (≈3074).
+    const joint = (s) =>
+      /\bm\.?\s*tech\b|\bmba\b|\biim\b|dual degree|integrated/i.test(s) ? 1 : 0;
     const d = order(a) - order(b);
-    return d !== 0 ? d : a.localeCompare(b);
+    if (d !== 0) return d;
+    const j = joint(a) - joint(b);
+    if (j !== 0) return j;
+    return a.localeCompare(b);
   });
   if (_loaded || _predictorReady) _progCache.set(college.slug, list);
   return list;

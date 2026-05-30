@@ -30,8 +30,10 @@ function validate(mode, f) {
     else if (!isEmail(f.email))      e.email        = "Enter a valid email";
     if (!f.phone)                    e.phone        = "Mobile number is required";
     else if (!isPhone(f.phone))      e.phone        = "Enter a valid 10-digit number";
+    if (!f.coaching.trim())          e.coaching     = "Coaching is required";
     if (!f.jeeMainsRank)             e.jeeMainsRank = "JEE Mains rank is required";
     else if (!isRank(f.jeeMainsRank)) e.jeeMainsRank = "Enter a valid rank number";
+    // JEE Advanced rank stays optional — only validated if provided
     if (f.jeeAdvancedRank && !isRank(f.jeeAdvancedRank)) e.jeeAdvancedRank = "Enter a valid rank number";
     if (!f.password)             e.password = "Password is required";
     else if (f.password.length < 6) e.password = "Minimum 6 characters";
@@ -541,8 +543,8 @@ export default function AuthModal() {
                     <Field icon={Phone} type="tel" inputMode="numeric" maxLength={10}
                       placeholder="Mobile number *" value={f.phone}
                       error={fe.phone} onChange={e => set("phone", e.target.value.replace(/\D/g, ""))} autoComplete="tel" />
-                    <Field icon={GraduationCap} placeholder="Coaching (optional)" value={f.coaching}
-                      onChange={e => set("coaching", e.target.value)} />
+                    <Field icon={GraduationCap} placeholder="Coaching *" value={f.coaching}
+                      error={fe.coaching} onChange={e => set("coaching", e.target.value)} />
                     <div style={{ gridColumn: "1/-1" }}>
                       <Field icon={Mail} type="email" placeholder="Email address *" value={f.email}
                         error={fe.email} onChange={e => set("email", e.target.value)} autoComplete="email" />
