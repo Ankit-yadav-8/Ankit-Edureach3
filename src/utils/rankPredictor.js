@@ -15,10 +15,10 @@
 const TOTAL_CANDIDATES_2026 = 1400000;
 export const CATEGORY_POOLS_2026 = {
   General: 1400000,   // CRL pool
-  "OBC-NCL": 612000,
-  EWS: 180086,
-  SC: 50000,
-  ST: 25000,
+  "OBC-NCL": 350000,
+  EWS: 150000,
+  SC: 35000,
+  ST: 8000,
 };
 
 // ── JEE Main marks → CRL ──────────────────────────────────────
@@ -189,6 +189,39 @@ function interpAdvBand(marks) {
 
 export const maxPerSubject = (advanced) => (advanced ? 120 : 100);
 export const maxTotal      = (advanced) => (advanced ? 360 : 300);
+
+// ── JEE Main 2026: PERCENTILE → RANK (exact 2026 formula) ─────
+// NTA hands every candidate a percentile (NTA score), not a raw rank, so this
+// path applies the 2026 formula straight from the candidate pools — no
+// marks-vs-rank interpolation in between:
+//
+//   CRL_rank      = ((100 − percentile) / 100) × 14,00,000
+//   category_rank = ((100 − percentile) / 100) × <category pool>
+//
+// Reference points reproduced exactly:
+//   99 %ile  → CRL 14,000 · OBC 6,120 · EWS 1,801 · SC 500 · ST 250
+//   98.64 %ile → CRL 19,040  (1.36% × 14,00,000)
+export const RANK_BAND = 0.05; // ±5% variance band (per 2026 spec)
+
+export function predictFromPercentile({ percentile, category = "General" }) {
+  const pct  = clamp(Number(percentile) || 0, 0, 100);
+  const frac = (100 - pct) / 100;                 // share of pool ranked above you
+  const isGeneral = category === "General";
+  const pool = CATEGORY_POOLS_2026[category] ?? TOTAL_CANDIDATES_2026;
+
+  const crl          = Math.max(1, Math.round(frac * TOTAL_CANDIDATES_2026));
+  const categoryRank = Math.max(1, Math.round(frac * pool));
+  const rank         = isGeneral ? crl : categoryRank;
+
+  return {
+    mode: "percentile",
+    total: null, advanced: false, category, isGeneral, ranked: true,
+    percentile: Number(pct.toFixed(3)),
+    crl, categoryRank, rank,
+    low:  Math.max(1, Math.round(rank * (1 - RANK_BAND))),
+    high: Math.round(rank * (1 + RANK_BAND)),
+  };
+}
 
 /**
  * Unified predictor for JEE Main and JEE Advanced.

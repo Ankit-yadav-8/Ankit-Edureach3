@@ -6,7 +6,7 @@ import {
   Atom, FlaskConical, Calculator, Sparkles,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { predictRank, maxPerSubject, maxTotal } from "../../utils/rankPredictor.js";
+import { predictRank, predictFromPercentile, maxPerSubject, maxTotal } from "../../utils/rankPredictor.js";
 import { useCollegePredictor } from "../../hooks/useCollegePredictor.js";
 import { loadPredictorDB } from "../../utils/realCutoffEngine.js";
 import { TIER_COLOR } from "../../utils/collegePredictor.js";
@@ -36,10 +36,26 @@ export default function RankPredictorTool({ accent = "#F97316", advanced = false
   const totalMax = maxTotal(advanced);
   const cats     = advanced ? CATS_ADV : CATS_MAIN;
 
-  const [form, setForm] = useState({ physics: "", chemistry: "", maths: "", category: "General" });
+  // Input mode — JEE Main lets students predict from raw marks OR from their
+  // NTA percentile (which is what the result card actually shows them). JEE
+  // Advanced is marks-only.
+  const [mode, setMode] = useState("marks"); // "marks" | "percentile"
+  const isPctMode = !advanced && mode === "percentile";
+
+  const [form, setForm] = useState({ physics: "", chemistry: "", maths: "", percentile: "", category: "General" });
   const [res,  setRes]  = useState(null);
   const nav = useNavigate();
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  // Percentile entry: accept 0–100 with up to 4 decimals (NTA reports 7), clamp
+  // the integer part so a stray digit can't push it past 100.
+  const setPct = (raw) => {
+    if (raw === "") return set("percentile", "");
+    if (!/^\d{0,3}(\.\d{0,4})?$/.test(raw)) return;
+    const n = Number(raw);
+    if (Number.isNaN(n) || n < 0) return;
+    set("percentile", n > 100 ? "100" : raw);
+  };
 
   // Marks entry: accept what the student types (0–999) so we can SHOW a clear
   // "max {cap}" message when any subject exceeds 100 (or 120 for JEE Advanced),
@@ -52,20 +68,28 @@ export default function RankPredictorTool({ accent = "#F97316", advanced = false
   };
 
   // Per-subject overflow (marks above the per-subject cap) → drives the inline
-  // warning + blocks prediction until corrected.
-  const overSubjects = SUBJECTS.filter((s) => Number(form[s.key]) > cap);
+  // warning + blocks prediction until corrected. (Marks mode only.)
+  const overSubjects = isPctMode ? [] : SUBJECTS.filter((s) => Number(form[s.key]) > cap);
   const hasOverflow  = overSubjects.length > 0;
+
+  // Percentile mode is ready once a 0–100 value is present.
+  const pctValid = form.percentile !== "" && Number(form.percentile) >= 0 && Number(form.percentile) <= 100;
 
   // Inline college preview — predicted from the CATEGORY rank (CRL for General)
   const { predict: predictColleges, reset: resetColleges, results: colleges, loading: collegesLoading } =
     useCollegePredictor();
 
   const submit = () => {
+    if (isPctMode) {
+      if (!pctValid) return;
+      setRes(predictFromPercentile({ percentile: form.percentile, category: form.category }));
+      return;
+    }
     if (hasOverflow) return; // never predict from invalid (>cap) marks
     setRes(predictRank({ ...form, advanced }));
   };
   const reset  = () => {
-    setForm({ physics: "", chemistry: "", maths: "", category: "General" });
+    setForm({ physics: "", chemistry: "", maths: "", percentile: "", category: "General" });
     setRes(null);
     resetColleges();
   };
@@ -83,12 +107,13 @@ export default function RankPredictorTool({ accent = "#F97316", advanced = false
     }, false);
   }, [res, advanced, predictColleges, resetColleges]);
 
-  const scorePct = res ? Math.round((res.total / totalMax) * 100) : 0;
+  // Gauge value: % of max marks in marks mode, the percentile itself in pct mode.
+  const scorePct = res ? (res.total != null ? Math.round((res.total / totalMax) * 100) : Math.round(res.percentile)) : 0;
 
   // Live running total as the user types (raw, so over-cap entries are visible)
   const liveTotal = SUBJECTS.reduce((sum, s) => sum + (Number(form[s.key]) || 0), 0);
   const livePct = Math.round((liveTotal / totalMax) * 100);
-  const hasInput = SUBJECTS.some((s) => form[s.key] !== "");
+  const hasInput = SUBJECTS.some((s) => form[s.key] !== "") || form.percentile !== "";
 
   return (
     <>
