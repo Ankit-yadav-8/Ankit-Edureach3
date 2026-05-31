@@ -14,11 +14,11 @@
 //   category_rank = CRL × (category pool / 14,00,000)  ← see CATEGORY_FACTOR.
 const TOTAL_CANDIDATES_2026 = 1400000;
 export const CATEGORY_POOLS_2026 = {
-  General: 1400000,   // CRL pool
-  "OBC-NCL": 612000,
-  EWS: 180086,
-  SC: 50000,
-  ST: 25000,
+  General: 1300000,   // CRL pool
+  "OBC-NCL": 350000,
+  EWS: 150000,
+  SC: 35000,
+  ST: 9000,
 };
 
 // ── JEE Main marks → CRL ──────────────────────────────────────
@@ -98,7 +98,7 @@ const ADV_BANDS = [
 
 // ── Category minimum aggregate cutoffs ───────────────────────
 const CAT_AGG_CUTOFF = {
-  General: 90, EWS: 90, "OBC-NCL": 81, SC: 45, ST: 45, PwD: 45,
+  General: 70, EWS: 70, "OBC-NCL": 79, SC: 52, ST: 45, PwD: 45,
 };
 // Approximate per-subject minimum (each subject must meet this)
 const CAT_SUB_CUTOFF = {
@@ -335,7 +335,7 @@ export function predictRank({ physics, chemistry, maths, category = "General", a
 
   // Spread reflects the asymmetric curve: tighter band at top (dense scores),
   // wider band mid-range where shift normalisation has more impact.
-  const spread = total >= 210 ? 0.06 : total >= 150 ? 0.10 : total >= 105 ? 0.14 : 0.18;
+  const spread = total >= 190 ? 0.06 : total >= 150 ? 0.10 : total >= 105 ? 0.14 : 0.18;
 
   const percentile = Number(clamp(100 * (1 - (crl - 1) / MAIN_CANDIDATES), 0, 99.999).toFixed(3));
 
