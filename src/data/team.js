@@ -78,6 +78,31 @@ export const TEAM = [
       github:"https://github.com/Ankit-yadav-8/Ankit-7"
     },
   },
+  {
+    id: "operations-head",
+    initials: "KG",
+    photo: "/assets/team/K.Gopal.jpeg",
+    name: "K. Gopal",
+    role: "Operations Head",
+    accent: "#F47B20",
+    tagline: "Keeping the platform running smoothly so students always come first.",
+    college: "IIT Roorkee",
+    location: "IIT Roorkee, Uttarakhand",
+    exam: "JEE Advanced",
+    email: "collegeparichay@gmail.com",
+    bio: `Hi, I'm K. Gopal, Operations Head at College Parichay and an IIT Roorkee student. I oversee all operational aspects of the platform — ensuring seamless day-to-day functioning, team coordination, and execution across departments. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Being part of College Parichay is my way of channelling that experience into something that truly matters. One mission: helping every student make confident, data-driven decisions.`,
+    skills: ["Operations", "Team Coordination", "Execution", "Strategy", "Communication", "Management"],
+    projects: [
+      { name: "Operations & Coordination", desc: "Day-to-day functioning of the platform and smooth coordination across the team.", tag: "Operations" },
+      { name: "Cross-Department Execution", desc: "Aligning product, content and outreach so initiatives ship on time.", tag: "Execution" },
+      { name: "Student Support", desc: "Ensuring students get timely, reliable help through every counselling season.", tag: "Support" },
+    ],
+    socials: {
+      instagram: "https://www.instagram.com/_mr_gopal.___0?utm_source=qr&igsh=M3V5eXRzcGExeTR2",
+      whatsapp: WA,
+      website: "https://collegeparichay.in",
+    },
+  },
 ];
 
 export const TEAM_BY_ID = Object.fromEntries(TEAM.map((t) => [t.id, t]));

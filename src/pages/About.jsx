@@ -50,14 +50,29 @@ const FOUNDERS = [
     name: "Ankit Kumar",
     initials: "AK",
     photo: "/assets/team/ankit.jpeg",
-    role: "Co-Founder & CTO",
+    role: "Manager & CTO",
     accent: "#F47B20",
     edu: "B.Tech, IIT Roorkee",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
     jeeRank: "AIR 3846 · JEE Advanced",
-    bio: "Hi, I'm Ankit Kumar, Co-Founder & CTO of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.",
+    bio: "Hi, I'm Ankit Kumar, Manager & Cheif Technical Head of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.",
     skills: ["React", "Node.js", "MongoDB", "Express", "Python", "REST APIs"],
     socials: { linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/ankit_1_7_/", whatsapp: WA },
+  },
+];
+
+/* ── Operations team data ──────────────────────────────────── */
+const OPERATIONS = [
+  {
+    name: "K. Gopal",
+    initials: "KG",
+    photo: "/assets/team/K.Gopal.jpeg",
+    role: "Operations~",
+    accent: "#F47B20",
+    edu: "B.Tech, IIT Roorkee",
+    bio: "Hi, I'm K. Gopal, Operations Head at College Parichay and an IIT Roorkee student. I oversee all operational aspects of the platform — ensuring seamless day-to-day functioning, team coordination, and execution across departments. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Being part of College Parichay is my way of channelling that experience into something that truly matters. One mission: helping every student make confident, data-driven decisions.",
+    skills: ["Operations", "Team Coordination", "Execution", "Strategy", "Communication", "Management"],
+    socials: { instagram: "https://www.instagram.com/_mr_gopal.___0?utm_source=qr&igsh=M3V5eXRzcGExeTR2", whatsapp: WA },
   },
 ];
 
@@ -560,7 +575,7 @@ export default function About() {
                       padding: "4px 14px", borderRadius: 50,
                       fontSize: 11, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase",
                     }}>
-                      <Trophy size={10} /> {idx === 0 ? "Founder" : "Co-Founder"}
+                      <Trophy size={10} /> {f.badge || (idx === 0 ? "Founder" : "Co-Founder")}
                     </span>
 
                     <div>
@@ -607,6 +622,180 @@ export default function About() {
                       <SocialBtn href={f.socials.linkedin}  icon={Linkedin} label="LinkedIn"  accent={f.accent} />
                       <SocialBtn href={f.socials.instagram} icon={IgIcon}   label="Instagram" accent={f.accent} />
                       <SocialBtn href={f.socials.whatsapp}  icon={WaIcon}   label="WhatsApp"  accent={f.accent} />
+                    </div>
+                  </div>
+
+                  {/* ── Right: photo column ── */}
+                  <div style={{
+                    width: 320, flexShrink: 0,
+                    background: `linear-gradient(160deg, rgba(244,123,32,.22) 0%, rgba(251,191,36,.12) 60%, rgba(244,123,32,.1) 100%)`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    position: "relative", overflow: "hidden", padding: "28px 20px",
+                  }}>
+                    <div style={{ position: "absolute", top: -30, right: -30, width: 130, height: 130, borderRadius: "50%", background: `radial-gradient(circle, ${f.accent}44 0%, transparent 70%)`, animation: "orbDrift1 6s ease-in-out infinite" }} />
+                    <div style={{ position: "absolute", bottom: -20, left: -20, width: 100, height: 100, borderRadius: "50%", background: `radial-gradient(circle, ${f.accent}28 0%, transparent 70%)`, animation: "orbDrift2 8s ease-in-out infinite" }} />
+
+                    {[
+                      { text: f.skills[0], pos: { top: 14, left: 8 } },
+                      { text: f.skills[1], pos: { top: 46, right: 6 } },
+                      { text: f.skills[4] || f.skills[3], pos: { bottom: 46, left: 6 } },
+                      { text: f.skills[2], pos: { bottom: 14, right: 8 } },
+                    ].map(({ text, pos }, si) => text && (
+                      <motion.div
+                        key={text}
+                        initial={{ opacity: 0, scale: .5 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.1 + si * 0.08 + 0.35, type: "spring", bounce: 0.4 }}
+                        style={{
+                          position: "absolute", ...pos,
+                          background: `${f.accent}20`, border: `1px solid ${f.accent}38`,
+                          borderRadius: 8, padding: "4px 8px",
+                          fontSize: 10, color: f.accent, fontWeight: 700,
+                          backdropFilter: "blur(4px)",
+                        }}
+                      >{text}</motion.div>
+                    ))}
+
+                    <FounderPhoto founder={f} />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          OPERATIONS TEAM
+      ══════════════════════════════════════════════════════ */}
+      <section style={{ background: "#0d0d1c", padding: "0 0 84px", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
+        <div className="container">
+          {/* Section header */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            style={{ textAlign: "center", marginBottom: 60 }}
+          >
+            <span style={{
+              display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 14,
+              background: "rgba(244,123,32,.15)", border: "1px solid rgba(244,123,32,.3)",
+              color: "#fb923c", padding: "5px 18px", borderRadius: 50, fontSize: 12, fontWeight: 700, letterSpacing: .5,
+            }}>
+              <Users size={12} /> The Operations Team
+            </span>
+            <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,3.5vw,2.7rem)", color: "#fff", margin: "0 0 12px" }}>
+              Keeping everything running smoothly
+            </h2>
+            <p style={{ color: "rgba(255,255,255,.45)", fontSize: 15, maxWidth: 480, margin: "0 auto" }}>
+              The people behind the scenes making sure students always come first
+            </p>
+          </motion.div>
+
+          {/* Operations cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(540px, 1fr))", gap: 32 }}>
+            {OPERATIONS.map((f, idx) => (
+              <motion.div
+                key={f.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.6, delay: idx * 0.15, type: "spring", bounce: 0.3 }}
+              >
+                <div
+                  className="founder-card-wrap"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.02) 100%)",
+                    border: "1px solid rgba(255,255,255,.1)",
+                    borderTop: `4px solid ${f.accent}`,
+                    borderRadius: 22,
+                    overflow: "hidden",
+                    display: "grid",
+                    gridTemplateColumns: "1fr auto",
+                    boxShadow: "0 8px 40px rgba(0,0,0,.3)",
+                  }}
+                >
+                  {/* Gloss sweep on hover */}
+                  <div className="card-gloss" />
+
+                  {/* ── Left: text ── */}
+                  <div style={{ padding: "28px 26px 26px", display: "flex", flexDirection: "column", gap: 14 }}>
+
+                    {/* Big IIT Roorkee Tagline */}
+                    <motion.div
+                      className="iit-tag"
+                      initial={{ opacity: 0, scale: .8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: idx * 0.15 + 0.2, type: "spring", bounce: 0.5 }}
+                      style={{
+                        display: "inline-flex", alignItems: "center", gap: 10, alignSelf: "flex-start",
+                        padding: "10px 20px", borderRadius: 14,
+                        background: "linear-gradient(90deg, rgba(244,123,32,.22) 0%, rgba(251,191,36,.14) 100%)",
+                        border: "1px solid rgba(244,123,32,.45)",
+                        boxShadow: "0 0 24px rgba(244,123,32,.2)",
+                      }}
+                    >
+                      <GraduationCap size={22} color="#F47B20" />
+                      <span style={{
+                        fontFamily: "Sora", fontWeight: 900, fontSize: "1.25rem",
+                        background: "linear-gradient(90deg, #F47B20 0%, #fbbf24 55%, #F47B20 100%)",
+                        backgroundSize: "200% auto",
+                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                        animation: "gradText 3s ease infinite",
+                        letterSpacing: "-0.02em",
+                      }}>
+                        IIT Roorkee
+                      </span>
+                    </motion.div>
+
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 6, alignSelf: "flex-start",
+                      background: `${f.accent}18`, color: f.accent,
+                      border: `1px solid ${f.accent}35`,
+                      padding: "4px 14px", borderRadius: 50,
+                      fontSize: 11, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase",
+                    }}>
+                      <Zap size={10} /> Operations
+                    </span>
+
+                    <div>
+                      <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.45rem", color: "#fff", marginBottom: 4, lineHeight: 1.2 }}>{f.name}</h3>
+                      <div style={{ color: f.accent, fontWeight: 600, fontSize: 14 }}>{f.role}</div>
+                    </div>
+
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
+                        <GraduationCap size={13} color={f.accent} /> {f.edu}
+                      </div>
+                    </div>
+
+                    <p style={{ color: "rgba(255,255,255,.58)", lineHeight: 1.72, fontSize: 13.5, flex: 1 }}>{f.bio}</p>
+
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                      {f.skills.slice(0, 4).map((s, si) => (
+                        <motion.span
+                          key={s}
+                          initial={{ opacity: 0, scale: .7 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: idx * 0.1 + si * 0.05 + 0.3 }}
+                          style={{
+                            padding: "3px 10px", borderRadius: 50, fontSize: 11,
+                            background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.12)",
+                            color: "rgba(255,255,255,.72)", fontWeight: 500,
+                          }}
+                        >{s}</motion.span>
+                      ))}
+                    </div>
+
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      {f.socials.linkedin && <SocialBtn href={f.socials.linkedin}  icon={Linkedin} label="LinkedIn"  accent={f.accent} />}
+                      {f.socials.instagram && <SocialBtn href={f.socials.instagram} icon={IgIcon}   label="Instagram" accent={f.accent} />}
+                      {f.socials.whatsapp && <SocialBtn href={f.socials.whatsapp}  icon={WaIcon}   label="WhatsApp"  accent={f.accent} />}
                     </div>
                   </div>
 
