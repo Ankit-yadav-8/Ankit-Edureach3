@@ -159,7 +159,7 @@ function FounderPhoto({ founder }) {
         animation: "aboutGlow 2.5s ease infinite",
       }} />
       <div className="founder-photo-frame" style={{
-        width: 280, height: 350, borderRadius: 20, overflow: "hidden",
+        width: 360, height: 450, borderRadius: 20, overflow: "hidden",
         position: "relative", zIndex: 1,
         boxShadow: `0 0 50px ${founder.accent}aa, 0 0 100px ${founder.accent}44, 0 8px 40px rgba(0,0,0,.5)`,
       }}>
@@ -643,7 +643,7 @@ export default function About() {
 
                   {/* ── Right: photo column ── */}
                   <div className="team-photo-col" style={{
-                    width: 320, flexShrink: 0,
+                    width: 420, flexShrink: 0,
                     background: `linear-gradient(160deg, rgba(244,123,32,.22) 0%, rgba(251,191,36,.12) 60%, rgba(244,123,32,.1) 100%)`,
                     display: "flex", alignItems: "center", justifyContent: "center",
                     position: "relative", overflow: "hidden", padding: "28px 20px",
@@ -820,7 +820,7 @@ export default function About() {
 
                   {/* ── Right: photo column ── */}
                   <div className="team-photo-col" style={{
-                    width: 320, flexShrink: 0,
+                    width: 420, flexShrink: 0,
                     background: `linear-gradient(160deg, rgba(244,123,32,.22) 0%, rgba(251,191,36,.12) 60%, rgba(244,123,32,.1) 100%)`,
                     display: "flex", alignItems: "center", justifyContent: "center",
                     position: "relative", overflow: "hidden", padding: "28px 20px",
