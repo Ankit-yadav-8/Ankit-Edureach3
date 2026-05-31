@@ -52,7 +52,7 @@ const FOUNDERS = [
     photo: "/assets/team/ankit.jpeg",
     role: "Manager & CTO",
     accent: "#F47B20",
-    edu: "B.Tech, IIT Roorkee",
+    highlight: "The engineer who turns rank-list chaos into clarity — every tool here is built by him.",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
     jeeRank: "AIR 3846 · JEE Advanced",
     bio: "Hi, I'm Ankit Kumar, Manager & Cheif Technical Head of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.",
@@ -159,7 +159,7 @@ function FounderPhoto({ founder }) {
         backgroundSize: "400% 400%",
         animation: "aboutGlow 2.5s ease infinite",
       }} />
-      <div style={{
+      <div className="founder-photo-frame" style={{
         width: 280, height: 350, borderRadius: 20, overflow: "hidden",
         position: "relative", zIndex: 1,
         boxShadow: `0 0 50px ${founder.accent}aa, 0 0 100px ${founder.accent}44, 0 8px 40px rgba(0,0,0,.5)`,
@@ -371,6 +371,21 @@ export default function About() {
         .iit-tag {
           animation: iitTagPop .5s cubic-bezier(.22,.68,0,1.2) both;
         }
+        /* ── Mobile: stack photo on top, content below ── */
+        @media (max-width: 640px) {
+          .team-grid { grid-template-columns: 1fr !important; }
+          .founder-card-wrap { grid-template-columns: 1fr !important; }
+          .team-photo-col {
+            width: auto !important;
+            order: -1;
+            padding: 26px 16px !important;
+          }
+          .founder-photo-frame {
+            width: min(240px, 68vw) !important;
+            height: auto !important;
+            aspect-ratio: 4 / 5;
+          }
+        }
       `}</style>
 
       {/* ══════════════════════════════════════════════════════
@@ -511,7 +526,7 @@ export default function About() {
           </motion.div>
 
           {/* Founder cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(540px, 1fr))", gap: 32 }}>
+          <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(540px, 100%), 1fr))", gap: 32 }}>
             {FOUNDERS.map((f, idx) => (
               <motion.div
                 key={f.name}
@@ -520,6 +535,26 @@ export default function About() {
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.6, delay: idx * 0.15, type: "spring", bounce: 0.3 }}
               >
+                {f.highlight && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45, delay: idx * 0.15 + 0.1 }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 10,
+                      marginBottom: 14, padding: "11px 16px", borderRadius: 12,
+                      background: "linear-gradient(90deg, rgba(244,123,32,.16) 0%, rgba(251,191,36,.08) 100%)",
+                      border: "1px solid rgba(244,123,32,.4)",
+                      boxShadow: "0 0 22px rgba(244,123,32,.14)",
+                    }}
+                  >
+                    <Star size={16} color={f.accent} style={{ flexShrink: 0 }} fill={f.accent} />
+                    <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "#fff", lineHeight: 1.45 }}>
+                      {f.highlight}
+                    </span>
+                  </motion.div>
+                )}
                 <div
                   className="founder-card-wrap"
                   style={{
@@ -626,7 +661,7 @@ export default function About() {
                   </div>
 
                   {/* ── Right: photo column ── */}
-                  <div style={{
+                  <div className="team-photo-col" style={{
                     width: 320, flexShrink: 0,
                     background: `linear-gradient(160deg, rgba(244,123,32,.22) 0%, rgba(251,191,36,.12) 60%, rgba(244,123,32,.1) 100%)`,
                     display: "flex", alignItems: "center", justifyContent: "center",
@@ -695,7 +730,7 @@ export default function About() {
           </motion.div>
 
           {/* Operations cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(540px, 1fr))", gap: 32 }}>
+          <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(540px, 100%), 1fr))", gap: 32 }}>
             {OPERATIONS.map((f, idx) => (
               <motion.div
                 key={f.name}
@@ -800,7 +835,7 @@ export default function About() {
                   </div>
 
                   {/* ── Right: photo column ── */}
-                  <div style={{
+                  <div className="team-photo-col" style={{
                     width: 320, flexShrink: 0,
                     background: `linear-gradient(160deg, rgba(244,123,32,.22) 0%, rgba(251,191,36,.12) 60%, rgba(244,123,32,.1) 100%)`,
                     display: "flex", alignItems: "center", justifyContent: "center",
