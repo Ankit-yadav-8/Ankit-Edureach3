@@ -52,9 +52,7 @@ const FOUNDERS = [
     photo: "/assets/team/ankit.jpeg",
     role: "COO & CTO",
     accent: "#F47B20",
-    highlight: "The engineer who turns rank-list chaos into clarity — every tool here is built by him.",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
-    jeeRank: "AIR 3846 · JEE Advanced",
     bio: "Hi, I'm Ankit Kumar, COO & Cheif Technical Head of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.",
     skills: ["React", "Node.js", "MongoDB", "Express", "Python", "REST APIs"],
     socials: { linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/ankit_1_7_/", whatsapp: WA },
@@ -371,25 +369,20 @@ export default function About() {
         .iit-tag {
           animation: iitTagPop .5s cubic-bezier(.22,.68,0,1.2) both;
         }
-        /* ── Mobile: keep the same horizontal photo + content layout, just compact ── */
+        /* ── Mobile: stack photo on top, content below ── */
         @media (max-width: 640px) {
+          .team-grid { grid-template-columns: 1fr !important; }
+          .founder-card-wrap { grid-template-columns: 1fr !important; }
           .team-photo-col {
-            width: 132px !important;
-            padding: 16px 10px !important;
-          }
-          .team-content {
-            padding: 18px 14px 18px !important;
-            gap: 11px !important;
+            width: auto !important;
+            order: -1;
+            padding: 26px 16px !important;
           }
           .founder-photo-frame {
-            width: 108px !important;
+            width: min(240px, 68vw) !important;
             height: auto !important;
             aspect-ratio: 4 / 5;
           }
-          .team-float-tag { display: none !important; }
-          .team-content .iit-tag { padding: 7px 12px !important; }
-          .team-content .iit-tag span { font-size: 1rem !important; }
-          .team-content h3 { font-size: 1.2rem !important; }
         }
       `}</style>
 
@@ -540,27 +533,6 @@ export default function About() {
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.6, delay: idx * 0.15, type: "spring", bounce: 0.3 }}
               >
-                {f.highlight && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.45, delay: idx * 0.15 + 0.1 }}
-                    style={{
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                      width: "fit-content", maxWidth: "100%", margin: "0 auto 14px",
-                      padding: "11px 18px", borderRadius: 50, textAlign: "center",
-                      background: "linear-gradient(90deg, rgba(244,123,32,.16) 0%, rgba(251,191,36,.08) 100%)",
-                      border: "1px solid rgba(244,123,32,.4)",
-                      boxShadow: "0 0 22px rgba(244,123,32,.14)",
-                    }}
-                  >
-                    <Star size={16} color={f.accent} style={{ flexShrink: 0 }} fill={f.accent} />
-                    <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "#fff", lineHeight: 1.45 }}>
-                      {f.highlight}
-                    </span>
-                  </motion.div>
-                )}
                 <div
                   className="founder-card-wrap"
                   style={{
@@ -625,9 +597,11 @@ export default function About() {
                     </div>
 
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
-                        <GraduationCap size={13} color={f.accent} /> {f.edu}
-                      </div>
+                      {f.edu && (
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
+                          <GraduationCap size={13} color={f.accent} /> {f.edu}
+                        </div>
+                      )}
                       {f.jeeRank && (
                         <motion.div
                           initial={{ opacity: 0, scale: .6, y: 10 }}
@@ -810,9 +784,11 @@ export default function About() {
                     </div>
 
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
-                        <GraduationCap size={13} color={f.accent} /> {f.edu}
-                      </div>
+                      {f.edu && (
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
+                          <GraduationCap size={13} color={f.accent} /> {f.edu}
+                        </div>
+                      )}
                     </div>
 
                     <p style={{ color: "rgba(255,255,255,.58)", lineHeight: 1.72, fontSize: 13.5, flex: 1 }}>{f.bio}</p>
