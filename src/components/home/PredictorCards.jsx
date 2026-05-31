@@ -19,7 +19,7 @@ const CARDS = [
     gradient: "linear-gradient(135deg, #6366f1, #4f46e5)",
     desc: "Turn your rank into a personalised list of colleges — across all JoSAA & CSAB rounds, with packages & placements.",
     to: "/jee-main#college", cta: "Find My Colleges",
-    donut: { data: [{ name: "Safe", value: 40 }, { name: "Moderate", value: 35 }, { name: "Stretch", value: 25 }], label: "6+2", sub: "JoSAA + CSAB" },
+    donut: { data: [{ name: "Safe", value: 40 }, { name: "Moderate", value: 35 }, { name: "Ambitious", value: 25 }], label: "6+2", sub: "JoSAA + CSAB" },
     colors: ["#2EC4B6", "#6366f1", "#F97316"],
     badge: "850+ colleges",
   },

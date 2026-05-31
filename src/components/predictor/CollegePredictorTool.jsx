@@ -129,7 +129,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
 
   const summary = useMemo(() => {
     if (!results?.length) return null;
-    const tiers    = ["Safe", "Good", "Moderate", "Reach"];
+    const tiers    = ["Safe", "Moderate", "Ambitious"];
     const dist     = tiers
       .map((t) => ({ name: t, value: results.filter((r) => r.tier === t).length }))
       .filter((d) => d.value);
@@ -276,7 +276,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
             <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Confidence breakdown</h4>
             <PieWithLegend
               data={summary.dist}
-              colors={["#2EC4B6", "#0EA5A4", "#F4A261", "#F97316"]}
+              colors={["#2EC4B6", "#F97316", "#EF4444"]}
               height={200}
             />
           </div>

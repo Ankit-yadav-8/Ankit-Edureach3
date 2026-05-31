@@ -23,26 +23,24 @@ import {
 } from "./realCutoffEngine.js";
 import { forecastClosing } from "./cutoffEngine.js";
 
+// JoSAA-spec 3-bucket classification (by % of final-round closing rank):
+//   Safe       → rank ≤ 80% of closing
+//   Moderate   → rank is 80%–100% of closing
+//   Ambitious  → rank is 100%–115% of closing (stretch — try in earlier rounds)
 export const TIER_COLOR = {
-  Safe:     "var(--green)",
-  Good:     "var(--teal)",
-  Moderate: "var(--orange)",
-  Reach:    "var(--violet)",
-  Stretch:  "var(--coral)",
+  Safe:      "var(--green)",
+  Moderate:  "var(--orange)",
+  Ambitious: "var(--coral)",
 };
 export const TIER_BG = {
-  Safe:     "rgba(46,196,182,.15)",
-  Good:     "rgba(14,165,164,.15)",
-  Moderate: "rgba(249,115,22,.13)",
-  Reach:    "rgba(139,92,246,.13)",
-  Stretch:  "rgba(239,68,68,.13)",
+  Safe:      "rgba(46,196,182,.15)",
+  Moderate:  "rgba(249,115,22,.13)",
+  Ambitious: "rgba(239,68,68,.13)",
 };
 export const TIER_DESC = {
-  Safe:     "Your rank is above the opening rank — admission almost certain in Round 1.",
-  Good:     "Your rank is comfortably within the Round-1 closing — high probability.",
-  Moderate: "Your rank is within the final closing but may need later rounds.",
-  Reach:    "Close to the final closing — possible in the last rounds.",
-  Stretch:  "Slightly beyond the last closing — very low chance; keep as backup only.",
+  Safe:      "Your rank is comfortably within the closing rank (≤ 80%) — admission almost certain.",
+  Moderate:  "Your rank is near the final closing rank (80%–100%) — likely, may need later rounds.",
+  Ambitious: "Your rank slightly exceeds the closing rank (up to 115%) — worth trying in earlier rounds.",
 };
 export function rankGapLabel(rankGap) {
   if (rankGap >= 0) return `${rankGap.toLocaleString()} ranks inside`;
@@ -274,26 +272,29 @@ export function predictColleges({
       const effR1Closing    = Math.round(r1Closing  * totalRelax);
       const effFinalClosing = Math.round(rawClosing  * totalRelax);
 
-      // ── Strict eligibility: user's rank must be ≤ final closing ─────────
-      if (userRank > effFinalClosing) return;
+      // ── Eligibility: include Ambitious stretch options up to 115% of the
+      //    final-round closing rank (JoSAA spec). Beyond that = out of reach.
+      if (userRank > effFinalClosing * 1.15) return;
 
-      // ── 4-tier classification ────────────────────────────────────────────
+      // ── 3-bucket classification by % of final closing rank ────────────────
+      //   Safe ≤ 80%  ·  Moderate 80–100%  ·  Ambitious 100–115%
       let tier;
-      if      (userRank <= effOpening)             tier = "Safe";
-      else if (userRank <= effR1Closing)           tier = "Good";
-      else if (userRank <= effFinalClosing * 0.88) tier = "Moderate";
-      else                                          tier = "Reach";
+      if      (userRank <= effFinalClosing * 0.80) tier = "Safe";
+      else if (userRank <= effFinalClosing)        tier = "Moderate";
+      else                                          tier = "Ambitious";
 
-      // ── Fit score 5–100 ──────────────────────────────────────────────────
+      // ── Fit score 5–100 (monotonic across the three buckets) ──────────────
       let score;
-      if (userRank <= effOpening) {
-        score = 100;
-      } else if (userRank <= effR1Closing) {
-        score = Math.round(90 - ((userRank - effOpening) / Math.max(1, effR1Closing - effOpening)) * 25);
-      } else if (userRank <= effFinalClosing * 0.88) {
-        score = Math.round(65 - ((userRank - effR1Closing) / Math.max(1, effFinalClosing * 0.88 - effR1Closing)) * 20);
+      const cl = effFinalClosing;
+      if (userRank <= cl * 0.80) {
+        // Safe: 100 (at/above opening) → 75 (at 80% of closing)
+        score = Math.round(100 - (userRank / Math.max(1, cl * 0.80)) * 25);
+      } else if (userRank <= cl) {
+        // Moderate: 70 → 45
+        score = Math.round(70 - ((userRank - cl * 0.80) / Math.max(1, cl * 0.20)) * 25);
       } else {
-        score = Math.round(45 - ((userRank - effFinalClosing * 0.88) / Math.max(1, effFinalClosing * 0.12)) * 20);
+        // Ambitious: 40 → 12
+        score = Math.round(40 - ((userRank - cl) / Math.max(1, cl * 0.15)) * 28);
       }
 
       const relaxedRounds = rounds.map((rd) => ({
