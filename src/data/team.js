@@ -52,7 +52,7 @@ export const TEAM = [
   {
     id: "developer-1",
     initials: "AK",
-    photo: "/assets/team/ankit.jpeg",
+    photo: "/assets/team/ankit.png",
     name: "Ankit Kumar",
     role: " COO and CTO  ",
     accent: "#F47B20",
