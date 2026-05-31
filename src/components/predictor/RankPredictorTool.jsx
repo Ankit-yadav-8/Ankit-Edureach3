@@ -41,20 +41,29 @@ export default function RankPredictorTool({ accent = "#F97316", advanced = false
   const nav = useNavigate();
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  // Marks entry: clamp to 0–cap so a JEE Main subject can never exceed 100
-  // (or 120 for JEE Advanced). Empty string stays empty for a clean field.
+  // Marks entry: accept what the student types (0–999) so we can SHOW a clear
+  // "max {cap}" message when any subject exceeds 100 (or 120 for JEE Advanced),
+  // instead of silently swallowing the extra digits. Empty stays empty.
   const setMark = (k, raw) => {
     if (raw === "") return set(k, "");
     const n = Math.floor(Number(raw));
-    if (Number.isNaN(n)) return;
-    set(k, String(Math.max(0, Math.min(cap, n))));
+    if (Number.isNaN(n) || n < 0) return;
+    set(k, String(Math.min(999, n)));
   };
+
+  // Per-subject overflow (marks above the per-subject cap) → drives the inline
+  // warning + blocks prediction until corrected.
+  const overSubjects = SUBJECTS.filter((s) => Number(form[s.key]) > cap);
+  const hasOverflow  = overSubjects.length > 0;
 
   // Inline college preview — predicted from the CATEGORY rank (CRL for General)
   const { predict: predictColleges, reset: resetColleges, results: colleges, loading: collegesLoading } =
     useCollegePredictor();
 
-  const submit = () => setRes(predictRank({ ...form, advanced }));
+  const submit = () => {
+    if (hasOverflow) return; // never predict from invalid (>cap) marks
+    setRes(predictRank({ ...form, advanced }));
+  };
   const reset  = () => {
     setForm({ physics: "", chemistry: "", maths: "", category: "General" });
     setRes(null);
@@ -76,10 +85,8 @@ export default function RankPredictorTool({ accent = "#F97316", advanced = false
 
   const scorePct = res ? Math.round((res.total / totalMax) * 100) : 0;
 
-  // Live running total as the user types (clamped per subject)
-  const liveTotal = SUBJECTS.reduce(
-    (sum, s) => sum + Math.max(0, Math.min(cap, Number(form[s.key]) || 0)), 0
-  );
+  // Live running total as the user types (raw, so over-cap entries are visible)
+  const liveTotal = SUBJECTS.reduce((sum, s) => sum + (Number(form[s.key]) || 0), 0);
   const livePct = Math.round((liveTotal / totalMax) * 100);
   const hasInput = SUBJECTS.some((s) => form[s.key] !== "");
 
@@ -116,16 +123,17 @@ export default function RankPredictorTool({ accent = "#F97316", advanced = false
           <div className="grid-3" style={{ gap: 11 }}>
             {SUBJECTS.map(({ key, label, icon: Icon, color }) => {
               const filled = form[key] !== "";
+              const over   = Number(form[key]) > cap;
               return (
                 <div key={key} style={{
-                  border: `1px solid ${filled ? `${color}55` : "var(--line)"}`,
-                  background: filled ? `${color}0c` : "var(--sky)",
+                  border: `1px solid ${over ? "#ef4444" : filled ? `${color}55` : "var(--line)"}`,
+                  background: over ? "#fef2f2" : filled ? `${color}0c` : "var(--sky)",
                   borderRadius: 13, padding: "12px 12px 11px", transition: "all .18s",
                 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
                     <span style={{
                       display: "grid", placeItems: "center", width: 24, height: 24, borderRadius: 7,
-                      background: `${color}1c`, color, flexShrink: 0,
+                      background: over ? "#fee2e2" : `${color}1c`, color: over ? "#ef4444" : color, flexShrink: 0,
                     }}>
                       <Icon size={14} />
                     </span>
@@ -137,14 +145,21 @@ export default function RankPredictorTool({ accent = "#F97316", advanced = false
                       value={form[key]} onChange={(e) => setMark(key, e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && submit()}
                       placeholder="0"
+                      aria-invalid={over}
                       style={{
                         width: "100%", border: "none", background: "transparent", outline: "none",
-                        fontFamily: "Sora", fontWeight: 800, fontSize: 22, color: "var(--navy)",
+                        fontFamily: "Sora", fontWeight: 800, fontSize: 22,
+                        color: over ? "#ef4444" : "var(--navy)",
                         padding: 0, minWidth: 0,
                       }}
                     />
                     <span style={{ fontSize: 12, color: "var(--muted)", fontWeight: 600, whiteSpace: "nowrap" }}>/ {cap}</span>
                   </div>
+                  {over && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 6, color: "#ef4444", fontSize: 11, fontWeight: 700 }}>
+                      <AlertCircle size={12} /> Max {cap}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -202,14 +217,36 @@ export default function RankPredictorTool({ accent = "#F97316", advanced = false
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+          {/* ── Validation message: any subject above the cap ── */}
+          {hasOverflow && (
+            <motion.div
+              initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
+              style={{
+                marginTop: 14, padding: "10px 13px", borderRadius: 11,
+                background: "#fef2f2", border: "1px solid #fecaca",
+                display: "flex", alignItems: "flex-start", gap: 8,
+                fontSize: 12.5, color: "#b91c1c", lineHeight: 1.5,
+              }}
+            >
+              <AlertCircle size={15} style={{ flexShrink: 0, marginTop: 1 }} />
+              <span>
+                Each subject is out of <strong>{cap}</strong> marks. Please fix{" "}
+                <strong>{overSubjects.map((s) => s.label).join(", ")}</strong> —
+                a single subject can&apos;t exceed {cap}.
+              </span>
+            </motion.div>
+          )}
+
+          <div style={{ display: "flex", gap: 10, marginTop: hasOverflow ? 12 : 20 }}>
             <button
               className="btn full"
               style={{
-                background: accent, color: "#fff", justifyContent: "center",
-                boxShadow: `0 6px 18px ${accent}44`, fontWeight: 700,
+                background: hasOverflow ? "#cbd5e1" : accent, color: "#fff", justifyContent: "center",
+                boxShadow: hasOverflow ? "none" : `0 6px 18px ${accent}44`, fontWeight: 700,
+                cursor: hasOverflow ? "not-allowed" : "pointer",
               }}
               onClick={submit}
+              disabled={hasOverflow}
             >
               <Sparkles size={16} /> Predict my rank
             </button>
@@ -297,7 +334,29 @@ function RankPredictorNotes({ accent, advanced }) {
 }
 
 /* ══════════════════════════════════════════════
-   JEE MAIN result (unchanged logic)
+   Animated count-up number — eases from 0 to `value`
+   on mount / whenever the value changes.
+══════════════════════════════════════════════ */
+function CountUp({ value, format = (n) => n, duration = 850 }) {
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    if (!Number.isFinite(value)) { setDisplay(value); return; }
+    let raf;
+    const start = performance.now();
+    const tick = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+      setDisplay(Math.round(value * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value, duration]);
+  return <>{format(display)}</>;
+}
+
+/* ══════════════════════════════════════════════
+   JEE MAIN result
 ══════════════════════════════════════════════ */
 function MainResult({ res, scorePct, totalMax, accent, nav, colleges, collegesLoading }) {
   const headline = res.isGeneral
@@ -311,10 +370,17 @@ function MainResult({ res, scorePct, totalMax, accent, nav, colleges, collegesLo
         <div>
           <div style={{ fontSize: 12.5, color: "var(--muted)" }}>{headline}</div>
           <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "2rem", color: "var(--navy)", lineHeight: 1.1 }}>
-            {fmtRank(res.rank)}
+            <CountUp value={res.rank} format={fmtRank} />
           </div>
           <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 2 }}>
-            Range {fmtRank(res.low)} – {fmtRank(res.high)}
+            Range {fmtRank(res.low)} – {fmtRank(res.high)} <span style={{ color: "var(--muted)" }}>(±{Math.round((res.high / res.rank - 1) * 100)}%)</span>
+          </div>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 5, marginTop: 8,
+            padding: "4px 10px", borderRadius: 50, fontSize: 12, fontWeight: 700,
+            background: `${accent}14`, color: accent,
+          }}>
+            <TrendingUp size={12} /> {res.percentile} %ile
           </div>
         </div>
       </div>
@@ -365,6 +431,28 @@ function MainResult({ res, scorePct, totalMax, accent, nav, colleges, collegesLo
       </p>
     </motion.div>
   );
+}
+
+/* ══════════════════════════════════════════════
+   Build "likely branches" from REAL JoSAA category-cutoff
+   matches (the same data the college preview uses), so
+   reserved-category candidates see branches that actually
+   close at their CATEGORY rank — not the General/CRL table.
+   Returns distinct "College — Branch (closing ~X)" lines.
+══════════════════════════════════════════════ */
+function branchesFromColleges(colleges, limit = 5) {
+  if (!colleges || !colleges.length) return null;
+  const seen = new Set();
+  const out  = [];
+  for (const c of colleges) {
+    const name = c.short || c.college;
+    const key  = `${name}|${c.branch}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(`${name} ${c.branch} (closing ~${fmtRank(c.closing)})`);
+    if (out.length >= limit) break;
+  }
+  return out.length ? out : null;
 }
 
 /* ══════════════════════════════════════════════
@@ -469,29 +557,52 @@ function AdvancedResult({ res, scorePct, accent, nav, colleges, collegesLoading 
         <strong style={{ color: "var(--navy)", fontSize: 14, whiteSpace: "nowrap" }}>{effDisplay}</strong>
       </div>
 
-      {/* 6. Likely branches */}
-      <div style={{ marginBottom: 10 }}>
-        <div style={{ fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
-          <BookOpen size={13} color={OR} />
-          Likely branches at rank ~{fmtRank(res.effRank)}
-        </div>
-        {res.branches.map((b, i) => (
-          <div key={i} style={{
-            display: "flex", alignItems: "center", gap: 8,
-            padding: "6px 10px", borderRadius: 8, marginBottom: 5, fontSize: 13,
-            background: i === 0 ? `${OR}10` : "var(--sky)",
-            border: i === 0 ? `1px solid ${OR}25` : "none",
-          }}>
-            <span style={{
-              width: 20, height: 20, borderRadius: "50%", flexShrink: 0,
-              background: i === 0 ? OR : "var(--line)",
-              color: i === 0 ? "#fff" : "var(--navy)",
-              fontSize: 10, fontWeight: 800, display: "grid", placeItems: "center",
-            }}>{i + 1}</span>
-            {b}
+      {/* 6. Likely branches — for reserved categories, derive from REAL JoSAA
+            CATEGORY closing ranks (res.branches/BRANCH_TABLE is General/CRL-only). */}
+      {(() => {
+        const realBranches = res.isGeneral ? null : branchesFromColleges(colleges);
+        // Reserved category, still fetching real category cutoffs → show loader
+        // instead of the (General-calibrated) fallback list.
+        if (!res.isGeneral && !realBranches && collegesLoading) {
+          return (
+            <div style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
+                <BookOpen size={13} color={OR} />
+                Likely branches at {res.category} rank ~{fmtRank(res.effRank)}
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--muted)", fontSize: 12.5, padding: "8px 2px" }}>
+                <Loader2 size={14} style={{ animation: "spin 0.8s linear infinite" }} />
+                Matching branches against {res.category} closing ranks…
+              </div>
+            </div>
+          );
+        }
+        const branchList = realBranches ?? res.branches;
+        return (
+          <div style={{ marginBottom: 10 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
+              <BookOpen size={13} color={OR} />
+              Likely branches at {res.isGeneral ? "CRL" : `${res.category} rank`} ~{fmtRank(res.effRank)}
+            </div>
+            {branchList.map((b, i) => (
+              <div key={i} style={{
+                display: "flex", alignItems: "center", gap: 8,
+                padding: "6px 10px", borderRadius: 8, marginBottom: 5, fontSize: 13,
+                background: i === 0 ? `${OR}10` : "var(--sky)",
+                border: i === 0 ? `1px solid ${OR}25` : "none",
+              }}>
+                <span style={{
+                  width: 20, height: 20, borderRadius: "50%", flexShrink: 0,
+                  background: i === 0 ? OR : "var(--line)",
+                  color: i === 0 ? "#fff" : "var(--navy)",
+                  fontSize: 10, fontWeight: 800, display: "grid", placeItems: "center",
+                }}>{i + 1}</span>
+                {b}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        );
+      })()}
 
       {/* 7. Stretch option */}
       <div style={{

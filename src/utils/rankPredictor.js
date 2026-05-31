@@ -6,10 +6,25 @@
                  Calibration: 146 marks OBC → CRL ~4,846 | OBC ~938
    ============================================================ */
 
-// ── JEE Main ──────────────────────────────────────────────────
+// ── JEE Main 2026 candidate pools ─────────────────────────────
+// Exact 2026 pools (drive CRL → category-rank conversion below).
+//   CRL_rank      = ((100 − percentile) / 100) × 14,00,000
+//   category_rank = ((100 − percentile) / 100) × <category pool>
+// Since percentile = (1 − CRL / 14,00,000) × 100, this is equivalent to
+//   category_rank = CRL × (category pool / 14,00,000)  ← see CATEGORY_FACTOR.
+const TOTAL_CANDIDATES_2026 = 1400000;
+export const CATEGORY_POOLS_2026 = {
+  General: 1400000,   // CRL pool
+  "OBC-NCL": 612000,
+  EWS: 180086,
+  SC: 50000,
+  ST: 25000,
+};
+
+// ── JEE Main marks → CRL ──────────────────────────────────────
 // Calibrated so 180 marks → CRL ≈ 1,40,000 (per recent NTA marks-vs-rank
 // trends). Curve is monotonic; lower marks pile up steeply because the
-// candidate pool is ~11.8 lakh.
+// candidate pool is ~14 lakh.
 const MAIN_TABLE = [
   [300, 1], [295, 8], [290, 25], [285, 60], [280, 130], [275, 250],
   [270, 450], [265, 760], [260, 1200], [255, 1900], [250, 2900],
@@ -72,9 +87,17 @@ const CATEGORY_DIVISOR = {
   General: 1, EWS: 1.11, "OBC-NCL": 5.17, SC: 16, ST: 57, PwD: 33,
 };
 
-// Legacy factor for JEE Main (CRL × factor = category rank)
+// JEE Main category rank: CRL × factor = category rank, where the factor is
+// the 2026 category-pool ÷ total-pool ratio. This makes
+//   category_rank = CRL × (pool / 14,00,000) = ((100 − percentile)/100) × pool
+// exactly matching the official-style 2026 formula.
 const CATEGORY_FACTOR = {
-  General: 1, "OBC-NCL": 0.42, EWS: 0.78, SC: 0.16, ST: 0.085, PwD: 0.05,
+  General: 1,
+  "OBC-NCL": CATEGORY_POOLS_2026["OBC-NCL"] / TOTAL_CANDIDATES_2026, // 0.4371
+  EWS: CATEGORY_POOLS_2026.EWS / TOTAL_CANDIDATES_2026,              // 0.1286
+  SC: CATEGORY_POOLS_2026.SC / TOTAL_CANDIDATES_2026,               // 0.0357
+  ST: CATEGORY_POOLS_2026.ST / TOTAL_CANDIDATES_2026,               // 0.0179
+  PwD: 0.03,
 };
 
 // ── IIT branch possibilities by effective rank ────────────────
@@ -132,7 +155,7 @@ function getAdviceAdv(effRank) {
 }
 
 // ── Helpers ───────────────────────────────────────────────────
-const MAIN_CANDIDATES = 1100000;
+const MAIN_CANDIDATES = TOTAL_CANDIDATES_2026;
 const ADV_CANDIDATES  = 180000;
 const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 

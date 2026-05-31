@@ -56,9 +56,13 @@ const HOME_STATE_RELAX = 1.25;
 // user supplies their All-India CRL we convert it first. Factors mirror the
 // divisors used in rankPredictor.js (category rank = CRL × factor).
 //   • Advanced (IITs):   ST 1/57, SC 1/16, OBC 1/5.17, EWS 1/1.11
-//   • Main (NIT/IIIT):   ST 0.085, SC 0.16, OBC 0.42, EWS 0.78
+//   • Main (NIT/IIIT):   2026 pool ÷ 14,00,000 → OBC 0.4371, EWS 0.1286,
+//                        SC 0.0357, ST 0.0179
 const CRL_TO_CAT_ADV  = { "OBC-NCL": 1 / 5.17, EWS: 1 / 1.11, SC: 1 / 16, ST: 1 / 57 };
-const CRL_TO_CAT_MAIN = { "OBC-NCL": 0.42,     EWS: 0.78,     SC: 0.16,   ST: 0.085 };
+const CRL_TO_CAT_MAIN = {
+  "OBC-NCL": 612000 / 1400000, EWS: 180086 / 1400000,
+  SC: 50000 / 1400000,         ST: 25000 / 1400000,
+};
 
 /**
  * Convert an All-India CRL to an approximate category rank.
