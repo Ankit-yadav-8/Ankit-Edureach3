@@ -71,6 +71,44 @@ const DIFFICULTY_DATA = {
   },
 };
 
+/* ═══════════════════════════════════════════════════════════
+   PAPER CHARACTER — how Paper 1 vs Paper 2 differ in nature,
+   question types and the strategy each demands. Independent of
+   the year-wise difficulty index above.
+═══════════════════════════════════════════════════════════ */
+const PAPER_CHARACTER = [
+  {
+    paper: "Paper 1",
+    time: "9:00 AM – 12:00 PM",
+    rating: "Moderate → Difficult",
+    color: "#F97316",
+    bg: "#fff3e8",
+    summary:
+      "Generally rated Moderate to Difficult. It usually features a balanced mix of conceptual problems, with a higher tendency for non-negative numerical / integer-type questions where there is no negative marking.",
+    points: [
+      "Balanced mix of conceptual & application problems",
+      "More non-negative numerical / integer-type questions",
+      "Reward for accuracy — attempt every numerical (no negative marking on those)",
+      "A good Paper 1 score builds the cushion before the tougher Paper 2",
+    ],
+  },
+  {
+    paper: "Paper 2",
+    time: "2:30 PM – 5:30 PM",
+    rating: "Consistently Difficult",
+    color: "#7C3AED",
+    bg: "#f3e8ff",
+    summary:
+      "Consistently rated Difficult. It heavily features multi-correct MCQs, paragraph-type questions and significantly lengthier calculations — designed to test stamina and time management in the second half of a long exam day.",
+    points: [
+      "Heavy on multi-correct MCQs — partial & negative marking traps",
+      "Paragraph / comprehension-linked question sets",
+      "Significantly lengthier, calculation-heavy problems",
+      "A true test of stamina & time management — pace yourself",
+    ],
+  },
+];
+
 const TREND_PHYSICS   = DIFFICULTY_YEARS.map((y) => ({ year: y, Paper1: DIFFICULTY_DATA[y].p1.phy,  Paper2: DIFFICULTY_DATA[y].p2.phy  }));
 const TREND_CHEMISTRY = DIFFICULTY_YEARS.map((y) => ({ year: y, Paper1: DIFFICULTY_DATA[y].p1.chem, Paper2: DIFFICULTY_DATA[y].p2.chem }));
 const TREND_MATHS     = DIFFICULTY_YEARS.map((y) => ({ year: y, Paper1: DIFFICULTY_DATA[y].p1.math, Paper2: DIFFICULTY_DATA[y].p2.math }));
@@ -458,6 +496,9 @@ export default function JeeAdvanced() {
           background: linear-gradient(90deg, #F97316 0%, #7C3AED 40%, #0EA5A4 70%, #EC4899 100%);
           border-radius: 2px; margin: 0;
         }
+        @media (max-width: 720px) {
+          .paper-char-grid { grid-template-columns: 1fr !important; }
+        }
       `}</style>
 
       {/* ── Hero ── */}
@@ -572,6 +613,51 @@ export default function JeeAdvanced() {
               Select a year to compare Physics, Chemistry &amp; Maths difficulty across both papers.
               Qualitative labels from official paper analysis. Index: 0 = easiest · 100 = hardest.
             </p>
+          </div>
+
+          {/* ── Paper 1 vs Paper 2 — Character & Strategy ── */}
+          <div className="paper-char-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 34 }}>
+            {PAPER_CHARACTER.map((p) => (
+              <div key={p.paper}
+                className="card card-hover fade-up"
+                style={{ borderTop: `4px solid ${p.color}`, padding: "20px 22px" }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{
+                      display: "grid", placeItems: "center", width: 38, height: 38, borderRadius: 11,
+                      background: `${p.color}18`, color: p.color, flexShrink: 0,
+                    }}>
+                      <FileText size={20} />
+                    </span>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, color: "var(--navy)" }}>{p.paper}</div>
+                      <div style={{ fontSize: 11.5, color: "var(--muted)" }}>{p.time}</div>
+                    </div>
+                  </div>
+                  <span style={{
+                    fontSize: 12, fontWeight: 800, padding: "5px 13px", borderRadius: 50,
+                    background: p.bg, color: p.color, whiteSpace: "nowrap",
+                  }}>
+                    {p.rating}
+                  </span>
+                </div>
+
+                <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.65, marginBottom: 14 }}>{p.summary}</p>
+
+                <div style={{ fontSize: 11, fontWeight: 700, color: p.color, textTransform: "uppercase", letterSpacing: ".5px", marginBottom: 8 }}>
+                  What to expect
+                </div>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                  {p.points.map((pt) => (
+                    <li key={pt} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12.5, color: "var(--navy)", lineHeight: 1.5 }}>
+                      <CheckCircle2 size={15} color={p.color} style={{ flexShrink: 0, marginTop: 1 }} />
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
 
           {/* ── Year Selector ── */}

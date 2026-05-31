@@ -4,8 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Crosshair, RotateCcw, ChevronDown, MapPin,
   ExternalLink, ArrowRight, Loader2, Info,
+  Database, Layers, Trophy, Users, BarChart3,
 } from "lucide-react";
 import { TIER_COLOR } from "../../utils/collegePredictor.js";
+import { NotesBlock } from "./RankPredictorTool.jsx";
 import { expandRounds } from "../../utils/cutoffEngine.js";
 import { loadPredictorDB } from "../../utils/realCutoffEngine.js";
 import { COLLEGE_BY_SLUG, BRANCHES, CATEGORIES, STATES } from "../../data/colleges.js";
@@ -431,6 +433,46 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
           )}
         </div>
       )}
+
+      {/* ── How the College Predictor works ── */}
+      <NotesBlock
+        accent="#F97316"
+        eyebrow="About this tool"
+        heading="How the College Predictor works"
+        points={[
+          {
+            icon: Database,
+            title: "Real JoSAA 2024 data only",
+            body: "Every match comes straight from official JoSAA 2024 opening & closing ranks — no modelled or made-up programs, so you never see branches a college doesn't actually offer.",
+          },
+          {
+            icon: Layers,
+            title: "All rounds, 3 confidence tiers",
+            body: "We scan every JoSAA (and CSAB) round and classify each option as Safe (≤80% of closing), Moderate (80–100%) or Ambitious (100–115%) so you know how realistic it is.",
+          },
+          {
+            icon: Trophy,
+            title: "Category-rank matching",
+            body: "JoSAA publishes reserved cutoffs as category ranks. Enter your category rank for the most accurate matches, or your CRL and we'll estimate the category rank for you.",
+          },
+          {
+            icon: Users,
+            title: "Female & home-state quotas",
+            body: "Toggle female (supernumerary) seats to use female-only cutoffs, and apply home-state quota for NIT/IIIT to relax closing ranks for colleges in your state.",
+          },
+          {
+            icon: BarChart3,
+            title: "Smart, useful ordering",
+            body: "Results are sorted by home-state preference, then NIRF rank, branch value and closing rank — the strongest, most relevant options surface first.",
+          },
+          {
+            icon: MapPin,
+            title: "Full detail on every row",
+            body: "Tap any college to see round-by-round opening/closing cutoffs, seat counts, average package and a direct link to the full college profile.",
+          },
+        ]}
+        note="Cutoffs are based on JoSAA 2024 and are indicative for 2026 — always verify on josaa.nic.in / csab.nic.in before locking choices."
+      />
     </div>
   );
 }
