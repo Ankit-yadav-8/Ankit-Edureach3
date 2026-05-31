@@ -15,31 +15,60 @@
 const TOTAL_CANDIDATES_2026 = 1400000;
 export const CATEGORY_POOLS_2026 = {
   General: 1400000,   // CRL pool
-  "OBC-NCL": 350000,
-  EWS: 150000,
-  SC: 35000,
-  ST: 8000,
+  "OBC-NCL": 612000,
+  EWS: 180086,
+  SC: 50000,
+  ST: 25000,
 };
 
 // ── JEE Main marks → CRL ──────────────────────────────────────
-// Calibrated so 180 marks → CRL ≈ 1,40,000 (per recent NTA marks-vs-rank
-// trends). Curve is monotonic; lower marks pile up steeply because the
-// candidate pool is ~14 lakh.
+// v2.2 — Recalibrated with 25–30 mark bands and an asymmetric curve:
+//   • Going UP (>120 marks): percentile gains slowly — each 30-mark step
+//     adds only ~0.5–1.5 %ile because the top-score crowd is dense.
+//   • Going DOWN (<120 marks): percentile drops steeply — each 15-mark step
+//     loses 2–5 %ile as the bulk of the 14-lakh pool is in this range.
+//   • Qualifying threshold: ~93.0 %ile at 105 marks  (CRL ≈ 98,000).
+//
+// Anchors (pct → CRL = ((100−pct)/100) × 14,00,000):
+//   300 → 99.999 %ile → CRL      14
+//   275 → 99.950 %ile → CRL     700
+//   250 → 99.850 %ile → CRL   2,100
+//   225 → 99.600 %ile → CRL   5,600
+//   210 → 99.000 %ile → CRL  14,000
+//   195 → 98.700 %ile → CRL  18,200
+//   180 → 98.500 %ile → CRL  21,000
+//   165 → 98.000 %ile → CRL  28,000
+//   150 → 97.500 %ile → CRL  35,000
+//   135 → 96.500 %ile → CRL  49,000
+//   120 → 95.000 %ile → CRL  70,000
+//   105 → 93.000 %ile → CRL  98,000  ← qualifying cutoff
+//    90 → 90.000 %ile → CRL 140,000
+//    75 → 85.000 %ile → CRL 210,000
+//    60 → 78.000 %ile → CRL 308,000
+//    45 → 70.000 %ile → CRL 420,000
+//    30 → 60.000 %ile → CRL 560,000
+//    15 → 45.000 %ile → CRL 770,000
+//     0 → 15.000 %ile → CRL 1,190,000
 const MAIN_TABLE = [
-  [300, 1], [295, 8], [290, 25], [285, 60], [280, 130], [275, 250],
-  [270, 450], [265, 760], [260, 1200], [255, 1900], [250, 2900],
-  [245, 4300], [240, 6200], [235, 8800], [230, 12200], [225, 16500],
-  [220, 22000], [215, 29000], [210, 38000], [205, 49000], [200, 62000],
-  [195, 78000], [190, 96000], [185, 117000], [180, 140000],
-  [175, 165000], [170, 192000], [165, 220000], [160, 250000],
-  [155, 282000], [150, 315000], [145, 350000], [140, 386000],
-  [135, 423000], [130, 461000], [125, 500000], [120, 540000],
-  [115, 580000], [110, 620000], [105, 661000], [100, 702000],
-  [95, 743000], [90, 784000], [85, 824000], [80, 863000],
-  [75, 900000], [70, 935000], [65, 967000], [60, 996000],
-  [55, 1022000], [50, 1045000], [45, 1065000], [40, 1083000],
-  [35, 1099000], [30, 1113000], [25, 1126000], [20, 1138000],
-  [15, 1149000], [10, 1159000], [5, 1168000], [0, 1180000],
+  [300,    14],
+  [275,   700],
+  [250,  2100],
+  [225,  5600],
+  [210, 14000],
+  [195, 18200],
+  [180, 21000],
+  [165, 28000],
+  [150, 35000],
+  [135, 49000],
+  [120, 70000],
+  [105, 98000],
+  [ 90, 140000],
+  [ 75, 210000],
+  [ 60, 308000],
+  [ 45, 420000],
+  [ 30, 560000],
+  [ 15, 770000],
+  [  0, 1190000],
 ];
 
 // ── JEE Advanced 2026 bands ───────────────────────────────────
@@ -303,8 +332,12 @@ export function predictRank({ physics, chemistry, maths, category = "General", a
   const isGeneral    = category === "General";
   const categoryRank = isGeneral ? crl : Math.max(1, Math.round(crl * (CATEGORY_FACTOR[category] ?? 1)));
   const rank         = isGeneral ? crl : categoryRank;
-  const spread       = total >= 240 ? 0.08 : total >= 165 ? 0.12 : 0.16;
-  const percentile   = Number(clamp(100 * (1 - (crl - 1) / MAIN_CANDIDATES), 0, 99.999).toFixed(3));
+
+  // Spread reflects the asymmetric curve: tighter band at top (dense scores),
+  // wider band mid-range where shift normalisation has more impact.
+  const spread = total >= 210 ? 0.06 : total >= 150 ? 0.10 : total >= 105 ? 0.14 : 0.18;
+
+  const percentile = Number(clamp(100 * (1 - (crl - 1) / MAIN_CANDIDATES), 0, 99.999).toFixed(3));
 
   return {
     total, advanced: false, category, isGeneral, ranked: true,
