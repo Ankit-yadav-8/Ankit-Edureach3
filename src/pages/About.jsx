@@ -665,11 +665,12 @@ export default function About() {
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.1 + si * 0.08 + 0.35, type: "spring", bounce: 0.4 }}
                         style={{
-                          position: "absolute", ...pos,
-                          background: `${f.accent}20`, border: `1px solid ${f.accent}38`,
-                          borderRadius: 8, padding: "4px 8px",
+                          position: "absolute", ...pos, zIndex: 3,
+                          background: "rgba(12,12,24,.62)", border: `1px solid ${f.accent}66`,
+                          borderRadius: 8, padding: "4px 9px",
                           fontSize: 10, color: f.accent, fontWeight: 700,
                           backdropFilter: "blur(4px)",
+                          boxShadow: "0 2px 8px rgba(0,0,0,.35)",
                         }}
                       >{text}</motion.div>
                     ))}
@@ -842,11 +843,12 @@ export default function About() {
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.1 + si * 0.08 + 0.35, type: "spring", bounce: 0.4 }}
                         style={{
-                          position: "absolute", ...pos,
-                          background: `${f.accent}20`, border: `1px solid ${f.accent}38`,
-                          borderRadius: 8, padding: "4px 8px",
+                          position: "absolute", ...pos, zIndex: 3,
+                          background: "rgba(12,12,24,.62)", border: `1px solid ${f.accent}66`,
+                          borderRadius: 8, padding: "4px 9px",
                           fontSize: 10, color: f.accent, fontWeight: 700,
                           backdropFilter: "blur(4px)",
+                          boxShadow: "0 2px 8px rgba(0,0,0,.35)",
                         }}
                       >{text}</motion.div>
                     ))}
