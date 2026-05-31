@@ -52,6 +52,7 @@ const FOUNDERS = [
     photo: "/assets/team/ankit.jpeg",
     role: "COO & CTO",
     accent: "#F47B20",
+    badge: "Jisne ye sab socha aur banaya",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
     bio: "Hi, I'm Ankit Kumar, COO & Cheif Technical Head of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.",
     skills: ["React", "Node.js", "MongoDB", "Express", "Python", "REST APIs"],
