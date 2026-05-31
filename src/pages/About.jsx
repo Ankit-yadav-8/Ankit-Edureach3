@@ -43,7 +43,7 @@ const FOUNDERS = [
     role: "Founder & CEO",
     accent: "#F47B20",
    bio: "Hi, I'm Ankit Yadav, an IIT Roorkee graduate and the founder of College Parichay — a platform built to make college guidance simpler, clearer, and more accessible for students across India. During my own journey, I saw how confusing the college and career decision process can be. That experience inspired me to create College Parichay with one simple belief: \"Students need clarity, not confusion.\" Through authentic insights, relatable experiences, and a community-driven approach, we aim to help students make informed decisions with confidence.",
-    skills: ["Product Strategy", "React", "System Design", "Leadership", "Data Analysis", "UX"],
+    skills: ["Product Strategy", "React", "Leadership", "Data Analysis", "UX"],
     socials: { linkedin: LK, instagram: IG, whatsapp: WA },
   },
   {
@@ -52,10 +52,10 @@ const FOUNDERS = [
     photo: "/assets/team/ankit.jpeg",
     role: "COO & CTO",
     accent: "#F47B20",
-    badge: "Jisne ye sab socha aur banaya",
+    badge: "Visionary",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
     bio: "Hi, I'm Ankit Kumar, COO & Cheif Technical Head of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.",
-    skills: ["React", "Node.js", "MongoDB", "Express", "Python", "REST APIs"],
+    skills: ["COO", "Tech Head", "Full Stack Developer", "System Design", "Node.js", "Express", "Python", "REST APIs"],
     socials: { linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/ankit_1_7_/", whatsapp: WA },
   },
 ];
@@ -654,7 +654,7 @@ export default function About() {
                     {[
                       { text: f.skills[0], pos: { top: 14, left: 8 } },
                       { text: f.skills[1], pos: { top: 46, right: 6 } },
-                      { text: f.skills[4] || f.skills[3], pos: { bottom: 46, left: 6 } },
+                      { text: f.skills[3], pos: { bottom: 46, left: 6 } },
                       { text: f.skills[2], pos: { bottom: 14, right: 8 } },
                     ].map(({ text, pos }, si) => text && (
                       <motion.div
@@ -831,7 +831,7 @@ export default function About() {
                     {[
                       { text: f.skills[0], pos: { top: 14, left: 8 } },
                       { text: f.skills[1], pos: { top: 46, right: 6 } },
-                      { text: f.skills[4] || f.skills[3], pos: { bottom: 46, left: 6 } },
+                      { text: f.skills[3], pos: { bottom: 46, left: 6 } },
                       { text: f.skills[2], pos: { bottom: 14, right: 8 } },
                     ].map(({ text, pos }, si) => text && (
                       <motion.div
