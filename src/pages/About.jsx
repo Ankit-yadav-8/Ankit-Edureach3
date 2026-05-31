@@ -49,7 +49,7 @@ const FOUNDERS = [
   {
     name: "Ankit Kumar",
     initials: "AK",
-    photo: "/assets/team/ankit.png",
+    photo: "/assets/team/ankit.png?v=2",
     role: "COO & CTO",
     accent: "#F47B20",
     badge: "Visionary behind the Platform",
