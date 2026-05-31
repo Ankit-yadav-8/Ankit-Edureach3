@@ -50,12 +50,12 @@ const FOUNDERS = [
     name: "Ankit Kumar",
     initials: "AK",
     photo: "/assets/team/ankit.jpeg",
-    role: "Manager & CTO",
+    role: "COO & CTO",
     accent: "#F47B20",
     highlight: "The engineer who turns rank-list chaos into clarity — every tool here is built by him.",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
     jeeRank: "AIR 3846 · JEE Advanced",
-    bio: "Hi, I'm Ankit Kumar, Manager & Cheif Technical Head of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.",
+    bio: "Hi, I'm Ankit Kumar, COO & Cheif Technical Head of College Parichay and an IIT Roorkee engineer. I lead all technical development on the platform — from the React frontend and data pipelines to backend APIs and deployment. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Building College Parichay is my way of putting engineering skills to work for something that truly matters. One mission: helping every student make confident, data-driven decisions.",
     skills: ["React", "Node.js", "MongoDB", "Express", "Python", "REST APIs"],
     socials: { linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/ankit_1_7_/", whatsapp: WA },
   },
@@ -371,20 +371,25 @@ export default function About() {
         .iit-tag {
           animation: iitTagPop .5s cubic-bezier(.22,.68,0,1.2) both;
         }
-        /* ── Mobile: stack photo on top, content below ── */
+        /* ── Mobile: keep the same horizontal photo + content layout, just compact ── */
         @media (max-width: 640px) {
-          .team-grid { grid-template-columns: 1fr !important; }
-          .founder-card-wrap { grid-template-columns: 1fr !important; }
           .team-photo-col {
-            width: auto !important;
-            order: -1;
-            padding: 26px 16px !important;
+            width: 132px !important;
+            padding: 16px 10px !important;
+          }
+          .team-content {
+            padding: 18px 14px 18px !important;
+            gap: 11px !important;
           }
           .founder-photo-frame {
-            width: min(240px, 68vw) !important;
+            width: 108px !important;
             height: auto !important;
             aspect-ratio: 4 / 5;
           }
+          .team-float-tag { display: none !important; }
+          .team-content .iit-tag { padding: 7px 12px !important; }
+          .team-content .iit-tag span { font-size: 1rem !important; }
+          .team-content h3 { font-size: 1.2rem !important; }
         }
       `}</style>
 
@@ -526,7 +531,7 @@ export default function About() {
           </motion.div>
 
           {/* Founder cards */}
-          <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(540px, 100%), 1fr))", gap: 32 }}>
+          <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
             {FOUNDERS.map((f, idx) => (
               <motion.div
                 key={f.name}
@@ -542,8 +547,9 @@ export default function About() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.45, delay: idx * 0.15 + 0.1 }}
                     style={{
-                      display: "flex", alignItems: "center", gap: 10,
-                      marginBottom: 14, padding: "11px 16px", borderRadius: 12,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                      width: "fit-content", maxWidth: "100%", margin: "0 auto 14px",
+                      padding: "11px 18px", borderRadius: 50, textAlign: "center",
                       background: "linear-gradient(90deg, rgba(244,123,32,.16) 0%, rgba(251,191,36,.08) 100%)",
                       border: "1px solid rgba(244,123,32,.4)",
                       boxShadow: "0 0 22px rgba(244,123,32,.14)",
@@ -572,7 +578,7 @@ export default function About() {
                   <div className="card-gloss" />
 
                   {/* ── Left: text ── */}
-                  <div style={{ padding: "28px 26px 26px", display: "flex", flexDirection: "column", gap: 14 }}>
+                  <div className="team-content" style={{ padding: "28px 26px 26px", display: "flex", flexDirection: "column", gap: 14 }}>
 
                     {/* Big IIT Roorkee Tagline */}
                     <motion.div
@@ -678,6 +684,7 @@ export default function About() {
                     ].map(({ text, pos }, si) => text && (
                       <motion.div
                         key={text}
+                        className="team-float-tag"
                         initial={{ opacity: 0, scale: .5 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
@@ -730,7 +737,7 @@ export default function About() {
           </motion.div>
 
           {/* Operations cards */}
-          <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(540px, 100%), 1fr))", gap: 32 }}>
+          <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
             {OPERATIONS.map((f, idx) => (
               <motion.div
                 key={f.name}
@@ -756,7 +763,7 @@ export default function About() {
                   <div className="card-gloss" />
 
                   {/* ── Left: text ── */}
-                  <div style={{ padding: "28px 26px 26px", display: "flex", flexDirection: "column", gap: 14 }}>
+                  <div className="team-content" style={{ padding: "28px 26px 26px", display: "flex", flexDirection: "column", gap: 14 }}>
 
                     {/* Big IIT Roorkee Tagline */}
                     <motion.div
@@ -852,6 +859,7 @@ export default function About() {
                     ].map(({ text, pos }, si) => text && (
                       <motion.div
                         key={text}
+                        className="team-float-tag"
                         initial={{ opacity: 0, scale: .5 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
