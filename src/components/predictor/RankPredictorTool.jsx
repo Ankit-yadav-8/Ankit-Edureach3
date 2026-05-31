@@ -84,7 +84,7 @@ export default function RankPredictorTool({ accent = "#F97316", advanced = false
           <div style={{ display: "grid", placeItems: "center", height: 320, color: "var(--muted)", textAlign: "center" }}>
             <div>
               <GaugeIcon size={48} color="var(--line)" />
-              <p style={{ marginTop: 12 }}>Your predicted rank, percentile and category rank<br />will appear here.</p>
+              <p style={{ marginTop: 12 }}>Your predicted All-India rank and category rank<br />will appear here.</p>
               <p style={{ marginTop: 6, fontSize: 12 }}>
                 {advanced ? "JEE Advanced scale: 0–360 (P1 + P2 combined)" : "JEE Main scale: 0–300"}
               </p>
@@ -123,12 +123,11 @@ function MainResult({ res, scorePct, totalMax, accent, nav }) {
         </div>
       </div>
 
-      <div className="grid-3" style={{ gap: 10, marginTop: 14, textAlign: "center" }}>
+      <div className={res.isGeneral ? "grid-2" : "grid-3"} style={{ gap: 10, marginTop: 14, textAlign: "center" }}>
         {[
           ["Total", `${res.total}/${totalMax}`],
-          ["Percentile", `${res.percentile}`],
-          [res.isGeneral ? "CRL (AIR)" : `${res.category} rank`,
-            fmtRank(res.isGeneral ? res.crl : res.categoryRank)],
+          ["CRL (AIR)", fmtRank(res.crl)],
+          ...(res.isGeneral ? [] : [[`${res.category} category rank`, fmtRank(res.categoryRank)]]),
         ].map(([l, v]) => (
           <div key={l} style={{ background: "var(--sky)", borderRadius: 12, padding: "12px 8px" }}>
             <div style={{ fontSize: 11, color: "var(--muted)" }}>{l}</div>
@@ -138,8 +137,14 @@ function MainResult({ res, scorePct, totalMax, accent, nav }) {
       </div>
 
       {!res.isGeneral && (
-        <div style={{ marginTop: 10, fontSize: 12, color: "var(--muted)", display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
-          <Trophy size={13} color={accent} /> CRL {fmtRank(res.crl)} · {res.category} rank {fmtRank(res.categoryRank)}
+        <div style={{
+          marginTop: 12, padding: "9px 12px", borderRadius: 10,
+          background: `${accent}12`, border: `1px solid ${accent}30`,
+          display: "flex", alignItems: "center", gap: 8, justifyContent: "center",
+          fontSize: 12.5, color: "var(--navy)",
+        }}>
+          <Trophy size={14} color={accent} />
+          Use your <strong>{res.category} category rank {fmtRank(res.categoryRank)}</strong> in the College Predictor below.
         </div>
       )}
 
@@ -232,10 +237,12 @@ function AdvancedResult({ res, scorePct, accent, nav }) {
         </div>
       </div>
 
-      {/* 3 + 4. Key stats: Percentile, Total, 2025 Reference */}
+      {/* 3 + 4. Key stats: Total, CRL / Category rank, 2025 Reference */}
       <div className="grid-3" style={{ gap: 8, marginBottom: 10 }}>
         <StatBox label="Total marks" value={`${res.total} / 360`} />
-        <StatBox label="Percentile (CRL)" value={`~${res.percentile}%ile`} accent={OR} />
+        {res.isGeneral
+          ? <StatBox label="CRL 2026 (est.)" value={`~${fmtRank(res.crl)}`} accent={OR} />
+          : <StatBox label={`${res.category} category rank`} value={`~${fmtRank(res.catRank)}`} accent={OR} />}
         <StatBox
           label="2025 Reference AIR"
           value={`${fmtRank(res.ref25Lo)}–${fmtRank(res.ref25Hi)}`}

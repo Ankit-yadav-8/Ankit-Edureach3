@@ -556,7 +556,7 @@ export default function JeeMain() {
 
       {/* ── Rank Predictor ── */}
       <Block id="rank" eyebrow="Tool 1" title="JEE Main Rank Predictor"
-        sub="Convert your expected marks into an All-India rank, percentile and category rank.">
+        sub="Convert your expected marks into an All-India rank (CRL) and your category rank.">
         <RankPredictorTool accent="#F97316" />
       </Block>
 

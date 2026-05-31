@@ -51,6 +51,26 @@ const TYPE_LABEL   = { IIT: "IIT", NIT: "NIT", IIIT: "IIIT", GFTI: "GFTI" };
 const FEMALE_RELAX = { IIT: 1.35, NIT: 1.20, IIIT: 1.20, GFTI: 1.15 };
 const HOME_STATE_RELAX = 1.25;
 
+// ── CRL → approximate category rank ───────────────────────────────────────────
+// JoSAA reserved-category cutoffs are expressed as CATEGORY ranks, so when a
+// user supplies their All-India CRL we convert it first. Factors mirror the
+// divisors used in rankPredictor.js (category rank = CRL × factor).
+//   • Advanced (IITs):   ST 1/57, SC 1/16, OBC 1/5.17, EWS 1/1.11
+//   • Main (NIT/IIIT):   ST 0.085, SC 0.16, OBC 0.42, EWS 0.78
+const CRL_TO_CAT_ADV  = { "OBC-NCL": 1 / 5.17, EWS: 1 / 1.11, SC: 1 / 16, ST: 1 / 57 };
+const CRL_TO_CAT_MAIN = { "OBC-NCL": 0.42,     EWS: 0.78,     SC: 0.16,   ST: 0.085 };
+
+/**
+ * Convert an All-India CRL to an approximate category rank.
+ * Returns the rank unchanged for OPEN or when no factor applies.
+ */
+function crlToCategoryRank(crl, category, types) {
+  if (category === "OPEN") return crl;
+  const isAdvanced = types.length === 1 && types[0] === "IIT";
+  const factor = (isAdvanced ? CRL_TO_CAT_ADV : CRL_TO_CAT_MAIN)[category];
+  return factor ? Math.max(1, Math.round(crl * factor)) : crl;
+}
+
 const BRANCH_VALUE = {
   cse: 100, ai: 95, it: 90, ece: 82, eee: 70, ee: 68,
   che: 60, me: 64, ce: 48, mme: 42,
@@ -183,8 +203,11 @@ function estimateAdmitRound(rounds, candidateRank, relaxedClosing) {
  * Uses ONLY josaa_2024.csv data — no modelled/illustrative fallback.
  *
  * @param {Object}   opts
- * @param {number}   opts.rank       JEE Adv rank (IITs) or JEE Main CRL/category rank
+ * @param {number}   opts.rank       Your rank — interpreted per `rankType`
  * @param {string}   opts.category   "OPEN" | "OBC-NCL" | "EWS" | "SC" | "ST"
+ * @param {string}  [opts.rankType]  "category" (default) or "crl". When "crl"
+ *                                   and a reserved category is chosen, the CRL
+ *                                   is converted to an approximate category rank.
  * @param {string}  [opts.state]     Home state name
  * @param {string}  [opts.branch]    Restrict to one branch code
  * @param {string[]}[opts.types]     Institute types to include
@@ -194,14 +217,20 @@ function estimateAdmitRound(rounds, candidateRank, relaxedClosing) {
 export function predictColleges({
   rank,
   category   = "OPEN",
+  rankType   = "category",
   state      = "",
   branch     = "",
   types      = ["IIT", "NIT", "IIIT", "GFTI"],
   female     = false,
   homeState  = false,
 } = {}) {
-  const userRank = Number(rank) || 0;
-  if (userRank <= 0) return [];
+  const enteredRank = Number(rank) || 0;
+  if (enteredRank <= 0) return [];
+
+  // JoSAA reserved cutoffs are category ranks; convert a CRL when needed.
+  const userRank = rankType === "crl"
+    ? crlToCategoryRank(enteredRank, category, types)
+    : enteredRank;
 
   // Wait for DB; if neither ready, return empty (worker always awaits load first)
   if (!isDBReady() && !isPredictorReady()) return [];
@@ -361,13 +390,14 @@ export function predictColleges({
 export function predictCollegesGrouped({
   rank,
   category   = "OPEN",
+  rankType   = "category",
   state      = "",
   branch     = "",
   types      = ["IIT", "NIT", "IIIT", "GFTI"],
   female     = false,
   homeState  = false,
 } = {}) {
-  const all = predictColleges({ rank, category, state, branch, types, female, homeState });
+  const all = predictColleges({ rank, category, rankType, state, branch, types, female, homeState });
 
   const groups = { IIT: [], NIT: [], IIIT: [], GFTI: [] };
 

@@ -92,9 +92,10 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
   const allowedTypes = TYPE_SETS[basePath] || ["IIT", "NIT", "IIIT"];
 
   const [form, setForm] = useState({
-    rank: "", category: "OPEN", state: "",
+    rank: "", category: "OPEN", rankType: "category", state: "",
     branch: "", female: false, homeState: false,
   });
+  const isReserved = form.category !== "OPEN";
   const [expandedRow, setExpandedRow] = useState(null);
   const [tipIdx, setTipIdx]           = useState(0);
   const tipTimer                      = useRef(null);
@@ -113,7 +114,9 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
       setTipIdx((i) => (i + 1) % LOADING_TIPS.length);
     }, 1500);
 
-    predict({ ...form, rank: Number(form.rank), types: allowedTypes }, false);
+    // OPEN candidates always supply a CRL; reserved candidates choose CRL vs category rank.
+    const rankType = isReserved ? form.rankType : "crl";
+    predict({ ...form, rank: Number(form.rank), rankType, types: allowedTypes }, false);
   }
 
   if (!loading && tipTimer.current) {
@@ -122,7 +125,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
   }
 
   function handleReset() {
-    setForm({ rank: "", category: "OPEN", state: "", branch: "", female: false, homeState: false });
+    setForm({ rank: "", category: "OPEN", rankType: "category", state: "", branch: "", female: false, homeState: false });
     setExpandedRow(null);
     resetWorker();
   }
@@ -149,7 +152,11 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
 
         <div className="grid-4" style={{ gap: 12 }}>
           <div className="field">
-            <label>Your rank (CRL / category)</label>
+            <label>
+              {isReserved
+                ? (form.rankType === "category" ? `Your ${form.category} category rank` : "Your All-India CRL")
+                : "Your rank (CRL)"}
+            </label>
             <input
               className="input" type="number" min="1"
               value={form.rank}
@@ -179,6 +186,43 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
             </select>
           </div>
         </div>
+
+        {/* ── Rank-type toggle (reserved categories only) ── */}
+        {isReserved && (
+          <div style={{ marginTop: 14 }}>
+            <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "var(--navy)", marginBottom: 7 }}>
+              Which rank are you entering?
+            </label>
+            <div style={{ display: "inline-flex", background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 10, padding: 4, gap: 4 }}>
+              {[
+                ["category", `${form.category} category rank`],
+                ["crl", "All-India CRL"],
+              ].map(([val, lbl]) => {
+                const active = form.rankType === val;
+                return (
+                  <button
+                    key={val}
+                    type="button"
+                    onClick={() => set("rankType", val)}
+                    style={{
+                      padding: "7px 16px", borderRadius: 7, border: "none", cursor: "pointer",
+                      fontSize: 13, fontWeight: 700, fontFamily: "Sora",
+                      background: active ? "#F97316" : "transparent",
+                      color: active ? "#fff" : "var(--muted)",
+                      boxShadow: active ? "0 2px 8px rgba(249,115,22,.30)" : "none",
+                      transition: "all .18s",
+                    }}
+                  >{lbl}</button>
+                );
+              })}
+            </div>
+            <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 7, lineHeight: 1.5, maxWidth: 520 }}>
+              {form.rankType === "category"
+                ? `Colleges are matched directly against ${form.category} closing ranks from JoSAA 2024 data.`
+                : `We'll convert your CRL to an approximate ${form.category} rank, then match against ${form.category} closing ranks. Enter your category rank above for the most accurate result.`}
+            </p>
+          </div>
+        )}
 
         <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginTop: 12 }}>
           <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 14 }}>
@@ -212,8 +256,8 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
         </div>
       </div>
 
-      {/* ── JEE Advanced category notice ── */}
-      {basePath === "/jee-advanced" && form.category !== "OPEN" && (
+      {/* ── Reserved-category notice ── */}
+      {isReserved && (
         <div style={{
           display: "flex", alignItems: "flex-start", gap: 10,
           background: "rgba(249,115,22,0.08)",
@@ -223,11 +267,13 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
         }}>
           <Info size={16} style={{ color: "#F97316", marginTop: 1, flexShrink: 0 }} />
           <span>
-            <strong>Note:</strong> The rank you enter is your JEE Advanced{" "}
-            <strong>CRL (General) rank</strong>. Colleges are matched against{" "}
-            <strong>{form.category}</strong> category cutoffs from JoSAA data.
-            For detailed category-rank analysis, open the{" "}
-            <strong>College Details</strong> page of any result below.
+            <strong>Note:</strong> JoSAA publishes reserved-category cutoffs as{" "}
+            <strong>category ranks</strong>. Pick{" "}
+            <strong>“{form.category} category rank”</strong> above for the most accurate
+            matches{basePath === "/jee-advanced" ? " (your JEE Advanced category rank)" : ""}. If you only know your
+            All-India CRL, choose <strong>“All-India CRL”</strong> and we'll estimate
+            your {form.category} rank automatically. Use the Rank Predictor to find your
+            category rank from your marks.
           </span>
         </div>
       )}
