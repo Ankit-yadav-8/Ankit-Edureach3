@@ -252,6 +252,7 @@ export default function AuthModal() {
   const [busy,    setBusy]   = useState(false);
   const [shake,   setShake]  = useState(false);
   const [slowNet, setSlowNet] = useState(false);
+  const [notReg,  setNotReg]  = useState(false);
   const prevOpen = useRef(false);
 
   useEffect(() => {
@@ -270,6 +271,7 @@ export default function AuthModal() {
     setBanner({ type: "", text: "" });
     setFe({});
     setSlowNet(false);
+    setNotReg(false);
     setMode(m);
   };
 
@@ -280,6 +282,7 @@ export default function AuthModal() {
     setFe({});
     setBusy(false);
     setSlowNet(false);
+    setNotReg(false);
     closeLogin();
   };
 
@@ -316,11 +319,25 @@ export default function AuthModal() {
   const doLogin   = run(async () => { await login(f.email.trim(), f.password); close(); }, "login");
   const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, password: f.password, jeeMainsRank: f.jeeMainsRank ? Number(f.jeeMainsRank) : undefined, jeeAdvancedRank: f.jeeAdvancedRank ? Number(f.jeeAdvancedRank) : undefined }); close(); }, "signup");
   const doSendOtp = run(async () => {
-    const r = await apiSendOtp({ email: f.email.trim(), name: f.name.trim() });
-    setBanner({ type: "ok", text: r.devCode ? `Dev OTP: ${r.devCode}` : "Code sent! Check your inbox and spam folder." });
-    go("otpCode");
+    setNotReg(false);
+    try {
+      const r = await apiSendOtp({ email: f.email.trim(), name: f.name.trim() });
+      setBanner({ type: "ok", text: r.devCode ? `Dev OTP: ${r.devCode}` : "Code sent! Check your inbox and spam folder." });
+      go("otpCode");
+    } catch (e) {
+      if (e?.data?.notRegistered || /not registered/i.test(e?.message || "")) setNotReg(true);
+      throw e; // let run() surface the message in the banner
+    }
   }, "otpEmail");
-  const doVerify  = run(async () => { const r = await apiVerifyOtp({ email: f.email.trim(), code: f.code }); saveSession(r); close(); });
+  const doVerify  = run(async () => {
+    try {
+      const r = await apiVerifyOtp({ email: f.email.trim(), code: f.code });
+      saveSession(r); close();
+    } catch (e) {
+      if (e?.data?.notRegistered || /not registered/i.test(e?.message || "")) setNotReg(true);
+      throw e;
+    }
+  });
   const doForgot  = run(async () => {
     const r = await apiForgot({ email: f.email.trim() });
     if (r.devToken) { set("token", r.devToken); go("reset"); }
@@ -587,9 +604,25 @@ export default function AuthModal() {
                   <Field icon={User} placeholder="Your name (optional)" value={f.name}
                     onChange={e => set("name", e.target.value)} />
                   <Field icon={Mail} type="email" placeholder="Email address *" value={f.email}
-                    error={fe.email} onChange={e => set("email", e.target.value)}
+                    error={fe.email} onChange={e => { set("email", e.target.value); if (notReg) setNotReg(false); }}
                     onKeyDown={e => e.key === "Enter" && doSendOtp()} autoComplete="email" />
-                  <ActionBtn busy={busy} label="Send OTP →" busyLabel={busyLabel} onClick={doSendOtp} shake={shake} />
+                  {notReg ? (
+                    <button onClick={() => go("signup")} style={{
+                      width: "100%", height: 48, borderRadius: 13, border: "none",
+                      background: OR, color: "#fff", fontWeight: 700, fontSize: 14.5,
+                      cursor: "pointer", display: "flex", alignItems: "center",
+                      justifyContent: "center", gap: 8, fontFamily: "inherit",
+                      boxShadow: `0 8px 20px -8px ${OR}`, transition: "transform .12s",
+                    }}
+                      onMouseDown={e => e.currentTarget.style.transform = "scale(.98)"}
+                      onMouseUp={e => e.currentTarget.style.transform = "scale(1)"}
+                      onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+                    >
+                      Sign up now →
+                    </button>
+                  ) : (
+                    <ActionBtn busy={busy} label="Send OTP →" busyLabel={busyLabel} onClick={doSendOtp} shake={shake} />
+                  )}
                 </>)}
 
                 {/* ═══ OTP CODE ═══ */}

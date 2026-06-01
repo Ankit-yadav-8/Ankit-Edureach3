@@ -16,6 +16,9 @@ router.post("/send", async (req, res) => {
     const email = cleanEmail(req.body?.email);
     const name = String(req.body?.name || "").trim();
     if (!isEmail(email)) return res.status(400).json({ error: "Enter a valid email address" });
+    // OTP login is only for already-registered emails. New users must sign up first.
+    const exists = await User.findOne({ email }).select("_id").lean();
+    if (!exists) return res.status(404).json({ error: "This email isn't registered yet. Please sign up first, then log in with OTP.", notRegistered: true });
     const code = String(Math.floor(100000 + Math.random() * 900000));
     const codeHash = await bcrypt.hash(code, 8);
     await Otp.deleteMany({ email });
@@ -50,13 +53,14 @@ router.post("/verify", async (req, res) => {
       await otp.save(); 
       return res.status(400).json({ error: `Incorrect code (${5 - otp.attempts} attempts left)` }); 
     }
-    let user = await User.findOne({ email });
-    if (!user) user = await User.create({ email, name: otp.name, lastLogin: new Date() });
-    else { 
-      user.lastLogin = new Date(); 
-      if (otp.name && !user.name) user.name = otp.name; 
-      await user.save(); 
+    const user = await User.findOne({ email });
+    if (!user) {
+      await otp.deleteOne();
+      return res.status(404).json({ error: "This email isn't registered yet. Please sign up first, then log in with OTP.", notRegistered: true });
     }
+    user.lastLogin = new Date();
+    if (otp.name && !user.name) user.name = otp.name;
+    await user.save();
     await otp.deleteOne();
     res.json({ token: sign(user), user: { id: user._id, name: user.name, email: user.email, phone: user.phone } });
   } catch (e) { 
