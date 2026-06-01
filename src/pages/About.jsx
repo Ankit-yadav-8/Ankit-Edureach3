@@ -384,6 +384,10 @@ export default function About() {
             height: auto !important;
             aspect-ratio: 4 / 5;
           }
+          /* Decorative skill tags collide with the small centered photo +
+             name overlay on phones — skills are already listed as chips in
+             the text content, so hide the floating ones here. */
+          .team-float-tag { display: none !important; }
         }
       `}</style>
 
@@ -652,10 +656,10 @@ export default function About() {
                     <div style={{ position: "absolute", bottom: -20, left: -20, width: 100, height: 100, borderRadius: "50%", background: `radial-gradient(circle, ${f.accent}28 0%, transparent 70%)`, animation: "orbDrift2 8s ease-in-out infinite" }} />
 
                     {[
-                      { text: f.skills[0], pos: { top: 14, left: 8 } },
-                      { text: f.skills[1], pos: { top: 46, right: 6 } },
-                      { text: f.skills[3], pos: { bottom: 46, left: 6 } },
-                      { text: f.skills[2], pos: { bottom: 14, right: 8 } },
+                      { text: f.skills[0], pos: { top: 16, left: 6 } },
+                      { text: f.skills[1], pos: { top: 16, right: 6 } },
+                      { text: f.skills[3], pos: { top: "46%", left: 4 } },
+                      { text: f.skills[2], pos: { top: "46%", right: 4 } },
                     ].map(({ text, pos }, si) => text && (
                       <motion.div
                         key={text}
@@ -671,6 +675,8 @@ export default function About() {
                           fontSize: 10, color: f.accent, fontWeight: 700,
                           backdropFilter: "blur(4px)",
                           boxShadow: "0 2px 8px rgba(0,0,0,.35)",
+                          maxWidth: "42%", whiteSpace: "nowrap",
+                          overflow: "hidden", textOverflow: "ellipsis",
                         }}
                       >{text}</motion.div>
                     ))}
@@ -830,10 +836,10 @@ export default function About() {
                     <div style={{ position: "absolute", bottom: -20, left: -20, width: 100, height: 100, borderRadius: "50%", background: `radial-gradient(circle, ${f.accent}28 0%, transparent 70%)`, animation: "orbDrift2 8s ease-in-out infinite" }} />
 
                     {[
-                      { text: f.skills[0], pos: { top: 14, left: 8 } },
-                      { text: f.skills[1], pos: { top: 46, right: 6 } },
-                      { text: f.skills[3], pos: { bottom: 46, left: 6 } },
-                      { text: f.skills[2], pos: { bottom: 14, right: 8 } },
+                      { text: f.skills[0], pos: { top: 16, left: 6 } },
+                      { text: f.skills[1], pos: { top: 16, right: 6 } },
+                      { text: f.skills[3], pos: { top: "46%", left: 4 } },
+                      { text: f.skills[2], pos: { top: "46%", right: 4 } },
                     ].map(({ text, pos }, si) => text && (
                       <motion.div
                         key={text}
@@ -849,6 +855,8 @@ export default function About() {
                           fontSize: 10, color: f.accent, fontWeight: 700,
                           backdropFilter: "blur(4px)",
                           boxShadow: "0 2px 8px rgba(0,0,0,.35)",
+                          maxWidth: "42%", whiteSpace: "nowrap",
+                          overflow: "hidden", textOverflow: "ellipsis",
                         }}
                       >{text}</motion.div>
                     ))}
