@@ -871,14 +871,31 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   color:#F47B20;
 }
 .josaa-price-card {
-  background:#fff;
+  background:linear-gradient(180deg,#fff 0%,#fff8f3 100%);
   border:1.5px solid rgba(244,123,32,.35);
-  border-radius:22px;
-  padding:2rem 1.8rem;
+  border-radius:24px;
+  padding:2.2rem 1.8rem 2rem;
   text-align:center;
   position:relative;
   overflow:hidden;
-  box-shadow:0 8px 36px rgba(244,123,32,.18);
+  box-shadow:0 18px 50px rgba(244,123,32,.22),0 2px 8px rgba(0,0,0,.04);
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.josaa-price-card:hover {
+  transform:translateY(-4px);
+  box-shadow:0 26px 60px rgba(244,123,32,.30),0 4px 12px rgba(0,0,0,.06);
+}
+.josaa-save-ribbon {
+  position:absolute;
+  top:18px; right:-38px;
+  transform:rotate(45deg);
+  background:linear-gradient(135deg,#16a34a,#22c55e);
+  color:#fff;
+  font-size:.66rem;
+  font-weight:800;
+  letter-spacing:1px;
+  padding:.32rem 3rem;
+  box-shadow:0 4px 10px rgba(22,163,74,.35);
 }
 .josaa-price-card::before {
   content:'';
@@ -902,24 +919,57 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   display:inline-block;
   margin-bottom:1.2rem;
 }
+.josaa-price-row {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.6rem;
+  margin-bottom:.3rem;
+}
 .josaa-old-price {
-  font-size:1.1rem;
+  font-size:1.15rem;
   color:#9ca3af;
   text-decoration:line-through;
-  margin-bottom:.2rem;
+  text-decoration-color:rgba(220,38,38,.55);
+}
+.josaa-off-pill {
+  background:rgba(22,163,74,.12);
+  color:#16a34a;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.5px;
+  padding:.22rem .6rem;
+  border-radius:var(--radius-pill);
 }
 .josaa-new-price {
   font-family:"Sora",sans-serif;
-  font-size:3.5rem;
+  font-size:4rem;
   font-weight:800;
   color:#1a1a2e;
   line-height:1;
+  display:inline-flex;
+  align-items:flex-start;
+  justify-content:center;
+  gap:.1rem;
 }
-.josaa-new-price span { font-size:1.4rem; color:#6b7280; }
+.josaa-new-price .josaa-rupee {
+  font-size:2.2rem;
+  font-weight:700;
+  margin-top:.45rem;
+  color:#F47B20;
+}
+.josaa-new-price .josaa-per {
+  font-size:1.15rem;
+  font-weight:600;
+  color:#9ca3af;
+  align-self:flex-end;
+  margin-bottom:.55rem;
+  margin-left:.15rem;
+}
 .josaa-price-label {
   font-size:.82rem;
   color:#9ca3af;
-  margin-top:.3rem;
+  margin-top:.45rem;
   margin-bottom:1.5rem;
 }
 .josaa-includes {
