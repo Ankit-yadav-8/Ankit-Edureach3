@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
-  BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy,
+  BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut,
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -63,6 +63,7 @@ export default function Navbar({ onSearch }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [confirmLogout, setConfirmLogout] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -256,15 +257,16 @@ export default function Navbar({ onSearch }) {
           </button>
           {isLoggedIn ? (
             <button
-              onClick={logout}
-              title={user?.name || user?.phone || "Account"}
+              onClick={() => setConfirmLogout(true)}
+              title="Logout"
               className="cta-desktop"
-              style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
+              style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
             >
               <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#F47B20", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
                 {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
               </span>
               {user?.name?.split(" ")[0] || "Account"}
+              <LogOut size={15} style={{ color: "#e5484d" }} />
             </button>
           ) : (
             <>
@@ -394,7 +396,7 @@ export default function Navbar({ onSearch }) {
 
               {isLoggedIn ? (
                 <button
-                  onClick={() => { logout(); setMobileOpen(false); }}
+                  onClick={() => { setMobileOpen(false); setConfirmLogout(true); }}
                   style={{
                     display: "flex", alignItems: "center", gap: 10,
                     width: "100%", marginTop: 12, padding: "12px 16px",
@@ -446,6 +448,73 @@ export default function Navbar({ onSearch }) {
               )}
             </motion.aside>
           </>
+        )}
+      </AnimatePresence>
+
+      {/* ── Logout confirmation ── */}
+      <AnimatePresence>
+        {confirmLogout && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            onClick={() => setConfirmLogout(false)}
+            style={{
+              position: "fixed", inset: 0, zIndex: 2000,
+              background: "rgba(13,27,62,.55)",
+              backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)",
+              display: "grid", placeItems: "center", padding: "1.2rem",
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 12 }}
+              transition={{ type: "spring", stiffness: 420, damping: 30 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: "min(380px, 100%)", background: "#fff",
+                borderRadius: 20, padding: "26px 24px 22px",
+                boxShadow: "0 30px 80px rgba(13,27,62,.4)",
+                textAlign: "center",
+              }}
+            >
+              <div style={{
+                width: 56, height: 56, borderRadius: "50%", margin: "0 auto 14px",
+                background: "#FFF1E9", display: "grid", placeItems: "center",
+              }}>
+                <LogOut size={26} color="#F47B20" />
+              </div>
+              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.25rem", color: "var(--navy)", margin: "0 0 6px" }}>
+                Log out?
+              </h3>
+              <p style={{ fontSize: "0.95rem", color: "var(--gray)", margin: "0 0 20px", lineHeight: 1.5 }}>
+                Are you sure you want to log out of your account?
+              </p>
+              <div style={{ display: "flex", gap: 10 }}>
+                <button
+                  onClick={() => setConfirmLogout(false)}
+                  style={{
+                    flex: 1, padding: "12px 0", borderRadius: 12,
+                    border: "1.5px solid var(--line)", background: "#fff",
+                    color: "var(--navy)", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer",
+                  }}
+                >
+                  No
+                </button>
+                <button
+                  onClick={() => { logout(); setConfirmLogout(false); navigate("/"); }}
+                  style={{
+                    flex: 1, padding: "12px 0", borderRadius: 12,
+                    border: "none", background: "#e5484d",
+                    color: "#fff", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer",
+                    boxShadow: "0 6px 18px -6px #e5484d",
+                  }}
+                >
+                  Yes, log out
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>

@@ -98,7 +98,8 @@ function Field({ icon: Icon, error, label, ...props }) {
           style={{
             flex: 1, border: "none", background: "transparent", outline: "none",
             paddingLeft: 40, paddingRight: isPass ? 46 : 14,
-            height: 48, fontSize: 14, color: "#1e293b", borderRadius: 12,
+            height: 52, fontSize: 16.5, fontWeight: 600, letterSpacing: ".01em",
+            color: "#0f172a", borderRadius: 12,
             fontFamily: "inherit",
           }}
         />
@@ -186,8 +187,8 @@ function Banner({ type, text }) {
         padding: "11px 14px", marginTop: 14, color,
       }}
     >
-      <Icon size={16} style={{ flexShrink: 0, marginTop: 1 }} />
-      <span style={{ fontSize: 13, lineHeight: 1.55, fontWeight: 500 }}>{text}</span>
+      <Icon size={17} style={{ flexShrink: 0, marginTop: 1 }} />
+      <span style={{ fontSize: 13.5, lineHeight: 1.55, fontWeight: 700 }}>{text}</span>
     </motion.div>
   );
 }
