@@ -12,10 +12,10 @@ export async function sendOtpEmail(email, code) {
         "api-key": process.env.BREVO_API_KEY,
       },
       body: JSON.stringify({
-        sender: { name: "EduReach", email: process.env.SMTP_FROM_EMAIL },
+        sender: { name: "CollegeParichay", email: process.env.SMTP_FROM_EMAIL },
         to: [{ email }],
-        subject: "Your EduReach verification code",
-        textContent: `Your EduReach verification code is ${code}. Valid for 5 minutes.`,
+        subject: "Your CollegeParichay verification code",
+        textContent: `Your CollegeParichay verification code is ${code}. Valid for 5 minutes.`,
         htmlContent: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto">
           <h2 style="color:#F47B20;margin:0 0 8px">EduReach</h2>
           <p style="color:#333;font-size:15px">Your verification code is:</p>
