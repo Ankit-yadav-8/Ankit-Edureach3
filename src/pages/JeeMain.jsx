@@ -2,6 +2,7 @@ import { useState } from "react";
 import { EXAM_BY_SLUG } from "../data/exams.js";
 import RankPredictorTool from "../components/predictor/RankPredictorTool.jsx";
 import CollegePredictorTool from "../components/predictor/CollegePredictorTool.jsx";
+import CounsellingCard from "../components/predictor/CounsellingCard.jsx";
 import { EligibilityCards, RankingsTable } from "../components/predictor/AnalysisSections.jsx";
 import { Bars, Trend } from "../components/Charts.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -575,7 +576,12 @@ export default function JeeMain() {
               <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a "Page Unresponsive" pop-up, click <strong>"Wait"</strong> — do <em>not</em> click "Exit Page".
             </span>
           </div>
-          <CollegePredictorTool basePath="/jee-main" />
+          <div className="predictor-layout" style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <CollegePredictorTool basePath="/jee-main" />
+            </div>
+            <CounsellingCard exam="main" />
+          </div>
         </Block>
       </div>
 
