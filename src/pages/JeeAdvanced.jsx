@@ -9,7 +9,7 @@ import Reveal from "../components/Reveal.jsx";
 import {
   Info, Atom, FlaskConical, Calculator, FileText,
   CheckCircle2, ArrowRight, Zap, MapPin, Globe,
-  Star, Target, TrendingUp, TrendingDown,
+  Star, Target, TrendingUp, TrendingDown, Building2,
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════
@@ -70,6 +70,24 @@ const DIFFICULTY_DATA = {
       "Mathematics was exceptionally tough in Paper 1 with unconventional question types. Physics was moderately hard with application-based questions. Chemistry remained the most scoring subject overall.",
     tags: ["Maths unconventional", "Physics application-based", "Chemistry scoring"],
   },
+};
+
+/* ═══════════════════════════════════════════════════════════
+   ORGANISING IIT — which IIT designed & conducted the paper.
+   JEE Advanced rotates between 7 zonal IITs under the Joint
+   Admission Board (JAB). History verified against jeeadv.ac.in
+   & Wikipedia. Each setter IIT lends the paper its own flavour.
+═══════════════════════════════════════════════════════════ */
+const ORGANISING_IITS = {
+  2018: { iit: "IIT Kanpur",    short: "IITK",   city: "Kanpur, UP",      color: "#0EA5A4", setterNote: "Concept-first paper with a fair Chemistry section." },
+  2019: { iit: "IIT Roorkee",   short: "IITR",   city: "Roorkee, UK",     color: "#2563EB", setterNote: "Balanced across subjects; Maths on the lengthier side." },
+  2020: { iit: "IIT Delhi",     short: "IITD",   city: "New Delhi",       color: "#DC2626", setterNote: "COVID-year paper; moderate overall with tricky Physics." },
+  2021: { iit: "IIT Kharagpur", short: "IITKgp", city: "Kharagpur, WB",   color: "#7C3AED", setterNote: "Pushed more non-negative numerical-answer questions; Maths very lengthy." },
+  2022: { iit: "IIT Bombay",    short: "IITB",   city: "Mumbai, MH",      color: "#0891B2", setterNote: "Set a brutal multi-correct Maths section — one of the toughest years." },
+  2023: { iit: "IIT Guwahati",  short: "IITG",   city: "Guwahati, AS",    color: "#16A34A", setterNote: "Unconventional Maths problem types drove difficulty to a multi-year high." },
+  2024: { iit: "IIT Madras",    short: "IITM",   city: "Chennai, TN",     color: "#EA580C", setterNote: "Physics turned unusually demanding; rich application-based framing." },
+  2025: { iit: "IIT Kanpur",    short: "IITK",   city: "Kanpur, UP",      color: "#0EA5A4", setterNote: "Lengthy, unconventional Maths in Paper 1; Chemistry stayed the scoring section." },
+  2026: { iit: "IIT Roorkee",   short: "IITR",   city: "Roorkee, UK",     color: "#2563EB", setterNote: "Conducting JEE Advanced 2026 — expected to keep the 3-subject, dual-paper format." },
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -400,6 +418,67 @@ function SubjectBar({ label, p1, p2, animate }) {
   );
 }
 
+/* ── Animated "Organising IIT" banner — shows which IIT designed
+      and conducted the paper for the selected year. ── */
+function OrganiserBanner({ year }) {
+  const org = ORGANISING_IITS[year];
+  if (!org) return null;
+  return (
+    <div
+      key={`org-${year}`}
+      className="org-banner"
+      style={{
+        background: `linear-gradient(135deg, ${org.color} 0%, ${org.color}cc 60%, ${org.color}99 100%)`,
+        borderRadius: 18,
+        padding: "22px 26px",
+        marginBottom: 22,
+        position: "relative",
+        overflow: "hidden",
+        boxShadow: `0 14px 40px ${org.color}33`,
+      }}
+    >
+      {/* decorative animated glow */}
+      <div className="org-glow" style={{ background: "radial-gradient(circle at 80% 20%, rgba(255,255,255,.28) 0%, transparent 55%)" }} />
+      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+        {/* IIT seal / crest */}
+        <div className="org-seal" style={{
+          width: 64, height: 64, borderRadius: 16, flexShrink: 0,
+          display: "grid", placeItems: "center",
+          background: "rgba(255,255,255,.18)", border: "2px solid rgba(255,255,255,.4)",
+          backdropFilter: "blur(4px)",
+        }}>
+          <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 18, color: "#fff", letterSpacing: ".5px" }}>
+            {org.short}
+          </span>
+        </div>
+
+        <div style={{ flex: 1, minWidth: 200 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.2, textTransform: "uppercase", color: "rgba(255,255,255,.85)" }}>
+              <Building2 size={13} style={{ display: "inline", marginRight: 5, marginBottom: -2 }} />
+              Paper set &amp; conducted by
+            </span>
+          </div>
+          <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: "clamp(1.4rem,3vw,2rem)", color: "#fff", lineHeight: 1.1 }}>
+            {org.iit}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4, fontSize: 13, color: "rgba(255,255,255,.9)" }}>
+            <MapPin size={13} /> {org.city} &nbsp;·&nbsp; JEE Advanced {year}
+          </div>
+        </div>
+
+        <div style={{
+          flexShrink: 0, maxWidth: 320, fontSize: 12.5, lineHeight: 1.55,
+          color: "rgba(255,255,255,.95)", borderLeft: "2px solid rgba(255,255,255,.35)",
+          paddingLeft: 14, fontStyle: "italic",
+        }}>
+          "{org.setterNote}"
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── Qualifying marks mini-bar ── */
 function MarksBar({ label, value, color, maxValue = 120 }) {
   return (
@@ -459,6 +538,28 @@ export default function JeeAdvanced() {
         .d1 { animation-delay: .04s }
         .d2 { animation-delay: .10s }
         .year-active-adv { animation: pulseRingAdv 1.2s ease; }
+
+        /* Organising-IIT banner */
+        @keyframes orgIn   { from{opacity:0;transform:translateY(14px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)} }
+        @keyframes orgGlow { 0%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.12)} 100%{opacity:.5;transform:scale(1)} }
+        @keyframes sealPop { from{transform:scale(.6) rotate(-8deg);opacity:0} to{transform:scale(1) rotate(0);opacity:1} }
+        .org-banner { animation: orgIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+        .org-glow   { position:absolute; inset:0; animation: orgGlow 4s ease-in-out infinite; pointer-events:none; }
+        .org-seal   { animation: sealPop .55s cubic-bezier(.34,1.56,.64,1) .08s both; }
+        @media (max-width: 640px) {
+          .org-banner [style*="border-left"] { border-left:none !important; padding-left:0 !important; }
+        }
+
+        /* Paper-setting IIT timeline strip */
+        .org-pill {
+          flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 4px;
+          padding: 10px 14px; border-radius: 14px; cursor: pointer;
+          border: 1.5px solid var(--line); background: #fff;
+          transition: transform .18s, box-shadow .18s, border-color .18s;
+          min-width: 92px;
+        }
+        .org-pill:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,.1); }
+        .org-pill.is-active { color: #fff; border-color: transparent; box-shadow: 0 8px 22px rgba(0,0,0,.18); }
 
         .card-hover { transition: transform .2s, box-shadow .2s; cursor: default; }
         .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,.09); }
@@ -614,10 +715,11 @@ export default function JeeAdvanced() {
 
           <div className="title-bar">
             <span className="eyebrow">Paper Analysis · 2021–2025</span>
-            <h2 className="section-title">Paper-wise Difficulty — Subject Analysis</h2>
+            <h2 className="section-title">Paper-wise Difficulty &amp; the IIT Behind Each Year</h2>
             <p className="section-sub">
-              Select a year to compare Physics, Chemistry &amp; Maths difficulty across both papers.
-              Qualitative labels from official paper analysis. Index: 0 = easiest · 100 = hardest.
+              Select a year to see <strong>which IIT set the paper</strong> and compare Physics, Chemistry &amp;
+              Maths difficulty across both papers. Qualitative labels from official post-exam analysis.
+              Index: 0 = easiest · 100 = hardest.
             </p>
           </div>
 
@@ -691,6 +793,9 @@ export default function JeeAdvanced() {
               ))}
             </div>
           </div>
+
+          {/* ── Organising IIT Banner (which IIT set the paper) ── */}
+          <OrganiserBanner year={selectedYear} />
 
           {/* ── Paper Overall Badges ── */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 22 }}>
@@ -808,6 +913,7 @@ export default function JeeAdvanced() {
                 <thead>
                   <tr>
                     <th>Year</th>
+                    <th>Organising IIT</th>
                     <th>Paper 1 Difficulty</th>
                     <th>Paper 2 Difficulty</th>
                     <th>Toughest Subject</th>
@@ -819,12 +925,26 @@ export default function JeeAdvanced() {
                     const row = DIFFICULTY_DATA[y];
                     const m1  = labelMeta(row.p1Label);
                     const m2  = labelMeta(row.p2Label);
+                    const org = ORGANISING_IITS[y];
                     return (
                       <tr key={y} className="yr-row-adv">
                         <td>
                           <strong style={{ fontFamily: "Sora", fontSize: 15, color: selectedYear === y ? "#7C3AED" : "var(--navy)" }}>
                             {y}{selectedYear === y ? " ◀" : ""}
                           </strong>
+                        </td>
+                        <td>
+                          {org && (
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
+                              <span style={{
+                                width: 26, height: 26, borderRadius: 7, flexShrink: 0,
+                                display: "grid", placeItems: "center",
+                                background: `${org.color}18`, color: org.color,
+                                fontFamily: "Sora", fontWeight: 800, fontSize: 9,
+                              }}>{org.short}</span>
+                              <span style={{ fontSize: 13, fontWeight: 700, color: "var(--navy)" }}>{org.iit}</span>
+                            </span>
+                          )}
                         </td>
                         <td>
                           <span style={{ fontSize: 12, fontWeight: 700, padding: "4px 11px", borderRadius: 50, background: m1.bg, color: m1.color }}>
@@ -845,6 +965,50 @@ export default function JeeAdvanced() {
                   })}
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          {/* ── Paper-setting IITs Over the Years (clickable timeline) ── */}
+          <div style={{ marginTop: 30 }}>
+            <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, marginBottom: 4 }}>
+              🏛️ Which IIT Sets the Paper — Rotation Timeline
+            </h4>
+            <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>
+              JEE Advanced rotates between the 7 zonal IITs under the Joint Admission Board.
+              Tap a year with analysis data to load its breakdown above.
+            </p>
+            <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 8 }}>
+              {Object.keys(ORGANISING_IITS).map((yr) => {
+                const y = Number(yr);
+                const org = ORGANISING_IITS[y];
+                const hasData = DIFFICULTY_YEARS.includes(y);
+                const active = selectedYear === y;
+                return (
+                  <button
+                    key={y}
+                    onClick={() => hasData && handleYearChange(y)}
+                    className={`org-pill${active ? " is-active" : ""}`}
+                    style={{
+                      background: active ? `linear-gradient(135deg,${org.color},${org.color}bb)` : "#fff",
+                      borderColor: active ? "transparent" : "var(--line)",
+                      cursor: hasData ? "pointer" : "default",
+                      opacity: hasData ? 1 : 0.62,
+                    }}
+                    title={hasData ? `View ${y} analysis` : `${org.iit} — ${y}`}
+                  >
+                    <span style={{
+                      width: 34, height: 34, borderRadius: 9, display: "grid", placeItems: "center",
+                      background: active ? "rgba(255,255,255,.22)" : `${org.color}18`,
+                      color: active ? "#fff" : org.color,
+                      fontFamily: "Sora", fontWeight: 900, fontSize: 11,
+                    }}>{org.short}</span>
+                    <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: active ? "#fff" : "var(--navy)" }}>{y}</span>
+                    <span style={{ fontSize: 10.5, fontWeight: 600, color: active ? "rgba(255,255,255,.9)" : "var(--muted)", whiteSpace: "nowrap" }}>
+                      {org.iit.replace("IIT ", "")}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
