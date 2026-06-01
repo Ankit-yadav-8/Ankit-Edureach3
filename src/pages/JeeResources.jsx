@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  BookOpen, FlaskConical, Sigma, ChevronRight,
+  BookOpen, FlaskConical, Sigma, ChevronRight, ChevronDown,
   Flame, Zap, Star, Clock, Target, ArrowRight,
-  CheckCircle2, TrendingUp,
+  CheckCircle2, TrendingUp, ListChecks, Sparkles,
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -138,6 +138,7 @@ const JEE_STYLE = {
 function ChapterCard({ ch, color, index }) {
   const diff = DIFF_STYLE[ch.diff];
   const jee  = JEE_STYLE[ch.jee];
+  const [open, setOpen] = useState(false);
 
   return (
     <motion.div
@@ -145,21 +146,22 @@ function ChapterCard({ ch, color, index }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.38, delay: (index % 6) * 0.05, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      whileHover={open ? undefined : { y: -4, transition: { duration: 0.2 } }}
       style={{
         background: "#fff",
         borderRadius: 14,
-        border: "1px solid rgba(0,0,0,.08)",
-        boxShadow: "0 2px 12px rgba(28,28,40,.05)",
+        border: open ? `1px solid ${color}55` : "1px solid rgba(0,0,0,.08)",
+        boxShadow: open ? `0 10px 32px ${color}22` : "0 2px 12px rgba(28,28,40,.05)",
         padding: "16px 16px 14px",
         display: "flex",
         flexDirection: "column",
         gap: 10,
         cursor: "pointer",
-        transition: "box-shadow .2s",
+        transition: "box-shadow .2s, border-color .2s",
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 10px 32px ${color}22`; }}
-      onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 2px 12px rgba(28,28,40,.05)"; }}
+      onClick={() => setOpen((o) => !o)}
+      onMouseEnter={(e) => { if (!open) e.currentTarget.style.boxShadow = `0 10px 32px ${color}22`; }}
+      onMouseLeave={(e) => { if (!open) e.currentTarget.style.boxShadow = "0 2px 12px rgba(28,28,40,.05)"; }}
     >
       {/* Chapter number + badges */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -183,14 +185,23 @@ function ChapterCard({ ch, color, index }) {
         </div>
       </div>
 
-      {/* Chapter name */}
-      <h4 style={{
-        fontFamily: "Sora", fontWeight: 700,
-        fontSize: "0.88rem", color: "#1c1c28",
-        lineHeight: 1.35,
-      }}>
-        {ch.name}
-      </h4>
+      {/* Chapter name + expand chevron */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
+        <h4 style={{
+          fontFamily: "Sora", fontWeight: 700,
+          fontSize: "0.88rem", color: "#1c1c28",
+          lineHeight: 1.35,
+        }}>
+          {ch.name}
+        </h4>
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.25 }}
+          style={{ flexShrink: 0, color, marginTop: 2 }}
+        >
+          <ChevronDown size={18} />
+        </motion.span>
+      </div>
 
       {/* Topics */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
@@ -206,6 +217,77 @@ function ChapterCard({ ch, color, index }) {
           </span>
         ))}
       </div>
+
+      {/* Expandable: full topic list + quiz section */}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="details"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            style={{ overflow: "hidden" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ paddingTop: 6, borderTop: "1px dashed rgba(0,0,0,.1)", marginTop: 4 }}>
+              {/* Topics list */}
+              <div style={{ display: "flex", alignItems: "center", gap: 6, margin: "12px 0 8px" }}>
+                <ListChecks size={14} color={color} />
+                <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12, color: "#1c1c28" }}>
+                  Topics in this chapter
+                </span>
+              </div>
+              <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+                {ch.topics.map((t) => (
+                  <li key={t} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, color: "#4b5563", fontFamily: "DM Sans" }}>
+                    <CheckCircle2 size={14} color={color} style={{ flexShrink: 0 }} />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+
+              {/* Quiz section — Coming Soon */}
+              <div style={{
+                marginTop: 14,
+                background: `${color}0d`,
+                border: `1px dashed ${color}40`,
+                borderRadius: 12,
+                padding: "14px 14px",
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+              }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: 10,
+                  background: `${color}1a`,
+                  display: "grid", placeItems: "center", flexShrink: 0,
+                }}>
+                  <Target size={18} color={color} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "#1c1c28" }}>
+                      Chapter Quiz
+                    </span>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 3,
+                      padding: "2px 8px", borderRadius: 50,
+                      background: `${color}18`, color,
+                      fontSize: 10, fontWeight: 700,
+                    }}>
+                      <Sparkles size={10} /> Coming Soon
+                    </span>
+                  </div>
+                  <p style={{ margin: "3px 0 0", fontSize: 11.5, color: "#6b7280", fontFamily: "DM Sans" }}>
+                    Practice questions for this chapter will be available here soon.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

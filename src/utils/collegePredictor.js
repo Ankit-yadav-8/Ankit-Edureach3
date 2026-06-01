@@ -90,8 +90,8 @@ const PROG_BRANCH_MAP = [
   [["computer science and engineering (artificial", "computer science and engineering ( artificial",
     "cse ( data science", "computer science and engineering (data",
     "computer science and engineering with major in artificial",
-    "computer science engineering (artificial", "computer science.*specialization",
-    "b.tech in computer science and engineering"], "cse"],
+    "computer science engineering (artificial",
+    "b.tech in computer science and engineering", "(cse)"], "cse"],
   // Pure AI / Data Science programs
   [["artificial intelligence and machine learning", "artificial intelligence & machine learning",
     "artificial intelligence and data science", "artificial intelligence & data science",
@@ -101,25 +101,30 @@ const PROG_BRANCH_MAP = [
   [["computer science and engineering", "computer science & engineering", "computer engineering",
     "computer science (hons", "b.tech. in computer"], "cse"],
   [["information technology"], "it"],
-  // Electronics / ECE
+  // Electronics / ECE (incl. IIT-KGP's "Electronics and Electrical Communication")
   [["electronics and communication engineering", "electronics & communication engineering",
     "electronics and communication (", "electronics & communication (",
-    "b.tech. in electronics and communication"], "ece"],
-  [["electrical and electronics engineering", "electrical and electronics ("], "eee"],
+    "electronics and electrical communication",
+    "b.tech. in electronics and communication", "(ece)"], "ece"],
+  [["electrical and electronics engineering", "electrical and electronics (", "(eee)"], "eee"],
   [["electrical engineering"], "ee"],
   // Mechanical / Robotics
   [["robotics and automation", "robotics & automation",
     "mechanical engineering", "engineering and computational mechanics",
-    "b.tech / b. tech (hons.) mechanical"], "me"],
-  // Civil
-  [["civil engineering", "civil and environmental engineering"], "ce"],
+    "b.tech / b. tech (hons.) mechanical", "(me) -", "(me)-"], "me"],
+  // Civil (incl. IIT-Patna's "B. Tech in CE. - M. Tech." dual degrees)
+  [["civil engineering", "civil and environmental engineering", "in ce. -"], "ce"],
+  // Bio / Pharma — checked BEFORE chemical so "Biotechnology and Biochemical
+  // Engineering" (IIT-KGP) isn't swallowed by the "chemical engineering" substring.
+  [["biotechnology", "bio-technology", "bio technology", "biochemical engineering",
+    "biosciences and bioengineering", "biosciences", "bioengineering",
+    "biological sciences", "biological engineering", "pharmaceutical"], "bio"],
+  // Chemical sciences (B.Tech/dual) — distinct from Chemical Engineering, so checked first
+  [["chemical sciences", "chemical science and technology", "chemical science"], "chemsci"],
   [["chemical engineering"], "che"],
-  // Materials / Metallurgy
+  // Materials / Metallurgy (incl. ISM's "Mineral and Metallurgical")
   [["metallurgical and materials engineering", "metallurgical engineering",
     "materials science", "materials engineering"], "mme"],
-  // Bio / Pharma
-  [["biotechnology", "bio-technology", "bio technology", "biochemical engineering",
-    "pharmaceutical"], "bio"],
   // Aerospace
   [["aerospace engineering", "aeronautical engineering"], "aero"],
   // Architecture / Planning
@@ -130,30 +135,56 @@ const PROG_BRANCH_MAP = [
   [["mathematics and computing", "mathematics & computing",
     "b.tech in mathematics", "mathematics and data science",
     "mathematics and statistics", "applied mathematics"], "maths"],
-  // Production / Manufacturing
+  // Production / Manufacturing / Industrial (incl. KGP's "Industrial & Systems",
+  // "Manufacturing Science")
   [["production and industrial engineering", "production engineering",
-    "industrial engineering", "manufacturing engineering"], "prod"],
-  // Mining
-  [["mining engineering"], "mine"],
+    "industrial and systems engineering", "industrial engineering",
+    "manufacturing science and engineering", "manufacturing engineering"], "prod"],
+  // Mining (incl. ISM's "Mining Machinery")
+  [["mining machinery", "mining engineering"], "mine"],
+  // Petroleum
+  [["petroleum engineering", "petroleum"], "petro"],
   // Instrumentation
   [["instrumentation and control engineering", "instrumentation engineering",
     "electronics and instrumentation"], "instr"],
   // Ocean / Naval
   [["ocean engineering", "naval architecture"], "ocean"],
-  // Agriculture
-  [["agricultural engineering", "agriculture engineering"], "agri"],
+  // Agriculture (incl. KGP's "Agricultural and Food Engineering")
+  [["agricultural and food", "agricultural engineering", "agriculture engineering",
+    "agricultural"], "agri"],
+  // Energy
+  [["energy engineering", "energy science"], "energy"],
+  // Environmental
+  [["environmental engineering", "environmental science"], "env"],
+  // Geophysics (checked before "physics" so it isn't swallowed)
+  [["geophysical technology", "applied geophysics", "exploration geophysics",
+    "geophysics"], "geophysics"],
+  // Geology
+  [["geological technology", "applied geology", "geology"], "geology"],
+  // Economics
+  [["economics", "bs in economics"], "econ"],
+  // Pure sciences
+  [["chemistry"], "chemistry"],
+  [["physics"], "physci"],
   // Textile / Rubber
   [["textile technology", "textile engineering", "rubber technology", "polymer science"], "textile"],
   // General data science catch-all
   [["data science"], "ai"],
 ];
 
+// Slugify a short name into a stable branch code for the fallback path.
+const slugifyCode = (s) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 24);
+
 function progToBranchCode(progName) {
   const lower = progName.toLowerCase();
   for (const [keywords, code] of PROG_BRANCH_MAP) {
     if (keywords.some(kw => lower.includes(kw))) return code;
   }
-  return null;
+  // Fallback: derive a stable code from the program's short name so that every
+  // genuine JoSAA program (niche sciences, dual degrees, etc.) is still shown
+  // rather than silently dropped. Empty names yield null and are skipped.
+  return slugifyCode(getProgramShortName(progName)) || null;
 }
 
 // ── Seat-matrix helper ────────────────────────────────────────────────────────
