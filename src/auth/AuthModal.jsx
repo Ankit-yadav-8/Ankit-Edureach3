@@ -232,6 +232,90 @@ function FeaturePills() {
 }
 
 /* ════════════════════════════════════════════════════════════
+   SHOWCASE PANEL — animated left side (desktop only)
+════════════════════════════════════════════════════════════ */
+const SHOWCASE = {
+  login:  { title: "Welcome back to",     accent: "College Parichay" },
+  signup: { title: "Start your journey with", accent: "College Parichay" },
+};
+const SHOW_STATS = [
+  { icon: Trophy,  label: "8 years of JoSAA closing ranks" },
+  { icon: BookOpen, label: "Personalised college predictor" },
+  { icon: Award,   label: "Branch & cutoff comparisons" },
+  { icon: Shield,  label: "Free forever · privacy-first" },
+];
+// Deterministic particle field so it doesn't reshuffle on every render
+const PARTICLES = Array.from({ length: 16 }).map((_, i) => ({
+  left: (i * 53) % 100,
+  size: 3 + ((i * 7) % 6),
+  delay: (i % 8) * 0.9,
+  dur: 7 + ((i * 3) % 7),
+}));
+
+function ShowcasePanel({ mode }) {
+  const S = SHOWCASE[mode] || SHOWCASE.login;
+  return (
+    <div className="auth-showcase">
+      {/* animated colour layers */}
+      <div className="auth-aurora" />
+      <div className="auth-mesh" />
+      {PARTICLES.map((p, i) => (
+        <span key={i} className="auth-particle" style={{
+          left: `${p.left}%`, bottom: -10, width: p.size, height: p.size,
+          animationDelay: `${p.delay}s`, animationDuration: `${p.dur}s`,
+        }} />
+      ))}
+
+      {/* brand */}
+      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 10 }}>
+        <span style={{ width: 38, height: 38, borderRadius: 11, background: `linear-gradient(135deg,${OR},${ORD})`, display: "grid", placeItems: "center", boxShadow: `0 6px 18px ${OR}66`, animation: "glowPulse 3s ease-in-out infinite" }}>
+          <GraduationCap size={20} color="#fff" />
+        </span>
+        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: "#fff" }}>
+          College <span style={{ color: OR }}>Parichay</span>
+        </span>
+      </div>
+
+      {/* headline */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <AnimatePresence mode="wait">
+          <motion.h2
+            key={mode}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.7rem", lineHeight: 1.25, margin: "0 0 14px", color: "#fff" }}
+          >
+            {S.title}<br />
+            <span className="auth-grad-text">{S.accent}</span>
+          </motion.h2>
+        </AnimatePresence>
+        <p style={{ color: "rgba(255,255,255,.6)", fontSize: 13.5, lineHeight: 1.6, margin: 0, maxWidth: 280 }}>
+          The data-driven companion for every JEE aspirant choosing where to study next.
+        </p>
+      </div>
+
+      {/* stat chips */}
+      <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 9 }}>
+        {SHOW_STATS.map(({ icon: I, label }, i) => (
+          <motion.div key={label} className="auth-stat"
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.12 + i * 0.08, duration: 0.35 }}
+          >
+            <span style={{ width: 28, height: 28, borderRadius: 9, background: `${OR}22`, border: `1px solid ${OR}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <I size={14} color={OR} />
+            </span>
+            <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.82)", fontWeight: 600 }}>{label}</span>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════
    MAIN MODAL
 ════════════════════════════════════════════════════════════ */
 const HEADS = {
@@ -383,24 +467,22 @@ export default function AuthModal() {
           minHeight: "100%",
         }}
       >
-        {/* ── card ── */}
+        {/* ── card ── split-panel: showcase (desktop) + form ── */}
         <motion.div
           key="card"
+          className="auth-card"
           initial={{ opacity: 0, scale: 0.90, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
           transition={{ type: "spring", stiffness: 420, damping: 30 }}
           onClick={e => e.stopPropagation()}
-          style={{
-            width: "min(460px,100%)",
-            borderRadius: 26,
-            overflow: "hidden",
-            boxShadow: "0 40px 100px rgba(10,12,28,.55), 0 0 0 1px rgba(255,255,255,.08)",
-            background: "#fff",
-            flexShrink: 0,
-            position: "relative",
-          }}
         >
+
+          {/* ─── LEFT: animated showcase (login / signup only, desktop) ─── */}
+          {(mode === "login" || mode === "signup") && <ShowcasePanel mode={mode} />}
+
+          {/* ─── RIGHT: form panel ─── */}
+          <div className="auth-form-panel">
 
           {/* ─── BUSY progress bar ─── */}
           <AnimatePresence>
@@ -766,6 +848,7 @@ export default function AuthModal() {
               </div>
             )}
 
+          </div>
           </div>
         </motion.div>
       </motion.div>

@@ -2291,4 +2291,168 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 @media (max-width:430px)  { .section { padding:2.5rem 0; } }
 @media (min-width:431px) and (max-width:767px)  { .section { padding:3rem 0; } }
 @media (min-width:768px) and (max-width:1024px) { .section { padding:4rem 0; } }
+
+/* ════════════════════════════════════════════════════════════
+   AUTH MODAL — split-panel layout + dynamic animations
+════════════════════════════════════════════════════════════ */
+/* Two-column shell: showcase panel + form panel */
+.auth-card {
+  display: flex;
+  width: min(940px, 100%);
+  border-radius: 26px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 40px 100px rgba(10,12,28,.55), 0 0 0 1px rgba(255,255,255,.08);
+  flex-shrink: 0;
+  position: relative;
+}
+.auth-form-panel { flex: 1 1 460px; min-width: 0; position: relative; z-index: 2; }
+.auth-showcase {
+  flex: 0 0 380px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(150deg,#1a0d00 0%,#2d1400 38%,#3d2010 64%,#160b00 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 36px 32px;
+}
+/* Collapse to single column on tablet / mobile */
+@media (max-width: 820px) {
+  .auth-showcase { display: none; }
+  .auth-card { width: min(460px, 100%); }
+}
+
+/* Animated aurora wash that drifts behind the showcase content */
+.auth-aurora {
+  position: absolute; inset: -40%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(244,123,32,.55), transparent 45%),
+    radial-gradient(circle at 70% 65%, rgba(234,88,12,.45), transparent 50%),
+    radial-gradient(circle at 50% 90%, rgba(251,191,36,.35), transparent 45%);
+  filter: blur(14px);
+  animation: authAurora 14s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes authAurora {
+  0%,100% { transform: translate(0,0) rotate(0deg) scale(1); }
+  33%     { transform: translate(6%,-5%) rotate(8deg) scale(1.12); }
+  66%     { transform: translate(-5%,5%) rotate(-6deg) scale(1.06); }
+}
+/* Animated mesh grid drifting over the panel */
+.auth-mesh {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(circle at 50% 40%, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 30%, transparent 75%);
+  animation: authMeshDrift 20s linear infinite;
+  pointer-events: none;
+}
+@keyframes authMeshDrift { to { background-position: 26px 26px; } }
+
+/* Floating particles inside the showcase */
+.auth-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.9), rgba(244,123,32,.4));
+  box-shadow: 0 0 12px rgba(244,123,32,.6);
+  animation: authParticle linear infinite;
+  pointer-events: none;
+}
+@keyframes authParticle {
+  0%   { transform: translateY(0) scale(1);   opacity: 0; }
+  10%  { opacity: .9; }
+  90%  { opacity: .9; }
+  100% { transform: translateY(-340px) scale(.3); opacity: 0; }
+}
+
+/* Animated gradient headline text */
+.auth-grad-text {
+  background: linear-gradient(90deg,#fff,#F47B20,#fbbf24,#fff);
+  background-size: 220% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: gradientShift 5s linear infinite;
+}
+
+/* Animated conic glow ring framing the card */
+.auth-card::before {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 26px;
+  padding: 1px;
+  background: conic-gradient(from 0deg, transparent 0%, rgba(244,123,32,.55) 18%, transparent 38%, transparent 60%, rgba(251,191,36,.5) 78%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  mask-composite: exclude;
+  animation: rotateBorder 8s linear infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Stat chip inside showcase */
+.auth-stat {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border-radius: 14px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+  backdrop-filter: blur(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-aurora, .auth-mesh, .auth-particle, .auth-grad-text, .auth-card::before { animation: none; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   JoSAA 2026 — upgraded price card
+════════════════════════════════════════════════════════════ */
+.josaa-price-card {
+  position: relative;
+  background: #fff;
+  color: var(--ink);
+  padding: 30px 28px;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px -24px rgba(244,123,32,.45), 0 0 0 1px rgba(244,123,32,.12);
+  animation: floatY 6s ease-in-out infinite;
+}
+/* soft animated colour aura that breathes behind the content */
+.josaa-price-aura {
+  position: absolute; inset: -2px;
+  background: conic-gradient(from 0deg, #F47B20, #fbbf24, #ea580c, #F47B20);
+  filter: blur(26px);
+  opacity: .18;
+  animation: rotateBorder 9s linear infinite;
+  pointer-events: none;
+}
+/* discount corner ribbon */
+.josaa-ribbon {
+  position: absolute; top: 16px; right: -34px;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg,#ef4444,#ea580c);
+  color: #fff; font-family: Sora, sans-serif; font-weight: 800; font-size: 11.5px;
+  letter-spacing: .04em; padding: 5px 40px;
+  box-shadow: 0 4px 12px rgba(234,88,12,.4);
+  z-index: 2;
+}
+/* gradient, animated price figure */
+.josaa-price-amt {
+  font-family: Sora, sans-serif; font-weight: 800; font-size: 3.1rem;
+  background: linear-gradient(90deg,#F47B20,#fbbf24,#ea580c,#F47B20);
+  background-size: 220% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: gradientShift 4s linear infinite;
+}
+/* feature rows fade/slide in */
+.josaa-feat { animation: slideInRight .5s cubic-bezier(.22,1,.36,1) both; }
+/* CTA gets a slow pulsing glow */
+.josaa-cta { animation: glowPulse 2.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .josaa-price-card, .josaa-price-aura, .josaa-price-amt, .josaa-feat, .josaa-cta { animation: none; }
+}
 @media (min-width:1025px) and (max-width:1279px){ .section { padding:4.5rem 0; } }
