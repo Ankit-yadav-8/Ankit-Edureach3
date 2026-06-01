@@ -32,6 +32,36 @@ const FAQ = [
   ["What if my rank changes after a round?", "Your plan is revised each round at no extra cost — that's the point of ongoing support."],
   ["Do you guarantee a specific college?", "No one honestly can. We maximise your chances with data-driven choice ordering and flag mistakes — the allotment is by JoSAA."],
   ["How do I get started?", "Click Enrol, complete the ₹249 payment, and you'll get a WhatsApp message within hours to begin."],
+  ["What is the difference between JoSAA and CSAB?", "JoSAA conducts the common counselling for all 23 IITs, 31 NITs, 26 IIITs and 40+ GFTIs across its main rounds. After JoSAA ends, CSAB conducts special rounds to fill the seats left vacant in NITs, IIITs and GFTIs (IITs do not take part in CSAB). We guide you through both so you never miss a late upgrade."],
+  ["How many rounds are there and should I keep upgrading?", "JoSAA typically runs 5–6 rounds, followed by CSAB special rounds. In each round you can Freeze, Float or Slide your allotted seat. Choosing the wrong option can either lock you too early or risk losing a confirmed seat — we tell you exactly what to pick each round based on your goals."],
+  ["What is seat freezing, floating and sliding?", "Freeze means you accept the allotted seat and stop participating in further rounds. Float means you keep the current seat but stay in the running for any institute/branch higher in your list. Slide means you stay only for a better branch within the same institute. Picking the right one each round is the single most important decision in counselling."],
+  ["I have a low rank — is counselling still worth it for me?", "Absolutely. Lower ranks have more options across NITs, IIITs, GFTIs, home-state quotas and CSAB rounds — which means more ways to go wrong, and more room to upgrade with a smart choice list. A well-ordered list often gets students a far better branch or college than they expected."],
+  ["Do you help with home-state quota and category seats?", "Yes. We factor in your category (OPEN/EWS/OBC-NCL/SC/ST/PwD), gender-neutral vs female-only seats, and home-state vs other-state quota for NITs — all of which dramatically change which choices are realistic for you."],
+  ["What documents will I need during counselling?", "Typically your JEE scorecard, Class X & XII marksheets, category & PwD certificates (if applicable), a domicile certificate for home-state quota, photo ID, passport photos and the seat-acceptance fee receipt. We send you a complete, deadline-tagged checklist so nothing is missing at reporting."],
+];
+
+/* In-depth explainer cards for how counselling actually works */
+const EXPLAINER = [
+  ["What is JoSAA counselling?", "JoSAA (Joint Seat Allocation Authority) runs a single, combined counselling process that allocates seats in all IITs, NITs, IIITs and GFTIs based on your JEE Main and JEE Advanced ranks. You register once, fill an ordered list of college-and-branch choices, and a computer allots seats round by round strictly according to your rank, category and the order of your choices."],
+  ["Why choice order decides everything", "The software always tries to give you the highest choice in your list that your rank can reach. That means if you place a 'dream' college above a realistic one, you can be locked into a seat you didn't actually want — or miss a better branch sitting lower in your list. The order is not a wishlist; it is a strategy. Getting it right is exactly what our plan does for you."],
+  ["JoSAA vs CSAB — the full picture", "JoSAA handles the main rounds for all institute types. Once JoSAA closes, CSAB conducts special rounds to fill remaining NIT, IIIT and GFTI seats — often where the biggest last-minute upgrades happen. Many students stop after JoSAA and never realise they could have moved up in CSAB. We track both for you, end to end."],
+];
+
+/* Counselling timeline / round-by-round roadmap */
+const TIMELINE = [
+  ["Registration & choice filling", "Create your JoSAA account, then lock in a carefully ordered list of every college-branch combination you'd accept — from dream to safe. This is the most decisive step of the entire process."],
+  ["Mock allotments", "Before choices are frozen, JoSAA publishes 1–2 mock rounds showing where you'd land with your current list. We read these signals with you and fine-tune your ordering while there's still time."],
+  ["Round-wise seat allotment", "Across 5–6 rounds, seats are allotted by rank. After each round you decide Freeze, Float or Slide, pay the seat-acceptance fee, and complete online reporting to hold your seat."],
+  ["CSAB special rounds", "After JoSAA, CSAB opens additional rounds for vacant NIT/IIIT/GFTI seats. We help you decide whether to participate and how to order fresh choices for a final upgrade."],
+  ["Document verification & reporting", "Physical or online verification of your documents and final admission at the allotted institute. We give you a deadline-tagged checklist so nothing trips you up at the finish line."],
+];
+
+/* Who this plan is built for */
+const AUDIENCE = [
+  ["JEE Main qualifiers", "Targeting NITs, IIITs and GFTIs and want a choice list ordered around your exact rank, category and home state."],
+  ["JEE Advanced qualifiers", "Aiming for IITs and need help balancing branch vs institute and reading IIT closing-rank trends across rounds."],
+  ["Borderline & dropper ranks", "Where smart float/slide decisions and CSAB rounds make the biggest difference between an average and a great seat."],
+  ["Confused first-timers", "Anyone who finds the JoSAA portal, rounds and reporting deadlines overwhelming and wants a mentor in their corner."],
 ];
 
 function Faq({ q, a }) {
@@ -130,8 +160,28 @@ export default function Josaa2026() {
         </div>
       </section>
 
-      {/* INCLUDES */}
+      {/* EXPLAINER — what counselling actually is */}
       <section className="section section--sky">
+        <div className="container">
+          <div className="title-bar"><span className="eyebrow">Understand the process</span><h2 className="section-title">What JoSAA &amp; CSAB <span className="accent">counselling</span> really is</h2></div>
+          <p style={{ color: "var(--muted)", maxWidth: 760, lineHeight: 1.7, fontSize: "1.05rem", marginBottom: 28 }}>
+            Clearing JEE gets you a rank — but it's <strong>counselling</strong> that turns that rank into an actual seat. JoSAA 2026 is where lakhs of students compete for limited seats across the IITs, NITs, IIITs and GFTIs, and the difference between a great college and a disappointing one often comes down to <strong>how you fill and order your choices</strong>, not just your rank. Here's how the process works, in plain language.
+          </p>
+          <div className="grid-3">
+            {EXPLAINER.map(([t, d], i) => (
+              <Reveal key={t} delay={i * 0.07}>
+                <div className="card" style={{ height: "100%" }}>
+                  <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8, color: "var(--navy)" }}>{t}</h3>
+                  <p style={{ color: "var(--muted)", lineHeight: 1.65, fontSize: 14.5 }}>{d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* INCLUDES */}
+      <section className="section">
         <div className="container">
           <div className="title-bar"><span className="eyebrow">What you get</span><h2 className="section-title">Everything you need to fill choices right</h2></div>
           <div className="grid-3">
@@ -141,6 +191,29 @@ export default function Josaa2026() {
                   <span style={{ width: 44, height: 44, borderRadius: 12, display: "grid", placeItems: "center", background: "rgba(249,115,22,.12)" }}><f.icon size={22} color="var(--coral)" /></span>
                   <h3 style={{ fontFamily: "Sora", fontWeight: 700, margin: "12px 0 6px", color: "var(--navy)" }}>{f.t}</h3>
                   <p style={{ color: "var(--muted)", lineHeight: 1.55, fontSize: 14.5 }}>{f.d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TIMELINE — round-by-round roadmap */}
+      <section className="section section--sky">
+        <div className="container">
+          <div className="title-bar"><span className="eyebrow">The roadmap</span><h2 className="section-title">Your JoSAA 2026 counselling <span className="accent">timeline</span></h2></div>
+          <p style={{ color: "var(--muted)", maxWidth: 720, lineHeight: 1.7, marginBottom: 28 }}>
+            Counselling isn't a single day — it's a multi-week marathon of registration, mock rounds, allotments, reporting and CSAB. Miss one deadline and you can lose a seat you'd already earned. Here's every stage you'll go through, and where we're with you at each step.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {TIMELINE.map(([t, d], i) => (
+              <Reveal key={t} delay={i * 0.05}>
+                <div className="card" style={{ display: "flex", gap: 18, alignItems: "flex-start" }}>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--coral)", color: "#fff", display: "grid", placeItems: "center", fontFamily: "Sora", fontWeight: 800, flexShrink: 0, fontSize: 17 }}>{i + 1}</div>
+                  <div>
+                    <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 5, color: "var(--navy)" }}>{t}</h3>
+                    <p style={{ color: "var(--muted)", lineHeight: 1.6, fontSize: 14.5 }}>{d}</p>
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -166,8 +239,31 @@ export default function Josaa2026() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
+      {/* AUDIENCE — who this is for */}
       <section className="section section--sky">
+        <div className="container">
+          <div className="title-bar"><span className="eyebrow">Who it's for</span><h2 className="section-title">Built for every kind of <span className="accent">JEE counselling candidate</span></h2></div>
+          <p style={{ color: "var(--muted)", maxWidth: 720, lineHeight: 1.7, marginBottom: 28 }}>
+            Whether you're chasing a top IIT branch or trying to make the most of a borderline rank, the choices you make in JoSAA decide the next four years. This plan is designed for:
+          </p>
+          <div className="grid-2">
+            {AUDIENCE.map(([t, d], i) => (
+              <Reveal key={t} delay={i * 0.06}>
+                <div className="card" style={{ height: "100%", display: "flex", gap: 14, alignItems: "flex-start" }}>
+                  <span style={{ width: 40, height: 40, borderRadius: 12, display: "grid", placeItems: "center", background: "rgba(249,115,22,.12)", flexShrink: 0 }}><Users size={20} color="var(--coral)" /></span>
+                  <div>
+                    <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 5, color: "var(--navy)" }}>{t}</h3>
+                    <p style={{ color: "var(--muted)", lineHeight: 1.6, fontSize: 14.5 }}>{d}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="section">
         <div className="container">
           <div className="title-bar"><span className="eyebrow">Student results</span><h2 className="section-title">They filled smart — and upgraded</h2></div>
           <div className="grid-3">
@@ -189,7 +285,7 @@ export default function Josaa2026() {
       </section>
 
       {/* FAQ */}
-      <section className="section">
+      <section className="section section--sky">
         <div className="container" style={{ maxWidth: 760 }}>
           <div className="title-bar"><span className="eyebrow">FAQ</span><h2 className="section-title">Questions, answered</h2></div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
