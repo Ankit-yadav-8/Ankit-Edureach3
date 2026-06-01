@@ -1,21 +1,94 @@
-# dependencies
+# ─────────────────────────────────────────
+# DEPENDENCIES
+# ─────────────────────────────────────────
 node_modules
 server/node_modules
+client/node_modules
 
-# secrets — NEVER commit these
+# ─────────────────────────────────────────
+# SECRETS — NEVER COMMIT THESE
+# ─────────────────────────────────────────
 .env
 .env.*
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.test
 server/.env
 server/.env.*
+client/.env
+client/.env.*
 
-# build output
+# ─────────────────────────────────────────
+# BUILD OUTPUT
+# ─────────────────────────────────────────
 dist
+build
 .vite
 .vercel
+client/dist
+server/dist
 
-# one-time DB import source (73 MB; not needed at runtime). Remove this line if you want it in the repo.
+# ─────────────────────────────────────────
+# DATABASE / DATA FILES
+# ─────────────────────────────────────────
+# one-time DB import source (73 MB; not needed at runtime)
+# Remove this line if you want it in the repo
 server/data/*.csv
+server/data/*.json
+server/data/*.xlsx
 
-# misc
-.DS_Store
+# ─────────────────────────────────────────
+# LOGS
+# ─────────────────────────────────────────
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+server/logs/
+
+# ─────────────────────────────────────────
+# CACHE
+# ─────────────────────────────────────────
+.cache
+.parcel-cache
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# ─────────────────────────────────────────
+# EDITOR & OS FILES
+# ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ─────────────────────────────────────────
+# RUNTIME
+# ─────────────────────────────────────────
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# ─────────────────────────────────────────
+# TESTING
+# ─────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ─────────────────────────────────────────
+# UPLOADS / USER GENERATED FILES
+# ─────────────────────────────────────────
+server/uploads/
+public/uploads/

@@ -1119,7 +1119,7 @@ export default function About() {
 
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
               <a
-                href="mailto:collegeparichay@gmail.com"
+                href="mailto:hello@collegeparichay.in"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 8,
                   background: "#F47B20", color: "#fff", padding: "13px 26px", borderRadius: 50,
@@ -1129,7 +1129,7 @@ export default function About() {
                 onMouseEnter={e => { e.currentTarget.style.background = "#e0680c"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 30px rgba(244,123,32,.55)"; }}
                 onMouseLeave={e => { e.currentTarget.style.background = "#F47B20"; e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 20px rgba(244,123,32,.4)"; }}
               >
-                <Mail size={16} /> collegeparichay@gmail.com
+                <Mail size={16} /> hello@collegeparichay.in
               </a>
               <a
                 href="tel:+918118826194"

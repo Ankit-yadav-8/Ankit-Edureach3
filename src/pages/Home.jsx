@@ -252,7 +252,7 @@ function ExamCard({ ex }) {
 ════════════════════════════════════════════════ */
 function JoSAAPromoSection() {
   const PAY_LINK = "https://forms.gle/bgtSMjr1QXJytXHDA"; // Google Form — enrolment
-  const WA_LINK  = "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹999 counselling plan.");
+  const WA_LINK  = "https://wa.me/918118826194?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹499 counselling plan.");
 
   return (
     <section className="josaa-promo-section" style={{ position: "relative" }}>
@@ -273,7 +273,7 @@ function JoSAAPromoSection() {
               <p style={{ color: "#4b5563" }}>
                 JoSAA counselling is where ranks become seats — and most students
                 lose branch upgrades simply because they filled choices in the wrong
-                order. Our ₹999 plan gives you a data-backed choice list built
+                order. Our ₹499 plan gives you a data-backed choice list built
                 around YOUR rank, plus a 45-min 1-on-1 mentor call.
               </p>
 
@@ -288,7 +288,7 @@ function JoSAAPromoSection() {
 
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <a href={PAY_LINK} target="_blank" rel="noreferrer" className="josaa-cta-btn btn-shimmer" style={{ maxWidth: 260, overflow: "hidden", position: "relative" }}>
-                  Enrol now — only ₹999 <ArrowRight size={17} />
+                  Enrol now — only ₹499 <ArrowRight size={17} />
                 </a>
                 <a
                   href={WA_LINK}
@@ -326,7 +326,7 @@ function JoSAAPromoSection() {
             <div className="josaa-price-card">
               <div className="limited-tag">🔥 Limited slots this cycle</div>
               <div className="josaa-old-price">₹2,999</div>
-              <div className="josaa-new-price">₹999 <span>/plan</span></div>
+              <div className="josaa-new-price">₹499 <span>/plan</span></div>
               <div className="josaa-price-label">one-time · all JoSAA + CSAB rounds</div>
 
               <div className="josaa-includes">
@@ -346,7 +346,7 @@ function JoSAAPromoSection() {
               </div>
 
               <a href={PAY_LINK} target="_blank" rel="noreferrer" className="josaa-cta-btn">
-                Enrol Now — ₹999 <ArrowRight size={17} />
+                Enrol Now — ₹499 <ArrowRight size={17} />
               </a>
 
               <div className="josaa-secure-note">
@@ -641,11 +641,11 @@ function CollegePickingGuide() {
             Want a personalised choice list done for you?
           </h4>
           <p style={{ fontSize: "0.88rem", color: "#4b5563" }}>
-            Our JoSAA 2026 expert plan gives you a ready-to-fill, rank-specific choice list for just ₹999.
+            Our JoSAA 2026 expert plan gives you a ready-to-fill, rank-specific choice list for just ₹499.
           </p>
         </div>
         <Link to="/josaa-2026" className="btn btn-coral" style={{ flexShrink: 0, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700 }}>
-          Get my ₹999 plan <ArrowRight size={15} />
+          Get my ₹499 plan <ArrowRight size={15} />
         </Link>
       </motion.div>
     </HomeSection>

@@ -8,7 +8,7 @@ import Reveal from "../components/Reveal.jsx";
 
 /* 👉 Replace with your real payment link (Razorpay/PhonePe) and WhatsApp number. */
 const PAY_LINK = "https://forms.gle/bgtSMjr1QXJytXHDA"; // Google Form — enrolment
-const WA = "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹999 counselling plan.");
+const WA = "https://wa.me/918118826194?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹499 counselling plan.");
 
 const INCLUDES = [
   { icon: Target, t: "Personalised choice list", d: "A ranked, college-by-college JoSAA choice-filling sheet built around your rank, category & preferences." },
@@ -20,18 +20,18 @@ const INCLUDES = [
 ];
 
 const STEPS = [
-  { n: "1", t: "Enrol for ₹999", d: "Secure your slot — limited mentors per cycle." },
+  { n: "1", t: "Enrol for ₹499", d: "Secure your slot — limited mentors per cycle." },
   { n: "2", t: "Share your scorecard", d: "Rank, category, home state & branch preferences." },
   { n: "3", t: "Get your plan + call", d: "Personalised choice list and a 1:1 mentor call." },
   { n: "4", t: "Fill with confidence", d: "We support you through every JoSAA & CSAB round." },
 ];
 
 const FAQ = [
-  ["Is ₹999 a one-time fee?", "Yes — one payment covers your full JoSAA + CSAB 2026 counselling support, all rounds."],
+  ["Is ₹499 a one-time fee?", "Yes — one payment covers your full JoSAA + CSAB 2026 counselling support, all rounds."],
   ["Who are the mentors?", "Students and alumni from IITs/NITs who have personally cleared JEE and been through counselling."],
   ["What if my rank changes after a round?", "Your plan is revised each round at no extra cost — that's the point of ongoing support."],
   ["Do you guarantee a specific college?", "No one honestly can. We maximise your chances with data-driven choice ordering and flag mistakes — the allotment is by JoSAA."],
-  ["How do I get started?", "Click Enrol, complete the ₹999 payment, and you'll get a WhatsApp message within hours to begin."],
+  ["How do I get started?", "Click Enrol, complete the ₹499 payment, and you'll get a WhatsApp message within hours to begin."],
 ];
 
 function Faq({ q, a }) {
@@ -63,10 +63,10 @@ export default function Josaa2026() {
               Don't lose your dream college to a <span style={{ color: "#F47B20" }}>wrong choice list</span>.
             </h1>
             <p style={{ color: "rgba(28,28,40,.65)", fontSize: "1.1rem", maxWidth: 540, lineHeight: 1.6 }}>
-              Get a personalised, data-backed JoSAA choice-filling plan and 1-on-1 mentorship from people who've done it — for just ₹999.
+              Get a personalised, data-backed JoSAA choice-filling plan and 1-on-1 mentorship from people who've done it — for just ₹499.
             </p>
             <div style={{ display: "flex", gap: 12, marginTop: 26, flexWrap: "wrap" }}>
-              <a href={PAY_LINK} target="_blank" rel="noreferrer" className="btn btn-coral" style={{ fontSize: 16, padding: "14px 26px" }}>Enrol now — ₹999 <ArrowRight size={18} /></a>
+              <a href={PAY_LINK} target="_blank" rel="noreferrer" className="btn btn-coral" style={{ fontSize: 16, padding: "14px 26px" }}>Enrol now — ₹499 <ArrowRight size={18} /></a>
               <a href={WA} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 15, padding: "14px 22px" }}><MessageCircle size={17} /> Talk on WhatsApp</a>
             </div>
             <div style={{ display: "flex", gap: 20, marginTop: 24, flexWrap: "wrap", fontSize: 13.5, color: "rgba(28,28,40,.65)" }}>
@@ -83,7 +83,7 @@ export default function Josaa2026() {
                 <span className="badge orange">Limited slots this cycle</span>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 10, marginTop: 14 }}>
                   <span style={{ fontSize: 20, color: "var(--muted)", textDecoration: "line-through" }}>₹2,999</span>
-                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "3rem", color: "var(--coral)" }}>₹999</span>
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "3rem", color: "var(--coral)" }}>₹499</span>
                 </div>
                 <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 18 }}>one-time · all rounds covered</div>
               </div>
@@ -163,7 +163,7 @@ export default function Josaa2026() {
           <div className="grid-3">
             {[
               ["Got CSE at a top NIT in CSAB round 2 — I'd never have filled those choices myself.", "Rahul, NIT"],
-              ["The mentor call cleared all my float/slide doubts in 30 minutes. Worth way more than ₹999.", "Ishita, IIIT"],
+              ["The mentor call cleared all my float/slide doubts in 30 minutes. Worth way more than ₹499.", "Ishita, IIIT"],
               ["Predicted allotment was almost exactly what I got. Took all the stress out.", "Aman, GFTI→NIT"],
             ].map(([t, n], i) => (
               <Reveal key={n} delay={i * 0.07}>
@@ -192,9 +192,9 @@ export default function Josaa2026() {
       <section style={{ background: "linear-gradient(135deg,var(--coral),#ea580c)", color: "#fff", padding: "56px 0", textAlign: "center" }}>
         <div className="container">
           <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,3.5vw,2.3rem)", marginBottom: 10 }}>Counselling opens soon. Be ready.</h2>
-          <p style={{ color: "rgba(255,255,255,.9)", maxWidth: 560, margin: "0 auto 22px" }}>Lock your ₹999 plan now and get your personalised choice list before the rush.</p>
+          <p style={{ color: "rgba(255,255,255,.9)", maxWidth: 560, margin: "0 auto 22px" }}>Lock your ₹499 plan now and get your personalised choice list before the rush.</p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href={PAY_LINK} target="_blank" rel="noreferrer" className="btn btn-light" style={{ fontSize: 16, padding: "14px 28px", background: "#fff", color: "var(--coral)", border: "none" }}>Enrol now — ₹999</a>
+            <a href={PAY_LINK} target="_blank" rel="noreferrer" className="btn btn-light" style={{ fontSize: 16, padding: "14px 28px", background: "#fff", color: "var(--coral)", border: "none" }}>Enrol now — ₹499</a>
             <a href={WA} target="_blank" rel="noreferrer" className="btn" style={{ fontSize: 15, padding: "14px 22px", background: "rgba(255,255,255,.15)", color: "#fff", border: "1px solid rgba(255,255,255,.5)" }}><MessageCircle size={17} /> Ask on WhatsApp</a>
           </div>
         </div>

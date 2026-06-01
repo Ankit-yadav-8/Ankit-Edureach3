@@ -242,7 +242,9 @@ const HEADS = {
 };
 
 export default function AuthModal() {
-  const { loginOpen, closeLogin, login, signup, saveSession, loginMode } = useAuth();
+  const { loginOpen, closeLogin, login, signup, saveSession, loginMode, isLoggedIn } = useAuth();
+  // Auth is mandatory: guests cannot dismiss the modal (no close X / no skip).
+  const mandatory = !isLoggedIn;
   const [mode,    setMode]   = useState("login");
   const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", jeeMainsRank: "", jeeAdvancedRank: "" });
   const [fe,      setFe]     = useState({});
@@ -434,14 +436,16 @@ export default function AuthModal() {
                 </div>
               )}
 
-              <button onClick={close} aria-label="Close"
-                style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.15)", cursor: "pointer", color: "rgba(255,255,255,.75)", display: "grid", placeItems: "center", transition: "background .15s" }}
-                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.2)"}
-                onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.10)"}
-                title="Close"
-              >
-                <X size={15} />
-              </button>
+              {!mandatory && (
+                <button onClick={close} aria-label="Close"
+                  style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.15)", cursor: "pointer", color: "rgba(255,255,255,.75)", display: "grid", placeItems: "center", transition: "background .15s" }}
+                  onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.2)"}
+                  onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.10)"}
+                  title="Close"
+                >
+                  <X size={15} />
+                </button>
+              )}
             </div>
 
             {/* title area */}
@@ -707,8 +711,8 @@ export default function AuthModal() {
               </span>
             </div>
 
-            {/* ── skip link (guest browsing) ── */}
-            {(mode === "login" || mode === "signup") && (
+            {/* ── skip link — only when auth is optional (logged-in re-auth) ── */}
+            {!mandatory && (mode === "login" || mode === "signup") && (
               <div style={{ textAlign: "center", marginTop: 14 }}>
                 <button
                   onClick={close}

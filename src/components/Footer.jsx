@@ -23,7 +23,7 @@ const EXAM_LINKS = [
   ["VITEEE 2026", "/exams/viteee"],
 ];
 const TOOL_LINKS = [
-  ["JoSAA 2026 Counselling ₹999", "/josaa-2026"],
+  ["JoSAA 2026 Counselling ₹499", "/josaa-2026"],
   ["JEE Main Rank Predictor", "/jee-main#rank"],
   ["College Predictor", "/jee-main#college"],
   ["Counselling Planner", "/planner"],
@@ -389,7 +389,7 @@ export default function Footer() {
               href="mailto:support@collegeparichay.com"
               style={{ display: "flex", alignItems: "center", gap: 6 }}
             >
-              <Mail size={15} /> collegeparichay@gmail.com
+              <Mail size={15} /> hello@collegeparichay.in
             </a>
             <a
               href="tel:+918118826194"

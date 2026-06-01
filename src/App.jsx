@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
@@ -55,25 +55,17 @@ function ScrollManager() {
   return null;
 }
 
-/* Show auth modal immediately on page load for guests (skip admin page). */
-function AuthBootstrap() {
-  const { openLogin } = useAuth();
+/* Mandatory auth gate — keep the login modal open for every guest and
+   re-open it if they dismiss it. Auth is required to use the site
+   (admin page is exempt and handles its own access). */
+function AuthGate() {
+  const { isLoggedIn, loginOpen, openLogin } = useAuth();
   const { pathname } = useLocation();
-  const triggered = useRef(false);
 
   useEffect(() => {
-    if (triggered.current) return;
-    if (pathname === "/admin") return;
-
-    // If no auth token exists in this session, the user is definitely a guest
-    const hasToken = !!localStorage.getItem("edureach:token");
-    if (hasToken) return;
-
-    triggered.current = true;
-    // Brief delay so the page visually renders before the modal appears
-    const t = setTimeout(() => openLogin(), 700);
-    return () => clearTimeout(t);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (pathname.startsWith("/admin")) return;
+    if (!isLoggedIn && !loginOpen) openLogin();
+  }, [isLoggedIn, loginOpen, pathname, openLogin]);
 
   return null;
 }
@@ -113,7 +105,7 @@ export default function App() {
       <div id="progress-bar" />
       <ScrollProgress />
       <ScrollManager />
-      <AuthBootstrap />
+      <AuthGate />
       <Navbar onSearch={() => setSearchOpen(true)} />
 
       <main>
