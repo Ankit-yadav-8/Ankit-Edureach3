@@ -940,6 +940,31 @@ export default function Hero({ onSearch }) {
               </RippleButton>
 
               <RippleButton
+                className="btn btn-shimmer btn-glow"
+                onClick={() => nav("/jee-advanced-result-2026")}
+                style={{
+                  padding: isXs ? "11px 20px" : "12px 24px",
+                  fontSize: isXs ? 13.5 : 14.5,
+                  fontWeight: 700,
+                  borderRadius: 12,
+                  gap: 8,
+                  background: "linear-gradient(135deg, #f5c842, #ff9f1c)",
+                  color: "#0a0f2e",
+                  border: "none",
+                  boxShadow: "0 6px 20px rgba(245,200,66,.5)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: isMobile ? "100%" : "auto",
+                  position: "relative",
+                  animation: "livePulse 2.4s infinite",
+                }}
+                color="rgba(255,255,255,0.4)"
+              >
+                <Trophy size={isXs ? 16 : 18} /> JEE Advanced Result 2026
+              </RippleButton>
+
+              <RippleButton
                 className="btn btn-shimmer"
                 onClick={() => nav("/jee-resources")}
                 style={{

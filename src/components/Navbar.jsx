@@ -30,6 +30,7 @@ const JEE_MAIN = [
   { label: "JEE Main Rank Predictor", to: "/jee-main#rank", icon: Gauge },
 ];
 const JEE_ADV = [
+  { label: "🔥 Result & Rank List 2026", to: "/jee-advanced-result-2026", icon: Trophy },
   { label: "Eligibility Criteria", to: "/jee-advanced#eligibility", icon: BadgeCheck },
   { label: "Exam Pattern & Schedule", to: "/exams/jee-advanced", icon: CalendarDays },
   { label: "Paper 1 & Paper 2 Analysis", to: "/jee-advanced#analysis", icon: BarChart3 },
