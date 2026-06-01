@@ -21,54 +21,54 @@ const DIFFICULTY_YEARS = [2021, 2022, 2023, 2024, 2025];
 
 const DIFFICULTY_DATA = {
   2021: {
-    p1: { phy: 78, chem: 52, math: 88 },
-    p2: { phy: 72, chem: 62, math: 80 },
-    p1Label: "Hard",
-    p2Label: "Moderate-Hard",
+    p1: { phy: 72, chem: 52, math: 80 },
+    p2: { phy: 78, chem: 62, math: 88 },
+    p1Label: "Moderate-Hard",
+    p2Label: "Hard",
     toughest: "Mathematics",
     keyTrend:
-      "Mathematics in Paper 1 was extremely lengthy with complex integrals and coordinate geometry. Chemistry was the most approachable subject. Physics had conceptual questions on Optics and Mechanics.",
-    tags: ["Maths very lengthy", "Chemistry approachable", "Optics heavy"],
+      "Mathematics in Paper 2 was extremely lengthy with complex integrals and coordinate geometry. Chemistry was the most approachable subject. Physics had conceptual questions on Optics and Mechanics, with Paper 2 the tougher half overall.",
+    tags: ["Paper 2 tougher", "Maths very lengthy", "Chemistry approachable"],
   },
   2022: {
-    p1: { phy: 85, chem: 45, math: 92 },
-    p2: { phy: 76, chem: 58, math: 84 },
-    p1Label: "Very Hard",
-    p2Label: "Hard",
+    p1: { phy: 76, chem: 45, math: 84 },
+    p2: { phy: 85, chem: 58, math: 92 },
+    p1Label: "Hard",
+    p2Label: "Very Hard",
     toughest: "Mathematics",
     keyTrend:
-      "One of the toughest years overall — Mathematics had multi-correct questions requiring deep calculus. Chemistry was the easiest subject. Physics had tricky Electrostatics and Modern Physics problems.",
-    tags: ["Maths multi-correct hard", "Chemistry easiest", "Electrostatics tricky"],
+      "One of the toughest years overall — Paper 2 Mathematics had multi-correct questions requiring deep calculus. Chemistry was the easiest subject. Physics had tricky Electrostatics and Modern Physics problems that hit hardest in Paper 2.",
+    tags: ["Paper 2 tougher", "Maths multi-correct hard", "Chemistry easiest"],
   },
   2023: {
-    p1: { phy: 80, chem: 68, math: 95 },
-    p2: { phy: 74, chem: 72, math: 86 },
-    p1Label: "Very Hard",
-    p2Label: "Hard",
+    p1: { phy: 74, chem: 62, math: 86 },
+    p2: { phy: 80, chem: 72, math: 95 },
+    p1Label: "Hard",
+    p2Label: "Very Hard",
     toughest: "Mathematics",
     keyTrend:
-      "Mathematics hit a 5-year difficulty high in Paper 1 with unconventional problem types. Chemistry became harder across both papers. Physics was balanced with a mix of theory and numericals.",
-    tags: ["Maths 5-year high", "Chemistry harder", "Physics balanced"],
+      "Mathematics hit a 5-year difficulty high in Paper 2 with unconventional problem types. Chemistry became harder across both papers. Physics was balanced, but Paper 2 was the more demanding sitting.",
+    tags: ["Paper 2 tougher", "Maths 5-year high", "Chemistry harder"],
   },
   2024: {
-    p1: { phy: 88, chem: 55, math: 90 },
-    p2: { phy: 82, chem: 62, math: 88 },
-    p1Label: "Very Hard",
-    p2Label: "Hard",
+    p1: { phy: 82, chem: 52, math: 88 },
+    p2: { phy: 88, chem: 62, math: 90 },
+    p1Label: "Hard",
+    p2Label: "Very Hard",
     toughest: "Mathematics",
     keyTrend:
-      "Physics was the hardest in years — Modern Physics and Electromagnetic Induction dominated Paper 1. Maths remained very tough. Chemistry was the most scoring subject in both papers.",
-    tags: ["Physics hardest in years", "Maths very hard", "Chemistry scoring"],
+      "Physics was the hardest in years — Modern Physics and Electromagnetic Induction dominated Paper 2. Maths remained very tough across both papers. Chemistry was the most scoring subject, and Paper 2 was clearly the harder half.",
+    tags: ["Paper 2 tougher", "Physics hardest in years", "Maths very hard"],
   },
   2025: {
-    p1: { phy: 83, chem: 60, math: 93 },
-    p2: { phy: 78, chem: 65, math: 85 },
-    p1Label: "Very Hard",
-    p2Label: "Hard",
+    p1: { phy: 78, chem: 58, math: 85 },
+    p2: { phy: 83, chem: 65, math: 93 },
+    p1Label: "Hard",
+    p2Label: "Very Hard",
     toughest: "Mathematics",
     keyTrend:
-      "Mathematics was exceptionally tough in Paper 1 with unconventional question types. Physics was moderately hard with application-based questions. Chemistry remained the most scoring subject overall.",
-    tags: ["Maths unconventional", "Physics application-based", "Chemistry scoring"],
+      "Mathematics was exceptionally tough in Paper 2 with unconventional question types. Physics was application-based and lengthier in the second sitting. Chemistry remained the most scoring subject, but Paper 2 stayed the harder paper overall.",
+    tags: ["Paper 2 tougher", "Maths unconventional", "Physics application-based"],
   },
 };
 
@@ -86,7 +86,7 @@ const ORGANISING_IITS = {
   2022: { iit: "IIT Bombay",    short: "IITB",   city: "Mumbai, MH",      color: "#0891B2", setterNote: "Set a brutal multi-correct Maths section — one of the toughest years." },
   2023: { iit: "IIT Guwahati",  short: "IITG",   city: "Guwahati, AS",    color: "#16A34A", setterNote: "Unconventional Maths problem types drove difficulty to a multi-year high." },
   2024: { iit: "IIT Madras",    short: "IITM",   city: "Chennai, TN",     color: "#EA580C", setterNote: "Physics turned unusually demanding; rich application-based framing." },
-  2025: { iit: "IIT Kanpur",    short: "IITK",   city: "Kanpur, UP",      color: "#0EA5A4", setterNote: "Lengthy, unconventional Maths in Paper 1; Chemistry stayed the scoring section." },
+  2025: { iit: "IIT Kanpur",    short: "IITK",   city: "Kanpur, UP",      color: "#0EA5A4", setterNote: "Lengthy, unconventional Maths peaking in Paper 2; Chemistry stayed the scoring section." },
   2026: { iit: "IIT Roorkee",   short: "IITR",   city: "Roorkee, UK",     color: "#2563EB", setterNote: "Conducting JEE Advanced 2026 — expected to keep the 3-subject, dual-paper format." },
 };
 
@@ -1062,7 +1062,7 @@ export default function JeeAdvanced() {
           {/* Trend insight mini cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }}>
             {[
-              { icon: "⚛", color: "#F97316", title: "Physics",   stat: "↑ +10 pts", sub: "Index rose from ~75 (2021) to ~83 (2025 P1) — Modern Physics and EMI harder each year" },
+              { icon: "⚛", color: "#F97316", title: "Physics",   stat: "↑ +10 pts", sub: "Index rose from ~78 (2021) to ~83 (2025 P2) — Modern Physics and EMI harder each year, peaking in Paper 2" },
               { icon: "⚗", color: "#0EA5A4", title: "Chemistry", stat: "↑ +8 pts",  sub: "Mild increase overall — still the most scoring; focus on Named Reactions and Physical Chem" },
               { icon: "∑",  color: "#7C3AED", title: "Maths",    stat: "↑ +5 pts",  sub: "Consistently toughest — multi-correct calculus and 3D geometry questions are critical" },
             ].map(({ icon, color, title, stat, sub }) => (

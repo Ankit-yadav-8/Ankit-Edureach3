@@ -42,6 +42,7 @@ const FOUNDERS = [
     photo: "/assets/team/ankit2.PNG",
     role: "Founder & CEO",
     accent: "#F47B20",
+    edu: "B.Tech, IIT Roorkee",
    bio: "Hi, I'm Ankit Yadav, an IIT Roorkee graduate and the founder of College Parichay — a platform built to make college guidance simpler, clearer, and more accessible for students across India. During my own journey, I saw how confusing the college and career decision process can be. That experience inspired me to create College Parichay with one simple belief: \"Students need clarity, not confusion.\" Through authentic insights, relatable experiences, and a community-driven approach, we aim to help students make informed decisions with confidence.",
     skills: ["Product Strategy", "React", "Leadership", "Data Analysis", "UX"],
     socials: { linkedin: LK, instagram: IG, whatsapp: WA },

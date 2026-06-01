@@ -325,11 +325,25 @@ export function getAvailableYears(college) {
   );
 }
 
+// The all-India general pool is labelled "AI" in 2024 JoSAA data but "OS"
+// (Other State — nationwide competition) in every other year for NITs/IIITs.
+// The two never coexist for one institute in a single year, so they are
+// treated as one logical pool: requesting either matches both. Without this,
+// querying "AI" returns rows ONLY for 2024 and all other years appear empty.
+const QUOTA_EQUIV = {
+  AI: ["AI", "OS"],
+  OS: ["AI", "OS"],
+};
+function quotaMatches(rowQuota, requested) {
+  const eq = QUOTA_EQUIV[requested];
+  return eq ? eq.includes(rowQuota) : rowQuota === requested;
+}
+
 export function getRealRounds(college, program, quota, seatType, year, gender = "GN") {
   const rows = (DB.get(year) ?? []).filter((r) =>
     matchInstitute(r, college) &&
     sameProgram(r.program, program) &&
-    r.quota    === quota    &&
+    quotaMatches(r.quota, quota) &&
     r.seatType === seatType &&
     r.gender   === gender
   );
@@ -404,10 +418,18 @@ export function getAvailableQuotas(college) {
       if (matchInstitute(r, college)) seen.add(r.quota);
     }
   }
-  const all = [...seen].filter(Boolean).sort();
-  return all.length
-    ? all.map((q) => ({ value: q, label: QUOTA_LABELS[q] ?? q }))
-    : [{ value: "AI", label: QUOTA_LABELS.AI }];
+  const out = [];
+  // Collapse AI + OS into a single all-India general-pool option. They are
+  // the same pool under different year-wise labels (AI in 2024, OS elsewhere),
+  // and getRealRounds treats them as equivalent — so one option covers all years.
+  if (seen.has("AI") || seen.has("OS")) {
+    out.push({ value: "AI", label: "AI/OS — All India (General)" });
+  }
+  // Remaining quotas (HS, GO, JK, …) kept as distinct options.
+  for (const q of [...seen].filter((q) => q && q !== "AI" && q !== "OS").sort()) {
+    out.push({ value: q, label: QUOTA_LABELS[q] ?? q });
+  }
+  return out.length ? out : [{ value: "AI", label: QUOTA_LABELS.AI }];
 }
 
 const SHORT_OVERRIDES = [
