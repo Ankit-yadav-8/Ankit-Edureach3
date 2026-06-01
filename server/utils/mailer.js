@@ -17,7 +17,7 @@ export async function sendOtpEmail(email, code) {
         subject: "Your CollegeParichay verification code",
         textContent: `Your CollegeParichay verification code is ${code}. Valid for 5 minutes.`,
         htmlContent: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto">
-          <h2 style="color:#F47B20;margin:0 0 8px">EduReach</h2>
+          <h2 style="color:#F47B20;margin:0 0 8px">CollegeParichay</h2>
           <p style="color:#333;font-size:15px">Your verification code is:</p>
           <div style="font-size:32px;font-weight:800;letter-spacing:8px;color:#1c1c28;margin:12px 0">${code}</div>
           <p style="color:#888;font-size:13px">Valid for 5 minutes. If you didn't request this, ignore this email.</p>
