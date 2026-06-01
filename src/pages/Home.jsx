@@ -324,42 +324,56 @@ function JoSAAPromoSection() {
           {/* RIGHT: price card */}
           <Reveal delay={0.1}>
             <div className="josaa-price-card">
-              <div className="josaa-save-ribbon">SAVE 75%</div>
-              <div className="limited-tag">🔥 Limited slots this cycle</div>
+              <div className="josaa-save-ribbon">SAVE 87%</div>
 
-              <div className="josaa-price-row">
-                <div className="josaa-old-price">₹999</div>
-                <span className="josaa-off-pill">75% OFF</span>
-              </div>
-              <div className="josaa-new-price">
-                <span className="josaa-rupee">₹</span>249
-                <span className="josaa-per">/plan</span>
-              </div>
-              <div className="josaa-price-label">one-time · all JoSAA + CSAB rounds</div>
-
-              <div className="josaa-includes">
-                {[
-                  "Personalised choice list (your rank + category)",
-                  "1-on-1 mentor call — 45 min",
-                  "Round-wise allotment prediction",
-                  "WhatsApp support till seat locked",
-                  "Document & deadline checklist",
-                  "Choice review before you lock",
-                ].map((item) => (
-                  <div className="josaa-include-item" key={item}>
-                    <Check size={15} color="#22c55e" strokeWidth={2.5} />
-                    <span>{item}</span>
+              {/* Premium gradient header — matches JEE Main/Advanced cards */}
+              <div className="josaa-price-header">
+                <div className="josaa-price-header-mesh" />
+                <div className="josaa-price-header-glow" />
+                <div className="josaa-price-header-top">
+                  <div className="josaa-price-header-icon">
+                    <Award size={22} color="#fff" />
                   </div>
-                ))}
+                  <span className="josaa-price-header-tag">JoSAA + CSAB 2026</span>
+                </div>
+                <div className="limited-tag">🔥 Limited slots this cycle</div>
+                <div className="josaa-price-row">
+                  <div className="josaa-old-price">₹1999</div>
+                  <span className="josaa-off-pill">87% OFF</span>
+                </div>
+                <div className="josaa-new-price">
+                  <span className="josaa-rupee">₹</span>249
+                  <span className="josaa-per">/plan</span>
+                </div>
+                <div className="josaa-price-label">one-time · all JoSAA + CSAB rounds</div>
               </div>
 
-              <a href={PAY_LINK} target="_blank" rel="noreferrer" className="josaa-cta-btn">
-                Enrol Now — ₹249 <ArrowRight size={17} />
-              </a>
+              {/* Body */}
+              <div className="josaa-price-body">
+                <div className="josaa-includes">
+                  {[
+                    "Personalised choice list (your rank + category)",
+                    "1-on-1 mentor call — 45 min",
+                    "Round-wise allotment prediction",
+                    "WhatsApp support till seat locked",
+                    "Document & deadline checklist",
+                    "Choice review before you lock",
+                  ].map((item) => (
+                    <div className="josaa-include-item" key={item}>
+                      <Check size={15} color="#22c55e" strokeWidth={2.5} />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
 
-              <div className="josaa-secure-note">
-                <ShieldCheck size={13} />
-                Secure payment · mentor assigned within hours
+                <a href={PAY_LINK} target="_blank" rel="noreferrer" className="josaa-cta-btn">
+                  Enrol Now — ₹249 <ArrowRight size={17} />
+                </a>
+
+                <div className="josaa-secure-note">
+                  <ShieldCheck size={13} />
+                  Secure payment · mentor assigned within hours
+                </div>
               </div>
             </div>
           </Reveal>
