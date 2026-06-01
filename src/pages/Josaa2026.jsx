@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Check, Star, ShieldCheck, Phone, MessageCircle, Clock, FileText, Target,
   TrendingUp, Users, ChevronDown, Sparkles, Award, ArrowRight, BadgeCheck,
+  Search, HelpCircle, ListChecks, Layers, Wallet, BookMarked,
 } from "lucide-react";
 import Reveal from "../components/Reveal.jsx";
 
@@ -26,19 +28,94 @@ const STEPS = [
   { n: "4", t: "Fill with confidence", d: "We support you through every JoSAA & CSAB round." },
 ];
 
-const FAQ = [
-  ["Is ₹249 a one-time fee?", "Yes — one payment covers your full JoSAA + CSAB 2026 counselling support, all rounds."],
-  ["Who are the mentors?", "Students and alumni from IITs/NITs who have personally cleared JEE and been through counselling."],
-  ["What if my rank changes after a round?", "Your plan is revised each round at no extra cost — that's the point of ongoing support."],
-  ["Do you guarantee a specific college?", "No one honestly can. We maximise your chances with data-driven choice ordering and flag mistakes — the allotment is by JoSAA."],
-  ["How do I get started?", "Click Enrol, complete the ₹249 payment, and you'll get a WhatsApp message within hours to begin."],
-  ["What is the difference between JoSAA and CSAB?", "JoSAA conducts the common counselling for all 23 IITs, 31 NITs, 26 IIITs and 40+ GFTIs across its main rounds. After JoSAA ends, CSAB conducts special rounds to fill the seats left vacant in NITs, IIITs and GFTIs (IITs do not take part in CSAB). We guide you through both so you never miss a late upgrade."],
-  ["How many rounds are there and should I keep upgrading?", "JoSAA typically runs 5–6 rounds, followed by CSAB special rounds. In each round you can Freeze, Float or Slide your allotted seat. Choosing the wrong option can either lock you too early or risk losing a confirmed seat — we tell you exactly what to pick each round based on your goals."],
-  ["What is seat freezing, floating and sliding?", "Freeze means you accept the allotted seat and stop participating in further rounds. Float means you keep the current seat but stay in the running for any institute/branch higher in your list. Slide means you stay only for a better branch within the same institute. Picking the right one each round is the single most important decision in counselling."],
-  ["I have a low rank — is counselling still worth it for me?", "Absolutely. Lower ranks have more options across NITs, IIITs, GFTIs, home-state quotas and CSAB rounds — which means more ways to go wrong, and more room to upgrade with a smart choice list. A well-ordered list often gets students a far better branch or college than they expected."],
-  ["Do you help with home-state quota and category seats?", "Yes. We factor in your category (OPEN/EWS/OBC-NCL/SC/ST/PwD), gender-neutral vs female-only seats, and home-state vs other-state quota for NITs — all of which dramatically change which choices are realistic for you."],
-  ["What documents will I need during counselling?", "Typically your JEE scorecard, Class X & XII marksheets, category & PwD certificates (if applicable), a domicile certificate for home-state quota, photo ID, passport photos and the seat-acceptance fee receipt. We send you a complete, deadline-tagged checklist so nothing is missing at reporting."],
+/* ── Large, categorised FAQ knowledge base for JEE / JoSAA 2026 counselling ── */
+const FAQ_GROUPS = [
+  {
+    id: "basics",
+    label: "Counselling basics",
+    icon: HelpCircle,
+    items: [
+      ["What is JoSAA counselling?", "JoSAA (Joint Seat Allocation Authority) runs a single, combined counselling process that allots seats across all 23 IITs, 31 NITs, 26 IIITs and 40+ GFTIs based on your JEE Main and JEE Advanced ranks. You register once, fill an ordered list of college-and-branch choices, and a computer allots seats round by round strictly by your rank, category and choice order."],
+      ["When will JoSAA 2026 counselling start?", "JoSAA registration usually opens within a few days of the JEE Advanced result — historically mid-June. Expect roughly 5–6 main rounds spread across June–July 2026, followed by CSAB special rounds. Exact dates are announced on josaa.nic.in; we alert enrolled students the moment the schedule drops so you never miss day one."],
+      ["What is the difference between JoSAA and CSAB?", "JoSAA conducts the common counselling for all IITs, NITs, IIITs and GFTIs across its main rounds. After JoSAA ends, CSAB conducts special rounds to fill seats left vacant in NITs, IIITs and GFTIs — IITs do NOT take part in CSAB. We guide you through both so you never miss a late upgrade."],
+      ["Who is eligible for JoSAA 2026 counselling?", "Anyone with a valid JEE Main rank can participate for NIT/IIIT/GFTI seats. To be eligible for IIT seats you must also qualify JEE Advanced. You also need to meet the Class XII eligibility criteria (subject and percentage/percentile norms) set for the year."],
+      ["Is JoSAA registration free?", "Yes — registering and filling choices on the JoSAA portal is free. You only pay a Seat Acceptance Fee once a seat is allotted and you choose to accept it (₹35,000 for OPEN/OBC-NCL/EWS and ₹15,000 for SC/ST/PwD in recent years, adjusted later against admission fees)."],
+    ],
+  },
+  {
+    id: "choices",
+    label: "Choice filling",
+    icon: ListChecks,
+    items: [
+      ["How does choice filling work?", "After registering you build an ordered list of every college-and-branch combination you'd accept — from dream to safe. The software always tries to give you the highest choice in your list your rank can reach, so the ORDER is a strategy, not a wishlist."],
+      ["How many choices should I fill?", "There is effectively no upper limit — many students fill 50–200+ choices. More well-ordered choices means more chances to be allotted something good and more room to upgrade in later rounds. Filling too few is one of the most common, costly mistakes."],
+      ["Why does choice order matter so much?", "Because allotment is done strictly top-down by your list. Place an unrealistic 'dream' choice above a reachable one and you can be locked into a seat you didn't want, or miss a better branch sitting lower. Getting the order right is exactly what our plan does for you."],
+      ["Should I fill only dream colleges?", "No. A safe list mixes reach, moderate and safe options. Filling only top colleges risks 'no allotment' entirely. We build a balanced, rank-backed list so you always secure something good while staying in the running for an upgrade."],
+      ["Can I edit or lock my choices?", "You can edit choices freely until the locking deadline; after that they're frozen for that round. If you don't lock manually, the system auto-locks your last saved list at the deadline. We review and flag risky ordering before you lock."],
+      ["What are mock allotments?", "Before choices freeze, JoSAA publishes 1–2 mock rounds showing where you'd likely land with your current list. They're a free preview — we read these signals with you and fine-tune your ordering while there's still time to change it."],
+    ],
+  },
+  {
+    id: "rounds",
+    label: "Rounds & seat actions",
+    icon: Layers,
+    items: [
+      ["How many rounds are there in JoSAA 2026?", "JoSAA typically runs 5–6 main rounds, followed by CSAB special rounds. In each round you can Freeze, Float or Slide your allotted seat. The wrong action can lock you too early or risk a confirmed seat — we tell you exactly what to pick each round."],
+      ["What is Freeze, Float and Slide?", "Freeze = accept the allotted seat and stop participating further. Float = keep the current seat but stay in the running for anything higher in your list. Slide = stay only for a better branch within the same institute. Choosing correctly each round is the single most important decision in counselling."],
+      ["What happens if I don't report after an allotment?", "If you're allotted a seat and neither accept (pay the fee + report) nor it carries forward correctly, your seat can be cancelled and you may exit the process. Deadlines are strict and unforgiving — our checklist is tagged to every reporting cut-off."],
+      ["What is the Seat Acceptance Fee and is it refundable?", "It's a one-time fee paid online to confirm acceptance of an allotted seat (recently ₹35,000 general / ₹15,000 reserved). It's adjusted against your admission fee at the institute. If you withdraw within the allowed window, a partial refund applies as per JoSAA's withdrawal rules."],
+      ["Can I withdraw a seat I've accepted?", "Yes, JoSAA allows seat withdrawal up to a published round/deadline. Withdrawing exits you from further rounds, so it's a serious decision — usually only sensible if you've secured a seat elsewhere. We help you weigh it before you click."],
+    ],
+  },
+  {
+    id: "quota",
+    label: "Seats, category & quota",
+    icon: Users,
+    items: [
+      ["Do you help with home-state quota?", "Yes. NITs, IIITs and GFTIs reserve a large share of seats for home-state candidates (the 'HS' quota), with the rest under 'OS'/All-India. Your domicile dramatically changes which choices are realistic — we factor it into every list."],
+      ["How do category seats (OBC-NCL / SC / ST / EWS) work?", "Seats are reserved per category with separate closing ranks, which are usually lower than OPEN. We use your exact category to map realistic targets and make sure you don't under- or over-shoot your list."],
+      ["What are gender-neutral and female-only seats?", "Each institute has gender-neutral seats (open to all) plus a supernumerary pool of female-only seats to improve diversity. Female candidates are considered for both, which often unlocks better branches — we order choices to use this fully."],
+      ["What is the difference between AI quota and HS quota in NITs?", "In NITs, ~50% of seats in each state's NIT go to Home State (HS) candidates and ~50% to Other State / All India (OS) candidates. Closing ranks for HS are usually far more favourable — knowing which quota you fall under is essential to a realistic list."],
+      ["I have a low rank — is counselling still worth it?", "Absolutely. Lower ranks have MORE options across NITs, IIITs, GFTIs, home-state quotas and CSAB — which means more ways to go wrong, and more room to upgrade with a smart list. A well-ordered list often lands students a far better seat than they expected."],
+    ],
+  },
+  {
+    id: "csab",
+    label: "CSAB & special rounds",
+    icon: TrendingUp,
+    items: [
+      ["What are CSAB special rounds?", "After JoSAA closes, CSAB (Central Seat Allocation Board) opens additional rounds to fill NIT, IIIT and GFTI seats left vacant — often where the biggest last-minute upgrades happen. It needs a fresh registration and a new ordered choice list."],
+      ["Should I join CSAB if I already have a JoSAA seat?", "Often yes — you can hold your JoSAA seat as a 'float' safety net while trying for an upgrade in CSAB. But the rules around carrying a seat into CSAB are nuanced; we walk you through exactly how to participate without losing what you already have."],
+      ["Do IITs participate in CSAB?", "No. CSAB special rounds cover only NITs, IIITs and GFTIs. IIT seats are allotted solely through JoSAA's main rounds, so any IIT upgrade must happen within JoSAA itself."],
+    ],
+  },
+  {
+    id: "docs",
+    label: "Documents & reporting",
+    icon: FileText,
+    items: [
+      ["What documents will I need during counselling?", "Typically: JEE scorecard / rank card, Class X & XII marksheets and certificates, category & PwD certificates (if applicable), a domicile certificate for home-state quota, photo ID (Aadhaar), passport photos, and the seat-acceptance fee receipt. We send a complete, deadline-tagged checklist so nothing is missing at reporting."],
+      ["What is online vs physical reporting?", "After accepting a seat you complete reporting — in recent years this is largely online (document upload + verification) with a Reporting Centre fallback. Each allotment has its own reporting window; miss it and the seat can be cancelled."],
+      ["What if there's a discrepancy in my documents?", "Minor issues (name spelling, certificate format) can usually be resolved if caught early, but they can also delay or cancel a seat at verification. We pre-check your documents against requirements before reporting so surprises don't cost you the seat."],
+      ["When should I keep my documents ready?", "Before counselling even begins. Verification windows are short and overlap with allotment deadlines, so scrambling for a domicile or category certificate mid-process is a classic way to lose a seat. Our checklist tells you what to arrange in advance."],
+    ],
+  },
+  {
+    id: "plan",
+    label: "Our ₹249 plan",
+    icon: Wallet,
+    items: [
+      ["Is ₹249 a one-time fee?", "Yes — one payment covers your full JoSAA + CSAB 2026 counselling support across all rounds. There are no per-round or hidden charges."],
+      ["Who are the mentors?", "Students and alumni from IITs/NITs who have personally cleared JEE and been through counselling themselves — so the advice is lived, not theoretical."],
+      ["What if my rank changes after a round?", "Your plan is revised each round at no extra cost — that's the whole point of ongoing support. Float/slide advice is updated to your latest position."],
+      ["Do you guarantee a specific college?", "No one honestly can — the allotment is done by JoSAA's software. What we guarantee is a data-driven, mistake-proofed choice list that maximises your chances and never leaves an easy upgrade on the table."],
+      ["How do I get started?", "Click Enrol, complete the ₹249 payment, and you'll get a WhatsApp message within hours to begin. Share your scorecard and preferences, and your mentor builds your plan."],
+    ],
+  },
 ];
+
+/* Flattened list (with category) for search */
+const ALL_FAQS = FAQ_GROUPS.flatMap((g) => g.items.map(([q, a]) => ({ q, a, cat: g.id, catLabel: g.label })));
 
 /* In-depth explainer cards for how counselling actually works */
 const EXPLAINER = [
@@ -64,16 +141,115 @@ const AUDIENCE = [
   ["Confused first-timers", "Anyone who finds the JoSAA portal, rounds and reporting deadlines overwhelming and wants a mentor in their corner."],
 ];
 
-function Faq({ q, a }) {
-  const [open, setOpen] = useState(false);
+/* Highlight matched search term inside a string */
+function highlight(text, term) {
+  if (!term) return text;
+  const i = text.toLowerCase().indexOf(term.toLowerCase());
+  if (i === -1) return text;
+  return (<>
+    {text.slice(0, i)}
+    <mark style={{ background: "rgba(244,123,32,.22)", color: "#c2410c", borderRadius: 3, padding: "0 2px" }}>{text.slice(i, i + term.length)}</mark>
+    {text.slice(i + term.length)}
+  </>);
+}
+
+function Faq({ q, a, term, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="card" style={{ cursor: "pointer" }} onClick={() => setOpen((o) => !o)}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-        <strong style={{ color: "var(--navy)", fontFamily: "Sora" }}>{q}</strong>
-        <ChevronDown size={18} style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform .2s", flexShrink: 0 }} />
+    <div
+      className="faq-card"
+      onClick={() => setOpen((o) => !o)}
+      style={{ borderColor: open ? "rgba(244,123,32,.45)" : "rgba(0,0,0,.08)" }}
+    >
+      <div className="faq-card__head">
+        <span className="faq-card__q">{highlight(q, term)}</span>
+        <span className="faq-card__chev" style={{ transform: open ? "rotate(180deg)" : "none" }}>
+          <ChevronDown size={18} />
+        </span>
       </div>
-      {open && <p style={{ color: "var(--muted)", marginTop: 10, lineHeight: 1.6 }}>{a}</p>}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="body"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
+            style={{ overflow: "hidden" }}
+          >
+            <p className="faq-card__a">{highlight(a, term)}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
+  );
+}
+
+/* Full categorised + searchable FAQ block */
+function FaqSection() {
+  const [active, setActive] = useState("all");
+  const [query, setQuery]   = useState("");
+  const term = query.trim();
+
+  const results = useMemo(() => {
+    let list = active === "all" ? ALL_FAQS : ALL_FAQS.filter((f) => f.cat === active);
+    if (term) {
+      const t = term.toLowerCase();
+      list = list.filter((f) => f.q.toLowerCase().includes(t) || f.a.toLowerCase().includes(t));
+    }
+    return list;
+  }, [active, term]);
+
+  const tabs = [{ id: "all", label: "All", icon: BookMarked, count: ALL_FAQS.length },
+    ...FAQ_GROUPS.map((g) => ({ id: g.id, label: g.label, icon: g.icon, count: g.items.length }))];
+
+  return (
+    <>
+      {/* search */}
+      <div className="faq-search">
+        <Search size={18} className="faq-search__icon" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search counselling questions…"
+          aria-label="Search FAQs"
+        />
+        {query && (
+          <button className="faq-search__clear" onClick={() => setQuery("")} aria-label="Clear search">×</button>
+        )}
+      </div>
+
+      {/* category chips */}
+      <div className="faq-chips">
+        {tabs.map(({ id, label, icon: I, count }) => (
+          <button
+            key={id}
+            className={"faq-chip" + (active === id ? " is-active" : "")}
+            onClick={() => setActive(id)}
+          >
+            <I size={14} /> {label}
+            <span className="faq-chip__count">{count}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* results */}
+      {results.length > 0 ? (
+        <div className="faq-list">
+          {results.map((f, i) => (
+            <Faq key={f.q} q={f.q} a={f.a} term={term} defaultOpen={!!term && i === 0} />
+          ))}
+        </div>
+      ) : (
+        <div className="faq-empty">
+          <HelpCircle size={30} color="var(--coral)" />
+          <p>No questions match "<strong>{term}</strong>".</p>
+          <a href={WA} target="_blank" rel="noreferrer" className="btn btn-coral" style={{ fontSize: 14 }}>
+            <MessageCircle size={16} /> Ask us on WhatsApp
+          </a>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -84,7 +260,7 @@ export default function Josaa2026() {
       <section className="warm-page-header" style={{ padding: "110px 0 70px" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 50% 50% at 0% 80%, rgba(244,162,97,.20) 0%, transparent 60%)" }} />
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: 40, alignItems: "center", position: "relative", zIndex: 1 }}>
+        <div className="container josaa-hero-grid" style={{ display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: 40, alignItems: "center", position: "relative", zIndex: 1 }}>
           <div>
             <span className="pill" style={{ background: "rgba(244,123,32,.12)", color: "#c75b0a", border: "1px solid rgba(244,123,32,.38)" }}>
               <Sparkles size={13} /> JoSAA + CSAB 2026 Counselling
@@ -286,11 +462,15 @@ export default function Josaa2026() {
 
       {/* FAQ */}
       <section className="section section--sky">
-        <div className="container" style={{ maxWidth: 760 }}>
-          <div className="title-bar"><span className="eyebrow">FAQ</span><h2 className="section-title">Questions, answered</h2></div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {FAQ.map(([q, a]) => <Faq key={q} q={q} a={a} />)}
+        <div className="container" style={{ maxWidth: 880 }}>
+          <div className="title-bar">
+            <span className="eyebrow"><HelpCircle size={13} /> FAQ</span>
+            <h2 className="section-title">JEE 2026 counselling, <span className="accent">answered</span></h2>
+            <p className="section-sub">
+              {ALL_FAQS.length}+ of the most-asked questions about JoSAA &amp; CSAB 2026 — search, or browse by topic.
+            </p>
           </div>
+          <FaqSection />
         </div>
       </section>
 

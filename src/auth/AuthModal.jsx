@@ -446,6 +446,7 @@ export default function AuthModal() {
       {/* ── backdrop ── clicking outside does NOT auto-close (use Skip link below) */}
       <motion.div
         key="backdrop"
+        className="auth-backdrop"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -459,10 +460,6 @@ export default function AuthModal() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
-          paddingTop: "80px",
-          paddingBottom: "24px",
-          paddingLeft: "16px",
-          paddingRight: "16px",
           boxSizing: "border-box",
           minHeight: "100%",
         }}
@@ -505,9 +502,8 @@ export default function AuthModal() {
           </AnimatePresence>
 
           {/* ─── HEADER BAND ─── */}
-          <div style={{
+          <div className="auth-header-band" style={{
             background: `linear-gradient(135deg, #1a0d00 0%, #2d1400 40%, #3d2010 70%, #1a0d00 100%)`,
-            padding: "22px 24px 20px",
             position: "relative", overflow: "hidden",
           }}>
             {/* glow orbs */}
@@ -592,7 +588,7 @@ export default function AuthModal() {
           </div>
 
           {/* ─── FORM BODY ─── */}
-          <div style={{ padding: "24px 24px 22px" }}>
+          <div className="auth-form-body">
 
             {/* feature pills — login/signup only */}
             {(mode === "login" || mode === "signup") && <FeaturePills />}
@@ -639,7 +635,7 @@ export default function AuthModal() {
 
                 {/* ═══ SIGNUP ═══ */}
                 {mode === "signup" && (<>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  <div className="auth-signup-grid">
                     <div style={{ gridColumn: "1/-1" }}>
                       <Field icon={User} placeholder="Full name *" value={f.name}
                         error={fe.name} onChange={e => set("name", e.target.value)} autoComplete="name" />
