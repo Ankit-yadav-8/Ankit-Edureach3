@@ -2665,14 +2665,18 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   text-align: center;
 }
 
-/* ── Styled, consistent horizontal scrollbar for the results table ── */
+/* ── Styled scrollbars for the results table — scrolls BOTH ways ──
+   overflow:auto on both axes + a bounded max-height gives the table its
+   own scroll region, which is what lets the sticky <thead> stay pinned and
+   the rows scroll vertically underneath it on every device. */
 .cp-results-scroll {
-  overflow-x: auto;
+  overflow: auto;
   -webkit-overflow-scrolling: touch;
+  max-height: clamp(360px, 68vh, 720px);
   scrollbar-width: thin;
   scrollbar-color: var(--coral) #f3f0ec;
 }
-.cp-results-scroll::-webkit-scrollbar { height: 8px; }
+.cp-results-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
 .cp-results-scroll::-webkit-scrollbar-track {
   background: #f3f0ec;
   border-radius: 8px;
@@ -2682,6 +2686,18 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   border-radius: 8px;
 }
 .cp-results-scroll::-webkit-scrollbar-thumb:hover { background: #d9641a; }
+.cp-results-scroll::-webkit-scrollbar-corner { background: #f3f0ec; }
+
+/* ── Sticky header row — stays visible while scrolling vertically, on every
+   screen size (the base data-table rule sets position:sticky; top:0, here we
+   guarantee it floats ABOVE the body cells and the pinned first column). ── */
+.cp-results-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #fff7f0;
+}
+.cp-results-table thead th:first-child { z-index: 4; }
 
 /* ── Same horizontal-scroll treatment for the summary charts so both the
    "Confidence breakdown" and "Matches by institute type" pies stay full-size
