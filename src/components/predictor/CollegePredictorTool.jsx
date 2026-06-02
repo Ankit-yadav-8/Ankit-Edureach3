@@ -38,14 +38,14 @@ function RoundDetail({ row }) {
           {row.fullProgramName}
         </p>
       )}
-      <div className="grid-2" style={{ gap: 18, alignItems: "start" }}>
+      <div className="grid-2 rd-grid" style={{ gap: 18, alignItems: "start" }}>
         <div style={{ overflowX: "auto" }}>
           {rounds.length === 0 ? (
             <p style={{ fontSize: 12.5, color: "var(--muted)" }}>
               Round-by-round data unavailable for this program.
             </p>
           ) : (
-          <table className="data-table" style={{ fontSize: 12.5 }}>
+          <table className="data-table rd-table" style={{ fontSize: 12.5 }}>
             <thead>
               <tr><th>Round</th><th>Stage</th><th>Opening</th><th>Closing</th></tr>
             </thead>
@@ -82,7 +82,7 @@ function RoundDetail({ row }) {
           />
         </div>
       </div>
-      <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+      <div style={{ display: "flex", gap: 10, marginTop: 8, flexWrap: "wrap" }}>
         <Link to={`/colleges/${row.slug}?tab=placements`} className="btn btn-ghost" style={{ fontSize: 13 }}>
           Placements <ArrowRight size={14} />
         </Link>
@@ -328,7 +328,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
 
       {/* ── Summary charts ── */}
       {results && results.length > 0 && !loading && (
-        <div className="grid-2" style={{ marginTop: 22, gap: 22 }}>
+        <div className="grid-2 cp-results-summary" style={{ marginTop: 22, gap: 22 }}>
           <div className="card">
             <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Confidence breakdown</h4>
             <PieWithLegend
@@ -369,8 +369,8 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
               No matches — try widening the branch or category filters, or check your rank.
             </div>
           ) : (
-            <div style={{ overflowX: "auto" }}>
-              <table className="data-table">
+            <div className="cp-results-scroll" style={{ overflowX: "auto" }}>
+              <table className="data-table cp-results-table">
                 <thead>
                   <tr>
                     <th>College</th>
@@ -392,7 +392,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
                           onClick={() => setExpandedRow(isOpen ? null : key)}
                           style={{ cursor: "pointer", background: isOpen ? "var(--sky)" : undefined }}
                         >
-                          <td>
+                          <td data-label="College">
                             <Link
                               to={`/colleges/${r.slug}`}
                               onClick={(e) => e.stopPropagation()}
@@ -404,23 +404,23 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
                               <MapPin size={11} /> {r.state} · NIRF #{r.nirf}
                             </div>
                           </td>
-                          <td>{r.branch}</td>
-                          <td><span className="badge teal">{r.type}</span></td>
-                          <td>{fmtRank(r.closing)}</td>
-                          <td>{fmtINR(r.avgPackage)}</td>
-                          <td>
+                          <td data-label="Branch">{r.branch}</td>
+                          <td data-label="Type"><span className="badge teal">{r.type}</span></td>
+                          <td data-label="Closing rank">{fmtRank(r.closing)}</td>
+                          <td data-label="Avg package">{fmtINR(r.avgPackage)}</td>
+                          <td data-label="Confidence">
                             <span className="badge" style={{ background: `${TIER_COLOR[r.tier]}22`, color: TIER_COLOR[r.tier] }}>
                               {r.tier}
                             </span>
                           </td>
-                          <td>
+                          <td className="cp-expand-cell" data-label="">
                             <ChevronDown size={16} style={{ transform: isOpen ? "rotate(180deg)" : "none", transition: ".2s" }} />
                           </td>
                         </tr>
                         <AnimatePresence>
                           {isOpen && (
-                            <tr>
-                              <td colSpan={7} style={{ padding: 0, background: "var(--sky)" }}>
+                            <tr className="cp-detail-row">
+                              <td className="cp-detail-cell" colSpan={7} style={{ padding: 0, background: "var(--sky)" }}>
                                 <motion.div
                                   initial={{ height: 0, opacity: 0 }}
                                   animate={{ height: "auto", opacity: 1 }}
