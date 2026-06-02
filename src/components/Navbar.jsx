@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
-  BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut,
+  BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut, Sparkles,
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -100,6 +100,7 @@ export default function Navbar({ onSearch }) {
     { label: "JEE Main", drop: JEE_MAIN, base: "/jee-main" },
     { label: "JEE Advanced", drop: JEE_ADV, base: "/jee-advanced" },
     { label: "Colleges", drop: COLLEGES, base: "/colleges" },
+    { label: "Colleges For You", to: "/for-you", feature: true },
     { label: "Exams", to: "/exams" },
     { label: "Cutoffs", to: "/cutoffs" },
     { label: "Tools", drop: TOOLS, base: "/for-you" },
@@ -223,6 +224,15 @@ export default function Navbar({ onSearch }) {
                     )}
                   </AnimatePresence>
                 </>
+              ) : item.feature ? (
+                <button
+                  onClick={() => goHash(item.to)}
+                  className="nav-feature-btn"
+                  style={navFeatureStyle}
+                >
+                  <Sparkles size={14} />
+                  {item.label}
+                </button>
               ) : (
                 <button onClick={() => goHash(item.to)} style={navLinkStyle(false)}>
                   {item.label}
@@ -537,6 +547,18 @@ const navHighlightStyle = (active) => ({
   border: `1.5px solid ${active ? "#6366f1" : "rgba(99,102,241,.25)"}`,
   transition: "all .2s",
 });
+
+const navFeatureStyle = {
+  display: "flex", alignItems: "center", gap: 5,
+  padding: "0.45rem 0.85rem", fontSize: "0.86rem", fontWeight: 700,
+  color: "#fff", borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
+  border: "none",
+  background: "linear-gradient(120deg, #F47B20 0%, #f97316 40%, #fb923c 60%, #F47B20 100%)",
+  backgroundSize: "200% auto",
+  boxShadow: "0 6px 16px -6px rgba(244,123,32,.75)",
+  animation: "brandGradient 3s linear infinite",
+  transition: "transform .2s ease, box-shadow .2s ease",
+};
 
 const dropItemStyle = {
   display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",

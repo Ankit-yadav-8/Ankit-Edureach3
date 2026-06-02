@@ -375,6 +375,10 @@ input,select,textarea { font-family:inherit; }
   0%   { background-position: 0% center; }
   100% { background-position: 200% center; }
 }
+.nav-feature-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px -6px rgba(244,123,32,.85) !important;
+}
 @keyframes rankGlow {
   from { box-shadow: 0 0 8px rgba(244,123,32,.5), 0 0 16px rgba(244,123,32,.25); }
   to   { box-shadow: 0 0 20px rgba(244,123,32,.9), 0 0 40px rgba(244,123,32,.5), 0 0 6px #F47B20; }

@@ -434,7 +434,11 @@ export function predictColleges({
 /**
  * Same as predictColleges but returns results grouped by institute type.
  * Shape: { IIT: [...], NIT: [...], IIIT: [...], GFTI: [...] }
- * Each group is capped at 9 entries (one best branch per college).
+ * One best branch per college; each group is capped at `limit` entries.
+ *
+ * @param {number|Object} [opts.limit]  Max colleges per group. Either a single
+ *   number applied to every group, or a per-type map e.g. { IIT: 25, NIT: 15 }.
+ *   Defaults to 9 per group.
  */
 export function predictCollegesGrouped({
   rank,
@@ -445,19 +449,23 @@ export function predictCollegesGrouped({
   types      = ["IIT", "NIT", "IIIT", "GFTI"],
   female     = false,
   homeState  = false,
+  limit      = 9,
 } = {}) {
   const all = predictColleges({ rank, category, rankType, state, branch, types, female, homeState });
 
   const groups = { IIT: [], NIT: [], IIIT: [], GFTI: [] };
+  const capFor = (key) =>
+    typeof limit === "object" ? (limit[key] ?? 9) : limit;
 
   for (const key of Object.keys(groups)) {
+    const cap  = capFor(key);
     const seen = new Set();
     for (const m of all) {
       if (m.type !== key)   continue;
       if (seen.has(m.slug)) continue;
       seen.add(m.slug);
       groups[key].push(m);
-      if (groups[key].length >= 9) break;
+      if (groups[key].length >= cap) break;
     }
   }
 
