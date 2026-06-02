@@ -914,7 +914,7 @@ export default function Hero({ onSearch }) {
                   width: isMobile ? "100%" : "auto",
                 }}
               >
-                <TrendingUp size={isXs ? 16 : 18} /> Predict Rank — JEE Main
+                <TrendingUp size={isXs ? 16 : 18} /> Predict for JEE Mains
               </RippleButton>
 
               <RippleButton
@@ -936,7 +936,7 @@ export default function Hero({ onSearch }) {
                   width: isMobile ? "100%" : "auto",
                 }}
               >
-                <TrendingUp size={isXs ? 16 : 18} /> Predict Rank — JEE Advanced
+                <TrendingUp size={isXs ? 16 : 18} /> Predict for JEE Advanced
               </RippleButton>
 
               <RippleButton

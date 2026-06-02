@@ -360,7 +360,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
               {results.length} eligible college-branch option{results.length !== 1 ? "s" : ""}
             </strong>
             <span style={{ fontSize: 12.5, color: "var(--muted)" }}>
-              Tap any row to see all JoSAA &amp; CSAB round cutoffs
+              Tap any row for round-by-round cutoffs
             </span>
           </div>
 
@@ -369,6 +369,8 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
               No matches — try widening the branch or category filters, or check your rank.
             </div>
           ) : (
+            <>
+            <p className="cp-swipe-hint">← Swipe sideways to see every column →</p>
             <div className="cp-results-scroll" style={{ overflowX: "auto" }}>
               <table className="data-table cp-results-table">
                 <thead>
@@ -439,6 +441,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
                 </tbody>
               </table>
             </div>
+            </>
           )}
         </div>
       )}
