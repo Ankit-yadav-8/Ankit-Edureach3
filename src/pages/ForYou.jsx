@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, MapPin, Trophy, ArrowRight, Wand2, Loader2, Award, GraduationCap } from "lucide-react";
+import { Sparkles, MapPin, Trophy, ArrowRight, Wand2, Loader2, Award, GraduationCap, Download } from "lucide-react";
 import { COLLEGE_BY_SLUG, CATEGORIES } from "../data/colleges.js";
 import { TIER_COLOR } from "../utils/collegePredictor.js";
 import { useCollegePredictor } from "../hooks/useCollegePredictor.js";
@@ -99,6 +99,40 @@ export default function ForYou() {
   if (!loading && tipTimer.current) {
     clearInterval(tipTimer.current);
     tipTimer.current = null;
+  }
+
+  function downloadList() {
+    if (!hasResults) return;
+    const head =
+      `College Parichay — Colleges For You\n` +
+      `Exam: ${profile.title} (${profile.sub})\n` +
+      `Rank: ${rank || "-"}   Category: ${category}\n` +
+      `Generated on ${new Date().toLocaleDateString("en-IN")}\n` +
+      `${"=".repeat(52)}\n`;
+
+    const sections = GROUP_ORDER.map((groupKey) => {
+      const picks = grouped[groupKey];
+      if (!picks?.length) return null;
+      const meta = GROUP_META[groupKey];
+      const lines = picks.map((m, i) => {
+        const c = COLLEGE_BY_SLUG[m.slug];
+        const name = c?.short || m.college;
+        return `${String(i + 1).padStart(2, " ")}. ${name} — ${m.branch}\n` +
+               `     Closing ${fmtRank(m.closing)}  |  Avg ${fmtINR(m.avgPackage)}  |  ${m.tier}`;
+      }).join("\n");
+      return `\n${meta.label} (${picks.length})\n${"-".repeat(52)}\n${lines}\n`;
+    }).filter(Boolean).join("\n");
+
+    const blob = new Blob(
+      [head + sections + "\n(Illustrative — based on 2024 JoSAA cutoffs. Verify on josaa.nic.in)"],
+      { type: "text/plain" }
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `colleges-for-you-${profile.key}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   return (
@@ -264,9 +298,14 @@ export default function ForYou() {
         {/* ── Grouped results ── */}
         {hasResults && !loading && (
           <>
-            <p style={{ color: "var(--muted)", marginBottom: 24, fontSize: 14 }}>
-              Showing best-fit <strong>{profile.title}</strong> options for rank <strong>{fmtRank(Number(rank))}</strong> · {category} · 2024 cutoffs
-            </p>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
+              <p style={{ color: "var(--muted)", fontSize: 14, margin: 0 }}>
+                Showing best-fit <strong>{profile.title}</strong> options for rank <strong>{fmtRank(Number(rank))}</strong> · {category} · 2024 cutoffs
+              </p>
+              <button className="btn btn-ghost" onClick={downloadList} style={{ fontSize: 13, padding: "8px 14px", whiteSpace: "nowrap" }}>
+                <Download size={15} /> Download list
+              </button>
+            </div>
 
             {GROUP_ORDER.map((groupKey) => {
               const picks = grouped[groupKey];

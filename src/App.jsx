@@ -36,6 +36,7 @@ import SearchResults from "./pages/SearchResults.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Admin from "./pages/Admin.jsx";
 import JeeResources from "./pages/JeeResources.jsx";
+import HowToUse from "./pages/HowToUse.jsx";
 import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
@@ -133,6 +134,7 @@ export default function App() {
           <Route path="/cutoffs" element={<OfficialCutoffs />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/jee-resources" element={<JeeResources />} />
+          <Route path="/how-to-use" element={<HowToUse />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

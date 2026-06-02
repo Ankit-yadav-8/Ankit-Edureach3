@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Reorder } from "framer-motion";
-import { ListOrdered, GripVertical, Crosshair, RotateCcw, Trophy, MapPin, CheckCircle2, ArrowRight, Download } from "lucide-react";
+import { ListOrdered, GripVertical, Crosshair, RotateCcw, Trophy, MapPin, CheckCircle2, ArrowRight, Download, Loader2 } from "lucide-react";
 import { predictColleges, TIER_COLOR } from "../utils/collegePredictor.js";
+import { loadPredictorDB } from "../utils/realCutoffEngine.js";
 import { CATEGORIES, BRANCHES, STATES } from "../data/colleges.js";
 import { fmtRank, fmtINR } from "../utils/format.js";
 
@@ -10,16 +11,26 @@ export default function CounsellingPlanner() {
   const [form, setForm] = useState({ rank: "", category: "OPEN", state: "", branch: "", exam: "advanced" });
   const [order, setOrder] = useState([]);
   const [ran, setRan] = useState(false);
+  const [loading, setLoading] = useState(false);
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
+  // Pre-warm the 2024 cutoff DB on the main thread the moment the page opens —
+  // predictColleges() runs synchronously here (no worker), so the data must be
+  // loaded before it can return any results.
+  useEffect(() => { loadPredictorDB(); }, []);
+
   // JEE Advanced → only IITs · JEE Main → only NITs & IIITs
-  const run = () => {
+  const run = async () => {
+    if (!form.rank || Number(form.rank) <= 0) return;
+    setLoading(true);
+    setRan(true);
+    await loadPredictorDB();   // resolves instantly if already loaded
     const types = form.exam === "advanced" ? ["IIT"] : ["NIT", "IIIT"];
     const out = predictColleges({ ...form, types }).slice(0, 14);
     setOrder(out.map((o, i) => ({ ...o, _id: `${o.slug}-${o.branchCode}-${i}` })));
-    setRan(true);
+    setLoading(false);
   };
-  const reset = () => { setForm({ rank: "", category: "OPEN", state: "", branch: "", exam: "advanced" }); setOrder([]); setRan(false); };
+  const reset = () => { setForm({ rank: "", category: "OPEN", state: "", branch: "", exam: "advanced" }); setOrder([]); setRan(false); setLoading(false); };
 
   const download = () => {
     if (!order.length) return;
@@ -130,20 +141,29 @@ export default function CounsellingPlanner() {
               </div>
             </div>
             <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-              <button className="btn btn-coral" style={{ flex: 1, justifyContent: "center" }} onClick={run}>
-                <Crosshair size={16} /> Build my choice list
+              <button className="btn btn-coral" style={{ flex: 1, justifyContent: "center", opacity: loading ? 0.75 : 1 }} onClick={run} disabled={loading}>
+                {loading
+                  ? <><Loader2 size={16} style={{ animation: "spin 0.8s linear infinite" }} /> Building…</>
+                  : <><Crosshair size={16} /> Build my choice list</>}
               </button>
               <button className="btn btn-ghost" onClick={reset}><RotateCcw size={16} /></button>
             </div>
           </div>
 
-          {ran && order.length === 0 && (
+          {loading && (
+            <div className="card" style={{ textAlign: "center", padding: 40, color: "var(--muted)" }}>
+              <div style={{ width: 44, height: 44, borderRadius: "50%", border: "4px solid #f3f0ec", borderTop: "4px solid var(--coral)", animation: "spin 0.8s linear infinite", margin: "0 auto 16px" }} />
+              Loading 2024 JoSAA cutoffs and building your choice list…
+            </div>
+          )}
+
+          {ran && !loading && order.length === 0 && (
             <div className="card" style={{ textAlign: "center", padding: 40, color: "var(--muted)" }}>
               No eligible options — try widening your filters or check your rank.
             </div>
           )}
 
-          {order.length > 0 && (
+          {!loading && order.length > 0 && (
             <div className="grid-2" style={{ gap: 22, alignItems: "start" }}>
 
               {/* Choice list */}

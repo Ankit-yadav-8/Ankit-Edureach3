@@ -5,6 +5,7 @@ import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut, Sparkles,
+  HelpCircle,
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -243,6 +244,21 @@ export default function Navbar({ onSearch }) {
         </ul>
 
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Link
+            to="/how-to-use"
+            title="How to use College Parichay"
+            className="how-to-pill cta-desktop"
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 5,
+              padding: "7px 12px", borderRadius: 999,
+              background: "rgba(244,123,32,.1)", color: "#ea580c",
+              border: "1.5px solid rgba(244,123,32,.28)",
+              fontSize: "0.78rem", fontWeight: 700, whiteSpace: "nowrap",
+              textDecoration: "none",
+            }}
+          >
+            <HelpCircle size={14} /> How to use
+          </Link>
           <button onClick={onSearch} aria-label="Search" style={{ width: 40, height: 40, borderRadius: 10, display: "grid", placeItems: "center", background: "var(--sky)", color: "var(--navy)" }}>
             <Search size={18} />
           </button>
@@ -395,6 +411,20 @@ export default function Navbar({ onSearch }) {
                   )}
                 </div>
               ))}
+
+              <Link
+                to="/how-to-use"
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  width: "100%", marginTop: 14, padding: "12px 16px",
+                  borderRadius: 10, border: "1.5px solid rgba(244,123,32,.28)",
+                  background: "rgba(244,123,32,.1)", color: "#ea580c",
+                  fontWeight: 700, fontSize: "0.95rem", textDecoration: "none",
+                }}
+              >
+                <HelpCircle size={16} /> How to use College Parichay
+              </Link>
 
               <button
                 className="btn btn-coral full mt-3"
