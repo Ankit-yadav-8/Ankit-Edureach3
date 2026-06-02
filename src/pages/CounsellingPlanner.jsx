@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Reorder } from "framer-motion";
 import { ListOrdered, GripVertical, Crosshair, RotateCcw, Trophy, MapPin, CheckCircle2, ArrowRight, Download, Loader2 } from "lucide-react";
-import { predictColleges, TIER_COLOR } from "../utils/collegePredictor.js";
-import { loadPredictorDB } from "../utils/realCutoffEngine.js";
+import { TIER_COLOR } from "../utils/collegePredictor.js";
+import { useCollegePredictor } from "../hooks/useCollegePredictor.js";
 import { CATEGORIES, BRANCHES, STATES } from "../data/colleges.js";
 import { fmtRank, fmtINR } from "../utils/format.js";
 
@@ -11,26 +11,27 @@ export default function CounsellingPlanner() {
   const [form, setForm] = useState({ rank: "", category: "OPEN", state: "", branch: "", exam: "advanced" });
   const [order, setOrder] = useState([]);
   const [ran, setRan] = useState(false);
-  const [loading, setLoading] = useState(false);
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  // Pre-warm the 2024 cutoff DB on the main thread the moment the page opens —
-  // predictColleges() runs synchronously here (no worker), so the data must be
-  // loaded before it can return any results.
-  useEffect(() => { loadPredictorDB(); }, []);
+  // Run the prediction in a Web Worker so the heavy JoSAA cutoff scan never
+  // blocks the main thread — previously this ran synchronously here and froze
+  // the page for 7–10s, making it look unresponsive / broken.
+  const { predict, reset: resetPredict, results, loading, error } = useCollegePredictor();
+
+  // When the worker returns, turn the flat result list into a draggable order.
+  useEffect(() => {
+    if (!results) return;
+    setOrder(results.slice(0, 14).map((o, i) => ({ ...o, _id: `${o.slug}-${o.branchCode}-${i}` })));
+  }, [results]);
 
   // JEE Advanced → only IITs · JEE Main → only NITs & IIITs
-  const run = async () => {
+  const run = () => {
     if (!form.rank || Number(form.rank) <= 0) return;
-    setLoading(true);
     setRan(true);
-    await loadPredictorDB();   // resolves instantly if already loaded
     const types = form.exam === "advanced" ? ["IIT"] : ["NIT", "IIIT"];
-    const out = predictColleges({ ...form, types }).slice(0, 14);
-    setOrder(out.map((o, i) => ({ ...o, _id: `${o.slug}-${o.branchCode}-${i}` })));
-    setLoading(false);
+    predict({ ...form, types });
   };
-  const reset = () => { setForm({ rank: "", category: "OPEN", state: "", branch: "", exam: "advanced" }); setOrder([]); setRan(false); setLoading(false); };
+  const reset = () => { setForm({ rank: "", category: "OPEN", state: "", branch: "", exam: "advanced" }); setOrder([]); setRan(false); resetPredict(); };
 
   const download = () => {
     if (!order.length) return;
@@ -157,7 +158,13 @@ export default function CounsellingPlanner() {
             </div>
           )}
 
-          {ran && !loading && order.length === 0 && (
+          {error && !loading && (
+            <div className="card" style={{ textAlign: "center", padding: 40, color: "var(--coral)" }}>
+              Couldn't build your list: {error}. Please try again.
+            </div>
+          )}
+
+          {ran && !loading && !error && order.length === 0 && (
             <div className="card" style={{ textAlign: "center", padding: 40, color: "var(--muted)" }}>
               No eligible options — try widening your filters or check your rank.
             </div>

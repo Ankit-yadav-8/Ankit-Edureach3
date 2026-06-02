@@ -5,6 +5,8 @@
  *              Opening Rank | Closing Rank | Round | Year
  */
 
+import { COLLEGES } from "../data/colleges.js";
+
 export const REAL_YEARS = ["2018","2019","2020","2021","2022","2023","2024","2025"];
 
 const DB  = new Map();   // Map<year, Row[]>
@@ -16,6 +18,33 @@ let _predictorReady   = false;
 
 // ── Caches (filled once DB is ready) ───────────────────────────────────────
 const _progCache = new Map(); // slug → string[]
+// Row index: college slug → rows belonging to that institute. Built once after
+// the DB is ready so per-query helpers scan a few hundred rows for one college
+// instead of re-matching all ~57k rows (with a regex) on every program/quota
+// lookup. Without this, the Counselling Planner froze the page for 7–10s.
+let _byCollege = null;
+function invalidateCaches() {
+  _progCache.clear();
+  _byCollege = null;
+}
+function getCollegeRows(college) {
+  if (!_byCollege) {
+    if (!_loaded && !_predictorReady) return [];
+    _byCollege = new Map();
+    for (const [, rows] of DB) {
+      for (const r of rows) {
+        for (const c of COLLEGES) {
+          if (matchInstitute(r, c)) {
+            let bucket = _byCollege.get(c.slug);
+            if (!bucket) { bucket = []; _byCollege.set(c.slug, bucket); }
+            bucket.push(r);
+          }
+        }
+      }
+    }
+  }
+  return _byCollege.get(college.slug) ?? [];
+}
 
 // ── CSV parsing ─────────────────────────────────────────────────────────────
 function parseLine(line) {
@@ -125,7 +154,7 @@ export function loadCutoffDB() {
       DB.get(row.year).push(row);
     }
     _loaded = true;
-    _progCache.clear();
+    invalidateCaches();
   })();
   return _loadPromise;
 }
@@ -149,7 +178,7 @@ export function loadPredictorDB() {
       }
       // If full DB already loaded, 2024 rows are already present — skip insert
       _predictorReady = true;
-      _progCache.clear();
+      invalidateCaches();
     })
     .catch((err) => {
       console.error("[realCutoffEngine] 2024 fast load failed:", err);
@@ -167,7 +196,7 @@ export function _injectRows(rows) {
     DB.get(r.year).push(r);
   }
   _loaded = true;
-  _progCache.clear();
+  invalidateCaches();
 }
 
 // ── Institute matching (slug → CSV-name substrings) ──────────────────────────
@@ -254,7 +283,9 @@ const INSTITUTE_ALIASES = {
 };
 
 function matchInstitute(row, college) {
-  const inst    = norm(row.institute);
+  // Cache the normalized institute name on the row — matchInstitute is called
+  // millions of times while building the index, once per (row × college).
+  const inst    = row._inst ?? (row._inst = norm(row.institute));
   const aliases = INSTITUTE_ALIASES[college.slug];
   if (aliases) return aliases.some((a) => inst.includes(a));
   if (college.name && inst.includes(norm(college.name))) return true;
@@ -286,11 +317,7 @@ function sameProgram(candidate, target) {
 export function getRealPrograms(college) {
   if (_progCache.has(college.slug)) return _progCache.get(college.slug);
   const seen = new Set();
-  for (const [, rows] of DB) {
-    for (const r of rows) {
-      if (matchInstitute(r, college)) seen.add(r.program);
-    }
-  }
+  for (const r of getCollegeRows(college)) seen.add(r.program);
   const list = [...seen].sort((a, b) => {
     const order = (s) => {
       const l = s.toLowerCase();
@@ -320,9 +347,8 @@ export function getRealPrograms(college) {
 }
 
 export function getAvailableYears(college) {
-  return REAL_YEARS.filter((yr) =>
-    (DB.get(yr) ?? []).some((r) => matchInstitute(r, college))
-  );
+  const rows = getCollegeRows(college);
+  return REAL_YEARS.filter((yr) => rows.some((r) => r.year === yr));
 }
 
 // The all-India general pool is labelled "AI" in 2024 JoSAA data but "OS"
@@ -340,8 +366,8 @@ function quotaMatches(rowQuota, requested) {
 }
 
 export function getRealRounds(college, program, quota, seatType, year, gender = "GN") {
-  const rows = (DB.get(year) ?? []).filter((r) =>
-    matchInstitute(r, college) &&
+  const rows = getCollegeRows(college).filter((r) =>
+    r.year === year &&
     sameProgram(r.program, program) &&
     quotaMatches(r.quota, quota) &&
     r.seatType === seatType &&
@@ -413,11 +439,7 @@ const QUOTA_LABELS = {
 
 export function getAvailableQuotas(college) {
   const seen = new Set();
-  for (const [, rows] of DB) {
-    for (const r of rows) {
-      if (matchInstitute(r, college)) seen.add(r.quota);
-    }
-  }
+  for (const r of getCollegeRows(college)) seen.add(r.quota);
   const out = [];
   // Collapse AI + OS into a single all-India general-pool option. They are
   // the same pool under different year-wise labels (AI in 2024, OS elsewhere),
