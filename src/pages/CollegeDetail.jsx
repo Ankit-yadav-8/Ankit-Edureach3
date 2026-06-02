@@ -209,7 +209,10 @@ export default function CollegeDetail() {
               <a href={college.website} target="_blank" rel="noreferrer" className="btn btn-coral btn-glow">
                 <Globe size={16} /> Official Website
               </a>
-              <button className="btn btn-light" onClick={() => nav("/jee-main#college")}>
+              <button
+                className="btn btn-light"
+                onClick={() => nav(college.type === "IIT" ? "/jee-advanced#college" : "/jee-main#college")}
+              >
                 <Crosshair size={16} /> Check if I qualify
               </button>
               <SaveButton slug={college.slug} label />

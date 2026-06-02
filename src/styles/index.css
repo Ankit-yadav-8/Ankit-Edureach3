@@ -2596,6 +2596,29 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 @media (max-width:1024px) {
   table.data-table thead th { padding:.7rem .75rem; font-size:.78rem; }
   table.data-table tbody td { padding:.7rem .75rem; font-size:.86rem; }
+
+  /* ── College Predictor results: same clean horizontal scroll on tablets &
+     iPads as on phones, so every column (college → confidence → expand) stays
+     reachable and the college name stays pinned while you swipe. ── */
+  .cp-results-scroll          { overflow-x:scroll; -webkit-overflow-scrolling:touch; }
+  table.cp-results-table      { min-width:760px; }
+  .cp-results-table tbody td::before { content:none; }
+  .cp-expand-cell             { text-align:center; }
+  .cp-swipe-hint              { display:block; }
+
+  /* Pin the college column so each option stays identifiable while scrolling. */
+  .cp-results-table thead th:first-child,
+  .cp-results-table tbody td[data-label="College"] {
+    position:sticky;
+    left:0;
+    z-index:2;
+    background:#fff;
+    box-shadow:6px 0 8px -6px rgba(0,0,0,.18);
+  }
+  .cp-results-table thead th:first-child { z-index:3; background:#fff7f0; }
+
+  /* Expanded round-by-round detail + summary charts stack to full width. */
+  .cp-detail-cell .grid-2     { grid-template-columns:1fr !important; }
 }
 
 /* ── Phones (≤640px): stack the College Predictor results as cards ── */
@@ -2612,36 +2635,14 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   table.data-table.rd-table td { padding:.5rem .55rem; font-size:11.5px; }
   .rd-grid                    { gap:14px !important; }
 
-  /* College Predictor results → keep the desktop table look on phones,
-     but allow a clean horizontal scroll so columns stay aligned and
-     readable instead of stacking into cards. */
-  .cp-results-scroll          { overflow-x:auto; -webkit-overflow-scrolling:touch; }
-  table.cp-results-table      { min-width:640px; }
+  /* College Predictor results → keep the desktop table look on phones, but
+     denser cells + a smaller min-width so less swiping is needed. The scroll,
+     pinned college column and swipe hint are inherited from the ≤1024px block. */
+  table.cp-results-table      { min-width:600px; }
   table.cp-results-table thead th { padding:.6rem .65rem; font-size:.74rem; }
   table.cp-results-table tbody td { padding:.6rem .65rem; font-size:.82rem; }
-  /* The data-label pseudo-elements are only for card mode — hide them here. */
-  .cp-results-table tbody td::before { content:none; }
-  .cp-expand-cell             { text-align:center; }
 
-  /* Show the swipe hint on phones only */
-  .cp-swipe-hint              { display:block; }
-
-  /* Keep the College name pinned while the rest of the row scrolls,
-     so each option stays identifiable. */
-  .cp-results-table thead th:first-child,
-  .cp-results-table tbody td[data-label="College"] {
-    position:sticky;
-    left:0;
-    z-index:2;
-    background:#fff;
-    box-shadow:6px 0 8px -6px rgba(0,0,0,.18);
-  }
-  .cp-results-table thead th:first-child { z-index:3; background:#fff7f0; }
-
-  /* Expanded detail panel sits inside the same scroll width as the table. */
-  .cp-detail-cell .grid-2     { grid-template-columns:1fr !important; }
-
-  /* Summary pie/bar charts each get full width */
+  /* Summary pie/bar charts each get full width on phones */
   .cp-results-summary .grid-2 { grid-template-columns:1fr !important; }
 }
 
@@ -2659,6 +2660,8 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 
 /* ── Styled, consistent horizontal scrollbar for the results table ── */
 .cp-results-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: var(--coral) #f3f0ec;
 }

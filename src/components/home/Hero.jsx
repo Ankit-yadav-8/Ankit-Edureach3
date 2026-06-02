@@ -834,7 +834,7 @@ export default function Hero({ onSearch }) {
               {QUICK.map((t) => (
                 <button
                   key={t}
-                  onClick={() => go(t)}
+                  onClick={() => t === "College Predictor" ? nav("/jee-main#college") : go(t)}
                   style={{
                     padding: isXs ? "4px 10px" : "5px 13px",
                     borderRadius: 50,
@@ -877,22 +877,29 @@ export default function Hero({ onSearch }) {
               }}
             >
               <RippleButton
-                className="btn btn-coral btn-shimmer btn-glow"
+                className="btn btn-shimmer btn-glow hero-cp-highlight"
                 onClick={() => nav("/jee-main#college")}
                 style={{
-                  padding: isXs ? "11px 20px" : "12px 24px",
-                  fontSize: isXs ? 13.5 : 14.5,
-                  fontWeight: 700,
+                  padding: isXs ? "11px 22px" : "12px 26px",
+                  fontSize: isXs ? 14 : 15,
+                  fontWeight: 800,
                   borderRadius: 12,
                   gap: 8,
-                  boxShadow: "0 6px 20px rgba(244,123,32,.42)",
+                  background: "linear-gradient(135deg, #F47B20 0%, #fbbf24 55%, #F97316 100%)",
+                  color: "#fff",
+                  border: "2px solid rgba(255,255,255,.55)",
+                  letterSpacing: "0.2px",
+                  boxShadow: "0 8px 28px rgba(244,123,32,.55), 0 0 0 4px rgba(251,191,36,.18)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: isMobile ? "100%" : "auto",
+                  position: "relative",
+                  animation: "livePulse 2.2s infinite",
                 }}
+                color="rgba(255,255,255,0.45)"
               >
-                <Crosshair size={isXs ? 16 : 18} /> Predict My College
+                <Crosshair size={isXs ? 17 : 19} /> College Predictor
               </RippleButton>
 
               <RippleButton

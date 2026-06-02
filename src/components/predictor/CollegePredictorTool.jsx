@@ -371,7 +371,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
           ) : (
             <>
             <p className="cp-swipe-hint">← Swipe sideways to see every column →</p>
-            <div className="cp-results-scroll" style={{ overflowX: "auto" }}>
+            <div className="cp-results-scroll">
               <table className="data-table cp-results-table">
                 <thead>
                   <tr>
