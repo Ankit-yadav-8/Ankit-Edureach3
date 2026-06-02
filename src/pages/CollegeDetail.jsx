@@ -321,37 +321,40 @@ export default function CollegeDetail() {
               />
               
               {/* ── Seat Matrix Table ── */}
-              <div className="card" style={{ overflowX: "auto" }}>
+              <div className="card">
                 <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 4 }}>Seat matrix (approx.)</h4>
                 <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 12 }}>
                   Indicative seats per branch and category. Verify the official seat matrix on josaa.nic.in.
                 </p>
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Branch</th>
-                      <th>OPEN</th>
-                      <th>OBC-NCL</th>
-                      <th>EWS</th>
-                      <th>SC</th>
-                      <th>ST</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {seats.map((s) => (
-                      <tr key={s.code}>
-                        <td><strong style={{ color: "var(--navy)" }}>{s.name}</strong></td>
-                        <td>{s.byCat.OPEN}</td>
-                        <td>{s.byCat["OBC-NCL"]}</td>
-                        <td>{s.byCat.EWS}</td>
-                        <td>{s.byCat.SC}</td>
-                        <td>{s.byCat.ST}</td>
-                        <td><strong>{s.total}</strong></td>
+                <p className="table-scroll-hint">← Swipe sideways to see every category →</p>
+                <div className="table-scroll">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Branch</th>
+                        <th>OPEN</th>
+                        <th>OBC-NCL</th>
+                        <th>EWS</th>
+                        <th>SC</th>
+                        <th>ST</th>
+                        <th>Total</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {seats.map((s) => (
+                        <tr key={s.code}>
+                          <td><strong style={{ color: "var(--navy)" }}>{s.name}</strong></td>
+                          <td>{s.byCat.OPEN}</td>
+                          <td>{s.byCat["OBC-NCL"]}</td>
+                          <td>{s.byCat.EWS}</td>
+                          <td>{s.byCat.SC}</td>
+                          <td>{s.byCat.ST}</td>
+                          <td><strong>{s.total}</strong></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}

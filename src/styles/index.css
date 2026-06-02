@@ -674,6 +674,30 @@ input:focus,select:focus,textarea:focus { outline:2px solid rgba(244,123,32,.45)
    TABLES
 ════════════════════════════════════════════════ */
 .table-wrap { overflow-x:auto; border-radius:var(--radius); box-shadow:var(--shadow-sm); -webkit-overflow-scrolling:touch; width:100%; }
+
+/* In-card horizontal scroller (e.g. the seat matrix) — scrolls ONLY the table,
+   not the heading above it, and shows a clear coral scrollbar so it is obvious
+   on phones that there are more columns to the right. */
+.table-scroll {
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:var(--coral) #f3f0ec;
+}
+.table-scroll::-webkit-scrollbar { height:9px; }
+.table-scroll::-webkit-scrollbar-track { background:#f3f0ec; border-radius:8px; }
+.table-scroll::-webkit-scrollbar-thumb { background:var(--coral); border-radius:8px; }
+.table-scroll::-webkit-scrollbar-thumb:hover { background:#d9641a; }
+
+/* Small "swipe sideways" hint — only shown on phones where columns overflow. */
+.table-scroll-hint { display:none; }
+@media (max-width:640px) {
+  .table-scroll-hint {
+    display:block; margin:0 0 8px; font-size:11.5px; font-weight:600;
+    letter-spacing:.02em; color:var(--coral);
+  }
+}
+
 table.data-table { width:100%; border-collapse:collapse; background: #fff; min-width:640px; }
 table.data-table thead th { background: #fff7f0; color: #1a1a2e; border-bottom:2px solid var(--coral); text-align:left; padding:.9rem 1rem; font-size:.82rem; font-weight:700; position:sticky; top:0; }
 table.data-table tbody td { padding:.85rem 1rem; font-size:.9rem; border-bottom: 1px solid rgba(0,0,0,.07); color: #374151; }
@@ -2625,11 +2649,12 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .cp-results-summary         { grid-template-columns:repeat(2,1fr) !important; }
 }
 
-/* ── Phones (≤640px): stack the College Predictor results as cards ── */
+/* ── Phones (≤640px): College Predictor as a real 2-axis scrollable table ── */
 @media (max-width:640px) {
-  /* Generic data tables: smaller min-width + denser cells so they fit
-     with minimal horizontal scrolling on the narrowest phones. */
-  table.data-table            { min-width:520px; }
+  /* Generic data tables (incl. the seat matrix): keep them as REAL tables and
+     let the wrapper scroll horizontally — columns like OPEN / OBC / EWS / SC /
+     ST / Total stay aligned and every value is reachable by swiping sideways. */
+  table.data-table            { min-width:560px; }
   table.data-table thead th   { padding:.6rem .65rem; font-size:.74rem; }
   table.data-table tbody td   { padding:.6rem .65rem; font-size:.82rem; }
 
@@ -2639,66 +2664,36 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   table.data-table.rd-table td { padding:.5rem .55rem; font-size:11.5px; }
   .rd-grid                    { gap:14px !important; }
 
-  /* ── College Predictor results → STACKED CARDS on phones (iPhone / Android).
-     The horizontal-scroll table hid the Confidence column off-screen; here each
-     option becomes a self-contained card so college, branch, type, closing rank,
-     package AND confidence are all visible at once — no sideways swiping. ── */
-  .cp-results-scroll          { overflow:visible; max-height:none; }
-  .cp-swipe-hint              { display:none; }            /* nothing to swipe now */
+  /* ── College Predictor results on phones (iPhone / Android) → a real table
+     that scrolls BOTH ways inside a bounded box. Swipe sideways for every
+     column (College → NIRF → Confidence → expand); scroll down through the
+     rows. The header row AND the college column stay pinned so you never lose
+     track of which option you're reading and nothing is ever cut off. ── */
+  table.cp-results-table      { min-width:800px; }
+  .cp-results-table tbody td::before { content:none; }   /* no card-style labels */
+  .cp-expand-cell             { text-align:center; }
+  .cp-swipe-hint              { display:block; }
 
-  table.cp-results-table      { min-width:0; width:100%; display:block; }
-  .cp-results-table thead     { display:none; }            /* labels move into each cell */
-  .cp-results-table tbody     { display:block; }
-
-  /* Each result row → a card */
-  .cp-results-table tbody tr:not(.cp-detail-row) {
-    display:block;
-    padding:14px 16px;
-    margin:0 0 12px;
-    border:1px solid var(--line);
-    border-radius:14px;
-    background:#fff !important;
-    box-shadow:0 2px 12px rgba(13,27,62,.06);
+  /* Bounded height → a vertical scrollbar appears for long result lists, while
+     the page itself stays put. */
+  .cp-results-scroll {
+    overflow-x:auto;
+    overflow-y:auto;
+    max-height:78vh;
+    -webkit-overflow-scrolling:touch;
   }
-  .cp-results-table tbody tr:nth-child(even) { background:#fff !important; }
 
-  /* Each cell → a label : value row */
-  .cp-results-table tbody td {
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    padding:7px 0 !important; border:none !important;
-    font-size:14px !important;
-    /* undo the pinned-first-column treatment from the ≤1024px block */
-    position:static !important; box-shadow:none !important; background:transparent !important;
-  }
-  .cp-results-table tbody td::before {
-    content:attr(data-label);
-    font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
-    color:var(--muted); flex-shrink:0;
-  }
-  .cp-results-table tbody td > *:last-child { text-align:right; }
-
-  /* College name = card header, full width, no label prefix */
+  /* Pin the college column while scrolling sideways. */
+  .cp-results-table thead th:first-child,
   .cp-results-table tbody td[data-label="College"] {
-    display:block; padding:0 0 10px !important; margin-bottom:6px;
-    border-bottom:1px solid var(--line) !important;
+    position:sticky; left:0; z-index:2;
+    background:#fff; box-shadow:6px 0 8px -6px rgba(0,0,0,.18);
   }
-  .cp-results-table tbody td[data-label="College"]::before { content:none; }
-  .cp-results-table tbody td[data-label="College"] a { font-size:15px; }
+  /* Top-left header cell sits above both the sticky row and sticky column. */
+  .cp-results-table thead th:first-child { z-index:5; background:#fff7f0; }
 
-  /* Chevron row → a clear full-width "tap to expand" affordance */
-  .cp-results-table tbody td.cp-expand-cell {
-    justify-content:center; gap:6px;
-    margin-top:6px; padding-top:11px !important;
-    border-top:1px solid var(--line) !important;
-    color:var(--coral); font-weight:700; font-size:12.5px;
-  }
-  .cp-results-table tbody td.cp-expand-cell::before {
-    content:"Round-by-round cutoffs"; color:var(--coral); text-transform:none; letter-spacing:0;
-  }
-
-  /* Expanded detail spans the full card width */
-  .cp-results-table tbody tr.cp-detail-row,
-  .cp-results-table tbody td.cp-detail-cell { display:block; width:100%; }
+  /* Expanded round-by-round detail stacks into a single column. */
+  .cp-detail-cell .grid-2     { grid-template-columns:1fr !important; }
 
   /* ── Summary pie charts: stack ONE BY ONE in a single column so BOTH
      "Confidence breakdown" and "Matches by institute type" are fully visible
@@ -2733,7 +2728,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   scrollbar-width: thin;
   scrollbar-color: var(--coral) #f3f0ec;
 }
-.cp-results-scroll::-webkit-scrollbar { height: 8px; }
+.cp-results-scroll::-webkit-scrollbar { height: 9px; width: 9px; }
 .cp-results-scroll::-webkit-scrollbar-track {
   background: #f3f0ec;
   border-radius: 8px;
@@ -2743,6 +2738,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   border-radius: 8px;
 }
 .cp-results-scroll::-webkit-scrollbar-thumb:hover { background: #d9641a; }
+.cp-results-scroll::-webkit-scrollbar-corner { background: #f3f0ec; }
 
 /* ── Sticky header row — stays visible while scrolling vertically, on every
    screen size (the base data-table rule sets position:sticky; top:0, here we

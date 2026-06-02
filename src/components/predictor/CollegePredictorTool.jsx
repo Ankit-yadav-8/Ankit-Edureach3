@@ -399,7 +399,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
             </div>
           ) : (
             <>
-            <p className="cp-swipe-hint">← Swipe sideways to see every column →</p>
+            <p className="cp-swipe-hint">← Swipe sideways for every column · scroll down for more colleges ↓</p>
             <div className="cp-results-scroll">
               <table className="data-table cp-results-table">
                 <thead>
