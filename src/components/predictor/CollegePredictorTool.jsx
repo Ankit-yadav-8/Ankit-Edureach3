@@ -386,8 +386,10 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
             <strong style={{ fontFamily: "Sora" }}>
               {results.length} eligible college-branch option{results.length !== 1 ? "s" : ""}
             </strong>
-            <span style={{ fontSize: 12.5, color: "var(--muted)" }}>
-              Tap any row for round-by-round cutoffs
+            <span className="cp-rank-legend">
+              <span className="cp-legend-dot" style={{ background: "#2EC4B6" }} /> Opening
+              <span className="cp-legend-dot" style={{ background: "#F97316", marginLeft: 12 }} /> Closing
+              <span style={{ marginLeft: 14, color: "var(--muted)" }}>· Tap a row for all rounds</span>
             </span>
           </div>
 
@@ -405,7 +407,8 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
                     <th>College</th>
                     <th>Branch</th>
                     <th>Type</th>
-                    <th>Closing (final)</th>
+                    <th>Opening rank</th>
+                    <th>Closing rank</th>
                     <th>Avg pkg</th>
                     <th>Confidence</th>
                     <th></th>
@@ -435,7 +438,8 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
                           </td>
                           <td data-label="Branch">{r.branch}</td>
                           <td data-label="Type"><span className="badge teal">{r.type}</span></td>
-                          <td data-label="Closing rank">{fmtRank(r.closing)}</td>
+                          <td data-label="Opening rank"><span className="cp-rank cp-rank-open">{fmtRank(r.opening)}</span></td>
+                          <td data-label="Closing rank"><span className="cp-rank cp-rank-close">{fmtRank(r.closing)}</span></td>
                           <td data-label="Avg package">{fmtINR(r.avgPackage)}</td>
                           <td data-label="Confidence">
                             <span className={`badge ${TIER_BADGE[r.tier] || "teal"} cp-tier-badge`}>
@@ -449,7 +453,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
                         <AnimatePresence>
                           {isOpen && (
                             <tr className="cp-detail-row">
-                              <td className="cp-detail-cell" colSpan={7} style={{ padding: 0, background: "var(--sky)" }}>
+                              <td className="cp-detail-cell" colSpan={8} style={{ padding: 0, background: "var(--sky)" }}>
                                 <motion.div
                                   initial={{ height: 0, opacity: 0 }}
                                   animate={{ height: "auto", opacity: 1 }}

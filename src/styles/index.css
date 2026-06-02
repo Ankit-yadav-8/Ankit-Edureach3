@@ -2601,7 +2601,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
      iPads as on phones, so every column (college → confidence → expand) stays
      reachable and the college name stays pinned while you swipe. ── */
   .cp-results-scroll          { overflow-x:scroll; -webkit-overflow-scrolling:touch; }
-  table.cp-results-table      { min-width:760px; }
+  table.cp-results-table      { min-width:880px; }
   .cp-results-table tbody td::before { content:none; }
   .cp-expand-cell             { text-align:center; }
   .cp-swipe-hint              { display:block; }
@@ -2721,18 +2721,19 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   text-align: center;
 }
 
-/* ── Styled scrollbars for the results table — scrolls BOTH ways ──
-   overflow:auto on both axes + a bounded max-height gives the table its
-   own scroll region, which is what lets the sticky <thead> stay pinned and
-   the rows scroll vertically underneath it on every device. */
+/* ── Results table scroll — HORIZONTAL ONLY ──
+   No bounded max-height / vertical scroll region: the table grows to its full
+   height and the whole page scrolls naturally, so there is no inner vertical
+   scrollbar. Only the horizontal axis scrolls (when columns overflow on small
+   screens). The sticky <thead> now pins against the viewport while you scroll. */
 .cp-results-scroll {
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: visible;
   -webkit-overflow-scrolling: touch;
-  max-height: clamp(360px, 68vh, 720px);
   scrollbar-width: thin;
   scrollbar-color: var(--coral) #f3f0ec;
 }
-.cp-results-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
+.cp-results-scroll::-webkit-scrollbar { height: 8px; }
 .cp-results-scroll::-webkit-scrollbar-track {
   background: #f3f0ec;
   border-radius: 8px;
@@ -2742,7 +2743,6 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   border-radius: 8px;
 }
 .cp-results-scroll::-webkit-scrollbar-thumb:hover { background: #d9641a; }
-.cp-results-scroll::-webkit-scrollbar-corner { background: #f3f0ec; }
 
 /* ── Sticky header row — stays visible while scrolling vertically, on every
    screen size (the base data-table rule sets position:sticky; top:0, here we
@@ -2813,4 +2813,40 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   font-size: 0.72rem;
   padding: 0.32rem 0.7rem;
   border-radius: var(--radius-pill);
+}
+
+/* ── Opening / Closing rank cells — colour-coded to match the round chart
+   (teal = opening, orange = closing) so the JoSAA 2024 rank range reads at a
+   glance. Tabular figures keep the numbers aligned column-to-column. ── */
+.cp-rank {
+  display: inline-block;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 8px;
+  line-height: 1.2;
+}
+.cp-rank-open  { color: #0e9c90; background: rgba(46,196,182,.12); }
+.cp-rank-close { color: #d9641a; background: rgba(249,115,22,.12); }
+
+/* Legend in the results header: small dots that explain the two rank colours. */
+.cp-rank-legend {
+  display: flex;
+  align-items: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--navy);
+}
+.cp-legend-dot {
+  display: inline-block;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+@media (max-width:640px) {
+  /* On the stacked card layout, let the rank chips sit flush-right like the
+     other values and stay compact. */
+  .cp-rank { font-size: 14px; }
+  .cp-rank-legend { flex-wrap: wrap; gap: 2px 0; }
 }
