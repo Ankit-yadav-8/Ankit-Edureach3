@@ -83,15 +83,17 @@ function RoundDetail({ row }) {
         </div>
       </div>
       <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-        <Link to={`/colleges/${slug}?tab=placements`} className="btn btn-ghost" style={{ fontSize: 13 }}>
+        <Link to={`/colleges/${row.slug}?tab=placements`} className="btn btn-ghost" style={{ fontSize: 13 }}>
           Placements <ArrowRight size={14} />
         </Link>
-        <Link to={`/colleges/${slug}`} className="btn btn-coral" style={{ fontSize: 13 }}>
+        <Link to={`/colleges/${row.slug}`} className="btn btn-coral" style={{ fontSize: 13 }}>
           Full college details <ArrowRight size={14} />
         </Link>
+        {college?.website && (
         <a href={college.website} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 13 }}>
           Official site <ExternalLink size={13} />
         </a>
+        )}
       </div>
     </div>
   );
