@@ -328,22 +328,27 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
 
       {/* ── Summary charts ── */}
       {results && results.length > 0 && !loading && (
-        <div className="grid-2 cp-results-summary" style={{ marginTop: 22, gap: 22 }}>
-          <div className="card">
-            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Confidence breakdown</h4>
-            <PieWithLegend
-              data={summary.dist}
-              colors={["#2EC4B6", "#F97316", "#EF4444"]}
-              height={200}
-            />
-          </div>
-          <div className="card">
-            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Matches by institute type</h4>
-            <PieWithLegend
-              data={summary.typeData}
-              colors={["#e05a2b", "#2563eb", "#7c3aed", "#059669"]}
-              height={200}
-            />
+        <div style={{ marginTop: 22 }}>
+          <p className="cp-swipe-hint">← Swipe sideways to see both charts →</p>
+          <div className="cp-summary-scroll">
+            <div className="grid-2 cp-results-summary" style={{ gap: 22 }}>
+              <div className="card">
+                <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Confidence breakdown</h4>
+                <PieWithLegend
+                  data={summary.dist}
+                  colors={["#2EC4B6", "#F97316", "#EF4444"]}
+                  height={200}
+                />
+              </div>
+              <div className="card">
+                <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Matches by institute type</h4>
+                <PieWithLegend
+                  data={summary.typeData}
+                  colors={["#e05a2b", "#2563eb", "#7c3aed", "#059669"]}
+                  height={200}
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}
