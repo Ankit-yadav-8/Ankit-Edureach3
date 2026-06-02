@@ -5,7 +5,7 @@
                Bars · Trend · Gauge
    All props-compatible with the previous version.
    ============================================================ */
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -24,6 +24,27 @@ export const PALETTE = [
   "#06D6A0", // mint
   "#FF6B9D", // hot-pink
 ];
+
+// ─── Responsive helper ────────────────────────────────────────
+/** Tracks a max-width breakpoint so charts can shrink on phones.
+    Pie / donut / bar charts otherwise keep their full desktop height on
+    mobile, which makes them look oversized and squeezes the legend
+    (Safe / Moderate / Ambitious) out of view. */
+function useIsMobile(bp = 640) {
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" &&
+          window.matchMedia(`(max-width:${bp}px)`).matches
+  );
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia(`(max-width:${bp}px)`);
+    const onChange = () => setIsMobile(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [bp]);
+  return isMobile;
+}
 
 // ─── Color math ───────────────────────────────────────────────
 /** Convert any 6-char hex to HSL, darken 14 %, saturate 8 %. */
@@ -175,13 +196,15 @@ export function CenterDonut({
   data, centerLabel, centerSub,
   height = 200, colors = PALETTE, fmt,
 }) {
+  const isMobile = useIsMobile();
+  const h = isMobile ? Math.max(110, Math.round(height * 0.82)) : height;
   const [activeIdx, setActiveIdx] = useState(null);
   const onEnter = useCallback((_, i) => setActiveIdx(i), []);
   const onLeave = useCallback(() => setActiveIdx(null), []);
 
   const indexed = useMemo(() => data.map((d, i) => ({ ...d, index: i })), [data]);
 
-  if (!data?.length) return <ChartEmpty height={height} />;
+  if (!data?.length) return <ChartEmpty height={h} />;
 
   const activeColor = activeIdx !== null ? colors[activeIdx % colors.length] : null;
   const activeValue = activeIdx !== null && data[activeIdx]
@@ -192,7 +215,7 @@ export function CenterDonut({
     : (centerSub ?? "");
 
   return (
-    <div style={{ position: "relative", width: "100%", height }}>
+    <div style={{ position: "relative", width: "100%", height: h }}>
       <ResponsiveContainer>
         <PieChart>
           <Pie
@@ -233,7 +256,7 @@ export function CenterDonut({
         <div>
           <div style={{
             fontFamily: "Sora, sans-serif", fontWeight: 800,
-            fontSize: height < 160 ? 20 : 26,
+            fontSize: h < 160 ? 20 : 26,
             color: activeColor ?? "var(--navy, #0d1b3e)",
             lineHeight: 1, transition: "color 0.2s",
           }}>
@@ -262,7 +285,7 @@ export function DonutLegend({
   activeIdx = null, onEnter, onLeave,
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 12 }}>
+    <div className="chart-legend" style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 12 }}>
       {data.map((d, i) => {
         const base     = colors[i % colors.length];
         const isActive = activeIdx === i;
@@ -329,16 +352,18 @@ export function DonutLegend({
    PieWithLegend
 ══════════════════════════════════════════════════════════════ */
 export function PieWithLegend({ data, height = 220, colors = PALETTE, fmt }) {
+  const isMobile = useIsMobile();
+  const h = isMobile ? Math.max(130, Math.round(height * 0.72)) : height;
   const [activeIdx, setActiveIdx] = useState(null);
   const onEnter = useCallback((_, i) => setActiveIdx(i), []);
   const onLeave = useCallback(() => setActiveIdx(null), []);
   const indexed = useMemo(() => data.map((d, i) => ({ ...d, index: i })), [data]);
 
-  if (!data?.length) return <ChartEmpty height={height + 60} />;
+  if (!data?.length) return <ChartEmpty height={h + 60} />;
 
   return (
     <div>
-      <div style={{ width: "100%", height }}>
+      <div style={{ width: "100%", height: h }}>
         <ResponsiveContainer>
           <PieChart>
             <Pie
@@ -392,10 +417,12 @@ export function PieWithLegend({ data, height = 220, colors = PALETTE, fmt }) {
           height, fmt, angle
 ══════════════════════════════════════════════════════════════ */
 export function Bars({ data, bars, height = 280, fmt, angle = 0 }) {
-  if (!data?.length || !bars?.length) return <ChartEmpty height={height} />;
+  const isMobile = useIsMobile();
+  const h = isMobile ? Math.max(180, Math.round(height * 0.8)) : height;
+  if (!data?.length || !bars?.length) return <ChartEmpty height={h} />;
 
   return (
-    <div style={{ width: "100%", height }}>
+    <div style={{ width: "100%", height: h }}>
       <ResponsiveContainer>
         <BarChart
           data={data}

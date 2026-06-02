@@ -785,7 +785,15 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
 
 /* College Predictor + Counselling card layout */
 @media (max-width: 980px) {
-  .predictor-layout { flex-direction:column; }
+  /* Stack the predictor and the counselling card. The inline `align-items:
+     flex-start` (set in JSX) would otherwise stop the stacked children from
+     stretching, so the predictor column collapses to its widest content (the
+     800px-min results table) and overflows the viewport — cutting off the pie
+     charts and the table's own horizontal scroll. Force a full-width stretch so
+     each child fills the column, the summary pies fit, and the results table
+     scrolls inside its bounded box. */
+  .predictor-layout        { flex-direction:column; align-items:stretch !important; }
+  .predictor-layout > *    { min-width:0; max-width:100%; width:100%; }
 }
 
 /* ════════════════════════════════════════════════
@@ -2701,7 +2709,22 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .cp-results-summary         { grid-template-columns:1fr !important; }
 
   /* Cutoff bar graph stacks under the round table at full width on phones. */
-  .cp-cutoff-chart            { margin-top:4px; }
+  .cp-cutoff-chart            { margin-top:4px; padding:10px 8px 4px; }
+  .cp-cutoff-chart-head       { font-size:11.5px; }
+
+  /* ── Summary chart cards: tighter padding + smaller header so the (now
+     shrunken) pies AND their Safe / Moderate / Ambitious legend stay fully
+     visible without overflowing the card on phones. ── */
+  .cp-summary-card            { padding:1rem .9rem 1.1rem; }
+  .cp-summary-head            { gap:9px; margin-bottom:10px; }
+  .cp-summary-icon            { width:30px; height:30px; }
+  .cp-summary-head h4         { font-size:13.5px; }
+  .cp-summary-head p          { font-size:11px; }
+
+  /* Pie legend rows: tighten so each Safe / Moderate / Ambitious label and its
+     value read clearly under the smaller chart. */
+  .chart-legend               { margin-top:10px; }
+  .chart-legend > div         { padding:5px 8px; }
 }
 
 /* Swipe hint is mobile-only — hidden on desktop where the full table fits */
