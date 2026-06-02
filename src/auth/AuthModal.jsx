@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Mail, ArrowLeft, Lock, User, KeyRound,
-  Phone, GraduationCap, CheckCircle2, AlertCircle,
+  Phone, GraduationCap, CheckCircle2, AlertCircle, MapPin,
   Loader2, Eye, EyeOff, Sparkles,
   Shield, Zap, BookOpen, Award, Trophy,
 } from "lucide-react";
@@ -12,25 +12,32 @@ import { apiForgot, apiReset, apiSendOtp, apiVerifyOtp } from "./api.js";
 /* ── constants ──────────────────────────────────────────────── */
 const OR  = "#F47B20";
 const ORD = "#ea580c";
-const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || "").trim());
+// Email is only accepted when it ends with "@gmail.com" or with ".in"
+const isEmail = (v) => {
+  const s = String(v || "").trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)) return false;
+  return s.endsWith("@gmail.com") || s.endsWith(".in");
+};
 const isPhone = (v) => /^\d{10}$/.test(v);
 const isRank  = (v) => !v || (!isNaN(Number(v)) && Number(v) > 0);
+const EMAIL_ERR = "Use a @gmail.com or .in email address";
 
 /* ── client-side validation ─────────────────────────────────── */
 function validate(mode, f) {
   const e = {};
   if (mode === "login") {
     if (!f.email.trim())         e.email    = "Email is required";
-    else if (!isEmail(f.email))  e.email    = "Enter a valid email";
+    else if (!isEmail(f.email))  e.email    = EMAIL_ERR;
     if (!f.password)             e.password = "Password is required";
   }
   if (mode === "signup") {
     if (!f.name.trim())              e.name         = "Full name is required";
     if (!f.email.trim())             e.email        = "Email is required";
-    else if (!isEmail(f.email))      e.email        = "Enter a valid email";
+    else if (!isEmail(f.email))      e.email        = EMAIL_ERR;
     if (!f.phone)                    e.phone        = "Mobile number is required";
     else if (!isPhone(f.phone))      e.phone        = "Enter a valid 10-digit number";
     if (!f.coaching.trim())          e.coaching     = "Coaching is required";
+    if (!f.homeState.trim())         e.homeState    = "Home state is required";
     if (!f.jeeMainsRank)             e.jeeMainsRank = "JEE Mains rank is required";
     else if (!isRank(f.jeeMainsRank)) e.jeeMainsRank = "Enter a valid rank number";
     // JEE Advanced rank stays optional — only validated if provided
@@ -40,11 +47,11 @@ function validate(mode, f) {
   }
   if (mode === "otpEmail") {
     if (!f.email.trim())         e.email = "Email is required";
-    else if (!isEmail(f.email))  e.email = "Enter a valid email";
+    else if (!isEmail(f.email))  e.email = EMAIL_ERR;
   }
   if (mode === "forgot") {
     if (!f.email.trim())         e.email = "Email is required";
-    else if (!isEmail(f.email))  e.email = "Enter a valid email";
+    else if (!isEmail(f.email))  e.email = EMAIL_ERR;
   }
   if (mode === "reset") {
     if (!f.token.trim())         e.token    = "Reset token is required";
@@ -331,7 +338,7 @@ export default function AuthModal() {
   // Auth is mandatory: guests cannot dismiss the modal (no close X / no skip).
   const mandatory = !isLoggedIn;
   const [mode,    setMode]   = useState("login");
-  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", jeeMainsRank: "", jeeAdvancedRank: "" });
+  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", jeeMainsRank: "", jeeAdvancedRank: "" });
   const [fe,      setFe]     = useState({});
   const [banner,  setBanner] = useState({ type: "", text: "" });
   const [busy,    setBusy]   = useState(false);
@@ -362,7 +369,7 @@ export default function AuthModal() {
 
   const close = () => {
     setMode("login");
-    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", jeeMainsRank: "", jeeAdvancedRank: "" });
+    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", jeeMainsRank: "", jeeAdvancedRank: "" });
     setBanner({ type: "", text: "" });
     setFe({});
     setBusy(false);
@@ -402,7 +409,7 @@ export default function AuthModal() {
   };
 
   const doLogin   = run(async () => { await login(f.email.trim(), f.password); close(); }, "login");
-  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, password: f.password, jeeMainsRank: f.jeeMainsRank ? Number(f.jeeMainsRank) : undefined, jeeAdvancedRank: f.jeeAdvancedRank ? Number(f.jeeAdvancedRank) : undefined }); close(); }, "signup");
+  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, jeeMainsRank: f.jeeMainsRank ? Number(f.jeeMainsRank) : undefined, jeeAdvancedRank: f.jeeAdvancedRank ? Number(f.jeeAdvancedRank) : undefined }); close(); }, "signup");
   const doSendOtp = run(async () => {
     setNotReg(false);
     try {
@@ -645,6 +652,10 @@ export default function AuthModal() {
                       error={fe.phone} onChange={e => set("phone", e.target.value.replace(/\D/g, ""))} autoComplete="tel" />
                     <Field icon={GraduationCap} placeholder="Coaching *" value={f.coaching}
                       error={fe.coaching} onChange={e => set("coaching", e.target.value)} />
+                    <div style={{ gridColumn: "1/-1" }}>
+                      <Field icon={MapPin} placeholder="Home state *" value={f.homeState}
+                        error={fe.homeState} onChange={e => set("homeState", e.target.value)} />
+                    </div>
                     <div style={{ gridColumn: "1/-1" }}>
                       <Field icon={Mail} type="email" placeholder="Email address *" value={f.email}
                         error={fe.email} onChange={e => set("email", e.target.value)} autoComplete="email" />

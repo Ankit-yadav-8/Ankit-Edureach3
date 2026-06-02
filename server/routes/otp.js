@@ -8,14 +8,19 @@ import { sendOtpEmail } from "../utils/mailer.js";
 const router = express.Router();
 const sign = (u) => jwt.sign({ id: u._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 const cleanEmail = (e) => String(e || "").trim().toLowerCase();
-const isEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+// Email must be a valid address ending in "@gmail.com" or ".in"
+const isEmail = (e) => {
+  const s = String(e || "").toLowerCase().trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)) return false;
+  return s.endsWith("@gmail.com") || s.endsWith(".in");
+};
 
 // send OTP to an email
 router.post("/send", async (req, res) => {
   try {
     const email = cleanEmail(req.body?.email);
     const name = String(req.body?.name || "").trim();
-    if (!isEmail(email)) return res.status(400).json({ error: "Enter a valid email address" });
+    if (!isEmail(email)) return res.status(400).json({ error: "Use a @gmail.com or .in email address" });
     // OTP login is only for already-registered emails. New users must sign up first.
     const exists = await User.findOne({ email }).select("_id").lean();
     if (!exists) return res.status(404).json({ error: "This email isn't registered yet. Please sign up first, then log in with OTP.", notRegistered: true });

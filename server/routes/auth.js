@@ -7,16 +7,22 @@ import { requireAuth } from "../middleware/auth.js";
 
 const router = express.Router();
 const sign = (u) => jwt.sign({ id: u._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
-const isEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-const pub = (u) => ({ id: u._id, name: u.name, email: u.email, phone: u.phone, coaching: u.coaching, jeeMainsRank: u.jeeMainsRank, jeeAdvancedRank: u.jeeAdvancedRank });
+// Email must be a valid address ending in "@gmail.com" or ".in"
+const isEmail = (e) => {
+  const s = String(e || "").toLowerCase().trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)) return false;
+  return s.endsWith("@gmail.com") || s.endsWith(".in");
+};
+const pub = (u) => ({ id: u._id, name: u.name, email: u.email, phone: u.phone, coaching: u.coaching, homeState: u.homeState, jeeMainsRank: u.jeeMainsRank, jeeAdvancedRank: u.jeeAdvancedRank });
 
 router.post("/signup", async (req, res) => {
   try {
-    let { name, email, phone, coaching, password, jeeMainsRank, jeeAdvancedRank } = req.body || {};
+    let { name, email, phone, coaching, homeState, password, jeeMainsRank, jeeAdvancedRank } = req.body || {};
     if (!name || !email || !password || !phone) return res.status(400).json({ error: "Name, email, phone and password are required" });
     if (!String(coaching || "").trim()) return res.status(400).json({ error: "Coaching is required" });
+    if (!String(homeState || "").trim()) return res.status(400).json({ error: "Home state is required" });
     email = String(email).toLowerCase().trim();
-    if (!isEmail(email)) return res.status(400).json({ error: "Please enter a valid email" });
+    if (!isEmail(email)) return res.status(400).json({ error: "Use a @gmail.com or .in email address" });
     if (String(password).length < 6) return res.status(400).json({ error: "Password must be at least 6 characters" });
     if (!/^\d{10}$/.test(String(phone))) return res.status(400).json({ error: "Enter a valid 10-digit phone number" });
     // Single round-trip duplicate check (email + phone) instead of two sequential queries
@@ -26,6 +32,7 @@ router.post("/signup", async (req, res) => {
     const user = await User.create({
       name: String(name).trim(), email, phone: String(phone),
       coaching: String(coaching || "").trim(),
+      homeState: String(homeState || "").trim(),
       jeeMainsRank:    jeeMainsRank    ? Number(jeeMainsRank)    : undefined,
       jeeAdvancedRank: jeeAdvancedRank ? Number(jeeAdvancedRank) : undefined,
       passwordHash, lastLogin: new Date(),
