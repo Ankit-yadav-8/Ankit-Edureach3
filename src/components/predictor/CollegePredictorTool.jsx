@@ -71,16 +71,22 @@ function RoundDetail({ row }) {
               : "Actual JoSAA 2024 opening & closing ranks for this program — verify on josaa.nic.in / csab.nic.in."}
           </p>
         </div>
-        <div>
-          <Bars
-            data={chart}
-            bars={[
-              { key: "Opening", label: "Opening", color: "#2EC4B6" },
-              { key: "Closing", label: "Closing", color: "#F97316" },
-            ]}
-            height={220} fmt={fmtRank} angle={-30}
-          />
-        </div>
+        {chart.length > 0 && (
+          <div className="cp-cutoff-chart">
+            <div className="cp-cutoff-chart-head">
+              <BarChart3 size={15} color="#F97316" />
+              <span>Opening vs Closing rank by round</span>
+            </div>
+            <Bars
+              data={chart}
+              bars={[
+                { key: "Opening", label: "Opening rank", color: "#2EC4B6" },
+                { key: "Closing", label: "Closing rank", color: "#F97316" },
+              ]}
+              height={230} fmt={fmtRank} angle={-30}
+            />
+          </div>
+        )}
       </div>
       <div style={{ display: "flex", gap: 10, marginTop: 8, flexWrap: "wrap" }}>
         <Link to={`/colleges/${row.slug}?tab=placements`} className="btn btn-ghost" style={{ fontSize: 13 }}>
@@ -326,29 +332,24 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
         </div>
       )}
 
-      {/* ── Summary charts ── */}
+      {/* ── Summary charts — side-by-side on desktop, stacked one-by-one on mobile ── */}
       {results && results.length > 0 && !loading && (
-        <div style={{ marginTop: 22 }}>
-          <p className="cp-swipe-hint">← Swipe sideways to see both charts →</p>
-          <div className="cp-summary-scroll">
-            <div className="grid-2 cp-results-summary" style={{ gap: 22 }}>
-              <div className="card">
-                <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Confidence breakdown</h4>
-                <PieWithLegend
-                  data={summary.dist}
-                  colors={["#2EC4B6", "#F97316", "#EF4444"]}
-                  height={200}
-                />
-              </div>
-              <div className="card">
-                <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Matches by institute type</h4>
-                <PieWithLegend
-                  data={summary.typeData}
-                  colors={["#e05a2b", "#2563eb", "#7c3aed", "#059669"]}
-                  height={200}
-                />
-              </div>
-            </div>
+        <div className="grid-2 cp-results-summary" style={{ marginTop: 22, gap: 22 }}>
+          <div className="card">
+            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Confidence breakdown</h4>
+            <PieWithLegend
+              data={summary.dist}
+              colors={["#2EC4B6", "#F97316", "#EF4444"]}
+              height={200}
+            />
+          </div>
+          <div className="card">
+            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Matches by institute type</h4>
+            <PieWithLegend
+              data={summary.typeData}
+              colors={["#e05a2b", "#2563eb", "#7c3aed", "#059669"]}
+              height={200}
+            />
           </div>
         </div>
       )}

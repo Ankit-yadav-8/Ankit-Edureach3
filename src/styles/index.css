@@ -2620,9 +2620,9 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   /* Expanded round-by-round detail stacks to full width. */
   .cp-detail-cell .grid-2     { grid-template-columns:1fr !important; }
 
-  /* ── Summary charts: keep both pies full-size and readable, scrolling
-     horizontally inside .cp-summary-scroll instead of being squished. ── */
-  .cp-results-summary         { grid-template-columns:repeat(2,1fr) !important; min-width:660px; }
+  /* ── Summary charts: two pies still fit comfortably side-by-side on tablets
+     / iPads, so keep the 2-column grid (no forced horizontal scroll). ── */
+  .cp-results-summary         { grid-template-columns:repeat(2,1fr) !important; }
 }
 
 /* ── Phones (≤640px): stack the College Predictor results as cards ── */
@@ -2646,11 +2646,13 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   table.cp-results-table thead th { padding:.6rem .65rem; font-size:.74rem; }
   table.cp-results-table tbody td { padding:.6rem .65rem; font-size:.82rem; }
 
-  /* Summary pie charts stay full-size & readable — scroll sideways inside
-     .cp-summary-scroll rather than shrinking. (NB: .cp-results-summary IS the
-     grid-2 element, so the old `.cp-results-summary .grid-2` descendant
-     selector never matched and is intentionally removed.) */
-  .cp-results-summary         { grid-template-columns:repeat(2,1fr) !important; min-width:600px; }
+  /* ── Summary pie charts on phones (iPhone / Android): stack ONE BY ONE in a
+     single column so BOTH "Confidence breakdown" and "Matches by institute
+     type" are fully visible without any sideways scrolling. ── */
+  .cp-results-summary         { grid-template-columns:1fr !important; }
+
+  /* Cutoff bar graph stacks under the round table at full width on phones. */
+  .cp-cutoff-chart            { margin-top:4px; }
 }
 
 /* Swipe hint is mobile-only — hidden on desktop where the full table fits */
@@ -2699,22 +2701,24 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 }
 .cp-results-table thead th:first-child { z-index: 4; }
 
-/* ── Same horizontal-scroll treatment for the summary charts so both the
-   "Confidence breakdown" and "Matches by institute type" pies stay full-size
-   and fully visible on tablets/phones instead of being squished. ── */
-.cp-summary-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--coral) #f3f0ec;
+/* ── Enhanced cutoff bar graph (Opening vs Closing rank by round) shown in the
+   expanded round-by-round detail. A soft gradient card + labelled header makes
+   the chart read as a deliberate, polished panel rather than a bare graph. ── */
+.cp-cutoff-chart {
+  background: linear-gradient(180deg, #fffdfb 0%, #fff7f0 100%);
+  border: 1px solid rgba(249,115,22,0.16);
+  border-radius: 14px;
+  padding: 12px 12px 6px;
+  box-shadow: 0 4px 18px rgba(13,27,62,0.05);
 }
-.cp-summary-scroll::-webkit-scrollbar { height: 8px; }
-.cp-summary-scroll::-webkit-scrollbar-track {
-  background: #f3f0ec;
-  border-radius: 8px;
+.cp-cutoff-chart-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "Sora", sans-serif;
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--navy);
+  margin-bottom: 6px;
+  padding-left: 2px;
 }
-.cp-summary-scroll::-webkit-scrollbar-thumb {
-  background: var(--coral);
-  border-radius: 8px;
-}
-.cp-summary-scroll::-webkit-scrollbar-thumb:hover { background: #d9641a; }
