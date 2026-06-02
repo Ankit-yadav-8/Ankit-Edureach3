@@ -6,7 +6,6 @@ import {
   ExternalLink, ArrowRight, Loader2, Info,
   Database, Layers, Trophy, Users, BarChart3,
 } from "lucide-react";
-import { TIER_COLOR } from "../../utils/collegePredictor.js";
 import { NotesBlock } from "./RankPredictorTool.jsx";
 import { COLLEGE_BY_SLUG, BRANCHES, CATEGORIES, STATES } from "../../data/colleges.js";
 import { useCollegePredictor } from "../../hooks/useCollegePredictor.js";
@@ -17,6 +16,12 @@ const TYPE_SETS = {
   "/jee-main":      ["NIT", "IIIT"],
   "/jee-advanced":  ["IIT"],
 };
+
+// Map each confidence tier to a valid badge colour class. (Using
+// TIER_COLOR's `var(--…)` values for an inline translucent background is
+// invalid CSS — `var(--green)22` silently drops — so the pill rendered with
+// no background and was nearly invisible, especially on mobile.)
+const TIER_BADGE = { Safe: "green", Moderate: "orange", Ambitious: "red" };
 
 const LOADING_TIPS = [
   "Scanning all college-branch combinations…",
@@ -335,16 +340,32 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
       {/* ── Summary charts — side-by-side on desktop, stacked one-by-one on mobile ── */}
       {results && results.length > 0 && !loading && (
         <div className="grid-2 cp-results-summary" style={{ marginTop: 22, gap: 22 }}>
-          <div className="card">
-            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Confidence breakdown</h4>
+          <div className="card cp-summary-card">
+            <div className="cp-summary-head">
+              <span className="cp-summary-icon" style={{ background: "rgba(46,196,182,.14)", color: "#0e9c90" }}>
+                <Crosshair size={16} />
+              </span>
+              <div>
+                <h4>Confidence breakdown</h4>
+                <p>How realistic each match is for your rank</p>
+              </div>
+            </div>
             <PieWithLegend
               data={summary.dist}
               colors={["#2EC4B6", "#F97316", "#EF4444"]}
               height={200}
             />
           </div>
-          <div className="card">
-            <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Matches by institute type</h4>
+          <div className="card cp-summary-card">
+            <div className="cp-summary-head">
+              <span className="cp-summary-icon" style={{ background: "rgba(249,115,22,.12)", color: "#e05a2b" }}>
+                <Layers size={16} />
+              </span>
+              <div>
+                <h4>Matches by institute type</h4>
+                <p>Spread of your options across NIT / IIIT / IIT</p>
+              </div>
+            </div>
             <PieWithLegend
               data={summary.typeData}
               colors={["#e05a2b", "#2563eb", "#7c3aed", "#059669"]}
@@ -417,7 +438,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
                           <td data-label="Closing rank">{fmtRank(r.closing)}</td>
                           <td data-label="Avg package">{fmtINR(r.avgPackage)}</td>
                           <td data-label="Confidence">
-                            <span className="badge" style={{ background: `${TIER_COLOR[r.tier]}22`, color: TIER_COLOR[r.tier] }}>
+                            <span className={`badge ${TIER_BADGE[r.tier] || "teal"} cp-tier-badge`}>
                               {r.tier}
                             </span>
                           </td>

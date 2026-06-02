@@ -286,7 +286,7 @@ export function DonutLegend({
               opacity: activeIdx !== null && !isActive ? 0.55 : 1,
             }}
           >
-            <span style={{ display: "flex", alignItems: "center", gap: 9 }}>
+            <span style={{ display: "flex", alignItems: "center", gap: 9, minWidth: 0, flex: 1 }}>
               <span style={{
                 width: 11, height: 11, borderRadius: 3,
                 background: isActive ? hoverColor(base) : base,
@@ -297,11 +297,12 @@ export function DonutLegend({
               <span style={{
                 fontSize: 12.5, color: isActive ? "var(--navy, #0d1b3e)" : "#6b7280",
                 fontWeight: isActive ? 600 : 400,
+                overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>
                 {d.name}
               </span>
             </span>
-            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
               <span style={{
                 fontSize: 10.5, color: "#d1d5db", fontWeight: 600,
                 background: "#f9fafb", borderRadius: 20,

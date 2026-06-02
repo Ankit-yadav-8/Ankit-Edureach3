@@ -2639,16 +2639,70 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   table.data-table.rd-table td { padding:.5rem .55rem; font-size:11.5px; }
   .rd-grid                    { gap:14px !important; }
 
-  /* College Predictor results → keep the desktop table look on phones, but
-     denser cells + a smaller min-width so less swiping is needed. The scroll,
-     pinned college column and swipe hint are inherited from the ≤1024px block. */
-  table.cp-results-table      { min-width:600px; }
-  table.cp-results-table thead th { padding:.6rem .65rem; font-size:.74rem; }
-  table.cp-results-table tbody td { padding:.6rem .65rem; font-size:.82rem; }
+  /* ── College Predictor results → STACKED CARDS on phones (iPhone / Android).
+     The horizontal-scroll table hid the Confidence column off-screen; here each
+     option becomes a self-contained card so college, branch, type, closing rank,
+     package AND confidence are all visible at once — no sideways swiping. ── */
+  .cp-results-scroll          { overflow:visible; max-height:none; }
+  .cp-swipe-hint              { display:none; }            /* nothing to swipe now */
 
-  /* ── Summary pie charts on phones (iPhone / Android): stack ONE BY ONE in a
-     single column so BOTH "Confidence breakdown" and "Matches by institute
-     type" are fully visible without any sideways scrolling. ── */
+  table.cp-results-table      { min-width:0; width:100%; display:block; }
+  .cp-results-table thead     { display:none; }            /* labels move into each cell */
+  .cp-results-table tbody     { display:block; }
+
+  /* Each result row → a card */
+  .cp-results-table tbody tr:not(.cp-detail-row) {
+    display:block;
+    padding:14px 16px;
+    margin:0 0 12px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:#fff !important;
+    box-shadow:0 2px 12px rgba(13,27,62,.06);
+  }
+  .cp-results-table tbody tr:nth-child(even) { background:#fff !important; }
+
+  /* Each cell → a label : value row */
+  .cp-results-table tbody td {
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:7px 0 !important; border:none !important;
+    font-size:14px !important;
+    /* undo the pinned-first-column treatment from the ≤1024px block */
+    position:static !important; box-shadow:none !important; background:transparent !important;
+  }
+  .cp-results-table tbody td::before {
+    content:attr(data-label);
+    font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--muted); flex-shrink:0;
+  }
+  .cp-results-table tbody td > *:last-child { text-align:right; }
+
+  /* College name = card header, full width, no label prefix */
+  .cp-results-table tbody td[data-label="College"] {
+    display:block; padding:0 0 10px !important; margin-bottom:6px;
+    border-bottom:1px solid var(--line) !important;
+  }
+  .cp-results-table tbody td[data-label="College"]::before { content:none; }
+  .cp-results-table tbody td[data-label="College"] a { font-size:15px; }
+
+  /* Chevron row → a clear full-width "tap to expand" affordance */
+  .cp-results-table tbody td.cp-expand-cell {
+    justify-content:center; gap:6px;
+    margin-top:6px; padding-top:11px !important;
+    border-top:1px solid var(--line) !important;
+    color:var(--coral); font-weight:700; font-size:12.5px;
+  }
+  .cp-results-table tbody td.cp-expand-cell::before {
+    content:"Round-by-round cutoffs"; color:var(--coral); text-transform:none; letter-spacing:0;
+  }
+
+  /* Expanded detail spans the full card width */
+  .cp-results-table tbody tr.cp-detail-row,
+  .cp-results-table tbody td.cp-detail-cell { display:block; width:100%; }
+
+  /* ── Summary pie charts: stack ONE BY ONE in a single column so BOTH
+     "Confidence breakdown" and "Matches by institute type" are fully visible
+     without any sideways scrolling. ── */
   .cp-results-summary         { grid-template-columns:1fr !important; }
 
   /* Cutoff bar graph stacks under the round table at full width on phones. */
@@ -2721,4 +2775,42 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   color: var(--navy);
   margin-bottom: 6px;
   padding-left: 2px;
+}
+
+/* ── Summary chart cards (Confidence breakdown / Matches by institute type) ──
+   A small coloured icon + title + one-line subtitle reads as a polished panel
+   and gives the two pies a consistent, scannable header. ── */
+.cp-summary-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-bottom: 14px;
+}
+.cp-summary-icon {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: 10px;
+}
+.cp-summary-head h4 {
+  font-family: "Sora", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--navy);
+  line-height: 1.25;
+  margin: 0;
+}
+.cp-summary-head p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* Confidence pill: a touch larger + rounded so Safe / Moderate / Ambitious read
+   clearly on phones (replaces the old invalid translucent inline background). */
+.cp-tier-badge {
+  font-size: 0.72rem;
+  padding: 0.32rem 0.7rem;
+  border-radius: var(--radius-pill);
 }
