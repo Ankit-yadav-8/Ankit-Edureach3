@@ -389,6 +389,24 @@ export default function Navbar({ onSearch }) {
               )}
 
               {navItems.map((item) => (
+                item.feature ? (
+                  <button
+                    key={item.label}
+                    onClick={() => goHash(item.to)}
+                    style={{
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                      width: "100%", margin: "10px 0", padding: "13px 16px",
+                      borderRadius: 12, border: "none", cursor: "pointer",
+                      color: "#fff", fontWeight: 800, fontSize: "0.98rem",
+                      background: "linear-gradient(120deg, #F47B20 0%, #f97316 40%, #fb923c 60%, #F47B20 100%)",
+                      backgroundSize: "200% auto",
+                      boxShadow: "0 8px 20px -8px rgba(244,123,32,.7)",
+                      animation: "brandGradient 3s linear infinite",
+                    }}
+                  >
+                    <Sparkles size={16} /> {item.label}
+                  </button>
+                ) : (
                 <div key={item.label} style={{ borderBottom: "1px solid var(--gray-light)", padding: "0.5rem 0" }}>
                   <button
                     onClick={() => goHash(item.to || item.base)}
@@ -410,6 +428,7 @@ export default function Navbar({ onSearch }) {
                     </div>
                   )}
                 </div>
+                )
               ))}
 
               <Link
