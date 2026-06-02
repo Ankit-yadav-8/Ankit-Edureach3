@@ -2162,7 +2162,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   /* Single column at 360-375px */
   .college-grid      { grid-template-columns:1fr !important; }
   .footer-grid       { grid-template-columns:1fr !important; }
-  .grid-4            { grid-template-columns:repeat(2,1fr) !important; }
+  .grid-4            { grid-template-columns:1fr !important; }
 }
 
 /* ── iPad mini 6th gen portrait (744px) + large phone landscape ── */
