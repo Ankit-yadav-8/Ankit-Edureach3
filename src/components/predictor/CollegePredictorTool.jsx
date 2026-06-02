@@ -8,12 +8,7 @@ import {
 } from "lucide-react";
 import { TIER_COLOR } from "../../utils/collegePredictor.js";
 import { NotesBlock } from "./RankPredictorTool.jsx";
-import { expandRounds } from "../../utils/cutoffEngine.js";
-import { loadPredictorDB } from "../../utils/realCutoffEngine.js";
 import { COLLEGE_BY_SLUG, BRANCHES, CATEGORIES, STATES } from "../../data/colleges.js";
-
-// Pre-warm 2024 cutoff data for round detail display
-loadPredictorDB();
 import { useCollegePredictor } from "../../hooks/useCollegePredictor.js";
 import { Bars, PieWithLegend } from "../Charts.jsx";
 import { fmtRank, fmtINR } from "../../utils/format.js";
@@ -30,15 +25,26 @@ const LOADING_TIPS = [
   "Ranking results by NIRF & branch value…",
 ];
 
-function RoundDetail({ slug, branchCode, category }) {
-  const college = COLLEGE_BY_SLUG[slug];
-  const rounds  = expandRounds(college, branchCode, category);
-  const chart   = rounds.map((r) => ({ name: r.round, Opening: r.opening, Closing: r.closing }));
+function RoundDetail({ row }) {
+  const college   = COLLEGE_BY_SLUG[row.slug];
+  const rounds    = row.roundData ?? [];
+  const chart     = rounds.map((r) => ({ name: r.round, Opening: r.opening, Closing: r.closing }));
+  const estimated = row.relaxMultiplier && row.relaxMultiplier !== 1;
 
   return (
     <div style={{ padding: "16px 4px 4px" }}>
+      {row.fullProgramName && (
+        <p style={{ fontSize: 12.5, color: "var(--navy)", fontWeight: 600, marginBottom: 10 }}>
+          {row.fullProgramName}
+        </p>
+      )}
       <div className="grid-2" style={{ gap: 18, alignItems: "start" }}>
         <div style={{ overflowX: "auto" }}>
+          {rounds.length === 0 ? (
+            <p style={{ fontSize: 12.5, color: "var(--muted)" }}>
+              Round-by-round data unavailable for this program.
+            </p>
+          ) : (
           <table className="data-table" style={{ fontSize: 12.5 }}>
             <thead>
               <tr><th>Round</th><th>Stage</th><th>Opening</th><th>Closing</th></tr>
@@ -58,10 +64,11 @@ function RoundDetail({ slug, branchCode, category }) {
               ))}
             </tbody>
           </table>
+          )}
           <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 8 }}>
-            {college.type === "IIT"
-              ? "6 JoSAA rounds (IITs have no CSAB). Illustrative ranks modelled from base cutoffs — verify on josaa.nic.in."
-              : "6 JoSAA + 2 CSAB special rounds. Illustrative ranks modelled from base cutoffs — verify on josaa.nic.in / csab.nic.in."}
+            {estimated
+              ? "Closing ranks are estimated by relaxing JoSAA 2024 general-pool cutoffs for the selected quota — verify on josaa.nic.in / csab.nic.in."
+              : "Actual JoSAA 2024 opening & closing ranks for this program — verify on josaa.nic.in / csab.nic.in."}
           </p>
         </div>
         <div>
@@ -418,7 +425,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
                                   exit={{ height: 0, opacity: 0 }}
                                   style={{ overflow: "hidden", padding: "0 20px" }}
                                 >
-                                  <RoundDetail slug={r.slug} branchCode={r.branchCode} category={r.category} />
+                                  <RoundDetail row={r} />
                                 </motion.div>
                               </td>
                             </tr>

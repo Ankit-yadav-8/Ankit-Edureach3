@@ -127,6 +127,9 @@ const PROG_BRANCH_MAP = [
     "materials science", "materials engineering"], "mme"],
   // Aerospace
   [["aerospace engineering", "aeronautical engineering"], "aero"],
+  // Ocean / Naval — checked BEFORE Architecture so "Naval Architecture and
+  // Ocean Engineering" isn't swallowed by the bare "architecture" substring.
+  [["ocean engineering", "naval architecture"], "ocean"],
   // Architecture / Planning
   [["architecture", "b.arch", "planning"], "arch"],
   // Engineering Physics
@@ -147,8 +150,6 @@ const PROG_BRANCH_MAP = [
   // Instrumentation
   [["instrumentation and control engineering", "instrumentation engineering",
     "electronics and instrumentation"], "instr"],
-  // Ocean / Naval
-  [["ocean engineering", "naval architecture"], "ocean"],
   // Agriculture (incl. KGP's "Agricultural and Food Engineering")
   [["agricultural and food", "agricultural engineering", "agriculture engineering",
     "agricultural"], "agri"],
@@ -365,6 +366,17 @@ export function predictColleges({
         ...rd,
         closing: Math.round(rd.closing * totalRelax),
       }));
+      // Round-by-round data the UI shows when a result row is expanded. Built
+      // from the SAME rounds used to score this row (exact CSV program, correct
+      // gender pool, same relaxation) so the detail table always matches the
+      // row's closing rank — and works for niche/dual-degree programs that the
+      // old branch-code re-lookup couldn't resolve.
+      const roundData = rounds.map((rd) => ({
+        round:   rd.round,
+        stage:   rd.stage,
+        opening: rd.opening != null ? Math.round(rd.opening * totalRelax) : null,
+        closing: rd.closing != null ? Math.round(rd.closing * totalRelax) : null,
+      }));
       const admitRound = estimateAdmitRound(relaxedRounds, userRank, effFinalClosing);
       const rankGap    = effFinalClosing - userRank;
 
@@ -377,6 +389,8 @@ export function predictColleges({
         college:           college.name,
         short:             college.short,
         type:              TYPE_LABEL[college.type] || college.type,
+        fullProgramName:   progName,
+        roundData,
         nirf:              college.nirf,
         state:             college.state,
         isHomeState:       isHome,
