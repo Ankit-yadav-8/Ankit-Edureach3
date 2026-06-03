@@ -13,11 +13,11 @@ import {
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════
-   DIFFICULTY DATA  (2021–2025)
+   DIFFICULTY DATA  (2021–2026)
    Paper 1 & Paper 2 difficulty indices (0 = easiest, 100 = hardest).
    Mathematics is the toughest subject every year.
 ═══════════════════════════════════════════════════════════ */
-const DIFFICULTY_YEARS = [2021, 2022, 2023, 2024, 2025];
+const DIFFICULTY_YEARS = [2021, 2022, 2023, 2024, 2025, 2026];
 
 const DIFFICULTY_DATA = {
   2021: {
@@ -70,6 +70,16 @@ const DIFFICULTY_DATA = {
       "Mathematics was exceptionally tough in Paper 2 with unconventional question types. Physics was application-based and lengthier in the second sitting. Chemistry remained the most scoring subject, but Paper 2 stayed the harder paper overall.",
     tags: ["Paper 2 tougher", "Maths unconventional", "Physics application-based"],
   },
+  2026: {
+    p1: { phy: 68, chem: 52, math: 74 },
+    p2: { phy: 74, chem: 58, math: 82 },
+    p1Label: "Easy-Moderate",
+    p2Label: "Moderate-Hard",
+    toughest: "Mathematics",
+    keyTrend:
+      "A clear relief from 2025 — IIT Roorkee set a more balanced paper. Paper 1 was Easy to Moderate with straightforward, concept-first questions, while Paper 2 was Moderate to Hard but leaned more towards the moderate side. Overall easier than 2025, yet a notch tougher than the relatively easy 2024 paper — reflected in the CRL qualifying cutoff rising to 92 marks (between 2025's 74 and 2024's 109). Chemistry stayed the most scoring subject and Mathematics remained the toughest, though noticeably more approachable than 2025.",
+    tags: ["Easier than 2025", "Paper 1 easy-moderate", "Paper 2 leans moderate", "CRL cutoff 92"],
+  },
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -87,7 +97,7 @@ const ORGANISING_IITS = {
   2023: { iit: "IIT Guwahati",  short: "IITG",   city: "Guwahati, AS",    color: "#16A34A", setterNote: "Unconventional Maths problem types drove difficulty to a multi-year high." },
   2024: { iit: "IIT Madras",    short: "IITM",   city: "Chennai, TN",     color: "#EA580C", setterNote: "Physics turned unusually demanding; rich application-based framing." },
   2025: { iit: "IIT Kanpur",    short: "IITK",   city: "Kanpur, UP",      color: "#0EA5A4", setterNote: "Lengthy, unconventional Maths peaking in Paper 2; Chemistry stayed the scoring section." },
-  2026: { iit: "IIT Roorkee",   short: "IITR",   city: "Roorkee, UK",     color: "#2563EB", setterNote: "Conducting JEE Advanced 2026 — expected to keep the 3-subject, dual-paper format." },
+  2026: { iit: "IIT Roorkee",   short: "IITR",   city: "Roorkee, UK",     color: "#2563EB", setterNote: "Set a more balanced paper — Paper 1 Easy-Moderate and Paper 2 leaning moderate; easier than 2025 but tougher than 2024." },
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -135,7 +145,7 @@ const TREND_MATHS     = DIFFICULTY_YEARS.map((y) => ({ year: y, Paper1: DIFFICUL
 /* ═══════════════════════════════════════════════════════════
    JEE ADVANCED QUALIFYING CUTOFF MARKS (out of 360)
    Minimum aggregate marks to appear in the merit list.
-   Source: jeeadv.ac.in official cutoff notifications 2021–2025.
+   Source: jeeadv.ac.in official cutoff notifications 2021–2026.
    NOT the JEE Main percentile cutoff.
 ═══════════════════════════════════════════════════════════ */
 const QUALIFYING_TREND = [
@@ -144,6 +154,7 @@ const QUALIFYING_TREND = [
   { year: 2023, crl: 86,  obc_ews: 77, sc_st_pwd: 43 },
   { year: 2024, crl: 109, obc_ews: 98, sc_st_pwd: 54 },
   { year: 2025, crl: 74,  obc_ews: 66, sc_st_pwd: 37 },
+  { year: 2026, crl: 92,  obc_ews: 82, sc_st_pwd: 46 },
 ];
 
 /* Top IIT closing ranks (JoSAA 2025 Round 6) */
@@ -503,7 +514,7 @@ function MarksBar({ label, value, color, maxValue = 120 }) {
 ════════════════════════════════════════════════════════════ */
 export default function JeeAdvanced() {
   const exam = EXAM_BY_SLUG["jee-advanced"];
-  const [selectedYear, setSelectedYear] = useState(2025);
+  const [selectedYear, setSelectedYear] = useState(2026);
   const [animateBars, setAnimateBars] = useState(true);
   const d = DIFFICULTY_DATA[selectedYear];
 
@@ -714,7 +725,7 @@ export default function JeeAdvanced() {
         <div className="container">
 
           <div className="title-bar">
-            <span className="eyebrow">Paper Analysis · 2021–2025</span>
+            <span className="eyebrow">Paper Analysis · 2021–2026</span>
             <h2 className="section-title">Paper-wise Difficulty &amp; the IIT Behind Each Year</h2>
             <p className="section-sub">
               Select a year to see <strong>which IIT set the paper</strong> and compare Physics, Chemistry &amp;
@@ -907,7 +918,7 @@ export default function JeeAdvanced() {
 
           {/* ── Year-wise Summary Table ── */}
           <div>
-            <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, marginBottom: 14 }}>📋 Year-wise Difficulty Summary (2021–2025)</h4>
+            <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, marginBottom: 14 }}>📋 Year-wise Difficulty Summary (2021–2026)</h4>
             <div className="card" style={{ overflowX: "auto" }}>
               <table className="data-table" style={{ minWidth: 700 }}>
                 <thead>
@@ -1015,15 +1026,15 @@ export default function JeeAdvanced() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          5-YEAR DIFFICULTY TREND
+          6-YEAR DIFFICULTY TREND
       ════════════════════════════════════════════════════════ */}
       <section className="section" style={{ background: "var(--sky)", scrollMarginTop: 90 }}>
         <div className="container">
           <div className="title-bar">
-            <span className="eyebrow">5-Year Trend</span>
-            <h2 className="section-title">Subject Difficulty Trend (2021–2025)</h2>
+            <span className="eyebrow">6-Year Trend</span>
+            <h2 className="section-title">Subject Difficulty Trend (2021–2026)</h2>
             <p className="section-sub">
-              How Paper 1 &amp; Paper 2 difficulty has shifted per subject over 5 years.
+              How Paper 1 &amp; Paper 2 difficulty has shifted per subject over 6 years.
               Mathematics toughest every year; Chemistry consistently most scoring.
             </p>
           </div>
@@ -1062,9 +1073,9 @@ export default function JeeAdvanced() {
           {/* Trend insight mini cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }}>
             {[
-              { icon: "⚛", color: "#F97316", title: "Physics",   stat: "↑ +10 pts", sub: "Index rose from ~78 (2021) to ~83 (2025 P2) — Modern Physics and EMI harder each year, peaking in Paper 2" },
-              { icon: "⚗", color: "#0EA5A4", title: "Chemistry", stat: "↑ +8 pts",  sub: "Mild increase overall — still the most scoring; focus on Named Reactions and Physical Chem" },
-              { icon: "∑",  color: "#7C3AED", title: "Maths",    stat: "↑ +5 pts",  sub: "Consistently toughest — multi-correct calculus and 3D geometry questions are critical" },
+              { icon: "⚛", color: "#F97316", title: "Physics",   stat: "↓ eased in 2026", sub: "Climbed to a ~83 (2025 P2) peak, then eased to ~74 in 2026 as Roorkee set a more application-friendly paper" },
+              { icon: "⚗", color: "#0EA5A4", title: "Chemistry", stat: "Most scoring",    sub: "Stayed the most scoring subject — 2026 a touch easier than 2025; focus on Named Reactions and Physical Chem" },
+              { icon: "∑",  color: "#7C3AED", title: "Maths",    stat: "Still #1 hardest", sub: "Toughest every year incl. 2026, though noticeably more approachable than 2025's peak — calculus & 3D geometry still decisive" },
             ].map(({ icon, color, title, stat, sub }) => (
               <div key={title} className="card" style={{ borderLeft: `4px solid ${color}`, padding: "14px 18px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
@@ -1087,8 +1098,8 @@ export default function JeeAdvanced() {
       <section id="trend" className="section" style={{ scrollMarginTop: 90 }}>
         <div className="container">
           <div className="title-bar">
-            <span className="eyebrow">Cutoff Trends · 2021–2025</span>
-            <h2 className="section-title">JEE Advanced — 5-Year Aggregate Qualifying Cutoff</h2>
+            <span className="eyebrow">Cutoff Trends · 2021–2026</span>
+            <h2 className="section-title">JEE Advanced — 6-Year Aggregate Qualifying Cutoff</h2>
             <p className="section-sub">
               Official minimum aggregate marks (out of 360, Paper 1 + Paper 2 combined) required to secure a rank in the JEE Advanced merit list.
               <strong> Source: jeeadv.ac.in official cutoff notifications.</strong>
@@ -1111,10 +1122,10 @@ export default function JeeAdvanced() {
                 <div key={cat} className="marks-card fade-up" style={{ borderTop: `4px solid ${color}` }}>
                   <div style={{ fontSize: 10, color: "var(--muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: .5, marginBottom: 4 }}>{cat}</div>
                   <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 26, color, lineHeight: 1 }}>{val}</div>
-                  <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 8 }}>marks (2025) / 360</div>
+                  <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 8 }}>marks ({latest.year}) / 360</div>
                   <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 700, color: isUp ? "#EF4444" : "#15A06E" }}>
                     {isUp ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
-                    {isUp ? "+" : ""}{diff} vs 2024
+                    {isUp ? "+" : ""}{diff} vs {prev.year}
                   </div>
                   <div style={{ marginTop: 8, height: 6, borderRadius: 3, background: "#e5e7eb", overflow: "hidden" }}>
                     <div style={{ height: "100%", width: `${(val / 180) * 100}%`, background: color, borderRadius: 3 }} />
@@ -1152,11 +1163,11 @@ export default function JeeAdvanced() {
             {/* Per-category mini bars for latest year */}
             <div style={{ marginBottom: 20, padding: "16px 20px", background: "var(--sky)", borderRadius: 12, border: "1px solid var(--line)" }}>
               <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, marginBottom: 14, color: "var(--navy)" }}>
-                📊 2025 Qualifying Marks — Category Visual (out of 360)
+                📊 2026 Qualifying Marks — Category Visual (out of 360)
               </div>
-              <MarksBar label="CRL (General)"  value={74} color="#7C3AED" maxValue={180} />
-              <MarksBar label="OBC-NCL / EWS"  value={66} color="#F97316" maxValue={180} />
-              <MarksBar label="SC / ST / PwD"  value={37} color="#0EA5A4" maxValue={180} />
+              <MarksBar label="CRL (General)"  value={92} color="#7C3AED" maxValue={180} />
+              <MarksBar label="OBC-NCL / EWS"  value={82} color="#F97316" maxValue={180} />
+              <MarksBar label="SC / ST / PwD"  value={46} color="#0EA5A4" maxValue={180} />
             </div>
 
             <Trend
@@ -1170,17 +1181,23 @@ export default function JeeAdvanced() {
             />
 
             {/* Key insights */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12, marginTop: 20 }}>
               <div style={{ padding: "12px 16px", background: "#fef2f2", borderRadius: 10, border: "1px solid #fca5a5" }}>
                 <div style={{ fontWeight: 700, fontSize: 12, color: "#EF4444", marginBottom: 4 }}>📈 2024 peak cutoff</div>
                 <div style={{ fontSize: 12, color: "#7f1d1d", lineHeight: 1.5 }}>
-                  CRL cutoff reached 109 marks in 2024 — the highest in 5 years, reflecting an easier paper that year.
+                  CRL cutoff reached 109 marks in 2024 — the highest in 6 years, reflecting an easier paper that year.
                 </div>
               </div>
               <div style={{ padding: "12px 16px", background: "#f0fdf4", borderRadius: 10, border: "1px solid #86efac" }}>
                 <div style={{ fontWeight: 700, fontSize: 12, color: "#15A06E", marginBottom: 4 }}>📉 2025 sharp drop</div>
                 <div style={{ fontSize: 12, color: "#14532d", lineHeight: 1.5 }}>
                   2025 saw a significant dip to 74 marks (CRL) — a ~32% drop from 2024 due to markedly harder papers.
+                </div>
+              </div>
+              <div style={{ padding: "12px 16px", background: "#faf5ff", borderRadius: 10, border: "1px solid #c4b5fd" }}>
+                <div style={{ fontWeight: 700, fontSize: 12, color: "#7C3AED", marginBottom: 4 }}>📊 2026 moderate rebound</div>
+                <div style={{ fontSize: 12, color: "#4c1d95", lineHeight: 1.5 }}>
+                  2026 recovered to 92 marks (CRL) as IIT Roorkee set an easier-than-2025 paper — sitting between 2024 (109) and 2025 (74).
                 </div>
               </div>
             </div>
