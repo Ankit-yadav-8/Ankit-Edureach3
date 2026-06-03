@@ -378,24 +378,22 @@ export default function CollegeDetail() {
                   <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 12 }}>
                     Cost summary
                   </h4>
-                  <table className="data-table">
-                    <tbody>
-                      {feeData.map((f) => (
-                        <tr key={f.name}>
-                          <td>{f.name}</td>
-                          <td style={{ textAlign: "right" }}>{fmtINR(f.value)}</td>
-                        </tr>
-                      ))}
-                      <tr style={{ fontWeight: 800 }}>
-                        <td>Total / year</td>
-                        <td style={{ textAlign: "right", color: "var(--coral)" }}>{fmtINR(totalFee)}</td>
-                      </tr>
-                      <tr style={{ fontWeight: 800 }}>
-                        <td>Approx 4-year cost</td>
-                        <td style={{ textAlign: "right", color: "var(--navy)" }}>{fmtINR(totalFee * 4)}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div className="fee-rows">
+                    {feeData.map((f) => (
+                      <div key={f.name} className="fee-row">
+                        <span className="fee-row-label">{f.name}</span>
+                        <span className="fee-row-value">{fmtINR(f.value)}</span>
+                      </div>
+                    ))}
+                    <div className="fee-row fee-row-total">
+                      <span className="fee-row-label">Total / year</span>
+                      <span className="fee-row-value" style={{ color: "var(--coral)" }}>{fmtINR(totalFee)}</span>
+                    </div>
+                    <div className="fee-row fee-row-total">
+                      <span className="fee-row-label">Approx 4-year cost</span>
+                      <span className="fee-row-value" style={{ color: "var(--navy)" }}>{fmtINR(totalFee * 4)}</span>
+                    </div>
+                  </div>
                   <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 12 }}>
                     Scholarships, fee waivers (SC/ST/EWS) and mess refunds can significantly
                     reduce the net cost.

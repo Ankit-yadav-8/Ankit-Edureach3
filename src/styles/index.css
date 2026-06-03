@@ -698,6 +698,40 @@ input:focus,select:focus,textarea:focus { outline:2px solid rgba(244,123,32,.45)
   }
 }
 
+/* ROI calculator — responsive input grid + result metric cards. Auto-fit keeps
+   inputs comfortably wide and collapses cleanly to one column on phones. */
+.roi-grid {
+  display:grid; gap:12px;
+  grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
+}
+.roi-results {
+  display:grid; gap:12px;
+  grid-template-columns:repeat(4, 1fr);
+}
+@media (max-width:760px) { .roi-results { grid-template-columns:repeat(2, 1fr); } }
+@media (max-width:380px) {
+  .roi-grid { grid-template-columns:1fr; }
+  .roi-results { grid-template-columns:1fr; }
+}
+
+/* Fee cost-summary rows — a lightweight 2-column list that never overflows on
+   phones (unlike the wide scrolling .data-table used for the seat matrix). */
+.fee-rows { display:flex; flex-direction:column; }
+.fee-row {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:.7rem .2rem; border-bottom:1px solid rgba(0,0,0,.07);
+}
+.fee-row:last-child { border-bottom:none; }
+.fee-row-label { font-size:.9rem; color:#374151; }
+.fee-row-value { font-size:.9rem; font-weight:600; color:#1a1a2e; text-align:right; white-space:nowrap; }
+.fee-row-total { font-weight:800; }
+.fee-row-total .fee-row-label { font-weight:800; color:#1a1a2e; }
+.fee-row-total .fee-row-value { font-weight:800; }
+@media (max-width:480px) {
+  .fee-row { padding:.62rem .1rem; }
+  .fee-row-label, .fee-row-value { font-size:.86rem; }
+}
+
 table.data-table { width:100%; border-collapse:collapse; background: #fff; min-width:640px; }
 table.data-table thead th { background: #fff7f0; color: #1a1a2e; border-bottom:2px solid var(--coral); text-align:left; padding:.9rem 1rem; font-size:.82rem; font-weight:700; position:sticky; top:0; }
 table.data-table tbody td { padding:.85rem 1rem; font-size:.9rem; border-bottom: 1px solid rgba(0,0,0,.07); color: #374151; }

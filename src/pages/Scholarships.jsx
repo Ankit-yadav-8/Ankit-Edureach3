@@ -3,6 +3,7 @@ import { Award, ExternalLink, Landmark, Percent } from "lucide-react";
 import { SCHOLARSHIPS } from "../data/scholarships.js";
 import { fmtINR } from "../utils/format.js";
 import Reveal from "../components/Reveal.jsx";
+import ROICalculator from "../components/ROICalculator.jsx";
 
 function EMICalculator() {
   const [amount, setAmount] = useState(800000);
@@ -54,6 +55,7 @@ export default function Scholarships() {
       </section>
 
       <div className="container section" style={{ display: "flex", flexDirection: "column", gap: 26 }}>
+        <ROICalculator />
         <EMICalculator />
 
         <div>
