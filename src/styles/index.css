@@ -783,6 +783,45 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
 .btn-predict { display:inline-flex; align-items:center; gap:.5rem; background:linear-gradient(135deg,var(--coral),var(--coral-light)); color:#fff; font-size:.96rem; font-weight:700; padding:.85rem 1.8rem; border-radius:var(--radius-pill); box-shadow:var(--shadow-coral); transition:var(--transition); border:none; cursor:pointer; font-family:inherit; }
 .btn-predict:hover { transform:translateY(-2px) scale(1.03); box-shadow:0 16px 36px rgba(249,115,22,.42); }
 
+/* ── College-predictor data-vintage banner ── */
+.cp-data-banner {
+  display:flex; align-items:flex-start; gap:.7rem;
+  background:linear-gradient(95deg,rgba(244,123,32,.14),rgba(46,196,182,.10) 55%,rgba(244,123,32,.14));
+  border:1.5px solid rgba(249,115,22,.32);
+  border-radius:14px; padding:.95rem 1.3rem; margin-bottom:1.1rem;
+  box-shadow:0 3px 14px rgba(244,123,32,.10);
+}
+.cp-data-banner-icon { color:#e05a2b; margin-top:2px; flex-shrink:0; }
+.cp-data-banner p { margin:0; font-size:.9rem; line-height:1.55; color:#5a3410; }
+.cp-data-banner strong { color:#7a3000; font-weight:800; }
+.cp-data-banner-cta {
+  font-weight:800;
+  background:linear-gradient(90deg,#F47B20,#ef4444 45%,#7c3aed 90%);
+  background-size:200% auto;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  white-space:nowrap; animation:cpHueShift 5s linear infinite;
+}
+@keyframes cpHueShift { to { background-position:200% center; } }
+
+/* ── "Explore full college details" colour-effect button ── */
+.cp-explore-btn {
+  position:relative; overflow:hidden; border:none; color:#fff; font-weight:700;
+  background:linear-gradient(115deg,#F47B20,#ef4444 40%,#7c3aed 75%,#F47B20 100%);
+  background-size:240% auto;
+  box-shadow:0 4px 16px rgba(124,58,237,.28);
+  animation:cpExploreFlow 6s linear infinite;
+  transition:transform .18s, box-shadow .18s;
+}
+.cp-explore-btn:hover {
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 12px 30px rgba(124,58,237,.42), 0 0 26px rgba(244,123,32,.32);
+}
+@keyframes cpExploreFlow { to { background-position:240% center; } }
+@media (prefers-reduced-motion: reduce) {
+  .cp-data-banner-cta, .cp-explore-btn { animation:none; }
+}
+
 /* College Predictor + Counselling card layout */
 @media (max-width: 980px) {
   /* Stack the predictor and the counselling card. The inline `align-items:

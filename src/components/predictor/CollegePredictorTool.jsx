@@ -97,8 +97,8 @@ function RoundDetail({ row }) {
         <Link to={`/colleges/${row.slug}?tab=placements`} className="btn btn-ghost" style={{ fontSize: 13 }}>
           Placements <ArrowRight size={14} />
         </Link>
-        <Link to={`/colleges/${row.slug}`} className="btn btn-coral" style={{ fontSize: 13 }}>
-          Full college details <ArrowRight size={14} />
+        <Link to={`/colleges/${row.slug}`} className="btn cp-explore-btn" style={{ fontSize: 13 }}>
+          Explore full college details <ArrowRight size={14} />
         </Link>
         {college?.website && (
         <a href={college.website} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 13 }}>
@@ -166,6 +166,18 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
 
   return (
     <div>
+      {/* ── Data-vintage notice ── */}
+      <div className="cp-data-banner">
+        <Database size={18} className="cp-data-banner-icon" />
+        <p>
+          <strong>Predictions are based on official JoSAA 2024 cutoff data.</strong>{" "}
+          To explore the complete year-on-year data from{" "}
+          <strong>2018&nbsp;to&nbsp;2025</strong>, open{" "}
+          <span className="cp-data-banner-cta">Explore full college details</span>{" "}
+          on any result below.
+        </p>
+      </div>
+
       {/* ── Form ── */}
       <div className="card">
         <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.2rem", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
