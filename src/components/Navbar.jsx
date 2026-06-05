@@ -12,33 +12,46 @@ import { useAuth } from "../auth/AuthContext.jsx";
 
 const GATE_TABS = false;
 
-const JEE_RESOURCES = [
-  { label: "Mathematics (19 chapters)", to: "/jee-resources?subject=math",     icon: Sigma,        tag: "Algebra · Calculus · Geometry" },
-  { label: "Physics (25 chapters)",     to: "/jee-resources?subject=physics",  icon: Zap,          tag: "Mechanics · Electrodynamics" },
-  { label: "Chemistry (29 chapters)",   to: "/jee-resources?subject=chemistry",icon: FlaskConical, tag: "Physical · Organic · Inorganic" },
-  { label: "Exam Cycle 2025–26",        to: "/#exam-cycle",                    icon: CalendarClock,tag: "All exams · Dates · Fees" },
-  { label: "JEE Main Guide",            to: "/jee-main",                        icon: FileText,     tag: "Pattern · Eligibility · Cutoffs" },
-  { label: "JEE Advanced Guide",        to: "/jee-advanced",                    icon: Trophy,       tag: "IIT admission · Strategy" },
+// ── JEE mega-menu: Prep + JEE Main + JEE Advanced merged into one panel ───────
+// Previously these were three separate top-level tabs (JEE, JEE Main, JEE
+// Advanced) which made the navbar feel crowded. Grouping them under one "JEE"
+// heading with three colour-coded columns keeps everything one hover away.
+const JEE_MEGA = [
+  {
+    title: "JEE Prep Resources", to: "/jee-resources", color: "#6366f1", icon: BookOpen,
+    items: [
+      { label: "Mathematics (19 chapters)", to: "/jee-resources?subject=math",      icon: Sigma },
+      { label: "Physics (25 chapters)",     to: "/jee-resources?subject=physics",   icon: Zap },
+      { label: "Chemistry (29 chapters)",   to: "/jee-resources?subject=chemistry", icon: FlaskConical },
+      { label: "Exam Cycle 2025–26",        to: "/#exam-cycle",                     icon: CalendarClock },
+    ],
+  },
+  {
+    title: "JEE Main", to: "/jee-main", color: "#F47B20", icon: FileText,
+    items: [
+      { label: "Eligibility Criteria",     to: "/jee-main#eligibility",   icon: BadgeCheck },
+      { label: "Exam Pattern & Schedule",  to: "/exams/jee-main",         icon: CalendarDays },
+      { label: "Shift-wise Papers & Keys", to: "/jee-main#papers",        icon: FileText },
+      { label: "Result & Rank Analysis",   to: "/jee-main#analysis",      icon: BarChart3 },
+      { label: "NIT Rankings (NIRF)",      to: "/jee-main#nit-rankings",  icon: Landmark },
+      { label: "College Predictor",        to: "/jee-main#college",       icon: Crosshair },
+      { label: "Rank Predictor",           to: "/jee-main#rank",          icon: Gauge },
+    ],
+  },
+  {
+    title: "JEE Advanced", to: "/jee-advanced", color: "#e5484d", icon: Trophy,
+    items: [
+      { label: "🔥 Result & Rank List 2026", to: "/jee-advanced-result-2026",   icon: Trophy },
+      { label: "Eligibility Criteria",       to: "/jee-advanced#eligibility",   icon: BadgeCheck },
+      { label: "Exam Pattern & Schedule",    to: "/exams/jee-advanced",         icon: CalendarDays },
+      { label: "Paper 1 & 2 Analysis",       to: "/jee-advanced#analysis",      icon: BarChart3 },
+      { label: "IIT Rankings (NIRF)",        to: "/jee-advanced#iit-rankings",  icon: Landmark },
+      { label: "College Predictor",          to: "/jee-advanced#college",       icon: Crosshair },
+      { label: "Rank Predictor",             to: "/jee-advanced#rank",          icon: Gauge },
+    ],
+  },
 ];
 
-const JEE_MAIN = [
-  { label: "Eligibility Criteria", to: "/jee-main#eligibility", icon: BadgeCheck },
-  { label: "Exam Pattern & Schedule", to: "/exams/jee-main", icon: CalendarDays },
-  { label: "Shift-wise Papers & Keys", to: "/jee-main#papers", icon: FileText },
-  { label: "Result & Rank Analysis", to: "/jee-main#analysis", icon: BarChart3 },
-  { label: "NIT Rankings (NIRF)", to: "/jee-main#nit-rankings", icon: Landmark },
-  { label: "JEE Main College Predictor", to: "/jee-main#college", icon: Crosshair },
-  { label: "JEE Main Rank Predictor", to: "/jee-main#rank", icon: Gauge },
-];
-const JEE_ADV = [
-  { label: "🔥 Result & Rank List 2026", to: "/jee-advanced-result-2026", icon: Trophy },
-  { label: "Eligibility Criteria", to: "/jee-advanced#eligibility", icon: BadgeCheck },
-  { label: "Exam Pattern & Schedule", to: "/exams/jee-advanced", icon: CalendarDays },
-  { label: "Paper 1 & Paper 2 Analysis", to: "/jee-advanced#analysis", icon: BarChart3 },
-  { label: "IIT Rankings (NIRF)", to: "/jee-advanced#iit-rankings", icon: Landmark },
-  { label: "JEE Advanced College Predictor", to: "/jee-advanced#college", icon: Crosshair },
-  { label: "JEE Advanced Rank Predictor", to: "/jee-advanced#rank", icon: Gauge },
-];
 const COLLEGES = [
   { label: "Explore IITs", to: "/colleges?type=IIT", icon: Landmark },
   { label: "Explore NITs", to: "/colleges?type=NIT", icon: Landmark },
@@ -47,15 +60,32 @@ const COLLEGES = [
   { label: "State-wise Colleges", to: "/colleges", icon: BadgeCheck },
 ];
 
-const TOOLS = [
-  { label: "JoSAA 2026 Counselling", to: "/josaa-2026", icon: Award },
-  { label: "Colleges For You", to: "/for-you", icon: Gauge },
-  { label: "Counselling Planner", to: "/planner", icon: CalendarDays },
-  { label: "Compare Colleges", to: "/compare", icon: GitCompare },
-  { label: "Compare Exams", to: "/compare-exams", icon: BarChart3 },
-  { label: "College Map", to: "/map", icon: Landmark },
-  { label: "Scholarships & Loans", to: "/scholarships", icon: BadgeCheck },
-  { label: "Admin Data", to: "/admin", icon: ShieldCheck },
+// ── Tools mega-menu: every utility grouped under a common, colour-coded name ──
+const TOOLS_MEGA = [
+  {
+    title: "Plan & Apply", to: "/planner", color: "#F47B20", icon: CalendarDays,
+    items: [
+      { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays },
+      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award },
+      { label: "Colleges For You",        to: "/for-you",    icon: Sparkles },
+    ],
+  },
+  {
+    title: "Compare & Explore", to: "/compare", color: "#6366f1", icon: GitCompare,
+    items: [
+      { label: "Compare Colleges", to: "/compare",       icon: GitCompare },
+      { label: "Compare Exams",    to: "/compare-exams", icon: BarChart3 },
+      { label: "College Map",      to: "/map",           icon: Landmark },
+    ],
+  },
+  {
+    title: "Cutoffs & More", to: "/cutoffs", color: "#2ec4b6", icon: FileText,
+    items: [
+      { label: "Official Cutoffs",      to: "/cutoffs",      icon: FileText },
+      { label: "Scholarships & Loans",  to: "/scholarships", icon: BadgeCheck },
+      { label: "Admin Data",            to: "/admin",        icon: ShieldCheck },
+    ],
+  },
 ];
 
 export default function Navbar({ onSearch }) {
@@ -97,14 +127,11 @@ export default function Navbar({ onSearch }) {
 
   const navItems = [
     { label: "Home", to: "/" },
-    { label: "JEE", drop: JEE_RESOURCES, base: "/jee-resources", highlight: true },
-    { label: "JEE Main", drop: JEE_MAIN, base: "/jee-main" },
-    { label: "JEE Advanced", drop: JEE_ADV, base: "/jee-advanced" },
+    { label: "JEE", mega: JEE_MEGA, base: "/jee-resources", highlight: true },
     { label: "Colleges", drop: COLLEGES, base: "/colleges" },
     { label: "Colleges For You", to: "/for-you", feature: true },
     { label: "Exams", to: "/exams" },
-    { label: "Cutoffs", to: "/cutoffs" },
-    { label: "Tools", drop: TOOLS, base: "/for-you" },
+    { label: "Tools", mega: TOOLS_MEGA, base: "/planner", align: "right" },
   ];
 
   return (
@@ -178,10 +205,69 @@ export default function Navbar({ onSearch }) {
             <li
               key={item.label}
               style={{ position: "relative" }}
-              onMouseEnter={() => item.drop && setOpen(item.label)}
+              onMouseEnter={() => (item.drop || item.mega) && setOpen(item.label)}
               onMouseLeave={() => setOpen(null)}
             >
-              {item.drop ? (
+              {item.mega ? (
+                <>
+                  <button
+                    onClick={() => (GATE_TABS && !isLoggedIn ? openLogin() : navigate(item.base))}
+                    style={item.highlight ? navHighlightStyle(open === item.label) : navLinkStyle(open === item.label)}
+                  >
+                    {item.highlight && <BookOpen size={13} />}
+                    {item.label}
+                    <ChevronDown size={13} style={{ transform: open === item.label ? "rotate(180deg)" : "none", transition: ".2s" }} />
+                  </button>
+                  <AnimatePresence>
+                    {open === item.label && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.18 }}
+                        style={{
+                          position: "absolute", top: "calc(100% + 8px)",
+                          ...(item.align === "right" ? { right: 0 } : { left: 0 }),
+                          background: "#fff", borderRadius: 18,
+                          boxShadow: "0 24px 60px -18px rgba(13,27,62,.32)",
+                          padding: 12, border: "1px solid var(--border)",
+                          display: "flex", gap: 6,
+                        }}
+                      >
+                        {item.mega.map((col) => {
+                          const ColIc = col.icon;
+                          return (
+                            <div key={col.title} style={{ minWidth: 214 }}>
+                              <button
+                                onClick={() => goHash(col.to)}
+                                style={{
+                                  display: "flex", alignItems: "center", gap: 8, width: "100%",
+                                  padding: "8px 10px", marginBottom: 4, borderRadius: 10,
+                                  background: `${col.color}14`, cursor: "pointer", border: "none",
+                                }}
+                              >
+                                <span style={{ width: 24, height: 24, borderRadius: 7, background: col.color, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                                  <ColIc size={14} color="#fff" />
+                                </span>
+                                <span style={{ fontWeight: 800, fontSize: "0.82rem", color: col.color, letterSpacing: "-0.01em" }}>{col.title}</span>
+                              </button>
+                              {col.items.map((d) => {
+                                const Ic = d.icon;
+                                return (
+                                  <button key={d.label} onClick={() => goHash(d.to)} style={megaItemStyle}>
+                                    <Ic size={15} color={col.color} />
+                                    <span style={{ fontWeight: 600, fontSize: "0.82rem" }}>{d.label}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              ) : item.drop ? (
                 <>
                   <button
                     onClick={() => (GATE_TABS && !isLoggedIn ? openLogin() : navigate(item.base))}
@@ -201,20 +287,15 @@ export default function Navbar({ onSearch }) {
                         style={{
                           position: "absolute", top: "calc(100% + 6px)", left: 0,
                           background: "#fff", borderRadius: 14, boxShadow: "var(--shadow-lg)",
-                          minWidth: item.highlight ? 300 : 252, padding: 8, border: "1px solid var(--border)",
+                          minWidth: 252, padding: 8, border: "1px solid var(--border)",
                         }}
                       >
-                        {item.highlight && (
-                          <div style={{ padding: "8px 10px 6px", fontSize: 10, fontWeight: 700, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase" }}>
-                            JEE Prep Resources
-                          </div>
-                        )}
                         {item.drop.map((d) => {
                           const Ic = d.icon;
                           return (
                             <button key={d.label} onClick={() => goHash(d.to)} style={d.tag ? { ...dropItemStyle, flexDirection: "column", alignItems: "flex-start", gap: 1 } : dropItemStyle}>
                               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                <Ic size={15} color={item.highlight ? "#6366f1" : "var(--coral)"} />
+                                <Ic size={15} color="var(--coral)" />
                                 <span style={{ fontWeight: 600, fontSize: "0.85rem" }}>{d.label}</span>
                               </div>
                               {d.tag && <span style={{ fontSize: 11, color: "#9ca3af", paddingLeft: 23 }}>{d.tag}</span>}
@@ -427,6 +508,29 @@ export default function Navbar({ onSearch }) {
                       ))}
                     </div>
                   )}
+                  {item.mega && (
+                    <div style={{ paddingLeft: 12 }}>
+                      {item.mega.map((col) => (
+                        <div key={col.title} style={{ marginTop: 8 }}>
+                          <button
+                            onClick={() => goHash(col.to)}
+                            style={{ display: "block", padding: "0.25rem 0", fontSize: "0.72rem", fontWeight: 800, color: col.color, letterSpacing: "0.04em", textTransform: "uppercase" }}
+                          >
+                            {col.title}
+                          </button>
+                          {col.items.map((d) => (
+                            <button
+                              key={d.label}
+                              onClick={() => goHash(d.to)}
+                              style={{ display: "block", padding: "0.32rem 0", color: "var(--gray)", fontSize: "0.86rem" }}
+                            >
+                              {d.label}
+                            </button>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 )
               ))}
@@ -612,4 +716,10 @@ const navFeatureStyle = {
 const dropItemStyle = {
   display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
   padding: "0.6rem 0.8rem", borderRadius: 9, fontSize: "0.85rem", color: "var(--navy)",
+};
+
+const megaItemStyle = {
+  display: "flex", alignItems: "center", gap: 9, width: "100%", textAlign: "left",
+  padding: "0.5rem 0.7rem 0.5rem 0.85rem", borderRadius: 9,
+  fontSize: "0.82rem", color: "var(--navy)", cursor: "pointer", border: "none", background: "transparent",
 };

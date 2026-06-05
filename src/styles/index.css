@@ -2908,7 +2908,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 }
 
 /* ── Opening / Closing rank cells — colour-coded to match the round chart
-   (teal = opening, orange = closing) so the JoSAA 2024 rank range reads at a
+   (teal = opening, orange = closing) so the JoSAA 2025 rank range reads at a
    glance. Tabular figures keep the numbers aligned column-to-column. ── */
 .cp-rank {
   display: inline-block;

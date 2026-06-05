@@ -13,7 +13,7 @@ import { TIER_COLOR } from "../../utils/collegePredictor.js";
 import { Gauge } from "../Charts.jsx";
 import { fmtRank } from "../../utils/format.js";
 
-// Pre-warm 2024 cutoff data so the inline college preview is fast
+// Pre-warm 2025 cutoff data so the inline college preview is fast
 loadPredictorDB();
 
 const CATS_MAIN = ["General", "EWS", "OBC-NCL", "SC", "ST"];

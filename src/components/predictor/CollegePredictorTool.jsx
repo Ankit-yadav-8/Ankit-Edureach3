@@ -25,7 +25,7 @@ const TIER_BADGE = { Safe: "green", Moderate: "orange", Ambitious: "red" };
 
 const LOADING_TIPS = [
   "Scanning all college-branch combinations…",
-  "Matching your rank against 2024 JoSAA cutoffs…",
+  "Matching your rank against 2025 JoSAA cutoffs…",
   "Calculating fit scores across all rounds…",
   "Ranking results by NIRF & branch value…",
 ];
@@ -72,8 +72,8 @@ function RoundDetail({ row }) {
           )}
           <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 8 }}>
             {estimated
-              ? "Closing ranks are estimated by relaxing JoSAA 2024 general-pool cutoffs for the selected quota — verify on josaa.nic.in / csab.nic.in."
-              : "Actual JoSAA 2024 opening & closing ranks for this program — verify on josaa.nic.in / csab.nic.in."}
+              ? "Closing ranks are estimated by relaxing JoSAA 2025 general-pool cutoffs for the selected quota — verify on josaa.nic.in / csab.nic.in."
+              : "Actual JoSAA 2025 opening & closing ranks for this program — verify on josaa.nic.in / csab.nic.in."}
           </p>
         </div>
         {chart.length > 0 && (
@@ -170,7 +170,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
       <div className="cp-data-banner">
         <Database size={18} className="cp-data-banner-icon" />
         <p>
-          <strong>Predictions are based on official JoSAA 2024 cutoff data.</strong>{" "}
+          <strong>Predictions are based on official JoSAA 2025 cutoff data.</strong>{" "}
           To explore the complete year-on-year data from{" "}
           <strong>2018&nbsp;to&nbsp;2025</strong>, open{" "}
           <span className="cp-data-banner-cta">Explore full college details</span>{" "}
@@ -252,7 +252,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
             </div>
             <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 7, lineHeight: 1.5, maxWidth: 520 }}>
               {form.rankType === "category"
-                ? `Colleges are matched directly against ${form.category} closing ranks from JoSAA 2024 data.`
+                ? `Colleges are matched directly against ${form.category} closing ranks from JoSAA 2025 data.`
                 : `We'll convert your CRL to an approximate ${form.category} rank, then match against ${form.category} closing ranks. Enter your category rank above for the most accurate result.`}
             </p>
           </div>
@@ -497,8 +497,8 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
         points={[
           {
             icon: Database,
-            title: "Real JoSAA 2024 data only",
-            body: "Every match comes straight from official JoSAA 2024 opening & closing ranks — no modelled or made-up programs, so you never see branches a college doesn't actually offer.",
+            title: "Real JoSAA 2025 data only",
+            body: "Every match comes straight from official JoSAA 2025 opening & closing ranks — no modelled or made-up programs, so you never see branches a college doesn't actually offer.",
           },
           {
             icon: Layers,
@@ -526,7 +526,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
             body: "Tap any college to see round-by-round opening/closing cutoffs, seat counts, average package and a direct link to the full college profile.",
           },
         ]}
-        note="Cutoffs are based on JoSAA 2024 and are indicative for 2026 — always verify on josaa.nic.in / csab.nic.in before locking choices."
+        note="Cutoffs are based on JoSAA 2025 and are indicative for 2026 — always verify on josaa.nic.in / csab.nic.in before locking choices."
       />
     </div>
   );

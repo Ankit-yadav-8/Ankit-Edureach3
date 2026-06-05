@@ -50,7 +50,7 @@ const EXAM_PROFILES = {
 
 const LOADING_TIPS = [
   "Scanning 1,000+ college-branch combinations…",
-  "Matching your rank against 2024 JoSAA cutoffs…",
+  "Matching your rank against 2025 JoSAA cutoffs…",
   "Calculating fit scores across all rounds…",
   "Almost there — ranking results by NIRF & branch value…",
 ];
@@ -124,7 +124,7 @@ export default function ForYou() {
     }).filter(Boolean).join("\n");
 
     const blob = new Blob(
-      [head + sections + "\n(Illustrative — based on 2024 JoSAA cutoffs. Verify on josaa.nic.in)"],
+      [head + sections + "\n(Illustrative — based on 2025 JoSAA cutoffs. Verify on josaa.nic.in)"],
       { type: "text/plain" }
     );
     const url = URL.createObjectURL(blob);
@@ -153,7 +153,7 @@ export default function ForYou() {
           </h1>
           <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 620, lineHeight: 1.55 }}>
             Pick your exam, enter your rank, and we'll instantly shortlist the
-            best-fit institutes based on real 2024 JoSAA cutoffs.
+            best-fit institutes based on real 2025 JoSAA cutoffs.
           </p>
         </div>
       </section>
@@ -300,7 +300,7 @@ export default function ForYou() {
           <>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
               <p style={{ color: "var(--muted)", fontSize: 14, margin: 0 }}>
-                Showing best-fit <strong>{profile.title}</strong> options for rank <strong>{fmtRank(Number(rank))}</strong> · {category} · 2024 cutoffs
+                Showing best-fit <strong>{profile.title}</strong> options for rank <strong>{fmtRank(Number(rank))}</strong> · {category} · 2025 cutoffs
               </p>
               <button className="btn btn-ghost" onClick={downloadList} style={{ fontSize: 13, padding: "8px 14px", whiteSpace: "nowrap" }}>
                 <Download size={15} /> Download list

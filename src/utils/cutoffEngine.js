@@ -1,13 +1,13 @@
 /* ============================================================
-   cutoffEngine.js — REAL JoSAA cutoffs (2024) with modelled fallback
+   cutoffEngine.js — REAL JoSAA cutoffs (2025) with modelled fallback
    ------------------------------------------------------------
    expandRounds / cutoffHistory / forecastClosing return REAL
    JoSAA data from realCutoffEngine.js.  When a branch has no real
    row (rare new programs) they fall back to the modelled curve so
    the UI never breaks.
 
-   Default predictor year  = 2024.
-   General pool quota      = AI (all-India) — standard for 2024 JoSAA.
+   Default predictor year  = 2025.
+   General pool quota      = AI (all-India) — standard for 2024/2025 JoSAA.
    seatMatrix()            uses the real SEAT_MATRIX (unchanged).
    ============================================================ */
 
@@ -16,17 +16,17 @@ import { BRANCHES }    from "../data/colleges.js";
 import {
   loadCutoffDB,
   isDBReady,
-  isPredictorReady,   // ← added: gates expandRounds on 2024-only fast load
+  isPredictorReady,   // ← added: gates expandRounds on 2025-only fast load
   REAL_YEARS,
   getRealRounds,
   getRealPrograms,
 } from "./realCutoffEngine.js";
 
 // NOTE: loadCutoffDB() is NOT called here at module level.
-// The predictor worker only needs 2024 data via loadPredictorDB().
+// The predictor worker only needs 2025 data via loadPredictorDB().
 // CollegeDetail and CutoffSection call loadCutoffDB() directly.
 
-const DEFAULT_YEAR    = "2024";
+const DEFAULT_YEAR    = "2025";
 const ALLINDIA_QUOTAS = ["AI", "OS"]; // AI for 2024+; OS for older NIT years
 
 // ── Real-data plumbing ────────────────────────────────────────────────────────
@@ -83,7 +83,7 @@ function programForBranch(college, branchCode) {
 }
 
 function realRounds(college, branchCode, cat, year, gender = "GN") {
-  // accept either the full 8-year DB or the 2024-only predictor DB
+  // accept either the full 8-year DB or the 2025-only predictor DB
   if (!isDBReady() && !isPredictorReady()) return null;
   const program = programForBranch(college, branchCode);
   if (!program) return null;
@@ -205,7 +205,7 @@ export function collegeBranches(college) {
   });
 }
 
-// ── expandRounds — real 2024 data, modelled fallback ─────────────────────────
+// ── expandRounds — real 2025 data, modelled fallback ─────────────────────────
 // realOnly=true: skip the modelled fallback; used by predictor to avoid fake results.
 // gender: "GN" (default) or "FO" (female-only supernumerary seats).
 export function expandRounds(college, branch, cat, year = DEFAULT_YEAR, realOnly = false, gender = "GN") {

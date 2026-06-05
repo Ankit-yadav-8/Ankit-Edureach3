@@ -154,7 +154,7 @@ export default function CounsellingPlanner() {
           {loading && (
             <div className="card" style={{ textAlign: "center", padding: 40, color: "var(--muted)" }}>
               <div style={{ width: 44, height: 44, borderRadius: "50%", border: "4px solid #f3f0ec", borderTop: "4px solid var(--coral)", animation: "spin 0.8s linear infinite", margin: "0 auto 16px" }} />
-              Loading 2024 JoSAA cutoffs and building your choice list…
+              Loading 2025 JoSAA cutoffs and building your choice list…
             </div>
           )}
 

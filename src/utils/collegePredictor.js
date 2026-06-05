@@ -1,7 +1,7 @@
 /* ============================================================
    collegePredictor.js — Real-data College Predictor (v5)
    ------------------------------------------------------------
-   • Cutoffs sourced EXCLUSIVELY from josaa_2024.csv.
+   • Cutoffs sourced EXCLUSIVELY from josaa_2025.csv.
      Modelled/illustrative fallback is disabled in the predictor
      so fake programs (e.g. AI at NITs that don't offer it) are
      never shown.
@@ -222,7 +222,7 @@ const ALLINDIA_QUOTAS = ["AI", "OS"];
 
 function fetchRealRounds(college, progName, category, gender) {
   for (const q of ALLINDIA_QUOTAS) {
-    const rounds = getRealRounds(college, progName, q, category, "2024", gender);
+    const rounds = getRealRounds(college, progName, q, category, "2025", gender);
     if (rounds.length) return rounds;
   }
   return [];
@@ -236,7 +236,7 @@ function estimateAdmitRound(rounds, candidateRank, relaxedClosing) {
 
 /**
  * Returns a flat sorted array of college-branch matches for a given rank.
- * Uses ONLY josaa_2024.csv data — no modelled/illustrative fallback.
+ * Uses ONLY josaa_2025.csv data — no modelled/illustrative fallback.
  *
  * @param {Object}   opts
  * @param {number}   opts.rank       Your rank — interpreted per `rankType`
@@ -282,7 +282,7 @@ export function predictColleges({
 
     // ── Get real programs from the CSV for this college ──────────────────────
     const realProgs = getRealPrograms(college);
-    if (!realProgs.length) return; // college not in JoSAA 2024 CSV — skip
+    if (!realProgs.length) return; // college not in JoSAA 2025 CSV — skip
 
     // Map each program to a branch code; deduplicate per college per code
     const seenCodes  = new Set();

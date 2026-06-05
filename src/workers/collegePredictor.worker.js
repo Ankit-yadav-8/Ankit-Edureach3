@@ -1,7 +1,7 @@
 import { predictColleges, predictCollegesGrouped } from "../utils/collegePredictor.js";
 import { loadPredictorDB } from "../utils/realCutoffEngine.js";  // ← changed
 
-// Pre-warm: fetch only josaa_2024.csv the moment the worker spins up.
+// Pre-warm: fetch only josaa_2025.csv the moment the worker spins up.
 loadPredictorDB();  // ← changed
 
 self.onmessage = async ({ data }) => {

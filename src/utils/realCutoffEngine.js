@@ -12,7 +12,7 @@ export const REAL_YEARS = ["2018","2019","2020","2021","2022","2023","2024","202
 const DB  = new Map();   // Map<year, Row[]>
 let _loadPromise = null;
 let _loaded      = false;
-// ── Predictor-only 2024 fast loader state ────────────────────────────────────
+// ── Predictor-only 2025 fast loader state ────────────────────────────────────
 let _predictorPromise = null;
 let _predictorReady   = false;
 
@@ -161,27 +161,27 @@ export function loadCutoffDB() {
 
 export const isDBReady = () => _loaded;
 
-// ── Predictor-only 2024 fast loader ─────────────────────────────────────────
-// Fetches ONLY josaa_2024.csv. Used by the college predictor worker so it
+// ── Predictor-only 2025 fast loader ─────────────────────────────────────────
+// Fetches ONLY josaa_2025.csv. Used by the college predictor worker so it
 // doesn't wait for all 8 years. Reuses the same DB map — if loadCutoffDB()
 // already ran, rows are already there and this resolves instantly.
 export function loadPredictorDB() {
   if (_predictorPromise) return _predictorPromise;
-  _predictorPromise = fetchYear("2024")
+  _predictorPromise = fetchYear("2025")
     .then((rows) => {
-      if (!DB.has("2024")) {
-        // Full DB hasn't loaded yet — insert 2024 rows now
+      if (!DB.has("2025")) {
+        // Full DB hasn't loaded yet — insert 2025 rows now
         for (const row of rows) {
           if (!DB.has(row.year)) DB.set(row.year, []);
           DB.get(row.year).push(row);
         }
       }
-      // If full DB already loaded, 2024 rows are already present — skip insert
+      // If full DB already loaded, 2025 rows are already present — skip insert
       _predictorReady = true;
       invalidateCaches();
     })
     .catch((err) => {
-      console.error("[realCutoffEngine] 2024 fast load failed:", err);
+      console.error("[realCutoffEngine] 2025 fast load failed:", err);
       _predictorPromise = null; // allow retry on next call
     });
   return _predictorPromise;
@@ -351,8 +351,8 @@ export function getAvailableYears(college) {
   return REAL_YEARS.filter((yr) => rows.some((r) => r.year === yr));
 }
 
-// The all-India general pool is labelled "AI" in 2024 JoSAA data but "OS"
-// (Other State — nationwide competition) in every other year for NITs/IIITs.
+// The all-India general pool is labelled "AI" in 2024/2025 JoSAA data but "OS"
+// (Other State — nationwide competition) in older years for NITs/IIITs.
 // The two never coexist for one institute in a single year, so they are
 // treated as one logical pool: requesting either matches both. Without this,
 // querying "AI" returns rows ONLY for 2024 and all other years appear empty.
@@ -442,7 +442,7 @@ export function getAvailableQuotas(college) {
   for (const r of getCollegeRows(college)) seen.add(r.quota);
   const out = [];
   // Collapse AI + OS into a single all-India general-pool option. They are
-  // the same pool under different year-wise labels (AI in 2024, OS elsewhere),
+  // the same pool under different year-wise labels (AI in 2024/2025, OS in older years),
   // and getRealRounds treats them as equivalent — so one option covers all years.
   if (seen.has("AI") || seen.has("OS")) {
     out.push({ value: "AI", label: "AI/OS — All India (General)" });
