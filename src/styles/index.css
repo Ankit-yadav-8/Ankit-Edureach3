@@ -230,6 +230,10 @@ input,select,textarea { font-family:inherit; }
   align-items:center;
   gap:.75rem;
 }
+
+/* Merged utility icon group (Help · Search · Compare · Wishlist) */
+.nav-icon-btn { background:transparent; color:#374151; }
+.nav-icon-btn:hover { background:rgba(244,123,32,.14); color:#F47B20; }
 .btn-nav-ghost {
   background:transparent;
   color:#374151;

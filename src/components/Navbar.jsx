@@ -159,7 +159,7 @@ export default function Navbar({ onSearch }) {
         <Link
           to="/"
           onClick={() => window.scrollTo({ top: 0 })}
-          style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}
+          style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", flexShrink: 0 }}
         >
           {/* CP circle logo */}
           <span
@@ -206,15 +206,17 @@ export default function Navbar({ onSearch }) {
           </span>
         </Link>
 
-        {/* Desktop nav — absolutely centered in the navbar so the JEE / Colleges /
-            Tools links sit in the true middle regardless of how wide the logo or
-            the right-hand button cluster grow. */}
+        {/* Desktop nav — a flexible middle section (flex:1) that centres the
+            JEE / Colleges / Tools links in the space left between the logo and
+            the right-hand action cluster. Using flex flow (instead of the old
+            position:absolute centring) guarantees the links can never overlap
+            the side clusters on MacBook / laptop widths (1280–1500px), where the
+            absolutely-positioned version used to collide with the buttons. */}
         <ul
           className="desktop-nav"
           style={{
             display: "flex", alignItems: "center", gap: 4,
-            position: "absolute", left: "50%", top: "50%",
-            transform: "translate(-50%, -50%)",
+            flex: "1 1 auto", justifyContent: "center", minWidth: 0,
             margin: 0, padding: 0, listStyle: "none",
           }}
         >
@@ -352,44 +354,37 @@ export default function Navbar({ onSearch }) {
           ))}
         </ul>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <Link
-            to="/how-to-use"
-            title="How to use College Parichay"
-            className="how-to-pill cta-desktop"
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+          {/* Unified utility cluster — Help · Search · Compare · Wishlist merged
+              into one segmented pill so the bar reads as a single tidy module
+              instead of four loose icons. */}
+          <div
             style={{
-              display: "inline-flex", alignItems: "center", gap: 5,
-              padding: "7px 12px", borderRadius: 999,
-              background: "rgba(244,123,32,.1)", color: "#ea580c",
-              border: "1.5px solid rgba(244,123,32,.28)",
-              fontSize: "0.78rem", fontWeight: 700, whiteSpace: "nowrap",
-              textDecoration: "none",
+              display: "flex", alignItems: "center", gap: 2,
+              background: "rgba(244,123,32,.06)",
+              border: "1px solid rgba(244,123,32,.16)",
+              borderRadius: 999, padding: 3,
             }}
           >
-            <HelpCircle size={14} /> How to use
-          </Link>
-          <button onClick={onSearch} aria-label="Search" style={{ width: 40, height: 40, borderRadius: 10, display: "grid", placeItems: "center", background: "var(--sky)", color: "var(--navy)" }}>
-            <Search size={18} />
-          </button>
-          <Link to="/compare" aria-label="Compare colleges" title="Compare" style={{ position: "relative", width: 40, height: 40, borderRadius: 10, display: "grid", placeItems: "center", background: "var(--sky)", color: "var(--navy)" }}>
-            <GitCompare size={18} />
-            {compare.length > 0 && (
-              <span style={{ position: "absolute", top: -4, right: -4, minWidth: 17, height: 17, padding: "0 4px", borderRadius: 999, background: "var(--teal)", color: "#fff", fontSize: 10, fontWeight: 700, display: "grid", placeItems: "center" }}>
-                {compare.length}
-              </span>
-            )}
-          </Link>
-          <Link to="/shortlist" aria-label="My colleges" title="My Colleges" style={{ position: "relative", width: 40, height: 40, borderRadius: 10, display: "grid", placeItems: "center", background: "var(--sky)", color: "var(--coral)" }}>
-            <Heart size={18} fill={saved.length ? "var(--coral)" : "none"} />
-            {saved.length > 0 && (
-              <span style={{ position: "absolute", top: -4, right: -4, minWidth: 17, height: 17, padding: "0 4px", borderRadius: 999, background: "var(--coral)", color: "#fff", fontSize: 10, fontWeight: 700, display: "grid", placeItems: "center" }}>
-                {saved.length}
-              </span>
-            )}
-          </Link>
-          <button className="btn btn-coral cta-desktop" onClick={() => goHash("/jee-main#college")}>
-            <Target size={16} /> Predict My College
-          </button>
+            <Link to="/how-to-use" title="How to use College Parichay" aria-label="How to use" className="nav-icon-btn cta-desktop" style={iconBtnStyle}>
+              <HelpCircle size={18} />
+            </Link>
+            <button onClick={onSearch} aria-label="Search" className="nav-icon-btn" style={iconBtnStyle}>
+              <Search size={18} />
+            </button>
+            <Link to="/compare" aria-label="Compare colleges" title="Compare" className="nav-icon-btn" style={{ ...iconBtnStyle, position: "relative" }}>
+              <GitCompare size={18} />
+              {compare.length > 0 && (
+                <span style={iconBadge("var(--teal)")}>{compare.length}</span>
+              )}
+            </Link>
+            <Link to="/shortlist" aria-label="My colleges" title="My Colleges" className="nav-icon-btn" style={{ ...iconBtnStyle, position: "relative", color: "var(--coral)" }}>
+              <Heart size={18} fill={saved.length ? "var(--coral)" : "none"} />
+              {saved.length > 0 && (
+                <span style={iconBadge("var(--coral)")}>{saved.length}</span>
+              )}
+            </Link>
+          </div>
           {isLoggedIn ? (
             <button
               onClick={() => setConfirmLogout(true)}
@@ -755,6 +750,21 @@ const navFeatureStyle = {
   animation: "brandGradient 3s linear infinite",
   transition: "transform .2s ease, box-shadow .2s ease",
 };
+
+const iconBtnStyle = {
+  width: 38, height: 38, borderRadius: 999,
+  display: "grid", placeItems: "center",
+  border: "none", cursor: "pointer",
+  transition: "background .15s ease, color .15s ease",
+};
+
+const iconBadge = (bg) => ({
+  position: "absolute", top: 0, right: 0,
+  minWidth: 16, height: 16, padding: "0 4px",
+  borderRadius: 999, background: bg, color: "#fff",
+  fontSize: 9, fontWeight: 700, lineHeight: 1,
+  display: "grid", placeItems: "center",
+});
 
 const dropItemStyle = {
   display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
