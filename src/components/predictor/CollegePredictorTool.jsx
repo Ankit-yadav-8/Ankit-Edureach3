@@ -155,13 +155,15 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
   const summary = useMemo(() => {
     if (!results?.length) return null;
     const tiers    = ["Safe", "Moderate", "Ambitious"];
+    const counts   = { Safe: 0, Moderate: 0, Ambitious: 0 };
+    results.forEach((r) => { counts[r.tier] = (counts[r.tier] || 0) + 1; });
     const dist     = tiers
-      .map((t) => ({ name: t, value: results.filter((r) => r.tier === t).length }))
+      .map((t) => ({ name: t, value: counts[t] }))
       .filter((d) => d.value);
     const byType   = {};
     results.forEach((r) => { byType[r.type] = (byType[r.type] || 0) + 1; });
     const typeData = Object.entries(byType).map(([name, value]) => ({ name, value }));
-    return { dist, typeData };
+    return { dist, typeData, counts, total: results.length };
   }, [results]);
 
   return (
@@ -180,9 +182,12 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
 
       {/* ── Form ── */}
       <div className="card">
-        <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.2rem", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
+        <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.2rem", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
           <Crosshair size={20} color="#F97316" /> Find every college within your reach
         </h3>
+        <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 16, lineHeight: 1.5 }}>
+          Enter your rank below — the rest is optional. We'll instantly match it against real JoSAA&nbsp;2025 cutoffs and show you every college you can get.
+        </p>
 
         <div className="grid-4" style={{ gap: 12 }}>
           <div className="field">
@@ -312,6 +317,32 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
         </div>
       )}
 
+      {/* ── Empty state — guides the user before the first prediction ── */}
+      {!results && !loading && !error && (
+        <div className="cp-empty">
+          <div className="cp-empty-icon"><Crosshair size={26} color="#F97316" /></div>
+          <h4 className="cp-empty-title">Ready when you are</h4>
+          <p className="cp-empty-sub">
+            Type your rank in the box above and hit <strong>Predict Colleges</strong>. Here's what you'll get:
+          </p>
+          <div className="cp-empty-steps">
+            {[
+              { n: "1", t: "Every eligible college", d: "All NIT / IIIT / GFTI (or IIT) branches your rank can reach." },
+              { n: "2", t: "Colour-coded confidence", d: "Safe, Moderate or Ambitious — so you know your real chances." },
+              { n: "3", t: "Round-by-round cutoffs", d: "Tap any result to see all JoSAA & CSAB opening/closing ranks." },
+            ].map((s) => (
+              <div className="cp-empty-step" key={s.n}>
+                <span className="cp-empty-step-num">{s.n}</span>
+                <div>
+                  <div className="cp-empty-step-t">{s.t}</div>
+                  <div className="cp-empty-step-d">{s.d}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ── Loading state ── */}
       {loading && (
         <div style={{
@@ -346,6 +377,24 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
           color: "#dc2626", fontSize: 13,
         }}>
           ⚠️ {error} — please try again.
+        </div>
+      )}
+
+      {/* ── At-a-glance result strip — instant read on how many options & how safe ── */}
+      {results && results.length > 0 && !loading && summary && (
+        <div className="cp-glance-strip">
+          {[
+            { label: "Total options", value: summary.total, color: "#1a1a2e", bg: "rgba(26,26,46,.06)", hint: "college + branch matches" },
+            { label: "Safe", value: summary.counts.Safe, color: "#0e9c90", bg: "rgba(46,196,182,.12)", hint: "rank clears comfortably" },
+            { label: "Moderate", value: summary.counts.Moderate, color: "#d9641a", bg: "rgba(249,115,22,.12)", hint: "rank is near the cutoff" },
+            { label: "Ambitious", value: summary.counts.Ambitious, color: "#dc2626", bg: "rgba(239,68,68,.10)", hint: "a stretch — worth a shot" },
+          ].map((s) => (
+            <div key={s.label} className="cp-glance-card" style={{ borderTop: `3px solid ${s.color}` }}>
+              <div className="cp-glance-val" style={{ color: s.color }}>{s.value}</div>
+              <div className="cp-glance-lbl">{s.label}</div>
+              <div className="cp-glance-hint">{s.hint}</div>
+            </div>
+          ))}
         </div>
       )}
 

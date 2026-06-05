@@ -570,10 +570,9 @@ function LiveCollegePanel({ isTablet }) {
         ))}
       </div>
 
-      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
-
-      {/* Mini stat row */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+      {/* Mini stat row — lifted up: tighter top margin so the IITs/NITs/IIITs
+          counts + Explore button sit a touch higher in the panel */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginTop: -2 }}>
         {[{ val: "23", lbl: "IITs" }, { val: "31", lbl: "NITs" }, { val: "26+", lbl: "IIITs" }].map(({ val, lbl }) => (
           <div key={lbl} style={{ textAlign: "center", background: "rgba(255,255,255,.04)", borderRadius: 9, padding: isTablet ? "6px 4px" : "8px 4px" }}>
             <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: isTablet ? 13 : 15, color: "#fff" }}>{val}</div>

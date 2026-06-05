@@ -3017,3 +3017,119 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .cp-rank { font-size: 14px; }
   .cp-rank-legend { flex-wrap: wrap; gap: 2px 0; }
 }
+
+/* ── At-a-glance result strip — 4 quick-read cards above the summary pies ── */
+.cp-glance-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 22px;
+}
+.cp-glance-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px 13px;
+  box-shadow: 0 2px 12px rgba(13,27,62,.05);
+  text-align: center;
+}
+.cp-glance-val {
+  font-family: "Sora", sans-serif;
+  font-weight: 800;
+  font-size: 1.7rem;
+  line-height: 1.05;
+}
+.cp-glance-lbl {
+  font-family: "Sora", sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--navy);
+  margin-top: 4px;
+}
+.cp-glance-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+  line-height: 1.35;
+}
+@media (max-width:640px) {
+  .cp-glance-strip { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .cp-glance-val   { font-size: 1.45rem; }
+}
+
+/* ── Empty state — shown before the first prediction is run ── */
+.cp-empty {
+  margin-top: 22px;
+  background: linear-gradient(180deg, #fffdfb 0%, #fff7f0 100%);
+  border: 1px solid rgba(249,115,22,.18);
+  border-radius: 18px;
+  padding: 30px 26px;
+  text-align: center;
+}
+.cp-empty-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 14px;
+  border-radius: 16px;
+  display: grid; place-items: center;
+  background: rgba(249,115,22,.10);
+  border: 1px solid rgba(249,115,22,.22);
+}
+.cp-empty-title {
+  font-family: "Sora", sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--navy);
+  margin: 0 0 6px;
+}
+.cp-empty-sub {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 520px;
+  margin: 0 auto 22px;
+}
+.cp-empty-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.cp-empty-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 14px;
+  text-align: left;
+}
+.cp-empty-step-num {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #F47B20, #ea580c);
+  color: #fff;
+  font-family: "Sora", sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 3px 10px rgba(244,123,32,.35);
+}
+.cp-empty-step-t {
+  font-family: "Sora", sans-serif;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--navy);
+  line-height: 1.25;
+}
+.cp-empty-step-d {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-top: 3px;
+}
+@media (max-width:720px) {
+  .cp-empty-steps { grid-template-columns: 1fr; }
+}
