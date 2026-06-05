@@ -13,6 +13,7 @@
 
 import { SEAT_MATRIX } from "../data/seatMatrix.js";
 import { BRANCHES }    from "../data/colleges.js";
+import { BASE_CUTOFF_2025 } from "../data/cutoffs2025.js";
 import {
   loadCutoffDB,
   isDBReady,
@@ -21,6 +22,20 @@ import {
   getRealRounds,
   getRealPrograms,
 } from "./realCutoffEngine.js";
+
+// ── Base cutoffs: prefer REAL josaa_2025.csv-derived data (auto-generated in
+//    data/cutoffs2025.js) over the legacy illustrative `baseCutoff` field, so
+//    every modelled/fallback number and the Compare page reflect real 2025
+//    JoSAA ranks. Each cell is [JR1 opening, JR1 closing, FINAL closing].
+const baseFor  = (college) => BASE_CUTOFF_2025[college?.slug] ?? college?.baseCutoff ?? null;
+const baseCell = (college, branch, cat) => baseFor(college)?.[branch]?.[cat] ?? null;
+
+// Real JoSAA-2025 FINAL closing rank for a college·branch·category (null when
+// unavailable). Used for direct "2025 cutoff" display (e.g. the Compare page).
+export function realFinalClose2025(college, branch, cat = "OPEN") {
+  const cell = baseCell(college, branch, cat);
+  return cell ? (cell[2] ?? cell[1] ?? null) : null;
+}
 
 // NOTE: loadCutoffDB() is NOT called here at module level.
 // The predictor worker only needs 2025 data via loadPredictorDB().
@@ -132,7 +147,7 @@ const CSAB_CLOSE_MUL  = [1.370, 1.450];
 const CSAB_OPEN_MUL   = [1.310, 1.385];
 
 function modelledRounds(college, branch, cat) {
-  const base = college?.baseCutoff?.[branch]?.[cat];
+  const base = baseCell(college, branch, cat);
   if (!base) return [];
   const [baseOpen, baseClose] = base;
   const isIIT  = college.type === "IIT";
@@ -166,7 +181,7 @@ const YEAR_CLOSE_MUL  = [1.22, 1.15, 1.08, 1.03, 1.00];
 const YEAR_OPEN_MUL   = [1.20, 1.13, 1.07, 1.02, 1.00];
 
 function modelledHistory(college, branch, cat) {
-  const base = college?.baseCutoff?.[branch]?.[cat];
+  const base = baseCell(college, branch, cat);
   if (!base) return [];
   const [baseOpen, baseClose] = base;
   const spread = Math.max(6, Math.round(baseClose * 0.018));
@@ -198,8 +213,9 @@ function modelledForecast(college, branch, cat) {
 
 // ── collegeBranches ───────────────────────────────────────────────────────────
 export function collegeBranches(college) {
-  if (!college?.baseCutoff) return [];
-  return Object.keys(college.baseCutoff).map((code) => {
+  const base = baseFor(college);
+  if (!base) return [];
+  return Object.keys(base).map((code) => {
     const found = BRANCHES.find((b) => b.code === code);
     return found ?? { code, name: code.toUpperCase() };
   });
@@ -262,8 +278,9 @@ export function seatMatrix(college) {
       },
     }));
   }
-  if (!college?.baseCutoff) return [];
-  return Object.keys(college.baseCutoff).map((code) => {
+  const base = baseFor(college);
+  if (!base) return [];
+  return Object.keys(base).map((code) => {
     const branch = BRANCHES.find((b) => b.code === code);
     const total  = college.type === "IIT" ? 60 : college.type === "NIT" ? 120 : 90;
     return {

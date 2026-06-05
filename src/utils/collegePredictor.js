@@ -434,22 +434,25 @@ export function predictColleges({
 /**
  * Same as predictColleges but returns results grouped by institute type.
  * Shape: { IIT: [...], NIT: [...], IIIT: [...], GFTI: [...] }
- * One best branch per college; each group is capped at `limit` entries.
  *
- * @param {number|Object} [opts.limit]  Max colleges per group. Either a single
+ * @param {number|Object} [opts.limit]  Max ENTRIES per group. Either a single
  *   number applied to every group, or a per-type map e.g. { IIT: 25, NIT: 15 }.
- *   Defaults to 9 per group.
+ *   Defaults to 9. Pass Infinity to include every eligible option.
+ * @param {boolean} [opts.allBranches]  When true, include EVERY eligible
+ *   branch of each college (not just the single best one), so the user sees
+ *   all branches and colleges they're eligible for. Defaults to false.
  */
 export function predictCollegesGrouped({
   rank,
-  category   = "OPEN",
-  rankType   = "category",
-  state      = "",
-  branch     = "",
-  types      = ["IIT", "NIT", "IIIT", "GFTI"],
-  female     = false,
-  homeState  = false,
-  limit      = 9,
+  category    = "OPEN",
+  rankType    = "category",
+  state       = "",
+  branch      = "",
+  types       = ["IIT", "NIT", "IIIT", "GFTI"],
+  female      = false,
+  homeState   = false,
+  limit       = 9,
+  allBranches = false,
 } = {}) {
   const all = predictColleges({ rank, category, rankType, state, branch, types, female, homeState });
 
@@ -461,8 +464,9 @@ export function predictCollegesGrouped({
     const cap  = capFor(key);
     const seen = new Set();
     for (const m of all) {
-      if (m.type !== key)   continue;
-      if (seen.has(m.slug)) continue;
+      if (m.type !== key)                continue;
+      // Without allBranches we keep only the single best branch per college.
+      if (!allBranches && seen.has(m.slug)) continue;
       seen.add(m.slug);
       groups[key].push(m);
       if (groups[key].length >= cap) break;

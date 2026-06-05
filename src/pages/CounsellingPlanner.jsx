@@ -19,23 +19,25 @@ export default function CounsellingPlanner() {
   const { predict, reset: resetPredict, results, loading, error } = useCollegePredictor();
 
   // When the worker returns, turn the flat result list into a draggable order.
+  // Include EVERY eligible college-branch option (no cap) so the choice list is
+  // complete — exactly the set of options the candidate can fill in JoSAA.
   useEffect(() => {
     if (!results) return;
-    setOrder(results.slice(0, 14).map((o, i) => ({ ...o, _id: `${o.slug}-${o.branchCode}-${i}` })));
+    setOrder(results.map((o, i) => ({ ...o, _id: `${o.slug}-${o.branchCode}-${i}` })));
   }, [results]);
 
-  // JEE Advanced → only IITs · JEE Main → only NITs & IIITs
+  // JEE Advanced → all IITs · JEE Main → all NITs, IIITs & GFTIs
   const run = () => {
     if (!form.rank || Number(form.rank) <= 0) return;
     setRan(true);
-    const types = form.exam === "advanced" ? ["IIT"] : ["NIT", "IIIT"];
+    const types = form.exam === "advanced" ? ["IIT"] : ["NIT", "IIIT", "GFTI"];
     predict({ ...form, types });
   };
   const reset = () => { setForm({ rank: "", category: "OPEN", state: "", branch: "", exam: "advanced" }); setOrder([]); setRan(false); resetPredict(); };
 
   const download = () => {
     if (!order.length) return;
-    const head = `College Parichay — My JoSAA Choice List\nExam: ${form.exam === "advanced" ? "JEE Advanced (IITs)" : "JEE Main (NITs & IIITs)"}\nRank: ${form.rank || "-"}   Category: ${form.category}\nGenerated on ${new Date().toLocaleDateString("en-IN")}\n${"=".repeat(50)}\n\n`;
+    const head = `College Parichay — My JoSAA Choice List\nExam: ${form.exam === "advanced" ? "JEE Advanced (IITs)" : "JEE Main (NITs, IIITs & GFTIs)"}\nRank: ${form.rank || "-"}   Category: ${form.category}\nTotal options: ${order.length}\nGenerated on ${new Date().toLocaleDateString("en-IN")}\n${"=".repeat(50)}\n\n`;
     const body = order.map((o, i) => `${String(i + 1).padStart(2, " ")}. ${o.college} — ${o.branch}\n     Closing rank: ${o.closing}   |   ${o.tier}`).join("\n\n");
     const blob = new Blob([head + body + "\n\n(Illustrative — verify on josaa.nic.in)"], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -91,7 +93,7 @@ export default function CounsellingPlanner() {
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                 {[
                   { id: "advanced", label: "JEE Advanced", sub: "IITs only" },
-                  { id: "mains",   label: "JEE Main",     sub: "NITs & IIITs" },
+                  { id: "mains",   label: "JEE Main",     sub: "NITs, IIITs & GFTIs" },
                 ].map((e) => {
                   const on = form.exam === e.id;
                   return (
@@ -176,13 +178,16 @@ export default function CounsellingPlanner() {
               {/* Choice list */}
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
-                  <h3 style={{ fontFamily: "Sora", fontWeight: 700 }}>Your choice order</h3>
+                  <h3 style={{ fontFamily: "Sora", fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                    Your choice order
+                    <span className="badge orange" style={{ fontSize: 12 }}>{order.length} options</span>
+                  </h3>
                   <button className="btn btn-ghost" onClick={download} style={{ fontSize: 13, padding: "7px 12px" }}>
                     <Download size={15} /> Download list
                   </button>
                 </div>
                 <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>
-                  Drag the handle to reorder. Put your most-wanted seat at the top.
+                  Every college-branch you're eligible for is listed below. Drag the handle to reorder — put your most-wanted seat at the top.
                 </p>
                 <Reorder.Group axis="y" values={order} onReorder={setOrder} style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
                   {order.map((o, i) => (

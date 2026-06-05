@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, MapPin, Trophy, ArrowRight, Wand2, Loader2, Award, GraduationCap, Download } from "lucide-react";
+import { Reorder } from "framer-motion";
+import { Sparkles, MapPin, Trophy, ArrowRight, Wand2, Loader2, Award, GraduationCap, Download, Plus, Check, X, GripVertical, ListOrdered, Trash2 } from "lucide-react";
 import { COLLEGE_BY_SLUG, CATEGORIES } from "../data/colleges.js";
 import { TIER_COLOR } from "../utils/collegePredictor.js";
 import { useCollegePredictor } from "../hooks/useCollegePredictor.js";
@@ -28,22 +29,20 @@ const EXAM_PROFILES = {
     color: "#e05a2b",
     gradient: "linear-gradient(135deg,#F47B20 0%,#e05a2b 100%)",
     types: ["IIT"],
-    limit: { IIT: 25 },
     rankLabel: "Your JEE Advanced rank (CRL / category)",
-    note: "Showing up to 25 IITs that fit your JEE Advanced rank.",
+    note: "Showing every IIT branch you're eligible for with your JEE Advanced rank.",
     placeholder: "e.g. 4200",
   },
   main: {
     key: "main",
     title: "JEE Main",
-    sub: "NIT + IIIT admissions",
+    sub: "NIT + IIIT + GFTI admissions",
     icon: Award,
     color: "#2563eb",
     gradient: "linear-gradient(135deg,#3b82f6 0%,#7c3aed 100%)",
-    types: ["NIT", "IIIT"],
-    limit: { NIT: 15, IIIT: 15 },
+    types: ["NIT", "IIIT", "GFTI"],
     rankLabel: "Your JEE Main rank (CRL / category)",
-    note: "Showing up to 15 NITs and 15 IIITs that fit your JEE Main rank.",
+    note: "Showing every NIT, IIIT & GFTI branch you're eligible for with your JEE Main rank.",
     placeholder: "e.g. 18500",
   },
 };
@@ -64,6 +63,46 @@ export default function ForYou() {
   const [category, setCategory] = useState("OPEN");
   const [tipIdx, setTipIdx]     = useState(0);
   const tipTimer = useRef(null);
+
+  // ── User-built ordered choice list (persisted across visits) ──
+  const [myList, setMyList] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("cp_my_choice_list") || "[]"); }
+    catch { return []; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem("cp_my_choice_list", JSON.stringify(myList)); } catch { /* ignore quota */ }
+  }, [myList]);
+
+  const idOf       = (m) => `${m.slug}-${m.branchCode}`;
+  const inList     = (m) => myList.some((x) => x._id === idOf(m));
+  const addToList  = (m) => setMyList((l) => (l.some((x) => x._id === idOf(m)) ? l : [...l, { ...m, _id: idOf(m) }]));
+  const removeFrom = (id) => setMyList((l) => l.filter((x) => x._id !== id));
+  const clearList  = () => setMyList([]);
+
+  const downloadMyList = () => {
+    if (!myList.length) return;
+    const head =
+      `College Parichay — My Choice List (my preference order)\n` +
+      `Rank: ${rank || "-"}   Category: ${category}\n` +
+      `Total choices: ${myList.length}\n` +
+      `Generated on ${new Date().toLocaleDateString("en-IN")}\n` +
+      `${"=".repeat(52)}\n\n`;
+    const body = myList
+      .map((o, i) => {
+        const c = COLLEGE_BY_SLUG[o.slug];
+        const name = c?.short || o.college;
+        return `${String(i + 1).padStart(2, " ")}. ${name} — ${o.branch}\n` +
+               `     Closing ${fmtRank(o.closing)}  |  Avg ${fmtINR(o.avgPackage)}  |  ${o.tier}`;
+      })
+      .join("\n\n");
+    const blob = new Blob([head + body + "\n\n(Order them in JoSAA exactly as above. Verify on josaa.nic.in)"], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "my-choice-list.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const { predict, reset, results: grouped, loading, error } = useCollegePredictor();
 
@@ -91,7 +130,8 @@ export default function ForYou() {
       rank: Number(rank),
       category,
       types: profile.types,
-      limit: profile.limit,
+      limit: Infinity,      // no per-group cap — show every eligible option
+      allBranches: true,    // include every eligible branch of each college
     }, true);
   }
 
@@ -295,91 +335,167 @@ export default function ForYou() {
           </div>
         )}
 
-        {/* ── Grouped results ── */}
+        {/* ── Grouped results + My-list builder (two columns) ── */}
         {hasResults && !loading && (
-          <>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
-              <p style={{ color: "var(--muted)", fontSize: 14, margin: 0 }}>
-                Showing best-fit <strong>{profile.title}</strong> options for rank <strong>{fmtRank(Number(rank))}</strong> · {category} · 2025 cutoffs
-              </p>
-              <button className="btn btn-ghost" onClick={downloadList} style={{ fontSize: 13, padding: "8px 14px", whiteSpace: "nowrap" }}>
-                <Download size={15} /> Download list
-              </button>
+          <div className="fy-layout">
+
+            {/* LEFT — predicted colleges */}
+            <div className="fy-main">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
+                <p style={{ color: "var(--muted)", fontSize: 14, margin: 0 }}>
+                  Every <strong>{profile.title}</strong> branch you're eligible for · rank <strong>{fmtRank(Number(rank))}</strong> · {category} · 2025 cutoffs
+                </p>
+                <button className="btn btn-ghost" onClick={downloadList} style={{ fontSize: 13, padding: "8px 14px", whiteSpace: "nowrap" }}>
+                  <Download size={15} /> Download all
+                </button>
+              </div>
+
+              {GROUP_ORDER.map((groupKey) => {
+                const picks = grouped[groupKey];
+                if (!picks?.length) return null;
+                const meta = GROUP_META[groupKey];
+
+                return (
+                  <div key={groupKey} style={{ marginBottom: 40 }}>
+                    <div style={{
+                      display: "flex", alignItems: "center", gap: 10,
+                      marginBottom: 14, paddingBottom: 10,
+                      borderBottom: `2px solid ${meta.color}22`,
+                    }}>
+                      <span style={{ fontSize: 20 }}>{meta.emoji}</span>
+                      <h3 style={{ fontFamily: "Sora", fontWeight: 700, color: meta.color, margin: 0 }}>
+                        {meta.label}
+                      </h3>
+                      <span className="badge" style={{ background: `${meta.color}18`, color: meta.color, fontSize: 12 }}>
+                        {picks.length} option{picks.length > 1 ? "s" : ""}
+                      </span>
+                    </div>
+
+                    <div className="fy-cards">
+                      {picks.map((m, i) => {
+                        const c = COLLEGE_BY_SLUG[m.slug];
+                        if (!c) return null;
+                        const added = inList(m);
+                        return (
+                          <Reveal key={`${m.slug}-${m.branchCode}`} delay={(i % 3) * 0.05}>
+                            <div className="card fy-card" style={{
+                              display: "flex", flexDirection: "column", gap: 9,
+                              height: "100%", borderTop: `3px solid ${meta.color}`,
+                            }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                                <h4 style={{ fontFamily: "Sora", fontWeight: 700, color: "var(--navy)", fontSize: 14, lineHeight: 1.3 }}>
+                                  {c.short}
+                                </h4>
+                                <span className="badge" style={{ background: `${TIER_COLOR[m.tier]}22`, color: TIER_COLOR[m.tier], whiteSpace: "nowrap" }}>
+                                  {m.tier}
+                                </span>
+                              </div>
+
+                              <div style={{ fontSize: 12.5, color: "var(--muted)", display: "flex", alignItems: "center", gap: 4 }}>
+                                <MapPin size={12} /> {c.location}
+                              </div>
+
+                              <div style={{ fontSize: 13 }}>
+                                Branch: <strong>{m.branch}</strong>
+                              </div>
+
+                              <div style={{ display: "flex", gap: 12, fontSize: 12.5, padding: "8px 0", borderTop: "1px solid var(--line)" }}>
+                                <span>Closing <strong>{fmtRank(m.closing)}</strong></span>
+                                <span>Avg <strong>{fmtINR(m.avgPackage)}</strong></span>
+                              </div>
+
+                              <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
+                                <button
+                                  className="btn"
+                                  onClick={() => (added ? removeFrom(idOf(m)) : addToList(m))}
+                                  style={{
+                                    justifyContent: "center", fontSize: 12.5, fontWeight: 700,
+                                    border: `1.5px solid ${added ? "var(--green)" : meta.color}`,
+                                    background: added ? "rgba(46,196,182,.12)" : `${meta.color}10`,
+                                    color: added ? "#0e9c90" : meta.color,
+                                  }}
+                                >
+                                  {added ? <><Check size={14} /> In your list</> : <><Plus size={14} /> Add to my list</>}
+                                </button>
+                                <div style={{ display: "flex", gap: 8 }}>
+                                  <SaveButton slug={c.slug} size={15} />
+                                  <CompareButton slug={c.slug} label={false} />
+                                  <button
+                                    className="btn btn-ghost"
+                                    style={{ flex: 1, justifyContent: "center", fontSize: 12.5 }}
+                                    onClick={() => nav(`/colleges/${c.slug}`)}
+                                  >
+                                    Details <ArrowRight size={14} />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </Reveal>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
-            {GROUP_ORDER.map((groupKey) => {
-              const picks = grouped[groupKey];
-              if (!picks?.length) return null;
-              const meta = GROUP_META[groupKey];
-
-              return (
-                <div key={groupKey} style={{ marginBottom: 40 }}>
-                  <div style={{
-                    display: "flex", alignItems: "center", gap: 10,
-                    marginBottom: 14, paddingBottom: 10,
-                    borderBottom: `2px solid ${meta.color}22`,
-                  }}>
-                    <span style={{ fontSize: 20 }}>{meta.emoji}</span>
-                    <h3 style={{ fontFamily: "Sora", fontWeight: 700, color: meta.color, margin: 0 }}>
-                      {meta.label}
-                    </h3>
-                    <span className="badge" style={{ background: `${meta.color}18`, color: meta.color, fontSize: 12 }}>
-                      {picks.length} option{picks.length > 1 ? "s" : ""}
-                    </span>
+            {/* RIGHT — your own ordered choice list */}
+            <aside className="fy-aside">
+              <div className="card fy-mylist-card">
+                <div className="fy-mylist-head">
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span className="fy-mylist-icon"><ListOrdered size={16} /></span>
+                    <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1rem", margin: 0 }}>My choice list</h3>
                   </div>
-
-                  <div className="grid-3">
-                    {picks.map((m, i) => {
-                      const c = COLLEGE_BY_SLUG[m.slug];
-                      if (!c) return null;
-                      return (
-                        <Reveal key={`${m.slug}-${m.branch}`} delay={(i % 3) * 0.05}>
-                          <div className="card fy-card" style={{
-                            display: "flex", flexDirection: "column", gap: 9,
-                            height: "100%", borderTop: `3px solid ${meta.color}`,
-                          }}>
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
-                              <h4 style={{ fontFamily: "Sora", fontWeight: 700, color: "var(--navy)", fontSize: 14, lineHeight: 1.3 }}>
-                                {c.short}
-                              </h4>
-                              <span className="badge" style={{ background: `${TIER_COLOR[m.tier]}22`, color: TIER_COLOR[m.tier], whiteSpace: "nowrap" }}>
-                                {m.tier}
-                              </span>
-                            </div>
-
-                            <div style={{ fontSize: 12.5, color: "var(--muted)", display: "flex", alignItems: "center", gap: 4 }}>
-                              <MapPin size={12} /> {c.location}
-                            </div>
-
-                            <div style={{ fontSize: 13 }}>
-                              Best fit: <strong>{m.branch}</strong>
-                            </div>
-
-                            <div style={{ display: "flex", gap: 12, fontSize: 12.5, padding: "8px 0", borderTop: "1px solid var(--line)" }}>
-                              <span>Closing <strong>{fmtRank(m.closing)}</strong></span>
-                              <span>Avg <strong>{fmtINR(m.avgPackage)}</strong></span>
-                            </div>
-
-                            <div style={{ display: "flex", gap: 8, marginTop: "auto" }}>
-                              <SaveButton slug={c.slug} size={15} />
-                              <CompareButton slug={c.slug} label={false} />
-                              <button
-                                className="btn btn-coral"
-                                style={{ flex: 1, justifyContent: "center", fontSize: 12.5 }}
-                                onClick={() => nav(`/colleges/${c.slug}`)}
-                              >
-                                Details <ArrowRight size={14} />
-                              </button>
-                            </div>
-                          </div>
-                        </Reveal>
-                      );
-                    })}
-                  </div>
+                  <span className="badge orange" style={{ fontSize: 12 }}>{myList.length}</span>
                 </div>
-              );
-            })}
-          </>
+
+                {myList.length === 0 ? (
+                  <div className="fy-mylist-empty">
+                    <Plus size={26} color="var(--line)" />
+                    <p>Tap <strong>“Add to my list”</strong> on any college to start building your preference order — drag to rank them 1, 2, 3…</p>
+                  </div>
+                ) : (
+                  <>
+                    <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 10px" }}>
+                      Drag to reorder. JoSAA gives you the highest choice you qualify for, so put your most-wanted seat at #1.
+                    </p>
+                    <Reorder.Group axis="y" values={myList} onReorder={setMyList} style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                      {myList.map((o, i) => {
+                        const c = COLLEGE_BY_SLUG[o.slug];
+                        return (
+                          <Reorder.Item key={o._id} value={o} className="fy-mylist-item" style={{ borderLeft: `4px solid ${TIER_COLOR[o.tier]}` }}>
+                            <span className="fy-mylist-num">{i + 1}</span>
+                            <GripVertical size={14} color="var(--muted)" style={{ flexShrink: 0, cursor: "grab" }} />
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontWeight: 700, color: "var(--navy)", fontSize: 12.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                {c?.short || o.college}
+                              </div>
+                              <div style={{ fontSize: 11, color: "var(--muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                {o.branch} · {fmtRank(o.closing)}
+                              </div>
+                            </div>
+                            <button className="fy-mylist-x" onClick={() => removeFrom(o._id)} title="Remove" aria-label="Remove">
+                              <X size={14} />
+                            </button>
+                          </Reorder.Item>
+                        );
+                      })}
+                    </Reorder.Group>
+
+                    <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                      <button className="btn btn-coral" onClick={downloadMyList} style={{ flex: 1, justifyContent: "center", fontSize: 12.5 }}>
+                        <Download size={14} /> Download
+                      </button>
+                      <button className="btn btn-ghost" onClick={clearList} style={{ fontSize: 12.5, padding: "8px 12px" }} title="Clear list">
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </aside>
+          </div>
         )}
 
         {/* ── No results ── */}
@@ -436,6 +552,27 @@ export default function ForYou() {
       <style>{`
         .fy-card { transition: transform .2s ease, box-shadow .2s ease; }
         .fy-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px -16px rgba(0,0,0,.28); }
+
+        /* Two-column: predicted colleges + sticky my-list builder */
+        .fy-layout { display: grid; grid-template-columns: minmax(0,1fr) 340px; gap: 26px; align-items: start; }
+        .fy-cards  { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 16px; }
+        .fy-aside  { position: sticky; top: 88px; }
+
+        .fy-mylist-card { padding: 16px; }
+        .fy-mylist-head { display: flex; align-items: center; justify-content: space-between; gap: 8; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+        .fy-mylist-icon { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: rgba(249,115,22,.12); color: #e05a2b; }
+        .fy-mylist-empty { text-align: center; padding: 24px 8px; color: var(--muted); }
+        .fy-mylist-empty p { font-size: 12.5px; line-height: 1.6; margin: 10px 0 0; }
+        .fy-mylist-item { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; box-shadow: 0 1px 6px rgba(13,27,62,.05); cursor: default; }
+        .fy-mylist-num { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg,#F47B20,#ea580c); color: #fff; font-family: "Sora",sans-serif; font-weight: 800; font-size: 11px; }
+        .fy-mylist-x { flex-shrink: 0; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; border: none; background: rgba(239,68,68,.08); color: #ef4444; cursor: pointer; transition: background .15s; }
+        .fy-mylist-x:hover { background: rgba(239,68,68,.18); }
+
+        /* On tablet/phone the builder drops below the predictions, full width */
+        @media (max-width: 980px) {
+          .fy-layout { grid-template-columns: 1fr; }
+          .fy-aside  { position: static; }
+        }
         @media (max-width: 560px) { .exam-toggle { grid-template-columns: 1fr !important; } }
       `}</style>
     </div>

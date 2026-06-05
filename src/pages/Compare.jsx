@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { X, Plus, Trophy, MapPin, ArrowRight, GitCompare } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { COLLEGE_BY_SLUG, COLLEGES, BRANCHES } from "../data/colleges.js";
-import { finalClosing } from "../utils/cutoffEngine.js";
+import { realFinalClose2025 } from "../utils/cutoffEngine.js";
 import { Bars } from "../components/Charts.jsx";
 import { fmtINR, fmtRank } from "../utils/format.js";
 
@@ -14,7 +14,7 @@ export default function Compare() {
   const cols = compare.map((s) => COLLEGE_BY_SLUG[s]).filter(Boolean);
 
   const feeTotal = (c) => Object.values(c.fees).reduce((a, b) => a + b, 0);
-  const cseClose = (c) => finalClosing(c, "cse", "OPEN");
+  const cseClose = (c) => realFinalClose2025(c, "cse", "OPEN");
 
   const ROWS = [
     ["Type", (c) => c.type],
@@ -25,7 +25,7 @@ export default function Compare() {
     ["Highest package", (c) => fmtINR(c.placements.highest)],
     ["Placement %", (c) => `${c.placements.placedPct}%`],
     ["Total fees / yr", (c) => fmtINR(feeTotal(c))],
-    ["CSE closing (Gen)", (c) => fmtRank(cseClose(c))],
+    ["CSE closing 2025 (Gen)", (c) => fmtRank(cseClose(c))],
     ["Counselling", (c) => c.counsellingExam],
   ];
 
