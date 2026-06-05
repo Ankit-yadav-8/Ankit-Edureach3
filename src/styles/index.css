@@ -3018,10 +3018,13 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .cp-rank-legend { flex-wrap: wrap; gap: 2px 0; }
 }
 
-/* ── At-a-glance result strip — 4 quick-read cards above the summary pies ── */
+/* ── At-a-glance result strip — 4 quick-read cards above the summary pies.
+   auto-fit keeps it correct on every width: 4-across on desktop, reflowing to
+   2 (and 1 on the smallest phones) as the column narrows — including the
+   narrower predictor column that shares space with the counselling card. ── */
 .cp-glance-strip {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 12px;
   margin-top: 22px;
 }
@@ -3053,8 +3056,10 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   line-height: 1.35;
 }
 @media (max-width:640px) {
-  .cp-glance-strip { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .cp-glance-strip { gap: 10px; }
   .cp-glance-val   { font-size: 1.45rem; }
+  .cp-glance-card  { padding: 12px 10px 11px; }
+  .cp-glance-hint  { font-size: 10.5px; }
 }
 
 /* ── Empty state — shown before the first prediction is run ── */
@@ -3090,7 +3095,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 }
 .cp-empty-steps {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 14px;
   max-width: 760px;
   margin: 0 auto;
@@ -3130,6 +3135,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   line-height: 1.5;
   margin-top: 3px;
 }
-@media (max-width:720px) {
+@media (max-width:640px) {
+  .cp-empty       { padding: 24px 18px; }
   .cp-empty-steps { grid-template-columns: 1fr; }
 }
