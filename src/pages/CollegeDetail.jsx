@@ -10,7 +10,6 @@ import { useState, useEffect } from "react";
 import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapPin, Globe, Trophy, ArrowLeft, ExternalLink, Crosshair, Building2 } from "lucide-react";
-import { FloatingOrbs, GradientText } from "../components/Animations.jsx";
 import { COLLEGE_BY_SLUG, CATEGORIES, BRANCHES } from "../data/colleges.js";
 import { collegeBranches, seatMatrix } from "../utils/cutoffEngine.js";
 import { loadCutoffDB } from "../utils/realCutoffEngine.js";
@@ -90,16 +89,25 @@ export default function CollegeDetail() {
   ];
   const totalFee = feeData.reduce((s, f) => s + f.value, 0);
 
+  // Clean the About copy for display: drop the internal "(Illustrative profile …)"
+  // note and fix the "is an National…" grammar so the page reads professionally.
+  const aboutText = (college.about || "")
+    .replace(/\s*\(Illustrative profile[^)]*\)\s*/gi, " ")
+    .replace(/\bis an National\b/g, "is a National")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+
   return (
     <div className="page">
 
-      {/* ── Hero ─────────────────────────────────────────────────────────────── */}
+      {/* ── Hero — clean: image + one readability gradient + a subtle accent ──── */}
       <section style={{
         position: "relative", color: "#fff",
-        padding: "120px 0 64px", overflow: "hidden",
-        minHeight: 480,
+        padding: "108px 0 52px", overflow: "hidden",
+        minHeight: 400,
+        background: "linear-gradient(135deg, #15152e, #0d0d1f)",
       }}>
-        {/* Background image — full visible with brightness/contrast boost */}
+        {/* Background image */}
         <div style={{
           position: "absolute", inset: 0,
           backgroundImage: `url("${encodeURI(college.heroImage)}")`,
@@ -107,48 +115,25 @@ export default function CollegeDetail() {
           backgroundPosition: "center 30%",
           backgroundRepeat: "no-repeat",
           zIndex: 0,
-          filter: "brightness(1.08) contrast(1.08) saturate(1.15)",
         }} />
 
-        {/* Light gradient — only heavy at very bottom for text readability */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(180deg,rgba(8,8,24,.18) 0%,rgba(8,8,24,.28) 45%,rgba(8,8,24,.82) 78%,rgba(8,8,24,.97) 100%)",
-          zIndex: 1,
-        }} />
-
-        {/* Subtle vignette on left & right edges */}
+        {/* Single top-to-bottom gradient for text legibility */}
         <div style={{
           position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
-          background: "linear-gradient(90deg,rgba(8,8,24,.38) 0%,transparent 18%,transparent 82%,rgba(8,8,24,.38) 100%)",
+          background: "linear-gradient(180deg, rgba(10,10,24,.30) 0%, rgba(10,10,24,.46) 52%, rgba(10,10,24,.88) 100%)",
         }} />
 
-        {/* Orange corner glows */}
-        <div style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 0% 0%, rgba(244,123,32,.22), transparent 55%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "radial-gradient(ellipse 50% 60% at 100% 100%, rgba(244,123,32,.15), transparent 55%)" }} />
-
-        {/* Floating orbs */}
-        <FloatingOrbs count={4} colors={["#F47B20","#fbbf24","#F97316","#f4a261"]} style={{ zIndex: 1 }} />
-
-        {/* Mesh grid overlay */}
+        {/* One subtle brand-colour glow in the top corner */}
         <div style={{
           position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
-          backgroundImage: "linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
+          background: `radial-gradient(ellipse 55% 60% at 100% 0%, ${college.accent}33, transparent 60%)`,
         }} />
 
-        {/* Pulsing glowing accent bar at bottom */}
-        <motion.div
-          animate={{ opacity: [0.5, 1, 0.5], scaleX: [0.8, 1, 0.8] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          style={{
-            position: "absolute", bottom: 0, left: "10%", right: "10%", height: 2,
-            background: "linear-gradient(90deg, transparent, #F47B20, #fbbf24, #F47B20, transparent)",
-            zIndex: 3,
-            boxShadow: "0 0 24px rgba(244,123,32,.8), 0 0 48px rgba(244,123,32,.3)",
-            transformOrigin: "center",
-          }}
-        />
+        {/* Static accent line at the bottom edge */}
+        <div style={{
+          position: "absolute", bottom: 0, left: 0, right: 0, height: 3, zIndex: 3,
+          background: `linear-gradient(90deg, transparent, ${college.accent}, transparent)`,
+        }} />
 
         <div className="container" style={{ position: "relative", zIndex: 4 }}>
           <motion.div
@@ -170,14 +155,12 @@ export default function CollegeDetail() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.1 }}
             >
-              <motion.span
-                animate={{ boxShadow: ["0 0 0px rgba(244,123,32,0)", "0 0 18px rgba(244,123,32,.55)", "0 0 0px rgba(244,123,32,0)"] }}
-                transition={{ duration: 2.5, repeat: Infinity }}
+              <span
                 className="badge orange"
                 style={{ display: "inline-flex", gap: 4, alignItems: "center" }}
               >
                 <Trophy size={12} /> NIRF #{college.nirf} · {college.type}
-              </motion.span>
+              </span>
               <motion.h1
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -282,11 +265,24 @@ export default function CollegeDetail() {
                 <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>
                   About {college.short}
                 </h3>
-                <p style={{ color: "var(--muted)", lineHeight: 1.7 }}>{college.about}</p>
-                <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 8 }}>
-                  <span className="badge teal">{college.counsellingExam}</span>
-                  <span className="badge orange">Estd {college.estd}</span>
-                  <span className="badge violet">{college.state}</span>
+                <p style={{ color: "var(--muted)", lineHeight: 1.7 }}>{aboutText}</p>
+                <div style={{
+                  marginTop: 18, paddingTop: 16, borderTop: "1px solid var(--line)",
+                  display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 20px",
+                }}>
+                  {[
+                    ["NIRF Rank",   `#${college.nirf}`],
+                    ["Type",        college.type],
+                    ["Established", college.estd],
+                    ["State",       college.state],
+                    ["Location",    college.location],
+                    ["Counselling", college.counsellingExam],
+                  ].map(([k, v]) => (
+                    <div key={k}>
+                      <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".5px" }}>{k}</div>
+                      <div style={{ fontWeight: 700, color: "var(--navy)", fontSize: 14, marginTop: 3 }}>{v}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="card">
