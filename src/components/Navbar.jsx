@@ -61,29 +61,31 @@ const COLLEGES = [
 ];
 
 // ── Tools mega-menu: every utility grouped under a common, colour-coded name ──
+// Each item carries a one-line `desc` so first-time visitors instantly know what
+// the tool does — they shouldn't have to click to find out.
 const TOOLS_MEGA = [
   {
     title: "Plan & Apply", to: "/planner", color: "#F47B20", icon: CalendarDays,
     items: [
-      { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays },
-      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award },
-      { label: "Colleges For You",        to: "/for-you",    icon: Sparkles },
+      { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays, desc: "Track every JoSAA & CSAB round date" },
+      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert ₹249 choice-filling plan" },
+      { label: "Colleges For You",        to: "/for-you",    icon: Sparkles,     desc: "Personalised picks for your rank" },
     ],
   },
   {
     title: "Compare & Explore", to: "/compare", color: "#6366f1", icon: GitCompare,
     items: [
-      { label: "Compare Colleges", to: "/compare",       icon: GitCompare },
-      { label: "Compare Exams",    to: "/compare-exams", icon: BarChart3 },
-      { label: "College Map",      to: "/map",           icon: Landmark },
+      { label: "Compare Colleges", to: "/compare",       icon: GitCompare, desc: "Place colleges side by side" },
+      { label: "Compare Exams",    to: "/compare-exams", icon: BarChart3,  desc: "JEE vs other entrance exams" },
+      { label: "College Map",      to: "/map",           icon: Landmark,   desc: "Find institutes across India" },
     ],
   },
   {
     title: "Cutoffs & More", to: "/cutoffs", color: "#2ec4b6", icon: FileText,
     items: [
-      { label: "Official Cutoffs",      to: "/cutoffs",      icon: FileText },
-      { label: "Scholarships & Loans",  to: "/scholarships", icon: BadgeCheck },
-      { label: "Admin Data",            to: "/admin",        icon: ShieldCheck },
+      { label: "Official Cutoffs",      to: "/cutoffs",      icon: FileText,    desc: "Real opening & closing ranks" },
+      { label: "Scholarships & Loans",  to: "/scholarships", icon: BadgeCheck,  desc: "Funding options for your seat" },
+      { label: "Admin Data",            to: "/admin",        icon: ShieldCheck, desc: "Manage portal data" },
     ],
   },
 ];
@@ -125,14 +127,19 @@ export default function Navbar({ onSearch }) {
     }
   };
 
+  // `match` decides when a nav item should render in its "active" (current-page)
+  // state — gives every one of the six parts a consistent highlight so users
+  // always know where they are.
   const navItems = [
-    { label: "Home", to: "/" },
-    { label: "JEE", mega: JEE_MEGA, base: "/jee-resources", highlight: true },
-    { label: "Colleges", drop: COLLEGES, base: "/colleges" },
-    { label: "Colleges For You", to: "/for-you", feature: true },
-    { label: "Exams", to: "/exams" },
-    { label: "Tools", mega: TOOLS_MEGA, base: "/planner", align: "right" },
+    { label: "Home", to: "/", match: (p) => p === "/" },
+    { label: "JEE", mega: JEE_MEGA, base: "/jee-resources", highlight: true, match: (p) => p.startsWith("/jee") },
+    { label: "Colleges", drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
+    { label: "Colleges For You", to: "/for-you", feature: true, match: (p) => p.startsWith("/for-you") },
+    { label: "Exams", to: "/exams", match: (p) => p.startsWith("/exam") || p.startsWith("/compare-exams") },
+    { label: "Tools", mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa"].some((x) => p.startsWith(x)) },
   ];
+
+  const isActive = (item) => (item.match ? item.match(location.pathname) : false);
 
   return (
     <>
@@ -199,8 +206,18 @@ export default function Navbar({ onSearch }) {
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <ul style={{ display: "flex", alignItems: "center", gap: 2 }} className="desktop-nav">
+        {/* Desktop nav — absolutely centered in the navbar so the JEE / Colleges /
+            Tools links sit in the true middle regardless of how wide the logo or
+            the right-hand button cluster grow. */}
+        <ul
+          className="desktop-nav"
+          style={{
+            display: "flex", alignItems: "center", gap: 4,
+            position: "absolute", left: "50%", top: "50%",
+            transform: "translate(-50%, -50%)",
+            margin: 0, padding: 0, listStyle: "none",
+          }}
+        >
           {navItems.map((item) => (
             <li
               key={item.label}
@@ -212,7 +229,7 @@ export default function Navbar({ onSearch }) {
                 <>
                   <button
                     onClick={() => (GATE_TABS && !isLoggedIn ? openLogin() : navigate(item.base))}
-                    style={item.highlight ? navHighlightStyle(open === item.label) : navLinkStyle(open === item.label)}
+                    style={item.highlight ? navHighlightStyle(open === item.label || isActive(item)) : navLinkStyle(open === item.label || isActive(item))}
                   >
                     {item.highlight && <BookOpen size={13} />}
                     {item.label}
@@ -237,9 +254,10 @@ export default function Navbar({ onSearch }) {
                         {item.mega.map((col) => {
                           const ColIc = col.icon;
                           return (
-                            <div key={col.title} style={{ minWidth: 214 }}>
+                            <div key={col.title} style={{ minWidth: 230 }}>
                               <button
                                 onClick={() => goHash(col.to)}
+                                className="mega-col-head"
                                 style={{
                                   display: "flex", alignItems: "center", gap: 8, width: "100%",
                                   padding: "8px 10px", marginBottom: 4, borderRadius: 10,
@@ -254,9 +272,19 @@ export default function Navbar({ onSearch }) {
                               {col.items.map((d) => {
                                 const Ic = d.icon;
                                 return (
-                                  <button key={d.label} onClick={() => goHash(d.to)} style={megaItemStyle}>
-                                    <Ic size={15} color={col.color} />
-                                    <span style={{ fontWeight: 600, fontSize: "0.82rem" }}>{d.label}</span>
+                                  <button
+                                    key={d.label}
+                                    onClick={() => goHash(d.to)}
+                                    className="mega-item"
+                                    style={{ ...megaItemStyle, alignItems: d.desc ? "flex-start" : "center", "--mega-accent": col.color }}
+                                  >
+                                    <span style={{ width: 26, height: 26, borderRadius: 8, background: `${col.color}16`, display: "grid", placeItems: "center", flexShrink: 0, marginTop: d.desc ? 1 : 0 }}>
+                                      <Ic size={15} color={col.color} />
+                                    </span>
+                                    <span style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                                      <span style={{ fontWeight: 700, fontSize: "0.83rem", color: "var(--navy)" }}>{d.label}</span>
+                                      {d.desc && <span style={{ fontSize: "0.72rem", color: "#9ca3af", lineHeight: 1.35 }}>{d.desc}</span>}
+                                    </span>
                                   </button>
                                 );
                               })}
@@ -271,7 +299,7 @@ export default function Navbar({ onSearch }) {
                 <>
                   <button
                     onClick={() => (GATE_TABS && !isLoggedIn ? openLogin() : navigate(item.base))}
-                    style={item.highlight ? navHighlightStyle(open === item.label) : navLinkStyle(open === item.label)}
+                    style={item.highlight ? navHighlightStyle(open === item.label || isActive(item)) : navLinkStyle(open === item.label || isActive(item))}
                   >
                     {item.highlight && <BookOpen size={13} />}
                     {item.label}
@@ -293,7 +321,7 @@ export default function Navbar({ onSearch }) {
                         {item.drop.map((d) => {
                           const Ic = d.icon;
                           return (
-                            <button key={d.label} onClick={() => goHash(d.to)} style={d.tag ? { ...dropItemStyle, flexDirection: "column", alignItems: "flex-start", gap: 1 } : dropItemStyle}>
+                            <button key={d.label} onClick={() => goHash(d.to)} className="drop-item" style={d.tag ? { ...dropItemStyle, flexDirection: "column", alignItems: "flex-start", gap: 1 } : dropItemStyle}>
                               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                 <Ic size={15} color="var(--coral)" />
                                 <span style={{ fontWeight: 600, fontSize: "0.85rem" }}>{d.label}</span>
@@ -316,7 +344,7 @@ export default function Navbar({ onSearch }) {
                   {item.label}
                 </button>
               ) : (
-                <button onClick={() => goHash(item.to)} style={navLinkStyle(false)}>
+                <button onClick={() => goHash(item.to)} style={navLinkStyle(isActive(item))}>
                   {item.label}
                 </button>
               )}
@@ -491,8 +519,15 @@ export default function Navbar({ onSearch }) {
                 <div key={item.label} style={{ borderBottom: "1px solid var(--gray-light)", padding: "0.5rem 0" }}>
                   <button
                     onClick={() => goHash(item.to || item.base)}
-                    style={{ fontWeight: 700, color: "var(--navy)", fontSize: "1rem", padding: "0.4rem 0" }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 8,
+                      fontWeight: 700, fontSize: "1rem", padding: "0.5rem 0.7rem",
+                      width: "100%", borderRadius: 10, cursor: "pointer",
+                      color: isActive(item) ? "#ea580c" : "var(--navy)",
+                      background: isActive(item) ? "rgba(244,123,32,.1)" : "transparent",
+                    }}
                   >
+                    {isActive(item) && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#F47B20" }} />}
                     {item.label}
                   </button>
                   {item.drop && (
@@ -522,9 +557,10 @@ export default function Navbar({ onSearch }) {
                             <button
                               key={d.label}
                               onClick={() => goHash(d.to)}
-                              style={{ display: "block", padding: "0.32rem 0", color: "var(--gray)", fontSize: "0.86rem" }}
+                              style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 1, padding: "0.4rem 0", width: "100%", textAlign: "left" }}
                             >
-                              {d.label}
+                              <span style={{ color: "var(--navy)", fontSize: "0.88rem", fontWeight: 600 }}>{d.label}</span>
+                              {d.desc && <span style={{ color: "#9ca3af", fontSize: "0.74rem", lineHeight: 1.3 }}>{d.desc}</span>}
                             </button>
                           ))}
                         </div>
@@ -685,19 +721,26 @@ export default function Navbar({ onSearch }) {
 }
 
 const navLinkStyle = (active) => ({
-  display: "flex", alignItems: "center", gap: 4,
-  padding: "0.5rem 0.7rem", fontSize: "0.88rem", fontWeight: 500,
-  color: active ? "var(--coral)" : "var(--navy)", borderRadius: 8,
-  background: active ? "var(--sky)" : "transparent", transition: "all .2s", whiteSpace: "nowrap",
+  display: "flex", alignItems: "center", gap: 5,
+  padding: "0.46rem 0.9rem", fontSize: "0.88rem", fontWeight: active ? 700 : 600,
+  color: active ? "#ea580c" : "#374151",
+  borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
+  fontFamily: "inherit",
+  background: active ? "rgba(244,123,32,.12)" : "transparent",
+  border: `1.5px solid ${active ? "rgba(244,123,32,.3)" : "transparent"}`,
+  boxShadow: active ? "0 4px 14px -6px rgba(244,123,32,.5)" : "none",
+  transition: "all .2s",
 });
 
 const navHighlightStyle = (active) => ({
   display: "flex", alignItems: "center", gap: 5,
-  padding: "0.45rem 0.8rem", fontSize: "0.86rem", fontWeight: 700,
+  padding: "0.46rem 0.9rem", fontSize: "0.86rem", fontWeight: 700,
   color: active ? "#fff" : "#6366f1",
-  borderRadius: 8, whiteSpace: "nowrap",
-  background: active ? "#6366f1" : "rgba(99,102,241,.10)",
-  border: `1.5px solid ${active ? "#6366f1" : "rgba(99,102,241,.25)"}`,
+  borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
+  fontFamily: "inherit",
+  background: active ? "linear-gradient(120deg,#6366f1,#818cf8)" : "rgba(99,102,241,.10)",
+  border: `1.5px solid ${active ? "transparent" : "rgba(99,102,241,.28)"}`,
+  boxShadow: active ? "0 6px 16px -6px rgba(99,102,241,.7)" : "none",
   transition: "all .2s",
 });
 

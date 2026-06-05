@@ -198,6 +198,32 @@ input,select,textarea { font-family:inherit; }
 .desktop-nav a.active::after { width:100%; }
 .desktop-nav a.active { color:#F47B20; font-weight:600; }
 
+/* Button-based nav items (JEE / Colleges / Tools …) — subtle lift + glow on hover */
+.desktop-nav > li > button {
+  cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  will-change:transform;
+}
+.desktop-nav > li > button:hover {
+  transform:translateY(-2px);
+}
+.desktop-nav > li:hover { z-index:5; }
+
+/* Dropdown / mega-menu items — clean hover feedback so tools feel explorable */
+.drop-item, .mega-item, .mega-col-head {
+  transition:background .15s ease, transform .15s ease;
+}
+.drop-item:hover {
+  background:rgba(244,123,32,.09);
+  transform:translateX(2px);
+}
+.mega-item:hover {
+  background:var(--mega-accent, rgba(244,123,32,.5));
+  background:color-mix(in srgb, var(--mega-accent, #F47B20) 10%, transparent);
+  transform:translateX(2px);
+}
+.mega-col-head:hover { filter:brightness(.97); }
+
 /* CTA buttons in nav */
 .cta-desktop {
   display:flex;
