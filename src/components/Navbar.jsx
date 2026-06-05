@@ -132,9 +132,9 @@ export default function Navbar({ onSearch }) {
   // always know where they are.
   const navItems = [
     { label: "Home", to: "/", match: (p) => p === "/" },
-    { label: "JEE", mega: JEE_MEGA, base: "/jee-resources", highlight: true, match: (p) => p.startsWith("/jee") },
+    { label: "JEE", mega: JEE_MEGA, base: "/jee-resources", match: (p) => p.startsWith("/jee") },
     { label: "Colleges", drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
-    { label: "Colleges For You", to: "/for-you", feature: true, match: (p) => p.startsWith("/for-you") },
+    { label: "Colleges For You", to: "/for-you", match: (p) => p.startsWith("/for-you") },
     { label: "Exams", to: "/exams", match: (p) => p.startsWith("/exam") || p.startsWith("/compare-exams") },
     { label: "Tools", mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa"].some((x) => p.startsWith(x)) },
   ];
