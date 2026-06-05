@@ -233,7 +233,52 @@ input,select,textarea { font-family:inherit; }
 
 /* Merged utility icon group (Help · Search · Compare · Wishlist) */
 .nav-icon-btn { background:transparent; color:#374151; }
-.nav-icon-btn:hover { background:rgba(244,123,32,.14); color:#F47B20; }
+.nav-icon-btn:hover { background:rgba(244,123,32,.14); color:#F47B20; transform:translateY(-1px); }
+.nav-icon-btn:active { transform:translateY(0) scale(.94); }
+
+/* ── Unified navbar button colour effects — simple, dynamic ──────────────
+   Every clickable item in the bar reacts on hover with a soft tint + lift,
+   so the whole navbar feels alive while staying calm and consistent. */
+
+/* Standard links: Home · Colleges · Exams · Tools — warm orange wash */
+.nav-link-btn:hover {
+  background:rgba(244,123,32,.12) !important;
+  color:#ea580c !important;
+  border-color:rgba(244,123,32,.3) !important;
+  box-shadow:0 6px 16px -8px rgba(244,123,32,.55) !important;
+}
+.nav-link-btn:active { transform:translateY(0) scale(.97); }
+
+/* JEE highlight — keep its indigo identity, deepen the glow on hover */
+.nav-highlight-btn:hover {
+  background:linear-gradient(120deg,#6366f1,#818cf8) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+  box-shadow:0 8px 20px -6px rgba(99,102,241,.7) !important;
+}
+.nav-highlight-btn:hover svg { color:#fff; }
+.nav-highlight-btn:active { transform:translateY(0) scale(.97); }
+
+/* Login / Logout ghost CTA — outline turns orange and lifts */
+.nav-ghost-cta { transition:transform .2s ease, border-color .2s ease, color .2s ease, background .2s ease, box-shadow .2s ease; }
+.nav-ghost-cta:hover {
+  border-color:#F47B20 !important;
+  color:#ea580c !important;
+  background:rgba(244,123,32,.07) !important;
+  transform:translateY(-2px);
+  box-shadow:0 8px 18px -8px rgba(244,123,32,.45);
+}
+.nav-ghost-cta:active { transform:translateY(0) scale(.97); }
+
+/* Sign Up primary CTA — solid fills into a lively gradient on hover */
+.nav-primary-cta { transition:transform .2s ease, box-shadow .2s ease, background-position .4s ease, background .3s ease; }
+.nav-primary-cta:hover {
+  background-image:linear-gradient(120deg,#F47B20 0%,#f97316 45%,#fb923c 100%) !important;
+  background-position:100% center;
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px -6px rgba(244,123,32,.7);
+}
+.nav-primary-cta:active { transform:translateY(0) scale(.97); }
 .btn-nav-ghost {
   background:transparent;
   color:#374151;

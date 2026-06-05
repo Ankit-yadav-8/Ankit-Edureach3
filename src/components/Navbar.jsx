@@ -231,6 +231,7 @@ export default function Navbar({ onSearch }) {
                 <>
                   <button
                     onClick={() => (GATE_TABS && !isLoggedIn ? openLogin() : navigate(item.base))}
+                    className={item.highlight ? "nav-highlight-btn" : "nav-link-btn"}
                     style={item.highlight ? navHighlightStyle(open === item.label || isActive(item)) : navLinkStyle(open === item.label || isActive(item))}
                   >
                     {item.highlight && <BookOpen size={13} />}
@@ -301,6 +302,7 @@ export default function Navbar({ onSearch }) {
                 <>
                   <button
                     onClick={() => (GATE_TABS && !isLoggedIn ? openLogin() : navigate(item.base))}
+                    className={item.highlight ? "nav-highlight-btn" : "nav-link-btn"}
                     style={item.highlight ? navHighlightStyle(open === item.label || isActive(item)) : navLinkStyle(open === item.label || isActive(item))}
                   >
                     {item.highlight && <BookOpen size={13} />}
@@ -346,7 +348,7 @@ export default function Navbar({ onSearch }) {
                   {item.label}
                 </button>
               ) : (
-                <button onClick={() => goHash(item.to)} style={navLinkStyle(isActive(item))}>
+                <button onClick={() => goHash(item.to)} className="nav-link-btn" style={navLinkStyle(isActive(item))}>
                   {item.label}
                 </button>
               )}
@@ -389,7 +391,7 @@ export default function Navbar({ onSearch }) {
             <button
               onClick={() => setConfirmLogout(true)}
               title="Logout"
-              className="cta-desktop"
+              className="cta-desktop nav-ghost-cta"
               style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
             >
               <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#F47B20", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
@@ -402,15 +404,15 @@ export default function Navbar({ onSearch }) {
             <>
               <button
                 onClick={openLogin}
-                className="cta-desktop"
+                className="cta-desktop nav-ghost-cta"
                 style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
               >
                 Login
               </button>
               <button
                 onClick={openSignup}
-                className="cta-desktop"
-                style={{ padding: "9px 18px", borderRadius: 10, border: "none", background: "#F47B20", color: "#fff", fontWeight: 700, cursor: "pointer" }}
+                className="cta-desktop nav-primary-cta"
+                style={{ padding: "9px 18px", borderRadius: 10, border: "none", background: "#F47B20", backgroundSize: "200% auto", color: "#fff", fontWeight: 700, cursor: "pointer" }}
               >
                 Sign Up
               </button>
