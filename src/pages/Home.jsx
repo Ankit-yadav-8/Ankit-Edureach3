@@ -1,5 +1,6 @@
 import Hero from "../components/home/Hero.jsx";
 import PredictorCards from "../components/home/PredictorCards.jsx";
+import RankCounselling from "../components/home/RankCounselling.jsx";
 import NewTools from "../components/home/NewTools.jsx";
 import ApplicationRadar from "../components/home/ApplicationRadar.jsx";
 import EntranceExams from "../components/home/EntranceExams.jsx";
@@ -691,6 +692,11 @@ export default function Home({ onSearch }) {
       <PredictorCards />
 
       <WaveSeparator fillTop="#fef3e8" fillBottom="#fff7f0" />
+
+      {/* ── JEE Mains Rank Counselling (80K–9L) ── */}
+      <RankCounselling />
+
+      <WaveSeparator fillTop="#fff7f0" fillBottom="#fff7f0" />
 
       {/* ── JEE Main & Advanced ── */}
       <HomeSection
