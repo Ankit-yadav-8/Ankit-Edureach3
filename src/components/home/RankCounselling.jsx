@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, Phone, MessageCircle, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight,
   Star, Users, Award, ShieldCheck, MapPin, GraduationCap, Sparkles, Check,
-  ClipboardList, Target, BookOpen, CalendarCheck, Quote, TrendingUp,
+  ClipboardList, Target, CalendarCheck, Quote, TrendingUp,
 } from "lucide-react";
 import Reveal from "../Reveal.jsx";
 
@@ -15,6 +15,7 @@ const WA_NUMBER = "917877596464";
 const PHONE_DISPLAY = "+91 78775 96464";
 const PHONE_TEL = "+917877596464";
 const PRICE = "499";
+const FORM_LINK = "https://forms.gle/AsfEKer3xBnpu7bB6";
 const WA_LINK =
   `https://wa.me/${WA_NUMBER}?text=` +
   encodeURIComponent("Hi! I scored a rank between 80,000–9,00,000 in JEE Main. I'd like to enrol in the ₹499 college counselling plan.");
@@ -43,28 +44,6 @@ const RANK_RANGES = [
   { range: "80K – 2L", color: "#15a06e", tag: "Strong options", options: ["Newer NITs (HS quota)", "Several IIITs", "GFTIs", "Top private (CSE)"] },
   { range: "2L – 5L", color: "#F97316", tag: "Good balance", options: ["State Govt. colleges", "GFTIs (core branches)", "Reputed private colleges", "Autonomous institutes"] },
   { range: "5L – 9L", color: "#6366f1", tag: "Smart choices", options: ["Private engineering colleges", "Deemed universities", "State quota seats", "Management / scholarship seats"] },
-];
-
-const BRANCHES = {
-  "CSE": ["IIIT (newer campuses)", "State Govt. — CSE", "Top private CSE", "Deemed univ. CSE"],
-  "ECE": ["NIT (HS quota) ECE", "IIIT ECE", "GFTI ECE", "Private ECE"],
-  "IT": ["IIIT IT", "State Govt. IT", "Private IT", "Autonomous IT"],
-  "Mechanical": ["NIT (HS) Mech", "GFTI Mech", "State Govt. Mech", "Private Mech"],
-  "Civil": ["NIT (HS) Civil", "State Govt. Civil", "GFTI Civil", "Private Civil"],
-  "AI / ML": ["IIIT AI", "Private AI/ML", "Deemed univ. AI", "Autonomous AI/DS"],
-  "Data Science": ["IIIT Data Sci.", "Private DS programs", "State Govt. DS", "Deemed univ. DS"],
-  "Electrical": ["NIT (HS) EE", "GFTI EE", "State Govt. EE", "Private EE"],
-};
-
-const STATE_BOARDS = [
-  { board: "JoSAA / CSAB", region: "All-India · NIT/IIIT/GFTI", color: "#F97316" },
-  { board: "MHT-CET", region: "Maharashtra", color: "#6366f1" },
-  { board: "KCET", region: "Karnataka", color: "#0ea5a4" },
-  { board: "WBJEE", region: "West Bengal", color: "#15a06e" },
-  { board: "UPCET / AKTU", region: "Uttar Pradesh", color: "#8b5cf6" },
-  { board: "MP DTE", region: "Madhya Pradesh", color: "#f59e0b" },
-  { board: "REAP", region: "Rajasthan", color: "#ef4444" },
-  { board: "TS / AP EAMCET", region: "Telangana · Andhra", color: "#0891b2" },
 ];
 
 const STORIES = [
@@ -112,7 +91,6 @@ const TRUST = [
    COMPONENT
 ════════════════════════════════════════════════ */
 export default function RankCounselling() {
-  const [branch, setBranch] = useState("CSE");
   const [openFaq, setOpenFaq] = useState(0);
   const [story, setStory] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -309,7 +287,7 @@ export default function RankCounselling() {
                     </div>
                   ))}
                 </div>
-                <a href={WA_LINK} target="_blank" rel="noreferrer" className="josaa-cta-btn">
+                <a href={FORM_LINK} target="_blank" rel="noreferrer" className="josaa-cta-btn">
                   Enrol Now — ₹{PRICE} <ArrowRight size={17} />
                 </a>
                 <div className="josaa-secure-note">
@@ -318,54 +296,6 @@ export default function RankCounselling() {
                 </div>
               </div>
             </div>
-          </div>
-        </Reveal>
-
-        {/* ── 5 · BRANCH / STREAM SELECTOR ── */}
-        <Reveal>
-          <SectionHead eyebrow="Explore by branch" title={<>Find colleges by <span className="accent">your stream</span></>}
-            sub="Pick a branch to see the kinds of colleges you can target in your rank range." />
-          <div style={{ background: "#fff", borderRadius: 18, border: "1px solid rgba(244,123,32,.18)", boxShadow: "0 2px 16px rgba(0,0,0,.06)", padding: "26px", marginBottom: 64, maxWidth: 760, margin: "0 auto 64px" }}>
-            <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#1a1a2e", marginBottom: 8, fontFamily: "'Space Grotesk',sans-serif" }}>
-              <BookOpen size={15} color="#F47B20" style={{ verticalAlign: -3, marginRight: 6 }} /> Select your branch
-            </label>
-            <div style={{ position: "relative", maxWidth: 320 }}>
-              <select value={branch} onChange={(e) => setBranch(e.target.value)}
-                style={{ width: "100%", appearance: "none", padding: "12px 40px 12px 16px", borderRadius: 12, border: "1.5px solid rgba(244,123,32,.35)", background: "#fff7f0", fontSize: 15, fontWeight: 600, color: "#1a1a2e", cursor: "pointer", outline: "none", fontFamily: "'Space Grotesk',sans-serif" }}>
-                {Object.keys(BRANCHES).map((b) => <option key={b} value={b}>{b}</option>)}
-              </select>
-              <ChevronDown size={18} color="#F47B20" style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginTop: 22 }}>
-              {BRANCHES[branch].map((c) => (
-                <div key={c} style={{ display: "flex", alignItems: "center", gap: 9, background: "#fff7f0", border: "1px solid rgba(244,123,32,.18)", borderRadius: 12, padding: "12px 14px" }}>
-                  <GraduationCap size={17} color="#F47B20" style={{ flexShrink: 0 }} />
-                  <span style={{ fontSize: ".86rem", fontWeight: 600, color: "#374151" }}>{c}</span>
-                </div>
-              ))}
-            </div>
-            <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 16, marginBottom: 0 }}>
-              * Indicative options. Your counsellor builds the exact list using previous-year cut-offs for your rank &amp; category.
-            </p>
-          </div>
-        </Reveal>
-
-        {/* ── 6 · STATE-WISE COUNSELLING ── */}
-        <Reveal>
-          <SectionHead eyebrow="State-wise help" title={<>Counselling for <span className="accent">every board</span></>}
-            sub="We guide you through all-India and state counselling boards." />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 64 }}>
-            {STATE_BOARDS.map((s) => (
-              <motion.div key={s.board} whileHover={{ y: -4 }}
-                style={{ background: "#fff", borderRadius: 14, border: `1px solid ${s.color}22`, borderLeft: `4px solid ${s.color}`, boxShadow: "0 2px 12px rgba(0,0,0,.05)", padding: "16px 18px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                  <MapPin size={16} color={s.color} />
-                  <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: "1rem", color: "#1a1a2e", margin: 0 }}>{s.board}</h3>
-                </div>
-                <div style={{ fontSize: ".82rem", color: "#6b7280" }}>{s.region}</div>
-              </motion.div>
-            ))}
           </div>
         </Reveal>
 
@@ -497,10 +427,10 @@ export default function RankCounselling() {
                   style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, background: "rgba(255,255,255,.12)", border: "1.5px solid rgba(255,255,255,.25)", color: "#fff", padding: "14px 24px", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif", textDecoration: "none" }}>
                   <Phone size={17} /> {PHONE_DISPLAY}
                 </a>
-                <Link to="/josaa-2026"
+                <a href={FORM_LINK} target="_blank" rel="noreferrer"
                   style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, color: "rgba(255,255,255,.85)", fontSize: 13.5, fontWeight: 600, textDecoration: "underline", textUnderlineOffset: 3 }}>
                   Or fill the enrolment form <ArrowRight size={14} />
-                </Link>
+                </a>
               </div>
             </div>
           </div>
