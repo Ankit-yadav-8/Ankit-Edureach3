@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowRight, Phone, MessageCircle, CheckCircle2, ChevronDown,
-  Star, Users, Award, ShieldCheck, MapPin, GraduationCap, Sparkles,
-  ClipboardList, Target, BookOpen, CalendarCheck, Quote,
+  ArrowRight, Phone, MessageCircle, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight,
+  Star, Users, Award, ShieldCheck, MapPin, GraduationCap, Sparkles, Check,
+  ClipboardList, Target, BookOpen, CalendarCheck, Quote, TrendingUp,
 } from "lucide-react";
 import Reveal from "../Reveal.jsx";
 
@@ -68,10 +68,30 @@ const STATE_BOARDS = [
 ];
 
 const STORIES = [
-  { name: "Rahul S.", rank: "1,42,000", college: "GFTI — CSE", quote: "I thought my rank was too low for a good college. The counsellor found me a CSE seat I didn't even know existed." },
-  { name: "Priya M.", rank: "3,10,000", college: "State Govt. — IT", quote: "Home-state quota changed everything. Got into a government college close to home with great placements." },
-  { name: "Aman K.", rank: "5,80,000", college: "Top Private — AI/ML", quote: "Their list was honest and realistic. I joined a private college with a strong AI program and a scholarship." },
-  { name: "Sneha R.", rank: "2,05,000", college: "IIIT — ECE", quote: "The CSAB round guidance got me an IIIT seat in the last round. Forever grateful for the deadline reminders!" },
+  { name: "Rahul Sharma", city: "Patna, Bihar", rank: "1,42,000", category: "OBC-NCL", college: "GFTI — CSE", quote: "I thought my rank was too low for a good college. The counsellor found me a CSE seat I didn't even know existed.", note: "GFTI cut-off was relaxed for OBC-NCL — a branch most aggregators had marked 'out of reach'." },
+  { name: "Priya Mehta", city: "Indore, MP", rank: "3,10,000", category: "General", college: "State Govt. — IT", quote: "Home-state quota changed everything. Got into a government college close to home with great placements.", note: "Home-state quota dropped her effective cut-off by ~40% vs the all-India list." },
+  { name: "Aman Kumar", city: "Jaipur, Rajasthan", rank: "5,80,000", category: "EWS", college: "Top Private — AI/ML", quote: "Their list was honest and realistic. I joined a private college with a strong AI program and a scholarship.", note: "Bagged a merit scholarship that cut 30% off the fee — flagged by the counsellor during the call." },
+  { name: "Sneha Reddy", city: "Hyderabad, Telangana", rank: "2,05,000", category: "General", college: "IIIT — ECE", quote: "The CSAB round guidance got me an IIIT seat in the last round. Forever grateful for the deadline reminders!", note: "Seat allotted in the final CSAB special round — most students had already stopped checking." },
+  { name: "Vikram Singh", city: "Lucknow, UP", rank: "4,25,000", category: "SC", college: "State Govt. — Mechanical", quote: "I almost gave up after JoSAA. The team mapped my state counselling options and I got a core branch seat.", note: "Switched focus to state counselling (UPCET) after JoSAA — that's where his seat finally came through." },
+  { name: "Ananya Das", city: "Kolkata, WB", rank: "7,40,000", category: "General", college: "Deemed Univ. — Data Science", quote: "Even at 7.4 lakh I landed a future-proof branch. The Safe–Moderate–Reach list took all the panic away.", note: "Avoided two overpriced colleges the counsellor flagged for weak placement records." },
+];
+
+const PLAN_INCLUDES = [
+  "Personalised college list for YOUR rank & category",
+  "Covers NITs · IIITs · GFTIs · State · Private · Deemed",
+  "1-on-1 expert counsellor call (45 min)",
+  "Choice-filling order — JoSAA + CSAB + State boards",
+  "Home-state & reservation quota optimisation",
+  "Safe / Moderate / Reach list, mistake-proofed",
+  "Document & deadline checklist",
+  "WhatsApp support till your seat is locked",
+];
+
+const PLAN_BULLETS = [
+  "Built for the 80,000 – 9,00,000 rank band specifically",
+  "Every college category covered — not just NITs",
+  "Honest, data-backed advice (no overpriced colleges pushed)",
+  "Guidance through every round until you have a seat",
 ];
 
 const FAQS = [
@@ -94,6 +114,17 @@ const TRUST = [
 export default function RankCounselling() {
   const [branch, setBranch] = useState("CSE");
   const [openFaq, setOpenFaq] = useState(0);
+  const [story, setStory] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  // auto-rotate success stories
+  useEffect(() => {
+    if (paused) return;
+    const t = setInterval(() => setStory((s) => (s + 1) % STORIES.length), 4500);
+    return () => clearInterval(t);
+  }, [paused]);
+
+  const gotoStory = (i) => setStory((i + STORIES.length) % STORIES.length);
 
   return (
     <section
@@ -212,6 +243,84 @@ export default function RankCounselling() {
           </div>
         </Reveal>
 
+        {/* ── 4b · ₹499 COUNSELLING PLAN CARD ── */}
+        <Reveal>
+          <SectionHead eyebrow="Counselling Plan" title={<>One plan for <span className="accent">all colleges</span></>}
+            sub="Built for the 80,000 – 9,00,000 rank band — NITs, IIITs, GFTIs, State, Private & Deemed, all covered." />
+          <div className="grid-2" style={{ gap: 32, alignItems: "center", marginBottom: 64 }}>
+            {/* LEFT — pitch */}
+            <div>
+              <div className="josaa-promo-badge" style={{ marginBottom: 18 }}>
+                <span className="pulse-dot" />
+                Free first session · then just ₹{PRICE}
+              </div>
+              <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, color: "#1a1a2e", fontSize: "clamp(1.4rem,2.6vw,2rem)", lineHeight: 1.2, marginBottom: 14, letterSpacing: "-0.5px" }}>
+                Everything you need to turn your rank into a{" "}
+                <span style={{ background: "linear-gradient(90deg,#F47B20,#ea580c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>confirmed seat</span>
+              </h3>
+              <p style={{ color: "#4b5563", fontSize: ".96rem", lineHeight: 1.7, marginBottom: 20 }}>
+                Most students in the 80K–9L range lose good seats simply because they don't know every option open to them. Our ₹{PRICE} plan gives you a complete, data-backed roadmap across all college categories.
+              </p>
+              <div className="josaa-bullets">
+                {PLAN_BULLETS.map((b) => (
+                  <div className="josaa-bullet" key={b}>
+                    <span className="josaa-bullet-icon">✓</span>
+                    {b}
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: "flex", gap: 20, marginTop: 22, flexWrap: "wrap", fontSize: 13, color: "#6b7280" }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 5 }}><Users size={14} color="#fb923c" /> 10,000+ counselled</span>
+                <span style={{ display: "flex", alignItems: "center", gap: 5 }}><Star size={14} color="#fbbf24" fill="#fbbf24" /> 4.8/5 rating</span>
+                <span style={{ display: "flex", alignItems: "center", gap: 5 }}><Award size={14} color="#fb923c" /> Expert advisors</span>
+              </div>
+            </div>
+
+            {/* RIGHT — price card (matches ₹249 card style) */}
+            <div className="josaa-price-card">
+              <div className="josaa-save-ribbon">SAVE 75%</div>
+              <div className="josaa-price-header">
+                <div className="josaa-price-header-mesh" />
+                <div className="josaa-price-header-glow" />
+                <div className="josaa-price-header-top">
+                  <div className="josaa-price-header-icon">
+                    <GraduationCap size={22} color="#fff" />
+                  </div>
+                  <span className="josaa-price-header-tag">All Colleges · Rank 80K–9L</span>
+                </div>
+                <div className="limited-tag">🔥 Limited slots this cycle</div>
+                <div className="josaa-price-row">
+                  <div className="josaa-old-price">₹1999</div>
+                  <span className="josaa-off-pill">75% OFF</span>
+                </div>
+                <div className="josaa-new-price">
+                  <span className="josaa-rupee">₹</span>{PRICE}
+                  <span className="josaa-per">/plan</span>
+                </div>
+                <div className="josaa-price-label">one-time · all counselling rounds</div>
+              </div>
+
+              <div className="josaa-price-body">
+                <div className="josaa-includes">
+                  {PLAN_INCLUDES.map((item) => (
+                    <div className="josaa-include-item" key={item}>
+                      <Check size={15} color="#22c55e" strokeWidth={2.5} />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <a href={WA_LINK} target="_blank" rel="noreferrer" className="josaa-cta-btn">
+                  Enrol Now — ₹{PRICE} <ArrowRight size={17} />
+                </a>
+                <div className="josaa-secure-note">
+                  <ShieldCheck size={13} />
+                  Secure · counsellor assigned within hours
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
         {/* ── 5 · BRANCH / STREAM SELECTOR ── */}
         <Reveal>
           <SectionHead eyebrow="Explore by branch" title={<>Find colleges by <span className="accent">your stream</span></>}
@@ -260,27 +369,79 @@ export default function RankCounselling() {
           </div>
         </Reveal>
 
-        {/* ── 7 · SUCCESS STORIES ── */}
+        {/* ── 7 · SUCCESS STORIES (dynamic carousel) ── */}
         <Reveal>
           <SectionHead eyebrow="Real results" title={<>Success <span className="accent">stories</span></>}
             sub="Students with ranks like yours who found the right college." />
-          <div className="grid-2" style={{ gap: 20, marginBottom: 64 }}>
-            {STORIES.map((s) => (
-              <div key={s.name} style={{ background: "#fff", borderRadius: 16, border: "1px solid rgba(244,123,32,.16)", boxShadow: "0 2px 16px rgba(0,0,0,.06)", padding: "22px 24px", position: "relative" }}>
-                <Quote size={30} color="rgba(244,123,32,.18)" style={{ position: "absolute", top: 16, right: 18 }} />
-                <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
-                  {[...Array(5)].map((_, i) => <Star key={i} size={15} color="#fbbf24" fill="#fbbf24" />)}
-                </div>
-                <p style={{ color: "#374151", fontSize: ".92rem", lineHeight: 1.6, fontStyle: "italic", marginBottom: 16 }}>“{s.quote}”</p>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, borderTop: "1px solid rgba(0,0,0,.06)", paddingTop: 14 }}>
-                  <div style={{ width: 42, height: 42, borderRadius: "50%", background: "linear-gradient(135deg,#F47B20,#ea580c)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontFamily: "'Space Grotesk',sans-serif" }}>{s.name[0]}</div>
-                  <div>
-                    <div style={{ fontWeight: 700, color: "#1a1a2e", fontSize: ".9rem" }}>{s.name}</div>
-                    <div style={{ fontSize: ".78rem", color: "#6b7280" }}>Rank {s.rank} · {s.college}</div>
-                  </div>
-                </div>
+          <div
+            style={{ position: "relative", maxWidth: 820, margin: "0 auto 64px" }}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+          >
+            <div style={{ position: "relative", minHeight: 320 }}>
+              <AnimatePresence mode="wait">
+                {(() => {
+                  const s = STORIES[story];
+                  return (
+                    <motion.div
+                      key={story}
+                      initial={{ opacity: 0, x: 40 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -40 }}
+                      transition={{ duration: 0.4 }}
+                      style={{ background: "#fff", borderRadius: 20, border: "1px solid rgba(244,123,32,.2)", boxShadow: "0 10px 40px rgba(244,123,32,.12)", padding: "30px 32px", position: "relative", overflow: "hidden" }}
+                    >
+                      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg,#F47B20,#fbbf24,#F47B20)" }} />
+                      <Quote size={48} color="rgba(244,123,32,.14)" style={{ position: "absolute", top: 20, right: 24 }} />
+
+                      <div style={{ display: "flex", gap: 4, marginBottom: 14 }}>
+                        {[...Array(5)].map((_, i) => <Star key={i} size={17} color="#fbbf24" fill="#fbbf24" />)}
+                      </div>
+                      <p style={{ color: "#1a1a2e", fontSize: "1.08rem", lineHeight: 1.65, fontWeight: 500, marginBottom: 16, position: "relative", zIndex: 1 }}>“{s.quote}”</p>
+
+                      {/* notable note */}
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: 9, background: "linear-gradient(135deg,#fff7f0,#fef0e2)", border: "1px solid rgba(244,123,32,.25)", borderRadius: 12, padding: "12px 14px", marginBottom: 20 }}>
+                        <TrendingUp size={17} color="#F47B20" style={{ flexShrink: 0, marginTop: 1 }} />
+                        <span style={{ fontSize: ".84rem", color: "#7c3a12", lineHeight: 1.5, fontWeight: 600 }}>
+                          <strong style={{ color: "#ea580c" }}>What worked:</strong> {s.note}
+                        </span>
+                      </div>
+
+                      <div style={{ display: "flex", alignItems: "center", gap: 14, borderTop: "1px solid rgba(0,0,0,.07)", paddingTop: 16, flexWrap: "wrap" }}>
+                        <div style={{ width: 50, height: 50, borderRadius: "50%", background: "linear-gradient(135deg,#F47B20,#ea580c)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18, fontFamily: "'Space Grotesk',sans-serif", flexShrink: 0 }}>{s.name[0]}</div>
+                        <div style={{ flex: 1, minWidth: 160 }}>
+                          <div style={{ fontWeight: 700, color: "#1a1a2e", fontSize: ".98rem", fontFamily: "'Space Grotesk',sans-serif" }}>{s.name}</div>
+                          <div style={{ fontSize: ".8rem", color: "#6b7280" }}>{s.city}</div>
+                        </div>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          <span style={{ fontSize: ".74rem", fontWeight: 700, color: "#6366f1", background: "rgba(99,102,241,.1)", border: "1px solid rgba(99,102,241,.25)", padding: "5px 11px", borderRadius: 50 }}>Rank {s.rank}</span>
+                          <span style={{ fontSize: ".74rem", fontWeight: 700, color: "#15a06e", background: "rgba(21,160,110,.1)", border: "1px solid rgba(21,160,110,.25)", padding: "5px 11px", borderRadius: 50 }}>{s.category}</span>
+                          <span style={{ fontSize: ".74rem", fontWeight: 700, color: "#F47B20", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", padding: "5px 11px", borderRadius: 50 }}>{s.college}</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })()}
+              </AnimatePresence>
+            </div>
+
+            {/* controls */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 20 }}>
+              <button onClick={() => gotoStory(story - 1)} aria-label="Previous story"
+                style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(244,123,32,.3)", background: "#fff", color: "#F47B20", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>
+                <ChevronLeft size={20} />
+              </button>
+              <div style={{ display: "flex", gap: 8 }}>
+                {STORIES.map((_, i) => (
+                  <button key={i} onClick={() => gotoStory(i)} aria-label={`Story ${i + 1}`}
+                    style={{ width: i === story ? 26 : 9, height: 9, borderRadius: 50, border: "none", cursor: "pointer", background: i === story ? "linear-gradient(90deg,#F47B20,#ea580c)" : "rgba(244,123,32,.25)", transition: "all .3s" }} />
+                ))}
               </div>
-            ))}
+              <button onClick={() => gotoStory(story + 1)} aria-label="Next story"
+                style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(244,123,32,.3)", background: "#fff", color: "#F47B20", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>
+                <ChevronRight size={20} />
+              </button>
+            </div>
           </div>
         </Reveal>
 
