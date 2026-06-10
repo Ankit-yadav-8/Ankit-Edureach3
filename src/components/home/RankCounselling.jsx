@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowRight, Phone, MessageCircle, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight,
-  Star, Users, Award, ShieldCheck, MapPin, GraduationCap, Sparkles, Check,
-  ClipboardList, Target, CalendarCheck, Quote, TrendingUp,
+  ArrowRight, Phone, MessageCircle, ChevronDown, ChevronLeft, ChevronRight,
+  Star, Users, Award, ShieldCheck, GraduationCap, Sparkles, Check,
+  Quote, TrendingUp,
 } from "lucide-react";
 import Reveal from "../Reveal.jsx";
 
@@ -23,29 +23,6 @@ const WA_LINK =
 /* ════════════════════════════════════════════════
    DATA
 ════════════════════════════════════════════════ */
-const CATEGORIES = [
-  { icon: "🏛️", title: "NITs", sub: "National Institutes of Technology", desc: "Home-state quota seats open up many NITs even at 80K–2L. We map HS vs OS cutoffs for your category.", color: "#F97316" },
-  { icon: "🔬", title: "IIITs", sub: "Institutes of Information Technology", desc: "CS/IT focused institutes — several newer IIITs are reachable in your range via JoSAA & CSAB rounds.", color: "#6366f1" },
-  { icon: "🏫", title: "GFTIs", sub: "Govt.-Funded Technical Institutes", desc: "Low-fee, government-backed colleges with relaxed cutoffs — strong safe choices for your list.", color: "#0ea5a4" },
-  { icon: "🏢", title: "State Govt. Colleges", sub: "Category-wise: General · OBC · SC/ST", desc: "State boards reserve big quotas. We guide you category-wise so you use every reservation advantage.", color: "#15a06e" },
-  { icon: "🏗️", title: "Semi-Govt / Autonomous", sub: "Deemed & autonomous institutes", desc: "Autonomous colleges with industry tie-ups and flexible admission — great mid-range options.", color: "#8b5cf6" },
-  { icon: "🎓", title: "Top Private Colleges", sub: "State-wise & all-India", desc: "Hand-picked private colleges with strong placements that genuinely fit your rank and budget.", color: "#f59e0b" },
-];
-
-const STEPS = [
-  { icon: Target, title: "Enter Your JEE Rank & Category", desc: "Share your CRL / category rank and reservation details to begin." },
-  { icon: MapPin, title: "Select Preferred States / Branches", desc: "Pick the states and branches you care about most." },
-  { icon: ClipboardList, title: "Get Predicted College List", desc: "We generate a list based on previous-year cut-offs." },
-  { icon: Users, title: "Book a 1-on-1 Counsellor Session", desc: "Talk to an expert who builds a plan around your goals." },
-  { icon: CalendarCheck, title: "Application & Admission Guidance", desc: "We guide you through forms, documents and deadlines." },
-];
-
-const RANK_RANGES = [
-  { range: "80K – 2L", color: "#15a06e", tag: "Strong options", options: ["Newer NITs (HS quota)", "Several IIITs", "GFTIs", "Top private (CSE)"] },
-  { range: "2L – 5L", color: "#F97316", tag: "Good balance", options: ["State Govt. colleges", "GFTIs (core branches)", "Reputed private colleges", "Autonomous institutes"] },
-  { range: "5L – 9L", color: "#6366f1", tag: "Smart choices", options: ["Private engineering colleges", "Deemed universities", "State quota seats", "Management / scholarship seats"] },
-];
-
 const STORIES = [
   { name: "Rahul Sharma", city: "Patna, Bihar", rank: "1,42,000", category: "OBC-NCL", college: "GFTI — CSE", quote: "I thought my rank was too low for a good college. The counsellor found me a CSE seat I didn't even know existed.", note: "GFTI cut-off was relaxed for OBC-NCL — a branch most aggregators had marked 'out of reach'." },
   { name: "Priya Mehta", city: "Indore, MP", rank: "3,10,000", category: "General", college: "State Govt. — IT", quote: "Home-state quota changed everything. Got into a government college close to home with great placements.", note: "Home-state quota dropped her effective cut-off by ~40% vs the all-India list." },
@@ -55,22 +32,58 @@ const STORIES = [
   { name: "Ananya Das", city: "Kolkata, WB", rank: "7,40,000", category: "General", college: "Deemed Univ. — Data Science", quote: "Even at 7.4 lakh I landed a future-proof branch. The Safe–Moderate–Reach list took all the panic away.", note: "Avoided two overpriced colleges the counsellor flagged for weak placement records." },
 ];
 
-const PLAN_INCLUDES = [
-  "Personalised college list for YOUR rank & category",
-  "Covers NITs · IIITs · GFTIs · State · Private · Deemed",
-  "1-on-1 expert counsellor call (45 min)",
-  "Choice-filling order — JoSAA + CSAB + State boards",
-  "Home-state & reservation quota optimisation",
-  "Safe / Moderate / Reach list, mistake-proofed",
-  "Document & deadline checklist",
-  "WhatsApp support till your seat is locked",
-];
-
-const PLAN_BULLETS = [
-  "Built for the 80,000 – 9,00,000 rank band specifically",
-  "Every college category covered — not just NITs",
-  "Honest, data-backed advice (no overpriced colleges pushed)",
-  "Guidance through every round until you have a seat",
+/* ── The two counselling plans shown side-by-side ── */
+const PLANS = [
+  {
+    key: "josaa",
+    icon: Award,
+    tag: "JoSAA + CSAB 2026",
+    band: "Top ranks · IITs / NITs / IIITs",
+    price: "249",
+    old: "1999",
+    off: "87% OFF",
+    save: "SAVE 87%",
+    label: "one-time · all JoSAA + CSAB rounds",
+    blurb: "For students fighting for an IIT, NIT, IIIT or GFTI seat through the official JoSAA & CSAB counselling rounds.",
+    includes: [
+      "Personalised choice list (your rank + category)",
+      "1-on-1 mentor call — 45 min",
+      "Round-wise allotment prediction",
+      "WhatsApp support till seat locked",
+      "Document & deadline checklist",
+      "Choice review before you lock",
+    ],
+    cta: "Enrol Now — ₹249",
+    to: "/josaa-2026",
+    external: false,
+    featured: false,
+  },
+  {
+    key: "all-colleges",
+    icon: GraduationCap,
+    tag: "All Colleges · Rank 80K–9L",
+    band: "Wider ranks · State / Private / Deemed",
+    price: "499",
+    old: "1999",
+    off: "75% OFF",
+    save: "SAVE 75%",
+    label: "one-time · all counselling rounds",
+    blurb: "For the 80,000–9,00,000 band — we map NITs, IIITs, GFTIs, State, Private & Deemed colleges so no good seat is missed.",
+    includes: [
+      "Personalised college list for YOUR rank & category",
+      "Covers NITs · IIITs · GFTIs · State · Private · Deemed",
+      "1-on-1 expert counsellor call (45 min)",
+      "Choice-filling order — JoSAA + CSAB + State boards",
+      "Home-state & reservation quota optimisation",
+      "Safe / Moderate / Reach list, mistake-proofed",
+      "Document & deadline checklist",
+      "WhatsApp support till your seat is locked",
+    ],
+    cta: "Enrol Now — ₹499",
+    href: FORM_LINK,
+    external: true,
+    featured: true,
+  },
 ];
 
 const FAQS = [
@@ -155,147 +168,80 @@ export default function RankCounselling() {
           </div>
         </Reveal>
 
-        {/* ── 2 · COLLEGE CATEGORIES ── */}
+        {/* ── 2 · COUNSELLING PLANS (₹249 + ₹499) ── */}
         <Reveal>
-          <SectionHead eyebrow="What we cover" title={<>Colleges across <span className="accent">every category</span></>}
-            sub="From government institutes to top private colleges — counselling guidance for all of them." />
-          <div className="grid-3" style={{ gap: 20, marginBottom: 64 }}>
-            {CATEGORIES.map((c) => (
-              <motion.div key={c.title} whileHover={{ y: -5 }}
-                style={{ background: "#fff", borderRadius: 16, border: `1px solid ${c.color}22`, borderTop: `3px solid ${c.color}`, boxShadow: "0 2px 16px rgba(0,0,0,.06)", padding: "22px 22px 20px", height: "100%" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 13, background: `${c.color}14`, border: `1.5px solid ${c.color}28`, display: "grid", placeItems: "center", fontSize: 24 }}>{c.icon}</div>
-                  <div>
-                    <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: "1.05rem", color: "#1a1a2e", margin: 0 }}>{c.title}</h3>
-                    <div style={{ fontSize: 12, color: c.color, fontWeight: 600 }}>{c.sub}</div>
-                  </div>
-                </div>
-                <p style={{ color: "#6b7280", fontSize: ".86rem", lineHeight: 1.6, margin: 0 }}>{c.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* ── 3 · HOW COUNSELLING WORKS ── */}
-        <Reveal>
-          <SectionHead eyebrow="Simple process" title={<>How counselling <span className="accent">works</span></>}
-            sub="Five clear steps from your rank to a confirmed admission." />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 64 }}>
-            {STEPS.map((s, i) => {
-              const Icon = s.icon;
+          <SectionHead eyebrow="Counselling Plans" title={<>One plan for <span className="accent">all colleges</span></>}
+            sub="Pick the plan that fits your rank — expert, data-backed counselling that turns your rank into a confirmed seat." />
+          <div className="plan-duo">
+            {PLANS.map((p) => {
+              const Icon = p.icon;
+              const featured = p.featured;
               return (
-                <div key={s.title} style={{ background: "#fff", borderRadius: 16, border: "1px solid rgba(244,123,32,.16)", boxShadow: "0 2px 14px rgba(0,0,0,.05)", padding: "20px 18px", textAlign: "center", position: "relative" }}>
-                  <div style={{ position: "absolute", top: 12, right: 14, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 26, color: "rgba(244,123,32,.16)" }}>{i + 1}</div>
-                  <div style={{ width: 50, height: 50, borderRadius: 14, background: "linear-gradient(135deg,#F47B20,#ea580c)", display: "grid", placeItems: "center", margin: "0 auto 14px", boxShadow: "0 6px 16px rgba(244,123,32,.35)" }}>
-                    <Icon size={22} color="#fff" />
+                <motion.div
+                  key={p.key}
+                  className={`josaa-price-card plan-card${featured ? " plan-card--featured" : ""}`}
+                  whileHover={{ y: -8 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                >
+                  {featured && <div className="plan-popular">★ Most Popular</div>}
+                  <div className="josaa-save-ribbon">{p.save}</div>
+
+                  <div className="josaa-price-header">
+                    <div className="josaa-price-header-mesh" />
+                    <div className="josaa-price-header-glow" />
+                    <div className="josaa-price-header-top">
+                      <div className="josaa-price-header-icon">
+                        <Icon size={22} color="#fff" />
+                      </div>
+                      <span className="josaa-price-header-tag">{p.tag}</span>
+                    </div>
+                    <div className="plan-band">{p.band}</div>
+                    <div className="josaa-price-row">
+                      <div className="josaa-old-price">₹{p.old}</div>
+                      <span className="josaa-off-pill">{p.off}</span>
+                    </div>
+                    <div className="josaa-new-price">
+                      <span className="josaa-rupee">₹</span>{p.price}
+                      <span className="josaa-per">/plan</span>
+                    </div>
+                    <div className="josaa-price-label">{p.label}</div>
                   </div>
-                  <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: ".92rem", color: "#1a1a2e", marginBottom: 6, lineHeight: 1.3 }}>{s.title}</h3>
-                  <p style={{ color: "#6b7280", fontSize: ".8rem", lineHeight: 1.55, margin: 0 }}>{s.desc}</p>
-                </div>
+
+                  <div className="josaa-price-body">
+                    <p className="plan-blurb">{p.blurb}</p>
+                    <div className="josaa-includes">
+                      {p.includes.map((item) => (
+                        <div className="josaa-include-item" key={item}>
+                          <Check size={15} color="#22c55e" strokeWidth={2.5} />
+                          <span>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {p.external ? (
+                      <a href={p.href} target="_blank" rel="noreferrer" className="josaa-cta-btn">
+                        {p.cta} <ArrowRight size={17} />
+                      </a>
+                    ) : (
+                      <Link to={p.to} className="josaa-cta-btn">
+                        {p.cta} <ArrowRight size={17} />
+                      </Link>
+                    )}
+                    <div className="josaa-secure-note">
+                      <ShieldCheck size={13} />
+                      Secure · counsellor assigned within hours
+                    </div>
+                  </div>
+                </motion.div>
               );
             })}
           </div>
-        </Reveal>
 
-        {/* ── 4 · RANK-RANGE GUIDANCE ── */}
-        <Reveal>
-          <SectionHead eyebrow="Where you stand" title={<>Rank-range <span className="accent">guidance</span></>}
-            sub="A quick view of what's realistically within reach for your rank band." />
-          <div className="grid-3" style={{ gap: 20, marginBottom: 64 }}>
-            {RANK_RANGES.map((r) => (
-              <div key={r.range} style={{ background: "#fff", borderRadius: 18, border: `1px solid ${r.color}22`, boxShadow: "0 2px 16px rgba(0,0,0,.06)", overflow: "hidden", height: "100%" }}>
-                <div style={{ background: `linear-gradient(135deg, ${r.color}, ${r.color}cc)`, padding: "18px 22px", color: "#fff" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, opacity: .9, letterSpacing: ".5px", textTransform: "uppercase" }}>{r.tag}</div>
-                  <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.5rem", marginTop: 2 }}>Rank {r.range}</div>
-                </div>
-                <div style={{ padding: "18px 22px" }}>
-                  {r.options.map((o) => (
-                    <div key={o} style={{ display: "flex", alignItems: "flex-start", gap: 9, marginBottom: 11 }}>
-                      <CheckCircle2 size={16} color={r.color} style={{ marginTop: 1, flexShrink: 0 }} />
-                      <span style={{ fontSize: ".88rem", color: "#374151", lineHeight: 1.45 }}>{o}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* ── 4b · ₹499 COUNSELLING PLAN CARD ── */}
-        <Reveal>
-          <SectionHead eyebrow="Counselling Plan" title={<>One plan for <span className="accent">all colleges</span></>}
-            sub="Built for the 80,000 – 9,00,000 rank band — NITs, IIITs, GFTIs, State, Private & Deemed, all covered." />
-          <div className="grid-2" style={{ gap: 32, alignItems: "center", marginBottom: 64 }}>
-            {/* LEFT — pitch */}
-            <div>
-              <div className="josaa-promo-badge" style={{ marginBottom: 18 }}>
-                <span className="pulse-dot" />
-                Free first session · then just ₹{PRICE}
-              </div>
-              <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, color: "#1a1a2e", fontSize: "clamp(1.4rem,2.6vw,2rem)", lineHeight: 1.2, marginBottom: 14, letterSpacing: "-0.5px" }}>
-                Everything you need to turn your rank into a{" "}
-                <span style={{ background: "linear-gradient(90deg,#F47B20,#ea580c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>confirmed seat</span>
-              </h3>
-              <p style={{ color: "#4b5563", fontSize: ".96rem", lineHeight: 1.7, marginBottom: 20 }}>
-                Most students in the 80K–9L range lose good seats simply because they don't know every option open to them. Our ₹{PRICE} plan gives you a complete, data-backed roadmap across all college categories.
-              </p>
-              <div className="josaa-bullets">
-                {PLAN_BULLETS.map((b) => (
-                  <div className="josaa-bullet" key={b}>
-                    <span className="josaa-bullet-icon">✓</span>
-                    {b}
-                  </div>
-                ))}
-              </div>
-              <div style={{ display: "flex", gap: 20, marginTop: 22, flexWrap: "wrap", fontSize: 13, color: "#6b7280" }}>
-                <span style={{ display: "flex", alignItems: "center", gap: 5 }}><Users size={14} color="#fb923c" /> 10,000+ counselled</span>
-                <span style={{ display: "flex", alignItems: "center", gap: 5 }}><Star size={14} color="#fbbf24" fill="#fbbf24" /> 4.8/5 rating</span>
-                <span style={{ display: "flex", alignItems: "center", gap: 5 }}><Award size={14} color="#fb923c" /> Expert advisors</span>
-              </div>
-            </div>
-
-            {/* RIGHT — price card (matches ₹249 card style) */}
-            <div className="josaa-price-card">
-              <div className="josaa-save-ribbon">SAVE 75%</div>
-              <div className="josaa-price-header">
-                <div className="josaa-price-header-mesh" />
-                <div className="josaa-price-header-glow" />
-                <div className="josaa-price-header-top">
-                  <div className="josaa-price-header-icon">
-                    <GraduationCap size={22} color="#fff" />
-                  </div>
-                  <span className="josaa-price-header-tag">All Colleges · Rank 80K–9L</span>
-                </div>
-                <div className="limited-tag">🔥 Limited slots this cycle</div>
-                <div className="josaa-price-row">
-                  <div className="josaa-old-price">₹1999</div>
-                  <span className="josaa-off-pill">75% OFF</span>
-                </div>
-                <div className="josaa-new-price">
-                  <span className="josaa-rupee">₹</span>{PRICE}
-                  <span className="josaa-per">/plan</span>
-                </div>
-                <div className="josaa-price-label">one-time · all counselling rounds</div>
-              </div>
-
-              <div className="josaa-price-body">
-                <div className="josaa-includes">
-                  {PLAN_INCLUDES.map((item) => (
-                    <div className="josaa-include-item" key={item}>
-                      <Check size={15} color="#22c55e" strokeWidth={2.5} />
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-                <a href={FORM_LINK} target="_blank" rel="noreferrer" className="josaa-cta-btn">
-                  Enrol Now — ₹{PRICE} <ArrowRight size={17} />
-                </a>
-                <div className="josaa-secure-note">
-                  <ShieldCheck size={13} />
-                  Secure · counsellor assigned within hours
-                </div>
-              </div>
-            </div>
+          {/* trust strip under the plans */}
+          <div className="plan-trust-strip">
+            <span><Users size={15} color="#F47B20" /> 10,000+ counselled</span>
+            <span><Star size={15} color="#fbbf24" fill="#fbbf24" /> 4.8/5 rating</span>
+            <span><Award size={15} color="#F47B20" /> Expert advisors</span>
+            <span><ShieldCheck size={15} color="#F47B20" /> Free first session</span>
           </div>
         </Reveal>
 
