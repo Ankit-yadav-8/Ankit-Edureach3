@@ -603,6 +603,119 @@ function LiveCollegePanel({ isTablet }) {
 }
 
 /* ════════════════════════════════════════════════
+   MENTORSHIP CARD (right panel) — JEE & NEET 2027 / 2028
+   Replaces the old live-college panel. Dynamic + animated.
+════════════════════════════════════════════════ */
+function MentorshipHeroCard({ isTablet }) {
+  const nav = useNavigate();
+  const GOLD = "#f5a623";
+  const [active, setActive] = useState(0);
+
+  // rotating spotlight across the JEE/NEET tracks
+  const tracks = [
+    { exam: "JEE 2027",  price: "₹1999", color: "#f5a623", to: "/mentorship/jee-2027" },
+    { exam: "NEET 2027", price: "₹1999", color: "#22c55e", to: "/mentorship/jee-2027" },
+    { exam: "JEE 2028",  price: "₹3999", color: "#f5a623", to: "/mentorship/jee-2028" },
+    { exam: "NEET 2028", price: "₹3999", color: "#22c55e", to: "/mentorship/jee-2028" },
+  ];
+  useEffect(() => {
+    const t = setInterval(() => setActive((i) => (i + 1) % tracks.length), 2400);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.7, delay: 0.3 }}
+      className="hero-about-col"
+      style={{
+        background: "linear-gradient(160deg, rgba(14,10,4,.92), rgba(10,10,16,.86))",
+        backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+        border: "1px solid rgba(245,166,35,.28)",
+        borderRadius: 20,
+        padding: isTablet ? "0.95rem 1rem" : "1.1rem 1.2rem",
+        display: "flex", flexDirection: "column", gap: isTablet ? "0.7rem" : "0.85rem",
+        boxShadow: "0 0 0 1px rgba(245,166,35,.1), 0 24px 64px rgba(0,0,0,.6)",
+        position: "relative", overflow: "hidden", minWidth: 0,
+      }}
+    >
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${GOLD}, transparent)` }} />
+      <div style={{ position: "absolute", top: -40, right: -30, width: 160, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,166,35,.22), transparent 70%)", pointerEvents: "none" }} />
+
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(245,166,35,.16)", border: "1.5px solid rgba(245,166,35,.4)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+          <GraduationCap size={20} color={GOLD} />
+        </div>
+        <div>
+          <div style={{ fontSize: 9.5, color: GOLD, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>1-on-1 Mentorship</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: isTablet ? ".9rem" : "1rem" }}>JEE & NEET · 2027 · 2028</div>
+        </div>
+        <motion.span
+          animate={{ boxShadow: ["0 0 0px #22c55e", "0 0 14px #22c55e", "0 0 0px #22c55e"], scale: [1, 1.15, 1] }}
+          transition={{ duration: 1.8, repeat: Infinity }}
+          style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block" }}
+        />
+      </div>
+
+      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
+
+      {/* Rotating track spotlight */}
+      <div style={{ display: "flex", flexDirection: "column", gap: isTablet ? 6 : 8 }}>
+        {tracks.map((tr, i) => (
+          <motion.div
+            key={tr.exam}
+            animate={{ opacity: i === active ? 1 : 0.5, scale: i === active ? 1 : 0.98 }}
+            transition={{ duration: 0.4 }}
+            onClick={() => nav(tr.to)}
+            style={{
+              display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
+              background: i === active ? `${tr.color}1f` : "rgba(255,255,255,.03)",
+              border: `1px solid ${i === active ? tr.color + "55" : "rgba(255,255,255,.06)"}`,
+              borderRadius: 10, padding: isTablet ? "7px 9px" : "8px 11px",
+              transition: "border .4s, background .4s",
+            }}
+          >
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: tr.color, flexShrink: 0, boxShadow: i === active ? `0 0 10px ${tr.color}` : "none" }} />
+            <span style={{ flex: 1, fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: isTablet ? 12 : 13, color: "#fff" }}>{tr.exam} Mentorship</span>
+            <span style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 800, fontSize: isTablet ? 12 : 13.5, color: tr.color }}>{tr.price}</span>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* mini stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+        {[{ val: "1:1", lbl: "Mentor" }, { val: "1000+", lbl: "Students" }, { val: "Daily", lbl: "Targets" }].map(({ val, lbl }) => (
+          <div key={lbl} style={{ textAlign: "center", background: "rgba(255,255,255,.04)", borderRadius: 9, padding: isTablet ? "6px 4px" : "8px 4px" }}>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: isTablet ? 13 : 15, color: "#fff" }}>{val}</div>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,.45)", marginTop: 1 }}>{lbl}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <button
+        onClick={() => nav("/mentorship/jee-2027")}
+        style={{
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+          background: `linear-gradient(135deg, ${GOLD}, #ffcf6b)`,
+          color: "#0a0a0a", border: "none", borderRadius: 11,
+          padding: isTablet ? "9px 12px" : "11px 16px",
+          fontSize: isTablet ? 12 : 13, fontWeight: 800,
+          fontFamily: "Sora", cursor: "pointer",
+          boxShadow: "0 4px 20px rgba(245,166,35,.45)", transition: "all .2s",
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(245,166,35,.6)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 20px rgba(245,166,35,.45)"; }}
+      >
+        Explore Mentorship <ArrowRight size={14} />
+      </button>
+    </motion.div>
+  );
+}
+
+/* ════════════════════════════════════════════════
    HERO — MAIN EXPORT
 ════════════════════════════════════════════════ */
 export default function Hero({ onSearch }) {
@@ -999,8 +1112,8 @@ export default function Hero({ onSearch }) {
           </div>
           {/* ══ end CENTER ══ */}
 
-          {/* ══ RIGHT — Live College Panel (hidden on mobile via CSS .hero-about-col) ══ */}
-          <LiveCollegePanel isTablet={isTablet} />
+          {/* ══ RIGHT — Mentorship Card (hidden on mobile via CSS .hero-about-col) ══ */}
+          <MentorshipHeroCard isTablet={isTablet} />
 
         </div>
       </div>

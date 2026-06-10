@@ -3,14 +3,27 @@ import mongoose from "mongoose";
 const enrollmentSchema = new mongoose.Schema(
   {
     // Plan
-    plan:   { type: String, enum: ["josaa", "all-colleges"], required: true },
-    amount: { type: Number, required: true }, // in rupees (249 / 499)
+    plan: {
+      type: String,
+      enum: [
+        "josaa", "all-colleges",
+        "mentor-jee-2027", "mentor-neet-2027",
+        "mentor-jee-2028", "mentor-neet-2028",
+        "mentor-foundation",
+      ],
+      required: true,
+    },
+    amount: { type: Number, required: true }, // in rupees
 
     // Student details
     name:      { type: String, trim: true, required: true },
     email:     { type: String, lowercase: true, trim: true, default: "" },
     phone:     { type: String, trim: true, default: "" },
     homeState: { type: String, trim: true, default: "" },
+
+    // Mentorship context (optional)
+    currentClass: { type: String, trim: true, default: "" },
+    targetExam:   { type: String, trim: true, default: "" },
 
     // Ranks
     jeeMainCrlRank:      { type: Number, default: null },

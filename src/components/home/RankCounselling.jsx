@@ -171,6 +171,10 @@ export default function RankCounselling() {
         <Reveal>
           <SectionHead eyebrow="Counselling Plans" title={<>One plan for <span className="accent">all colleges</span></>}
             sub="Pick the plan that fits your rank — expert, data-backed counselling that turns your rank into a confirmed seat." />
+
+          {/* ── Mentorship promo (above the ₹249 / ₹499 cards) ── */}
+          <MentorshipPromo />
+
           <div className="plan-duo">
             {PLANS.map((p) => {
               const Icon = p.icon;
@@ -383,6 +387,113 @@ export default function RankCounselling() {
 
       </div>
     </section>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   MENTORSHIP PROMO — dynamic animated banner above the plans
+   Promotes 1-on-1 JEE & NEET mentorship (2027 · 2028 · Foundation)
+════════════════════════════════════════════════ */
+const MENTOR_TRACKS = [
+  { exam: "JEE 2027",  price: "1999", color: "#f5a623", to: "/mentorship/jee-2027" },
+  { exam: "NEET 2027", price: "1999", color: "#22c55e", to: "/mentorship/jee-2027" },
+  { exam: "JEE 2028",  price: "3999", color: "#f5a623", to: "/mentorship/jee-2028" },
+  { exam: "NEET 2028", price: "3999", color: "#22c55e", to: "/mentorship/jee-2028" },
+  { exam: "Foundation 9–10", price: "2999", color: "#6366f1", to: "/mentorship/foundation" },
+];
+
+function MentorshipPromo() {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setActive((i) => (i + 1) % MENTOR_TRACKS.length), 2200);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <Reveal>
+      <motion.div
+        whileHover={{ y: -4 }}
+        transition={{ type: "spring", stiffness: 280, damping: 22 }}
+        style={{
+          position: "relative", overflow: "hidden",
+          background: "linear-gradient(135deg, #120c04 0%, #1a1207 45%, #0d0d14 100%)",
+          borderRadius: 22, border: "1px solid rgba(245,166,35,.32)",
+          boxShadow: "0 20px 60px -24px rgba(245,166,35,.5)",
+          padding: "30px 30px", marginBottom: 30,
+        }}
+      >
+        {/* animated glows */}
+        <motion.div
+          animate={{ opacity: [0.5, 0.9, 0.5] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          style={{ position: "absolute", top: -60, right: -30, width: 260, height: 260, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,166,35,.3), transparent 70%)", pointerEvents: "none" }}
+        />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)", backgroundSize: "34px 34px", pointerEvents: "none" }} />
+
+        <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 26 }}>
+          {/* Left — copy */}
+          <div style={{ flex: "1 1 320px", minWidth: 280 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#f5a623", background: "rgba(245,166,35,.12)", border: "1px solid rgba(245,166,35,.35)", padding: "6px 14px", borderRadius: 50, marginBottom: 16 }}>
+              <Sparkles size={13} /> New · 1-on-1 Mentorship
+            </span>
+            <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.5rem,3vw,2.1rem)", lineHeight: 1.15, letterSpacing: "-0.5px", color: "#fff", margin: "0 0 10px" }}>
+              Crack JEE & NEET with a{" "}
+              <span style={{ background: "linear-gradient(90deg,#f5a623,#ffd479)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>personal IITian / doctor mentor</span>
+            </h3>
+            <p style={{ color: "rgba(255,255,255,.6)", fontSize: ".95rem", lineHeight: 1.65, maxWidth: 460, marginBottom: 18 }}>
+              Daily targets, weekly test analysis & a mentor who knows your name. Built for serious 2027, 2028 and Class 9–10 foundation aspirants.
+            </p>
+
+            {/* rotating spotlight chip */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20 }}>
+              {MENTOR_TRACKS.map((tr, i) => (
+                <motion.span
+                  key={tr.exam}
+                  animate={{ opacity: i === active ? 1 : 0.55, scale: i === active ? 1.05 : 1 }}
+                  transition={{ duration: 0.4 }}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 700,
+                    color: "#fff", background: i === active ? `${tr.color}26` : "rgba(255,255,255,.05)",
+                    border: `1px solid ${i === active ? tr.color + "66" : "rgba(255,255,255,.1)"}`,
+                    padding: "6px 12px", borderRadius: 50,
+                  }}
+                >
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: tr.color, boxShadow: i === active ? `0 0 8px ${tr.color}` : "none" }} />
+                  {tr.exam} · ₹{tr.price}
+                </motion.span>
+              ))}
+            </div>
+
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <Link to="/mentorship/jee-2027" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg,#f5a623,#ffcf6b)", color: "#0a0a0a", padding: "13px 24px", borderRadius: 11, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 14.5, textDecoration: "none", boxShadow: "0 8px 26px rgba(245,166,35,.4)" }}>
+                Explore Mentorship <ArrowRight size={16} />
+              </Link>
+              <Link to="/mentorship/foundation" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,.07)", color: "#fff", padding: "13px 22px", borderRadius: 11, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none", border: "1px solid rgba(255,255,255,.18)" }}>
+                <GraduationCap size={16} /> Foundation 9–10
+              </Link>
+            </div>
+          </div>
+
+          {/* Right — animated stat ring */}
+          <div style={{ flex: "0 0 auto", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center" }}>
+            {[{ Icon: Users, val: "1000+", lbl: "Students" }, { Icon: Star, val: "1:1", lbl: "Mentor" }, { Icon: Award, val: "Daily", lbl: "Targets" }].map(({ Icon, val, lbl }, i) => (
+              <motion.div
+                key={lbl}
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.3 }}
+                style={{ width: 96, textAlign: "center", background: "rgba(255,255,255,.05)", border: "1px solid rgba(245,166,35,.22)", borderRadius: 16, padding: "16px 8px" }}
+              >
+                <div style={{ width: 38, height: 38, borderRadius: 11, background: "rgba(245,166,35,.14)", border: "1px solid rgba(245,166,35,.3)", display: "grid", placeItems: "center", margin: "0 auto 8px" }}>
+                  <Icon size={18} color="#f5a623" />
+                </div>
+                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 17, color: "#fff" }}>{val}</div>
+                <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.45)", marginTop: 2 }}>{lbl}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </Reveal>
   );
 }
 

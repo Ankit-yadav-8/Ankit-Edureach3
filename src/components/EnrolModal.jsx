@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, User, Mail, Phone, MapPin, Hash, ShieldCheck, Check, Loader2,
-  ArrowRight, Sparkles, BadgeCheck, PartyPopper,
+  ArrowRight, Sparkles, BadgeCheck, PartyPopper, GraduationCap,
 } from "lucide-react";
 import { startPayment } from "../payments/razorpay.js";
 
@@ -23,7 +23,35 @@ const PLAN_META = {
     title: "All Colleges Counselling",
     band: "Any rank · State / Private / Deemed + NITs",
   },
+  // ── Mentorship plans ──
+  "mentor-jee-2027": {
+    amount: 1999, old: 4999, kind: "mentorship", targetExam: "JEE 2027",
+    title: "JEE 2027 Mentorship Program",
+    band: "1-on-1 IITian mentor · Class 12 / Droppers",
+  },
+  "mentor-neet-2027": {
+    amount: 1999, old: 4999, kind: "mentorship", targetExam: "NEET 2027",
+    title: "NEET 2027 Mentorship Program",
+    band: "1-on-1 doctor mentor · Class 12 / Droppers",
+  },
+  "mentor-jee-2028": {
+    amount: 3999, old: 7999, kind: "mentorship", targetExam: "JEE 2028",
+    title: "JEE 2028 Mentorship (2-Year)",
+    band: "2-year IITian mentorship · Class 11",
+  },
+  "mentor-neet-2028": {
+    amount: 3999, old: 7999, kind: "mentorship", targetExam: "NEET 2028",
+    title: "NEET 2028 Mentorship (2-Year)",
+    band: "2-year doctor mentorship · Class 11",
+  },
+  "mentor-foundation": {
+    amount: 2999, old: 5999, kind: "mentorship", targetExam: "Foundation (JEE/NEET)",
+    title: "Foundation Mentorship (Class 9–10)",
+    band: "1-on-1 mentor · Shared JEE + NEET base",
+  },
 };
+
+const CLASS_OPTIONS = ["Class 9", "Class 10", "Class 11", "Class 12", "Dropper / Repeater"];
 
 const INDIAN_STATES = [
   "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
@@ -58,13 +86,14 @@ export function EnrolProvider({ children }) {
    The modal
    ───────────────────────────────────────────────────────── */
 const EMPTY = {
-  name: "", email: "", phone: "", homeState: "",
+  name: "", email: "", phone: "", homeState: "", currentClass: "",
   jeeMainCrlRank: "", jeeMainCategoryRank: "",
   jeeAdvCrlRank: "", jeeAdvCategoryRank: "",
 };
 
 function EnrolModal({ plan, onClose }) {
   const meta = PLAN_META[plan] || PLAN_META["josaa"];
+  const isMentorship = meta.kind === "mentorship";
   const [f, setF] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
@@ -83,8 +112,11 @@ function EnrolModal({ plan, onClose }) {
     if (!/^[0-9]{10}$/.test(f.phone.replace(/\D/g, "").slice(-10)))
       er.phone = "Enter a valid 10-digit number";
     if (!f.homeState) er.homeState = "Select your home state";
-    if (!f.jeeMainCrlRank.trim() && !f.jeeAdvCrlRank.trim())
+    if (isMentorship) {
+      if (!f.currentClass) er.currentClass = "Select your current class";
+    } else if (!f.jeeMainCrlRank.trim() && !f.jeeAdvCrlRank.trim()) {
       er.jeeMainCrlRank = "Enter at least your JEE Main CRL rank";
+    }
     setErrors(er);
     return Object.keys(er).length === 0;
   }
@@ -94,7 +126,7 @@ function EnrolModal({ plan, onClose }) {
     if (!validate()) return;
     setBusy(true);
     try {
-      const { paymentId } = await startPayment({ plan, ...f });
+      const { paymentId } = await startPayment({ plan, targetExam: meta.targetExam || "", ...f });
       setDone({ paymentId });
     } catch (e) {
       if (e.message !== "CANCELLED")
@@ -174,17 +206,37 @@ function EnrolModal({ plan, onClose }) {
 
               <SelectField label="Home state" icon={MapPin} value={f.homeState} onChange={set("homeState")} error={errors.homeState} options={INDIAN_STATES} />
 
-              <Divider label="JEE Main rank" />
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <Field label="CRL rank" icon={Hash} value={f.jeeMainCrlRank} onChange={set("jeeMainCrlRank")} error={errors.jeeMainCrlRank} placeholder="e.g. 45000" inputMode="numeric" />
-                <Field label="Category rank" icon={Hash} value={f.jeeMainCategoryRank} onChange={set("jeeMainCategoryRank")} placeholder="Optional" inputMode="numeric" />
-              </div>
+              {isMentorship ? (
+                <>
+                  <Divider label="Mentorship details" />
+                  <SelectField
+                    label="Current class"
+                    icon={GraduationCap}
+                    value={f.currentClass}
+                    onChange={set("currentClass")}
+                    error={errors.currentClass}
+                    options={CLASS_OPTIONS}
+                    placeholder="Select your current class…"
+                  />
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "10px 12px", fontSize: 12.5, color: "#9a3412", fontWeight: 600 }}>
+                    <BadgeCheck size={15} color="#F47B20" /> Target: {meta.targetExam}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Divider label="JEE Main rank" />
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    <Field label="CRL rank" icon={Hash} value={f.jeeMainCrlRank} onChange={set("jeeMainCrlRank")} error={errors.jeeMainCrlRank} placeholder="e.g. 45000" inputMode="numeric" />
+                    <Field label="Category rank" icon={Hash} value={f.jeeMainCategoryRank} onChange={set("jeeMainCategoryRank")} placeholder="Optional" inputMode="numeric" />
+                  </div>
 
-              <Divider label="JEE Advanced rank" hint="(if qualified)" />
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <Field label="CRL rank" icon={Hash} value={f.jeeAdvCrlRank} onChange={set("jeeAdvCrlRank")} placeholder="Optional" inputMode="numeric" />
-                <Field label="Category rank" icon={Hash} value={f.jeeAdvCategoryRank} onChange={set("jeeAdvCategoryRank")} placeholder="Optional" inputMode="numeric" />
-              </div>
+                  <Divider label="JEE Advanced rank" hint="(if qualified)" />
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    <Field label="CRL rank" icon={Hash} value={f.jeeAdvCrlRank} onChange={set("jeeAdvCrlRank")} placeholder="Optional" inputMode="numeric" />
+                    <Field label="Category rank" icon={Hash} value={f.jeeAdvCategoryRank} onChange={set("jeeAdvCategoryRank")} placeholder="Optional" inputMode="numeric" />
+                  </div>
+                </>
+              )}
 
               <button onClick={handlePay} disabled={busy}
                 style={{
@@ -274,7 +326,7 @@ function Field({ label, icon: Icon, error, ...rest }) {
   );
 }
 
-function SelectField({ label, icon: Icon, error, options, ...rest }) {
+function SelectField({ label, icon: Icon, error, options, placeholder, ...rest }) {
   return (
     <label style={{ display: "block", marginBottom: 14 }}>
       <span style={{ fontSize: 12.5, fontWeight: 700, color: "#374151", display: "block", marginBottom: 6 }}>{label}</span>
@@ -286,7 +338,7 @@ function SelectField({ label, icon: Icon, error, options, ...rest }) {
             border: `1.5px solid ${error ? "#fca5a5" : "rgba(0,0,0,.13)"}`, outline: "none",
             background: "#fff", color: rest.value ? "#1a1a2e" : "#9ca3af", appearance: "none", cursor: "pointer",
           }}>
-          <option value="">Select your state…</option>
+          <option value="">{placeholder || "Select your state…"}</option>
           {options.map((o) => <option key={o} value={o} style={{ color: "#1a1a2e" }}>{o}</option>)}
         </select>
       </span>

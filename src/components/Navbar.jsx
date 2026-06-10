@@ -52,6 +52,13 @@ const JEE_MEGA = [
   },
 ];
 
+// ── Mentorship dropdown: 1-on-1 JEE & NEET mentorship pages ───────────────────
+const MENTORSHIP_NAV = [
+  { label: "JEE & NEET 2027",   to: "/mentorship/jee-2027",   icon: Trophy,   tag: "₹1999 · Class 12 / Droppers" },
+  { label: "JEE & NEET 2028",   to: "/mentorship/jee-2028",   icon: Award,    tag: "₹3999 · 2-Year Plan" },
+  { label: "Foundation (9–10)", to: "/mentorship/foundation", icon: BookOpen, tag: "₹2999 · Class 9 & 10" },
+];
+
 const COLLEGES = [
   { label: "Explore IITs", to: "/colleges?type=IIT", icon: Landmark },
   { label: "Explore NITs", to: "/colleges?type=NIT", icon: Landmark },
@@ -133,6 +140,7 @@ export default function Navbar({ onSearch }) {
   const navItems = [
     { label: "Home", to: "/", match: (p) => p === "/" },
     { label: "JEE", mega: JEE_MEGA, base: "/jee-resources", match: (p) => p.startsWith("/jee") },
+    { label: "Mentorship", drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", highlight: true, match: (p) => p.startsWith("/mentorship") },
     { label: "Colleges", drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Colleges For You", to: "/for-you", match: (p) => p.startsWith("/for-you") },
     { label: "Exams", to: "/exams", match: (p) => p.startsWith("/exam") || p.startsWith("/compare-exams") },
@@ -731,13 +739,15 @@ const navLinkStyle = (active) => ({
 
 const navHighlightStyle = (active) => ({
   display: "flex", alignItems: "center", gap: 5,
-  padding: "0.46rem 0.9rem", fontSize: "0.86rem", fontWeight: 700,
-  color: active ? "#fff" : "#6366f1",
+  padding: "0.46rem 0.95rem", fontSize: "0.86rem", fontWeight: 800,
+  color: "#fff",
   borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   fontFamily: "inherit",
-  background: active ? "linear-gradient(120deg,#6366f1,#818cf8)" : "rgba(99,102,241,.10)",
-  border: `1.5px solid ${active ? "transparent" : "rgba(99,102,241,.28)"}`,
-  boxShadow: active ? "0 6px 16px -6px rgba(99,102,241,.7)" : "none",
+  background: "linear-gradient(120deg, #F47B20 0%, #f97316 45%, #fbbf24 100%)",
+  backgroundSize: "200% auto",
+  border: "1.5px solid rgba(255,255,255,.5)",
+  boxShadow: active ? "0 8px 20px -6px rgba(244,123,32,.8)" : "0 6px 16px -8px rgba(244,123,32,.6)",
+  animation: "brandGradient 3s linear infinite",
   transition: "all .2s",
 });
 
