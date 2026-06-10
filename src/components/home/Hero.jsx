@@ -62,7 +62,7 @@ function useBreakpoint() {
 /* ════════════════════════════════════════════════
    CONSTANTS
 ════════════════════════════════════════════════ */
-const ABOUT_ACCENT = "#F47B20";
+const ABOUT_ACCENT = "#f5a623";
 
 const QUICK = ["IIT Bombay", "JEE Main 2026", "College Predictor", "NIT Trichy", "VITEEE", "JEE Advanced"];
 
@@ -251,16 +251,16 @@ function AboutUsCard() {
       transition={{ duration: 0.7, delay: 0.3 }}
       className="hero-about-col"
       style={{
-        background: "rgba(10,10,26,0.72)",
+        background: "linear-gradient(160deg, rgba(14,10,4,.92), rgba(10,10,16,.86))",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
-        border: "1px solid rgba(255,255,255,.1)",
+        border: "1px solid rgba(245,166,35,.28)",
         borderRadius: 20,
         padding: "1.1rem 1.2rem",
         display: "flex",
         flexDirection: "column",
         gap: "0.85rem",
-        boxShadow: "0 0 0 1px rgba(255,255,255,.06), 0 24px 64px rgba(0,0,0,.6)",
+        boxShadow: "0 0 0 1px rgba(245,166,35,.1), 0 24px 64px rgba(0,0,0,.6)",
         position: "relative",
         overflow: "hidden",
         minWidth: 0, /* prevent flex blowout */
@@ -271,25 +271,27 @@ function AboutUsCard() {
         position: "absolute", top: 0, left: 0, right: 0, height: 2,
         background: `linear-gradient(90deg, transparent, ${ACCENT}, transparent)`,
       }} />
+      {/* gold corner glow */}
+      <div style={{ position: "absolute", top: -40, right: -30, width: 160, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,166,35,.22), transparent 70%)", pointerEvents: "none" }} />
 
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{
-                  width: 38, height: 38, borderRadius: "50%",
-                  background: "#F47B20",
+                  width: 40, height: 40, borderRadius: 11,
+                  background: "rgba(245,166,35,.16)",
+                  border: "1.5px solid rgba(245,166,35,.4)",
                   display: "grid", placeItems: "center", flexShrink: 0,
-                  boxShadow: "0 0 12px rgba(244,123,32,.5)",
                 }}>
                   <span style={{
                     fontFamily: "'Sora', sans-serif",
                     fontWeight: 800,
                     fontSize: 13,
-                    color: "#fff",
+                    color: ACCENT,
                     letterSpacing: "0.5px",
                   }}>CP</span>
                 </div>
         <div>
-          <div style={{ fontSize: 9, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.6px", textTransform: "uppercase" }}>About Us</div>
+          <div style={{ fontSize: 9, color: ACCENT, fontWeight: 700, letterSpacing: "1.6px", textTransform: "uppercase" }}>About Us</div>
           <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: ".97rem" }}>College Parichay</div>
         </div>
         <motion.span
@@ -354,9 +356,9 @@ function AboutUsCard() {
         onClick={() => nav("/about")}
         style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: `linear-gradient(135deg, ${ACCENT}, #ea580c)`,
-          color: "#fff", border: "none", borderRadius: 11,
-          padding: "10px 14px", fontSize: 12.5, fontWeight: 700,
+          background: `linear-gradient(135deg, ${ACCENT}, #ffcf6b)`,
+          color: "#0a0a0a", border: "none", borderRadius: 11,
+          padding: "10px 14px", fontSize: 12.5, fontWeight: 800,
           fontFamily: "Sora", cursor: "pointer", marginTop: "auto",
           boxShadow: `0 4px 20px ${ACCENT}55`, transition: "all .2s",
         }}
