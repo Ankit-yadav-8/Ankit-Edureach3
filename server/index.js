@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.js";
 import otpRoutes from "./routes/otp.js";
 import userRoutes from "./routes/users.js";
 import cutoffRoutes from "./routes/cutoffs.js";
+import paymentRoutes from "./routes/payment.js";
 
 dotenv.config();
 const app = express();
@@ -39,6 +40,7 @@ app.use("/api/auth", limiter, authRoutes);
 app.use("/api/otp", limiter, otpRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/cutoffs", cutoffRoutes);
+app.use("/api/payment", limiter, paymentRoutes);
 
 connectDB()
   .then(() => app.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`)))

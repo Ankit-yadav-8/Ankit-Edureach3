@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import { ShortlistProvider } from "./context/Shortlist.jsx";
 import { AuthProvider } from "./auth/AuthContext.jsx";
+import { EnrolProvider } from "./components/EnrolModal.jsx";
 import "./styles/index.css";
 
 // Base path: "/" in dev, "/Ankit-Edureach" on GitHub Pages (from vite base).
@@ -14,7 +15,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter basename={basename}>
       <AuthProvider>
         <ShortlistProvider>
-          <App />
+          <EnrolProvider>
+            <App />
+          </EnrolProvider>
         </ShortlistProvider>
       </AuthProvider>
     </BrowserRouter>

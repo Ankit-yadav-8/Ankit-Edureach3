@@ -7,6 +7,7 @@ import {
   Quote, TrendingUp,
 } from "lucide-react";
 import Reveal from "../Reveal.jsx";
+import { useEnrol } from "../EnrolModal.jsx";
 
 /* ════════════════════════════════════════════════
    CONTACT
@@ -15,7 +16,6 @@ const WA_NUMBER = "917877596464";
 const PHONE_DISPLAY = "+91 78775 96464";
 const PHONE_TEL = "+917877596464";
 const PRICE = "499";
-const FORM_LINK = "https://forms.gle/AsfEKer3xBnpu7bB6";
 const WA_LINK =
   `https://wa.me/${WA_NUMBER}?text=` +
   encodeURIComponent("Hi! I have my JEE Main rank and I'd like to enrol in the college counselling plan.");
@@ -80,8 +80,6 @@ const PLANS = [
       "WhatsApp support till your seat is locked",
     ],
     cta: "Enrol Now — ₹499",
-    href: FORM_LINK,
-    external: true,
     featured: true,
   },
 ];
@@ -104,6 +102,7 @@ const TRUST = [
    COMPONENT
 ════════════════════════════════════════════════ */
 export default function RankCounselling() {
+  const { open: openEnrol } = useEnrol();
   const [openFaq, setOpenFaq] = useState(0);
   const [story, setStory] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -217,14 +216,14 @@ export default function RankCounselling() {
                         </div>
                       ))}
                     </div>
-                    {p.external ? (
-                      <a href={p.href} target="_blank" rel="noreferrer" className="josaa-cta-btn">
-                        {p.cta} <ArrowRight size={17} />
-                      </a>
-                    ) : (
+                    {p.to ? (
                       <Link to={p.to} className="josaa-cta-btn">
                         {p.cta} <ArrowRight size={17} />
                       </Link>
+                    ) : (
+                      <button type="button" onClick={() => openEnrol(p.key)} className="josaa-cta-btn" style={{ border: "none", cursor: "pointer", width: "100%" }}>
+                        {p.cta} <ArrowRight size={17} />
+                      </button>
                     )}
                     <div className="josaa-secure-note">
                       <ShieldCheck size={13} />
@@ -373,10 +372,10 @@ export default function RankCounselling() {
                   style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, background: "rgba(255,255,255,.12)", border: "1.5px solid rgba(255,255,255,.25)", color: "#fff", padding: "14px 24px", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif", textDecoration: "none" }}>
                   <Phone size={17} /> {PHONE_DISPLAY}
                 </a>
-                <a href={FORM_LINK} target="_blank" rel="noreferrer"
-                  style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, color: "rgba(255,255,255,.85)", fontSize: 13.5, fontWeight: 600, textDecoration: "underline", textUnderlineOffset: 3 }}>
-                  Or fill the enrolment form <ArrowRight size={14} />
-                </a>
+                <button type="button" onClick={() => openEnrol("all-colleges")}
+                  style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, color: "rgba(255,255,255,.85)", fontSize: 13.5, fontWeight: 600, textDecoration: "underline", textUnderlineOffset: 3, background: "transparent", border: "none", cursor: "pointer" }}>
+                  Or enrol now — ₹499 <ArrowRight size={14} />
+                </button>
               </div>
             </div>
           </div>
