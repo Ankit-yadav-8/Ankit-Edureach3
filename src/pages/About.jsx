@@ -2,7 +2,7 @@ import {
   ShieldCheck, Mail, Phone, GraduationCap, Heart, Lightbulb,
   Linkedin, Github, MapPin, Quote, Trophy,
   Code2, Zap, Users, MessageCircle, Globe,
-  Star, ArrowRight, CheckCircle2,
+  Star, ArrowRight, CheckCircle2, Sparkles,
 } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
@@ -138,6 +138,31 @@ function Stat({ target, suffix, label, color = "#F47B20" }) {
       </div>
       <div style={{ fontSize: 14, color: "rgba(255,255,255,.6)", fontWeight: 500 }}>{label}</div>
     </motion.div>
+  );
+}
+
+/* ── Highlighted role pills (Founder / CTO / COO …) ───────────── */
+function RoleTags({ role, accent }) {
+  const parts = role.split(/\s*[&,/]\s*/).map((p) => p.trim()).filter(Boolean);
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 7 }}>
+      {parts.map((p, i) => (
+        <motion.span
+          key={p}
+          className="role-chip"
+          initial={{ opacity: 0, y: 10, scale: 0.8 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.15 + i * 0.12, type: "spring", bounce: 0.5 }}
+          style={{
+            background: `linear-gradient(135deg, ${accent}, #fbbf24)`,
+            boxShadow: `0 5px 18px ${accent}66, inset 0 1px 0 rgba(255,255,255,.35)`,
+          }}
+        >
+          <Sparkles size={12} /> {p}
+        </motion.span>
+      ))}
+    </div>
   );
 }
 
@@ -371,6 +396,28 @@ export default function About() {
         .iit-tag {
           animation: iitTagPop .5s cubic-bezier(.22,.68,0,1.2) both;
         }
+        .role-chip {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 6px 15px; border-radius: 50px;
+          font-family: "Sora", sans-serif;
+          font-size: 12.5px; font-weight: 800; letter-spacing: .3px;
+          color: #fff; border: 1px solid rgba(255,255,255,.3);
+          position: relative; overflow: hidden;
+          transition: transform .2s ease;
+          white-space: nowrap;
+        }
+        .role-chip::after {
+          content: ''; position: absolute; inset: 0;
+          background: linear-gradient(110deg, transparent 22%, rgba(255,255,255,.55) 50%, transparent 78%);
+          transform: translateX(-130%);
+          animation: roleShimmer 3.4s ease-in-out infinite;
+        }
+        .role-chip:hover { transform: translateY(-2px) scale(1.05); }
+        .role-chip > svg { position: relative; z-index: 1; }
+        @keyframes roleShimmer {
+          0% { transform: translateX(-130%); }
+          55%, 100% { transform: translateX(135%); }
+        }
         /* ── Mobile: stack photo on top, content below ── */
         @media (max-width: 640px) {
           .team-grid { grid-template-columns: 1fr !important; }
@@ -599,7 +646,7 @@ export default function About() {
 
                     <div>
                       <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.45rem", color: "#fff", marginBottom: 4, lineHeight: 1.2 }}>{f.name}</h3>
-                      <div style={{ color: f.accent, fontWeight: 600, fontSize: 14 }}>{f.role}</div>
+                      <RoleTags role={f.role} accent={f.accent} />
                     </div>
 
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -789,7 +836,7 @@ export default function About() {
 
                     <div>
                       <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.45rem", color: "#fff", marginBottom: 4, lineHeight: 1.2 }}>{f.name}</h3>
-                      <div style={{ color: f.accent, fontWeight: 600, fontSize: 14 }}>{f.role}</div>
+                      <RoleTags role={f.role} accent={f.accent} />
                     </div>
 
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>

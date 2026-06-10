@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   GraduationCap, Github, Linkedin, Dribbble, Mail, Phone,
   Instagram, Facebook, Heart, Sparkles, Twitter, Youtube,
-  Send, MessageCircle, MapPin, Code2,
+  Send, MessageCircle, MapPin, Code2, ArrowUpRight,
 } from "lucide-react";
 import { TEAM } from "../data/team.js";
 
@@ -94,99 +95,81 @@ function Col({ title, links }) {
 }
 
 /* ── Team member card ───────────────────────────────────────────── */
-function DevCard({ t }) {
-  const social = Object.keys(t.socials || {})[0];
-  const Ic = ICON[social] || Github;
+function DevCard({ t, index = 0 }) {
+  const roleParts = (t.role || "")
+    .split(/\s*(?:&|\band\b|,|\/)\s*/i)
+    .map((s) => s.trim())
+    .filter(Boolean);
 
   return (
-    <Link
-      to={`/team/${t.id}`}
-      title={`View ${t.name}'s portfolio`}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 14,
-        padding: "14px 20px",
-        borderRadius: 16,
-        background: "rgba(255,255,255,0.05)",
-        border: "1px solid rgba(249,115,22,0.25)",
-        color: "#fff",
-        textDecoration: "none",
-        transition: "all .25s ease",
-        backdropFilter: "blur(8px)",
-        position: "relative",
-        overflow: "hidden",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "rgba(249,115,22,0.12)";
-        e.currentTarget.style.border = "1px solid rgba(249,115,22,0.55)";
-        e.currentTarget.style.boxShadow =
-          "0 0 18px rgba(249,115,22,0.28), 0 0 6px rgba(249,115,22,0.15)";
-        e.currentTarget.style.transform = "translateY(-2px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-        e.currentTarget.style.border = "1px solid rgba(249,115,22,0.25)";
-        e.currentTarget.style.boxShadow = "none";
-        e.currentTarget.style.transform = "translateY(0)";
-      }}
+    <motion.div
+      initial={{ opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay: index * 0.12, ease: [0.22, 0.68, 0, 1.1] }}
+      whileHover={{ y: -4 }}
     >
-      {/* subtle inner glow dot */}
-      <span
-        style={{
-          position: "absolute",
-          top: -20,
-          right: -20,
-          width: 60,
-          height: 60,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${t.accent}33, transparent 70%)`,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* ── Initials logo (AY / AK) ── */}
-      <span
-        style={{
-          width: 46,
-          height: 46,
-          borderRadius: 12,
-          display: "grid",
-          placeItems: "center",
-          background: `linear-gradient(135deg, ${t.accent} 0%, #ea580c 100%)`,
-          fontFamily: "Sora, sans-serif",
-          fontWeight: 900,
-          fontSize: "1.05rem",
-          letterSpacing: "-0.5px",
-          color: "#fff",
-          flexShrink: 0,
-          boxShadow: `0 0 16px ${t.accent}88, 0 0 6px ${t.accent}55, inset 0 1px 0 rgba(255,255,255,.25)`,
-          border: `1.5px solid ${t.accent}cc`,
-          userSelect: "none",
-        }}
+      <Link
+        className="fdev-card"
+        to={`/team/${t.id}`}
+        title={`View ${t.name}'s portfolio`}
       >
-        {t.initials}
-      </span>
-
-      {/* Name + role */}
-      <span style={{ flex: 1 }}>
-        <span
-          style={{ display: "block", fontSize: ".88rem", fontWeight: 600 }}
-        >
-          {t.name}
-        </span>
+        {/* subtle inner glow dot */}
         <span
           style={{
-            display: "block",
-            fontSize: ".72rem",
-            color: "rgba(255,255,255,.55)",
+            position: "absolute",
+            top: -20,
+            right: -20,
+            width: 60,
+            height: 60,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${t.accent}33, transparent 70%)`,
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* ── Initials logo (AY / AK) ── */}
+        <span
+          className="fdev-initials"
+          style={{
+            width: 46,
+            height: 46,
+            borderRadius: 12,
+            display: "grid",
+            placeItems: "center",
+            background: `linear-gradient(135deg, ${t.accent} 0%, #ea580c 100%)`,
+            fontFamily: "Sora, sans-serif",
+            fontWeight: 900,
+            fontSize: "1.05rem",
+            letterSpacing: "-0.5px",
+            color: "#fff",
+            flexShrink: 0,
+            boxShadow: `0 0 16px ${t.accent}88, 0 0 6px ${t.accent}55, inset 0 1px 0 rgba(255,255,255,.25)`,
+            border: `1.5px solid ${t.accent}cc`,
+            userSelect: "none",
           }}
         >
-          {t.role}
+          {t.initials}
         </span>
-      </span>
-      <Ic size={15} color="rgba(255,255,255,.5)" />
-    </Link>
+
+        {/* Name + highlighted role chips */}
+        <span style={{ flex: 1, minWidth: 0 }}>
+          <span className="fdev-name">{t.name}</span>
+          <span className="fdev-roles">
+            {roleParts.map((r) => (
+              <span
+                key={r}
+                className="frole-chip"
+                style={{ background: `linear-gradient(135deg, ${t.accent}, #fbbf24)` }}
+              >
+                {r}
+              </span>
+            ))}
+          </span>
+        </span>
+        <ArrowUpRight className="fdev-arrow" size={16} color="rgba(255,255,255,.55)" />
+      </Link>
+    </motion.div>
   );
 }
 
@@ -194,6 +177,48 @@ function DevCard({ t }) {
 export default function Footer() {
   return (
     <footer style={{ background: "var(--navy)", color: "#fff", paddingTop: "3.5rem" }}>
+      <style>{`
+        .fdev-card {
+          display: flex; align-items: center; gap: 14px;
+          padding: 14px 18px; border-radius: 16px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(249,115,22,0.25);
+          color: #fff; text-decoration: none;
+          position: relative; overflow: hidden;
+          backdrop-filter: blur(8px);
+          transition: background .25s, border-color .25s, box-shadow .25s;
+        }
+        .fdev-card::before {
+          content: ''; position: absolute; top: 0; bottom: 0; left: -65%; width: 55%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
+          transform: skewX(-18deg); transition: left .6s ease; pointer-events: none;
+        }
+        .fdev-card:hover::before { left: 135%; }
+        .fdev-card:hover {
+          background: rgba(249,115,22,0.12);
+          border-color: rgba(249,115,22,0.55);
+          box-shadow: 0 12px 32px rgba(249,115,22,0.28), 0 0 6px rgba(249,115,22,0.15);
+        }
+        .fdev-initials { transition: transform .3s cubic-bezier(.22,.68,0,1.3); }
+        .fdev-card:hover .fdev-initials { transform: rotate(-5deg) scale(1.07); }
+        .fdev-arrow { transition: transform .25s ease, color .25s ease; }
+        .fdev-card:hover .fdev-arrow { transform: translate(3px,-3px); color: var(--coral-light); }
+        .fdev-name { display: block; font-size: .9rem; font-weight: 700; color: #fff; }
+        .fdev-roles { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+        .frole-chip {
+          display: inline-flex; align-items: center;
+          padding: 2px 9px; border-radius: 50px;
+          font-family: "Sora", sans-serif; font-size: .6rem; font-weight: 800;
+          letter-spacing: .5px; text-transform: uppercase; color: #fff;
+          white-space: nowrap;
+          box-shadow: 0 2px 9px rgba(249,115,22,.42), inset 0 1px 0 rgba(255,255,255,.32);
+        }
+        .fteam-badge { animation: ftBadgePulse 2.6s ease-in-out infinite; }
+        @keyframes ftBadgePulse {
+          0%,100% { box-shadow: 0 0 12px rgba(249,115,22,0.45); }
+          50% { box-shadow: 0 0 22px rgba(249,115,22,0.75); }
+        }
+      `}</style>
       <div className="container">
 
         {/* Main link grid */}
@@ -301,10 +326,15 @@ export default function Footer() {
           />
 
           {/* "Built by developers" badge */}
-          <div
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, type: "spring", bounce: 0.45 }}
             style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}
           >
             <span
+              className="fteam-badge"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -312,7 +342,6 @@ export default function Footer() {
                 padding: "5px 18px",
                 borderRadius: 99,
                 background: "rgba(249,115,22,0.85)",
-                boxShadow: "0 0 14px rgba(249,115,22,0.55)",
                 fontSize: ".78rem",
                 fontWeight: 700,
                 letterSpacing: 1.2,
@@ -323,10 +352,14 @@ export default function Footer() {
               <Code2 size={13} />
               Built by IITians. Trusted by Aspirants
             </span>
-          </div>
+          </motion.div>
 
           {/* Sub-heading */}
-          <p
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             style={{
               textAlign: "center",
               color: "var(--gold)",
@@ -350,7 +383,7 @@ export default function Footer() {
               style={{ margin: "0 2px" }}
             />{" "}
             by the Collegeparichay Team
-          </p>
+          </motion.p>
 
           {/* Team cards grid */}
           <div
@@ -362,8 +395,8 @@ export default function Footer() {
               margin: "0 auto",
             }}
           >
-            {TEAM.map((t) => (
-              <DevCard key={t.id} t={t} />
+            {TEAM.map((t, i) => (
+              <DevCard key={t.id} t={t} index={i} />
             ))}
           </div>
         </div>
