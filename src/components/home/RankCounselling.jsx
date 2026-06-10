@@ -18,7 +18,7 @@ const PRICE = "499";
 const FORM_LINK = "https://forms.gle/AsfEKer3xBnpu7bB6";
 const WA_LINK =
   `https://wa.me/${WA_NUMBER}?text=` +
-  encodeURIComponent("Hi! I scored a rank between 80,000–9,00,000 in JEE Main. I'd like to enrol in the ₹499 college counselling plan.");
+  encodeURIComponent("Hi! I have my JEE Main rank and I'd like to enrol in the college counselling plan.");
 
 /* ════════════════════════════════════════════════
    DATA
@@ -38,13 +38,13 @@ const PLANS = [
     key: "josaa",
     icon: Award,
     tag: "JoSAA + CSAB 2026",
-    band: "Top ranks · IITs / NITs / IIITs",
+    band: "Strong ranks · IITs / NITs / IIITs",
     price: "249",
     old: "1999",
     off: "87% OFF",
     save: "SAVE 87%",
     label: "one-time · all JoSAA + CSAB rounds",
-    blurb: "For students fighting for an IIT, NIT, IIIT or GFTI seat through the official JoSAA & CSAB counselling rounds.",
+    blurb: "Best when your rank is strong — secure the best possible IIT, NIT, IIIT or GFTI seat through the official JoSAA & CSAB rounds.",
     includes: [
       "Personalised choice list (your rank + category)",
       "1-on-1 mentor call — 45 min",
@@ -61,14 +61,14 @@ const PLANS = [
   {
     key: "all-colleges",
     icon: GraduationCap,
-    tag: "All Colleges · Rank 80K–9L",
-    band: "Wider ranks · State / Private / Deemed",
+    tag: "All Colleges · Any Rank",
+    band: "Higher ranks · State / Private / Deemed",
     price: "499",
     old: "1999",
     off: "75% OFF",
     save: "SAVE 75%",
     label: "one-time · all counselling rounds",
-    blurb: "For the 80,000–9,00,000 band — we map NITs, IIITs, GFTIs, State, Private & Deemed colleges so no good seat is missed.",
+    blurb: "Got a high rank? Don't settle. Join us and our experts land you a better college across NITs, GFTIs, State, Private & Deemed institutes you'd otherwise miss.",
     includes: [
       "Personalised college list for YOUR rank & category",
       "Covers NITs · IIITs · GFTIs · State · Private · Deemed",
@@ -142,9 +142,9 @@ export default function RankCounselling() {
               </span>
             </h2>
             <p style={{ color: "#4b5563", fontSize: "1.02rem", lineHeight: 1.7, maxWidth: 640, margin: "0 auto 26px" }}>
-              Dedicated guidance for JEE Mains rank holders between{" "}
-              <strong style={{ color: "#1a1a2e" }}>80,000 – 9,00,000</strong>. There are thousands of great
-              seats in your reach across NITs, IIITs, GFTIs, state &amp; private colleges — we help you find them.
+              Dedicated guidance for every JEE Mains rank holder. Whatever your rank, there are
+              thousands of great seats in your reach across NITs, IIITs, GFTIs, state &amp; private
+              colleges — we help you find them.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", alignItems: "center" }}>
               <a href={WA_LINK} target="_blank" rel="noreferrer" className="btn btn-coral btn-shimmer"
