@@ -291,8 +291,8 @@ function AboutUsCard() {
                   }}>CP</span>
                 </div>
         <div>
-          <div style={{ fontSize: 9, color: ACCENT, fontWeight: 700, letterSpacing: "1.6px", textTransform: "uppercase" }}>About Us</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: ".97rem" }}>College Parichay</div>
+          <div style={{ fontSize: 9.5, color: ACCENT, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>About Us</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: "1rem" }}>College Parichay</div>
         </div>
         <motion.span
           animate={{ boxShadow: ["0 0 0px #22c55e", "0 0 12px #22c55e", "0 0 0px #22c55e"] }}
@@ -306,8 +306,8 @@ function AboutUsCard() {
       {/* Origin story */}
       <div style={{
         background: "rgba(255,255,255,.04)",
-        border: "1px solid rgba(255,255,255,.07)",
-        borderRadius: 11, padding: "10px 12px",
+        border: "1px solid rgba(255,255,255,.06)",
+        borderRadius: 10, padding: "10px 12px",
       }}>
         <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", marginBottom: 6 }}>Our Story</div>
         <p style={{ fontSize: 12, color: "rgba(255,255,255,.65)", lineHeight: 1.65, margin: 0 }}>
@@ -325,12 +325,12 @@ function AboutUsCard() {
           <div key={label} style={{
             display: "flex", alignItems: "center", gap: 10,
             background: "rgba(255,255,255,.03)", border: "1px solid rgba(255,255,255,.06)",
-            borderRadius: 9, padding: "7px 10px",
+            borderRadius: 10, padding: "8px 11px",
           }}>
             <span style={{ fontSize: 15, flexShrink: 0 }}>{emoji}</span>
             <div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>{label}</div>
-              <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.38)" }}>{sub}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{label}</div>
+              <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.45)" }}>{sub}</div>
             </div>
           </div>
         ))}
@@ -343,10 +343,10 @@ function AboutUsCard() {
         {[{ val: "IIT-R", lbl: "Founded" }, { val: "3", lbl: "Engineers" }, { val: "Free", lbl: "Always" }].map(({ val, lbl }) => (
           <div key={lbl} style={{
             textAlign: "center", background: "rgba(255,255,255,.04)",
-            border: "1px solid rgba(255,255,255,.07)", borderRadius: 9, padding: "8px 4px",
+            borderRadius: 9, padding: "8px 4px",
           }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: ACCENT }}>{val}</div>
-            <div style={{ fontSize: 9.5, color: "rgba(255,255,255,.38)", marginTop: 1 }}>{lbl}</div>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: "#fff" }}>{val}</div>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,.45)", marginTop: 1 }}>{lbl}</div>
           </div>
         ))}
       </div>
