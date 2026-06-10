@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { WaveSeparator, FloatingOrbs, GradientText, StaggerReveal, StaggerItem } from "../components/Animations.jsx";
+import { WaveSeparator, GradientText, StaggerReveal, StaggerItem } from "../components/Animations.jsx";
 
 /* ════════════════════════════════════════════════
    INLINE DATA
@@ -245,141 +245,6 @@ function ExamCard({ ex }) {
         </Link>
       </div>
     </motion.div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   JOSAA 2026 PROMO SECTION
-════════════════════════════════════════════════ */
-function JoSAAPromoSection() {
-  const WA_LINK  = "https://wa.me/917877596464?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹249 counselling plan.");
-
-  return (
-    <section className="josaa-promo-section" style={{ position: "relative" }}>
-      <FloatingOrbs count={4} colors={["#F47B20","#fbbf24","#F47B20","#ea580c"]} />
-      <div className="container" style={{ position: "relative", zIndex: 2 }}>
-        <div className="josaa-promo-inner">
-          {/* LEFT: pitch */}
-          <Reveal>
-            <div>
-              <div className="josaa-promo-badge">
-                <span className="pulse-dot" />
-                JoSAA + CSAB 2026 · Counselling Open
-              </div>
-              <h2 style={{ color: "#1a1a2e" }}>
-                Don't lose your dream college to a{" "}
-                <span className="highlight">wrong choice list</span>.
-              </h2>
-              <p style={{ color: "#4b5563" }}>
-                JoSAA counselling is where ranks become seats — and most students
-                lose branch upgrades simply because they filled choices in the wrong
-                order. Our ₹249 plan gives you a data-backed choice list built
-                around YOUR rank, plus a 45-min 1-on-1 mentor call.
-              </p>
-
-              <div className="josaa-bullets">
-                {JOSAA_BULLETS.map((b) => (
-                  <div className="josaa-bullet" key={b}>
-                    <span className="josaa-bullet-icon">✓</span>
-                    {b}
-                  </div>
-                ))}
-              </div>
-
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <Link to="/josaa-2026" className="josaa-cta-btn btn-shimmer" style={{ maxWidth: 260, overflow: "hidden", position: "relative" }}>
-                  Enrol now — only ₹249 <ArrowRight size={17} />
-                </Link>
-                <a
-                  href={WA_LINK}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    display: "inline-flex", alignItems: "center", gap: 7,
-                    padding: "1rem 1.4rem", borderRadius: 50,
-                    background: "rgba(0,0,0,.06)",
-                    border: "1.5px solid rgba(0,0,0,.18)",
-                    color: "#374151", fontSize: ".9rem", fontWeight: 600,
-                    textDecoration: "none", transition: "all .25s",
-                  }}
-                >
-                  <MessageCircle size={16} /> Ask on WhatsApp
-                </a>
-              </div>
-
-              <div style={{ display: "flex", gap: 20, marginTop: 20, flexWrap: "wrap", fontSize: 13, color: "#6b7280" }}>
-                <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                  <Users size={14} color="#fb923c" /> 2,000+ students guided
-                </span>
-                <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                  <Star size={14} color="#fbbf24" fill="#fbbf24" /> 4.8/5 rating
-                </span>
-                <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                  <Award size={14} color="#fb923c" /> Built by IITians
-                </span>
-              </div>
-            </div>
-          </Reveal>
-
-          {/* RIGHT: price card */}
-          <Reveal delay={0.1}>
-            <div className="josaa-price-card">
-              <div className="josaa-save-ribbon">SAVE 87%</div>
-
-              {/* Premium gradient header — matches JEE Main/Advanced cards */}
-              <div className="josaa-price-header">
-                <div className="josaa-price-header-mesh" />
-                <div className="josaa-price-header-glow" />
-                <div className="josaa-price-header-top">
-                  <div className="josaa-price-header-icon">
-                    <Award size={22} color="#fff" />
-                  </div>
-                  <span className="josaa-price-header-tag">JoSAA + CSAB 2026</span>
-                </div>
-                <div className="limited-tag">🔥 Limited slots this cycle</div>
-                <div className="josaa-price-row">
-                  <div className="josaa-old-price">₹1999</div>
-                  <span className="josaa-off-pill">87% OFF</span>
-                </div>
-                <div className="josaa-new-price">
-                  <span className="josaa-rupee">₹</span>249
-                  <span className="josaa-per">/plan</span>
-                </div>
-                <div className="josaa-price-label">one-time · all JoSAA + CSAB rounds</div>
-              </div>
-
-              {/* Body */}
-              <div className="josaa-price-body">
-                <div className="josaa-includes">
-                  {[
-                    "Personalised choice list (your rank + category)",
-                    "1-on-1 mentor call — 45 min",
-                    "Round-wise allotment prediction",
-                    "WhatsApp support till seat locked",
-                    "Document & deadline checklist",
-                    "Choice review before you lock",
-                  ].map((item) => (
-                    <div className="josaa-include-item" key={item}>
-                      <Check size={15} color="#22c55e" strokeWidth={2.5} />
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <Link to="/josaa-2026" className="josaa-cta-btn">
-                  Enrol Now — ₹249 <ArrowRight size={17} />
-                </Link>
-
-                <div className="josaa-secure-note">
-                  <ShieldCheck size={13} />
-                  Secure payment · mentor assigned within hours
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -734,9 +599,6 @@ export default function Home({ onSearch }) {
         </div>
       </HomeSection>
 
-      <WaveSeparator fillTop="#fff7f0" fillBottom="#fff7f0" />
-      {/* ── JoSAA 2026 Counselling Promo ── */}
-      <JoSAAPromoSection />
       <WaveSeparator fillTop="#fff7f0" fillBottom="#fff7f0" />
 
       {/* ── How to Pick the Right College ── */}
