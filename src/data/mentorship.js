@@ -50,6 +50,49 @@ export const MENTORSHIP = {
       { val: "Daily", lbl: "Targets & check-ins" },
       { val: "Weekly", lbl: "Test analysis" },
     ],
+    metrics: {
+      student: { name: "Aarav", klass: "Class 12 · Dropper", mentor: "Aman (IIT Delhi)", line: "Aarav Gupta · Class 12", exam: "JEE 2027" },
+      growth: {
+        label: "Marks growth over 8 weeks", hint: "You vs batch average — out of 300",
+        you:   [84, 98, 92, 126, 150, 178, 196, 214],
+        batch: [72, 78, 80, 88, 96, 104, 110, 118],
+      },
+      subjects: [
+        { name: "Physics",   Before: 42, After: 78 },
+        { name: "Chemistry", Before: 55, After: 84 },
+        { name: "Maths",     Before: 38, After: 81 },
+      ],
+      outcomes: [
+        { v: "+130",      l: "Marks gained in 8 weeks", c: "#F47B20" },
+        { v: "86%",       l: "Average accuracy",        c: "#22c55e" },
+        { v: "88 → 99.2", l: "Percentile jump",         c: "#6366f1" },
+        { v: "23 days",   l: "Avg study streak",        c: "#ef4444" },
+      ],
+      weekHours: [4.5, 6, 5, 7, 6, 8, 2.5],
+      goalPct: 86,
+      liveTiles: [
+        { icon: "clock",    c: "#F47B20", v: "6h 12m",  l: "Today" },
+        { icon: "activity", c: "#6366f1", v: "39h",     l: "This week" },
+        { icon: "flame",    c: "#ef4444", v: "23 days", l: "Streak" },
+        { icon: "check",    c: "#22c55e", v: "18 / 21", l: "Tasks done" },
+      ],
+      test: {
+        week: "Week 6", gain: "+47 marks", trend: [34, 41, 38, 56, 68, 81],
+        weak: ["Rotational Motion", "Thermodynamics", "p-Block", "Probability"],
+        fix:  ["Re-do Rotational Motion PYQs (2 hrs)", "Revise Thermo formula sheet daily", "10 timed p-Block questions"],
+      },
+      parent: {
+        week: "Week 6",
+        rows: [
+          { icon: "clock",    c: "#F47B20", l: "Study hours this week", v: "39 hrs",  note: "+5h vs last week" },
+          { icon: "file",     c: "#6366f1", l: "Tests attempted",       v: "2 tests", note: "Both fully analysed" },
+          { icon: "trend",    c: "#22c55e", l: "Score improvement",     v: "+18%",    note: "126 → 178 / 300" },
+          { icon: "check",    c: "#0ea5a4", l: "Tasks completed",       v: "18 / 21", note: "86% consistency" },
+          { icon: "activity", c: "#ef4444", l: "Attendance",           v: "96%",     note: "Active 6 of 7 days" },
+        ],
+        remark: "Aarav's consistency really jumped this week. Next week we focus on Rotational Motion and timed mocks.",
+      },
+    },
 
     forYou: [
       "You have backlogs and no idea where to start",
@@ -113,6 +156,49 @@ export const MENTORSHIP = {
       { val: "4-Phase", lbl: "Roadmap" },
       { val: "Quarterly", lbl: "Checkpoints" },
     ],
+    metrics: {
+      student: { name: "Ishita", klass: "Class 11", mentor: "Sneha (IIT Bombay)", line: "Ishita Verma · Class 11", exam: "JEE 2028" },
+      growth: {
+        label: "Concept mastery over 8 weeks", hint: "You vs batch average — concept mastery %",
+        you:   [38, 46, 52, 58, 66, 74, 82, 88],
+        batch: [30, 36, 40, 46, 50, 56, 60, 64],
+      },
+      subjects: [
+        { name: "Physics",   Before: 30, After: 64 },
+        { name: "Chemistry", Before: 44, After: 76 },
+        { name: "Maths",     Before: 28, After: 70 },
+      ],
+      outcomes: [
+        { v: "+50%",    l: "Concept mastery gain", c: "#F47B20" },
+        { v: "82%",     l: "Average accuracy",     c: "#22c55e" },
+        { v: "2-yr",    l: "Head start built",     c: "#6366f1" },
+        { v: "19 days", l: "Avg study streak",     c: "#ef4444" },
+      ],
+      weekHours: [3, 4, 3.5, 5, 4.5, 6, 2],
+      goalPct: 78,
+      liveTiles: [
+        { icon: "clock",    c: "#F47B20", v: "4h 20m",  l: "Today" },
+        { icon: "activity", c: "#6366f1", v: "28h",     l: "This week" },
+        { icon: "flame",    c: "#ef4444", v: "19 days", l: "Streak" },
+        { icon: "check",    c: "#22c55e", v: "16 / 20", l: "Tasks done" },
+      ],
+      test: {
+        week: "Week 6", gain: "+39 marks", trend: [28, 35, 40, 48, 58, 67],
+        weak: ["Vectors", "Mole Concept", "Kinematics", "Trigonometry"],
+        fix:  ["Revise Vectors from basics (1.5 hrs)", "20 Mole Concept numericals", "Daily 5 Trigonometry problems"],
+      },
+      parent: {
+        week: "Week 6",
+        rows: [
+          { icon: "clock",    c: "#F47B20", l: "Study hours this week", v: "28 hrs",  note: "+4h vs last week" },
+          { icon: "file",     c: "#6366f1", l: "Tests attempted",       v: "1 test",  note: "Concept checkpoint" },
+          { icon: "trend",    c: "#22c55e", l: "Mastery improvement",   v: "+22%",    note: "66% → 88% concepts" },
+          { icon: "check",    c: "#0ea5a4", l: "Tasks completed",       v: "16 / 20", note: "80% consistency" },
+          { icon: "activity", c: "#ef4444", l: "Attendance",           v: "92%",     note: "Active 5 of 7 days" },
+        ],
+        remark: "Ishita is building concepts beautifully. Next week we strengthen Kinematics and Mole Concept.",
+      },
+    },
 
     forYou: [
       "You're in Class 11 and want to start the right way",
@@ -182,6 +268,49 @@ export const MENTORSHIP = {
       { val: "NCERT", lbl: "Mastery first" },
       { val: "Board+", lbl: "Olympiad edge" },
     ],
+    metrics: {
+      student: { name: "Riya", klass: "Class 10", mentor: "Dev (IIT Kanpur)", line: "Riya Singh · Class 10", exam: "Foundation" },
+      growth: {
+        label: "Foundation score over 8 weeks", hint: "You vs batch average — foundation test %",
+        you:   [52, 58, 56, 64, 72, 80, 86, 90],
+        batch: [44, 48, 50, 54, 58, 62, 66, 70],
+      },
+      subjects: [
+        { name: "Maths",        Before: 48, After: 82 },
+        { name: "Science",      Before: 52, After: 85 },
+        { name: "Mental Abil.", Before: 45, After: 79 },
+      ],
+      outcomes: [
+        { v: "+38%",    l: "Foundation score gain", c: "#F47B20" },
+        { v: "88%",     l: "Average accuracy",      c: "#22c55e" },
+        { v: "NTSE",    l: "Olympiad-ready",        c: "#6366f1" },
+        { v: "17 days", l: "Avg study streak",      c: "#ef4444" },
+      ],
+      weekHours: [2, 3, 2.5, 3.5, 3, 4, 1.5],
+      goalPct: 84,
+      liveTiles: [
+        { icon: "clock",    c: "#F47B20", v: "3h 05m",  l: "Today" },
+        { icon: "activity", c: "#6366f1", v: "21h",     l: "This week" },
+        { icon: "flame",    c: "#ef4444", v: "17 days", l: "Streak" },
+        { icon: "check",    c: "#22c55e", v: "14 / 18", l: "Tasks done" },
+      ],
+      test: {
+        week: "Week 6", gain: "+44 marks", trend: [40, 48, 52, 60, 70, 84],
+        weak: ["Linear Equations", "Light & Reflection", "Surface Area", "Atoms & Molecules"],
+        fix:  ["Re-do Linear Equations (NCERT)", "Practice ray diagrams daily", "10 mensuration sums"],
+      },
+      parent: {
+        week: "Week 6",
+        rows: [
+          { icon: "clock",    c: "#F47B20", l: "Study hours this week", v: "21 hrs",  note: "+3h vs last week" },
+          { icon: "file",     c: "#6366f1", l: "Tests attempted",       v: "1 test",  note: "Foundation + board" },
+          { icon: "trend",    c: "#22c55e", l: "Score improvement",     v: "+20%",    note: "70% → 90% test" },
+          { icon: "check",    c: "#0ea5a4", l: "Tasks completed",       v: "14 / 18", note: "78% consistency" },
+          { icon: "activity", c: "#ef4444", l: "Attendance",           v: "94%",     note: "Active 6 of 7 days" },
+        ],
+        remark: "Riya is balancing boards and foundation well. Next week we focus on Light and Linear Equations.",
+      },
+    },
 
     forYou: [
       "Class 9 students who want a genuine head start",

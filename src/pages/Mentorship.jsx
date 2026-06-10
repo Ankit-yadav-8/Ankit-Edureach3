@@ -17,6 +17,13 @@ const INK = "#1a1a2e";           // dark text
 const MUTE = "#5b6472";          // grey text
 const WA_NUMBER = "917877596464";
 
+/* string → icon, so per-page metrics can live in the data file */
+const ICONS = {
+  clock: Clock, activity: Activity, flame: Flame, check: CheckCircle2,
+  file: FileText, trend: TrendingUp, bar: BarChart3, target: Target,
+  zap: Zap, list: ListChecks,
+};
+
 /* ════════════════════════════════════════════════
    Small building blocks
 ════════════════════════════════════════════════ */
@@ -322,11 +329,8 @@ function HowWeGuide({ cfg }) {
 /* ════════════════════════════════════════════════
    WEEKLY TEST ANALYSIS — mock report card
 ════════════════════════════════════════════════ */
-const TEST_TREND = [
-  { t: "T1", v: 34 }, { t: "T2", v: 41 }, { t: "T3", v: 38 },
-  { t: "T4", v: 56 }, { t: "T5", v: 68 }, { t: "T6", v: 81 },
-];
-function TestAnalysis() {
+function TestAnalysis({ m }) {
+  const trend = m.test.trend.map((v, i) => ({ t: `T${i + 1}`, v }));
   return (
     <Section style={{ background: "linear-gradient(160deg,#fff7f0,#fef3e8)" }}>
       <SectionTitle kicker="Every test counts" sub="No test is just a score. Every week your mentor turns it into a one-page action plan.">
@@ -367,20 +371,20 @@ function TestAnalysis() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
               <div>
                 <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: ACCENT }}>Weekly Report</div>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.05rem", color: INK }}>Test Analysis · Week 6</div>
+                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.05rem", color: INK }}>Test Analysis · {m.test.week}</div>
               </div>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: "#22c55e", background: "rgba(34,197,94,.12)", border: "1px solid rgba(34,197,94,.3)", padding: "5px 10px", borderRadius: 50 }}>
-                <TrendingUp size={13} /> +47 marks
+                <TrendingUp size={13} /> {m.test.gain}
               </span>
             </div>
 
             {/* score trend bars */}
             <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130, padding: "0 4px 8px", borderBottom: "1px solid rgba(0,0,0,.08)", marginBottom: 16 }}>
-              {TEST_TREND.map((d, i) => (
+              {trend.map((d, i) => (
                 <div key={d.t} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
                   <motion.div
                     initial={{ height: 0 }} whileInView={{ height: `${d.v}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.07 }}
-                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === TEST_TREND.length - 1 ? "linear-gradient(180deg,#F47B20,#f5a623)" : "rgba(244,123,32,.35)" }} />
+                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#F47B20,#f5a623)" : "rgba(244,123,32,.35)" }} />
                   <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 600 }}>{d.t}</span>
                 </div>
               ))}
@@ -390,7 +394,7 @@ function TestAnalysis() {
             <div style={{ marginBottom: 14 }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 8 }}>Weak chapters this week</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                {["Rotational Motion", "Thermodynamics", "p-Block", "Probability"].map((w) => (
+                {m.test.weak.map((w) => (
                   <span key={w} style={{ fontSize: 11.5, fontWeight: 700, color: "#b91c1c", background: "rgba(239,68,68,.1)", border: "1px solid rgba(239,68,68,.25)", padding: "4px 10px", borderRadius: 50 }}>{w}</span>
                 ))}
               </div>
@@ -401,7 +405,7 @@ function TestAnalysis() {
               <div style={{ fontSize: 12, fontWeight: 800, color: "#9a3412", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
                 <ListChecks size={14} /> Your fix-list before next test
               </div>
-              {["Re-do Rotational Motion PYQs (2 hrs)", "Revise Thermo formula sheet daily", "10 timed p-Block questions"].map((a) => (
+              {m.test.fix.map((a) => (
                 <div key={a} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
                   <Check size={14} color="#22c55e" strokeWidth={3} />
                   <span style={{ fontSize: 12.5, color: "#374151" }}>{a}</span>
@@ -418,21 +422,6 @@ function TestAnalysis() {
 /* ════════════════════════════════════════════════
    IMPROVEMENT CHARTS — growth + before/after
 ════════════════════════════════════════════════ */
-const GROWTH = [
-  { year: "Wk 1", you: 84,  batch: 72 },
-  { year: "Wk 2", you: 98,  batch: 78 },
-  { year: "Wk 3", you: 92,  batch: 80 },
-  { year: "Wk 4", you: 126, batch: 88 },
-  { year: "Wk 5", you: 150, batch: 96 },
-  { year: "Wk 6", you: 178, batch: 104 },
-  { year: "Wk 7", you: 196, batch: 110 },
-  { year: "Wk 8", you: 214, batch: 118 },
-];
-const SUBJECTS = [
-  { name: "Physics",   Before: 42, After: 78 },
-  { name: "Chemistry", Before: 55, After: 84 },
-  { name: "Maths/Bio", Before: 38, After: 81 },
-];
 function ChartCard({ title, hint, children }) {
   return (
     <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.16)", borderRadius: 18, padding: "22px 22px 18px", height: "100%", boxShadow: "0 16px 40px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
@@ -443,7 +432,8 @@ function ChartCard({ title, hint, children }) {
     </div>
   );
 }
-function ImprovementCharts() {
+function ImprovementCharts({ m }) {
+  const growth = m.growth.you.map((you, i) => ({ year: `Wk ${i + 1}`, you, batch: m.growth.batch[i] }));
   return (
     <Section style={{ background: "#fffaf5" }}>
       <SectionTitle kicker="Proof, not promises" sub="Real, visible improvement — tracked every week and shared with you and your parents.">
@@ -452,25 +442,20 @@ function ImprovementCharts() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: 22, maxWidth: 1040, margin: "0 auto" }}>
         <Reveal>
-          <ChartCard title="Marks growth over 8 weeks" hint="You vs batch average — out of 300">
-            <Trend data={GROWTH} lines={[{ key: "you", label: "Your marks", color: "#F47B20" }, { key: "batch", label: "Batch avg", color: "#6366f1" }]} height={250} />
+          <ChartCard title={m.growth.label} hint={m.growth.hint}>
+            <Trend data={growth} lines={[{ key: "you", label: "You", color: "#F47B20" }, { key: "batch", label: "Batch avg", color: "#6366f1" }]} height={250} />
           </ChartCard>
         </Reveal>
         <Reveal delay={0.08}>
           <ChartCard title="Before vs After — by subject" hint="Average score lift after mentorship">
-            <Bars data={SUBJECTS} bars={[{ key: "Before", label: "Before", color: "#cbd5e1" }, { key: "After", label: "After", color: "#F47B20" }]} height={250} />
+            <Bars data={m.subjects} bars={[{ key: "Before", label: "Before", color: "#cbd5e1" }, { key: "After", label: "After", color: "#F47B20" }]} height={250} />
           </ChartCard>
         </Reveal>
       </div>
 
       {/* outcome stat tiles */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 16, maxWidth: 1040, margin: "20px auto 0" }}>
-        {[
-          { v: "+130", l: "Marks gained in 8 weeks", c: "#F47B20" },
-          { v: "86%", l: "Average accuracy", c: "#22c55e" },
-          { v: "88 → 99.2", l: "Percentile jump", c: "#6366f1" },
-          { v: "23 days", l: "Avg study streak", c: "#ef4444" },
-        ].map((s, i) => (
+        {m.outcomes.map((s, i) => (
           <Reveal key={s.l} delay={i * 0.05}>
             <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 4, borderTop: `3px solid ${s.c}` }}>
               <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: 26, color: s.c }}>{s.v}</span>
@@ -486,12 +471,11 @@ function ImprovementCharts() {
 /* ════════════════════════════════════════════════
    LIVE STUDENT TRACKING
 ════════════════════════════════════════════════ */
-const WEEK_HOURS = [
-  { d: "Mon", h: 4.5 }, { d: "Tue", h: 6 }, { d: "Wed", h: 5 }, { d: "Thu", h: 7 },
-  { d: "Fri", h: 6 }, { d: "Sat", h: 8 }, { d: "Sun", h: 2.5 },
-];
-function LiveTracking() {
-  const maxH = Math.max(...WEEK_HOURS.map((x) => x.h));
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+function LiveTracking({ m }) {
+  const week = m.weekHours.map((h, i) => ({ d: DAYS[i], h }));
+  const maxH = Math.max(...m.weekHours);
+  const maxIdx = m.weekHours.indexOf(maxH);
   return (
     <Section style={{ background: "linear-gradient(160deg,#fff7f0,#fef3e8)" }}>
       <SectionTitle kicker="Always on" sub="Your mentor sees your effort live — so nothing ever slips through the cracks.">
@@ -505,10 +489,10 @@ function LiveTracking() {
 
             {/* header */}
             <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
-              <div style={{ width: 46, height: 46, borderRadius: "50%", background: "linear-gradient(135deg,#F47B20,#f5a623)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>A</div>
+              <div style={{ width: 46, height: 46, borderRadius: "50%", background: "linear-gradient(135deg,#F47B20,#f5a623)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>{m.student.name[0]}</div>
               <div style={{ flex: 1, minWidth: 160 }}>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.05rem", color: INK }}>Aarav · JEE 2027</div>
-                <div style={{ fontSize: 12.5, color: MUTE }}>Mentor: Aman (IIT Delhi)</div>
+                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.05rem", color: INK }}>{m.student.name} · {m.student.exam}</div>
+                <div style={{ fontSize: 12.5, color: MUTE }}>Mentor: {m.student.mentor}</div>
               </div>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#16a34a", background: "rgba(34,197,94,.12)", border: "1px solid rgba(34,197,94,.3)", padding: "6px 13px", borderRadius: 50 }}>
                 <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} style={{ width: 8, height: 8, borderRadius: "50%", background: "#16a34a", display: "block" }} />
@@ -518,18 +502,16 @@ function LiveTracking() {
 
             {/* stat tiles */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 12, marginBottom: 22 }}>
-              {[
-                { Icon: Clock, c: "#F47B20", v: "6h 12m", l: "Today" },
-                { Icon: Activity, c: "#6366f1", v: "39h", l: "This week" },
-                { Icon: Flame, c: "#ef4444", v: "23 days", l: "Streak" },
-                { Icon: CheckCircle2, c: "#22c55e", v: "18 / 21", l: "Tasks done" },
-              ].map(({ Icon, c, v, l }) => (
-                <div key={l} style={{ background: "#fff7f0", border: "1px solid rgba(244,123,32,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
-                  <Icon size={18} color={c} style={{ marginBottom: 6 }} />
-                  <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 17, color: INK }}>{v}</div>
-                  <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{l}</div>
-                </div>
-              ))}
+              {m.liveTiles.map(({ icon, c, v, l }) => {
+                const Icon = ICONS[icon];
+                return (
+                  <div key={l} style={{ background: "#fff7f0", border: "1px solid rgba(244,123,32,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
+                    <Icon size={18} color={c} style={{ marginBottom: 6 }} />
+                    <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 17, color: INK }}>{v}</div>
+                    <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{l}</div>
+                  </div>
+                );
+              })}
             </div>
 
             {/* weekly hours + gauge */}
@@ -537,12 +519,12 @@ function LiveTracking() {
               <div>
                 <div style={{ fontSize: 12.5, fontWeight: 700, color: MUTE, marginBottom: 10 }}>Study hours · this week</div>
                 <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130 }}>
-                  {WEEK_HOURS.map((x, i) => (
+                  {week.map((x, i) => (
                     <div key={x.d} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
                       <span style={{ fontSize: 10.5, fontWeight: 700, color: INK }}>{x.h}h</span>
                       <motion.div
                         initial={{ height: 0 }} whileInView={{ height: `${(x.h / maxH) * 100}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }}
-                        style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === 5 ? "linear-gradient(180deg,#F47B20,#f5a623)" : "rgba(244,123,32,.4)" }} />
+                        style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === maxIdx ? "linear-gradient(180deg,#F47B20,#f5a623)" : "rgba(244,123,32,.4)" }} />
                       <span style={{ fontSize: 10.5, color: MUTE }}>{x.d}</span>
                     </div>
                   ))}
@@ -550,7 +532,7 @@ function LiveTracking() {
               </div>
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 12.5, fontWeight: 700, color: MUTE, marginBottom: 4 }}>Weekly goal</div>
-                <Gauge value={86} label="of target" color="#22c55e" height={170} />
+                <Gauge value={m.goalPct} label="of target" color="#22c55e" height={170} />
               </div>
             </div>
           </div>
@@ -563,7 +545,7 @@ function LiveTracking() {
 /* ════════════════════════════════════════════════
    PARENT WEEKLY BOOKLET
 ════════════════════════════════════════════════ */
-function ParentBooklet() {
+function ParentBooklet({ m }) {
   return (
     <Section style={{ background: "#fffaf5" }}>
       <SectionTitle kicker="Parents stay in the loop" sub="Every Sunday, parents get a simple weekly booklet — exactly what their child did and how they're improving.">
@@ -583,8 +565,8 @@ function ParentBooklet() {
               <p style={{ fontSize: 13.5, color: "rgba(255,255,255,.85)", lineHeight: 1.6, marginBottom: 26 }}>A clear, jargon-free summary of your child's week — effort, tests, improvement and what's next.</p>
               <div style={{ borderTop: "1px solid rgba(255,255,255,.25)", paddingTop: 16 }}>
                 <div style={{ fontSize: 12, opacity: .8 }}>Student</div>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.1rem" }}>Aarav Gupta · Class 12</div>
-                <div style={{ fontSize: 12, opacity: .8, marginTop: 6 }}>Week 6 · CollegeParichay Mentorship</div>
+                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.1rem" }}>{m.student.line}</div>
+                <div style={{ fontSize: 12, opacity: .8, marginTop: 6 }}>{m.parent.week} · CollegeParichay Mentorship</div>
               </div>
             </div>
           </div>
@@ -593,31 +575,28 @@ function ParentBooklet() {
         {/* inside page */}
         <Reveal delay={0.08}>
           <div style={{ background: "#fff", padding: "30px 30px", height: "100%" }}>
-            {[
-              { Icon: Clock,       c: "#F47B20", l: "Study hours this week", v: "39 hrs", note: "+5h vs last week" },
-              { Icon: FileText,    c: "#6366f1", l: "Tests attempted",       v: "2 tests", note: "Both fully analysed" },
-              { Icon: TrendingUp,  c: "#22c55e", l: "Score improvement",     v: "+18%", note: "126 → 178 / 300" },
-              { Icon: CheckCircle2,c: "#0ea5a4", l: "Tasks completed",       v: "18 / 21", note: "86% consistency" },
-              { Icon: Activity,    c: "#ef4444", l: "Attendance",            v: "96%", note: "Active 6 of 7 days" },
-            ].map(({ Icon, c, l, v, note }) => (
-              <div key={l} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 0", borderBottom: "1px solid rgba(0,0,0,.07)" }}>
-                <span style={{ width: 36, height: 36, borderRadius: 10, background: `${c}16`, border: `1px solid ${c}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <Icon size={17} color={c} />
-                </span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13.5, fontWeight: 700, color: INK }}>{l}</div>
-                  <div style={{ fontSize: 11.5, color: MUTE }}>{note}</div>
+            {m.parent.rows.map(({ icon, c, l, v, note }) => {
+              const Icon = ICONS[icon];
+              return (
+                <div key={l} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 0", borderBottom: "1px solid rgba(0,0,0,.07)" }}>
+                  <span style={{ width: 36, height: 36, borderRadius: 10, background: `${c}16`, border: `1px solid ${c}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <Icon size={17} color={c} />
+                  </span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 13.5, fontWeight: 700, color: INK }}>{l}</div>
+                    <div style={{ fontSize: 11.5, color: MUTE }}>{note}</div>
+                  </div>
+                  <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 16, color: c }}>{v}</div>
                 </div>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 16, color: c }}>{v}</div>
-              </div>
-            ))}
+              );
+            })}
 
             <div style={{ background: "#fff7ed", border: "1px solid rgba(244,123,32,.22)", borderRadius: 12, padding: "12px 14px", marginTop: 16 }}>
               <div style={{ fontSize: 11.5, fontWeight: 800, color: "#9a3412", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
                 <Star size={13} /> Mentor's remark
               </div>
               <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.55, margin: 0 }}>
-                "Aarav's consistency really jumped this week. Next week we focus on Rotational Motion and timed mocks."
+                "{m.parent.remark}"
               </p>
             </div>
 
@@ -1039,10 +1018,10 @@ export default function Mentorship() {
       <ForYou cfg={cfg} />
       <WhyFoundation cfg={cfg} />
       <HowWeGuide cfg={cfg} />
-      <TestAnalysis />
-      <ImprovementCharts />
-      <LiveTracking />
-      <ParentBooklet />
+      <TestAnalysis m={cfg.metrics} />
+      <ImprovementCharts m={cfg.metrics} />
+      <LiveTracking m={cfg.metrics} />
+      <ParentBooklet m={cfg.metrics} />
       <WhatsAppProof />
       <TwoYearPlan cfg={cfg} />
       <JourneyBrand />
