@@ -396,28 +396,6 @@ export default function About() {
         .iit-tag {
           animation: iitTagPop .5s cubic-bezier(.22,.68,0,1.2) both;
         }
-        .role-chip {
-          display: inline-flex; align-items: center; gap: 6px;
-          padding: 6px 15px; border-radius: 50px;
-          font-family: "Sora", sans-serif;
-          font-size: 12.5px; font-weight: 800; letter-spacing: .3px;
-          color: #fff; border: 1px solid rgba(255,255,255,.3);
-          position: relative; overflow: hidden;
-          transition: transform .2s ease;
-          white-space: nowrap;
-        }
-        .role-chip::after {
-          content: ''; position: absolute; inset: 0;
-          background: linear-gradient(110deg, transparent 22%, rgba(255,255,255,.55) 50%, transparent 78%);
-          transform: translateX(-130%);
-          animation: roleShimmer 3.4s ease-in-out infinite;
-        }
-        .role-chip:hover { transform: translateY(-2px) scale(1.05); }
-        .role-chip > svg { position: relative; z-index: 1; }
-        @keyframes roleShimmer {
-          0% { transform: translateX(-130%); }
-          55%, 100% { transform: translateX(135%); }
-        }
         /* ── Mobile: stack photo on top, content below ── */
         @media (max-width: 640px) {
           .team-grid { grid-template-columns: 1fr !important; }

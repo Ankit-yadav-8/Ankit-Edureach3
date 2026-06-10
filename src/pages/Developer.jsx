@@ -173,8 +173,26 @@ export default function Developer() {
                 {dev.name}
               </h1>
 
-              <div style={{ color: `${dev.accent}`, fontWeight: 700, fontSize: 16, marginBottom: 10 }}>
-                {dev.role}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
+                {dev.role
+                  .split(/\s*(?:&|\band\b|,|\/)\s*/i)
+                  .map((p) => p.trim())
+                  .filter(Boolean)
+                  .map((p, i) => (
+                    <motion.span
+                      key={p}
+                      className="role-chip"
+                      initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ delay: 0.2 + i * 0.12, type: "spring", bounce: 0.5 }}
+                      style={{
+                        background: `linear-gradient(135deg, ${dev.accent}, #fbbf24)`,
+                        boxShadow: `0 5px 18px ${dev.accent}66, inset 0 1px 0 rgba(255,255,255,.35)`,
+                      }}
+                    >
+                      <Sparkles size={12} /> {p}
+                    </motion.span>
+                  ))}
               </div>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 18 }}>
