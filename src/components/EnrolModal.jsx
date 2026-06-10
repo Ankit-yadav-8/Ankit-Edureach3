@@ -25,12 +25,12 @@ const PLAN_META = {
   },
   // ── Mentorship plans ──
   "mentor-jee-2027": {
-    amount: 1999, old: 4999, kind: "mentorship", targetExam: "JEE 2027",
+    amount: 1999, old: 7999, kind: "mentorship", targetExam: "JEE 2027",
     title: "JEE 2027 Mentorship Program",
     band: "1-on-1 IITian mentor · Class 12 / Droppers",
   },
   "mentor-neet-2027": {
-    amount: 1999, old: 4999, kind: "mentorship", targetExam: "NEET 2027",
+    amount: 1999, old: 7999, kind: "mentorship", targetExam: "NEET 2027",
     title: "NEET 2027 Mentorship Program",
     band: "1-on-1 doctor mentor · Class 12 / Droppers",
   },

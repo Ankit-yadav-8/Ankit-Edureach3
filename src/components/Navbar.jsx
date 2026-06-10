@@ -140,7 +140,7 @@ export default function Navbar({ onSearch }) {
   const navItems = [
     { label: "Home", to: "/", match: (p) => p === "/" },
     { label: "JEE", mega: JEE_MEGA, base: "/jee-resources", match: (p) => p.startsWith("/jee") },
-    { label: "Mentorship", drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", highlight: true, match: (p) => p.startsWith("/mentorship") },
+    { label: "Mentorship", drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
     { label: "Colleges", drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Colleges For You", to: "/for-you", match: (p) => p.startsWith("/for-you") },
     { label: "Exams", to: "/exams", match: (p) => p.startsWith("/exam") || p.startsWith("/compare-exams") },

@@ -8,14 +8,20 @@
      • server/models/Enrollment.js     (plan enum)
    ════════════════════════════════════════════════════════════════ */
 
-/* Pricing (server is the source of truth — these are display only):
+/* Total mentorship seats per batch — drives the urgency messaging. */
+export const SEATS_LIMIT = 120;
+export const SEATS_LEFT = 37; // shown as "X of 120 seats left"
+
+/* Pricing (server is the source of truth — these are display only).
+   `drops` is the cascading price-drop shown on the cards: every value
+   except the last is struck through, the last is the final price.
    JEE/NEET 2027 → ₹1999 · JEE/NEET 2028 → ₹3999 · Foundation → ₹2999 */
 export const MENTOR_PLANS = {
-  "mentor-jee-2027":  { amount: 1999, old: 4999, exam: "JEE",        year: 2027 },
-  "mentor-neet-2027": { amount: 1999, old: 4999, exam: "NEET",       year: 2027 },
-  "mentor-jee-2028":  { amount: 3999, old: 7999, exam: "JEE",        year: 2028 },
-  "mentor-neet-2028": { amount: 3999, old: 7999, exam: "NEET",       year: 2028 },
-  "mentor-foundation":{ amount: 2999, old: 5999, exam: "Foundation", year: null },
+  "mentor-jee-2027":  { amount: 1999, old: 7999, drops: [7999, 3999, 1999], exam: "JEE",        year: 2027 },
+  "mentor-neet-2027": { amount: 1999, old: 7999, drops: [7999, 3999, 1999], exam: "NEET",       year: 2027 },
+  "mentor-jee-2028":  { amount: 3999, old: 7999, drops: [7999, 3999],       exam: "JEE",        year: 2028 },
+  "mentor-neet-2028": { amount: 3999, old: 7999, drops: [7999, 3999],       exam: "NEET",       year: 2028 },
+  "mentor-foundation":{ amount: 2999, old: 5999, drops: [5999, 2999],       exam: "Foundation", year: null },
 };
 
 /* ── Quick summary used by navbar + hero card ───────────────────── */
@@ -33,10 +39,17 @@ export const MENTORSHIP = {
   "jee-2027": {
     slug: "jee-2027",
     eyebrow: "JEE & NEET 2027 Mentorship",
+    tagline: "Know Your Path. Own Your Future.",
     badge: "🔥 Limited spots · Serious aspirants only",
-    title: ["Introducing the", "AIR 100 Club", "for 2027 aspirants"],
-    subtitle: "Right guidance changes everything. A 1-on-1 IITian & doctor mentor system built to take serious JEE 2027 and NEET 2027 aspirants to their highest potential.",
-    videoNote: "Watch how the JEEsociety mentorship system works",
+    title: ["Right Guidance.", "Real Results.", ""],
+    subtitle: "CollegeParichay helps serious JEE & NEET 2027 aspirants cut through the confusion — with a personal IITian / doctor mentor, daily accountability and a plan that actually works. No noise, just the path to your highest potential.",
+    videoNote: "Watch how the CollegeParichay mentorship system works",
+    stats: [
+      { val: "1000+", lbl: "Students mentored" },
+      { val: "1-on-1", lbl: "Personal mentor" },
+      { val: "Daily", lbl: "Targets & check-ins" },
+      { val: "Weekly", lbl: "Test analysis" },
+    ],
 
     forYou: [
       "You have backlogs and no idea where to start",
@@ -89,10 +102,17 @@ export const MENTORSHIP = {
   "jee-2028": {
     slug: "jee-2028",
     eyebrow: "JEE & NEET 2028 Mentorship",
+    tagline: "Know Your Path. Own Your Future.",
     badge: "🐦 Early Bird Batch — Limited Seats",
-    title: ["You're Early.", "That's Your Advantage.", ""],
-    subtitle: "JEE 2028 & NEET 2028 aspirants who start now finish two full years ahead of everyone else. A 2-year mentorship built to compound every single day.",
+    title: ["You're Early.", "That's Your Edge.", ""],
+    subtitle: "CollegeParichay mentors JEE & NEET 2028 aspirants from day one — a 2-year plan that builds deep concepts, daily discipline and an unbeatable head start. Start now, finish two full years ahead of everyone else.",
     videoNote: "See how a 2-year head start builds an unbeatable lead",
+    stats: [
+      { val: "2 Years", lbl: "Of mentorship" },
+      { val: "1-on-1", lbl: "Same mentor" },
+      { val: "4-Phase", lbl: "Roadmap" },
+      { val: "Quarterly", lbl: "Checkpoints" },
+    ],
 
     forYou: [
       "You're in Class 11 and want to start the right way",
@@ -151,10 +171,17 @@ export const MENTORSHIP = {
   "foundation": {
     slug: "foundation",
     eyebrow: "Foundation Mentorship · Class 9 & 10",
+    tagline: "Know Your Path. Own Your Future.",
     badge: "🌱 Build the base before it's too late",
-    title: ["Build the Right Base.", "Before It's Too Late.", ""],
-    subtitle: "For Class 9 & 10 students who want to crack JEE or NEET without the struggle later. The earlier you start, the higher you rank.",
+    title: ["Build the Base.", "Win the Battle Early.", ""],
+    subtitle: "CollegeParichay guides Class 9 & 10 students toward JEE & NEET with a personal mentor — clearing confusion early and building the rock-solid foundation toppers are made of. The earlier you start, the higher you rank.",
     videoNote: "Why Class 9–10 is where toppers actually win",
+    stats: [
+      { val: "Class 9–10", lbl: "Right age to start" },
+      { val: "1-on-1", lbl: "Personal mentor" },
+      { val: "NCERT", lbl: "Mastery first" },
+      { val: "Board+", lbl: "Olympiad edge" },
+    ],
 
     forYou: [
       "Class 9 students who want a genuine head start",

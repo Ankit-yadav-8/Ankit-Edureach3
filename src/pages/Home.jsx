@@ -1,5 +1,6 @@
 import Hero from "../components/home/Hero.jsx";
 import PredictorCards from "../components/home/PredictorCards.jsx";
+import MentorshipHome from "../components/home/MentorshipHome.jsx";
 import RankCounselling from "../components/home/RankCounselling.jsx";
 import NewTools from "../components/home/NewTools.jsx";
 import ApplicationRadar from "../components/home/ApplicationRadar.jsx";
@@ -555,6 +556,9 @@ export default function Home({ onSearch }) {
 
       {/* ── Predictor Cards ── */}
       <PredictorCards />
+
+      {/* ── Mentorship (just below the predictor cards) ── */}
+      <MentorshipHome />
 
       <WaveSeparator fillTop="#fef3e8" fillBottom="#fff7f0" />
 
