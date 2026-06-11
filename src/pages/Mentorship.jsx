@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowRight, Check, ChevronDown, Play, ShieldCheck,
+  ArrowRight, Check, ChevronDown, Play, ShieldCheck, X,
   Target, Flame, Trophy, Users, MessageCircle, AlertTriangle,
   GraduationCap, Rocket, Star, Handshake, Library, CalendarClock, TrendingUp,
   BarChart3, ListChecks, Clock, Zap, Activity, FileText, Mail, CheckCircle2,
@@ -146,6 +146,73 @@ function EnrolTopBar({ cfg, scrollToEnrol }) {
             View plans
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   FLOATING ENROL CARD — dynamic, follows the user through every
+   section (top-right on desktop, sticky bottom bar on phones)
+════════════════════════════════════════════════ */
+function FloatingEnrol({ cfg, scrollToEnrol }) {
+  const { open: openEnrol } = useEnrol();
+  const [closed, setClosed] = useState(false);
+  const [idx, setIdx] = useState(0);
+  if (closed) return null;
+
+  const multi = cfg.tracks.length > 1;
+  const tr = cfg.tracks[idx] || cfg.tracks[0];
+  const meta = MENTOR_PLANS[tr.plan];
+
+  return (
+    <div className="mentor-float-enrol" aria-label="Quick enrol">
+      {/* ── Desktop / tablet: full floating card ── */}
+      <motion.div
+        className="mfe-card"
+        initial={{ opacity: 0, x: 48 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ type: "spring", stiffness: 240, damping: 22, delay: 0.5 }}
+      >
+        <motion.span aria-hidden className="mfe-glow"
+          animate={{ opacity: [0.45, 0.85, 0.45] }} transition={{ duration: 3.4, repeat: Infinity }} />
+        <button className="mfe-close" onClick={() => setClosed(true)} aria-label="Hide enrol card">
+          <X size={14} />
+        </button>
+
+        <span className="mfe-kicker"><Flame size={12} /> Limited seats</span>
+
+        {multi && (
+          <div className="mfe-toggle" role="tablist" aria-label="Choose exam">
+            {cfg.tracks.map((t, i) => (
+              <button key={t.plan} role="tab" aria-selected={i === idx}
+                onClick={() => setIdx(i)} className={i === idx ? "mfe-toggle-on" : ""}>
+                {t.exam.split(" ")[0]}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="mfe-exam">{tr.exam} Mentorship</div>
+        <div style={{ margin: "2px 0 10px" }}><PriceDrop drops={meta.drops} size="sm" /></div>
+        <div style={{ marginBottom: 14 }}><SeatsBar compact /></div>
+
+        <button className="mfe-cta" onClick={() => openEnrol(tr.plan)}>
+          Enrol Now — ₹{meta.amount} <ArrowRight size={16} />
+        </button>
+        <button className="mfe-link" onClick={scrollToEnrol}>View all plans</button>
+        <div className="mfe-secure"><ShieldCheck size={12} color="#22c55e" /> Secure payment · Razorpay</div>
+      </motion.div>
+
+      {/* ── Mobile: slim sticky bottom bar ── */}
+      <div className="mfe-bar">
+        <div className="mfe-bar-info">
+          <span className="mfe-bar-price">₹{meta.amount}</span>
+          <span className="mfe-bar-seats"><Flame size={12} /> {SEATS_LEFT} of {SEATS_LIMIT} seats left</span>
+        </div>
+        <button className="mfe-cta" onClick={() => openEnrol(tr.plan)} style={{ width: "auto", padding: "11px 20px", flexShrink: 0 }}>
+          Enrol <ArrowRight size={15} />
+        </button>
       </div>
     </div>
   );
@@ -1014,6 +1081,7 @@ export default function Mentorship() {
     <div style={{ background: "#fffaf5", color: INK }}>
       <MentorTabs variant={variant} />
       <EnrolTopBar cfg={cfg} scrollToEnrol={scrollToEnrol} />
+      <FloatingEnrol cfg={cfg} scrollToEnrol={scrollToEnrol} />
       <Hero cfg={cfg} scrollToEnrol={scrollToEnrol} />
       <ForYou cfg={cfg} />
       <WhyFoundation cfg={cfg} />

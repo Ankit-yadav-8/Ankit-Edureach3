@@ -2638,6 +2638,87 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .cat-cutoff-grid { grid-template-columns:repeat(2,1fr) !important; }
 }
 
+/* ════════════════════════════════════════════════
+   FLOATING MENTORSHIP ENROL CARD
+   Desktop/tablet: card pinned to the right, follows every section.
+   Phones: slim sticky enrol bar at the bottom.
+════════════════════════════════════════════════ */
+.mentor-float-enrol {
+  position:fixed; z-index:60; top:50%; right:16px;
+  transform:translateY(-50%); width:240px; pointer-events:none;
+}
+.mentor-float-enrol > * { pointer-events:auto; }
+.mfe-card {
+  position:relative;
+  background:linear-gradient(180deg,#fff 0%,#fff8f2 100%);
+  border:1.5px solid rgba(244,123,32,.35); border-radius:18px;
+  padding:18px 18px 16px;
+  box-shadow:0 24px 60px -22px rgba(244,123,32,.55), 0 4px 14px rgba(0,0,0,.08);
+}
+.mfe-glow {
+  position:absolute; inset:-2px; border-radius:20px; z-index:-1;
+  background:linear-gradient(135deg,#F47B20,#f5a623,#F47B20);
+  filter:blur(15px); opacity:.5;
+}
+.mfe-close {
+  position:absolute; top:8px; right:8px; width:24px; height:24px; border-radius:50%;
+  border:none; background:rgba(0,0,0,.06); color:#6b7280;
+  display:grid; place-items:center; cursor:pointer; transition:background .15s;
+}
+.mfe-close:hover { background:rgba(0,0,0,.12); }
+.mfe-kicker {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:800; letter-spacing:.5px; text-transform:uppercase;
+  color:#dc2626; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.25);
+  padding:4px 9px; border-radius:50px; margin-bottom:10px;
+}
+.mfe-toggle { display:flex; gap:6px; margin-bottom:11px; }
+.mfe-toggle button {
+  flex:1; padding:6px 8px; border-radius:9px; border:1px solid rgba(244,123,32,.3);
+  background:#fff; color:#6b7280; font-family:"Space Grotesk",sans-serif;
+  font-weight:800; font-size:12px; cursor:pointer; transition:all .15s;
+}
+.mfe-toggle .mfe-toggle-on {
+  background:linear-gradient(135deg,#F47B20,#f5a623); color:#fff; border-color:transparent;
+}
+.mfe-exam {
+  font-family:"Space Grotesk",sans-serif; font-weight:800;
+  font-size:14.5px; color:#1a1a2e; margin-bottom:4px;
+}
+.mfe-cta {
+  display:flex; align-items:center; justify-content:center; gap:7px; width:100%;
+  padding:12px; border:none; border-radius:11px;
+  background:linear-gradient(135deg,#F47B20,#ea580c); color:#fff;
+  font-family:"Space Grotesk",sans-serif; font-weight:800; font-size:14.5px;
+  cursor:pointer; box-shadow:0 8px 20px rgba(244,123,32,.4); transition:filter .15s;
+}
+.mfe-cta:hover { filter:brightness(1.06); }
+.mfe-link {
+  display:block; width:100%; margin-top:8px; background:none; border:none; cursor:pointer;
+  color:#c2410c; font-weight:700; font-size:12.5px;
+  text-decoration:underline; text-underline-offset:2px;
+}
+.mfe-secure {
+  display:flex; align-items:center; justify-content:center; gap:5px; margin-top:8px;
+  font-size:11px; color:#9ca3af; font-weight:600;
+}
+.mfe-bar { display:none; }
+
+/* Tablet/laptop where a side card would crowd content → bottom bar */
+@media (max-width:1024px) {
+  .mentor-float-enrol { top:auto; bottom:0; right:0; left:0; width:auto; transform:none; }
+  .mfe-card { display:none; }
+  .mfe-bar {
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:rgba(26,18,8,.96); backdrop-filter:blur(8px);
+    padding:10px 14px; border-top:1px solid rgba(245,166,35,.4);
+    box-shadow:0 -8px 24px rgba(0,0,0,.25);
+  }
+  .mfe-bar-info { display:flex; flex-direction:column; gap:1px; color:#fff; min-width:0; }
+  .mfe-bar-price { font-family:"Space Grotesk",sans-serif; font-weight:900; font-size:18px; line-height:1.1; }
+  .mfe-bar-seats { display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#fbbf24; }
+}
+
 /* ── Section vertical padding — smooth scale across breakpoints ── */
 @media (max-width:430px)  { .section { padding:2.5rem 0; } }
 @media (min-width:431px) and (max-width:767px)  { .section { padding:3rem 0; } }

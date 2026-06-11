@@ -52,34 +52,42 @@ router.post("/order", async (req, res) => {
     });
 
     // Persist the enrollment as "created" so we keep the lead even if
-    // the student abandons the payment.
+    // the student abandons the payment. This is best-effort lead capture —
+    // if it fails (DB hiccup, schema mismatch, etc.) we must NOT block the
+    // payment, otherwise the customer can't pay at all.
     const num = (v) => {
       const n = Number(String(v ?? "").replace(/[, ]/g, ""));
       return Number.isFinite(n) && n > 0 ? n : null;
     };
-    const enr = await Enrollment.create({
-      plan,
-      amount: planMeta.amount,
-      name: String(name).trim(),
-      email: (req.body.email || "").trim(),
-      phone: (req.body.phone || "").trim(),
-      homeState: (req.body.homeState || "").trim(),
-      currentClass: (req.body.currentClass || "").trim(),
-      targetExam:   (req.body.targetExam || "").trim(),
-      jeeMainCrlRank:      num(req.body.jeeMainCrlRank),
-      jeeMainCategoryRank: num(req.body.jeeMainCategoryRank),
-      jeeAdvCrlRank:       num(req.body.jeeAdvCrlRank),
-      jeeAdvCategoryRank:  num(req.body.jeeAdvCategoryRank),
-      razorpayOrderId: order.id,
-      status: "created",
-    });
+    let enrollmentId = null;
+    try {
+      const enr = await Enrollment.create({
+        plan,
+        amount: planMeta.amount,
+        name: String(name).trim(),
+        email: (req.body.email || "").trim(),
+        phone: (req.body.phone || "").trim(),
+        homeState: (req.body.homeState || "").trim(),
+        currentClass: (req.body.currentClass || "").trim(),
+        targetExam:   (req.body.targetExam || "").trim(),
+        jeeMainCrlRank:      num(req.body.jeeMainCrlRank),
+        jeeMainCategoryRank: num(req.body.jeeMainCategoryRank),
+        jeeAdvCrlRank:       num(req.body.jeeAdvCrlRank),
+        jeeAdvCategoryRank:  num(req.body.jeeAdvCategoryRank),
+        razorpayOrderId: order.id,
+        status: "created",
+      });
+      enrollmentId = enr._id;
+    } catch (persistErr) {
+      console.error("enrollment persist failed (continuing with payment):", persistErr?.message || persistErr);
+    }
 
     res.json({
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
       keyId: KEY_ID,
-      enrollmentId: enr._id,
+      enrollmentId,
       planLabel: planMeta.label,
     });
   } catch (e) {
@@ -108,17 +116,20 @@ router.post("/verify", async (req, res) => {
       crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(razorpay_signature));
 
     if (!valid) {
-      await Enrollment.findOneAndUpdate(
-        { razorpayOrderId: razorpay_order_id },
-        { status: "failed" }
-      );
+      try {
+        await Enrollment.findOneAndUpdate({ razorpayOrderId: razorpay_order_id }, { status: "failed" });
+      } catch (e) { console.error("enrollment status (failed) update error:", e?.message || e); }
       return res.status(400).json({ error: "Payment verification failed." });
     }
 
-    await Enrollment.findOneAndUpdate(
-      { razorpayOrderId: razorpay_order_id },
-      { status: "paid", razorpayPaymentId: razorpay_payment_id }
-    );
+    // Signature is valid — the payment is genuine. Record it best-effort, but
+    // never fail the response on a DB issue (the money has already moved).
+    try {
+      await Enrollment.findOneAndUpdate(
+        { razorpayOrderId: razorpay_order_id },
+        { status: "paid", razorpayPaymentId: razorpay_payment_id }
+      );
+    } catch (e) { console.error("enrollment status (paid) update error:", e?.message || e); }
 
     res.json({ ok: true, paymentId: razorpay_payment_id });
   } catch (e) {
