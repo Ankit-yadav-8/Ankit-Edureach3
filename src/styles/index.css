@@ -2629,6 +2629,15 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .table-wrap, .tabs { overflow-x:auto; -webkit-overflow-scrolling:touch; }
 }
 
+/* ── Live-tracking chart + gauge: stack on phones (inline grid override) ── */
+@media (max-width:600px) {
+  .track-grid { grid-template-columns:1fr !important; }
+}
+/* ── Category-cutoff 5-up row: 2 columns on phones (inline grid override) ── */
+@media (max-width:600px) {
+  .cat-cutoff-grid { grid-template-columns:repeat(2,1fr) !important; }
+}
+
 /* ── Section vertical padding — smooth scale across breakpoints ── */
 @media (max-width:430px)  { .section { padding:2.5rem 0; } }
 @media (min-width:431px) and (max-width:767px)  { .section { padding:3rem 0; } }

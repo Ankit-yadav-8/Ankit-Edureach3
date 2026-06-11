@@ -866,7 +866,7 @@ export default function JeeMain() {
           </div>
 
           {/* Latest year quick visual */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 12, marginBottom: 28 }}>
+          <div className="cat-cutoff-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 12, marginBottom: 28 }}>
             {[
               { cat: "General",  key: "open", color: "#1c4fa0" },
               { cat: "GEN-EWS",  key: "ews",  color: "#7C3AED" },
