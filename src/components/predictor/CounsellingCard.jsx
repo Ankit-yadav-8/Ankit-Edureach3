@@ -111,12 +111,12 @@ export default function CounsellingCard({ exam = "main", whatsapp = "91787759646
 
           {/* ── Price ── */}
           <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginTop: 16 }}>
-            <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 38, lineHeight: 1, color: "#fff" }}>₹249</span>
+            <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 38, lineHeight: 1, color: "#fff" }}>₹299</span>
             <span style={{ fontSize: 16, color: "rgba(255,255,255,.55)", textDecoration: "line-through" }}>₹1,999</span>
             <span style={{
               fontSize: 11, fontWeight: 800, color: "#1a1a2e",
               background: v.accent, padding: "4px 9px", borderRadius: 50,
-            }}>88% OFF</span>
+            }}>85% OFF</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11.5, color: "rgba(255,255,255,.7)", marginTop: 8 }}>
             <Clock size={12} /> Limited-period launch price · all rounds covered
@@ -158,7 +158,7 @@ export default function CounsellingCard({ exam = "main", whatsapp = "91787759646
             className="cc-btn-primary"
             style={{ background: `linear-gradient(135deg, ${v.accent}, ${v.accentDark})`, boxShadow: `0 10px 26px ${v.accent}55` }}
           >
-            Enroll Now — ₹249 <ArrowRight size={17} />
+            Enroll Now — ₹299 <ArrowRight size={17} />
           </Link>
           <a
             href={`https://wa.me/${whatsapp}?text=${encodeURIComponent("Hi! I want to know more about Counselling 2026.")}`}

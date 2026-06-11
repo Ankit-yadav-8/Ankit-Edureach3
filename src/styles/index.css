@@ -1293,7 +1293,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
 }
 
 /* ════════════════════════════════════════════════
-   TWO-PLAN PRICING DUO (₹249 + ₹499)
+   TWO-PLAN PRICING DUO (₹299 + ₹499)
 ════════════════════════════════════════════════ */
 .plan-duo {
   display:grid;
@@ -1401,6 +1401,8 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
     max-width:420px;
     gap:26px;
   }
+  /* On phones, show the featured ₹499 plan first */
+  .plan-duo .plan-card--featured { order:-1; }
 }
 
 /* ════════════════════════════════════════════════

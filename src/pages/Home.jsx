@@ -528,11 +528,11 @@ function CollegePickingGuide() {
             Want a personalised choice list done for you?
           </h4>
           <p style={{ fontSize: "0.88rem", color: "#4b5563" }}>
-            Our JoSAA 2026 expert plan gives you a ready-to-fill, rank-specific choice list for just ₹249.
+            Our JoSAA 2026 expert plan gives you a ready-to-fill, rank-specific choice list for just ₹299.
           </p>
         </div>
         <Link to="/josaa-2026" className="btn btn-coral" style={{ flexShrink: 0, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700 }}>
-          Get my ₹249 plan <ArrowRight size={15} />
+          Get my ₹299 plan <ArrowRight size={15} />
         </Link>
       </motion.div>
     </HomeSection>

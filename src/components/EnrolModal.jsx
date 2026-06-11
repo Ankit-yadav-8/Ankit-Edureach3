@@ -12,7 +12,7 @@ import { startPayment } from "../payments/razorpay.js";
    ───────────────────────────────────────────────────────── */
 const PLAN_META = {
   "josaa": {
-    amount: 249,
+    amount: 299,
     old: 1999,
     title: "JoSAA + CSAB 2026 Counselling",
     band: "Strong ranks · IITs / NITs / IIITs",

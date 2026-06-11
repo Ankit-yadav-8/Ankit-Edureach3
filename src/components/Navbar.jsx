@@ -75,7 +75,7 @@ const TOOLS_MEGA = [
     title: "Plan & Apply", to: "/planner", color: "#F47B20", icon: CalendarDays,
     items: [
       { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays, desc: "Track every JoSAA & CSAB round date" },
-      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert ₹249 choice-filling plan" },
+      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert ₹299 choice-filling plan" },
       { label: "Colleges For You",        to: "/for-you",    icon: Sparkles,     desc: "Personalised picks for your rank" },
     ],
   },

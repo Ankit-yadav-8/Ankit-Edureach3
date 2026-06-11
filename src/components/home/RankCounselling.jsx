@@ -40,10 +40,10 @@ const PLANS = [
     icon: Award,
     tag: "JoSAA + CSAB 2026",
     band: "Strong ranks · IITs / NITs / IIITs",
-    price: "249",
+    price: "299",
     old: "1999",
-    off: "87% OFF",
-    save: "SAVE 87%",
+    off: "85% OFF",
+    save: "SAVE 85%",
     label: "one-time · all JoSAA + CSAB rounds",
     blurb: "Best when your rank is strong — secure the best possible IIT, NIT, IIIT or GFTI seat through the official JoSAA & CSAB rounds.",
     includes: [
@@ -54,7 +54,7 @@ const PLANS = [
       "Document & deadline checklist",
       "Choice review before you lock",
     ],
-    cta: "Enrol Now — ₹249",
+    cta: "Enrol Now — ₹299",
     to: "/josaa-2026",
     external: false,
     featured: false,
@@ -168,7 +168,7 @@ export default function RankCounselling() {
           </div>
         </Reveal>
 
-        {/* ── 2 · COUNSELLING PLANS (₹249 + ₹499) ── */}
+        {/* ── 2 · COUNSELLING PLANS (₹299 + ₹499) ── */}
         <Reveal>
           <SectionHead eyebrow="Counselling Plans" title={<>One plan for <span className="accent">all colleges</span></>}
             sub="Pick the plan that fits your rank — expert, data-backed counselling that turns your rank into a confirmed seat." />
@@ -251,7 +251,7 @@ export default function RankCounselling() {
         </Reveal>
       </div>
 
-      {/* ── Mentorship (just below the ₹249 / ₹499 plans) ── */}
+      {/* ── Mentorship (just below the ₹299 / ₹499 plans) ── */}
       <MentorshipHome />
 
       <div className="container" style={{ position: "relative", zIndex: 1, paddingTop: 16, paddingBottom: 72 }}>

@@ -9,7 +9,7 @@ import {
 import Reveal from "../components/Reveal.jsx";
 import { useEnrol } from "../components/EnrolModal.jsx";
 
-const WA = "https://wa.me/917877596464?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹249 counselling plan.");
+const WA = "https://wa.me/917877596464?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹299 counselling plan.");
 
 const INCLUDES = [
   { icon: Target, t: "Personalised choice list", d: "A ranked, college-by-college JoSAA choice-filling sheet built around your rank, category & preferences." },
@@ -21,7 +21,7 @@ const INCLUDES = [
 ];
 
 const STEPS = [
-  { n: "1", t: "Enrol for ₹249", d: "Secure your slot — limited mentors per cycle." },
+  { n: "1", t: "Enrol for ₹299", d: "Secure your slot — limited mentors per cycle." },
   { n: "2", t: "Share your scorecard", d: "Rank, category, home state & branch preferences." },
   { n: "3", t: "Get your plan + call", d: "Personalised choice list and a 1:1 mentor call." },
   { n: "4", t: "Fill with confidence", d: "We support you through every JoSAA & CSAB round." },
@@ -101,14 +101,14 @@ const FAQ_GROUPS = [
   },
   {
     id: "plan",
-    label: "Our ₹249 plan",
+    label: "Our ₹299 plan",
     icon: Wallet,
     items: [
-      ["Is ₹249 a one-time fee?", "Yes — one payment covers your full JoSAA + CSAB 2026 counselling support across all rounds. There are no per-round or hidden charges."],
+      ["Is ₹299 a one-time fee?", "Yes — one payment covers your full JoSAA + CSAB 2026 counselling support across all rounds. There are no per-round or hidden charges."],
       ["Who are the mentors?", "Students and alumni from IITs/NITs who have personally cleared JEE and been through counselling themselves — so the advice is lived, not theoretical."],
       ["What if my rank changes after a round?", "Your plan is revised each round at no extra cost — that's the whole point of ongoing support. Float/slide advice is updated to your latest position."],
       ["Do you guarantee a specific college?", "No one honestly can — the allotment is done by JoSAA's software. What we guarantee is a data-driven, mistake-proofed choice list that maximises your chances and never leaves an easy upgrade on the table."],
-      ["How do I get started?", "Click Enrol, complete the ₹249 payment, and you'll get a WhatsApp message within hours to begin. Share your scorecard and preferences, and your mentor builds your plan."],
+      ["How do I get started?", "Click Enrol, complete the ₹299 payment, and you'll get a WhatsApp message within hours to begin. Share your scorecard and preferences, and your mentor builds your plan."],
     ],
   },
 ];
@@ -269,10 +269,10 @@ export default function Josaa2026() {
               Don't lose your dream college to a <span style={{ color: "#F47B20" }}>wrong choice list</span>.
             </h1>
             <p style={{ color: "rgba(28,28,40,.65)", fontSize: "1.1rem", maxWidth: 540, lineHeight: 1.6 }}>
-              Get a personalised, data-backed JoSAA choice-filling plan and 1-on-1 mentorship from people who've done it — for just ₹249.
+              Get a personalised, data-backed JoSAA choice-filling plan and 1-on-1 mentorship from people who've done it — for just ₹299.
             </p>
             <div style={{ display: "flex", gap: 12, marginTop: 26, flexWrap: "wrap" }}>
-              <button type="button" onClick={() => openEnrol("josaa")} className="btn btn-coral" style={{ fontSize: 16, padding: "14px 26px", cursor: "pointer", border: "none" }}>Enrol now — ₹249 <ArrowRight size={18} /></button>
+              <button type="button" onClick={() => openEnrol("josaa")} className="btn btn-coral" style={{ fontSize: 16, padding: "14px 26px", cursor: "pointer", border: "none" }}>Enrol now — ₹299 <ArrowRight size={18} /></button>
               <a href={WA} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 15, padding: "14px 22px" }}><MessageCircle size={17} /> Talk on WhatsApp</a>
             </div>
             <div style={{ display: "flex", gap: 20, marginTop: 24, flexWrap: "wrap", fontSize: 13.5, color: "rgba(28,28,40,.65)" }}>
@@ -288,14 +288,14 @@ export default function Josaa2026() {
               {/* animated colour aura behind the card */}
               <span className="josaa-price-aura" aria-hidden="true" />
               {/* corner discount ribbon */}
-              <span className="josaa-ribbon">87% OFF</span>
+              <span className="josaa-ribbon">85% OFF</span>
 
               <div style={{ position: "relative", zIndex: 1 }}>
                 <div style={{ textAlign: "center" }}>
                   <span className="badge orange" style={{ animation: "borderFlash 2.2s ease-in-out infinite" }}>🔥 Limited slots this cycle</span>
                   <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 10, marginTop: 16 }}>
                     <span style={{ fontSize: 20, color: "var(--muted)", textDecoration: "line-through" }}>₹1,999</span>
-                    <span className="josaa-price-amt">₹249</span>
+                    <span className="josaa-price-amt">₹299</span>
                   </div>
                   <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 4, marginBottom: 18 }}>one-time · all rounds covered</div>
                 </div>
@@ -307,7 +307,7 @@ export default function Josaa2026() {
                     </span>
                   ))}
                 </div>
-                <button type="button" onClick={() => openEnrol("josaa")} className="btn btn-coral josaa-cta" style={{ width: "100%", justifyContent: "center", marginTop: 20, fontSize: 16, padding: "13px", cursor: "pointer", border: "none" }}>Enrol now — ₹249 <ArrowRight size={18} /></button>
+                <button type="button" onClick={() => openEnrol("josaa")} className="btn btn-coral josaa-cta" style={{ width: "100%", justifyContent: "center", marginTop: 20, fontSize: 16, padding: "13px", cursor: "pointer", border: "none" }}>Enrol now — ₹299 <ArrowRight size={18} /></button>
                 <p style={{ fontSize: 11.5, color: "var(--muted)", textAlign: "center", marginTop: 10, display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}><ShieldCheck size={13} /> Secure payment · mentor assigned within hours</p>
               </div>
             </div>
@@ -445,7 +445,7 @@ export default function Josaa2026() {
           <div className="grid-3">
             {[
               ["Got CSE at a top NIT in CSAB round 2 — I'd never have filled those choices myself.", "Rahul, NIT"],
-              ["The mentor call cleared all my float/slide doubts in 30 minutes. Worth way more than ₹249.", "Ishita, IIIT"],
+              ["The mentor call cleared all my float/slide doubts in 30 minutes. Worth way more than ₹299.", "Ishita, IIIT"],
               ["Predicted allotment was almost exactly what I got. Took all the stress out.", "Aman, GFTI→NIT"],
             ].map(([t, n], i) => (
               <Reveal key={n} delay={i * 0.07}>
@@ -478,9 +478,9 @@ export default function Josaa2026() {
       <section style={{ background: "linear-gradient(135deg,var(--coral),#ea580c)", color: "#fff", padding: "56px 0", textAlign: "center" }}>
         <div className="container">
           <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,3.5vw,2.3rem)", marginBottom: 10 }}>Counselling opens soon. Be ready.</h2>
-          <p style={{ color: "rgba(255,255,255,.9)", maxWidth: 560, margin: "0 auto 22px" }}>Lock your ₹249 plan now and get your personalised choice list before the rush.</p>
+          <p style={{ color: "rgba(255,255,255,.9)", maxWidth: 560, margin: "0 auto 22px" }}>Lock your ₹299 plan now and get your personalised choice list before the rush.</p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <button type="button" onClick={() => openEnrol("josaa")} className="btn btn-light" style={{ fontSize: 16, padding: "14px 28px", background: "#fff", color: "var(--coral)", border: "none", cursor: "pointer" }}>Enrol now — ₹249</button>
+            <button type="button" onClick={() => openEnrol("josaa")} className="btn btn-light" style={{ fontSize: 16, padding: "14px 28px", background: "#fff", color: "var(--coral)", border: "none", cursor: "pointer" }}>Enrol now — ₹299</button>
             <a href={WA} target="_blank" rel="noreferrer" className="btn" style={{ fontSize: 15, padding: "14px 22px", background: "rgba(255,255,255,.15)", color: "#fff", border: "1px solid rgba(255,255,255,.5)" }}><MessageCircle size={17} /> Ask on WhatsApp</a>
           </div>
         </div>

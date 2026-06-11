@@ -8,7 +8,7 @@ const router = express.Router();
 /* Plan catalogue — amount is fixed on the server so it can't be tampered
    with from the client. Keep the keys in sync with the frontend. */
 const PLANS = {
-  "josaa":         { amount: 249,  label: "JoSAA + CSAB 2026 Counselling" },
+  "josaa":         { amount: 299,  label: "JoSAA + CSAB 2026 Counselling" },
   "all-colleges":  { amount: 499,  label: "All Colleges Counselling (Any Rank)" },
   // ── Mentorship plans (JEE & NEET) ──
   "mentor-jee-2027":   { amount: 1999, label: "JEE 2027 Mentorship Program" },
