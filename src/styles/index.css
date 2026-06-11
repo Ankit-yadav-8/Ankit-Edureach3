@@ -1222,21 +1222,42 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   color:rgba(255,255,255,.6);
   margin-top:.45rem;
 }
+.plan-includes-label {
+  font-family:"Space Grotesk","Sora",sans-serif;
+  font-size:.7rem;
+  font-weight:800;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:#F47B20;
+  text-align:left;
+  margin-bottom:.7rem;
+}
 .josaa-includes {
   display:flex;
   flex-direction:column;
-  gap:.5rem;
+  gap:.25rem;
   margin-bottom:1.5rem;
   text-align:left;
 }
 .josaa-include-item {
   display:flex;
-  align-items:center;
-  gap:.55rem;
-  font-size:.84rem;
+  align-items:flex-start;
+  gap:.6rem;
+  font-size:.85rem;
+  line-height:1.4;
   color:#374151;
+  padding:.5rem .55rem;
+  border-radius:10px;
+  transition:background .18s ease;
 }
-.josaa-include-item svg { color:#22c55e; flex-shrink:0; }
+.josaa-include-item:hover { background:rgba(244,123,32,.06); }
+.josaa-include-tick {
+  width:18px; height:18px; border-radius:50%;
+  background:linear-gradient(135deg,#16a34a,#22c55e);
+  display:grid; place-items:center; flex-shrink:0;
+  margin-top:1px;
+  box-shadow:0 2px 6px rgba(34,197,94,.35);
+}
 .josaa-cta-btn {
   display:flex;
   align-items:center;
@@ -1298,6 +1319,9 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   border-color:rgba(244,123,32,.6);
   box-shadow:0 24px 64px rgba(244,123,32,.32),0 2px 10px rgba(0,0,0,.05);
 }
+.plan-card--featured:hover {
+  box-shadow:0 32px 74px rgba(244,123,32,.40),0 4px 14px rgba(0,0,0,.07);
+}
 .plan-card--featured .josaa-price-header {
   background:linear-gradient(135deg,#F47B20 0%,#ea580c 60%,#c2410c 100%);
 }
@@ -1318,16 +1342,16 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   position:absolute;
   top:0; left:50%;
   transform:translateX(-50%);
-  background:linear-gradient(135deg,#1a1a2e,#2d1f3d);
-  color:#fbbf24;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  color:#1a1a2e;
   font-family:"Space Grotesk","Sora",sans-serif;
-  font-size:.7rem;
+  font-size:.72rem;
   font-weight:800;
   letter-spacing:.6px;
-  padding:.34rem 1.15rem;
-  border-radius:0 0 12px 12px;
+  padding:.4rem 1.3rem;
+  border-radius:0 0 14px 14px;
   z-index:4;
-  box-shadow:0 5px 16px rgba(0,0,0,.28);
+  box-shadow:0 6px 18px rgba(245,158,11,.45);
 }
 /* give the featured header room for the badge */
 .plan-card--featured .josaa-price-header { padding-top:2.5rem; }

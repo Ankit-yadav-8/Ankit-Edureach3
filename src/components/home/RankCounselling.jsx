@@ -179,7 +179,9 @@ export default function RankCounselling() {
                 <motion.div
                   key={p.key}
                   className={`josaa-price-card plan-card${featured ? " plan-card--featured" : ""}`}
-                  whileHover={{ y: -8 }}
+                  initial={{ scale: featured ? 1.03 : 1 }}
+                  animate={{ scale: featured ? 1.03 : 1 }}
+                  whileHover={{ y: -8, scale: featured ? 1.04 : 1.01 }}
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
                 >
                   {featured && <div className="plan-popular">★ Most Popular</div>}
@@ -208,10 +210,13 @@ export default function RankCounselling() {
 
                   <div className="josaa-price-body">
                     <p className="plan-blurb">{p.blurb}</p>
+                    <div className="plan-includes-label">What's included</div>
                     <div className="josaa-includes">
                       {p.includes.map((item) => (
                         <div className="josaa-include-item" key={item}>
-                          <Check size={15} color="#22c55e" strokeWidth={2.5} />
+                          <span className="josaa-include-tick">
+                            <Check size={12} color="#fff" strokeWidth={3.5} />
+                          </span>
                           <span>{item}</span>
                         </div>
                       ))}
