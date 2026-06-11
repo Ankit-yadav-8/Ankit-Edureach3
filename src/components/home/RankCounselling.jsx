@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import Reveal from "../Reveal.jsx";
 import { useEnrol } from "../EnrolModal.jsx";
+import MentorshipHome from "./MentorshipHome.jsx";
 
 /* ════════════════════════════════════════════════
    CONTACT
@@ -125,7 +126,7 @@ export default function RankCounselling() {
       <div style={{ position: "absolute", top: -80, left: "12%", width: 420, height: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.14) 0%, transparent 65%)", pointerEvents: "none" }} />
       <div style={{ position: "absolute", bottom: -60, right: "8%", width: 320, height: 240, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.12) 0%, transparent 65%)", pointerEvents: "none" }} />
 
-      <div className="container" style={{ position: "relative", zIndex: 1, paddingTop: 72, paddingBottom: 72 }}>
+      <div className="container" style={{ position: "relative", zIndex: 1, paddingTop: 72, paddingBottom: 16 }}>
 
         {/* ── 1 · HERO ── */}
         <Reveal>
@@ -248,6 +249,12 @@ export default function RankCounselling() {
             <span><ShieldCheck size={15} color="#F47B20" /> Free first session</span>
           </div>
         </Reveal>
+      </div>
+
+      {/* ── Mentorship (just below the ₹249 / ₹499 plans) ── */}
+      <MentorshipHome />
+
+      <div className="container" style={{ position: "relative", zIndex: 1, paddingTop: 16, paddingBottom: 72 }}>
 
         {/* ── 7 · SUCCESS STORIES (dynamic carousel) ── */}
         <Reveal>
