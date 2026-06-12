@@ -148,7 +148,7 @@ export default function Developer() {
         <div style={{ position: "absolute", top: "40%", left: "30%", width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, rgba(244,123,32,.14) 0%, transparent 70%)`, pointerEvents: "none", zIndex: 0 }} />
 
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 28, borderColor: "rgba(244,123,32,.4)", color: "#c75b0a" }}>
+          <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 28, color: "#fff" }}>
             <ArrowLeft size={16} /> Back
           </button>
 

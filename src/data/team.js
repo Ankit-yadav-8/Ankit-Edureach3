@@ -63,7 +63,7 @@ export const TEAM = [
     jeeRank: "AIR 3846",
     exam: "JEE Advanced",
     email: "hello@collegeparichay.in",
-    bio: `Hi, I'm Ankit Kumar — IIT Roorkee engineer, and the CTO & COO of College Parichay.
+    bio: `Hi, I'm Ankit Kumar — IIT Roorkee engineer, and the Co-Founder & CTO of College Parichay.
          I don't just build the platform. I am the kind of student it was built for.
         Like thousands of students who use College Parichay today, I once sat staring at rank lists, cutoffs, and counselling rounds — unsure what any of it meant for my future. That experience never left me. It drives every line of code I write.
         At College Parichay, I lead everything technical — from the React frontend and data pipelines to backend APIs and cloud deployment — with one goal in mind: make the technology invisible, so students only see clarity.
