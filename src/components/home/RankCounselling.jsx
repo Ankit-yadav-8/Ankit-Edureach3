@@ -123,8 +123,6 @@ export default function RankCounselling() {
       style={{ position: "relative", overflow: "hidden", background: "linear-gradient(160deg, #ffffff 0%, #ffffff 45%, #ffffff 100%)", scrollMarginTop: 80 }}
     >
       {/* ambient glow */}
-      <div style={{ position: "absolute", top: -80, left: "12%", width: 420, height: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.14) 0%, transparent 65%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: -60, right: "8%", width: 320, height: 240, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.12) 0%, transparent 65%)", pointerEvents: "none" }} />
 
       <div className="container" style={{ position: "relative", zIndex: 1, paddingTop: 72, paddingBottom: 16 }}>
 
@@ -358,8 +356,6 @@ export default function RankCounselling() {
         {/* ── 9 · CTA FOOTER BANNER ── */}
         <Reveal>
           <div style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #2d1f3d 55%, #3d1d0f 100%)", borderRadius: 22, padding: "40px 36px", position: "relative", overflow: "hidden", boxShadow: "0 16px 50px rgba(26,26,46,.35)" }}>
-            <div style={{ position: "absolute", top: -40, right: -20, width: 240, height: 240, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.3) 0%, transparent 70%)", pointerEvents: "none" }} />
-            <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)", backgroundSize: "32px 32px", pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 28 }}>
               <div style={{ maxWidth: 520 }}>
                 <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(1.4rem,3vw,2rem)", lineHeight: 1.2, marginBottom: 10 }}>

@@ -66,9 +66,6 @@ export default function ApplicationRadar() {
       }} />
 
       {/* ── ambient glow orbs ── */}
-      <div style={{ position: "absolute", top: -80,  left: "8%",  width: 540, height: 380, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.22) 0%, transparent 65%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: -70, right: "12%", width: 420, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(14,165,164,.13)   0%, transparent 65%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", top: "40%", right: "3%", width: 260, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,.10)   0%, transparent 65%)", pointerEvents: "none" }} />
 
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
 

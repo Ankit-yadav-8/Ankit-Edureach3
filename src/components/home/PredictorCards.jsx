@@ -39,12 +39,6 @@ export default function PredictorCards() {
   return (
     <section className="section" style={{ background: "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)", position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        {/* Background grid */}
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(244,123,32,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(244,123,32,.04) 1px,transparent 1px)", backgroundSize: "44px 44px", pointerEvents: "none" }} />
-        {/* Glow blobs */}
-        <div style={{ position: "absolute", top: -80, left: "20%", width: 400, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.18) 0%, transparent 65%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -60, right: "15%", width: 300, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.15) 0%, transparent 65%)", pointerEvents: "none" }} />
-
         <motion.div
           className="title-bar"
           initial={{ opacity: 0, y: 16 }}

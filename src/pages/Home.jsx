@@ -160,9 +160,6 @@ const PICK_STEPS = [
 function HomeSection({ id, eyebrow, title, sub, children, bg }) {
   return (
     <section id={id} style={{ padding: "72px 0", background: bg || "transparent", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
-      {/* Ambient glow orbs */}
-      <div style={{ position: "absolute", top: -60, left: "10%", width: 400, height: 300, borderRadius: "50%", background: "radial-gradient(circle,rgba(244,123,32,.12) 0%,transparent 65%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: -40, right: "5%", width: 300, height: 200, borderRadius: "50%", background: "radial-gradient(circle,rgba(244,162,97,.08) 0%,transparent 65%)", pointerEvents: "none" }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         {(eyebrow || title) && (
           <div className="title-bar" style={{ marginBottom: 40 }}>
@@ -551,17 +548,14 @@ export default function Home({ onSearch }) {
       {/* ── College Ticker ── */}
       <CollegeTicker />
 
-      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
 
       {/* ── Predictor Cards ── */}
       <PredictorCards />
 
-      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
 
       {/* ── JEE Mains Rank Counselling (80K–9L) ── */}
       <RankCounselling />
 
-      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
 
       {/* ── JEE Main & Advanced ── */}
       <HomeSection
@@ -584,7 +578,6 @@ export default function Home({ onSearch }) {
           border: "1px solid rgba(244,123,32,.2)",
           position: "relative", overflow: "hidden",
         }}>
-          <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(244,123,32,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(244,123,32,.04) 1px,transparent 1px)", backgroundSize: "36px 36px", pointerEvents: "none" }} />
           {[
             ["1", "Clear JEE Main", "Qualify for NIT/IIIT/GFTI seats", "#F47B20"],
             ["2", "Top 2.5L → Advanced", "Become eligible for the IITs", "#f59e0b"],
@@ -599,7 +592,6 @@ export default function Home({ onSearch }) {
         </div>
       </HomeSection>
 
-      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
 
       {/* ── How to Pick the Right College ── */}
       <CollegePickingGuide />
@@ -670,7 +662,6 @@ export default function Home({ onSearch }) {
       {/* ── Exam Cycle 2025–26 ── */}
       <ExamCycle />
 
-      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
       {/* ── JEE Resources Promo Banner ── */}
       <section style={{
         background: "linear-gradient(135deg, #ffffff 0%, #ffffff 50%, #ffffff 100%)",
@@ -679,8 +670,6 @@ export default function Home({ onSearch }) {
         borderTop: "1px solid rgba(244,123,32,.15)",
         borderBottom: "1px solid rgba(244,123,32,.15)",
       }}>
-        <div style={{ position: "absolute", top: -60, left: -60, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.15) 0%, transparent 70%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -40, right: 60, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,.12) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
             <Reveal>
@@ -740,7 +729,6 @@ export default function Home({ onSearch }) {
         </div>
       </section>
 
-      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
       {/* ── New Tools ── */}
       <NewTools />
 

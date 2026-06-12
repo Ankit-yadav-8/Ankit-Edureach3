@@ -67,14 +67,6 @@ export default function MentorshipHome() {
         padding: "84px 0",
       }}
     >
-      {/* ambient glows */}
-      <motion.div
-        animate={{ opacity: [0.55, 0.9, 0.55] }} transition={{ duration: 4, repeat: Infinity }}
-        style={{ position: "absolute", top: -80, left: "8%", width: 420, height: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.16), transparent 65%)", pointerEvents: "none" }}
-      />
-      <div style={{ position: "absolute", bottom: -60, right: "6%", width: 340, height: 260, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.12), transparent 65%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(244,123,32,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(244,123,32,.04) 1px,transparent 1px)", backgroundSize: "44px 44px", pointerEvents: "none" }} />
-
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         {/* ── Header ── */}
         <Reveal>
@@ -191,7 +183,6 @@ export default function MentorshipHome() {
               display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 22,
             }}
           >
-            <div style={{ position: "absolute", top: -40, right: -20, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.32), transparent 70%)", pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1, maxWidth: 540 }}>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#fbbf24", marginBottom: 8 }}>
                 <Flame size={14} /> Serious aspirants only

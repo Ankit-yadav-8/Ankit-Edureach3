@@ -251,67 +251,53 @@ function AboutUsCard() {
       transition={{ duration: 0.7, delay: 0.3 }}
       className="hero-about-col"
       style={{
-        background: "linear-gradient(160deg, rgba(14,10,4,.92), rgba(10,10,16,.86))",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        border: "1px solid rgba(245,166,35,.28)",
+        background: "#ffffff",
+        border: "1px solid rgba(244,123,32,.20)",
         borderRadius: 20,
         padding: "1.1rem 1.2rem",
         display: "flex",
         flexDirection: "column",
         gap: "0.85rem",
-        boxShadow: "0 0 0 1px rgba(245,166,35,.1), 0 24px 64px rgba(0,0,0,.6)",
+        boxShadow: "0 8px 30px rgba(13,27,62,.08)",
         position: "relative",
         overflow: "hidden",
         minWidth: 0, /* prevent flex blowout */
       }}
     >
-      {/* Top glow bar */}
-      <div style={{
-        position: "absolute", top: 0, left: 0, right: 0, height: 2,
-        background: `linear-gradient(90deg, transparent, ${ACCENT}, transparent)`,
-      }} />
-      {/* gold corner glow */}
-      <div style={{ position: "absolute", top: -40, right: -30, width: 160, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,166,35,.22), transparent 70%)", pointerEvents: "none" }} />
-
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{
                   width: 40, height: 40, borderRadius: 11,
-                  background: "rgba(245,166,35,.16)",
-                  border: "1.5px solid rgba(245,166,35,.4)",
+                  background: "rgba(244,123,32,.12)",
+                  border: "1.5px solid rgba(244,123,32,.3)",
                   display: "grid", placeItems: "center", flexShrink: 0,
                 }}>
                   <span style={{
                     fontFamily: "'Sora', sans-serif",
                     fontWeight: 800,
                     fontSize: 13,
-                    color: ACCENT,
+                    color: "#F47B20",
                     letterSpacing: "0.5px",
                   }}>CP</span>
                 </div>
         <div>
-          <div style={{ fontSize: 9.5, color: ACCENT, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>About Us</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: "1rem" }}>College Parichay</div>
+          <div style={{ fontSize: 9.5, color: "#F47B20", fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>About Us</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#1c1c28", fontSize: "1rem" }}>College Parichay</div>
         </div>
-        <motion.span
-          animate={{ boxShadow: ["0 0 0px #22c55e", "0 0 12px #22c55e", "0 0 0px #22c55e"] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block", flexShrink: 0 }}
-        />
+        <span style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block", flexShrink: 0 }} />
       </div>
 
-      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
+      <div style={{ height: 1, background: "rgba(0,0,0,.07)" }} />
 
       {/* Origin story */}
       <div style={{
-        background: "rgba(255,255,255,.04)",
-        border: "1px solid rgba(255,255,255,.06)",
+        background: "rgba(244,123,32,.06)",
+        border: "1px solid rgba(244,123,32,.14)",
         borderRadius: 10, padding: "10px 12px",
       }}>
         <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", marginBottom: 6 }}>Our Story</div>
-        <p style={{ fontSize: 12, color: "rgba(255,255,255,.65)", lineHeight: 1.65, margin: 0 }}>
-          Built in an <span style={{ color: ACCENT, fontWeight: 700 }}>IIT Roorkee</span> hostel room by students who lived the JoSAA chaos — and decided to fix it for everyone after them.
+        <p style={{ fontSize: 12, color: "rgba(28,28,40,.7)", lineHeight: 1.65, margin: 0 }}>
+          Built in an <span style={{ color: "#F47B20", fontWeight: 700 }}>IIT Roorkee</span> hostel room by students who lived the JoSAA chaos — and decided to fix it for everyone after them.
         </p>
       </div>
 
@@ -324,29 +310,29 @@ function AboutUsCard() {
         ].map(({ emoji, label, sub }) => (
           <div key={label} style={{
             display: "flex", alignItems: "center", gap: 10,
-            background: "rgba(255,255,255,.03)", border: "1px solid rgba(255,255,255,.06)",
+            background: "rgba(0,0,0,.025)", border: "1px solid rgba(0,0,0,.06)",
             borderRadius: 10, padding: "8px 11px",
           }}>
             <span style={{ fontSize: 15, flexShrink: 0 }}>{emoji}</span>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{label}</div>
-              <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.45)" }}>{sub}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#1c1c28" }}>{label}</div>
+              <div style={{ fontSize: 10.5, color: "rgba(28,28,40,.5)" }}>{sub}</div>
             </div>
           </div>
         ))}
       </div>
 
-      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
+      <div style={{ height: 1, background: "rgba(0,0,0,.07)" }} />
 
       {/* Mini stats */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
         {[{ val: "IIT-R", lbl: "Founded" }, { val: "3", lbl: "Engineers" }, { val: "Free", lbl: "Always" }].map(({ val, lbl }) => (
           <div key={lbl} style={{
-            textAlign: "center", background: "rgba(255,255,255,.04)",
+            textAlign: "center", background: "rgba(0,0,0,.025)",
             borderRadius: 9, padding: "8px 4px",
           }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: "#fff" }}>{val}</div>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,.45)", marginTop: 1 }}>{lbl}</div>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: "#1c1c28" }}>{val}</div>
+            <div style={{ fontSize: 10, color: "rgba(28,28,40,.5)", marginTop: 1 }}>{lbl}</div>
           </div>
         ))}
       </div>
@@ -356,14 +342,14 @@ function AboutUsCard() {
         onClick={() => nav("/about")}
         style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: `linear-gradient(135deg, ${ACCENT}, #ffcf6b)`,
-          color: "#0a0a0a", border: "none", borderRadius: 11,
+          background: "#F47B20",
+          color: "#fff", border: "none", borderRadius: 11,
           padding: "10px 14px", fontSize: 12.5, fontWeight: 800,
           fontFamily: "Sora", cursor: "pointer", marginTop: "auto",
-          boxShadow: `0 4px 20px ${ACCENT}55`, transition: "all .2s",
+          transition: "background .2s",
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `0 8px 28px ${ACCENT}88`; }}
-        onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `0 4px 20px ${ACCENT}55`; }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = "#e36a14"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "#F47B20"; }}
       >
         Our Story <ArrowRight size={13} />
       </button>
@@ -620,11 +606,6 @@ function MentorshipHeroCard({ isTablet }) {
     { exam: "JEE 2028",  price: "₹3999", color: "#f5a623", to: "/mentorship/jee-2028" },
     { exam: "NEET 2028", price: "₹3999", color: "#22c55e", to: "/mentorship/jee-2028" },
   ];
-  useEffect(() => {
-    const t = setInterval(() => setActive((i) => (i + 1) % tracks.length), 2400);
-    return () => clearInterval(t);
-  }, []);
-
   return (
     <motion.div
       initial={{ opacity: 0, x: 0 }}
@@ -632,66 +613,55 @@ function MentorshipHeroCard({ isTablet }) {
       transition={{ duration: 0.7, delay: 0.3 }}
       className="hero-about-col"
       style={{
-        background: "linear-gradient(160deg, rgba(14,10,4,.92), rgba(10,10,16,.86))",
-        backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-        border: "1px solid rgba(245,166,35,.28)",
+        background: "#ffffff",
+        border: "1px solid rgba(244,123,32,.20)",
         borderRadius: 20,
         padding: isTablet ? "0.95rem 1rem" : "1.1rem 1.2rem",
         display: "flex", flexDirection: "column", gap: isTablet ? "0.7rem" : "0.85rem",
-        boxShadow: "0 0 0 1px rgba(245,166,35,.1), 0 24px 64px rgba(0,0,0,.6)",
+        boxShadow: "0 8px 30px rgba(13,27,62,.08)",
         position: "relative", overflow: "hidden", minWidth: 0,
       }}
     >
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${GOLD}, transparent)` }} />
-      <div style={{ position: "absolute", top: -40, right: -30, width: 160, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,166,35,.22), transparent 70%)", pointerEvents: "none" }} />
-
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(245,166,35,.16)", border: "1.5px solid rgba(245,166,35,.4)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-          <GraduationCap size={20} color={GOLD} />
+        <div style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(244,123,32,.12)", border: "1.5px solid rgba(244,123,32,.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+          <GraduationCap size={20} color="#F47B20" />
         </div>
         <div>
-          <div style={{ fontSize: 9.5, color: GOLD, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>1-on-1 Mentorship</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: isTablet ? ".9rem" : "1rem" }}>JEE & NEET · 2027 · 2028</div>
+          <div style={{ fontSize: 9.5, color: "#F47B20", fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>1-on-1 Mentorship</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#1c1c28", fontSize: isTablet ? ".9rem" : "1rem" }}>JEE & NEET · 2027 · 2028</div>
         </div>
-        <motion.span
-          animate={{ boxShadow: ["0 0 0px #22c55e", "0 0 14px #22c55e", "0 0 0px #22c55e"], scale: [1, 1.15, 1] }}
-          transition={{ duration: 1.8, repeat: Infinity }}
-          style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block" }}
-        />
+        <span style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block" }} />
       </div>
 
-      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
+      <div style={{ height: 1, background: "rgba(0,0,0,.07)" }} />
 
-      {/* Rotating track spotlight */}
+      {/* Mentorship tracks */}
       <div style={{ display: "flex", flexDirection: "column", gap: isTablet ? 6 : 8 }}>
-        {tracks.map((tr, i) => (
-          <motion.div
+        {tracks.map((tr) => (
+          <div
             key={tr.exam}
-            animate={{ opacity: i === active ? 1 : 0.5, scale: i === active ? 1 : 0.98 }}
-            transition={{ duration: 0.4 }}
             onClick={() => nav(tr.to)}
             style={{
               display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
-              background: i === active ? `${tr.color}1f` : "rgba(255,255,255,.03)",
-              border: `1px solid ${i === active ? tr.color + "55" : "rgba(255,255,255,.06)"}`,
+              background: `${tr.color}12`,
+              border: `1px solid ${tr.color}33`,
               borderRadius: 10, padding: isTablet ? "7px 9px" : "8px 11px",
-              transition: "border .4s, background .4s",
             }}
           >
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: tr.color, flexShrink: 0, boxShadow: i === active ? `0 0 10px ${tr.color}` : "none" }} />
-            <span style={{ flex: 1, fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: isTablet ? 12 : 13, color: "#fff" }}>{tr.exam} Mentorship</span>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: tr.color, flexShrink: 0 }} />
+            <span style={{ flex: 1, fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: isTablet ? 12 : 13, color: "#1c1c28" }}>{tr.exam} Mentorship</span>
             <span style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 800, fontSize: isTablet ? 12 : 13.5, color: tr.color }}>{tr.price}</span>
-          </motion.div>
+          </div>
         ))}
       </div>
 
       {/* mini stats */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
         {[{ val: "1:1", lbl: "Mentor" }, { val: "1000+", lbl: "Students" }, { val: "Daily", lbl: "Targets" }].map(({ val, lbl }) => (
-          <div key={lbl} style={{ textAlign: "center", background: "rgba(255,255,255,.04)", borderRadius: 9, padding: isTablet ? "6px 4px" : "8px 4px" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: isTablet ? 13 : 15, color: "#fff" }}>{val}</div>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,.45)", marginTop: 1 }}>{lbl}</div>
+          <div key={lbl} style={{ textAlign: "center", background: "rgba(0,0,0,.025)", borderRadius: 9, padding: isTablet ? "6px 4px" : "8px 4px" }}>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: isTablet ? 13 : 15, color: "#1c1c28" }}>{val}</div>
+            <div style={{ fontSize: 10, color: "rgba(28,28,40,.5)", marginTop: 1 }}>{lbl}</div>
           </div>
         ))}
       </div>
@@ -701,15 +671,15 @@ function MentorshipHeroCard({ isTablet }) {
         onClick={() => nav("/mentorship/jee-2027")}
         style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: `linear-gradient(135deg, ${GOLD}, #ffcf6b)`,
-          color: "#0a0a0a", border: "none", borderRadius: 11,
+          background: "#F47B20",
+          color: "#fff", border: "none", borderRadius: 11,
           padding: isTablet ? "9px 12px" : "11px 16px",
           fontSize: isTablet ? 12 : 13, fontWeight: 800,
           fontFamily: "Sora", cursor: "pointer",
-          boxShadow: "0 4px 20px rgba(245,166,35,.45)", transition: "all .2s",
+          transition: "background .2s",
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(245,166,35,.6)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 20px rgba(245,166,35,.45)"; }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = "#e36a14"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "#F47B20"; }}
       >
         Explore Mentorship <ArrowRight size={14} />
       </button>
@@ -772,24 +742,6 @@ export default function Hero({ onSearch }) {
         boxSizing: "border-box",
       }}
     >
-      {/* ═══ Warm radial overlays — depth & glow on all sizes ═══ */}
-      <>
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 70% 60% at -5% 5%, rgba(244,123,32,.30) 0%, rgba(249,115,22,.10) 35%, transparent 65%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 108% 20%, rgba(249,115,22,.24) 0%, rgba(244,162,97,.10) 40%, transparent 65%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 50% 40% at -5% 98%, rgba(244,162,97,.20) 0%, transparent 60%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 50% 105%, rgba(244,123,32,.14) 0%, transparent 55%)" }} />
-        {/* Warm mesh grid */}
-        <div style={{
-          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-          backgroundImage: "linear-gradient(rgba(244,123,32,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(244,123,32,.055) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }} />
-      </>
-
-      {/* Animated canvas dots — reduced on mobile/tablet */}
-      <MeshDots dotCount={dotCount} />
-      <FloatingOrbs count={orbCount} colors={["#F47B20","#f9953d","#fbbf24","#ea580c","#f4a261","#F47B20"]} />
-
       {/* ═══ Content wrapper ═══ */}
       <div
         className="container"
@@ -819,24 +771,22 @@ export default function Hero({ onSearch }) {
           <div style={{ textAlign: "center", minWidth: 0 }}>
 
             {/* Badge */}
-            <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <motion.span
-                animate={{ boxShadow: ["0 0 0px rgba(244,123,32,0)", "0 0 22px rgba(244,123,32,.45)", "0 0 0px rgba(244,123,32,0)"] }}
-                transition={{ duration: 2.5, repeat: Infinity }}
+            <div>
+              <span
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 7,
-                  background: "rgba(244,123,32,.13)",
-                  border: "1px solid rgba(244,123,32,.40)",
+                  background: "rgba(244,123,32,.10)",
+                  border: "1px solid rgba(244,123,32,.30)",
                   color: "#F47B20",
                   fontSize: isXs ? 11 : 12, fontWeight: 700, letterSpacing: "0.5px",
                   padding: isXs ? "5px 12px" : "6px 16px", borderRadius: 50,
                   marginBottom: isXs ? 16 : 22,
                   fontFamily: "'Space Grotesk',sans-serif",
                 }}>
-                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 8px #22c55e", animation: "livePulse 2s infinite", flexShrink: 0 }} />
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
                 {isXs ? "JEE 2026 is Live" : "JEE 2026 Season is Live — Start Your Journey"}
-              </motion.span>
-            </motion.div>
+              </span>
+            </div>
 
             {/* Headline */}
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.05 }}>
@@ -863,19 +813,7 @@ export default function Hero({ onSearch }) {
                 Predict your JEE rank from marks, discover every college you can get into across all JoSAA &amp; CSAB rounds, and track every deadline — all in one place.
               </p>
 
-              <div style={{ height: 32, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.4rem" }}>
-                <TypewriterText
-                  words={["8 years of JoSAA data", "850+ institutes tracked", "Real-time rank predictions", "JEE Advanced cutoffs", "NIT / IIIT / GFTI seats"]}
-                  style={{
-                    fontSize: isXs ? ".78rem" : "clamp(.82rem,1.5vw,.96rem)",
-                    color: "#F47B20",
-                    fontFamily: "'Space Grotesk','Sora',sans-serif",
-                    fontWeight: 700,
-                    letterSpacing: "0.3px",
-                  }}
-                  cursorColor="#fbbf24"
-                />
-              </div>
+              <div style={{ marginBottom: "1.4rem" }} />
             </motion.div>
 
             {/* ── Search bar ── */}
@@ -891,9 +829,8 @@ export default function Hero({ onSearch }) {
                 background: "rgba(255,255,255,.97)",
                 padding: isXs ? 5 : 6,
                 borderRadius: 14,
-                boxShadow: isMobile
-                  ? "0 8px 28px rgba(244,123,32,.18), 0 0 0 1px rgba(244,123,32,.14)"
-                  : "0 20px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(249,115,22,.25)",
+                boxShadow: "0 8px 28px rgba(13,27,62,.10), 0 0 0 1px rgba(244,123,32,.16)",
+                border: "1px solid rgba(244,123,32,.18)",
               }}>
                 <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 8, paddingLeft: isXs ? 10 : 14, minWidth: 0 }}>
                   <Search size={16} color="#9ca3af" style={{ flexShrink: 0 }} />
@@ -1016,50 +953,6 @@ export default function Hero({ onSearch }) {
               </RippleButton>
 
               <RippleButton
-                className="btn btn-coral btn-shimmer btn-glow"
-                onClick={() => nav("/jee-main#rank")}
-                style={{
-                  padding: isXs ? "11px 20px" : "12px 24px",
-                  fontSize: isXs ? 13.5 : 14.5,
-                  fontWeight: 700,
-                  borderRadius: 12,
-                  gap: 8,
-                  background: "#F47B20",
-                  color: "#fff",
-                  border: "none",
-                  boxShadow: "0 6px 18px rgba(244,123,32,.3)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: isMobile ? "100%" : "auto",
-                }}
-              >
-                <TrendingUp size={isXs ? 16 : 18} /> Predict for JEE Mains
-              </RippleButton>
-
-              <RippleButton
-                className="btn btn-coral btn-shimmer btn-glow"
-                onClick={() => nav("/jee-advanced#rank")}
-                style={{
-                  padding: isXs ? "11px 20px" : "12px 24px",
-                  fontSize: isXs ? 13.5 : 14.5,
-                  fontWeight: 700,
-                  borderRadius: 12,
-                  gap: 8,
-                  background: "#F47B20",
-                  color: "#fff",
-                  border: "none",
-                  boxShadow: "0 6px 18px rgba(244,123,32,.3)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: isMobile ? "100%" : "auto",
-                }}
-              >
-                <TrendingUp size={isXs ? 16 : 18} /> Predict for JEE Advanced
-              </RippleButton>
-
-              <RippleButton
                 className="btn btn-shimmer btn-glow"
                 onClick={() => nav("/jee-advanced-result-2026")}
                 style={{
@@ -1085,7 +978,7 @@ export default function Hero({ onSearch }) {
 
               <RippleButton
                 className="btn btn-shimmer"
-                onClick={() => nav("/jee-resources")}
+                onClick={() => nav("/neet")}
                 style={{
                   padding: isXs ? "11px 20px" : "12px 24px",
                   fontSize: isXs ? 13.5 : 14.5,
@@ -1103,7 +996,7 @@ export default function Hero({ onSearch }) {
                 }}
                 color="rgba(255,255,255,0.4)"
               >
-                <BookOpen size={isXs ? 16 : 18} /> JEE Resources
+                <Award size={isXs ? 16 : 18} /> NEET 2026
               </RippleButton>
             </motion.div>
 
@@ -1119,12 +1012,6 @@ export default function Hero({ onSearch }) {
         </div>
       </div>
 
-      {/* Bottom fade — warm glow */}
-      <div style={{
-        position: "absolute", bottom: 0, left: 0, right: 0, height: 80,
-        background: "linear-gradient(to bottom, transparent, rgba(244,162,97,.12))",
-        pointerEvents: "none", zIndex: 2,
-      }} />
     </section>
   );
 }
