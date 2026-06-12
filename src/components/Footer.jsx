@@ -114,12 +114,13 @@ function DevCard({ t, index = 0 }) {
         to={`/team/${t.id}`}
         title={`View ${t.name}'s portfolio`}
       >
-        {/* ── Initials logo (AY / AK) ── */}
+        {/* ── Member photo (falls back to initials) ── */}
         <span
           className="fdev-initials"
           style={{
-            width: 46,
-            height: 46,
+            position: "relative",
+            width: 54,
+            height: 54,
             borderRadius: 12,
             display: "grid",
             placeItems: "center",
@@ -130,12 +131,21 @@ function DevCard({ t, index = 0 }) {
             letterSpacing: "-0.5px",
             color: "#fff",
             flexShrink: 0,
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,.2)",
             border: `1.5px solid ${t.accent}cc`,
+            overflow: "hidden",
             userSelect: "none",
           }}
         >
           {t.initials}
+          {t.photo && (
+            <img
+              src={t.photo}
+              alt={t.name}
+              loading="lazy"
+              onError={(e) => { e.currentTarget.style.display = "none"; }}
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
+            />
+          )}
         </span>
 
         {/* Name + highlighted role chips */}
