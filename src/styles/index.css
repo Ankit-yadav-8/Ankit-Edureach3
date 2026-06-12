@@ -650,20 +650,22 @@ input,select,textarea { font-family:inherit; }
   box-shadow: 0 6px 18px rgba(244,123,32,.30);
 }
 .btn-coral:hover { background:#e36a14; box-shadow:0 8px 22px rgba(244,123,32,.4); }
+/* Every site button is the same flat orange now (navbar buttons are excluded —
+   they use their own inline styles). */
 .btn-ghost {
-  background: rgba(244,123,32,.1);
-  color: #F47B20;
-  border: 1.6px solid rgba(244,123,32,.4);
+  background: #F47B20;
+  color: #fff;
+  border: none;
 }
-.btn-ghost:hover { background:#F47B20; color:#fff; transform:translateY(-2px); box-shadow: 0 8px 24px rgba(244,123,32,.4); }
-.btn-navy { background: #1a1a2e; color:#fff; border: 1px solid rgba(26,26,46,.3); }
-.btn-navy:hover { background: #2d2d5e; transform:translateY(-2px); }
+.btn-ghost:hover { background:#e36a14; transform:translateY(-1px); box-shadow: 0 8px 22px rgba(244,123,32,.4); }
+.btn-navy { background: #F47B20; color:#fff; border: none; }
+.btn-navy:hover { background: #e36a14; transform:translateY(-1px); }
 .btn-light {
-  background: rgba(244,123,32,.08);
-  color: #F47B20;
-  border: 1.6px solid rgba(244,123,32,.35);
+  background: #F47B20;
+  color: #fff;
+  border: none;
 }
-.btn-light:hover { background: #F47B20; color:#fff; border-color: #F47B20; transform:translateY(-2px); }
+.btn-light:hover { background: #e36a14; color:#fff; transform:translateY(-1px); }
 
 /* ════════════════════════════════════════════════
    FEATURES STRIP
@@ -2186,26 +2188,26 @@ textarea.input { width:100%; }
 
   /* Ghost button */
   .btn-ghost {
-    background: rgba(244,123,32,.1) !important;
-    color:#F47B20 !important;
-    border:1.6px solid rgba(244,123,32,.4) !important;
+    background: #F47B20 !important;
+    color:#fff !important;
+    border:none !important;
   }
   .btn-ghost:hover {
-    background:#F47B20 !important;
+    background:#e36a14 !important;
     color:#fff !important;
-    transform:translateY(-2px);
+    transform:translateY(-1px);
   }
 
   /* Light button */
   .btn-light {
-    background: rgba(244,123,32,.08) !important;
-    color: #F47B20 !important;
-    border: 1.6px solid rgba(244,123,32,.35) !important;
+    background: #F47B20 !important;
+    color: #fff !important;
+    border: none !important;
   }
   .btn-light:hover {
-    background: #F47B20 !important;
+    background: #e36a14 !important;
     color:#fff !important;
-    transform:translateY(-2px);
+    transform:translateY(-1px);
   }
 
   /* Stats bar */

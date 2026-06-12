@@ -114,20 +114,6 @@ function DevCard({ t, index = 0 }) {
         to={`/team/${t.id}`}
         title={`View ${t.name}'s portfolio`}
       >
-        {/* subtle inner glow dot */}
-        <span
-          style={{
-            position: "absolute",
-            top: -20,
-            right: -20,
-            width: 60,
-            height: 60,
-            borderRadius: "50%",
-            background: `radial-gradient(circle, ${t.accent}33, transparent 70%)`,
-            pointerEvents: "none",
-          }}
-        />
-
         {/* ── Initials logo (AY / AK) ── */}
         <span
           className="fdev-initials"
@@ -144,7 +130,7 @@ function DevCard({ t, index = 0 }) {
             letterSpacing: "-0.5px",
             color: "#fff",
             flexShrink: 0,
-            boxShadow: `0 0 16px ${t.accent}88, 0 0 6px ${t.accent}55, inset 0 1px 0 rgba(255,255,255,.25)`,
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,.2)",
             border: `1.5px solid ${t.accent}cc`,
             userSelect: "none",
           }}
@@ -176,7 +162,7 @@ function DevCard({ t, index = 0 }) {
 /* ── Footer ─────────────────────────────────────────────────────── */
 export default function Footer() {
   return (
-    <footer style={{ background: "var(--navy)", color: "#fff", paddingTop: "3.5rem" }}>
+    <footer style={{ background: "#0a0a0a", color: "#fff", paddingTop: "3.5rem" }}>
       <style>{`
         .fdev-card {
           display: flex; align-items: center; gap: 14px;
@@ -188,16 +174,9 @@ export default function Footer() {
           backdrop-filter: blur(8px);
           transition: background .25s, border-color .25s, box-shadow .25s;
         }
-        .fdev-card::before {
-          content: ''; position: absolute; top: 0; bottom: 0; left: -65%; width: 55%;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
-          transform: skewX(-18deg); transition: left .6s ease; pointer-events: none;
-        }
-        .fdev-card:hover::before { left: 135%; }
         .fdev-card:hover {
-          background: rgba(249,115,22,0.12);
-          border-color: rgba(249,115,22,0.55);
-          box-shadow: 0 12px 32px rgba(249,115,22,0.28), 0 0 6px rgba(249,115,22,0.15);
+          background: rgba(255,255,255,0.08);
+          border-color: rgba(249,115,22,0.5);
         }
         .fdev-initials { transition: transform .3s cubic-bezier(.22,.68,0,1.3); }
         .fdev-card:hover .fdev-initials { transform: rotate(-5deg) scale(1.07); }
@@ -211,7 +190,6 @@ export default function Footer() {
           font-family: "Sora", sans-serif; font-size: .6rem; font-weight: 800;
           letter-spacing: .5px; text-transform: uppercase; color: #fff;
           white-space: nowrap;
-          box-shadow: 0 2px 9px rgba(249,115,22,.42), inset 0 1px 0 rgba(255,255,255,.32);
         }
         .fteam-badge { animation: ftBadgePulse 2.6s ease-in-out infinite; }
         @keyframes ftBadgePulse {
@@ -244,14 +222,16 @@ export default function Footer() {
                 style={{
                   width: 40,
                   height: 40,
-                  borderRadius: 10,
+                  borderRadius: "50%",
                   display: "grid",
                   placeItems: "center",
-                  background:
-                    "linear-gradient(135deg,var(--coral),var(--coral-light))",
+                  background: "#F47B20",
+                  flexShrink: 0,
                 }}
               >
-                <GraduationCap size={20} />
+                <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 16, letterSpacing: "-0.5px", lineHeight: 1 }}>
+                  CP
+                </span>
               </span>
               <span
                 style={{
@@ -290,41 +270,10 @@ export default function Footer() {
             padding: "2rem 1.8rem 1.8rem",
             position: "relative",
             overflow: "hidden",
-            boxShadow:
-              "0 0 0 1px rgba(249,115,22,0.22), 0 0 30px rgba(249,115,22,0.18), 0 0 60px rgba(249,115,22,0.08)",
-            background:
-              "linear-gradient(145deg, rgba(249,115,22,0.10) 0%, rgba(15,20,40,0.85) 60%, rgba(249,115,22,0.06) 100%)",
-            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(255,255,255,.08)",
+            background: "rgba(255,255,255,.03)",
           }}
         >
-          {/* corner glow blobs */}
-          <span
-            style={{
-              position: "absolute",
-              top: -40,
-              left: -40,
-              width: 160,
-              height: 160,
-              borderRadius: "50%",
-              background:
-                "radial-gradient(circle, rgba(249,115,22,0.22), transparent 70%)",
-              pointerEvents: "none",
-            }}
-          />
-          <span
-            style={{
-              position: "absolute",
-              bottom: -50,
-              right: -50,
-              width: 200,
-              height: 200,
-              borderRadius: "50%",
-              background:
-                "radial-gradient(circle, rgba(249,115,22,0.15), transparent 70%)",
-              pointerEvents: "none",
-            }}
-          />
-
           {/* "Built by developers" badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -470,12 +419,11 @@ export default function Footer() {
                   transition: "box-shadow .2s, border-color .2s",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "0 0 10px rgba(249,115,22,0.5)";
-                  e.currentTarget.style.borderColor = "rgba(249,115,22,0.6)";
+                  e.currentTarget.style.background = "rgba(249,115,22,0.18)";
+                  e.currentTarget.style.borderColor = "rgba(249,115,22,0.5)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.background = "rgba(255,255,255,.08)";
                   e.currentTarget.style.borderColor = "rgba(255,255,255,.15)";
                 }}
               >

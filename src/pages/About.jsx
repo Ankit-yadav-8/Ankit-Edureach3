@@ -89,29 +89,34 @@ const VALUES = [
 /* ── Story timeline ────────────────────────────────────────── */
 const TIMELINE = [
   {
-    year: "2023", icon: "💡", color: "#F47B20",
+    year: "May 2026", icon: "💡", color: "#F47B20",
     title: "The Frustration That Started It All",
-    content: "Sitting in a hostel room at IIT Roorkee after JoSAA round 1, we watched a batchmate nearly lose his preferred branch because of bad information — outdated cutoff PDFs, contradictory WhatsApp forwards, and no clear way to compare options. That moment became the spark.",
+    content: "Sitting in a hostel room at IIT Roorkee right after JoSAA Round 1, we watched a batchmate nearly lose his preferred branch to bad information — outdated cutoff PDFs, contradictory WhatsApp forwards and no clear way to compare options. That single moment became the spark for College Parichay.",
   },
   {
-    year: "Early 2024", icon: "🏗️", color: "#7C3AED",
+    year: "Jun 2026", icon: "🏗️", color: "#7C3AED",
     title: "Building in the Hostel Room",
-    content: "We began building College Parichay right in our IIT Roorkee hostel, coding late into the night between classes and exams. The first version was a simple rank-to-college matcher. We shared it in JEE WhatsApp groups and got 500+ users within the first week.",
+    content: "We started coding College Parichay late into the night between classes and exams. The first version was a simple rank-to-college matcher we shared in JEE WhatsApp groups — it crossed 500+ users in the very first week, and the feedback never stopped coming.",
   },
   {
-    year: "Mid 2024", icon: "📊", color: "#0EA5A4",
+    year: "Jul 2026", icon: "📊", color: "#0EA5A4",
     title: "Solving the Data Problem",
-    content: "We scraped, cleaned and structured 7 years of JoSAA cutoff data across 800+ colleges, 5000+ branches and 6 categories. Building the predictor engine was the hardest challenge — handling NTA percentile rounding, fresh allocation vs. spot rounds, and edge cases for new IITs.",
+    content: "We scraped, cleaned and structured 7 years of JoSAA cutoff data across 800+ colleges, 5,000+ branches and 6 categories. The predictor engine was the hardest part — handling NTA percentile rounding, fresh vs. spot rounds, and edge cases for the newest IITs and IIITs.",
   },
   {
-    year: "2025", icon: "🚀", color: "#EC4899",
+    year: "Aug 2026", icon: "🚀", color: "#EC4899",
     title: "Official Launch & Student Impact",
-    content: "College Parichay officially launched with rank predictors for JEE Main & Advanced, a college explorer, JoSAA counselling planner, and the comparison tool. Thousands of students used it for their choice-filling. Messages poured in from students who avoided costly mistakes thanks to our data.",
+    content: "College Parichay launched with JEE Main & Advanced rank predictors, a college explorer, a JoSAA counselling planner and a side-by-side comparison tool. Thousands of students used it for choice-filling, and messages poured in from those who avoided costly mistakes thanks to our data.",
   },
   {
-    year: "2026", icon: "🎯", color: "#15A06E",
+    year: "Sep 2026", icon: "🤝", color: "#F59E0B",
+    title: "Mentorship & 1-on-1 Guidance",
+    content: "We added 1-on-1 mentorship from IITians and doctors for JEE & NEET aspirants, plus an expert JoSAA + CSAB counselling plan — pairing our verified data with real human guidance through every single round of seat allotment.",
+  },
+  {
+    year: "Oct 2026", icon: "🎯", color: "#15A06E",
     title: "What We're Building Next",
-    content: "Expanding to cover NEET, BITSAT, and state counselling — every major technical and medical admission in India. New tools include AI-powered choice-filling strategy, personalised college recommendations, and alumni connect. Our goal: the go-to platform for every Indian student navigating admissions.",
+    content: "Expanding to NEET, BITSAT and every major state counselling, with AI-powered choice-filling strategy, personalised college recommendations and an alumni-connect network. The goal: the single go-to platform for every Indian student navigating admissions.",
   },
 ];
 
@@ -899,7 +904,7 @@ export default function About() {
       {/* ══════════════════════════════════════════════════════
           OUR STORY
       ══════════════════════════════════════════════════════ */}
-      <section style={{ background: "#fff", padding: "88px 0" }}>
+      <section style={{ background: "#0a0a12", padding: "88px 0" }}>
         <div className="container" style={{ maxWidth: 900 }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -909,7 +914,7 @@ export default function About() {
             className="title-bar" style={{ textAlign: "left", alignItems: "flex-start", marginBottom: 44 }}
           >
             <span className="eyebrow">Our story</span>
-            <h2 className="section-title" style={{ textAlign: "left", maxWidth: 640 }}>
+            <h2 className="section-title" style={{ textAlign: "left", maxWidth: 640, color: "#fff" }}>
               It started in an IIT Roorkee hostel room
             </h2>
           </motion.div>
@@ -922,7 +927,7 @@ export default function About() {
               `Today, College Parichay is used by thousands of students every counselling season. We've structured 7+ years of JoSAA data, built rank predictors for JEE Main and Advanced, a college explorer, a JoSAA planner, and a comparison engine — all from that same hostel room drive to make this process less chaotic for the next student.`,
             ].map((text, i) => (
               <Reveal key={i} delay={i * 0.06}>
-                <p style={{ fontSize: "1.04rem", lineHeight: 1.82, color: "var(--ink)", margin: 0 }}
+                <p style={{ fontSize: "1.04rem", lineHeight: 1.82, color: "rgba(255,255,255,.72)", margin: 0 }}
                   dangerouslySetInnerHTML={{ __html: text.replace(/"([^"]+)"/g, '<em>"$1"</em>') }} />
               </Reveal>
             ))}
@@ -931,12 +936,11 @@ export default function About() {
           <Reveal>
             <div style={{
               borderLeft: "4px solid #F47B20", borderRadius: "0 14px 14px 0",
-              background: "linear-gradient(135deg,#fff8f0,#fff)", padding: "22px 26px",
+              background: "rgba(244,123,32,.08)", border: "1px solid rgba(244,123,32,.22)", borderLeftWidth: 4, padding: "22px 26px",
               display: "flex", gap: 16, marginBottom: 56,
-              boxShadow: "0 4px 24px rgba(244,123,32,.1)",
             }}>
               <Quote size={30} color="#F47B20" style={{ flexShrink: 0, marginTop: 4 }} />
-              <p style={{ fontStyle: "italic", color: "var(--navy)", fontSize: "1.08rem", lineHeight: 1.68, margin: 0 }}>
+              <p style={{ fontStyle: "italic", color: "rgba(255,255,255,.86)", fontSize: "1.08rem", lineHeight: 1.68, margin: 0 }}>
                 "We're not a faceless portal. We're engineers who lived this chaos and decided to fix it for the next student. Every feature on College Parichay answers a question one of us once had — and found no good answer to."
               </p>
             </div>
@@ -947,7 +951,7 @@ export default function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.45 }}
-            style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 22, marginBottom: 32, color: "var(--navy)" }}
+            style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 22, marginBottom: 32, color: "#fff" }}
           >
             How we built it — from IIT hostel to live platform
           </motion.h3>
@@ -982,14 +986,13 @@ export default function About() {
                   {item.icon}
                 </motion.div>
                 <motion.div
-                  className="card"
                   whileHover={{ x: 4 }}
                   transition={{ duration: 0.2 }}
-                  style={{ flex: 1, borderLeft: `3px solid ${item.color}`, padding: "18px 22px" }}
+                  style={{ flex: 1, borderRadius: 16, background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.1)", borderLeft: `3px solid ${item.color}`, padding: "18px 22px" }}
                 >
                   <div style={{ fontSize: 11, fontWeight: 700, color: item.color, letterSpacing: 1, textTransform: "uppercase", marginBottom: 6 }}>{item.year}</div>
-                  <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8, color: "var(--navy)", fontSize: 15 }}>{item.title}</h4>
-                  <p style={{ fontSize: 13.5, color: "var(--muted)", lineHeight: 1.72, margin: 0 }}>{item.content}</p>
+                  <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8, color: "#fff", fontSize: 15 }}>{item.title}</h4>
+                  <p style={{ fontSize: 13.5, color: "rgba(255,255,255,.62)", lineHeight: 1.72, margin: 0 }}>{item.content}</p>
                 </motion.div>
               </motion.div>
             ))}
@@ -1074,7 +1077,7 @@ export default function About() {
       {/* ══════════════════════════════════════════════════════
           VALUES
       ══════════════════════════════════════════════════════ */}
-      <section style={{ background: "var(--sky)", padding: "88px 0" }}>
+      <section style={{ background: "#0a0a12", padding: "88px 0" }}>
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1084,8 +1087,8 @@ export default function About() {
             className="title-bar"
           >
             <span className="eyebrow">What we stand for</span>
-            <h2 className="section-title">Our values</h2>
-            <p className="section-sub">The principles that guide every feature we build and every decision we make.</p>
+            <h2 className="section-title" style={{ color: "#fff" }}>Our values</h2>
+            <p className="section-sub" style={{ color: "rgba(255,255,255,.6)" }}>The principles that guide every feature we build and every decision we make.</p>
           </motion.div>
           <div className="grid-3" style={{ gap: 20 }}>
             {VALUES.map((v, i) => (
@@ -1096,16 +1099,16 @@ export default function About() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.45, delay: i * 0.07, type: "spring", bounce: 0.3 }}
               >
-                <div className="card value-card-about" style={{ height: "100%", borderTop: `3px solid ${v.color}` }}>
+                <div className="value-card-about" style={{ height: "100%", borderRadius: 16, padding: "22px 24px", background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.1)", borderTop: `3px solid ${v.color}` }}>
                   <span className="value-icon-wrap" style={{
                     width: 50, height: 50, borderRadius: 14,
                     display: "grid", placeItems: "center",
-                    background: `${v.color}14`,
+                    background: `${v.color}22`,
                   }}>
                     <v.icon size={24} color={v.color} />
                   </span>
-                  <h3 style={{ fontFamily: "Sora", fontWeight: 700, margin: "14px 0 7px", color: "var(--navy)" }}>{v.t}</h3>
-                  <p style={{ color: "var(--muted)", lineHeight: 1.65, fontSize: 14 }}>{v.d}</p>
+                  <h3 style={{ fontFamily: "Sora", fontWeight: 700, margin: "14px 0 7px", color: "#fff" }}>{v.t}</h3>
+                  <p style={{ color: "rgba(255,255,255,.62)", lineHeight: 1.65, fontSize: 14 }}>{v.d}</p>
                 </div>
               </motion.div>
             ))}

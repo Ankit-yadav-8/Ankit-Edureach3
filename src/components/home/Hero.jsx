@@ -999,17 +999,16 @@ export default function Hero({ onSearch }) {
                   fontWeight: 800,
                   borderRadius: 12,
                   gap: 8,
-                  background: "linear-gradient(135deg, #F47B20 0%, #fbbf24 55%, #F97316 100%)",
+                  background: "#F47B20",
                   color: "#fff",
-                  border: "2px solid rgba(255,255,255,.55)",
+                  border: "none",
                   letterSpacing: "0.2px",
-                  boxShadow: "0 8px 28px rgba(244,123,32,.55), 0 0 0 4px rgba(251,191,36,.18)",
+                  boxShadow: "0 6px 18px rgba(244,123,32,.3)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: isMobile ? "100%" : "auto",
                   position: "relative",
-                  animation: "livePulse 2.2s infinite",
                 }}
                 color="rgba(255,255,255,0.45)"
               >
@@ -1025,10 +1024,10 @@ export default function Hero({ onSearch }) {
                   fontWeight: 700,
                   borderRadius: 12,
                   gap: 8,
-                  background: "linear-gradient(135deg, #F47B20, #f9953d)",
+                  background: "#F47B20",
                   color: "#fff",
                   border: "none",
-                  boxShadow: "0 6px 20px rgba(244,123,32,.42)",
+                  boxShadow: "0 6px 18px rgba(244,123,32,.3)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -1047,10 +1046,10 @@ export default function Hero({ onSearch }) {
                   fontWeight: 700,
                   borderRadius: 12,
                   gap: 8,
-                  background: "linear-gradient(135deg, #ea580c, #F47B20)",
+                  background: "#F47B20",
                   color: "#fff",
                   border: "none",
-                  boxShadow: "0 6px 20px rgba(234,88,12,.42)",
+                  boxShadow: "0 6px 18px rgba(244,123,32,.3)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -1069,16 +1068,15 @@ export default function Hero({ onSearch }) {
                   fontWeight: 700,
                   borderRadius: 12,
                   gap: 8,
-                  background: "linear-gradient(135deg, #f5c842, #ff9f1c)",
-                  color: "#0a0f2e",
+                  background: "#F47B20",
+                  color: "#fff",
                   border: "none",
-                  boxShadow: "0 6px 20px rgba(245,200,66,.5)",
+                  boxShadow: "0 6px 18px rgba(244,123,32,.3)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: isMobile ? "100%" : "auto",
                   position: "relative",
-                  animation: "livePulse 2.4s infinite",
                 }}
                 color="rgba(255,255,255,0.4)"
               >
@@ -1094,15 +1092,16 @@ export default function Hero({ onSearch }) {
                   fontWeight: 700,
                   borderRadius: 12,
                   gap: 8,
-                  background: "rgba(244,123,32,.12)",
-                  color: "#c75b0a",
-                  border: "1.5px solid rgba(244,123,32,.38)",
+                  background: "#F47B20",
+                  color: "#fff",
+                  border: "none",
+                  boxShadow: "0 6px 18px rgba(244,123,32,.3)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: isMobile ? "100%" : "auto",
                 }}
-                color="rgba(244,123,32,0.3)"
+                color="rgba(255,255,255,0.4)"
               >
                 <BookOpen size={isXs ? 16 : 18} /> JEE Resources
               </RippleButton>

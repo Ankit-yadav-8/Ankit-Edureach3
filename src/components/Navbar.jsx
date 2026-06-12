@@ -52,6 +52,37 @@ const JEE_MEGA = [
   },
 ];
 
+// ── NEET mega-menu: mirrors the JEE tab's style with dummy NEET data ──────────
+const NEET_MEGA = [
+  {
+    title: "NEET Prep Resources", to: "/neet", color: "#0ea5a4", icon: BookOpen,
+    items: [
+      { label: "Biology (38 chapters)",   to: "/neet#biology",   icon: BookOpen,      desc: "Botany + Zoology · 360 marks" },
+      { label: "Physics (29 chapters)",    to: "/neet#physics",   icon: Zap,           desc: "Mechanics to modern physics" },
+      { label: "Chemistry (30 chapters)",  to: "/neet#chemistry", icon: FlaskConical,  desc: "Physical · Organic · Inorganic" },
+      { label: "NEET Exam Cycle 2026",     to: "/neet#cycle",     icon: CalendarClock, desc: "Every key date for the year" },
+    ],
+  },
+  {
+    title: "NEET UG 2026", to: "/neet", color: "#F47B20", icon: FileText,
+    items: [
+      { label: "Eligibility Criteria",    to: "/neet#eligibility", icon: BadgeCheck,   desc: "Age, qualification & attempts" },
+      { label: "Exam Pattern & Syllabus", to: "/neet#pattern",     icon: CalendarDays, desc: "180 questions · 720 marks" },
+      { label: "Result & Rank List 2026", to: "/neet#result",      icon: BarChart3,    desc: "Toppers, cutoffs & percentile" },
+      { label: "NEET Rank Predictor",     to: "/neet#predictor",   icon: Gauge,        desc: "Marks → expected AIR" },
+    ],
+  },
+  {
+    title: "NEET Counselling", to: "/neet", color: "#6366f1", icon: Award,
+    items: [
+      { label: "MCC / AIQ Counselling",   to: "/neet#counselling", icon: Award,    desc: "15% All-India quota seats" },
+      { label: "State Quota Counselling", to: "/neet#counselling", icon: Landmark, desc: "85% state domicile seats" },
+      { label: "Top Medical Colleges",    to: "/neet#colleges",    icon: Landmark, desc: "AIIMS, JIPMER & govt MBBS" },
+      { label: "MBBS Cutoff Trends",      to: "/neet#cutoffs",     icon: BarChart3, desc: "Category-wise closing ranks" },
+    ],
+  },
+];
+
 // ── Mentorship dropdown: 1-on-1 JEE & NEET mentorship pages ───────────────────
 const MENTORSHIP_NAV = [
   { label: "JEE & NEET 2027",   to: "/mentorship/jee-2027",   icon: Trophy,   tag: "₹1999 · Class 12 / Droppers" },
@@ -165,9 +196,9 @@ export default function Navbar({ onSearch }) {
   const navItems = [
     { label: "Home", to: "/", match: (p) => p === "/" },
     { label: "JEE", mega: JEE_MEGA, base: "/jee-resources", match: (p) => p.startsWith("/jee") },
+    { label: "NEET", mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
     { label: "Mentorship", drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
     { label: "Colleges", drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
-    { label: "Colleges For You", to: "/for-you", match: (p) => p.startsWith("/for-you") },
     { label: "Exam Buzz", mega: EXAM_NEWS_MEGA, base: "/exams", match: (p) => p.startsWith("/exam") || p.startsWith("/compare-exams") || p.startsWith("/news") || p.startsWith("/josaa-round-1") },
     { label: "Tools", mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa"].some((x) => p.startsWith(x)) },
   ];
