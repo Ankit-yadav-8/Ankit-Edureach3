@@ -1,11 +1,8 @@
 import {
   ShieldCheck, Mail, Phone, GraduationCap, Heart, Lightbulb,
-  Linkedin, Github, MapPin, Quote, Trophy,
-  Code2, Zap, Users, MessageCircle, Globe,
-  Star, ArrowRight, CheckCircle2, Sparkles,
+  Linkedin, Quote, Trophy, Code2, Zap, Users,
 } from "lucide-react";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { COLLEGES } from "../data/colleges.js";
 import { EXAMS } from "../data/exams.js";
 import useCountUp from "../utils/useCountUp.js";
@@ -120,98 +117,64 @@ const TIMELINE = [
   },
 ];
 
-/* ── Animated stat ─────────────────────────────────────────── */
+/* ── Animated count-up stat (no glow) ──────────────────────── */
 function Stat({ target, suffix, label, color = "#F47B20" }) {
   const [ref, val] = useCountUp(target);
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30, scale: 0.85 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, type: "spring", bounce: 0.35 }}
-      style={{ textAlign: "center" }}
-    >
-      <div style={{
-        fontFamily: "Sora", fontWeight: 900,
-        fontSize: "clamp(2.6rem,5vw,3.8rem)",
-        color, lineHeight: 1, marginBottom: 8,
-        textShadow: `0 0 40px ${color}66`,
-        animation: "statPulse 3s ease-in-out infinite",
-      }}>
+    <div ref={ref} style={{ textAlign: "center" }}>
+      <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: "clamp(2.4rem,5vw,3.4rem)", color, lineHeight: 1, marginBottom: 8 }}>
         {val.toLocaleString("en-IN")}{suffix}
       </div>
-      <div style={{ fontSize: 14, color: "rgba(255,255,255,.6)", fontWeight: 500 }}>{label}</div>
-    </motion.div>
+      <div style={{ fontSize: 14, color: "var(--muted)", fontWeight: 500 }}>{label}</div>
+    </div>
   );
 }
 
-/* ── Highlighted role pills (Founder / CTO / COO …) ───────────── */
+/* ── Role pills (Founder / CTO / COO …) ────────────────────── */
 function RoleTags({ role, accent }) {
   const parts = role.split(/\s*[&,/]\s*/).map((p) => p.trim()).filter(Boolean);
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 7 }}>
-      {parts.map((p, i) => (
-        <motion.span
-          key={p}
-          className="role-chip"
-          initial={{ opacity: 0, y: 10, scale: 0.8 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.15 + i * 0.12, type: "spring", bounce: 0.5 }}
-          style={{
-            background: `linear-gradient(135deg, ${accent}, #fbbf24)`,
-            boxShadow: `0 5px 18px ${accent}66, inset 0 1px 0 rgba(255,255,255,.35)`,
-          }}
-        >
-          <Sparkles size={12} /> {p}
-        </motion.span>
+      {parts.map((p) => (
+        <span key={p} style={{
+          display: "inline-flex", alignItems: "center", gap: 6,
+          padding: "5px 14px", borderRadius: 50,
+          fontFamily: "Sora, sans-serif", fontSize: 12.5, fontWeight: 800,
+          letterSpacing: ".3px", color: "#fff", background: accent,
+        }}>
+          {p}
+        </span>
       ))}
     </div>
   );
 }
 
-/* ── Square founder photo ──────────────────────────────────── */
+/* ── Square founder photo (no animated border / glow) ──────── */
 function FounderPhoto({ founder }) {
   return (
-    <div style={{ position: "relative", flexShrink: 0 }}>
-      {/* Outer ambient pulse ring */}
+    <div className="founder-photo-frame" style={{
+      width: 360, height: 450, borderRadius: 20, overflow: "hidden",
+      position: "relative",
+      border: `2px solid ${founder.accent}33`,
+      boxShadow: "0 12px 36px rgba(13,27,62,.14)",
+    }}>
+      <img
+        src={founder.photo} alt={founder.name}
+        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
+      />
       <div style={{
-        position: "absolute", inset: -18, borderRadius: 28, zIndex: 0,
-        background: `radial-gradient(ellipse, ${founder.accent}44 0%, ${founder.accent}18 45%, transparent 72%)`,
-        animation: "photoAmbient 3s ease-in-out infinite alternate",
-        pointerEvents: "none",
-      }} />
-      {/* Animated gradient border */}
-      <div style={{
-        position: "absolute", inset: -4, borderRadius: 22, zIndex: 0,
-        background: `linear-gradient(135deg, ${founder.accent}, #fbbf24, #fff8, ${founder.accent}88, #ea580c, ${founder.accent})`,
-        backgroundSize: "400% 400%",
-        animation: "aboutGlow 2.5s ease infinite",
-      }} />
-      <div className="founder-photo-frame" style={{
-        width: 360, height: 450, borderRadius: 20, overflow: "hidden",
-        position: "relative", zIndex: 1,
-        boxShadow: `0 0 50px ${founder.accent}aa, 0 0 100px ${founder.accent}44, 0 8px 40px rgba(0,0,0,.5)`,
+        position: "absolute", bottom: 0, left: 0, right: 0,
+        padding: "36px 14px 14px",
+        background: `linear-gradient(to top, ${founder.accent}ee 0%, transparent 100%)`,
       }}>
-        <img
-          src={founder.photo} alt={founder.name}
-          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
-        />
-        <div style={{
-          position: "absolute", bottom: 0, left: 0, right: 0,
-          padding: "36px 14px 14px",
-          background: `linear-gradient(to top, ${founder.accent}ee 0%, transparent 100%)`,
-        }}>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: "#fff", lineHeight: 1.2 }}>{founder.name}</div>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,.85)", marginTop: 2 }}>{founder.role}</div>
-        </div>
+        <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: "#fff", lineHeight: 1.2 }}>{founder.name}</div>
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,.85)", marginTop: 2 }}>{founder.role}</div>
       </div>
     </div>
   );
 }
 
-/* ── Social button ─────────────────────────────────────────── */
+/* ── Social button (light) ─────────────────────────────────── */
 function SocialBtn({ href, icon: Icon, label, accent }) {
   return (
     <a
@@ -219,705 +182,212 @@ function SocialBtn({ href, icon: Icon, label, accent }) {
       style={{
         display: "inline-flex", alignItems: "center", gap: 6,
         padding: "7px 14px", borderRadius: 50,
-        background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.15)",
-        color: "rgba(255,255,255,.8)", fontSize: 12, fontWeight: 600,
+        background: "#fff", border: "1px solid rgba(0,0,0,.12)",
+        color: "var(--navy)", fontSize: 12, fontWeight: 600,
         textDecoration: "none", transition: "all .2s",
       }}
-      onMouseEnter={e => { e.currentTarget.style.background = accent; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = accent; }}
-      onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,.08)"; e.currentTarget.style.color = "rgba(255,255,255,.8)"; e.currentTarget.style.borderColor = "rgba(255,255,255,.15)"; }}
+      onMouseEnter={(e) => { e.currentTarget.style.background = accent; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = accent; }}
+      onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = "var(--navy)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.12)"; }}
     >
       <Icon size={13} /> {label}
     </a>
   );
 }
 
-/* ── Animated JEE Rank badge (Ankit Kumar only) ────────────── */
-function JeeRankBadge({ rank, accent }) {
+/* ── Section header ────────────────────────────────────────── */
+function SectionHead({ icon: Icon, eyebrow, title, sub }) {
   return (
-    <div style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
-      {/* Ping ripple */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      style={{ textAlign: "center", marginBottom: 52 }}
+    >
       <span style={{
-        position: "absolute", inset: 0, borderRadius: 50,
-        background: `${accent}55`,
-        animation: "rankPing 1.8s cubic-bezier(0,.2,.8,1) infinite",
-        pointerEvents: "none",
-      }} />
-      <span style={{
-        position: "absolute", inset: 0, borderRadius: 50,
-        background: `${accent}33`,
-        animation: "rankPing 1.8s cubic-bezier(0,.2,.8,1) infinite .6s",
-        pointerEvents: "none",
-      }} />
-      <div style={{
-        position: "relative",
-        display: "inline-flex", alignItems: "center", gap: 7,
-        padding: "7px 18px", borderRadius: 50,
-        background: `linear-gradient(90deg, ${accent}28 0%, #fbbf2420 50%, ${accent}28 100%)`,
-        backgroundSize: "200% auto",
-        animation: "rankShimmer 2.5s linear infinite",
-        border: `1.5px solid ${accent}70`,
-        boxShadow: `0 0 18px ${accent}55, inset 0 1px 0 rgba(255,255,255,.1)`,
+        display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 14,
+        background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.3)",
+        color: "#c2410c", padding: "5px 18px", borderRadius: 50, fontSize: 12, fontWeight: 700, letterSpacing: ".5px",
       }}>
-        <span style={{ fontSize: 15 }}>🏆</span>
-        <span style={{
-          fontFamily: "Sora", fontWeight: 800, fontSize: 13.5,
-          background: `linear-gradient(90deg, ${accent}, #fbbf24, ${accent})`,
-          backgroundSize: "200% auto",
-          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          animation: "gradText 2s ease infinite",
-          letterSpacing: "0.02em",
+        {Icon && <Icon size={12} />} {eyebrow}
+      </span>
+      <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,3.5vw,2.7rem)", color: "var(--navy)", margin: "0 0 12px" }}>
+        {title}
+      </h2>
+      {sub && <p style={{ color: "var(--muted)", fontSize: 15, maxWidth: 520, margin: "0 auto" }}>{sub}</p>}
+    </motion.div>
+  );
+}
+
+/* ── Team member card (founders + operations) ──────────────── */
+function TeamCard({ f, idx, badgeIcon: BadgeIcon, badgeLabel }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.55, delay: idx * 0.1 }}
+    >
+      <div
+        className="founder-card-wrap"
+        style={{
+          background: "#fff",
+          border: "1px solid rgba(0,0,0,.08)",
+          borderTop: `4px solid ${f.accent}`,
+          borderRadius: 22, overflow: "hidden",
+          display: "grid", gridTemplateColumns: "1fr auto",
+          boxShadow: "0 8px 30px rgba(13,27,62,.08)",
+        }}
+      >
+        {/* ── Left: text ── */}
+        <div className="team-content" style={{ padding: "28px 26px 26px", display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 10, alignSelf: "flex-start",
+            padding: "10px 20px", borderRadius: 14,
+            background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.3)",
+          }}>
+            <GraduationCap size={22} color="#F47B20" />
+            <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: "1.25rem", color: "#F47B20", letterSpacing: "-0.02em" }}>IIT Roorkee</span>
+          </div>
+
+          <span style={{
+            display: "inline-flex", alignItems: "center", gap: 6, alignSelf: "flex-start",
+            background: `${f.accent}14`, color: f.accent, border: `1px solid ${f.accent}30`,
+            padding: "4px 14px", borderRadius: 50,
+            fontSize: 11, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase",
+          }}>
+            <BadgeIcon size={10} /> {f.badge || badgeLabel}
+          </span>
+
+          <div>
+            <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.45rem", color: "var(--navy)", marginBottom: 4, lineHeight: 1.2 }}>{f.name}</h3>
+            <RoleTags role={f.role} accent={f.accent} />
+          </div>
+
+          {f.edu && (
+            <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--muted)" }}>
+              <GraduationCap size={13} color={f.accent} /> {f.edu}
+            </div>
+          )}
+
+          <p style={{ color: "#4b5563", lineHeight: 1.72, fontSize: 13.5, flex: 1 }}>{f.bio}</p>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+            {f.skills.slice(0, 4).map((s) => (
+              <span key={s} style={{
+                padding: "3px 10px", borderRadius: 50, fontSize: 11,
+                background: "rgba(0,0,0,.04)", border: "1px solid rgba(0,0,0,.08)",
+                color: "#4b5563", fontWeight: 500,
+              }}>{s}</span>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {f.socials.linkedin && <SocialBtn href={f.socials.linkedin} icon={Linkedin} label="LinkedIn" accent={f.accent} />}
+            {f.socials.instagram && <SocialBtn href={f.socials.instagram} icon={IgIcon} label="Instagram" accent={f.accent} />}
+            {f.socials.whatsapp && <SocialBtn href={f.socials.whatsapp} icon={WaIcon} label="WhatsApp" accent={f.accent} />}
+          </div>
+        </div>
+
+        {/* ── Right: photo column ── */}
+        <div className="team-photo-col" style={{
+          width: 420, flexShrink: 0,
+          background: "linear-gradient(160deg, rgba(244,123,32,.12) 0%, rgba(251,191,36,.07) 60%, rgba(244,123,32,.05) 100%)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          position: "relative", overflow: "hidden", padding: "28px 20px",
         }}>
-          {rank}
-        </span>
+          <FounderPhoto founder={f} />
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 /* ════════════════════════════════════════════════════════════
-   Main About Page
+   Main About Page — flat white, no glow / background animations
 ════════════════════════════════════════════════════════════ */
 export default function About() {
-  const founderRef = useRef(null);
-  const statsRef = useRef(null);
-
   return (
     <div className="page">
       <style>{`
-        @keyframes aboutGlow {
-          0%,100% { background-position: 0% 50%; }
-          50%      { background-position: 100% 50%; }
-        }
-        @keyframes aboutFloat {
-          0%,100% { transform: translateY(0); }
-          50%      { transform: translateY(-7px); }
-        }
-        @keyframes aboutPulse {
-          0%,100% { opacity:.7; transform:scale(1); }
-          50%      { opacity:1;  transform:scale(1.04); }
-        }
-        @keyframes gradText {
-          0%,100% { background-position: 0% 50%; }
-          50%      { background-position: 100% 50%; }
-        }
-        @keyframes photoAmbient {
-          from { opacity: .55; transform: scale(1); }
-          to   { opacity: 1;   transform: scale(1.06); }
-        }
-        @keyframes rankPing {
-          75%, 100% { transform: scale(2.4); opacity: 0; }
-        }
-        @keyframes rankShimmer {
-          from { background-position: 200% center; }
-          to   { background-position: -200% center; }
-        }
-        @keyframes statPulse {
-          0%,100% { text-shadow: 0 0 40px currentColor; }
-          50%      { text-shadow: 0 0 70px currentColor, 0 0 100px currentColor; }
-        }
-        @keyframes orbDrift1 {
-          0%,100% { transform: translate(0,0) scale(1); }
-          33%     { transform: translate(22px,-18px) scale(1.1); }
-          66%     { transform: translate(-12px,12px) scale(.93); }
-        }
-        @keyframes orbDrift2 {
-          0%,100% { transform: translate(0,0) scale(1); }
-          40%     { transform: translate(-28px,22px) scale(1.12); }
-          70%     { transform: translate(14px,-8px) scale(.97); }
-        }
-        @keyframes orbDrift3 {
-          0%,100% { transform: translate(0,0) rotate(0deg); }
-          50%     { transform: translate(18px,-14px) rotate(180deg); }
-        }
-        @keyframes cardGloss {
-          from { transform: translateX(-180%) skewX(-22deg); opacity: .45; }
-          to   { transform: translateX(380%) skewX(-22deg); opacity: .45; }
-        }
-        @keyframes iitTagPop {
-          0%   { transform: scale(.82); opacity: 0; }
-          60%  { transform: scale(1.06); opacity: 1; }
-          100% { transform: scale(1);   opacity: 1; }
-        }
-        @keyframes timelinePop {
-          from { opacity: 0; transform: translateX(32px) scale(.96); }
-          to   { opacity: 1; transform: translateX(0)    scale(1);   }
-        }
-        @keyframes valuePop {
-          from { opacity: 0; transform: translateY(24px) scale(.94); }
-          to   { opacity: 1; transform: translateY(0)    scale(1);   }
-        }
-        .about-social-hero {
-          display: inline-flex; align-items: center; gap: 7px;
-          padding: 9px 18px; border-radius: 50px;
-          font-size: 13px; font-weight: 600; text-decoration: none;
-          border: 1px solid rgba(255,255,255,.2);
-          color: #fff; background: rgba(255,255,255,.1);
-          transition: all .22s; backdrop-filter: blur(4px);
-        }
-        .about-social-hero:hover {
-          background: rgba(255,255,255,.22);
-          border-color: rgba(255,255,255,.4);
-          transform: translateY(-3px);
-          box-shadow: 0 8px 24px rgba(0,0,0,.2);
-        }
-        .founder-card-wrap {
-          transition: transform .28s cubic-bezier(.22,.68,0,1.2), box-shadow .28s;
-          position: relative; overflow: hidden;
-        }
-        .founder-card-wrap:hover {
-          transform: translateY(-7px);
-          box-shadow: 0 32px 80px rgba(244,123,32,.28) !important;
-        }
-        .founder-card-wrap .card-gloss {
-          display: none;
-        }
-        .founder-card-wrap:hover .card-gloss {
-          display: block;
-          position: absolute; top: 0; bottom: 0; width: 60px;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,.07), transparent);
-          animation: cardGloss .65s ease forwards;
-          pointer-events: none; z-index: 10;
-        }
-        .value-card-about {
-          transition: transform .22s cubic-bezier(.22,.68,0,1.2), box-shadow .22s;
-        }
-        .value-card-about:hover {
-          transform: translateY(-5px) rotate(-0.5deg);
-          box-shadow: 0 16px 40px rgba(0,0,0,.12);
-        }
-        .value-card-about:hover .value-icon-wrap {
-          transform: scale(1.12) rotate(8deg);
-        }
-        .value-icon-wrap {
-          transition: transform .22s;
-        }
-        .timeline-dot {
-          animation: aboutPulse 2.8s ease-in-out infinite;
-        }
-        .timeline-item {
-          animation: timelinePop .5s cubic-bezier(.22,.68,0,1.1) both;
-        }
-        .iit-tag {
-          animation: iitTagPop .5s cubic-bezier(.22,.68,0,1.2) both;
-        }
-        /* ── Mobile: stack photo on top, content below ── */
         @media (max-width: 640px) {
           .team-grid { grid-template-columns: 1fr !important; }
           .founder-card-wrap { grid-template-columns: 1fr !important; }
-          .team-photo-col {
-            width: auto !important;
-            order: -1;
-            padding: 26px 16px !important;
-          }
-          .founder-photo-frame {
-            width: min(240px, 68vw) !important;
-            height: auto !important;
-            aspect-ratio: 4 / 5;
-          }
-          /* Decorative skill tags collide with the small centered photo +
-             name overlay on phones — skills are already listed as chips in
-             the text content, so hide the floating ones here. */
-          .team-float-tag { display: none !important; }
+          .team-photo-col { width: auto !important; order: -1; padding: 26px 16px !important; }
+          .founder-photo-frame { width: min(240px, 68vw) !important; height: auto !important; aspect-ratio: 4 / 5; }
         }
       `}</style>
 
-      {/* ══════════════════════════════════════════════════════
-          HERO
-      ══════════════════════════════════════════════════════ */}
-      <section style={{
-        background: "linear-gradient(135deg, #0c0c18 0%, #170f28 50%, #0c1828 100%)",
-        padding: "110px 0 90px",
-        position: "relative", overflow: "hidden",
-      }}>
-        {/* Animated drifting orbs */}
-        <div style={{
-          position: "absolute", top: -80, right: -60, width: 560, height: 560, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(244,123,32,.22) 0%, transparent 65%)",
-          pointerEvents: "none", animation: "orbDrift1 9s ease-in-out infinite",
-        }} />
-        <div style={{
-          position: "absolute", bottom: -60, left: -60, width: 460, height: 460, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(124,58,237,.18) 0%, transparent 65%)",
-          pointerEvents: "none", animation: "orbDrift2 11s ease-in-out infinite",
-        }} />
-        <div style={{
-          position: "absolute", top: "38%", left: "32%", width: 260, height: 260, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(14,165,164,.14) 0%, transparent 70%)",
-          pointerEvents: "none", animation: "orbDrift3 7s ease-in-out infinite",
-        }} />
-        {/* Small accent orbs */}
-        <div style={{ position: "absolute", top: "20%", left: "15%", width: 80, height: 80, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.3) 0%, transparent 70%)", pointerEvents: "none", animation: "orbDrift2 5s ease-in-out infinite 1s" }} />
-        <div style={{ position: "absolute", bottom: "25%", right: "18%", width: 60, height: 60, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,58,237,.35) 0%, transparent 70%)", pointerEvents: "none", animation: "orbDrift1 6s ease-in-out infinite .5s" }} />
-        {/* Dot grid */}
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: "radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
-
-        <div className="container" style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
-          {/* Staggered children */}
-          <motion.div
-            initial={{ opacity: 0, scale: .7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, type: "spring", bounce: 0.5 }}
-            style={{ display: "inline-flex", marginBottom: 22 }}
-          >
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              background: "rgba(244,123,32,.18)", border: "1px solid rgba(244,123,32,.35)",
-              color: "#fb923c", padding: "5px 16px 5px 5px", borderRadius: 50,
-              fontSize: 13, fontWeight: 700, letterSpacing: .5,
-            }}>
-              <span style={{
-                width: 26, height: 26, borderRadius: "50%",
-                background: "#F47B20", display: "grid", placeItems: "center", flexShrink: 0,
-              }}>
-                <span style={{
-                  color: "#fff", fontFamily: "Sora, sans-serif",
-                  fontWeight: 800, fontSize: "11px", letterSpacing: "-0.5px", lineHeight: 1,
-                }}>CP</span>
-              </span>
-              About College Parichay
+      {/* ── HERO ── */}
+      <section style={{ background: "#ffffff", padding: "70px 0 60px", borderBottom: "1px solid rgba(244,123,32,.12)" }}>
+        <div className="container" style={{ textAlign: "center" }}>
+          <span style={{
+            display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 22,
+            background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.3)",
+            color: "#c2410c", padding: "5px 16px 5px 5px", borderRadius: 50,
+            fontSize: 13, fontWeight: 700, letterSpacing: ".5px",
+          }}>
+            <span style={{ width: 26, height: 26, borderRadius: "50%", background: "#F47B20", display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: "11px", letterSpacing: "-0.5px", lineHeight: 1 }}>CP</span>
             </span>
-          </motion.div>
+            About College Parichay
+          </span>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.12 }}
-            style={{
-              fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900,
-              fontSize: "clamp(2.2rem,5vw,3.6rem)", margin: "0 0 18px",
-              letterSpacing: "-0.04em", color: "#fff", lineHeight: 1.15,
-            }}
-          >
+          <h1 style={{
+            fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900,
+            fontSize: "clamp(2.2rem,5vw,3.6rem)", margin: "0 0 18px",
+            letterSpacing: "-0.04em", color: "var(--navy)", lineHeight: 1.15,
+          }}>
             Made by students who've been{" "}
-            <span style={{
-              background: "linear-gradient(90deg,#F47B20,#fbbf24,#fb923c,#F47B20)",
-              backgroundSize: "200% auto",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              backgroundClip: "text", animation: "gradText 3s ease infinite",
-            }}>
-              exactly where you are
-            </span>
-          </motion.h1>
+            <span style={{ color: "#F47B20" }}>exactly where you are</span>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.25 }}
-            style={{ color: "rgba(255,255,255,.62)", maxWidth: 640, margin: "0 auto 36px", fontSize: "1.08rem", lineHeight: 1.75 }}
-          >
+          <p style={{ color: "var(--muted)", maxWidth: 640, margin: "0 auto 36px", fontSize: "1.08rem", lineHeight: 1.75 }}>
             Two engineers from IIT Roorkee who cracked JEE Advanced, lived through the chaos of JoSAA counselling, and built the platform they wished existed. College Parichay brings rank prediction, college discovery and counselling guidance into one clean, student-first platform — completely free.
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.38 }}
-            style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}
-          >
-            <a href={LK} target="_blank" rel="noreferrer" className="about-social-hero">
-              <Linkedin size={15} /> LinkedIn
-            </a>
-            <a href={IG} target="_blank" rel="noreferrer" className="about-social-hero">
-              <IgIcon size={15} /> Instagram
-            </a>
-            <a href={WA} target="_blank" rel="noreferrer" className="about-social-hero">
-              <WaIcon size={15} /> WhatsApp
-            </a>
-            <a href="#contact" className="about-social-hero" style={{ background: "rgba(244,123,32,.22)", borderColor: "rgba(244,123,32,.4)", color: "#fb923c" }}>
-              <Mail size={15} /> Contact Us
-            </a>
-          </motion.div>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <a href={LK} target="_blank" rel="noreferrer" className="btn btn-light"><Linkedin size={15} /> LinkedIn</a>
+            <a href={IG} target="_blank" rel="noreferrer" className="btn btn-light"><IgIcon size={15} /> Instagram</a>
+            <a href={WA} target="_blank" rel="noreferrer" className="btn btn-light"><WaIcon size={15} /> WhatsApp</a>
+            <a href="#contact" className="btn btn-coral"><Mail size={15} /> Contact Us</a>
+          </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          FOUNDERS
-      ══════════════════════════════════════════════════════ */}
-      <section ref={founderRef} style={{ background: "#0d0d1c", padding: "84px 0", borderTop: "1px solid rgba(255,255,255,.06)" }}>
+      {/* ── FOUNDERS ── */}
+      <section style={{ background: "#ffffff", padding: "76px 0" }}>
         <div className="container">
-          {/* Section header */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            style={{ textAlign: "center", marginBottom: 60 }}
-          >
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 14,
-              background: "rgba(244,123,32,.15)", border: "1px solid rgba(244,123,32,.3)",
-              color: "#fb923c", padding: "5px 18px", borderRadius: 50, fontSize: 12, fontWeight: 700, letterSpacing: .5,
-            }}>
-              <Trophy size={12} /> The Founders
-            </span>
-            <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,3.5vw,2.7rem)", color: "#fff", margin: "0 0 12px" }}>
-              Who's behind College Parichay
-            </h2>
-            <p style={{ color: "rgba(255,255,255,.45)", fontSize: 15, maxWidth: 480, margin: "0 auto" }}>
-              Two engineers from IIT Roorkee, building the tool every JEE aspirant deserves
-            </p>
-          </motion.div>
-
-          {/* Founder cards */}
+          <SectionHead icon={Trophy} eyebrow="The Founders" title="Who's behind College Parichay" sub="Two engineers from IIT Roorkee, building the tool every JEE aspirant deserves" />
           <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
             {FOUNDERS.map((f, idx) => (
-              <motion.div
-                key={f.name}
-                initial={{ opacity: 0, x: idx === 0 ? -40 : 40, y: 20 }}
-                whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.6, delay: idx * 0.15, type: "spring", bounce: 0.3 }}
-              >
-                <div
-                  className="founder-card-wrap"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.02) 100%)",
-                    border: "1px solid rgba(255,255,255,.1)",
-                    borderTop: `4px solid ${f.accent}`,
-                    borderRadius: 22,
-                    overflow: "hidden",
-                    display: "grid",
-                    gridTemplateColumns: "1fr auto",
-                    boxShadow: "0 8px 40px rgba(0,0,0,.3)",
-                  }}
-                >
-                  {/* Gloss sweep on hover */}
-                  <div className="card-gloss" />
-
-                  {/* ── Left: text ── */}
-                  <div className="team-content" style={{ padding: "28px 26px 26px", display: "flex", flexDirection: "column", gap: 14 }}>
-
-                    {/* Big IIT Roorkee Tagline */}
-                    <motion.div
-                      className="iit-tag"
-                      initial={{ opacity: 0, scale: .8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: idx * 0.15 + 0.2, type: "spring", bounce: 0.5 }}
-                      style={{
-                        display: "inline-flex", alignItems: "center", gap: 10, alignSelf: "flex-start",
-                        padding: "10px 20px", borderRadius: 14,
-                        background: "linear-gradient(90deg, rgba(244,123,32,.22) 0%, rgba(251,191,36,.14) 100%)",
-                        border: "1px solid rgba(244,123,32,.45)",
-                        boxShadow: "0 0 24px rgba(244,123,32,.2)",
-                      }}
-                    >
-                      <GraduationCap size={22} color="#F47B20" />
-                      <span style={{
-                        fontFamily: "Sora", fontWeight: 900, fontSize: "1.25rem",
-                        background: "linear-gradient(90deg, #F47B20 0%, #fbbf24 55%, #F47B20 100%)",
-                        backgroundSize: "200% auto",
-                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                        animation: "gradText 3s ease infinite",
-                        letterSpacing: "-0.02em",
-                      }}>
-                        IIT Roorkee
-                      </span>
-                    </motion.div>
-
-                    <span style={{
-                      display: "inline-flex", alignItems: "center", gap: 6, alignSelf: "flex-start",
-                      background: `${f.accent}18`, color: f.accent,
-                      border: `1px solid ${f.accent}35`,
-                      padding: "4px 14px", borderRadius: 50,
-                      fontSize: 11, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase",
-                    }}>
-                      <Trophy size={10} /> {f.badge || (idx === 0 ? "Founder" : "Co-Founder")}
-                    </span>
-
-                    <div>
-                      <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.45rem", color: "#fff", marginBottom: 4, lineHeight: 1.2 }}>{f.name}</h3>
-                      <RoleTags role={f.role} accent={f.accent} />
-                    </div>
-
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                      {f.edu && (
-                        <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
-                          <GraduationCap size={13} color={f.accent} /> {f.edu}
-                        </div>
-                      )}
-                      {f.jeeRank && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: .6, y: 10 }}
-                          whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.5, delay: 0.4, type: "spring", bounce: 0.55 }}
-                        >
-                          <JeeRankBadge rank={f.jeeRank} accent={f.accent} />
-                        </motion.div>
-                      )}
-                    </div>
-
-                    <p style={{ color: "rgba(255,255,255,.58)", lineHeight: 1.72, fontSize: 13.5, flex: 1 }}>{f.bio}</p>
-
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                      {f.skills.slice(0, 4).map((s, si) => (
-                        <motion.span
-                          key={s}
-                          initial={{ opacity: 0, scale: .7 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: idx * 0.1 + si * 0.05 + 0.3 }}
-                          style={{
-                            padding: "3px 10px", borderRadius: 50, fontSize: 11,
-                            background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.12)",
-                            color: "rgba(255,255,255,.72)", fontWeight: 500,
-                          }}
-                        >{s}</motion.span>
-                      ))}
-                    </div>
-
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                      <SocialBtn href={f.socials.linkedin}  icon={Linkedin} label="LinkedIn"  accent={f.accent} />
-                      <SocialBtn href={f.socials.instagram} icon={IgIcon}   label="Instagram" accent={f.accent} />
-                      <SocialBtn href={f.socials.whatsapp}  icon={WaIcon}   label="WhatsApp"  accent={f.accent} />
-                    </div>
-                  </div>
-
-                  {/* ── Right: photo column ── */}
-                  <div className="team-photo-col" style={{
-                    width: 420, flexShrink: 0,
-                    background: `linear-gradient(160deg, rgba(244,123,32,.22) 0%, rgba(251,191,36,.12) 60%, rgba(244,123,32,.1) 100%)`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    position: "relative", overflow: "hidden", padding: "28px 20px",
-                  }}>
-                    <div style={{ position: "absolute", top: -30, right: -30, width: 130, height: 130, borderRadius: "50%", background: `radial-gradient(circle, ${f.accent}44 0%, transparent 70%)`, animation: "orbDrift1 6s ease-in-out infinite" }} />
-                    <div style={{ position: "absolute", bottom: -20, left: -20, width: 100, height: 100, borderRadius: "50%", background: `radial-gradient(circle, ${f.accent}28 0%, transparent 70%)`, animation: "orbDrift2 8s ease-in-out infinite" }} />
-
-                    {[
-                      { text: f.skills[0], pos: { top: 16, left: 6 } },
-                      { text: f.skills[1], pos: { top: 16, right: 6 } },
-                      { text: f.skills[3], pos: { top: "46%", left: 4 } },
-                      { text: f.skills[2], pos: { top: "46%", right: 4 } },
-                    ].map(({ text, pos }, si) => text && (
-                      <motion.div
-                        key={text}
-                        className="team-float-tag"
-                        initial={{ opacity: 0, scale: .5 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: idx * 0.1 + si * 0.08 + 0.35, type: "spring", bounce: 0.4 }}
-                        style={{
-                          position: "absolute", ...pos, zIndex: 3,
-                          background: "rgba(12,12,24,.62)", border: `1px solid ${f.accent}66`,
-                          borderRadius: 8, padding: "4px 9px",
-                          fontSize: 10, color: f.accent, fontWeight: 700,
-                          backdropFilter: "blur(4px)",
-                          boxShadow: "0 2px 8px rgba(0,0,0,.35)",
-                          maxWidth: "42%", whiteSpace: "nowrap",
-                          overflow: "hidden", textOverflow: "ellipsis",
-                        }}
-                      >{text}</motion.div>
-                    ))}
-
-                    <FounderPhoto founder={f} />
-                  </div>
-                </div>
-              </motion.div>
+              <TeamCard key={f.name} f={f} idx={idx} badgeIcon={Trophy} badgeLabel={idx === 0 ? "Founder" : "Co-Founder"} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          OPERATIONS TEAM
-      ══════════════════════════════════════════════════════ */}
-      <section style={{ background: "#0d0d1c", padding: "0 0 84px", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
+      {/* ── OPERATIONS ── */}
+      <section style={{ background: "#ffffff", padding: "0 0 76px" }}>
         <div className="container">
-          {/* Section header */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            style={{ textAlign: "center", marginBottom: 60 }}
-          >
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 14,
-              background: "rgba(244,123,32,.15)", border: "1px solid rgba(244,123,32,.3)",
-              color: "#fb923c", padding: "5px 18px", borderRadius: 50, fontSize: 12, fontWeight: 700, letterSpacing: .5,
-            }}>
-              <Users size={12} /> The Operations Team
-            </span>
-            <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,3.5vw,2.7rem)", color: "#fff", margin: "0 0 12px" }}>
-              Keeping everything running smoothly
-            </h2>
-            <p style={{ color: "rgba(255,255,255,.45)", fontSize: 15, maxWidth: 480, margin: "0 auto" }}>
-              The people behind the scenes making sure students always come first
-            </p>
-          </motion.div>
-
-          {/* Operations cards */}
+          <SectionHead icon={Users} eyebrow="The Operations Team" title="Keeping everything running smoothly" sub="The people behind the scenes making sure students always come first" />
           <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
             {OPERATIONS.map((f, idx) => (
-              <motion.div
-                key={f.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.6, delay: idx * 0.15, type: "spring", bounce: 0.3 }}
-              >
-                <div
-                  className="founder-card-wrap"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.02) 100%)",
-                    border: "1px solid rgba(255,255,255,.1)",
-                    borderTop: `4px solid ${f.accent}`,
-                    borderRadius: 22,
-                    overflow: "hidden",
-                    display: "grid",
-                    gridTemplateColumns: "1fr auto",
-                    boxShadow: "0 8px 40px rgba(0,0,0,.3)",
-                  }}
-                >
-                  {/* Gloss sweep on hover */}
-                  <div className="card-gloss" />
-
-                  {/* ── Left: text ── */}
-                  <div className="team-content" style={{ padding: "28px 26px 26px", display: "flex", flexDirection: "column", gap: 14 }}>
-
-                    {/* Big IIT Roorkee Tagline */}
-                    <motion.div
-                      className="iit-tag"
-                      initial={{ opacity: 0, scale: .8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: idx * 0.15 + 0.2, type: "spring", bounce: 0.5 }}
-                      style={{
-                        display: "inline-flex", alignItems: "center", gap: 10, alignSelf: "flex-start",
-                        padding: "10px 20px", borderRadius: 14,
-                        background: "linear-gradient(90deg, rgba(244,123,32,.22) 0%, rgba(251,191,36,.14) 100%)",
-                        border: "1px solid rgba(244,123,32,.45)",
-                        boxShadow: "0 0 24px rgba(244,123,32,.2)",
-                      }}
-                    >
-                      <GraduationCap size={22} color="#F47B20" />
-                      <span style={{
-                        fontFamily: "Sora", fontWeight: 900, fontSize: "1.25rem",
-                        background: "linear-gradient(90deg, #F47B20 0%, #fbbf24 55%, #F47B20 100%)",
-                        backgroundSize: "200% auto",
-                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                        animation: "gradText 3s ease infinite",
-                        letterSpacing: "-0.02em",
-                      }}>
-                        IIT Roorkee
-                      </span>
-                    </motion.div>
-
-                    <span style={{
-                      display: "inline-flex", alignItems: "center", gap: 6, alignSelf: "flex-start",
-                      background: `${f.accent}18`, color: f.accent,
-                      border: `1px solid ${f.accent}35`,
-                      padding: "4px 14px", borderRadius: 50,
-                      fontSize: 11, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase",
-                    }}>
-                      <Zap size={10} /> Operations
-                    </span>
-
-                    <div>
-                      <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.45rem", color: "#fff", marginBottom: 4, lineHeight: 1.2 }}>{f.name}</h3>
-                      <RoleTags role={f.role} accent={f.accent} />
-                    </div>
-
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                      {f.edu && (
-                        <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
-                          <GraduationCap size={13} color={f.accent} /> {f.edu}
-                        </div>
-                      )}
-                    </div>
-
-                    <p style={{ color: "rgba(255,255,255,.58)", lineHeight: 1.72, fontSize: 13.5, flex: 1 }}>{f.bio}</p>
-
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                      {f.skills.slice(0, 4).map((s, si) => (
-                        <motion.span
-                          key={s}
-                          initial={{ opacity: 0, scale: .7 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: idx * 0.1 + si * 0.05 + 0.3 }}
-                          style={{
-                            padding: "3px 10px", borderRadius: 50, fontSize: 11,
-                            background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.12)",
-                            color: "rgba(255,255,255,.72)", fontWeight: 500,
-                          }}
-                        >{s}</motion.span>
-                      ))}
-                    </div>
-
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                      {f.socials.linkedin && <SocialBtn href={f.socials.linkedin}  icon={Linkedin} label="LinkedIn"  accent={f.accent} />}
-                      {f.socials.instagram && <SocialBtn href={f.socials.instagram} icon={IgIcon}   label="Instagram" accent={f.accent} />}
-                      {f.socials.whatsapp && <SocialBtn href={f.socials.whatsapp}  icon={WaIcon}   label="WhatsApp"  accent={f.accent} />}
-                    </div>
-                  </div>
-
-                  {/* ── Right: photo column ── */}
-                  <div className="team-photo-col" style={{
-                    width: 420, flexShrink: 0,
-                    background: `linear-gradient(160deg, rgba(244,123,32,.22) 0%, rgba(251,191,36,.12) 60%, rgba(244,123,32,.1) 100%)`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    position: "relative", overflow: "hidden", padding: "28px 20px",
-                  }}>
-                    <div style={{ position: "absolute", top: -30, right: -30, width: 130, height: 130, borderRadius: "50%", background: `radial-gradient(circle, ${f.accent}44 0%, transparent 70%)`, animation: "orbDrift1 6s ease-in-out infinite" }} />
-                    <div style={{ position: "absolute", bottom: -20, left: -20, width: 100, height: 100, borderRadius: "50%", background: `radial-gradient(circle, ${f.accent}28 0%, transparent 70%)`, animation: "orbDrift2 8s ease-in-out infinite" }} />
-
-                    {[
-                      { text: f.skills[0], pos: { top: 16, left: 6 } },
-                      { text: f.skills[1], pos: { top: 16, right: 6 } },
-                      { text: f.skills[3], pos: { top: "46%", left: 4 } },
-                      { text: f.skills[2], pos: { top: "46%", right: 4 } },
-                    ].map(({ text, pos }, si) => text && (
-                      <motion.div
-                        key={text}
-                        className="team-float-tag"
-                        initial={{ opacity: 0, scale: .5 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: idx * 0.1 + si * 0.08 + 0.35, type: "spring", bounce: 0.4 }}
-                        style={{
-                          position: "absolute", ...pos, zIndex: 3,
-                          background: "rgba(12,12,24,.62)", border: `1px solid ${f.accent}66`,
-                          borderRadius: 8, padding: "4px 9px",
-                          fontSize: 10, color: f.accent, fontWeight: 700,
-                          backdropFilter: "blur(4px)",
-                          boxShadow: "0 2px 8px rgba(0,0,0,.35)",
-                          maxWidth: "42%", whiteSpace: "nowrap",
-                          overflow: "hidden", textOverflow: "ellipsis",
-                        }}
-                      >{text}</motion.div>
-                    ))}
-
-                    <FounderPhoto founder={f} />
-                  </div>
-                </div>
-              </motion.div>
+              <TeamCard key={f.name} f={f} idx={idx} badgeIcon={Zap} badgeLabel="Operations" />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          OUR STORY
-      ══════════════════════════════════════════════════════ */}
-      <section style={{ background: "#0a0a12", padding: "88px 0" }}>
+      {/* ── OUR STORY ── */}
+      <section style={{ background: "#ffffff", padding: "80px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
         <div className="container" style={{ maxWidth: 900 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="title-bar" style={{ textAlign: "left", alignItems: "flex-start", marginBottom: 44 }}
-          >
+          <div className="title-bar" style={{ textAlign: "left", alignItems: "flex-start", marginBottom: 40 }}>
             <span className="eyebrow">Our story</span>
-            <h2 className="section-title" style={{ textAlign: "left", maxWidth: 640, color: "#fff" }}>
+            <h2 className="section-title" style={{ textAlign: "left", maxWidth: 640 }}>
               It started in an IIT Roorkee hostel room
             </h2>
-          </motion.div>
+          </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 44 }}>
             {[
@@ -927,7 +397,7 @@ export default function About() {
               `Today, College Parichay is used by thousands of students every counselling season. We've structured 7+ years of JoSAA data, built rank predictors for JEE Main and Advanced, a college explorer, a JoSAA planner, and a comparison engine — all from that same hostel room drive to make this process less chaotic for the next student.`,
             ].map((text, i) => (
               <Reveal key={i} delay={i * 0.06}>
-                <p style={{ fontSize: "1.04rem", lineHeight: 1.82, color: "rgba(255,255,255,.72)", margin: 0 }}
+                <p style={{ fontSize: "1.04rem", lineHeight: 1.82, color: "var(--ink)", margin: 0 }}
                   dangerouslySetInnerHTML={{ __html: text.replace(/"([^"]+)"/g, '<em>"$1"</em>') }} />
               </Reveal>
             ))}
@@ -936,101 +406,48 @@ export default function About() {
           <Reveal>
             <div style={{
               borderLeft: "4px solid #F47B20", borderRadius: "0 14px 14px 0",
-              background: "rgba(244,123,32,.08)", border: "1px solid rgba(244,123,32,.22)", borderLeftWidth: 4, padding: "22px 26px",
+              background: "rgba(244,123,32,.06)", padding: "22px 26px",
               display: "flex", gap: 16, marginBottom: 56,
             }}>
               <Quote size={30} color="#F47B20" style={{ flexShrink: 0, marginTop: 4 }} />
-              <p style={{ fontStyle: "italic", color: "rgba(255,255,255,.86)", fontSize: "1.08rem", lineHeight: 1.68, margin: 0 }}>
+              <p style={{ fontStyle: "italic", color: "var(--navy)", fontSize: "1.08rem", lineHeight: 1.68, margin: 0 }}>
                 "We're not a faceless portal. We're engineers who lived this chaos and decided to fix it for the next student. Every feature on College Parichay answers a question one of us once had — and found no good answer to."
               </p>
             </div>
           </Reveal>
 
-          <motion.h3
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45 }}
-            style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 22, marginBottom: 32, color: "#fff" }}
-          >
+          <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 22, marginBottom: 32, color: "var(--navy)" }}>
             How we built it — from IIT hostel to live platform
-          </motion.h3>
+          </h3>
 
           <div style={{ position: "relative" }}>
-            <div style={{
-              position: "absolute", left: 20, top: 0, bottom: 0, width: 2,
-              background: "linear-gradient(180deg, #F47B20, #7C3AED, #0EA5A4, #EC4899, #15A06E)",
-              borderRadius: 2,
-            }} />
-
+            <div style={{ position: "absolute", left: 20, top: 0, bottom: 0, width: 2, background: "rgba(244,123,32,.25)", borderRadius: 2 }} />
             {TIMELINE.map((item, i) => (
-              <motion.div
-                key={item.year}
-                initial={{ opacity: 0, x: 32, scale: .96 }}
-                whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.45, delay: i * 0.07, type: "spring", bounce: 0.25 }}
-                style={{ display: "flex", gap: 24, marginBottom: 32, position: "relative" }}
-              >
-                <motion.div
-                  className="timeline-dot"
-                  whileHover={{ scale: 1.2 }}
-                  style={{
+              <Reveal key={item.year} delay={i * 0.05}>
+                <div style={{ display: "flex", gap: 24, marginBottom: 28, position: "relative" }}>
+                  <div style={{
                     width: 42, height: 42, borderRadius: "50%", flexShrink: 0,
                     background: item.color, display: "grid", placeItems: "center",
                     fontSize: 18, zIndex: 1,
-                    boxShadow: `0 0 0 6px ${item.color}20, 0 4px 16px ${item.color}55`,
-                    cursor: "default",
-                  }}
-                >
-                  {item.icon}
-                </motion.div>
-                <motion.div
-                  whileHover={{ x: 4 }}
-                  transition={{ duration: 0.2 }}
-                  style={{ flex: 1, borderRadius: 16, background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.1)", borderLeft: `3px solid ${item.color}`, padding: "18px 22px" }}
-                >
-                  <div style={{ fontSize: 11, fontWeight: 700, color: item.color, letterSpacing: 1, textTransform: "uppercase", marginBottom: 6 }}>{item.year}</div>
-                  <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8, color: "#fff", fontSize: 15 }}>{item.title}</h4>
-                  <p style={{ fontSize: 13.5, color: "rgba(255,255,255,.62)", lineHeight: 1.72, margin: 0 }}>{item.content}</p>
-                </motion.div>
-              </motion.div>
+                  }}>
+                    {item.icon}
+                  </div>
+                  <div style={{ flex: 1, borderRadius: 16, background: "#fff", border: "1px solid rgba(0,0,0,.08)", borderLeft: `3px solid ${item.color}`, padding: "18px 22px", boxShadow: "0 2px 14px rgba(13,27,62,.05)" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: item.color, letterSpacing: 1, textTransform: "uppercase", marginBottom: 6 }}>{item.year}</div>
+                    <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8, color: "var(--navy)", fontSize: 15 }}>{item.title}</h4>
+                    <p style={{ fontSize: 13.5, color: "var(--muted)", lineHeight: 1.72, margin: 0 }}>{item.content}</p>
+                  </div>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          STATS — dark glowing
-      ══════════════════════════════════════════════════════ */}
-      <section ref={statsRef} style={{
-        background: "linear-gradient(135deg, #0c0c18 0%, #170f28 100%)",
-        padding: "88px 0", position: "relative", overflow: "hidden",
-      }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: "radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px)", backgroundSize: "26px 26px" }} />
-        <div style={{ position: "absolute", top: -60, right: -60, width: 380, height: 380, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.2) 0%, transparent 65%)", pointerEvents: "none", animation: "orbDrift1 10s ease-in-out infinite" }} />
-        <div style={{ position: "absolute", bottom: -40, left: -40, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,58,237,.16) 0%, transparent 65%)", pointerEvents: "none", animation: "orbDrift2 12s ease-in-out infinite" }} />
-
-        <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            style={{ textAlign: "center", marginBottom: 56 }}
-          >
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 14,
-              background: "rgba(244,123,32,.15)", border: "1px solid rgba(244,123,32,.3)",
-              color: "#fb923c", padding: "5px 18px", borderRadius: 50, fontSize: 12, fontWeight: 700,
-            }}>
-              By the numbers
-            </span>
-            <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,3.5vw,2.6rem)", color: "#fff", margin: 0 }}>
-              What we've built so far
-            </h2>
-          </motion.div>
-
+      {/* ── STATS ── */}
+      <section style={{ background: "#ffffff", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
+        <div className="container">
+          <SectionHead eyebrow="By the numbers" title="What we've built so far" />
           <div className="grid-4">
             <Stat target={COLLEGES.length} suffix="+" label="Colleges profiled"     color="#F47B20" />
             <Stat target={EXAMS.length}   suffix=""  label="Entrance exams tracked" color="#a855f7" />
@@ -1038,149 +455,73 @@ export default function About() {
             <Stat target={5}              suffix="-yr" label="Cutoff history"       color="#EC4899" />
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 48 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 44 }} className="about-highlight-grid">
             {[
               { icon: "🏆", title: "AIR 3846", sub: "Co-Founder's JEE Advanced rank — built this from lived experience", color: "#F47B20" },
               { icon: "📊", title: "7 Years of Data", sub: "JoSAA cutoffs from 2019–2025 across 800+ colleges structured & verified", color: "#a855f7" },
               { icon: "🎓", title: "IIT Roorkee", sub: "Built by B.Tech students — the same IIT grind that shaped the platform", color: "#2EC4B6" },
             ].map(({ icon, title, sub, color }, i) => (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, y: 28, scale: .92 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.45, delay: i * 0.1, type: "spring", bounce: 0.3 }}
-                whileHover={{ y: -5, boxShadow: `0 20px 50px ${color}33` }}
-                style={{
-                  background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.1)",
-                  borderTop: `3px solid ${color}`,
-                  borderRadius: 16, padding: "20px 22px", textAlign: "center",
-                  cursor: "default",
-                }}
-              >
-                <div style={{ fontSize: 32, marginBottom: 10 }}>{icon}</div>
+              <Reveal key={title} delay={i * 0.08}>
                 <div style={{
-                  fontFamily: "Sora", fontWeight: 800, fontSize: 18, marginBottom: 6,
-                  background: `linear-gradient(90deg, ${color}, #fff, ${color})`,
-                  backgroundSize: "200% auto",
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  animation: "gradText 4s ease infinite",
-                }}>{title}</div>
-                <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.5)", lineHeight: 1.6 }}>{sub}</div>
-              </motion.div>
+                  background: "#fff", border: "1px solid rgba(0,0,0,.08)",
+                  borderTop: `3px solid ${color}`, borderRadius: 16,
+                  padding: "20px 22px", textAlign: "center", height: "100%",
+                  boxShadow: "0 2px 14px rgba(13,27,62,.05)",
+                }}>
+                  <div style={{ fontSize: 32, marginBottom: 10 }}>{icon}</div>
+                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 18, marginBottom: 6, color }}>{title}</div>
+                  <div style={{ fontSize: 12.5, color: "var(--muted)", lineHeight: 1.6 }}>{sub}</div>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          VALUES
-      ══════════════════════════════════════════════════════ */}
-      <section style={{ background: "#0a0a12", padding: "88px 0" }}>
+      {/* ── VALUES ── */}
+      <section style={{ background: "#ffffff", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
         <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45 }}
-            className="title-bar"
-          >
+          <div className="title-bar">
             <span className="eyebrow">What we stand for</span>
-            <h2 className="section-title" style={{ color: "#fff" }}>Our values</h2>
-            <p className="section-sub" style={{ color: "rgba(255,255,255,.6)" }}>The principles that guide every feature we build and every decision we make.</p>
-          </motion.div>
+            <h2 className="section-title">Our values</h2>
+            <p className="section-sub">The principles that guide every feature we build and every decision we make.</p>
+          </div>
           <div className="grid-3" style={{ gap: 20 }}>
             {VALUES.map((v, i) => (
-              <motion.div
-                key={v.t}
-                initial={{ opacity: 0, y: 30, scale: .93 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.45, delay: i * 0.07, type: "spring", bounce: 0.3 }}
-              >
-                <div className="value-card-about" style={{ height: "100%", borderRadius: 16, padding: "22px 24px", background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.1)", borderTop: `3px solid ${v.color}` }}>
-                  <span className="value-icon-wrap" style={{
-                    width: 50, height: 50, borderRadius: 14,
-                    display: "grid", placeItems: "center",
-                    background: `${v.color}22`,
-                  }}>
+              <Reveal key={v.t} delay={(i % 3) * 0.07}>
+                <div className="card" style={{ height: "100%", borderTop: `3px solid ${v.color}` }}>
+                  <span style={{ width: 50, height: 50, borderRadius: 14, display: "grid", placeItems: "center", background: `${v.color}14` }}>
                     <v.icon size={24} color={v.color} />
                   </span>
-                  <h3 style={{ fontFamily: "Sora", fontWeight: 700, margin: "14px 0 7px", color: "#fff" }}>{v.t}</h3>
-                  <p style={{ color: "rgba(255,255,255,.62)", lineHeight: 1.65, fontSize: 14 }}>{v.d}</p>
+                  <h3 style={{ fontFamily: "Sora", fontWeight: 700, margin: "14px 0 7px", color: "var(--navy)" }}>{v.t}</h3>
+                  <p style={{ color: "var(--muted)", lineHeight: 1.65, fontSize: 14 }}>{v.d}</p>
                 </div>
-              </motion.div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          CONTACT — dark CTA
-      ══════════════════════════════════════════════════════ */}
-      <section id="contact" style={{
-        background: "linear-gradient(135deg, #0c0c18 0%, #170f28 100%)",
-        padding: "88px 0", position: "relative", overflow: "hidden",
-      }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: "radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px)", backgroundSize: "26px 26px" }} />
-        <div style={{ position: "absolute", bottom: -60, left: -60, width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,58,237,.18) 0%, transparent 65%)", pointerEvents: "none", animation: "orbDrift2 9s ease-in-out infinite" }} />
-        <div style={{ position: "absolute", top: -40, right: -40, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.16) 0%, transparent 65%)", pointerEvents: "none", animation: "orbDrift1 11s ease-in-out infinite" }} />
-
-        <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 32, scale: .94 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55, type: "spring", bounce: 0.3 }}
-            style={{
-              maxWidth: 720, margin: "0 auto", textAlign: "center",
-              background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.1)",
-              borderRadius: 28, padding: "56px 44px",
-              boxShadow: "0 0 80px rgba(244,123,32,.08), inset 0 1px 0 rgba(255,255,255,.08)",
-            }}
-          >
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 8, -8, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 3 }}
-              style={{ fontSize: 40, marginBottom: 16, display: "inline-block" }}
-            >
-              🤝
-            </motion.div>
-            <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900, fontSize: "clamp(1.7rem,3vw,2.3rem)", color: "#fff", marginBottom: 12 }}>
+      {/* ── CONTACT ── */}
+      <section id="contact" style={{ background: "#ffffff", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
+        <div className="container">
+          <div style={{
+            maxWidth: 720, margin: "0 auto", textAlign: "center",
+            background: "#fff", border: "1px solid rgba(244,123,32,.2)",
+            borderRadius: 28, padding: "48px 40px",
+            boxShadow: "0 10px 36px rgba(13,27,62,.08)",
+          }}>
+            <div style={{ fontSize: 40, marginBottom: 16 }}>🤝</div>
+            <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900, fontSize: "clamp(1.7rem,3vw,2.3rem)", color: "var(--navy)", marginBottom: 12 }}>
               Have a question? Talk to us.
             </h2>
-            <p style={{ color: "rgba(255,255,255,.52)", marginBottom: 32, fontSize: 15, lineHeight: 1.7 }}>
+            <p style={{ color: "var(--muted)", marginBottom: 30, fontSize: 15, lineHeight: 1.7 }}>
               We reply personally — no call centres, no bots. Just two IIT engineers who built this and genuinely want to help every student navigate admissions better.
             </p>
 
-            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
-              <a
-                href="mailto:hello@collegeparichay.in"
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  background: "#F47B20", color: "#fff", padding: "13px 26px", borderRadius: 50,
-                  fontWeight: 700, fontSize: 14, textDecoration: "none", transition: "all .2s",
-                  boxShadow: "0 4px 20px rgba(244,123,32,.4)",
-                }}
-                onMouseEnter={e => { e.currentTarget.style.background = "#e0680c"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 30px rgba(244,123,32,.55)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "#F47B20"; e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 20px rgba(244,123,32,.4)"; }}
-              >
-                <Mail size={16} /> hello@collegeparichay.in
-              </a>
-              <a
-                href="tel:+918118826194"
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.2)",
-                  color: "#fff", padding: "13px 26px", borderRadius: 50,
-                  fontWeight: 700, fontSize: 14, textDecoration: "none", transition: "all .2s",
-                }}
-                onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.18)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,.1)"; e.currentTarget.style.transform = ""; }}
-              >
-                <Phone size={16} /> +91-8118826194
-              </a>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 22 }}>
+              <a href="mailto:hello@collegeparichay.in" className="btn btn-coral"><Mail size={16} /> hello@collegeparichay.in</a>
+              <a href="tel:+918118826194" className="btn btn-light"><Phone size={16} /> +91-8118826194</a>
             </div>
 
             <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
@@ -1192,17 +533,17 @@ export default function About() {
                 <a key={label} href={href} target="_blank" rel="noreferrer" style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
                   padding: "8px 16px", borderRadius: 50, fontSize: 13, fontWeight: 600,
-                  background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.15)",
-                  color: "rgba(255,255,255,.78)", textDecoration: "none", transition: "all .2s",
+                  background: "#fff", border: "1px solid rgba(0,0,0,.12)",
+                  color: "var(--navy)", textDecoration: "none", transition: "all .2s",
                 }}
-                onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.18)"; e.currentTarget.style.color = "#fff"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,.08)"; e.currentTarget.style.color = "rgba(255,255,255,.78)"; e.currentTarget.style.transform = ""; }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(244,123,32,.5)"; e.currentTarget.style.color = "#c2410c"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,.12)"; e.currentTarget.style.color = "var(--navy)"; }}
                 >
                   <Icon size={14} /> {label}
                 </a>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>

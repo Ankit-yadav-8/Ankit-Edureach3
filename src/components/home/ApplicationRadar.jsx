@@ -83,8 +83,7 @@ export default function ApplicationRadar() {
             >
               <span style={{
                 width: 7, height: 7, borderRadius: "50%",
-                background: "#22c55e", boxShadow: "0 0 8px #22c55e",
-                animation: "livePulse 2s infinite", display: "inline-block", flexShrink: 0,
+                background: "#22c55e", display: "inline-block", flexShrink: 0,
               }} />
               Live Deadlines
             </span>
@@ -197,9 +196,8 @@ export default function ApplicationRadar() {
                     }}>
                       <span style={{
                         width: 6, height: 6, borderRadius: "50%",
-                        background: t.dot, boxShadow: `0 0 7px ${t.dot}`,
+                        background: t.dot,
                         flexShrink: 0, display: "inline-block",
-                        animation: t.pulse ? "livePulse 2s infinite" : "none",
                       }} />
                       {r.status}
                     </span>
