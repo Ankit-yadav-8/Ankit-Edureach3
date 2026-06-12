@@ -350,26 +350,18 @@ function Section({ title, pill, children }) {
 const CSS = `
 .josr-page{
   --o:#F47B20; --o2:#ff9f45; --navy:#1a1a2e; --muted:#6b7280;
-  --card:rgba(255,255,255,.86); --line:rgba(13,27,62,.08);
-  background:linear-gradient(168deg,#fff8f1 0%,#fef3e8 42%,#fff7f5 100%);
+  --card:#ffffff; --line:rgba(13,27,62,.08);
+  background:#ffffff;
   color:var(--navy); min-height:100vh; position:relative; overflow-x:hidden;
+  padding-top:56px;
   font-family:'Space Grotesk','Sora',system-ui,sans-serif;
 }
-.josr-page::before{
-  content:''; position:fixed; inset:-10%; pointer-events:none; z-index:0;
-  background:
-    radial-gradient(ellipse 36% 30% at 16% 10%, rgba(244,123,32,.18) 0%, transparent 62%),
-    radial-gradient(ellipse 32% 28% at 86% 18%, rgba(99,102,241,.12) 0%, transparent 62%),
-    radial-gradient(ellipse 38% 32% at 78% 86%, rgba(14,165,164,.12) 0%, transparent 62%);
-  animation:josrDrift 18s ease-in-out infinite alternate;
-}
-@keyframes josrDrift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(2%,-1.5%,0) scale(1.05)}100%{transform:translate3d(-2%,2%,0) scale(1.02)}}
-@media (prefers-reduced-motion:reduce){.josr-page::before,.josr-page *{animation:none !important}}
+@media (prefers-reduced-motion:reduce){.josr-page *{animation:none !important}}
 .josr-page *{box-sizing:border-box}
 .josr-wrap{position:relative; z-index:1; max-width:1040px; margin:0 auto; padding:18px 22px 80px}
 
 /* action bar */
-.josr-actionbar{position:sticky; top:74px; z-index:20; display:flex; justify-content:space-between; align-items:center; max-width:1040px; margin:0 auto; padding:10px 22px 0}
+.josr-actionbar{position:sticky; top:108px; z-index:20; display:flex; justify-content:space-between; align-items:center; max-width:1040px; margin:0 auto; padding:10px 22px 0}
 .josr-back,.josr-share{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:700; padding:8px 15px; border-radius:50px; cursor:pointer; border:1px solid rgba(244,123,32,.2); transition:all .22s}
 .josr-back{background:rgba(255,255,255,.8); color:var(--navy); backdrop-filter:blur(8px)}
 .josr-back:hover{background:#fff; transform:translateX(-2px); box-shadow:0 6px 18px rgba(13,27,62,.12)}

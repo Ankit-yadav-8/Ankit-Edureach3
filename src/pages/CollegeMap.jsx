@@ -57,7 +57,7 @@ export default function CollegeMap() {
 
   return (
     <div className="page">
-      <section style={{ background: "linear-gradient(135deg,#fff7f0,#ffe8d6)", color: "var(--ink)", padding: "44px 0" }}>
+      <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "44px 0" }}>
         <div className="container">
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Interactive Map</span>
           <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.5rem)", margin: "8px 0 4px" }}>Colleges on the map</h1>

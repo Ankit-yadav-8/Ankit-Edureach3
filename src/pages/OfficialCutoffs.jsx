@@ -104,7 +104,7 @@ export default function OfficialCutoffs() {
 
   return (
     <div className="page">
-      <section style={{ background: "linear-gradient(135deg,#fff7f0,#ffe8d6)", color: "var(--ink)", padding: "44px 0", textAlign: "center" }}>
+      <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "44px 0", textAlign: "center" }}>
         <div className="container">
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Official Cutoffs</span>
           <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.9rem,4.5vw,3rem)", margin: "8px 0 6px" }}>JoSAA Cutoffs <span style={{ color: "var(--coral)" }}>2018–2025</span></h1>

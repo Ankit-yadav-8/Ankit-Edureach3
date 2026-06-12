@@ -218,7 +218,7 @@ function EnrolModal({ plan, onClose }) {
                     options={CLASS_OPTIONS}
                     placeholder="Select your current class…"
                   />
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "10px 12px", fontSize: 12.5, color: "#9a3412", fontWeight: 600 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#ffffff", border: "1px solid #fed7aa", borderRadius: 10, padding: "10px 12px", fontSize: 12.5, color: "#9a3412", fontWeight: 600 }}>
                     <BadgeCheck size={15} color="#F47B20" /> Target: {meta.targetExam}
                   </div>
                 </>

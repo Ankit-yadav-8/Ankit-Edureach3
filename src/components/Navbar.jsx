@@ -178,7 +178,7 @@ export default function Navbar({ onSearch }) {
     <>
       <nav
         style={{
-          position: "fixed", top: 3, left: 0, right: 0, zIndex: 1000,
+          position: "fixed", top: 34, left: 0, right: 0, zIndex: 1000,
           height: 68, display: "flex", alignItems: "center", justifyContent: "space-between",
           padding: "0 1.4rem",
           background: scrolled ? "rgba(250,249,247,0.96)" : "rgba(250,249,247,0.82)",
@@ -438,14 +438,14 @@ export default function Navbar({ onSearch }) {
               <button
                 onClick={openLogin}
                 className="cta-desktop nav-ghost-cta"
-                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
+                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #F47B20", background: "#fff", color: "#F47B20", fontWeight: 700, cursor: "pointer" }}
               >
                 Login
               </button>
               <button
                 onClick={openSignup}
                 className="cta-desktop nav-primary-cta"
-                style={{ padding: "9px 18px", borderRadius: 10, border: "none", background: "#F47B20", backgroundSize: "200% auto", color: "#fff", fontWeight: 700, cursor: "pointer" }}
+                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #F47B20", background: "#F47B20", color: "#fff", fontWeight: 700, cursor: "pointer" }}
               >
                 Sign Up
               </button>

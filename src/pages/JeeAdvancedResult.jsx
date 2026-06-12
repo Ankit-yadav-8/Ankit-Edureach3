@@ -458,7 +458,7 @@ const CSS = `
   --ink:#2a2342; --muted:#6c6587; --soft:#9a93b3;
   --white:#ffffff; --card:rgba(255,255,255,0.78);
   --border:rgba(244,123,32,0.18); --line:rgba(120,100,170,0.12);
-  background:linear-gradient(165deg,#fff7ef 0%,#fdf0f6 45%,#eef4ff 100%);
+  background:#ffffff;
   color:var(--ink);
   font-family:'DM Sans',sans-serif; min-height:100vh;
   position:relative; overflow-x:hidden;

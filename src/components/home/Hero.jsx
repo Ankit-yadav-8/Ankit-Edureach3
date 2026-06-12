@@ -745,7 +745,7 @@ export default function Hero({ onSearch }) {
     "300px 1fr 300px";
 
   /* ── Hero background — warm gradient on all sizes ── */
-  const heroBg = "linear-gradient(160deg, #fff7f0 0%, #fde8d4 40%, #fddcbc 72%, #fbc99a 100%)";
+  const heroBg = "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 72%, #ffffff 100%)";
 
   /* ── Dot/orb counts for performance ── */
   const dotCount  = isMobile ? 30 : isTablet ? 50 : 80;
@@ -762,7 +762,7 @@ export default function Hero({ onSearch }) {
         position: "relative",
         overflow: "hidden",           /* ← stops framer-motion x offset from causing scroll */
         background: heroBg,
-        paddingTop: isXs ? 80 : isMobile ? 90 : isTablet ? 100 : 110,
+        paddingTop: isXs ? 114 : isMobile ? 124 : isTablet ? 134 : 144,
         paddingBottom: isXs ? 40 : isMobile ? 52 : isTablet ? 60 : 70,
         minHeight: isMobile ? "auto" : isTablet ? "90vh" : "95vh",
         display: "flex",

@@ -246,7 +246,7 @@ export default function Admin() {
             </div>
           </div>
           <div style={{ background: "#fff", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #eee" }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#fff7ed", display: "grid", placeItems: "center" }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#ffffff", display: "grid", placeItems: "center" }}>
               <Clock size={22} color={ORANGE} />
             </div>
             <div>

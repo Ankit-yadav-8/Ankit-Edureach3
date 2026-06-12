@@ -257,7 +257,7 @@ function InstitutesSection() {
       eyebrow="College Guide"
       title={<>NITs &amp; IIITs — <span className="accent">Know Before You Choose</span></>}
       sub="31 NITs and 26 IIITs together offer ~31,000 seats. Here's what separates them and which ones you should target."
-      bg="linear-gradient(160deg, #fff7f0 0%, #fef3e8 50%, #fff7f0 100%)"
+      bg="linear-gradient(160deg, #ffffff 0%, #ffffff 50%, #ffffff 100%)"
     >
       {/* Institute type cards */}
       <div className="grid-3" style={{ marginBottom: 32 }}>
@@ -454,7 +454,7 @@ function CollegePickingGuide() {
       eyebrow="Step-by-step guide"
       title={<>How to pick the <span className="accent">right college</span> in JoSAA</>}
       sub="Most rank drops happen not in the exam hall — but at the choice-filling screen. Follow these 6 steps to fill smart."
-      bg="linear-gradient(160deg, #fef3e8 0%, #fde8d4 40%, #fef3e8 100%)"
+      bg="linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)"
     >
       <div className="grid-3" style={{ marginBottom: 28 }}>
         {PICK_STEPS.map((s, i) => {
@@ -513,7 +513,7 @@ function CollegePickingGuide() {
       <motion.div
         whileHover={{ scale: 1.01 }}
         style={{
-          background: "linear-gradient(135deg, #fff3e8 0%, #fde8d0 60%, #fddcbc 100%)",
+          background: "linear-gradient(135deg, #ffffff 0%, #ffffff 60%, #ffffff 100%)",
           borderRadius: 18, padding: "24px 28px",
           display: "flex", alignItems: "center", justifyContent: "space-between",
           flexWrap: "wrap", gap: 18,
@@ -551,23 +551,23 @@ export default function Home({ onSearch }) {
       {/* ── College Ticker ── */}
       <CollegeTicker />
 
-      <WaveSeparator fillTop="#fff7f0" fillBottom="#fef3e8" />
+      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
 
       {/* ── Predictor Cards ── */}
       <PredictorCards />
 
-      <WaveSeparator fillTop="#fef3e8" fillBottom="#fff7f0" />
+      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
 
       {/* ── JEE Mains Rank Counselling (80K–9L) ── */}
       <RankCounselling />
 
-      <WaveSeparator fillTop="#fff7f0" fillBottom="#fff7f0" />
+      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
 
       {/* ── JEE Main & Advanced ── */}
       <HomeSection
         eyebrow="Exams 2026"
         title={<>JEE Main & JEE Advanced — <span className="accent">choose your path</span></>}
-        bg="linear-gradient(160deg, #fff7f0 0%, #fef3e8 40%, #fff7f0 100%)"
+        bg="linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)"
         sub="Two exams, two doors to the top engineering colleges. Tap either to open its full guide, rank predictor and real cutoffs."
       >
         <div className="grid-2" style={{ gap: 24, alignItems: "stretch" }}>
@@ -577,7 +577,7 @@ export default function Home({ onSearch }) {
         {/* quick path strip */}
         <div style={{
           marginTop: 24,
-          background: "linear-gradient(135deg, #fff3e8 0%, #fde8d0 60%, #fddcbc 100%)",
+          background: "linear-gradient(135deg, #ffffff 0%, #ffffff 60%, #ffffff 100%)",
           borderRadius: 18, padding: "24px 28px",
           display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "space-around",
           boxShadow: "0 4px 24px rgba(244,123,32,.12)",
@@ -599,7 +599,7 @@ export default function Home({ onSearch }) {
         </div>
       </HomeSection>
 
-      <WaveSeparator fillTop="#fff7f0" fillBottom="#fff7f0" />
+      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
 
       {/* ── How to Pick the Right College ── */}
       <CollegePickingGuide />
@@ -612,7 +612,7 @@ export default function Home({ onSearch }) {
         eyebrow="Seat Matrix"
         title={<>Total Seats Available <span className="accent">(JoSAA 2026)</span></>}
         sub="Approximate seat distribution across IITs, NITs, IIITs and GFTIs via JoSAA counselling."
-        bg="linear-gradient(160deg, #fff7f0 0%, #fef3e8 40%, #fff7f0 100%)"
+        bg="linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)"
       >
         <div className="grid-2" style={{ gap: 24, alignItems: "start" }}>
           <div style={{
@@ -670,10 +670,10 @@ export default function Home({ onSearch }) {
       {/* ── Exam Cycle 2025–26 ── */}
       <ExamCycle />
 
-      <WaveSeparator fillTop="#fff7f0" fillBottom="#fff7f0" />
+      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
       {/* ── JEE Resources Promo Banner ── */}
       <section style={{
-        background: "linear-gradient(135deg, #fef3e8 0%, #fde8d4 50%, #fddcbc 100%)",
+        background: "linear-gradient(135deg, #ffffff 0%, #ffffff 50%, #ffffff 100%)",
         padding: "56px 0",
         position: "relative", overflow: "hidden",
         borderTop: "1px solid rgba(244,123,32,.15)",
@@ -740,7 +740,7 @@ export default function Home({ onSearch }) {
         </div>
       </section>
 
-      <WaveSeparator fillTop="#fde8d0" fillBottom="#fff7f0" />
+      <WaveSeparator fillTop="#ffffff" fillBottom="#ffffff" />
       {/* ── New Tools ── */}
       <NewTools />
 

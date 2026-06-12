@@ -428,7 +428,7 @@ export default function ExamCycle() {
   const [activePhase, setActivePhase] = useState(null);
 
   return (
-    <section id="exam-cycle" className="section" style={{ background: "linear-gradient(160deg, #fff7f0 0%, #fef3e8 40%, #fff7f0 100%)", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
+    <section id="exam-cycle" className="section" style={{ background: "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
       <div className="container">
 
         {/* Header */}

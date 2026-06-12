@@ -63,7 +63,7 @@ export default function MentorshipHome() {
       id="mentorship"
       style={{
         position: "relative", overflow: "hidden", scrollMarginTop: 80,
-        background: "linear-gradient(160deg, #fff7f0 0%, #fef3e8 45%, #fff7f0 100%)",
+        background: "linear-gradient(160deg, #ffffff 0%, #ffffff 45%, #ffffff 100%)",
         padding: "84px 0",
       }}
     >

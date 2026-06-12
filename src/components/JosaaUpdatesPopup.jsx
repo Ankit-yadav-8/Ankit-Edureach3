@@ -184,7 +184,7 @@ const CSS = `
 
 /* featured */
 .jpop-feature{display:flex; flex-direction:column; align-items:flex-start; gap:3px; width:100%; text-align:left; cursor:pointer;
-  background:linear-gradient(135deg,#fff7ed,#ffedd5); border:1.5px solid rgba(244,123,32,.4); border-radius:14px; padding:14px 16px;
+  background:linear-gradient(135deg,#ffffff,#ffedd5); border:1.5px solid rgba(244,123,32,.4); border-radius:14px; padding:14px 16px;
   transition:transform .2s, box-shadow .2s}
 .jpop-feature:hover{transform:translateY(-2px); box-shadow:0 12px 28px rgba(244,123,32,.22)}
 .jpop-feature__tag{font-size:9.5px; font-weight:800; letter-spacing:.6px; color:#fff; background:#ef4444; padding:3px 8px; border-radius:5px}

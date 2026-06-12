@@ -47,7 +47,7 @@ const SUBJECTS = [
     short: "Phy",
     icon: Zap,
     color: "#f97316",
-    light: "#fff7ed",
+    light: "#ffffff",
     chapters: 25,
     desc: "Mechanics, Electrodynamics, Optics, Modern Physics",
     gradient: "linear-gradient(135deg, #ea580c 0%, #dc2626 100%)",

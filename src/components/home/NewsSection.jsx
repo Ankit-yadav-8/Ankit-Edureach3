@@ -46,7 +46,7 @@ export default function NewsSection() {
   const shown = NEWS.slice(0, count);
 
   return (
-    <section className="section" id="news" style={{ background: "linear-gradient(160deg, #fff7f0 0%, #fef3e8 40%, #fff7f0 100%)", paddingTop: 0, position: "relative", overflow: "hidden" }}>
+    <section className="section" id="news" style={{ background: "#ffffff", paddingTop: 0, position: "relative", overflow: "hidden" }}>
       {/* Breaking news ticker */}
       <NewsTicker />
 

@@ -32,7 +32,7 @@ const TOOLS = [
 export default function NewTools() {
   const nav = useNavigate();
   return (
-    <section className="section" style={{ background: "linear-gradient(160deg, #fef3e8 0%, #fde8d4 40%, #fef3e8 100%)", position: "relative", overflow: "hidden" }}>
+    <section className="section" style={{ background: "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)", position: "relative", overflow: "hidden" }}>
       <div className="container">
         <div className="title-bar">
           <span className="eyebrow"><Rocket size={13} style={{ marginRight: 5, verticalAlign: "-2px" }} /> Just launched</span>

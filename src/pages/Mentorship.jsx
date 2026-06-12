@@ -225,7 +225,7 @@ function Hero({ cfg, scrollToEnrol }) {
   return (
     <section style={{
       position: "relative", overflow: "hidden",
-      background: "linear-gradient(160deg, #fff7f0 0%, #fde8d4 45%, #fddcbc 100%)",
+      background: "linear-gradient(160deg, #ffffff 0%, #ffffff 45%, #ffffff 100%)",
       paddingTop: 132, paddingBottom: 80,
     }}>
       {/* warm radial overlays */}
@@ -344,7 +344,7 @@ function ForYou({ cfg }) {
 function WhyFoundation({ cfg }) {
   if (!cfg.whyFoundation) return null;
   return (
-    <Section style={{ background: "linear-gradient(160deg,#fff7f0,#fef3e8)" }}>
+    <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
       <SectionTitle kicker="Why it matters">Why <Accent>Foundation</Accent> Matters</SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18 }}>
         {cfg.whyFoundation.map((t, i) => (
@@ -399,7 +399,7 @@ function HowWeGuide({ cfg }) {
 function TestAnalysis({ m }) {
   const trend = m.test.trend.map((v, i) => ({ t: `T${i + 1}`, v }));
   return (
-    <Section style={{ background: "linear-gradient(160deg,#fff7f0,#fef3e8)" }}>
+    <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
       <SectionTitle kicker="Every test counts" sub="No test is just a score. Every week your mentor turns it into a one-page action plan.">
         Weekly <Accent>Test Analysis</Accent>
       </SectionTitle>
@@ -468,7 +468,7 @@ function TestAnalysis({ m }) {
             </div>
 
             {/* fix list */}
-            <div style={{ background: "#fff7ed", border: "1px solid rgba(244,123,32,.22)", borderRadius: 12, padding: "12px 14px" }}>
+            <div style={{ background: "#ffffff", border: "1px solid rgba(244,123,32,.22)", borderRadius: 12, padding: "12px 14px" }}>
               <div style={{ fontSize: 12, fontWeight: 800, color: "#9a3412", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
                 <ListChecks size={14} /> Your fix-list before next test
               </div>
@@ -544,7 +544,7 @@ function LiveTracking({ m }) {
   const maxH = Math.max(...m.weekHours);
   const maxIdx = m.weekHours.indexOf(maxH);
   return (
-    <Section style={{ background: "linear-gradient(160deg,#fff7f0,#fef3e8)" }}>
+    <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
       <SectionTitle kicker="Always on" sub="Your mentor sees your effort live — so nothing ever slips through the cracks.">
         Live Student <Accent>Tracking</Accent>
       </SectionTitle>
@@ -572,7 +572,7 @@ function LiveTracking({ m }) {
               {m.liveTiles.map(({ icon, c, v, l }) => {
                 const Icon = ICONS[icon];
                 return (
-                  <div key={l} style={{ background: "#fff7f0", border: "1px solid rgba(244,123,32,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
+                  <div key={l} style={{ background: "#ffffff", border: "1px solid rgba(244,123,32,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
                     <Icon size={18} color={c} style={{ marginBottom: 6 }} />
                     <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 17, color: INK }}>{v}</div>
                     <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{l}</div>
@@ -658,7 +658,7 @@ function ParentBooklet({ m }) {
               );
             })}
 
-            <div style={{ background: "#fff7ed", border: "1px solid rgba(244,123,32,.22)", borderRadius: 12, padding: "12px 14px", marginTop: 16 }}>
+            <div style={{ background: "#ffffff", border: "1px solid rgba(244,123,32,.22)", borderRadius: 12, padding: "12px 14px", marginTop: 16 }}>
               <div style={{ fontSize: 11.5, fontWeight: 800, color: "#9a3412", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
                 <Star size={13} /> Mentor's remark
               </div>
@@ -688,7 +688,7 @@ function ParentBooklet({ m }) {
 function TwoYearPlan({ cfg }) {
   if (!cfg.twoYearPlan) return null;
   return (
-    <Section style={{ background: "linear-gradient(160deg,#fff7f0,#fef3e8)" }}>
+    <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
       <SectionTitle kicker="The roadmap">The <Accent>2-Year</Accent> Plan</SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 18 }}>
         {cfg.twoYearPlan.map((p, i) => (
@@ -743,7 +743,7 @@ function Testimonials({ cfg }) {
 function Enrol({ cfg }) {
   const { open: openEnrol } = useEnrol();
   return (
-    <section id="enrol" style={{ padding: "92px 0", background: "linear-gradient(160deg,#fff7f0,#fde8d4)", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
+    <section id="enrol" style={{ padding: "92px 0", background: "linear-gradient(160deg,#ffffff,#ffffff)", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: -60, left: "10%", width: 360, height: 280, borderRadius: "50%", background: "radial-gradient(circle,rgba(244,123,32,.16),transparent 65%)", pointerEvents: "none" }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <SectionTitle kicker="Limited spots" sub="One-time enrolment. Serious aspirants only. Pick your track below.">
@@ -843,7 +843,7 @@ function Contact({ cfg }) {
 function Faqs({ cfg }) {
   const [open, setOpen] = useState(0);
   return (
-    <Section style={{ background: "linear-gradient(160deg,#fff7f0,#fef3e8)" }}>
+    <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
       <SectionTitle kicker="Questions">Frequently Asked <Accent>Questions</Accent></SectionTitle>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         {cfg.faqs.map((q, i) => {
@@ -993,7 +993,7 @@ const JOURNEY_STEPS = [
 
 function JourneyBrand() {
   return (
-    <section style={{ padding: "92px 0", background: "linear-gradient(160deg, #fff7f0 0%, #fde8d4 45%, #fddcbc 100%)", position: "relative", overflow: "hidden" }}>
+    <section style={{ padding: "92px 0", background: "linear-gradient(160deg, #ffffff 0%, #ffffff 45%, #ffffff 100%)", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: -60, left: "8%", width: 360, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.18), transparent 65%)", pointerEvents: "none" }} />
       <div style={{ position: "absolute", bottom: -40, right: "10%", width: 280, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.12), transparent 65%)", pointerEvents: "none" }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>

@@ -25,7 +25,7 @@ const ALL = [...ITEMS, ...ITEMS];
 export default function CollegeTicker() {
   return (
     <div style={{
-      background: "linear-gradient(135deg, #fff7f0 0%, #fef3e8 100%)",
+      background: "linear-gradient(135deg, #ffffff 0%, #ffffff 100%)",
       borderTop: "1px solid rgba(244,123,32,.18)",
       borderBottom: "1px solid rgba(244,123,32,.18)",
       padding: "14px 0",
@@ -33,9 +33,9 @@ export default function CollegeTicker() {
       position: "relative",
     }}>
       {/* Left fade */}
-      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to right, #fff7f0, transparent)", zIndex: 2, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to right, #ffffff, transparent)", zIndex: 2, pointerEvents: "none" }} />
       {/* Right fade */}
-      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to left, #fff7f0, transparent)", zIndex: 2, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to left, #ffffff, transparent)", zIndex: 2, pointerEvents: "none" }} />
 
       <motion.div
         animate={{ x: ["0%", "-50%"] }}

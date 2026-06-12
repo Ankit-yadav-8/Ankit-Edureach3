@@ -302,12 +302,12 @@ const COACHING = [
 /* ── Helpers ── */
 function diffIndex(val) {
   if (val >= 75) return { label: "Hard",   color: "#EF4444", bg: "#fee2e2" };
-  if (val >= 65) return { label: "Medium", color: "#F97316", bg: "#fff3e8" };
+  if (val >= 65) return { label: "Medium", color: "#F97316", bg: "#ffffff" };
   return               { label: "Easy",   color: "#15A06E", bg: "#d1fae5" };
 }
 function labelMeta(label) {
   if (label.includes("Tough"))     return { color: "#EF4444", bg: "#fee2e2" };
-  if (label.includes("Difficult")) return { color: "#F97316", bg: "#fff3e8" };
+  if (label.includes("Difficult")) return { color: "#F97316", bg: "#ffffff" };
   return                                  { color: "#15A06E", bg: "#d1fae5" };
 }
 
@@ -1089,7 +1089,7 @@ export default function JeeMain() {
           </div>
 
           {/* Book list */}
-          <div className="card" style={{ marginTop: 16, background: "linear-gradient(135deg,#fff3e8,#fde8d0)", border: "1px solid rgba(244,123,32,.2)" }}>
+          <div className="card" style={{ marginTop: 16, background: "linear-gradient(135deg,#ffffff,#ffffff)", border: "1px solid rgba(244,123,32,.2)" }}>
             <h4 style={{ fontFamily: "Sora", fontWeight: 800, marginBottom: 16, color: "#1a1a2e" }}>📚 Complete Book List — JEE Main</h4>
             <div className="grid-3" style={{ gap: 14 }}>
               {[

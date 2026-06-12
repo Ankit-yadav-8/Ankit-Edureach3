@@ -37,7 +37,7 @@ const CARDS = [
 export default function PredictorCards() {
   const nav = useNavigate();
   return (
-    <section className="section" style={{ background: "linear-gradient(160deg, #fff7f0 0%, #fef3e8 40%, #fff7f0 100%)", position: "relative", overflow: "hidden" }}>
+    <section className="section" style={{ background: "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)", position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         {/* Background grid */}
         <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(244,123,32,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(244,123,32,.04) 1px,transparent 1px)", backgroundSize: "44px 44px", pointerEvents: "none" }} />

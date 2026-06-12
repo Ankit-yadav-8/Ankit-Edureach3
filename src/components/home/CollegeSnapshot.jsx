@@ -127,7 +127,7 @@ export default function CollegeSnapshot() {
   const nav = useNavigate();
 
   return (
-    <section style={{ background: "linear-gradient(160deg, #fef3e8 0%, #fde8d4 40%, #fef3e8 100%)", padding: "72px 0", position: "relative", overflow: "hidden" }}>
+    <section style={{ background: "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)", padding: "72px 0", position: "relative", overflow: "hidden" }}>
       <div className="container">
 
         {/* Header */}

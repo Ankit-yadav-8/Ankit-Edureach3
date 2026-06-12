@@ -111,7 +111,7 @@ const PAPER_CHARACTER = [
     time: "9:00 AM – 12:00 PM",
     rating: "Moderate → Difficult",
     color: "#F97316",
-    bg: "#fff3e8",
+    bg: "#ffffff",
     summary:
       "Generally rated Moderate to Difficult. It usually features a balanced mix of conceptual problems, with a higher tendency for non-negative numerical / integer-type questions where there is no negative marking.",
     points: [
@@ -353,13 +353,13 @@ const COACHING = [
 /* ── Helpers ── */
 function diffIndex(val) {
   if (val >= 80) return { label: "Very Hard", color: "#EF4444", bg: "#fee2e2" };
-  if (val >= 70) return { label: "Hard",      color: "#F97316", bg: "#fff3e8" };
+  if (val >= 70) return { label: "Hard",      color: "#F97316", bg: "#ffffff" };
   if (val >= 60) return { label: "Medium",    color: "#EAB308", bg: "#fefce8" };
   return               { label: "Easy",      color: "#15A06E", bg: "#d1fae5" };
 }
 function labelMeta(label) {
   if (label === "Very Hard")      return { color: "#EF4444", bg: "#fee2e2" };
-  if (label.includes("Hard"))    return { color: "#F97316", bg: "#fff3e8" };
+  if (label.includes("Hard"))    return { color: "#F97316", bg: "#ffffff" };
   return                                { color: "#15A06E", bg: "#d1fae5" };
 }
 

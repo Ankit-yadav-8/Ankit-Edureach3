@@ -22,7 +22,7 @@ export default function SearchResults() {
 
   return (
     <div className="page">
-      <section style={{ background: "linear-gradient(135deg,#fff7f0,#ffe8d6)", color: "var(--ink)", padding: "40px 0" }}>
+      <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "40px 0" }}>
         <div className="container">
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Smart Search</span>
           <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,4vw,2.2rem)", margin: "8px 0 4px" }}>

@@ -299,7 +299,7 @@ export default function TopColleges() {
   const typeInfo = TYPES.find((t) => t.id === type);
 
   return (
-    <section className="section" id="colleges" style={{ background: "linear-gradient(160deg, #fff7f0 0%, #fef3e8 40%, #fff7f0 100%)", position: "relative", overflow: "hidden" }}>
+    <section className="section" id="colleges" style={{ background: "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)", position: "relative", overflow: "hidden" }}>
       <div className="container">
 
         {/* Section header */}

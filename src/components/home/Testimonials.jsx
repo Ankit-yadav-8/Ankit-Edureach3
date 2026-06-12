@@ -9,7 +9,7 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
   return (
-    <section className="section" style={{ background: "linear-gradient(160deg, #fff7f0 0%, #fef3e8 40%, #fff7f0 100%)", position: "relative", overflow: "hidden" }}>
+    <section className="section" style={{ background: "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)", position: "relative", overflow: "hidden" }}>
       {/* Ambient glow */}
       <div style={{ position: "absolute", top: -60, left: "20%", width: 400, height: 300, borderRadius: "50%", background: "radial-gradient(circle,rgba(244,123,32,.1) 0%,transparent 65%)", pointerEvents: "none" }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>

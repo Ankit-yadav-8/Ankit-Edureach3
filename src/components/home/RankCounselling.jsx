@@ -120,7 +120,7 @@ export default function RankCounselling() {
   return (
     <section
       id="rank-counselling"
-      style={{ position: "relative", overflow: "hidden", background: "linear-gradient(160deg, #fff7f0 0%, #fef3e8 45%, #fff7f0 100%)", scrollMarginTop: 80 }}
+      style={{ position: "relative", overflow: "hidden", background: "linear-gradient(160deg, #ffffff 0%, #ffffff 45%, #ffffff 100%)", scrollMarginTop: 80 }}
     >
       {/* ambient glow */}
       <div style={{ position: "absolute", top: -80, left: "12%", width: 420, height: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.14) 0%, transparent 65%)", pointerEvents: "none" }} />
@@ -287,7 +287,7 @@ export default function RankCounselling() {
                       <p style={{ color: "#1a1a2e", fontSize: "1.08rem", lineHeight: 1.65, fontWeight: 500, marginBottom: 16, position: "relative", zIndex: 1 }}>“{s.quote}”</p>
 
                       {/* notable note */}
-                      <div style={{ display: "flex", alignItems: "flex-start", gap: 9, background: "linear-gradient(135deg,#fff7f0,#fef0e2)", border: "1px solid rgba(244,123,32,.25)", borderRadius: 12, padding: "12px 14px", marginBottom: 20 }}>
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: 9, background: "linear-gradient(135deg,#ffffff,#ffffff)", border: "1px solid rgba(244,123,32,.25)", borderRadius: 12, padding: "12px 14px", marginBottom: 20 }}>
                         <TrendingUp size={17} color="#F47B20" style={{ flexShrink: 0, marginTop: 1 }} />
                         <span style={{ fontSize: ".84rem", color: "#7c3a12", lineHeight: 1.5, fontWeight: 600 }}>
                           <strong style={{ color: "#ea580c" }}>What worked:</strong> {s.note}

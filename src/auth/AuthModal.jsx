@@ -798,7 +798,7 @@ export default function AuthModal() {
                 <motion.div key="slow" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                   style={{
                     marginTop: 10,
-                    background: "linear-gradient(135deg,#fff7ed,#fef3e8)",
+                    background: "linear-gradient(135deg,#ffffff,#ffffff)",
                     border: "1px solid rgba(244,123,32,.22)",
                     borderRadius: 10,
                     padding: "10px 14px",
