@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
   <head>
+    <!-- SPA Redirect (GitHub Pages / Netlify fallback) -->
     <script type="text/javascript">
       (function (l) {
         if (l.search[1] === '/') {
@@ -11,45 +12,212 @@
         }
       })(window.location);
     </script>
+
     <meta charset="UTF-8" />
-
-    <!-- ✅ Browser Tab Favicon (SVG) -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23F05A28'/><text x='50' y='72' font-family='Arial Black, sans-serif' font-size='54' font-weight='900' text-anchor='middle' fill='white'>CP</text></svg>" />
-
-    <!-- ✅ Apple Touch Icon (PNG generated from SVG via canvas) -->
-    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23F05A28'/><text x='50' y='72' font-family='Arial Black, sans-serif' font-size='54' font-weight='900' text-anchor='middle' fill='white'>CP</text></svg>" />
-
-    <!-- ✅ Apple PWA Meta -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="CollegeParichay" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="College parichay — India's most accurate JEE rank predictor & college discovery platform. Predict JEE Main & Advanced ranks, find colleges, track counselling deadlines."
-    />
-    <title>CollegeParichay — Know Your Rank. Find Your College.</title>
+
+    <!-- ═══════════════════════════════════════════════
+         PRIMARY SEO META
+    ═══════════════════════════════════════════════ -->
+
+    <!-- Primary title: lead with the strongest keyword phrase -->
+    <title>CollegeParichay — JEE Rank Predictor, College Reviews & Counselling Guide 2025</title>
+
+    <!-- Keep under 160 chars; front-load keywords Google cares about -->
+    <meta name="description"
+      content="India's most trusted JEE rank predictor & college discovery platform. Get accurate JEE Main and JEE Advanced rank predictions, read verified college reviews, compare cutoffs, and track JoSAA / CSAB / State counselling deadlines — all in one place." />
+
+    <!-- Comma-separated keyword list (secondary signal, still useful for Bing) -->
+    <meta name="keywords"
+      content="JEE rank predictor, JEE Main rank predictor 2025, JEE Advanced rank predictor, college reviews India, NIT cutoff, IIT cutoff, JoSAA counselling, CSAB counselling, best engineering colleges India, college parichay, college comparison, JEE percentile to rank, JEE Main result 2025" />
+
+    <!-- Authorship & publisher -->
+    <meta name="author" content="CollegeParichay" />
+    <meta name="publisher" content="CollegeParichay" />
+
+    <!-- Tell Google to index this page and follow all links -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+    <!-- Canonical: prevents duplicate-content penalties (change to your real domain) -->
+    <link rel="canonical" href="https://www.collegeparichay.com/" />
+
+    <!-- Locale & language signals -->
+    <meta name="language" content="English" />
+    <meta property="og:locale" content="en_IN" />
+    <link rel="alternate" hreflang="en-in" href="https://www.collegeparichay.com/" />
+    <link rel="alternate" hreflang="en"    href="https://www.collegeparichay.com/" />
+
+    <!-- ═══════════════════════════════════════════════
+         OPEN GRAPH (Facebook, WhatsApp, LinkedIn shares)
+    ═══════════════════════════════════════════════ -->
+    <meta property="og:type"         content="website" />
+    <meta property="og:url"          content="https://www.collegeparichay.com/" />
+    <meta property="og:site_name"    content="CollegeParichay" />
+    <meta property="og:title"
+      content="CollegeParichay — JEE Rank Predictor, College Reviews & Counselling Guide 2025" />
+    <meta property="og:description"
+      content="Predict your JEE Main & Advanced rank instantly, read verified college reviews, compare NIT/IIT cutoffs, and never miss a counselling deadline." />
+    <!-- Replace with your real OG image (1200×630 px) hosted on your domain -->
+    <meta property="og:image"        content="https://www.collegeparichay.com/og-image.png" />
+    <meta property="og:image:width"  content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt"    content="CollegeParichay — JEE Rank Predictor & College Discovery" />
+
+    <!-- ═══════════════════════════════════════════════
+         TWITTER / X CARD
+    ═══════════════════════════════════════════════ -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:site"        content="@CollegeParichay" />
+    <meta name="twitter:creator"     content="@CollegeParichay" />
+    <meta name="twitter:title"
+      content="CollegeParichay — JEE Rank Predictor, College Reviews & Counselling 2025" />
+    <meta name="twitter:description"
+      content="India's most accurate JEE rank predictor. Compare colleges, read real reviews, track JoSAA cutoffs & counselling deadlines." />
+    <meta name="twitter:image"       content="https://www.collegeparichay.com/og-image.png" />
+    <meta name="twitter:image:alt"   content="CollegeParichay — Know Your Rank. Find Your College." />
+
+    <!-- ═══════════════════════════════════════════════
+         STRUCTURED DATA — JSON-LD
+         Enables Google Rich Results: sitelinks searchbox,
+         star ratings, breadcrumbs, FAQ snippets.
+         This is the single biggest organic SEO lever.
+    ═══════════════════════════════════════════════ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://www.collegeparichay.com/#website",
+          "url": "https://www.collegeparichay.com/",
+          "name": "CollegeParichay",
+          "description": "India's most accurate JEE rank predictor and college discovery platform",
+          "inLanguage": "en-IN",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.collegeparichay.com/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://www.collegeparichay.com/#organization",
+          "name": "CollegeParichay",
+          "url": "https://www.collegeparichay.com/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.collegeparichay.com/logo.png",
+            "width": 180,
+            "height": 60
+          },
+          "sameAs": [
+            "https://twitter.com/CollegeParichay",
+            "https://www.instagram.com/CollegeParichay",
+            "https://www.linkedin.com/company/collegeparichay",
+            "https://www.youtube.com/@CollegeParichay"
+          ]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://www.collegeparichay.com/#webpage",
+          "url": "https://www.collegeparichay.com/",
+          "name": "JEE Rank Predictor, College Reviews & Counselling Guide 2025 — CollegeParichay",
+          "isPartOf": { "@id": "https://www.collegeparichay.com/#website" },
+          "publisher": { "@id": "https://www.collegeparichay.com/#organization" },
+          "description": "Predict your JEE Main & Advanced rank, read verified college reviews, compare NIT and IIT cutoffs, and track counselling deadlines.",
+          "inLanguage": "en-IN",
+          "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.collegeparichay.com/" }
+            ]
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How accurate is CollegeParichay's JEE rank predictor?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "CollegeParichay uses historical JEE Main and JEE Advanced data combined with real-time percentile-to-rank mapping to provide highly accurate rank predictions. Predictions are updated after every official NTA result."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I read genuine college reviews on CollegeParichay?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. CollegeParichay features verified reviews from current students and alumni covering academics, placements, hostel, faculty, and campus life for NITs, IITs, IIITs, and other top engineering colleges in India."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does CollegeParichay cover JoSAA and state counselling deadlines?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. CollegeParichay tracks JoSAA, CSAB, and all major state-level counselling (MHT-CET, KCET, AP EAMCET, TS EAMCET, etc.) with deadline reminders and round-wise cutoff data."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I compare colleges on CollegeParichay?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Use the College Comparison tool to compare any two or more colleges side-by-side on placement stats, NIRF rankings, cutoff ranks, available branches, fees, and student reviews."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- ═══════════════════════════════════════════════
+         FAVICONS & PWA
+    ═══════════════════════════════════════════════ -->
+    <link rel="icon" type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23F05A28'/><text x='50' y='72' font-family='Arial Black, sans-serif' font-size='54' font-weight='900' text-anchor='middle' fill='white'>CP</text></svg>" />
+    <link rel="apple-touch-icon" sizes="180x180"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23F05A28'/><text x='50' y='72' font-family='Arial Black, sans-serif' font-size='54' font-weight='900' text-anchor='middle' fill='white'>CP</text></svg>" />
+
+    <!-- Apple PWA Meta -->
+    <meta name="apple-mobile-web-app-capable"         content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title"            content="CollegeParichay" />
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#F05A28" />
 
-    <!-- Leaflet -->
+    <!-- ═══════════════════════════════════════════════
+         PERFORMANCE & THIRD-PARTY
+    ═══════════════════════════════════════════════ -->
+
+    <!-- DNS prefetch for external origins loaded at runtime -->
+    <link rel="dns-prefetch"    href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch"    href="//fonts.gstatic.com" />
+    <link rel="dns-prefetch"    href="//unpkg.com" />
+    <link rel="preconnect"      href="https://fonts.googleapis.com" />
+    <link rel="preconnect"      href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet" />
 
-    <!-- ✅ Dynamically generate apple-touch-icon as PNG for full Apple compatibility -->
+    <!-- Leaflet JS (deferred) -->
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Dynamic apple-touch-icon PNG fallback -->
     <script>
       (function () {
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
@@ -58,14 +226,21 @@
             font-weight="900" text-anchor="middle" fill="white">CP</text>
         </svg>`;
         const blob = new Blob([svg], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
+        const url  = URL.createObjectURL(blob);
         const link = document.querySelector('link[rel="apple-touch-icon"]');
         if (link) link.href = url;
       })();
     </script>
 
-    <!-- Google Analytics placeholder -->
-    <!-- GA tag here -->
+    <!-- Google Analytics — replace UA/G-XXXXXX with your real Measurement ID -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
   </head>
   <body>
     <div id="root"></div>
