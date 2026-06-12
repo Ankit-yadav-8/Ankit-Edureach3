@@ -32,7 +32,7 @@ export default function NewsDetail() {
         <div className="grid-3">
           {related.map((r, i) => (
             <Reveal key={r.slug} delay={i * 0.06}>
-              <button onClick={() => { nav(`/news/${r.slug}`); window.scrollTo({ top: 0 }); }} className="card" style={{ textAlign: "left", cursor: "pointer", width: "100%", height: "100%" }}>
+              <button onClick={() => { nav(r.link || `/news/${r.slug}`); window.scrollTo({ top: 0 }); }} className="card" style={{ textAlign: "left", cursor: "pointer", width: "100%", height: "100%" }}>
                 <div style={{ fontSize: 11.5, color: "var(--muted)" }}>{r.date}</div>
                 <h4 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "0.98rem", lineHeight: 1.35, margin: "6px 0 8px", color: "var(--navy)" }}>{r.title}</h4>
                 <span style={{ color: "var(--coral)", fontWeight: 600, fontSize: 13, display: "inline-flex", alignItems: "center", gap: 5 }}>Read <ArrowRight size={13} /></span>

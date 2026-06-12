@@ -5,6 +5,25 @@
 
 export const NEWS = [
   {
+    slug: "josaa-2026-round-1-result",
+    date: "Jun 10, 2026",
+    tags: ["JoSAA", "Round 1 Result"],
+    featured: true,
+    // Opens the dedicated, full Round 1 result page instead of the generic
+    // article view — `link` takes precedence over the /news/:slug route.
+    link: "/josaa-round-1-result-2026",
+    title: "JoSAA 2026 Round 1 Seat Allotment Result Declared",
+    excerpt:
+      "Round 1 seat allotment for all IITs, NITs, IIITs & GFTIs is out on josaa.nic.in. Decide Freeze, Float or Slide before reporting.",
+    source: "https://josaa.nic.in",
+    image: "url(https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=80) center/cover no-repeat",
+    body: [
+      "The Joint Seat Allocation Authority (JoSAA) has declared the Round 1 seat allotment result for the 2026 admission cycle on its official portal, josaa.nic.in.",
+      "Candidates can log in with their JEE roll number and password to view the institute and branch allotted to them across the 23 IITs, 31 NITs, 26 IIITs and participating GFTIs.",
+      "Every allotted candidate must now pay the seat-acceptance fee, complete online reporting and choose Freeze, Float or Slide for their seat before the deadline — the choice that decides their next round.",
+    ],
+  },
+  {
     slug: "cbse-class-12-2026-result",
     date: "May 13, 2026",
     tags: ["CBSE", "Result"],

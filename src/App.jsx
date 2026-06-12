@@ -23,6 +23,7 @@ import Compare from "./pages/Compare.jsx";
 import Shortlist from "./pages/Shortlist.jsx";
 import ForYou from "./pages/ForYou.jsx";
 import Josaa2026 from "./pages/Josaa2026.jsx";
+import JosaaRound1Result from "./pages/JosaaRound1Result.jsx";
 import CounsellingPlanner from "./pages/CounsellingPlanner.jsx";
 import CollegeMap from "./pages/CollegeMap.jsx";
 import CompareExams from "./pages/CompareExams.jsx";
@@ -31,6 +32,7 @@ import OfficialCutoffs from "./pages/OfficialCutoffs.jsx";
 import CompareTray from "./components/CompareTray.jsx";
 import Chatbot from "./components/Chatbot.jsx";
 import WhatsAppButton from "./components/WhatsAppButton.jsx";
+import JosaaUpdatesPopup from "./components/JosaaUpdatesPopup.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
 import SearchResults from "./pages/SearchResults.jsx";
 import NotFound from "./pages/NotFound.jsx";
@@ -128,6 +130,7 @@ export default function App() {
           <Route path="/shortlist" element={<Shortlist />} />
           <Route path="/for-you" element={<ForYou />} />
           <Route path="/josaa-2026" element={<Josaa2026 />} />
+          <Route path="/josaa-round-1-result-2026" element={<JosaaRound1Result />} />
           <Route path="/planner" element={<CounsellingPlanner />} />
           <Route path="/map" element={<CollegeMap />} />
           <Route path="/compare-exams" element={<CompareExams />} />
@@ -147,6 +150,7 @@ export default function App() {
       <CompareTray />
       <Chatbot />
       <WhatsAppButton />
+      <JosaaUpdatesPopup />
       <AuthModal />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>

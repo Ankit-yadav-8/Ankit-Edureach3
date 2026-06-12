@@ -61,12 +61,13 @@ export default function NewsSection() {
           {shown.map((n, i) => (
             <Reveal key={n.slug} delay={(i % 3) * 0.06}>
               <button
-                onClick={() => nav(`/news/${n.slug}`)}
+                onClick={() => nav(n.link || `/news/${n.slug}`)}
                 style={{
                   textAlign: "left", width: "100%", cursor: "pointer",
                   padding: 0, overflow: "hidden", display: "flex", flexDirection: "column",
                   height: "100%", background: "#fff", borderRadius: 16,
-                  border: "1px solid rgba(0,0,0,.08)", boxShadow: "0 2px 16px rgba(0,0,0,.07)",
+                  border: n.featured ? "1.5px solid rgba(244,123,32,.55)" : "1px solid rgba(0,0,0,.08)",
+                  boxShadow: n.featured ? "0 8px 30px rgba(244,123,32,.18)" : "0 2px 16px rgba(0,0,0,.07)",
                   transition: "box-shadow .25s, transform .25s",
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 0 0 1.5px rgba(244,123,32,.4), 0 16px 48px rgba(244,123,32,.15)"; }}
@@ -93,6 +94,12 @@ export default function NewsSection() {
                       }}>{t}</span>
                     ))}
                   </div>
+                  {/* Featured "Just out" ribbon */}
+                  {n.featured && (
+                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 2, display: "flex", alignItems: "center", gap: 4, background: "#ef4444", color: "#fff", fontSize: 10, fontWeight: 800, padding: "3px 9px", borderRadius: 20, letterSpacing: "0.5px", fontFamily: "'Space Grotesk',sans-serif", boxShadow: "0 4px 12px rgba(239,68,68,.4)" }}>
+                      🔥 JUST OUT
+                    </div>
+                  )}
                   {/* Date on image */}
                   <div style={{ position: "absolute", bottom: 10, right: 12, zIndex: 2, display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "rgba(255,255,255,.8)", fontWeight: 600 }}>
                     <Clock size={10} /> {n.date}

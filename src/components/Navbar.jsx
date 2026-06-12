@@ -5,7 +5,7 @@ import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut, Sparkles,
-  HelpCircle,
+  HelpCircle, Newspaper, Flame, Medal, Megaphone,
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -97,6 +97,31 @@ const TOOLS_MEGA = [
   },
 ];
 
+// ── "Exam Buzz" mega-menu: the old Exams tab merged with News into one ────────
+// Previously exam pages and the news section lived in two different places. They
+// are now one uniquely-named tab — "Exam Buzz" — with a Latest News column
+// (results & counselling updates) beside an Entrance Exams column.
+const EXAM_NEWS_MEGA = [
+  {
+    title: "Latest News & Results", to: "/#news", color: "#15a06e", icon: Newspaper,
+    items: [
+      { label: "🔥 JoSAA 2026 Round 1 Result", to: "/josaa-round-1-result-2026", icon: Trophy,    desc: "Seat allotment is out — Freeze/Float/Slide" },
+      { label: "JEE Advanced 2026 Result",      to: "/jee-advanced-result-2026",  icon: Medal,     desc: "Toppers, cutoffs & rank list" },
+      { label: "Counselling Schedule & Dates",  to: "/planner",                   icon: CalendarDays, desc: "Every JoSAA & CSAB round date" },
+      { label: "All News & Admission Updates",  to: "/#news",                     icon: Megaphone,  desc: "Results, admit cards & notices" },
+    ],
+  },
+  {
+    title: "Entrance Exams", to: "/exams", color: "#F47B20", icon: FileText,
+    items: [
+      { label: "All Entrance Exams", to: "/exams",            icon: FileText,  desc: "Eligibility, pattern & dates" },
+      { label: "JEE Main",           to: "/exams/jee-main",   icon: Zap,       desc: "NTA · twice a year" },
+      { label: "JEE Advanced",       to: "/exams/jee-advanced", icon: Flame,   desc: "Gateway to the IITs" },
+      { label: "Compare Exams",      to: "/compare-exams",    icon: BarChart3, desc: "JEE vs other entrances" },
+    ],
+  },
+];
+
 export default function Navbar({ onSearch }) {
   const { saved, compare } = useShortlist();
   const { isLoggedIn, user, openLogin, openSignup, logout } = useAuth();
@@ -143,7 +168,7 @@ export default function Navbar({ onSearch }) {
     { label: "Mentorship", drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
     { label: "Colleges", drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Colleges For You", to: "/for-you", match: (p) => p.startsWith("/for-you") },
-    { label: "Exams", to: "/exams", match: (p) => p.startsWith("/exam") || p.startsWith("/compare-exams") },
+    { label: "Exam Buzz", mega: EXAM_NEWS_MEGA, base: "/exams", match: (p) => p.startsWith("/exam") || p.startsWith("/compare-exams") || p.startsWith("/news") || p.startsWith("/josaa-round-1") },
     { label: "Tools", mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa"].some((x) => p.startsWith(x)) },
   ];
 
