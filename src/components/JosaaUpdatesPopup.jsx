@@ -14,7 +14,7 @@ import { useAuth } from "../auth/AuthContext.jsx";
    an interactive Freeze / Float / Slide explainer.
 ═══════════════════════════════════════════════════════════ */
 
-const POPUP_INTERVAL = 30000; // 30 seconds
+const POPUP_INTERVAL = 60000; // 1 minute
 const WA =
   "https://wa.me/917877596464?text=" +
   encodeURIComponent("Hi! I saw the JoSAA 2026 Round 1 update — I need counselling help.");
@@ -147,7 +147,7 @@ export default function JosaaUpdatesPopup() {
             <div className="jpop-foot">
               <button className="jpop-btn jpop-btn--primary" onClick={openEnrol}>Get ₹299 counselling help <ArrowRight size={15} /></button>
               <a className="jpop-btn jpop-btn--wa" href={WA} target="_blank" rel="noreferrer" onClick={close}><MessageCircle size={15} /> WhatsApp</a>
-              <span className="jpop-foot__note"><Clock size={12} /> Updates refresh every 30s</span>
+              <span className="jpop-foot__note"><Clock size={12} /> Updates refresh every minute</span>
             </div>
           </motion.div>
         </motion.div>
