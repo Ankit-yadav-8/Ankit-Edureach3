@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   GraduationCap, Github, Linkedin, Dribbble, Mail, Phone,
-  Instagram, Facebook, Heart, Sparkles, Twitter, Youtube,
-  Send, MessageCircle, MapPin, Code2, ArrowUpRight,
+  Instagram, Heart, Sparkles, Youtube,
+  MessageCircle, MapPin, Code2, ArrowUpRight,
 } from "lucide-react";
 import { TEAM } from "../data/team.js";
 
@@ -393,12 +393,9 @@ export default function Footer() {
           </div>
           <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
             {[
-              { Icon: Instagram, url: " https://www.instagram.com/collegeparichay?igsh=YnN6eGJwMWt1a21o&utm_source=qr", label: "Instagram" },
-              { Icon: Facebook, url: "https://facebook.com", label: "Facebook" },
-              { Icon: Twitter, url: "https://twitter.com", label: "Twitter / X" },
               { Icon: Linkedin, url: "https://www.linkedin.com/company/college-parichay/", label: "LinkedIn" },
-              { Icon: Youtube, url: "https://youtube.com/@collegeparichay?si=jB_0mk8J6BSaKjzx", label: "YouTube" },
-              { Icon: Send, url: "https://telegram.org", label: "Telegram" },
+              { Icon: Instagram, url: "https://www.instagram.com/collegeparichay", label: "Instagram" },
+              { Icon: Youtube, url: "https://www.youtube.com/@CollegeParichay-2626", label: "YouTube" },
               { Icon: MessageCircle, url: "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t", label: "WhatsApp" },
             ].map(({ Icon, url, label }) => (
               <a
