@@ -119,15 +119,15 @@ function DevCard({ t, index = 0 }) {
           className="fdev-initials"
           style={{
             position: "relative",
-            width: 54,
-            height: 54,
-            borderRadius: 12,
+            width: 72,
+            height: 72,
+            borderRadius: 14,
             display: "grid",
             placeItems: "center",
             background: `linear-gradient(135deg, ${t.accent} 0%, #ea580c 100%)`,
             fontFamily: "Sora, sans-serif",
             fontWeight: 900,
-            fontSize: "1.05rem",
+            fontSize: "1.25rem",
             letterSpacing: "-0.5px",
             color: "#fff",
             flexShrink: 0,
@@ -201,10 +201,15 @@ export default function Footer() {
           letter-spacing: .5px; text-transform: uppercase; color: #fff;
           white-space: nowrap;
         }
-        .fteam-badge { animation: ftBadgePulse 2.6s ease-in-out infinite; }
-        @keyframes ftBadgePulse {
-          0%,100% { box-shadow: 0 0 12px rgba(249,115,22,0.45); }
-          50% { box-shadow: 0 0 22px rgba(249,115,22,0.75); }
+        .fteam-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.2rem;
+          max-width: 1080px;
+          margin: 0 auto;
+        }
+        @media (max-width: 880px) {
+          .fteam-grid { grid-template-columns: 1fr; max-width: 460px; }
         }
       `}</style>
       <div className="container">
@@ -340,15 +345,7 @@ export default function Footer() {
           </motion.p>
 
           {/* Team cards grid */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: "1.2rem",
-              maxWidth: 700,
-              margin: "0 auto",
-            }}
-          >
+          <div className="fteam-grid">
             {TEAM.map((t, i) => (
               <DevCard key={t.id} t={t} index={i} />
             ))}
