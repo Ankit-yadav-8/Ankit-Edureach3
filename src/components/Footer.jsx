@@ -370,10 +370,10 @@ export default function Footer() {
         >
           <div style={{ display: "flex", flexWrap: "wrap", gap: "1.4rem" }}>
             <a
-              href="mailto:support@collegeparichay.com"
+              href="mailto:collegeparichay@gmail.com"
               style={{ display: "flex", alignItems: "center", gap: 6 }}
             >
-              <Mail size={15} /> hello@collegeparichay.in
+              <Mail size={15} /> collegeparichay@gmail.com
             </a>
             <a
               href="tel:+918118826194"

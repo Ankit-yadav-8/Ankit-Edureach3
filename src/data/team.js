@@ -18,7 +18,7 @@ export const TEAM = [
     location: "IIT Roorkee, Uttarakhand",
     college: "IIT Roorkee",
     exam: "JEE Advanced",
-    email: "hello@collegeparichay.in",
+    email: "collegeparichay@gmail.com",
     phone: "8118826194",
     bio: `Hi, I'm Ankit Yadav, an IIT Roorkee graduate and the founder of College Parichay — a platform built to make college guidance simpler, clearer, and more accessible for students across India. During my own journey, I saw how confusing the college and career decision process can be for students. That experience inspired me to create College Parichay with one simple belief: "Students need clarity, not confusion." Through authentic insights, relatable experiences, and a community-driven approach, we aim to help students make informed decisions with confidence.`,
     skills: [
@@ -62,7 +62,7 @@ export const TEAM = [
      branch: "B.Tech Electrical Engineering",
     jeeRank: "AIR 3846",
     exam: "JEE Advanced",
-    email: "hello@collegeparichay.in",
+    email: "collegeparichay@gmail.com",
     bio: `Hi, I'm Ankit Kumar — IIT Roorkee engineer, and the Co-Founder & CTO of College Parichay.
          I don't just build the platform. I am the kind of student it was built for.
         Like thousands of students who use College Parichay today, I once sat staring at rank lists, cutoffs, and counselling rounds — unsure what any of it meant for my future. That experience never left me. It drives every line of code I write.
@@ -112,7 +112,7 @@ export const TEAM = [
     college: "IIT Roorkee",
     location: "IIT Roorkee, Uttarakhand",
     exam: "JEE Advanced",
-    email: "hello@collegeparichay.in",
+    email: "collegeparichay@gmail.com",
     bio: `Hi, I'm K. Gopal, Operations Head at College Parichay and an IIT Roorkee student. I oversee all operational aspects of the platform — ensuring seamless day-to-day functioning, team coordination, and execution across departments. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Being part of College Parichay is my way of channelling that experience into something that truly matters. One mission: helping every student make confident, data-driven decisions.`,
     skills: ["Operations", "Team Coordination", "Execution", "Strategy", "Communication", "Management"],
     projects: [

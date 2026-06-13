@@ -561,7 +561,7 @@ export default function About() {
             </p>
 
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 22 }}>
-              <a href="mailto:hello@collegeparichay.in" className="btn btn-coral"><Mail size={16} /> hello@collegeparichay.in</a>
+              <a href="mailto:collegeparichay@gmail.com" className="btn btn-coral"><Mail size={16} /> collegeparichay@gmail.com</a>
               <a href="tel:+918118826194" className="btn btn-light"><Phone size={16} /> +91-8118826194</a>
             </div>
 

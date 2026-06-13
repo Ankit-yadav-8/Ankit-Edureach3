@@ -159,6 +159,7 @@ export default function Navbar({ onSearch }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [expandedSection, setExpandedSection] = useState(null);
   const [confirmLogout, setConfirmLogout] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -251,8 +252,8 @@ export default function Navbar({ onSearch }) {
             </span>
           </span>
 
-          {/* Brand text */}
-          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.3rem", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
+          {/* Brand text — clamps down on narrow phones so the bar never overflows */}
+          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1rem, 4.4vw, 1.3rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
             College{" "}
             <span
               style={{
@@ -423,8 +424,10 @@ export default function Navbar({ onSearch }) {
         <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
           {/* Unified utility cluster — Help · Search · Compare · Wishlist merged
               into one segmented pill so the bar reads as a single tidy module
-              instead of four loose icons. */}
+              instead of four loose icons. Hidden on mobile/tablet (cta-desktop)
+              so the bar stays clean — these actions live in the drawer instead. */}
           <div
+            className="cta-desktop"
             style={{
               display: "flex", alignItems: "center", gap: 2,
               background: "rgba(244,123,32,.06)",
@@ -482,7 +485,7 @@ export default function Navbar({ onSearch }) {
               </button>
             </>
           )}
-          <button className="hamburger" onClick={() => setMobileOpen(true)} aria-label="Menu" style={{ display: "none" }}>
+          <button className="hamburger" onClick={() => { setExpandedSection(null); setMobileOpen(true); }} aria-label="Menu" style={{ display: "none" }}>
             <Menu size={24} color="var(--navy)" />
           </button>
         </div>
@@ -558,79 +561,117 @@ export default function Navbar({ onSearch }) {
                 </div>
               )}
 
-              {navItems.map((item) => (
-                item.feature ? (
-                  <button
-                    key={item.label}
-                    onClick={() => goHash(item.to)}
-                    style={{
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                      width: "100%", margin: "10px 0", padding: "13px 16px",
-                      borderRadius: 12, border: "none", cursor: "pointer",
-                      color: "#fff", fontWeight: 800, fontSize: "0.98rem",
-                      background: "linear-gradient(120deg, #F47B20 0%, #f97316 40%, #fb923c 60%, #F47B20 100%)",
-                      backgroundSize: "200% auto",
-                      boxShadow: "0 8px 20px -8px rgba(244,123,32,.7)",
-                      animation: "brandGradient 3s linear infinite",
-                    }}
-                  >
-                    <Sparkles size={16} /> {item.label}
-                  </button>
-                ) : (
-                <div key={item.label} style={{ borderBottom: "1px solid var(--gray-light)", padding: "0.5rem 0" }}>
-                  <button
-                    onClick={() => goHash(item.to || item.base)}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 8,
-                      fontWeight: 700, fontSize: "1rem", padding: "0.5rem 0.7rem",
-                      width: "100%", borderRadius: 10, cursor: "pointer",
-                      color: isActive(item) ? "#ea580c" : "var(--navy)",
-                      background: isActive(item) ? "rgba(244,123,32,.1)" : "transparent",
-                    }}
-                  >
-                    {isActive(item) && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#F47B20" }} />}
-                    {item.label}
-                  </button>
-                  {item.drop && (
-                    <div style={{ paddingLeft: 12 }}>
-                      {item.drop.map((d) => (
-                        <button
-                          key={d.label}
-                          onClick={() => goHash(d.to)}
-                          style={{ display: "block", padding: "0.35rem 0", color: "var(--gray)", fontSize: "0.88rem" }}
+              {navItems.map((item) => {
+                if (item.feature) {
+                  return (
+                    <button
+                      key={item.label}
+                      onClick={() => goHash(item.to)}
+                      style={{
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                        width: "100%", margin: "10px 0", padding: "13px 16px",
+                        borderRadius: 12, border: "none", cursor: "pointer",
+                        color: "#fff", fontWeight: 800, fontSize: "0.98rem",
+                        background: "linear-gradient(120deg, #F47B20 0%, #f97316 40%, #fb923c 60%, #F47B20 100%)",
+                        backgroundSize: "200% auto",
+                        boxShadow: "0 8px 20px -8px rgba(244,123,32,.7)",
+                        animation: "brandGradient 3s linear infinite",
+                      }}
+                    >
+                      <Sparkles size={16} /> {item.label}
+                    </button>
+                  );
+                }
+
+                const hasChildren = !!(item.drop || item.mega);
+                const expanded = expandedSection === item.label;
+                const active = isActive(item);
+
+                return (
+                  <div key={item.label} style={{ borderBottom: "1px solid var(--gray-light)" }}>
+                    {/* Top-level category row — taps toggle the section (or navigate if it has no children) */}
+                    <button
+                      onClick={() =>
+                        hasChildren
+                          ? setExpandedSection(expanded ? null : item.label)
+                          : goHash(item.to || item.base)
+                      }
+                      style={{
+                        display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+                        fontWeight: 700, fontSize: "1rem", padding: "0.85rem 0.7rem",
+                        width: "100%", borderRadius: 10, cursor: "pointer",
+                        color: active || expanded ? "#ea580c" : "var(--navy)",
+                        background: active ? "rgba(244,123,32,.1)" : "transparent",
+                      }}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        {active && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#F47B20" }} />}
+                        {item.label}
+                      </span>
+                      {hasChildren && (
+                        <ChevronDown
+                          size={18}
+                          style={{
+                            color: "#9ca3af", flexShrink: 0,
+                            transform: expanded ? "rotate(180deg)" : "none",
+                            transition: "transform .2s",
+                          }}
+                        />
+                      )}
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {hasChildren && expanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.22, ease: "easeInOut" }}
+                          style={{ overflow: "hidden" }}
                         >
-                          {d.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {item.mega && (
-                    <div style={{ paddingLeft: 12 }}>
-                      {item.mega.map((col) => (
-                        <div key={col.title} style={{ marginTop: 8 }}>
-                          <button
-                            onClick={() => goHash(col.to)}
-                            style={{ display: "block", padding: "0.25rem 0", fontSize: "0.72rem", fontWeight: 800, color: col.color, letterSpacing: "0.04em", textTransform: "uppercase" }}
-                          >
-                            {col.title}
-                          </button>
-                          {col.items.map((d) => (
-                            <button
-                              key={d.label}
-                              onClick={() => goHash(d.to)}
-                              style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 1, padding: "0.4rem 0", width: "100%", textAlign: "left" }}
-                            >
-                              <span style={{ color: "var(--navy)", fontSize: "0.88rem", fontWeight: 600 }}>{d.label}</span>
-                              {d.desc && <span style={{ color: "#9ca3af", fontSize: "0.74rem", lineHeight: 1.3 }}>{d.desc}</span>}
-                            </button>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                )
-              ))}
+                          {item.drop && (
+                            <div style={{ paddingLeft: 12, paddingBottom: 8 }}>
+                              {item.drop.map((d) => (
+                                <button
+                                  key={d.label}
+                                  onClick={() => goHash(d.to)}
+                                  style={{ display: "block", padding: "0.5rem 0.7rem", color: "var(--gray)", fontSize: "0.9rem", width: "100%", textAlign: "left" }}
+                                >
+                                  {d.label}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                          {item.mega && (
+                            <div style={{ paddingLeft: 12, paddingBottom: 8 }}>
+                              {item.mega.map((col) => (
+                                <div key={col.title} style={{ marginTop: 8 }}>
+                                  <button
+                                    onClick={() => goHash(col.to)}
+                                    style={{ display: "block", padding: "0.25rem 0.7rem", fontSize: "0.72rem", fontWeight: 800, color: col.color, letterSpacing: "0.04em", textTransform: "uppercase" }}
+                                  >
+                                    {col.title}
+                                  </button>
+                                  {col.items.map((d) => (
+                                    <button
+                                      key={d.label}
+                                      onClick={() => goHash(d.to)}
+                                      style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 1, padding: "0.45rem 0.7rem", width: "100%", textAlign: "left" }}
+                                    >
+                                      <span style={{ color: "var(--navy)", fontSize: "0.88rem", fontWeight: 600 }}>{d.label}</span>
+                                      {d.desc && <span style={{ color: "#9ca3af", fontSize: "0.74rem", lineHeight: 1.3 }}>{d.desc}</span>}
+                                    </button>
+                                  ))}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
 
               <Link
                 to="/how-to-use"

@@ -150,7 +150,7 @@
           "contactPoint": {
             "@type": "ContactPoint",
             "contactType": "customer support",
-            "email": "hello@collegeparichay.com",
+            "email": "collegeparichay@gmail.com",
             "availableLanguage": ["English", "Hindi"]
           },
           "sameAs": [
@@ -502,17 +502,21 @@
     <!-- ═══════════════════════════════════════════════
          FAVICONS & PWA
     ═══════════════════════════════════════════════ -->
-    <link rel="icon" type="image/svg+xml"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23F05A28'/><text x='50' y='72' font-family='Arial Black, sans-serif' font-size='54' font-weight='900' text-anchor='middle' fill='white'>CP</text></svg>" />
-    <link rel="apple-touch-icon" sizes="180x180"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23F05A28'/><text x='50' y='72' font-family='Arial Black, sans-serif' font-size='54' font-weight='900' text-anchor='middle' fill='white'>CP</text></svg>" />
+    <!-- Real hosted favicon files — Google's favicon crawler does NOT support
+         data-URI icons, so these must be fetchable URLs for the CP logo to show
+         in search results. -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <meta name="apple-mobile-web-app-capable"          content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title"            content="CollegeParichay" />
 
     <link rel="manifest" href="manifest.webmanifest" />
-    <meta name="theme-color" content="#F05A28" />
+    <meta name="theme-color" content="#F47B20" />
 
     <!-- ═══════════════════════════════════════════════
          PERFORMANCE
@@ -531,20 +535,6 @@
 
     <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-    <script>
-      (function () {
-        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
-          <rect width="180" height="180" rx="20" fill="#F05A28"/>
-          <text x="90" y="130" font-family="Arial Black, sans-serif" font-size="98"
-            font-weight="900" text-anchor="middle" fill="white">CP</text>
-        </svg>`;
-        const blob = new Blob([svg], { type: 'image/svg+xml' });
-        const url  = URL.createObjectURL(blob);
-        const link = document.querySelector('link[rel="apple-touch-icon"]');
-        if (link) link.href = url;
-      })();
-    </script>
 
     <!-- Google Analytics — replace G-XXXXXXXXXX with your real ID -->
     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
