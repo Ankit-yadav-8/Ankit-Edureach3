@@ -32,7 +32,7 @@ const HEADER_STATS = [
 /* Quick at-a-glance facts. */
 const SNAPSHOT = [
   ["Round", "Round 1 of 6"],
-  ["Result declared", "10 June 2026, 5:00 PM"],
+  ["Result declared", "13 June 2026"],
   ["Mode", "Online · josaa.nic.in"],
   ["Institutes", "23 IITs · 31 NITs · 26 IIITs · 42 GFTIs"],
   ["Seat-accept fee", "₹35,000 (Gen/OBC/EWS) · ₹15,000 (SC/ST/PwD)"],
@@ -55,10 +55,10 @@ const CUTOFFS = [
 
 /* Round 1 → Round 2 roadmap. */
 const TIMELINE = [
-  ["Round 1 result declared", "10 Jun 2026", "Seat-allotment list is live on josaa.nic.in. Log in with your JEE roll number and password to see your allotted institute & branch."],
-  ["Online reporting + fee", "10–14 Jun 2026", "Pay the seat-acceptance fee and upload documents. Then choose Freeze, Float or Slide for your seat — this decides your Round 2."],
-  ["Document verification", "11–15 Jun 2026", "Your uploaded documents are verified online. Respond fast to any query raised, or the seat can be withdrawn."],
-  ["Round 2 seat allotment", "16 Jun 2026", "Float/Slide candidates may be upgraded. Fresh allotment is published for everyone still in the pool."],
+  ["Round 1 result declared", "13 Jun 2026", "Seat-allotment list is live on josaa.nic.in. Log in with your JEE roll number and password to see your allotted institute & branch."],
+  ["Online reporting + fee", "13–17 Jun 2026", "Pay the seat-acceptance fee and upload documents. Then choose Freeze, Float or Slide for your seat — this decides your Round 2."],
+  ["Document verification", "14–18 Jun 2026", "Your uploaded documents are verified online. Respond fast to any query raised, or the seat can be withdrawn."],
+  ["Round 2 seat allotment", "19 Jun 2026", "Float/Slide candidates may be upgraded. Fresh allotment is published for everyone still in the pool."],
   ["Rounds 3–5 + final round", "Jun–Jul 2026", "Allotment continues round by round. The final round seat is binding — withdrawal rules tighten as rounds progress."],
   ["CSAB special rounds", "Jul 2026", "After JoSAA closes, CSAB fills the leftover NIT / IIIT / GFTI seats — often the biggest last-minute upgrades."],
 ];

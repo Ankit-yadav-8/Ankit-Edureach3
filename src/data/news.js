@@ -6,7 +6,7 @@
 export const NEWS = [
   {
     slug: "josaa-2026-round-1-result",
-    date: "Jun 10, 2026",
+    date: "Jun 13, 2026",
     tags: ["JoSAA", "Round 1 Result"],
     featured: true,
     // Opens the dedicated, full Round 1 result page instead of the generic
