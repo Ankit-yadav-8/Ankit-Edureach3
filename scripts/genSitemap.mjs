@@ -26,7 +26,6 @@ const STATIC_ROUTES = [
   ["/jee-main", "0.9", "weekly"],
   ["/jee-advanced", "0.9", "weekly"],
   ["/for-you", "0.9", "weekly"],
-  ["/shortlist", "0.7", "weekly"],
   ["/compare", "0.7", "weekly"],
   ["/cutoffs", "0.8", "weekly"],
   ["/exams", "0.8", "weekly"],
