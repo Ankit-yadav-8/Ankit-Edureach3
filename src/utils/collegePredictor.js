@@ -11,7 +11,7 @@
      (direct HS-quota data requires future enhancement).
    • Results prioritised: NIRF rank → branch value → closing rank.
    ============================================================ */
-
+   
 import { COLLEGES, BRANCHES }   from "../data/colleges.js";
 import { SEAT_MATRIX }          from "../data/seatMatrix.js";
 import {
