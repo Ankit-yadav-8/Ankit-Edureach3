@@ -1,611 +1,316 @@
 <!DOCTYPE html>
 <html lang="en-IN">
-  <head>
-    <!-- SPA Redirect (GitHub Pages / Netlify fallback) -->
-    <script type="text/javascript">
-      (function (l) {
-        if (l.search[1] === '/') {
-          var decoded = l.search.slice(1).split('&').map(function (s) {
-            return s.replace(/~and~/g, '&');
-          }).join('?');
-          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+<head>
+
+  <!-- ═══════════════════════════════════
+       CORE
+  ═══════════════════════════════════ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>CollegeParichay — JEE Rank Predictor & IIT NIT IIIT College Reviews | By IIT Roorkee Alumni</title>
+
+  <meta name="description" content="Free JEE Main & Advanced rank predictor by IIT Roorkee alumni. Compare IIT NIT IIIT BITS cutoffs, read verified college reviews, shortlist colleges, and track JoSAA / CSAB counselling — all free." />
+
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+  <link rel="canonical" href="https://collegeparichay.in/" />
+
+  <link rel="alternate" hreflang="en-IN"      href="https://collegeparichay.in/" />
+  <link rel="alternate" hreflang="en"         href="https://collegeparichay.in/" />
+  <link rel="alternate" hreflang="x-default"  href="https://collegeparichay.in/" />
+
+  <meta name="google-site-verification" content="ewgbtc97cFcWk-niu2-_DeYk0kTO8v1PD7Q5OUZWJMo" />
+
+  <!-- ═══════════════════════════════════
+       OPEN GRAPH
+  ═══════════════════════════════════ -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://collegeparichay.in/" />
+  <meta property="og:site_name"   content="CollegeParichay" />
+  <meta property="og:locale"      content="en_IN" />
+  <meta property="og:title"       content="CollegeParichay — JEE Rank Predictor & IIT NIT IIIT College Reviews" />
+  <meta property="og:description" content="Free JEE rank predictor, IIT NIT IIIT cutoffs, college reviews and JoSAA counselling guide — built by IIT Roorkee alumni." />
+  <meta property="og:image"       content="https://collegeparichay.in/cplogo3.jpeg" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt"   content="CollegeParichay — Know Your Rank. Find Your College." />
+
+  <!-- ═══════════════════════════════════
+       TWITTER / X
+  ═══════════════════════════════════ -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:site"        content="@CollegeParichay" />
+  <meta name="twitter:title"       content="CollegeParichay — JEE Rank Predictor & IIT NIT IIIT Reviews" />
+  <meta name="twitter:description" content="Free JEE rank predictor, IIT NIT IIIT cutoffs, and JoSAA counselling guide by IIT Roorkee alumni." />
+  <meta name="twitter:image"       content="https://collegeparichay.in/cplogo3.jpeg" />
+
+  <!-- ═══════════════════════════════════
+       STRUCTURED DATA — JSON-LD
+  ═══════════════════════════════════ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+
+      {
+        "@type": "WebSite",
+        "@id": "https://collegeparichay.in/#website",
+        "url": "https://collegeparichay.in/",
+        "name": "CollegeParichay",
+        "alternateName": "College Parichay",
+        "description": "India's leading student-built platform for JEE rank prediction, IIT NIT IIIT college reviews, cutoff comparison, and JoSAA counselling — built by IIT Roorkee alumni.",
+        "inLanguage": "en-IN",
+        "publisher": { "@id": "https://collegeparichay.in/#organization" },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://collegeparichay.in/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
         }
-      })(window.location);
-    </script>
+      },
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- ═══════════════════════════════════════════════
-         PRIMARY SEO META — Maximised for AI Overviews
-         & Google Featured Snippets
-    ═══════════════════════════════════════════════ -->
-
-    <title>CollegeParichay — JEE Rank Predictor & IIT NIT IIIT College Reviews | By IIT Roorkee Alumni</title>
-
-    <meta name="description"
-      content="CollegeParichay is a student-built platform by IIT Roorkee alumni Ankit Yadav & Ankit Kumar — NOT the DCE Rajasthan government portal. Get JEE Main & Advanced rank predictions, compare IIT NIT IIIT BITS cutoffs, read verified college reviews, shortlist colleges, and track JoSAA / CSAB counselling deadlines — all free." />
-
-    <meta name="keywords"
-      content="CollegeParichay, College Parichay, JEE rank predictor 2025, IIT college reviews, NIT cutoff 2025, IIIT cutoff, BITS Pilani cutoff, JEE Main rank predictor, JEE Advanced rank predictor, JoSAA counselling 2025, CSAB counselling, best engineering colleges India, college shortlist JEE, IIT Roorkee, Ankit Yadav IIT Roorkee, Ankit Kumar IIT Roorkee, college comparison India, NIT Trichy review, NIT Warangal review, IIT Bombay cutoff, IIT Delhi cutoff, BITS Pilani admission" />
-
-    <meta name="author"      content="Ankit Yadav & Ankit Kumar — IIT Roorkee Alumni" />
-    <meta name="publisher"   content="CollegeParichay" />
-    <meta name="copyright"   content="CollegeParichay" />
-    <meta name="robots"      content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-
-    <!-- ── Google Search Console verification ──────────────────
-         HOW TO GET YOUR TOKEN:
-         1. Go to https://search.google.com/search-console
-         2. Add a property → URL prefix → https://collegeparichay.in
-         3. Choose the "HTML tag" verification method
-         4. Google shows a tag like:
-              <meta name="google-site-verification" content="abc123..." />
-         5. Copy ONLY the content value and paste it below in place of
-            PASTE_YOUR_GOOGLE_SEARCH_CONSOLE_TOKEN_HERE, then deploy.
-            (Bing: same idea, uses name="msvalidate.01".) -->
-    <meta name="google-site-verification" content="ewgbtc97cFcWk-niu2-_DeYk0kTO8v1PD7Q5OUZWJMo" />
-    <meta name="revisit-after" content="3 days" />
-    <meta name="rating"      content="general" />
-    <meta name="category"    content="Education, JEE Counselling, College Reviews" />
-
-    <!-- CRITICAL: Differentiate from the Rajasthan DCE government portal -->
-    <meta name="note" content="CollegeParichay is a private platform founded by two IIT Roorkee alumni (Ankit Yadav & Ankit Kumar) and headquartered in Jaipur, Rajasthan. It is an independent student startup — NOT the Rajasthan DCE government portal (hte.rajasthan.gov.in)." />
-
-    <link rel="canonical" href="https://collegeparichay.in/" />
-
-    <meta name="language"        content="English" />
-    <meta property="og:locale"   content="en_IN" />
-    <link rel="alternate" hreflang="en-in" href="https://collegeparichay.in/" />
-    <link rel="alternate" hreflang="en"    href="https://collegeparichay.in/" />
-
-    <!-- ═══════════════════════════════════════════════
-         OPEN GRAPH
-    ═══════════════════════════════════════════════ -->
-    <meta property="og:type"         content="website" />
-    <meta property="og:url"          content="https://collegeparichay.in/" />
-    <meta property="og:site_name"    content="CollegeParichay" />
-    <meta property="og:title"
-      content="CollegeParichay — JEE Rank Predictor & IIT NIT IIIT College Reviews by IIT Roorkee Alumni" />
-    <meta property="og:description"
-      content="Built by IIT Roorkee alumni Ankit Yadav & Ankit Kumar. Predict your JEE rank, shortlist IIT/NIT/IIIT colleges, compare cutoffs, and never miss a counselling deadline. Free forever." />
-    <meta property="og:image"        content="https://collegeparichay.in/cplogo3.jpeg" />
-    <meta property="og:image:type"   content="image/jpeg" />
-    <meta property="og:image:alt"    content="CollegeParichay — JEE Rank Predictor & College Discovery by IIT Roorkee Alumni" />
-
-    <!-- ═══════════════════════════════════════════════
-         TWITTER / X
-    ═══════════════════════════════════════════════ -->
-    <meta name="twitter:card"        content="summary_large_image" />
-    <meta name="twitter:site"        content="@CollegeParichay" />
-    <meta name="twitter:creator"     content="@CollegeParichay" />
-    <meta name="twitter:title"
-      content="CollegeParichay — JEE Rank Predictor, IIT NIT IIIT Reviews by IIT Roorkee Alumni" />
-    <meta name="twitter:description"
-      content="India's student-built JEE platform. Predict rank, shortlist IIT/NIT/IIIT, compare cutoffs, track counselling. Built by IIT Roorkee alumni." />
-    <meta name="twitter:image"       content="https://collegeparichay.in/cplogo3.jpeg" />
-    <meta name="twitter:image:alt"   content="CollegeParichay — Know Your Rank. Find Your College." />
-
-    <!-- ═══════════════════════════════════════════════
-         STRUCTURED DATA — JSON-LD
-         Maximum coverage for AI Overviews, Rich Results,
-         Knowledge Panel, and Sitelinks Searchbox.
-
-         KEY ADDITIONS vs old version:
-         1. Person schema for both founders (IIT Roorkee)
-         2. SoftwareApplication for the rank predictor tool
-         3. ItemList of top colleges (IITs, NITs, IIITs, BITS)
-         4. EducationalOrganization mentions for E-E-A-T
-         5. Expanded FAQPage targeting "IIT NIT IIIT" queries
-         6. HowTo for JoSAA counselling steps
-         7. Breadcrumb & SiteNavigation for sitelinks
-    ═══════════════════════════════════════════════ -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": "https://collegeparichay.in/#website",
-          "url": "https://collegeparichay.in/",
-          "name": "CollegeParichay",
-          "alternateName": ["College Parichay", "CP JEE", "CollegeParichay IIT NIT"],
-          "description": "India's leading student-built platform for JEE rank prediction, IIT NIT IIIT college reviews, cutoff comparison, and JoSAA counselling guidance — built by IIT Roorkee alumni.",
-          "inLanguage": "en-IN",
-          "publisher": { "@id": "https://collegeparichay.in/#organization" },
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": "https://collegeparichay.in/search?q={search_term_string}"
-            },
-            "query-input": "required name=search_term_string"
+      {
+        "@type": "Organization",
+        "@id": "https://collegeparichay.in/#organization",
+        "name": "CollegeParichay",
+        "alternateName": "College Parichay",
+        "url": "https://collegeparichay.in/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://collegeparichay.in/icon-512.png",
+          "width": 512,
+          "height": 512
+        },
+        "description": "CollegeParichay is a private student platform founded by IIT Roorkee alumni Ankit Yadav and Ankit Kumar. It is NOT the Rajasthan government DCE portal (hte.rajasthan.gov.in).",
+        "disambiguatingDescription": "CollegeParichay (collegeparichay.in) is an independent student startup founded by IIT Roorkee alumni Ankit Yadav and Ankit Kumar, headquartered in Jaipur, Rajasthan. Not affiliated with Rajasthan DCE government portal.",
+        "foundingDate": "2023",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Jaipur",
+          "addressRegion": "Rajasthan",
+          "addressCountry": "IN"
+        },
+        "founders": [
+          {
+            "@type": "Person",
+            "name": "Ankit Yadav",
+            "jobTitle": "Co-Founder & CEO",
+            "alumniOf": { "@type": "CollegeOrUniversity", "name": "IIT Roorkee", "sameAs": "https://en.wikipedia.org/wiki/IIT_Roorkee" }
+          },
+          {
+            "@type": "Person",
+            "name": "Ankit Kumar",
+            "jobTitle": "Co-Founder & CTO",
+            "alumniOf": { "@type": "CollegeOrUniversity", "name": "IIT Roorkee", "sameAs": "https://en.wikipedia.org/wiki/IIT_Roorkee" }
           }
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "email": "collegeparichay@gmail.com",
+          "availableLanguage": ["English", "Hindi"]
         },
-        {
-          "@type": "Organization",
-          "@id": "https://collegeparichay.in/#organization",
-          "name": "CollegeParichay",
-          "alternateName": "College Parichay",
-          "url": "https://collegeparichay.in/",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://collegeparichay.in/cplogo3.jpeg"
+        "sameAs": [
+          "https://www.linkedin.com/company/college-parichay",
+          "https://in.linkedin.com/company/college-parichay",
+          "https://www.instagram.com/collegeparichay/",
+          "https://www.youtube.com/@CollegeParichay-2626"
+        ]
+      },
+
+      {
+        "@type": "ItemList",
+        "@id": "https://collegeparichay.in/#sitelinks",
+        "name": "CollegeParichay — Main Pages",
+        "itemListElement": [
+          {
+            "@type": "SiteNavigationElement",
+            "position": 1,
+            "name": "JEE Main Rank Predictor",
+            "description": "Predict your JEE Main rank from percentile score — free and updated after every NTA result.",
+            "url": "https://collegeparichay.in/jee-main"
           },
-          "description": "CollegeParichay is a private student platform founded by IIT Roorkee alumni Ankit Yadav and Ankit Kumar. CollegeParichay provides JEE rank prediction, IIT NIT IIIT college reviews, cutoff data, and counselling guidance to JEE aspirants across India.",
-          "disambiguatingDescription": "CollegeParichay (collegeparichay.in) is a private student startup founded by two IIT Roorkee alumni, Ankit Yadav and Ankit Kumar, and is headquartered in Jaipur, Rajasthan. It is an independent platform and is not affiliated with the Rajasthan government DCE portal (hte.rajasthan.gov.in) or any other platform of a similar name.",
-          "foundingDate": "2023",
-          "foundingLocation": {
-            "@type": "Place",
-            "name": "Roorkee, Uttarakhand, India",
-            "address": {
-              "@type": "PostalAddress",
-              "addressLocality": "Roorkee",
-              "addressRegion": "Uttarakhand",
-              "addressCountry": "IN"
+          {
+            "@type": "SiteNavigationElement",
+            "position": 2,
+            "name": "JEE Advanced Rank Predictor",
+            "description": "Predict your JEE Advanced rank and see which IITs you can get.",
+            "url": "https://collegeparichay.in/jee-advanced"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 3,
+            "name": "College For You — Shortlist Tool",
+            "description": "Get a personalised IIT NIT IIIT shortlist based on your rank, category, home state, and branch.",
+            "url": "https://collegeparichay.in/for-you"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 4,
+            "name": "All Colleges — IIT NIT IIIT Reviews",
+            "description": "Reviews, cutoffs, placements, and hostel info for every IIT, NIT, and IIIT in India.",
+            "url": "https://collegeparichay.in/colleges"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 5,
+            "name": "JoSAA Counselling Guide 2026",
+            "description": "Step-by-step JoSAA 2026 counselling guide with deadlines, choice filling tips, and seat matrix.",
+            "url": "https://collegeparichay.in/josaa-2026"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 6,
+            "name": "JEE Cutoffs — IIT NIT IIIT",
+            "description": "Round-wise, branch-wise, category-wise JoSAA cutoffs from 2018 to 2025.",
+            "url": "https://collegeparichay.in/cutoffs"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 7,
+            "name": "About CollegeParichay",
+            "description": "Built by IIT Roorkee alumni Ankit Yadav and Ankit Kumar from a hostel room.",
+            "url": "https://collegeparichay.in/about"
+          }
+        ]
+      },
+
+      {
+        "@type": "ItemList",
+        "@id": "https://collegeparichay.in/#videos",
+        "name": "CollegeParichay Videos — JEE Counselling & College Reviews",
+        "description": "Watch JEE counselling tips, IIT NIT college reviews, and JoSAA guidance videos by CollegeParichay on YouTube.",
+        "url": "https://www.youtube.com/@CollegeParichay-2626",
+        "itemListElement": [
+          {
+            "@type": "VideoObject",
+            "position": 1,
+            "name": "CollegeParichay — JEE Counselling & College Review Videos",
+            "description": "JEE Main & Advanced rank predictor walkthroughs, IIT NIT IIIT college reviews, JoSAA counselling guides, and cutoff analysis by CollegeParichay — founded by IIT Roorkee alumni.",
+            "thumbnailUrl": "https://collegeparichay.in/cplogo3.jpeg",
+            "uploadDate": "2024-01-01",
+            "publisher": { "@id": "https://collegeparichay.in/#organization" },
+            "embedUrl": "https://www.youtube.com/@CollegeParichay-2626"
+          }
+        ]
+      },
+
+      {
+        "@type": "FAQPage",
+        "@id": "https://collegeparichay.in/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is CollegeParichay?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CollegeParichay is a free student platform built by IIT Roorkee alumni Ankit Yadav and Ankit Kumar. It provides JEE Main and JEE Advanced rank prediction, IIT NIT IIIT college reviews, personalised college shortlisting, cutoff comparison, and JoSAA / CSAB counselling guidance. It is NOT the Rajasthan government DCE portal."
             }
           },
-          "founders": [
-            { "@id": "https://collegeparichay.in/#ankit-yadav" },
-            { "@id": "https://collegeparichay.in/#ankit-kumar" }
-          ],
-          "founder": [
-            { "@id": "https://collegeparichay.in/#ankit-yadav" },
-            { "@id": "https://collegeparichay.in/#ankit-kumar" }
-          ],
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Jaipur",
-            "addressRegion": "Rajasthan",
-            "addressCountry": "IN"
-          },
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "customer support",
-            "email": "collegeparichay@gmail.com",
-            "availableLanguage": ["English", "Hindi"]
-          },
-          "sameAs": [
-            "https://www.linkedin.com/company/college-parichay",
-            "https://www.youtube.com/@CollegeParichay-2626",
-            "https://www.instagram.com/collegeparichay"
-          ],
-          "knowsAbout": [
-            "JEE Main", "JEE Advanced", "IIT admissions", "NIT admissions",
-            "IIIT admissions", "JoSAA counselling",
-            "CSAB counselling", "JEE rank prediction", "engineering college reviews India"
-          ]
-        },
-        {
-          "@type": "Person",
-          "@id": "https://collegeparichay.in/#ankit-yadav",
-          "name": "Ankit Yadav",
-          "jobTitle": "Co-Founder, CollegeParichay",
-          "alumniOf": {
-            "@type": "CollegeOrUniversity",
-            "name": "IIT Roorkee",
-            "url": "https://www.iitr.ac.in/",
-            "sameAs": "https://en.wikipedia.org/wiki/IIT_Roorkee"
-          },
-          "worksFor": { "@id": "https://collegeparichay.in/#organization" },
-          "url": "https://collegeparichay.in/about",
-          "description": "Ankit Yadav is an IIT Roorkee alumnus and co-founder of CollegeParichay, India's leading JEE rank predictor and engineering college review platform."
-        },
-        {
-          "@type": "Person",
-          "@id": "https://collegeparichay.in/#ankit-kumar",
-          "name": "Ankit Kumar",
-          "jobTitle": "Co-Founder, CollegeParichay",
-          "alumniOf": {
-            "@type": "CollegeOrUniversity",
-            "name": "IIT Roorkee",
-            "url": "https://www.iitr.ac.in/",
-            "sameAs": "https://en.wikipedia.org/wiki/IIT_Roorkee"
-          },
-          "worksFor": { "@id": "https://collegeparichay.in/#organization" },
-          "url": "https://collegeparichay.in/about",
-          "description": "Ankit Kumar is an IIT Roorkee alumnus and co-founder of CollegeParichay, providing data-driven college counselling tools for JEE aspirants."
-        },
-        {
-          "@type": "SoftwareApplication",
-          "@id": "https://collegeparichay.in/#rank-predictor",
-          "name": "CollegeParichay JEE Rank Predictor",
-          "applicationCategory": "EducationalApplication",
-          "operatingSystem": "Web",
-          "url": "https://collegeparichay.in/jee-main",
-          "description": "Free JEE Main and JEE Advanced rank predictor. Enter your percentile or marks to get your predicted rank and see which IITs, NITs, and IIITs you can get.",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "INR"
-          },
-          "publisher": { "@id": "https://collegeparichay.in/#organization" },
-          "featureList": [
-            "JEE Main rank prediction from percentile",
-            "JEE Advanced rank prediction",
-            "College shortlist based on predicted rank",
-            "Category-wise (GEN/OBC/SC/ST/EWS) rank prediction",
-            "JoSAA round-wise cutoff comparison"
-          ]
-        },
-        {
-          "@type": "SoftwareApplication",
-          "@id": "https://collegeparichay.in/#college-shortlist",
-          "name": "College Shortlist Tool — CollegeParichay",
-          "applicationCategory": "EducationalApplication",
-          "operatingSystem": "Web",
-          "url": "https://collegeparichay.in/for-you",
-          "description": "Get a personalised IIT NIT IIIT college shortlist based on your JEE rank, category, home state, preferred branch, and gender. Powered by JoSAA historical cutoff data.",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "INR"
-          },
-          "publisher": { "@id": "https://collegeparichay.in/#organization" }
-        },
-        {
-          "@type": "WebPage",
-          "@id": "https://collegeparichay.in/#webpage",
-          "url": "https://collegeparichay.in/",
-          "name": "CollegeParichay — JEE Rank Predictor & IIT NIT IIIT College Reviews by IIT Roorkee Alumni",
-          "isPartOf": { "@id": "https://collegeparichay.in/#website" },
-          "publisher": { "@id": "https://collegeparichay.in/#organization" },
-          "description": "India's leading JEE platform built by IIT Roorkee alumni. Predict JEE rank, shortlist IIT NIT IIIT colleges, read real reviews, compare cutoffs, track counselling.",
-          "inLanguage": "en-IN",
-          "dateModified": "2026-06-13",
-          "breadcrumb": {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://collegeparichay.in/" }
-            ]
-          },
-          "mainEntity": { "@id": "https://collegeparichay.in/#rank-predictor" }
-        },
-        {
-          "@type": "ItemList",
-          "@id": "https://collegeparichay.in/#top-colleges-list",
-          "name": "Top Engineering Colleges in India — IIT NIT IIIT Reviews on CollegeParichay",
-          "description": "CollegeParichay has reviews, cutoffs, placement stats, and counselling data for all IITs, NITs, and IIITs in India.",
-          "url": "https://collegeparichay.in/colleges",
-          "numberOfItems": 15,
-          "itemListElement": [
-            {
-              "@type": "ListItem", "position": 1,
-              "url": "https://collegeparichay.in/colleges/iit-bombay",
-              "name": "IIT Bombay — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 2,
-              "url": "https://collegeparichay.in/colleges/iit-delhi",
-              "name": "IIT Delhi — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 3,
-              "url": "https://collegeparichay.in/colleges/iit-madras",
-              "name": "IIT Madras — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 4,
-              "url": "https://collegeparichay.in/colleges/iit-kanpur",
-              "name": "IIT Kanpur — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 5,
-              "url": "https://collegeparichay.in/colleges/iit-kharagpur",
-              "name": "IIT Kharagpur — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 6,
-              "url": "https://collegeparichay.in/colleges/iit-roorkee",
-              "name": "IIT Roorkee — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 7,
-              "url": "https://collegeparichay.in/colleges/iit-guwahati",
-              "name": "IIT Guwahati — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 8,
-              "url": "https://collegeparichay.in/colleges/nit-trichy",
-              "name": "NIT Trichy — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 9,
-              "url": "https://collegeparichay.in/colleges/nit-warangal",
-              "name": "NIT Warangal — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 10,
-              "url": "https://collegeparichay.in/colleges/nit-surathkal",
-              "name": "NIT Surathkal — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 11,
-              "url": "https://collegeparichay.in/colleges/nit-calicut",
-              "name": "NIT Calicut — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 12,
-              "url": "https://collegeparichay.in/colleges/nit-rourkela",
-              "name": "NIT Rourkela — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 13,
-              "url": "https://collegeparichay.in/colleges/iit-hyderabad",
-              "name": "IIT Hyderabad — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 14,
-              "url": "https://collegeparichay.in/colleges/iiit-hyderabad",
-              "name": "IIIT Hyderabad — Cutoffs, Reviews & Placements on CollegeParichay"
-            },
-            {
-              "@type": "ListItem", "position": 15,
-              "url": "https://collegeparichay.in/colleges/iiit-allahabad",
-              "name": "IIIT Allahabad — Cutoffs, Reviews & Placements on CollegeParichay"
+          {
+            "@type": "Question",
+            "name": "Is CollegeParichay the Rajasthan DCE government portal?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. CollegeParichay (collegeparichay.in) is a private student-built platform by IIT Roorkee alumni. The Rajasthan government higher education portal is hte.rajasthan.gov.in. These are completely different platforms."
             }
-          ]
-        },
-        {
-          "@type": "HowTo",
-          "@id": "https://collegeparichay.in/#josaa-howto",
-          "name": "How to Fill JoSAA Counselling 2026 for IIT NIT IIIT Admission",
-          "description": "Step-by-step guide to JoSAA 2026 counselling registration, choice filling, seat allotment, and document verification for IIT, NIT, IIIT, and GFTI admissions.",
-          "url": "https://collegeparichay.in/josaa-2026",
-          "totalTime": "PT2H",
-          "estimatedCost": { "@type": "MonetaryAmount", "currency": "INR", "value": "0" },
-          "tool": { "@type": "HowToTool", "name": "CollegeParichay College Shortlist Tool" },
-          "step": [
-            {
-              "@type": "HowToStep", "position": 1,
-              "name": "Predict Your JEE Rank",
-              "text": "Use CollegeParichay's free JEE rank predictor to get your expected rank from your JEE Main percentile or JEE Advanced marks.",
-              "url": "https://collegeparichay.in/jee-main"
-            },
-            {
-              "@type": "HowToStep", "position": 2,
-              "name": "Shortlist Colleges",
-              "text": "Use the College For You tool on CollegeParichay to shortlist IITs, NITs, IIITs, and GFTIs based on your rank, category, home state, and branch preference.",
-              "url": "https://collegeparichay.in/for-you"
-            },
-            {
-              "@type": "HowToStep", "position": 3,
-              "name": "Register on JoSAA Portal",
-              "text": "Visit josaa.nic.in and register using your JEE Main / JEE Advanced roll number and date of birth."
-            },
-            {
-              "@type": "HowToStep", "position": 4,
-              "name": "Fill and Lock Your Choices",
-              "text": "Enter and lock your college-branch preferences in the order of your priority. CollegeParichay's cutoff comparison tool helps you decide the optimal order."
-            },
-            {
-              "@type": "HowToStep", "position": 5,
-              "name": "Check Seat Allotment & Accept",
-              "text": "After each JoSAA round, check your seat allotment result. Accept, float, or freeze your allotted seat based on your preference."
+          },
+          {
+            "@type": "Question",
+            "name": "Who founded CollegeParichay?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CollegeParichay was co-founded by Ankit Yadav (CEO) and Ankit Kumar (CTO), both alumni of IIT Roorkee. It started in an IIT Roorkee hostel room and is now headquartered in Jaipur, Rajasthan."
             }
-          ]
-        },
-        {
-          "@type": "FAQPage",
-          "@id": "https://collegeparichay.in/#faq",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "What is CollegeParichay?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "CollegeParichay is a free student platform built by IIT Roorkee alumni Ankit Yadav and Ankit Kumar. It provides JEE Main and JEE Advanced rank prediction, reviews of IITs, NITs, and IIITs, personalised college shortlisting, cutoff comparison, and JoSAA/CSAB counselling guidance. CollegeParichay is NOT the official Rajasthan government DCE portal."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Who founded CollegeParichay?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "CollegeParichay was founded by Ankit Yadav and Ankit Kumar, both alumni of IIT Roorkee (Indian Institute of Technology Roorkee). The platform was built to help JEE aspirants make informed decisions about IIT, NIT, and IIIT admissions."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Where is CollegeParichay based?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "CollegeParichay is headquartered in Jaipur, Rajasthan. It was founded by two IIT Roorkee alumni, Ankit Yadav and Ankit Kumar, and started in an IIT Roorkee hostel room. It is an independent, student-built JEE rank predictor and college review platform at collegeparichay.in, and is not affiliated with the Rajasthan government DCE portal or any other platform of a similar name."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Who built CollegeParichay and where is it from?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "CollegeParichay was built by two engineers and IIT Roorkee alumni, Ankit Yadav (Founder & CEO) and Ankit Kumar (Co-Founder & CTO). It originated from an IIT Roorkee hostel room and is now headquartered in Jaipur, Rajasthan, India."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is CollegeParichay the Rajasthan DCE government portal?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "No. CollegeParichay (collegeparichay.in) is a private student-built platform by IIT Roorkee alumni. The Rajasthan government higher education portal is hte.rajasthan.gov.in. These are completely different platforms."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Which colleges are covered on CollegeParichay?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "CollegeParichay covers all 23 IITs (including IIT Bombay, IIT Delhi, IIT Madras, IIT Kanpur, IIT Roorkee), all 31 NITs (including NIT Trichy, NIT Warangal, NIT Surathkal, NIT Rourkela), and the IIITs across India. Each college page includes JoSAA cutoffs, placement stats, campus reviews, hostel info, and branch-wise details."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How accurate is the CollegeParichay JEE rank predictor?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "CollegeParichay uses 5+ years of historical JEE Main and JEE Advanced result data combined with real-time NTA percentile-to-rank mapping. Predictions are updated within hours of each NTA result announcement and are accurate to within ±5% for most percentile ranges."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What is the College For You / college shortlist tool?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "The 'College For You' shortlist tool on CollegeParichay generates a personalised list of IIT, NIT, and IIIT colleges you are likely to get based on your predicted JEE rank, category (GEN/OBC/SC/ST/EWS), home state, preferred engineering branch, and gender. The shortlist is based on JoSAA historical cutoffs and is available free at collegeparichay.in/for-you."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What is the NIT Trichy cutoff for 2025?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "NIT Trichy JoSAA 2025 cutoffs vary by branch and category. For Computer Science Engineering (CSE) in the General category, the closing rank was approximately 2,000–2,800 in recent years. Visit collegeparichay.in/colleges/nit-trichy for round-wise, branch-wise, and category-wise cutoff data for NIT Trichy 2025."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What is the IIT Bombay JEE Advanced cutoff 2025?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "IIT Bombay's JEE Advanced cutoff for 2025 varies by branch. For the most competitive branch (Computer Science Engineering), the closing rank is typically under 100 for General category. For Electrical Engineering it is around 200–500. Visit collegeparichay.in/colleges/iit-bombay for complete branch-wise and category-wise cutoff data."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How does CollegeParichay help with JoSAA counselling?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "CollegeParichay provides: (1) JEE rank prediction to know your realistic options, (2) a college shortlist tool to build your JoSAA choice list, (3) round-wise JoSAA cutoff data for all IITs, NITs, IIITs, and GFTIs, (4) deadline reminders for each JoSAA round, and (5) branch-wise seat matrix and opening/closing rank analysis."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is CollegeParichay free to use?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. CollegeParichay is completely free to use. All features including JEE rank prediction, college shortlisting, cutoff comparison, college reviews, and counselling guides are available at no cost."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What is the IIT Roorkee cutoff for 2025?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "IIT Roorkee JoSAA cutoffs vary by branch and category. For Computer Science Engineering (CSE) in the General category, the closing rank is typically in the low hundreds on the JEE Advanced rank scale. Visit collegeparichay.in/colleges/iit-roorkee for round-wise, branch-wise, and category-wise cutoff data."
-              }
+          },
+          {
+            "@type": "Question",
+            "name": "Is CollegeParichay free to use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. All features — JEE rank prediction, college shortlisting, cutoff comparison, college reviews, and counselling guides — are completely free."
             }
-          ]
-        },
-        {
-          "@type": "Dataset",
-          "@id": "https://collegeparichay.in/#cutoff-dataset",
-          "name": "JoSAA JEE Cutoff Data — IIT NIT IIIT 2018-2025",
-          "description": "Round-wise, branch-wise, category-wise JoSAA cutoff data for IITs, NITs, IIITs, and GFTIs from 2018 to 2025, based on official JoSAA results.",
-          "url": "https://collegeparichay.in/cutoffs",
-          "publisher": { "@id": "https://collegeparichay.in/#organization" },
-          "license": "https://collegeparichay.in/terms",
-          "keywords": ["JoSAA cutoff", "IIT cutoff", "NIT cutoff", "IIIT cutoff", "JEE Advanced cutoff", "JEE Main cutoff"]
-        }
+          },
+          {
+            "@type": "Question",
+            "name": "How accurate is the CollegeParichay JEE rank predictor?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CollegeParichay uses 5+ years of historical JEE Main and JEE Advanced data with real-time NTA percentile-to-rank mapping. Predictions are updated within hours of each NTA result and are accurate to within ±5% for most percentile ranges."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which colleges are covered on CollegeParichay?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CollegeParichay covers all 23 IITs (IIT Bombay, IIT Delhi, IIT Madras, IIT Kanpur, IIT Roorkee etc.), all 31 NITs (NIT Trichy, NIT Warangal, NIT Surathkal etc.), and IIITs across India — with JoSAA cutoffs, placement stats, campus reviews, and branch-wise data."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does CollegeParichay help with JoSAA counselling?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CollegeParichay provides: JEE rank prediction, a personalised college shortlist tool, round-wise JoSAA cutoff data for all IITs, NITs, IIITs and GFTIs, counselling deadline reminders, and branch-wise opening/closing rank analysis."
+            }
+          }
+        ]
+      }
 
-      ]
-    }
-    </script>
+    ]
+  }
+  </script>
 
-    <!-- ═══════════════════════════════════════════════
-         FAVICONS & PWA
-    ═══════════════════════════════════════════════ -->
-    <!-- Real hosted favicon files — Google's favicon crawler does NOT support
-         data-URI icons, so these must be fetchable URLs for the CP logo to show
-         in search results. -->
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <!-- ═══════════════════════════════════
+       FAVICONS & PWA
+  ═══════════════════════════════════ -->
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32"   href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="96x96"   href="/favicon-96.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
 
-    <meta name="apple-mobile-web-app-capable"          content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title"            content="CollegeParichay" />
+  <meta name="theme-color" content="#F47B20" />
+  <meta name="apple-mobile-web-app-capable"          content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title"            content="CollegeParichay" />
 
-    <link rel="manifest" href="manifest.webmanifest" />
-    <meta name="theme-color" content="#F47B20" />
+  <!-- ═══════════════════════════════════
+       PERFORMANCE
+  ═══════════════════════════════════ -->
+  <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+  <link rel="preconnect"   href="https://fonts.googleapis.com" />
+  <link rel="preconnect"   href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- ═══════════════════════════════════════════════
-         PERFORMANCE
-    ═══════════════════════════════════════════════ -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-    <link rel="dns-prefetch" href="//unpkg.com" />
-    <link rel="preconnect"   href="https://fonts.googleapis.com" />
-    <link rel="preconnect"   href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
 
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet" />
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- SPA redirect (GitHub Pages / Netlify fallback) -->
+  <script>
+    (function(l){
+      if(l.search[1]==='/'){
+        var d=l.search.slice(1).split('&').map(function(s){return s.replace(/~and~/g,'&');}).join('?');
+        window.history.replaceState(null,null,l.pathname.slice(0,-1)+d+l.hash);
+      }
+    })(window.location);
+  </script>
 
-    <!-- Google Analytics — replace G-XXXXXXXXXX with your real ID -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script> -->
-
-  </head>
-  <body>
-
-    <!--
-    ═══════════════════════════════════════════════════════════════
-     HIDDEN SEO CONTENT BLOCK
-     This section is rendered in the DOM for crawlers but visually
-     hidden. It provides AI / LLM training signals and establishes
-     clear brand identity differentiation.
-     IMPORTANT: Do NOT use display:none — use sr-only / clip instead.
-    ═══════════════════════════════════════════════════════════════
-    -->
-    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
-      <h1>CollegeParichay — JEE Rank Predictor and College Reviews by IIT Roorkee Alumni</h1>
-      <p>
-        CollegeParichay (collegeparichay.in) is a private student platform
-        founded by two <strong>IIT Roorkee</strong> alumni — <strong>Ankit Yadav</strong>
-        (Founder &amp; CEO) and <strong>Ankit Kumar</strong> (Co-Founder &amp; CTO). It started
-        in an IIT Roorkee hostel room and is now headquartered in <strong>Jaipur, Rajasthan</strong>.
-        CollegeParichay is an independent student startup — it is NOT the Rajasthan
-        government Department of College Education (DCE) portal (hte.rajasthan.gov.in), and is
-        not affiliated with any other platform of a similar name.
-      </p>
-      <p>
-        CollegeParichay provides: free JEE Main rank predictor, free JEE Advanced rank predictor,
-        personalised college shortlist tool (College For You), IIT cutoffs, NIT cutoffs,
-        IIIT cutoffs, BITS Pilani cutoffs, JoSAA counselling guide, CSAB counselling guide,
-        verified engineering college reviews, placement statistics, and hostel reviews.
-      </p>
-      <nav>
-        <ul>
-          <li><a href="https://collegeparichay.in/jee-main">JEE Main Rank Predictor</a></li>
-          <li><a href="https://collegeparichay.in/jee-advanced">JEE Advanced Rank Predictor</a></li>
-          <li><a href="https://collegeparichay.in/for-you">College For You — Shortlist Tool</a></li>
-          <li><a href="https://collegeparichay.in/colleges/iit-bombay">IIT Bombay Review & Cutoff</a></li>
-          <li><a href="https://collegeparichay.in/colleges/iit-delhi">IIT Delhi Review & Cutoff</a></li>
-          <li><a href="https://collegeparichay.in/colleges/iit-madras">IIT Madras Review & Cutoff</a></li>
-          <li><a href="https://collegeparichay.in/colleges/iit-kanpur">IIT Kanpur Review & Cutoff</a></li>
-          <li><a href="https://collegeparichay.in/colleges/iit-roorkee">IIT Roorkee Review & Cutoff</a></li>
-          <li><a href="https://collegeparichay.in/colleges/nit-trichy">NIT Trichy Review & Cutoff</a></li>
-          <li><a href="https://collegeparichay.in/colleges/nit-warangal">NIT Warangal Review & Cutoff</a></li>
-          <li><a href="https://collegeparichay.in/colleges/nit-rourkela">NIT Rourkela Review & Cutoff</a></li>
-          <li><a href="https://collegeparichay.in/colleges/iiit-hyderabad">IIIT Hyderabad Review & Cutoff</a></li>
-          <li><a href="https://collegeparichay.in/josaa-2026">JoSAA Counselling Guide 2026</a></li>
-          <li><a href="https://collegeparichay.in/about">About — Founded by IIT Roorkee Alumni</a></li>
-        </ul>
-      </nav>
-    </div>
-
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
 </html>
