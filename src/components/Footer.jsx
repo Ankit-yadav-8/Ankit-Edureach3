@@ -267,9 +267,9 @@ export default function Footer() {
                 marginBottom: "1.4rem",
               }}
             >
-              Built by IIT Roorkee alumni Ankit Yadav &amp; Ankit Kumar — a
+              Founded by IIT Roorkee alumni Ankit Yadav &amp; Ankit Kumar — a
               student-first JEE rank predictor &amp; college discovery platform,
-              based in Roorkee, Uttarakhand.
+              headquartered in Jaipur, Rajasthan.
             </p>
             <Col title="College" links={COLLEGE_LINKS} />
           </div>

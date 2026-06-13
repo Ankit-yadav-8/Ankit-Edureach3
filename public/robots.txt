@@ -1,4 +1,4 @@
-# robots.txt — CollegeParichay (https://www.collegeparichay.com)
+# robots.txt — CollegeParichay (https://collegeparichay.in)
 
 # Standard search engines: crawl everything except private/admin areas.
 User-agent: *
@@ -41,4 +41,4 @@ Allow: /
 User-agent: Applebot
 Allow: /
 
-Sitemap: https://www.collegeparichay.com/sitemap.xml
+Sitemap: https://collegeparichay.in/sitemap.xml
