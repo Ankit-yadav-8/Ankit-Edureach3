@@ -16,7 +16,7 @@ import { COLLEGES } from "../src/data/colleges.js";
 import { EXAMS } from "../src/data/exams.js";
 import { NEWS } from "../src/data/news.js";
 
-const SITE = "https://www.collegeparichay.com";
+const SITE = "https://collegeparichay.in";
 const today = new Date().toISOString().slice(0, 10);
 
 // [path, priority, changefreq]
