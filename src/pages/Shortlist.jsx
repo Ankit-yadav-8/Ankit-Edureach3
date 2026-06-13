@@ -50,6 +50,7 @@ export default function Shortlist() {
         title="Shortlist Your College"
         description="Build and share your personalised college shortlist on CollegeParichay — save IITs, NITs and IIITs, compare them side by side, and plan your JoSAA choices. Free by IIT Roorkee alumni."
         path="/shortlist"
+        robots="noindex, follow"
       />
       <section className="warm-page-header" style={{ padding: "40px 0" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 55% 65% at 90% 20%, rgba(249,115,22,.20) 0%, transparent 60%)" }} />
