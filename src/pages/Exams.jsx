@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Seo from "../components/Seo.jsx";
 import { ArrowRight, Globe } from "lucide-react";
 import { EXAMS, EXAM_PILLS } from "../data/exams.js";
 import Reveal from "../components/Reveal.jsx";
@@ -9,6 +10,11 @@ export default function Exams() {
   const nav = useNavigate();
   return (
     <div className="page">
+      <Seo
+        title="Engineering Entrance Exams 2026 — JEE Main, Advanced, BITSAT & More"
+        description="Dates, eligibility, exam pattern, syllabus and 5-year cutoff trends for JEE Main, JEE Advanced, BITSAT and other top engineering entrance exams in India."
+        path="/exams"
+      />
       <section className="warm-page-header" style={{ padding: "44px 0" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 55% 65% at 100% 20%, rgba(249,115,22,.20) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>

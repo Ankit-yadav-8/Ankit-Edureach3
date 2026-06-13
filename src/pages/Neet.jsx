@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Seo from "../components/Seo.jsx";
 import {
   ArrowRight, Stethoscope, CalendarDays, BadgeCheck, BarChart3, Gauge,
   Award, Landmark, BookOpen, Zap, FlaskConical, Clock, Sparkles,
@@ -61,6 +62,11 @@ export default function Neet() {
   const nav = useNavigate();
   return (
     <div className="page">
+      <Seo
+        title="NEET Rank Predictor & Medical College Finder"
+        description="Predict your NEET rank, explore MBBS and medical colleges, and check cutoffs and counselling guidance for NEET aspirants on CollegeParichay."
+        path="/neet"
+      />
       {/* HERO */}
       <section className="warm-page-header" style={{ padding: "44px 0" }}>
         <div className="container">

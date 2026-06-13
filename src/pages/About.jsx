@@ -3,6 +3,7 @@ import {
   Linkedin, Quote, Trophy, Code2, Zap, Users,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import Seo from "../components/Seo.jsx";
 import { COLLEGES } from "../data/colleges.js";
 import { EXAMS } from "../data/exams.js";
 import useCountUp from "../utils/useCountUp.js";
@@ -309,6 +310,11 @@ function TeamCard({ f, idx, badgeIcon: BadgeIcon, badgeLabel }) {
 export default function About() {
   return (
     <div className="page">
+      <Seo
+        title="About CollegeParichay — Built by IIT Roorkee Alumni"
+        description="CollegeParichay is a free student platform built by IIT Roorkee alumni Ankit Yadav and Ankit Kumar to help JEE aspirants predict ranks, shortlist colleges and navigate JoSAA counselling."
+        path="/about"
+      />
       <style>{`
         @media (max-width: 640px) {
           .team-grid { grid-template-columns: 1fr !important; }

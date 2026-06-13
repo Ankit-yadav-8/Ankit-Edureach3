@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Seo from "../components/Seo.jsx";
 import { EXAM_BY_SLUG } from "../data/exams.js";
 import RankPredictorTool from "../components/predictor/RankPredictorTool.jsx";
 import CollegePredictorTool from "../components/predictor/CollegePredictorTool.jsx";
@@ -534,6 +535,11 @@ export default function JeeAdvanced() {
 
   return (
     <div className="page">
+      <Seo
+        title="JEE Advanced Rank Predictor — Marks to Rank & IIT College Predictor"
+        description="Free JEE Advanced rank predictor. Enter your marks to get your expected rank and the IITs and branches you can get, category-wise. Built by IIT Roorkee alumni."
+        path="/jee-advanced"
+      />
 
       {/* ── Global Styles ── */}
       <style>{`

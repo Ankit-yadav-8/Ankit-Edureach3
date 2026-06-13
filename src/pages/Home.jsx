@@ -1,3 +1,4 @@
+import Seo from "../components/Seo.jsx";
 import Hero from "../components/home/Hero.jsx";
 import PredictorCards from "../components/home/PredictorCards.jsx";
 import RankCounselling from "../components/home/RankCounselling.jsx";
@@ -542,6 +543,7 @@ function CollegePickingGuide() {
 export default function Home({ onSearch }) {
   return (
     <>
+      <Seo path="/" />
       {/* ── Hero ── */}
       <Hero onSearch={onSearch} />
 

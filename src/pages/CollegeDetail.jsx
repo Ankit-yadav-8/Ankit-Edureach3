@@ -21,6 +21,7 @@ import Reviews from "../components/Reviews.jsx";
 import Gallery from "../components/Gallery.jsx";
 import ROICalculator from "../components/ROICalculator.jsx";
 import CutoffSection from "../components/CutoffSection.jsx";
+import Seo, { SITE_URL } from "../components/Seo.jsx";
 import { Youtube, Map as MapIcon } from "lucide-react";
 
 // Kick off the DB load as soon as this module is imported
@@ -53,6 +54,7 @@ export default function CollegeDetail() {
   if (!college) {
     return (
       <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}>
+        <Seo title="College not found" robots="noindex, follow" path={`/colleges/${slug}`} />
         <h2>College not found</h2>
         <Link to="/colleges" className="btn btn-coral" style={{ marginTop: 16 }}>
           Back to colleges
@@ -97,8 +99,59 @@ export default function CollegeDetail() {
     .replace(/\s{2,}/g, " ")
     .trim();
 
+  // ── SEO: per-college title, description and structured data ───────────────
+  const seoYear = new Date().getFullYear();
+  const seoTitle = `${college.name} — Cutoffs, Reviews, Placements & Fees ${seoYear}`;
+  const seoDesc =
+    `${college.name} (${college.type}${college.location ? `, ${college.location}` : ""}): ` +
+    `JoSAA cutoffs, branch-wise placements, fees, hostel info and student reviews. ` +
+    `Predict your JEE rank and check your admission chances on CollegeParichay.`;
+  const seoImage = college.heroImage
+    ? SITE_URL + encodeURI(college.heroImage)
+    : undefined;
+  const seoJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollegeOrUniversity",
+        "@id": `${SITE_URL}/colleges/${college.slug}#college`,
+        name: college.name,
+        url: `${SITE_URL}/colleges/${college.slug}`,
+        description: aboutText || seoDesc,
+        ...(college.estd ? { foundingDate: String(college.estd) } : {}),
+        ...(college.website ? { sameAs: college.website } : {}),
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: college.location || college.state || "India",
+          ...(college.state ? { addressRegion: college.state } : {}),
+          addressCountry: "IN",
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+          { "@type": "ListItem", position: 2, name: "Colleges", item: `${SITE_URL}/colleges` },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: college.name,
+            item: `${SITE_URL}/colleges/${college.slug}`,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="page">
+      <Seo
+        title={seoTitle}
+        description={seoDesc}
+        path={`/colleges/${college.slug}`}
+        image={seoImage}
+        jsonLd={seoJsonLd}
+      />
 
       {/* ── Hero — clean: image + one readability gradient + a subtle accent ──── */}
       <section style={{

@@ -1,0 +1,44 @@
+# robots.txt — CollegeParichay (https://www.collegeparichay.com)
+
+# Standard search engines: crawl everything except private/admin areas.
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /search
+
+# Allow major AI / answer-engine crawlers so CollegeParichay can be
+# cited and described accurately in AI Overviews and chat assistants.
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+Sitemap: https://www.collegeparichay.com/sitemap.xml

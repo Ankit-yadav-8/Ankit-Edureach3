@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
+import Seo from "../components/Seo.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check, Star, ShieldCheck, Phone, MessageCircle, Clock, FileText, Target,
@@ -256,6 +257,11 @@ export default function Josaa2026() {
   const { open: openEnrol } = useEnrol();
   return (
     <div className="page">
+      <Seo
+        title="JoSAA 2026 Counselling — Schedule, Choice Filling & Cutoffs"
+        description="Complete JoSAA 2026 counselling guide: registration, choice filling, round-wise schedule, seat allotment and IIT NIT IIIT cutoffs. Track every deadline on CollegeParichay."
+        path="/josaa-2026"
+      />
       {/* HERO */}
       <section className="warm-page-header" style={{ padding: "110px 0 70px" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />

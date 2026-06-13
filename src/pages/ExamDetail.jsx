@@ -3,16 +3,24 @@ import { ArrowLeft, Globe, FileText, ExternalLink, CalendarDays, CheckCircle2, L
 import { EXAM_BY_SLUG } from "../data/exams.js";
 import { Trend } from "../components/Charts.jsx";
 import Reveal from "../components/Reveal.jsx";
+import Seo from "../components/Seo.jsx";
 
 export default function ExamDetail() {
   const { slug } = useParams();
   const nav = useNavigate();
   const exam = EXAM_BY_SLUG[slug];
 
-  if (!exam) return <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}><h2>Exam not found</h2><Link to="/exams" className="btn btn-coral" style={{ marginTop: 16 }}>All exams</Link></div>;
+  if (!exam) return <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}><Seo title="Exam not found" robots="noindex, follow" path={`/exams/${slug}`} /><h2>Exam not found</h2><Link to="/exams" className="btn btn-coral" style={{ marginTop: 16 }}>All exams</Link></div>;
+
+  const seoYear = new Date().getFullYear();
 
   return (
     <div className="page">
+      <Seo
+        title={`${exam.name} ${seoYear} — Dates, Pattern, Eligibility & Cutoffs`}
+        description={`${exam.name}: ${(exam.about || "").slice(0, 150)} Check exam dates, pattern, eligibility, previous papers and cutoff trends on CollegeParichay.`}
+        path={`/exams/${slug}`}
+      />
       <section className="warm-page-header">
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: `radial-gradient(ellipse 60% 70% at 100% 20%, ${exam.color}30 0%, transparent 60%)` }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 100%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />

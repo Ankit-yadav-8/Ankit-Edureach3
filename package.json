@@ -8,6 +8,8 @@
     "dev": "vite",
     "server": "cd server && node --watch index.js",
     "dev:full": "concurrently \"npm run dev\" \"npm run server\"",
+    "sitemap": "node scripts/genSitemap.mjs",
+    "prebuild": "node scripts/genSitemap.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },

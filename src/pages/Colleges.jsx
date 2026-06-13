@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useDeferredValue } from "react";
+import Seo from "../components/Seo.jsx";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, MapPin, Trophy, ArrowRight, BadgeCheck, SlidersHorizontal, TrendingUp, Percent, X } from "lucide-react";
@@ -66,6 +67,11 @@ export default function Colleges() {
 
   return (
     <div className="page">
+      <Seo
+        title="All IIT, NIT & IIIT Colleges — Cutoffs, Reviews & Placements"
+        description="Browse and compare every IIT, NIT and IIIT in India. Filter by JEE rank, branch, state and category to find JoSAA cutoffs, placements, fees and student reviews on CollegeParichay."
+        path="/colleges"
+      />
 
       {/* Page header */}
       <section className="warm-page-header">

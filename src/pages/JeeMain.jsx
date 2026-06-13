@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Seo from "../components/Seo.jsx";
 import { EXAM_BY_SLUG } from "../data/exams.js";
 import RankPredictorTool from "../components/predictor/RankPredictorTool.jsx";
 import CollegePredictorTool from "../components/predictor/CollegePredictorTool.jsx";
@@ -425,6 +426,11 @@ export default function JeeMain() {
 
   return (
     <div className="page">
+      <Seo
+        title="JEE Main Rank Predictor — Percentile to Rank & College Predictor"
+        description="Free JEE Main rank predictor. Convert your NTA percentile to an expected rank and see which IITs, NITs and IIITs you can get, category-wise. Built by IIT Roorkee alumni."
+        path="/jee-main"
+      />
 
       {/* ── Global Styles ── */}
       <style>{`

@@ -1,15 +1,15 @@
 {
-  "name": "EduReach — JEE & College Discovery",
-  "short_name": "EduReach",
-  "description": "Predict your JEE rank, discover colleges and track counselling — all in one place.",
-  "start_url": "./",
-  "scope": "./",
+  "name": "CollegeParichay — JEE Rank Predictor & College Reviews",
+  "short_name": "CollegeParichay",
+  "description": "Predict your JEE Main & Advanced rank, discover IIT/NIT/IIIT colleges, compare cutoffs, read reviews and track JoSAA counselling — all free.",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
-  "theme_color": "#f97316",
+  "theme_color": "#F05A28",
   "icons": [
-    { "src": "assets/team/CPlogo3.jpeg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any" },
-    { "src": "assets/team/CPlogo3.jpeg", "sizes": "192x192", "type": "image/jpeg", "purpose": "any" }
+    { "src": "/cplogo3.jpeg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any" },
+    { "src": "/cplogo3.jpeg", "sizes": "192x192", "type": "image/jpeg", "purpose": "any" }
   ]
 }
