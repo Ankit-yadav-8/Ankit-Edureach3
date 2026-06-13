@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Gauge, Crosshair, Building2, ArrowRight } from "lucide-react";
 import { CenterDonut } from "../Charts.jsx";
-import { TiltCard, FloatingOrbs, StaggerReveal, StaggerItem, RippleButton } from "../Animations.jsx";
+import { TiltCard, FloatingOrbs, StaggerReveal, StaggerItem } from "../Animations.jsx";
 
 const CARDS = [
   {
@@ -103,7 +103,7 @@ export default function PredictorCards() {
               {/* Description + CTA */}
               <div style={{ padding: "8px 20px 20px", display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
                 <p style={{ color: "#6b7280", fontSize: 13.5, lineHeight: 1.65, margin: 0 }}>{c.desc}</p>
-                <RippleButton
+                <button
                   style={{
                     marginTop: "auto",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
@@ -111,14 +111,11 @@ export default function PredictorCards() {
                     border: "none", borderRadius: 11, padding: "11px 16px",
                     fontSize: 13.5, fontWeight: 700, fontFamily: "'Space Grotesk','Sora',sans-serif",
                     cursor: "pointer",
-                    boxShadow: `0 4px 16px ${c.accent}44`,
-                    transition: "filter .2s, transform .2s",
                   }}
-                  className="btn-shimmer"
                   onClick={() => nav(c.to)}
                 >
                   {c.cta} <ArrowRight size={15} />
-                </RippleButton>
+                </button>
               </div>
             </motion.div>
             </TiltCard>

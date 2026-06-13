@@ -145,8 +145,8 @@ export default function RankCounselling() {
               colleges — we help you find them.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", alignItems: "center" }}>
-              <a href={WA_LINK} target="_blank" rel="noreferrer" className="btn btn-coral btn-shimmer"
-                style={{ fontSize: "1rem", padding: "14px 30px", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, position: "relative", overflow: "hidden" }}>
+              <a href={WA_LINK} target="_blank" rel="noreferrer" className="btn btn-coral"
+                style={{ fontSize: "1rem", padding: "14px 30px", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700 }}>
                 Start Free Counselling <ArrowRight size={18} />
               </a>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", borderRadius: 50, background: "#fff", border: "1.5px dashed rgba(244,123,32,.5)", fontSize: 14, fontWeight: 700, color: "#1a1a2e" }}>

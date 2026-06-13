@@ -710,14 +710,12 @@ export default function Home({ onSearch }) {
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <Link
                   to="/jee-resources"
-                  className="btn btn-coral btn-shimmer"
+                  className="btn btn-coral"
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 8,
                     padding: "14px 28px",
                     borderRadius: 12, fontSize: 15, fontWeight: 700,
                     textDecoration: "none",
-                    boxShadow: "0 8px 30px rgba(244,123,32,.45)",
-                    position: "relative", overflow: "hidden",
                   }}
                 >
                   Explore JEE Resources <ArrowRight size={17} />

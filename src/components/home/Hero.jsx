@@ -10,7 +10,6 @@ import {
   TypewriterText,
   FloatingOrbs,
   GradientText,
-  RippleButton,
   AnimatedNumber,
 } from "../Animations.jsx";
 
@@ -927,8 +926,7 @@ export default function Hero({ onSearch }) {
                 paddingInline: isMobile ? "0" : "0",
               }}
             >
-              <RippleButton
-                className="btn btn-shimmer btn-glow hero-cp-highlight"
+              <button
                 onClick={() => nav("/jee-main#college")}
                 style={{
                   padding: isXs ? "11px 22px" : "12px 26px",
@@ -939,21 +937,18 @@ export default function Hero({ onSearch }) {
                   background: "#F47B20",
                   color: "#fff",
                   border: "none",
+                  cursor: "pointer",
                   letterSpacing: "0.2px",
-                  boxShadow: "0 6px 18px rgba(244,123,32,.3)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: isMobile ? "100%" : "auto",
-                  position: "relative",
                 }}
-                color="rgba(255,255,255,0.45)"
               >
                 <Crosshair size={isXs ? 17 : 19} /> College Predictor
-              </RippleButton>
+              </button>
 
-              <RippleButton
-                className="btn btn-shimmer btn-glow"
+              <button
                 onClick={() => nav("/jee-advanced-result-2026")}
                 style={{
                   padding: isXs ? "11px 20px" : "12px 24px",
@@ -964,20 +959,17 @@ export default function Hero({ onSearch }) {
                   background: "#F47B20",
                   color: "#fff",
                   border: "none",
-                  boxShadow: "0 6px 18px rgba(244,123,32,.3)",
+                  cursor: "pointer",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: isMobile ? "100%" : "auto",
-                  position: "relative",
                 }}
-                color="rgba(255,255,255,0.4)"
               >
                 <Trophy size={isXs ? 16 : 18} /> JEE Advanced Result 2026
-              </RippleButton>
+              </button>
 
-              <RippleButton
-                className="btn btn-shimmer"
+              <button
                 onClick={() => nav("/neet")}
                 style={{
                   padding: isXs ? "11px 20px" : "12px 24px",
@@ -988,16 +980,15 @@ export default function Hero({ onSearch }) {
                   background: "#F47B20",
                   color: "#fff",
                   border: "none",
-                  boxShadow: "0 6px 18px rgba(244,123,32,.3)",
+                  cursor: "pointer",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: isMobile ? "100%" : "auto",
                 }}
-                color="rgba(255,255,255,0.4)"
               >
                 <Award size={isXs ? 16 : 18} /> NEET 2026
-              </RippleButton>
+              </button>
             </motion.div>
 
             {/* ── Stats bar ── */}

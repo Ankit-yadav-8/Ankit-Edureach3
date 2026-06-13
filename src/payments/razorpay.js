@@ -46,13 +46,17 @@ export async function startPayment(details) {
       order_id: order.orderId,
       name: "College Parichay",
       description: order.planLabel,
+      image: `${window.location.origin}/cp-pay-logo.png`,
       prefill: {
         name: details.name || "",
         email: details.email || "",
         contact: details.phone || "",
       },
       notes: { plan: details.plan },
-      theme: { color: "#F47B20" },
+      theme: {
+        color: "#F47B20",
+        backdrop_color: "#1c1c28",
+      },
       handler: async (response) => {
         try {
           await post("/api/payment/verify", {
