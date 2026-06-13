@@ -29,6 +29,13 @@ router.post("/send", async (req, res) => {
     await Otp.deleteMany({ email });
     await Otp.create({ email, codeHash, name, expiresAt: new Date(Date.now() + 5 * 60 * 1000) });
     const r = await sendOtpEmail(email, code);
+    // If a real send was attempted and failed, tell the user — don't pretend it
+    // worked (and never leak the code in the response outside dev mode).
+    if (!r.ok) {
+      await Otp.deleteMany({ email });
+      console.error(`[OTP] Send failed for ${email}: ${r.error}`);
+      return res.status(502).json({ error: "We couldn't send the code right now. Please try again in a moment." });
+    }
     console.log(`[OTP] Sent to ${email} | dev=${r.dev}`);
     res.json({ sent: true, ...(r.dev ? { devCode: code } : {}) });
   } catch (e) { 
