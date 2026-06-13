@@ -262,8 +262,9 @@ export default function Footer() {
                 marginBottom: "1.4rem",
               }}
             >
-              India's most trusted JEE rank predictor & college discovery
-              platform for engineering aspirants.
+              Built by IIT Roorkee alumni Ankit Yadav &amp; Ankit Kumar — a
+              student-first JEE rank predictor &amp; college discovery platform,
+              based in Roorkee, Uttarakhand.
             </p>
             <Col title="College" links={COLLEGE_LINKS} />
           </div>
@@ -309,7 +310,7 @@ export default function Footer() {
               }}
             >
               <Code2 size={13} />
-              Built by IITians. Trusted by Aspirants
+              Built by IIT Roorkee Alumni · Trusted by Aspirants
             </span>
           </motion.div>
 
@@ -396,7 +397,7 @@ export default function Footer() {
               <Phone size={15} /> +91-7877596464 
             </a>
             <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <MapPin size={15} /> Jaipur,Rajasthan
+              <MapPin size={15} /> Roorkee, Uttarakhand
             </span>
           </div>
           <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
