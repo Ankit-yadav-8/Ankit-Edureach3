@@ -22,13 +22,53 @@ export default function PrivateDetail() {
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: `radial-gradient(ellipse 60% 70% at 100% 20%, ${u.accent}30 0%, transparent 60%)` }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 100%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 18, borderColor: "rgba(244,123,32,.4)", color: "#c75b0a" }}><ArrowLeft size={16} /> Back</button>
+          <button
+            onClick={() => nav(-1)}
+            className="btn"
+            style={{
+              marginBottom: 18,
+              background: "#fff",
+              color: "#ea580c",
+              border: "1.5px solid rgba(244,123,32,.4)",
+              fontWeight: 700,
+              boxShadow: "0 1px 6px rgba(244,123,32,.08)",
+              transition: "all .2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(244,123,32,.09)"; e.currentTarget.style.borderColor = "#F47B20"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(244,123,32,.4)"; }}
+          >
+            <ArrowLeft size={16} /> Back
+          </button>
           <span className="eyebrow">Private University · {u.exam}</span>
           <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", margin: "10px 0 4px", color: "#1c1c28" }}>{u.name}</h1>
           <div style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(28,28,40,.65)", marginTop: 6 }}><MapPin size={16} color="#F47B20" /> {u.state} · Fees {u.fees}</div>
-          <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
-            <a href={u.apply} target="_blank" rel="noreferrer" className="btn btn-coral">Apply Now <ExternalLink size={15} /></a>
-            <a href={u.website} target="_blank" rel="noreferrer" className="btn btn-ghost"><Globe size={15} /> Website</a>
+          <div style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
+            <a
+              href={u.apply}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-coral"
+              style={{ fontWeight: 700, boxShadow: "0 6px 18px rgba(244,123,32,.32)" }}
+            >
+              Apply Now <ExternalLink size={15} />
+            </a>
+            <a
+              href={u.website}
+              target="_blank"
+              rel="noreferrer"
+              className="btn"
+              style={{
+                background: "#fff",
+                color: "#ea580c",
+                border: "1.5px solid rgba(244,123,32,.4)",
+                fontWeight: 700,
+                transition: "all .2s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(244,123,32,.09)"; e.currentTarget.style.borderColor = "#F47B20"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(244,123,32,.4)"; }}
+            >
+              <Globe size={15} /> Website
+            </a>
           </div>
         </div>
       </section>
