@@ -26,21 +26,29 @@ export async function sendOtpEmail(email, code) {
     return { ok: true, dev: true };
   }
 
-  const fromEmail = String(process.env.SMTP_FROM_EMAIL || "").trim();
+  // The verified Brevo sender to use when SMTP_FROM_EMAIL is missing or set to a
+  // free-webmail address (gmail/yahoo/…) that Brevo refuses to send from. This
+  // domain (collegeparichay.in) is authenticated in Brevo, so OTP delivery keeps
+  // working even if SMTP_FROM_EMAIL on Render is misconfigured.
+  const VERIFIED_SENDER = "hello@collegeparichay.in";
+
+  let fromEmail   = String(process.env.SMTP_FROM_EMAIL || "").trim();
   const fromName  = (process.env.SMTP_FROM_NAME || "CollegeParichay").trim();
   const replyTo   = String(process.env.REPLY_TO_EMAIL || "collegeparichay@gmail.com").trim();
 
-  // Catch the most common misconfiguration loudly instead of failing silently.
-  if (!fromEmail) {
-    console.error("[MAILER] SMTP_FROM_EMAIL is not set — Brevo cannot send.");
-    return { ok: false, dev: false, error: "Sender email not configured" };
-  }
-  if (FREE_WEBMAIL.test(fromEmail)) {
-    console.error(
-      `[MAILER] SMTP_FROM_EMAIL="${fromEmail}" is a free webmail address. Brevo ` +
-      `rejects these as senders. Set SMTP_FROM_EMAIL to a verified domain address ` +
-      `(e.g. noreply@collegeparichay.in) and keep the gmail as REPLY_TO_EMAIL.`
-    );
+  // A free webmail "from" can never be sent through Brevo — fall back to the
+  // verified domain sender (and keep the gmail as reply-to) instead of failing.
+  if (!fromEmail || FREE_WEBMAIL.test(fromEmail)) {
+    if (fromEmail) {
+      console.error(
+        `[MAILER] SMTP_FROM_EMAIL="${fromEmail}" is a free webmail address Brevo ` +
+        `won't send from — using verified sender "${VERIFIED_SENDER}" instead. ` +
+        `(Set SMTP_FROM_EMAIL to a verified domain address on Render to silence this.)`
+      );
+    } else {
+      console.warn(`[MAILER] SMTP_FROM_EMAIL not set — using "${VERIFIED_SENDER}".`);
+    }
+    fromEmail = VERIFIED_SENDER;
   }
 
   try {
