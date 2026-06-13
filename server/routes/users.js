@@ -12,7 +12,7 @@ router.use((_req, res, next) => {
 router.get("/count", requireAdmin, async (_req, res) => {
   try {
     res.json({ total: await User.countDocuments() });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { console.error("[users/count]", e.message); res.status(500).json({ error: "Server error" }); }
 });
 
 router.get("/", requireAdmin, async (_req, res) => {
@@ -22,7 +22,7 @@ router.get("/", requireAdmin, async (_req, res) => {
     //  still appeared in the full CSV, making old records look "missing".)
     const users = await User.find().select("-passwordHash -resetTokenHash").sort({ createdAt: -1 }).lean();
     res.json({ total: users.length, users });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { console.error("[users/list]", e.message); res.status(500).json({ error: "Server error" }); }
 });
 
 router.get("/export.csv", requireAdmin, async (_req, res) => {
@@ -38,7 +38,7 @@ router.get("/export.csv", requireAdmin, async (_req, res) => {
     res.setHeader("Content-Type", "text/csv");
     res.setHeader("Content-Disposition", "attachment; filename=collegeparichay-users.csv");
     res.send(head + rows);
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { console.error("[users/export]", e.message); res.status(500).json({ error: "Server error" }); }
 });
 
 export default router;

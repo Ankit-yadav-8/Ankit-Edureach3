@@ -28,7 +28,7 @@ router.post("/signup", async (req, res) => {
     // Single round-trip duplicate check (email + phone) instead of two sequential queries
     const dup = await User.findOne({ $or: [{ email }, { phone: String(phone) }] }).select("email phone");
     if (dup) return res.status(409).json({ error: dup.email === email ? "Email already registered" : "Phone number already registered" });
-    const passwordHash = await bcrypt.hash(String(password), 10);
+    const passwordHash = await bcrypt.hash(String(password), 12);
     const user = await User.create({
       name: String(name).trim(), email, phone: String(phone),
       coaching: String(coaching || "").trim(),
@@ -38,7 +38,7 @@ router.post("/signup", async (req, res) => {
       passwordHash, lastLogin: new Date(),
     });
     res.status(201).json({ token: sign(user), user: pub(user) });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { console.error("[auth/signup]", e.message); res.status(500).json({ error: "Could not create account. Please try again." }); }
 });
 
 router.post("/login", async (req, res) => {
@@ -52,7 +52,7 @@ router.post("/login", async (req, res) => {
     // Respond immediately; update lastLogin in the background (don't block the response)
     res.json({ token: sign(user), user: pub(user) });
     User.updateOne({ _id: user._id }, { lastLogin: new Date() }).catch(() => {});
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { console.error("[auth/login]", e.message); res.status(500).json({ error: "Could not log in. Please try again." }); }
 });
 
 router.get("/me", requireAuth, async (req, res) => {
@@ -73,7 +73,7 @@ router.post("/forgot", async (req, res) => {
     const devLink = `${(process.env.CLIENT_ORIGIN || "").split(",")[0]}/?reset=${token}`;
     console.log(`\n[DEV RESET] for ${email}: token=${token}\n`);
     res.json({ ok: true, ...(process.env.OTP_DEV_MODE !== "false" ? { devToken: token, devLink } : {}) });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { console.error("[auth/forgot]", e.message); res.status(500).json({ error: "Could not process the request. Please try again." }); }
 });
 
 router.post("/reset", async (req, res) => {
@@ -87,7 +87,7 @@ router.post("/reset", async (req, res) => {
     user.resetTokenHash = undefined; user.resetExpires = undefined;
     await user.save();
     res.json({ ok: true, token: sign(user), user: pub(user) });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { console.error("[auth/reset]", e.message); res.status(500).json({ error: "Could not reset password. Please try again." }); }
 });
 
 export default router;
