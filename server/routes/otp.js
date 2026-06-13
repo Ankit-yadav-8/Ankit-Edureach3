@@ -38,9 +38,9 @@ router.post("/send", async (req, res) => {
     }
     console.log(`[OTP] Sent to ${email} | dev=${r.dev}`);
     res.json({ sent: true, ...(r.dev ? { devCode: code } : {}) });
-  } catch (e) { 
+  } catch (e) {
     console.error("[OTP SEND ERROR]", e.message);
-    res.status(500).json({ error: e.message }); 
+    res.status(500).json({ error: "Could not send the code. Please try again." });
   }
 });
 
@@ -75,9 +75,9 @@ router.post("/verify", async (req, res) => {
     await user.save();
     await otp.deleteOne();
     res.json({ token: sign(user), user: { id: user._id, name: user.name, email: user.email, phone: user.phone } });
-  } catch (e) { 
+  } catch (e) {
     console.error("[OTP VERIFY ERROR]", e.message);
-    res.status(500).json({ error: e.message }); 
+    res.status(500).json({ error: "Could not verify the code. Please try again." });
   }
 });
 

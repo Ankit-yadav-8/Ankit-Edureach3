@@ -14,8 +14,25 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.set("trust proxy", 1);
+// Don't advertise the framework — one less hint for an attacker.
+app.disable("x-powered-by");
 
-app.use(express.json());
+// ── Security headers (helmet-equivalent, no extra dependency) ──────────────
+// This is a JSON API: it never serves HTML or scripts, so the strictest CSP
+// (`default-src 'none'`) is safe and ideal here.
+app.use((_req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; base-uri 'none'");
+  next();
+});
+
+// Reject oversized payloads early — these endpoints only ever take small JSON.
+app.use(express.json({ limit: "16kb" }));
 
 // Build allowed origins list: always include localhost for development
 const envOrigins = (process.env.CLIENT_ORIGIN || "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -33,14 +50,25 @@ app.use(cors({
   credentials: true,
 }));
 
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 50, standardHeaders: true, legacyHeaders: false });
+const rl = (opts) => rateLimit({
+  standardHeaders: true,   // emit RateLimit-* + Retry-After headers
+  legacyHeaders: false,
+  message: { error: "Too many requests — please wait a moment and try again." },
+  ...opts,
+});
+
+// Tight limit on credential/code endpoints to blunt brute-force & abuse.
+const authLimiter    = rl({ windowMs: 15 * 60 * 1000, max: 30 });
+// Generous per-minute limit for read/payment traffic — enough for normal use,
+// low enough to stop scraping or admin-key guessing.
+const apiLimiter     = rl({ windowMs: 60 * 1000, max: 120 });
 
 app.get("/", (_req, res) => res.send("EduReach API ✅"));
-app.use("/api/auth", limiter, authRoutes);
-app.use("/api/otp", limiter, otpRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/cutoffs", cutoffRoutes);
-app.use("/api/payment", limiter, paymentRoutes);
+app.use("/api/auth", authLimiter, authRoutes);
+app.use("/api/otp", authLimiter, otpRoutes);
+app.use("/api/users", apiLimiter, userRoutes);
+app.use("/api/cutoffs", apiLimiter, cutoffRoutes);
+app.use("/api/payment", apiLimiter, paymentRoutes);
 
 connectDB()
   .then(() => app.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`)))

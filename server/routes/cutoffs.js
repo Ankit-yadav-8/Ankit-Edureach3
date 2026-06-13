@@ -3,6 +3,12 @@ import Cutoff from "../models/Cutoff.js";
 
 const router = express.Router();
 
+// Escape user input before it goes into a RegExp. Without this, a value like
+// "(a+)+$" is a ReDoS catastrophic-backtracking vector, and metacharacters let
+// a caller inject unintended regex into the Mongo query. We match it as a
+// literal, case-insensitive substring instead.
+const safeRegex = (s) => new RegExp(String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+
 // GET /api/cutoffs?year=2024&exam=JEE_ADVANCED&seat_type=OPEN&gender=Gender-Neutral&institute=Bombay&round=1&page=1&limit=100
 router.get("/", async (req, res) => {
   try {
@@ -16,8 +22,8 @@ router.get("/", async (req, res) => {
     if (seat_type) filter.seat_type = seat_type;
     if (gender)    filter.gender    = gender;
     if (quota)     filter.quota     = quota;
-    if (institute) filter.institute = new RegExp(institute, "i");
-    if (program)   filter.program   = new RegExp(program, "i");
+    if (institute) filter.institute = safeRegex(institute);
+    if (program)   filter.program   = safeRegex(program);
 
     const skip = (page - 1) * limit;
     const [data, total] = await Promise.all([
@@ -26,7 +32,8 @@ router.get("/", async (req, res) => {
     ]);
     res.json({ total, page, pages: Math.ceil(total / limit), data });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("[cutoffs] query error:", err.message);
+    res.status(500).json({ error: "Could not load cutoff data." });
   }
 });
 
