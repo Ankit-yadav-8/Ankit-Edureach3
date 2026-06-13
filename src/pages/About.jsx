@@ -386,24 +386,35 @@ export default function About() {
       </section>
 
       {/* ── OUR STORY ── */}
-      <section style={{ background: "#ffffff", padding: "80px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
-        <div className="container" style={{ maxWidth: 900 }}>
-          <div className="title-bar" style={{ textAlign: "left", alignItems: "flex-start", marginBottom: 40 }}>
-            <span className="eyebrow">Our story</span>
-            <h2 className="section-title" style={{ textAlign: "left", maxWidth: 640 }}>
+      <section style={{ background: "#ffffff", padding: "96px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
+        <div className="container" style={{ maxWidth: 1160 }}>
+          <div className="title-bar" style={{ textAlign: "left", alignItems: "flex-start", marginBottom: 44 }}>
+            <span className="eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <GraduationCap size={15} /> Our story · IIT Roorkee
+            </span>
+            <h2 className="section-title" style={{ textAlign: "left", maxWidth: 1000, fontSize: "clamp(2.2rem, 4.8vw, 3.6rem)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.1 }}>
               It started in an IIT Roorkee hostel room
             </h2>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 44 }}>
+          <Reveal>
+            <p style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.65rem)", lineHeight: 1.6, fontWeight: 600, color: "var(--navy)", margin: "0 0 34px", maxWidth: 1040 }}>
+              College Parichay was founded by two <strong>IIT Roorkee</strong> alumni —{" "}
+              <strong>Ankit Yadav</strong> (Founder &amp; CEO) and <strong>Ankit Kumar</strong> (Co-Founder &amp; CTO) —
+              with <strong>K. Gopal</strong> (COO &amp; Operations Head) keeping everything running. Three students from the
+              same campus, building the platform we wished existed when we were the ones staring at rank lists and cutoffs.
+            </p>
+          </Reveal>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 22, marginBottom: 48 }}>
             {[
               `A few years ago, sitting in a hostel room at IIT Roorkee, we were remembering how stressful our own JEE counselling had been. Endless browser tabs, outdated cutoff PDFs, WhatsApp forwards full of conflicting information, and a constant fear: "what if I fill my choices wrong and lose a seat I deserved?"`,
               `We watched batchmates — bright students who had cracked one of the toughest exams in the world — stumble at the last hurdle simply because the right information wasn't available. Students from small towns without seniors to guide them were at a real disadvantage. That didn't sit right with us.`,
-              `IIT Roorkee gave us the technical foundation and the peer environment that pushes you to build real things. We had access to years of JoSAA data, the engineering coursework to build prediction models, and most importantly — the lived experience of going through this process. We decided to use all of it to build something meaningful.`,
-              `Today, College Parichay is used by thousands of students every counselling season. We've structured 7+ years of JoSAA data, built rank predictors for JEE Main and Advanced, a college explorer, a JoSAA planner, and a comparison engine — all from that same hostel room drive to make this process less chaotic for the next student.`,
+              `<strong>IIT Roorkee</strong> gave us the technical foundation and the peer environment that pushes you to build real things. We had access to years of JoSAA data, the engineering coursework to build prediction models, and most importantly — the lived experience of going through this process. We decided to use all of it to build something meaningful.`,
+              `Today, College Parichay is used by thousands of students every counselling season. We've structured 7+ years of JoSAA data, built rank predictors for JEE Main and Advanced, a college explorer, a JoSAA planner, and a comparison engine — all from that same <strong>IIT Roorkee</strong> hostel-room drive to make this process less chaotic for the next student.`,
             ].map((text, i) => (
               <Reveal key={i} delay={i * 0.06}>
-                <p style={{ fontSize: "1.04rem", lineHeight: 1.82, color: "var(--ink)", margin: 0 }}
+                <p style={{ fontSize: "1.2rem", lineHeight: 1.9, color: "var(--ink)", margin: 0, maxWidth: 1040 }}
                   dangerouslySetInnerHTML={{ __html: text.replace(/"([^"]+)"/g, '<em>"$1"</em>') }} />
               </Reveal>
             ))}
@@ -411,19 +422,43 @@ export default function About() {
 
           <Reveal>
             <div style={{
-              borderLeft: "4px solid #F47B20", borderRadius: "0 14px 14px 0",
-              background: "rgba(244,123,32,.06)", padding: "22px 26px",
-              display: "flex", gap: 16, marginBottom: 56,
+              borderLeft: "5px solid #F47B20", borderRadius: "0 16px 16px 0",
+              background: "rgba(244,123,32,.06)", padding: "30px 34px",
+              display: "flex", gap: 18, marginBottom: 38, maxWidth: 1040,
             }}>
-              <Quote size={30} color="#F47B20" style={{ flexShrink: 0, marginTop: 4 }} />
-              <p style={{ fontStyle: "italic", color: "var(--navy)", fontSize: "1.08rem", lineHeight: 1.68, margin: 0 }}>
-                "We're not a faceless portal. We're engineers who lived this chaos and decided to fix it for the next student. Every feature on College Parichay answers a question one of us once had — and found no good answer to."
+              <Quote size={38} color="#F47B20" style={{ flexShrink: 0, marginTop: 4 }} />
+              <p style={{ fontStyle: "italic", color: "var(--navy)", fontSize: "1.32rem", lineHeight: 1.62, fontWeight: 500, margin: 0 }}>
+                "We're not a faceless portal. We're <strong>IIT&nbsp;Roorkee</strong> engineers who lived this chaos and decided to fix it for the next student. Every feature on College Parichay answers a question one of us once had — and found no good answer to."
               </p>
             </div>
           </Reveal>
 
-          <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 22, marginBottom: 32, color: "var(--navy)" }}>
-            How we built it — from IIT hostel to live platform
+          {/* Founder & team signature */}
+          <Reveal>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 14, marginBottom: 64 }}>
+              {[
+                ["Ankit Yadav", "Founder & CEO"],
+                ["Ankit Kumar", "Co-Founder & CTO"],
+                ["K. Gopal", "COO & Operations Head"],
+              ].map(([name, role]) => (
+                <div key={name} style={{
+                  display: "flex", flexDirection: "column", gap: 3,
+                  padding: "16px 24px", borderRadius: 16, background: "#fff",
+                  border: "1px solid rgba(244,123,32,.28)", boxShadow: "0 4px 18px rgba(13,27,62,.06)",
+                  minWidth: 200, flex: "1 1 220px",
+                }}>
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.18rem", color: "var(--navy)" }}>{name}</span>
+                  <span style={{ fontSize: 13.5, fontWeight: 700, color: "#F47B20" }}>{role}</span>
+                  <span style={{ fontSize: 12.5, color: "var(--muted)", display: "inline-flex", alignItems: "center", gap: 5, marginTop: 2 }}>
+                    <GraduationCap size={13} /> IIT Roorkee
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 26, marginBottom: 32, color: "var(--navy)" }}>
+            How we built it — from IIT Roorkee hostel to live platform
           </h3>
 
           <div style={{ position: "relative" }}>
