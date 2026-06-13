@@ -9,7 +9,6 @@ import {
 import {
   TypewriterText,
   FloatingOrbs,
-  GradientText,
   AnimatedNumber,
 } from "../Animations.jsx";
 
@@ -800,7 +799,7 @@ export default function Hero({ onSearch }) {
               }}>
                 Know Your Rank.{" "}
                 <br />
-                <GradientText from="#F47B20" via="#fbbf24" to="#F97316">Find Your College.</GradientText>
+                <span style={{ color: "#F47B20" }}>Find Your College.</span>
               </h1>
 
               <p style={{
@@ -852,7 +851,7 @@ export default function Hero({ onSearch }) {
                   />
                 </div>
                 <button
-                  className="btn btn-coral"
+                  className="btn"
                   onClick={() => go()}
                   style={{
                     borderRadius: 10,
@@ -861,6 +860,9 @@ export default function Hero({ onSearch }) {
                     fontWeight: 700,
                     whiteSpace: "nowrap",
                     flexShrink: 0,
+                    background: "#F47B20",
+                    color: "#fff",
+                    boxShadow: "none",
                   }}
                 >
                   Search

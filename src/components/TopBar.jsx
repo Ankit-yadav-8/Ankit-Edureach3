@@ -2,9 +2,8 @@ import { GraduationCap, BadgeCheck } from "lucide-react";
 
 /* ============================================================
    TopBar — a slim, minimalist announcement strip pinned above
-   the navbar. Same orange + white brand colours. The trust
-   line carries a soft glow (the one glow effect kept on the
-   site after the footer was flattened).
+   the navbar. Solid orange background with clean white trust
+   text (no glow / animation).
    ============================================================ */
 export default function TopBar() {
   return (
@@ -24,15 +23,6 @@ export default function TopBar() {
       <style>{`
         .cp-topbar .cp-topbar__glow {
           display: inline-flex; align-items: center; gap: 6px;
-          text-shadow: 0 0 8px rgba(255,255,255,.85), 0 0 16px rgba(255,224,178,.6);
-          animation: cpTopbarGlow 2.4s ease-in-out infinite;
-        }
-        @keyframes cpTopbarGlow {
-          0%, 100% { text-shadow: 0 0 6px rgba(255,255,255,.6), 0 0 12px rgba(255,224,178,.4); }
-          50%      { text-shadow: 0 0 12px rgba(255,255,255,1), 0 0 24px rgba(255,224,178,.85); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .cp-topbar .cp-topbar__glow { animation: none; }
         }
       `}</style>
       <span className="cp-topbar__glow">

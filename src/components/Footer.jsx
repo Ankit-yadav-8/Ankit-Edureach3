@@ -286,13 +286,7 @@ export default function Footer() {
           }}
         >
           {/* "Built by developers" badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45, type: "spring", bounce: 0.45 }}
-            style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}
-          >
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
             <span
               className="fteam-badge"
               style={{
@@ -301,7 +295,7 @@ export default function Footer() {
                 gap: 7,
                 padding: "5px 18px",
                 borderRadius: 99,
-                background: "rgba(249,115,22,0.85)",
+                background: "#F47B20",
                 fontSize: ".78rem",
                 fontWeight: 700,
                 letterSpacing: 1.2,
@@ -312,7 +306,7 @@ export default function Footer() {
               <Code2 size={13} />
               Built by IIT Roorkee Alumni · Trusted by Aspirants
             </span>
-          </motion.div>
+          </div>
 
           {/* Sub-heading */}
           <motion.p
