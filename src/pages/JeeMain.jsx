@@ -836,7 +836,7 @@ export default function JeeMain() {
           </div>
 
           {/* Trend insight mini cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
             {[
               { icon: "⚛", color: "#F97316", title: "Physics",   stat: "↑ +14 pts", sub: "Index rose from ~60 (2021) to ~72 (2025 S2) — harder every year" },
               { icon: "⚗", color: "#0EA5A4", title: "Chemistry", stat: "↑ +8 pts",  sub: "Mild increase overall — still the most scoring subject consistently" },
@@ -993,7 +993,7 @@ export default function JeeMain() {
             <p className="section-sub">75 questions · 300 marks · 3 hours. 25 questions per subject (20 MCQ + 5 Numerical Value).</p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 28 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 14, marginBottom: 28 }}>
             {[
               { label: "Total Questions", value: "75",    sub: "25 per subject", color: "#F97316" },
               { label: "Total Marks",     value: "300",   sub: "4 marks each",   color: "#0EA5A4" },

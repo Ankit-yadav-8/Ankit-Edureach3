@@ -416,7 +416,7 @@ export default function CutoffSection({ college, initialProgram }) {
     return (
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
+        gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
         gap: 12,
         marginBottom: 22,
       }}>
