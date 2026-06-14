@@ -492,7 +492,7 @@ export default function About() {
           <div className="grid-4">
             <Stat target={COLLEGES.length} suffix="+" label="Colleges profiled"     color="#F47B20" />
             <Stat target={EXAMS.length}   suffix=""  label="Entrance exams tracked" color="#a855f7" />
-            <Stat target={2000}           suffix="+" label="Students guided"        color="#2EC4B6" />
+            <Stat target={3200}           suffix="+" label="Students guided"        color="#2EC4B6" />
             <Stat target={5}              suffix="-yr" label="Cutoff history"       color="#EC4899" />
           </div>
 

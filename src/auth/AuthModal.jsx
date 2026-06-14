@@ -830,7 +830,7 @@ export default function AuthModal() {
             }}>
               <Sparkles size={12} color={OR} />
               <span style={{ fontSize: 11.5, color: "#94a3b8" }}>
-                Free · Trusted by <strong style={{ color: "#64748b" }}>50,000+</strong> JEE aspirants
+                Free · Trusted by <strong style={{ color: "#64748b" }}>3,200+</strong> JEE aspirants
               </span>
             </div>
 

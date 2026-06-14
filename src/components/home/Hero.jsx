@@ -77,7 +77,7 @@ const TOP_COLLEGES = [
 ════════════════════════════════════════════════ */
 function StatsBar({ isMobile, isXs }) {
   const stats = [
-    { icon: <Users size={isXs ? 16 : 20} />,      val: "2.4L+",   lbl: "Students helped",    iconClass: "orange" },
+    { icon: <Users size={isXs ? 16 : 20} />,      val: "3,200+",  lbl: "Students helped",    iconClass: "orange" },
     { icon: <BookOpen size={isXs ? 16 : 20} />,   val: "850+",    lbl: "Colleges listed",    iconClass: "teal"   },
     { icon: <Target size={isXs ? 16 : 20} />,     val: "98% acc", lbl: "Rank predictions",   iconClass: "green"  },
     { icon: <TrendingUp size={isXs ? 16 : 20} />, val: "1.2M+",   lbl: "Cutoff data points", iconClass: "orange" },
@@ -442,7 +442,7 @@ function DevProfileCard() {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-        {[{ val: "850+", lbl: "Colleges" }, { val: "8 yrs", lbl: "Data" }, { val: "50K+", lbl: "Students" }].map(({ val, lbl }) => (
+        {[{ val: "850+", lbl: "Colleges" }, { val: "8 yrs", lbl: "Data" }, { val: "3,200+", lbl: "Students" }].map(({ val, lbl }) => (
           <div key={lbl} style={{ textAlign: "center", background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.07)", borderRadius: 9, padding: "8px 4px" }}>
             <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: ACCENT }}>{val}</div>
             <div style={{ fontSize: 9.5, color: "rgba(255,255,255,.38)", marginTop: 1 }}>{lbl}</div>
