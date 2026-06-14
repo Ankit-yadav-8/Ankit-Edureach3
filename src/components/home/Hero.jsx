@@ -802,6 +802,19 @@ export default function Hero({ onSearch }) {
                 <span style={{ color: "#F47B20" }}>Find Your College.</span>
               </h1>
 
+              {/* IIT Roorkee startup line — brand identity + SEO signal */}
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                marginBottom: "1rem",
+                fontFamily: "'Space Grotesk','Sora',sans-serif",
+                fontWeight: 700,
+                fontSize: isXs ? 12 : 13.5,
+                color: "#1c1c28",
+              }}>
+                <GraduationCap size={isXs ? 15 : 17} color="#F47B20" style={{ flexShrink: 0 }} />
+                An <span style={{ color: "#F47B20" }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
+              </div>
+
               <p style={{
                 color: subColor,
                 fontSize: isXs ? ".85rem" : "clamp(.92rem,1.7vw,1.08rem)",
