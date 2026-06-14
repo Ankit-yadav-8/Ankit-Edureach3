@@ -1273,16 +1273,16 @@ export default function Hero({ onSearch }) {
         <div
           className="hero-grid"
           style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "stretch",
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : isTablet ? "1fr 320px" : "1fr 380px",
             gap: isMobile ? "1.8rem" : "2.4rem",
+            alignItems: "center",
             width: "100%",
           }}
         >
 
-          {/* ══ HERO TEXT — heading starts where "Parichay" ends ══ */}
-          <div style={{ textAlign: "left", minWidth: 0, width: "100%", paddingLeft: headOffset }}>
+          {/* ══ HERO TEXT — centre-left, rotating card on the right ══ */}
+          <div style={{ textAlign: "left", minWidth: 0, width: "100%", maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
 
             {/* Badge */}
             <div>
@@ -1441,14 +1441,14 @@ export default function Hero({ onSearch }) {
               ))}
             </motion.div>
 
+            {/* ── Stats bar ── */}
+            <StatsBar isMobile={isMobile} isXs={isXs} />
+
           </div>
           {/* ══ end HERO TEXT ══ */}
 
-          {/* ── Six feature cards — single full-width row ── */}
-          <SixFeatureCards isMobile={isMobile} isXs={isXs} />
-
-          {/* ── Stats bar ── */}
-          <StatsBar isMobile={isMobile} isXs={isXs} />
+          {/* ── Right: rotating radar card — one card at a time, scroll effect ── */}
+          <HeroRadarCard isMobile={isMobile} />
 
         </div>
       </div>
