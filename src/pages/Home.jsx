@@ -545,11 +545,11 @@ export default function Home({ onSearch }) {
       {/* ── Hero ── */}
       <Hero onSearch={onSearch} />
 
+      {/* ── College Ticker (just below hero) ── */}
+      <CollegeTicker />
+
       {/* ── Smart Tools Hub (merged predictor + new tools) ── */}
       <SmartToolsHub />
-
-      {/* ── College Ticker ── */}
-      <CollegeTicker />
 
 
       {/* ── JEE Mains Rank Counselling (80K–9L) ── */}

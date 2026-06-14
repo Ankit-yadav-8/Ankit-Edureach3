@@ -171,37 +171,6 @@ export default function MentorshipHome() {
             ))}
           </div>
         </Reveal>
-
-        {/* ── Closing CTA strip ── */}
-        <Reveal delay={0.15}>
-          <motion.div
-            whileHover={{ scale: 1.005 }}
-            style={{
-              marginTop: 34, background: "linear-gradient(135deg, #1a1a2e 0%, #2d1f3d 55%, #3d1d0f 100%)",
-              borderRadius: 20, padding: "30px 32px", position: "relative", overflow: "hidden",
-              boxShadow: "0 18px 50px -22px rgba(26,26,46,.6)",
-              display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 22,
-            }}
-          >
-            <div style={{ position: "relative", zIndex: 1, maxWidth: 540 }}>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#fbbf24", marginBottom: 8 }}>
-                <Flame size={14} /> Serious aspirants only
-              </div>
-              <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(1.3rem,2.6vw,1.8rem)", lineHeight: 1.2, margin: 0 }}>
-                The earlier you start, the higher you rank.
-              </h3>
-              <p style={{ color: "rgba(255,255,255,.7)", fontSize: ".95rem", lineHeight: 1.6, marginTop: 8 }}>
-                Limited spots each batch — a mentor can only guide so many students 1-on-1.
-              </p>
-            </div>
-            <Link
-              to="/mentorship/jee-2027"
-              style={{ position: "relative", zIndex: 1, display: "inline-flex", alignItems: "center", gap: 9, background: "linear-gradient(135deg,#F47B20,#f5a623)", color: "#fff", padding: "15px 28px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 15, textDecoration: "none", boxShadow: "0 10px 30px rgba(244,123,32,.5)", flexShrink: 0 }}
-            >
-              Explore Mentorship <ArrowRight size={17} />
-            </Link>
-          </motion.div>
-        </Reveal>
       </div>
     </section>
   );

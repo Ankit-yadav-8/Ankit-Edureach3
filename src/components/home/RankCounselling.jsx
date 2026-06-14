@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, Phone, MessageCircle, ChevronDown, ChevronLeft, ChevronRight,
   Star, Users, Award, ShieldCheck, GraduationCap, Sparkles, Check,
-  Quote, TrendingUp,
+  Quote, TrendingUp, Flame,
 } from "lucide-react";
 import Reveal from "../Reveal.jsx";
 import { useEnrol } from "../EnrolModal.jsx";
@@ -260,12 +260,43 @@ export default function RankCounselling() {
 
       <div className="container" style={{ position: "relative", zIndex: 1, paddingTop: 16, paddingBottom: 72 }}>
 
-        {/* ── 7 · SUCCESS STORIES (dynamic carousel) ── */}
-        <Reveal>
-          <SectionHead eyebrow="Real results" title={<>Success <span className="accent">stories</span></>}
-            sub="Students with ranks like yours who found the right college." />
+        {/* ── 7 · SUCCESS STORIES (left) + EXPLORE MENTORSHIP (right) on desktop ── */}
+        <div className="cta-merge-grid-rev">
+          {/* Explore Mentorship — source first → right column on desktop, on top on mobile */}
+          <Reveal delay={0.1}>
+            <motion.div
+              whileHover={{ scale: 1.005 }}
+              style={{
+                background: "linear-gradient(135deg, #1a1a2e 0%, #2d1f3d 55%, #3d1d0f 100%)",
+                borderRadius: 20, padding: "32px 32px", position: "relative", overflow: "hidden",
+                boxShadow: "0 18px 50px -22px rgba(26,26,46,.6)",
+                display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 16,
+              }}
+            >
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#fbbf24" }}>
+                <Flame size={14} /> Serious aspirants only
+              </div>
+              <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(1.3rem,2.6vw,1.8rem)", lineHeight: 1.2, margin: 0 }}>
+                The earlier you start, the higher you rank.
+              </h3>
+              <p style={{ color: "rgba(255,255,255,.7)", fontSize: ".95rem", lineHeight: 1.6, margin: 0 }}>
+                Limited spots each batch — a mentor can only guide so many students 1-on-1.
+              </p>
+              <Link
+                to="/mentorship/jee-2027"
+                style={{ display: "inline-flex", alignItems: "center", gap: 9, background: "linear-gradient(135deg,#F47B20,#f5a623)", color: "#fff", padding: "15px 28px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 15, textDecoration: "none", boxShadow: "0 10px 30px rgba(244,123,32,.5)" }}
+              >
+                Explore Mentorship <ArrowRight size={17} />
+              </Link>
+            </motion.div>
+          </Reveal>
+
+          {/* Success stories — source last → left column on desktop */}
+          <Reveal>
+            <SectionHead eyebrow="Real results" title={<>Success <span className="accent">stories</span></>}
+              sub="Students with ranks like yours who found the right college." />
           <div
-            style={{ position: "relative", maxWidth: 820, margin: "0 auto 64px" }}
+            style={{ position: "relative", maxWidth: "none", margin: 0 }}
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
           >
@@ -334,13 +365,15 @@ export default function RankCounselling() {
               </button>
             </div>
           </div>
-        </Reveal>
+          </Reveal>
+        </div>
 
-        {/* ── 8 · FAQ ── */}
-        <Reveal>
-          <SectionHead eyebrow="Got questions?" title={<>Frequently asked <span className="accent">questions</span></>}
-            sub="Everything you need to know before you start." />
-          <div style={{ maxWidth: 760, margin: "0 auto 64px" }}>
+        {/* ── 8 · FAQ (left) + TALK TO A COUNSELLOR (right) on desktop ── */}
+        <div className="cta-merge-grid">
+          <Reveal>
+            <SectionHead eyebrow="Got questions?" title={<>Frequently asked <span className="accent">questions</span></>}
+              sub="Everything you need to know before you start." />
+          <div style={{ maxWidth: "none", margin: 0 }}>
             {FAQS.map((f, i) => {
               const open = openFaq === i;
               return (
@@ -393,7 +426,8 @@ export default function RankCounselling() {
               </div>
             </div>
           </div>
-        </Reveal>
+          </Reveal>
+        </div>
 
       </div>
     </section>

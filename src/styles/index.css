@@ -2759,6 +2759,20 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .etl-node-name { white-space: normal; }
 }
 
+/* ── Merged content + CTA rows (desktop 2-col, mobile stacked unchanged) ── */
+.cta-merge-grid,
+.cta-merge-grid-rev { display: grid; grid-template-columns: 1.1fr .9fr; gap: 30px; align-items: center; margin-bottom: 64px; }
+/* reversed: 1st child (CTA card) sits on the RIGHT, 2nd child (content) on the LEFT */
+.cta-merge-grid-rev > :first-child { order: 2; }
+.cta-merge-grid-rev > :last-child  { order: 1; }
+@media (max-width: 900px) {
+  .cta-merge-grid,
+  .cta-merge-grid-rev { grid-template-columns: 1fr; gap: 26px; margin-bottom: 48px; }
+  /* restore source order on mobile so nothing changes there */
+  .cta-merge-grid-rev > :first-child,
+  .cta-merge-grid-rev > :last-child { order: 0; }
+}
+
 /* Two-column shell: showcase panel + form panel */
 .auth-card {
   display: flex;
