@@ -1,8 +1,7 @@
 import Seo from "../components/Seo.jsx";
 import Hero from "../components/home/Hero.jsx";
-import PredictorCards from "../components/home/PredictorCards.jsx";
+import SmartToolsHub from "../components/home/SmartToolsHub.jsx";
 import RankCounselling from "../components/home/RankCounselling.jsx";
-import NewTools from "../components/home/NewTools.jsx";
 import ApplicationRadar from "../components/home/ApplicationRadar.jsx";
 import EntranceExams from "../components/home/EntranceExams.jsx";
 import TopColleges from "../components/home/TopColleges.jsx";
@@ -546,12 +545,11 @@ export default function Home({ onSearch }) {
       {/* ── Hero ── */}
       <Hero onSearch={onSearch} />
 
+      {/* ── Smart Tools Hub (merged predictor + new tools) ── */}
+      <SmartToolsHub />
+
       {/* ── College Ticker ── */}
       <CollegeTicker />
-
-
-      {/* ── Predictor Cards ── */}
-      <PredictorCards />
 
 
       {/* ── JEE Mains Rank Counselling (80K–9L) ── */}
@@ -727,9 +725,6 @@ export default function Home({ onSearch }) {
           </div>
         </div>
       </section>
-
-      {/* ── New Tools ── */}
-      <NewTools />
 
       {/* ── Application Radar ── */}
       <ApplicationRadar />

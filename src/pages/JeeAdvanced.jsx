@@ -8,7 +8,7 @@ import { EligibilityCards, RankingsTable } from "../components/predictor/Analysi
 import { Bars, Trend } from "../components/Charts.jsx";
 import Reveal from "../components/Reveal.jsx";
 import {
-  Info, Atom, FlaskConical, Calculator, FileText,
+  Atom, FlaskConical, Calculator, FileText,
   CheckCircle2, ArrowRight, Zap, MapPin, Globe,
   Star, Target, TrendingUp, TrendingDown, Building2,
 } from "lucide-react";
@@ -643,16 +643,8 @@ export default function JeeAdvanced() {
           </div>
         </div>
       </section>
-      <div className="section-divider-adv" />
-
-      {/* Info Banner (also the #cutoffs anchor — closing-ranks table removed) */}
-      <div id="cutoffs" className="container" style={{ marginTop: 18, scrollMarginTop: 90 }}>
-        <div className="info-banner">
-          <Info size={18} />
-          Illustrative 2026 data modelled on historical trends — verify at jeeadv.ac.in and josaa.nic.in.
-          <strong style={{ marginLeft: "auto", color: "#5b21b6" }}>JEE Advanced: Paper 1 (9 AM) &amp; Paper 2 (2:30 PM) on the same day</strong>
-        </div>
-      </div>
+      {/* #cutoffs anchor kept for the "IIT Cutoffs" sub-nav pill */}
+      <div id="cutoffs" style={{ scrollMarginTop: 90 }} />
 
       {/* ── Rank Predictor ── */}
       <Block id="rank" eyebrow="Tool 1" title="JEE Advanced Rank Predictor"

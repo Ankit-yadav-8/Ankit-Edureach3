@@ -29,49 +29,51 @@ export default function CollegeTicker() {
       borderTop: "1px solid rgba(244,123,32,.18)",
       borderBottom: "1px solid rgba(244,123,32,.18)",
       padding: "14px 0",
-      overflow: "hidden",
-      position: "relative",
     }}>
-      {/* Left fade */}
-      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to right, #ffffff, transparent)", zIndex: 2, pointerEvents: "none" }} />
-      {/* Right fade */}
-      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to left, #ffffff, transparent)", zIndex: 2, pointerEvents: "none" }} />
+      {/* Contained track (matches Application Radar) — items fade & disappear
+          within the padded container, never running edge-to-edge of the screen */}
+      <div className="container" style={{ position: "relative", overflow: "hidden" }}>
+        {/* Left fade */}
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 64, background: "linear-gradient(to right, #ffffff, transparent)", zIndex: 2, pointerEvents: "none" }} />
+        {/* Right fade */}
+        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 64, background: "linear-gradient(to left, #ffffff, transparent)", zIndex: 2, pointerEvents: "none" }} />
 
-      <motion.div
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 38, repeat: Infinity, ease: "linear" }}
-        style={{ display: "flex", gap: 0, width: "max-content" }}
-      >
-        {ALL.map((item, i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex", alignItems: "center", gap: 8,
-              padding: "0 24px",
-              borderRight: "1px solid rgba(244,123,32,.12)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            <span style={{
-              width: 8, height: 8, borderRadius: "50%",
-              background: item.color,
-              boxShadow: `0 0 6px ${item.color}88`,
-              flexShrink: 0,
-            }} />
-            <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "#1a1a2e" }}>
-              {item.name}
-            </span>
-            <span style={{
-              padding: "2px 9px", borderRadius: 50,
-              background: `${item.color}22`,
-              border: `1px solid ${item.color}44`,
-              color: item.color, fontSize: 11, fontWeight: 700,
-            }}>
-              {item.stat}
-            </span>
-          </div>
-        ))}
-      </motion.div>
+        <motion.div
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 38, repeat: Infinity, ease: "linear" }}
+          style={{ display: "flex", gap: 0, width: "max-content" }}
+        >
+          {ALL.map((item, i) => (
+            <div
+              key={i}
+              style={{
+                display: "flex", alignItems: "center", gap: 8,
+                padding: "0 24px",
+                borderRight: "1px solid rgba(244,123,32,.12)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <span style={{
+                width: 8, height: 8, borderRadius: "50%",
+                background: item.color,
+                boxShadow: `0 0 6px ${item.color}88`,
+                flexShrink: 0,
+              }} />
+              <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "#1a1a2e" }}>
+                {item.name}
+              </span>
+              <span style={{
+                padding: "2px 9px", borderRadius: 50,
+                background: `${item.color}22`,
+                border: `1px solid ${item.color}44`,
+                color: item.color, fontSize: 11, fontWeight: 700,
+              }}>
+                {item.stat}
+              </span>
+            </div>
+          ))}
+        </motion.div>
+      </div>
     </div>
   );
 }

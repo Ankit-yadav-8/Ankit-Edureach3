@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles, ArrowRight, Check, GraduationCap, Trophy, Award,
   Users, Target, CalendarClock, ShieldCheck, Star, Flame,
@@ -57,7 +58,94 @@ const TRUST = [
   { icon: ShieldCheck, label: "IITian & doctor mentors" },
 ];
 
+/* ── Right-side detail card for the selected program ───────────── */
+function ProgramDetail({ p }) {
+  const Icon = p.icon;
+  return (
+    <motion.div
+      key={p.to}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        position: "relative", background: "#fff", borderRadius: 20, overflow: "hidden",
+        border: `1px solid ${p.color}33`,
+        boxShadow: p.featured
+          ? `0 28px 60px -28px ${p.color}88, 0 0 0 2px ${p.color}44`
+          : `0 18px 44px -26px ${p.color}77`,
+      }}
+    >
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${p.color},#f5a623)` }} />
+      {p.featured && (
+        <div style={{ position: "absolute", top: 16, right: -36, transform: "rotate(45deg)", background: `linear-gradient(135deg,${p.color},#818cf8)`, color: "#fff", fontWeight: 800, fontSize: 10.5, letterSpacing: "0.5px", padding: "4px 42px", boxShadow: "0 4px 12px rgba(0,0,0,.2)", zIndex: 1 }}>
+          BEST VALUE
+        </div>
+      )}
+
+      <div style={{ padding: "30px 28px", display: "flex", flexWrap: "wrap", gap: 28 }}>
+        {/* ── Overview column ── */}
+        <div style={{ flex: "1 1 300px", minWidth: 0, display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 13, marginBottom: 16 }}>
+            <div style={{ width: 52, height: 52, borderRadius: 14, background: `${p.color}16`, border: `1px solid ${p.color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <Icon size={26} color={p.color} />
+            </div>
+            <div>
+              <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.32rem", color: "#1a1a2e", margin: 0, lineHeight: 1.2 }}>{p.exam}</h3>
+              <span style={{ fontSize: 12.5, color: p.color, fontWeight: 700 }}>{p.tag}</span>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "baseline", gap: 9, marginBottom: 9 }}>
+            <span style={{ fontSize: 17, color: "#9ca3af", textDecoration: "line-through", textDecorationColor: "#ef4444" }}>₹{p.old}</span>
+            <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: 40, color: "#1a1a2e" }}>₹{p.price}</span>
+            <span style={{ fontSize: 13, color: "#6b7280" }}>one-time</span>
+          </div>
+          <div style={{ display: "inline-flex", alignSelf: "flex-start", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 800, color: "#dc2626", background: "rgba(239,68,68,.08)", border: "1px solid rgba(239,68,68,.22)", padding: "4px 10px", borderRadius: 50, marginBottom: 14 }}>
+            <Flame size={12} /> Only 120 seats · enrol fast
+          </div>
+
+          <p style={{ color: "#6b7280", fontSize: 14, lineHeight: 1.65, marginBottom: 22 }}>{p.blurb}</p>
+
+          <Link
+            to={p.to}
+            style={{
+              marginTop: "auto", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+              background: `linear-gradient(135deg,${p.color},#f5a623)`, color: "#fff",
+              padding: "14px 22px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif",
+              fontWeight: 800, fontSize: 15, textDecoration: "none",
+              boxShadow: `0 10px 24px -8px ${p.color}aa`,
+            }}
+          >
+            Enrol — ₹{p.price} <ArrowRight size={16} />
+          </Link>
+        </div>
+
+        {/* ── What's included column ── */}
+        <div style={{ flex: "1 1 240px", minWidth: 0, background: `${p.color}0c`, border: `1px solid ${p.color}22`, borderRadius: 16, padding: "20px 22px" }}>
+          <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: p.color, marginBottom: 14 }}>
+            What's included
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+            {p.points.map((pt) => (
+              <div key={pt} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                <span style={{ width: 20, height: 20, borderRadius: "50%", background: `${p.color}1f`, display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                  <Check size={12} color={p.color} strokeWidth={3} />
+                </span>
+                <span style={{ color: "#374151", fontSize: 13.6, lineHeight: 1.45 }}>{pt}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function MentorshipHome() {
+  const featuredIdx = PROGRAMS.findIndex((p) => p.featured);
+  const [active, setActive] = useState(featuredIdx >= 0 ? featuredIdx : 0);
+
   return (
     <section
       id="mentorship"
@@ -84,82 +172,61 @@ export default function MentorshipHome() {
           </div>
         </Reveal>
 
-        {/* ── Program cards ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 22, maxWidth: 1080, margin: "36px auto 0", alignItems: "stretch" }}>
-          {PROGRAMS.map((p, i) => {
-            const Icon = p.icon;
-            return (
-              <Reveal key={p.to} delay={i * 0.08}>
-                <motion.div
-                  whileHover={{ y: -10 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  style={{
-                    position: "relative", height: "100%", display: "flex", flexDirection: "column",
-                    background: "#fff", borderRadius: 20, overflow: "hidden",
-                    border: `1px solid ${p.color}33`,
-                    boxShadow: p.featured
-                      ? `0 28px 60px -28px ${p.color}88, 0 0 0 2px ${p.color}44`
-                      : `0 18px 44px -26px ${p.color}77`,
-                  }}
-                >
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${p.color},#f5a623)` }} />
-                  {p.featured && (
-                    <div style={{ position: "absolute", top: 14, right: -34, transform: "rotate(45deg)", background: `linear-gradient(135deg,${p.color},#818cf8)`, color: "#fff", fontWeight: 800, fontSize: 10.5, letterSpacing: "0.5px", padding: "4px 40px", boxShadow: "0 4px 12px rgba(0,0,0,.2)" }}>
-                      BEST VALUE
-                    </div>
-                  )}
+        {/* ── Programs: pick a plan (left) · its full card (right) ── */}
+        <Reveal>
+          <div className="exam-timeline-grid" style={{ marginTop: 40 }}>
 
-                  <div style={{ padding: "26px 24px 0" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-                      <div style={{ width: 48, height: 48, borderRadius: 13, background: `${p.color}16`, border: `1px solid ${p.color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                        <Icon size={24} color={p.color} />
-                      </div>
-                      <div>
-                        <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.18rem", color: "#1a1a2e", margin: 0, lineHeight: 1.2 }}>{p.exam}</h3>
-                        <span style={{ fontSize: 12, color: p.color, fontWeight: 700 }}>{p.tag}</span>
-                      </div>
-                    </div>
-
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 9, marginBottom: 8 }}>
-                      <span style={{ fontSize: 16, color: "#9ca3af", textDecoration: "line-through", textDecorationColor: "#ef4444" }}>₹{p.old}</span>
-                      <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: 34, color: "#1a1a2e" }}>₹{p.price}</span>
-                      <span style={{ fontSize: 12.5, color: "#6b7280" }}>one-time</span>
-                    </div>
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 800, color: "#dc2626", background: "rgba(239,68,68,.08)", border: "1px solid rgba(239,68,68,.22)", padding: "4px 10px", borderRadius: 50, marginBottom: 12 }}>
-                      <Flame size={12} /> Only 120 seats · enrol fast
-                    </div>
-
-                    <p style={{ color: "#6b7280", fontSize: 13.5, lineHeight: 1.6, marginBottom: 16 }}>{p.blurb}</p>
-                  </div>
-
-                  <div style={{ padding: "0 24px", display: "flex", flexDirection: "column", gap: 9, marginBottom: 20 }}>
-                    {p.points.map((pt) => (
-                      <div key={pt} style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                        <span style={{ width: 18, height: 18, borderRadius: "50%", background: `${p.color}18`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                          <Check size={12} color={p.color} strokeWidth={3} />
+            {/* LEFT — program picker rail */}
+            <div className="exam-timeline-rail">
+              <div className="etl-rail-card">
+                <div className="etl-rail-head">
+                  <GraduationCap size={15} color="#F47B20" /> Choose your program
+                </div>
+                <div className="etl-nodes">
+                  {PROGRAMS.map((p, i) => {
+                    const Icon = p.icon;
+                    const on = i === active;
+                    return (
+                      <button
+                        key={p.to}
+                        onClick={() => setActive(i)}
+                        className="etl-node"
+                        aria-pressed={on}
+                        style={{
+                          background: on ? `${p.color}10` : undefined,
+                          borderColor: on ? `${p.color}33` : undefined,
+                        }}
+                      >
+                        <span className="etl-num" style={{
+                          background: on ? `linear-gradient(135deg, ${p.color}, ${p.color}cc)` : "#fff",
+                          color: on ? "#fff" : p.color,
+                          borderColor: on ? "transparent" : `${p.color}55`,
+                          boxShadow: on ? `0 6px 16px -4px ${p.color}88` : "none",
+                        }}>
+                          <Icon size={18} />
                         </span>
-                        <span style={{ color: "#374151", fontSize: 13.3 }}>{pt}</span>
-                      </div>
-                    ))}
-                  </div>
+                        <span className="etl-node-text">
+                          <span className="etl-node-name" style={{ color: on ? "#1a1a2e" : "#475569" }}>{p.exam}</span>
+                          <span className="etl-node-period">{p.tag}</span>
+                        </span>
+                        <span className="etl-node-count" style={{ background: `${p.color}1a`, color: p.color }}>
+                          ₹{p.price}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
 
-                  <Link
-                    to={p.to}
-                    style={{
-                      margin: "auto 24px 24px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
-                      background: `linear-gradient(135deg,${p.color},#f5a623)`, color: "#fff",
-                      padding: "13px 20px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif",
-                      fontWeight: 800, fontSize: 14.5, textDecoration: "none",
-                      boxShadow: `0 10px 24px -8px ${p.color}aa`,
-                    }}
-                  >
-                    Enrol — ₹{p.price} <ArrowRight size={16} />
-                  </Link>
-                </motion.div>
-              </Reveal>
-            );
-          })}
-        </div>
+            {/* RIGHT — selected program's full card */}
+            <div style={{ minWidth: 0 }}>
+              <AnimatePresence mode="wait">
+                <ProgramDetail key={active} p={PROGRAMS[active]} />
+              </AnimatePresence>
+            </div>
+          </div>
+        </Reveal>
 
         {/* ── Trust strip ── */}
         <Reveal delay={0.1}>

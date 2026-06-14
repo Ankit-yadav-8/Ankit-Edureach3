@@ -2734,8 +2734,23 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 @media (max-width: 860px) {
   .exam-timeline-grid { grid-template-columns: 1fr; gap: 18px; }
   .exam-timeline-rail { position: static; }
-  .etl-nodes { flex-direction: row; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
-  .etl-node { min-width: 200px; }
+  .etl-nodes {
+    flex-direction: row; flex-wrap: nowrap;
+    overflow-x: auto; overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    overscroll-behavior-x: contain;
+    padding-bottom: 10px;
+    scrollbar-width: none;
+  }
+  .etl-nodes::-webkit-scrollbar { display: none; }
+  /* flex:0 0 auto keeps every node at full width so the row overflows and
+     scrolls instead of squashing — makes the 4th+ phases reachable. */
+  .etl-node { flex: 0 0 auto; min-width: 200px; scroll-snap-align: start; }
+}
+@media (max-width: 480px) {
+  /* narrower nodes so the next one peeks in, hinting the row is scrollable */
+  .etl-node { min-width: 168px; }
 }
 
 /* Two-column shell: showcase panel + form panel */

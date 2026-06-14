@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar, IndianRupee, Users, Trophy, ChevronDown, ChevronUp,
-  ExternalLink, Clock, CheckCircle2, Sparkles,
+  ExternalLink, CheckCircle2, Sparkles,
 } from "lucide-react";
 
 /* ── Exam data Sep 2025 → Dec 2026 ─────────────────────────── */
@@ -550,27 +550,6 @@ export default function ExamCycle() {
             </AnimatePresence>
           </div>
         </div>
-
-        {/* Bottom note */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          style={{
-            marginTop: 40,
-            background: "rgba(244,123,32,.06)",
-            border: "1px solid rgba(244,123,32,.18)",
-            borderRadius: 12, padding: "14px 20px",
-            display: "flex", alignItems: "center", gap: 10,
-            fontSize: 13, color: "#92400e",
-          }}
-        >
-          <Clock size={15} color="#F47B20" style={{ flexShrink: 0 }} />
-          <span>
-            Dates are indicative based on previous year patterns. Always verify from official websites before applying.
-          </span>
-        </motion.div>
       </div>
     </section>
   );

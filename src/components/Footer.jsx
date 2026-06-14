@@ -256,7 +256,6 @@ export default function Footer() {
                 }}
               >
                 Collegeparichay
-                <span style={{ color: "var(--coral)" }}>.in</span>
               </span>
             </Link>
             <p
