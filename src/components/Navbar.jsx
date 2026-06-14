@@ -94,7 +94,7 @@ const COLLEGES = [
   { label: "Explore IITs", to: "/colleges?type=IIT", icon: Landmark },
   { label: "Explore NITs", to: "/colleges?type=NIT", icon: Landmark },
   { label: "Explore IIITs", to: "/colleges?type=IIIT", icon: Landmark },
-  { label: "Private Universities", to: "/#private", icon: BadgeCheck },
+  { label: "Private Universities", to: "/private-universities", icon: BadgeCheck },
   { label: "State-wise Colleges", to: "/colleges", icon: BadgeCheck },
 ];
 

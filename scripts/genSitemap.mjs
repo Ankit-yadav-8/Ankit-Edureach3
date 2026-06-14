@@ -37,6 +37,7 @@ const STATIC_ROUTES = [
   ["/jee-resources", "0.6", "weekly"],
   ["/neet", "0.7", "weekly"],
   ["/mentorship", "0.7", "weekly"],
+  ["/private-universities", "0.7", "weekly"],
   ["/how-to-use", "0.4", "monthly"],
   ["/about", "0.5", "monthly"],
 ];

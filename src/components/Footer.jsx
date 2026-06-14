@@ -12,7 +12,7 @@ const COLLEGE_LINKS = [
   ["Explore All IITs", "/colleges?type=IIT"],
   ["Explore All NITs", "/colleges?type=NIT"],
   ["Explore All IIITs", "/colleges?type=IIIT"],
-  ["Private Universities", "/#private"],
+  ["Private Universities", "/private-universities"],
 ];
 const EXAM_LINKS = [
   ["JEE Main 2026", "/exams/jee-main"],

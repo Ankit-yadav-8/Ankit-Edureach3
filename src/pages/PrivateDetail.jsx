@@ -10,7 +10,7 @@ export default function PrivateDetail() {
   const { slug } = useParams();
   const nav = useNavigate();
   const u = PRIVATE_BY_SLUG[slug];
-  if (!u) return <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}><Seo title="University not found" robots="noindex, follow" path={`/private/${slug}`} /><h2>University not found</h2><Link to="/#private" className="btn btn-coral" style={{ marginTop: 16 }}>Private universities</Link></div>;
+  if (!u) return <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}><Seo title="University not found" robots="noindex, follow" path={`/private/${slug}`} /><h2>University not found</h2><Link to="/private-universities" className="btn btn-coral" style={{ marginTop: 16 }}>Private universities</Link></div>;
 
   const placeData = [
     { name: "Avg package", value: u.placements.avg },
@@ -44,7 +44,7 @@ export default function PrivateDetail() {
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-          { "@type": "ListItem", position: 2, name: "Private Universities", item: `${SITE_URL}/#private` },
+          { "@type": "ListItem", position: 2, name: "Private Universities", item: `${SITE_URL}/private-universities` },
           { "@type": "ListItem", position: 3, name: u.name, item: `${SITE_URL}/private/${slug}` },
         ],
       },

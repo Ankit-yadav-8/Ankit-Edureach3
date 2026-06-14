@@ -18,6 +18,7 @@ import Exams from "./pages/Exams.jsx";
 import ExamDetail from "./pages/ExamDetail.jsx";
 import NewsDetail from "./pages/NewsDetail.jsx";
 import PrivateDetail from "./pages/PrivateDetail.jsx";
+import PrivateUnis from "./pages/PrivateUnis.jsx";
 import About from "./pages/About.jsx";
 import Developer from "./pages/Developer.jsx";
 import Compare from "./pages/Compare.jsx";
@@ -126,6 +127,7 @@ export default function App() {
           <Route path="/exams" element={<Exams />} />
           <Route path="/exams/:slug" element={<ExamDetail />} />
           <Route path="/news/:slug" element={<NewsDetail />} />
+          <Route path="/private-universities" element={<PrivateUnis />} />
           <Route path="/private/:slug" element={<PrivateDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/team/:id" element={<Developer />} />

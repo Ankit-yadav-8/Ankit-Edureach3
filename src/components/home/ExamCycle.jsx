@@ -264,7 +264,7 @@ const EXAM_CYCLE = [
           "Slots based on entrance exam rank/JEE score",
           "Scholarship offered by many at this stage",
         ],
-        link: "/#private",
+        link: "/private-universities",
       },
     ],
   },
