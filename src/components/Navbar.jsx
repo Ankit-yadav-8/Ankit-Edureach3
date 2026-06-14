@@ -253,7 +253,7 @@ export default function Navbar({ onSearch }) {
           </span>
 
           {/* Brand text — clamps down on narrow phones so the bar never overflows */}
-          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1rem, 4.4vw, 1.3rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
+          <span id="cp-wordmark" style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1rem, 4.4vw, 1.3rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
             College{" "}
             <span
               style={{

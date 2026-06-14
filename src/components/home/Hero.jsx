@@ -5,6 +5,7 @@ import {
   Search, Sparkles, TrendingUp, Crosshair,
   GraduationCap, Users, Star, Award, ArrowRight,
   BookOpen, Target, MapPin, Trophy, Zap, ChevronRight,
+  Stethoscope, Radar, Info,
 } from "lucide-react";
 import {
   TypewriterText,
@@ -1105,12 +1106,110 @@ function HeroRadarCard({ isMobile }) {
 }
 
 /* ════════════════════════════════════════════════
+   SIX FEATURE CARDS — single horizontal row below the
+   hero heading. Each: icon → title → sub → CTA pinned
+   bottom. Scroll-reveal fade-up. Radar card is taller,
+   accented, lists colleges + a "Radar" badge.
+════════════════════════════════════════════════ */
+const SIX_CARDS = [
+  { key: "jee-adv", Icon: Trophy, accent: "#8b5cf6", title: "JEE Advanced", desc: "Cutoffs · Predictor · IIT Seat Matrix", cta: "Explore JEE Advanced", to: "/jee-advanced" },
+  { key: "jee-main", Icon: GraduationCap, accent: "#F47B20", title: "JEE Mains", desc: "Rank Predict · NIT Cutoffs · Sessions", cta: "Explore JEE Mains", to: "/jee-main" },
+  { key: "neet", Icon: Stethoscope, accent: "#22c55e", title: "NEET", desc: "MBBS Colleges · State Cutoffs · AIQ", cta: "Explore NEET", to: "/neet" },
+  { key: "mentorship", Icon: Users, accent: "#f5a623", title: "Mentorship", desc: "1-on-1 with IITian Mentors · Personalised Guidance", cta: "Book a Session", to: "/mentorship/jee-2027" },
+  { key: "radar", Icon: Radar, accent: "#f97316", title: "Application & Counselling Radar", radar: true, colleges: ["IIT Bombay", "IIT Delhi", "NIT Trichy", "NIT Warangal", "BITS Pilani", "KIIT", "VIT"], cta: "View Radar", to: "/planner" },
+  { key: "about", Icon: Info, accent: "#6366f1", title: "About Us / Our Story", desc: "IIT Roorkee Startup · Built by IITians", cta: "Our Story", to: "/about" },
+];
+
+function SixFeatureCards({ isMobile, isXs }) {
+  const nav = useNavigate();
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: isXs ? "repeat(2,1fr)" : isMobile ? "repeat(3,1fr)" : "repeat(6,1fr)",
+        gap: 14, width: "100%", alignItems: "start",
+      }}
+    >
+      {SIX_CARDS.map((c, idx) => (
+        <motion.div
+          key={c.key}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.4, delay: idx * 0.05, ease: "easeOut" }}
+          onClick={() => nav(c.to)}
+          style={{
+            cursor: "pointer", display: "flex", flexDirection: "column", gap: 8,
+            minHeight: c.radar ? 232 : 200, textAlign: "left",
+            background: "#fff",
+            border: c.radar ? "1.5px solid #f97316" : "1px solid rgba(0,0,0,.08)",
+            borderRadius: 16, padding: "16px 14px", position: "relative",
+            boxShadow: "0 1px 3px rgba(0,0,0,.05)",
+            transition: "box-shadow .25s, transform .25s",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,.05)"; e.currentTarget.style.transform = ""; }}
+        >
+          {c.radar && (
+            <span style={{ position: "absolute", top: 10, right: 10, fontSize: 9, fontWeight: 800, letterSpacing: ".5px", color: "#f97316", background: "rgba(249,115,22,.12)", border: "1px solid rgba(249,115,22,.3)", borderRadius: 9999, padding: "2px 8px" }}>Radar</span>
+          )}
+          <span style={{ width: 40, height: 40, borderRadius: 11, background: `${c.accent}18`, border: `1.5px solid ${c.accent}38`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+            <c.Icon size={20} color={c.accent} />
+          </span>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: "#1c1c28", lineHeight: 1.2 }}>{c.title}</div>
+          {c.radar ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 3, flex: 1 }}>
+              {c.colleges.map((col) => (
+                <div key={col} style={{ fontSize: 11, color: "rgba(28,28,40,.66)", display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: c.accent, flexShrink: 0 }} />{col}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ fontSize: 11.5, color: "rgba(28,28,40,.62)", lineHeight: 1.45, flex: 1 }}>{c.desc}</div>
+          )}
+          <button
+            onClick={(e) => { e.stopPropagation(); nav(c.to); }}
+            style={{
+              marginTop: "auto", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
+              background: c.accent, color: "#fff", border: "none", borderRadius: 9999, padding: "8px 12px",
+              fontSize: 11.5, fontWeight: 800, fontFamily: "Sora", cursor: "pointer", width: "100%",
+            }}
+          >
+            {c.cta} <ArrowRight size={13} />
+          </button>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
    HERO — MAIN EXPORT
 ════════════════════════════════════════════════ */
 export default function Hero({ onSearch }) {
   const [q, setQ] = useState("");
   const nav = useNavigate();
   const { bp, isMobile, isXs, isTablet, isDesktop } = useBreakpoint();
+
+  /* Align the hero heading's left edge to where "Parichay" ends in the
+     navbar wordmark — measured live with getBoundingClientRect. Desktop only. */
+  const containerRef = useRef(null);
+  const [headOffset, setHeadOffset] = useState(0);
+  useEffect(() => {
+    const measure = () => {
+      if (typeof window === "undefined" || window.innerWidth <= 1024) { setHeadOffset(0); return; }
+      const wm = document.getElementById("cp-wordmark");
+      const cont = containerRef.current;
+      if (!wm || !cont) { setHeadOffset(0); return; }
+      const off = wm.getBoundingClientRect().right - cont.getBoundingClientRect().left;
+      setHeadOffset(off > 0 && off < 360 ? off : 0);
+    };
+    measure();
+    const id = setTimeout(measure, 250);
+    window.addEventListener("resize", measure);
+    return () => { clearTimeout(id); window.removeEventListener("resize", measure); };
+  }, []);
 
   const go = (term) => {
     const t = (term ?? q).trim();
@@ -1161,28 +1260,29 @@ export default function Hero({ onSearch }) {
     >
       {/* ═══ Content wrapper ═══ */}
       <div
+        ref={containerRef}
         className="container"
         style={{
           position: "relative",
           zIndex: 2,
           width: "100%",
-          paddingInline: isXs ? "1rem" : isMobile ? "1.1rem" : "1.5rem",
+          paddingInline: "1.5rem",
           boxSizing: "border-box",
         }}
       >
         <div
           className="hero-grid"
           style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : isTablet ? "1fr 320px" : "1fr 380px",
-            gap: isMobile ? "1.8rem" : "2.2rem",
-            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+            gap: isMobile ? "1.8rem" : "2.4rem",
             width: "100%",
           }}
         >
 
-          {/* ══ HERO TEXT — left-aligned to the logo ══ */}
-          <div style={{ textAlign: "left", minWidth: 0, maxWidth: 600, width: "100%" }}>
+          {/* ══ HERO TEXT — heading starts where "Parichay" ends ══ */}
+          <div style={{ textAlign: "left", minWidth: 0, width: "100%", paddingLeft: headOffset }}>
 
             {/* Badge */}
             <div>
@@ -1341,14 +1441,14 @@ export default function Hero({ onSearch }) {
               ))}
             </motion.div>
 
-            {/* ── Stats bar ── */}
-            <StatsBar isMobile={isMobile} isXs={isXs} />
-
           </div>
           {/* ══ end HERO TEXT ══ */}
 
-          {/* ── Right: rotating radar card (scrolls one-by-one) ── */}
-          <HeroRadarCard isMobile={isMobile} />
+          {/* ── Six feature cards — single full-width row ── */}
+          <SixFeatureCards isMobile={isMobile} isXs={isXs} />
+
+          {/* ── Stats bar ── */}
+          <StatsBar isMobile={isMobile} isXs={isXs} />
 
         </div>
       </div>
