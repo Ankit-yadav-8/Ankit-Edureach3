@@ -394,8 +394,8 @@ export default function Footer() {
           <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
             {[
               { Icon: Linkedin, url: "https://www.linkedin.com/company/college-parichay/", label: "LinkedIn" },
-              { Icon: Youtube, url: "https://www.youtube.com/@CollegeParichay-2626", label: "YouTube" },
               { Icon: Instagram, url: "https://www.instagram.com/collegeparichay", label: "Instagram" },
+              { Icon: Youtube, url: "https://www.youtube.com/@CollegeParichay-2626", label: "YouTube" },
               { Icon: MessageCircle, url: "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t", label: "WhatsApp" },
             ].map(({ Icon, url, label }) => (
               <a
