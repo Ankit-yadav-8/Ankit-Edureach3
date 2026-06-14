@@ -2732,25 +2732,31 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 .etl-node-period { font-size:11.5px; color:#9ca3af; margin-top:2px; }
 .etl-node-count { flex-shrink:0; min-width:24px; height:24px; padding:0 7px; border-radius:50px; display:grid; place-items:center; font-family:"Space Grotesk",sans-serif; font-weight:800; font-size:12px; }
 @media (max-width: 860px) {
-  .exam-timeline-grid { grid-template-columns: 1fr; gap: 18px; }
-  .exam-timeline-rail { position: static; }
+  /* Single column. min-width:0 on the grid + its items is essential — without
+     it the horizontal rail's content forces the column wider than the viewport,
+     which pushed the phase details off-screen (cut-off text). */
+  .exam-timeline-grid { grid-template-columns: 1fr; gap: 18px; min-width: 0; }
+  .exam-timeline-grid > * { min-width: 0; }
+  .exam-timeline-rail { position: static; min-width: 0; }
+  .etl-rail-card { min-width: 0; overflow: hidden; }
   .etl-nodes {
     flex-direction: row; flex-wrap: nowrap;
+    min-width: 0;
     overflow-x: auto; overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
     padding-bottom: 10px;
     scrollbar-width: none;
   }
   .etl-nodes::-webkit-scrollbar { display: none; }
-  /* flex:0 0 auto keeps every node at full width so the row overflows and
-     scrolls instead of squashing — makes the 4th+ phases reachable. */
-  .etl-node { flex: 0 0 auto; min-width: 200px; scroll-snap-align: start; }
-}
-@media (max-width: 480px) {
-  /* narrower nodes so the next one peeks in, hinting the row is scrollable */
-  .etl-node { min-width: 168px; }
+  /* One phase per "page" with the next peeking in, so it's clearly a swipeable
+     carousel; snap keeps each phase aligned. */
+  .etl-node {
+    flex: 0 0 82%; max-width: 280px; min-width: 0;
+    scroll-snap-align: start;
+  }
+  .etl-node-name { white-space: normal; }
 }
 
 /* Two-column shell: showcase panel + form panel */
