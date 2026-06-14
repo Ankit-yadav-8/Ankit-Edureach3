@@ -170,71 +170,77 @@ export default function RankCounselling() {
         <Reveal>
           <SectionHead eyebrow="Counselling Plans" title={<>One plan for <span className="accent">all colleges</span></>}
             sub="Pick the plan that fits your rank — expert, data-backed counselling that turns your rank into a confirmed seat." />
-          <div className="plan-duo">
-            {PLANS.map((p) => {
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 22, maxWidth: 760, margin: "36px auto 0", alignItems: "stretch" }}>
+            {PLANS.map((p, i) => {
               const Icon = p.icon;
               const featured = p.featured;
+              const color = featured ? "#6366f1" : "#F47B20";
+              const ctaStyle = {
+                margin: "auto 24px 24px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                background: `linear-gradient(135deg,${color},#f5a623)`, color: "#fff",
+                padding: "13px 20px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif",
+                fontWeight: 800, fontSize: 14.5, textDecoration: "none", boxShadow: `0 10px 24px -8px ${color}aa`,
+              };
               return (
-                <motion.div
-                  key={p.key}
-                  className={`josaa-price-card plan-card${featured ? " plan-card--featured" : ""}`}
-                  initial={{ scale: featured ? 1.03 : 1 }}
-                  animate={{ scale: featured ? 1.03 : 1 }}
-                  whileHover={{ y: -8, scale: featured ? 1.04 : 1.01 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                >
-                  {featured && <div className="plan-popular">★ Most Popular</div>}
-                  <div className="josaa-save-ribbon">{p.save}</div>
-
-                  <div className="josaa-price-header">
-                    <div className="josaa-price-header-mesh" />
-                    <div className="josaa-price-header-glow" />
-                    <div className="josaa-price-header-top">
-                      <div className="josaa-price-header-icon">
-                        <Icon size={22} color="#fff" />
+                <Reveal key={p.key} delay={i * 0.08}>
+                  <motion.div
+                    whileHover={{ y: -10 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                    style={{
+                      position: "relative", height: "100%", display: "flex", flexDirection: "column",
+                      background: "#fff", borderRadius: 20, overflow: "hidden",
+                      border: `1px solid ${color}33`,
+                      boxShadow: featured ? `0 28px 60px -28px ${color}88, 0 0 0 2px ${color}44` : `0 18px 44px -26px ${color}77`,
+                    }}
+                  >
+                    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${color},#f5a623)` }} />
+                    {featured && (
+                      <div style={{ position: "absolute", top: 14, right: -34, transform: "rotate(45deg)", background: `linear-gradient(135deg,${color},#818cf8)`, color: "#fff", fontWeight: 800, fontSize: 10.5, letterSpacing: "0.5px", padding: "4px 40px", boxShadow: "0 4px 12px rgba(0,0,0,.2)" }}>
+                        MOST POPULAR
                       </div>
-                      <span className="josaa-price-header-tag">{p.tag}</span>
-                    </div>
-                    <div className="plan-band">{p.band}</div>
-                    <div className="josaa-price-row">
-                      <div className="josaa-old-price">₹{p.old}</div>
-                      <span className="josaa-off-pill">{p.off}</span>
-                    </div>
-                    <div className="josaa-new-price">
-                      <span className="josaa-rupee">₹</span>{p.price}
-                      <span className="josaa-per">/plan</span>
-                    </div>
-                    <div className="josaa-price-label">{p.label}</div>
-                  </div>
+                    )}
 
-                  <div className="josaa-price-body">
-                    <p className="plan-blurb">{p.blurb}</p>
-                    <div className="plan-includes-label">What's included</div>
-                    <div className="josaa-includes">
-                      {p.includes.map((item) => (
-                        <div className="josaa-include-item" key={item}>
-                          <span className="josaa-include-tick">
-                            <Check size={12} color="#fff" strokeWidth={3.5} />
+                    <div style={{ padding: "26px 24px 0" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                        <div style={{ width: 48, height: 48, borderRadius: 13, background: `${color}16`, border: `1px solid ${color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                          <Icon size={24} color={color} />
+                        </div>
+                        <div>
+                          <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.18rem", color: "#1a1a2e", margin: 0, lineHeight: 1.2 }}>{p.tag}</h3>
+                          <span style={{ fontSize: 12, color, fontWeight: 700 }}>{p.band}</span>
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", alignItems: "baseline", gap: 9, marginBottom: 8 }}>
+                        <span style={{ fontSize: 16, color: "#9ca3af", textDecoration: "line-through", textDecorationColor: "#ef4444" }}>₹{p.old}</span>
+                        <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: 34, color: "#1a1a2e" }}>₹{p.price}</span>
+                        <span style={{ fontSize: 12.5, color: "#6b7280" }}>one-time</span>
+                      </div>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 800, color: "#dc2626", background: "rgba(239,68,68,.08)", border: "1px solid rgba(239,68,68,.22)", padding: "4px 10px", borderRadius: 50, marginBottom: 12 }}>
+                        {p.off} · limited slots
+                      </div>
+
+                      <p style={{ color: "#6b7280", fontSize: 13.5, lineHeight: 1.6, marginBottom: 16 }}>{p.blurb}</p>
+                    </div>
+
+                    <div style={{ padding: "0 24px", display: "flex", flexDirection: "column", gap: 9, marginBottom: 20 }}>
+                      {p.includes.map((pt) => (
+                        <div key={pt} style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                          <span style={{ width: 18, height: 18, borderRadius: "50%", background: `${color}18`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                            <Check size={12} color={color} strokeWidth={3} />
                           </span>
-                          <span>{item}</span>
+                          <span style={{ color: "#374151", fontSize: 13.3 }}>{pt}</span>
                         </div>
                       ))}
                     </div>
+
                     {p.to ? (
-                      <Link to={p.to} className="josaa-cta-btn">
-                        {p.cta} <ArrowRight size={17} />
-                      </Link>
+                      <Link to={p.to} style={ctaStyle}>{p.cta} <ArrowRight size={16} /></Link>
                     ) : (
-                      <button type="button" onClick={() => openEnrol(p.key)} className="josaa-cta-btn" style={{ border: "none", cursor: "pointer", width: "100%" }}>
-                        {p.cta} <ArrowRight size={17} />
-                      </button>
+                      <button type="button" onClick={() => openEnrol(p.key)} style={{ ...ctaStyle, border: "none", cursor: "pointer" }}>{p.cta} <ArrowRight size={16} /></button>
                     )}
-                    <div className="josaa-secure-note">
-                      <ShieldCheck size={13} />
-                      Secure · counsellor assigned within hours
-                    </div>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </Reveal>
               );
             })}
           </div>
