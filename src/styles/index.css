@@ -2038,6 +2038,11 @@ textarea.input { width:100%; }
   }
 }
 
+/* Counselling plans: ₹499 (featured) above ₹299 once the cards stack on phones */
+@media (max-width: 650px) {
+  .counsel-plans > *:nth-child(2) { order: -1; }
+}
+
 /* ════════════════════════════════════════════════
    RESPONSIVE — MOBILE  (≤ 768px)  — LIGHT THEME
 ════════════════════════════════════════════════ */

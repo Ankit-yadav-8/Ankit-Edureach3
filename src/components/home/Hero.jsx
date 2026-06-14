@@ -1106,6 +1106,143 @@ function HeroRadarCard({ isMobile }) {
 }
 
 /* ════════════════════════════════════════════════
+   HERO ROTATING SIDE CARDS — both hero columns are now
+   auto-scrolling cards. LEFT cycles Our Story · Tools ·
+   Explore Colleges. RIGHT cycles Mentorship · JEE Adv ·
+   JEE Main · NEET. Coloured header + description +
+   link rows (→ pages) + CTA, with dot navigation.
+════════════════════════════════════════════════ */
+const HERO_LEFT = [
+  { key: "story", accent: "#6366f1", eyebrow: "ABOUT US", title: "Our Story",
+    desc: "Built in an IIT Roorkee hostel room by students who lived the JoSAA chaos — now free for every aspirant after them.",
+    links: [["Our mission & story", "/about"], ["How to use CollegeParichay", "/how-to-use"], ["Browse all colleges", "/colleges"]],
+    cta: "About Us", to: "/about" },
+  { key: "tools", accent: "#0ea5a4", eyebrow: "FREE TOOLS", title: "Tools for Smarter Choices",
+    desc: "Free calculators and explorers to plan your admission end-to-end.",
+    links: [["ROI / Fees Calculator", "/scholarships"], ["College Map View", "/map"], ["Choice Filling Helper", "/planner"], ["Colleges for You", "/for-you"]],
+    cta: "Explore All Tools", to: "/for-you" },
+  { key: "colleges", accent: "#F47B20", eyebrow: "850+ COLLEGES", title: "Explore Colleges",
+    desc: "Reviews, cutoffs, placements & fees for every IIT, NIT, IIIT and top private university.",
+    links: [["All IIT · NIT · IIIT", "/colleges"], ["Compare colleges", "/compare"], ["Private universities", "/private-universities"]],
+    cta: "Explore Colleges", to: "/colleges" },
+];
+
+const HERO_RIGHT = [
+  { key: "mentorship", accent: "#f5a623", eyebrow: "1-ON-1 MENTORSHIP", title: "Mentorship by IITians",
+    desc: "A personal IITian / doctor mentor, daily targets and weekly test analysis for JEE & NEET — every plan in one place.",
+    links: [["JEE & NEET 2027 plan", "/mentorship"], ["JEE & NEET 2028 plan", "/mentorship"], ["Foundation · Class 9–10", "/mentorship"], ["View all mentorship plans", "/mentorship"]],
+    cta: "See All Mentorship Plans", to: "/mentorship" },
+  { key: "jee-adv", accent: "#8b5cf6", eyebrow: "JEE ADVANCED 2026", title: "JEE Advanced — IIT Predictor",
+    desc: "Marks to AIR, then the exact IITs and branches you qualify for, category-wise.",
+    links: [["JEE Advanced Rank Predictor", "/jee-advanced"], ["Result & Rank List 2026", "/jee-advanced-result-2026"], ["IIT Cutoffs & branches", "/cutoffs"]],
+    cta: "Open JEE Advanced", to: "/jee-advanced" },
+  { key: "jee-main", accent: "#F47B20", eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College",
+    desc: "Turn your NTA percentile into a rank and see every IIT, NIT & IIIT you can get.",
+    links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"]],
+    cta: "Open JEE Main", to: "/jee-main" },
+  { key: "neet", accent: "#22c55e", eyebrow: "NEET 2026", title: "NEET — Rank & College Finder",
+    desc: "Predict your NEET rank and explore MBBS & medical colleges with cutoffs.",
+    links: [["NEET Rank Predictor", "/neet"], ["Medical College Finder", "/neet"], ["Counselling guidance", "/planner"]],
+    cta: "Open NEET", to: "/neet" },
+];
+
+function HeroRotatingCard({ slides, isMobile, interval = 4200, minHeight = 430 }) {
+  const nav = useNavigate();
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return;
+    const t = setInterval(() => setI((p) => (p + 1) % slides.length), interval);
+    return () => clearInterval(t);
+  }, [paused, slides.length, interval]);
+
+  const idx = i % slides.length;
+  const c = slides[idx];
+
+  return (
+    <div
+      className="hero-about-col"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      style={{ width: "100%", maxWidth: isMobile ? 460 : "none", margin: isMobile ? "4px auto 0" : 0, minWidth: 0 }}
+    >
+      <div style={{ position: "relative", minHeight }}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={c.key}
+            initial={{ opacity: 0, x: 36 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -36 }}
+            transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+            style={{
+              position: "absolute", inset: 0,
+              background: "#ffffff", border: "1px solid rgba(0,0,0,.08)", borderRadius: 20, overflow: "hidden",
+              boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 24px 30px -8px rgba(0,0,0,.10), 0 12px 14px -8px rgba(0,0,0,.05)",
+              display: "flex", flexDirection: "column",
+            }}
+          >
+            {/* coloured header */}
+            <div style={{ background: `linear-gradient(135deg, ${c.accent}, ${c.accent}cc)`, color: "#fff", padding: "15px 18px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 10, fontWeight: 800, letterSpacing: "1.2px", opacity: 0.95 }}>
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#fff", display: "inline-block" }} /> {c.eyebrow}
+              </div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", marginTop: 6, lineHeight: 1.25 }}>{c.title}</div>
+            </div>
+
+            {/* body */}
+            <div style={{ padding: "14px 16px 16px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
+              <p style={{ fontSize: 12.5, color: "rgba(28,28,40,.66)", lineHeight: 1.5, margin: 0 }}>{c.desc}</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                {c.links.map(([label, to]) => (
+                  <button
+                    key={label}
+                    onClick={() => nav(to)}
+                    style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, width: "100%",
+                      background: "rgba(0,0,0,.02)", border: "1px solid rgba(0,0,0,.06)", borderRadius: 10, padding: "9px 12px",
+                      cursor: "pointer", fontSize: 12.5, fontWeight: 600, color: "#1c1c28", textAlign: "left",
+                      transition: "background .18s, border-color .18s",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = `${c.accent}10`; e.currentTarget.style.borderColor = `${c.accent}40`; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,.02)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.06)"; }}
+                  >
+                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
+                    <ArrowRight size={14} color={c.accent} style={{ flexShrink: 0 }} />
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => nav(c.to)}
+                style={{
+                  marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+                  background: c.accent, color: "#fff", border: "none", borderRadius: 9999,
+                  padding: "11px 16px", fontSize: 13.5, fontWeight: 800, fontFamily: "Sora", cursor: "pointer",
+                }}
+              >
+                {c.cta} <ArrowRight size={15} />
+              </button>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* dots */}
+      <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
+        {slides.map((card, d) => (
+          <button
+            key={card.key}
+            onClick={() => setI(d)}
+            aria-label={card.title}
+            style={{ width: d === idx ? 22 : 7, height: 7, borderRadius: 9999, border: "none", background: d === idx ? c.accent : "rgba(0,0,0,.18)", cursor: "pointer", transition: "all .3s", padding: 0 }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
    SIX FEATURE CARDS — single horizontal row below the
    hero heading. Each: icon → title → sub → CTA pinned
    bottom. Scroll-reveal fade-up. Radar card is taller,
@@ -1281,8 +1418,8 @@ export default function Hero({ onSearch }) {
           }}
         >
 
-          {/* ══ LEFT — About Us Card (desktop only, hidden via .hero-about-col) ══ */}
-          <AboutUsCard />
+          {/* ══ LEFT — rotating card: Our Story · Tools · Explore Colleges (desktop only) ══ */}
+          <HeroRotatingCard slides={HERO_LEFT} isMobile={isMobile} />
 
           {/* ══ CENTER — hero text ══ */}
           <div style={{ textAlign: "center", minWidth: 0, width: "100%" }}>
@@ -1450,8 +1587,8 @@ export default function Hero({ onSearch }) {
           </div>
           {/* ══ end CENTER ══ */}
 
-          {/* ══ RIGHT — Mentorship Card (hidden on mobile via .hero-about-col) ══ */}
-          <MentorshipHeroCard isTablet={isTablet} />
+          {/* ══ RIGHT — rotating card: Mentorship · JEE Advanced · JEE Main · NEET ══ */}
+          <HeroRotatingCard slides={HERO_RIGHT} isMobile={isMobile} />
 
         </div>
       </div>
