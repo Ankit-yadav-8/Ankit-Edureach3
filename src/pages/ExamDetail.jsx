@@ -52,10 +52,21 @@ export default function ExamDetail() {
 
         <Reveal>
           <div className="card">
-            <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}><CalendarDays size={18} color="var(--violet)" /> Important dates</h3>
-            <table className="data-table">
-              <tbody>{exam.dates.map(([l, d]) => <tr key={l}><td>{l}</td><td style={{ textAlign: "right", fontWeight: 600 }}>{d}</td></tr>)}</tbody>
-            </table>
+            <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}><CalendarDays size={18} color="var(--violet)" /> Important dates</h3>
+            {/* Responsive date cards (no fixed-width table) so dates stay readable on every device */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 12 }}>
+              {exam.dates.map(([l, d]) => (
+                <div key={l} style={{ display: "flex", alignItems: "center", gap: 12, background: "var(--sky)", border: "1px solid rgba(0,0,0,.06)", borderRadius: 12, padding: "12px 14px" }}>
+                  <span style={{ width: 38, height: 38, borderRadius: 10, background: `${exam.color}16`, border: `1px solid ${exam.color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <CalendarDays size={17} color={exam.color} />
+                  </span>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 2 }}>{l}</div>
+                    <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 14, color: "var(--navy)" }}>{d}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </Reveal>
 

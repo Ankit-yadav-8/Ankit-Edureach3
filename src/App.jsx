@@ -43,6 +43,8 @@ import JeeResources from "./pages/JeeResources.jsx";
 import Neet from "./pages/Neet.jsx";
 import HowToUse from "./pages/HowToUse.jsx";
 import Mentorship from "./pages/Mentorship.jsx";
+import Privacy from "./pages/Privacy.jsx";
+import Terms from "./pages/Terms.jsx";
 import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
@@ -147,6 +149,8 @@ export default function App() {
           <Route path="/how-to-use" element={<HowToUse />} />
           <Route path="/mentorship" element={<Mentorship />} />
           <Route path="/mentorship/:variant" element={<Mentorship />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

@@ -325,8 +325,24 @@ export default function About() {
       `}</style>
 
       {/* ── HERO ── */}
-      <section style={{ background: "#ffffff", padding: "70px 0 60px", borderBottom: "1px solid rgba(244,123,32,.12)" }}>
-        <div className="container" style={{ textAlign: "center" }}>
+      <section style={{ position: "relative", overflow: "hidden", background: "#ffffff", padding: "84px 0 72px", borderBottom: "1px solid rgba(244,123,32,.12)" }}>
+        {/* animated IIT Roorkee backdrop */}
+        <motion.div
+          aria-hidden="true"
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1.18 }}
+          transition={{ duration: 22, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+          style={{
+            position: "absolute", inset: 0, zIndex: 0,
+            backgroundImage: "url('/IITroorkee.png')",
+            backgroundSize: "cover", backgroundPosition: "center",
+            opacity: 0.30,
+          }}
+        />
+        {/* warm colour wash — keeps text crisp and tints the photo on-brand */}
+        <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(180deg, rgba(255,255,255,.90) 0%, rgba(255,245,236,.80) 45%, rgba(255,255,255,.95) 100%)" }} />
+        <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 0, background: "radial-gradient(ellipse 65% 60% at 50% -10%, rgba(244,123,32,.20) 0%, transparent 62%)" }} />
+        <div className="container" style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
           <span style={{
             display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 22,
             background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.3)",

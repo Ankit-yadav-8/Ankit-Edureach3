@@ -1,17 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { EXAMS, EXAM_PILLS } from "../../data/exams.js";
+import { EXAMS } from "../../data/exams.js";
 import Reveal from "../Reveal.jsx";
-
-// map a pill label to a known exam slug if we have a detail page for it
-const SLUG_BY_NAME = Object.fromEntries(EXAMS.map((e) => [e.name.toLowerCase(), e.slug]));
 
 export default function EntranceExams() {
   const nav = useNavigate();
-  const open = (label) => {
-    const slug = SLUG_BY_NAME[label.toLowerCase()];
-    nav(slug ? `/exams/${slug}` : `/exams`);
-  };
 
   return (
     <section className="section" id="exams" style={{ background: "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 100%)", position: "relative", overflow: "hidden" }}>
@@ -37,12 +30,15 @@ export default function EntranceExams() {
           ))}
         </div>
 
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
-          {EXAM_PILLS.map((p) => (
-            <button key={p} className="pill" onClick={() => open(p)} style={{ cursor: "pointer" }}>
-              {p}
-            </button>
-          ))}
+        {/* Single button (consistent on laptop + mobile) instead of a long pill cloud */}
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 28 }}>
+          <button
+            className="btn btn-coral"
+            style={{ fontSize: 14.5, padding: "13px 26px" }}
+            onClick={() => nav("/exams")}
+          >
+            View All Entrance Exams <ArrowRight size={16} />
+          </button>
         </div>
       </div>
     </section>

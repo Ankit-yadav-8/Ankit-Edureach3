@@ -37,8 +37,8 @@ const TOOL_LINKS = [
 const COMPANY_LINKS = [
   ["About Us", "/about"],
   ["Contact Us", "/about#contact"],
-  ["Privacy Policy", "/about#privacy"],
-  ["Terms of Use", "/about#terms"],
+  ["Privacy Policy", "/privacy"],
+  ["Terms of Use", "/terms"],
   ["Support", "/about#contact"],
 ];
 
