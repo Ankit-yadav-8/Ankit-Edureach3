@@ -469,7 +469,7 @@ export default function AuthModal() {
           justifyContent: "flex-start",
           boxSizing: "border-box",
           minHeight: "100%",
-          padding: "84px 16px 40px",
+          padding: "calc(var(--nav-h) + 20px) 16px 40px",
         }}
       >
         {/* ── card ── split-panel: showcase (desktop) + form ── */}

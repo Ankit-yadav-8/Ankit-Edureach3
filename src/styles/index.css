@@ -42,6 +42,7 @@
   --shadow-coral: 0 10px 26px rgba(244,123,32,.35);
   --shadow-card:  0 2px 12px  rgba(0,0,0,.07), 0 1px 3px rgba(0,0,0,.05);
 
+  --nav-h:       64px;   /* fixed navbar height — modals/pages clear this */
   --radius:      14px;
   --radius-lg:   22px;
   --radius-pill: 50px;
