@@ -271,7 +271,7 @@ export default function Footer() {
               student-first JEE rank predictor &amp; college discovery platform,
               headquartered in Jaipur, Rajasthan.
             </p>
-            <Col title="College" links={COLLEGE_LINKS} />
+            <Col title="College Parichay" links={COLLEGE_LINKS} />
           </div>
           <Col title="Exam" links={EXAM_LINKS} />
           <Col title="Tools" links={TOOL_LINKS} />

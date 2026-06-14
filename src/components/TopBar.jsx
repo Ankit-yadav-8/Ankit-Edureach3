@@ -1,4 +1,4 @@
-import { GraduationCap, BadgeCheck } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 
 /* ============================================================
    TopBar — a slim, minimalist announcement strip pinned above
@@ -26,7 +26,16 @@ export default function TopBar() {
         }
       `}</style>
       <span className="cp-topbar__glow">
-        <GraduationCap size={14} strokeWidth={2.4} />
+        <span
+          style={{
+            width: 17, height: 17, borderRadius: "50%", background: "#fff",
+            display: "grid", placeItems: "center", flexShrink: 0,
+          }}
+        >
+          <span style={{ color: "#F47B20", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 8.5, letterSpacing: "-0.3px", lineHeight: 1 }}>
+            CP
+          </span>
+        </span>
         Built by <strong style={{ fontWeight: 800 }}>IITians</strong>
       </span>
       <span aria-hidden="true" style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,.7)", flexShrink: 0 }} />

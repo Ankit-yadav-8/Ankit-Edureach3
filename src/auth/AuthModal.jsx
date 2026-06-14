@@ -275,8 +275,8 @@ function ShowcasePanel({ mode }) {
 
       {/* brand */}
       <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 10 }}>
-        <span style={{ width: 38, height: 38, borderRadius: 11, background: `linear-gradient(135deg,${OR},${ORD})`, display: "grid", placeItems: "center", boxShadow: `0 6px 18px ${OR}66`, animation: "glowPulse 3s ease-in-out infinite" }}>
-          <GraduationCap size={20} color="#fff" />
+        <span style={{ width: 38, height: 38, borderRadius: "50%", background: `linear-gradient(135deg,${OR},${ORD})`, display: "grid", placeItems: "center", boxShadow: `0 6px 18px ${OR}66`, animation: "glowPulse 3s ease-in-out infinite" }}>
+          <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 15, letterSpacing: "-0.5px", lineHeight: 1 }}>CP</span>
         </span>
         <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: "#1a1a2e" }}>
           College <span style={{ color: OR }}>Parichay</span>
@@ -532,8 +532,8 @@ export default function AuthModal() {
               ) : (
                 /* brand pill */
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ width: 30, height: 30, borderRadius: 8, background: `linear-gradient(135deg,${OR},${ORD})`, display: "grid", placeItems: "center", boxShadow: `0 4px 12px ${OR}55` }}>
-                    <GraduationCap size={16} color="#fff" />
+                  <span style={{ width: 30, height: 30, borderRadius: "50%", background: `linear-gradient(135deg,${OR},${ORD})`, display: "grid", placeItems: "center", boxShadow: `0 4px 12px ${OR}55` }}>
+                    <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 12, letterSpacing: "-0.5px", lineHeight: 1 }}>CP</span>
                   </span>
                   <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: ".95rem", color: "#1a1a2e" }}>
                     College <span style={{ color: OR }}>Parichay</span>
