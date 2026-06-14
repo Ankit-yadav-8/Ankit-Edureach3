@@ -1224,11 +1224,11 @@ export default function Hero({ onSearch }) {
     bp === "ipadpro"              ? "clamp(2.8rem,4vw,3.4rem)" :
     "clamp(3.2rem,4.8vw,4.2rem)";
 
-  /* ── Grid columns ── */
+  /* ── Grid columns — About card · center text · Mentorship card ── */
   const gridCols =
     isMobile  ? "1fr" :
     isTablet  ? "1fr minmax(0,300px)" :
-    "1fr 360px";
+    "300px 1fr 300px";
 
   /* ── Hero background — warm gradient on all sizes ── */
   const heroBg = "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 72%, #ffffff 100%)";
@@ -1274,15 +1274,18 @@ export default function Hero({ onSearch }) {
           className="hero-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : isTablet ? "1fr 320px" : "1fr 380px",
-            gap: isMobile ? "1.8rem" : "2.4rem",
+            gridTemplateColumns: gridCols,
+            gap: isMobile ? "1.8rem" : isTablet ? "1.5rem" : "1.9rem",
             alignItems: "center",
             width: "100%",
           }}
         >
 
-          {/* ══ HERO TEXT — centre-left, rotating card on the right ══ */}
-          <div style={{ textAlign: "left", minWidth: 0, width: "100%", maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
+          {/* ══ LEFT — About Us Card (desktop only, hidden via .hero-about-col) ══ */}
+          <AboutUsCard />
+
+          {/* ══ CENTER — hero text ══ */}
+          <div style={{ textAlign: "center", minWidth: 0, width: "100%" }}>
 
             {/* Badge */}
             <div>
@@ -1334,7 +1337,7 @@ export default function Hero({ onSearch }) {
               <p style={{
                 color: subColor,
                 fontSize: isXs ? ".85rem" : "clamp(.92rem,1.7vw,1.08rem)",
-                maxWidth: 560, margin: "0 0 0.6rem",
+                maxWidth: 560, margin: "0 auto 0.6rem",
                 lineHeight: 1.75,
               }}>
                 Predict your JEE rank from marks, discover every college you can get into across all JoSAA &amp; CSAB rounds, and track every deadline — all in one place.
@@ -1348,7 +1351,7 @@ export default function Hero({ onSearch }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.18 }}
-              style={{ maxWidth: 560, margin: "0 0 1rem" }}
+              style={{ maxWidth: 560, margin: "0 auto 1rem" }}
             >
               <div style={{
                 display: "flex",
@@ -1408,7 +1411,7 @@ export default function Hero({ onSearch }) {
                 display: "flex",
                 gap: isXs ? 5 : 7,
                 flexWrap: "wrap",
-                justifyContent: "flex-start",
+                justifyContent: "center",
                 marginBottom: 0,
               }}
             >
@@ -1445,10 +1448,10 @@ export default function Hero({ onSearch }) {
             <StatsBar isMobile={isMobile} isXs={isXs} />
 
           </div>
-          {/* ══ end HERO TEXT ══ */}
+          {/* ══ end CENTER ══ */}
 
-          {/* ── Right: rotating radar card — one card at a time, scroll effect ── */}
-          <HeroRadarCard isMobile={isMobile} />
+          {/* ══ RIGHT — Mentorship Card (hidden on mobile via .hero-about-col) ══ */}
+          <MentorshipHeroCard isTablet={isTablet} />
 
         </div>
       </div>
