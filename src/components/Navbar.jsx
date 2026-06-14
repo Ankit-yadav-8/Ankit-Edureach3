@@ -430,9 +430,10 @@ export default function Navbar({ onSearch }) {
             className="cta-desktop"
             style={{
               display: "flex", alignItems: "center", gap: 2,
-              background: "rgba(244,123,32,.06)",
-              border: "1px solid rgba(244,123,32,.16)",
-              borderRadius: 999, padding: 3,
+              background: "#ffffff",
+              border: "1px solid rgba(0,0,0,.08)",
+              borderRadius: 999, padding: 4,
+              boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 6px 12px -4px rgba(0,0,0,.06)",
             }}
           >
             <Link to="/how-to-use" title="How to use College Parichay" aria-label="How to use" className="nav-icon-btn cta-desktop" style={iconBtnStyle}>

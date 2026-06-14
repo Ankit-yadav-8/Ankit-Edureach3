@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, Sparkles, TrendingUp, Crosshair,
   GraduationCap, Users, Star, Award, ArrowRight,
@@ -686,6 +686,165 @@ function MentorshipHeroCard({ isTablet }) {
 }
 
 /* ════════════════════════════════════════════════
+   ROTATING HERO CARD (right column)
+   Merges the old left/right hero cards into ONE
+   auto-cycling showcase — jastro-style: white card,
+   soft layered shadow, rounded, pill CTA.
+════════════════════════════════════════════════ */
+const HERO_CARDS = [
+  {
+    key: "jee-main", accent: "#F47B20", Icon: Crosshair,
+    eyebrow: "Free Tool", title: "JEE Main Rank Predictor",
+    rows: [
+      ["Percentile → Rank", "Instant"],
+      ["Categories", "All"],
+      ["Updated for", "2026"],
+    ],
+    cta: "Predict my rank", to: "/jee-main#college",
+  },
+  {
+    key: "jee-adv", accent: "#8b5cf6", Icon: Trophy,
+    eyebrow: "Free Tool", title: "JEE Advanced Predictor",
+    rows: [
+      ["Marks → AIR", "Instant"],
+      ["IIT branch chances", "23 IITs"],
+      ["CRL + category", "Yes"],
+    ],
+    cta: "Check IIT chances", to: "/jee-advanced#college",
+  },
+  {
+    key: "college", accent: "#0ea5a4", Icon: GraduationCap,
+    eyebrow: "Smart Match", title: "College Predictor",
+    rows: [
+      ["Rank → colleges", "Personalised"],
+      ["IIT · NIT · IIIT", "850+"],
+      ["JoSAA cutoffs", "2018–25"],
+    ],
+    cta: "Find my colleges", to: "/for-you",
+  },
+  {
+    key: "mentorship", accent: "#f5a623", Icon: Users,
+    eyebrow: "1-on-1", title: "JEE & NEET Mentorship",
+    rows: [
+      ["Daily targets", "Yes"],
+      ["Mentors", "IITians"],
+      ["Starts at", "₹1999"],
+    ],
+    cta: "Explore mentorship", to: "/mentorship/jee-2027",
+  },
+  {
+    key: "colleges", accent: "#6366f1", Icon: MapPin,
+    eyebrow: "Explore", title: "850+ Colleges",
+    rows: [
+      ["Reviews & cutoffs", "Verified"],
+      ["Placements & fees", "Branch-wise"],
+      ["IITs · NITs · IIITs", "All"],
+    ],
+    cta: "Browse colleges", to: "/colleges",
+  },
+];
+
+function RotatingHeroCard({ isMobile }) {
+  const nav = useNavigate();
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return;
+    const t = setInterval(() => setI((p) => (p + 1) % HERO_CARDS.length), 3500);
+    return () => clearInterval(t);
+  }, [paused]);
+
+  const c = HERO_CARDS[i];
+
+  return (
+    <div
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      style={{ width: "100%", maxWidth: isMobile ? 460 : "none", margin: isMobile ? "10px auto 0" : 0 }}
+    >
+      <div style={{ position: "relative", minHeight: 318 }}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={c.key}
+            initial={{ opacity: 0, x: 36 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -36 }}
+            transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+            style={{
+              background: "#ffffff",
+              border: "1px solid rgba(0,0,0,.07)",
+              borderRadius: 18,
+              padding: "1.2rem 1.25rem",
+              boxShadow:
+                "0 1px 3px rgba(0,0,0,.05), 0 20px 25px -5px rgba(0,0,0,.06), 0 10px 10px -5px rgba(0,0,0,.04)",
+              display: "flex", flexDirection: "column", gap: "0.9rem",
+              position: "absolute", inset: 0, overflow: "hidden",
+            }}
+          >
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, transparent, ${c.accent}, transparent)` }} />
+
+            {/* header */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: `${c.accent}18`, border: `1.5px solid ${c.accent}40`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <c.Icon size={20} color={c.accent} />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 9.5, color: c.accent, fontWeight: 800, letterSpacing: "1.4px", textTransform: "uppercase" }}>{c.eyebrow}</div>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#1c1c28", fontSize: "1.02rem", lineHeight: 1.2 }}>{c.title}</div>
+              </div>
+              <span style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
+            </div>
+
+            <div style={{ height: 1, background: "rgba(0,0,0,.07)" }} />
+
+            {/* rows */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {c.rows.map(([label, value]) => (
+                <div key={label} style={{ display: "flex", alignItems: "center", gap: 9, background: "rgba(0,0,0,.025)", border: "1px solid rgba(0,0,0,.05)", borderRadius: 10, padding: "8px 11px" }}>
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: c.accent, flexShrink: 0 }} />
+                  <span style={{ flex: 1, fontSize: 12.5, color: "rgba(28,28,40,.72)", fontWeight: 500 }}>{label}</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 800, color: "#1c1c28" }}>{value}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA — pill (jastro) */}
+            <button
+              onClick={() => nav(c.to)}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+                background: c.accent, color: "#fff", border: "none", borderRadius: 9999,
+                padding: "11px 16px", fontSize: 13.5, fontWeight: 800, fontFamily: "Sora",
+                cursor: "pointer", marginTop: "auto",
+              }}
+            >
+              {c.cta} <ArrowRight size={15} />
+            </button>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* dots */}
+      <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
+        {HERO_CARDS.map((card, idx) => (
+          <button
+            key={card.key}
+            onClick={() => setI(idx)}
+            aria-label={card.title}
+            style={{
+              width: idx === i ? 22 : 7, height: 7, borderRadius: 9999, border: "none",
+              background: idx === i ? c.accent : "rgba(0,0,0,.18)",
+              cursor: "pointer", transition: "all .3s", padding: 0,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
    HERO — MAIN EXPORT
 ════════════════════════════════════════════════ */
 export default function Hero({ onSearch }) {
@@ -709,8 +868,8 @@ export default function Hero({ onSearch }) {
   /* ── Grid columns ── */
   const gridCols =
     isMobile  ? "1fr" :
-    isTablet  ? "1fr minmax(0,290px)" :
-    "300px 1fr 300px";
+    isTablet  ? "1fr minmax(0,300px)" :
+    "1fr 360px";
 
   /* ── Hero background — warm gradient on all sizes ── */
   const heroBg = "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 72%, #ffffff 100%)";
@@ -747,7 +906,7 @@ export default function Hero({ onSearch }) {
           position: "relative",
           zIndex: 2,
           width: "100%",
-          paddingInline: isXs ? "0.85rem" : isMobile ? "1rem" : isTablet ? "1.25rem" : "1rem",
+          paddingInline: isXs ? "1rem" : isMobile ? "1.1rem" : "1.5rem",
           boxSizing: "border-box",
         }}
       >
@@ -761,9 +920,6 @@ export default function Hero({ onSearch }) {
             width: "100%",
           }}
         >
-
-          {/* ══ LEFT — About Us Card (desktop only, hidden via CSS class) ══ */}
-          <AboutUsCard />
 
           {/* ══ CENTER ══ */}
           <div style={{ textAlign: "center", minWidth: 0 }}>
@@ -1012,8 +1168,8 @@ export default function Hero({ onSearch }) {
           </div>
           {/* ══ end CENTER ══ */}
 
-          {/* ══ RIGHT — Mentorship Card (hidden on mobile via CSS .hero-about-col) ══ */}
-          <MentorshipHeroCard isTablet={isTablet} />
+          {/* ══ RIGHT — Rotating showcase card (merged from the old side cards) ══ */}
+          <RotatingHeroCard isMobile={isMobile} />
 
         </div>
       </div>
