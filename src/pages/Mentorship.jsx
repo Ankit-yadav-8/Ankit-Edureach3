@@ -1049,7 +1049,7 @@ function JourneyBrand() {
 function MentorTabs({ variant }) {
   const label = (slug) => slug === "foundation" ? "Foundation 9–10" : slug === "jee-2027" ? "JEE / NEET 2027" : "JEE / NEET 2028";
   return (
-    <div style={{ position: "relative", zIndex: 2, background: "#fffaf5", borderBottom: "1px solid rgba(244,123,32,.14)", paddingTop: 76 }}>
+    <div style={{ position: "relative", zIndex: 2, background: "#fffaf5", borderBottom: "1px solid rgba(244,123,32,.14)", paddingTop: 114 }}>
       <div className="container" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", padding: "12px 0" }}>
         {Object.values(MENTORSHIP).map((m) => {
           const active = m.slug === variant;

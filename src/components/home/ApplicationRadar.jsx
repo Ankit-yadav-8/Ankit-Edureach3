@@ -3,9 +3,9 @@ import { ChevronLeft, ChevronRight, CalendarClock, ExternalLink } from "lucide-r
 import { RADAR } from "../../data/counselling.js";
 
 const TONE = {
-  red:    { bg: "rgba(239,68,68,.18)",   fg: "#fca5a5", dot: "#ef4444", glow: "rgba(239,68,68,.55)",  border: "rgba(239,68,68,.38)",  pulse: true  },
-  orange: { bg: "rgba(244,123,32,.18)",  fg: "#fdba74", dot: "#F47B20", glow: "rgba(244,123,32,.50)", border: "rgba(244,123,32,.38)", pulse: true  },
-  teal:   { bg: "rgba(14,165,164,.15)",  fg: "#5eead4", dot: "#0ea5a4", glow: "rgba(14,165,164,.32)", border: "rgba(14,165,164,.30)", pulse: false },
+  red:    { bg: "rgba(239,68,68,.12)",   fg: "#dc2626", dot: "#ef4444", glow: "rgba(239,68,68,.28)",  border: "rgba(239,68,68,.30)",  pulse: true  },
+  orange: { bg: "rgba(244,123,32,.12)",  fg: "#c2540a", dot: "#F47B20", glow: "rgba(244,123,32,.28)", border: "rgba(244,123,32,.30)", pulse: true  },
+  teal:   { bg: "rgba(14,165,164,.12)",  fg: "#0e7490", dot: "#0ea5a4", glow: "rgba(14,165,164,.24)", border: "rgba(14,165,164,.28)", pulse: false },
 };
 
 export default function ApplicationRadar() {
@@ -132,14 +132,14 @@ export default function ApplicationRadar() {
         <div style={{ position: "relative" }}>
           {/* left fade */}
           <div style={{
-            position: "absolute", top: 0, left: 0, bottom: 0, width: 80,
-            background: "linear-gradient(to right, #0d0800 20%, transparent)",
+            position: "absolute", top: 0, left: 0, bottom: 0, width: 64,
+            background: "linear-gradient(to right, #ffffff, transparent)",
             pointerEvents: "none", zIndex: 2,
           }} />
           {/* right fade */}
           <div style={{
-            position: "absolute", top: 0, right: 0, bottom: 0, width: 80,
-            background: "linear-gradient(to left, #1c0e00 20%, transparent)",
+            position: "absolute", top: 0, right: 0, bottom: 0, width: 64,
+            background: "linear-gradient(to left, #ffffff, transparent)",
             pointerEvents: "none", zIndex: 2,
           }} />
 

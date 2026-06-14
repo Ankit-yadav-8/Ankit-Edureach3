@@ -278,7 +278,7 @@ function ShowcasePanel({ mode }) {
         <span style={{ width: 38, height: 38, borderRadius: 11, background: `linear-gradient(135deg,${OR},${ORD})`, display: "grid", placeItems: "center", boxShadow: `0 6px 18px ${OR}66`, animation: "glowPulse 3s ease-in-out infinite" }}>
           <GraduationCap size={20} color="#fff" />
         </span>
-        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: "#fff" }}>
+        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: "#1a1a2e" }}>
           College <span style={{ color: OR }}>Parichay</span>
         </span>
       </div>
@@ -292,13 +292,13 @@ function ShowcasePanel({ mode }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.7rem", lineHeight: 1.25, margin: "0 0 14px", color: "#fff" }}
+            style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.7rem", lineHeight: 1.25, margin: "0 0 14px", color: "#1a1a2e" }}
           >
             {S.title}<br />
             <span className="auth-grad-text">{S.accent}</span>
           </motion.h2>
         </AnimatePresence>
-        <p style={{ color: "rgba(255,255,255,.6)", fontSize: 13.5, lineHeight: 1.6, margin: 0, maxWidth: 280 }}>
+        <p style={{ color: "#6b7280", fontSize: 13.5, lineHeight: 1.6, margin: 0, maxWidth: 280 }}>
           The data-driven companion for every JEE aspirant choosing where to study next.
         </p>
       </div>
@@ -311,10 +311,10 @@ function ShowcasePanel({ mode }) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.12 + i * 0.08, duration: 0.35 }}
           >
-            <span style={{ width: 28, height: 28, borderRadius: 9, background: `${OR}22`, border: `1px solid ${OR}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+            <span style={{ width: 28, height: 28, borderRadius: 9, background: `${OR}1a`, border: `1px solid ${OR}3a`, display: "grid", placeItems: "center", flexShrink: 0 }}>
               <I size={14} color={OR} />
             </span>
-            <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.82)", fontWeight: 600 }}>{label}</span>
+            <span style={{ fontSize: 12.5, color: "#475569", fontWeight: 600 }}>{label}</span>
           </motion.div>
         ))}
       </div>
@@ -460,8 +460,8 @@ export default function AuthModal() {
         transition={{ duration: 0.22 }}
         style={{
           position: "fixed", inset: 0, zIndex: 300,
-          background: "rgba(10,12,28,.82)",
-          backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
+          background: "rgba(255,247,239,.82)",
+          backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -511,12 +511,13 @@ export default function AuthModal() {
 
           {/* ─── HEADER BAND ─── */}
           <div className="auth-header-band" style={{
-            background: `linear-gradient(135deg, #1a0d00 0%, #2d1400 40%, #3d2010 70%, #1a0d00 100%)`,
+            background: `linear-gradient(135deg, #fff7ef 0%, #ffe9d4 45%, #ffdfc2 100%)`,
+            borderBottom: "1px solid rgba(244,123,32,.16)",
             position: "relative", overflow: "hidden",
           }}>
             {/* glow orbs */}
-            <div style={{ position: "absolute", top: -30, right: -20, width: 160, height: 160, borderRadius: "50%", background: `radial-gradient(circle, ${OR}44 0%, transparent 70%)`, pointerEvents: "none" }} />
-            <div style={{ position: "absolute", bottom: -40, left: -20, width: 120, height: 120, borderRadius: "50%", background: `radial-gradient(circle, ${OR}22 0%, transparent 70%)`, pointerEvents: "none" }} />
+            <div style={{ position: "absolute", top: -30, right: -20, width: 160, height: 160, borderRadius: "50%", background: `radial-gradient(circle, ${OR}33 0%, transparent 70%)`, pointerEvents: "none" }} />
+            <div style={{ position: "absolute", bottom: -40, left: -20, width: 120, height: 120, borderRadius: "50%", background: `radial-gradient(circle, ${OR}1f 0%, transparent 70%)`, pointerEvents: "none" }} />
 
             {/* top bar: back + close */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, position: "relative", zIndex: 1 }}>
@@ -524,7 +525,7 @@ export default function AuthModal() {
                 <motion.button
                   whileHover={{ x: -2 }}
                   onClick={() => go(mode === "otpCode" ? "otpEmail" : "login")}
-                  style={{ background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 8, cursor: "pointer", color: "rgba(255,255,255,.85)", padding: "5px 12px", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 5 }}
+                  style={{ background: "rgba(244,123,32,.10)", border: "1px solid rgba(244,123,32,.25)", borderRadius: 8, cursor: "pointer", color: "#c2410c", padding: "5px 12px", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 5 }}
                 >
                   <ArrowLeft size={14} /> Back
                 </motion.button>
@@ -534,7 +535,7 @@ export default function AuthModal() {
                   <span style={{ width: 30, height: 30, borderRadius: 8, background: `linear-gradient(135deg,${OR},${ORD})`, display: "grid", placeItems: "center", boxShadow: `0 4px 12px ${OR}55` }}>
                     <GraduationCap size={16} color="#fff" />
                   </span>
-                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: ".95rem", color: "#fff" }}>
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: ".95rem", color: "#1a1a2e" }}>
                     College <span style={{ color: OR }}>Parichay</span>
                   </span>
                 </div>
@@ -542,9 +543,9 @@ export default function AuthModal() {
 
               {!mandatory && (
                 <button onClick={close} aria-label="Close"
-                  style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.15)", cursor: "pointer", color: "rgba(255,255,255,.75)", display: "grid", placeItems: "center", transition: "background .15s" }}
-                  onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.2)"}
-                  onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.10)"}
+                  style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(244,123,32,.10)", border: "1px solid rgba(244,123,32,.22)", cursor: "pointer", color: "#c2410c", display: "grid", placeItems: "center", transition: "background .15s" }}
+                  onMouseEnter={e => e.currentTarget.style.background = "rgba(244,123,32,.2)"}
+                  onMouseLeave={e => e.currentTarget.style.background = "rgba(244,123,32,.10)"}
                   title="Close"
                 >
                   <X size={15} />
@@ -561,10 +562,10 @@ export default function AuthModal() {
               style={{ position: "relative", zIndex: 1 }}
             >
               <div style={{ fontSize: 28, marginBottom: 6, lineHeight: 1 }}>{H.emoji}</div>
-              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.35rem", color: "#fff", margin: "0 0 5px" }}>
+              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.35rem", color: "#1a1a2e", margin: "0 0 5px", letterSpacing: "-0.3px" }}>
                 {H.title}
               </h3>
-              <p style={{ color: "rgba(255,255,255,.65)", fontSize: 13.5, margin: 0, lineHeight: 1.5 }}>
+              <p style={{ color: "#6b7280", fontSize: 13.5, margin: 0, lineHeight: 1.5 }}>
                 {mode === "otpCode"
                   ? `Code sent to ${f.email || "your email"}`
                   : H.sub}
@@ -574,7 +575,7 @@ export default function AuthModal() {
             {/* Login / Sign up tab switcher (only on login/signup) */}
             {(mode === "login" || mode === "signup") && (
               <div style={{
-                display: "flex", background: "rgba(255,255,255,.08)", borderRadius: 10,
+                display: "flex", background: "rgba(244,123,32,.10)", border: "1px solid rgba(244,123,32,.18)", borderRadius: 10,
                 padding: 3, marginTop: 18, position: "relative", zIndex: 1,
               }}>
                 {[["login", "Log in"], ["signup", "Sign up"]].map(([m, lbl]) => (
@@ -582,10 +583,10 @@ export default function AuthModal() {
                     style={{
                       flex: 1, border: "none", cursor: "pointer", borderRadius: 8,
                       padding: "8px 0", fontSize: 13.5, fontWeight: 700, fontFamily: "Sora",
-                      background: mode === m ? "rgba(255,255,255,.92)" : "transparent",
-                      color: mode === m ? OR : "rgba(255,255,255,.7)",
+                      background: mode === m ? `linear-gradient(135deg, ${OR}, ${ORD})` : "transparent",
+                      color: mode === m ? "#fff" : "#a8623a",
                       transition: "all .2s",
-                      boxShadow: mode === m ? "0 2px 8px rgba(0,0,0,.18)" : "none",
+                      boxShadow: mode === m ? `0 4px 12px -2px ${OR}88` : "none",
                     }}
                   >
                     {lbl}

@@ -5,7 +5,7 @@ import {
   Search, Sparkles, TrendingUp, Crosshair,
   GraduationCap, Users, Star, Award, ArrowRight,
   BookOpen, Target, MapPin, Trophy, Zap, ChevronRight,
-  Stethoscope, Radar, Info,
+  Stethoscope, Radar, Info, Check,
 } from "lucide-react";
 import {
   TypewriterText,
@@ -98,10 +98,12 @@ function StatsBar({ isMobile, isXs }) {
       style={{
         display: "grid",
         gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
-        gap: isXs ? 8 : 12,
+        gap: isXs ? 10 : 12,
+        width: "100%",
         maxWidth: 580,
-        margin: "0 auto",
-        padding: isXs ? "14px 0" : "20px 0",
+        margin: isMobile ? "6px auto 0" : "0 auto",
+        padding: isXs ? "16px 2px" : "20px 0",
+        boxSizing: "border-box",
         borderTop: "1px solid rgba(244,123,32,.20)",
         borderBottom: "1px solid rgba(244,123,32,.20)",
       }}
@@ -114,11 +116,11 @@ function StatsBar({ isMobile, isXs }) {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: isXs ? 7 : 10,
+              gap: isXs ? 8 : 10,
               background: "rgba(255,255,255,.72)",
               border: "1px solid rgba(244,123,32,.18)",
               borderRadius: 12,
-              padding: isXs ? "8px 7px" : "12px 10px",
+              padding: isXs ? "10px 9px" : "12px 10px",
               backdropFilter: "blur(10px)",
             }}
           >
@@ -1113,40 +1115,47 @@ function HeroRadarCard({ isMobile }) {
    link rows (→ pages) + CTA, with dot navigation.
 ════════════════════════════════════════════════ */
 const HERO_LEFT = [
-  { key: "story", accent: "#6366f1", eyebrow: "ABOUT US", title: "Our Story",
-    desc: "Built in an IIT Roorkee hostel room by students who lived the JoSAA chaos — now free for every aspirant after them.",
-    links: [["Our mission & story", "/about"], ["How to use CollegeParichay", "/how-to-use"], ["Browse all colleges", "/colleges"]],
-    cta: "About Us", to: "/about" },
-  { key: "tools", accent: "#0ea5a4", eyebrow: "FREE TOOLS", title: "Tools for Smarter Choices",
-    desc: "Free calculators and explorers to plan your admission end-to-end.",
+  { key: "story", accent: "#6366f1", Icon: Sparkles, eyebrow: "ABOUT US", title: "Our Story",
+    desc: "Built in an IIT Roorkee hostel room by students who lived the JoSAA chaos first-hand — now free for every aspirant who comes after them.",
+    highlights: ["IIT Roorkee", "Student-first", "Always free"],
+    links: [["Our mission & story", "/about"], ["Meet the team behind it", "/about"], ["How to use CollegeParichay", "/how-to-use"], ["Browse all colleges", "/colleges"]],
+    cta: "Read Our Story", to: "/about" },
+  { key: "tools", accent: "#0ea5a4", Icon: Zap, eyebrow: "FREE TOOLS", title: "Tools for Smarter Choices",
+    desc: "Free calculators and explorers that plan your admission end-to-end — from fees and ROI to the perfect choice-filling order.",
+    highlights: ["ROI calc", "College map", "Choice list"],
     links: [["ROI / Fees Calculator", "/scholarships"], ["College Map View", "/map"], ["Choice Filling Helper", "/planner"], ["Colleges for You", "/for-you"]],
     cta: "Explore All Tools", to: "/for-you" },
-  { key: "colleges", accent: "#F47B20", eyebrow: "850+ COLLEGES", title: "Explore Colleges",
-    desc: "Reviews, cutoffs, placements & fees for every IIT, NIT, IIIT and top private university.",
-    links: [["All IIT · NIT · IIIT", "/colleges"], ["Compare colleges", "/compare"], ["Private universities", "/private-universities"]],
+  { key: "colleges", accent: "#F47B20", Icon: GraduationCap, eyebrow: "850+ COLLEGES", title: "Explore Colleges",
+    desc: "Verified reviews, year-wise cutoffs, placements and fees for every IIT, NIT, IIIT and top private university in India.",
+    highlights: ["850+ listed", "Cutoffs", "Placements"],
+    links: [["All IIT · NIT · IIIT", "/colleges"], ["Compare colleges side-by-side", "/compare"], ["Private universities", "/private-universities"], ["Colleges on the map", "/map"]],
     cta: "Explore Colleges", to: "/colleges" },
 ];
 
 const HERO_RIGHT = [
-  { key: "mentorship", accent: "#f5a623", eyebrow: "1-ON-1 MENTORSHIP", title: "Mentorship by IITians",
-    desc: "A personal IITian / doctor mentor, daily targets and weekly test analysis for JEE & NEET — every plan in one place.",
+  { key: "mentorship", accent: "#f5a623", Icon: Users, eyebrow: "1-ON-1 MENTORSHIP", title: "Mentorship by IITians",
+    desc: "A personal IITian / doctor mentor, daily targets and weekly test analysis for JEE & NEET — every plan, Foundation to Droppers, in one place.",
+    highlights: ["1-on-1", "Daily targets", "IITian mentors"],
     links: [["JEE & NEET 2027 plan", "/mentorship"], ["JEE & NEET 2028 plan", "/mentorship"], ["Foundation · Class 9–10", "/mentorship"], ["View all mentorship plans", "/mentorship"]],
     cta: "See All Mentorship Plans", to: "/mentorship" },
-  { key: "jee-adv", accent: "#8b5cf6", eyebrow: "JEE ADVANCED 2026", title: "JEE Advanced — IIT Predictor",
-    desc: "Marks to AIR, then the exact IITs and branches you qualify for, category-wise.",
-    links: [["JEE Advanced Rank Predictor", "/jee-advanced"], ["Result & Rank List 2026", "/jee-advanced-result-2026"], ["IIT Cutoffs & branches", "/cutoffs"]],
+  { key: "jee-adv", accent: "#8b5cf6", Icon: Trophy, eyebrow: "JEE ADVANCED 2026", title: "JEE Advanced — IIT Predictor",
+    desc: "Convert your marks to an All-India Rank, then see the exact IITs and branches you qualify for — category-wise, across all 23 IITs.",
+    highlights: ["Marks → AIR", "23 IITs", "Category-wise"],
+    links: [["JEE Advanced Rank Predictor", "/jee-advanced"], ["Result & Rank List 2026", "/jee-advanced-result-2026"], ["IIT Cutoffs & branches", "/cutoffs"], ["JoSAA Round 1 result", "/josaa-round-1-result-2026"]],
     cta: "Open JEE Advanced", to: "/jee-advanced" },
-  { key: "jee-main", accent: "#F47B20", eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College",
-    desc: "Turn your NTA percentile into a rank and see every IIT, NIT & IIIT you can get.",
-    links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"]],
+  { key: "jee-main", accent: "#F47B20", Icon: Crosshair, eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College",
+    desc: "Turn your NTA percentile into a rank, then discover every IIT, NIT, IIIT and GFTI seat you can realistically get this year.",
+    highlights: ["%ile → Rank", "NIT · IIIT", "2026 data"],
+    links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"], ["Exam dates & pattern", "/exams"]],
     cta: "Open JEE Main", to: "/jee-main" },
-  { key: "neet", accent: "#22c55e", eyebrow: "NEET 2026", title: "NEET — Rank & College Finder",
-    desc: "Predict your NEET rank and explore MBBS & medical colleges with cutoffs.",
-    links: [["NEET Rank Predictor", "/neet"], ["Medical College Finder", "/neet"], ["Counselling guidance", "/planner"]],
+  { key: "neet", accent: "#22c55e", Icon: Stethoscope, eyebrow: "NEET 2026", title: "NEET — Rank & College Finder",
+    desc: "Predict your NEET rank and explore MBBS, BDS and other medical colleges with both All-India-quota and state-quota cutoffs.",
+    highlights: ["Rank predict", "MBBS / BDS", "AIQ + state"],
+    links: [["NEET Rank Predictor", "/neet"], ["Medical College Finder", "/neet"], ["Counselling guidance", "/planner"], ["MBBS scholarships", "/scholarships"]],
     cta: "Open NEET", to: "/neet" },
 ];
 
-function HeroRotatingCard({ slides, isMobile, interval = 4200, minHeight = 430 }) {
+function HeroRotatingCard({ slides, isMobile, interval = 4600, minHeight = 492 }) {
   const nav = useNavigate();
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -1159,6 +1168,7 @@ function HeroRotatingCard({ slides, isMobile, interval = 4200, minHeight = 430 }
 
   const idx = i % slides.length;
   const c = slides[idx];
+  const Icon = c.Icon;
 
   return (
     <div
@@ -1171,57 +1181,107 @@ function HeroRotatingCard({ slides, isMobile, interval = 4200, minHeight = 430 }
         <AnimatePresence mode="wait">
           <motion.div
             key={c.key}
-            initial={{ opacity: 0, x: 36 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -36 }}
-            transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+            initial={{ opacity: 0, y: 18, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -14, scale: 0.98 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ y: -4 }}
             style={{
               position: "absolute", inset: 0,
-              background: "#ffffff", border: "1px solid rgba(0,0,0,.08)", borderRadius: 20, overflow: "hidden",
-              boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 24px 30px -8px rgba(0,0,0,.10), 0 12px 14px -8px rgba(0,0,0,.05)",
+              background: "#ffffff", border: `1px solid ${c.accent}22`, borderRadius: 22, overflow: "hidden",
+              boxShadow: `0 1px 3px rgba(0,0,0,.05), 0 30px 50px -18px ${c.accent}44, 0 12px 18px -10px rgba(0,0,0,.10)`,
               display: "flex", flexDirection: "column",
             }}
           >
-            {/* coloured header */}
-            <div style={{ background: `linear-gradient(135deg, ${c.accent}, ${c.accent}cc)`, color: "#fff", padding: "15px 18px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 10, fontWeight: 800, letterSpacing: "1.2px", opacity: 0.95 }}>
-                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#fff", display: "inline-block" }} /> {c.eyebrow}
+            {/* coloured header with shimmer sweep */}
+            <div style={{ position: "relative", background: `linear-gradient(135deg, ${c.accent}, ${c.accent}cc)`, color: "#fff", padding: "16px 18px", overflow: "hidden" }}>
+              <motion.div
+                aria-hidden
+                animate={{ x: ["-120%", "240%"] }}
+                transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.7 }}
+                style={{ position: "absolute", top: 0, bottom: 0, width: "45%", background: "linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent)", pointerEvents: "none" }}
+              />
+              <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 11 }}>
+                <motion.span
+                  initial={{ rotate: -8, scale: 0.8, opacity: 0 }}
+                  animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                  style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(255,255,255,.18)", border: "1px solid rgba(255,255,255,.35)", display: "grid", placeItems: "center", flexShrink: 0 }}
+                >
+                  <Icon size={21} color="#fff" />
+                </motion.span>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 9.5, fontWeight: 800, letterSpacing: "1.3px", opacity: 0.95 }}>
+                    <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.6, repeat: Infinity }} style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff", display: "inline-block" }} />
+                    {c.eyebrow}
+                  </div>
+                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.04rem", marginTop: 4, lineHeight: 1.2 }}>{c.title}</div>
+                </div>
               </div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", marginTop: 6, lineHeight: 1.25 }}>{c.title}</div>
+            </div>
+
+            {/* auto-rotate progress bar */}
+            <div style={{ height: 3, background: "rgba(0,0,0,.06)", position: "relative", overflow: "hidden" }}>
+              <motion.div
+                key={`${c.key}-${paused}`}
+                initial={{ width: paused ? "100%" : "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: paused ? 0 : interval / 1000, ease: "linear" }}
+                style={{ position: "absolute", left: 0, top: 0, bottom: 0, background: c.accent }}
+              />
             </div>
 
             {/* body */}
-            <div style={{ padding: "14px 16px 16px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-              <p style={{ fontSize: 12.5, color: "rgba(28,28,40,.66)", lineHeight: 1.5, margin: 0 }}>{c.desc}</p>
+            <div style={{ padding: "13px 16px 16px", display: "flex", flexDirection: "column", gap: 11, flex: 1 }}>
+              <p style={{ fontSize: 12.5, color: "rgba(28,28,40,.66)", lineHeight: 1.55, margin: 0 }}>{c.desc}</p>
+
+              {/* highlight chips */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {c.highlights.map((h) => (
+                  <span key={h} style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10.5, fontWeight: 700, color: c.accent, background: `${c.accent}12`, border: `1px solid ${c.accent}2e`, borderRadius: 9999, padding: "4px 10px" }}>
+                    <Check size={11} color={c.accent} strokeWidth={3} /> {h}
+                  </span>
+                ))}
+              </div>
+
+              {/* link rows (staggered) */}
               <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                {c.links.map(([label, to]) => (
-                  <button
+                {c.links.map(([label, to], li) => (
+                  <motion.button
                     key={label}
+                    initial={{ opacity: 0, x: 14 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.12 + li * 0.06, duration: 0.35 }}
                     onClick={() => nav(to)}
                     style={{
                       display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, width: "100%",
-                      background: "rgba(0,0,0,.02)", border: "1px solid rgba(0,0,0,.06)", borderRadius: 10, padding: "9px 12px",
+                      background: "rgba(0,0,0,.02)", border: "1px solid rgba(0,0,0,.06)", borderRadius: 11, padding: "9px 12px",
                       cursor: "pointer", fontSize: 12.5, fontWeight: 600, color: "#1c1c28", textAlign: "left",
-                      transition: "background .18s, border-color .18s",
+                      transition: "background .18s, border-color .18s, transform .18s",
                     }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = `${c.accent}10`; e.currentTarget.style.borderColor = `${c.accent}40`; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,.02)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.06)"; }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = `${c.accent}10`; e.currentTarget.style.borderColor = `${c.accent}40`; e.currentTarget.style.transform = "translateX(3px)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,.02)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.06)"; e.currentTarget.style.transform = ""; }}
                   >
                     <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
                     <ArrowRight size={14} color={c.accent} style={{ flexShrink: 0 }} />
-                  </button>
+                  </motion.button>
                 ))}
               </div>
-              <button
+
+              {/* CTA */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => nav(c.to)}
                 style={{
                   marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-                  background: c.accent, color: "#fff", border: "none", borderRadius: 9999,
-                  padding: "11px 16px", fontSize: 13.5, fontWeight: 800, fontFamily: "Sora", cursor: "pointer",
+                  background: `linear-gradient(135deg, ${c.accent}, ${c.accent}d0)`, color: "#fff", border: "none", borderRadius: 9999,
+                  padding: "12px 16px", fontSize: 13.5, fontWeight: 800, fontFamily: "Sora", cursor: "pointer",
+                  boxShadow: `0 8px 22px -6px ${c.accent}99`,
                 }}
               >
                 {c.cta} <ArrowRight size={15} />
-              </button>
+              </motion.button>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -1234,7 +1294,7 @@ function HeroRotatingCard({ slides, isMobile, interval = 4200, minHeight = 430 }
             key={card.key}
             onClick={() => setI(d)}
             aria-label={card.title}
-            style={{ width: d === idx ? 22 : 7, height: 7, borderRadius: 9999, border: "none", background: d === idx ? c.accent : "rgba(0,0,0,.18)", cursor: "pointer", transition: "all .3s", padding: 0 }}
+            style={{ width: d === idx ? 24 : 7, height: 7, borderRadius: 9999, border: "none", background: d === idx ? c.accent : "rgba(0,0,0,.18)", cursor: "pointer", transition: "all .3s", padding: 0 }}
           />
         ))}
       </div>
@@ -1546,10 +1606,10 @@ export default function Hero({ onSearch }) {
               transition={{ delay: 0.35 }}
               style={{
                 display: "flex",
-                gap: isXs ? 5 : 7,
+                gap: isXs ? 6 : 7,
                 flexWrap: "wrap",
                 justifyContent: "center",
-                marginBottom: 0,
+                marginBottom: isMobile ? 20 : 0,
               }}
             >
               {QUICK.map((t) => (
