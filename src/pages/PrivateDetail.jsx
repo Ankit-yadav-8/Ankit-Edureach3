@@ -4,20 +4,56 @@ import { PRIVATE_BY_SLUG } from "../data/counselling.js";
 import { CenterDonut } from "../components/Charts.jsx";
 import { fmtINR } from "../utils/format.js";
 import Reveal from "../components/Reveal.jsx";
+import Seo, { SITE_URL } from "../components/Seo.jsx";
 
 export default function PrivateDetail() {
   const { slug } = useParams();
   const nav = useNavigate();
   const u = PRIVATE_BY_SLUG[slug];
-  if (!u) return <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}><h2>University not found</h2><Link to="/#private" className="btn btn-coral" style={{ marginTop: 16 }}>Private universities</Link></div>;
+  if (!u) return <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}><Seo title="University not found" robots="noindex, follow" path={`/private/${slug}`} /><h2>University not found</h2><Link to="/#private" className="btn btn-coral" style={{ marginTop: 16 }}>Private universities</Link></div>;
 
   const placeData = [
     { name: "Avg package", value: u.placements.avg },
     { name: "Highest", value: u.placements.highest },
   ];
 
+  // ── SEO: per-university review-intent title, description & structured data ──
+  const seoYear = new Date().getFullYear();
+  const seoTitle = `${u.name} Review ${seoYear}: Fees, Placements, Admission & Courses`;
+  const seoDesc =
+    `${u.name} review ${seoYear}${u.state ? ` (${u.state})` : ""} — is it worth it? ` +
+    `Fees ${u.fees}, branch-wise placements (avg & highest package), ${u.exam} admission, ` +
+    `courses and an honest breakdown. Compare with IITs/NITs/IIITs free on CollegeParichay.`;
+  const seoJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollegeOrUniversity",
+        "@id": `${SITE_URL}/private/${slug}#university`,
+        name: u.name,
+        url: `${SITE_URL}/private/${slug}`,
+        description: seoDesc,
+        ...(u.website ? { sameAs: u.website } : {}),
+        address: {
+          "@type": "PostalAddress",
+          addressRegion: u.state || "India",
+          addressCountry: "IN",
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+          { "@type": "ListItem", position: 2, name: "Private Universities", item: `${SITE_URL}/#private` },
+          { "@type": "ListItem", position: 3, name: u.name, item: `${SITE_URL}/private/${slug}` },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="page">
+      <Seo title={seoTitle} description={seoDesc} path={`/private/${slug}`} jsonLd={seoJsonLd} />
       <section className="warm-page-header" style={{ padding: "40px 0" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: `radial-gradient(ellipse 60% 70% at 100% 20%, ${u.accent}30 0%, transparent 60%)` }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 100%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />

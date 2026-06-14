@@ -8,6 +8,7 @@ import {
 import Reveal from "../components/Reveal.jsx";
 import { useEnrol } from "../components/EnrolModal.jsx";
 import { FFS_OPTIONS, QUICK_LINKS } from "../data/josaaRounds.js";
+import Seo from "../components/Seo.jsx";
 
 /* ═══════════════════════════════════════════════════════════
    JoSAA 2026 — ROUND 1 SEAT ALLOTMENT RESULT
@@ -94,6 +95,11 @@ export default function JosaaRound1Result() {
 
   return (
     <div className="josr-page">
+      <Seo
+        title="JoSAA 2026 Round 1 Seat Allotment Result"
+        description="JoSAA 2026 Round 1 seat allotment result, opening & closing ranks and what to do next (float/slide/freeze) — explained by IIT Roorkee alumni on CollegeParichay."
+        path="/josaa-round-1-result-2026"
+      />
       <style>{CSS}</style>
 
       {/* floating action bar */}

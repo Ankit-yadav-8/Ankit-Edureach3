@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MapPin, Layers, ArrowRight } from "lucide-react";
 import { COLLEGES } from "../data/colleges.js";
 import { fmtINR } from "../utils/format.js";
+import Seo from "../components/Seo.jsx";
 
 const TYPE_COLOR = { IIT: "#f97316", NIT: "#0ea5a4", IIIT: "#d97706", Private: "#15803d" };
 const TYPES = ["All", "IIT", "NIT", "IIIT"];
@@ -57,6 +58,11 @@ export default function CollegeMap() {
 
   return (
     <div className="page">
+      <Seo
+        title="College Map — Explore IITs, NITs & IIITs Across India"
+        description="Interactive map of every IIT, NIT and IIIT in India — explore colleges by location, type and rank, then open full cutoffs, placements and reviews on CollegeParichay."
+        path="/map"
+      />
       <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "44px 0" }}>
         <div className="container">
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Interactive Map</span>

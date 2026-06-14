@@ -7,6 +7,7 @@ import {
   Compass, Lightbulb, Rocket, HelpCircle,
 } from "lucide-react";
 import Reveal from "../components/Reveal.jsx";
+import Seo from "../components/Seo.jsx";
 
 const OR = "#F47B20";
 
@@ -337,6 +338,11 @@ function StepCard({ item, last }) {
 export default function HowToUse() {
   return (
     <div className="page" style={{ paddingTop: 0 }}>
+      <Seo
+        title="How to Use CollegeParichay — Rank, Shortlist & Counselling"
+        description="A quick guide to using CollegeParichay — predict your JEE rank, build a college shortlist, compare options and plan JoSAA/CSAB counselling, all free and built by IIT Roorkee alumni."
+        path="/how-to-use"
+      />
       {/* ── HERO ── */}
       <header className="warm-page-header" style={{ paddingTop: 96 }}>
         <div className="container" style={{ position: "relative", zIndex: 2, textAlign: "center" }}>

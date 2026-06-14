@@ -6,6 +6,7 @@ import { TIER_COLOR } from "../utils/collegePredictor.js";
 import { useCollegePredictor } from "../hooks/useCollegePredictor.js";
 import { CATEGORIES, BRANCHES, STATES } from "../data/colleges.js";
 import { fmtRank, fmtINR } from "../utils/format.js";
+import Seo from "../components/Seo.jsx";
 
 export default function CounsellingPlanner() {
   const [form, setForm] = useState({ rank: "", category: "OPEN", state: "", branch: "", exam: "advanced" });
@@ -53,6 +54,11 @@ export default function CounsellingPlanner() {
 
   return (
     <div className="page">
+      <Seo
+        title="JoSAA Counselling Planner — Build Your Choice-Filling Order"
+        description="Free JoSAA 2026 counselling planner — arrange your IIT/NIT/IIIT choice list in the smartest order based on your rank, category and preferences, by IIT Roorkee alumni."
+        path="/planner"
+      />
 
       {/* ── Warm hero header ── */}
       <section className="warm-page-header" style={{ padding: "52px 0 48px" }}>

@@ -4,6 +4,7 @@ import { SCHOLARSHIPS } from "../data/scholarships.js";
 import { fmtINR } from "../utils/format.js";
 import Reveal from "../components/Reveal.jsx";
 import ROICalculator from "../components/ROICalculator.jsx";
+import Seo from "../components/Seo.jsx";
 
 function EMICalculator() {
   const [amount, setAmount] = useState(800000);
@@ -43,6 +44,11 @@ function EMICalculator() {
 export default function Scholarships() {
   return (
     <div className="page">
+      <Seo
+        title="Engineering & JEE Scholarships 2026 — Eligibility & How to Apply"
+        description="Top scholarships for engineering and JEE aspirants — eligibility, amount, deadlines and how to apply — plus an education-loan EMI and ROI calculator on CollegeParichay."
+        path="/scholarships"
+      />
       <section className="warm-page-header" style={{ padding: "40px 0" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.20) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>

@@ -6,6 +6,7 @@ import {
   CheckCircle2, TrendingUp, ListChecks, Sparkles,
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import Seo from "../components/Seo.jsx";
 
 /* ── Subject Data ─────────────────────────────────────────── */
 const SUBJECTS = [
@@ -393,6 +394,11 @@ export default function JeeResources() {
 
   return (
     <div className="page" style={{ minHeight: "100vh" }}>
+      <Seo
+        title="JEE Preparation Resources — Free Notes, PYQs & Study Plan"
+        description="Free JEE Main & Advanced preparation resources — subject-wise notes, previous-year papers, best books and a study plan curated by IIT Roorkee alumni on CollegeParichay."
+        path="/jee-resources"
+      />
 
       {/* ── Page Header ── */}
       <section className="warm-page-header" style={{ padding: "60px 0 48px" }}>

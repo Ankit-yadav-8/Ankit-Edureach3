@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { Search, ArrowRight, Sparkles, MapPin, TrendingUp } from "lucide-react";
 import { search, answerFor } from "../utils/searchIndex.js";
 import { fmtINR } from "../utils/format.js";
+import Seo from "../components/Seo.jsx";
 
 const KIND_COLOR = { College: "#0EA5A4", Private: "#0EA5A4", Exam: "#F97316", News: "#F4A261", Tool: "#2EC4B6" };
 const FILTERS = ["All", "College", "Exam", "Private", "News", "Tool"];
@@ -22,6 +23,7 @@ export default function SearchResults() {
 
   return (
     <div className="page">
+      <Seo title="Search" robots="noindex, follow" path="/search" />
       <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "40px 0" }}>
         <div className="container">
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Smart Search</span>

@@ -10,6 +10,7 @@ import {
 import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
 import { Trend, Bars, Gauge } from "../components/Charts.jsx";
+import Seo from "../components/Seo.jsx";
 
 const ACCENT = "#F47B20";        // brand orange
 const GOLD = "#f5a623";          // highlight gold
@@ -1079,6 +1080,11 @@ export default function Mentorship() {
 
   return (
     <div style={{ background: "#fffaf5", color: INK }}>
+      <Seo
+        title={`${(variant || "jee-2027").replace(/-/g, " ").toUpperCase()} Mentorship by IITians — 1-on-1 Guidance`}
+        description="1-on-1 JEE & NEET mentorship by IIT Roorkee alumni — daily targets, test analysis, live tracking and parent reports. Limited seats. Enrol on CollegeParichay."
+        path={`/mentorship/${variant}`}
+      />
       <MentorTabs variant={variant} />
       <EnrolTopBar cfg={cfg} scrollToEnrol={scrollToEnrol} />
       <FloatingEnrol cfg={cfg} scrollToEnrol={scrollToEnrol} />

@@ -101,11 +101,12 @@ export default function CollegeDetail() {
 
   // ── SEO: per-college title, description and structured data ───────────────
   const seoYear = new Date().getFullYear();
-  const seoTitle = `${college.name} — Cutoffs, Reviews, Placements & Fees ${seoYear}`;
+  const seoTitle = `${college.name} Review ${seoYear}: Cutoffs, Placements, Fees & Ranking`;
   const seoDesc =
-    `${college.name} (${college.type}${college.location ? `, ${college.location}` : ""}): ` +
-    `JoSAA cutoffs, branch-wise placements, fees, hostel info and student reviews. ` +
-    `Predict your JEE rank and check your admission chances on CollegeParichay.`;
+    `${college.name} review ${seoYear}${college.location ? ` (${college.location})` : ""} — ` +
+    `is it worth it? See NIRF ranking, JoSAA cutoffs, branch-wise placements, average package, ` +
+    `fees, hostel details and honest student reviews. Check your admission chances free with the ` +
+    `CollegeParichay JEE rank predictor — built by IIT Roorkee alumni.`;
   const seoImage = college.heroImage
     ? SITE_URL + encodeURI(college.heroImage)
     : undefined;

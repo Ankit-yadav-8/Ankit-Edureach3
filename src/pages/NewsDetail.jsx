@@ -2,17 +2,36 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Clock, ExternalLink, ArrowRight } from "lucide-react";
 import { NEWS_BY_SLUG, NEWS } from "../data/news.js";
 import Reveal from "../components/Reveal.jsx";
+import Seo, { SITE_URL } from "../components/Seo.jsx";
 
 export default function NewsDetail() {
   const { slug } = useParams();
   const nav = useNavigate();
   const n = NEWS_BY_SLUG[slug];
-  if (!n) return <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}><h2>Article not found</h2><Link to="/#news" className="btn btn-coral" style={{ marginTop: 16 }}>All news</Link></div>;
+  if (!n) return <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}><Seo title="Article not found" robots="noindex, follow" path={`/news/${slug}`} /><h2>Article not found</h2><Link to="/#news" className="btn btn-coral" style={{ marginTop: 16 }}>All news</Link></div>;
 
   const related = NEWS.filter((x) => x.slug !== slug).slice(0, 3);
 
+  // ── SEO: article title, description & NewsArticle structured data ──
+  const seoDesc = ((n.body && n.body[0]) ? n.body[0] : n.title).slice(0, 160);
+  const seoJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: n.title,
+    ...(n.date ? { datePublished: n.date } : {}),
+    ...(n.tags && n.tags.length ? { articleSection: n.tags.join(", ") } : {}),
+    mainEntityOfPage: `${SITE_URL}/news/${slug}`,
+    author: { "@type": "Organization", name: "CollegeParichay", url: SITE_URL },
+    publisher: {
+      "@type": "Organization",
+      name: "CollegeParichay",
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/icon-512.png` },
+    },
+  };
+
   return (
     <div className="page">
+      <Seo title={n.title} description={seoDesc} path={`/news/${slug}`} type="article" jsonLd={seoJsonLd} />
       <section style={{ background: n.image, height: 240, position: "relative" }}>
         <div className="container" style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingBottom: 24 }}>
           <button onClick={() => nav(-1)} className="btn btn-light" style={{ alignSelf: "flex-start", marginBottom: "auto", marginTop: 20 }}><ArrowLeft size={16} /> Back</button>
