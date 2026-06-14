@@ -978,6 +978,133 @@ function HeroFeatureCards({ isMobile, isXs }) {
 }
 
 /* ════════════════════════════════════════════════
+   HERO RADAR CARD (right column) — one rich, fully
+   informative card that auto-scrolls one-by-one:
+   coloured header + description + link rows (→) +
+   bottom CTA, with dot navigation.
+════════════════════════════════════════════════ */
+const HERO_RADAR = [
+  { key: "jee-main", accent: "#F47B20", eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College Predictor",
+    desc: "Turn your NTA percentile into a rank and see every IIT, NIT & IIIT you can get.",
+    links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"], ["Exam dates & pattern", "/exams"]],
+    cta: "Open JEE Main", to: "/jee-main" },
+  { key: "jee-adv", accent: "#8b5cf6", eyebrow: "JEE ADVANCED 2026", title: "JEE Advanced — IIT Predictor",
+    desc: "Marks to AIR, then the exact IITs and branches you qualify for, category-wise.",
+    links: [["JEE Advanced Rank Predictor", "/jee-advanced"], ["Result & Rank List 2026", "/jee-advanced-result-2026"], ["IIT Cutoffs & branches", "/cutoffs"], ["JoSAA Round 1 result", "/josaa-round-1-result-2026"]],
+    cta: "Open JEE Advanced", to: "/jee-advanced" },
+  { key: "neet", accent: "#22c55e", eyebrow: "NEET 2026", title: "NEET — Rank & College Finder",
+    desc: "Predict your NEET rank and explore MBBS & medical colleges with cutoffs.",
+    links: [["NEET Rank Predictor", "/neet"], ["Medical College Finder", "/neet"], ["NEET Cutoffs", "/neet"], ["Counselling guidance", "/planner"]],
+    cta: "Open NEET", to: "/neet" },
+  { key: "mentorship", accent: "#f5a623", eyebrow: "1-ON-1 MENTORSHIP", title: "Mentorship by IITians",
+    desc: "Daily targets, test analysis & live tracking for JEE and NEET aspirants.",
+    links: [["JEE 2027 Mentorship", "/mentorship/jee-2027"], ["JEE 2028 Mentorship", "/mentorship/jee-2028"], ["NEET Mentorship", "/mentorship/jee-2027"], ["How it works", "/mentorship/jee-2027"]],
+    cta: "Explore Mentorship", to: "/mentorship/jee-2027" },
+  { key: "counselling", accent: "#0ea5a4", eyebrow: "JoSAA & CSAB", title: "Counselling — Plan Every Round",
+    desc: "Build your choice list, track round dates and read official cutoffs.",
+    links: [["JoSAA Counselling Planner", "/planner"], ["JoSAA Round 1 Result", "/josaa-round-1-result-2026"], ["All Cutoffs 2018–2025", "/cutoffs"], ["JoSAA 2026 Guide", "/josaa-2026"]],
+    cta: "Open Counselling Planner", to: "/planner" },
+  { key: "colleges", accent: "#6366f1", eyebrow: "850+ COLLEGES", title: "Colleges & Our Story",
+    desc: "Reviews, cutoffs, placements & fees for every IIT, NIT and IIIT — built by IIT Roorkee alumni.",
+    links: [["All IIT · NIT · IIIT", "/colleges"], ["Compare colleges", "/compare"], ["College map", "/map"], ["About / Our story", "/about"]],
+    cta: "Browse Colleges", to: "/colleges" },
+];
+
+function HeroRadarCard({ isMobile }) {
+  const nav = useNavigate();
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return;
+    const t = setInterval(() => setI((p) => (p + 1) % HERO_RADAR.length), 4200);
+    return () => clearInterval(t);
+  }, [paused]);
+
+  const c = HERO_RADAR[i];
+
+  return (
+    <div
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      style={{ width: "100%", maxWidth: isMobile ? 460 : "none", margin: isMobile ? "4px auto 0" : 0 }}
+    >
+      <div style={{ position: "relative", minHeight: 404 }}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={c.key}
+            initial={{ opacity: 0, x: 36 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -36 }}
+            transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+            style={{
+              position: "absolute", inset: 0,
+              background: "#ffffff", border: "1px solid rgba(0,0,0,.08)", borderRadius: 20, overflow: "hidden",
+              boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 24px 30px -8px rgba(0,0,0,.10), 0 12px 14px -8px rgba(0,0,0,.05)",
+              display: "flex", flexDirection: "column",
+            }}
+          >
+            {/* coloured header */}
+            <div style={{ background: `linear-gradient(135deg, ${c.accent}, ${c.accent}cc)`, color: "#fff", padding: "15px 18px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 10, fontWeight: 800, letterSpacing: "1.2px", opacity: 0.95 }}>
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#fff", display: "inline-block" }} /> {c.eyebrow}
+              </div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", marginTop: 6, lineHeight: 1.25 }}>{c.title}</div>
+            </div>
+
+            {/* body */}
+            <div style={{ padding: "14px 16px 16px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
+              <p style={{ fontSize: 12.5, color: "rgba(28,28,40,.66)", lineHeight: 1.5, margin: 0 }}>{c.desc}</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                {c.links.map(([label, to]) => (
+                  <button
+                    key={label}
+                    onClick={() => nav(to)}
+                    style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, width: "100%",
+                      background: "rgba(0,0,0,.02)", border: "1px solid rgba(0,0,0,.06)", borderRadius: 10, padding: "9px 12px",
+                      cursor: "pointer", fontSize: 12.5, fontWeight: 600, color: "#1c1c28", textAlign: "left",
+                      transition: "background .18s, border-color .18s",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = `${c.accent}10`; e.currentTarget.style.borderColor = `${c.accent}40`; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,.02)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.06)"; }}
+                  >
+                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
+                    <ArrowRight size={14} color={c.accent} style={{ flexShrink: 0 }} />
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => nav(c.to)}
+                style={{
+                  marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+                  background: c.accent, color: "#fff", border: "none", borderRadius: 9999,
+                  padding: "11px 16px", fontSize: 13.5, fontWeight: 800, fontFamily: "Sora", cursor: "pointer",
+                }}
+              >
+                {c.cta} <ArrowRight size={15} />
+              </button>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* dots */}
+      <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
+        {HERO_RADAR.map((card, idx) => (
+          <button
+            key={card.key}
+            onClick={() => setI(idx)}
+            aria-label={card.title}
+            style={{ width: idx === i ? 22 : 7, height: 7, borderRadius: 9999, border: "none", background: idx === i ? c.accent : "rgba(0,0,0,.18)", cursor: "pointer", transition: "all .3s", padding: 0 }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
    HERO — MAIN EXPORT
 ════════════════════════════════════════════════ */
 export default function Hero({ onSearch }) {
@@ -1046,16 +1173,16 @@ export default function Hero({ onSearch }) {
         <div
           className="hero-grid"
           style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "stretch",
-            gap: isMobile ? "1.6rem" : "2.2rem",
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : isTablet ? "1fr 320px" : "1fr 380px",
+            gap: isMobile ? "1.8rem" : "2.2rem",
+            alignItems: "center",
             width: "100%",
           }}
         >
 
           {/* ══ HERO TEXT — left-aligned to the logo ══ */}
-          <div style={{ textAlign: "left", minWidth: 0, maxWidth: 820, width: "100%", alignSelf: "flex-start" }}>
+          <div style={{ textAlign: "left", minWidth: 0, maxWidth: 600, width: "100%" }}>
 
             {/* Badge */}
             <div>
@@ -1214,14 +1341,14 @@ export default function Hero({ onSearch }) {
               ))}
             </motion.div>
 
+            {/* ── Stats bar ── */}
+            <StatsBar isMobile={isMobile} isXs={isXs} />
+
           </div>
           {/* ══ end HERO TEXT ══ */}
 
-          {/* ── Feature cards — full-width detailed cards ── */}
-          <HeroFeatureCards isMobile={isMobile} isXs={isXs} />
-
-          {/* ── Stats bar ── */}
-          <StatsBar isMobile={isMobile} isXs={isXs} />
+          {/* ── Right: rotating radar card (scrolls one-by-one) ── */}
+          <HeroRadarCard isMobile={isMobile} />
 
         </div>
       </div>
