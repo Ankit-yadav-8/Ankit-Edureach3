@@ -6,7 +6,6 @@ import NewTools from "../components/home/NewTools.jsx";
 import ApplicationRadar from "../components/home/ApplicationRadar.jsx";
 import EntranceExams from "../components/home/EntranceExams.jsx";
 import TopColleges from "../components/home/TopColleges.jsx";
-import PrivateUniversities from "../components/home/PrivateUniversities.jsx";
 import NewsSection from "../components/home/NewsSection.jsx";
 import Testimonials from "../components/home/Testimonials.jsx";
 import ExamCycle from "../components/home/ExamCycle.jsx";
@@ -743,9 +742,6 @@ export default function Home({ onSearch }) {
 
       {/* ── Top Colleges ── */}
       <TopColleges />
-
-      {/* ── Private Universities ── */}
-      <PrivateUniversities />
 
       {/* ── Testimonials ── */}
       <Testimonials />

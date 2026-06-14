@@ -1081,7 +1081,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
 .josaa-price-header {
   position:relative;
   overflow:hidden;
-  padding:1.8rem 1.8rem 1.7rem;
+  padding:1.2rem 1.5rem 1.1rem;
   background:linear-gradient(135deg,#1c1c28 0%,#2d1f3d 50%,#0f0a1e 100%);
 }
 .josaa-price-header-mesh {
@@ -1118,7 +1118,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   padding:.4rem .9rem; border-radius:var(--radius-pill);
 }
 .josaa-price-body {
-  padding:1.6rem 1.8rem 1.8rem;
+  padding:1.2rem 1.5rem 1.4rem;
 }
 .josaa-save-ribbon {
   position:absolute;
@@ -1339,7 +1339,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   box-shadow:0 6px 18px rgba(245,158,11,.45);
 }
 /* give the featured header room for the badge */
-.plan-card--featured .josaa-price-header { padding-top:2.5rem; }
+.plan-card--featured .josaa-price-header { padding-top:2rem; }
 
 /* rank-band line in header */
 .plan-band {

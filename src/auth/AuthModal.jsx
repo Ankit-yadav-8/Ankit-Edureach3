@@ -105,7 +105,7 @@ function Field({ icon: Icon, error, label, ...props }) {
           style={{
             flex: 1, border: "none", background: "transparent", outline: "none",
             paddingLeft: 40, paddingRight: isPass ? 46 : 14,
-            height: 52, fontSize: 16.5, fontWeight: 600, letterSpacing: ".01em",
+            height: 46, fontSize: 16, fontWeight: 600, letterSpacing: ".01em",
             color: "#0f172a", borderRadius: 12,
             fontFamily: "inherit",
           }}
@@ -469,6 +469,7 @@ export default function AuthModal() {
           justifyContent: "flex-start",
           boxSizing: "border-box",
           minHeight: "100%",
+          padding: "84px 16px 40px",
         }}
       >
         {/* ── card ── split-panel: showcase (desktop) + form ── */}

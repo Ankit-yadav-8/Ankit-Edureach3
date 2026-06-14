@@ -845,67 +845,133 @@ function RotatingHeroCard({ isMobile }) {
 }
 
 /* ════════════════════════════════════════════════
-   SQUARE FEATURE CARDS — small square cards below the
-   centered hero. Same card language as the old story /
-   mentorship cards (white, rounded, colour icon chip),
-   just compact + square.
+   HERO FEATURE CARDS — detailed cards (radar style:
+   header + info + bottom CTA button → page). Counselling
+   and Our Story rotate their content (scroll effect).
 ════════════════════════════════════════════════ */
-const CARD_LABEL = {
-  "jee-main": "JEE Main Predictor",
-  "jee-adv": "JEE Advanced",
-  "college": "College Predictor",
-  "mentorship": "Mentorship",
-  "colleges": "Colleges",
-};
+const COUNSEL_LIST = [
+  "IIT Bombay · CSE ≤ AIR 68",
+  "IIT Delhi · CSE ≤ AIR 110",
+  "IIT Madras · CSE ≤ AIR 162",
+  "NIT Trichy · CSE ≤ 5,000",
+  "IIIT Hyderabad · CSE ≤ 2,500",
+  "NIT Warangal · CSE ≤ 8,000",
+];
+const STORY_LINES = [
+  "Built in an IIT Roorkee hostel room.",
+  "By students who lived the JoSAA chaos.",
+  "Now free for every aspirant after them.",
+  "Honest data · student-first · always free.",
+];
 
-function SquareFeatureCards({ isMobile, isXs }) {
+const FEATURE_CARDS = [
+  { key: "jee-main", accent: "#F47B20", Icon: Crosshair, eyebrow: "Free Tool", title: "JEE Main",
+    rows: [["Percentile → Rank", "Instant"], ["College chances", "IIT·NIT·IIIT"], ["Updated", "2026"]],
+    cta: "Open JEE Main", to: "/jee-main" },
+  { key: "jee-adv", accent: "#8b5cf6", Icon: Trophy, eyebrow: "Free Tool", title: "JEE Advanced",
+    rows: [["Marks → AIR", "Instant"], ["IIT branches", "23 IITs"], ["CRL + category", "Yes"]],
+    cta: "Open JEE Advanced", to: "/jee-advanced" },
+  { key: "neet", accent: "#22c55e", Icon: Award, eyebrow: "Free Tool", title: "NEET",
+    rows: [["Rank predictor", "Yes"], ["MBBS colleges", "Explore"], ["Cutoffs", "All-India"]],
+    cta: "Open NEET", to: "/neet" },
+  { key: "mentorship", accent: "#f5a623", Icon: Users, eyebrow: "1-on-1", title: "Mentorship",
+    rows: [["JEE & NEET", "2027·2028"], ["Daily targets", "Yes"], ["Starts at", "₹1999"]],
+    cta: "Explore Mentorship", to: "/mentorship/jee-2027" },
+  { key: "counselling", accent: "#0ea5a4", Icon: GraduationCap, eyebrow: "Counselling", title: "Colleges",
+    rotate: COUNSEL_LIST, cta: "Browse Colleges", to: "/colleges" },
+  { key: "about", accent: "#6366f1", Icon: Sparkles, eyebrow: "About Us", title: "Our Story",
+    rotate: STORY_LINES, cta: "About Us", to: "/about" },
+];
+
+function RotatingLine({ items, accent }) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((p) => (p + 1) % items.length), 2200);
+    return () => clearInterval(t);
+  }, [items.length]);
+  return (
+    <div style={{ flex: 1, minHeight: 92, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.4 }}
+          style={{ display: "flex", alignItems: "center", gap: 9, background: `${accent}0e`, border: `1px solid ${accent}26`, borderRadius: 10, padding: "13px 13px" }}
+        >
+          <span style={{ width: 7, height: 7, borderRadius: "50%", background: accent, flexShrink: 0 }} />
+          <span style={{ fontSize: 13, fontWeight: 600, color: "#1c1c28", lineHeight: 1.4 }}>{items[i]}</span>
+        </motion.div>
+      </AnimatePresence>
+      <div style={{ display: "flex", gap: 4, marginTop: 10, justifyContent: "center" }}>
+        {items.map((_, idx) => (
+          <span key={idx} style={{ width: idx === i ? 16 : 6, height: 6, borderRadius: 9999, background: idx === i ? accent : "rgba(0,0,0,.15)", transition: "all .3s" }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HeroFeatureCards({ isMobile, isXs }) {
   const nav = useNavigate();
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: isXs ? "repeat(2,1fr)" : isMobile ? "repeat(3,1fr)" : "repeat(5,1fr)",
-        gap: isXs ? 10 : 12,
-        maxWidth: 760,
-        margin: "0 auto 1.9rem",
+        gridTemplateColumns: isXs ? "1fr" : isMobile ? "repeat(2,1fr)" : "repeat(3,1fr)",
+        gap: 16,
         width: "100%",
       }}
     >
-      {HERO_CARDS.map((c) => (
-        <button
+      {FEATURE_CARDS.map((c) => (
+        <div
           key={c.key}
-          onClick={() => nav(c.to)}
-          aria-label={CARD_LABEL[c.key] || c.title}
           style={{
-            aspectRatio: "1 / 1",
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            gap: 10, textAlign: "center",
-            background: "#ffffff",
-            border: "1px solid rgba(0,0,0,.07)",
-            borderRadius: 16,
-            padding: "12px 8px",
-            cursor: "pointer",
-            boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 10px 15px -6px rgba(0,0,0,.08)",
-            transition: "transform .2s, box-shadow .2s, border-color .2s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-3px)";
-            e.currentTarget.style.boxShadow = `0 1px 3px rgba(0,0,0,.06), 0 18px 26px -8px ${c.accent}40`;
-            e.currentTarget.style.borderColor = `${c.accent}55`;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "";
-            e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,.05), 0 10px 15px -6px rgba(0,0,0,.08)";
-            e.currentTarget.style.borderColor = "rgba(0,0,0,.07)";
+            display: "flex", flexDirection: "column", gap: 12,
+            background: "#ffffff", border: "1px solid rgba(0,0,0,.07)", borderRadius: 18,
+            padding: "1.15rem 1.2rem", textAlign: "left", minHeight: 240,
+            boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 20px 25px -5px rgba(0,0,0,.06), 0 10px 10px -5px rgba(0,0,0,.04)",
           }}
         >
-          <span style={{ width: isXs ? 40 : 48, height: isXs ? 40 : 48, borderRadius: 13, background: `${c.accent}18`, border: `1.5px solid ${c.accent}38`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-            <c.Icon size={isXs ? 20 : 23} color={c.accent} />
-          </span>
-          <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: isXs ? 11 : 12, color: "#1c1c28", lineHeight: 1.25 }}>
-            {CARD_LABEL[c.key] || c.title}
-          </span>
-        </button>
+          {/* header */}
+          <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
+            <span style={{ width: 44, height: 44, borderRadius: 12, background: `${c.accent}18`, border: `1.5px solid ${c.accent}38`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <c.Icon size={21} color={c.accent} />
+            </span>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 9.5, color: c.accent, fontWeight: 800, letterSpacing: "1.3px", textTransform: "uppercase" }}>{c.eyebrow}</div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#1c1c28", fontSize: "1.08rem", lineHeight: 1.15 }}>{c.title}</div>
+            </div>
+          </div>
+
+          <div style={{ height: 1, background: "rgba(0,0,0,.07)" }} />
+
+          {/* body — info rows OR rotating list */}
+          {c.rotate ? (
+            <RotatingLine items={c.rotate} accent={c.accent} />
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: 1 }}>
+              {c.rows.map(([label, value]) => (
+                <div key={label} style={{ display: "flex", alignItems: "center", gap: 9, background: "rgba(0,0,0,.025)", border: "1px solid rgba(0,0,0,.05)", borderRadius: 9, padding: "7px 10px" }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: c.accent, flexShrink: 0 }} />
+                  <span style={{ flex: 1, fontSize: 12.5, color: "rgba(28,28,40,.72)", fontWeight: 500 }}>{label}</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 800, color: "#1c1c28" }}>{value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* bottom CTA — pill → page */}
+          <button
+            onClick={() => nav(c.to)}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+              background: c.accent, color: "#fff", border: "none", borderRadius: 9999,
+              padding: "10px 16px", fontSize: 13, fontWeight: 800, fontFamily: "Sora", cursor: "pointer",
+            }}
+          >
+            {c.cta} <ArrowRight size={15} />
+          </button>
+        </div>
       ))}
     </div>
   );
@@ -982,13 +1048,14 @@ export default function Hero({ onSearch }) {
           style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
+            alignItems: "stretch",
+            gap: isMobile ? "1.6rem" : "2.2rem",
             width: "100%",
           }}
         >
 
-          {/* ══ CENTER (jastro — single centred column) ══ */}
-          <div style={{ textAlign: "center", minWidth: 0, maxWidth: 880, width: "100%", margin: "0 auto" }}>
+          {/* ══ HERO TEXT — left-aligned to the logo ══ */}
+          <div style={{ textAlign: "left", minWidth: 0, maxWidth: 820, width: "100%", alignSelf: "flex-start" }}>
 
             {/* Badge */}
             <div>
@@ -1040,7 +1107,7 @@ export default function Hero({ onSearch }) {
               <p style={{
                 color: subColor,
                 fontSize: isXs ? ".85rem" : "clamp(.92rem,1.7vw,1.08rem)",
-                maxWidth: 540, margin: "0 auto 0.6rem",
+                maxWidth: 560, margin: "0 0 0.6rem",
                 lineHeight: 1.75,
               }}>
                 Predict your JEE rank from marks, discover every college you can get into across all JoSAA &amp; CSAB rounds, and track every deadline — all in one place.
@@ -1054,7 +1121,7 @@ export default function Hero({ onSearch }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.18 }}
-              style={{ maxWidth: 560, margin: "0 auto 1rem" }}
+              style={{ maxWidth: 560, margin: "0 0 1rem" }}
             >
               <div style={{
                 display: "flex",
@@ -1114,8 +1181,8 @@ export default function Hero({ onSearch }) {
                 display: "flex",
                 gap: isXs ? 5 : 7,
                 flexWrap: "wrap",
-                justifyContent: "center",
-                marginBottom: isMobile ? "1.4rem" : "1.8rem",
+                justifyContent: "flex-start",
+                marginBottom: 0,
               }}
             >
               {QUICK.map((t) => (
@@ -1147,95 +1214,14 @@ export default function Hero({ onSearch }) {
               ))}
             </motion.div>
 
-            {/* ── CTA buttons ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              style={{
-                display: "flex",
-                gap: isMobile ? 10 : 12,
-                justifyContent: "center",
-                flexWrap: "wrap",
-                flexDirection: isMobile ? "column" : "row",   /* ← stack on mobile */
-                alignItems: isMobile ? "stretch" : "center",
-                marginBottom: isMobile ? "2rem" : "2.8rem",
-                paddingInline: isMobile ? "0" : "0",
-              }}
-            >
-              <button
-                onClick={() => nav("/jee-main#college")}
-                style={{
-                  padding: isXs ? "11px 22px" : "12px 26px",
-                  fontSize: isXs ? 14 : 15,
-                  fontWeight: 800,
-                  borderRadius: 12,
-                  gap: 8,
-                  background: "#F47B20",
-                  color: "#fff",
-                  border: "none",
-                  cursor: "pointer",
-                  letterSpacing: "0.2px",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: isMobile ? "100%" : "auto",
-                }}
-              >
-                <Crosshair size={isXs ? 17 : 19} /> College Predictor
-              </button>
-
-              <button
-                onClick={() => nav("/jee-advanced-result-2026")}
-                style={{
-                  padding: isXs ? "11px 20px" : "12px 24px",
-                  fontSize: isXs ? 13.5 : 14.5,
-                  fontWeight: 700,
-                  borderRadius: 12,
-                  gap: 8,
-                  background: "#F47B20",
-                  color: "#fff",
-                  border: "none",
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: isMobile ? "100%" : "auto",
-                }}
-              >
-                <Trophy size={isXs ? 16 : 18} /> JEE Advanced Result 2026
-              </button>
-
-              <button
-                onClick={() => nav("/neet")}
-                style={{
-                  padding: isXs ? "11px 20px" : "12px 24px",
-                  fontSize: isXs ? 13.5 : 14.5,
-                  fontWeight: 700,
-                  borderRadius: 12,
-                  gap: 8,
-                  background: "#F47B20",
-                  color: "#fff",
-                  border: "none",
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: isMobile ? "100%" : "auto",
-                }}
-              >
-                <Award size={isXs ? 16 : 18} /> NEET 2026
-              </button>
-            </motion.div>
-
-            {/* ── Square feature cards (jastro) ── */}
-            <SquareFeatureCards isMobile={isMobile} isXs={isXs} />
-
-            {/* ── Stats bar ── */}
-            <StatsBar isMobile={isMobile} isXs={isXs} />
-
           </div>
-          {/* ══ end CENTER ══ */}
+          {/* ══ end HERO TEXT ══ */}
+
+          {/* ── Feature cards — full-width detailed cards ── */}
+          <HeroFeatureCards isMobile={isMobile} isXs={isXs} />
+
+          {/* ── Stats bar ── */}
+          <StatsBar isMobile={isMobile} isXs={isXs} />
 
         </div>
       </div>
