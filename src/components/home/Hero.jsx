@@ -845,6 +845,73 @@ function RotatingHeroCard({ isMobile }) {
 }
 
 /* ════════════════════════════════════════════════
+   SQUARE FEATURE CARDS — small square cards below the
+   centered hero. Same card language as the old story /
+   mentorship cards (white, rounded, colour icon chip),
+   just compact + square.
+════════════════════════════════════════════════ */
+const CARD_LABEL = {
+  "jee-main": "JEE Main Predictor",
+  "jee-adv": "JEE Advanced",
+  "college": "College Predictor",
+  "mentorship": "Mentorship",
+  "colleges": "Colleges",
+};
+
+function SquareFeatureCards({ isMobile, isXs }) {
+  const nav = useNavigate();
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: isXs ? "repeat(2,1fr)" : isMobile ? "repeat(3,1fr)" : "repeat(5,1fr)",
+        gap: isXs ? 10 : 12,
+        maxWidth: 760,
+        margin: "0 auto 1.9rem",
+        width: "100%",
+      }}
+    >
+      {HERO_CARDS.map((c) => (
+        <button
+          key={c.key}
+          onClick={() => nav(c.to)}
+          aria-label={CARD_LABEL[c.key] || c.title}
+          style={{
+            aspectRatio: "1 / 1",
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+            gap: 10, textAlign: "center",
+            background: "#ffffff",
+            border: "1px solid rgba(0,0,0,.07)",
+            borderRadius: 16,
+            padding: "12px 8px",
+            cursor: "pointer",
+            boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 10px 15px -6px rgba(0,0,0,.08)",
+            transition: "transform .2s, box-shadow .2s, border-color .2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "translateY(-3px)";
+            e.currentTarget.style.boxShadow = `0 1px 3px rgba(0,0,0,.06), 0 18px 26px -8px ${c.accent}40`;
+            e.currentTarget.style.borderColor = `${c.accent}55`;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "";
+            e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,.05), 0 10px 15px -6px rgba(0,0,0,.08)";
+            e.currentTarget.style.borderColor = "rgba(0,0,0,.07)";
+          }}
+        >
+          <span style={{ width: isXs ? 40 : 48, height: isXs ? 40 : 48, borderRadius: 13, background: `${c.accent}18`, border: `1.5px solid ${c.accent}38`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+            <c.Icon size={isXs ? 20 : 23} color={c.accent} />
+          </span>
+          <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: isXs ? 11 : 12, color: "#1c1c28", lineHeight: 1.25 }}>
+            {CARD_LABEL[c.key] || c.title}
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
    HERO — MAIN EXPORT
 ════════════════════════════════════════════════ */
 export default function Hero({ onSearch }) {
@@ -913,16 +980,15 @@ export default function Hero({ onSearch }) {
         <div
           className="hero-grid"
           style={{
-            display: "grid",
-            gridTemplateColumns: gridCols,
-            gap: isMobile ? 0 : isTablet ? "1.25rem" : "1.75rem",
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             width: "100%",
           }}
         >
 
-          {/* ══ CENTER ══ */}
-          <div style={{ textAlign: "center", minWidth: 0 }}>
+          {/* ══ CENTER (jastro — single centred column) ══ */}
+          <div style={{ textAlign: "center", minWidth: 0, maxWidth: 880, width: "100%", margin: "0 auto" }}>
 
             {/* Badge */}
             <div>
@@ -1162,14 +1228,14 @@ export default function Hero({ onSearch }) {
               </button>
             </motion.div>
 
+            {/* ── Square feature cards (jastro) ── */}
+            <SquareFeatureCards isMobile={isMobile} isXs={isXs} />
+
             {/* ── Stats bar ── */}
             <StatsBar isMobile={isMobile} isXs={isXs} />
 
           </div>
           {/* ══ end CENTER ══ */}
-
-          {/* ══ RIGHT — Rotating showcase card (merged from the old side cards) ══ */}
-          <RotatingHeroCard isMobile={isMobile} />
 
         </div>
       </div>

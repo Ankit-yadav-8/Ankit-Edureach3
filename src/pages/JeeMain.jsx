@@ -513,48 +513,8 @@ export default function JeeMain() {
       </section>
       <div className="section-divider" />
 
-      {/* ── College Cutoff Quick-Stats ── */}
-      <section id="cutoffs" style={{ background: "var(--sky)", padding: "32px 0", scrollMarginTop: 90 }}>
-        <div className="container">
-          <div style={{ marginBottom: 16, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
-            <div>
-              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 18, marginBottom: 2 }}>📊 Top College Closing Percentiles</h3>
-              <span style={{ fontSize: 12, color: "var(--muted)" }}>JoSAA 2025 Round 6 — verify on josaa.nic.in</span>
-            </div>
-          </div>
-          <div style={{ overflowX: "auto" }}>
-            <table className="data-table" style={{ minWidth: 560 }}>
-              <thead>
-                <tr>
-                  <th>College &amp; Branch</th>
-                  <th style={{ textAlign: "center" }}>General</th>
-                  <th style={{ textAlign: "center" }}>OBC-NCL</th>
-                  <th style={{ textAlign: "center" }}>SC</th>
-                </tr>
-              </thead>
-              <tbody>
-                {COLLEGE_CUTOFFS.map((c) => (
-                  <tr key={c.name} className="yr-row">
-                    <td><strong style={{ color: "var(--navy)" }}>{c.name}</strong></td>
-                    <td style={{ textAlign: "center" }}>
-                      <span style={{ fontFamily: "Sora", fontWeight: 800, color: "#7C3AED", fontSize: 14 }}>{c.open}%ile</span>
-                    </td>
-                    <td style={{ textAlign: "center" }}>
-                      <span style={{ fontFamily: "Sora", fontWeight: 800, color: "#F97316", fontSize: 14 }}>{c.obc}%ile</span>
-                    </td>
-                    <td style={{ textAlign: "center" }}>
-                      <span style={{ fontFamily: "Sora", fontWeight: 800, color: "#0EA5A4", fontSize: 14 }}>{c.sc}%ile</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* Info Banner */}
-      <div className="container" style={{ marginTop: 18 }}>
+      {/* Info Banner (also the #cutoffs anchor — closing-percentiles table removed) */}
+      <div id="cutoffs" className="container" style={{ marginTop: 18, scrollMarginTop: 90 }}>
         <div className="info-banner">
           <Info size={18} />
           Data shown is illustrative for 2026 and modelled on past trends. Always cross-check with official sources (jeemain.nta.ac.in, josaa.nic.in, csab.nic.in).

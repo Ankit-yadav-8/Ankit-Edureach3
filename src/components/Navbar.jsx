@@ -422,39 +422,12 @@ export default function Navbar({ onSearch }) {
         </ul>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-          {/* Unified utility cluster — Help · Search · Compare · Wishlist merged
-              into one segmented pill so the bar reads as a single tidy module
-              instead of four loose icons. Hidden on mobile/tablet (cta-desktop)
-              so the bar stays clean — these actions live in the drawer instead. */}
-          <div
-            className="cta-desktop"
-            style={{
-              display: "flex", alignItems: "center", gap: 2,
-              background: "#ffffff",
-              border: "1px solid rgba(0,0,0,.08)",
-              borderRadius: 999, padding: 4,
-              boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 6px 12px -4px rgba(0,0,0,.06)",
-            }}
-          >
-            <Link to="/how-to-use" title="How to use College Parichay" aria-label="How to use" className="nav-icon-btn cta-desktop" style={iconBtnStyle}>
-              <HelpCircle size={18} />
-            </Link>
-            <button onClick={onSearch} aria-label="Search" className="nav-icon-btn" style={iconBtnStyle}>
-              <Search size={18} />
-            </button>
-            <Link to="/compare" aria-label="Compare colleges" title="Compare" className="nav-icon-btn" style={{ ...iconBtnStyle, position: "relative" }}>
-              <GitCompare size={18} />
-              {compare.length > 0 && (
-                <span style={iconBadge("var(--teal)")}>{compare.length}</span>
-              )}
-            </Link>
-            <Link to="/shortlist" aria-label="My colleges" title="My Colleges" className="nav-icon-btn" style={{ ...iconBtnStyle, position: "relative", color: "var(--coral)" }}>
-              <Heart size={18} fill={saved.length ? "var(--coral)" : "none"} />
-              {saved.length > 0 && (
-                <span style={iconBadge("var(--coral)")}>{saved.length}</span>
-              )}
-            </Link>
-          </div>
+          {/* Quick search — single labelled action (utility icon cluster removed
+              for a clean jastro-style bar; compare/saved live in the menus). */}
+          <button onClick={onSearch} className="cta-desktop nav-ghost-cta" aria-label="Search"
+            style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}>
+            <Search size={16} /> Search
+          </button>
           {isLoggedIn ? (
             <button
               onClick={() => setConfirmLogout(true)}
