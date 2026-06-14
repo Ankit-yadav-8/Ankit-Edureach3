@@ -4,10 +4,11 @@ import { motion } from "framer-motion";
  * Reveal — animates children up + fade when scrolled into view.
  * Usage: <Reveal delay={0.1}><Card/></Reveal>
  */
-export default function Reveal({ children, delay = 0, y = 28, className = "" }) {
+export default function Reveal({ children, delay = 0, y = 28, className = "", style }) {
   return (
     <motion.div
       className={className}
+      style={style}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
