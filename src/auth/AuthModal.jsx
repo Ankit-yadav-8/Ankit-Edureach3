@@ -40,8 +40,8 @@ function validate(mode, f) {
     if (!f.homeState.trim())         e.homeState    = "Home state is required";
     if (!f.jeeMainsRank)             e.jeeMainsRank = "JEE Mains rank is required";
     else if (!isRank(f.jeeMainsRank)) e.jeeMainsRank = "Enter a valid rank number";
-    // JEE Advanced rank stays optional — only validated if provided
-    if (f.jeeAdvancedRank && !isRank(f.jeeAdvancedRank)) e.jeeAdvancedRank = "Enter a valid rank number";
+    if (!f.jeeAdvancedRank)               e.jeeAdvancedRank = "JEE Advanced rank is required";
+    else if (!isRank(f.jeeAdvancedRank))  e.jeeAdvancedRank = "Enter a valid rank number";
     if (!f.password)             e.password = "Password is required";
     else if (f.password.length < 6) e.password = "Minimum 6 characters";
   }
@@ -150,7 +150,7 @@ function ActionBtn({ busy, disabled, label, busyLabel, onClick, shake }) {
       onClick={onClick}
       disabled={busy || disabled}
       style={{
-        width: "100%", height: 50, borderRadius: 14,
+        width: "100%", height: 50, borderRadius: 9999,
         background: busy || disabled
           ? `linear-gradient(135deg, ${OR}99, ${ORD}88)`
           : `linear-gradient(135deg, ${OR} 0%, ${ORD} 100%)`,
@@ -664,7 +664,7 @@ export default function AuthModal() {
                       placeholder="JEE Mains rank *" value={f.jeeMainsRank}
                       error={fe.jeeMainsRank} onChange={e => set("jeeMainsRank", e.target.value.replace(/\D/g, ""))} />
                     <Field icon={Trophy} type="tel" inputMode="numeric"
-                      placeholder="JEE Advanced rank (opt.)" value={f.jeeAdvancedRank}
+                      placeholder="JEE Advanced rank *" value={f.jeeAdvancedRank}
                       error={fe.jeeAdvancedRank} onChange={e => set("jeeAdvancedRank", e.target.value.replace(/\D/g, ""))} />
                     <div style={{ gridColumn: "1/-1" }}>
                       <Field icon={Lock} type="password" placeholder="Password (min 6 chars) *" value={f.password}
