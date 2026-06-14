@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Search, Database, FileSpreadsheet, AlertTriangle } from "lucide-react";
+import Seo from "../components/Seo";
 
 /* Loads JoSAA cutoffs from public/data/ at runtime (static — works on GitHub Pages).
    Preferred: per-year files via a manifest:
@@ -104,6 +105,11 @@ export default function OfficialCutoffs() {
 
   return (
     <div className="page">
+      <Seo
+        title="JoSAA Cutoffs 2018–2025 — Official IIT NIT IIIT Opening & Closing Ranks"
+        description="Official JoSAA opening and closing ranks for all IITs, NITs and IIITs from 2018 to 2025 — filter round-wise, category-wise and branch-wise. Free on CollegeParichay, built by IIT Roorkee alumni."
+        path="/cutoffs"
+      />
       <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "44px 0", textAlign: "center" }}>
         <div className="container">
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Official Cutoffs</span>
