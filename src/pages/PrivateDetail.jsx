@@ -63,15 +63,15 @@ export default function PrivateDetail() {
             className="btn"
             style={{
               marginBottom: 18,
-              background: "#fff",
-              color: "#ea580c",
-              border: "1.5px solid rgba(244,123,32,.4)",
+              background: "#F47B20",
+              color: "#fff",
+              border: "none",
               fontWeight: 700,
-              boxShadow: "0 1px 6px rgba(244,123,32,.08)",
+              boxShadow: "0 4px 14px rgba(244,123,32,.3)",
               transition: "all .2s",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(244,123,32,.09)"; e.currentTarget.style.borderColor = "#F47B20"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(244,123,32,.4)"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#e36a14"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#F47B20"; e.currentTarget.style.transform = ""; }}
           >
             <ArrowLeft size={16} /> Back
           </button>

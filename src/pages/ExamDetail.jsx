@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Globe, FileText, ExternalLink, CalendarDays, CheckCircle2, ListChecks } from "lucide-react";
+import { ArrowLeft, Globe, FileText, ExternalLink, CalendarDays, CheckCircle2, ListChecks, GraduationCap, ArrowRight, Sparkles } from "lucide-react";
 import { EXAM_BY_SLUG } from "../data/exams.js";
 import { Trend } from "../components/Charts.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -24,11 +24,45 @@ export default function ExamDetail() {
       <section className="warm-page-header">
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: `radial-gradient(ellipse 60% 70% at 100% 20%, ${exam.color}30 0%, transparent 60%)` }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 100%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
-        <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 18, borderColor: "rgba(244,123,32,.4)", color: "#c75b0a" }}><ArrowLeft size={16} /> Back</button>
-          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", color: "#1c1c28" }}>{exam.name}</h1>
-          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, margin: "6px 0 14px" }}>{exam.about}</p>
-          <a href={exam.website} target="_blank" rel="noreferrer" className="btn btn-coral"><Globe size={16} /> Official Website</a>
+        <div className="container" style={{ position: "relative", zIndex: 1, display: "flex", gap: 28, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
+          <div style={{ flex: "1 1 440px", minWidth: 0 }}>
+            <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 18, color: "#fff" }}><ArrowLeft size={16} /> Back</button>
+            <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", color: "#1c1c28" }}>{exam.name}</h1>
+            <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, margin: "6px 0 14px" }}>{exam.about}</p>
+            <a href={exam.website} target="_blank" rel="noreferrer" className="btn btn-coral"><Globe size={16} /> Official Website</a>
+          </div>
+
+          {/* Small Explore Mentorship card (right side) */}
+          <Link
+            to="/mentorship/jee-2027"
+            style={{
+              flex: "0 1 320px", maxWidth: 340, alignSelf: "stretch",
+              display: "flex", flexDirection: "column", gap: 10,
+              background: "linear-gradient(160deg, #fff7ef 0%, #ffffff 60%, #fff3e6 100%)",
+              border: "1px solid rgba(244,123,32,.28)", borderRadius: 18,
+              padding: "20px 22px", textDecoration: "none", position: "relative", overflow: "hidden",
+              boxShadow: "0 16px 44px -26px rgba(244,123,32,.55)",
+            }}
+          >
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F47B20,#f5a623)" }} />
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, alignSelf: "flex-start", fontSize: 11, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: "#c2410c", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.28)", padding: "4px 11px", borderRadius: 50 }}>
+              <Sparkles size={12} /> 1-on-1 Mentorship
+            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
+              <span style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(244,123,32,.14)", border: "1px solid rgba(244,123,32,.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <GraduationCap size={20} color="#F47B20" />
+              </span>
+              <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.02rem", color: "#1a1a2e", margin: 0, lineHeight: 1.2 }}>
+                Crack {exam.name} with a mentor
+              </h3>
+            </div>
+            <p style={{ color: "#5b6472", fontSize: 13, lineHeight: 1.55, margin: 0 }}>
+              A personal IITian / doctor mentor, a study plan and weekly accountability.
+            </p>
+            <span style={{ marginTop: 2, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(135deg,#F47B20,#f5a623)", color: "#fff", padding: "11px 18px", borderRadius: 11, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 13.5, boxShadow: "0 10px 24px -8px rgba(244,123,32,.6)" }}>
+              Explore Mentorship <ArrowRight size={15} />
+            </span>
+          </Link>
         </div>
       </section>
 
