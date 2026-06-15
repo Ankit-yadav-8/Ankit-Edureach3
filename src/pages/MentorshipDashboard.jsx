@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home, GraduationCap, LayoutDashboard, LineChart as LineIcon, Mail, Activity,
+  Home, GraduationCap, LineChart as LineIcon, Mail, Activity,
   Flame, Clock, CheckCircle2, Target, TrendingUp, TrendingDown, Plus, Sparkles,
-  ShieldCheck, ArrowRight, Users, BarChart3,
+  ShieldCheck, ArrowRight, Users, BarChart3, Rocket, Zap, Crosshair, Timer,
+  ListChecks, Lock, Loader2, RotateCw, Pencil, Trash2, CalendarDays, Brain,
+  BookOpen, Minus,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
-import { apiMyEnrollments } from "../auth/api.js";
-import { Trend, Gauge, PieWithLegend } from "../components/Charts.jsx";
+import { apiMyEnrollments, apiSendOtp, apiVerifyOtp } from "../auth/api.js";
+import { Trend, Gauge, PieWithLegend, Bars } from "../components/Charts.jsx";
 
 const ORANGE = "#F47B20";
 const GOLD = "#f5a623";
@@ -27,28 +29,68 @@ const save = (key, val) => { try { localStorage.setItem(key, JSON.stringify(val)
 const isoDay = (d) => new Date(d).toISOString().slice(0, 10);
 const fmtDay = (iso) => new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
 const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const round1 = (n) => Math.round(Number(n || 0) * 10) / 10;
+
+/* ── subjects per exam track ──────────────────────────────────────── */
+function subjectsFor(exam) {
+  const e = String(exam || "").toLowerCase();
+  if (e.includes("foundation")) return ["Maths", "Science"];
+  if (e.includes("jee") && e.includes("neet")) return ["Physics", "Chemistry", "Maths", "Biology"];
+  if (e.includes("neet")) return ["Physics", "Chemistry", "Biology"];
+  return ["Physics", "Chemistry", "Maths"]; // JEE default
+}
+const SUBJECT_COLORS = {
+  Physics: "#6366f1", Chemistry: "#15a06e", Maths: "#F47B20",
+  Biology: "#ec4899", Science: "#06b6d4",
+};
+const subColor = (s) => SUBJECT_COLORS[s] || "#6366f1";
+
+const STRENGTHS = {
+  weak:   { label: "Weak",   color: "#ef4444", w: 3 },
+  medium: { label: "Medium", color: "#f59e0b", w: 2 },
+  strong: { label: "Strong", color: "#22c55e", w: 1 },
+};
+
+const WEEK_TARGET_HRS = 40;
 
 /* ── demo seed (used until the student logs their own data) ───────── */
-function seedTracking() {
+function splitHours(total, subjects) {
+  const per = round1(total / subjects.length);
+  const m = {};
+  subjects.forEach((s, j) => {
+    m[s] = j === subjects.length - 1 ? round1(total - per * (subjects.length - 1)) : per;
+  });
+  return m;
+}
+function seedTracking(subjects) {
   const today = new Date();
   const hrs = [4.5, 6, 5, 7, 6, 8, 2.5];
   const td = [16, 18, 15, 20, 18, 21, 12];
   const tt = [21, 21, 20, 21, 21, 21, 18];
   return hrs.map((h, i) => {
     const d = new Date(today); d.setDate(today.getDate() - (6 - i));
-    return { date: isoDay(d), hours: h, tasksDone: td[i], tasksTotal: tt[i] };
+    return { date: isoDay(d), hours: h, tasksDone: td[i], tasksTotal: tt[i], subjects: splitHours(h, subjects), routine: i % 4 !== 0 };
   });
 }
 function seedTests() {
   const today = new Date();
-  const mk = (n, back, total, scored, correct, wrong, skipped) => {
+  const mk = (n, back, total, scored, correct, wrong, skipped, silly, overspent, weak) => {
     const d = new Date(today); d.setDate(today.getDate() - back);
-    return { id: `${n}-${back}`, name: n, date: isoDay(d), total, scored, correct, wrong, skipped };
+    return { id: `${n}-${back}`, name: n, date: isoDay(d), total, scored, correct, wrong, skipped, silly, overspent, weak };
   };
   return [
-    mk("Mock 1", 21, 300, 126, 48, 22, 20),
-    mk("Mock 2", 14, 300, 150, 56, 18, 16),
-    mk("Mock 3", 7,  300, 178, 64, 14, 12),
+    mk("Mock 1", 21, 300, 126, 48, 22, 20, 8, "Physics", ["Rotational Motion", "Thermodynamics"]),
+    mk("Mock 2", 14, 300, 150, 56, 18, 16, 6, "Maths",   ["p-Block", "Probability"]),
+    mk("Mock 3", 7,  300, 178, 64, 14, 12, 3, "Physics", ["Rotational Motion", "p-Block"]),
+  ];
+}
+function seedBacklog() {
+  const today = new Date();
+  const plus = (days) => { const d = new Date(today); d.setDate(d.getDate() + days); return isoDay(d); };
+  return [
+    { id: "b1", subject: "Physics",   topic: "Rotational Motion", strength: "weak",   planDate: plus(5), week: "Week 1", done: false },
+    { id: "b2", subject: "Chemistry", topic: "Chemical Bonding",  strength: "medium", planDate: plus(9), week: "Week 2", done: false },
+    { id: "b3", subject: "Maths",     topic: "Probability",       strength: "weak",   planDate: plus(3), week: "Week 1", done: true  },
   ];
 }
 
@@ -57,35 +99,200 @@ function streakOf(entries) {
   const set = new Set(entries.map((e) => e.date));
   let streak = 0;
   const d = new Date();
-  // allow today to be missing (count from yesterday)
   if (!set.has(isoDay(d))) d.setDate(d.getDate() - 1);
   while (set.has(isoDay(d))) { streak++; d.setDate(d.getDate() - 1); }
   return streak;
 }
 
-const WEEK_TARGET_HRS = 40;
+/* current ISO week key (year-Www) for the fix-list */
+function weekKey(d = new Date()) {
+  const dt = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = dt.getUTCDay() || 7;
+  dt.setUTCDate(dt.getUTCDate() + 4 - day);
+  const yStart = new Date(Date.UTC(dt.getUTCFullYear(), 0, 1));
+  const wk = Math.ceil((((dt - yStart) / 86400000) + 1) / 7);
+  return `${dt.getUTCFullYear()}-W${wk}`;
+}
 
+/* ════════════════════════════════════════════════════════════════
+   DEFAULT EXPORT — auth + OTP security gate, then the dashboard
+   ════════════════════════════════════════════════════════════════ */
 export default function MentorshipDashboard() {
-  const { user, token, isLoggedIn, openLogin } = useAuth();
-  const navigate = useNavigate();
-
+  const { user, isLoggedIn, openLogin } = useAuth();
   const emailKey = (user?.email || "guest").toLowerCase();
-  const TRACK_KEY = `mdash:tracking:${emailKey}`;
-  const TEST_KEY = `mdash:tests:${emailKey}`;
+  const OTP_OK_KEY = `mdash:otpok:${emailKey}`;
 
-  const [entries, setEntries] = useState(() => load(TRACK_KEY, null) || seedTracking());
-  const [tests, setTests] = useState(() => load(TEST_KEY, null) || seedTests());
-  const [planLabel, setPlanLabel] = useState("Mentorship Program");
-  const [planExam, setPlanExam] = useState("JEE / NEET");
-
-  const [logForm, setLogForm] = useState({ hours: "", tasksDone: "", tasksTotal: "" });
-  const [testForm, setTestForm] = useState({ name: "", total: "300", scored: "", correct: "", wrong: "", skipped: "" });
+  const [otpOk, setOtpOk] = useState(() => {
+    try { return sessionStorage.getItem(OTP_OK_KEY) === "1"; } catch { return false; }
+  });
 
   useEffect(() => {
     const prev = document.title;
     document.title = "Mentorship Dashboard · College Parichay";
     return () => { document.title = prev; };
   }, []);
+
+  if (!isLoggedIn) {
+    return (
+      <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "120px 16px 60px" }}>
+        <div style={{ textAlign: "center", maxWidth: 380 }}>
+          <div style={{ width: 64, height: 64, borderRadius: 20, background: `${ORANGE}15`, display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
+            <ShieldCheck size={30} color={ORANGE} />
+          </div>
+          <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: "1.5rem", margin: "0 0 8px" }}>Please log in</h2>
+          <p style={{ color: "#6b7280", marginBottom: 18 }}>Log in to open your personal mentorship dashboard.</p>
+          <button onClick={openLogin} style={{ background: ORANGE, color: "#fff", border: "none", padding: "12px 22px", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontFamily: "Sora" }}>Log in</button>
+        </div>
+      </section>
+    );
+  }
+
+  if (!otpOk) {
+    return (
+      <OtpGate
+        email={user.email}
+        name={user.name}
+        onVerified={() => { try { sessionStorage.setItem(OTP_OK_KEY, "1"); } catch {} setOtpOk(true); }}
+      />
+    );
+  }
+
+  return <DashboardBody />;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   OTP SECURITY GATE — email verification before the dashboard opens
+   ════════════════════════════════════════════════════════════════ */
+function OtpGate({ email, name, onVerified }) {
+  const navigate = useNavigate();
+  const [step, setStep] = useState("intro"); // intro | code
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState({ type: "", text: "" });
+
+  const masked = (() => {
+    const [u, d] = String(email || "").split("@");
+    if (!d) return email;
+    const head = u.length <= 2 ? u : u.slice(0, 2) + "•".repeat(Math.max(1, u.length - 2));
+    return `${head}@${d}`;
+  })();
+
+  const send = async () => {
+    setBusy(true); setMsg({ type: "", text: "" });
+    try {
+      const r = await apiSendOtp({ email, name });
+      setMsg({ type: "ok", text: r.devCode ? `Dev OTP: ${r.devCode}` : "Code sent — check your inbox & spam folder." });
+      setStep("code");
+    } catch (e) {
+      setMsg({ type: "err", text: e.message || "Couldn't send the code. Try again." });
+    } finally { setBusy(false); }
+  };
+
+  const verify = async () => {
+    if (code.length < 6) return;
+    setBusy(true); setMsg({ type: "", text: "" });
+    try {
+      await apiVerifyOtp({ email, code });
+      onVerified();
+    } catch (e) {
+      setMsg({ type: "err", text: e.message || "Incorrect code. Try again." });
+    } finally { setBusy(false); }
+  };
+
+  return (
+    <section style={{ background: "#f8f7f5", minHeight: "100vh", display: "grid", placeItems: "center", padding: "120px 16px 60px" }}>
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+        style={{ width: "100%", maxWidth: 440, background: "#fff", borderRadius: 24, border: "1px solid rgba(244,123,32,.18)", padding: "34px 30px", boxShadow: "0 30px 70px -40px rgba(13,27,62,.5)", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${ORANGE},${GREEN})` }} />
+
+        <div style={{ width: 62, height: 62, borderRadius: 18, background: `linear-gradient(135deg,${ORANGE}1a,${GREEN}1a)`, border: `1px solid ${ORANGE}33`, display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
+          <Lock size={28} color={ORANGE} />
+        </div>
+        <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: "1.45rem", margin: 0, textAlign: "center", letterSpacing: "-0.4px" }}>
+          Verify it's you
+        </h2>
+        <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.6, textAlign: "center", margin: "10px 0 22px" }}>
+          Your mentorship dashboard is private. {step === "intro"
+            ? <>We'll email a 6-digit code to <strong style={{ color: NAVY }}>{masked}</strong> to confirm it's really you.</>
+            : <>Enter the 6-digit code we sent to <strong style={{ color: NAVY }}>{masked}</strong>.</>}
+        </p>
+
+        {step === "intro" ? (
+          <button onClick={send} disabled={busy}
+            style={{ width: "100%", height: 52, borderRadius: 14, border: "none", background: busy ? `${ORANGE}99` : `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 15, cursor: busy ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 9, boxShadow: `0 12px 26px -10px ${ORANGE}` }}>
+            {busy ? <><Loader2 size={18} style={{ animation: "spin .8s linear infinite" }} /> Sending code…</> : <><Mail size={18} /> Send code to my email</>}
+          </button>
+        ) : (
+          <>
+            <input
+              inputMode="numeric" maxLength={6} placeholder="——————" value={code} autoFocus
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+              onKeyDown={(e) => e.key === "Enter" && verify()}
+              style={{ width: "100%", textAlign: "center", letterSpacing: "0.9em", fontSize: 32, fontWeight: 900, color: "#1e293b", height: 70, border: `2px solid ${code.length === 6 ? ORANGE : "#e2e8f0"}`, borderRadius: 16, background: code.length === 6 ? `${ORANGE}08` : "#f8fafc", outline: "none", fontFamily: "Sora, monospace", boxSizing: "border-box", marginBottom: 16 }}
+            />
+            <button onClick={verify} disabled={busy || code.length < 6}
+              style={{ width: "100%", height: 52, borderRadius: 14, border: "none", background: busy || code.length < 6 ? `${ORANGE}99` : `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 15, cursor: busy || code.length < 6 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 9, boxShadow: `0 12px 26px -10px ${ORANGE}` }}>
+              {busy ? <><Loader2 size={18} style={{ animation: "spin .8s linear infinite" }} /> Verifying…</> : <><ShieldCheck size={18} /> Verify & open dashboard</>}
+            </button>
+            <button onClick={send} disabled={busy}
+              style={{ width: "100%", height: 44, marginTop: 10, borderRadius: 12, background: "transparent", border: `1.5px solid ${ORANGE}30`, color: ORANGE, fontWeight: 700, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
+              <RotateCw size={14} /> Resend code
+            </button>
+          </>
+        )}
+
+        <AnimatePresence>
+          {msg.text && (
+            <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+              style={{ marginTop: 14, borderRadius: 12, padding: "10px 14px", fontSize: 13, fontWeight: 700, lineHeight: 1.5, background: msg.type === "ok" ? "#f0fdf4" : "#fff1f2", border: `1.5px solid ${msg.type === "ok" ? "#86efac" : "#fca5a5"}`, color: msg.type === "ok" ? "#166534" : "#991b1b" }}>
+              {msg.text}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, color: "#94a3b8" }}>
+            <ShieldCheck size={13} color={GREEN} /> Extra security for your data
+          </span>
+          <button onClick={() => navigate("/dashboard")} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 12.5, fontWeight: 600, cursor: "pointer", textDecoration: "underline", textDecorationStyle: "dotted" }}>
+            Back to account
+          </button>
+        </div>
+      </motion.div>
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+    </section>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DASHBOARD BODY
+   ════════════════════════════════════════════════════════════════ */
+function DashboardBody() {
+  const { user, token } = useAuth();
+  const navigate = useNavigate();
+
+  const emailKey = (user?.email || "guest").toLowerCase();
+  const TRACK_KEY = `mdash:tracking:${emailKey}`;
+  const TEST_KEY = `mdash:tests:${emailKey}`;
+  const BACKLOG_KEY = `mdash:backlog:${emailKey}`;
+  const FIX_KEY = `mdash:fixdone:${emailKey}`;
+
+  const [planLabel, setPlanLabel] = useState("Mentorship Program");
+  const [planExam, setPlanExam] = useState("JEE / NEET");
+  const subjects = useMemo(() => subjectsFor(planExam), [planExam]);
+
+  const [entries, setEntries] = useState(() => load(TRACK_KEY, null) || seedTracking(subjectsFor("JEE / NEET")));
+  const [tests, setTests] = useState(() => load(TEST_KEY, null) || seedTests());
+  const [backlog, setBacklog] = useState(() => load(BACKLOG_KEY, null) || seedBacklog());
+  const [fixDone, setFixDone] = useState(() => load(FIX_KEY, {}));
+
+  const todayIso = isoDay(new Date());
+  const todayEntry = entries.find((e) => e.date === todayIso);
+
+  const [editingLog, setEditingLog] = useState(false);
+  const [logForm, setLogForm] = useState({ subjects: {}, tasksDone: "", tasksTotal: "", routine: true });
+  const [testForm, setTestForm] = useState({ name: "", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", overspent: "", weak: "" });
+  const [blForm, setBlForm] = useState({ subject: "", topic: "", strength: "weak", planDate: "", week: "" });
 
   // Pull the real mentorship plan name (best-effort).
   useEffect(() => {
@@ -106,18 +313,41 @@ export default function MentorshipDashboard() {
 
   useEffect(() => { save(TRACK_KEY, entries); }, [TRACK_KEY, entries]);
   useEffect(() => { save(TEST_KEY, tests); }, [TEST_KEY, tests]);
+  useEffect(() => { save(BACKLOG_KEY, backlog); }, [BACKLOG_KEY, backlog]);
+  useEffect(() => { save(FIX_KEY, fixDone); }, [FIX_KEY, fixDone]);
 
   /* ── derived tracking metrics ── */
   const sorted = useMemo(() => [...entries].sort((a, b) => a.date.localeCompare(b.date)), [entries]);
   const last7 = sorted.slice(-7);
-  const todayIso = isoDay(new Date());
-  const todayEntry = sorted.find((e) => e.date === todayIso);
+  const prevWeek = sorted.slice(-14, -7);
   const weekHours = last7.reduce((s, e) => s + Number(e.hours || 0), 0);
+  const prevWeekHours = prevWeek.reduce((s, e) => s + Number(e.hours || 0), 0);
   const latestTrack = sorted[sorted.length - 1];
   const tasksLabel = latestTrack ? `${latestTrack.tasksDone} / ${latestTrack.tasksTotal}` : "—";
   const streak = streakOf(sorted);
   const goalPct = Math.min(100, Math.round((weekHours / WEEK_TARGET_HRS) * 100));
   const maxH = Math.max(1, ...last7.map((e) => Number(e.hours || 0)));
+  const routineDays = last7.filter((e) => e.routine).length;
+  const routinePct = last7.length ? Math.round((routineDays / last7.length) * 100) : 0;
+
+  /* subject totals helper */
+  const subjTotals = (es) => {
+    const m = Object.fromEntries(subjects.map((s) => [s, 0]));
+    es.forEach((e) => subjects.forEach((s) => { m[s] += Number(e.subjects?.[s] || 0); }));
+    return m;
+  };
+  const thisWk = useMemo(() => subjTotals(last7), [last7, subjects]);
+  const lastWk = useMemo(() => subjTotals(prevWeek), [prevWeek, subjects]);
+  const subjectPie = subjects.map((s) => ({ name: s, value: round1(thisWk[s]) })).filter((x) => x.value > 0);
+  const subjectTrendData = last7.map((e) => {
+    const row = { year: DOW[new Date(e.date).getDay()] };
+    subjects.forEach((s) => { row[s] = Number(e.subjects?.[s] || 0); });
+    return row;
+  });
+  const subjectLines = subjects.map((s) => ({ key: s, label: s, color: subColor(s) }));
+  const lowestSubject = subjects.length
+    ? subjects.reduce((lo, s) => (thisWk[s] < thisWk[lo] ? s : lo), subjects[0])
+    : null;
 
   /* ── derived test metrics ── */
   const testsSorted = useMemo(() => [...tests].sort((a, b) => a.date.localeCompare(b.date)), [tests]);
@@ -127,10 +357,13 @@ export default function MentorshipDashboard() {
     const att = Number(t.correct) + Number(t.wrong);
     return att ? Math.round((Number(t.correct) / att) * 100) : 0;
   };
+  const pct = (t) => Math.round((Number(t.scored) / Math.max(1, Number(t.total))) * 100);
   const improvement = latest && prev && Number(prev.scored) > 0
     ? Math.round(((Number(latest.scored) - Number(prev.scored)) / Number(prev.scored)) * 100)
     : null;
   const scoreTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, you: Number(t.scored), target: Math.round(Number(t.total) * 0.75) }));
+  const accTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, accuracy: acc(t) }));
+  const sillyTrend = testsSorted.map((t, i) => ({ name: t.name || `T${i + 1}`, silly: Number(t.silly || 0) }));
   const latestBreakdown = latest
     ? [
         { name: "Correct", value: Number(latest.correct) },
@@ -139,18 +372,94 @@ export default function MentorshipDashboard() {
       ]
     : [];
 
+  /* ── weak-chapter heatmap (tests + open backlog) ── */
+  const weakRanked = useMemo(() => {
+    const freq = {};
+    testsSorted.forEach((t) => (t.weak || []).forEach((c) => { freq[c] = (freq[c] || 0) + 1; }));
+    backlog.filter((b) => !b.done && b.strength !== "strong").forEach((b) => {
+      const k = b.topic;
+      if (!k) return;
+      freq[k] = (freq[k] || 0) + (b.strength === "weak" ? 2 : 1);
+    });
+    return Object.entries(freq).sort((a, b) => b[1] - a[1]);
+  }, [testsSorted, backlog]);
+  const maxWeak = Math.max(1, ...weakRanked.map(([, n]) => n));
+
+  /* ── time-management review (overspent subject frequency) ── */
+  const timeRanked = useMemo(() => {
+    const freq = {};
+    testsSorted.forEach((t) => { if (t.overspent) freq[t.overspent] = (freq[t.overspent] || 0) + 1; });
+    return Object.entries(freq).sort((a, b) => b[1] - a[1]);
+  }, [testsSorted]);
+
+  /* ── auto weekly fix-list ── */
+  const wk = weekKey();
+  const fixList = useMemo(() => {
+    const list = [];
+    if (weakRanked[0]) list.push(`Re-do ${weakRanked[0][0]} PYQs (2 hrs) — your most recurring weak chapter`);
+    if (latest && Number(latest.silly) > 0) list.push(`Kill silly mistakes — re-attempt last test's ${latest.silly} silly errors slowly & carefully`);
+    if (weakRanked[1]) list.push(`Revise ${weakRanked[1][0]} formula sheet daily`);
+    if (lowestSubject && thisWk[lowestSubject] < WEEK_TARGET_HRS / subjects.length) list.push(`Give ${lowestSubject} an extra 1 hr/day — it's your least-studied subject this week`);
+    if (timeRanked[0]) list.push(`Time-box ${timeRanked[0][0]} in the next paper — you keep over-spending there`);
+    if (weakRanked[2]) list.push(`10 timed ${weakRanked[2][0]} questions before the next test`);
+    return list.slice(0, 5);
+  }, [weakRanked, latest, lowestSubject, timeRanked, thisWk, subjects.length]);
+  const fixDoneSet = fixDone[wk] || [];
+  const toggleFix = (label) => setFixDone((prev) => {
+    const cur = new Set(prev[wk] || []);
+    cur.has(label) ? cur.delete(label) : cur.add(label);
+    return { ...prev, [wk]: [...cur] };
+  });
+
+  /* ── AI insights (rule-based) ── */
+  const insights = useMemo(() => {
+    const out = [];
+    if (latest && prev) {
+      const dS = Number(latest.scored) - Number(prev.scored);
+      out.push({ tone: dS >= 0 ? "up" : "down", text: dS >= 0
+        ? `Score up ${dS} marks (${improvement >= 0 ? "+" : ""}${improvement}%) — ${latest.name} beat ${prev.name}. Momentum is building.`
+        : `Score dropped ${Math.abs(dS)} marks (${improvement}%) vs ${prev.name}. Flag the weak chapters below with your mentor this week.` });
+      const dA = acc(latest) - acc(prev);
+      if (dA !== 0) out.push({ tone: dA > 0 ? "up" : "down", text: `${dA > 0 ? "Accuracy improved" : "Accuracy slipped"} ${Math.abs(dA)}% (${acc(prev)}% → ${acc(latest)}%).` });
+      const dM = Number(prev.silly) - Number(latest.silly);
+      if (Number(prev.silly) || Number(latest.silly)) out.push({ tone: dM >= 0 ? "up" : "down", text: dM >= 0
+        ? `Silly mistakes down from ${prev.silly} to ${latest.silly} — careful checking is paying off.`
+        : `Silly mistakes rose from ${prev.silly} to ${latest.silly}. Slow down on the last 10 minutes of every paper.` });
+    }
+    if (weekHours && prevWeekHours) {
+      const d = round1(weekHours - prevWeekHours);
+      out.push({ tone: d >= 0 ? "up" : "down", text: `${d >= 0 ? "Study time up" : "Study time down"} ${Math.abs(d)}h vs last week (${round1(prevWeekHours)}h → ${round1(weekHours)}h).` });
+    }
+    if (weakRanked[0]) out.push({ tone: "down", text: `${weakRanked[0][0]} is your #1 recurring weak area (${weakRanked[0][1]}× flagged). It's in this week's fix-list.` });
+    if (lowestSubject) out.push({ tone: "flat", text: `${lowestSubject} got the least time this week (${round1(thisWk[lowestSubject])}h). Balance it before the next test.` });
+    return out;
+  }, [latest, prev, improvement, weekHours, prevWeekHours, weakRanked, lowestSubject, thisWk]);
+
+  /* ── actions ── */
+  function startEditLog() {
+    setLogForm({
+      subjects: Object.fromEntries(subjects.map((s) => [s, todayEntry?.subjects?.[s] ?? ""])),
+      tasksDone: todayEntry?.tasksDone ?? "",
+      tasksTotal: todayEntry?.tasksTotal ?? "",
+      routine: todayEntry?.routine ?? true,
+    });
+    setEditingLog(true);
+  }
   function addLog(e) {
     e.preventDefault();
-    const hours = Number(logForm.hours);
-    if (!Number.isFinite(hours) || hours <= 0) return;
+    const subj = {};
+    let total = 0;
+    subjects.forEach((s) => { const v = Number(logForm.subjects?.[s]) || 0; subj[s] = v; total += v; });
+    if (total <= 0) return;
     const entry = {
-      date: todayIso,
-      hours,
+      date: todayIso, hours: round1(total), subjects: subj,
       tasksDone: Number(logForm.tasksDone) || 0,
       tasksTotal: Number(logForm.tasksTotal) || Number(logForm.tasksDone) || 0,
+      routine: !!logForm.routine,
     };
     setEntries((prevE) => [...prevE.filter((x) => x.date !== todayIso), entry]);
-    setLogForm({ hours: "", tasksDone: "", tasksTotal: "" });
+    setLogForm({ subjects: {}, tasksDone: "", tasksTotal: "", routine: true });
+    setEditingLog(false);
   }
 
   function addTest(e) {
@@ -159,46 +468,49 @@ export default function MentorshipDashboard() {
     const scored = Number(testForm.scored);
     if (!testForm.name.trim() || !Number.isFinite(scored)) return;
     const t = {
-      id: `${Date.now()}`,
-      name: testForm.name.trim(),
-      date: todayIso,
-      total,
-      scored,
+      id: `${Date.now()}`, name: testForm.name.trim(), date: todayIso, total, scored,
       correct: Number(testForm.correct) || 0,
       wrong: Number(testForm.wrong) || 0,
       skipped: Number(testForm.skipped) || 0,
+      silly: Number(testForm.silly) || 0,
+      overspent: testForm.overspent.trim(),
+      weak: testForm.weak.split(",").map((x) => x.trim()).filter(Boolean),
     };
     setTests((prevT) => [...prevT, t]);
-    setTestForm({ name: "", total: "300", scored: "", correct: "", wrong: "", skipped: "" });
+    setTestForm({ name: "", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", overspent: "", weak: "" });
   }
 
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  if (!isLoggedIn) {
-    return (
-      <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "120px 16px 60px" }}>
-        <div style={{ textAlign: "center", maxWidth: 380 }}>
-          <div style={{ width: 64, height: 64, borderRadius: 20, background: `${ORANGE}15`, display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
-            <ShieldCheck size={30} color={ORANGE} />
-          </div>
-          <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: "1.5rem", margin: "0 0 8px" }}>Please log in</h2>
-          <p style={{ color: "#6b7280", marginBottom: 18 }}>Log in to open your personal mentorship dashboard.</p>
-          <button onClick={openLogin} style={{ background: ORANGE, color: "#fff", border: "none", padding: "12px 22px", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontFamily: "Sora" }}>Log in</button>
-        </div>
-      </section>
-    );
+  function addBacklog(e) {
+    e.preventDefault();
+    if (!blForm.topic.trim()) return;
+    const item = {
+      id: `${Date.now()}`,
+      subject: blForm.subject || subjects[0] || "General",
+      topic: blForm.topic.trim(),
+      strength: blForm.strength,
+      planDate: blForm.planDate || "",
+      week: blForm.week.trim() || "Week 1",
+      done: false,
+    };
+    setBacklog((prev) => [item, ...prev]);
+    setBlForm({ subject: "", topic: "", strength: "weak", planDate: "", week: "" });
   }
+  const toggleBacklog = (id) => setBacklog((prev) => prev.map((b) => (b.id === id ? { ...b, done: !b.done } : b)));
+  const removeBacklog = (id) => setBacklog((prev) => prev.filter((b) => b.id !== id));
+  const backlogDone = backlog.filter((b) => b.done).length;
+  const backlogPct = backlog.length ? Math.round((backlogDone / backlog.length) * 100) : 0;
+
+  const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
 
   const initial = (user?.name || user?.email || "U").charAt(0).toUpperCase();
 
   const NAV_LINKS = [
-    { id: "personalised",  label: "Personalised dashboard", desc: "Your complete 1-on-1 overview",  icon: LayoutDashboard, color: ORANGE },
-    { id: "test-analysis", label: "Test analysis",          desc: "Marks → AI-analysed charts",      icon: LineIcon,        color: "#6366f1" },
-    { id: "parent-report", label: "Weekly report to parents", desc: "Auto-emailed every week",       icon: Mail,            color: GREEN },
-    { id: "live-tracking", label: "Live student tracking",  desc: "Daily hours, streak & tasks",     icon: Activity,        color: "#ef4444" },
+    { id: "live-tracking",    label: "Live student tracking", desc: "Subject-wise daily log & streak", icon: Activity,        color: "#ef4444" },
+    { id: "subject-analysis", label: "Subject-wise analysis", desc: "Time split & day comparison",     icon: BarChart3,       color: "#6366f1" },
+    { id: "test-analysis",    label: "Test analysis",         desc: "Marks → AI-analysed charts",      icon: LineIcon,        color: "#8b5cf6" },
+    { id: "mentor-tools",     label: "What your mentor breaks down", desc: "Silly mistakes · weak chapters", icon: Brain,      color: GOLD },
+    { id: "backlog",          label: "Backlog clearing sprints", desc: "List & clear pending topics",  icon: Rocket,          color: "#7c3aed" },
+    { id: "parent-report",    label: "Weekly report to parents", desc: "Auto-emailed every week",      icon: Mail,            color: GREEN },
   ];
 
   return (
@@ -207,7 +519,7 @@ export default function MentorshipDashboard() {
       <div style={{ paddingTop: 104, textAlign: "center" }}>
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
           style={{ fontSize: 12, fontWeight: 800, letterSpacing: "3px", textTransform: "uppercase", color: ORANGE, marginBottom: 8 }}>
-          1-on-1 · Personalised
+          1-on-1 · Personalised · Verified
         </motion.div>
         <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .05 }}
           style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.6rem)", color: NAVY, margin: 0, letterSpacing: "-0.5px" }}>
@@ -215,7 +527,7 @@ export default function MentorshipDashboard() {
         </motion.h1>
       </div>
 
-      {/* ══ HERO — light, animated, 3 columns (left card / mid text / right links) ══ */}
+      {/* ══ HERO ══ */}
       <div style={{ maxWidth: 1180, margin: "0 auto", padding: "28px 24px 0" }}>
         <div style={{
           position: "relative", overflow: "hidden", borderRadius: 26,
@@ -223,7 +535,6 @@ export default function MentorshipDashboard() {
           border: "1px solid rgba(244,123,32,.16)", padding: "10px",
           boxShadow: "0 30px 70px -40px rgba(13,27,62,.4)",
         }}>
-          {/* ambient orbs */}
           <motion.div aria-hidden animate={{ opacity: [.5, .85, .5] }} transition={{ duration: 5, repeat: Infinity }}
             style={{ position: "absolute", top: -60, left: "4%", width: 320, height: 260, borderRadius: "50%", background: "radial-gradient(circle,rgba(244,123,32,.18),transparent 65%)", pointerEvents: "none" }} />
           <motion.div aria-hidden animate={{ opacity: [.4, .7, .4] }} transition={{ duration: 6, repeat: Infinity }}
@@ -231,7 +542,7 @@ export default function MentorshipDashboard() {
 
           <div style={{ position: "relative", display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.05fr) minmax(0,1fr)", gap: 18, padding: "16px" }} className="md-hero-grid">
 
-            {/* LEFT — user / plan card (specific padding, Home button, no edit) */}
+            {/* LEFT — user / plan card */}
             <motion.div initial={{ opacity: 0, x: -22 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5 }}
               style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", padding: "26px 24px", display: "flex", flexDirection: "column", boxShadow: "0 18px 40px -28px rgba(13,27,62,.4)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
@@ -277,14 +588,13 @@ export default function MentorshipDashboard() {
                 Everything about your journey, in one place.
               </h2>
               <p style={{ color: MUTE, fontSize: 15, lineHeight: 1.7, margin: 0 }}>
-                This dashboard is fully personalised and 1-on-1. Log your daily study hours and tasks,
-                enter every test result, and our system analyses it automatically — turning your numbers
-                into clear charts, streaks and week-on-week improvement. Your parents get a clean weekly
-                report by email, so everyone stays on the same page.
+                Log your study hours <strong style={{ color: NAVY }}>subject by subject</strong> once a day, enter every test,
+                and list your backlog. We turn it into clear charts, week-on-week comparisons, a silly-mistake audit,
+                a weak-chapter heatmap and an automatic fix-list — and email a clean weekly report to your parents.
               </p>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 18 }}>
                 <button onClick={() => scrollTo("live-tracking")} style={{ background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", border: "none", padding: "12px 20px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, boxShadow: `0 12px 26px -10px ${ORANGE}` }}>
-                  Start tracking <ArrowRight size={16} />
+                  Log today <ArrowRight size={16} />
                 </button>
                 <button onClick={() => scrollTo("test-analysis")} style={{ background: "#fff", color: NAVY, border: "1.5px solid #e5e7eb", padding: "12px 20px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer" }}>
                   Add a test
@@ -292,22 +602,22 @@ export default function MentorshipDashboard() {
               </div>
             </motion.div>
 
-            {/* RIGHT — links to every section on this page */}
+            {/* RIGHT — jump links */}
             <motion.div initial={{ opacity: 0, x: 22 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5, delay: .12 }}
               style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", padding: "20px", boxShadow: "0 18px 40px -28px rgba(13,27,62,.4)" }}>
               <div style={{ fontSize: 11.5, fontWeight: 800, color: "#9ca3af", textTransform: "uppercase", letterSpacing: ".06em", margin: "2px 4px 12px" }}>Jump to</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
                 {NAV_LINKS.map(({ id, label, desc, icon: Icon, color }) => (
                   <button key={id} onClick={() => scrollTo(id)}
-                    style={{ textAlign: "left", background: "#fff", border: "1px solid #eee", borderRadius: 14, padding: "13px 14px", cursor: "pointer", display: "flex", gap: 12, alignItems: "center", transition: "box-shadow .15s, transform .15s" }}
+                    style={{ textAlign: "left", background: "#fff", border: "1px solid #eee", borderRadius: 14, padding: "11px 13px", cursor: "pointer", display: "flex", gap: 12, alignItems: "center", transition: "box-shadow .15s, transform .15s" }}
                     onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 12px 26px -14px ${color}99`; e.currentTarget.style.transform = "translateY(-2px)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
-                    <span style={{ width: 40, height: 40, borderRadius: 11, background: `${color}14`, border: `1px solid ${color}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                      <Icon size={19} color={color} />
+                    <span style={{ width: 38, height: 38, borderRadius: 11, background: `${color}14`, border: `1px solid ${color}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                      <Icon size={18} color={color} />
                     </span>
                     <span style={{ flex: 1, minWidth: 0 }}>
-                      <span style={{ display: "block", fontFamily: "Sora", fontWeight: 700, fontSize: 14, color: NAVY }}>{label}</span>
-                      <span style={{ display: "block", fontSize: 12, color: "#9ca3af", marginTop: 1 }}>{desc}</span>
+                      <span style={{ display: "block", fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, color: NAVY }}>{label}</span>
+                      <span style={{ display: "block", fontSize: 11.5, color: "#9ca3af", marginTop: 1 }}>{desc}</span>
                     </span>
                     <ArrowRight size={15} color="#cbd5e1" />
                   </button>
@@ -321,9 +631,30 @@ export default function MentorshipDashboard() {
       {/* ══ BODY ══ */}
       <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px" }}>
 
+        {/* ── PERSONALISED OVERVIEW ── */}
+        <Section id="personalised" kicker="Proof, not promises" title="Your snapshot" tColor={ORANGE}
+          sub="A single overview your mentor and parents can see — built from your own data.">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 14 }}>
+            {[
+              { v: latest ? `${latest.scored}/${latest.total}` : "—", l: "Latest score", c: ORANGE },
+              { v: latest ? `${acc(latest)}%` : "—", l: "Accuracy", c: "#22c55e" },
+              { v: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%`, l: "Since last test", c: improvement != null && improvement < 0 ? "#ef4444" : "#6366f1" },
+              { v: `${streak}`, l: "Day streak", c: "#ef4444" },
+              { v: `${routinePct}%`, l: "Routine kept", c: "#8b5cf6" },
+              { v: `${backlogDone}/${backlog.length}`, l: "Backlog cleared", c: "#7c3aed" },
+            ].map((s) => (
+              <motion.div key={s.l} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "18px", borderTop: `3px solid ${s.c}`, boxShadow: "0 14px 36px -28px rgba(13,27,62,.4)" }}>
+                <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 24, color: s.c }}>{s.v}</div>
+                <div style={{ fontSize: 12.5, color: MUTE, fontWeight: 600, marginTop: 2 }}>{s.l}</div>
+              </motion.div>
+            ))}
+          </div>
+        </Section>
+
         {/* ── LIVE STUDENT TRACKING ── */}
-        <Section id="live-tracking" kicker="Always on" title="Live Student Tracking" tColor="#ef4444"
-          sub="Log your effort daily — the charts update instantly so nothing slips through the cracks.">
+        <Section id="live-tracking" kicker="Always on · once a day" title="Live Student Tracking" tColor="#ef4444"
+          sub="Log each subject's study hours once per day — the charts update instantly so nothing slips through the cracks.">
           <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},${ORANGE})` }} />
 
@@ -341,12 +672,13 @@ export default function MentorshipDashboard() {
             </div>
 
             {/* stat tiles */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 12, marginBottom: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 12, marginBottom: 20 }}>
               {[
                 { icon: Clock, c: ORANGE, v: todayEntry ? `${todayEntry.hours}h` : "0h", l: "Today" },
-                { icon: Activity, c: "#6366f1", v: `${Math.round(weekHours * 10) / 10}h`, l: "This week" },
+                { icon: Activity, c: "#6366f1", v: `${round1(weekHours)}h`, l: "This week" },
                 { icon: Flame, c: "#ef4444", v: `${streak} day${streak === 1 ? "" : "s"}`, l: "Streak" },
                 { icon: CheckCircle2, c: "#22c55e", v: tasksLabel, l: "Tasks done" },
+                { icon: Target, c: "#8b5cf6", v: `${routinePct}%`, l: "Routine kept" },
               ].map(({ icon: Icon, c, v, l }) => (
                 <div key={l} style={{ background: "#fff", border: "1px solid rgba(244,123,32,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
                   <Icon size={18} color={c} style={{ marginBottom: 6 }} />
@@ -356,21 +688,62 @@ export default function MentorshipDashboard() {
               ))}
             </div>
 
-            {/* log today's effort */}
-            <form onSubmit={addLog} style={{ background: "#fffaf5", border: "1px solid rgba(244,123,32,.22)", borderRadius: 14, padding: "14px 16px", marginBottom: 22, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>
-              <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412", width: "100%" }}>Log today ({fmtDay(todayIso)})</div>
-              <NumField label="Study hours" value={logForm.hours} onChange={(v) => setLogForm((s) => ({ ...s, hours: v }))} placeholder="e.g. 6" />
-              <NumField label="Tasks done" value={logForm.tasksDone} onChange={(v) => setLogForm((s) => ({ ...s, tasksDone: v }))} placeholder="e.g. 18" />
-              <NumField label="Tasks planned" value={logForm.tasksTotal} onChange={(v) => setLogForm((s) => ({ ...s, tasksTotal: v }))} placeholder="e.g. 21" />
-              <button type="submit" style={{ padding: "11px 18px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 7 }}>
-                <Plus size={15} /> Save
-              </button>
-            </form>
+            {/* log today — ONCE PER DAY */}
+            {todayEntry && !editingLog ? (
+              <div style={{ background: "#f0faf4", border: "1px solid rgba(34,197,94,.3)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13.5, fontWeight: 800, color: "#15803d" }}>
+                    <CheckCircle2 size={17} /> Logged for today ({fmtDay(todayIso)}) — one entry per day
+                  </span>
+                  <button onClick={startEditLog} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #cbd5e1", borderRadius: 9, padding: "7px 12px", fontSize: 12.5, fontWeight: 700, color: NAVY, cursor: "pointer" }}>
+                    <Pencil size={13} /> Edit today's log
+                  </button>
+                </div>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {subjects.map((s) => (
+                    <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: `1px solid ${subColor(s)}33`, borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: NAVY }}>
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(s) }} /> {s}: {todayEntry.subjects?.[s] || 0}h
+                    </span>
+                  ))}
+                  <span style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: NAVY }}>Tasks: {todayEntry.tasksDone}/{todayEntry.tasksTotal}</span>
+                  <span style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: todayEntry.routine ? "#15803d" : "#b91c1c" }}>Routine: {todayEntry.routine ? "Followed ✓" : "Missed"}</span>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={addLog} style={{ background: "#fffaf5", border: "1px solid rgba(244,123,32,.22)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412", marginBottom: 12 }}>Log today ({fmtDay(todayIso)}) · study hours per subject</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 10, marginBottom: 12 }}>
+                  {subjects.map((s) => (
+                    <SubjectField key={s} subject={s} value={logForm.subjects?.[s] ?? ""}
+                      onChange={(v) => setLogForm((st) => ({ ...st, subjects: { ...st.subjects, [s]: v } }))} />
+                  ))}
+                </div>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>
+                  <NumField label="Tasks done" value={logForm.tasksDone} onChange={(v) => setLogForm((s) => ({ ...s, tasksDone: v }))} placeholder="e.g. 18" />
+                  <NumField label="Tasks planned" value={logForm.tasksTotal} onChange={(v) => setLogForm((s) => ({ ...s, tasksTotal: v }))} placeholder="e.g. 21" />
+                  <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                    <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>Followed routine?</span>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      {[["Yes", true], ["No", false]].map(([lbl, val]) => (
+                        <button type="button" key={lbl} onClick={() => setLogForm((s) => ({ ...s, routine: val }))}
+                          style={{ padding: "10px 16px", borderRadius: 10, border: `1.5px solid ${logForm.routine === val ? ORANGE : "#e5e7eb"}`, background: logForm.routine === val ? `${ORANGE}10` : "#fff", color: logForm.routine === val ? "#9a3412" : "#6b7280", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                          {lbl}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <button type="submit" style={{ padding: "11px 18px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 7 }}>
+                    <Plus size={15} /> Save today's log
+                  </button>
+                  {editingLog && <button type="button" onClick={() => setEditingLog(false)} style={{ padding: "11px 16px", borderRadius: 11, border: "1.5px solid #e5e7eb", background: "#fff", color: "#6b7280", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>Cancel</button>}
+                </div>
+              </form>
+            )}
 
             {/* weekly hours bars + goal gauge */}
             <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 22, alignItems: "center" }} className="md-track-grid">
               <div>
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: MUTE, marginBottom: 10 }}>Study hours · last 7 days</div>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: MUTE, marginBottom: 10 }}>Total study hours · last 7 days</div>
                 <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 150 }}>
                   {last7.map((e, i) => (
                     <div key={e.date} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
@@ -390,13 +763,47 @@ export default function MentorshipDashboard() {
           </div>
         </Section>
 
+        {/* ── SUBJECT-WISE ANALYSIS ── */}
+        <Section id="subject-analysis" kicker="Every subject counts" title="Subject-wise Analysis" tColor="#6366f1"
+          sub="See exactly where your hours go, compare day-by-day, and check this week against last week.">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 18, marginBottom: 18 }}>
+            <ChartCard title="Subject-wise hours · last 7 days" hint="Compare each subject day by day" accent="#6366f1">
+              <Trend data={subjectTrendData} lines={subjectLines} height={230} fmt={(v) => `${v}h`} />
+            </ChartCard>
+            <ChartCard title="Time split this week" hint="Share of study hours per subject" accent="#15a06e">
+              {subjectPie.length
+                ? <PieWithLegend data={subjectPie} colors={subjects.map(subColor)} height={200} fmt={(v) => `${v}h`} />
+                : <ChartHint text="Log today's subject hours to see your split." />}
+            </ChartCard>
+          </div>
+
+          {/* per-subject vs last week */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 14 }}>
+            {subjects.map((s) => {
+              const now = round1(thisWk[s]); const was = round1(lastWk[s]);
+              const d = round1(now - was);
+              return (
+                <div key={s} style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "16px 18px", borderTop: `3px solid ${subColor(s)}`, boxShadow: "0 14px 36px -28px rgba(13,27,62,.4)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: subColor(s) }} />
+                    <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: NAVY }}>{s}</span>
+                  </div>
+                  <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 22, color: subColor(s) }}>{now}h</div>
+                  <div style={{ fontSize: 12, color: MUTE, marginTop: 2 }}>this week · {round1(now / 7)}h/day</div>
+                  <DeltaPill d={d} unit="h" subtext="vs last week" />
+                </div>
+              );
+            })}
+          </div>
+        </Section>
+
         {/* ── TEST ANALYSIS ── */}
-        <Section id="test-analysis" kicker="Every test counts" title="Test Analysis" tColor="#6366f1"
-          sub="Enter your marks and question split — we analyse accuracy, score and week-on-week change automatically.">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 18 }}>
+        <Section id="test-analysis" kicker="Every test counts" title="Test Analysis" tColor="#8b5cf6"
+          sub="Enter your marks, silly mistakes and weak chapters — we analyse accuracy, score and week-on-week change automatically.">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: 18 }}>
             {/* left — input + improvement */}
-            <div style={{ background: "#fff", border: "1px solid rgba(99,102,241,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#6366f1,#22c55e)" }} />
+            <div style={{ background: "#fff", border: "1px solid rgba(139,92,246,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#8b5cf6,#22c55e)" }} />
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "0 0 14px" }}>Add a test result</h3>
               <form onSubmit={addTest} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <TextField label="Test name" value={testForm.name} onChange={(v) => setTestForm((s) => ({ ...s, name: v }))} placeholder="e.g. Mock 4" />
@@ -409,19 +816,24 @@ export default function MentorshipDashboard() {
                   <NumField label="Wrong" value={testForm.wrong} onChange={(v) => setTestForm((s) => ({ ...s, wrong: v }))} placeholder="14" full />
                   <NumField label="Skipped" value={testForm.skipped} onChange={(v) => setTestForm((s) => ({ ...s, skipped: v }))} placeholder="12" full />
                 </div>
-                <button type="submit" style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#6366f1,#4f46e5)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  <NumField label="Silly mistakes" value={testForm.silly} onChange={(v) => setTestForm((s) => ({ ...s, silly: v }))} placeholder="e.g. 4" full />
+                  <SelectField label="Over-spent time on" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} />
+                </div>
+                <TextField label="Weak chapters (comma separated)" value={testForm.weak} onChange={(v) => setTestForm((s) => ({ ...s, weak: v }))} placeholder="e.g. Rotational Motion, p-Block" />
+                <button type="submit" style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <Plus size={16} /> Analyse this test
                 </button>
               </form>
 
-              {/* AI insight */}
+              {/* improvement / decline report */}
               {latest && (
                 <div style={{ marginTop: 16, background: improvement == null ? "#f8fafc" : improvement >= 0 ? "#f0faf4" : "#fef2f2", border: `1px solid ${improvement == null ? "#e5e7eb" : improvement >= 0 ? "#bbf7d0" : "#fecaca"}`, borderRadius: 14, padding: "14px 16px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                     {improvement == null ? <BarChart3 size={16} color="#64748b" />
                       : improvement >= 0 ? <TrendingUp size={16} color="#16a34a" /> : <TrendingDown size={16} color="#dc2626" />}
                     <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: INK }}>
-                      {latest.name} · {Math.round((Number(latest.scored) / Math.max(1, Number(latest.total))) * 100)}% · {acc(latest)}% accuracy
+                      {latest.name} · {pct(latest)}% · {acc(latest)}% accuracy
                     </span>
                   </div>
                   <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.5 }}>
@@ -437,34 +849,188 @@ export default function MentorshipDashboard() {
 
             {/* right — charts */}
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-              <ChartCard title="Score trend" hint="Your marks across every test" accent="#6366f1">
-                <Trend data={scoreTrend} lines={[{ key: "you", label: "You", color: ORANGE }, { key: "target", label: "Target (75%)", color: "#6366f1" }]} height={210} />
+              <ChartCard title="Score trend" hint="Your marks across every test (vs 75% target)" accent="#8b5cf6">
+                <Trend data={scoreTrend} lines={[{ key: "you", label: "You", color: ORANGE }, { key: "target", label: "Target (75%)", color: "#8b5cf6" }]} height={200} />
               </ChartCard>
-              <ChartCard title={`Latest test split — ${latest ? latest.name : "—"}`} hint="Correct · Wrong · Skipped" accent="#22c55e">
+              <ChartCard title="Accuracy trend" hint="Correct ÷ attempted, test over test" accent="#22c55e">
+                <Trend data={accTrend} lines={[{ key: "accuracy", label: "Accuracy %", color: "#22c55e" }]} height={180} fmt={(v) => `${v}%`} />
+              </ChartCard>
+              <ChartCard title={`Latest test split — ${latest ? latest.name : "—"}`} hint="Correct · Wrong · Skipped" accent="#6366f1">
                 {latestBreakdown.length
-                  ? <PieWithLegend data={latestBreakdown} colors={["#22c55e", "#ef4444", "#9ca3af"]} height={200} />
-                  : <div style={{ color: "#9ca3af", fontSize: 13, padding: "30px 0", textAlign: "center" }}>Add a test to see the breakdown.</div>}
+                  ? <PieWithLegend data={latestBreakdown} colors={["#22c55e", "#ef4444", "#9ca3af"]} height={190} />
+                  : <ChartHint text="Add a test to see the breakdown." />}
               </ChartCard>
             </div>
           </div>
         </Section>
 
-        {/* ── PERSONALISED DASHBOARD (overview) ── */}
-        <Section id="personalised" kicker="Proof, not promises" title="Personalised Dashboard" tColor={ORANGE}
-          sub="A single overview your mentor and parents can see — updated from your own data.">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 16 }}>
-            {[
-              { v: latest ? `${latest.scored}/${latest.total}` : "—", l: "Latest score", c: ORANGE },
-              { v: latest ? `${acc(latest)}%` : "—", l: "Accuracy", c: "#22c55e" },
-              { v: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%`, l: "Since last test", c: improvement != null && improvement < 0 ? "#ef4444" : "#6366f1" },
-              { v: `${streak}`, l: "Day study streak", c: "#ef4444" },
-            ].map((s) => (
-              <motion.div key={s.l} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "20px", borderTop: `3px solid ${s.c}`, boxShadow: "0 14px 36px -28px rgba(13,27,62,.4)" }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 26, color: s.c }}>{s.v}</div>
-                <div style={{ fontSize: 13, color: MUTE, fontWeight: 600, marginTop: 2 }}>{s.l}</div>
-              </motion.div>
-            ))}
+        {/* ── MENTOR TOOLS ── */}
+        <Section id="mentor-tools" kicker="Proof, not guesswork" title="What Your Mentor Breaks Down" tColor={GOLD}
+          sub="Every number you enter is automatically turned into the exact breakdowns your mentor reviews — and an action list for the week.">
+
+          {/* AI insights banner */}
+          <div style={{ background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 18, padding: "20px 22px", marginBottom: 18, boxShadow: "0 16px 40px -30px rgba(245,166,35,.8)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 12 }}>
+              <span style={{ width: 36, height: 36, borderRadius: 11, background: `${GOLD}1a`, border: `1px solid ${GOLD}44`, display: "grid", placeItems: "center" }}><Brain size={18} color={GOLD} /></span>
+              <div>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK }}>AI auto-analysis</div>
+                <div style={{ fontSize: 12, color: MUTE }}>Updated from your latest log & test</div>
+              </div>
+            </div>
+            <div style={{ display: "grid", gap: 8 }}>
+              {insights.length ? insights.map((ins, i) => (
+                <div key={i} style={{ display: "flex", gap: 9, alignItems: "flex-start", background: "#fff", border: "1px solid #f1f5f9", borderRadius: 12, padding: "10px 13px" }}>
+                  {ins.tone === "up" ? <TrendingUp size={16} color="#16a34a" style={{ flexShrink: 0, marginTop: 1 }} />
+                    : ins.tone === "down" ? <TrendingDown size={16} color="#dc2626" style={{ flexShrink: 0, marginTop: 1 }} />
+                    : <Minus size={16} color="#64748b" style={{ flexShrink: 0, marginTop: 1 }} />}
+                  <span style={{ fontSize: 13, color: "#374151", lineHeight: 1.5 }}>{ins.text}</span>
+                </div>
+              )) : <span style={{ fontSize: 13, color: MUTE }}>Add a couple of tests and daily logs to unlock your improvement & decline report.</span>}
+            </div>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16 }}>
+            {/* Silly-mistake audit */}
+            <ToolCard icon={Crosshair} color="#ef4444" title="Silly-mistake audit" desc="Marks lost to silly errors, tracked & killed.">
+              {sillyTrend.length ? (
+                <>
+                  <Bars data={sillyTrend} bars={[{ key: "silly", label: "Silly mistakes", color: "#ef4444" }]} height={150} />
+                  {latest && prev && (
+                    <DeltaPill d={Number(latest.silly) - Number(prev.silly)} lowerIsBetter subtext={`${prev.silly} → ${latest.silly} this test`} />
+                  )}
+                </>
+              ) : <ChartHint text="Add tests with silly-mistake counts." />}
+            </ToolCard>
+
+            {/* Weak-chapter heatmap */}
+            <ToolCard icon={Zap} color="#8b5cf6" title="Weak-chapter heatmap" desc="The exact topics dragging your score, ranked.">
+              {weakRanked.length ? (
+                <>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 12 }}>
+                    {weakRanked.slice(0, 6).map(([c]) => (
+                      <span key={c} style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", borderRadius: 50, padding: "5px 12px", fontSize: 12, fontWeight: 700 }}>{c}</span>
+                    ))}
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {weakRanked.slice(0, 5).map(([c, n]) => (
+                      <div key={c} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ fontSize: 12.5, color: NAVY, fontWeight: 600, width: 130, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c}</span>
+                        <div style={{ flex: 1, height: 9, borderRadius: 6, background: "#f1f5f9", overflow: "hidden" }}>
+                          <div style={{ width: `${(n / maxWeak) * 100}%`, height: "100%", borderRadius: 6, background: "linear-gradient(90deg,#f59e0b,#ef4444)" }} />
+                        </div>
+                        <span style={{ fontSize: 11.5, color: "#ef4444", fontWeight: 800, width: 24, textAlign: "right" }}>×{n}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : <ChartHint text="Tag weak chapters on tests or in your backlog." />}
+            </ToolCard>
+
+            {/* Time-management review */}
+            <ToolCard icon={Timer} color="#06b6d4" title="Time-management review" desc="Where you over-spent time in the paper.">
+              {timeRanked.length ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                  {timeRanked.map(([s, n]) => (
+                    <div key={s} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "10px 13px" }}>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: NAVY }}>
+                        <span style={{ width: 9, height: 9, borderRadius: "50%", background: subColor(s) }} /> {s}
+                      </span>
+                      <span style={{ fontSize: 12, color: "#0891b2", fontWeight: 800 }}>{n} test{n === 1 ? "" : "s"} over-spent</span>
+                    </div>
+                  ))}
+                  <div style={{ fontSize: 12.5, color: MUTE, lineHeight: 1.5, marginTop: 2 }}>
+                    Set a hard time-cap for <strong style={{ color: NAVY }}>{timeRanked[0][0]}</strong> in your next paper.
+                  </div>
+                </div>
+              ) : <ChartHint text="Pick the subject you over-spent on when adding a test." />}
+            </ToolCard>
+
+            {/* Weekly fix-list */}
+            <ToolCard icon={ListChecks} color={GREEN} title="Your weekly fix-list" desc="3–5 concrete actions before your next test.">
+              {fixList.length ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {fixList.map((label) => {
+                    const done = fixDoneSet.includes(label);
+                    return (
+                      <button key={label} onClick={() => toggleFix(label)}
+                        style={{ display: "flex", gap: 10, alignItems: "flex-start", textAlign: "left", background: done ? "#f0faf4" : "#fff", border: `1px solid ${done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px", cursor: "pointer" }}>
+                        <span style={{ width: 19, height: 19, borderRadius: 6, border: `1.5px solid ${done ? GREEN : "#cbd5e1"}`, background: done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                          {done && <CheckCircle2 size={14} color="#fff" />}
+                        </span>
+                        <span style={{ fontSize: 13, color: done ? "#15803d" : "#374151", lineHeight: 1.45, textDecoration: done ? "line-through" : "none" }}>{label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : <ChartHint text="Log a test & backlog to generate your fix-list." />}
+            </ToolCard>
+          </div>
+        </Section>
+
+        {/* ── BACKLOG ── */}
+        <Section id="backlog" kicker="Catch up without burning out" title="Backlog Clearing Sprints" tColor="#7c3aed"
+          sub="A structured catch-up system that clears months of pending chapters — list them, rate your strength, and set a plan date.">
+          <div style={{ background: "#fff", border: "1px solid rgba(124,58,237,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#7c3aed,#a855f7)" }} />
+
+            {/* header + progress */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginBottom: 18 }}>
+              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#f5f3ff", border: "1px solid #ddd6fe", display: "grid", placeItems: "center" }}><Rocket size={22} color="#7c3aed" /></span>
+              <div style={{ flex: 1, minWidth: 180 }}>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK }}>Your backlog · {backlogDone}/{backlog.length} cleared</div>
+                <div style={{ height: 9, borderRadius: 6, background: "#f1f5f9", overflow: "hidden", marginTop: 8, maxWidth: 320 }}>
+                  <motion.div initial={{ width: 0 }} animate={{ width: `${backlogPct}%` }} style={{ height: "100%", borderRadius: 6, background: "linear-gradient(90deg,#7c3aed,#a855f7)" }} />
+                </div>
+              </div>
+              <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 26, color: "#7c3aed" }}>{backlogPct}%</div>
+            </div>
+
+            {/* add form */}
+            <form onSubmit={addBacklog} style={{ background: "#faf8ff", border: "1px solid #ede9fe", borderRadius: 14, padding: "16px 18px", marginBottom: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, alignItems: "flex-end" }}>
+              <SelectField label="Subject" value={blForm.subject} onChange={(v) => setBlForm((s) => ({ ...s, subject: v }))} options={subjects} />
+              <TextField label="Topic / chapter" value={blForm.topic} onChange={(v) => setBlForm((s) => ({ ...s, topic: v }))} placeholder="e.g. Rotational Motion" />
+              <SelectField label="How strong are you?" value={blForm.strength} onChange={(v) => setBlForm((s) => ({ ...s, strength: v }))} options={["weak", "medium", "strong"]} labels={{ weak: "Weak", medium: "Medium", strong: "Strong" }} />
+              <DateField label="Plan date" value={blForm.planDate} onChange={(v) => setBlForm((s) => ({ ...s, planDate: v }))} />
+              <TextField label="Target week" value={blForm.week} onChange={(v) => setBlForm((s) => ({ ...s, week: v }))} placeholder="e.g. Week 2" />
+              <button type="submit" style={{ padding: "12px 16px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#7c3aed,#a855f7)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, height: 42 }}>
+                <Plus size={15} /> Add
+              </button>
+            </form>
+
+            {/* list */}
+            {backlog.length ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {backlog.map((b) => {
+                  const st = STRENGTHS[b.strength] || STRENGTHS.weak;
+                  return (
+                    <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: b.done ? "#f8fafc" : "#fff", border: "1px solid #eef2f7", borderRadius: 13, padding: "13px 15px", opacity: b.done ? 0.72 : 1 }}>
+                      <button onClick={() => toggleBacklog(b.id)} title={b.done ? "Mark as pending" : "Mark cleared"}
+                        style={{ width: 24, height: 24, borderRadius: 7, border: `1.5px solid ${b.done ? GREEN : "#cbd5e1"}`, background: b.done ? GREEN : "#fff", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                        {b.done && <CheckCircle2 size={16} color="#fff" />}
+                      </button>
+                      <span style={{ width: 9, height: 9, borderRadius: "50%", background: subColor(b.subject), flexShrink: 0 }} />
+                      <div style={{ flex: 1, minWidth: 150 }}>
+                        <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 14, color: NAVY, textDecoration: b.done ? "line-through" : "none" }}>{b.topic}</div>
+                        <div style={{ fontSize: 12, color: MUTE }}>{b.subject}{b.week ? ` · ${b.week}` : ""}</div>
+                      </div>
+                      <span style={{ background: `${st.color}14`, border: `1px solid ${st.color}40`, color: st.color, borderRadius: 50, padding: "4px 11px", fontSize: 11.5, fontWeight: 800 }}>{st.label}</span>
+                      {b.planDate && (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#6b7280", fontWeight: 600 }}>
+                          <CalendarDays size={13} /> {fmtDay(b.planDate)}
+                        </span>
+                      )}
+                      <button onClick={() => removeBacklog(b.id)} title="Remove" style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "#fff", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div style={{ textAlign: "center", padding: "26px 0", color: "#9ca3af", fontSize: 13.5 }}>
+                <BookOpen size={26} style={{ marginBottom: 8, opacity: .6 }} /><br />No backlog yet — add your pending chapters above.
+              </div>
+            )}
           </div>
         </Section>
 
@@ -481,18 +1047,20 @@ export default function MentorshipDashboard() {
                 <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: INK, margin: "0 0 8px" }}>Your parents never miss a week</h3>
                 <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.65, margin: 0 }}>
                   We send a simple, jargon-free report — study hours, streak, tasks completed, latest test
-                  score and improvement — to the parent email you gave at enrolment. You’ll also get a weekly
+                  score, accuracy and improvement — to the parent email you gave at enrolment. You’ll also get a weekly
                   nudge to keep your numbers up to date.
                 </p>
               </div>
               <div style={{ background: "#f0faf4", border: `1px solid ${GREEN}33`, borderRadius: 16, padding: "18px 20px" }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 10 }}>This week’s summary</div>
                 {[
-                  { l: "Study hours", v: `${Math.round(weekHours * 10) / 10} h` },
+                  { l: "Study hours", v: `${round1(weekHours)} h` },
                   { l: "Day streak", v: `${streak} days` },
+                  { l: "Routine kept", v: `${routinePct}%` },
                   { l: "Tasks", v: tasksLabel },
                   { l: "Latest test", v: latest ? `${latest.scored}/${latest.total} (${acc(latest)}%)` : "—" },
                   { l: "Change vs last test", v: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
+                  { l: "Backlog cleared", v: `${backlogDone}/${backlog.length}` },
                 ].map((r) => (
                   <div key={r.l} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: "1px solid rgba(0,0,0,.06)" }}>
                     <span style={{ fontSize: 13, color: "#374151" }}>{r.l}</span>
@@ -512,6 +1080,7 @@ export default function MentorshipDashboard() {
         @media (max-width: 640px) {
           .md-track-grid { grid-template-columns: 1fr !important; }
         }
+        @keyframes spin{to{transform:rotate(360deg)}}
       `}</style>
     </section>
   );
@@ -542,6 +1111,51 @@ function ChartCard({ title, hint, accent = ORANGE, children }) {
   );
 }
 
+function ToolCard({ icon: Icon, color, title, desc, children }) {
+  return (
+    <div style={{ background: "#fff", border: `1px solid ${color}28`, borderRadius: 18, padding: "20px", boxShadow: "0 16px 40px -28px rgba(26,26,46,.4)", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 4 }}>
+        <span style={{ width: 38, height: 38, borderRadius: 11, background: `${color}14`, border: `1px solid ${color}30`, display: "grid", placeItems: "center", flexShrink: 0 }}><Icon size={18} color={color} /></span>
+        <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1rem", color: INK, margin: 0 }}>{title}</h3>
+      </div>
+      <p style={{ fontSize: 12.5, color: MUTE, margin: "4px 0 14px", lineHeight: 1.5 }}>{desc}</p>
+      <div style={{ marginTop: "auto" }}>{children}</div>
+    </div>
+  );
+}
+
+function ChartHint({ text }) {
+  return <div style={{ color: "#9ca3af", fontSize: 13, padding: "28px 0", textAlign: "center" }}>{text}</div>;
+}
+
+function DeltaPill({ d, unit = "", subtext, lowerIsBetter = false }) {
+  const good = d === 0 ? null : lowerIsBetter ? d < 0 : d > 0;
+  const color = d === 0 ? "#64748b" : good ? "#16a34a" : "#dc2626";
+  const Icon = d === 0 ? Minus : d > 0 ? TrendingUp : TrendingDown;
+  const word = d === 0 ? "no change" : `${d > 0 ? "+" : ""}${d}${unit}`;
+  return (
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 10, background: `${color}12`, border: `1px solid ${color}30`, borderRadius: 50, padding: "4px 11px" }}>
+      <Icon size={13} color={color} />
+      <span style={{ fontSize: 11.5, fontWeight: 800, color }}>{word}</span>
+      {subtext && <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>· {subtext}</span>}
+    </div>
+  );
+}
+
+function SubjectField({ subject, value, onChange }) {
+  const c = subColor(subject);
+  return (
+    <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
+      <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 700, color: "#374151" }}>
+        <span style={{ width: 8, height: 8, borderRadius: "50%", background: c }} /> {subject} (h)
+      </span>
+      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder="e.g. 2" inputMode="decimal"
+        style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
+        onFocus={(e) => { e.target.style.borderColor = c; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+    </label>
+  );
+}
+
 function NumField({ label, value, onChange, placeholder, full }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 5, flex: full ? "none" : "1 1 110px", minWidth: 0 }}>
@@ -555,10 +1169,36 @@ function NumField({ label, value, onChange, placeholder, full }) {
 
 function TextField({ label, value, onChange, placeholder }) {
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+    <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
       <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>{label}</span>
       <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
         style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
+        onFocus={(e) => { e.target.style.borderColor = ORANGE; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+    </label>
+  );
+}
+
+function SelectField({ label, value, onChange, options, labels, placeholders }) {
+  return (
+    <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
+      <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>{label}</span>
+      <select value={value} onChange={(e) => onChange(e.target.value)}
+        style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff", cursor: "pointer" }}
+        onFocus={(e) => { e.target.style.borderColor = ORANGE; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }}>
+        {options.map((o) => (
+          <option key={o} value={o}>{(placeholders && placeholders[o]) || (labels && labels[o]) || o}</option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+function DateField({ label, value, onChange }) {
+  return (
+    <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
+      <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>{label}</span>
+      <input type="date" value={value} onChange={(e) => onChange(e.target.value)}
+        style={{ width: "100%", padding: "9px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
         onFocus={(e) => { e.target.style.borderColor = ORANGE; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
     </label>
   );
