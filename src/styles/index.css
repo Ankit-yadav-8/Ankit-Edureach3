@@ -2809,17 +2809,18 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .auth-showcase { display: none; }
   .auth-card { width: min(460px, 100%); }
 }
-/* Phones: tighten spacing so the card fits without awkward scrolling */
+/* Phones: tighten spacing + stack signup fields into one column so each
+   input is wide enough to be tappable and nothing overflows the card */
 @media (max-width: 560px) {
   .auth-backdrop    { padding: 56px 12px 20px; }
-  .auth-card        { border-radius: 20px; }
+  .auth-card        { width: 100%; border-radius: 20px; }
   .auth-header-band { padding: 18px 18px 16px; }
   .auth-form-body   { padding: 20px 18px 18px; }
+  .auth-signup-grid { grid-template-columns: 1fr; gap: 12px; }
 }
-/* Small phones: stack signup fields into one column */
-@media (max-width: 440px) {
+/* Small phones: trim padding further */
+@media (max-width: 400px) {
   .auth-backdrop     { padding: 40px 10px 16px; }
-  .auth-signup-grid  { grid-template-columns: 1fr; }
   .auth-header-band  { padding: 16px 15px 14px; }
   .auth-form-body    { padding: 18px 15px 16px; }
 }

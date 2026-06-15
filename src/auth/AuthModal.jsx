@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Mail, ArrowLeft, Lock, User, KeyRound,
   Phone, GraduationCap, CheckCircle2, AlertCircle, MapPin,
-  Loader2, Eye, EyeOff, Sparkles,
+  Loader2, Eye, EyeOff, Sparkles, ChevronDown,
   Shield, Zap, BookOpen, Award, Trophy,
 } from "lucide-react";
 import { useAuth } from "./AuthContext.jsx";
@@ -21,6 +21,16 @@ const isEmail = (v) => {
 const isPhone = (v) => /^\d{10}$/.test(v);
 const isRank  = (v) => !v || (!isNaN(Number(v)) && Number(v) > 0);
 const EMAIL_ERR = "Use a @gmail.com or .in email address";
+
+/* Indian states & union territories — for the Home state dropdown */
+const INDIAN_STATES = [
+  "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
+  "Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh",
+  "Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan",
+  "Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal",
+  "Andaman & Nicobar","Chandigarh","Dadra & Nagar Haveli and Daman & Diu","Delhi",
+  "Jammu & Kashmir","Ladakh","Lakshadweep","Puducherry",
+];
 
 /* ── client-side validation ─────────────────────────────────── */
 function validate(mode, f) {
@@ -119,6 +129,81 @@ function Field({ icon: Icon, error, label, ...props }) {
             {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
           </button>
         )}
+      </div>
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            key="err"
+            initial={{ opacity: 0, height: 0, y: -4 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.15 }}
+            style={{ display: "flex", alignItems: "center", gap: 4, paddingTop: 5, paddingLeft: 4 }}
+          >
+            <AlertCircle size={11} color="#ef4444" />
+            <span style={{ fontSize: 11.5, color: "#ef4444", fontWeight: 500 }}>{error}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   SELECT FIELD — same styling as Field, native dropdown
+══════════════════════════════════════════════════ */
+function SelectField({ icon: Icon, error, label, options, placeholder, value, ...props }) {
+  const [focused, setFocused] = useState(false);
+  const borderColor = error ? "#ef4444" : focused ? OR : "#e2e8f0";
+  const shadow      = error
+    ? "0 0 0 3px rgba(239,68,68,.12)"
+    : focused
+      ? `0 0 0 3px ${OR}1a, 0 1px 4px rgba(0,0,0,.06)`
+      : "0 1px 3px rgba(0,0,0,.04)";
+
+  return (
+    <div style={{ marginBottom: error ? 6 : 14 }}>
+      {label && (
+        <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 5, display: "block", letterSpacing: ".03em" }}>
+          {label}
+        </label>
+      )}
+      <div style={{
+        position: "relative", borderRadius: 13,
+        border: `1.5px solid ${borderColor}`,
+        background: error ? "#fff8f8" : "#fff",
+        transition: "border-color .18s, box-shadow .18s",
+        boxShadow: shadow,
+        display: "flex", alignItems: "center",
+      }}>
+        <Icon size={15} style={{
+          position: "absolute", left: 14,
+          color: error ? "#ef4444" : focused ? OR : "#94a3b8",
+          transition: "color .18s", flexShrink: 0, zIndex: 1,
+        }} />
+        <select
+          {...props}
+          value={value}
+          onFocus={(e) => { setFocused(true); props.onFocus?.(e); }}
+          onBlur={(e)  => { setFocused(false); props.onBlur?.(e); }}
+          style={{
+            flex: 1, width: "100%", border: "none", background: "transparent", outline: "none",
+            paddingLeft: 40, paddingRight: 38,
+            height: 46, fontSize: 16, fontWeight: 600, letterSpacing: ".01em",
+            color: value ? "#0f172a" : "#94a3b8", borderRadius: 12,
+            fontFamily: "inherit", appearance: "none", WebkitAppearance: "none",
+            MozAppearance: "none", cursor: "pointer",
+          }}
+        >
+          <option value="" disabled>{placeholder || "Select…"}</option>
+          {options.map((o) => (
+            <option key={o} value={o} style={{ color: "#0f172a" }}>{o}</option>
+          ))}
+        </select>
+        <ChevronDown size={16} style={{
+          position: "absolute", right: 12, pointerEvents: "none",
+          color: focused ? OR : "#94a3b8", transition: "color .18s",
+        }} />
       </div>
       <AnimatePresence>
         {error && (
@@ -655,8 +740,9 @@ export default function AuthModal() {
                     <Field icon={GraduationCap} placeholder="Coaching *" value={f.coaching}
                       error={fe.coaching} onChange={e => set("coaching", e.target.value)} />
                     <div style={{ gridColumn: "1/-1" }}>
-                      <Field icon={MapPin} placeholder="Home state *" value={f.homeState}
-                        error={fe.homeState} onChange={e => set("homeState", e.target.value)} />
+                      <SelectField icon={MapPin} placeholder="Home state *" value={f.homeState}
+                        options={INDIAN_STATES} error={fe.homeState}
+                        onChange={e => set("homeState", e.target.value)} />
                     </div>
                     <div style={{ gridColumn: "1/-1" }}>
                       <Field icon={Mail} type="email" placeholder="Email address *" value={f.email}
