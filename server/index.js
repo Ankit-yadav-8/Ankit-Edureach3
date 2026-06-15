@@ -8,6 +8,7 @@ import otpRoutes from "./routes/otp.js";
 import userRoutes from "./routes/users.js";
 import cutoffRoutes from "./routes/cutoffs.js";
 import paymentRoutes from "./routes/payment.js";
+import mentorshipRoutes from "./routes/mentorship.js";
 import adminRoutes from "./routes/admin.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 
@@ -72,6 +73,7 @@ app.use("/api/admin", authLimiter, adminRoutes);
 app.use("/api/users", apiLimiter, userRoutes);
 app.use("/api/cutoffs", apiLimiter, cutoffRoutes);
 app.use("/api/payment", apiLimiter, paymentRoutes);
+app.use("/api/mentorship", apiLimiter, mentorshipRoutes);
 
 connectDB()
   .then(() => {

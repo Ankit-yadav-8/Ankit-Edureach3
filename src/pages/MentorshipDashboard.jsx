@@ -6,11 +6,12 @@ import {
   Flame, Clock, CheckCircle2, Target, TrendingUp, TrendingDown, Plus, Sparkles,
   ShieldCheck, ArrowRight, Users, BarChart3, Rocket, Zap, Crosshair, Timer,
   ListChecks, Lock, Loader2, RotateCw, Pencil, Trash2, CalendarDays, Brain,
-  BookOpen, Minus,
+  BookOpen, Minus, Trophy, Send, Lightbulb, Hourglass,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
-import { apiMyEnrollments, apiSendOtp, apiVerifyOtp } from "../auth/api.js";
+import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiSendParentReport } from "../auth/api.js";
 import { Trend, Gauge, PieWithLegend, Bars } from "../components/Charts.jsx";
+import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
 
 const ORANGE = "#F47B20";
 const GOLD = "#f5a623";
@@ -30,71 +31,95 @@ const isoDay = (d) => new Date(d).toISOString().slice(0, 10);
 const fmtDay = (iso) => new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
 const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const round1 = (n) => Math.round(Number(n || 0) * 10) / 10;
+const inr = (n) => Number(n || 0).toLocaleString("en-IN");
 
-/* ── subjects per exam track ──────────────────────────────────────── */
+/* ── subjects per exam track (JEE/NEET split Chemistry into 3) ─────── */
 function subjectsFor(exam) {
   const e = String(exam || "").toLowerCase();
   if (e.includes("foundation")) return ["Maths", "Science"];
-  if (e.includes("jee") && e.includes("neet")) return ["Physics", "Chemistry", "Maths", "Biology"];
-  if (e.includes("neet")) return ["Physics", "Chemistry", "Biology"];
-  return ["Physics", "Chemistry", "Maths"]; // JEE default
+  if (e.includes("neet") && !e.includes("jee")) return ["Physics", "Physical Chemistry", "Organic Chemistry", "Inorganic Chemistry", "Biology"];
+  return ["Physics", "Physical Chemistry", "Organic Chemistry", "Inorganic Chemistry", "Maths"]; // JEE / generic
 }
 const SUBJECT_COLORS = {
-  Physics: "#6366f1", Chemistry: "#15a06e", Maths: "#F47B20",
-  Biology: "#ec4899", Science: "#06b6d4",
+  Physics: "#6366f1",
+  "Physical Chemistry": "#14b8a6",
+  "Organic Chemistry": "#15a06e",
+  "Inorganic Chemistry": "#84cc16",
+  Chemistry: "#15a06e",
+  Maths: "#F47B20",
+  Biology: "#ec4899",
+  Science: "#06b6d4",
 };
 const subColor = (s) => SUBJECT_COLORS[s] || "#6366f1";
+const SHORT = {
+  Physics: "Phy", "Physical Chemistry": "P.Chem", "Organic Chemistry": "O.Chem",
+  "Inorganic Chemistry": "I.Chem", Chemistry: "Chem", Maths: "Math", Biology: "Bio", Science: "Sci",
+};
+const shortName = (s) => SHORT[s] || s;
+// Recharts treats dots in a dataKey as a nested path, so chart keys must be
+// alphanumeric — labels can still be the pretty short names.
+const keyOf = (s) => String(s).replace(/[^a-zA-Z0-9]/g, "");
+
+/* subject hours/tasks for one day — tolerant of the old number-only shape */
+const subVal = (entry, s) => {
+  const v = entry?.subjects?.[s];
+  if (v == null) return { h: 0, t: 0 };
+  if (typeof v === "number") return { h: v, t: 0 };
+  return { h: Number(v.h) || 0, t: Number(v.t) || 0 };
+};
 
 const STRENGTHS = {
-  weak:   { label: "Weak",   color: "#ef4444", w: 3 },
-  medium: { label: "Medium", color: "#f59e0b", w: 2 },
-  strong: { label: "Strong", color: "#22c55e", w: 1 },
+  weak:   { label: "Weak",   color: "#ef4444" },
+  medium: { label: "Medium", color: "#f59e0b" },
+  strong: { label: "Strong", color: "#22c55e" },
 };
+const CATEGORIES = ["General", "OBC-NCL", "EWS", "SC", "ST"];
 
 const WEEK_TARGET_HRS = 40;
 
 /* ── demo seed (used until the student logs their own data) ───────── */
-function splitHours(total, subjects) {
-  const per = round1(total / subjects.length);
+function seedSubjects(total, subjects) {
+  const perH = round1(total / subjects.length);
   const m = {};
   subjects.forEach((s, j) => {
-    m[s] = j === subjects.length - 1 ? round1(total - per * (subjects.length - 1)) : per;
+    const h = j === subjects.length - 1 ? round1(total - perH * (subjects.length - 1)) : perH;
+    m[s] = { h, t: Math.max(0, Math.round(h * 2)) };
   });
   return m;
 }
 function seedTracking(subjects) {
   const today = new Date();
   const hrs = [4.5, 6, 5, 7, 6, 8, 2.5];
-  const td = [16, 18, 15, 20, 18, 21, 12];
-  const tt = [21, 21, 20, 21, 21, 21, 18];
   return hrs.map((h, i) => {
     const d = new Date(today); d.setDate(today.getDate() - (6 - i));
-    return { date: isoDay(d), hours: h, tasksDone: td[i], tasksTotal: tt[i], subjects: splitHours(h, subjects), routine: i % 4 !== 0 };
+    const subs = seedSubjects(h, subjects);
+    const tasksDone = subjects.reduce((s, k) => s + subs[k].t, 0);
+    return { date: isoDay(d), hours: h, subjects: subs, tasksDone, tasksTotal: Math.round(tasksDone * 1.15), routine: i % 4 !== 0 };
   });
 }
 function seedTests() {
   const today = new Date();
-  const mk = (n, back, total, scored, correct, wrong, skipped, silly, overspent, weak) => {
+  const mk = (n, back, total, scored, correct, wrong, skipped, silly, sillyTopic, overspent, weak) => {
     const d = new Date(today); d.setDate(today.getDate() - back);
-    return { id: `${n}-${back}`, name: n, date: isoDay(d), total, scored, correct, wrong, skipped, silly, overspent, weak };
+    return { id: `${n}-${back}`, name: n, type: "mock", date: isoDay(d), total, scored, correct, wrong, skipped, silly, sillyTopic, overspent, weak };
   };
   return [
-    mk("Mock 1", 21, 300, 126, 48, 22, 20, 8, "Physics", ["Rotational Motion", "Thermodynamics"]),
-    mk("Mock 2", 14, 300, 150, 56, 18, 16, 6, "Maths",   ["p-Block", "Probability"]),
-    mk("Mock 3", 7,  300, 178, 64, 14, 12, 3, "Physics", ["Rotational Motion", "p-Block"]),
+    mk("Mock 1", 21, 300, 126, 48, 22, 20, 8, "Units & Dimensions", "Physics", ["Rotational Motion", "Thermodynamics"]),
+    mk("Mock 2", 14, 300, 150, 56, 18, 16, 6, "Mole Concept",       "Maths",   ["p-Block", "Probability"]),
+    mk("Mock 3", 7,  300, 178, 64, 14, 12, 3, "Sign errors",        "Physics", ["Rotational Motion", "p-Block"]),
   ];
 }
 function seedBacklog() {
   const today = new Date();
   const plus = (days) => { const d = new Date(today); d.setDate(d.getDate() + days); return isoDay(d); };
   return [
-    { id: "b1", subject: "Physics",   topic: "Rotational Motion", strength: "weak",   planDate: plus(5), week: "Week 1", done: false },
-    { id: "b2", subject: "Chemistry", topic: "Chemical Bonding",  strength: "medium", planDate: plus(9), week: "Week 2", done: false },
-    { id: "b3", subject: "Maths",     topic: "Probability",       strength: "weak",   planDate: plus(3), week: "Week 1", done: true  },
+    { id: "b1", subject: "Physics",            topic: "Rotational Motion", strength: "weak",   planDate: plus(5), week: "Week 1", done: false },
+    { id: "b2", subject: "Organic Chemistry",  topic: "Aldehydes & Ketones", strength: "medium", planDate: plus(9), week: "Week 2", done: false },
+    { id: "b3", subject: "Maths",              topic: "Probability",       strength: "weak",   planDate: plus(3), week: "Week 1", done: true  },
+    { id: "b4", subject: "Inorganic Chemistry", topic: "Coordination Compounds", strength: "strong", planDate: plus(12), week: "Week 3", done: false },
   ];
 }
 
-/* trailing consecutive-day streak ending today/yesterday */
 function streakOf(entries) {
   const set = new Set(entries.map((e) => e.date));
   let streak = 0;
@@ -104,7 +129,6 @@ function streakOf(entries) {
   return streak;
 }
 
-/* current ISO week key (year-Www) for the fix-list */
 function weekKey(d = new Date()) {
   const dt = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   const day = dt.getUTCDay() || 7;
@@ -161,7 +185,7 @@ export default function MentorshipDashboard() {
 }
 
 /* ════════════════════════════════════════════════════════════════
-   OTP SECURITY GATE — email verification before the dashboard opens
+   OTP SECURITY GATE
    ════════════════════════════════════════════════════════════════ */
 function OtpGate({ email, name, onVerified }) {
   const navigate = useNavigate();
@@ -276,23 +300,31 @@ function DashboardBody() {
   const TEST_KEY = `mdash:tests:${emailKey}`;
   const BACKLOG_KEY = `mdash:backlog:${emailKey}`;
   const FIX_KEY = `mdash:fixdone:${emailKey}`;
+  const WTASK_KEY = `mdash:weeklytasks:${emailKey}`;
 
   const [planLabel, setPlanLabel] = useState("Mentorship Program");
   const [planExam, setPlanExam] = useState("JEE / NEET");
   const subjects = useMemo(() => subjectsFor(planExam), [planExam]);
+  const isFoundation = /foundation/i.test(planExam);
+  const isNEET = /neet/i.test(planExam) && !/jee/i.test(planExam);
+  const rankEnabled = /jee/i.test(planExam) && !isFoundation;
 
   const [entries, setEntries] = useState(() => load(TRACK_KEY, null) || seedTracking(subjectsFor("JEE / NEET")));
   const [tests, setTests] = useState(() => load(TEST_KEY, null) || seedTests());
   const [backlog, setBacklog] = useState(() => load(BACKLOG_KEY, null) || seedBacklog());
   const [fixDone, setFixDone] = useState(() => load(FIX_KEY, {}));
+  const [weeklyTasks, setWeeklyTasks] = useState(() => load(WTASK_KEY, []));
 
   const todayIso = isoDay(new Date());
   const todayEntry = entries.find((e) => e.date === todayIso);
 
   const [editingLog, setEditingLog] = useState(false);
-  const [logForm, setLogForm] = useState({ subjects: {}, tasksDone: "", tasksTotal: "", routine: true });
-  const [testForm, setTestForm] = useState({ name: "", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", overspent: "", weak: "" });
+  const [logForm, setLogForm] = useState({ subjects: {}, tasksTotal: "", routine: true });
+  const [testForm, setTestForm] = useState({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General" });
   const [blForm, setBlForm] = useState({ subject: "", topic: "", strength: "weak", planDate: "", week: "" });
+  const [wtInput, setWtInput] = useState("");
+  const [wtEdit, setWtEdit] = useState({ id: null, text: "" });
+  const [parentState, setParentState] = useState({ sending: false, msg: { type: "", text: "" } });
 
   // Pull the real mentorship plan name (best-effort).
   useEffect(() => {
@@ -315,6 +347,7 @@ function DashboardBody() {
   useEffect(() => { save(TEST_KEY, tests); }, [TEST_KEY, tests]);
   useEffect(() => { save(BACKLOG_KEY, backlog); }, [BACKLOG_KEY, backlog]);
   useEffect(() => { save(FIX_KEY, fixDone); }, [FIX_KEY, fixDone]);
+  useEffect(() => { save(WTASK_KEY, weeklyTasks); }, [WTASK_KEY, weeklyTasks]);
 
   /* ── derived tracking metrics ── */
   const sorted = useMemo(() => [...entries].sort((a, b) => a.date.localeCompare(b.date)), [entries]);
@@ -330,24 +363,27 @@ function DashboardBody() {
   const routineDays = last7.filter((e) => e.routine).length;
   const routinePct = last7.length ? Math.round((routineDays / last7.length) * 100) : 0;
 
-  /* subject totals helper */
-  const subjTotals = (es) => {
+  const subjAgg = (es, key) => {
     const m = Object.fromEntries(subjects.map((s) => [s, 0]));
-    es.forEach((e) => subjects.forEach((s) => { m[s] += Number(e.subjects?.[s] || 0); }));
+    es.forEach((e) => subjects.forEach((s) => { m[s] += subVal(e, s)[key]; }));
     return m;
   };
-  const thisWk = useMemo(() => subjTotals(last7), [last7, subjects]);
-  const lastWk = useMemo(() => subjTotals(prevWeek), [prevWeek, subjects]);
-  const subjectPie = subjects.map((s) => ({ name: s, value: round1(thisWk[s]) })).filter((x) => x.value > 0);
-  const subjectTrendData = last7.map((e) => {
+  const thisWkH = useMemo(() => subjAgg(last7, "h"), [last7, subjects]);
+  const lastWkH = useMemo(() => subjAgg(prevWeek, "h"), [prevWeek, subjects]);
+  const thisWkT = useMemo(() => subjAgg(last7, "t"), [last7, subjects]);
+  const subjectPie = subjects.map((s) => ({ name: shortName(s), value: round1(thisWkH[s]) })).filter((x) => x.value > 0);
+  const subjectLines = subjects.map((s) => ({ key: keyOf(s), label: shortName(s), color: subColor(s) }));
+  const subjectHourTrend = last7.map((e) => {
     const row = { year: DOW[new Date(e.date).getDay()] };
-    subjects.forEach((s) => { row[s] = Number(e.subjects?.[s] || 0); });
+    subjects.forEach((s) => { row[keyOf(s)] = subVal(e, s).h; });
     return row;
   });
-  const subjectLines = subjects.map((s) => ({ key: s, label: s, color: subColor(s) }));
-  const lowestSubject = subjects.length
-    ? subjects.reduce((lo, s) => (thisWk[s] < thisWk[lo] ? s : lo), subjects[0])
-    : null;
+  const subjectTaskTrend = last7.map((e) => {
+    const row = { year: DOW[new Date(e.date).getDay()] };
+    subjects.forEach((s) => { row[keyOf(s)] = subVal(e, s).t; });
+    return row;
+  });
+  const lowestSubject = subjects.length ? subjects.reduce((lo, s) => (thisWkH[s] < thisWkH[lo] ? s : lo), subjects[0]) : null;
 
   /* ── derived test metrics ── */
   const testsSorted = useMemo(() => [...tests].sort((a, b) => a.date.localeCompare(b.date)), [tests]);
@@ -364,6 +400,7 @@ function DashboardBody() {
   const scoreTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, you: Number(t.scored), target: Math.round(Number(t.total) * 0.75) }));
   const accTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, accuracy: acc(t) }));
   const sillyTrend = testsSorted.map((t, i) => ({ name: t.name || `T${i + 1}`, silly: Number(t.silly || 0) }));
+  const avgSkipped = testsSorted.length ? Math.round(testsSorted.reduce((s, t) => s + Number(t.skipped || 0), 0) / testsSorted.length) : 0;
   const latestBreakdown = latest
     ? [
         { name: "Correct", value: Number(latest.correct) },
@@ -371,26 +408,43 @@ function DashboardBody() {
         { name: "Skipped", value: Number(latest.skipped) },
       ]
     : [];
+  const latestRankTest = [...testsSorted].reverse().find((t) => t.rank);
 
-  /* ── weak-chapter heatmap (tests + open backlog) ── */
+  /* ── weak-chapter heatmap (tests + open backlog + silly topics) ── */
   const weakRanked = useMemo(() => {
     const freq = {};
-    testsSorted.forEach((t) => (t.weak || []).forEach((c) => { freq[c] = (freq[c] || 0) + 1; }));
+    testsSorted.forEach((t) => {
+      (t.weak || []).forEach((c) => { freq[c] = (freq[c] || 0) + 1; });
+      if (t.sillyTopic) freq[t.sillyTopic] = (freq[t.sillyTopic] || 0) + 1;
+    });
     backlog.filter((b) => !b.done && b.strength !== "strong").forEach((b) => {
-      const k = b.topic;
-      if (!k) return;
-      freq[k] = (freq[k] || 0) + (b.strength === "weak" ? 2 : 1);
+      if (!b.topic) return;
+      freq[b.topic] = (freq[b.topic] || 0) + (b.strength === "weak" ? 2 : 1);
     });
     return Object.entries(freq).sort((a, b) => b[1] - a[1]);
   }, [testsSorted, backlog]);
   const maxWeak = Math.max(1, ...weakRanked.map(([, n]) => n));
 
-  /* ── time-management review (overspent subject frequency) ── */
+  /* ── silly-mistake topics ── */
+  const sillyTopics = useMemo(() => {
+    const freq = {};
+    testsSorted.forEach((t) => { if (t.sillyTopic) freq[t.sillyTopic] = (freq[t.sillyTopic] || 0) + 1; });
+    return Object.entries(freq).sort((a, b) => b[1] - a[1]);
+  }, [testsSorted]);
+
+  /* ── time-management review ── */
   const timeRanked = useMemo(() => {
     const freq = {};
     testsSorted.forEach((t) => { if (t.overspent) freq[t.overspent] = (freq[t.overspent] || 0) + 1; });
     return Object.entries(freq).sort((a, b) => b[1] - a[1]);
   }, [testsSorted]);
+  const timeBars = timeRanked.map(([s, n]) => ({ name: shortName(s), over: n }));
+  /* suggested pacing for next paper */
+  const pacing = useMemo(() => {
+    if (isFoundation) return [{ s: "Maths", min: 90 }, { s: "Science", min: 90 }];
+    if (isNEET) return [{ s: "Physics", min: 45 }, { s: "Chemistry", min: 45 }, { s: "Biology", min: 90 }];
+    return [{ s: "Physics", min: 60 }, { s: "Chemistry", min: 60 }, { s: "Maths", min: 60 }];
+  }, [isFoundation, isNEET]);
 
   /* ── auto weekly fix-list ── */
   const wk = weekKey();
@@ -399,17 +453,24 @@ function DashboardBody() {
     if (weakRanked[0]) list.push(`Re-do ${weakRanked[0][0]} PYQs (2 hrs) — your most recurring weak chapter`);
     if (latest && Number(latest.silly) > 0) list.push(`Kill silly mistakes — re-attempt last test's ${latest.silly} silly errors slowly & carefully`);
     if (weakRanked[1]) list.push(`Revise ${weakRanked[1][0]} formula sheet daily`);
-    if (lowestSubject && thisWk[lowestSubject] < WEEK_TARGET_HRS / subjects.length) list.push(`Give ${lowestSubject} an extra 1 hr/day — it's your least-studied subject this week`);
-    if (timeRanked[0]) list.push(`Time-box ${timeRanked[0][0]} in the next paper — you keep over-spending there`);
+    if (lowestSubject && thisWkH[lowestSubject] < WEEK_TARGET_HRS / subjects.length) list.push(`Give ${shortName(lowestSubject)} an extra 1 hr/day — it's your least-studied subject this week`);
+    if (timeRanked[0]) list.push(`Time-box ${shortName(timeRanked[0][0])} in the next paper — you keep over-spending there`);
     if (weakRanked[2]) list.push(`10 timed ${weakRanked[2][0]} questions before the next test`);
     return list.slice(0, 5);
-  }, [weakRanked, latest, lowestSubject, timeRanked, thisWk, subjects.length]);
+  }, [weakRanked, latest, lowestSubject, timeRanked, thisWkH, subjects.length]);
   const fixDoneSet = fixDone[wk] || [];
   const toggleFix = (label) => setFixDone((prev) => {
     const cur = new Set(prev[wk] || []);
     cur.has(label) ? cur.delete(label) : cur.add(label);
     return { ...prev, [wk]: [...cur] };
   });
+
+  /* ── chapters by strength (for parent report) ── */
+  const chaptersByStrength = useMemo(() => ({
+    weak: backlog.filter((b) => b.strength === "weak").map((b) => `${b.topic} (${shortName(b.subject)})`),
+    medium: backlog.filter((b) => b.strength === "medium").map((b) => `${b.topic} (${shortName(b.subject)})`),
+    strong: backlog.filter((b) => b.strength === "strong").map((b) => `${b.topic} (${shortName(b.subject)})`),
+  }), [backlog]);
 
   /* ── AI insights (rule-based) ── */
   const insights = useMemo(() => {
@@ -431,15 +492,26 @@ function DashboardBody() {
       out.push({ tone: d >= 0 ? "up" : "down", text: `${d >= 0 ? "Study time up" : "Study time down"} ${Math.abs(d)}h vs last week (${round1(prevWeekHours)}h → ${round1(weekHours)}h).` });
     }
     if (weakRanked[0]) out.push({ tone: "down", text: `${weakRanked[0][0]} is your #1 recurring weak area (${weakRanked[0][1]}× flagged). It's in this week's fix-list.` });
-    if (lowestSubject) out.push({ tone: "flat", text: `${lowestSubject} got the least time this week (${round1(thisWk[lowestSubject])}h). Balance it before the next test.` });
+    if (lowestSubject) out.push({ tone: "flat", text: `${shortName(lowestSubject)} got the least time this week (${round1(thisWkH[lowestSubject])}h). Balance it before the next test.` });
     return out;
-  }, [latest, prev, improvement, weekHours, prevWeekHours, weakRanked, lowestSubject, thisWk]);
+  }, [latest, prev, improvement, weekHours, prevWeekHours, weakRanked, lowestSubject, thisWkH]);
+
+  /* ── strategies (fills the white space under the test form) ── */
+  const strategies = useMemo(() => {
+    const out = [];
+    if (lowestSubject) out.push({ icon: Target, color: subColor(lowestSubject), text: `Balance your effort: add ~1 hr/day to ${shortName(lowestSubject)} — it's your least-studied subject this week.` });
+    if (weakRanked[0]) out.push({ icon: Zap, color: "#8b5cf6", text: `Attack ${weakRanked[0][0]} first — your most recurring weak chapter. Aim for 30 PYQs this week.` });
+    if (latest && Number(latest.silly) >= 3) out.push({ icon: Crosshair, color: "#ef4444", text: `Reserve the last 10 min of every paper to recheck — you lost ~${latest.silly} marks to silly errors.` });
+    if (latest && acc(latest) < 80) out.push({ icon: ShieldCheck, color: "#0891b2", text: `Accuracy is ${acc(latest)}% — skip low-confidence questions to dodge negative marking.` });
+    out.push({ icon: RotateCw, color: GREEN, text: "Revise within 24 hrs, then again at 7 days — spaced revision beats re-reading." });
+    out.push({ icon: Hourglass, color: ORANGE, text: "Sit one full-length timed paper every week to build exam-day stamina & pacing." });
+    return out.slice(0, 5);
+  }, [lowestSubject, weakRanked, latest, thisWkH]);
 
   /* ── actions ── */
   function startEditLog() {
     setLogForm({
-      subjects: Object.fromEntries(subjects.map((s) => [s, todayEntry?.subjects?.[s] ?? ""])),
-      tasksDone: todayEntry?.tasksDone ?? "",
+      subjects: Object.fromEntries(subjects.map((s) => [s, { h: subVal(todayEntry, s).h || "", t: subVal(todayEntry, s).t || "" }])),
       tasksTotal: todayEntry?.tasksTotal ?? "",
       routine: todayEntry?.routine ?? true,
     });
@@ -448,36 +520,67 @@ function DashboardBody() {
   function addLog(e) {
     e.preventDefault();
     const subj = {};
-    let total = 0;
-    subjects.forEach((s) => { const v = Number(logForm.subjects?.[s]) || 0; subj[s] = v; total += v; });
-    if (total <= 0) return;
+    let totalH = 0, totalT = 0;
+    subjects.forEach((s) => {
+      const h = Number(logForm.subjects?.[s]?.h) || 0;
+      const t = Number(logForm.subjects?.[s]?.t) || 0;
+      subj[s] = { h, t }; totalH += h; totalT += t;
+    });
+    if (totalH <= 0) return;
     const entry = {
-      date: todayIso, hours: round1(total), subjects: subj,
-      tasksDone: Number(logForm.tasksDone) || 0,
-      tasksTotal: Number(logForm.tasksTotal) || Number(logForm.tasksDone) || 0,
+      date: todayIso, hours: round1(totalH), subjects: subj,
+      tasksDone: totalT,
+      tasksTotal: Number(logForm.tasksTotal) || totalT,
       routine: !!logForm.routine,
     };
     setEntries((prevE) => [...prevE.filter((x) => x.date !== todayIso), entry]);
-    setLogForm({ subjects: {}, tasksDone: "", tasksTotal: "", routine: true });
+    setLogForm({ subjects: {}, tasksTotal: "", routine: true });
     setEditingLog(false);
   }
 
   function addTest(e) {
     e.preventDefault();
-    const total = Number(testForm.total) || 0;
-    const scored = Number(testForm.scored);
-    if (!testForm.name.trim() || !Number.isFinite(scored)) return;
+    const isRankTest = rankEnabled && (testForm.type === "main" || testForm.type === "adv");
+    let total, scored, rank = null;
+    if (isRankTest) {
+      const advanced = testForm.type === "adv";
+      const p = Number(testForm.mp) || 0, c = Number(testForm.mc) || 0, m = Number(testForm.mm) || 0;
+      total = p + c + m; scored = total;
+      const r = predictRank({ physics: p, chemistry: c, maths: m, category: testForm.category, advanced });
+      rank = {
+        type: testForm.type, advanced, category: testForm.category, total,
+        ranked: r.ranked, crl: r.crl, crlLo: r.crlLo ?? null, crlHi: r.crlHi ?? null,
+        rank: r.rank, low: r.low, high: r.high,
+        percentile: r.percentile, categoryRank: r.categoryRank, isGeneral: r.isGeneral,
+        branches: (r.branches || []).slice(0, 3), advice: r.advice || "",
+        cutoffNeeded: r.cutoffNeeded ?? null,
+      };
+    } else {
+      total = Number(testForm.total) || 0;
+      scored = Number(testForm.scored);
+      if (!Number.isFinite(scored)) return;
+    }
+    if (!testForm.name.trim()) return;
     const t = {
-      id: `${Date.now()}`, name: testForm.name.trim(), date: todayIso, total, scored,
+      id: `${Date.now()}`, name: testForm.name.trim(), type: testForm.type, date: todayIso, total, scored,
       correct: Number(testForm.correct) || 0,
       wrong: Number(testForm.wrong) || 0,
       skipped: Number(testForm.skipped) || 0,
       silly: Number(testForm.silly) || 0,
+      sillyTopic: testForm.sillyTopic.trim(),
       overspent: testForm.overspent.trim(),
       weak: testForm.weak.split(",").map((x) => x.trim()).filter(Boolean),
+      rank,
     };
     setTests((prevT) => [...prevT, t]);
-    setTestForm({ name: "", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", overspent: "", weak: "" });
+    setTestForm({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General" });
+  }
+  function setTestType(type) {
+    setTestForm((s) => ({
+      ...s, type,
+      name: type === "main" ? "JEE Mains" : type === "adv" ? "JEE Advanced" : s.name === "JEE Mains" || s.name === "JEE Advanced" ? "" : s.name,
+      total: type === "adv" ? "360" : "300",
+    }));
   }
 
   function addBacklog(e) {
@@ -500,22 +603,60 @@ function DashboardBody() {
   const backlogDone = backlog.filter((b) => b.done).length;
   const backlogPct = backlog.length ? Math.round((backlogDone / backlog.length) * 100) : 0;
 
-  const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  /* ── weekly tasks (add + complete only · no delete) ── */
+  function addWeeklyTask(e) {
+    e.preventDefault();
+    const text = wtInput.trim();
+    if (!text) return;
+    setWeeklyTasks((prev) => [...prev, { id: `${Date.now()}`, text, done: false, week: wk, createdAt: todayIso }]);
+    setWtInput("");
+  }
+  const toggleWeeklyTask = (id) => setWeeklyTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
+  const saveWeeklyEdit = () => {
+    const text = wtEdit.text.trim();
+    if (text) setWeeklyTasks((prev) => prev.map((t) => (t.id === wtEdit.id ? { ...t, text } : t)));
+    setWtEdit({ id: null, text: "" });
+  };
+  const weeklyDone = weeklyTasks.filter((t) => t.done).length;
 
+  /* ── send weekly report to parent ── */
+  async function sendParentReport() {
+    if (!token) return;
+    setParentState({ sending: true, msg: { type: "", text: "" } });
+    const report = {
+      week: wk,
+      stats: {
+        hours: round1(weekHours), streak, routinePct, tasks: tasksLabel,
+        latestTest: latest ? `${latest.name}: ${latest.scored}/${latest.total} (${acc(latest)}%)` : "—",
+        improvement: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%`,
+        backlog: `${backlogDone}/${backlog.length}`,
+      },
+      chapters: chaptersByStrength,
+      weeklyTasks: weeklyTasks.map((t) => ({ text: t.text, done: t.done })),
+    };
+    try {
+      const r = await apiSendParentReport(token, { report });
+      setParentState({ sending: false, msg: { type: "ok", text: r.dev ? "Report queued (dev mode — email is logged on the server)." : `Sent to your parent (${r.to}).` } });
+    } catch (e) {
+      setParentState({ sending: false, msg: { type: "err", text: e.message || "Couldn't send the report. Try again." } });
+    }
+  }
+
+  const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
   const initial = (user?.name || user?.email || "U").charAt(0).toUpperCase();
 
   const NAV_LINKS = [
     { id: "live-tracking",    label: "Live student tracking", desc: "Subject-wise daily log & streak", icon: Activity,        color: "#ef4444" },
-    { id: "subject-analysis", label: "Subject-wise analysis", desc: "Time split & day comparison",     icon: BarChart3,       color: "#6366f1" },
-    { id: "test-analysis",    label: "Test analysis",         desc: "Marks → AI-analysed charts",      icon: LineIcon,        color: "#8b5cf6" },
+    { id: "subject-analysis", label: "Subject-wise analysis", desc: "Hours, tasks & day comparison",   icon: BarChart3,       color: "#6366f1" },
+    { id: "test-analysis",    label: "Test analysis",         desc: rankEnabled ? "Marks → charts + rank" : "Marks → AI charts", icon: LineIcon, color: "#8b5cf6" },
     { id: "mentor-tools",     label: "What your mentor breaks down", desc: "Silly mistakes · weak chapters", icon: Brain,      color: GOLD },
     { id: "backlog",          label: "Backlog clearing sprints", desc: "List & clear pending topics",  icon: Rocket,          color: "#7c3aed" },
-    { id: "parent-report",    label: "Weekly report to parents", desc: "Auto-emailed every week",      icon: Mail,            color: GREEN },
+    { id: "parent-report",    label: "Weekly report & tasks", desc: "Tasks + auto parent email",        icon: Mail,            color: GREEN },
   ];
 
   return (
     <section style={{ background: "#f8f7f5", minHeight: "100vh", paddingBottom: 70 }}>
-      {/* ── Title strip just below navbar ── */}
+      {/* ── Title strip ── */}
       <div style={{ paddingTop: 104, textAlign: "center" }}>
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
           style={{ fontSize: 12, fontWeight: 800, letterSpacing: "3px", textTransform: "uppercase", color: ORANGE, marginBottom: 8 }}>
@@ -588,9 +729,10 @@ function DashboardBody() {
                 Everything about your journey, in one place.
               </h2>
               <p style={{ color: MUTE, fontSize: 15, lineHeight: 1.7, margin: 0 }}>
-                Log your study hours <strong style={{ color: NAVY }}>subject by subject</strong> once a day, enter every test,
-                and list your backlog. We turn it into clear charts, week-on-week comparisons, a silly-mistake audit,
-                a weak-chapter heatmap and an automatic fix-list — and email a clean weekly report to your parents.
+                Log study hours & tasks <strong style={{ color: NAVY }}>subject by subject</strong> once a day, enter every test
+                {rankEnabled && <> (with <strong style={{ color: NAVY }}>JEE rank prediction</strong>)</>}, and list your backlog.
+                We turn it into charts, week-on-week comparisons, a silly-mistake audit, a weak-chapter heatmap, strategies and a
+                fix-list — and email a clean weekly report to your parents.
               </p>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 18 }}>
                 <button onClick={() => scrollTo("live-tracking")} style={{ background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", border: "none", padding: "12px 20px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, boxShadow: `0 12px 26px -10px ${ORANGE}` }}>
@@ -654,7 +796,7 @@ function DashboardBody() {
 
         {/* ── LIVE STUDENT TRACKING ── */}
         <Section id="live-tracking" kicker="Always on · once a day" title="Live Student Tracking" tColor="#ef4444"
-          sub="Log each subject's study hours once per day — the charts update instantly so nothing slips through the cracks.">
+          sub="Log each subject's study hours and tasks once per day — the charts update instantly so nothing slips through the cracks.">
           <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},${ORANGE})` }} />
 
@@ -702,7 +844,7 @@ function DashboardBody() {
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   {subjects.map((s) => (
                     <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: `1px solid ${subColor(s)}33`, borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: NAVY }}>
-                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(s) }} /> {s}: {todayEntry.subjects?.[s] || 0}h
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(s) }} /> {shortName(s)}: {subVal(todayEntry, s).h}h · {subVal(todayEntry, s).t}✓
                     </span>
                   ))}
                   <span style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: NAVY }}>Tasks: {todayEntry.tasksDone}/{todayEntry.tasksTotal}</span>
@@ -711,16 +853,17 @@ function DashboardBody() {
               </div>
             ) : (
               <form onSubmit={addLog} style={{ background: "#fffaf5", border: "1px solid rgba(244,123,32,.22)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412", marginBottom: 12 }}>Log today ({fmtDay(todayIso)}) · study hours per subject</div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 10, marginBottom: 12 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412", marginBottom: 12 }}>Log today ({fmtDay(todayIso)}) · hours & tasks completed per subject</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 10, marginBottom: 12 }}>
                   {subjects.map((s) => (
-                    <SubjectField key={s} subject={s} value={logForm.subjects?.[s] ?? ""}
-                      onChange={(v) => setLogForm((st) => ({ ...st, subjects: { ...st.subjects, [s]: v } }))} />
+                    <SubjectDualField key={s} subject={s}
+                      hours={logForm.subjects?.[s]?.h ?? ""} tasks={logForm.subjects?.[s]?.t ?? ""}
+                      onHours={(v) => setLogForm((st) => ({ ...st, subjects: { ...st.subjects, [s]: { ...st.subjects?.[s], h: v } } }))}
+                      onTasks={(v) => setLogForm((st) => ({ ...st, subjects: { ...st.subjects, [s]: { ...st.subjects?.[s], t: v } } }))} />
                   ))}
                 </div>
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>
-                  <NumField label="Tasks done" value={logForm.tasksDone} onChange={(v) => setLogForm((s) => ({ ...s, tasksDone: v }))} placeholder="e.g. 18" />
-                  <NumField label="Tasks planned" value={logForm.tasksTotal} onChange={(v) => setLogForm((s) => ({ ...s, tasksTotal: v }))} placeholder="e.g. 21" />
+                  <NumField label="Tasks planned (total)" value={logForm.tasksTotal} onChange={(v) => setLogForm((s) => ({ ...s, tasksTotal: v }))} placeholder="e.g. 21" />
                   <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                     <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>Followed routine?</span>
                     <div style={{ display: "flex", gap: 6 }}>
@@ -765,52 +908,88 @@ function DashboardBody() {
 
         {/* ── SUBJECT-WISE ANALYSIS ── */}
         <Section id="subject-analysis" kicker="Every subject counts" title="Subject-wise Analysis" tColor="#6366f1"
-          sub="See exactly where your hours go, compare day-by-day, and check this week against last week.">
+          sub="See exactly where your hours and tasks go, compare day-by-day, and check this week against last week.">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 18, marginBottom: 18 }}>
-            <ChartCard title="Subject-wise hours · last 7 days" hint="Compare each subject day by day" accent="#6366f1">
-              <Trend data={subjectTrendData} lines={subjectLines} height={230} fmt={(v) => `${v}h`} />
+            <ChartCard title="Study hours per subject · last 7 days" hint="Compare each subject day by day" accent="#6366f1">
+              <Trend data={subjectHourTrend} lines={subjectLines} height={230} fmt={(v) => `${v}h`} />
             </ChartCard>
-            <ChartCard title="Time split this week" hint="Share of study hours per subject" accent="#15a06e">
-              {subjectPie.length
-                ? <PieWithLegend data={subjectPie} colors={subjects.map(subColor)} height={200} fmt={(v) => `${v}h`} />
-                : <ChartHint text="Log today's subject hours to see your split." />}
+            <ChartCard title="Tasks completed per subject · last 7 days" hint="How many tasks you cleared, by subject" accent="#15a06e">
+              <Trend data={subjectTaskTrend} lines={subjectLines} height={230} />
             </ChartCard>
           </div>
 
-          {/* per-subject vs last week */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 14 }}>
-            {subjects.map((s) => {
-              const now = round1(thisWk[s]); const was = round1(lastWk[s]);
-              const d = round1(now - was);
-              return (
-                <div key={s} style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "16px 18px", borderTop: `3px solid ${subColor(s)}`, boxShadow: "0 14px 36px -28px rgba(13,27,62,.4)" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: subColor(s) }} />
-                    <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: NAVY }}>{s}</span>
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.4fr)", gap: 18, alignItems: "start" }} className="md-track-grid">
+            <ChartCard title="Time split this week" hint="Share of study hours per subject" accent="#8b5cf6">
+              {subjectPie.length
+                ? <PieWithLegend data={subjectPie} colors={subjects.map(subColor)} height={210} fmt={(v) => `${v}h`} />
+                : <ChartHint text="Log today's subject hours to see your split." />}
+            </ChartCard>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 12 }}>
+              {subjects.map((s) => {
+                const now = round1(thisWkH[s]); const was = round1(lastWkH[s]);
+                const d = round1(now - was);
+                return (
+                  <div key={s} style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "15px 16px", borderTop: `3px solid ${subColor(s)}`, boxShadow: "0 14px 36px -28px rgba(13,27,62,.4)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                      <span style={{ width: 9, height: 9, borderRadius: "50%", background: subColor(s) }} />
+                      <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: NAVY }}>{shortName(s)}</span>
+                    </div>
+                    <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 21, color: subColor(s) }}>{now}h</div>
+                    <div style={{ fontSize: 11.5, color: MUTE, marginTop: 2 }}>{Math.round(thisWkT[s])} tasks · {round1(now / 7)}h/day</div>
+                    <DeltaPill d={d} unit="h" subtext="vs last week" />
                   </div>
-                  <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 22, color: subColor(s) }}>{now}h</div>
-                  <div style={{ fontSize: 12, color: MUTE, marginTop: 2 }}>this week · {round1(now / 7)}h/day</div>
-                  <DeltaPill d={d} unit="h" subtext="vs last week" />
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </Section>
 
         {/* ── TEST ANALYSIS ── */}
         <Section id="test-analysis" kicker="Every test counts" title="Test Analysis" tColor="#8b5cf6"
-          sub="Enter your marks, silly mistakes and weak chapters — we analyse accuracy, score and week-on-week change automatically.">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: 18 }}>
-            {/* left — input + improvement */}
+          sub={rankEnabled
+            ? "Enter your marks, silly mistakes and weak chapters. Pick JEE Mains/Advanced to get a predicted rank — everything else is analysed automatically."
+            : "Enter your marks, silly mistakes and weak chapters — we analyse accuracy, score and week-on-week change automatically."}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(330px,1fr))", gap: 18 }}>
+            {/* left — input + reports + strategies */}
             <div style={{ background: "#fff", border: "1px solid rgba(139,92,246,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#8b5cf6,#22c55e)" }} />
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "0 0 14px" }}>Add a test result</h3>
+
+              {/* JEE-only test type toggle */}
+              {rankEnabled && (
+                <div style={{ display: "flex", gap: 7, marginBottom: 14, flexWrap: "wrap" }}>
+                  {[["mock", "Mock / Other"], ["main", "JEE Mains"], ["adv", "JEE Advanced"]].map(([val, lbl]) => (
+                    <button type="button" key={val} onClick={() => setTestType(val)}
+                      style={{ flex: "1 1 90px", padding: "9px 8px", borderRadius: 10, border: `1.5px solid ${testForm.type === val ? "#8b5cf6" : "#e5e7eb"}`, background: testForm.type === val ? "#8b5cf610" : "#fff", color: testForm.type === val ? "#6d28d9" : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
+                      {val !== "mock" && <Trophy size={13} />}{lbl}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               <form onSubmit={addTest} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <TextField label="Test name" value={testForm.name} onChange={(v) => setTestForm((s) => ({ ...s, name: v }))} placeholder="e.g. Mock 4" />
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                  <NumField label="Total marks" value={testForm.total} onChange={(v) => setTestForm((s) => ({ ...s, total: v }))} placeholder="300" full />
-                  <NumField label="Marks scored" value={testForm.scored} onChange={(v) => setTestForm((s) => ({ ...s, scored: v }))} placeholder="178" full />
-                </div>
+
+                {rankEnabled && (testForm.type === "main" || testForm.type === "adv") ? (
+                  <>
+                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#6d28d9", marginTop: -2 }}>
+                      Marks per section (out of {maxPerSubject(testForm.type === "adv")} each · total {maxTotal(testForm.type === "adv")})
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                      <NumField label="Physics" value={testForm.mp} onChange={(v) => setTestForm((s) => ({ ...s, mp: v }))} placeholder="0" full />
+                      <NumField label="Chemistry" value={testForm.mc} onChange={(v) => setTestForm((s) => ({ ...s, mc: v }))} placeholder="0" full />
+                      <NumField label="Maths" value={testForm.mm} onChange={(v) => setTestForm((s) => ({ ...s, mm: v }))} placeholder="0" full />
+                    </div>
+                    <SelectField label="Category" value={testForm.category} onChange={(v) => setTestForm((s) => ({ ...s, category: v }))} options={CATEGORIES} />
+                  </>
+                ) : (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                    <NumField label="Total marks" value={testForm.total} onChange={(v) => setTestForm((s) => ({ ...s, total: v }))} placeholder="300" full />
+                    <NumField label="Marks scored" value={testForm.scored} onChange={(v) => setTestForm((s) => ({ ...s, scored: v }))} placeholder="178" full />
+                  </div>
+                )}
+
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
                   <NumField label="Correct" value={testForm.correct} onChange={(v) => setTestForm((s) => ({ ...s, correct: v }))} placeholder="64" full />
                   <NumField label="Wrong" value={testForm.wrong} onChange={(v) => setTestForm((s) => ({ ...s, wrong: v }))} placeholder="14" full />
@@ -818,11 +997,12 @@ function DashboardBody() {
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   <NumField label="Silly mistakes" value={testForm.silly} onChange={(v) => setTestForm((s) => ({ ...s, silly: v }))} placeholder="e.g. 4" full />
-                  <SelectField label="Over-spent time on" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} />
+                  <TextField label="Silly mistake topic" value={testForm.sillyTopic} onChange={(v) => setTestForm((s) => ({ ...s, sillyTopic: v }))} placeholder="e.g. Sign errors" />
                 </div>
+                <SelectField label="Over-spent time on" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
                 <TextField label="Weak chapters (comma separated)" value={testForm.weak} onChange={(v) => setTestForm((s) => ({ ...s, weak: v }))} placeholder="e.g. Rotational Motion, p-Block" />
                 <button type="submit" style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                  <Plus size={16} /> Analyse this test
+                  <Plus size={16} /> {rankEnabled && (testForm.type === "main" || testForm.type === "adv") ? "Analyse & predict rank" : "Analyse this test"}
                 </button>
               </form>
 
@@ -845,6 +1025,27 @@ function DashboardBody() {
                   </div>
                 </div>
               )}
+
+              {/* rank prediction (JEE only) */}
+              {rankEnabled && latestRankTest?.rank && <RankCard r={latestRankTest.rank} name={latestRankTest.name} />}
+
+              {/* strategies — fills the white space */}
+              <div style={{ marginTop: 16, background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 14, padding: "16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                  <Lightbulb size={17} color={GOLD} />
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: INK }}>Strategies to do better</span>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                  {strategies.map((st, i) => (
+                    <div key={i} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
+                      <span style={{ width: 26, height: 26, borderRadius: 8, background: `${st.color}14`, border: `1px solid ${st.color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                        <st.icon size={14} color={st.color} />
+                      </span>
+                      <span style={{ fontSize: 12.5, color: "#374151", lineHeight: 1.5, paddingTop: 3 }}>{st.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* right — charts */}
@@ -874,7 +1075,7 @@ function DashboardBody() {
               <span style={{ width: 36, height: 36, borderRadius: 11, background: `${GOLD}1a`, border: `1px solid ${GOLD}44`, display: "grid", placeItems: "center" }}><Brain size={18} color={GOLD} /></span>
               <div>
                 <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK }}>AI auto-analysis</div>
-                <div style={{ fontSize: 12, color: MUTE }}>Updated from your latest log & test</div>
+                <div style={{ fontSize: 12, color: MUTE }}>Improvement & decline report, updated from your latest log & test</div>
               </div>
             </div>
             <div style={{ display: "grid", gap: 8 }}>
@@ -891,15 +1092,25 @@ function DashboardBody() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16 }}>
             {/* Silly-mistake audit */}
-            <ToolCard icon={Crosshair} color="#ef4444" title="Silly-mistake audit" desc="Marks lost to silly errors, tracked & killed.">
+            <ToolCard icon={Crosshair} color="#ef4444" title="Silly-mistake audit" desc="Marks lost to silly errors — tracked, by topic, and killed.">
               {sillyTrend.length ? (
                 <>
-                  <Bars data={sillyTrend} bars={[{ key: "silly", label: "Silly mistakes", color: "#ef4444" }]} height={150} />
+                  <Bars data={sillyTrend} bars={[{ key: "silly", label: "Silly mistakes", color: "#ef4444" }]} height={140} />
                   {latest && prev && (
                     <DeltaPill d={Number(latest.silly) - Number(prev.silly)} lowerIsBetter subtext={`${prev.silly} → ${latest.silly} this test`} />
                   )}
+                  {sillyTopics.length > 0 && (
+                    <div style={{ marginTop: 12 }}>
+                      <div style={{ fontSize: 11.5, fontWeight: 700, color: MUTE, marginBottom: 6 }}>Where silly mistakes happen</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                        {sillyTopics.slice(0, 5).map(([c, n]) => (
+                          <span key={c} style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", borderRadius: 50, padding: "4px 10px", fontSize: 11.5, fontWeight: 700 }}>{c}{n > 1 ? ` ×${n}` : ""}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </>
-              ) : <ChartHint text="Add tests with silly-mistake counts." />}
+              ) : <ChartHint text="Add tests with silly-mistake counts & topics." />}
             </ToolCard>
 
             {/* Weak-chapter heatmap */}
@@ -926,23 +1137,28 @@ function DashboardBody() {
               ) : <ChartHint text="Tag weak chapters on tests or in your backlog." />}
             </ToolCard>
 
-            {/* Time-management review */}
-            <ToolCard icon={Timer} color="#06b6d4" title="Time-management review" desc="Where you over-spent time in the paper.">
-              {timeRanked.length ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                  {timeRanked.map(([s, n]) => (
-                    <div key={s} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "10px 13px" }}>
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: NAVY }}>
-                        <span style={{ width: 9, height: 9, borderRadius: "50%", background: subColor(s) }} /> {s}
-                      </span>
-                      <span style={{ fontSize: 12, color: "#0891b2", fontWeight: 800 }}>{n} test{n === 1 ? "" : "s"} over-spent</span>
+            {/* Time-management review — enhanced */}
+            <ToolCard icon={Timer} color="#06b6d4" title="Time-management review" desc="Where you over-spend, plus a pacing plan for the next paper.">
+              {timeBars.length > 0 && <Bars data={timeBars} bars={[{ key: "over", label: "Over-spent (tests)", color: "#06b6d4" }]} height={130} />}
+              <div style={{ marginTop: timeBars.length ? 12 : 0 }}>
+                <div style={{ fontSize: 11.5, fontWeight: 700, color: MUTE, marginBottom: 7 }}>Suggested pacing · next paper</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                  {pacing.map(({ s, min }) => (
+                    <div key={s} style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                      <span style={{ fontSize: 12.5, color: NAVY, fontWeight: 600, width: 80 }}>{s}</span>
+                      <div style={{ flex: 1, height: 8, borderRadius: 5, background: "#f1f5f9", overflow: "hidden" }}>
+                        <div style={{ width: `${(min / Math.max(...pacing.map((p) => p.min))) * 100}%`, height: "100%", borderRadius: 5, background: subColor(s) }} />
+                      </div>
+                      <span style={{ fontSize: 11.5, color: "#0891b2", fontWeight: 800, width: 48, textAlign: "right" }}>{min} min</span>
                     </div>
                   ))}
-                  <div style={{ fontSize: 12.5, color: MUTE, lineHeight: 1.5, marginTop: 2 }}>
-                    Set a hard time-cap for <strong style={{ color: NAVY }}>{timeRanked[0][0]}</strong> in your next paper.
-                  </div>
                 </div>
-              ) : <ChartHint text="Pick the subject you over-spent on when adding a test." />}
+                <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 10 }}>
+                  {timeRanked[0]
+                    ? <>Set a hard time-cap for <strong style={{ color: NAVY }}>{shortName(timeRanked[0][0])}</strong> — and you skip ~{avgSkipped} questions/paper, so do a confident first pass before returning to them.</>
+                    : <>You skip ~{avgSkipped} questions/paper on average — do one confident pass first, then circle back.</>}
+                </div>
+              </div>
             </ToolCard>
 
             {/* Weekly fix-list */}
@@ -973,7 +1189,6 @@ function DashboardBody() {
           <div style={{ background: "#fff", border: "1px solid rgba(124,58,237,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#7c3aed,#a855f7)" }} />
 
-            {/* header + progress */}
             <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginBottom: 18 }}>
               <span style={{ width: 46, height: 46, borderRadius: 13, background: "#f5f3ff", border: "1px solid #ddd6fe", display: "grid", placeItems: "center" }}><Rocket size={22} color="#7c3aed" /></span>
               <div style={{ flex: 1, minWidth: 180 }}>
@@ -985,9 +1200,8 @@ function DashboardBody() {
               <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 26, color: "#7c3aed" }}>{backlogPct}%</div>
             </div>
 
-            {/* add form */}
             <form onSubmit={addBacklog} style={{ background: "#faf8ff", border: "1px solid #ede9fe", borderRadius: 14, padding: "16px 18px", marginBottom: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, alignItems: "flex-end" }}>
-              <SelectField label="Subject" value={blForm.subject} onChange={(v) => setBlForm((s) => ({ ...s, subject: v }))} options={subjects} />
+              <SelectField label="Subject" value={blForm.subject} onChange={(v) => setBlForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, s]))} />
               <TextField label="Topic / chapter" value={blForm.topic} onChange={(v) => setBlForm((s) => ({ ...s, topic: v }))} placeholder="e.g. Rotational Motion" />
               <SelectField label="How strong are you?" value={blForm.strength} onChange={(v) => setBlForm((s) => ({ ...s, strength: v }))} options={["weak", "medium", "strong"]} labels={{ weak: "Weak", medium: "Medium", strong: "Strong" }} />
               <DateField label="Plan date" value={blForm.planDate} onChange={(v) => setBlForm((s) => ({ ...s, planDate: v }))} />
@@ -997,7 +1211,6 @@ function DashboardBody() {
               </button>
             </form>
 
-            {/* list */}
             {backlog.length ? (
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {backlog.map((b) => {
@@ -1011,7 +1224,7 @@ function DashboardBody() {
                       <span style={{ width: 9, height: 9, borderRadius: "50%", background: subColor(b.subject), flexShrink: 0 }} />
                       <div style={{ flex: 1, minWidth: 150 }}>
                         <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 14, color: NAVY, textDecoration: b.done ? "line-through" : "none" }}>{b.topic}</div>
-                        <div style={{ fontSize: 12, color: MUTE }}>{b.subject}{b.week ? ` · ${b.week}` : ""}</div>
+                        <div style={{ fontSize: 12, color: MUTE }}>{shortName(b.subject)}{b.week ? ` · ${b.week}` : ""}</div>
                       </div>
                       <span style={{ background: `${st.color}14`, border: `1px solid ${st.color}40`, color: st.color, borderRadius: 50, padding: "4px 11px", fontSize: 11.5, fontWeight: 800 }}>{st.label}</span>
                       {b.planDate && (
@@ -1034,30 +1247,99 @@ function DashboardBody() {
           </div>
         </Section>
 
-        {/* ── WEEKLY REPORT TO PARENTS ── */}
-        <Section id="parent-report" kicker="Parents stay in the loop" title="Weekly Report to Parents" tColor={GREEN}
-          sub="Every week, a clean summary of your effort and test results is emailed to your parent automatically.">
-          <div style={{ background: "#fff", border: `1px solid ${GREEN}33`, borderRadius: 20, padding: "26px 24px", boxShadow: `0 20px 46px -30px ${GREEN}99`, position: "relative", overflow: "hidden" }}>
+        {/* ── WEEKLY REPORT & TASKS ── */}
+        <Section id="parent-report" kicker="Parents stay in the loop" title="Weekly Report & Task List" tColor={GREEN}
+          sub="Add your weekly tasks (tick them off as you finish — they can't be deleted), and send a clean chapter-strength report to your parent.">
+
+          {/* send strip */}
+          <div style={{ background: "#fff", border: `1px solid ${GREEN}33`, borderRadius: 20, padding: "20px 22px", boxShadow: `0 20px 46px -30px ${GREEN}99`, position: "relative", overflow: "hidden", marginBottom: 18 }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},#22c55e)` }} />
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 22, alignItems: "center" }}>
-              <div>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 800, color: "#15803d", background: "#dcfce7", padding: "6px 13px", borderRadius: 50, marginBottom: 14 }}>
-                  <Mail size={14} /> Auto-emailed every week
-                </div>
-                <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: INK, margin: "0 0 8px" }}>Your parents never miss a week</h3>
-                <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.65, margin: 0 }}>
-                  We send a simple, jargon-free report — study hours, streak, tasks completed, latest test
-                  score, accuracy and improvement — to the parent email you gave at enrolment. You’ll also get a weekly
-                  nudge to keep your numbers up to date.
+            <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#dcfce7", display: "grid", placeItems: "center", flexShrink: 0 }}><Mail size={22} color={GREEN} /></span>
+              <div style={{ flex: 1, minWidth: 220 }}>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK }}>Send this week's report to your parent</div>
+                <p style={{ color: MUTE, fontSize: 13.5, lineHeight: 1.6, margin: "4px 0 0" }}>
+                  Includes study hours, streak, tasks, latest test and your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> — emailed to the parent address on your enrolment.
                 </p>
               </div>
+              <button onClick={sendParentReport} disabled={parentState.sending}
+                style={{ padding: "13px 22px", borderRadius: 12, border: "none", background: parentState.sending ? `${GREEN}99` : `linear-gradient(135deg,${GREEN},#22c55e)`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: parentState.sending ? "not-allowed" : "pointer", display: "inline-flex", alignItems: "center", gap: 9, boxShadow: `0 12px 26px -10px ${GREEN}` }}>
+                {parentState.sending ? <><Loader2 size={17} style={{ animation: "spin .8s linear infinite" }} /> Sending…</> : <><Send size={16} /> Send to parent</>}
+              </button>
+            </div>
+            <AnimatePresence>
+              {parentState.msg.text && (
+                <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                  style={{ marginTop: 14, borderRadius: 12, padding: "10px 14px", fontSize: 13, fontWeight: 700, background: parentState.msg.type === "ok" ? "#f0fdf4" : "#fff1f2", border: `1.5px solid ${parentState.msg.type === "ok" ? "#86efac" : "#fca5a5"}`, color: parentState.msg.type === "ok" ? "#166534" : "#991b1b" }}>
+                  {parentState.msg.text}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(290px,1fr))", gap: 18 }}>
+            {/* weekly task list */}
+            <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK, margin: 0, display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  <ListChecks size={18} color={GREEN} /> Weekly task list
+                </h3>
+                <span style={{ fontSize: 12, fontWeight: 800, color: GREEN, background: "#dcfce7", borderRadius: 50, padding: "4px 11px" }}>{weeklyDone}/{weeklyTasks.length} done</span>
+              </div>
+              <p style={{ fontSize: 12, color: MUTE, margin: "0 0 12px", lineHeight: 1.5 }}>Add tasks for the week. Once added a task stays for accountability — you can edit the text or tick it complete, but it can't be deleted.</p>
+
+              <form onSubmit={addWeeklyTask} style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+                <input value={wtInput} onChange={(e) => setWtInput(e.target.value)} placeholder="e.g. Finish Rotational Motion DPP"
+                  style={{ flex: 1, padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
+                  onFocus={(e) => { e.target.style.borderColor = GREEN; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+                <button type="submit" style={{ padding: "11px 16px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${GREEN},#22c55e)`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <Plus size={15} /> Add
+                </button>
+              </form>
+
+              {weeklyTasks.length ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {weeklyTasks.map((t) => (
+                    <div key={t.id} style={{ display: "flex", gap: 10, alignItems: "center", background: t.done ? "#f0faf4" : "#fff", border: `1px solid ${t.done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px" }}>
+                      <button onClick={() => toggleWeeklyTask(t.id)} title={t.done ? "Mark incomplete" : "Mark complete"}
+                        style={{ width: 21, height: 21, borderRadius: 6, border: `1.5px solid ${t.done ? GREEN : "#cbd5e1"}`, background: t.done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, cursor: "pointer" }}>
+                        {t.done && <CheckCircle2 size={14} color="#fff" />}
+                      </button>
+                      {wtEdit.id === t.id ? (
+                        <>
+                          <input value={wtEdit.text} autoFocus onChange={(e) => setWtEdit((s) => ({ ...s, text: e.target.value }))}
+                            onKeyDown={(e) => e.key === "Enter" && saveWeeklyEdit()}
+                            style={{ flex: 1, padding: "7px 10px", borderRadius: 8, border: `1.5px solid ${GREEN}`, fontSize: 13.5, color: NAVY, outline: "none" }} />
+                          <button onClick={saveWeeklyEdit} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 8, padding: "7px 11px", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>Save</button>
+                        </>
+                      ) : (
+                        <>
+                          <span style={{ flex: 1, fontSize: 13.5, color: t.done ? "#15803d" : "#374151", lineHeight: 1.4, textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
+                          {!t.done && (
+                            <button onClick={() => setWtEdit({ id: t.id, text: t.text })} title="Edit" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #e5e7eb", background: "#fff", color: "#6b7280", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                              <Pencil size={13} />
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ textAlign: "center", padding: "20px 0", color: "#9ca3af", fontSize: 13 }}>No tasks yet — add your first weekly task above.</div>
+              )}
+            </div>
+
+            {/* summary + chapter strength */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <div style={{ background: "#f0faf4", border: `1px solid ${GREEN}33`, borderRadius: 16, padding: "18px 20px" }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 10 }}>This week’s summary</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 10 }}>This week's summary</div>
                 {[
                   { l: "Study hours", v: `${round1(weekHours)} h` },
                   { l: "Day streak", v: `${streak} days` },
                   { l: "Routine kept", v: `${routinePct}%` },
-                  { l: "Tasks", v: tasksLabel },
+                  { l: "Tasks (latest day)", v: tasksLabel },
+                  { l: "Weekly tasks done", v: `${weeklyDone}/${weeklyTasks.length}` },
                   { l: "Latest test", v: latest ? `${latest.scored}/${latest.total} (${acc(latest)}%)` : "—" },
                   { l: "Change vs last test", v: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
                   { l: "Backlog cleared", v: `${backlogDone}/${backlog.length}` },
@@ -1068,6 +1350,29 @@ function DashboardBody() {
                   </div>
                 ))}
               </div>
+
+              <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 16, padding: "18px 20px" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 12 }}>Chapter-strength report (sent to parent)</div>
+                {["weak", "medium", "strong"].map((k) => {
+                  const st = STRENGTHS[k];
+                  const items = chaptersByStrength[k];
+                  return (
+                    <div key={k} style={{ marginBottom: 12 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 6 }}>
+                        <span style={{ width: 9, height: 9, borderRadius: "50%", background: st.color }} />
+                        <span style={{ fontSize: 12.5, fontWeight: 800, color: st.color }}>{st.label} ({items.length})</span>
+                      </div>
+                      {items.length ? (
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                          {items.map((c) => (
+                            <span key={c} style={{ background: `${st.color}12`, border: `1px solid ${st.color}33`, color: st.color, borderRadius: 50, padding: "3px 10px", fontSize: 11.5, fontWeight: 700 }}>{c}</span>
+                          ))}
+                        </div>
+                      ) : <span style={{ fontSize: 12, color: "#9ca3af" }}>None yet — add chapters in your backlog.</span>}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </Section>
@@ -1077,7 +1382,7 @@ function DashboardBody() {
         @media (max-width: 900px) {
           .md-hero-grid { grid-template-columns: 1fr !important; }
         }
-        @media (max-width: 640px) {
+        @media (max-width: 760px) {
           .md-track-grid { grid-template-columns: 1fr !important; }
         }
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -1124,6 +1429,65 @@ function ToolCard({ icon: Icon, color, title, desc, children }) {
   );
 }
 
+function RankCard({ r, name }) {
+  const purple = "#6d28d9";
+  if (!r.ranked) {
+    return (
+      <div style={{ marginTop: 16, background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 14, padding: "14px 16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+          <Trophy size={16} color="#c2410c" />
+          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: INK }}>{name} · {r.total} marks</span>
+        </div>
+        <div style={{ fontSize: 13, color: "#9a3412", lineHeight: 1.5 }}>
+          Below the qualifying cutoff{r.cutoffNeeded ? ` (need ~${r.cutoffNeeded} aggregate)` : ""}. Focus on clearing each subject's minimum first.
+        </div>
+      </div>
+    );
+  }
+  const rng = (lo, hi) => `${inr(lo)} – ${inr(hi)}`;
+  return (
+    <div style={{ marginTop: 16, background: "linear-gradient(135deg,#f5f3ff,#fff)", border: `1px solid ${purple}33`, borderRadius: 14, padding: "16px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+        <Trophy size={17} color={purple} />
+        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: INK }}>
+          Predicted {r.advanced ? "JEE Advanced" : "JEE Main"} 2026 rank · {r.total} marks
+        </span>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 10, marginBottom: 10 }}>
+        <div style={{ background: "#fff", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
+          <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{r.advanced ? rng(r.crlLo ?? r.low, r.crlHi ?? r.high) : inr(r.crl)}</div>
+          <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{r.advanced ? "CRL range" : "All-India CRL"}</div>
+        </div>
+        {!r.isGeneral && r.categoryRank && (
+          <div style={{ background: "#fff", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
+            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{inr(r.categoryRank)}</div>
+            <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{r.category} rank</div>
+          </div>
+        )}
+        {r.percentile != null && !r.advanced && (
+          <div style={{ background: "#fff", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
+            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{r.percentile}</div>
+            <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>percentile</div>
+          </div>
+        )}
+        {!r.advanced && (
+          <div style={{ background: "#fff", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
+            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{rng(r.low, r.high)}</div>
+            <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>likely band</div>
+          </div>
+        )}
+      </div>
+      {r.advanced && r.branches?.length > 0 && (
+        <div style={{ fontSize: 12.5, color: "#374151", lineHeight: 1.55 }}>
+          <strong style={{ color: NAVY }}>Possible:</strong> {r.branches.join(" · ")}
+        </div>
+      )}
+      {r.advice && <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 6 }}>{r.advice}</div>}
+      <div style={{ fontSize: 10.5, color: "#9ca3af", marginTop: 8 }}>Estimate only — actual rank depends on the official normalisation & shift difficulty.</div>
+    </div>
+  );
+}
+
 function ChartHint({ text }) {
   return <div style={{ color: "#9ca3af", fontSize: 13, padding: "28px 0", textAlign: "center" }}>{text}</div>;
 }
@@ -1142,17 +1506,30 @@ function DeltaPill({ d, unit = "", subtext, lowerIsBetter = false }) {
   );
 }
 
-function SubjectField({ subject, value, onChange }) {
+function SubjectDualField({ subject, hours, tasks, onHours, onTasks }) {
   const c = subColor(subject);
+  const inp = {
+    width: "100%", padding: "9px 10px", borderRadius: 9, border: "1.5px solid #e5e7eb",
+    fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box",
+  };
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
-      <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 700, color: "#374151" }}>
-        <span style={{ width: 8, height: 8, borderRadius: "50%", background: c }} /> {subject} (h)
-      </span>
-      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder="e.g. 2" inputMode="decimal"
-        style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
-        onFocus={(e) => { e.target.style.borderColor = c; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
-    </label>
+    <div style={{ border: `1px solid ${c}26`, borderRadius: 12, padding: "11px 12px", background: "#fff" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, fontSize: 12, fontWeight: 800, color: NAVY }}>
+        <span style={{ width: 8, height: 8, borderRadius: "50%", background: c }} /> {subject}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+        <label style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#9ca3af" }}>Hours</span>
+          <input value={hours} onChange={(e) => onHours(e.target.value)} placeholder="2" inputMode="decimal" style={inp}
+            onFocus={(e) => { e.target.style.borderColor = c; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+        </label>
+        <label style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#9ca3af" }}>Tasks ✓</span>
+          <input value={tasks} onChange={(e) => onTasks(e.target.value)} placeholder="4" inputMode="numeric" style={inp}
+            onFocus={(e) => { e.target.style.borderColor = c; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+        </label>
+      </div>
+    </div>
   );
 }
 
