@@ -6,7 +6,7 @@ import {
   Flame, Clock, CheckCircle2, Target, TrendingUp, TrendingDown, Plus, Sparkles,
   ShieldCheck, ArrowRight, Users, BarChart3, Rocket, Zap, Crosshair, Timer,
   ListChecks, Lock, Loader2, RotateCw, Pencil, Trash2, CalendarDays, Brain,
-  BookOpen, Minus, Trophy, Send, Lightbulb, Hourglass,
+  BookOpen, Minus, Trophy, Send, Lightbulb, Hourglass, AlertCircle,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiSendParentReport } from "../auth/api.js";
@@ -78,6 +78,13 @@ const CATEGORIES = ["General", "OBC-NCL", "EWS", "SC", "ST"];
 const WEEK_TARGET_HRS = 40;
 const MAX_LOGS_PER_DAY = 3; // student may add/update today's log up to 3× a day
 
+// JEE Advanced runs as TWO 3-hour papers (P1 + P2). Each paper carries ~60
+// marks/subject (180/paper · 360 combined) and is 180 minutes long.
+const isAdvPaper = (type) => type === "adv1" || type === "adv2";
+const ADV_PAPER_SUB_MAX = 60;   // marks per subject in one Advanced paper
+const ADV_PAPER_TOTAL   = 180;  // marks per Advanced paper
+const ADV_PAPER_MINUTES = 180;  // each Advanced paper is 3 hours
+
 /* sticky in-page navigation */
 const SECTIONS = [
   { id: "personalised",    label: "Snapshot",        icon: Sparkles,  color: ORANGE },
@@ -124,12 +131,12 @@ function seedTests() {
 }
 function seedBacklog() {
   const today = new Date();
-  const plus = (days) => { const d = new Date(today); d.setDate(d.getDate() + days); return isoDay(d); };
+  const shift = (days) => { const d = new Date(today); d.setDate(d.getDate() + days); return isoDay(d); };
   return [
-    { id: "b1", subject: "Physics",            topic: "Rotational Motion", strength: "weak",   planDate: plus(5), week: "Week 1", done: false },
-    { id: "b2", subject: "Organic Chemistry",  topic: "Aldehydes & Ketones", strength: "medium", planDate: plus(9), week: "Week 2", done: false },
-    { id: "b3", subject: "Maths",              topic: "Probability",       strength: "weak",   planDate: plus(3), week: "Week 1", done: true  },
-    { id: "b4", subject: "Inorganic Chemistry", topic: "Coordination Compounds", strength: "strong", planDate: plus(12), week: "Week 3", done: false },
+    { id: "b1", subject: "Physics",             topic: "Rotational Motion",      strength: "weak",   targetDate: shift(-2), done: false }, // overdue
+    { id: "b2", subject: "Organic Chemistry",   topic: "Aldehydes & Ketones",    strength: "medium", targetDate: shift(9),  done: false },
+    { id: "b3", subject: "Maths",               topic: "Probability",            strength: "weak",   targetDate: shift(3),  done: true  },
+    { id: "b4", subject: "Inorganic Chemistry", topic: "Coordination Compounds", strength: "strong", targetDate: shift(12), done: false },
   ];
 }
 
@@ -336,14 +343,15 @@ function DashboardBody() {
   const [logForm, setLogForm] = useState({ subjects: {}, tasksTotal: "", routine: true });
   const [editingLog, setEditingLog] = useState(false); // re-open today's log to update it
   const [testForm, setTestForm] = useState({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General", times: {} });
-  const [blForm, setBlForm] = useState({ subject: "", topic: "", strength: "weak", planDate: "", week: "" });
+  const [blForm, setBlForm] = useState({ subject: "", topic: "", strength: "weak", targetDate: "" });
   const [wtInput, setWtInput] = useState("");
   const [wtEdit, setWtEdit] = useState({ id: null, text: "" });
   const [parentEmail, setParentEmail] = useState("");
   const [weeklyState, setWeeklyState] = useState({ sending: false, msg: { type: "", text: "" } });
   const [dailyState, setDailyState] = useState({ sending: false, msg: { type: "", text: "" } });
-  const [reportPrefs, setReportPrefs] = useState(() => load(PREFS_KEY, { autoWeekly: true, autoDaily: false }));
-  const [lastAuto, setLastAuto] = useState(() => load(AUTO_KEY, { weekly: "", daily: "" }));
+  const [alertState, setAlertState] = useState({ sending: false, msg: { type: "", text: "" } });
+  const [reportPrefs, setReportPrefs] = useState(() => load(PREFS_KEY, { autoWeekly: true, autoDaily: false, autoBacklogAlert: true }));
+  const [lastAuto, setLastAuto] = useState(() => load(AUTO_KEY, { weekly: "", daily: "", backlog: "" }));
   const [activeSec, setActiveSec] = useState("personalised");
 
   // Pull the real mentorship plan name (best-effort).
@@ -636,23 +644,40 @@ function DashboardBody() {
 
   function addTest(e) {
     e.preventDefault();
-    const isRankTest = rankEnabled && (testForm.type === "main" || testForm.type === "adv");
+    const advPaper = isAdvPaper(testForm.type);
+    const isRankTest = rankEnabled && (testForm.type === "main" || advPaper);
     let total, scored, rank = null;
     if (isRankTest) {
-      const advanced = testForm.type === "adv";
       const p = Number(testForm.mp) || 0, c = Number(testForm.mc) || 0, m = Number(testForm.mm) || 0;
       const aggregate = p + c + m;
-      total = maxTotal(advanced); // 300 (Main) / 360 (Advanced) — the real max
-      scored = aggregate;         // marks the student actually got
-      const r = predictRank({ physics: p, chemistry: c, maths: m, category: testForm.category, advanced });
-      rank = {
-        type: testForm.type, advanced, category: testForm.category, total: aggregate,
-        ranked: r.ranked, crl: r.crl, crlLo: r.crlLo ?? null, crlHi: r.crlHi ?? null,
-        rank: r.rank, low: r.low, high: r.high,
-        percentile: r.percentile, categoryRank: r.categoryRank, isGeneral: r.isGeneral,
-        branches: (r.branches || []).slice(0, 3), advice: r.advice || "",
-        cutoffNeeded: r.cutoffNeeded ?? null,
-      };
+      if (advPaper) {
+        // One JEE Advanced paper → project the full 2-paper score for the rank
+        // by assuming a similar showing in the other paper (×2 the section marks).
+        total = ADV_PAPER_TOTAL;  // this paper's max (180)
+        scored = aggregate;       // marks the student got in THIS paper
+        const r = predictRank({ physics: p * 2, chemistry: c * 2, maths: m * 2, category: testForm.category, advanced: true });
+        rank = {
+          type: testForm.type, advanced: true, paper: testForm.type === "adv1" ? 1 : 2,
+          projected: true, paperMarks: aggregate, category: testForm.category, total: aggregate * 2,
+          ranked: r.ranked, crl: r.crl, crlLo: r.crlLo ?? null, crlHi: r.crlHi ?? null,
+          rank: r.rank, low: r.low, high: r.high,
+          percentile: r.percentile, categoryRank: r.categoryRank, isGeneral: r.isGeneral,
+          branches: (r.branches || []).slice(0, 3), advice: r.advice || "",
+          cutoffNeeded: r.cutoffNeeded != null ? r.cutoffNeeded : null,
+        };
+      } else {
+        total = maxTotal(false); // 300 — JEE Main
+        scored = aggregate;
+        const r = predictRank({ physics: p, chemistry: c, maths: m, category: testForm.category, advanced: false });
+        rank = {
+          type: testForm.type, advanced: false, category: testForm.category, total: aggregate,
+          ranked: r.ranked, crl: r.crl, crlLo: r.crlLo ?? null, crlHi: r.crlHi ?? null,
+          rank: r.rank, low: r.low, high: r.high,
+          percentile: r.percentile, categoryRank: r.categoryRank, isGeneral: r.isGeneral,
+          branches: (r.branches || []).slice(0, 3), advice: r.advice || "",
+          cutoffNeeded: r.cutoffNeeded ?? null,
+        };
+      }
     } else {
       total = Number(testForm.total) || 0;
       scored = Number(testForm.scored);
@@ -678,10 +703,12 @@ function DashboardBody() {
     setTestForm({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General", times: {} });
   }
   function setTestType(type) {
+    const autoName = { main: "JEE Mains", adv1: "JEE Advanced · Paper 1", adv2: "JEE Advanced · Paper 2" };
+    const wasAuto = (s) => s.name === "JEE Mains" || /^JEE Advanced/.test(s.name);
     setTestForm((s) => ({
       ...s, type,
-      name: type === "main" ? "JEE Mains" : type === "adv" ? "JEE Advanced" : s.name === "JEE Mains" || s.name === "JEE Advanced" ? "" : s.name,
-      total: type === "adv" ? "360" : "300",
+      name: autoName[type] ? autoName[type] : wasAuto(s) ? "" : s.name,
+      total: isAdvPaper(type) ? String(ADV_PAPER_TOTAL) : "300",
     }));
   }
 
@@ -693,17 +720,20 @@ function DashboardBody() {
       subject: blForm.subject || subjects[0] || "General",
       topic: blForm.topic.trim(),
       strength: blForm.strength,
-      planDate: blForm.planDate || "",
-      week: blForm.week.trim() || "Week 1",
+      targetDate: blForm.targetDate || "",
       done: false,
     };
     setBacklog((prev) => [item, ...prev]);
-    setBlForm({ subject: "", topic: "", strength: "weak", planDate: "", week: "" });
+    setBlForm({ subject: "", topic: "", strength: "weak", targetDate: "" });
   }
   const toggleBacklog = (id) => setBacklog((prev) => prev.map((b) => (b.id === id ? { ...b, done: !b.done } : b)));
   const removeBacklog = (id) => setBacklog((prev) => prev.filter((b) => b.id !== id));
   const backlogDone = backlog.filter((b) => b.done).length;
   const backlogPct = backlog.length ? Math.round((backlogDone / backlog.length) * 100) : 0;
+  // target date (back-compat with older items that used planDate) + overdue detection
+  const blDate = (b) => b.targetDate || b.planDate || "";
+  const overdueBacklog = backlog.filter((b) => !b.done && blDate(b) && blDate(b) < todayIso);
+  const studyIrregular = streak < 2 || routinePct < 50;
 
   /* ── weekly tasks (add + complete only · no delete) ── */
   function addWeeklyTask(e) {
@@ -766,33 +796,47 @@ function DashboardBody() {
       rank: buildRankSummary(),
     };
   }
+  // Alert report — sent to the parent when backlog is falling behind / study is irregular.
+  function buildBacklogReport() {
+    return {
+      backlog: {
+        cleared: backlogDone, total: backlog.length, pct: backlogPct,
+        overdue: overdueBacklog.map((b) => ({ topic: b.topic, subject: shortName(b.subject), date: fmtDay(blDate(b)) })),
+        pending: backlog.filter((b) => !b.done).map((b) => `${b.topic} (${shortName(b.subject)})`),
+        streak, routinePct, irregular: studyIrregular,
+        hoursThisWeek: round1(weekHours),
+      },
+    };
+  }
 
   async function sendReport(kind, isAuto = false) {
     if (!token) return;
-    const setState = kind === "daily" ? setDailyState : setWeeklyState;
-    if (isAuto) setLastAuto((p) => ({ ...p, [kind]: kind === "weekly" ? wk : todayIso }));
+    const setState = kind === "daily" ? setDailyState : kind === "backlog" ? setAlertState : setWeeklyState;
+    if (isAuto) setLastAuto((p) => ({ ...p, [kind]: kind === "daily" ? todayIso : wk }));
     if (!isAuto) setState({ sending: true, msg: { type: "", text: "" } });
-    const report = kind === "daily" ? buildDailyReport() : buildWeeklyReport();
+    const report = kind === "daily" ? buildDailyReport() : kind === "backlog" ? buildBacklogReport() : buildWeeklyReport();
     try {
       const r = await apiSendParentReport(token, { kind, report });
-      const label = kind === "daily" ? "Daily" : "Weekly";
+      const label = kind === "daily" ? "Daily report" : kind === "backlog" ? "Backlog alert" : "Weekly report";
       const text = r.dev
-        ? `${label} report queued (dev mode — logged on the server).`
-        : `${isAuto ? "Auto-sent" : "Sent"} to your parent (${r.to}).`;
+        ? `${label} queued (dev mode — logged on the server).`
+        : `${label} ${isAuto ? "auto-sent" : "on its way"} to your parent (${r.to}) — arrives in a few seconds.`;
       setState({ sending: false, msg: { type: "ok", text } });
     } catch (e) {
       if (!isAuto) setState({ sending: false, msg: { type: "err", text: e.message || "Couldn't send the report. Try again." } });
     }
   }
 
-  // Auto-send: weekly every Sunday, daily each day (if enabled) — once each.
+  // Auto-send: weekly every Sunday, daily each day (if enabled), and a backlog
+  // alert (≤ once/week) whenever chapters are overdue or study is irregular.
   useEffect(() => {
     if (!token) return;
     const isSunday = new Date().getDay() === 0;
     if (reportPrefs.autoWeekly && isSunday && lastAuto.weekly !== wk) sendReport("weekly", true);
     if (reportPrefs.autoDaily && todayEntry && lastAuto.daily !== todayIso) sendReport("daily", true);
+    if (reportPrefs.autoBacklogAlert && lastAuto.backlog !== wk && (overdueBacklog.length > 0 || (backlogPct < 100 && studyIrregular))) sendReport("backlog", true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, reportPrefs.autoWeekly, reportPrefs.autoDaily, lastAuto.weekly, lastAuto.daily, todayEntry]);
+  }, [token, reportPrefs.autoWeekly, reportPrefs.autoDaily, reportPrefs.autoBacklogAlert, lastAuto.weekly, lastAuto.daily, lastAuto.backlog, todayEntry, overdueBacklog.length, backlogPct, studyIrregular]);
 
   const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
   const initial = (user?.name || user?.email || "U").charAt(0).toUpperCase();
@@ -1201,12 +1245,12 @@ function DashboardBody() {
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#8b5cf6,#22c55e)" }} />
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "0 0 14px" }}>Add a test result</h3>
 
-              {/* JEE-only test type toggle */}
+              {/* JEE-only test type toggle — Advanced is split into Paper 1 & Paper 2 */}
               {rankEnabled && (
                 <div style={{ display: "flex", gap: 7, marginBottom: 14, flexWrap: "wrap" }}>
-                  {[["mock", "Mock / Other"], ["main", "JEE Mains"], ["adv", "JEE Advanced"]].map(([val, lbl]) => (
+                  {[["mock", "Mock / Other"], ["main", "JEE Mains"], ["adv1", "JEE Adv P1"], ["adv2", "JEE Adv P2"]].map(([val, lbl]) => (
                     <button type="button" key={val} onClick={() => setTestType(val)}
-                      style={{ flex: "1 1 90px", padding: "9px 8px", borderRadius: 10, border: `1.5px solid ${testForm.type === val ? "#8b5cf6" : "#e5e7eb"}`, background: testForm.type === val ? "#8b5cf610" : "#fff", color: testForm.type === val ? "#6d28d9" : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
+                      style={{ flex: "1 1 84px", padding: "9px 8px", borderRadius: 10, border: `1.5px solid ${testForm.type === val ? "#8b5cf6" : "#e5e7eb"}`, background: testForm.type === val ? "#8b5cf610" : "#fff", color: testForm.type === val ? "#6d28d9" : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
                       {val !== "mock" && <Trophy size={13} />}{lbl}
                     </button>
                   ))}
@@ -1216,10 +1260,12 @@ function DashboardBody() {
               <form onSubmit={addTest} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <TextField label="Test name" value={testForm.name} onChange={(v) => setTestForm((s) => ({ ...s, name: v }))} placeholder="e.g. Mock 4" />
 
-                {rankEnabled && (testForm.type === "main" || testForm.type === "adv") ? (
+                {rankEnabled && (testForm.type === "main" || isAdvPaper(testForm.type)) ? (
                   <>
                     <div style={{ fontSize: 11.5, fontWeight: 700, color: "#6d28d9", marginTop: -2 }}>
-                      Marks per section (out of {maxPerSubject(testForm.type === "adv")} each · total {maxTotal(testForm.type === "adv")})
+                      {isAdvPaper(testForm.type)
+                        ? <>Paper {testForm.type === "adv1" ? "1" : "2"} marks per section (out of {ADV_PAPER_SUB_MAX} each · paper total {ADV_PAPER_TOTAL} · 3-hour paper)</>
+                        : <>Marks per section (out of {maxPerSubject(false)} each · total {maxTotal(false)})</>}
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
                       <NumField label="Physics" value={testForm.mp} onChange={(v) => setTestForm((s) => ({ ...s, mp: v }))} placeholder="0" full />
@@ -1268,7 +1314,7 @@ function DashboardBody() {
                 <SelectField label="Over-spent time on (quick pick)" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
                 <TextField label="Weak chapters (comma separated)" value={testForm.weak} onChange={(v) => setTestForm((s) => ({ ...s, weak: v }))} placeholder="e.g. Rotational Motion, p-Block" />
                 <button type="submit" style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                  <Plus size={16} /> {rankEnabled && (testForm.type === "main" || testForm.type === "adv") ? "Analyse & predict rank" : "Analyse this test"}
+                  <Plus size={16} /> {rankEnabled && (testForm.type === "main" || isAdvPaper(testForm.type)) ? "Analyse & predict rank" : "Analyse this test"}
                 </button>
               </form>
 
@@ -1504,8 +1550,7 @@ function DashboardBody() {
               <SelectField label="Subject" value={blForm.subject} onChange={(v) => setBlForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, s]))} />
               <TextField label="Topic / chapter" value={blForm.topic} onChange={(v) => setBlForm((s) => ({ ...s, topic: v }))} placeholder="e.g. Rotational Motion" />
               <SelectField label="How strong are you?" value={blForm.strength} onChange={(v) => setBlForm((s) => ({ ...s, strength: v }))} options={["weak", "medium", "strong"]} labels={{ weak: "Weak", medium: "Medium", strong: "Strong" }} />
-              <DateField label="Plan date" value={blForm.planDate} onChange={(v) => setBlForm((s) => ({ ...s, planDate: v }))} />
-              <TextField label="Target week" value={blForm.week} onChange={(v) => setBlForm((s) => ({ ...s, week: v }))} placeholder="e.g. Week 2" />
+              <DateField label="Target date" value={blForm.targetDate} onChange={(v) => setBlForm((s) => ({ ...s, targetDate: v }))} />
               <button type="submit" style={{ padding: "12px 16px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#7c3aed,#a855f7)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, height: 42 }}>
                 <Plus size={15} /> Add
               </button>
@@ -1515,8 +1560,10 @@ function DashboardBody() {
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {backlog.map((b) => {
                   const st = STRENGTHS[b.strength] || STRENGTHS.weak;
+                  const date = blDate(b);
+                  const overdue = !b.done && date && date < todayIso;
                   return (
-                    <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: b.done ? "#f8fafc" : "#fff", border: "1px solid #eef2f7", borderRadius: 13, padding: "13px 15px", opacity: b.done ? 0.72 : 1 }}>
+                    <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: b.done ? "#f8fafc" : overdue ? "#fff5f5" : "#fff", border: `1px solid ${overdue ? "#fecaca" : "#eef2f7"}`, borderRadius: 13, padding: "13px 15px", opacity: b.done ? 0.72 : 1 }}>
                       <button onClick={() => toggleBacklog(b.id)} title={b.done ? "Mark as pending" : "Mark cleared"}
                         style={{ width: 24, height: 24, borderRadius: 7, border: `1.5px solid ${b.done ? GREEN : "#cbd5e1"}`, background: b.done ? GREEN : "#fff", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
                         {b.done && <CheckCircle2 size={16} color="#fff" />}
@@ -1524,12 +1571,12 @@ function DashboardBody() {
                       <span style={{ width: 9, height: 9, borderRadius: "50%", background: subColor(b.subject), flexShrink: 0 }} />
                       <div style={{ flex: 1, minWidth: 150 }}>
                         <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 14, color: NAVY, textDecoration: b.done ? "line-through" : "none" }}>{b.topic}</div>
-                        <div style={{ fontSize: 12, color: MUTE }}>{shortName(b.subject)}{b.week ? ` · ${b.week}` : ""}</div>
+                        <div style={{ fontSize: 12, color: MUTE }}>{shortName(b.subject)}</div>
                       </div>
                       <span style={{ background: `${st.color}14`, border: `1px solid ${st.color}40`, color: st.color, borderRadius: 50, padding: "4px 11px", fontSize: 11.5, fontWeight: 800 }}>{st.label}</span>
-                      {b.planDate && (
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#6b7280", fontWeight: 600 }}>
-                          <CalendarDays size={13} /> {fmtDay(b.planDate)}
+                      {date && (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: overdue ? "#dc2626" : "#6b7280", fontWeight: overdue ? 800 : 600 }}>
+                          <CalendarDays size={13} /> {overdue ? "Overdue · " : "Target "}{fmtDay(date)}
                         </span>
                       )}
                       <button onClick={() => removeBacklog(b.id)} title="Remove" style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "#fff", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
@@ -1564,6 +1611,29 @@ function DashboardBody() {
                 <SendControls color={GREEN} state={weeklyState} onSend={() => sendReport("weekly")} sendLabel="Send weekly report now"
                   auto={reportPrefs.autoWeekly} onToggle={() => setReportPrefs((p) => ({ ...p, autoWeekly: !p.autoWeekly }))}
                   autoLabel="Auto-send every Sunday" parentEmail={parentEmail} />
+              </div>
+            </div>
+          </div>
+
+          {/* ── BACKLOG ALERT strip — auto-emails the parent when chapters fall behind ── */}
+          <div style={{ background: overdueBacklog.length || studyIrregular ? "#fff7ed" : "#fff", border: `1px solid ${overdueBacklog.length || studyIrregular ? "#fdba74" : "#fde68a"}`, borderRadius: 20, padding: "22px 24px", boxShadow: "0 20px 46px -30px rgba(234,88,12,.6)", position: "relative", overflow: "hidden", marginBottom: 18 }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#f59e0b,#ef4444)" }} />
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
+              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#ffedd5", display: "grid", placeItems: "center", flexShrink: 0 }}><AlertCircle size={22} color="#ea580c" /></span>
+              <div style={{ flex: 1, minWidth: 240 }}>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                  Backlog alert to parent
+                  {overdueBacklog.length > 0 && <span style={{ fontSize: 11, fontWeight: 800, color: "#b91c1c", background: "#fee2e2", borderRadius: 50, padding: "3px 10px" }}>{overdueBacklog.length} overdue</span>}
+                </div>
+                <p style={{ color: MUTE, fontSize: 13.5, lineHeight: 1.6, margin: "4px 0 14px" }}>
+                  If chapters pass their <strong style={{ color: NAVY }}>target date</strong> unfinished or study turns irregular (low streak / routine), your parent is automatically emailed that the backlog isn't being cleared — so they can step in early.{" "}
+                  {overdueBacklog.length || studyIrregular
+                    ? <strong style={{ color: "#c2410c" }}>Currently flagged: {overdueBacklog.length ? `${overdueBacklog.length} overdue chapter${overdueBacklog.length === 1 ? "" : "s"}` : "irregular study"}.</strong>
+                    : <span style={{ color: "#15803d", fontWeight: 700 }}>All on track right now — nothing to flag.</span>}
+                </p>
+                <SendControls color="#ea580c" state={alertState} onSend={() => sendReport("backlog")} sendLabel="Send backlog alert now"
+                  auto={reportPrefs.autoBacklogAlert} onToggle={() => setReportPrefs((p) => ({ ...p, autoBacklogAlert: !p.autoBacklogAlert }))}
+                  autoLabel="Auto-alert when behind" parentEmail={parentEmail} />
               </div>
             </div>
           </div>
@@ -1810,12 +1880,20 @@ function RankCard({ r, name }) {
   const rng = (lo, hi) => `${inr(lo)} – ${inr(hi)}`;
   return (
     <div style={{ marginTop: 16, background: "linear-gradient(135deg,#f5f3ff,#fff)", border: `1px solid ${purple}33`, borderRadius: 14, padding: "16px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: r.projected ? 4 : 10, flexWrap: "wrap" }}>
         <Trophy size={17} color={purple} />
         <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: INK }}>
           Predicted {r.advanced ? "JEE Advanced" : "JEE Main"} 2026 rank · {r.total} marks
         </span>
+        {r.paper && (
+          <span style={{ fontSize: 10.5, fontWeight: 800, color: purple, background: `${purple}14`, borderRadius: 50, padding: "2px 8px" }}>Paper {r.paper}</span>
+        )}
       </div>
+      {r.projected && (
+        <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.5, marginBottom: 10 }}>
+          Projected full-test rank from Paper {r.paper} ({r.paperMarks}/{ADV_PAPER_TOTAL}) — assumes a similar Paper {r.paper === 1 ? 2 : 1}. Log both papers for a sharper estimate.
+        </div>
+      )}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 10, marginBottom: 10 }}>
         <div style={{ background: "#fff", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
           <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{r.advanced ? rng(r.crlLo ?? r.low, r.crlHi ?? r.high) : inr(r.crl)}</div>

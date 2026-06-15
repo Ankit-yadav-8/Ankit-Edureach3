@@ -107,12 +107,43 @@ function buildDailyHtml(studentName, r, link) {
     ${link ? `<a href="${esc(link)}" style="display:inline-block;margin:18px 0 4px;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:10px">Open the dashboard</a>` : ""}`);
 }
 
+// Backlog alert — sent when chapters pass their target date unfinished or study
+// is irregular, so the parent knows their child is falling behind.
+function buildBacklogHtml(studentName, r, link) {
+  const b = r.backlog || {};
+  const overdue = cap(b.overdue, 20);
+  const overdueHtml = overdue.length
+    ? `<div style="margin-top:8px">${overdue.map((x) => `<div style="font-size:13px;color:#374151;padding:5px 0;border-bottom:1px solid #f1f1f1"><span style="color:#dc2626;font-weight:700">⏰ ${esc(x.topic)}</span> <span style="color:#9aa0aa">(${esc(x.subject)}${x.date ? ` · target ${esc(x.date)}` : ""})</span></div>`).join("")}</div>`
+    : "";
+  const reasons = [];
+  if (overdue.length) reasons.push(`${overdue.length} chapter${overdue.length === 1 ? "" : "s"} past the planned target date`);
+  if (b.irregular) reasons.push(`irregular study (current streak ${b.streak ?? 0} day${b.streak === 1 ? "" : "s"}, routine kept ${b.routinePct ?? 0}%)`);
+  const reasonLine = reasons.length ? reasons.join(" and ") : "the backlog is not being cleared on schedule";
+  return shell(`
+    <p style="font-size:15px;color:#374151;line-height:1.6">Namaste, this is a heads-up about <b>${esc(studentName)}</b>'s preparation.</p>
+    <div style="background:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:12px 14px;margin:10px 0">
+      <div style="font-size:14px;font-weight:800;color:#c2410c;margin-bottom:4px">⚠️ Falling behind on the backlog</div>
+      <div style="font-size:13.5px;color:#7c2d12;line-height:1.6">${esc(studentName)} could not complete the planned backlog and is not keeping a regular study routine — ${esc(reasonLine)}. A little nudge from you will help them get back on track.</div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;margin:8px 0 4px">
+      ${row("Backlog cleared", `${b.cleared ?? 0} / ${b.total ?? 0} (${b.pct ?? 0}%)`)}
+      ${row("Overdue chapters", overdue.length)}
+      ${row("Day streak", `${b.streak ?? 0} days`)}
+      ${row("Routine kept", `${b.routinePct ?? 0}%`)}
+      ${row("Study hours this week", `${b.hoursThisWeek ?? 0} h`)}
+    </table>
+    ${overdue.length ? `<div style="margin-top:12px"><div style="font-size:14px;font-weight:800;color:#1c1c28;margin-bottom:2px">Overdue chapters</div>${overdueHtml}</div>` : ""}
+    ${link ? `<a href="${esc(link)}" style="display:inline-block;margin:18px 0 4px;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:10px">See full progress</a>` : ""}`);
+}
+
 const siteOrigin = () =>
   (process.env.CLIENT_ORIGIN || "").split(",")[0].trim() || "https://collegeparichay.in";
 
+const KINDS = new Set(["daily", "weekly", "backlog"]);
+
 router.post("/parent-report", requireAuth, async (req, res) => {
   try {
-    const kind = req.body?.kind === "daily" ? "daily" : "weekly";
+    const kind = KINDS.has(req.body?.kind) ? req.body.kind : "weekly";
     const user = await User.findById(req.user.id).select("email name").lean();
     if (!user?.email) return res.status(400).json({ error: "No account email found." });
 
@@ -129,20 +160,30 @@ router.post("/parent-report", requireAuth, async (req, res) => {
     const studentName = enr.name || user.name || "your child";
     const link = `${siteOrigin()}/mentorship-dashboard`;
 
-    const html = kind === "daily" ? buildDailyHtml(studentName, report, link) : buildWeeklyHtml(studentName, report, link);
-    const subject = kind === "daily"
-      ? `Daily mentorship update — ${studentName}`
+    const html = kind === "daily" ? buildDailyHtml(studentName, report, link)
+      : kind === "backlog" ? buildBacklogHtml(studentName, report, link)
+      : buildWeeklyHtml(studentName, report, link);
+    const subject = kind === "daily" ? `Daily mentorship update — ${studentName}`
+      : kind === "backlog" ? `Action needed — ${studentName} is behind on their backlog`
       : `Weekly mentorship report — ${studentName}`;
 
-    const out = await sendMail({ to: enr.parentEmail, subject, html, text: `${subject}. Open the dashboard: ${link}` });
-    if (!out.ok) return res.status(502).json({ error: "Couldn't send the email right now. Please try again shortly." });
+    // Respond immediately and send in the background so the dashboard isn't
+    // blocked on Brevo (which can take several seconds). dev flag mirrors mailer.
+    const dev = process.env.OTP_DEV_MODE !== "false" || !process.env.BREVO_API_KEY;
+    res.json({ sent: true, queued: true, dev, to: enr.parentEmail, kind });
 
-    // The weekly report is what the cron-based cadence tracks.
-    if (kind === "weekly") await Enrollment.updateOne({ _id: enr._id }, { $set: { lastParentReportAt: new Date() } });
-    res.json({ sent: true, dev: !!out.dev, to: enr.parentEmail, kind });
+    sendMail({ to: enr.parentEmail, subject, html, text: `${subject}. Open the dashboard: ${link}` })
+      .then((out) => {
+        if (!out.ok) { console.error("[mentorship/parent-report] send failed:", out.error); return; }
+        // Weekly + backlog alerts advance the cron cadence stamp.
+        if (kind === "weekly" || kind === "backlog") {
+          Enrollment.updateOne({ _id: enr._id }, { $set: { lastParentReportAt: new Date() } }).catch(() => {});
+        }
+      })
+      .catch((e) => console.error("[mentorship/parent-report] send error:", e?.message || e));
   } catch (e) {
     console.error("[mentorship/parent-report]", e?.message || e);
-    res.status(500).json({ error: "Server error" });
+    if (!res.headersSent) res.status(500).json({ error: "Server error" });
   }
 });
 
