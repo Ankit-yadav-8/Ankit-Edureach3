@@ -111,14 +111,15 @@ function seedTracking(subjects) {
 }
 function seedTests() {
   const today = new Date();
-  const mk = (n, back, total, scored, correct, wrong, skipped, silly, sillyTopic, overspent, weak) => {
+  const mk = (n, back, total, scored, correct, wrong, skipped, silly, sillyTopic, overspent, weak, times) => {
     const d = new Date(today); d.setDate(today.getDate() - back);
-    return { id: `${n}-${back}`, name: n, type: "mock", date: isoDay(d), total, scored, correct, wrong, skipped, silly, sillyTopic, overspent, weak };
+    const timeTotal = times ? Object.values(times).reduce((s, v) => s + v, 0) : 0;
+    return { id: `${n}-${back}`, name: n, type: "mock", date: isoDay(d), total, scored, correct, wrong, skipped, silly, sillyTopic, overspent, weak, times: times || {}, timeTotal };
   };
   return [
-    mk("Mock 1", 21, 300, 126, 48, 22, 20, 8, "Units & Dimensions", "Physics", ["Rotational Motion", "Thermodynamics"]),
-    mk("Mock 2", 14, 300, 150, 56, 18, 16, 6, "Mole Concept",       "Maths",   ["p-Block", "Probability"]),
-    mk("Mock 3", 7,  300, 178, 64, 14, 12, 3, "Sign errors",        "Physics", ["Rotational Motion", "p-Block"]),
+    mk("Mock 1", 21, 300, 126, 48, 22, 20, 8, "Units & Dimensions", "Physics", ["Rotational Motion", "Thermodynamics"], { Physics: 72, Chemistry: 54, Maths: 64 }),
+    mk("Mock 2", 14, 300, 150, 56, 18, 16, 6, "Mole Concept",       "Maths",   ["p-Block", "Probability"],            { Physics: 70, Chemistry: 56, Maths: 62 }),
+    mk("Mock 3", 7,  300, 178, 64, 14, 12, 3, "Sign errors",        "Physics", ["Rotational Motion", "p-Block"],      { Physics: 71, Chemistry: 53, Maths: 60 }),
   ];
 }
 function seedBacklog() {
@@ -334,7 +335,7 @@ function DashboardBody() {
 
   const [logForm, setLogForm] = useState({ subjects: {}, tasksTotal: "", routine: true });
   const [editingLog, setEditingLog] = useState(false); // re-open today's log to update it
-  const [testForm, setTestForm] = useState({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General" });
+  const [testForm, setTestForm] = useState({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General", times: {} });
   const [blForm, setBlForm] = useState({ subject: "", topic: "", strength: "weak", planDate: "", week: "" });
   const [wtInput, setWtInput] = useState("");
   const [wtEdit, setWtEdit] = useState({ id: null, text: "" });
@@ -467,36 +468,70 @@ function DashboardBody() {
   }, [testsSorted]);
 
   /* ── time-management review ── */
+  // The paper's sections + the ideal minutes for each (all add up to a 180-min paper).
+  const examSections = useMemo(() =>
+    isFoundation ? ["Maths", "Science"]
+    : isNEET ? ["Physics", "Chemistry", "Biology"]
+    : ["Physics", "Chemistry", "Maths"], [isFoundation, isNEET]);
+  const idealPace = useMemo(() =>
+    isFoundation ? { Maths: 90, Science: 90 }
+    : isNEET ? { Physics: 45, Chemistry: 45, Biology: 90 }
+    : { Physics: 60, Chemistry: 60, Maths: 60 }, [isFoundation, isNEET]);
+  const examTotalMin = useMemo(() => examSections.reduce((s, k) => s + (idealPace[k] || 0), 0), [examSections, idealPace]);
+
   const timeRanked = useMemo(() => {
     const freq = {};
     testsSorted.forEach((t) => { if (t.overspent) freq[t.overspent] = (freq[t.overspent] || 0) + 1; });
     return Object.entries(freq).sort((a, b) => b[1] - a[1]);
   }, [testsSorted]);
-  const timeBars = timeRanked.map(([s, n]) => ({ name: shortName(s), over: n }));
-  /* suggested pacing for the next paper — derived from REAL data: start from the
-     section's base time, then tighten the subjects the student keeps over-spending
-     on (from their logged tests) so the plan reflects their own pattern. */
-  const pacing = useMemo(() => {
-    const base = isFoundation
-      ? [["Maths", 90], ["Science", 90]]
-      : isNEET
-        ? [["Physics", 45], ["Chemistry", 45], ["Biology", 90]]
-        : [["Physics", 60], ["Chemistry", 60], ["Maths", 60]];
-    // how many times each base subject was flagged as over-spent in the tests
-    const overFor = (subj) => {
-      const a = subj.toLowerCase(), b = shortName(subj).toLowerCase();
-      return testsSorted.reduce((n, t) => {
-        const o = String(t.overspent || "").toLowerCase();
-        return n + (o && (o.includes(a) || o.includes(b) || a.includes(o)) ? 1 : 0);
-      }, 0);
-    };
-    return base.map(([s, min]) => {
-      const over = overFor(s);
-      // each over-spend flag shaves ~6 min off (a tighter self-cap), floored sensibly
-      const capped = over > 0 ? Math.max(Math.round(min * 0.6), min - over * 6) : min;
-      return { s, min: capped, base: min, over, cap: over > 0 };
-    });
-  }, [isFoundation, isNEET, testsSorted]);
+
+  // Average minutes ACTUALLY spent per section, from tests where the student
+  // logged their per-section time. null ⇒ no timed tests yet.
+  const timedTests = useMemo(
+    () => testsSorted.filter((t) => t.times && examSections.some((sec) => Number(t.times[sec]) > 0)),
+    [testsSorted, examSections]);
+  const avgTimePer = useMemo(() => {
+    if (!timedTests.length) return null;
+    const m = Object.fromEntries(examSections.map((sec) => [sec, 0]));
+    timedTests.forEach((t) => examSections.forEach((sec) => { m[sec] += Number(t.times?.[sec]) || 0; }));
+    examSections.forEach((sec) => { m[sec] = Math.round(m[sec] / timedTests.length); });
+    return m;
+  }, [timedTests, examSections]);
+
+  // Bars: real "you vs target" minutes when we have timed tests; else the old
+  // over-spend frequency so the card is never empty.
+  const timeBars = useMemo(() =>
+    avgTimePer
+      ? examSections.map((sec) => ({ name: shortName(sec), you: avgTimePer[sec], target: idealPace[sec] }))
+      : timeRanked.map(([s, n]) => ({ name: shortName(s), over: n })),
+    [avgTimePer, examSections, idealPace, timeRanked]);
+  const timeBarSeries = avgTimePer
+    ? [{ key: "you", label: "You (avg)", color: "#06b6d4" }, { key: "target", label: "Target", color: "#22c55e" }]
+    : [{ key: "over", label: "Over-spent (tests)", color: "#06b6d4" }];
+
+  /* suggested pacing for the next paper — REAL data: target each section to its
+     ideal time; flag (CAP) the ones where the student's logged average over-runs. */
+  const pacing = useMemo(() => examSections.map((sec) => {
+    const ideal = idealPace[sec];
+    const spent = avgTimePer ? avgTimePer[sec] : null;
+    const over = spent != null ? Math.max(0, spent - ideal) : 0;
+    return { s: sec, min: ideal, base: ideal, spent, over, cap: over > 0 };
+  }), [examSections, idealPace, avgTimePer]);
+
+  // "Better timings → better paper" — what reclaiming the over-run time buys you.
+  const timeInsight = useMemo(() => {
+    if (!avgTimePer) return null;
+    const overrun = examSections.reduce((s, sec) => s + Math.max(0, avgTimePer[sec] - idealPace[sec]), 0);
+    const worst = examSections
+      .map((sec) => [sec, avgTimePer[sec] - idealPace[sec]])
+      .sort((a, b) => b[1] - a[1])[0];
+    const minPerQ = isNEET ? 1 : 2; // ~2 min/q (JEE), ~1 min/q (NEET)
+    const extraQ = Math.round(overrun / minPerQ);
+    const sillyAvg = testsSorted.length
+      ? Math.round(testsSorted.reduce((s, t) => s + Number(t.silly || 0), 0) / testsSorted.length) : 0;
+    const totalSpent = examSections.reduce((s, sec) => s + avgTimePer[sec], 0);
+    return { overrun, worst: worst && worst[1] > 0 ? worst[0] : null, extraQ, sillyAvg, totalSpent };
+  }, [avgTimePer, examSections, idealPace, isNEET, testsSorted]);
 
   /* ── auto weekly fix-list ── */
   const wk = weekKey();
@@ -624,6 +659,9 @@ function DashboardBody() {
       if (!Number.isFinite(scored)) return;
     }
     if (!testForm.name.trim()) return;
+    // per-section minutes spent (0 when the student didn't log it)
+    const times = Object.fromEntries(examSections.map((sec) => [sec, Number(testForm.times?.[sec]) || 0]));
+    const timeTotal = Object.values(times).reduce((s, v) => s + v, 0);
     const t = {
       id: `${Date.now()}`, name: testForm.name.trim(), type: testForm.type, date: todayIso, total, scored,
       correct: Number(testForm.correct) || 0,
@@ -633,10 +671,11 @@ function DashboardBody() {
       sillyTopic: testForm.sillyTopic.trim(),
       overspent: testForm.overspent.trim(),
       weak: testForm.weak.split(",").map((x) => x.trim()).filter(Boolean),
+      times, timeTotal,
       rank,
     };
     setTests((prevT) => [...prevT, t]);
-    setTestForm({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General" });
+    setTestForm({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General", times: {} });
   }
   function setTestType(type) {
     setTestForm((s) => ({
@@ -1205,7 +1244,28 @@ function DashboardBody() {
                   <NumField label="Silly mistakes" value={testForm.silly} onChange={(v) => setTestForm((s) => ({ ...s, silly: v }))} placeholder="e.g. 4" full />
                   <TextField label="Silly mistake topic" value={testForm.sillyTopic} onChange={(v) => setTestForm((s) => ({ ...s, sillyTopic: v }))} placeholder="e.g. Sign errors" />
                 </div>
-                <SelectField label="Over-spent time on" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
+
+                {/* time spent per section — powers the time-management plan */}
+                <div style={{ background: "#ecfeff", border: "1px solid #a5f3fc", borderRadius: 12, padding: "12px 13px" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 9 }}>
+                    <span style={{ fontSize: 11.5, fontWeight: 800, color: "#0e7490", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                      <Timer size={14} /> Time spent per section (min)
+                    </span>
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: "#0891b2", background: "#cffafe", borderRadius: 50, padding: "2px 8px" }}>Paper · {examTotalMin} min</span>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: `repeat(${examSections.length}, 1fr)`, gap: 10 }}>
+                    {examSections.map((sec) => (
+                      <NumField key={sec} label={`${shortName(sec)} · ${idealPace[sec]}m`} value={testForm.times?.[sec] ?? ""}
+                        onChange={(v) => setTestForm((s) => ({ ...s, times: { ...s.times, [sec]: v } }))}
+                        placeholder={String(idealPace[sec])} full />
+                    ))}
+                  </div>
+                  <div style={{ fontSize: 10.5, color: "#0e7490", marginTop: 7, lineHeight: 1.45 }}>
+                    Optional — logging this builds your personalised pacing plan below.
+                  </div>
+                </div>
+
+                <SelectField label="Over-spent time on (quick pick)" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
                 <TextField label="Weak chapters (comma separated)" value={testForm.weak} onChange={(v) => setTestForm((s) => ({ ...s, weak: v }))} placeholder="e.g. Rotational Motion, p-Block" />
                 <button type="submit" style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <Plus size={16} /> {rankEnabled && (testForm.type === "main" || testForm.type === "adv") ? "Analyse & predict rank" : "Analyse this test"}
@@ -1343,39 +1403,61 @@ function DashboardBody() {
               ) : <ChartHint text="Tag weak chapters on tests or in your backlog." />}
             </ToolCard>
 
-            {/* Time-management review — enhanced */}
-            <ToolCard icon={Timer} color="#06b6d4" title="Time-management review" desc="Where you over-spend, plus a pacing plan for the next paper.">
-              {timeBars.length > 0 && <Bars data={timeBars} bars={[{ key: "over", label: "Over-spent (tests)", color: "#06b6d4" }]} height={130} />}
+            {/* Time-management review — driven by per-section time logged on tests */}
+            <ToolCard icon={Timer} color="#06b6d4" title="Time-management review" desc="Your real time per section vs the target — plus how better pacing lifts your paper.">
+              {timeBars.length > 0 && <Bars data={timeBars} bars={timeBarSeries} height={140} fmt={avgTimePer ? (v) => `${v}m` : undefined} />}
               <div style={{ marginTop: timeBars.length ? 14 : 0 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 9 }}>
                   <span style={{ fontSize: 11.5, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".04em" }}>Suggested pacing · next paper</span>
                   <span style={{ fontSize: 11, fontWeight: 800, color: "#0891b2", background: "#cffafe", borderRadius: 50, padding: "3px 9px" }}>
-                    {timeRanked.length ? "From your tests" : "Balanced start"}
+                    {avgTimePer ? "From your test timings" : timeRanked.length ? "From your tests" : "Balanced start"}
                   </span>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                  {pacing.map(({ s, min, base, cap }) => (
+                  {pacing.map(({ s, min, spent, over, cap }) => (
                     <div key={s} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 6, width: 92, flexShrink: 0 }}>
                         <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(s), flexShrink: 0 }} />
                         <span style={{ fontSize: 12.5, color: NAVY, fontWeight: 700 }}>{shortName(s)}</span>
                       </span>
                       <div style={{ flex: 1, minWidth: 0, height: 10, borderRadius: 6, background: "#f1f5f9", overflow: "hidden", position: "relative" }}>
-                        <motion.div initial={{ width: 0 }} whileInView={{ width: `${(min / Math.max(...pacing.map((p) => p.base))) * 100}%` }} viewport={{ once: true }} transition={{ duration: .6 }}
+                        {/* target fill */}
+                        <motion.div initial={{ width: 0 }} whileInView={{ width: `${(min / Math.max(examTotalMin / 2, ...pacing.map((p) => Math.max(p.min, p.spent || 0)))) * 100}%` }} viewport={{ once: true }} transition={{ duration: .6 }}
                           style={{ height: "100%", borderRadius: 6, background: `linear-gradient(90deg,${subColor(s)},${subColor(s)}cc)` }} />
+                        {/* over-run marker */}
+                        {cap && spent != null && (
+                          <div title={`You averaged ${spent} min`} style={{ position: "absolute", top: -2, bottom: -2, left: `${Math.min(100, (spent / Math.max(examTotalMin / 2, ...pacing.map((p) => Math.max(p.min, p.spent || 0)))) * 100)}%`, width: 2, background: "#ef4444" }} />
+                        )}
                       </div>
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 5, width: 92, justifyContent: "flex-end", flexShrink: 0 }}>
-                        {cap && <span title={`Tightened from ${base} min`} style={{ fontSize: 9.5, fontWeight: 800, color: "#b45309", background: "#fef3c7", borderRadius: 5, padding: "1px 5px" }}>CAP</span>}
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 5, width: 96, justifyContent: "flex-end", flexShrink: 0 }}>
+                        {cap && <span title={`You averaged ${spent} min — ${over} over`} style={{ fontSize: 9.5, fontWeight: 800, color: "#b91c1c", background: "#fee2e2", borderRadius: 5, padding: "1px 5px" }}>+{over}m</span>}
                         <span style={{ fontSize: 12, color: "#0891b2", fontWeight: 800 }}>{min} min</span>
                       </span>
                     </div>
                   ))}
                 </div>
-                <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 11, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
-                  {timeRanked[0]
-                    ? <>Based on your tests, <strong style={{ color: NAVY }}>{shortName(timeRanked[0][0])}</strong> eats the most time — it's now capped tighter above. You also skip ~{avgSkipped} questions/paper, so make one confident pass first, then return.</>
-                    : <>Log a test's “over-spent” subject and this plan re-tunes to your real pace. You skip ~{avgSkipped} questions/paper on average — do one confident pass first, then circle back.</>}
-                </div>
+
+                {/* How better timings make a better paper */}
+                {timeInsight ? (
+                  <div style={{ marginTop: 12, background: "linear-gradient(135deg,#ecfeff,#f0fdf4)", border: "1px solid #a5f3fc", borderRadius: 12, padding: "12px 13px" }}>
+                    <div style={{ fontSize: 12, fontWeight: 800, color: "#0e7490", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                      <Rocket size={14} /> Better timings → better paper
+                    </div>
+                    {timeInsight.overrun > 0 ? (
+                      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
+                        You run <strong style={{ color: "#b91c1c" }}>~{timeInsight.overrun} min over</strong>{timeInsight.worst ? <> (mostly on <strong style={{ color: NAVY }}>{shortName(timeInsight.worst)}</strong>)</> : ""}. Cap each section to its target and you reclaim that time — about <strong style={{ color: "#0e7490" }}>{timeInsight.extraQ} more question{timeInsight.extraQ === 1 ? "" : "s"}</strong> attempted, or enough to recheck and cut your ~{timeInsight.sillyAvg} silly mistake{timeInsight.sillyAvg === 1 ? "" : "s"}. Bank the last 10 min to revisit skipped questions.
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
+                        Great pacing — you finish each section within target (~{timeInsight.totalSpent} min total). Keep the last 10 min to recheck flagged questions and shave your ~{timeInsight.sillyAvg} silly mistake{timeInsight.sillyAvg === 1 ? "" : "s"}.
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 11, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
+                    Add <strong style={{ color: NAVY }}>“Time spent per section”</strong> when you log a test to unlock a personalised pacing plan and see how much score better timing can unlock. You skip ~{avgSkipped} questions/paper on average — do one confident pass first, then circle back.
+                  </div>
+                )}
               </div>
             </ToolCard>
 
