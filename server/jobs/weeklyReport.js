@@ -39,6 +39,11 @@ const studentHtml = (name, link) => shell(`
   <a href="${link}" style="display:inline-block;margin:14px 0;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:10px">Update my dashboard</a>`);
 
 async function runOnce() {
+  // Weekly cadence is anchored to Sunday: the job is checked daily but only
+  // sends on Sundays. (If a student opens the dashboard on Sunday, the client
+  // sends the real data report and stamps lastParentReportAt, so the nudge
+  // below is skipped for them — no duplicate.)
+  if (new Date().getDay() !== 0) return;
   const cutoff = new Date(Date.now() - WEEK_MS);
   const due = await Enrollment.find({
     status: "paid",

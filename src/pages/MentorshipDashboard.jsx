@@ -85,7 +85,7 @@ const SECTIONS = [
   { id: "test-analysis",   label: "Tests",           icon: LineIcon,  color: "#8b5cf6" },
   { id: "mentor-tools",    label: "Mentor tools",    icon: Brain,     color: GOLD },
   { id: "backlog",         label: "Backlog",         icon: Rocket,    color: "#7c3aed" },
-  { id: "parent-report",   label: "Weekly & parent", icon: Mail,      color: GREEN },
+  { id: "parent-report",   label: "Reports",         icon: Mail,      color: GREEN },
 ];
 
 /* ── demo seed (used until the student logs their own data) ───────── */
@@ -312,6 +312,8 @@ function DashboardBody() {
   const BACKLOG_KEY = `mdash:backlog:${emailKey}`;
   const FIX_KEY = `mdash:fixdone:${emailKey}`;
   const WTASK_KEY = `mdash:weeklytasks:${emailKey}`;
+  const PREFS_KEY = `mdash:reportprefs:${emailKey}`;
+  const AUTO_KEY = `mdash:autosent:${emailKey}`;
 
   const [planLabel, setPlanLabel] = useState("Mentorship Program");
   const [planExam, setPlanExam] = useState("JEE / NEET");
@@ -334,7 +336,11 @@ function DashboardBody() {
   const [blForm, setBlForm] = useState({ subject: "", topic: "", strength: "weak", planDate: "", week: "" });
   const [wtInput, setWtInput] = useState("");
   const [wtEdit, setWtEdit] = useState({ id: null, text: "" });
-  const [parentState, setParentState] = useState({ sending: false, msg: { type: "", text: "" } });
+  const [parentEmail, setParentEmail] = useState("");
+  const [weeklyState, setWeeklyState] = useState({ sending: false, msg: { type: "", text: "" } });
+  const [dailyState, setDailyState] = useState({ sending: false, msg: { type: "", text: "" } });
+  const [reportPrefs, setReportPrefs] = useState(() => load(PREFS_KEY, { autoWeekly: true, autoDaily: false }));
+  const [lastAuto, setLastAuto] = useState(() => load(AUTO_KEY, { weekly: "", daily: "" }));
   const [activeSec, setActiveSec] = useState("personalised");
 
   // Pull the real mentorship plan name (best-effort).
@@ -348,6 +354,7 @@ function DashboardBody() {
         if (m) {
           setPlanLabel(m.planLabel || m.plan);
           setPlanExam(m.targetExam || (String(m.plan).includes("neet") ? "NEET" : String(m.plan).includes("foundation") ? "Foundation" : "JEE"));
+          setParentEmail(m.parentEmail || "");
         }
       })
       .catch(() => {});
@@ -359,6 +366,8 @@ function DashboardBody() {
   useEffect(() => { save(BACKLOG_KEY, backlog); }, [BACKLOG_KEY, backlog]);
   useEffect(() => { save(FIX_KEY, fixDone); }, [FIX_KEY, fixDone]);
   useEffect(() => { save(WTASK_KEY, weeklyTasks); }, [WTASK_KEY, weeklyTasks]);
+  useEffect(() => { save(PREFS_KEY, reportPrefs); }, [PREFS_KEY, reportPrefs]);
+  useEffect(() => { save(AUTO_KEY, lastAuto); }, [AUTO_KEY, lastAuto]);
 
   // Scroll-spy: highlight the section currently in view in the sticky nav.
   useEffect(() => {
@@ -559,10 +568,12 @@ function DashboardBody() {
     if (isRankTest) {
       const advanced = testForm.type === "adv";
       const p = Number(testForm.mp) || 0, c = Number(testForm.mc) || 0, m = Number(testForm.mm) || 0;
-      total = p + c + m; scored = total;
+      const aggregate = p + c + m;
+      total = maxTotal(advanced); // 300 (Main) / 360 (Advanced) — the real max
+      scored = aggregate;         // marks the student actually got
       const r = predictRank({ physics: p, chemistry: c, maths: m, category: testForm.category, advanced });
       rank = {
-        type: testForm.type, advanced, category: testForm.category, total,
+        type: testForm.type, advanced, category: testForm.category, total: aggregate,
         ranked: r.ranked, crl: r.crl, crlLo: r.crlLo ?? null, crlHi: r.crlHi ?? null,
         rank: r.rank, low: r.low, high: r.high,
         percentile: r.percentile, categoryRank: r.categoryRank, isGeneral: r.isGeneral,
@@ -633,28 +644,61 @@ function DashboardBody() {
   };
   const weeklyDone = weeklyTasks.filter((t) => t.done).length;
 
-  /* ── send weekly report to parent ── */
-  async function sendParentReport() {
-    if (!token) return;
-    setParentState({ sending: true, msg: { type: "", text: "" } });
-    const report = {
+  /* ── parent report builders + send (daily & weekly) ── */
+  const todayTest = tests.find((t) => t.date === todayIso);
+  function buildWeeklyReport() {
+    return {
       week: wk,
       stats: {
         hours: round1(weekHours), streak, routinePct, tasks: tasksLabel,
-        latestTest: latest ? `${latest.name}: ${latest.scored}/${latest.total} (${acc(latest)}%)` : "—",
+        latestTest: latest ? `${latest.name}: ${latest.scored}/${latest.total} (${pct(latest)}%)` : "—",
         improvement: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%`,
         backlog: `${backlogDone}/${backlog.length}`,
       },
       chapters: chaptersByStrength,
       weeklyTasks: weeklyTasks.map((t) => ({ text: t.text, done: t.done })),
     };
+  }
+  function buildDailyReport() {
+    return {
+      date: fmtDay(todayIso),
+      daily: {
+        hours: todayEntry?.hours ?? 0,
+        subjects: subjects.map((s) => ({ name: shortName(s), h: subVal(todayEntry, s).h, t: subVal(todayEntry, s).t })),
+        tasksDone: todayEntry?.tasksDone ?? 0,
+        tasksTotal: todayEntry?.tasksTotal ?? 0,
+        routine: !!todayEntry?.routine,
+        todayTest: todayTest ? `${todayTest.name}: ${todayTest.scored}/${todayTest.total}` : null,
+      },
+    };
+  }
+
+  async function sendReport(kind, isAuto = false) {
+    if (!token) return;
+    const setState = kind === "daily" ? setDailyState : setWeeklyState;
+    if (isAuto) setLastAuto((p) => ({ ...p, [kind]: kind === "weekly" ? wk : todayIso }));
+    if (!isAuto) setState({ sending: true, msg: { type: "", text: "" } });
+    const report = kind === "daily" ? buildDailyReport() : buildWeeklyReport();
     try {
-      const r = await apiSendParentReport(token, { report });
-      setParentState({ sending: false, msg: { type: "ok", text: r.dev ? "Report queued (dev mode — email is logged on the server)." : `Sent to your parent (${r.to}).` } });
+      const r = await apiSendParentReport(token, { kind, report });
+      const label = kind === "daily" ? "Daily" : "Weekly";
+      const text = r.dev
+        ? `${label} report queued (dev mode — logged on the server).`
+        : `${isAuto ? "Auto-sent" : "Sent"} to your parent (${r.to}).`;
+      setState({ sending: false, msg: { type: "ok", text } });
     } catch (e) {
-      setParentState({ sending: false, msg: { type: "err", text: e.message || "Couldn't send the report. Try again." } });
+      if (!isAuto) setState({ sending: false, msg: { type: "err", text: e.message || "Couldn't send the report. Try again." } });
     }
   }
+
+  // Auto-send: weekly every Sunday, daily each day (if enabled) — once each.
+  useEffect(() => {
+    if (!token) return;
+    const isSunday = new Date().getDay() === 0;
+    if (reportPrefs.autoWeekly && isSunday && lastAuto.weekly !== wk) sendReport("weekly", true);
+    if (reportPrefs.autoDaily && todayEntry && lastAuto.daily !== todayIso) sendReport("daily", true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, reportPrefs.autoWeekly, reportPrefs.autoDaily, lastAuto.weekly, lastAuto.daily, todayEntry]);
 
   const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
   const initial = (user?.name || user?.email || "U").charAt(0).toUpperCase();
@@ -1121,7 +1165,7 @@ function DashboardBody() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16 }}>
+          <div className="md-tools-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 16 }}>
             {/* Silly-mistake audit */}
             <ToolCard icon={Crosshair} color="#ef4444" title="Silly-mistake audit" desc="Marks lost to silly errors — tracked, by topic, and killed.">
               {sillyTrend.length ? (
@@ -1278,90 +1322,81 @@ function DashboardBody() {
           </div>
         </Section>
 
-        {/* ── WEEKLY REPORT & TASKS ── */}
-        <Section id="parent-report" kicker="Parents stay in the loop" title="Weekly Report & Task List" tColor={GREEN}
-          sub="Add your weekly tasks (tick them off as you finish — they can't be deleted), and send a clean chapter-strength report to your parent.">
+        {/* ── DAILY & WEEKLY REPORTS ── */}
+        <Section id="parent-report" kicker="Parents stay in the loop" title="Daily & Weekly Reports" tColor={GREEN}
+          sub="A weekly report is auto-emailed to your parent every Sunday, and a daily report each day if you enable it — and you can send either one any time.">
 
-          {/* send strip */}
-          <div style={{ background: "#fff", border: `1px solid ${GREEN}33`, borderRadius: 20, padding: "20px 22px", boxShadow: `0 20px 46px -30px ${GREEN}99`, position: "relative", overflow: "hidden", marginBottom: 18 }}>
+          {/* ── WEEKLY send strip ── */}
+          <div style={{ background: "#fff", border: `1px solid ${GREEN}33`, borderRadius: 20, padding: "22px 24px", boxShadow: `0 20px 46px -30px ${GREEN}99`, position: "relative", overflow: "hidden", marginBottom: 18 }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},#22c55e)` }} />
-            <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
               <span style={{ width: 46, height: 46, borderRadius: 13, background: "#dcfce7", display: "grid", placeItems: "center", flexShrink: 0 }}><Mail size={22} color={GREEN} /></span>
-              <div style={{ flex: 1, minWidth: 220 }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK }}>Send this week's report to your parent</div>
-                <p style={{ color: MUTE, fontSize: 13.5, lineHeight: 1.6, margin: "4px 0 0" }}>
-                  Includes study hours, streak, tasks, latest test and your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> — emailed to the parent address on your enrolment.
+              <div style={{ flex: 1, minWidth: 240 }}>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK }}>Weekly report to parent</div>
+                <p style={{ color: MUTE, fontSize: 13.5, lineHeight: 1.6, margin: "4px 0 14px" }}>
+                  Study hours, streak, tasks, latest test and your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> — auto-sent every <strong style={{ color: NAVY }}>Sunday</strong>, or send it now.
                 </p>
+                <SendControls color={GREEN} state={weeklyState} onSend={() => sendReport("weekly")} sendLabel="Send weekly report now"
+                  auto={reportPrefs.autoWeekly} onToggle={() => setReportPrefs((p) => ({ ...p, autoWeekly: !p.autoWeekly }))}
+                  autoLabel="Auto-send every Sunday" parentEmail={parentEmail} />
               </div>
-              <button onClick={sendParentReport} disabled={parentState.sending}
-                style={{ padding: "13px 22px", borderRadius: 12, border: "none", background: parentState.sending ? `${GREEN}99` : `linear-gradient(135deg,${GREEN},#22c55e)`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: parentState.sending ? "not-allowed" : "pointer", display: "inline-flex", alignItems: "center", gap: 9, boxShadow: `0 12px 26px -10px ${GREEN}` }}>
-                {parentState.sending ? <><Loader2 size={17} style={{ animation: "spin .8s linear infinite" }} /> Sending…</> : <><Send size={16} /> Send to parent</>}
-              </button>
             </div>
-            <AnimatePresence>
-              {parentState.msg.text && (
-                <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                  style={{ marginTop: 14, borderRadius: 12, padding: "10px 14px", fontSize: 13, fontWeight: 700, background: parentState.msg.type === "ok" ? "#f0fdf4" : "#fff1f2", border: `1.5px solid ${parentState.msg.type === "ok" ? "#86efac" : "#fca5a5"}`, color: parentState.msg.type === "ok" ? "#166534" : "#991b1b" }}>
-                  {parentState.msg.text}
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(290px,1fr))", gap: 18 }}>
-            {/* weekly task list */}
-            <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          {/* ── two-card row: DAILY REPORT (auto-generated) + this-week summary ── */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 18, marginBottom: 18 }}>
+            {/* daily report */}
+            <div style={{ background: "#fff", border: "1px solid rgba(8,145,178,.22)", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#0891b2,#22d3ee)" }} />
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
                 <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK, margin: 0, display: "inline-flex", alignItems: "center", gap: 8 }}>
-                  <ListChecks size={18} color={GREEN} /> Weekly task list
+                  <CalendarDays size={18} color="#0891b2" /> Daily report
                 </h3>
-                <span style={{ fontSize: 12, fontWeight: 800, color: GREEN, background: "#dcfce7", borderRadius: 50, padding: "4px 11px" }}>{weeklyDone}/{weeklyTasks.length} done</span>
+                <span style={{ fontSize: 11, fontWeight: 800, color: "#0891b2", background: "#cffafe", borderRadius: 50, padding: "4px 11px", display: "inline-flex", alignItems: "center", gap: 5 }}><Sparkles size={12} /> Auto-generated</span>
               </div>
-              <p style={{ fontSize: 12, color: MUTE, margin: "0 0 12px", lineHeight: 1.5 }}>Add tasks for the week. Once added a task stays for accountability — you can edit the text or tick it complete, but it can't be deleted.</p>
+              <p style={{ fontSize: 12.5, color: MUTE, margin: "4px 0 14px", lineHeight: 1.5 }}>Today's effort, auto-built from your daily log — only today's tasks. Send it any time or auto-send every day.</p>
 
-              <form onSubmit={addWeeklyTask} style={{ display: "flex", gap: 8, marginBottom: 14 }}>
-                <input value={wtInput} onChange={(e) => setWtInput(e.target.value)} placeholder="e.g. Finish Rotational Motion DPP"
-                  style={{ flex: 1, padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
-                  onFocus={(e) => { e.target.style.borderColor = GREEN; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
-                <button type="submit" style={{ padding: "11px 16px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${GREEN},#22c55e)`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <Plus size={15} /> Add
-                </button>
-              </form>
-
-              {weeklyTasks.length ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {weeklyTasks.map((t) => (
-                    <div key={t.id} style={{ display: "flex", gap: 10, alignItems: "center", background: t.done ? "#f0faf4" : "#fff", border: `1px solid ${t.done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px" }}>
-                      <button onClick={() => toggleWeeklyTask(t.id)} title={t.done ? "Mark incomplete" : "Mark complete"}
-                        style={{ width: 21, height: 21, borderRadius: 6, border: `1.5px solid ${t.done ? GREEN : "#cbd5e1"}`, background: t.done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, cursor: "pointer" }}>
-                        {t.done && <CheckCircle2 size={14} color="#fff" />}
-                      </button>
-                      {wtEdit.id === t.id ? (
-                        <>
-                          <input value={wtEdit.text} autoFocus onChange={(e) => setWtEdit((s) => ({ ...s, text: e.target.value }))}
-                            onKeyDown={(e) => e.key === "Enter" && saveWeeklyEdit()}
-                            style={{ flex: 1, padding: "7px 10px", borderRadius: 8, border: `1.5px solid ${GREEN}`, fontSize: 13.5, color: NAVY, outline: "none" }} />
-                          <button onClick={saveWeeklyEdit} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 8, padding: "7px 11px", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>Save</button>
-                        </>
-                      ) : (
-                        <>
-                          <span style={{ flex: 1, fontSize: 13.5, color: t.done ? "#15803d" : "#374151", lineHeight: 1.4, textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
-                          {!t.done && (
-                            <button onClick={() => setWtEdit({ id: t.id, text: t.text })} title="Edit" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #e5e7eb", background: "#fff", color: "#6b7280", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                              <Pencil size={13} />
-                            </button>
-                          )}
-                        </>
-                      )}
+              {todayEntry ? (
+                <>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 12 }}>
+                    {[
+                      { l: "Hours today", v: `${todayEntry.hours}h`, c: "#0891b2" },
+                      { l: "Tasks", v: `${todayEntry.tasksDone}/${todayEntry.tasksTotal}`, c: "#22c55e" },
+                      { l: "Routine", v: todayEntry.routine ? "✓" : "✗", c: todayEntry.routine ? "#16a34a" : "#ef4444" },
+                    ].map((s) => (
+                      <div key={s.l} style={{ background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 12, padding: "12px 10px", textAlign: "center" }}>
+                        <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 18, color: s.c }}>{s.v}</div>
+                        <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{s.l}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: todayTest ? 10 : 0 }}>
+                    {subjects.map((s) => (
+                      <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: `1px solid ${subColor(s)}33`, borderRadius: 9, padding: "5px 10px", fontSize: 12, fontWeight: 700, color: NAVY }}>
+                        <span style={{ width: 7, height: 7, borderRadius: "50%", background: subColor(s) }} /> {shortName(s)}: {subVal(todayEntry, s).h}h · {subVal(todayEntry, s).t}✓
+                      </span>
+                    ))}
+                  </div>
+                  {todayTest && (
+                    <div style={{ fontSize: 12.5, color: "#374151", background: "#f5f3ff", border: "1px solid #ede9fe", borderRadius: 10, padding: "8px 12px" }}>
+                      <strong style={{ color: NAVY }}>Test today:</strong> {todayTest.name} · {todayTest.scored}/{todayTest.total}
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               ) : (
-                <div style={{ textAlign: "center", padding: "20px 0", color: "#9ca3af", fontSize: 13 }}>No tasks yet — add your first weekly task above.</div>
+                <div style={{ textAlign: "center", padding: "18px 0", color: "#9ca3af", fontSize: 13 }}>
+                  <CalendarDays size={24} style={{ marginBottom: 6, opacity: .6 }} /><br />Not logged yet today — fill today's log above to generate your daily report.
+                </div>
               )}
+
+              <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>
+                <SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report" disabled={!todayEntry}
+                  auto={reportPrefs.autoDaily} onToggle={() => setReportPrefs((p) => ({ ...p, autoDaily: !p.autoDaily }))}
+                  autoLabel="Auto-send daily" parentEmail={parentEmail} />
+              </div>
             </div>
 
-            {/* summary + chapter strength */}
+            {/* this-week summary + chapter strength */}
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <div style={{ background: "#f0faf4", border: `1px solid ${GREEN}33`, borderRadius: 16, padding: "18px 20px" }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 10 }}>This week's summary</div>
@@ -1371,7 +1406,7 @@ function DashboardBody() {
                   { l: "Routine kept", v: `${routinePct}%` },
                   { l: "Tasks (latest day)", v: tasksLabel },
                   { l: "Weekly tasks done", v: `${weeklyDone}/${weeklyTasks.length}` },
-                  { l: "Latest test", v: latest ? `${latest.scored}/${latest.total} (${acc(latest)}%)` : "—" },
+                  { l: "Latest test", v: latest ? `${latest.scored}/${latest.total} (${pct(latest)}%)` : "—" },
                   { l: "Change vs last test", v: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
                   { l: "Backlog cleared", v: `${backlogDone}/${backlog.length}` },
                 ].map((r) => (
@@ -1383,7 +1418,7 @@ function DashboardBody() {
               </div>
 
               <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 16, padding: "18px 20px" }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 12 }}>Chapter-strength report (sent to parent)</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 12 }}>Chapter-strength report (in weekly email)</div>
                 {["weak", "medium", "strong"].map((k) => {
                   const st = STRENGTHS[k];
                   const items = chaptersByStrength[k];
@@ -1406,6 +1441,58 @@ function DashboardBody() {
               </div>
             </div>
           </div>
+
+          {/* ── WEEKLY TASK LIST — full width (covers daily goals too) ── */}
+          <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 20, padding: "22px 24px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, flexWrap: "wrap", gap: 8 }}>
+              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK, margin: 0, display: "inline-flex", alignItems: "center", gap: 8 }}>
+                <ListChecks size={18} color={GREEN} /> Weekly task list
+              </h3>
+              <span style={{ fontSize: 12, fontWeight: 800, color: GREEN, background: "#dcfce7", borderRadius: 50, padding: "4px 11px" }}>{weeklyDone}/{weeklyTasks.length} done</span>
+            </div>
+            <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 14px", lineHeight: 1.5 }}>Plan everything for the week here (it covers your daily goals too). Once added a task stays for accountability — you can edit the text or tick it complete, but it can't be deleted.</p>
+
+            <form onSubmit={addWeeklyTask} style={{ display: "flex", gap: 8, marginBottom: 14, maxWidth: 620 }}>
+              <input value={wtInput} onChange={(e) => setWtInput(e.target.value)} placeholder="e.g. Finish Rotational Motion DPP"
+                style={{ flex: 1, padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
+                onFocus={(e) => { e.target.style.borderColor = GREEN; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+              <button type="submit" style={{ padding: "11px 18px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${GREEN},#22c55e)`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <Plus size={15} /> Add
+              </button>
+            </form>
+
+            {weeklyTasks.length ? (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 10 }}>
+                {weeklyTasks.map((t) => (
+                  <div key={t.id} style={{ display: "flex", gap: 10, alignItems: "center", background: t.done ? "#f0faf4" : "#fff", border: `1px solid ${t.done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px" }}>
+                    <button onClick={() => toggleWeeklyTask(t.id)} title={t.done ? "Mark incomplete" : "Mark complete"}
+                      style={{ width: 21, height: 21, borderRadius: 6, border: `1.5px solid ${t.done ? GREEN : "#cbd5e1"}`, background: t.done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, cursor: "pointer" }}>
+                      {t.done && <CheckCircle2 size={14} color="#fff" />}
+                    </button>
+                    {wtEdit.id === t.id ? (
+                      <>
+                        <input value={wtEdit.text} autoFocus onChange={(e) => setWtEdit((s) => ({ ...s, text: e.target.value }))}
+                          onKeyDown={(e) => e.key === "Enter" && saveWeeklyEdit()}
+                          style={{ flex: 1, padding: "7px 10px", borderRadius: 8, border: `1.5px solid ${GREEN}`, fontSize: 13.5, color: NAVY, outline: "none", minWidth: 0 }} />
+                        <button onClick={saveWeeklyEdit} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 8, padding: "7px 11px", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>Save</button>
+                      </>
+                    ) : (
+                      <>
+                        <span style={{ flex: 1, fontSize: 13.5, color: t.done ? "#15803d" : "#374151", lineHeight: 1.4, textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
+                        {!t.done && (
+                          <button onClick={() => setWtEdit({ id: t.id, text: t.text })} title="Edit" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #e5e7eb", background: "#fff", color: "#6b7280", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                            <Pencil size={13} />
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ textAlign: "center", padding: "20px 0", color: "#9ca3af", fontSize: 13 }}>No tasks yet — add your first weekly task above.</div>
+            )}
+          </div>
         </Section>
       </div>
 
@@ -1415,6 +1502,7 @@ function DashboardBody() {
         }
         @media (max-width: 760px) {
           .md-track-grid { grid-template-columns: 1fr !important; }
+          .md-tools-grid { grid-template-columns: 1fr !important; }
         }
         .md-sticky-nav { scrollbar-width: none; -ms-overflow-style: none; }
         .md-sticky-nav::-webkit-scrollbar { display: none; }
@@ -1523,6 +1611,45 @@ function RankCard({ r, name }) {
 
 function ChartHint({ text }) {
   return <div style={{ color: "#9ca3af", fontSize: 13, padding: "28px 0", textAlign: "center" }}>{text}</div>;
+}
+
+function ToggleSwitch({ on, onClick, color = GREEN }) {
+  return (
+    <button type="button" role="switch" aria-checked={on} onClick={onClick}
+      style={{ width: 40, height: 22, borderRadius: 50, border: "none", cursor: "pointer", background: on ? color : "#cbd5e1", position: "relative", transition: "background .2s", flexShrink: 0, padding: 0 }}>
+      <span style={{ position: "absolute", top: 2, left: on ? 20 : 2, width: 18, height: 18, borderRadius: "50%", background: "#fff", transition: "left .2s", boxShadow: "0 1px 3px rgba(0,0,0,.3)" }} />
+    </button>
+  );
+}
+
+function SendControls({ color, state, onSend, sendLabel, disabled, auto, onToggle, autoLabel, parentEmail }) {
+  const off = state.sending || disabled;
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
+        <button onClick={onSend} disabled={off}
+          style={{ padding: "11px 18px", borderRadius: 12, border: "none", background: off ? `${color}99` : color, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: off ? "not-allowed" : "pointer", display: "inline-flex", alignItems: "center", gap: 8, boxShadow: off ? "none" : `0 12px 26px -12px ${color}` }}>
+          {state.sending ? <><Loader2 size={16} style={{ animation: "spin .8s linear infinite" }} /> Sending…</> : <><Send size={15} /> {sendLabel}</>}
+        </button>
+        <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 700, color: NAVY, cursor: "pointer" }}>
+          <ToggleSwitch on={auto} onClick={onToggle} color={color} /> {autoLabel}
+        </label>
+      </div>
+      <div style={{ fontSize: 11.5, color: parentEmail ? "#94a3b8" : "#b45309", marginTop: 8 }}>
+        {parentEmail
+          ? <>Sends to parent: <strong style={{ color: "#64748b" }}>{parentEmail}</strong></>
+          : "Add a parent email at enrolment to receive these reports."}
+      </div>
+      <AnimatePresence>
+        {state.msg.text && (
+          <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            style={{ marginTop: 10, borderRadius: 12, padding: "9px 13px", fontSize: 12.5, fontWeight: 700, background: state.msg.type === "ok" ? "#f0fdf4" : "#fff1f2", border: `1.5px solid ${state.msg.type === "ok" ? "#86efac" : "#fca5a5"}`, color: state.msg.type === "ok" ? "#166534" : "#991b1b" }}>
+            {state.msg.text}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
 
 function DeltaPill({ d, unit = "", subtext, lowerIsBetter = false }) {
