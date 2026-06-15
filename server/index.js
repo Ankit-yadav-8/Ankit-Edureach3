@@ -9,6 +9,7 @@ import userRoutes from "./routes/users.js";
 import cutoffRoutes from "./routes/cutoffs.js";
 import paymentRoutes from "./routes/payment.js";
 import adminRoutes from "./routes/admin.js";
+import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 
 dotenv.config();
 const app = express();
@@ -73,5 +74,8 @@ app.use("/api/cutoffs", apiLimiter, cutoffRoutes);
 app.use("/api/payment", apiLimiter, paymentRoutes);
 
 connectDB()
-  .then(() => app.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`)))
+  .then(() => {
+    app.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`));
+    startWeeklyReportJob(); // weekly parent progress emails (best-effort, dev-safe)
+  })
   .catch((e) => { console.error("❌ DB error:", e.message); process.exit(1); });

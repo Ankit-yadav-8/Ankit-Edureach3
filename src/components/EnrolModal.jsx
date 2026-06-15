@@ -88,6 +88,7 @@ export function EnrolProvider({ children }) {
    ───────────────────────────────────────────────────────── */
 const EMPTY = {
   name: "", email: "", phone: "", homeState: "", currentClass: "",
+  parentEmail: "",
   jeeMainCrlRank: "", jeeMainCategoryRank: "",
   jeeAdvCrlRank: "", jeeAdvCategoryRank: "",
 };
@@ -124,6 +125,7 @@ function EnrolModal({ plan, onClose }) {
     if (!f.homeState) er.homeState = "Select your home state";
     if (isMentorship) {
       if (!f.currentClass) er.currentClass = "Select your current class";
+      if (!/^\S+@\S+\.\S+$/.test(f.parentEmail.trim())) er.parentEmail = "Enter a valid parent's email";
     } else if (!f.jeeMainCrlRank.trim() && !f.jeeAdvCrlRank.trim()) {
       er.jeeMainCrlRank = "Enter at least your JEE Main CRL rank";
     }
@@ -234,6 +236,10 @@ function EnrolModal({ plan, onClose }) {
                     options={CLASS_OPTIONS}
                     placeholder="Select your current class…"
                   />
+                  <Field label="Parent's email" icon={Mail} type="email" value={f.parentEmail} onChange={set("parentEmail")} error={errors.parentEmail} placeholder="parent@email.com" />
+                  <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: -6, marginBottom: 4, fontSize: 12, color: "#15803d", fontWeight: 600 }}>
+                    <Mail size={13} color="#16a34a" /> We email a weekly progress report here.
+                  </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#ffffff", border: "1px solid #fed7aa", borderRadius: 10, padding: "10px 12px", fontSize: 12.5, color: "#9a3412", fontWeight: 600 }}>
                     <BadgeCheck size={15} color="#F47B20" /> Target: {meta.targetExam}
                   </div>

@@ -119,6 +119,7 @@ router.post("/verify", async (req, res) => {
           email:     String(req.body.email || "").trim().toLowerCase(),
           phone:     String(req.body.phone || "").trim(),
           homeState: String(req.body.homeState || "").trim(),
+          parentEmail: String(req.body.parentEmail || "").trim().toLowerCase(),
           currentClass: String(req.body.currentClass || "").trim(),
           targetExam:   String(req.body.targetExam || "").trim(),
           jeeMainCrlRank:      num(req.body.jeeMainCrlRank),

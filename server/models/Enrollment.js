@@ -21,6 +21,10 @@ const enrollmentSchema = new mongoose.Schema(
     phone:     { type: String, trim: true, default: "" },
     homeState: { type: String, trim: true, default: "" },
 
+    // Parent contact — weekly progress report is emailed here (mentorship).
+    parentEmail:        { type: String, lowercase: true, trim: true, default: "" },
+    lastParentReportAt: { type: Date, default: null },
+
     // Mentorship context (optional)
     currentClass: { type: String, trim: true, default: "" },
     targetExam:   { type: String, trim: true, default: "" },

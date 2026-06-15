@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Mail, Phone, MapPin, GraduationCap, Hash, Calendar, LogOut,
   CreditCard, CheckCircle2, ArrowRight, Sparkles, ShieldCheck, BookOpen, Loader2,
-  Check, Compass, Pencil, X,
+  Check, Compass, Pencil, X, LayoutDashboard,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { useEnrol } from "../components/EnrolModal.jsx";
@@ -53,8 +53,8 @@ const PLAN_CATALOG = [
 // Look up the accent palette for an owned plan key.
 const groupForPlan = (key) =>
   isMentorshipPlan(key)
-    ? { accent: ORANGE, soft: "#fff6ee", icon: GraduationCap }
-    : { accent: GREEN, soft: "#f0faf4", icon: Compass };
+    ? { accent: ORANGE, accent2: GOLD, soft: "#fff6ee", icon: GraduationCap }
+    : { accent: GREEN, accent2: "#22c55e", soft: "#f0faf4", icon: Compass };
 
 const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
@@ -385,6 +385,12 @@ export default function Dashboard() {
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "6px 13px" }}>
                     <CheckCircle2 size={14} /> Active
                   </span>
+                  {isMentorshipPlan(p.plan) && (
+                    <button onClick={() => navigate("/mentorship-dashboard")}
+                      style={{ flexBasis: "100%", marginTop: 4, padding: "12px", borderRadius: 12, border: "none", background: `linear-gradient(135deg, ${g.accent}, ${g.accent2 || GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: `0 12px 26px -12px ${g.accent}` }}>
+                      <LayoutDashboard size={16} /> Mentorship dashboard <ArrowRight size={15} />
+                    </button>
+                  )}
                 </div>
               );
             })}

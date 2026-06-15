@@ -19,6 +19,50 @@
 
 const FREE_WEBMAIL = /@(gmail|googlemail|yahoo|ymail|outlook|hotmail|live|msn|icloud|me|aol|proton|protonmail|zoho)\./i;
 
+// Resolve the Brevo "from" address, falling back to the verified domain sender
+// when SMTP_FROM_EMAIL is missing or a free-webmail address Brevo won't send from.
+function resolveSender() {
+  const VERIFIED_SENDER = "hello@collegeparichay.in";
+  let fromEmail  = String(process.env.SMTP_FROM_EMAIL || "").trim();
+  const fromName = (process.env.SMTP_FROM_NAME || "CollegeParichay").trim();
+  const replyTo  = String(process.env.REPLY_TO_EMAIL || "collegeparichay@gmail.com").trim();
+  if (!fromEmail || FREE_WEBMAIL.test(fromEmail)) fromEmail = VERIFIED_SENDER;
+  return { fromEmail, fromName, replyTo };
+}
+
+/**
+ * Generic transactional email. In dev mode (OTP_DEV_MODE !== "false") or when no
+ * Brevo key is set, it only logs — so it never sends real mail during local dev.
+ * Returns { ok, dev }.
+ */
+export async function sendMail({ to, subject, html, text }) {
+  const devMode = process.env.OTP_DEV_MODE !== "false";
+  if (devMode || !process.env.BREVO_API_KEY) {
+    console.log(`\n[DEV EMAIL] to ${to}\n  Subject: ${subject}\n`);
+    return { ok: true, dev: true };
+  }
+  const { fromEmail, fromName, replyTo } = resolveSender();
+  try {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "api-key": process.env.BREVO_API_KEY },
+      body: JSON.stringify({
+        sender: { name: fromName, email: fromEmail },
+        replyTo: { email: replyTo, name: fromName },
+        to: [{ email: to }],
+        subject,
+        textContent: text || subject,
+        htmlContent: html || `<p>${text || subject}</p>`,
+      }),
+    });
+    if (!res.ok) throw new Error(`Brevo API error (${res.status}): ${await res.text()}`);
+    return { ok: true, dev: false };
+  } catch (e) {
+    console.error("sendMail failed:", e.message);
+    return { ok: false, dev: false, error: e.message };
+  }
+}
+
 export async function sendOtpEmail(email, code) {
   const devMode = process.env.OTP_DEV_MODE !== "false";
   if (devMode || !process.env.BREVO_API_KEY) {
