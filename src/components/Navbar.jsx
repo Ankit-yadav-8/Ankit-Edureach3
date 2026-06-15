@@ -429,18 +429,28 @@ export default function Navbar({ onSearch }) {
             <Search size={16} /> Search
           </button>
           {isLoggedIn ? (
-            <button
-              onClick={() => setConfirmLogout(true)}
-              title="Logout"
-              className="cta-desktop nav-ghost-cta"
-              style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
-            >
-              <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#F47B20", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
-                {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
-              </span>
-              {user?.name?.split(" ")[0] || "Account"}
-              <LogOut size={15} style={{ color: "#e5484d" }} />
-            </button>
+            <div className="cta-desktop" style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", overflow: "hidden" }}>
+              {/* Chip → opens the user's personal dashboard */}
+              <button
+                onClick={() => navigate("/dashboard")}
+                title="My Dashboard"
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", border: "none", background: "transparent", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
+              >
+                <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#F47B20", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
+                  {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
+                </span>
+                {user?.name?.split(" ")[0] || "Account"}
+              </button>
+              {/* Logout → asks for confirmation (yes/no) */}
+              <button
+                onClick={() => setConfirmLogout(true)}
+                title="Logout"
+                aria-label="Logout"
+                style={{ display: "grid", placeItems: "center", padding: "0 12px", border: "none", borderLeft: "1.5px solid var(--line)", background: "transparent", cursor: "pointer" }}
+              >
+                <LogOut size={15} style={{ color: "#e5484d" }} />
+              </button>
+            </div>
           ) : (
             <>
               <button
@@ -516,11 +526,13 @@ export default function Navbar({ onSearch }) {
               </div>
 
               {isLoggedIn && (
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 10,
-                  background: "#FFF4EC", borderRadius: 10, padding: "10px 12px",
-                  marginBottom: "0.8rem", border: "1px solid #FFD9BA",
-                }}>
+                <button
+                  onClick={() => { setMobileOpen(false); navigate("/dashboard"); }}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
+                    background: "#FFF4EC", borderRadius: 10, padding: "10px 12px",
+                    marginBottom: "0.8rem", border: "1px solid #FFD9BA", cursor: "pointer",
+                  }}>
                   <span style={{
                     width: 32, height: 32, borderRadius: "50%",
                     background: "#F47B20", color: "#fff",
@@ -529,10 +541,13 @@ export default function Navbar({ onSearch }) {
                   }}>
                     {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
                   </span>
-                  <span style={{ fontWeight: 600, color: "var(--navy)", fontSize: "0.9rem", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {user?.name || user?.phone || "My Account"}
+                  <span style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+                    <span style={{ fontWeight: 700, color: "var(--navy)", fontSize: "0.9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {user?.name || user?.phone || "My Account"}
+                    </span>
+                    <span style={{ fontSize: "0.72rem", color: "#ea580c", fontWeight: 600 }}>View my dashboard →</span>
                   </span>
-                </div>
+                </button>
               )}
 
               {navItems.map((item) => {

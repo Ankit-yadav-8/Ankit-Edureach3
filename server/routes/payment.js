@@ -2,7 +2,9 @@ import express from "express";
 import crypto from "crypto";
 import Razorpay from "razorpay";
 import Enrollment from "../models/Enrollment.js";
+import User from "../models/User.js";
 import { requireAdmin } from "../middleware/admin.js";
+import { requireAuth } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -135,6 +137,22 @@ router.post("/verify", async (req, res) => {
   } catch (e) {
     console.error("payment/verify error:", e?.message || e);
     res.status(500).json({ error: "Could not verify payment." });
+  }
+});
+
+/* ── Logged-in user: their own successful purchases ──────────────── */
+router.get("/my-enrollments", requireAuth, async (req, res) => {
+  res.set("Cache-Control", "no-store");
+  try {
+    const user = await User.findById(req.user.id).select("email").lean();
+    if (!user?.email) return res.json({ enrollments: [] });
+    const items = await Enrollment.find({ status: "paid", email: user.email.toLowerCase() })
+      .sort({ createdAt: -1 }).lean();
+    const enrollments = items.map((e) => ({ ...e, planLabel: PLANS[e.plan]?.label || e.plan }));
+    res.json({ enrollments });
+  } catch (e) {
+    console.error("[payment/my-enrollments]", e?.message || e);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

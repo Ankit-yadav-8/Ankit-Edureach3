@@ -37,3 +37,4 @@ export const apiForgot    = (b) => req("/api/auth/forgot", { method: "POST", bod
 export const apiReset     = (b) => req("/api/auth/reset",  { method: "POST", body: b });
 export const apiSendOtp   = (b) => req("/api/otp/send",    { method: "POST", body: b });
 export const apiVerifyOtp = (b) => req("/api/otp/verify",  { method: "POST", body: b });
+export const apiMyEnrollments = (token) => req("/api/payment/my-enrollments", { token });

@@ -45,6 +45,7 @@ import HowToUse from "./pages/HowToUse.jsx";
 import Mentorship from "./pages/Mentorship.jsx";
 import Privacy from "./pages/Privacy.jsx";
 import Terms from "./pages/Terms.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
@@ -151,6 +152,7 @@ export default function App() {
           <Route path="/mentorship/:variant" element={<Mentorship />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
