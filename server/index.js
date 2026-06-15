@@ -8,6 +8,7 @@ import otpRoutes from "./routes/otp.js";
 import userRoutes from "./routes/users.js";
 import cutoffRoutes from "./routes/cutoffs.js";
 import paymentRoutes from "./routes/payment.js";
+import adminRoutes from "./routes/admin.js";
 
 dotenv.config();
 const app = express();
@@ -66,6 +67,7 @@ const apiLimiter     = rl({ windowMs: 60 * 1000, max: 120 });
 app.get("/", (_req, res) => res.send("EduReach API ✅"));
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/otp", authLimiter, otpRoutes);
+app.use("/api/admin", authLimiter, adminRoutes);
 app.use("/api/users", apiLimiter, userRoutes);
 app.use("/api/cutoffs", apiLimiter, cutoffRoutes);
 app.use("/api/payment", apiLimiter, paymentRoutes);

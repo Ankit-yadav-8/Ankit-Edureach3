@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback, Fragment } from "react";
 import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
-  ChevronRight, ChevronDown,
+  ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 
-const KEY_STORAGE = "edureach:adminKey";
+const TOKEN_STORAGE = "edureach:adminToken";
 const ORANGE = "#F47B20";
 
 const fmtDate = (iso) => {
@@ -61,15 +61,25 @@ const avatarColor = (str) => {
 };
 
 export default function Admin() {
-  const [storedKey, setStoredKey] = useState(() => sessionStorage.getItem(KEY_STORAGE) || "");
-  const [entering, setEntering] = useState("");
+  const [token, setToken] = useState(() => sessionStorage.getItem(TOKEN_STORAGE) || "");
   const [authed, setAuthed] = useState(false);
+  // two-step admin login: enter key → OTP emailed to the admin inbox → verify
+  const [step, setStep] = useState("key");          // "key" | "otp"
+  const [adminKey, setAdminKey] = useState("");     // verified key, kept for step 2
+  const [enteringKey, setEnteringKey] = useState("");
+  const [enteringOtp, setEnteringOtp] = useState("");
+  const [otpSentTo, setOtpSentTo] = useState("");
+  const [devCode, setDevCode] = useState("");
   const [users, setUsers] = useState([]);
   const [total, setTotal] = useState(0);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState(() => new Set());
+  const [tab, setTab] = useState("users");          // "users" | "payments"
+  const [payments, setPayments] = useState([]);
+  const [payTotal, setPayTotal] = useState(0);
+  const [payLoaded, setPayLoaded] = useState(false);
 
   useEffect(() => {
     const prev = document.title;
@@ -84,30 +94,87 @@ export default function Admin() {
       return next;
     });
 
-  const fetchUsers = useCallback(async (k) => {
+  const fetchUsers = useCallback(async (t) => {
     setBusy(true); setErr("");
     try {
-      const res = await fetch(API_BASE + "/api/users", { headers: { "x-admin-key": k }, cache: "no-store" });
-      if (res.status === 401 || res.status === 403) throw new Error("Invalid admin key");
+      const res = await fetch(API_BASE + "/api/users", { headers: { "x-admin-token": t }, cache: "no-store" });
+      if (res.status === 401 || res.status === 403) throw new Error("Session expired — please log in again");
       if (!res.ok) throw new Error("Server error " + res.status);
       const data = await res.json();
       setUsers(data.users || []);
       setTotal(data.total ?? (data.users?.length || 0));
       setAuthed(true);
-      sessionStorage.setItem(KEY_STORAGE, k);
-      setStoredKey(k);
+      sessionStorage.setItem(TOKEN_STORAGE, t);
+      setToken(t);
     } catch (e) {
       setErr(e.message);
       setAuthed(false);
+      sessionStorage.removeItem(TOKEN_STORAGE);
+      setToken("");
     } finally { setBusy(false); }
   }, []);
 
-  useEffect(() => { if (storedKey) fetchUsers(storedKey); /* eslint-disable-next-line */ }, []);
+  const fetchPayments = useCallback(async (t) => {
+    setBusy(true); setErr("");
+    try {
+      const res = await fetch(API_BASE + "/api/payment/enrollments", { headers: { "x-admin-token": t }, cache: "no-store" });
+      if (res.status === 401 || res.status === 403) throw new Error("Session expired — please log in again");
+      if (!res.ok) throw new Error("Server error " + res.status);
+      const data = await res.json();
+      setPayments(data.enrollments || []);
+      setPayTotal(data.total ?? (data.enrollments?.length || 0));
+      setPayLoaded(true);
+    } catch (e) {
+      setErr(e.message);
+    } finally { setBusy(false); }
+  }, []);
+
+  const switchTab = (t) => {
+    setTab(t); setSearch(""); setExpanded(new Set());
+    if (t === "payments" && !payLoaded) fetchPayments(token);
+  };
+  const refreshActive = () => (tab === "users" ? fetchUsers(token) : fetchPayments(token));
+
+  useEffect(() => { if (token) fetchUsers(token); /* eslint-disable-next-line */ }, []);
+
+  // Step 1 — verify the admin key on the server, which emails an OTP to the
+  // admin inbox. We never advance to step 2 unless the key was correct.
+  async function requestOtp(k) {
+    setBusy(true); setErr("");
+    try {
+      const res = await fetch(API_BASE + "/api/admin/request-otp", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: k }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not send the code");
+      setAdminKey(k);
+      setOtpSentTo(data.sentTo || "the admin email");
+      if (data.devCode) setDevCode(data.devCode);
+      setStep("otp"); setEnteringOtp("");
+    } catch (e) { setErr(e.message); } finally { setBusy(false); }
+  }
+
+  // Step 2 — verify key + OTP; on success the server returns a short-lived
+  // admin session token that gates every data request.
+  async function verifyOtp(code) {
+    setBusy(true); setErr("");
+    try {
+      const res = await fetch(API_BASE + "/api/admin/verify-otp", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: adminKey, code }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Invalid code");
+      setDevCode(""); setEnteringOtp(""); setAdminKey("");
+      await fetchUsers(data.token);  // stores the token + flips authed on success
+    } catch (e) { setErr(e.message); } finally { setBusy(false); }
+  }
 
   async function downloadCsv() {
     setErr("");
     try {
-      const res = await fetch(API_BASE + "/api/users/export.csv", { headers: { "x-admin-key": storedKey } });
+      const res = await fetch(API_BASE + "/api/users/export.csv", { headers: { "x-admin-token": token } });
       if (!res.ok) throw new Error("CSV download failed (" + res.status + ")");
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
@@ -118,10 +185,27 @@ export default function Admin() {
     } catch (e) { setErr(e.message); }
   }
 
+  async function downloadPaymentsCsv() {
+    setErr("");
+    try {
+      const res = await fetch(API_BASE + "/api/payment/enrollments/export.csv", { headers: { "x-admin-token": token } });
+      if (!res.ok) throw new Error("CSV download failed (" + res.status + ")");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "collegeparichay-payments.csv";
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) { setErr(e.message); }
+  }
+  const exportActive = () => (tab === "users" ? downloadCsv() : downloadPaymentsCsv());
+
   function logout() {
-    sessionStorage.removeItem(KEY_STORAGE);
-    setStoredKey(""); setEntering(""); setAuthed(false);
+    sessionStorage.removeItem(TOKEN_STORAGE);
+    setToken(""); setAuthed(false);
+    setStep("key"); setAdminKey(""); setEnteringKey(""); setEnteringOtp(""); setOtpSentTo(""); setDevCode("");
     setUsers([]); setTotal(0); setErr("");
+    setPayments([]); setPayTotal(0); setPayLoaded(false); setTab("users");
   }
 
   const q = norm(search);
@@ -132,46 +216,119 @@ export default function Admin() {
     fuzzyMatch(u.phone, q) ||
     fuzzyMatch(u.coaching, q)
   );
+  const filteredPayments = payments.filter((p) =>
+    !q ||
+    fuzzyMatch(p.name, q) ||
+    fuzzyMatch(p.email, q) ||
+    fuzzyMatch(p.phone, q) ||
+    fuzzyMatch(p.planLabel, q) ||
+    fuzzyMatch(p.plan, q)
+  );
+  const revenue = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 
-  // ── KEY-GATE ──────────────────────────────────────────────────
+  // ── TWO-STEP LOGIN GATE (key → OTP) ───────────────────────────
   if (!authed) {
+    const onKey = step === "key";
     return (
       <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: "60px 16px", background: "#f8f7f5" }}>
         <div style={{ maxWidth: 440, width: "100%", background: "#fff", borderRadius: 20, padding: "40px 36px", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", border: "1px solid #eee" }}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 28 }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 22 }}>
             <div style={{ width: 64, height: 64, borderRadius: 20, background: `${ORANGE}15`, display: "grid", placeItems: "center", marginBottom: 16 }}>
-              <ShieldCheck size={30} color={ORANGE} />
+              {onKey ? <ShieldCheck size={30} color={ORANGE} /> : <Mail size={30} color={ORANGE} />}
             </div>
-            <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: "#0d1b3e", fontSize: "1.6rem", margin: 0 }}>Admin Access</h2>
-            <p style={{ color: "#888", fontSize: 14, marginTop: 8 }}>Enter your secret key to view signups</p>
+            <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: "#0d1b3e", fontSize: "1.6rem", margin: 0 }}>
+              {onKey ? "Admin Access" : "Verify it's you"}
+            </h2>
+            <p style={{ color: "#888", fontSize: 14, marginTop: 8 }}>
+              {onKey
+                ? "Step 1 of 2 · Enter your secret key"
+                : <>Step 2 of 2 · Enter the 6-digit code sent to <strong>{otpSentTo}</strong></>}
+            </p>
           </div>
-          <div style={{ position: "relative", marginBottom: 16 }}>
-            <KeyRound size={17} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#bbb", pointerEvents: "none" }} />
-            <input
-              type="password" placeholder="Enter ADMIN_KEY"
-              value={entering} onChange={(e) => setEntering(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter" && entering) fetchUsers(entering); }}
-              autoFocus
-              style={{
-                width: "100%", paddingLeft: 44, paddingRight: 16, height: 50,
-                borderRadius: 12, border: "1.5px solid #e5e7eb", fontSize: 15,
-                outline: "none", boxSizing: "border-box", fontFamily: "inherit",
-                transition: "border .2s",
-              }}
-            />
+
+          {/* progress bars */}
+          <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 22 }}>
+            <span style={{ width: 28, height: 6, borderRadius: 6, background: ORANGE }} />
+            <span style={{ width: 28, height: 6, borderRadius: 6, background: onKey ? "#e5e7eb" : ORANGE, transition: "background .2s" }} />
           </div>
-          <button
-            disabled={busy || !entering}
-            onClick={() => fetchUsers(entering)}
-            style={{
-              background: ORANGE, color: "#fff", width: "100%", border: "none",
-              height: 50, borderRadius: 12, fontWeight: 700, fontSize: 16,
-              cursor: busy || !entering ? "not-allowed" : "pointer",
-              opacity: busy || !entering ? 0.6 : 1, transition: "opacity .2s",
-            }}
-          >
-            {busy ? "Verifying…" : "🔓 Unlock Dashboard"}
-          </button>
+
+          {onKey ? (
+            <>
+              <div style={{ position: "relative", marginBottom: 16 }}>
+                <KeyRound size={17} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#bbb", pointerEvents: "none" }} />
+                <input
+                  type="password" placeholder="Enter ADMIN_KEY"
+                  value={enteringKey} onChange={(e) => setEnteringKey(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter" && enteringKey && !busy) requestOtp(enteringKey); }}
+                  autoFocus
+                  style={{
+                    width: "100%", paddingLeft: 44, paddingRight: 16, height: 50,
+                    borderRadius: 12, border: "1.5px solid #e5e7eb", fontSize: 15,
+                    outline: "none", boxSizing: "border-box", fontFamily: "inherit", transition: "border .2s",
+                  }}
+                />
+              </div>
+              <button
+                disabled={busy || !enteringKey}
+                onClick={() => requestOtp(enteringKey)}
+                style={{
+                  background: ORANGE, color: "#fff", width: "100%", border: "none",
+                  height: 50, borderRadius: 12, fontWeight: 700, fontSize: 16,
+                  cursor: busy || !enteringKey ? "not-allowed" : "pointer",
+                  opacity: busy || !enteringKey ? 0.6 : 1, transition: "opacity .2s",
+                }}
+              >
+                {busy ? "Sending code…" : "Send verification code →"}
+              </button>
+            </>
+          ) : (
+            <>
+              <div style={{ position: "relative", marginBottom: 16 }}>
+                <KeyRound size={17} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#bbb", pointerEvents: "none" }} />
+                <input
+                  inputMode="numeric" maxLength={6} placeholder="6-digit code"
+                  value={enteringOtp}
+                  onChange={(e) => setEnteringOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  onKeyDown={(e) => { if (e.key === "Enter" && enteringOtp.length === 6 && !busy) verifyOtp(enteringOtp); }}
+                  autoFocus
+                  style={{
+                    width: "100%", paddingLeft: 44, paddingRight: 16, height: 50,
+                    borderRadius: 12, border: "1.5px solid #e5e7eb", fontSize: 22,
+                    letterSpacing: 6, fontWeight: 700, outline: "none", boxSizing: "border-box",
+                    fontFamily: "inherit", transition: "border .2s",
+                  }}
+                />
+              </div>
+              {devCode && (
+                <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginBottom: 14, color: "#92400e", fontSize: 13, textAlign: "center" }}>
+                  Dev mode — code: <strong>{devCode}</strong>
+                </div>
+              )}
+              <button
+                disabled={busy || enteringOtp.length !== 6}
+                onClick={() => verifyOtp(enteringOtp)}
+                style={{
+                  background: ORANGE, color: "#fff", width: "100%", border: "none",
+                  height: 50, borderRadius: 12, fontWeight: 700, fontSize: 16,
+                  cursor: busy || enteringOtp.length !== 6 ? "not-allowed" : "pointer",
+                  opacity: busy || enteringOtp.length !== 6 ? 0.6 : 1, transition: "opacity .2s",
+                }}
+              >
+                {busy ? "Verifying…" : "🔓 Verify & Unlock"}
+              </button>
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14 }}>
+                <button onClick={() => { setStep("key"); setErr(""); setDevCode(""); }} disabled={busy}
+                  style={{ background: "none", border: "none", color: "#888", fontSize: 13, cursor: "pointer", fontWeight: 600 }}>
+                  ← Back
+                </button>
+                <button onClick={() => requestOtp(adminKey)} disabled={busy}
+                  style={{ background: "none", border: "none", color: ORANGE, fontSize: 13, cursor: "pointer", fontWeight: 700 }}>
+                  Resend code
+                </button>
+              </div>
+            </>
+          )}
+
           {err && (
             <div style={{ background: "#fff0f0", border: "1px solid #fca5a5", borderRadius: 10, padding: "10px 14px", marginTop: 14, color: "#dc2626", fontSize: 13, textAlign: "center" }}>
               {err}
@@ -203,12 +360,12 @@ export default function Admin() {
             </p>
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button onClick={() => fetchUsers(storedKey)} disabled={busy}
+            <button onClick={refreshActive} disabled={busy}
               style={{ background: "#fff", color: ORANGE, border: `1.5px solid ${ORANGE}`, height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <RefreshCw size={14} style={{ animation: busy ? "spin 1s linear infinite" : "none" }} />
               {busy ? "Refreshing…" : "Refresh"}
             </button>
-            <button onClick={downloadCsv}
+            <button onClick={exportActive}
               style={{ background: ORANGE, color: "#fff", border: "none", height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <Download size={14} /> Export CSV
             </button>
@@ -219,7 +376,34 @@ export default function Admin() {
           </div>
         </div>
 
+        {/* Tabs */}
+        <div style={{ display: "flex", gap: 8, marginBottom: 22, borderBottom: "1px solid #ececec" }}>
+          {[
+            { k: "users", label: "Users", icon: Users, count: total },
+            { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
+          ].map(({ k, label, icon: Icon, count }) => {
+            const active = tab === k;
+            return (
+              <button key={k} onClick={() => switchTab(k)}
+                style={{
+                  display: "flex", alignItems: "center", gap: 7, padding: "10px 18px",
+                  border: "none", background: "transparent", cursor: "pointer",
+                  fontFamily: "Sora", fontWeight: 700, fontSize: 14,
+                  color: active ? ORANGE : "#888",
+                  borderBottom: active ? `2.5px solid ${ORANGE}` : "2.5px solid transparent",
+                  marginBottom: -1,
+                }}>
+                <Icon size={16} /> {label}
+                <span style={{ background: active ? `${ORANGE}15` : "#f3f4f6", color: active ? ORANGE : "#999", borderRadius: 20, padding: "1px 9px", fontSize: 12, fontWeight: 700 }}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
         {/* Stat cards */}
+        {tab === "users" ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 28 }}>
           <div style={{ background: "#0d1b3e", borderRadius: 16, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16 }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
@@ -261,6 +445,41 @@ export default function Admin() {
             </div>
           </div>
         </div>
+        ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 28 }}>
+          <div style={{ background: "#0d1b3e", borderRadius: 16, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
+              <CreditCard size={22} color={ORANGE} />
+            </div>
+            <div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{payTotal}</div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Successful payments</div>
+            </div>
+          </div>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #eee" }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+              <IndianRupee size={22} color="#16a34a" />
+            </div>
+            <div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                ₹{revenue.toLocaleString("en-IN")}
+              </div>
+              <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Total revenue</div>
+            </div>
+          </div>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #eee" }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+              <Calendar size={22} color="#16a34a" />
+            </div>
+            <div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                {payments.filter(p => new Date(p.createdAt).toDateString() === new Date().toDateString()).length}
+              </div>
+              <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Paid today</div>
+            </div>
+          </div>
+        </div>
+        )}
 
         {err && (
           <div style={{ background: "#fff0f0", border: "1px solid #fca5a5", borderRadius: 10, padding: "12px 16px", marginBottom: 20, color: "#dc2626", fontSize: 13 }}>
@@ -269,6 +488,7 @@ export default function Admin() {
         )}
 
         {/* Search + Table */}
+        {tab === "users" ? (
         <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
 
           {/* Search bar */}
@@ -397,9 +617,132 @@ export default function Admin() {
             </div>
           )}
         </div>
+        ) : (
+          <PaymentsTable
+            payments={filteredPayments}
+            search={search}
+            setSearch={setSearch}
+            expanded={expanded}
+            toggleRow={toggleRow}
+          />
+        )}
 
       </div>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+}
+
+/* ── Payments tab: successful enrolments only ─────────────────────── */
+function PaymentsTable({ payments, search, setSearch, expanded, toggleRow }) {
+  return (
+    <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+
+      {/* Search bar */}
+      <div style={{ padding: "16px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+        <span style={{ fontWeight: 700, color: "#0d1b3e", fontSize: 15 }}>
+          Successful Payments
+          <span style={{ marginLeft: 8, background: "#f3f4f6", borderRadius: 20, padding: "2px 10px", fontSize: 12, color: "#666", fontWeight: 600 }}>
+            {payments.length}
+          </span>
+        </span>
+        <input
+          placeholder="Search name, email, phone or plan…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ height: 38, padding: "0 14px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 13, outline: "none", minWidth: 240, fontFamily: "inherit" }}
+        />
+      </div>
+
+      {payments.length === 0 ? (
+        <div style={{ padding: "60px 20px", textAlign: "center", color: "#aaa", fontSize: 14 }}>
+          {search ? "No payments match your search." : "No successful payments yet."}
+        </div>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", minWidth: 1000, borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#fafafa" }}>
+                {["#", "", "Customer", "Email", "Phone", "Plan", "Amount", "Status", "Paid On"].map((h, hi) => (
+                  <th key={hi} style={{
+                    padding: "12px 20px", textAlign: "left", fontSize: 11,
+                    fontWeight: 700, color: "#999", letterSpacing: ".06em",
+                    textTransform: "uppercase", borderBottom: "1px solid #f0f0f0",
+                    whiteSpace: "nowrap",
+                  }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {payments.map((p, i) => {
+                const isOpen = expanded.has(p._id);
+                return (
+                <Fragment key={p._id}>
+                <tr style={{ borderBottom: isOpen ? "none" : "1px solid #f8f8f8", transition: "background .15s", cursor: "pointer", background: isOpen ? "#fafafa" : "transparent" }}
+                  onClick={() => toggleRow(p._id)}
+                  onMouseEnter={e => e.currentTarget.style.background = "#fafafa"}
+                  onMouseLeave={e => e.currentTarget.style.background = isOpen ? "#fafafa" : "transparent"}
+                >
+                  <td style={{ padding: "14px 20px", fontSize: 12, color: "#ccc", fontFamily: "monospace", width: 40 }}>{i + 1}</td>
+                  <td style={{ padding: "14px 8px", width: 24, color: "#bbb" }}>
+                    {isOpen ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
+                  </td>
+                  <td style={{ padding: "14px 20px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <div style={{
+                        width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
+                        background: avatarColor(p.name || p.phone),
+                        color: "#fff", display: "grid", placeItems: "center",
+                        fontSize: 13, fontWeight: 800,
+                      }}>
+                        {avatar(p.name, p.phone)}
+                      </div>
+                      <span style={{ fontWeight: 600, color: "#0d1b3e", fontSize: 14 }}>{p.name || "—"}</span>
+                    </div>
+                  </td>
+                  <td style={{ padding: "14px 20px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
+                      <Mail size={13} color="#bbb" />{p.email || "—"}
+                    </div>
+                  </td>
+                  <td style={{ padding: "14px 20px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
+                      <Phone size={13} color="#bbb" />{p.phone || "—"}
+                    </div>
+                  </td>
+                  <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>{p.planLabel || p.plan || "—"}</td>
+                  <td style={{ padding: "14px 20px", fontSize: 13.5, color: "#0d1b3e", fontWeight: 700, whiteSpace: "nowrap" }}>
+                    ₹{Number(p.amount || 0).toLocaleString("en-IN")}
+                  </td>
+                  <td style={{ padding: "14px 20px" }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "4px 11px", whiteSpace: "nowrap" }}>
+                      <CheckCircle2 size={13} /> Success
+                    </span>
+                  </td>
+                  <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888", whiteSpace: "nowrap" }}>{fmtDate(p.createdAt)}</td>
+                </tr>
+                {isOpen && (
+                  <tr style={{ borderBottom: "1px solid #f0f0f0", background: "#fafafa" }}>
+                    <td colSpan={9} style={{ padding: "0 20px 18px 52px" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#999", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: 8 }}>
+                        Full document (MongoDB Atlas · enrollments)
+                      </div>
+                      <pre style={{
+                        margin: 0, padding: "14px 16px", background: "#0d1b3e", color: "#cdd6f4",
+                        borderRadius: 10, fontSize: 12.5, lineHeight: 1.6, overflowX: "auto",
+                        fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                      }}>
+                        {JSON.stringify(p, null, 2)}
+                      </pre>
+                    </td>
+                  </tr>
+                )}
+                </Fragment>
+              );})}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

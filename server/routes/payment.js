@@ -2,6 +2,7 @@ import express from "express";
 import crypto from "crypto";
 import Razorpay from "razorpay";
 import Enrollment from "../models/Enrollment.js";
+import { requireAdmin } from "../middleware/admin.js";
 
 const router = express.Router();
 
@@ -28,9 +29,15 @@ if (KEY_ID && KEY_SECRET) {
   console.warn("⚠️  RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET not set — payments disabled.");
 }
 
+// Parse a rank-like value ("12,345" / " 678 ") to a positive number, else null.
+const num = (v) => {
+  const n = Number(String(v ?? "").replace(/[, ]/g, ""));
+  return Number.isFinite(n) && n > 0 ? n : null;
+};
+
 /* ── Create an order ──────────────────────────────────────────────
    Body: { plan, name, email, phone, homeState, jeeMainCrlRank, ... }
-   Returns: { orderId, amount, currency, keyId, enrollmentId }            */
+   Returns: { orderId, amount, currency, keyId, planLabel }                */
 router.post("/order", async (req, res) => {
   try {
     if (!razorpay) return res.status(503).json({ error: "Payments are not configured yet." });
@@ -51,43 +58,15 @@ router.post("/order", async (req, res) => {
       notes: { plan, name: String(name).slice(0, 100) },
     });
 
-    // Persist the enrollment as "created" so we keep the lead even if
-    // the student abandons the payment. This is best-effort lead capture —
-    // if it fails (DB hiccup, schema mismatch, etc.) we must NOT block the
-    // payment, otherwise the customer can't pay at all.
-    const num = (v) => {
-      const n = Number(String(v ?? "").replace(/[, ]/g, ""));
-      return Number.isFinite(n) && n > 0 ? n : null;
-    };
-    let enrollmentId = null;
-    try {
-      const enr = await Enrollment.create({
-        plan,
-        amount: planMeta.amount,
-        name: String(name).trim(),
-        email: (req.body.email || "").trim(),
-        phone: (req.body.phone || "").trim(),
-        homeState: (req.body.homeState || "").trim(),
-        currentClass: (req.body.currentClass || "").trim(),
-        targetExam:   (req.body.targetExam || "").trim(),
-        jeeMainCrlRank:      num(req.body.jeeMainCrlRank),
-        jeeMainCategoryRank: num(req.body.jeeMainCategoryRank),
-        jeeAdvCrlRank:       num(req.body.jeeAdvCrlRank),
-        jeeAdvCategoryRank:  num(req.body.jeeAdvCategoryRank),
-        razorpayOrderId: order.id,
-        status: "created",
-      });
-      enrollmentId = enr._id;
-    } catch (persistErr) {
-      console.error("enrollment persist failed (continuing with payment):", persistErr?.message || persistErr);
-    }
-
+    // Intentionally NOT persisted here. An enrolment document is written only
+    // after the payment is verified as genuine (see /verify), so the
+    // `enrollments` collection holds successful payments only — abandoned or
+    // failed checkouts leave no trace in the database.
     res.json({
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
       keyId: KEY_ID,
-      enrollmentId,
       planLabel: planMeta.label,
     });
   } catch (e) {
@@ -97,12 +76,13 @@ router.post("/order", async (req, res) => {
 });
 
 /* ── Verify the payment signature ─────────────────────────────────
-   Body: { razorpay_order_id, razorpay_payment_id, razorpay_signature }  */
+   Body: { razorpay_order_id, razorpay_payment_id, razorpay_signature,
+           plan, name, email, phone, ... }                                 */
 router.post("/verify", async (req, res) => {
   try {
     if (!KEY_SECRET) return res.status(503).json({ error: "Payments are not configured yet." });
 
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body || {};
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, plan } = req.body || {};
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature)
       return res.status(400).json({ error: "Missing payment details." });
 
@@ -115,26 +95,78 @@ router.post("/verify", async (req, res) => {
       expected.length === razorpay_signature.length &&
       crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(razorpay_signature));
 
-    if (!valid) {
-      try {
-        await Enrollment.findOneAndUpdate({ razorpayOrderId: razorpay_order_id }, { status: "failed" });
-      } catch (e) { console.error("enrollment status (failed) update error:", e?.message || e); }
-      return res.status(400).json({ error: "Payment verification failed." });
-    }
+    // Couldn't verify → the payment isn't genuine, so we save NOTHING. The
+    // enrolment collection only ever gains a row on a confirmed success.
+    if (!valid) return res.status(400).json({ error: "Payment verification failed." });
 
-    // Signature is valid — the payment is genuine. Record it best-effort, but
-    // never fail the response on a DB issue (the money has already moved).
+    // Amount/label always come from the server catalogue, never the client.
+    const planMeta = PLANS[plan];
+    if (!planMeta) return res.status(400).json({ error: "Invalid plan selected." });
+
+    // Signature is valid — the payment is genuine, so create the enrolment now.
+    // Keyed on the order id + upsert so a retried verify can't duplicate it.
+    // Best-effort: the money has already moved, so a DB hiccup must not fail
+    // the response to the customer.
     try {
       await Enrollment.findOneAndUpdate(
         { razorpayOrderId: razorpay_order_id },
-        { status: "paid", razorpayPaymentId: razorpay_payment_id }
+        {
+          plan,
+          amount: planMeta.amount,
+          name:      String(req.body.name || "").trim(),
+          email:     String(req.body.email || "").trim().toLowerCase(),
+          phone:     String(req.body.phone || "").trim(),
+          homeState: String(req.body.homeState || "").trim(),
+          currentClass: String(req.body.currentClass || "").trim(),
+          targetExam:   String(req.body.targetExam || "").trim(),
+          jeeMainCrlRank:      num(req.body.jeeMainCrlRank),
+          jeeMainCategoryRank: num(req.body.jeeMainCategoryRank),
+          jeeAdvCrlRank:       num(req.body.jeeAdvCrlRank),
+          jeeAdvCategoryRank:  num(req.body.jeeAdvCategoryRank),
+          razorpayOrderId:   razorpay_order_id,
+          razorpayPaymentId: razorpay_payment_id,
+          status: "paid",
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
       );
-    } catch (e) { console.error("enrollment status (paid) update error:", e?.message || e); }
+    } catch (e) { console.error("enrollment persist (paid) error:", e?.message || e); }
 
     res.json({ ok: true, paymentId: razorpay_payment_id });
   } catch (e) {
     console.error("payment/verify error:", e?.message || e);
     res.status(500).json({ error: "Could not verify payment." });
+  }
+});
+
+/* ── Admin: list successful payments (paid enrolments only) ───────── */
+router.get("/enrollments", requireAdmin, async (_req, res) => {
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate");
+  try {
+    const items = await Enrollment.find({ status: "paid" }).sort({ createdAt: -1 }).lean();
+    const enrollments = items.map((e) => ({ ...e, planLabel: PLANS[e.plan]?.label || e.plan }));
+    res.json({ total: enrollments.length, enrollments });
+  } catch (e) {
+    console.error("[payment/enrollments]", e?.message || e);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/enrollments/export.csv", requireAdmin, async (_req, res) => {
+  try {
+    const items = await Enrollment.find({ status: "paid" }).sort({ createdAt: -1 }).lean();
+    const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const head = "Name,Email,Phone,Plan,Amount,Home State,Class,Target Exam,Payment ID,Order ID,Paid On\n";
+    const rows = items.map((e) => [
+      e.name, e.email, e.phone, PLANS[e.plan]?.label || e.plan, e.amount,
+      e.homeState, e.currentClass, e.targetExam,
+      e.razorpayPaymentId, e.razorpayOrderId, e.createdAt?.toISOString(),
+    ].map(esc).join(",")).join("\n");
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", "attachment; filename=collegeparichay-payments.csv");
+    res.send(head + rows);
+  } catch (e) {
+    console.error("[payment/enrollments/export]", e?.message || e);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
