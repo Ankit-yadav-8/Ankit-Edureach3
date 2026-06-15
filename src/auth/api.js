@@ -33,6 +33,7 @@ async function req(path, { method = "GET", body, token } = {}) {
 export const apiSignup    = (b) => req("/api/auth/signup", { method: "POST", body: b });
 export const apiLogin     = (b) => req("/api/auth/login",  { method: "POST", body: b });
 export const apiMe        = (token) => req("/api/auth/me", { token });
+export const apiUpdateProfile = (token, b) => req("/api/auth/profile", { method: "PATCH", body: b, token });
 export const apiForgot    = (b) => req("/api/auth/forgot", { method: "POST", body: b });
 export const apiReset     = (b) => req("/api/auth/reset",  { method: "POST", body: b });
 export const apiSendOtp   = (b) => req("/api/otp/send",    { method: "POST", body: b });

@@ -61,6 +61,51 @@ router.get("/me", requireAuth, async (req, res) => {
   res.json({ user });
 });
 
+// Update the logged-in user's own profile. Only the fields present in the body
+// are touched, so the client can send a partial patch. Email/phone keep their
+// unique constraint, so we guard against collisions with another account.
+router.patch("/profile", requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: "Not found" });
+
+    let { name, email, phone, coaching, homeState, jeeMainsRank, jeeAdvancedRank } = req.body || {};
+
+    if (name !== undefined) {
+      if (!String(name).trim()) return res.status(400).json({ error: "Name cannot be empty" });
+      user.name = String(name).trim();
+    }
+
+    if (email !== undefined) {
+      email = String(email).toLowerCase().trim();
+      if (!isEmail(email)) return res.status(400).json({ error: "Use a @gmail.com or .in email address" });
+      if (email !== user.email) {
+        const dup = await User.findOne({ email, _id: { $ne: user._id } }).select("_id");
+        if (dup) return res.status(409).json({ error: "Email already registered" });
+        user.email = email;
+      }
+    }
+
+    if (phone !== undefined) {
+      phone = String(phone).trim();
+      if (!/^\d{10}$/.test(phone)) return res.status(400).json({ error: "Enter a valid 10-digit phone number" });
+      if (phone !== user.phone) {
+        const dup = await User.findOne({ phone, _id: { $ne: user._id } }).select("_id");
+        if (dup) return res.status(409).json({ error: "Phone number already registered" });
+        user.phone = phone;
+      }
+    }
+
+    if (coaching  !== undefined) user.coaching  = String(coaching).trim();
+    if (homeState !== undefined) user.homeState = String(homeState).trim();
+    if (jeeMainsRank    !== undefined) user.jeeMainsRank    = jeeMainsRank    === "" || jeeMainsRank    == null ? null : Number(jeeMainsRank);
+    if (jeeAdvancedRank !== undefined) user.jeeAdvancedRank = jeeAdvancedRank === "" || jeeAdvancedRank == null ? null : Number(jeeAdvancedRank);
+
+    await user.save();
+    res.json({ user: pub(user) });
+  } catch (e) { console.error("[auth/profile]", e.message); res.status(500).json({ error: "Could not update profile. Please try again." }); }
+});
+
 router.post("/forgot", async (req, res) => {
   try {
     const email = String(req.body?.email || "").toLowerCase().trim();

@@ -6,6 +6,7 @@ import {
   ArrowRight, Sparkles, BadgeCheck, PartyPopper, GraduationCap,
 } from "lucide-react";
 import { startPayment } from "../payments/razorpay.js";
+import { useAuth } from "../auth/AuthContext.jsx";
 
 /* ─────────────────────────────────────────────────────────
    Plan catalogue (must match server/routes/payment.js)
@@ -94,7 +95,16 @@ const EMPTY = {
 function EnrolModal({ plan, onClose }) {
   const meta = PLAN_META[plan] || PLAN_META["josaa"];
   const isMentorship = meta.kind === "mentorship";
-  const [f, setF] = useState(EMPTY);
+  // Pre-fill contact details straight from the logged-in account — the student
+  // can still edit any of them before paying.
+  const { user } = useAuth() || {};
+  const [f, setF] = useState(() => ({
+    ...EMPTY,
+    name:      user?.name      || "",
+    email:     user?.email     || "",
+    phone:     user?.phone     || "",
+    homeState: user?.homeState || "",
+  }));
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [topError, setTopError] = useState("");
@@ -194,6 +204,12 @@ function EnrolModal({ plan, onClose }) {
               {topError && (
                 <div style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", padding: "10px 12px", borderRadius: 10, fontSize: 13.5, marginBottom: 14, fontWeight: 600 }}>
                   {topError}
+                </div>
+              )}
+
+              {user && (
+                <div style={{ display: "flex", alignItems: "center", gap: 7, background: "#f0faf4", border: "1px solid #bbf7d0", color: "#15803d", padding: "9px 12px", borderRadius: 10, fontSize: 12.5, fontWeight: 600, marginBottom: 14 }}>
+                  <BadgeCheck size={15} color="#16a34a" /> Auto-filled from your account — edit any field if needed.
                 </div>
               )}
 

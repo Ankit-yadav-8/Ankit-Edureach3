@@ -4,10 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Mail, Phone, MapPin, GraduationCap, Hash, Calendar, LogOut,
   CreditCard, CheckCircle2, ArrowRight, Sparkles, ShieldCheck, BookOpen, Loader2,
-  Check, Compass,
+  Check, Compass, Pencil, X,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
-import { apiMyEnrollments } from "../auth/api.js";
+import { useEnrol } from "../components/EnrolModal.jsx";
+import { apiMyEnrollments, apiUpdateProfile } from "../auth/api.js";
 
 const ORANGE = "#F47B20";
 const GOLD = "#f5a623";
@@ -18,7 +19,42 @@ const NAVY = "#0d1b3e";
 // server/routes/payment.js PLANS). Mentorship keys all start with "mentor-".
 const COUNSELLING_KEYS = ["josaa", "all-colleges"];
 const isMentorshipPlan = (key) => String(key || "").startsWith("mentor-");
-const isCounsellingPlan = (key) => COUNSELLING_KEYS.includes(key);
+
+// Full plan catalogue shown on the dashboard. Prices are display-only — the
+// server is the source of truth at checkout. Keys match the EnrolModal/server.
+const PLAN_CATALOG = [
+  {
+    key: "mentorship",
+    title: "Mentorship plans",
+    subtitle: "1-on-1 IITian / doctor mentorship for JEE & NEET",
+    icon: GraduationCap,
+    accent: ORANGE, accent2: GOLD, soft: "#fff6ee",
+    plans: [
+      { key: "mentor-jee-2027",   label: "JEE 2027 Mentorship",         tag: "Class 12 / Droppers",    price: 1999, to: "/mentorship/jee-2027" },
+      { key: "mentor-neet-2027",  label: "NEET 2027 Mentorship",        tag: "Class 12 / Droppers",    price: 1999, to: "/mentorship/jee-2027" },
+      { key: "mentor-jee-2028",   label: "JEE 2028 Mentorship (2-Year)",tag: "Class 11 · 2-Year plan", price: 3999, to: "/mentorship/jee-2028" },
+      { key: "mentor-neet-2028",  label: "NEET 2028 Mentorship (2-Year)",tag: "Class 11 · 2-Year plan", price: 3999, to: "/mentorship/jee-2028" },
+      { key: "mentor-foundation", label: "Foundation Mentorship",       tag: "Class 9 & 10",           price: 2999, to: "/mentorship/foundation" },
+    ],
+  },
+  {
+    key: "counselling",
+    title: "Counselling plans",
+    subtitle: "Expert JoSAA / CSAB choice-filling & college lists",
+    icon: Compass,
+    accent: GREEN, accent2: "#22c55e", soft: "#f0faf4",
+    plans: [
+      { key: "josaa",        label: "JoSAA + CSAB 2026 Counselling", tag: "Strong ranks · IITs / NITs / IIITs", price: 299, to: "/josaa-2026" },
+      { key: "all-colleges", label: "All Colleges Counselling",      tag: "Any rank · State / Private / Deemed", price: 499, to: "/josaa-2026" },
+    ],
+  },
+];
+
+// Look up the accent palette for an owned plan key.
+const groupForPlan = (key) =>
+  isMentorshipPlan(key)
+    ? { accent: ORANGE, soft: "#fff6ee", icon: GraduationCap }
+    : { accent: GREEN, soft: "#f0faf4", icon: Compass };
 
 const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
@@ -33,15 +69,182 @@ const QUICK_LINKS = [
 
 const sectionTitle = {
   fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: NAVY,
-  margin: "0 0 14px", display: "flex", alignItems: "center", gap: 8,
+  margin: 0, display: "flex", alignItems: "center", gap: 8,
 };
 
+/* ── A single catalogue plan tile (Enrolled / Not enrolled) ───────── */
+function PlanTile({ plan, group, enrolled, purchase, onEnrol, onView }) {
+  const Icon = group.icon;
+  return (
+    <motion.div whileHover={{ y: -3 }} transition={{ type: "spring", stiffness: 300, damping: 24 }}
+      style={{
+        background: enrolled ? group.soft : "#fff",
+        border: enrolled ? `2px solid ${group.accent}` : "1px solid #eaeaea",
+        borderRadius: 18, padding: "18px", display: "flex", flexDirection: "column", gap: 12,
+        position: "relative", overflow: "hidden",
+        boxShadow: enrolled ? `0 18px 40px -24px ${group.accent}99` : "0 10px 30px -22px rgba(13,27,62,.35)",
+      }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 11 }}>
+        <div style={{ width: 42, height: 42, borderRadius: 12, background: `${group.accent}14`, border: `1px solid ${group.accent}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+          <Icon size={20} color={group.accent} />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: NAVY, lineHeight: 1.25 }}>{plan.label}</div>
+          <div style={{ fontSize: 11.5, color: "#9ca3af", fontWeight: 600, marginTop: 2 }}>{plan.tag}</div>
+        </div>
+        {enrolled ? (
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "5px 10px", flexShrink: 0 }}>
+            <CheckCircle2 size={12} /> Enrolled
+          </span>
+        ) : (
+          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#9ca3af", background: "#f3f4f6", borderRadius: 20, padding: "5px 10px", flexShrink: 0 }}>Not enrolled</span>
+        )}
+      </div>
+
+      <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
+        <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 22, color: NAVY }}>₹{plan.price.toLocaleString("en-IN")}</span>
+        <span style={{ fontSize: 11.5, color: "#9ca3af" }}>one-time</span>
+      </div>
+
+      {enrolled && purchase && (
+        <div style={{ fontSize: 11.5, color: group.accent, fontWeight: 700 }}>Purchased {fmtDate(purchase.createdAt)}</div>
+      )}
+
+      {enrolled ? (
+        <button onClick={() => onView(plan.to)}
+          style={{ marginTop: "auto", width: "100%", padding: "11px", borderRadius: 11, border: `1.5px solid ${group.accent}66`, background: "#fff", color: group.accent, fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
+          View details <ArrowRight size={15} />
+        </button>
+      ) : (
+        <button onClick={() => onEnrol(plan.key)}
+          style={{ marginTop: "auto", width: "100%", padding: "12px", borderRadius: 11, border: "none", background: `linear-gradient(135deg, ${group.accent}, ${group.accent2})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, boxShadow: `0 10px 22px -10px ${group.accent}99` }}>
+          Enrol now — ₹{plan.price.toLocaleString("en-IN")} <ArrowRight size={15} />
+        </button>
+      )}
+    </motion.div>
+  );
+}
+
+/* ── A labelled input used inside the Edit-info modal ─────────────── */
+function LabeledInput({ label, value, onChange, type = "text", placeholder, inputMode, disabled }) {
+  return (
+    <label style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color: "#6b7280" }}>{label}</span>
+      <input type={type} value={value} onChange={onChange} placeholder={placeholder} inputMode={inputMode} disabled={disabled}
+        style={{ width: "100%", padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box", background: disabled ? "#f9fafb" : "#fff" }}
+        onFocus={(e) => { e.target.style.borderColor = ORANGE; }}
+        onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+    </label>
+  );
+}
+
+/* ── Edit profile modal — name / email / phone (+ more) ───────────── */
+function EditInfoModal({ user, token, onClose, onSaved }) {
+  const [f, setF] = useState({
+    name: user?.name || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
+    coaching: user?.coaching || "",
+    homeState: user?.homeState || "",
+    jeeMainsRank: user?.jeeMainsRank ?? "",
+    jeeAdvancedRank: user?.jeeAdvancedRank ?? "",
+  });
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const set = (k) => (e) => { setF((s) => ({ ...s, [k]: e.target.value })); setErr(""); };
+
+  async function save() {
+    setErr("");
+    if (!f.name.trim()) return setErr("Name cannot be empty");
+    if (!/^\S+@\S+\.\S+$/.test(f.email.trim())) return setErr("Enter a valid email address");
+    if (!/^\d{10}$/.test(f.phone.replace(/\D/g, "").slice(-10))) return setErr("Enter a valid 10-digit phone number");
+    setBusy(true);
+    try {
+      const { user: updated } = await apiUpdateProfile(token, {
+        name: f.name.trim(),
+        email: f.email.trim().toLowerCase(),
+        phone: f.phone.replace(/\D/g, "").slice(-10),
+        coaching: f.coaching.trim(),
+        homeState: f.homeState.trim(),
+        jeeMainsRank: f.jeeMainsRank === "" ? null : Number(f.jeeMainsRank),
+        jeeAdvancedRank: f.jeeAdvancedRank === "" ? null : Number(f.jeeAdvancedRank),
+      });
+      onSaved(updated);
+      onClose();
+    } catch (e) {
+      setErr(e.message || "Could not save. Please try again.");
+    } finally { setBusy(false); }
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .18 }}
+      onMouseDown={(e) => { if (e.target === e.currentTarget && !busy) onClose(); }}
+      style={{ position: "fixed", inset: 0, zIndex: 4000, background: "rgba(13,27,62,.55)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", display: "grid", placeItems: "center", padding: 16, overflowY: "auto" }}>
+      <motion.div initial={{ opacity: 0, scale: .94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: .95, y: 12 }}
+        transition={{ type: "spring", stiffness: 360, damping: 28 }} onMouseDown={(e) => e.stopPropagation()}
+        style={{ width: "min(560px,100%)", background: "#fff", borderRadius: 22, boxShadow: "0 30px 80px rgba(13,27,62,.4)", overflow: "hidden", margin: "auto" }}>
+
+        {/* header */}
+        <div style={{ background: `linear-gradient(135deg, ${NAVY}, #14264f)`, color: "#fff", padding: "22px 24px", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: -30, right: -10, width: 160, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.35), transparent 70%)" }} />
+          <button onClick={onClose} disabled={busy} aria-label="Close"
+            style={{ position: "absolute", top: 14, right: 14, width: 34, height: 34, borderRadius: "50%", border: "none", background: "rgba(255,255,255,.16)", color: "#fff", cursor: busy ? "not-allowed" : "pointer", display: "grid", placeItems: "center" }}>
+            <X size={17} />
+          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 11, position: "relative" }}>
+            <div style={{ width: 44, height: 44, borderRadius: 13, background: "rgba(255,255,255,.14)", display: "grid", placeItems: "center" }}>
+              <Pencil size={20} color="#fff" />
+            </div>
+            <div>
+              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.25rem", margin: 0 }}>Edit your information</h3>
+              <div style={{ fontSize: 12.5, opacity: .8, marginTop: 2 }}>Used to auto-fill your details at checkout.</div>
+            </div>
+          </div>
+        </div>
+
+        {/* body */}
+        <div style={{ padding: "22px 24px 24px" }}>
+          {err && (
+            <div style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", padding: "10px 12px", borderRadius: 10, fontSize: 13.5, marginBottom: 14, fontWeight: 600 }}>{err}</div>
+          )}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <LabeledInput label="Full name" value={f.name} onChange={set("name")} placeholder="Your name" />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <LabeledInput label="Email" type="email" value={f.email} onChange={set("email")} placeholder="you@email.com" />
+              <LabeledInput label="Mobile number" type="tel" inputMode="numeric" value={f.phone} onChange={set("phone")} placeholder="10-digit mobile" />
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <LabeledInput label="Coaching" value={f.coaching} onChange={set("coaching")} placeholder="Your coaching" />
+              <LabeledInput label="Home state" value={f.homeState} onChange={set("homeState")} placeholder="Home state" />
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <LabeledInput label="JEE Main rank" inputMode="numeric" value={f.jeeMainsRank} onChange={set("jeeMainsRank")} placeholder="Optional" />
+              <LabeledInput label="JEE Advanced rank" inputMode="numeric" value={f.jeeAdvancedRank} onChange={set("jeeAdvancedRank")} placeholder="Optional" />
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: 10, marginTop: 22 }}>
+            <button onClick={onClose} disabled={busy} style={{ flex: 1, padding: "13px 0", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, fontWeight: 700, fontFamily: "Sora", cursor: busy ? "not-allowed" : "pointer" }}>Cancel</button>
+            <button onClick={save} disabled={busy}
+              style={{ flex: 1.4, padding: "13px 0", borderRadius: 12, border: "none", background: busy ? "#f9a25e" : `linear-gradient(135deg, ${ORANGE}, ${GOLD})`, color: "#fff", fontWeight: 800, fontFamily: "Sora", cursor: busy ? "wait" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: `0 10px 24px -10px ${ORANGE}` }}>
+              {busy ? <><Loader2 size={17} className="dash-spin" /> Saving…</> : <><Check size={17} strokeWidth={3} /> Save changes</>}
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function Dashboard() {
-  const { user, token, isLoggedIn, logout, openLogin } = useAuth();
+  const { user, token, isLoggedIn, logout, openLogin, updateUser } = useAuth();
+  const { open: openEnrol } = useEnrol() || {};
   const navigate = useNavigate();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [confirmLogout, setConfirmLogout] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   useEffect(() => {
     const prev = document.title;
@@ -88,48 +291,8 @@ export default function Dashboard() {
     { label: "Member since",      value: fmtDate(user?.createdAt), icon: Calendar },
   ];
 
-  // Split the user's purchases into the two product lines and render a big
-  // card for each — owned plans show an "enrolled" state, the rest a CTA.
-  const CATEGORIES = [
-    {
-      key: "mentorship",
-      title: "Mentorship",
-      tag: "1-on-1 IITian / doctor mentor",
-      desc: "A personal mentor, daily targets, weekly test analysis and a roadmap built around your backlog and target rank.",
-      icon: GraduationCap,
-      accent: ORANGE,
-      accent2: GOLD,
-      soft: "#fff6ee",
-      to: "/mentorship",
-      cta: "Explore mentorship",
-      features: [
-        "Personal 1-on-1 mentor",
-        "Daily targets & accountability",
-        "Weekly test analysis",
-        "Parent weekly progress booklet",
-      ],
-      owned: plans.filter((p) => isMentorshipPlan(p.plan)),
-    },
-    {
-      key: "counselling",
-      title: "Counselling",
-      tag: "JoSAA · CSAB · All-college guidance",
-      desc: "Expert choice-filling and a personalised college list tailored to your rank — across JoSAA, CSAB and every other counselling.",
-      icon: Compass,
-      accent: GREEN,
-      accent2: "#22c55e",
-      soft: "#f0faf4",
-      to: "/josaa-2026",
-      cta: "Explore counselling",
-      features: [
-        "Expert JoSAA + CSAB choice-filling",
-        "Personalised college list for your rank",
-        "Every counselling round covered",
-        "1-on-1 guidance from a mentor",
-      ],
-      owned: plans.filter((p) => isCounsellingPlan(p.plan)),
-    },
-  ];
+  const enrolledKeys = new Set(plans.map((p) => p.plan));
+  const hasAnyPlan = plans.length > 0;
 
   return (
     <section style={{ background: "#f8f7f5", minHeight: "100vh", padding: "120px 0 70px" }}>
@@ -151,9 +314,15 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* Profile details */}
-        <h2 style={sectionTitle}><User size={18} color={ORANGE} /> Your details</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 30 }}>
+        {/* Profile details + Edit info */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+          <h2 style={sectionTitle}><User size={18} color={ORANGE} /> Your details</h2>
+          <button onClick={() => setEditOpen(true)}
+            style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", border: `1.5px solid ${ORANGE}55`, color: ORANGE, padding: "8px 16px", borderRadius: 11, fontWeight: 800, fontFamily: "Sora", fontSize: 13.5, cursor: "pointer" }}>
+            <Pencil size={15} /> Edit info
+          </button>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 34 }}>
           {details.map(({ label, value, icon: Icon }) => (
             <div key={label} style={{ background: "#fff", border: "1px solid #eee", borderRadius: 14, padding: "16px 18px", display: "flex", alignItems: "center", gap: 12 }}>
               <div style={{ width: 40, height: 40, borderRadius: 10, background: `${ORANGE}12`, display: "grid", placeItems: "center", flexShrink: 0 }}>
@@ -169,112 +338,82 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Purchased plans — one big card per product line (Mentorship & Counselling) */}
-        <h2 style={sectionTitle}><CreditCard size={18} color={ORANGE} /> Your plans &amp; purchases</h2>
+        {/* ── Enrolled plans (a dedicated section for what you own) ── */}
+        <h2 style={{ ...sectionTitle, marginBottom: 14 }}><CheckCircle2 size={18} color={GREEN} /> Your enrolled plans</h2>
         {loading ? (
           <div style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "40px", textAlign: "center", color: "#9ca3af", marginBottom: 34 }}>
             <Loader2 size={22} className="dash-spin" /> Loading your plans…
           </div>
+        ) : !hasAnyPlan ? (
+          <div style={{ background: "#fff", border: "1px dashed #e5b894", borderRadius: 16, padding: "34px 24px", textAlign: "center", marginBottom: 34 }}>
+            <div style={{ width: 52, height: 52, borderRadius: 15, background: `${ORANGE}12`, display: "grid", placeItems: "center", margin: "0 auto 14px" }}>
+              <Sparkles size={24} color={ORANGE} />
+            </div>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 16, marginBottom: 4 }}>No active plans yet</div>
+            <div style={{ fontSize: 14, color: "#6b7280", marginBottom: 16 }}>Pick a mentorship or counselling plan below to get started.</div>
+          </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(330px, 1fr))", gap: 20, marginBottom: 34 }}>
-            {CATEGORIES.map((cat) => {
-              const Icon = cat.icon;
-              const owned = cat.owned;
-              const has = owned.length > 0;
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginBottom: 34 }}>
+            {plans.map((p) => {
+              const g = groupForPlan(p.plan);
+              const Icon = g.icon;
               return (
-                <motion.div key={cat.key} whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                  style={{
-                    background: "#fff", borderRadius: 22, border: `1px solid ${cat.accent}33`,
-                    position: "relative", overflow: "hidden", display: "flex", flexDirection: "column",
-                    boxShadow: `0 24px 50px -30px ${cat.accent}80`,
-                  }}>
-                  {/* top accent bar */}
-                  <div style={{ height: 5, background: `linear-gradient(90deg, ${cat.accent}, ${cat.accent2})` }} />
-
-                  <div style={{ padding: "24px 26px 28px", display: "flex", flexDirection: "column", flex: 1 }}>
-                    {/* header */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
-                      <div style={{ width: 54, height: 54, borderRadius: 16, background: `${cat.accent}14`, border: `1px solid ${cat.accent}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                        <Icon size={26} color={cat.accent} />
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.32rem", color: NAVY }}>{cat.title}</div>
-                        <div style={{ fontSize: 12.5, color: "#9ca3af", fontWeight: 600, marginTop: 1 }}>{cat.tag}</div>
-                      </div>
-                      {has ? (
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "6px 13px", flexShrink: 0 }}>
-                          <CheckCircle2 size={14} /> Enrolled
-                        </span>
-                      ) : (
-                        <span style={{ fontSize: 11.5, fontWeight: 700, color: "#9ca3af", background: "#f3f4f6", borderRadius: 20, padding: "6px 13px", flexShrink: 0 }}>
-                          Not enrolled
-                        </span>
-                      )}
-                    </div>
-
-                    <p style={{ color: "#6b7280", fontSize: 14, lineHeight: 1.6, margin: "0 0 18px" }}>{cat.desc}</p>
-
-                    {has ? (
-                      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                        {/* "you have this plan" confirmation banner */}
-                        <div style={{ display: "flex", alignItems: "center", gap: 11, background: cat.soft, border: `1px solid ${cat.accent}33`, borderRadius: 14, padding: "13px 15px" }}>
-                          <div style={{ width: 34, height: 34, borderRadius: "50%", background: cat.accent, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                            <Check size={18} color="#fff" strokeWidth={3} />
-                          </div>
-                          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, color: NAVY, lineHeight: 1.35 }}>
-                            You have {owned.length > 1 ? `${owned.length} active ${cat.title.toLowerCase()} plans` : `an active ${cat.title.toLowerCase()} plan`}
-                          </div>
-                        </div>
-
-                        {/* each owned plan */}
-                        {owned.map((p) => (
-                          <div key={p._id} style={{ background: "#fff", border: "1px solid #eef0f2", borderRadius: 14, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                            <div style={{ width: 40, height: 40, borderRadius: 11, background: `${cat.accent}12`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                              <Sparkles size={18} color={cat.accent} />
-                            </div>
-                            <div style={{ flex: 1, minWidth: 140 }}>
-                              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, color: NAVY }}>{p.planLabel || p.plan}</div>
-                              <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>
-                                Purchased {fmtDate(p.createdAt)} · ID {p.razorpayPaymentId || "—"}
-                              </div>
-                            </div>
-                            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 16, color: NAVY }}>₹{Number(p.amount || 0).toLocaleString("en-IN")}</div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 22 }}>
-                          {cat.features.map((f) => (
-                            <div key={f} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                              <span style={{ width: 22, height: 22, borderRadius: "50%", background: `${cat.accent}14`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                                <Check size={13} color={cat.accent} strokeWidth={3} />
-                              </span>
-                              <span style={{ color: "#374151", fontSize: 13.5 }}>{f}</span>
-                            </div>
-                          ))}
-                        </div>
-                        <button onClick={() => navigate(cat.to)}
-                          style={{
-                            marginTop: "auto", width: "100%", padding: "14px", borderRadius: 13, border: "none",
-                            background: `linear-gradient(135deg, ${cat.accent}, ${cat.accent2})`, color: "#fff",
-                            fontFamily: "Sora", fontWeight: 800, fontSize: 15, cursor: "pointer",
-                            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                            boxShadow: `0 12px 26px -10px ${cat.accent}99`,
-                          }}>
-                          {cat.cta} <ArrowRight size={17} />
-                        </button>
-                      </>
-                    )}
+                <div key={p._id} style={{ background: g.soft, border: `2px solid ${g.accent}`, borderRadius: 18, padding: "18px 20px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", boxShadow: `0 18px 40px -26px ${g.accent}99` }}>
+                  <div style={{ width: 46, height: 46, borderRadius: 13, background: "#fff", border: `1px solid ${g.accent}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <Icon size={22} color={g.accent} />
                   </div>
-                </motion.div>
+                  <div style={{ flex: 1, minWidth: 170 }}>
+                    <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15.5, color: NAVY }}>{p.planLabel || p.plan}</div>
+                    <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>
+                      Purchased {fmtDate(p.createdAt)} · ID {p.razorpayPaymentId || "—"}
+                    </div>
+                  </div>
+                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, color: NAVY }}>₹{Number(p.amount || 0).toLocaleString("en-IN")}</div>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "6px 13px" }}>
+                    <CheckCircle2 size={14} /> Active
+                  </span>
+                </div>
               );
             })}
           </div>
         )}
 
+        {/* ── All plans — every mentorship & counselling plan ── */}
+        <h2 style={{ ...sectionTitle, marginBottom: 6 }}><CreditCard size={18} color={ORANGE} /> All plans</h2>
+        <p style={{ fontSize: 13.5, color: "#9ca3af", margin: "0 0 22px" }}>Browse every plan — the ones you’re enrolled in are highlighted.</p>
+
+        {PLAN_CATALOG.map((group) => {
+          const GroupIcon = group.icon;
+          return (
+            <div key={group.key} style={{ marginBottom: 30 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 14 }}>
+                <div style={{ width: 38, height: 38, borderRadius: 11, background: `${group.accent}14`, border: `1px solid ${group.accent}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <GroupIcon size={19} color={group.accent} />
+                </div>
+                <div>
+                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.02rem", color: NAVY }}>{group.title}</div>
+                  <div style={{ fontSize: 12, color: "#9ca3af", fontWeight: 600 }}>{group.subtitle}</div>
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(255px, 1fr))", gap: 16 }}>
+                {group.plans.map((plan) => (
+                  <PlanTile
+                    key={plan.key}
+                    plan={plan}
+                    group={group}
+                    enrolled={enrolledKeys.has(plan.key)}
+                    purchase={plans.find((p) => p.plan === plan.key)}
+                    onEnrol={(k) => openEnrol?.(k)}
+                    onView={(to) => navigate(to)}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+
         {/* Quick links to the heavy content pages */}
-        <h2 style={sectionTitle}><BookOpen size={18} color={ORANGE} /> Continue learning</h2>
+        <h2 style={{ ...sectionTitle, marginBottom: 14, marginTop: 8 }}><BookOpen size={18} color={ORANGE} /> Continue learning</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
           {QUICK_LINKS.map(({ label, desc, to, color, icon: Icon }) => (
             <button key={label} onClick={() => navigate(to)}
@@ -292,6 +431,18 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+
+      {/* Edit info modal */}
+      <AnimatePresence>
+        {editOpen && (
+          <EditInfoModal
+            user={user}
+            token={token}
+            onClose={() => setEditOpen(false)}
+            onSaved={(u) => updateUser?.(u)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Logout confirmation */}
       <AnimatePresence>

@@ -52,9 +52,18 @@ export function AuthProvider({ children }) {
     setUser(user);
   };
 
+  // Merge a partial profile patch into the cached user (used after the
+  // dashboard "Edit info" save), preserving fields the patch doesn't return.
+  const updateUser = (patch) => setUser((prev) => {
+    const next = { ...(prev || {}), ...(patch || {}) };
+    writeCache(next);
+    return next;
+  });
+
   const value = {
     user, token, isLoggedIn: !!user,
     saveSession: save,
+    updateUser,
     login:  async (email, password) => save(await apiLogin({ email, password })),
     signup: async (form) => save(await apiSignup(form)),
     logout: () => { clearCache(); setToken(""); setUser(null); },
