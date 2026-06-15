@@ -76,6 +76,7 @@ const STRENGTHS = {
 const CATEGORIES = ["General", "OBC-NCL", "EWS", "SC", "ST"];
 
 const WEEK_TARGET_HRS = 40;
+const MAX_LOGS_PER_DAY = 3; // student may add/update today's log up to 3× a day
 
 /* sticky in-page navigation */
 const SECTIONS = [
@@ -332,6 +333,7 @@ function DashboardBody() {
   const todayEntry = entries.find((e) => e.date === todayIso);
 
   const [logForm, setLogForm] = useState({ subjects: {}, tasksTotal: "", routine: true });
+  const [editingLog, setEditingLog] = useState(false); // re-open today's log to update it
   const [testForm, setTestForm] = useState({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General" });
   const [blForm, setBlForm] = useState({ subject: "", topic: "", strength: "weak", planDate: "", week: "" });
   const [wtInput, setWtInput] = useState("");
@@ -540,9 +542,16 @@ function DashboardBody() {
     return out.slice(0, 5);
   }, [lowestSubject, weakRanked, latest, thisWkH]);
 
+  /* ── daily-log edit budget (up to 3 saves a day) ── */
+  // A legacy entry saved before this feature has no `edits` field → counts as 1.
+  const editsUsed = todayEntry ? (todayEntry.edits ?? 1) : 0;
+  const editsLeft = Math.max(0, MAX_LOGS_PER_DAY - editsUsed);
+  const canLogMore = editsLeft > 0;
+
   /* ── actions ── */
   function addLog(e) {
     e.preventDefault();
+    if (todayEntry && !canLogMore) return; // budget exhausted for today
     const subj = {};
     let totalH = 0, totalT = 0;
     subjects.forEach((s) => {
@@ -556,9 +565,20 @@ function DashboardBody() {
       tasksDone: totalT,
       tasksTotal: Number(logForm.tasksTotal) || totalT,
       routine: !!logForm.routine,
+      edits: editsUsed + 1, // 1 on first save, up to MAX_LOGS_PER_DAY
     };
     setEntries((prevE) => [...prevE.filter((x) => x.date !== todayIso), entry]);
     setLogForm({ subjects: {}, tasksTotal: "", routine: true });
+    setEditingLog(false);
+  }
+
+  // Re-open today's log pre-filled so the student can update it.
+  function startEditLog() {
+    if (!todayEntry || !canLogMore) return;
+    const subs = {};
+    subjects.forEach((s) => { const v = subVal(todayEntry, s); subs[s] = { h: v.h || "", t: v.t || "" }; });
+    setLogForm({ subjects: subs, tasksTotal: todayEntry.tasksTotal ?? "", routine: !!todayEntry.routine });
+    setEditingLog(true);
   }
 
   function addTest(e) {
@@ -646,6 +666,21 @@ function DashboardBody() {
 
   /* ── parent report builders + send (daily & weekly) ── */
   const todayTest = tests.find((t) => t.date === todayIso);
+  // Predicted JEE rank (latest Main/Advanced test) — shared by both reports so
+  // parents always see where their child currently stands.
+  function buildRankSummary() {
+    const r = latestRankTest?.rank;
+    if (!rankEnabled || !r || !r.ranked) return null;
+    return {
+      exam: r.advanced ? "JEE Advanced" : "JEE Main",
+      testName: latestRankTest.name || null,
+      marks: r.total,
+      crl: r.advanced ? `${inr(r.crlLo ?? r.low)} – ${inr(r.crlHi ?? r.high)}` : inr(r.crl),
+      band: r.advanced ? null : `${inr(r.low)} – ${inr(r.high)}`,
+      percentile: !r.advanced && r.percentile != null ? r.percentile : null,
+      categoryRank: !r.isGeneral && r.categoryRank ? `${r.category}: ${inr(r.categoryRank)}` : null,
+    };
+  }
   function buildWeeklyReport() {
     return {
       week: wk,
@@ -657,6 +692,7 @@ function DashboardBody() {
       },
       chapters: chaptersByStrength,
       weeklyTasks: weeklyTasks.map((t) => ({ text: t.text, done: t.done })),
+      rank: buildRankSummary(),
     };
   }
   function buildDailyReport() {
@@ -670,6 +706,7 @@ function DashboardBody() {
         routine: !!todayEntry?.routine,
         todayTest: todayTest ? `${todayTest.name}: ${todayTest.scored}/${todayTest.total}` : null,
       },
+      rank: buildRankSummary(),
     };
   }
 
@@ -903,16 +940,23 @@ function DashboardBody() {
               ))}
             </div>
 
-            {/* log today — ONCE PER DAY · locked after saving (no edits) */}
-            {todayEntry ? (
+            {/* log today — up to 3 updates a day, then locked till tomorrow */}
+            {todayEntry && !editingLog ? (
               <div style={{ background: "#f0faf4", border: "1px solid rgba(34,197,94,.3)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13.5, fontWeight: 800, color: "#15803d" }}>
-                    <CheckCircle2 size={17} /> Logged for today ({fmtDay(todayIso)}) — one entry per day
+                    <CheckCircle2 size={17} /> Logged for today ({fmtDay(todayIso)}) — {editsUsed}/{MAX_LOGS_PER_DAY} updates used
                   </span>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #cbd5e1", borderRadius: 9, padding: "7px 12px", fontSize: 12, fontWeight: 700, color: MUTE }}>
-                    <Lock size={13} /> Locked till tomorrow
-                  </span>
+                  {canLogMore ? (
+                    <button type="button" onClick={startEditLog}
+                      style={{ display: "inline-flex", alignItems: "center", gap: 6, background: `linear-gradient(135deg,${ORANGE},${GOLD})`, border: "none", borderRadius: 9, padding: "8px 14px", fontSize: 12.5, fontWeight: 800, color: "#fff", cursor: "pointer", fontFamily: "Sora", boxShadow: `0 8px 18px -10px ${ORANGE}` }}>
+                      <Pencil size={13} /> Update hours · {editsLeft} left
+                    </button>
+                  ) : (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #cbd5e1", borderRadius: 9, padding: "7px 12px", fontSize: 12, fontWeight: 700, color: MUTE }}>
+                      <Lock size={13} /> Locked till tomorrow
+                    </span>
+                  )}
                 </div>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   {subjects.map((s) => (
@@ -926,7 +970,9 @@ function DashboardBody() {
               </div>
             ) : (
               <form onSubmit={addLog} style={{ background: "#fffaf5", border: "1px solid rgba(244,123,32,.22)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412", marginBottom: 12 }}>Log today ({fmtDay(todayIso)}) · hours & tasks completed per subject</div>
+                <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412", marginBottom: 12 }}>
+                  {editingLog ? "Update today" : "Log today"} ({fmtDay(todayIso)}) · hours & tasks completed per subject
+                </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 10, marginBottom: 12 }}>
                   {subjects.map((s) => (
                     <SubjectDualField key={s} subject={s}
@@ -949,11 +995,17 @@ function DashboardBody() {
                     </div>
                   </div>
                   <button type="submit" style={{ padding: "11px 18px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 7 }}>
-                    <Plus size={15} /> Save today's log
+                    <Plus size={15} /> {editingLog ? "Save changes" : "Save today's log"}
                   </button>
+                  {editingLog && (
+                    <button type="button" onClick={() => { setEditingLog(false); setLogForm({ subjects: {}, tasksTotal: "", routine: true }); }}
+                      style={{ padding: "11px 18px", borderRadius: 11, border: "1.5px solid #e5e7eb", background: "#fff", color: MUTE, fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, cursor: "pointer" }}>
+                      Cancel
+                    </button>
+                  )}
                 </div>
                 <div style={{ fontSize: 11.5, color: MUTE, marginTop: 10, display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <Lock size={12} /> You can log only once per day — double-check before saving, it can't be edited afterwards.
+                  <RotateCw size={12} /> You can update today's log up to {MAX_LOGS_PER_DAY} times a day{editingLog ? ` — ${editsLeft} update${editsLeft === 1 ? "" : "s"} left after this` : ""}. It locks till tomorrow once used up.
                 </div>
               </form>
             )}
@@ -961,15 +1013,34 @@ function DashboardBody() {
             {/* weekly hours bars + goal gauge */}
             <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 22, alignItems: "center" }} className="md-track-grid">
               <div>
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: MUTE, marginBottom: 10 }}>Total study hours · last 7 days</div>
-                <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 150 }}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 12 }}>
+                  <span style={{ fontSize: 12.5, fontWeight: 700, color: MUTE }}>Total study hours · last 7 days</span>
+                  <span style={{ fontSize: 11.5, fontWeight: 800, color: ORANGE }}>{round1(weekHours)}h total</span>
+                </div>
+                {/* bar chart — fixed-height plot so the bars always render */}
+                <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 8, height: 172, padding: "20px 2px 0", borderBottom: "2px solid #eef1f5", position: "relative" }}>
+                  {last7.map((e, i) => {
+                    const h = Number(e.hours) || 0;
+                    const isToday = i === last7.length - 1;
+                    const barPx = Math.max(6, Math.round((h / maxH) * 118)); // up to 118px tall
+                    return (
+                      <div key={e.date} title={`${h}h on ${DOW[new Date(e.date).getDay()]}`}
+                        style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 6 }}>
+                        <span style={{ fontSize: 11, fontWeight: 800, color: isToday ? ORANGE : INK }}>{h}h</span>
+                        <motion.div initial={{ height: 0 }} animate={{ height: barPx }} transition={{ type: "spring", stiffness: 120, damping: 18, delay: i * 0.06 }}
+                          style={{ width: "100%", maxWidth: 30, borderRadius: "8px 8px 0 0",
+                            background: isToday ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "linear-gradient(180deg,rgba(244,123,32,.6),rgba(244,123,32,.28))",
+                            boxShadow: isToday ? `0 8px 18px -8px ${ORANGE}` : "none" }} />
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* day labels row (kept separate so bars share one clean baseline) */}
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 8 }}>
                   {last7.map((e, i) => (
-                    <div key={e.date} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                      <span style={{ fontSize: 10.5, fontWeight: 700, color: INK }}>{e.hours}h</span>
-                      <motion.div initial={{ height: 0 }} animate={{ height: `${(Number(e.hours) / maxH) * 100}%` }} transition={{ duration: .5, delay: i * 0.05 }}
-                        style={{ width: "100%", maxWidth: 28, borderRadius: "6px 6px 0 0", background: i === last7.length - 1 ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "rgba(244,123,32,.4)" }} />
-                      <span style={{ fontSize: 10.5, color: MUTE }}>{DOW[new Date(e.date).getDay()]}</span>
-                    </div>
+                    <span key={e.date} style={{ flex: 1, minWidth: 0, textAlign: "center", fontSize: 10.5, fontWeight: 700, color: i === last7.length - 1 ? ORANGE : MUTE }}>
+                      {DOW[new Date(e.date).getDay()]}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -1334,7 +1405,7 @@ function DashboardBody() {
               <div style={{ flex: 1, minWidth: 240 }}>
                 <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK }}>Weekly report to parent</div>
                 <p style={{ color: MUTE, fontSize: 13.5, lineHeight: 1.6, margin: "4px 0 14px" }}>
-                  Study hours, streak, tasks, latest test and your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> — auto-sent every <strong style={{ color: NAVY }}>Sunday</strong>, or send it now.
+                  Study hours, streak, tasks, latest test{rankEnabled ? <>, your <strong style={{ color: "#6d28d9" }}>predicted JEE rank</strong></> : ""} and your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> — auto-sent every <strong style={{ color: NAVY }}>Sunday</strong>, or send it now.
                 </p>
                 <SendControls color={GREEN} state={weeklyState} onSend={() => sendReport("weekly")} sendLabel="Send weekly report now"
                   auto={reportPrefs.autoWeekly} onToggle={() => setReportPrefs((p) => ({ ...p, autoWeekly: !p.autoWeekly }))}
@@ -1354,7 +1425,7 @@ function DashboardBody() {
                 </h3>
                 <span style={{ fontSize: 11, fontWeight: 800, color: "#0891b2", background: "#cffafe", borderRadius: 50, padding: "4px 11px", display: "inline-flex", alignItems: "center", gap: 5 }}><Sparkles size={12} /> Auto-generated</span>
               </div>
-              <p style={{ fontSize: 12.5, color: MUTE, margin: "4px 0 14px", lineHeight: 1.5 }}>Today's effort, auto-built from your daily log — only today's tasks. Send it any time or auto-send every day.</p>
+              <p style={{ fontSize: 12.5, color: MUTE, margin: "4px 0 14px", lineHeight: 1.5 }}>Today's effort, auto-built from your daily log — only today's tasks{rankEnabled ? <>, plus your <strong style={{ color: "#6d28d9" }}>predicted JEE rank</strong></> : ""}. Send it any time or auto-send every day.</p>
 
               {todayEntry ? (
                 <>
@@ -1380,6 +1451,14 @@ function DashboardBody() {
                   {todayTest && (
                     <div style={{ fontSize: 12.5, color: "#374151", background: "#f5f3ff", border: "1px solid #ede9fe", borderRadius: 10, padding: "8px 12px" }}>
                       <strong style={{ color: NAVY }}>Test today:</strong> {todayTest.name} · {todayTest.scored}/{todayTest.total}
+                    </div>
+                  )}
+                  {rankEnabled && latestRankTest?.rank?.ranked && (
+                    <div style={{ marginTop: 10, fontSize: 12.5, color: "#374151", background: "#f5f3ff", border: "1px solid #ede9fe", borderRadius: 10, padding: "8px 12px", display: "inline-flex", alignItems: "center", gap: 7 }}>
+                      <Trophy size={14} color="#6d28d9" />
+                      <span><strong style={{ color: "#6d28d9" }}>Predicted rank:</strong> {latestRankTest.rank.advanced
+                        ? `CRL ${inr(latestRankTest.rank.crlLo ?? latestRankTest.rank.low)}–${inr(latestRankTest.rank.crlHi ?? latestRankTest.rank.high)}`
+                        : `CRL ${inr(latestRankTest.rank.crl)}`} — included in this report</span>
                     </div>
                   )}
                 </>
@@ -1408,11 +1487,20 @@ function DashboardBody() {
                   { l: "Weekly tasks done", v: `${weeklyDone}/${weeklyTasks.length}` },
                   { l: "Latest test", v: latest ? `${latest.scored}/${latest.total} (${pct(latest)}%)` : "—" },
                   { l: "Change vs last test", v: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
+                  ...(rankEnabled && latestRankTest?.rank?.ranked ? [{
+                    l: "Predicted rank",
+                    v: latestRankTest.rank.advanced
+                      ? `CRL ${inr(latestRankTest.rank.crlLo ?? latestRankTest.rank.low)}–${inr(latestRankTest.rank.crlHi ?? latestRankTest.rank.high)}`
+                      : `CRL ${inr(latestRankTest.rank.crl)}`,
+                    hi: true,
+                  }] : []),
                   { l: "Backlog cleared", v: `${backlogDone}/${backlog.length}` },
                 ].map((r) => (
                   <div key={r.l} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: "1px solid rgba(0,0,0,.06)" }}>
-                    <span style={{ fontSize: 13, color: "#374151" }}>{r.l}</span>
-                    <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: NAVY }}>{r.v}</span>
+                    <span style={{ fontSize: 13, color: r.hi ? "#6d28d9" : "#374151", fontWeight: r.hi ? 700 : 400, display: "inline-flex", alignItems: "center", gap: 5 }}>
+                      {r.hi && <Trophy size={13} color="#6d28d9" />}{r.l}
+                    </span>
+                    <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: r.hi ? "#6d28d9" : NAVY }}>{r.v}</span>
                   </div>
                 ))}
               </div>

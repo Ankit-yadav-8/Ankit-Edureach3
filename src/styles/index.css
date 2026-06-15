@@ -2910,6 +2910,15 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 }
 
 /* ════════════════════════════════════════════════════════════
+   MENTORSHIP DASHBOARD — responsive tweaks
+════════════════════════════════════════════════════════════ */
+/* Bar chart + weekly-goal gauge sit side by side on desktop; stack on phones
+   so the bars get full width and the gauge isn't squashed. */
+@media (max-width: 720px) {
+  .md-track-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+}
+
+/* ════════════════════════════════════════════════════════════
    FAQ — searchable, categorised card grid (JoSAA 2026)
 ════════════════════════════════════════════════════════════ */
 .faq-search {

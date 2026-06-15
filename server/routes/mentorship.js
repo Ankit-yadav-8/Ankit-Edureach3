@@ -37,6 +37,24 @@ const chapterBlock = (title, color, items) => {
   </div>`;
 };
 
+// Predicted JEE rank block — included in both daily & weekly reports when the
+// student has logged a JEE Main/Advanced test (so parents see the live standing).
+const rankBlock = (rank) => {
+  if (!rank) return "";
+  const rows = [
+    ["Marks scored", rank.marks],
+    [rank.exam === "JEE Advanced" ? "Predicted CRL range" : "Predicted All-India CRL", rank.crl],
+    rank.band ? ["Likely rank band", rank.band] : null,
+    rank.percentile != null ? ["Percentile", rank.percentile] : null,
+    rank.categoryRank ? ["Category rank", rank.categoryRank] : null,
+  ].filter(Boolean);
+  return `<div style="margin-top:14px;border-top:1px solid #eee;padding-top:10px">
+    <div style="font-size:14px;font-weight:800;color:#6d28d9;margin-bottom:4px">🏆 Predicted ${esc(rank.exam)} 2026 rank${rank.testName ? ` · ${esc(rank.testName)}` : ""}</div>
+    <table style="width:100%;border-collapse:collapse">${rows.map(([l, v]) => row(l, v)).join("")}</table>
+    <div style="font-size:11px;color:#9aa0aa;margin-top:4px">Estimate only — actual rank depends on official normalisation & shift difficulty.</div>
+  </div>`;
+};
+
 function buildWeeklyHtml(studentName, r, link) {
   const s = r.stats || {};
   const ch = r.chapters || {};
@@ -62,6 +80,7 @@ function buildWeeklyHtml(studentName, r, link) {
       ${chapterBlock("Strong chapters", "#16a34a", ch.strong)}
       ${(!cap(ch.weak).length && !cap(ch.medium).length && !cap(ch.strong).length) ? `<div style="font-size:13px;color:#6b7280">No chapters logged yet.</div>` : ""}
     </div>
+    ${rankBlock(r.rank)}
     ${taskHtml}
     ${link ? `<a href="${esc(link)}" style="display:inline-block;margin:18px 0 4px;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:10px">Open the dashboard</a>` : ""}`);
 }
@@ -84,6 +103,7 @@ function buildDailyHtml(studentName, r, link) {
       <div style="font-size:14px;font-weight:800;color:#1c1c28;margin-bottom:2px">Subject-wise study today</div>
       ${subHtml}
     </div>
+    ${rankBlock(r.rank)}
     ${link ? `<a href="${esc(link)}" style="display:inline-block;margin:18px 0 4px;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:10px">Open the dashboard</a>` : ""}`);
 }
 
