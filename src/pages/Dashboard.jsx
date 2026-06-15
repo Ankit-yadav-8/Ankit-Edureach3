@@ -72,55 +72,68 @@ const sectionTitle = {
   margin: 0, display: "flex", alignItems: "center", gap: 8,
 };
 
-/* ── A single catalogue plan tile (Enrolled / Not enrolled) ───────── */
+/* ── A single catalogue plan tile — styled like the mentorship pricing
+      cards (top accent bar, equal height, text only). ─────────────── */
 function PlanTile({ plan, group, enrolled, purchase, onEnrol, onView }) {
   const Icon = group.icon;
   return (
-    <motion.div whileHover={{ y: -3 }} transition={{ type: "spring", stiffness: 300, damping: 24 }}
+    <motion.div whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
       style={{
         background: enrolled ? group.soft : "#fff",
-        border: enrolled ? `2px solid ${group.accent}` : "1px solid #eaeaea",
-        borderRadius: 18, padding: "18px", display: "flex", flexDirection: "column", gap: 12,
+        borderRadius: 20,
+        border: enrolled ? `2px solid ${group.accent}` : `1px solid ${group.accent}33`,
+        height: "100%", minHeight: 250, display: "flex", flexDirection: "column",
         position: "relative", overflow: "hidden",
-        boxShadow: enrolled ? `0 18px 40px -24px ${group.accent}99` : "0 10px 30px -22px rgba(13,27,62,.35)",
+        boxShadow: `0 24px 50px -26px ${group.accent}66`,
       }}>
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 11 }}>
-        <div style={{ width: 42, height: 42, borderRadius: 12, background: `${group.accent}14`, border: `1px solid ${group.accent}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-          <Icon size={20} color={group.accent} />
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: NAVY, lineHeight: 1.25 }}>{plan.label}</div>
-          <div style={{ fontSize: 11.5, color: "#9ca3af", fontWeight: 600, marginTop: 2 }}>{plan.tag}</div>
-        </div>
-        {enrolled ? (
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "5px 10px", flexShrink: 0 }}>
-            <CheckCircle2 size={12} /> Enrolled
+      {/* top accent bar */}
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg, ${group.accent}, ${group.accent2})` }} />
+
+      <div style={{ padding: "26px 24px 24px", display: "flex", flexDirection: "column", flex: 1 }}>
+        {/* header: icon + title */}
+        <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 12 }}>
+          <span style={{ width: 44, height: 44, borderRadius: 13, background: `${group.accent}18`, border: `1px solid ${group.accent}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+            <Icon size={22} color={group.accent} />
           </span>
+          <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.12rem", color: NAVY, margin: 0, lineHeight: 1.2, flex: 1, minWidth: 0 }}>{plan.label}</h3>
+        </div>
+
+        {/* status badge */}
+        <div style={{ marginBottom: 12 }}>
+          {enrolled ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11.5, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "5px 11px" }}>
+              <CheckCircle2 size={13} /> Enrolled
+            </span>
+          ) : (
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", background: "#f3f4f6", borderRadius: 20, padding: "5px 11px" }}>Not enrolled</span>
+          )}
+        </div>
+
+        <p style={{ color: "#6b7280", fontSize: 13.5, lineHeight: 1.55, margin: "0 0 16px" }}>{plan.tag}</p>
+
+        {/* price */}
+        <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
+          <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 28, color: NAVY }}>₹{plan.price.toLocaleString("en-IN")}</span>
+          <span style={{ fontSize: 12.5, color: "#9ca3af" }}>one-time</span>
+        </div>
+
+        {enrolled && purchase && (
+          <div style={{ fontSize: 12, color: group.accent, fontWeight: 700, marginTop: 6 }}>Purchased {fmtDate(purchase.createdAt)}</div>
+        )}
+
+        {/* action */}
+        {enrolled ? (
+          <button onClick={() => onView(plan.to)}
+            style={{ marginTop: "auto", width: "100%", padding: "14px", borderRadius: 12, border: `1.5px solid ${group.accent}66`, background: "#fff", color: group.accent, fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+            View details <ArrowRight size={16} />
+          </button>
         ) : (
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#9ca3af", background: "#f3f4f6", borderRadius: 20, padding: "5px 10px", flexShrink: 0 }}>Not enrolled</span>
+          <button onClick={() => onEnrol(plan.key)}
+            style={{ marginTop: "auto", width: "100%", padding: "15px", borderRadius: 12, border: "none", background: `linear-gradient(135deg, ${group.accent}, ${group.accent2})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: `0 10px 26px -10px ${group.accent}99` }}>
+            Enrol now — ₹{plan.price.toLocaleString("en-IN")} <ArrowRight size={16} />
+          </button>
         )}
       </div>
-
-      <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
-        <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 22, color: NAVY }}>₹{plan.price.toLocaleString("en-IN")}</span>
-        <span style={{ fontSize: 11.5, color: "#9ca3af" }}>one-time</span>
-      </div>
-
-      {enrolled && purchase && (
-        <div style={{ fontSize: 11.5, color: group.accent, fontWeight: 700 }}>Purchased {fmtDate(purchase.createdAt)}</div>
-      )}
-
-      {enrolled ? (
-        <button onClick={() => onView(plan.to)}
-          style={{ marginTop: "auto", width: "100%", padding: "11px", borderRadius: 11, border: `1.5px solid ${group.accent}66`, background: "#fff", color: group.accent, fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
-          View details <ArrowRight size={15} />
-        </button>
-      ) : (
-        <button onClick={() => onEnrol(plan.key)}
-          style={{ marginTop: "auto", width: "100%", padding: "12px", borderRadius: 11, border: "none", background: `linear-gradient(135deg, ${group.accent}, ${group.accent2})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, boxShadow: `0 10px 22px -10px ${group.accent}99` }}>
-          Enrol now — ₹{plan.price.toLocaleString("en-IN")} <ArrowRight size={15} />
-        </button>
-      )}
     </motion.div>
   );
 }
@@ -395,7 +408,7 @@ export default function Dashboard() {
                   <div style={{ fontSize: 12, color: "#9ca3af", fontWeight: 600 }}>{group.subtitle}</div>
                 </div>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(255px, 1fr))", gap: 16 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 18 }}>
                 {group.plans.map((plan) => (
                   <PlanTile
                     key={plan.key}
