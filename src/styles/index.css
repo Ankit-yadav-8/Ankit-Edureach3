@@ -2917,6 +2917,13 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 @media (max-width: 720px) {
   .md-track-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
 }
+/* Subject stat cards: 2-up on phones so the hours text stays large & legible. */
+@media (max-width: 560px) {
+  .md-subject-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+}
+@media (max-width: 360px) {
+  .md-subject-grid { grid-template-columns: 1fr !important; }
+}
 
 /* ════════════════════════════════════════════════════════════
    FAQ — searchable, categorised card grid (JoSAA 2026)

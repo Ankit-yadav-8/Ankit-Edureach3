@@ -473,12 +473,30 @@ function DashboardBody() {
     return Object.entries(freq).sort((a, b) => b[1] - a[1]);
   }, [testsSorted]);
   const timeBars = timeRanked.map(([s, n]) => ({ name: shortName(s), over: n }));
-  /* suggested pacing for next paper */
+  /* suggested pacing for the next paper — derived from REAL data: start from the
+     section's base time, then tighten the subjects the student keeps over-spending
+     on (from their logged tests) so the plan reflects their own pattern. */
   const pacing = useMemo(() => {
-    if (isFoundation) return [{ s: "Maths", min: 90 }, { s: "Science", min: 90 }];
-    if (isNEET) return [{ s: "Physics", min: 45 }, { s: "Chemistry", min: 45 }, { s: "Biology", min: 90 }];
-    return [{ s: "Physics", min: 60 }, { s: "Chemistry", min: 60 }, { s: "Maths", min: 60 }];
-  }, [isFoundation, isNEET]);
+    const base = isFoundation
+      ? [["Maths", 90], ["Science", 90]]
+      : isNEET
+        ? [["Physics", 45], ["Chemistry", 45], ["Biology", 90]]
+        : [["Physics", 60], ["Chemistry", 60], ["Maths", 60]];
+    // how many times each base subject was flagged as over-spent in the tests
+    const overFor = (subj) => {
+      const a = subj.toLowerCase(), b = shortName(subj).toLowerCase();
+      return testsSorted.reduce((n, t) => {
+        const o = String(t.overspent || "").toLowerCase();
+        return n + (o && (o.includes(a) || o.includes(b) || a.includes(o)) ? 1 : 0);
+      }, 0);
+    };
+    return base.map(([s, min]) => {
+      const over = overFor(s);
+      // each over-spend flag shaves ~6 min off (a tighter self-cap), floored sensibly
+      const capped = over > 0 ? Math.max(Math.round(min * 0.6), min - over * 6) : min;
+      return { s, min: capped, base: min, over, cap: over > 0 };
+    });
+  }, [isFoundation, isNEET, testsSorted]);
 
   /* ── auto weekly fix-list ── */
   const wk = weekKey();
@@ -905,8 +923,8 @@ function DashboardBody() {
         </Section>
 
         {/* ── LIVE STUDENT TRACKING ── */}
-        <Section id="live-tracking" kicker="Always on · once a day" title="Live Student Tracking" tColor="#ef4444"
-          sub="Log each subject's study hours and tasks once per day — the charts update instantly so nothing slips through the cracks.">
+        <Section id="live-tracking" kicker={`Always on · up to ${MAX_LOGS_PER_DAY}× a day`} title="Live Student Tracking" tColor="#ef4444"
+          sub={`Log each subject's study hours and tasks — and update them up to ${MAX_LOGS_PER_DAY} times a day. The charts refresh instantly so nothing slips through the cracks.`}>
           <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},${ORANGE})` }} />
 
@@ -945,16 +963,23 @@ function DashboardBody() {
               <div style={{ background: "#f0faf4", border: "1px solid rgba(34,197,94,.3)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13.5, fontWeight: 800, color: "#15803d" }}>
-                    <CheckCircle2 size={17} /> Logged for today ({fmtDay(todayIso)}) — {editsUsed}/{MAX_LOGS_PER_DAY} updates used
+                    <CheckCircle2 size={17} /> Logged for today ({fmtDay(todayIso)})
+                    {/* updates-used pips */}
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, marginLeft: 2 }}>
+                      {Array.from({ length: MAX_LOGS_PER_DAY }).map((_, i) => (
+                        <span key={i} style={{ width: 7, height: 7, borderRadius: "50%", background: i < editsUsed ? "#15803d" : "#bbf7d0" }} />
+                      ))}
+                    </span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#15803d" }}>{editsUsed}/{MAX_LOGS_PER_DAY}</span>
                   </span>
                   {canLogMore ? (
                     <button type="button" onClick={startEditLog}
-                      style={{ display: "inline-flex", alignItems: "center", gap: 6, background: `linear-gradient(135deg,${ORANGE},${GOLD})`, border: "none", borderRadius: 9, padding: "8px 14px", fontSize: 12.5, fontWeight: 800, color: "#fff", cursor: "pointer", fontFamily: "Sora", boxShadow: `0 8px 18px -10px ${ORANGE}` }}>
-                      <Pencil size={13} /> Update hours · {editsLeft} left
+                      style={{ display: "inline-flex", alignItems: "center", gap: 6, background: `linear-gradient(135deg,${ORANGE},${GOLD})`, border: "none", borderRadius: 9, padding: "9px 15px", fontSize: 12.5, fontWeight: 800, color: "#fff", cursor: "pointer", fontFamily: "Sora", boxShadow: `0 8px 18px -10px ${ORANGE}` }}>
+                      <Pencil size={13} /> Edit / update hours · {editsLeft} left
                     </button>
                   ) : (
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #cbd5e1", borderRadius: 9, padding: "7px 12px", fontSize: 12, fontWeight: 700, color: MUTE }}>
-                      <Lock size={13} /> Locked till tomorrow
+                      <Lock size={13} /> All {MAX_LOGS_PER_DAY} updates used · locked till tomorrow
                     </span>
                   )}
                 </div>
@@ -1012,31 +1037,47 @@ function DashboardBody() {
 
             {/* weekly hours bars + goal gauge */}
             <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 22, alignItems: "center" }} className="md-track-grid">
-              <div>
-                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 12 }}>
-                  <span style={{ fontSize: 12.5, fontWeight: 700, color: MUTE }}>Total study hours · last 7 days</span>
-                  <span style={{ fontSize: 11.5, fontWeight: 800, color: ORANGE }}>{round1(weekHours)}h total</span>
+              {/* weekly-hours bar chart — premium card with gridlines */}
+              <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.18)", borderRadius: 16, padding: "16px 16px 14px", boxShadow: "0 16px 40px -30px rgba(244,123,32,.8)" }}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 14 }}>
+                  <span style={{ fontSize: 12.5, fontWeight: 800, color: NAVY }}>Total study hours · last 7 days</span>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: ORANGE, background: `${ORANGE}12`, borderRadius: 50, padding: "3px 9px" }}>{round1(weekHours)}h total</span>
                 </div>
-                {/* bar chart — fixed-height plot so the bars always render */}
-                <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 8, height: 172, padding: "20px 2px 0", borderBottom: "2px solid #eef1f5", position: "relative" }}>
-                  {last7.map((e, i) => {
-                    const h = Number(e.hours) || 0;
-                    const isToday = i === last7.length - 1;
-                    const barPx = Math.max(6, Math.round((h / maxH) * 118)); // up to 118px tall
+                {/* plot: gridlines layer + bars layer share the same box.
+                    Gridlines are bottom-anchored on the SAME scale as the bars
+                    (bar max = 132px) so labels line up with the bar tops. */}
+                <div style={{ position: "relative", height: 168 }}>
+                  {/* horizontal gridlines + scale labels */}
+                  {[0, 1, 2, 3].map((g) => {
+                    const val = round1((maxH * g) / 3);
                     return (
-                      <div key={e.date} title={`${h}h on ${DOW[new Date(e.date).getDay()]}`}
-                        style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 6 }}>
-                        <span style={{ fontSize: 11, fontWeight: 800, color: isToday ? ORANGE : INK }}>{h}h</span>
-                        <motion.div initial={{ height: 0 }} animate={{ height: barPx }} transition={{ type: "spring", stiffness: 120, damping: 18, delay: i * 0.06 }}
-                          style={{ width: "100%", maxWidth: 30, borderRadius: "8px 8px 0 0",
-                            background: isToday ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "linear-gradient(180deg,rgba(244,123,32,.6),rgba(244,123,32,.28))",
-                            boxShadow: isToday ? `0 8px 18px -8px ${ORANGE}` : "none" }} />
+                      <div key={g} style={{ position: "absolute", left: 0, right: 0, bottom: `${(g / 3) * 132}px`, display: "flex", alignItems: "center", gap: 6, pointerEvents: "none" }}>
+                        <span style={{ fontSize: 9, color: "#b6bdc7", fontWeight: 700, width: 22, flexShrink: 0, textAlign: "right", transform: "translateY(50%)" }}>{val}h</span>
+                        <span style={{ flex: 1, borderTop: g === 0 ? "2px solid #e7ebf0" : "1px dashed #eef1f5" }} />
                       </div>
                     );
                   })}
+                  {/* bars */}
+                  <div style={{ position: "absolute", inset: "0 0 0 28px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 7 }}>
+                    {last7.map((e, i) => {
+                      const h = Number(e.hours) || 0;
+                      const isToday = i === last7.length - 1;
+                      const barPx = Math.max(5, Math.round((h / maxH) * 132)); // up to 132px tall
+                      return (
+                        <div key={e.date} title={`${h}h on ${DOW[new Date(e.date).getDay()]}`}
+                          style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
+                          <span style={{ fontSize: 11, fontWeight: 800, color: isToday ? ORANGE : INK }}>{h}h</span>
+                          <motion.div initial={{ height: 0 }} animate={{ height: barPx }} transition={{ type: "spring", stiffness: 120, damping: 18, delay: i * 0.06 }}
+                            style={{ width: "100%", maxWidth: 30, borderRadius: "8px 8px 2px 2px",
+                              background: isToday ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "linear-gradient(180deg,rgba(244,123,32,.6),rgba(244,123,32,.26))",
+                              boxShadow: isToday ? `0 8px 18px -8px ${ORANGE}` : "none" }} />
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-                {/* day labels row (kept separate so bars share one clean baseline) */}
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 8 }}>
+                {/* day labels row (aligned under the bars) */}
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 7, marginTop: 9, paddingLeft: 28 }}>
                   {last7.map((e, i) => (
                     <span key={e.date} style={{ flex: 1, minWidth: 0, textAlign: "center", fontSize: 10.5, fontWeight: 700, color: i === last7.length - 1 ? ORANGE : MUTE }}>
                       {DOW[new Date(e.date).getDay()]}
@@ -1044,9 +1085,12 @@ function DashboardBody() {
                   ))}
                 </div>
               </div>
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: MUTE, marginBottom: 4 }}>Weekly goal ({WEEK_TARGET_HRS}h)</div>
+              <div style={{ background: "#fff", border: "1px solid rgba(34,197,94,.22)", borderRadius: 16, padding: "16px 14px 12px", boxShadow: "0 16px 40px -30px rgba(34,197,94,.9)", textAlign: "center" }}>
+                <div style={{ fontSize: 12.5, fontWeight: 800, color: NAVY, marginBottom: 2 }}>Weekly goal ({WEEK_TARGET_HRS}h)</div>
                 <Gauge value={goalPct} label="of target" color="#22c55e" height={170} />
+                <div style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, marginTop: -2 }}>
+                  {round1(weekHours)}h of {WEEK_TARGET_HRS}h · {Math.max(0, round1(WEEK_TARGET_HRS - weekHours))}h to go
+                </div>
               </div>
             </div>
           </div>
@@ -1071,19 +1115,35 @@ function DashboardBody() {
                 : <ChartHint text="Log today's subject hours to see your split." />}
             </ChartCard>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 12 }}>
+            <div className="md-subject-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 12 }}>
               {subjects.map((s) => {
                 const now = round1(thisWkH[s]); const was = round1(lastWkH[s]);
                 const d = round1(now - was);
+                const c = subColor(s);
+                const tasks = Math.round(thisWkT[s]);
                 return (
-                  <div key={s} style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "15px 16px", borderTop: `3px solid ${subColor(s)}`, boxShadow: "0 14px 36px -28px rgba(13,27,62,.4)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                      <span style={{ width: 9, height: 9, borderRadius: "50%", background: subColor(s) }} />
+                  <div key={s} style={{ background: "#fff", border: `1px solid ${c}2e`, borderRadius: 16, overflow: "hidden", boxShadow: `0 16px 38px -28px ${c}cc`, display: "flex", flexDirection: "column" }}>
+                    {/* subject header strip (premium, like the plan cards) */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", background: `linear-gradient(135deg, ${c}16, ${c}05)`, borderBottom: `1px solid ${c}1f` }}>
+                      <span style={{ width: 10, height: 10, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}22`, flexShrink: 0 }} />
                       <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: NAVY }}>{shortName(s)}</span>
+                      <span style={{ marginLeft: "auto", fontSize: 9.5, fontWeight: 800, color: c, background: `${c}16`, borderRadius: 50, padding: "2px 8px", textTransform: "uppercase", letterSpacing: ".03em" }}>this week</span>
                     </div>
-                    <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 21, color: subColor(s) }}>{now}h</div>
-                    <div style={{ fontSize: 11.5, color: MUTE, marginTop: 2 }}>{Math.round(thisWkT[s])} tasks · {round1(now / 7)}h/day</div>
-                    <DeltaPill d={d} unit="h" subtext="vs last week" />
+                    <div style={{ padding: "13px 14px 14px" }}>
+                      <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
+                        <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 27, color: c, lineHeight: 1 }}>{now}</span>
+                        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: c }}>hrs</span>
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "5px 12px", marginTop: 9 }}>
+                        <span style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          <CheckCircle2 size={12} color={c} /> {tasks} task{tasks === 1 ? "" : "s"}
+                        </span>
+                        <span style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          <Clock size={12} color={c} /> {round1(now / 7)}h/day
+                        </span>
+                      </div>
+                      <DeltaPill d={d} unit="h" subtext="vs last week" />
+                    </div>
                   </div>
                 );
               })}
@@ -1286,23 +1346,35 @@ function DashboardBody() {
             {/* Time-management review — enhanced */}
             <ToolCard icon={Timer} color="#06b6d4" title="Time-management review" desc="Where you over-spend, plus a pacing plan for the next paper.">
               {timeBars.length > 0 && <Bars data={timeBars} bars={[{ key: "over", label: "Over-spent (tests)", color: "#06b6d4" }]} height={130} />}
-              <div style={{ marginTop: timeBars.length ? 12 : 0 }}>
-                <div style={{ fontSize: 11.5, fontWeight: 700, color: MUTE, marginBottom: 7 }}>Suggested pacing · next paper</div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  {pacing.map(({ s, min }) => (
-                    <div key={s} style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                      <span style={{ fontSize: 12.5, color: NAVY, fontWeight: 600, width: 80 }}>{s}</span>
-                      <div style={{ flex: 1, height: 8, borderRadius: 5, background: "#f1f5f9", overflow: "hidden" }}>
-                        <div style={{ width: `${(min / Math.max(...pacing.map((p) => p.min))) * 100}%`, height: "100%", borderRadius: 5, background: subColor(s) }} />
+              <div style={{ marginTop: timeBars.length ? 14 : 0 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 9 }}>
+                  <span style={{ fontSize: 11.5, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".04em" }}>Suggested pacing · next paper</span>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: "#0891b2", background: "#cffafe", borderRadius: 50, padding: "3px 9px" }}>
+                    {timeRanked.length ? "From your tests" : "Balanced start"}
+                  </span>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                  {pacing.map(({ s, min, base, cap }) => (
+                    <div key={s} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 6, width: 92, flexShrink: 0 }}>
+                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(s), flexShrink: 0 }} />
+                        <span style={{ fontSize: 12.5, color: NAVY, fontWeight: 700 }}>{shortName(s)}</span>
+                      </span>
+                      <div style={{ flex: 1, minWidth: 0, height: 10, borderRadius: 6, background: "#f1f5f9", overflow: "hidden", position: "relative" }}>
+                        <motion.div initial={{ width: 0 }} whileInView={{ width: `${(min / Math.max(...pacing.map((p) => p.base))) * 100}%` }} viewport={{ once: true }} transition={{ duration: .6 }}
+                          style={{ height: "100%", borderRadius: 6, background: `linear-gradient(90deg,${subColor(s)},${subColor(s)}cc)` }} />
                       </div>
-                      <span style={{ fontSize: 11.5, color: "#0891b2", fontWeight: 800, width: 48, textAlign: "right" }}>{min} min</span>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 5, width: 92, justifyContent: "flex-end", flexShrink: 0 }}>
+                        {cap && <span title={`Tightened from ${base} min`} style={{ fontSize: 9.5, fontWeight: 800, color: "#b45309", background: "#fef3c7", borderRadius: 5, padding: "1px 5px" }}>CAP</span>}
+                        <span style={{ fontSize: 12, color: "#0891b2", fontWeight: 800 }}>{min} min</span>
+                      </span>
                     </div>
                   ))}
                 </div>
-                <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 10 }}>
+                <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 11, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
                   {timeRanked[0]
-                    ? <>Set a hard time-cap for <strong style={{ color: NAVY }}>{shortName(timeRanked[0][0])}</strong> — and you skip ~{avgSkipped} questions/paper, so do a confident first pass before returning to them.</>
-                    : <>You skip ~{avgSkipped} questions/paper on average — do one confident pass first, then circle back.</>}
+                    ? <>Based on your tests, <strong style={{ color: NAVY }}>{shortName(timeRanked[0][0])}</strong> eats the most time — it's now capped tighter above. You also skip ~{avgSkipped} questions/paper, so make one confident pass first, then return.</>
+                    : <>Log a test's “over-spent” subject and this plan re-tunes to your real pace. You skip ~{avgSkipped} questions/paper on average — do one confident pass first, then circle back.</>}
                 </div>
               </div>
             </ToolCard>
