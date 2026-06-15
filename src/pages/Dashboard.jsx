@@ -4,12 +4,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Mail, Phone, MapPin, GraduationCap, Hash, Calendar, LogOut,
   CreditCard, CheckCircle2, ArrowRight, Sparkles, ShieldCheck, BookOpen, Loader2,
+  Check, Compass,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments } from "../auth/api.js";
 
 const ORANGE = "#F47B20";
+const GOLD = "#f5a623";
+const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
+
+// Which plan keys belong to which product line (kept in sync with
+// server/routes/payment.js PLANS). Mentorship keys all start with "mentor-".
+const COUNSELLING_KEYS = ["josaa", "all-colleges"];
+const isMentorshipPlan = (key) => String(key || "").startsWith("mentor-");
+const isCounsellingPlan = (key) => COUNSELLING_KEYS.includes(key);
 
 const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
@@ -79,6 +88,49 @@ export default function Dashboard() {
     { label: "Member since",      value: fmtDate(user?.createdAt), icon: Calendar },
   ];
 
+  // Split the user's purchases into the two product lines and render a big
+  // card for each — owned plans show an "enrolled" state, the rest a CTA.
+  const CATEGORIES = [
+    {
+      key: "mentorship",
+      title: "Mentorship",
+      tag: "1-on-1 IITian / doctor mentor",
+      desc: "A personal mentor, daily targets, weekly test analysis and a roadmap built around your backlog and target rank.",
+      icon: GraduationCap,
+      accent: ORANGE,
+      accent2: GOLD,
+      soft: "#fff6ee",
+      to: "/mentorship",
+      cta: "Explore mentorship",
+      features: [
+        "Personal 1-on-1 mentor",
+        "Daily targets & accountability",
+        "Weekly test analysis",
+        "Parent weekly progress booklet",
+      ],
+      owned: plans.filter((p) => isMentorshipPlan(p.plan)),
+    },
+    {
+      key: "counselling",
+      title: "Counselling",
+      tag: "JoSAA · CSAB · All-college guidance",
+      desc: "Expert choice-filling and a personalised college list tailored to your rank — across JoSAA, CSAB and every other counselling.",
+      icon: Compass,
+      accent: GREEN,
+      accent2: "#22c55e",
+      soft: "#f0faf4",
+      to: "/josaa-2026",
+      cta: "Explore counselling",
+      features: [
+        "Expert JoSAA + CSAB choice-filling",
+        "Personalised college list for your rank",
+        "Every counselling round covered",
+        "1-on-1 guidance from a mentor",
+      ],
+      owned: plans.filter((p) => isCounsellingPlan(p.plan)),
+    },
+  ];
+
   return (
     <section style={{ background: "#f8f7f5", minHeight: "100vh", padding: "120px 0 70px" }}>
       <div style={{ maxWidth: 1040, margin: "0 auto", padding: "0 20px" }}>
@@ -117,38 +169,107 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Purchased plans */}
+        {/* Purchased plans — one big card per product line (Mentorship & Counselling) */}
         <h2 style={sectionTitle}><CreditCard size={18} color={ORANGE} /> Your plans &amp; purchases</h2>
         {loading ? (
-          <div style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "40px", textAlign: "center", color: "#9ca3af", marginBottom: 30 }}>
+          <div style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "40px", textAlign: "center", color: "#9ca3af", marginBottom: 34 }}>
             <Loader2 size={22} className="dash-spin" /> Loading your plans…
           </div>
-        ) : plans.length === 0 ? (
-          <div style={{ background: "#fff", border: "1px dashed #e5b894", borderRadius: 16, padding: "34px 24px", textAlign: "center", marginBottom: 30 }}>
-            <div style={{ fontSize: 15, color: "#6b7280", marginBottom: 14 }}>You haven't purchased any plan yet.</div>
-            <button onClick={() => navigate("/mentorship")} style={{ background: ORANGE, color: "#fff", border: "none", padding: "11px 20px", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontFamily: "Sora", display: "inline-flex", alignItems: "center", gap: 8 }}>
-              Explore mentorship &amp; counselling <ArrowRight size={16} />
-            </button>
-          </div>
         ) : (
-          <div style={{ display: "grid", gap: 14, marginBottom: 30 }}>
-            {plans.map((p) => (
-              <div key={p._id} style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "18px 20px", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-                <div style={{ width: 46, height: 46, borderRadius: 12, background: `${ORANGE}12`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <Sparkles size={20} color={ORANGE} />
-                </div>
-                <div style={{ flex: 1, minWidth: 180 }}>
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 16, color: NAVY }}>{p.planLabel || p.plan}</div>
-                  <div style={{ fontSize: 12.5, color: "#9ca3af", marginTop: 2 }}>
-                    Purchased {fmtDate(p.createdAt)} · Payment ID {p.razorpayPaymentId || "—"}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(330px, 1fr))", gap: 20, marginBottom: 34 }}>
+            {CATEGORIES.map((cat) => {
+              const Icon = cat.icon;
+              const owned = cat.owned;
+              const has = owned.length > 0;
+              return (
+                <motion.div key={cat.key} whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 300, damping: 24 }}
+                  style={{
+                    background: "#fff", borderRadius: 22, border: `1px solid ${cat.accent}33`,
+                    position: "relative", overflow: "hidden", display: "flex", flexDirection: "column",
+                    boxShadow: `0 24px 50px -30px ${cat.accent}80`,
+                  }}>
+                  {/* top accent bar */}
+                  <div style={{ height: 5, background: `linear-gradient(90deg, ${cat.accent}, ${cat.accent2})` }} />
+
+                  <div style={{ padding: "24px 26px 28px", display: "flex", flexDirection: "column", flex: 1 }}>
+                    {/* header */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+                      <div style={{ width: 54, height: 54, borderRadius: 16, background: `${cat.accent}14`, border: `1px solid ${cat.accent}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                        <Icon size={26} color={cat.accent} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.32rem", color: NAVY }}>{cat.title}</div>
+                        <div style={{ fontSize: 12.5, color: "#9ca3af", fontWeight: 600, marginTop: 1 }}>{cat.tag}</div>
+                      </div>
+                      {has ? (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "6px 13px", flexShrink: 0 }}>
+                          <CheckCircle2 size={14} /> Enrolled
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: 11.5, fontWeight: 700, color: "#9ca3af", background: "#f3f4f6", borderRadius: 20, padding: "6px 13px", flexShrink: 0 }}>
+                          Not enrolled
+                        </span>
+                      )}
+                    </div>
+
+                    <p style={{ color: "#6b7280", fontSize: 14, lineHeight: 1.6, margin: "0 0 18px" }}>{cat.desc}</p>
+
+                    {has ? (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                        {/* "you have this plan" confirmation banner */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 11, background: cat.soft, border: `1px solid ${cat.accent}33`, borderRadius: 14, padding: "13px 15px" }}>
+                          <div style={{ width: 34, height: 34, borderRadius: "50%", background: cat.accent, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                            <Check size={18} color="#fff" strokeWidth={3} />
+                          </div>
+                          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, color: NAVY, lineHeight: 1.35 }}>
+                            You have {owned.length > 1 ? `${owned.length} active ${cat.title.toLowerCase()} plans` : `an active ${cat.title.toLowerCase()} plan`}
+                          </div>
+                        </div>
+
+                        {/* each owned plan */}
+                        {owned.map((p) => (
+                          <div key={p._id} style={{ background: "#fff", border: "1px solid #eef0f2", borderRadius: 14, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                            <div style={{ width: 40, height: 40, borderRadius: 11, background: `${cat.accent}12`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                              <Sparkles size={18} color={cat.accent} />
+                            </div>
+                            <div style={{ flex: 1, minWidth: 140 }}>
+                              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, color: NAVY }}>{p.planLabel || p.plan}</div>
+                              <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>
+                                Purchased {fmtDate(p.createdAt)} · ID {p.razorpayPaymentId || "—"}
+                              </div>
+                            </div>
+                            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 16, color: NAVY }}>₹{Number(p.amount || 0).toLocaleString("en-IN")}</div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 22 }}>
+                          {cat.features.map((f) => (
+                            <div key={f} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                              <span style={{ width: 22, height: 22, borderRadius: "50%", background: `${cat.accent}14`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                                <Check size={13} color={cat.accent} strokeWidth={3} />
+                              </span>
+                              <span style={{ color: "#374151", fontSize: 13.5 }}>{f}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <button onClick={() => navigate(cat.to)}
+                          style={{
+                            marginTop: "auto", width: "100%", padding: "14px", borderRadius: 13, border: "none",
+                            background: `linear-gradient(135deg, ${cat.accent}, ${cat.accent2})`, color: "#fff",
+                            fontFamily: "Sora", fontWeight: 800, fontSize: 15, cursor: "pointer",
+                            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                            boxShadow: `0 12px 26px -10px ${cat.accent}99`,
+                          }}>
+                          {cat.cta} <ArrowRight size={17} />
+                        </button>
+                      </>
+                    )}
                   </div>
-                </div>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 18, color: NAVY }}>₹{Number(p.amount || 0).toLocaleString("en-IN")}</div>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "5px 12px" }}>
-                  <CheckCircle2 size={14} /> Active
-                </span>
-              </div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
         )}
 
