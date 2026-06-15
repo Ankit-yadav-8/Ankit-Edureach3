@@ -26,22 +26,22 @@ const PLAN_META = {
   },
   // ── Mentorship plans ──
   "mentor-jee-2027": {
-    amount: 1999, old: 7999, kind: "mentorship", targetExam: "JEE 2027",
+    amount: 1, old: 7999, kind: "mentorship", targetExam: "JEE 2027",
     title: "JEE 2027 Mentorship Program",
     band: "1-on-1 IITian mentor · Class 12 / Droppers",
   },
   "mentor-neet-2027": {
-    amount: 1999, old: 7999, kind: "mentorship", targetExam: "NEET 2027",
+    amount: 1, old: 7999, kind: "mentorship", targetExam: "NEET 2027",
     title: "NEET 2027 Mentorship Program",
     band: "1-on-1 doctor mentor · Class 12 / Droppers",
   },
   "mentor-jee-2028": {
-    amount: 3999, old: 7999, kind: "mentorship", targetExam: "JEE 2028",
+    amount: 1, old: 7999, kind: "mentorship", targetExam: "JEE 2028",
     title: "JEE 2028 Mentorship (2-Year)",
     band: "2-year IITian mentorship · Class 11",
   },
   "mentor-neet-2028": {
-    amount: 3999, old: 7999, kind: "mentorship", targetExam: "NEET 2028",
+    amount: 1, old: 7999, kind: "mentorship", targetExam: "NEET 2028",
     title: "NEET 2028 Mentorship (2-Year)",
     band: "2-year doctor mentorship · Class 11",
   },

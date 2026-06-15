@@ -602,10 +602,10 @@ function MentorshipHeroCard({ isTablet }) {
 
   // rotating spotlight across the JEE/NEET tracks
   const tracks = [
-    { exam: "JEE 2027",  price: "₹1999", color: "#f5a623", to: "/mentorship/jee-2027" },
-    { exam: "NEET 2027", price: "₹1999", color: "#22c55e", to: "/mentorship/jee-2027" },
-    { exam: "JEE 2028",  price: "₹3999", color: "#f5a623", to: "/mentorship/jee-2028" },
-    { exam: "NEET 2028", price: "₹3999", color: "#22c55e", to: "/mentorship/jee-2028" },
+    { exam: "JEE 2027",  price: "₹1", color: "#f5a623", to: "/mentorship/jee-2027" },
+    { exam: "NEET 2027", price: "₹1", color: "#22c55e", to: "/mentorship/jee-2027" },
+    { exam: "JEE 2028",  price: "₹1", color: "#f5a623", to: "/mentorship/jee-2028" },
+    { exam: "NEET 2028", price: "₹1", color: "#22c55e", to: "/mentorship/jee-2028" },
   ];
   return (
     <motion.div
@@ -731,7 +731,7 @@ const HERO_CARDS = [
     rows: [
       ["Daily targets", "Yes"],
       ["Mentors", "IITians"],
-      ["Starts at", "₹1999"],
+      ["Starts at", "₹1"],
     ],
     cta: "Explore mentorship", to: "/mentorship/jee-2027",
   },
@@ -878,7 +878,7 @@ const FEATURE_CARDS = [
     rows: [["Rank predictor", "Yes"], ["MBBS colleges", "Explore"], ["Cutoffs", "All-India"]],
     cta: "Open NEET", to: "/neet" },
   { key: "mentorship", accent: "#f5a623", Icon: Users, eyebrow: "1-on-1", title: "Mentorship",
-    rows: [["JEE & NEET", "2027·2028"], ["Daily targets", "Yes"], ["Starts at", "₹1999"]],
+    rows: [["JEE & NEET", "2027·2028"], ["Daily targets", "Yes"], ["Starts at", "₹1"]],
     cta: "Explore Mentorship", to: "/mentorship/jee-2027" },
   { key: "counselling", accent: "#0ea5a4", Icon: GraduationCap, eyebrow: "Counselling", title: "Colleges",
     rotate: COUNSEL_LIST, cta: "Browse Colleges", to: "/colleges" },

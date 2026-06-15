@@ -77,6 +77,17 @@ const CATEGORIES = ["General", "OBC-NCL", "EWS", "SC", "ST"];
 
 const WEEK_TARGET_HRS = 40;
 
+/* sticky in-page navigation */
+const SECTIONS = [
+  { id: "personalised",    label: "Snapshot",        icon: Sparkles,  color: ORANGE },
+  { id: "live-tracking",   label: "Daily log",       icon: Activity,  color: "#ef4444" },
+  { id: "subject-analysis",label: "Subjects",        icon: BarChart3, color: "#6366f1" },
+  { id: "test-analysis",   label: "Tests",           icon: LineIcon,  color: "#8b5cf6" },
+  { id: "mentor-tools",    label: "Mentor tools",    icon: Brain,     color: GOLD },
+  { id: "backlog",         label: "Backlog",         icon: Rocket,    color: "#7c3aed" },
+  { id: "parent-report",   label: "Weekly & parent", icon: Mail,      color: GREEN },
+];
+
 /* ── demo seed (used until the student logs their own data) ───────── */
 function seedSubjects(total, subjects) {
   const perH = round1(total / subjects.length);
@@ -318,13 +329,13 @@ function DashboardBody() {
   const todayIso = isoDay(new Date());
   const todayEntry = entries.find((e) => e.date === todayIso);
 
-  const [editingLog, setEditingLog] = useState(false);
   const [logForm, setLogForm] = useState({ subjects: {}, tasksTotal: "", routine: true });
   const [testForm, setTestForm] = useState({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General" });
   const [blForm, setBlForm] = useState({ subject: "", topic: "", strength: "weak", planDate: "", week: "" });
   const [wtInput, setWtInput] = useState("");
   const [wtEdit, setWtEdit] = useState({ id: null, text: "" });
   const [parentState, setParentState] = useState({ sending: false, msg: { type: "", text: "" } });
+  const [activeSec, setActiveSec] = useState("personalised");
 
   // Pull the real mentorship plan name (best-effort).
   useEffect(() => {
@@ -348,6 +359,18 @@ function DashboardBody() {
   useEffect(() => { save(BACKLOG_KEY, backlog); }, [BACKLOG_KEY, backlog]);
   useEffect(() => { save(FIX_KEY, fixDone); }, [FIX_KEY, fixDone]);
   useEffect(() => { save(WTASK_KEY, weeklyTasks); }, [WTASK_KEY, weeklyTasks]);
+
+  // Scroll-spy: highlight the section currently in view in the sticky nav.
+  useEffect(() => {
+    const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(Boolean);
+    if (!els.length || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) setActiveSec(e.target.id); }),
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
 
   /* ── derived tracking metrics ── */
   const sorted = useMemo(() => [...entries].sort((a, b) => a.date.localeCompare(b.date)), [entries]);
@@ -509,14 +532,6 @@ function DashboardBody() {
   }, [lowestSubject, weakRanked, latest, thisWkH]);
 
   /* ── actions ── */
-  function startEditLog() {
-    setLogForm({
-      subjects: Object.fromEntries(subjects.map((s) => [s, { h: subVal(todayEntry, s).h || "", t: subVal(todayEntry, s).t || "" }])),
-      tasksTotal: todayEntry?.tasksTotal ?? "",
-      routine: todayEntry?.routine ?? true,
-    });
-    setEditingLog(true);
-  }
   function addLog(e) {
     e.preventDefault();
     const subj = {};
@@ -535,7 +550,6 @@ function DashboardBody() {
     };
     setEntries((prevE) => [...prevE.filter((x) => x.date !== todayIso), entry]);
     setLogForm({ subjects: {}, tasksTotal: "", routine: true });
-    setEditingLog(false);
   }
 
   function addTest(e) {
@@ -770,6 +784,21 @@ function DashboardBody() {
         </div>
       </div>
 
+      {/* ══ STICKY SECTION NAV ══ */}
+      <div className="md-stickywrap" style={{ position: "sticky", top: "var(--nav-h, 64px)", zIndex: 20, marginTop: 26, background: "rgba(248,247,245,.86)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderTop: "1px solid #eee", borderBottom: "1px solid #eee" }}>
+        <div className="md-sticky-nav" style={{ maxWidth: 1180, margin: "0 auto", padding: "10px 24px", display: "flex", gap: 8, overflowX: "auto" }}>
+          {SECTIONS.map(({ id, label, icon: Icon, color }) => {
+            const on = activeSec === id;
+            return (
+              <button key={id} onClick={() => scrollTo(id)}
+                style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 50, cursor: "pointer", fontFamily: "Sora", fontWeight: 700, fontSize: 13, whiteSpace: "nowrap", transition: "all .15s", border: `1.5px solid ${on ? color : "#e5e7eb"}`, background: on ? color : "#fff", color: on ? "#fff" : NAVY, boxShadow: on ? `0 8px 18px -8px ${color}` : "none" }}>
+                <Icon size={15} color={on ? "#fff" : color} /> {label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* ══ BODY ══ */}
       <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px" }}>
 
@@ -830,16 +859,16 @@ function DashboardBody() {
               ))}
             </div>
 
-            {/* log today — ONCE PER DAY */}
-            {todayEntry && !editingLog ? (
+            {/* log today — ONCE PER DAY · locked after saving (no edits) */}
+            {todayEntry ? (
               <div style={{ background: "#f0faf4", border: "1px solid rgba(34,197,94,.3)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13.5, fontWeight: 800, color: "#15803d" }}>
                     <CheckCircle2 size={17} /> Logged for today ({fmtDay(todayIso)}) — one entry per day
                   </span>
-                  <button onClick={startEditLog} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #cbd5e1", borderRadius: 9, padding: "7px 12px", fontSize: 12.5, fontWeight: 700, color: NAVY, cursor: "pointer" }}>
-                    <Pencil size={13} /> Edit today's log
-                  </button>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #cbd5e1", borderRadius: 9, padding: "7px 12px", fontSize: 12, fontWeight: 700, color: MUTE }}>
+                    <Lock size={13} /> Locked till tomorrow
+                  </span>
                 </div>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   {subjects.map((s) => (
@@ -878,7 +907,9 @@ function DashboardBody() {
                   <button type="submit" style={{ padding: "11px 18px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 7 }}>
                     <Plus size={15} /> Save today's log
                   </button>
-                  {editingLog && <button type="button" onClick={() => setEditingLog(false)} style={{ padding: "11px 16px", borderRadius: 11, border: "1.5px solid #e5e7eb", background: "#fff", color: "#6b7280", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>Cancel</button>}
+                </div>
+                <div style={{ fontSize: 11.5, color: MUTE, marginTop: 10, display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <Lock size={12} /> You can log only once per day — double-check before saving, it can't be edited afterwards.
                 </div>
               </form>
             )}
@@ -1385,6 +1416,8 @@ function DashboardBody() {
         @media (max-width: 760px) {
           .md-track-grid { grid-template-columns: 1fr !important; }
         }
+        .md-sticky-nav { scrollbar-width: none; -ms-overflow-style: none; }
+        .md-sticky-nav::-webkit-scrollbar { display: none; }
         @keyframes spin{to{transform:rotate(360deg)}}
       `}</style>
     </section>
@@ -1394,7 +1427,7 @@ function DashboardBody() {
 /* ── building blocks ─────────────────────────────────────────────── */
 function Section({ id, kicker, title, sub, tColor = ORANGE, children }) {
   return (
-    <section id={id} style={{ scrollMarginTop: 90, paddingTop: 44 }}>
+    <section id={id} style={{ scrollMarginTop: 140, paddingTop: 44 }}>
       <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 26px" }}>
         <span style={{ display: "inline-block", fontSize: 12, fontWeight: 800, letterSpacing: "2px", textTransform: "uppercase", color: tColor, marginBottom: 10 }}>{kicker}</span>
         <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.5rem,3.4vw,2.1rem)", color: INK, margin: 0, letterSpacing: "-0.5px" }}>{title}</h2>

@@ -14,10 +14,10 @@ const PLANS = {
   "josaa":         { amount: 299,  label: "JoSAA + CSAB 2026 Counselling" },
   "all-colleges":  { amount: 499,  label: "All Colleges Counselling (Any Rank)" },
   // ── Mentorship plans (JEE & NEET) ──
-  "mentor-jee-2027":   { amount: 1999, label: "JEE 2027 Mentorship Program" },
-  "mentor-neet-2027":  { amount: 1999, label: "NEET 2027 Mentorship Program" },
-  "mentor-jee-2028":   { amount: 3999, label: "JEE 2028 Mentorship Program (2-Year)" },
-  "mentor-neet-2028":  { amount: 3999, label: "NEET 2028 Mentorship Program (2-Year)" },
+  "mentor-jee-2027":   { amount: 1, label: "JEE 2027 Mentorship Program" },
+  "mentor-neet-2027":  { amount: 1, label: "NEET 2027 Mentorship Program" },
+  "mentor-jee-2028":   { amount: 1, label: "JEE 2028 Mentorship Program (2-Year)" },
+  "mentor-neet-2028":  { amount: 1, label: "NEET 2028 Mentorship Program (2-Year)" },
   "mentor-foundation": { amount: 1, label: "Foundation Mentorship (Class 9–10)" },
 };
 
