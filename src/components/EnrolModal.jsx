@@ -46,7 +46,7 @@ const PLAN_META = {
     band: "2-year doctor mentorship · Class 11",
   },
   "mentor-foundation": {
-    amount: 2999, old: 5999, kind: "mentorship", targetExam: "Foundation (JEE/NEET)",
+    amount: 1, old: 5999, kind: "mentorship", targetExam: "Foundation (JEE/NEET)",
     title: "Foundation Mentorship (Class 9–10)",
     band: "1-on-1 mentor · Shared JEE + NEET base",
   },

@@ -15,20 +15,20 @@ export const SEATS_LEFT = 37; // shown as "X of 120 seats left"
 /* Pricing (server is the source of truth — these are display only).
    `drops` is the cascading price-drop shown on the cards: every value
    except the last is struck through, the last is the final price.
-   JEE/NEET 2027 → ₹1999 · JEE/NEET 2028 → ₹3999 · Foundation → ₹2999 */
+   JEE/NEET 2027 → ₹1999 · JEE/NEET 2028 → ₹3999 · Foundation → ₹1 */
 export const MENTOR_PLANS = {
   "mentor-jee-2027":  { amount: 1999, old: 7999, drops: [7999, 3999, 1999], exam: "JEE",        year: 2027 },
   "mentor-neet-2027": { amount: 1999, old: 7999, drops: [7999, 3999, 1999], exam: "NEET",       year: 2027 },
   "mentor-jee-2028":  { amount: 3999, old: 7999, drops: [7999, 3999],       exam: "JEE",        year: 2028 },
   "mentor-neet-2028": { amount: 3999, old: 7999, drops: [7999, 3999],       exam: "NEET",       year: 2028 },
-  "mentor-foundation":{ amount: 2999, old: 5999, drops: [5999, 2999],       exam: "Foundation", year: null },
+  "mentor-foundation":{ amount: 1, old: 5999, drops: [5999, 1],       exam: "Foundation", year: null },
 };
 
 /* ── Quick summary used by navbar + hero card ───────────────────── */
 export const MENTOR_LINKS = [
   { slug: "jee-2027",   label: "JEE & NEET 2027", to: "/mentorship/jee-2027",   price: 1999, tag: "Class 12 / Droppers" },
   { slug: "jee-2028",   label: "JEE & NEET 2028", to: "/mentorship/jee-2028",   price: 3999, tag: "Class 11 · 2-Year Plan" },
-  { slug: "foundation", label: "Foundation 9–10", to: "/mentorship/foundation", price: 2999, tag: "Class 9 & 10" },
+  { slug: "foundation", label: "Foundation 9–10", to: "/mentorship/foundation", price: 1, tag: "Class 9 & 10" },
 ];
 
 /* ════════════════════════════════════════════════════════════════

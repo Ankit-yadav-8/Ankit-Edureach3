@@ -18,7 +18,7 @@ const PLANS = {
   "mentor-neet-2027":  { amount: 1999, label: "NEET 2027 Mentorship Program" },
   "mentor-jee-2028":   { amount: 3999, label: "JEE 2028 Mentorship Program (2-Year)" },
   "mentor-neet-2028":  { amount: 3999, label: "NEET 2028 Mentorship Program (2-Year)" },
-  "mentor-foundation": { amount: 2999, label: "Foundation Mentorship (Class 9–10)" },
+  "mentor-foundation": { amount: 1, label: "Foundation Mentorship (Class 9–10)" },
 };
 
 const KEY_ID     = process.env.RAZORPAY_KEY_ID;

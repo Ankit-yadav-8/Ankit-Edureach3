@@ -41,7 +41,7 @@ const PROGRAMS = [
     color: "#0ea5a4",
     exam: "Foundation 9–10",
     tag: "Class 9 & 10",
-    price: "2999",
+    price: "1",
     old: "5999",
     blurb: "Build the rock-solid Maths & Science base that makes JEE & NEET feel easy later. The earlier, the higher you rank.",
     points: ["NCERT mastery + study habits", "Early JEE / NEET pattern exposure", "Board + Olympiad edge"],

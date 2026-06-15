@@ -34,7 +34,7 @@ const PLAN_CATALOG = [
       { key: "mentor-neet-2027",  label: "NEET 2027 Mentorship",        tag: "Class 12 / Droppers",    price: 1999, to: "/mentorship/jee-2027" },
       { key: "mentor-jee-2028",   label: "JEE 2028 Mentorship (2-Year)",tag: "Class 11 · 2-Year plan", price: 3999, to: "/mentorship/jee-2028" },
       { key: "mentor-neet-2028",  label: "NEET 2028 Mentorship (2-Year)",tag: "Class 11 · 2-Year plan", price: 3999, to: "/mentorship/jee-2028" },
-      { key: "mentor-foundation", label: "Foundation Mentorship",       tag: "Class 9 & 10",           price: 2999, to: "/mentorship/foundation" },
+      { key: "mentor-foundation", label: "Foundation Mentorship",       tag: "Class 9 & 10",           price: 1, to: "/mentorship/foundation" },
     ],
   },
   {
