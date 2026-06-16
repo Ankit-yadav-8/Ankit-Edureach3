@@ -25,6 +25,13 @@ router.use((_req, res, next) => {
   next();
 });
 
+// ── GET /health — public: does THIS running server have media uploads set up? ─
+// Visit https://<your-api-host>/api/community/health to confirm the deployed
+// process actually sees the CLOUDINARY_* env vars. No secrets are exposed.
+router.get("/health", (_req, res) => {
+  res.json({ ok: true, cloudinaryReady: cloudinaryReady() });
+});
+
 // ── shapers: strip internal fields, compute per-viewer flags ────────────────
 const shapePost = (p, meId) => ({
   id: String(p._id),
