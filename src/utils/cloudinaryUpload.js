@@ -3,7 +3,7 @@ import { apiCommunitySignUpload } from "../auth/api.js";
 // Largest file we let a student attach. Cloudinary's free tier accepts videos,
 // but keeping a sane cap avoids slow uploads on patchy mobile connections.
 export const MAX_IMAGE_MB = 15;
-export const MAX_VIDEO_MB = 100;
+export const MAX_VIDEO_MB = 40;
 
 export function validateFile(file) {
   const isVideo = file.type.startsWith("video/");
