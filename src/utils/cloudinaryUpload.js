@@ -2,7 +2,7 @@ import { apiCommunitySignUpload } from "../auth/api.js";
 
 // Largest file we let a student attach. Cloudinary's free tier accepts videos,
 // but keeping a sane cap avoids slow uploads on patchy mobile connections.
-export const MAX_IMAGE_MB = 10;
+export const MAX_IMAGE_MB = 15;
 export const MAX_VIDEO_MB = 100;
 
 export function validateFile(file) {
@@ -15,11 +15,41 @@ export function validateFile(file) {
   return null;
 }
 
-// Upload one file straight to Cloudinary using a server-signed payload.
-// The file bytes go browser → Cloudinary directly; our API only ever sees the
-// resulting URL. Returns a media object ready to attach to a post/reply.
-export async function uploadToCloudinary(file, token, onProgress) {
-  const sig = await apiCommunitySignUpload(token);
+// Downscale + re-encode large photos in the browser so uploads are fast and
+// light — a 5 MB phone photo becomes ~300–600 KB with no visible quality loss
+// for a doubt screenshot. Videos & GIFs pass through untouched.
+export async function compressImage(file, { maxDim = 1600, quality = 0.82 } = {}) {
+  if (!file.type.startsWith("image/") || file.type === "image/gif") return file;
+  if (typeof createImageBitmap !== "function" || typeof document === "undefined") return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const longest = Math.max(bitmap.width, bitmap.height);
+    const scale = Math.min(1, maxDim / longest);
+    // Already small enough — don't waste time re-encoding.
+    if (scale === 1 && file.size < 700 * 1024) { bitmap.close?.(); return file; }
+    const w = Math.round(bitmap.width * scale);
+    const h = Math.round(bitmap.height * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = w; canvas.height = h;
+    canvas.getContext("2d").drawImage(bitmap, 0, 0, w, h);
+    bitmap.close?.();
+    const blob = await new Promise((r) => canvas.toBlob(r, "image/jpeg", quality));
+    if (!blob || blob.size >= file.size) return file; // no real gain
+    return new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" });
+  } catch {
+    return file; // HEIC / decode failure → upload the original, Cloudinary copes
+  }
+}
+
+// Fetch one signed payload and reuse it for every file in a batch: we only sign
+// folder + timestamp, so a single signature covers many parallel uploads.
+export async function getUploadSignature(token) {
+  return apiCommunitySignUpload(token);
+}
+
+// Upload one file straight to Cloudinary with a pre-fetched signature.
+// The file bytes go browser → Cloudinary directly; our API only sees the URL.
+export async function uploadToCloudinary(file, sig, onProgress) {
   const { signature, timestamp, apiKey, cloudName, folder } = sig;
 
   const form = new FormData();

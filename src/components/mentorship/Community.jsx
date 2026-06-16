@@ -12,7 +12,7 @@ import {
   apiCommunityDeletePost, apiCommunityLikePost, apiCommunityReplies, apiCommunityReply,
   apiCommunityLikeReply,
 } from "../../auth/api.js";
-import { uploadToCloudinary, validateFile } from "../../utils/cloudinaryUpload.js";
+import { uploadToCloudinary, validateFile, compressImage, getUploadSignature } from "../../utils/cloudinaryUpload.js";
 
 // The backend this build talks to — shown on the "uploads not configured"
 // banner so it's obvious WHICH server needs the CLOUDINARY_* env vars.
@@ -121,20 +121,41 @@ function Composer({ token, exam, compact, onSubmit, placeholder, autoFocus, canU
     setErr("");
     const files = Array.from(e.target.files || []);
     e.target.value = "";
+    if (!files.length) return;
+
+    // Register every valid file as an "uploading" tile first (instant feedback).
+    const jobs = [];
     for (const file of files) {
       const v = validateFile(file);
       if (v) { setErr(v); continue; }
       const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
       setAtts((a) => [...a, { id, name: file.name, status: "uploading", progress: 0, isVideo: file.type.startsWith("video/") }]);
+      jobs.push({ id, file });
+    }
+    if (!jobs.length) return;
+
+    // One signature for the whole batch — saves a round-trip per file.
+    let sig;
+    try {
+      sig = await getUploadSignature(token);
+    } catch (ex) {
+      setErr(ex.message || "Upload failed");
+      setAtts((a) => a.filter((x) => !jobs.some((j) => j.id === x.id)));
+      return;
+    }
+
+    // Compress photos, then upload everything in parallel.
+    await Promise.all(jobs.map(async ({ id, file }) => {
       try {
-        const media = await uploadToCloudinary(file, token, (p) =>
+        const prepared = await compressImage(file);
+        const media = await uploadToCloudinary(prepared, sig, (p) =>
           setAtts((a) => a.map((x) => x.id === id ? { ...x, progress: p } : x)));
         setAtts((a) => a.map((x) => x.id === id ? { ...x, status: "done", media, progress: 100 } : x));
       } catch (ex) {
         setErr(ex.message || "Upload failed");
         setAtts((a) => a.filter((x) => x.id !== id));
       }
-    }
+    }));
   };
 
   const removeAtt = (id) => setAtts((a) => a.filter((x) => x.id !== id));
