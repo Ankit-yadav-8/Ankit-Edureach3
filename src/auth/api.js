@@ -40,3 +40,15 @@ export const apiSendOtp   = (b) => req("/api/otp/send",    { method: "POST", bod
 export const apiVerifyOtp = (b) => req("/api/otp/verify",  { method: "POST", body: b });
 export const apiMyEnrollments = (token) => req("/api/payment/my-enrollments", { token });
 export const apiSendParentReport = (token, b) => req("/api/mentorship/parent-report", { method: "POST", body: b, token });
+
+// ── Community (per-batch doubt forum) ───────────────────────────────────────
+export const apiCommunityMe        = (token) => req("/api/community/me", { token });
+export const apiCommunityMembers   = (token) => req("/api/community/members", { token });
+export const apiCommunityFeed      = (token, tab = "all") => req(`/api/community/feed?tab=${tab}`, { token });
+export const apiCommunityCreatePost = (token, b) => req("/api/community/posts", { method: "POST", body: b, token });
+export const apiCommunityDeletePost = (token, id) => req(`/api/community/posts/${id}`, { method: "DELETE", token });
+export const apiCommunityLikePost  = (token, id) => req(`/api/community/posts/${id}/like`, { method: "POST", token });
+export const apiCommunityReplies   = (token, id) => req(`/api/community/posts/${id}/replies`, { token });
+export const apiCommunityReply     = (token, id, b) => req(`/api/community/posts/${id}/replies`, { method: "POST", body: b, token });
+export const apiCommunityLikeReply = (token, id) => req(`/api/community/replies/${id}/like`, { method: "POST", token });
+export const apiCommunitySignUpload = (token) => req("/api/community/sign-upload", { method: "POST", body: {}, token });

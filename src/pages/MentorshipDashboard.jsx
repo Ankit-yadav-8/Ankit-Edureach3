@@ -7,9 +7,11 @@ import {
   ShieldCheck, ArrowRight, Users, BarChart3, Rocket, Zap, Crosshair, Timer,
   ListChecks, Lock, Loader2, RotateCw, Pencil, Trash2, CalendarDays, Brain,
   BookOpen, Minus, Trophy, Send, Lightbulb, Hourglass, AlertCircle,
+  MessagesSquare, BadgeCheck,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiSendParentReport } from "../auth/api.js";
+import Community from "../components/mentorship/Community.jsx";
 import { Trend, Gauge, PieWithLegend, Bars } from "../components/Charts.jsx";
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
 
@@ -29,6 +31,7 @@ const save = (key, val) => { try { localStorage.setItem(key, JSON.stringify(val)
 
 const isoDay = (d) => new Date(d).toISOString().slice(0, 10);
 const fmtDay = (iso) => new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+const fmtFull = (d) => new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const round1 = (n) => Math.round(Number(n || 0) * 10) / 10;
 const inr = (n) => Number(n || 0).toLocaleString("en-IN");
@@ -93,6 +96,7 @@ const SECTIONS = [
   { id: "test-analysis",   label: "Tests",           icon: LineIcon,  color: "#8b5cf6" },
   { id: "mentor-tools",    label: "Mentor tools",    icon: Brain,     color: GOLD },
   { id: "backlog",         label: "Backlog",         icon: Rocket,    color: "#7c3aed" },
+  { id: "community",       label: "Community",       icon: MessagesSquare, color: "#0ea5e9" },
   { id: "parent-report",   label: "Reports",         icon: Mail,      color: GREEN },
 ];
 
@@ -326,6 +330,8 @@ function DashboardBody() {
 
   const [planLabel, setPlanLabel] = useState("Mentorship Program");
   const [planExam, setPlanExam] = useState("JEE / NEET");
+  // Identity shown in the left ID card (student ID, batch, validity window).
+  const [identity, setIdentity] = useState({ studentId: "", batchLabel: "", enrolledOn: null, validUntil: null, status: "" });
   const subjects = useMemo(() => subjectsFor(planExam), [planExam]);
   const isFoundation = /foundation/i.test(planExam);
   const isNEET = /neet/i.test(planExam) && !/jee/i.test(planExam);
@@ -366,6 +372,13 @@ function DashboardBody() {
           setPlanLabel(m.planLabel || m.plan);
           setPlanExam(m.targetExam || (String(m.plan).includes("neet") ? "NEET" : String(m.plan).includes("foundation") ? "Foundation" : "JEE"));
           setParentEmail(m.parentEmail || "");
+          setIdentity({
+            studentId: m.studentId || "",
+            batchLabel: m.batchLabel || m.planLabel || m.plan,
+            enrolledOn: m.createdAt || null,
+            validUntil: m.validUntil || null,
+            status: (m.validUntil && new Date(m.validUntil) < new Date()) ? "expired" : "active",
+          });
         }
       })
       .catch(() => {});
@@ -847,6 +860,7 @@ function DashboardBody() {
     { id: "test-analysis",    label: "Test analysis",         desc: rankEnabled ? "Marks → charts + rank" : "Marks → AI charts", icon: LineIcon, color: "#8b5cf6" },
     { id: "mentor-tools",     label: "What your mentor breaks down", desc: "Silly mistakes · weak chapters", icon: Brain,      color: GOLD },
     { id: "backlog",          label: "Backlog clearing sprints", desc: "List & clear pending topics",  icon: Rocket,          color: "#7c3aed" },
+    { id: "community",        label: "Batch community",       desc: "Ask doubts · photos & video",      icon: MessagesSquare,  color: "#0ea5e9" },
     { id: "parent-report",    label: "Weekly report & tasks", desc: "Tasks + auto parent email",        icon: Mail,            color: GREEN },
   ];
 
@@ -882,20 +896,35 @@ function DashboardBody() {
             {/* LEFT — user / plan card */}
             <motion.div initial={{ opacity: 0, x: -22 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5 }}
               style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", padding: "26px 24px", display: "flex", flexDirection: "column", boxShadow: "0 18px 40px -28px rgba(13,27,62,.4)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 16 }}>
                 <div style={{ width: 60, height: 60, borderRadius: "50%", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontSize: 26, fontWeight: 800, fontFamily: "Sora", flexShrink: 0 }}>{initial}</div>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: NAVY, lineHeight: 1.15 }}>{user?.name || "Student"}</div>
-                  <div style={{ fontSize: 12.5, color: MUTE, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.email}</div>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                    <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: NAVY, lineHeight: 1.15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.name || "Student"}</div>
+                    {identity.status && (
+                      <span style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 800, padding: "3px 9px", borderRadius: 50, textTransform: "capitalize",
+                        color: identity.status === "active" ? "#16a34a" : "#dc2626",
+                        background: identity.status === "active" ? "rgba(34,197,94,.12)" : "rgba(220,38,38,.1)",
+                        border: `1px solid ${identity.status === "active" ? "rgba(34,197,94,.35)" : "rgba(220,38,38,.3)"}` }}>
+                        {identity.status === "active" && <CheckCircle2 size={11} />}{identity.status}
+                      </span>
+                    )}
+                  </div>
+                  {/* Clean global student ID — CP-2026-00042 */}
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 7, padding: "4px 11px", borderRadius: 8, fontFamily: "monospace", fontSize: 13, fontWeight: 700, letterSpacing: ".02em",
+                    color: identity.studentId ? "#0f766e" : "#94a3b8", background: identity.studentId ? "rgba(13,148,136,.08)" : "#f1f5f9", border: `1px solid ${identity.studentId ? "rgba(13,148,136,.3)" : "#e5e7eb"}` }}>
+                    <BadgeCheck size={13} /> {identity.studentId || "ID pending"}
+                  </span>
                 </div>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
                 {[
-                  { icon: GraduationCap, c: ORANGE, l: "Plan", v: planLabel },
-                  { icon: Target, c: "#6366f1", l: "Target exam", v: planExam },
-                  { icon: Users, c: GREEN, l: "Mentor", v: "Assigned · 1-on-1" },
-                  { icon: Flame, c: "#ef4444", l: "Current streak", v: `${streak} day${streak === 1 ? "" : "s"}` },
+                  { icon: GraduationCap, c: ORANGE,    l: "Batch",         v: identity.batchLabel || planLabel },
+                  { icon: CalendarDays,  c: "#6366f1", l: "Enrolled on",   v: identity.enrolledOn ? fmtFull(identity.enrolledOn) : "—" },
+                  { icon: ShieldCheck,   c: GREEN,     l: "Valid until",   v: identity.validUntil ? fmtFull(identity.validUntil) : "—" },
+                  { icon: Mail,          c: "#0ea5e9", l: "Email",         v: user?.email },
+                  { icon: Flame,         c: "#ef4444", l: "Current streak", v: `${streak} day${streak === 1 ? "" : "s"}` },
                 ].map(({ icon: Icon, c, l, v }) => (
                   <div key={l} style={{ display: "flex", alignItems: "center", gap: 11 }}>
                     <span style={{ width: 36, height: 36, borderRadius: 10, background: `${c}14`, border: `1px solid ${c}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
@@ -1592,6 +1621,12 @@ function DashboardBody() {
               </div>
             )}
           </div>
+        </Section>
+
+        {/* ── BATCH COMMUNITY ── */}
+        <Section id="community" kicker="Your batch, in one room" title="Batch Community" tColor="#0ea5e9"
+          sub="Meet your batchmates and post doubts with photos & videos — peers and mentors reply, and the best ones get highlighted.">
+          <Community />
         </Section>
 
         {/* ── DAILY & WEEKLY REPORTS ── */}

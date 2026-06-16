@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const enrollmentSchema = new mongoose.Schema(
   {
+    // Clean, global, never-repeating student ID (CP-2026-00042). Assigned on
+    // first paid mentorship enrolment; back-filled for older enrolments on read.
+    studentId: { type: String, default: null, index: true },
+
     // Plan
     plan: {
       type: String,

@@ -5,6 +5,8 @@ import Enrollment from "../models/Enrollment.js";
 import User from "../models/User.js";
 import { requireAdmin } from "../middleware/admin.js";
 import { requireAuth } from "../middleware/auth.js";
+import { ensureStudentId, nextStudentId } from "../utils/studentId.js";
+import { batchLabelFor, validUntilFor } from "../utils/plans.js";
 
 const router = express.Router();
 
@@ -110,7 +112,7 @@ router.post("/verify", async (req, res) => {
     // Best-effort: the money has already moved, so a DB hiccup must not fail
     // the response to the customer.
     try {
-      await Enrollment.findOneAndUpdate(
+      const enr = await Enrollment.findOneAndUpdate(
         { razorpayOrderId: razorpay_order_id },
         {
           plan,
@@ -132,6 +134,14 @@ router.post("/verify", async (req, res) => {
         },
         { upsert: true, new: true, setDefaultsOnInsert: true }
       );
+      // Mentorship students get a clean global ID (CP-2026-00042) on enrolment.
+      if (enr && /^mentor-/.test(enr.plan) && !enr.studentId) {
+        const id = await nextStudentId(new Date(enr.createdAt || Date.now()).getFullYear());
+        await Enrollment.updateOne(
+          { _id: enr._id, $or: [{ studentId: null }, { studentId: "" }, { studentId: { $exists: false } }] },
+          { $set: { studentId: id } }
+        );
+      }
     } catch (e) { console.error("enrollment persist (paid) error:", e?.message || e); }
 
     res.json({ ok: true, paymentId: razorpay_payment_id });
@@ -149,7 +159,18 @@ router.get("/my-enrollments", requireAuth, async (req, res) => {
     if (!user?.email) return res.json({ enrollments: [] });
     const items = await Enrollment.find({ status: "paid", email: user.email.toLowerCase() })
       .sort({ createdAt: -1 }).lean();
-    const enrollments = items.map((e) => ({ ...e, planLabel: PLANS[e.plan]?.label || e.plan }));
+    // Mentorship enrolments carry a student ID, a batch label and a validity
+    // window — back-fill the ID here so older students get one on first open.
+    const enrollments = await Promise.all(items.map(async (e) => {
+      const isMentor = /^mentor-/.test(e.plan);
+      const studentId = isMentor ? (e.studentId || await ensureStudentId(e._id, e.createdAt)) : null;
+      return {
+        ...e,
+        studentId,
+        planLabel: PLANS[e.plan]?.label || e.plan,
+        ...(isMentor ? { batchLabel: batchLabelFor(e.plan), validUntil: validUntilFor(e.plan, e.createdAt) } : {}),
+      };
+    }));
     res.json({ enrollments });
   } catch (e) {
     console.error("[payment/my-enrollments]", e?.message || e);

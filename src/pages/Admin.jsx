@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, Fragment } from "react";
 import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
-  ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2,
+  ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
+import CommunityModeration from "../components/admin/CommunityModeration.jsx";
 
 const TOKEN_STORAGE = "edureach:adminToken";
 const ORANGE = "#F47B20";
@@ -130,10 +131,11 @@ export default function Admin() {
   }, []);
 
   const switchTab = (t) => {
-    setTab(t); setSearch(""); setExpanded(new Set());
+    setTab(t); setSearch(""); setExpanded(new Set()); setErr("");
     if (t === "payments" && !payLoaded) fetchPayments(token);
   };
-  const refreshActive = () => (tab === "users" ? fetchUsers(token) : fetchPayments(token));
+  // Community moderation manages its own data/refresh, so the header Refresh is a no-op there.
+  const refreshActive = () => (tab === "users" ? fetchUsers(token) : tab === "payments" ? fetchPayments(token) : undefined);
 
   useEffect(() => { if (token) fetchUsers(token); /* eslint-disable-next-line */ }, []);
 
@@ -365,10 +367,12 @@ export default function Admin() {
               <RefreshCw size={14} style={{ animation: busy ? "spin 1s linear infinite" : "none" }} />
               {busy ? "Refreshing…" : "Refresh"}
             </button>
-            <button onClick={exportActive}
-              style={{ background: ORANGE, color: "#fff", border: "none", height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <Download size={14} /> Export CSV
-            </button>
+            {tab !== "community" && (
+              <button onClick={exportActive}
+                style={{ background: ORANGE, color: "#fff", border: "none", height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+                <Download size={14} /> Export CSV
+              </button>
+            )}
             <button onClick={logout}
               style={{ background: "#fff", color: "#888", border: "1.5px solid #e5e7eb", height: 40, padding: "0 14px", borderRadius: 10, fontWeight: 600, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <LogOut size={14} /> Logout
@@ -381,6 +385,7 @@ export default function Admin() {
           {[
             { k: "users", label: "Users", icon: Users, count: total },
             { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
+            { k: "community", label: "Community", icon: MessagesSquare },
           ].map(({ k, label, icon: Icon, count }) => {
             const active = tab === k;
             return (
@@ -394,16 +399,18 @@ export default function Admin() {
                   marginBottom: -1,
                 }}>
                 <Icon size={16} /> {label}
-                <span style={{ background: active ? `${ORANGE}15` : "#f3f4f6", color: active ? ORANGE : "#999", borderRadius: 20, padding: "1px 9px", fontSize: 12, fontWeight: 700 }}>
-                  {count}
-                </span>
+                {count !== undefined && (
+                  <span style={{ background: active ? `${ORANGE}15` : "#f3f4f6", color: active ? ORANGE : "#999", borderRadius: 20, padding: "1px 9px", fontSize: 12, fontWeight: 700 }}>
+                    {count}
+                  </span>
+                )}
               </button>
             );
           })}
         </div>
 
         {/* Stat cards */}
-        {tab === "users" ? (
+        {tab === "community" ? null : tab === "users" ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 28 }}>
           <div style={{ background: "#0d1b3e", borderRadius: 16, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16 }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
@@ -488,7 +495,7 @@ export default function Admin() {
         )}
 
         {/* Search + Table */}
-        {tab === "users" ? (
+        {tab === "community" ? null : tab === "users" ? (
         <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
 
           {/* Search bar */}
@@ -743,6 +750,9 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow }) {
           </table>
         </div>
       )}
+
+        {/* Community moderation — pin/unpin, delete, post announcements */}
+        {tab === "community" && <CommunityModeration token={token} />}
     </div>
   );
 }
