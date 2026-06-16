@@ -98,7 +98,7 @@ function PillBtn({ active, color, onClick, children, title }) {
 }
 
 /* ── shared composer (used for posts + replies) ──────────────────── */
-function Composer({ token, exam, compact, onSubmit, placeholder, autoFocus }) {
+function Composer({ token, exam, compact, onSubmit, placeholder, autoFocus, canUpload = true }) {
   const [text, setText] = useState("");
   const [tag, setTag] = useState("doubt");
   const [subject, setSubject] = useState("");
@@ -205,8 +205,9 @@ function Composer({ token, exam, compact, onSubmit, placeholder, autoFocus }) {
       {err && <div style={{ fontSize: 12.5, color: "#dc2626", fontWeight: 600, margin: "2px 0 6px" }}>{err}</div>}
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: 6 }}>
-        <button onClick={() => fileRef.current?.click()} title="Attach photo or video"
-          style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, cursor: "pointer", fontWeight: 700, fontSize: 13 }}>
+        <button onClick={() => fileRef.current?.click()} disabled={!canUpload}
+          title={canUpload ? "Attach photo or video" : "Media uploads aren't configured on the server yet"}
+          style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, cursor: canUpload ? "pointer" : "not-allowed", opacity: canUpload ? 1 : .5, fontWeight: 700, fontSize: 13 }}>
           <ImagePlus size={16} color={ORANGE} /> Photo / Video
         </button>
         <input ref={fileRef} type="file" accept="image/*,video/*" multiple hidden onChange={pickFiles} />
@@ -223,7 +224,7 @@ function Composer({ token, exam, compact, onSubmit, placeholder, autoFocus }) {
 }
 
 /* ── reply thread ────────────────────────────────────────────────── */
-function ReplyThread({ token, post, exam, onReplied }) {
+function ReplyThread({ token, post, exam, onReplied, canUpload }) {
   const [replies, setReplies] = useState(null);
   const [busy, setBusy] = useState(true);
 
@@ -272,14 +273,14 @@ function ReplyThread({ token, post, exam, onReplied }) {
         <div style={{ fontSize: 13, color: "#9ca3af", padding: "4px 0 8px" }}>No replies yet — be the first to help.</div>
       )}
       <div style={{ marginTop: 8 }}>
-        <Composer token={token} exam={exam} compact placeholder="Write a reply…" onSubmit={addReply} />
+        <Composer token={token} exam={exam} compact canUpload={canUpload} placeholder="Write a reply…" onSubmit={addReply} />
       </div>
     </div>
   );
 }
 
 /* ── single post card ────────────────────────────────────────────── */
-function PostCard({ token, post, exam, onLike, onDelete, onReplied }) {
+function PostCard({ token, post, exam, onLike, onDelete, onReplied, canUpload }) {
   const [open, setOpen] = useState(false);
   const tag = TAG_META[post.tag] || TAG_META.doubt;
   return (
@@ -329,7 +330,7 @@ function PostCard({ token, post, exam, onLike, onDelete, onReplied }) {
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} style={{ overflow: "hidden" }}>
-            <ReplyThread token={token} post={post} exam={exam} onReplied={onReplied} />
+            <ReplyThread token={token} post={post} exam={exam} onReplied={onReplied} canUpload={canUpload} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -473,7 +474,7 @@ export default function Community() {
 
       {/* composer */}
       <div style={{ marginBottom: 16 }}>
-        <Composer token={token} exam={me.exam} onSubmit={createPost} />
+        <Composer token={token} exam={me.exam} canUpload={me.cloudinaryReady} onSubmit={createPost} />
         {!me.cloudinaryReady && (
           <div style={{ fontSize: 12, color: "#b45309", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginTop: 8 }}>
             Photo / video uploads aren't configured on the server yet — text posts work fine.
@@ -517,7 +518,7 @@ export default function Community() {
               </div>
             </div>
           ) : posts.map((p) => (
-            <PostCard key={p.id} token={token} post={p} exam={me.exam} onLike={likePost} onDelete={deletePost} onReplied={onReplied} />
+            <PostCard key={p.id} token={token} post={p} exam={me.exam} canUpload={me.cloudinaryReady} onLike={likePost} onDelete={deletePost} onReplied={onReplied} />
           ))}
         </div>
       )}

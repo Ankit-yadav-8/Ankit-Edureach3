@@ -938,8 +938,25 @@ function DashboardBody() {
                 ))}
               </div>
 
+              {/* Batch community shortcut */}
+              <button onClick={() => scrollTo("community")}
+                style={{ marginTop: "auto", textAlign: "left", width: "100%", marginBottom: 12, padding: "14px 15px", borderRadius: 14, cursor: "pointer",
+                  background: "linear-gradient(135deg,rgba(14,165,233,.12),rgba(14,165,233,.03))", border: "1px solid rgba(14,165,233,.3)",
+                  display: "flex", alignItems: "center", gap: 12, transition: "box-shadow .15s, transform .15s" }}
+                onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 12px 26px -14px rgba(14,165,233,.7)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
+                <span style={{ width: 40, height: 40, borderRadius: 11, background: "#0ea5e9", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <MessagesSquare size={19} color="#fff" />
+                </span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ display: "block", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: NAVY }}>Batch Community</span>
+                  <span style={{ display: "block", fontSize: 11.5, color: MUTE, marginTop: 1, lineHeight: 1.4 }}>Meet your batchmates & ask doubts with photos and video.</span>
+                </span>
+                <ArrowRight size={16} color="#0ea5e9" />
+              </button>
+
               <button onClick={() => navigate("/")}
-                style={{ marginTop: "auto", width: "100%", padding: "13px", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                style={{ width: "100%", padding: "13px", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                 <Home size={16} /> Home
               </button>
             </motion.div>
