@@ -7,11 +7,16 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext.jsx";
 import {
+  API_BASE,
   apiCommunityMe, apiCommunityMembers, apiCommunityFeed, apiCommunityCreatePost,
   apiCommunityDeletePost, apiCommunityLikePost, apiCommunityReplies, apiCommunityReply,
   apiCommunityLikeReply,
 } from "../../auth/api.js";
 import { uploadToCloudinary, validateFile } from "../../utils/cloudinaryUpload.js";
+
+// The backend this build talks to — shown on the "uploads not configured"
+// banner so it's obvious WHICH server needs the CLOUDINARY_* env vars.
+const API_HOST = (() => { try { return new URL(API_BASE).host; } catch { return API_BASE; } })();
 
 /* ── palette (matches the dashboard) ─────────────────────────────── */
 const ORANGE = "#F47B20", GOLD = "#f5a623", GREEN = "#15a06e";
@@ -476,8 +481,13 @@ export default function Community() {
       <div style={{ marginBottom: 16 }}>
         <Composer token={token} exam={me.exam} canUpload={me.cloudinaryReady} onSubmit={createPost} />
         {!me.cloudinaryReady && (
-          <div style={{ fontSize: 12, color: "#b45309", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginTop: 8 }}>
-            Photo / video uploads aren't configured on the server yet — text posts work fine.
+          <div style={{ fontSize: 12, color: "#b45309", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginTop: 8, lineHeight: 1.55 }}>
+            Photo / video uploads aren't configured on this server
+            (<code style={{ fontFamily: "monospace", background: "#fef3c7", padding: "1px 6px", borderRadius: 5, color: "#92400e" }}>{API_HOST}</code>) yet —
+            set the <strong>CLOUDINARY_*</strong> env vars there and redeploy. Text posts work fine.
+            <span style={{ display: "block", marginTop: 3, color: "#a16207" }}>
+              Verify with <code style={{ fontFamily: "monospace" }}>{API_BASE}/api/community/health</code>
+            </span>
           </div>
         )}
       </div>
