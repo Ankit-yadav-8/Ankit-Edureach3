@@ -27,10 +27,15 @@ router.post("/request-otp", async (req, res) => {
 
     const code = String(Math.floor(100000 + Math.random() * 900000));
     const codeHash = await bcrypt.hash(code, 8);
-    await Otp.deleteMany({ email: ADMIN_EMAIL });
-    await Otp.create({ email: ADMIN_EMAIL, codeHash, name: "admin", expiresAt: new Date(Date.now() + 5 * 60 * 1000) });
-
-    const r = await sendOtpEmail(ADMIN_EMAIL, code);
+    // Fire the email and persist the code together (single upsert) so the code
+    // arrives as fast as possible. Stale OTPs auto-expire via the TTL index.
+    const sendP = sendOtpEmail(ADMIN_EMAIL, code);
+    const persistP = Otp.findOneAndUpdate(
+      { email: ADMIN_EMAIL },
+      { codeHash, name: "admin", attempts: 0, expiresAt: new Date(Date.now() + 5 * 60 * 1000) },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    const [r] = await Promise.all([sendP, persistP]);
     if (!r.ok) {
       await Otp.deleteMany({ email: ADMIN_EMAIL });
       console.error(`[ADMIN OTP] send failed: ${r.error}`);

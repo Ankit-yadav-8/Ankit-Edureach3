@@ -30,6 +30,28 @@ function resolveSender() {
   return { fromEmail, fromName, replyTo };
 }
 
+// Single place that POSTs to Brevo, with a hard timeout so a slow/hung Brevo
+// request can't keep the user waiting (they get a fast "try again" instead).
+async function postToBrevo(body) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 12000);
+  try {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "api-key": process.env.BREVO_API_KEY },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+    if (!res.ok) throw new Error(`Brevo API error (${res.status}): ${await res.text()}`);
+    return { ok: true, dev: false };
+  } catch (e) {
+    if (e.name === "AbortError") throw new Error("Brevo timed out");
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /**
  * Generic transactional email. In dev mode (OTP_DEV_MODE !== "false") or when no
  * Brevo key is set, it only logs — so it never sends real mail during local dev.
@@ -43,20 +65,14 @@ export async function sendMail({ to, subject, html, text }) {
   }
   const { fromEmail, fromName, replyTo } = resolveSender();
   try {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "api-key": process.env.BREVO_API_KEY },
-      body: JSON.stringify({
-        sender: { name: fromName, email: fromEmail },
-        replyTo: { email: replyTo, name: fromName },
-        to: [{ email: to }],
-        subject,
-        textContent: text || subject,
-        htmlContent: html || `<p>${text || subject}</p>`,
-      }),
+    return await postToBrevo({
+      sender: { name: fromName, email: fromEmail },
+      replyTo: { email: replyTo, name: fromName },
+      to: [{ email: to }],
+      subject,
+      textContent: text || subject,
+      htmlContent: html || `<p>${text || subject}</p>`,
     });
-    if (!res.ok) throw new Error(`Brevo API error (${res.status}): ${await res.text()}`);
-    return { ok: true, dev: false };
   } catch (e) {
     console.error("sendMail failed:", e.message);
     return { ok: false, dev: false, error: e.message };
@@ -96,31 +112,19 @@ export async function sendOtpEmail(email, code) {
   }
 
   try {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "api-key": process.env.BREVO_API_KEY,
-      },
-      body: JSON.stringify({
-        sender: { name: fromName, email: fromEmail },
-        replyTo: { email: replyTo, name: fromName },
-        to: [{ email }],
-        subject: "Your CollegeParichay verification code",
-        textContent: `Your CollegeParichay verification code is ${code}. Valid for 5 minutes.`,
-        htmlContent: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto">
-          <h2 style="color:#F47B20;margin:0 0 8px">CollegeParichay</h2>
-          <p style="color:#333;font-size:15px">Your verification code is:</p>
-          <div style="font-size:32px;font-weight:800;letter-spacing:8px;color:#1c1c28;margin:12px 0">${code}</div>
-          <p style="color:#888;font-size:13px">Valid for 5 minutes. If you didn't request this, ignore this email.</p>
-        </div>`,
-      }),
+    return await postToBrevo({
+      sender: { name: fromName, email: fromEmail },
+      replyTo: { email: replyTo, name: fromName },
+      to: [{ email }],
+      subject: "Your CollegeParichay verification code",
+      textContent: `Your CollegeParichay verification code is ${code}. Valid for 5 minutes.`,
+      htmlContent: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto">
+        <h2 style="color:#F47B20;margin:0 0 8px">CollegeParichay</h2>
+        <p style="color:#333;font-size:15px">Your verification code is:</p>
+        <div style="font-size:32px;font-weight:800;letter-spacing:8px;color:#1c1c28;margin:12px 0">${code}</div>
+        <p style="color:#888;font-size:13px">Valid for 5 minutes. If you didn't request this, ignore this email.</p>
+      </div>`,
     });
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error(`Brevo API error (${res.status}): ${err}`);
-    }
-    return { ok: true, dev: false };
   } catch (e) {
     console.error("Email send failed:", e.message);
     return { ok: false, dev: false, error: e.message };

@@ -21,14 +21,25 @@ router.post("/send", async (req, res) => {
     const email = cleanEmail(req.body?.email);
     const name = String(req.body?.name || "").trim();
     if (!isEmail(email)) return res.status(400).json({ error: "Use a @gmail.com or .in email address" });
-    // OTP login is only for already-registered emails. New users must sign up first.
-    const exists = await User.findOne({ email }).select("_id").lean();
-    if (!exists) return res.status(404).json({ error: "This email isn't registered yet. Please sign up first, then log in with OTP.", notRegistered: true });
     const code = String(Math.floor(100000 + Math.random() * 900000));
-    const codeHash = await bcrypt.hash(code, 8);
-    await Otp.deleteMany({ email });
-    await Otp.create({ email, codeHash, name, expiresAt: new Date(Date.now() + 5 * 60 * 1000) });
-    const r = await sendOtpEmail(email, code);
+    // OTP login is only for already-registered emails. The registration check
+    // and the (slow-ish) bcrypt hash don't depend on each other — run together.
+    const [exists, codeHash] = await Promise.all([
+      User.findOne({ email }).select("_id").lean(),
+      bcrypt.hash(code, 8),
+    ]);
+    if (!exists) return res.status(404).json({ error: "This email isn't registered yet. Please sign up first, then log in with OTP.", notRegistered: true });
+
+    // Fire the email and store the code at the same time, in a single DB
+    // round-trip (upsert resets attempts), so delivery isn't held up behind the
+    // writes. Stale OTPs auto-expire via the TTL index.
+    const sendP = sendOtpEmail(email, code);
+    const persistP = Otp.findOneAndUpdate(
+      { email },
+      { codeHash, name, attempts: 0, expiresAt: new Date(Date.now() + 5 * 60 * 1000) },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    const [r] = await Promise.all([sendP, persistP]);
     // If a real send was attempted and failed, tell the user — don't pretend it
     // worked (and never leak the code in the response outside dev mode).
     if (!r.ok) {
