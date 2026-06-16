@@ -336,12 +336,13 @@ export default function About() {
             position: "absolute", inset: 0, zIndex: 0,
             backgroundImage: "url('/IITroorkee.png')",
             backgroundSize: "cover", backgroundPosition: "center",
-            opacity: 0.30,
+            opacity: 1,
+            filter: "saturate(1.28) brightness(1.06) contrast(1.08)",
           }}
         />
-        {/* warm colour wash — keeps text crisp and tints the photo on-brand */}
-        <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(180deg, rgba(255,255,255,.90) 0%, rgba(255,245,236,.80) 45%, rgba(255,255,255,.95) 100%)" }} />
-        <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 0, background: "radial-gradient(ellipse 65% 60% at 50% -10%, rgba(244,123,32,.20) 0%, transparent 62%)" }} />
+        {/* light scrim — keeps the photo fully visible while text stays legible */}
+        <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(180deg, rgba(255,255,255,.34) 0%, rgba(255,245,236,.16) 45%, rgba(255,255,255,.40) 100%)" }} />
+        <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 0, background: "radial-gradient(ellipse 70% 65% at 50% 42%, rgba(255,255,255,.42) 0%, transparent 60%)" }} />
         <div className="container" style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
           <span style={{
             display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 22,
@@ -359,12 +360,13 @@ export default function About() {
             fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900,
             fontSize: "clamp(2.2rem,5vw,3.6rem)", margin: "0 0 18px",
             letterSpacing: "-0.04em", color: "var(--navy)", lineHeight: 1.15,
+            textShadow: "0 1px 10px rgba(255,255,255,.9), 0 1px 2px rgba(255,255,255,.95)",
           }}>
             Made by students who've been{" "}
             <span style={{ color: "#F47B20" }}>exactly where you are</span>
           </h1>
 
-          <p style={{ color: "var(--muted)", maxWidth: 640, margin: "0 auto 36px", fontSize: "1.08rem", lineHeight: 1.75 }}>
+          <p style={{ color: "#334155", maxWidth: 640, margin: "0 auto 36px", fontSize: "1.08rem", lineHeight: 1.75, fontWeight: 500, textShadow: "0 1px 6px rgba(255,255,255,.92)" }}>
             Two engineers from IIT Roorkee who cracked JEE Advanced, lived through the chaos of JoSAA counselling, and built the platform they wished existed. College Parichay brings rank prediction, college discovery and counselling guidance into one clean, student-first platform — completely free.
           </p>
 
