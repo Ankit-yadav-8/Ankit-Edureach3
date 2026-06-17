@@ -495,7 +495,9 @@ export default function Admin() {
         )}
 
         {/* Search + Table */}
-        {tab === "community" ? null : tab === "users" ? (
+        {tab === "community" ? (
+          <CommunityModeration token={token} />
+        ) : tab === "users" ? (
         <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
 
           {/* Search bar */}
@@ -750,9 +752,6 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow }) {
           </table>
         </div>
       )}
-
-        {/* Community moderation — pin/unpin, delete, post announcements */}
-        {tab === "community" && <CommunityModeration token={token} />}
     </div>
   );
 }
