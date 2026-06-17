@@ -5,7 +5,7 @@ import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut, Sparkles,
-  HelpCircle, Newspaper, Flame, Medal, Megaphone,
+  HelpCircle, Newspaper, Flame, Medal, Megaphone, Globe2,
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -549,6 +549,24 @@ export default function Navbar({ onSearch }) {
                   </span>
                 </button>
               )}
+
+              {/* Public community — kept in the mobile drawer (the hamburger is
+                  how phones navigate); on desktop it lives in the hero instead. */}
+              <button
+                onClick={() => { setMobileOpen(false); navigate("/community"); }}
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
+                  background: "rgba(14,165,233,.08)", borderRadius: 10, padding: "11px 12px",
+                  marginBottom: "0.8rem", border: "1px solid rgba(14,165,233,.3)", cursor: "pointer",
+                }}>
+                <span style={{ width: 32, height: 32, borderRadius: "50%", background: "#0ea5e9", color: "#fff", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <Globe2 size={17} />
+                </span>
+                <span style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+                  <span style={{ fontWeight: 700, color: "var(--navy)", fontSize: "0.9rem" }}>Public Community</span>
+                  <span style={{ fontSize: "0.72rem", color: "#0284c7", fontWeight: 600 }}>Share tricks, strategies & notes →</span>
+                </span>
+              </button>
 
               {navItems.map((item) => {
                 if (item.feature) {
