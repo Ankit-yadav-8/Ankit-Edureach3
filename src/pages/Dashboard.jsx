@@ -386,9 +386,9 @@ export default function Dashboard() {
                     <CheckCircle2 size={14} /> Active
                   </span>
                   {isMentorshipPlan(p.plan) && (
-                    <button onClick={() => navigate("/mentorship-dashboard")}
+                    <button onClick={() => navigate(`/mentorship-dashboard?plan=${encodeURIComponent(p.plan)}`)}
                       style={{ flexBasis: "100%", marginTop: 4, padding: "12px", borderRadius: 12, border: "none", background: `linear-gradient(135deg, ${g.accent}, ${g.accent2 || GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: `0 12px 26px -12px ${g.accent}` }}>
-                      <LayoutDashboard size={16} /> Mentorship dashboard <ArrowRight size={15} />
+                      <LayoutDashboard size={16} /> Open {p.planLabel || "mentorship"} dashboard <ArrowRight size={15} />
                     </button>
                   )}
                 </div>

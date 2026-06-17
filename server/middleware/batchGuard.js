@@ -4,23 +4,39 @@ import { ensureStudentId } from "../utils/studentId.js";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Batch guard — the heart of community access control.
-// Resolves the logged-in user's most recent PAID mentorship enrolment and pins
-// every request to that plan's room (req.batch.plan). A student can therefore
-// only ever read or post in their own batch — the plan is never taken from the
-// client, so it can't be spoofed to peek into another batch.
+// A student may belong to MORE THAN ONE mentorship batch (e.g. JEE 2027 +
+// Foundation). The client can ask for a specific batch via ?plan=…, but the
+// plan is never trusted blindly: we only honour it when the user actually owns
+// a PAID enrolment for that exact plan. Otherwise we fall back to their most
+// recent paid mentorship enrolment. Either way req.batch.plan is the single
+// source of truth, so a student can never spoof their way into another batch.
 // ─────────────────────────────────────────────────────────────────────────────
 export async function requireBatch(req, res, next) {
   try {
     const user = await User.findById(req.user.id).select("email name").lean();
     if (!user?.email) return res.status(403).json({ error: "No account found." });
+    const email = user.email.toLowerCase();
 
-    const enr = await Enrollment.findOne({
-      status: "paid",
-      email: user.email.toLowerCase(),
-      plan: { $regex: /^mentor-/ },
-    })
-      .sort({ createdAt: -1 })
-      .lean();
+    // A batch the caller explicitly asked for (?plan= or x-batch-plan header).
+    const requested = String(req.query.plan || req.headers["x-batch-plan"] || "").trim();
+
+    let enr = null;
+    if (/^mentor-/.test(requested)) {
+      // Only resolves if THIS user paid for THIS plan — ownership is verified.
+      enr = await Enrollment.findOne({ status: "paid", email, plan: requested })
+        .sort({ createdAt: -1 })
+        .lean();
+    }
+    // No (or unowned) plan requested → their most recent mentorship batch.
+    if (!enr) {
+      enr = await Enrollment.findOne({
+        status: "paid",
+        email,
+        plan: { $regex: /^mentor-/ },
+      })
+        .sort({ createdAt: -1 })
+        .lean();
+    }
 
     if (!enr) {
       return res.status(403).json({

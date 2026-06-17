@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home, GraduationCap, LineChart as LineIcon, Mail, Activity,
@@ -167,6 +167,10 @@ function weekKey(d = new Date()) {
    ════════════════════════════════════════════════════════════════ */
 export default function MentorshipDashboard() {
   const { user, isLoggedIn, openLogin } = useAuth();
+  const [searchParams] = useSearchParams();
+  // Which batch's dashboard to open (a student may own several). Drives both the
+  // per-plan localStorage namespace and the batch the community is scoped to.
+  const urlPlan = searchParams.get("plan") || "";
   const emailKey = (user?.email || "guest").toLowerCase();
   const OTP_OK_KEY = `mdash:otpok:${emailKey}`;
 
@@ -205,7 +209,9 @@ export default function MentorshipDashboard() {
     );
   }
 
-  return <DashboardBody />;
+  // Remount the body when the selected batch changes so every per-plan piece
+  // (localStorage namespace, study data, community) re-initialises cleanly.
+  return <DashboardBody key={urlPlan || "default"} urlPlan={urlPlan} />;
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -315,18 +321,44 @@ function OtpGate({ email, name, onVerified }) {
 /* ════════════════════════════════════════════════════════════════
    DASHBOARD BODY
    ════════════════════════════════════════════════════════════════ */
-function DashboardBody() {
+function DashboardBody({ urlPlan = "" }) {
   const { user, token } = useAuth();
   const navigate = useNavigate();
 
   const emailKey = (user?.email || "guest").toLowerCase();
-  const TRACK_KEY = `mdash:tracking:${emailKey}`;
-  const TEST_KEY = `mdash:tests:${emailKey}`;
-  const BACKLOG_KEY = `mdash:backlog:${emailKey}`;
-  const FIX_KEY = `mdash:fixdone:${emailKey}`;
-  const WTASK_KEY = `mdash:weeklytasks:${emailKey}`;
-  const PREFS_KEY = `mdash:reportprefs:${emailKey}`;
-  const AUTO_KEY = `mdash:autosent:${emailKey}`;
+  // Per-batch namespace so a student in more than one plan keeps separate study
+  // data, tests and backlog for each. Falls back to a shared "default" slot when
+  // no plan is specified (e.g. the email-link entry point).
+  const planNs = urlPlan || "default";
+  const TRACK_KEY = `mdash:tracking:${emailKey}:${planNs}`;
+  const TEST_KEY = `mdash:tests:${emailKey}:${planNs}`;
+  const BACKLOG_KEY = `mdash:backlog:${emailKey}:${planNs}`;
+  const FIX_KEY = `mdash:fixdone:${emailKey}:${planNs}`;
+  const WTASK_KEY = `mdash:weeklytasks:${emailKey}:${planNs}`;
+  const PREFS_KEY = `mdash:reportprefs:${emailKey}:${planNs}`;
+  const AUTO_KEY = `mdash:autosent:${emailKey}:${planNs}`;
+
+  // One-time migration: older single-plan students stored data without the batch
+  // suffix. Inherit it into this batch's slot the first time it's opened so no
+  // logged history is lost. `legacy` is the pre-multi-batch key.
+  const loadScoped = (scopedKey, legacyKey, fallback) => {
+    const scoped = load(scopedKey, null);
+    if (scoped != null) return scoped;
+    const legacy = load(legacyKey, null);
+    if (legacy != null) { save(scopedKey, legacy); return legacy; }
+    return fallback;
+  };
+  const L_TRACK = `mdash:tracking:${emailKey}`;
+  const L_TEST = `mdash:tests:${emailKey}`;
+  const L_BACKLOG = `mdash:backlog:${emailKey}`;
+  const L_FIX = `mdash:fixdone:${emailKey}`;
+  const L_WTASK = `mdash:weeklytasks:${emailKey}`;
+  const L_PREFS = `mdash:reportprefs:${emailKey}`;
+  const L_AUTO = `mdash:autosent:${emailKey}`;
+
+  // The batch this dashboard is scoped to (resolved from the user's enrolments).
+  const [selectedPlan, setSelectedPlan] = useState(urlPlan || "");
+  const [myBatches, setMyBatches] = useState([]); // [{ plan, label }]
 
   const [planLabel, setPlanLabel] = useState("Mentorship Program");
   const [planExam, setPlanExam] = useState("JEE / NEET");
@@ -337,11 +369,11 @@ function DashboardBody() {
   const isNEET = /neet/i.test(planExam) && !/jee/i.test(planExam);
   const rankEnabled = /jee/i.test(planExam) && !isFoundation;
 
-  const [entries, setEntries] = useState(() => load(TRACK_KEY, null) || seedTracking(subjectsFor("JEE / NEET")));
-  const [tests, setTests] = useState(() => load(TEST_KEY, null) || seedTests());
-  const [backlog, setBacklog] = useState(() => load(BACKLOG_KEY, null) || seedBacklog());
-  const [fixDone, setFixDone] = useState(() => load(FIX_KEY, {}));
-  const [weeklyTasks, setWeeklyTasks] = useState(() => load(WTASK_KEY, []));
+  const [entries, setEntries] = useState(() => loadScoped(TRACK_KEY, L_TRACK, null) || seedTracking(subjectsFor("JEE / NEET")));
+  const [tests, setTests] = useState(() => loadScoped(TEST_KEY, L_TEST, null) || seedTests());
+  const [backlog, setBacklog] = useState(() => loadScoped(BACKLOG_KEY, L_BACKLOG, null) || seedBacklog());
+  const [fixDone, setFixDone] = useState(() => loadScoped(FIX_KEY, L_FIX, {}));
+  const [weeklyTasks, setWeeklyTasks] = useState(() => loadScoped(WTASK_KEY, L_WTASK, []));
 
   const todayIso = isoDay(new Date());
   const todayEntry = entries.find((e) => e.date === todayIso);
@@ -356,19 +388,25 @@ function DashboardBody() {
   const [weeklyState, setWeeklyState] = useState({ sending: false, msg: { type: "", text: "" } });
   const [dailyState, setDailyState] = useState({ sending: false, msg: { type: "", text: "" } });
   const [alertState, setAlertState] = useState({ sending: false, msg: { type: "", text: "" } });
-  const [reportPrefs, setReportPrefs] = useState(() => load(PREFS_KEY, { autoWeekly: true, autoDaily: false, autoBacklogAlert: true }));
-  const [lastAuto, setLastAuto] = useState(() => load(AUTO_KEY, { weekly: "", daily: "", backlog: "" }));
+  const [reportPrefs, setReportPrefs] = useState(() => loadScoped(PREFS_KEY, L_PREFS, { autoWeekly: true, autoDaily: false, autoBacklogAlert: true }));
+  const [lastAuto, setLastAuto] = useState(() => loadScoped(AUTO_KEY, L_AUTO, { weekly: "", daily: "", backlog: "" }));
   const [activeSec, setActiveSec] = useState("personalised");
 
-  // Pull the real mentorship plan name (best-effort).
+  // Resolve the real plan for THIS dashboard. A student can own several
+  // mentorship batches — pick the one named in ?plan= (if they own it),
+  // otherwise their most recent one. Also collect the full list for the switcher.
   useEffect(() => {
     if (!token) return;
     let alive = true;
     apiMyEnrollments(token)
       .then((d) => {
         if (!alive) return;
-        const m = (d.enrollments || []).find((e) => String(e.plan).startsWith("mentor-"));
+        const mentors = (d.enrollments || []).filter((e) => String(e.plan).startsWith("mentor-"));
+        setMyBatches(mentors.map((e) => ({ plan: e.plan, label: e.batchLabel || e.planLabel || e.plan })));
+        // Honour the requested batch only if the student actually owns it.
+        const m = mentors.find((e) => e.plan === urlPlan) || mentors[0];
         if (m) {
+          setSelectedPlan(m.plan);
           setPlanLabel(m.planLabel || m.plan);
           setPlanExam(m.targetExam || (String(m.plan).includes("neet") ? "NEET" : String(m.plan).includes("foundation") ? "Foundation" : "JEE"));
           setParentEmail(m.parentEmail || "");
@@ -383,7 +421,14 @@ function DashboardBody() {
       })
       .catch(() => {});
     return () => { alive = false; };
-  }, [token]);
+  }, [token, urlPlan]);
+
+  // Switch to another of the student's batches — re-points the URL, which
+  // remounts the body against that batch's data + community.
+  const switchBatch = (plan) => {
+    if (!plan || plan === selectedPlan) return;
+    navigate(`/mentorship-dashboard?plan=${encodeURIComponent(plan)}`);
+  };
 
   useEffect(() => { save(TRACK_KEY, entries); }, [TRACK_KEY, entries]);
   useEffect(() => { save(TEST_KEY, tests); }, [TEST_KEY, tests]);
@@ -829,7 +874,7 @@ function DashboardBody() {
     if (!isAuto) setState({ sending: true, msg: { type: "", text: "" } });
     const report = kind === "daily" ? buildDailyReport() : kind === "backlog" ? buildBacklogReport() : buildWeeklyReport();
     try {
-      const r = await apiSendParentReport(token, { kind, report });
+      const r = await apiSendParentReport(token, { kind, report, plan: selectedPlan || undefined });
       const label = kind === "daily" ? "Daily report" : kind === "backlog" ? "Backlog alert" : "Weekly report";
       const text = r.dev
         ? `${label} queued (dev mode — logged on the server).`
@@ -876,6 +921,28 @@ function DashboardBody() {
           style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.6rem)", color: NAVY, margin: 0, letterSpacing: "-0.5px" }}>
           Mentorship Dashboard
         </motion.h1>
+
+        {/* Batch switcher — only when the student owns more than one plan, so
+            opening "Foundation" never lands them on the JEE 2027 dashboard. */}
+        {myBatches.length > 1 && (
+          <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", marginTop: 16, background: "#fff", border: "1px solid rgba(244,123,32,.2)", borderRadius: 50, padding: "6px 8px", boxShadow: "0 14px 30px -24px rgba(13,27,62,.5)" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: MUTE, padding: "0 6px 0 10px" }}>
+              <GraduationCap size={14} color={ORANGE} /> Your batches
+            </span>
+            {myBatches.map((b) => {
+              const on = b.plan === selectedPlan;
+              return (
+                <button key={b.plan} onClick={() => switchBatch(b.plan)}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 15px", borderRadius: 50, cursor: on ? "default" : "pointer", fontFamily: "Sora", fontWeight: 800, fontSize: 12.5,
+                    border: `1.5px solid ${on ? ORANGE : "#e5e7eb"}`, background: on ? `linear-gradient(135deg,${ORANGE},${GOLD})` : "#fff", color: on ? "#fff" : NAVY,
+                    boxShadow: on ? `0 8px 18px -10px ${ORANGE}` : "none" }}>
+                  {on && <CheckCircle2 size={13} />} {b.label}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
       </div>
 
       {/* ══ HERO ══ */}
@@ -1643,7 +1710,7 @@ function DashboardBody() {
         {/* ── BATCH COMMUNITY ── */}
         <Section id="community" kicker="Your batch, in one room" title="Batch Community" tColor="#0ea5e9"
           sub="Meet your batchmates and post doubts with photos & videos — peers and mentors reply, and the best ones get highlighted.">
-          <Community />
+          <Community plan={selectedPlan || urlPlan || undefined} onSwitchBatch={switchBatch} />
         </Section>
 
         {/* ── DAILY & WEEKLY REPORTS ── */}

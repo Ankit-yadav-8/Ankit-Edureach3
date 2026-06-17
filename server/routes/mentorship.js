@@ -146,12 +146,22 @@ router.post("/parent-report", requireAuth, async (req, res) => {
     const kind = KINDS.has(req.body?.kind) ? req.body.kind : "weekly";
     const user = await User.findById(req.user.id).select("email name").lean();
     if (!user?.email) return res.status(400).json({ error: "No account email found." });
+    const email = user.email.toLowerCase();
 
-    const enr = await Enrollment.findOne({
-      status: "paid",
-      email: user.email.toLowerCase(),
-      plan: { $regex: /^mentor-/ },
-    }).sort({ createdAt: -1 }).lean();
+    // A student in more than one batch can target a specific plan; only honour
+    // it when they actually own it, else fall back to the most recent batch.
+    const requested = String(req.body?.plan || "").trim();
+    let enr = null;
+    if (/^mentor-/.test(requested)) {
+      enr = await Enrollment.findOne({ status: "paid", email, plan: requested }).sort({ createdAt: -1 }).lean();
+    }
+    if (!enr) {
+      enr = await Enrollment.findOne({
+        status: "paid",
+        email,
+        plan: { $regex: /^mentor-/ },
+      }).sort({ createdAt: -1 }).lean();
+    }
 
     if (!enr) return res.status(404).json({ error: "No active mentorship enrolment found." });
     if (!enr.parentEmail) return res.status(400).json({ error: "No parent email is on file for your enrolment yet — please contact us to add one." });

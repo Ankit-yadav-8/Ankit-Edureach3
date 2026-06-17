@@ -8,6 +8,7 @@ const communityReplySchema = new mongoose.Schema(
     authorId: { type: String, required: true },
     authorName: { type: String, default: "Student" },
     studentId: { type: String, default: "" },
+    role: { type: String, default: "" }, // see CommunityPost.role
 
     text: { type: String, default: "", maxlength: 4000 },
     media: { type: [MediaSchema], default: [] },

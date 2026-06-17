@@ -10,6 +10,7 @@ import cutoffRoutes from "./routes/cutoffs.js";
 import paymentRoutes from "./routes/payment.js";
 import mentorshipRoutes from "./routes/mentorship.js";
 import communityRoutes from "./routes/community.js";
+import publicCommunityRoutes from "./routes/publicCommunity.js";
 import adminRoutes from "./routes/admin.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 
@@ -76,6 +77,7 @@ app.use("/api/cutoffs", apiLimiter, cutoffRoutes);
 app.use("/api/payment", apiLimiter, paymentRoutes);
 app.use("/api/mentorship", apiLimiter, mentorshipRoutes);
 app.use("/api/community", apiLimiter, communityRoutes);
+app.use("/api/public-community", apiLimiter, publicCommunityRoutes);
 
 connectDB()
   .then(() => {

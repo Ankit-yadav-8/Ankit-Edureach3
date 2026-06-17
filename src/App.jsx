@@ -47,6 +47,7 @@ import Privacy from "./pages/Privacy.jsx";
 import Terms from "./pages/Terms.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import MentorshipDashboard from "./pages/MentorshipDashboard.jsx";
+import PublicCommunity from "./pages/PublicCommunity.jsx";
 import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
@@ -155,6 +156,7 @@ export default function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mentorship-dashboard" element={<MentorshipDashboard />} />
+          <Route path="/community" element={<PublicCommunity />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

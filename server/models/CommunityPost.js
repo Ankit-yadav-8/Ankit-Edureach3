@@ -15,10 +15,13 @@ const mediaSchema = new mongoose.Schema(
 
 const communityPostSchema = new mongoose.Schema(
   {
-    plan: { type: String, required: true, index: true }, // the batch "room"
+    plan: { type: String, required: true, index: true }, // the batch "room" (or "public")
     authorId: { type: String, required: true }, // user _id
     authorName: { type: String, default: "Student" },
     studentId: { type: String, default: "" },
+    // Author standing in the open public room: "student" (enrolled in any
+    // mentorship batch), "mentor"/"team" (staff) or "member" (free user).
+    role: { type: String, default: "" },
 
     text: { type: String, default: "", maxlength: 4000 },
     media: { type: [mediaSchema], default: [] },

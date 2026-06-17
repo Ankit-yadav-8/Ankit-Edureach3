@@ -43,8 +43,10 @@ export async function compressImage(file, { maxDim = 1600, quality = 0.82 } = {}
 
 // Fetch one signed payload and reuse it for every file in a batch: we only sign
 // folder + timestamp, so a single signature covers many parallel uploads.
-export async function getUploadSignature(token) {
-  return apiCommunitySignUpload(token);
+// `signFn` lets callers swap the endpoint (batch vs public community); it
+// defaults to the per-batch signer. `plan` scopes the batch signer's folder.
+export async function getUploadSignature(token, signFn = apiCommunitySignUpload, plan) {
+  return signFn(token, plan);
 }
 
 // Upload one file straight to Cloudinary with a pre-fetched signature.

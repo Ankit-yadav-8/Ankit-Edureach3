@@ -10,6 +10,7 @@ export const PLAN_LABELS = {
   "mentor-jee-2028": "JEE 2028 Mentorship Program (2-Year)",
   "mentor-neet-2028": "NEET 2028 Mentorship Program (2-Year)",
   "mentor-foundation": "Foundation Mentorship (Class 9–10)",
+  "public": "Public Community",
 };
 
 const BATCH_LABELS = {
@@ -18,7 +19,11 @@ const BATCH_LABELS = {
   "mentor-jee-2028": "JEE 2028 Batch",
   "mentor-neet-2028": "NEET 2028 Batch",
   "mentor-foundation": "Foundation Batch",
+  "public": "Public Community",
 };
+
+// The sentinel "plan" used for the open, everyone-welcome public community room.
+export const PUBLIC_ROOM = "public";
 
 export const planLabel = (plan) => PLAN_LABELS[plan] || plan;
 export const batchLabelFor = (plan) => BATCH_LABELS[plan] || planLabel(plan);

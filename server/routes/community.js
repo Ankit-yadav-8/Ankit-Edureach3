@@ -83,6 +83,22 @@ router.get("/me", requireAuth, requireBatch, async (req, res) => {
   try {
     const { plan } = req.batch;
     const batchmateCount = await Enrollment.countDocuments({ status: "paid", plan });
+
+    // Every mentorship batch this student belongs to — powers the in-community
+    // batch switcher when they're enrolled in more than one plan.
+    const mine = await Enrollment.find({
+      status: "paid",
+      email: req.batch.email,
+      plan: { $regex: /^mentor-/ },
+    }).select("plan").sort({ createdAt: -1 }).lean();
+    const seen = new Set();
+    const allBatches = [];
+    for (const e of mine) {
+      if (seen.has(e.plan)) continue;
+      seen.add(e.plan);
+      allBatches.push({ plan: e.plan, batchLabel: batchLabelFor(e.plan), exam: examFor(e.plan) });
+    }
+
     res.json({
       studentId: req.batch.studentId,
       name: req.batch.name,
@@ -94,6 +110,7 @@ router.get("/me", requireAuth, requireBatch, async (req, res) => {
       validUntil: validUntilFor(plan, req.batch.createdAt),
       status: "active",
       batchmateCount,
+      allBatches,
       cloudinaryReady: cloudinaryReady(),
     });
   } catch (e) {
@@ -123,13 +140,19 @@ router.get("/members", requireAuth, requireBatch, async (req, res) => {
   }
 });
 
-// ── GET /feed?tab=all|highlights — the batch feed ───────────────────────────
+// ── GET /feed?tab=all|highlights|unanswered&subject=… — the batch feed ──────
+const FEED_TABS = new Set(["all", "highlights", "unanswered"]);
 router.get("/feed", requireAuth, requireBatch, async (req, res) => {
   try {
-    const tab = req.query.tab === "highlights" ? "highlights" : "all";
-    const docs = await CommunityPost.find({ plan: req.batch.plan, deleted: { $ne: true } })
+    const tab = FEED_TABS.has(req.query.tab) ? req.query.tab : "all";
+    const subject = String(req.query.subject || "").trim().slice(0, 40);
+
+    const q = { plan: req.batch.plan, deleted: { $ne: true } };
+    if (subject) q.subject = subject;
+
+    const docs = await CommunityPost.find(q)
       .sort({ createdAt: -1 })
-      .limit(150)
+      .limit(200)
       .lean();
     let posts = docs.map((p) => shapePost(p, req.batch.userId));
 
@@ -138,6 +161,11 @@ router.get("/feed", requireAuth, requireBatch, async (req, res) => {
       posts = posts
         .filter((p) => p.pinned || p.likeCount > 0 || p.replyCount > 0)
         .sort((a, b) => Number(b.pinned) - Number(a.pinned) || score(b) - score(a) || new Date(b.createdAt) - new Date(a.createdAt));
+    } else if (tab === "unanswered") {
+      // Open doubts a mentor or peer can still pick up — no replies yet.
+      posts = posts
+        .filter((p) => p.tag === "doubt" && (p.replyCount || 0) === 0 && !p.pinned)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else {
       // pinned announcements float to the top, then newest-first.
       posts.sort((a, b) => Number(b.pinned) - Number(a.pinned) || new Date(b.createdAt) - new Date(a.createdAt));

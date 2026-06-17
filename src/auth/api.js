@@ -42,13 +42,36 @@ export const apiMyEnrollments = (token) => req("/api/payment/my-enrollments", { 
 export const apiSendParentReport = (token, b) => req("/api/mentorship/parent-report", { method: "POST", body: b, token });
 
 // ── Community (per-batch doubt forum) ───────────────────────────────────────
-export const apiCommunityMe        = (token) => req("/api/community/me", { token });
-export const apiCommunityMembers   = (token) => req("/api/community/members", { token });
-export const apiCommunityFeed      = (token, tab = "all") => req(`/api/community/feed?tab=${tab}`, { token });
-export const apiCommunityCreatePost = (token, b) => req("/api/community/posts", { method: "POST", body: b, token });
-export const apiCommunityDeletePost = (token, id) => req(`/api/community/posts/${id}`, { method: "DELETE", token });
-export const apiCommunityLikePost  = (token, id) => req(`/api/community/posts/${id}/like`, { method: "POST", token });
-export const apiCommunityReplies   = (token, id) => req(`/api/community/posts/${id}/replies`, { token });
-export const apiCommunityReply     = (token, id, b) => req(`/api/community/posts/${id}/replies`, { method: "POST", body: b, token });
-export const apiCommunityLikeReply = (token, id) => req(`/api/community/replies/${id}/like`, { method: "POST", token });
-export const apiCommunitySignUpload = (token) => req("/api/community/sign-upload", { method: "POST", body: {}, token });
+// `plan` scopes the call to ONE of the student's batches (they may belong to
+// several). It's optional — the server falls back to the most recent batch —
+// and is always re-verified server-side against what the user actually owns.
+const batchQ = (plan, extra = "") => {
+  const parts = [];
+  if (plan) parts.push(`plan=${encodeURIComponent(plan)}`);
+  if (extra) parts.push(extra);
+  return parts.length ? `?${parts.join("&")}` : "";
+};
+
+export const apiCommunityMe        = (token, plan) => req(`/api/community/me${batchQ(plan)}`, { token });
+export const apiCommunityMembers   = (token, plan) => req(`/api/community/members${batchQ(plan)}`, { token });
+export const apiCommunityFeed      = (token, tab = "all", plan, subject) =>
+  req(`/api/community/feed${batchQ(plan, `tab=${tab}${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`)}`, { token });
+export const apiCommunityCreatePost = (token, b, plan) => req(`/api/community/posts${batchQ(plan)}`, { method: "POST", body: b, token });
+export const apiCommunityDeletePost = (token, id, plan) => req(`/api/community/posts/${id}${batchQ(plan)}`, { method: "DELETE", token });
+export const apiCommunityLikePost  = (token, id, plan) => req(`/api/community/posts/${id}/like${batchQ(plan)}`, { method: "POST", token });
+export const apiCommunityReplies   = (token, id, plan) => req(`/api/community/posts/${id}/replies${batchQ(plan)}`, { token });
+export const apiCommunityReply     = (token, id, b, plan) => req(`/api/community/posts/${id}/replies${batchQ(plan)}`, { method: "POST", body: b, token });
+export const apiCommunityLikeReply = (token, id, plan) => req(`/api/community/replies/${id}/like${batchQ(plan)}`, { method: "POST", token });
+export const apiCommunitySignUpload = (token, plan) => req(`/api/community/sign-upload${batchQ(plan)}`, { method: "POST", body: {}, token });
+
+// ── Public community (open to free, enrolled & not-enrolled users) ──────────
+export const apiPublicMe          = (token) => req("/api/public-community/me", { token });
+export const apiPublicFeed        = (token, tab = "all", subject) =>
+  req(`/api/public-community/feed?tab=${tab}${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`, { token });
+export const apiPublicCreatePost  = (token, b) => req("/api/public-community/posts", { method: "POST", body: b, token });
+export const apiPublicDeletePost  = (token, id) => req(`/api/public-community/posts/${id}`, { method: "DELETE", token });
+export const apiPublicLikePost    = (token, id) => req(`/api/public-community/posts/${id}/like`, { method: "POST", token });
+export const apiPublicReplies     = (token, id) => req(`/api/public-community/posts/${id}/replies`, { token });
+export const apiPublicReply       = (token, id, b) => req(`/api/public-community/posts/${id}/replies`, { method: "POST", body: b, token });
+export const apiPublicLikeReply   = (token, id) => req(`/api/public-community/replies/${id}/like`, { method: "POST", token });
+export const apiPublicSignUpload  = (token) => req("/api/public-community/sign-upload", { method: "POST", body: {}, token });
