@@ -34,7 +34,7 @@ export const SUBJECTS = {
   JEE: ["Physics", "Chemistry", "Maths"],
   NEET: ["Physics", "Chemistry", "Biology"],
   Foundation: ["Maths", "Science"],
-  Public: ["Physics", "Chemistry", "Maths", "Biology", "General"],
+  Public: ["Physics", "Chemistry", "Maths", "Biology"],
 };
 
 const AVATAR_COLORS = ["#6366f1", "#ef4444", GREEN, "#8b5cf6", ORANGE, CYAN, "#ec4899", "#14b8a6"];

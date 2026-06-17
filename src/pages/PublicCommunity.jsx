@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Globe2, Sparkles, Loader2, ShieldCheck, MessagesSquare, Users,
-  RefreshCw, Search, Inbox, X, GraduationCap,
+  RefreshCw, Search, Inbox, X, GraduationCap, ChevronDown, Check, Plus, Send,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import {
@@ -55,7 +55,18 @@ export default function PublicCommunity() {
   const [tab, setTab] = useState("all"); // all | highlights | unanswered
   const [category, setCategory] = useState(""); // "" = every category | doubt | trick | strategy | notes | …
   const [subject, setSubject] = useState("");
+  const [subjectMenuOpen, setSubjectMenuOpen] = useState(false);
   const composerRef = useRef(null);
+
+  // Tricks / Strategies open a popup list-builder so members can jot several
+  // points and post the whole list to the community in one go.
+  const [listModal, setListModal] = useState(null); // "trick" | "strategy" | null
+  const [listIntro, setListIntro] = useState("");
+  const [listInput, setListInput] = useState("");
+  const [listItems, setListItems] = useState([]);
+  const [listSubject, setListSubject] = useState("");
+  const [listBusy, setListBusy] = useState(false);
+  const [listErr, setListErr] = useState("");
   const [query, setQuery] = useState("");
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -83,14 +94,6 @@ export default function PublicCommunity() {
       .catch(() => {})
       .finally(() => mounted.current && setRefreshing(false));
   }, [token, tab, subject, category]);
-
-  // Pick a category to both filter the feed and post under it. Selecting one
-  // scrolls up to the composer so members can immediately add their own.
-  const pickCategory = (id) => {
-    setCategory((cur) => (cur === id ? "" : id));
-    setTab("all"); // the "unanswered" tab is doubt-only; reset so the category shows
-    composerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
 
   useEffect(() => {
     if (!me) return;
@@ -194,38 +197,6 @@ export default function PublicCommunity() {
           </div>
         ) : (
           <>
-            {/* share categories — tricks · strategies · notes · doubts · … */}
-            <div style={{ marginBottom: 16 }}>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 15, marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
-                <Sparkles size={16} color={ORANGE} /> Share with the community
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))", gap: 10 }}>
-                {CATEGORIES.map((cat) => {
-                  const m = TAG_META[cat.id];
-                  const on = category === cat.id;
-                  const Ic = m.icon;
-                  return (
-                    <button key={cat.id} onClick={() => pickCategory(cat.id)}
-                      style={{
-                        display: "flex", alignItems: "center", gap: 10, textAlign: "left", cursor: "pointer",
-                        padding: "11px 13px", borderRadius: 14, background: on ? `${m.color}12` : "#fff",
-                        border: `1.5px solid ${on ? m.color : "#e8ebf0"}`,
-                        boxShadow: on ? `0 10px 22px -12px ${m.color}` : "0 10px 26px -22px rgba(13,27,62,.5)",
-                        transition: "all .15s",
-                      }}>
-                      <span style={{ width: 38, height: 38, borderRadius: 11, background: `${m.color}16`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                        <Ic size={19} color={m.color} />
-                      </span>
-                      <span style={{ minWidth: 0 }}>
-                        <span style={{ display: "block", fontWeight: 800, fontSize: 13.5, color: NAVY, fontFamily: "Sora" }}>{cat.label}</span>
-                        <span style={{ display: "block", fontSize: 11, color: MUTE, lineHeight: 1.35 }}>{cat.blurb}</span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
             {/* composer */}
             <div ref={composerRef} style={{ marginBottom: 16 }}>
               {category && (

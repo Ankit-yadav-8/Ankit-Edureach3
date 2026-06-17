@@ -428,6 +428,11 @@ export default function Navbar({ onSearch }) {
             style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}>
             <Search size={16} /> Search
           </button>
+          {/* Public community — open to every visitor (free, enrolled, not-enrolled) */}
+          <button onClick={() => navigate("/community")} className="cta-desktop nav-ghost-cta" aria-label="Public Community" title="Public Community — discuss with everyone"
+            style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 10, border: "1.5px solid rgba(14,165,233,.5)", background: location.pathname === "/community" ? "rgba(14,165,233,.12)" : "#fff", color: "#0284c7", fontWeight: 700, cursor: "pointer" }}>
+            <Globe2 size={16} /> Community
+          </button>
           {isLoggedIn ? (
             <div className="cta-desktop" style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", overflow: "hidden" }}>
               {/* Chip → opens the user's personal dashboard */}

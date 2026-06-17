@@ -5,7 +5,7 @@ import {
   Search, Sparkles, TrendingUp, Crosshair,
   GraduationCap, Users, Star, Award, ArrowRight,
   BookOpen, Target, MapPin, Trophy, Zap, ChevronRight,
-  Stethoscope, Radar, Info, Check, Globe2,
+  Stethoscope, Radar, Info, Check,
 } from "lucide-react";
 import {
   TypewriterText,
@@ -62,8 +62,6 @@ function useBreakpoint() {
    CONSTANTS
 ════════════════════════════════════════════════ */
 const ABOUT_ACCENT = "#f5a623";
-
-const QUICK = ["IIT Bombay", "JEE Main 2026", "College Predictor", "NIT Trichy", "VITEEE", "JEE Advanced"];
 
 const TOP_COLLEGES = [
   { name: "IIT Bombay",  type: "IIT",  nirf: 3,  avg: "₹33.8L", placed: 96, color: "#6366f1" },
@@ -1600,76 +1598,6 @@ export default function Hero({ onSearch }) {
                   Search
                 </button>
               </div>
-            </motion.div>
-
-            {/* ── Quick chips ── */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.35 }}
-              style={{
-                display: "flex",
-                gap: isXs ? 6 : 7,
-                flexWrap: "wrap",
-                justifyContent: "center",
-                marginBottom: isMobile ? 20 : 0,
-              }}
-            >
-              {QUICK.map((t) => (
-                <button
-                  key={t}
-                  onClick={() => t === "College Predictor" ? nav("/jee-main#college") : go(t)}
-                  style={{
-                    padding: isXs ? "4px 10px" : "5px 13px",
-                    borderRadius: 50,
-                    background: "rgba(244,123,32,.10)",
-                    border: "1px solid rgba(244,123,32,.30)",
-                    color: "#c75b0a",
-                    fontSize: isXs ? 11.5 : 12.5,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    transition: "all .2s",
-                    fontFamily: "DM Sans",
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(244,123,32,.22)"; e.currentTarget.style.borderColor = "#F47B20"; e.currentTarget.style.color = "#a04010"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(244,123,32,.10)";
-                    e.currentTarget.style.borderColor = "rgba(244,123,32,.30)";
-                    e.currentTarget.style.color = "#c75b0a";
-                    e.currentTarget.style.transform = "";
-                  }}
-                >
-                  {t}
-                </button>
-              ))}
-            </motion.div>
-
-            {/* ── Community entry — moved here from the navbar ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.42 }}
-              style={{ display: "flex", justifyContent: "center", margin: isMobile ? "16px 0 8px" : "20px 0 6px" }}
-            >
-              <button
-                onClick={() => nav("/community")}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 9,
-                  padding: isXs ? "9px 15px" : "11px 20px", borderRadius: 50, cursor: "pointer",
-                  background: "#fff", border: "1.5px solid rgba(14,165,233,.45)",
-                  boxShadow: "0 10px 26px -14px rgba(14,165,233,.6)",
-                  fontFamily: "Sora", fontWeight: 800, fontSize: isXs ? 12 : 13.5, color: "#0284c7",
-                  transition: "all .2s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.borderColor = "#0ea5e9"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(14,165,233,.45)"; }}
-              >
-                <span style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(14,165,233,.12)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <Globe2 size={15} color="#0ea5e9" />
-                </span>
-                {isXs ? "Join the Community" : "Join the Community — share tricks, strategies & notes"}
-                <ArrowRight size={15} />
-              </button>
             </motion.div>
 
             {/* ── Stats bar ── */}
