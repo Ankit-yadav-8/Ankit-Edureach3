@@ -66,8 +66,8 @@ export const apiCommunitySignUpload = (token, plan) => req(`/api/community/sign-
 
 // ── Public community (open to free, enrolled & not-enrolled users) ──────────
 export const apiPublicMe          = (token) => req("/api/public-community/me", { token });
-export const apiPublicFeed        = (token, tab = "all", subject) =>
-  req(`/api/public-community/feed?tab=${tab}${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`, { token });
+export const apiPublicFeed        = (token, tab = "all", subject, category) =>
+  req(`/api/public-community/feed?tab=${tab}${subject ? `&subject=${encodeURIComponent(subject)}` : ""}${category ? `&category=${encodeURIComponent(category)}` : ""}`, { token });
 export const apiPublicCreatePost  = (token, b) => req("/api/public-community/posts", { method: "POST", body: b, token });
 export const apiPublicDeletePost  = (token, id) => req(`/api/public-community/posts/${id}`, { method: "DELETE", token });
 export const apiPublicLikePost    = (token, id) => req(`/api/public-community/posts/${id}/like`, { method: "POST", token });

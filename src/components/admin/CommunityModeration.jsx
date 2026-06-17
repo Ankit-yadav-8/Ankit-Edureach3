@@ -7,7 +7,7 @@ import { API_BASE } from "../../auth/api.js";
 
 const ORANGE = "#F47B20", NAVY = "#0d1b3e", MUTE = "#6b7280";
 
-const TAG_COLOR = { doubt: "#ef4444", discussion: "#6366f1", resource: "#15a06e", announcement: ORANGE };
+const TAG_COLOR = { doubt: "#ef4444", discussion: "#6366f1", trick: "#f59e0b", strategy: "#8b5cf6", notes: "#0ea5e9", resource: "#15a06e", announcement: ORANGE };
 
 function timeAgo(d) {
   const s = Math.floor((Date.now() - new Date(d)) / 1000);

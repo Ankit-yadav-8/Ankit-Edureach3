@@ -20,6 +20,11 @@ import { PUBLIC_ROOM } from "../utils/plans.js";
 const router = express.Router();
 const isId = (v) => mongoose.Types.ObjectId.isValid(v);
 
+// Post categories a member can write under. Beyond plain doubts, members can
+// share exam "tricks", "strategy" and "notes" — keep this in sync with the
+// front-end POST_TAGS in components/mentorship/communityKit.jsx.
+const POST_TAGS = ["doubt", "discussion", "resource", "trick", "strategy", "notes"];
+
 // Always live — never let a proxy serve a stale public feed.
 router.use((_req, res, next) => { res.set("Cache-Control", "no-store"); next(); });
 
@@ -135,9 +140,11 @@ router.get("/feed", requireAuth, resolveViewer, async (req, res) => {
   try {
     const tab = FEED_TABS.has(req.query.tab) ? req.query.tab : "all";
     const subject = String(req.query.subject || "").trim().slice(0, 40);
+    const category = POST_TAGS.includes(req.query.category) ? req.query.category : "";
 
     const q = { plan: PUBLIC_ROOM, deleted: { $ne: true } };
     if (subject) q.subject = subject;
+    if (category) q.tag = category;
 
     const docs = await CommunityPost.find(q).sort({ createdAt: -1 }).limit(200).lean();
     let posts = docs.map((p) => shapePost(p, req.viewer.userId));
@@ -169,8 +176,7 @@ router.post("/posts", requireAuth, resolveViewer, async (req, res) => {
     const media = cleanMedia(req.body?.media);
     if (!text && !media.length) return res.status(400).json({ error: "Write something or attach a photo / video." });
 
-    const TAGS = ["doubt", "discussion", "resource"];
-    const tag = TAGS.includes(req.body?.tag) ? req.body.tag : "doubt";
+    const tag = POST_TAGS.includes(req.body?.tag) ? req.body.tag : "doubt";
     const subject = String(req.body?.subject || "").trim().slice(0, 40);
 
     const doc = await CommunityPost.create({

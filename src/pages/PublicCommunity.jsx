@@ -13,7 +13,7 @@ import {
 } from "../auth/api.js";
 import {
   ORANGE, GOLD, GREEN, NAVY, MUTE, CYAN,
-  SUBJECTS, Composer, PostCard,
+  SUBJECTS, Composer, PostCard, POST_TAGS, TAG_META,
 } from "../components/mentorship/communityKit.jsx";
 
 const API_HOST = (() => { try { return new URL(API_BASE).host; } catch { return API_BASE; } })();
@@ -27,12 +27,35 @@ const PUBLIC_API = {
   signUpload: apiPublicSignUpload,
 };
 
+// What members can share. The order doubles as the on-screen category bar; each
+// card filters the feed to that category AND points the composer at it so a tap
+// on "Tricks" lets you read every trick and add your own in one go.
+const CATEGORIES = [
+  { id: "trick",      label: "Tricks",      blurb: "Time-saving shortcuts & hacks" },
+  { id: "strategy",   label: "Strategies",  blurb: "How to plan, revise & attempt" },
+  { id: "notes",      label: "Notes",       blurb: "Topic summaries & short notes" },
+  { id: "doubt",      label: "Doubts",      blurb: "Ask & get it solved" },
+  { id: "discussion", label: "Discussions", blurb: "Talk it out with everyone" },
+  { id: "resource",   label: "Resources",   blurb: "Books, videos & PDFs" },
+];
+
+const CATEGORY_PLACEHOLDER = {
+  doubt:      "Ask a doubt — the community will help you solve it…",
+  discussion: "Start a discussion with the whole community…",
+  trick:      "Share a trick or shortcut you swear by…",
+  strategy:   "Share a strategy — how you plan, revise or attempt papers…",
+  notes:      "Share notes or a quick summary of a topic…",
+  resource:   "Share a resource — a book, video or PDF that helped you…",
+};
+
 export default function PublicCommunity() {
   const { token, isLoggedIn, openLogin } = useAuth();
   const [me, setMe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState("all"); // all | highlights | unanswered
+  const [category, setCategory] = useState(""); // "" = every category | doubt | trick | strategy | notes | …
   const [subject, setSubject] = useState("");
+  const composerRef = useRef(null);
   const [query, setQuery] = useState("");
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -55,11 +78,19 @@ export default function PublicCommunity() {
 
   const loadFeed = useCallback((which = tab, silent = false) => {
     if (!silent) setRefreshing(true);
-    apiPublicFeed(token, which, subject)
+    apiPublicFeed(token, which, subject, category)
       .then((d) => { if (mounted.current) setPosts(d.posts || []); })
       .catch(() => {})
       .finally(() => mounted.current && setRefreshing(false));
-  }, [token, tab, subject]);
+  }, [token, tab, subject, category]);
+
+  // Pick a category to both filter the feed and post under it. Selecting one
+  // scrolls up to the composer so members can immediately add their own.
+  const pickCategory = (id) => {
+    setCategory((cur) => (cur === id ? "" : id));
+    setTab("all"); // the "unanswered" tab is doubt-only; reset so the category shows
+    composerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
 
   useEffect(() => {
     if (!me) return;
@@ -163,10 +194,50 @@ export default function PublicCommunity() {
           </div>
         ) : (
           <>
-            {/* composer */}
+            {/* share categories — tricks · strategies · notes · doubts · … */}
             <div style={{ marginBottom: 16 }}>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 15, marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
+                <Sparkles size={16} color={ORANGE} /> Share with the community
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))", gap: 10 }}>
+                {CATEGORIES.map((cat) => {
+                  const m = TAG_META[cat.id];
+                  const on = category === cat.id;
+                  const Ic = m.icon;
+                  return (
+                    <button key={cat.id} onClick={() => pickCategory(cat.id)}
+                      style={{
+                        display: "flex", alignItems: "center", gap: 10, textAlign: "left", cursor: "pointer",
+                        padding: "11px 13px", borderRadius: 14, background: on ? `${m.color}12` : "#fff",
+                        border: `1.5px solid ${on ? m.color : "#e8ebf0"}`,
+                        boxShadow: on ? `0 10px 22px -12px ${m.color}` : "0 10px 26px -22px rgba(13,27,62,.5)",
+                        transition: "all .15s",
+                      }}>
+                      <span style={{ width: 38, height: 38, borderRadius: 11, background: `${m.color}16`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                        <Ic size={19} color={m.color} />
+                      </span>
+                      <span style={{ minWidth: 0 }}>
+                        <span style={{ display: "block", fontWeight: 800, fontSize: 13.5, color: NAVY, fontFamily: "Sora" }}>{cat.label}</span>
+                        <span style={{ display: "block", fontSize: 11, color: MUTE, lineHeight: 1.35 }}>{cat.blurb}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* composer */}
+            <div ref={composerRef} style={{ marginBottom: 16 }}>
+              {category && (
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, padding: "5px 12px", borderRadius: 50, background: `${TAG_META[category].color}12`, border: `1px solid ${TAG_META[category].color}33`, color: TAG_META[category].color, fontWeight: 800, fontSize: 12.5, fontFamily: "Sora" }}>
+                  {(() => { const Ic = TAG_META[category].icon; return <Ic size={13} />; })()}
+                  Posting under {TAG_META[category].label}
+                  <button onClick={() => setCategory("")} title="Clear" style={{ border: "none", background: "transparent", cursor: "pointer", color: "inherit", display: "grid", placeItems: "center", padding: 0 }}><X size={13} /></button>
+                </div>
+              )}
               <Composer token={token} exam="Public" canUpload={me?.cloudinaryReady} signUpload={apiPublicSignUpload}
-                placeholder="Ask a doubt or share something with the whole community…" onSubmit={createPost} />
+                initialTag={category || undefined}
+                placeholder={CATEGORY_PLACEHOLDER[category] || "Ask a doubt or share something with the whole community…"} onSubmit={createPost} />
               {me && !me.cloudinaryReady && (
                 <div style={{ fontSize: 12, color: "#b45309", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginTop: 8, lineHeight: 1.55 }}>
                   Photo / video uploads aren't configured on this server
@@ -222,10 +293,14 @@ export default function PublicCommunity() {
                 <div style={{ textAlign: "center", padding: "34px 20px", background: "#fff", border: "1px dashed #e5e7eb", borderRadius: 18, color: MUTE }}>
                   <ShieldCheck size={28} color="#cbd5e1" style={{ marginBottom: 8 }} />
                   <div style={{ fontWeight: 700, color: NAVY, marginBottom: 4 }}>
-                    {query ? "No matches" : tab === "highlights" ? "No highlights yet" : tab === "unanswered" ? "No open doubts" : "No posts yet"}
+                    {query ? "No matches"
+                      : category ? `No ${CATEGORIES.find((c) => c.id === category)?.label.toLowerCase()} yet`
+                      : tab === "highlights" ? "No highlights yet"
+                      : tab === "unanswered" ? "No open doubts" : "No posts yet"}
                   </div>
                   <div style={{ fontSize: 13.5 }}>
                     {query ? "Try a different search term."
+                      : category ? "Be the first to share one with the community."
                       : tab === "unanswered" ? "Every doubt has been answered. 🎉"
                       : "Be the first to start a discussion."}
                   </div>

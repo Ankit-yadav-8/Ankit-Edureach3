@@ -5,7 +5,7 @@ import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut, Sparkles,
-  HelpCircle, Newspaper, Flame, Medal, Megaphone, Globe2,
+  HelpCircle, Newspaper, Flame, Medal, Megaphone,
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -428,11 +428,6 @@ export default function Navbar({ onSearch }) {
             style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}>
             <Search size={16} /> Search
           </button>
-          {/* Public community — open to every visitor (free, enrolled, not-enrolled) */}
-          <button onClick={() => navigate("/community")} className="cta-desktop nav-ghost-cta" aria-label="Public Community" title="Public Community — discuss with everyone"
-            style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 10, border: "1.5px solid rgba(14,165,233,.5)", background: location.pathname === "/community" ? "rgba(14,165,233,.12)" : "#fff", color: "#0284c7", fontWeight: 700, cursor: "pointer" }}>
-            <Globe2 size={16} /> Community
-          </button>
           {isLoggedIn ? (
             <div className="cta-desktop" style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", overflow: "hidden" }}>
               {/* Chip → opens the user's personal dashboard */}
@@ -554,23 +549,6 @@ export default function Navbar({ onSearch }) {
                   </span>
                 </button>
               )}
-
-              {/* Public community — open to everyone */}
-              <button
-                onClick={() => { setMobileOpen(false); navigate("/community"); }}
-                style={{
-                  display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
-                  background: "rgba(14,165,233,.08)", borderRadius: 10, padding: "11px 12px",
-                  marginBottom: "0.8rem", border: "1px solid rgba(14,165,233,.3)", cursor: "pointer",
-                }}>
-                <span style={{ width: 32, height: 32, borderRadius: "50%", background: "#0ea5e9", color: "#fff", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <Globe2 size={17} />
-                </span>
-                <span style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
-                  <span style={{ fontWeight: 700, color: "var(--navy)", fontSize: "0.9rem" }}>Public Community</span>
-                  <span style={{ fontSize: "0.72rem", color: "#0284c7", fontWeight: 600 }}>Discuss doubts with everyone →</span>
-                </span>
-              </button>
 
               {navItems.map((item) => {
                 if (item.feature) {

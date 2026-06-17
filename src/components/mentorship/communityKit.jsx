@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Heart, Send, ImagePlus, Loader2, X, MessagesSquare, BookOpen, Pin,
   HelpCircle, CornerDownRight, Hash, PlayCircle, GraduationCap, BadgeCheck,
+  Lightbulb, Target, FileText,
 } from "lucide-react";
 import { uploadToCloudinary, validateFile, compressImage, getUploadSignature } from "../../utils/cloudinaryUpload.js";
 
@@ -19,10 +20,15 @@ export const NAVY = "#0d1b3e", INK = "#1a1a2e", MUTE = "#5b6472", CYAN = "#0ea5e
 export const TAG_META = {
   doubt:        { label: "Doubt",        color: "#ef4444", icon: HelpCircle },
   discussion:   { label: "Discussion",   color: "#6366f1", icon: MessagesSquare },
+  trick:        { label: "Trick",        color: "#f59e0b", icon: Lightbulb },
+  strategy:     { label: "Strategy",     color: "#8b5cf6", icon: Target },
+  notes:        { label: "Notes",        color: CYAN,      icon: FileText },
   resource:     { label: "Resource",     color: GREEN,     icon: BookOpen },
   announcement: { label: "Announcement", color: ORANGE,    icon: Pin },
 };
-export const POST_TAGS = ["doubt", "discussion", "resource"];
+// Tags a member can pick when writing a post. "tricks / strategies / notes"
+// turn the community into a place to share exam wisdom, not just ask doubts.
+export const POST_TAGS = ["doubt", "discussion", "trick", "strategy", "notes", "resource"];
 
 export const SUBJECTS = {
   JEE: ["Physics", "Chemistry", "Maths"],
@@ -114,10 +120,14 @@ export function PillBtn({ active, color, onClick, children, title }) {
 }
 
 /* ── shared composer (used for posts + replies) ───────────────────── */
-export function Composer({ token, exam, compact, onSubmit, placeholder, autoFocus, canUpload = true, signUpload, plan }) {
+export function Composer({ token, exam, compact, onSubmit, placeholder, autoFocus, canUpload = true, signUpload, plan, initialTag }) {
   const [text, setText] = useState("");
-  const [tag, setTag] = useState("doubt");
+  const [tag, setTag] = useState(initialTag || "doubt");
   const [subject, setSubject] = useState("");
+
+  // When the user switches the active category (e.g. clicks "Tricks"), reflect
+  // it in the composer so the post they write lands in that category.
+  useEffect(() => { if (initialTag) setTag(initialTag); }, [initialTag]);
   const [atts, setAtts] = useState([]); // { id, name, status, progress, media, isVideo }
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
@@ -173,7 +183,7 @@ export function Composer({ token, exam, compact, onSubmit, placeholder, autoFocu
     setBusy(true); setErr("");
     try {
       await onSubmit({ text: text.trim(), media: ready, tag, subject });
-      setText(""); setAtts([]); setSubject(""); setTag("doubt");
+      setText(""); setAtts([]); setSubject(""); setTag(initialTag || "doubt");
     } catch (ex) {
       setErr(ex.message || "Could not post. Try again.");
     } finally { setBusy(false); }

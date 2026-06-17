@@ -25,7 +25,7 @@ const communityPostSchema = new mongoose.Schema(
 
     text: { type: String, default: "", maxlength: 4000 },
     media: { type: [mediaSchema], default: [] },
-    tag: { type: String, enum: ["doubt", "discussion", "resource", "announcement"], default: "doubt" },
+    tag: { type: String, enum: ["doubt", "discussion", "resource", "trick", "strategy", "notes", "announcement"], default: "doubt" },
     subject: { type: String, default: "" },
 
     pinned: { type: Boolean, default: false }, // "highlighted" announcements

@@ -185,7 +185,8 @@ router.post("/posts", requireAuth, requireBatch, async (req, res) => {
     const media = cleanMedia(req.body?.media);
     if (!text && !media.length) return res.status(400).json({ error: "Write something or attach a photo / video." });
 
-    const TAGS = ["doubt", "discussion", "resource"];
+    // Keep in sync with POST_TAGS in components/mentorship/communityKit.jsx.
+    const TAGS = ["doubt", "discussion", "resource", "trick", "strategy", "notes"];
     const tag = TAGS.includes(req.body?.tag) ? req.body.tag : "doubt";
     const subject = String(req.body?.subject || "").trim().slice(0, 40);
 
