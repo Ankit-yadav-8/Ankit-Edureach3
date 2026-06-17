@@ -14,6 +14,7 @@ import { dirname, resolve } from "node:path";
 
 import { COLLEGES } from "../src/data/colleges.js";
 import { NEET_COLLEGES } from "../src/data/neetColleges.js";
+import { BRANCHES } from "../src/data/branches.js";
 import { EXAMS } from "../src/data/exams.js";
 import { NEWS } from "../src/data/news.js";
 
@@ -36,6 +37,9 @@ const STATIC_ROUTES = [
   ["/map", "0.6", "monthly"],
   ["/scholarships", "0.6", "monthly"],
   ["/jee-resources", "0.6", "weekly"],
+  ["/branches", "0.8", "weekly"],
+  ["/branch-vs-college", "0.7", "weekly"],
+  ["/exam-buzz", "0.7", "daily"],
   ["/neet", "0.7", "weekly"],
   ["/neet-colleges", "0.8", "weekly"],
   ["/mentorship", "0.7", "weekly"],
@@ -62,6 +66,11 @@ for (const c of COLLEGES) {
 // NEET / MBBS medical-college detail pages — long-tail "<college> MBBS seats/cutoff"
 for (const c of NEET_COLLEGES) {
   if (c?.slug) add(`/neet-colleges/${c.slug}`, "0.7", "weekly");
+}
+
+// Branch detail pages — long-tail "<branch> scope/salary/colleges"
+for (const b of BRANCHES) {
+  if (b?.slug) add(`/branches/${b.slug}`, "0.7", "weekly");
 }
 
 // Exam pages

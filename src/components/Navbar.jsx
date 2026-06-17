@@ -23,7 +23,7 @@ const JEE_MEGA = [
       { label: "Mathematics (19 chapters)", to: "/jee-resources?subject=math",      icon: Sigma },
       { label: "Physics (25 chapters)",     to: "/jee-resources?subject=physics",   icon: Zap },
       { label: "Chemistry (29 chapters)",   to: "/jee-resources?subject=chemistry", icon: FlaskConical },
-      { label: "Exam Cycle 2025–26",        to: "/#exam-cycle",                     icon: CalendarClock },
+      { label: "Exam Cycle 2025–26",        to: "/exam-buzz",                       icon: CalendarClock },
     ],
   },
   {
@@ -105,6 +105,8 @@ const TOOLS_MEGA = [
   {
     title: "Plan & Apply", to: "/planner", color: "#F47B20", icon: CalendarDays,
     items: [
+      { label: "Branch Catalog",          to: "/branches",   icon: Landmark,     desc: "220+ branches across 10 clear paths" },
+      { label: "Branch vs College",       to: "/branch-vs-college", icon: GitCompare, desc: "6 questions → what should win for you" },
       { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays, desc: "Track every JoSAA & CSAB round date" },
       { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert ₹299 choice-filling plan" },
       { label: "Colleges For You",        to: "/for-you",    icon: Sparkles,     desc: "Personalised picks for your rank" },
@@ -134,12 +136,12 @@ const TOOLS_MEGA = [
 // (results & counselling updates) beside an Entrance Exams column.
 const EXAM_NEWS_MEGA = [
   {
-    title: "Latest News & Results", to: "/#news", color: "#15a06e", icon: Newspaper,
+    title: "Latest News & Results", to: "/exam-buzz", color: "#15a06e", icon: Newspaper,
     items: [
       { label: "🔥 JoSAA 2026 Round 1 Result", to: "/josaa-round-1-result-2026", icon: Trophy,    desc: "Seat allotment is out — Freeze/Float/Slide" },
       { label: "JEE Advanced 2026 Result",      to: "/jee-advanced-result-2026",  icon: Medal,     desc: "Toppers, cutoffs & rank list" },
-      { label: "Counselling Schedule & Dates",  to: "/planner",                   icon: CalendarDays, desc: "Every JoSAA & CSAB round date" },
-      { label: "All News & Admission Updates",  to: "/#news",                     icon: Megaphone,  desc: "Results, admit cards & notices" },
+      { label: "Application & Counselling Radar", to: "/exam-buzz",               icon: CalendarDays, desc: "Every live deadline in one timeline" },
+      { label: "All News & Admission Updates",  to: "/exam-buzz",                 icon: Megaphone,  desc: "Results, admit cards & notices" },
     ],
   },
   {

@@ -50,6 +50,10 @@ import Terms from "./pages/Terms.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import MentorshipDashboard from "./pages/MentorshipDashboard.jsx";
 import PublicCommunity from "./pages/PublicCommunity.jsx";
+import Branches from "./pages/Branches.jsx";
+import BranchDetail from "./pages/BranchDetail.jsx";
+import BranchVsCollegePage from "./pages/BranchVsCollegePage.jsx";
+import ExamBuzz from "./pages/ExamBuzz.jsx";
 import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
@@ -161,6 +165,10 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mentorship-dashboard" element={<MentorshipDashboard />} />
           <Route path="/community" element={<PublicCommunity />} />
+          <Route path="/branches" element={<Branches />} />
+          <Route path="/branches/:slug" element={<BranchDetail />} />
+          <Route path="/branch-vs-college" element={<BranchVsCollegePage />} />
+          <Route path="/exam-buzz" element={<ExamBuzz />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
