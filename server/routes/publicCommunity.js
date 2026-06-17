@@ -105,17 +105,21 @@ function cleanMedia(media) {
 router.get("/health", (_req, res) => res.json({ ok: true, cloudinaryReady: cloudinaryReady() }));
 
 // ── GET /me — the caller's public identity + room stats ─────────────────────
+// The public room is open to everyone, so "members" is the whole registered
+// user base (not just people who have posted). "posts" is the live public count.
 router.get("/me", requireAuth, resolveViewer, async (req, res) => {
   try {
-    const [memberCount, postCount] = await Promise.all([
-      CommunityPost.distinct("authorId", { plan: PUBLIC_ROOM, deleted: { $ne: true } }).then((a) => a.length),
+    const [memberCount, postCount, posterCount] = await Promise.all([
+      User.countDocuments({}),
       CommunityPost.countDocuments({ plan: PUBLIC_ROOM, deleted: { $ne: true } }),
+      CommunityPost.distinct("authorId", { plan: PUBLIC_ROOM, deleted: { $ne: true } }).then((a) => a.length),
     ]);
     res.json({
       name: req.viewer.name,
       role: req.viewer.role,
       studentId: req.viewer.studentId,
-      memberCount,
+      memberCount,   // everyone on the platform
+      posterCount,   // how many have actually posted here
       postCount,
       cloudinaryReady: cloudinaryReady(),
     });
