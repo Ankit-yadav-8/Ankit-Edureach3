@@ -211,7 +211,7 @@ export default function Navbar({ onSearch }) {
       <nav
         style={{
           position: "fixed", top: 34, left: 0, right: 0, zIndex: 1000,
-          height: 68, display: "flex", alignItems: "center", justifyContent: "space-between",
+          height: 68, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
           padding: "0 1.4rem",
           background: scrolled ? "rgba(250,249,247,0.96)" : "rgba(250,249,247,0.82)",
           backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
@@ -224,7 +224,7 @@ export default function Navbar({ onSearch }) {
         <Link
           to="/"
           onClick={() => window.scrollTo({ top: 0 })}
-          style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", flexShrink: 0 }}
+          style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", justifySelf: "start" }}
         >
           {/* CP circle logo */}
           <span
@@ -271,17 +271,16 @@ export default function Navbar({ onSearch }) {
           </span>
         </Link>
 
-        {/* Desktop nav — a flexible middle section (flex:1) that centres the
-            JEE / Colleges / Tools links in the space left between the logo and
-            the right-hand action cluster. Using flex flow (instead of the old
-            position:absolute centring) guarantees the links can never overlap
-            the side clusters on MacBook / laptop widths (1280–1500px), where the
-            absolutely-positioned version used to collide with the buttons. */}
+        {/* Desktop nav — the middle cell of the navbar's 3-column grid
+            (1fr · auto · 1fr). The equal 1fr side columns hold the logo (left)
+            and action cluster (right), so the JEE / Colleges / Tools links sit
+            truly centred in the bar. The grid expands the side columns before
+            overlapping, so the links never collide on MacBook / laptop widths. */}
         <ul
           className="desktop-nav"
           style={{
             display: "flex", alignItems: "center", gap: 4,
-            flex: "1 1 auto", justifyContent: "center", minWidth: 0,
+            justifySelf: "center", justifyContent: "center", minWidth: 0,
             margin: 0, padding: 0, listStyle: "none",
           }}
         >
@@ -421,18 +420,15 @@ export default function Navbar({ onSearch }) {
           ))}
         </ul>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end" }}>
           {/* Quick search — single labelled action (utility icon cluster removed
               for a clean jastro-style bar; compare/saved live in the menus). */}
           <button onClick={onSearch} className="cta-desktop nav-ghost-cta" aria-label="Search"
             style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}>
             <Search size={16} /> Search
           </button>
-          {/* Public community — open to every visitor (free, enrolled, not-enrolled) */}
-          <button onClick={() => navigate("/community")} className="cta-desktop nav-ghost-cta" aria-label="Public Community" title="Public Community — discuss with everyone"
-            style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 10, border: "1.5px solid rgba(14,165,233,.5)", background: location.pathname === "/community" ? "rgba(14,165,233,.12)" : "#fff", color: "#0284c7", fontWeight: 700, cursor: "pointer" }}>
-            <Globe2 size={16} /> Community
-          </button>
+          {/* Public community lives in the home hero on desktop (see Hero.jsx) and
+              in the mobile drawer on phones/tablets — so no navbar button here. */}
           {isLoggedIn ? (
             <div className="cta-desktop" style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", overflow: "hidden" }}>
               {/* Chip → opens the user's personal dashboard */}

@@ -216,6 +216,12 @@ input,select,textarea { font-family:inherit; }
   gap:.75rem;
 }
 
+/* Hero "Join the Community" entry — desktop only (macbook / laptop / computer).
+   Hidden on mobile · iPhone · tablet, where the entry lives in the navbar drawer.
+   Threshold mirrors the navbar's desktop-nav / hamburger switch (1280px). */
+.hero-community-cta { display:none; }
+@media (min-width:1280px) { .hero-community-cta { display:flex; } }
+
 /* Merged utility icon group (Help · Search · Compare · Wishlist) */
 .nav-icon-btn { background:transparent; color:#374151; }
 .nav-icon-btn:hover { background:rgba(244,123,32,.14); color:#F47B20; transform:translateY(-1px); }

@@ -175,20 +175,22 @@ function FounderPhoto({ founder }) {
   );
 }
 
-/* ── Social button (light) ─────────────────────────────────── */
-function SocialBtn({ href, icon: Icon, label, accent }) {
+/* ── Social button — plain & neutral (no colour) ───────────────
+   Used only by the three team-member cards. Deliberately uncoloured:
+   white face, grey border/text, and a subtle grey hover — no accent. */
+function SocialBtn({ href, icon: Icon, label }) {
   return (
     <a
       href={href} target="_blank" rel="noreferrer"
       style={{
         display: "inline-flex", alignItems: "center", gap: 6,
         padding: "7px 14px", borderRadius: 50,
-        background: "#fff", border: "1px solid rgba(0,0,0,.12)",
-        color: "var(--navy)", fontSize: 12, fontWeight: 600,
-        textDecoration: "none", transition: "all .2s",
+        background: "#fff", border: "1px solid rgba(0,0,0,.14)",
+        color: "#374151", fontSize: 12, fontWeight: 600,
+        textDecoration: "none", transition: "background .2s, border-color .2s",
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.background = accent; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = accent; }}
-      onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = "var(--navy)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.12)"; }}
+      onMouseEnter={(e) => { e.currentTarget.style.background = "#f3f4f6"; e.currentTarget.style.borderColor = "rgba(0,0,0,.22)"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(0,0,0,.14)"; }}
     >
       <Icon size={13} /> {label}
     </a>

@@ -5,7 +5,7 @@ import {
   Search, Sparkles, TrendingUp, Crosshair,
   GraduationCap, Users, Star, Award, ArrowRight,
   BookOpen, Target, MapPin, Trophy, Zap, ChevronRight,
-  Stethoscope, Radar, Info, Check,
+  Stethoscope, Radar, Info, Check, Globe2,
 } from "lucide-react";
 import {
   TypewriterText,
@@ -1598,6 +1598,37 @@ export default function Hero({ onSearch }) {
                   Search
                 </button>
               </div>
+            </motion.div>
+
+            {/* ── Community entry — desktop only (macbook / laptop / computer).
+                On mobile · iPhone · tablet the entry stays in the navbar drawer,
+                so this is hidden ≤1279px to match the navbar breakpoint. ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.42 }}
+              className="hero-community-cta"
+              style={{ justifyContent: "center", margin: "20px 0 6px" }}
+            >
+              <button
+                onClick={() => nav("/community")}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 9,
+                  padding: "11px 20px", borderRadius: 50, cursor: "pointer",
+                  background: "#fff", border: "1.5px solid rgba(14,165,233,.45)",
+                  boxShadow: "0 10px 26px -14px rgba(14,165,233,.6)",
+                  fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: "#0284c7",
+                  transition: "all .2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.borderColor = "#0ea5e9"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(14,165,233,.45)"; }}
+              >
+                <span style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(14,165,233,.12)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <Globe2 size={15} color="#0ea5e9" />
+                </span>
+                Join the Community — share tricks, strategies &amp; notes
+                <ArrowRight size={15} />
+              </button>
             </motion.div>
 
             {/* ── Stats bar ── */}

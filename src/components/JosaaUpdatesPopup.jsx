@@ -9,12 +9,12 @@ import { useAuth } from "../auth/AuthContext.jsx";
 
 /* ═══════════════════════════════════════════════════════════
    JosaaUpdatesPopup — a global "live counselling updates" card
-   that surfaces every 30 seconds on every page. It bundles the
+   that surfaces every 2.5 minutes on every page. It bundles the
    JoSAA Round 1 result link, the full list of quick links and
    an interactive Freeze / Float / Slide explainer.
 ═══════════════════════════════════════════════════════════ */
 
-const POPUP_INTERVAL = 60000; // 1 minute
+const POPUP_INTERVAL = 150000; // 2.5 minutes
 const WA =
   "https://wa.me/917877596464?text=" +
   encodeURIComponent("Hi! I saw the JoSAA 2026 Round 1 update — I need counselling help.");
@@ -26,9 +26,9 @@ export default function JosaaUpdatesPopup() {
   const enrol = useEnrol();
   const { isLoggedIn } = useAuth();
 
-  // Re-surface the popup every 30s. If it's already open, the tick is a no-op,
-  // so it simply re-appears within 30s of the user closing it. Only runs once
-  // the user is logged in — otherwise it would cover the mandatory login gate.
+  // Re-surface the popup every 2.5 min. If it's already open, the tick is a
+  // no-op, so it simply re-appears 2.5 min after the user closes it. Only runs
+  // once the user is logged in — otherwise it would cover the mandatory login gate.
   useEffect(() => {
     if (!isLoggedIn) { setOpen(false); return; }
     const id = setInterval(() => setOpen(true), POPUP_INTERVAL);
