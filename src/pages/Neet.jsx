@@ -1,10 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import Seo from "../components/Seo.jsx";
 import {
   ArrowRight, Stethoscope, CalendarDays, BadgeCheck, BarChart3, Gauge,
-  Award, Landmark, BookOpen, Zap, FlaskConical, Clock, Sparkles,
+  Award, Landmark, BookOpen, Zap, FlaskConical, Clock, Sparkles, MapPin, Users,
 } from "lucide-react";
 import Reveal from "../components/Reveal.jsx";
+import { NEET_COLLEGES, NEET_STATES, NEET_TOTAL_SEATS } from "../data/neetColleges.js";
 
 /* ============================================================
    NEET UG 2026 — landing page (illustrative / dummy data)
@@ -60,6 +62,19 @@ const COLLEGES = [
 
 export default function Neet() {
   const nav = useNavigate();
+
+  // state-wise medical-college counts (college count + MBBS seats) from the
+  // NMC 2024-25 seat matrix, sorted by number of colleges.
+  const stateStats = useMemo(() => {
+    const m = {};
+    for (const c of NEET_COLLEGES) {
+      const s = (m[c.state] ||= { state: c.state, count: 0, seats: 0 });
+      s.count += 1;
+      s.seats += c.seats || 0;
+    }
+    return Object.values(m).sort((a, b) => b.count - a.count);
+  }, []);
+
   return (
     <div className="page">
       <Seo
@@ -173,9 +188,9 @@ export default function Neet() {
         </div>
         <p id="cutoffs" style={{ fontSize: 12.5, color: "var(--muted)", marginBottom: "3.5rem" }}>* Illustrative data for layout — replace with official NTA results.</p>
 
-        {/* COLLEGES */}
+        {/* COLLEGES — featured + state-wise browse */}
         <div id="colleges" className="title-bar"><span className="eyebrow"><Landmark size={12} /> Counselling</span><h2 className="section-title">Top <span className="accent">medical colleges</span></h2></div>
-        <div id="counselling" className="grid-3" style={{ marginBottom: "3.5rem" }}>
+        <div className="grid-3" style={{ marginBottom: "2.5rem" }}>
           {COLLEGES.map(([name, rank, course]) => (
             <Reveal key={name}>
               <div className="card" style={{ height: "100%" }}>
@@ -187,6 +202,53 @@ export default function Neet() {
               </div>
             </Reveal>
           ))}
+        </div>
+
+        {/* STATE-WISE MEDICAL COLLEGES — every MBBS college from the NMC seat matrix */}
+        <div id="counselling" className="title-bar" style={{ scrollMarginTop: 110 }}>
+          <span className="eyebrow"><MapPin size={12} /> State-wise</span>
+          <h2 className="section-title">All <span className="accent">{NEET_COLLEGES.length} MBBS colleges</span>, state by state</h2>
+        </div>
+        <p style={{ textAlign: "center", color: "var(--muted)", maxWidth: 640, margin: "0 auto 1.6rem", lineHeight: 1.6 }}>
+          Browse every MBBS medical college in India — AIIMS, JIPMER, government &amp; private — with
+          MBBS seats, affiliating university and year, across {NEET_STATES.length} states &amp; UTs
+          ({NEET_TOTAL_SEATS.toLocaleString("en-IN")} total seats). Pick a state to see its colleges.
+        </p>
+        <div
+          style={{
+            display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+            gap: 14, marginBottom: "2rem",
+          }}
+        >
+          {stateStats.map((s, i) => (
+            <Reveal key={s.state} delay={(i % 4) * 0.03}>
+              <Link
+                to={`/neet-colleges?state=${encodeURIComponent(s.state)}`}
+                className="card"
+                style={{
+                  display: "flex", alignItems: "center", gap: 12, height: "100%",
+                  textDecoration: "none", borderLeft: "3px solid var(--coral)",
+                }}
+              >
+                <span style={{ width: 42, height: 42, borderRadius: 11, background: "rgba(21,160,110,.12)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <MapPin size={20} color="#15a06e" />
+                </span>
+                <span style={{ minWidth: 0, flex: 1 }}>
+                  <span style={{ display: "block", fontFamily: "Sora", fontWeight: 700, fontSize: 14.5, color: "var(--navy)", lineHeight: 1.25 }}>{s.state}</span>
+                  <span style={{ display: "flex", gap: 10, marginTop: 4, fontSize: 12, color: "var(--muted)" }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Landmark size={11} /> {s.count}</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Users size={11} /> {s.seats.toLocaleString("en-IN")}</span>
+                  </span>
+                </span>
+                <ArrowRight size={16} color="var(--coral)" />
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+        <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
+          <button className="btn btn-coral" onClick={() => nav("/neet-colleges")}>
+            <Landmark size={16} /> Explore all {NEET_COLLEGES.length} medical colleges <ArrowRight size={15} />
+          </button>
         </div>
 
         {/* PREDICTOR / CYCLE CTA */}

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, GraduationCap, FileText, Newspaper, Wrench, Building2 } from "lucide-react";
+import { Search, X, GraduationCap, FileText, Newspaper, Wrench, Building2, Stethoscope } from "lucide-react";
 import { search } from "../utils/searchIndex.js";
 
 const KIND_ICON = {
   College: GraduationCap,
+  Medical: Stethoscope,
   Private: Building2,
   Exam: FileText,
   News: Newspaper,
@@ -13,6 +14,7 @@ const KIND_ICON = {
 };
 const KIND_COLOR = {
   College: "#4361ee",
+  Medical: "#15a06e",
   Private: "#0EA5A4",
   Exam: "#2ec4b6",
   News: "#F97316",

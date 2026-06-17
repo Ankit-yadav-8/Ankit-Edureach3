@@ -18,6 +18,7 @@
    ============================================================ */
 
 import { COLLEGES, BRANCHES } from "../data/colleges.js";
+import { NEET_COLLEGES } from "../data/neetColleges.js";
 import { EXAMS } from "../data/exams.js";
 import { NEWS } from "../data/news.js";
 import { PRIVATE_UNIS } from "../data/counselling.js";
@@ -117,6 +118,18 @@ function buildIndex() {
         placed: c.placements?.placedPct, fees: feeTotal(c),
         recruiters: (c.placements?.recruiters || []).slice(0, 4),
       },
+    });
+  });
+
+  NEET_COLLEGES.forEach((c) => {
+    const mgmt = c.govt ? "government" : c.management;
+    idx.push({
+      kind: "Medical", type: "Medical",
+      title: c.name,
+      sub: `MBBS · ${mgmt} · ${[c.district, c.state].filter(Boolean).join(", ")}${c.seats ? ` · ${c.seats} seats` : ""}`,
+      to: `/neet-colleges/${c.slug}`,
+      keywords: norm(`${c.name} ${c.state} ${c.district} ${c.university} ${mgmt} mbbs medical college neet doctor ug ${c.seats || ""} seats`),
+      meta: { type: "Medical", state: c.state, seats: c.seats },
     });
   });
 

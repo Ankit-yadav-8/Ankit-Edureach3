@@ -41,6 +41,8 @@ import NotFound from "./pages/NotFound.jsx";
 import Admin from "./pages/Admin.jsx";
 import JeeResources from "./pages/JeeResources.jsx";
 import Neet from "./pages/Neet.jsx";
+import NeetColleges from "./pages/NeetColleges.jsx";
+import NeetCollegeDetail from "./pages/NeetCollegeDetail.jsx";
 import HowToUse from "./pages/HowToUse.jsx";
 import Mentorship from "./pages/Mentorship.jsx";
 import Privacy from "./pages/Privacy.jsx";
@@ -149,6 +151,8 @@ export default function App() {
           <Route path="/search" element={<SearchResults />} />
           <Route path="/jee-resources" element={<JeeResources />} />
           <Route path="/neet" element={<Neet />} />
+          <Route path="/neet-colleges" element={<NeetColleges />} />
+          <Route path="/neet-colleges/:slug" element={<NeetCollegeDetail />} />
           <Route path="/how-to-use" element={<HowToUse />} />
           <Route path="/mentorship" element={<Mentorship />} />
           <Route path="/mentorship/:variant" element={<Mentorship />} />

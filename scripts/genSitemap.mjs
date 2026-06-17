@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 import { COLLEGES } from "../src/data/colleges.js";
+import { NEET_COLLEGES } from "../src/data/neetColleges.js";
 import { EXAMS } from "../src/data/exams.js";
 import { NEWS } from "../src/data/news.js";
 
@@ -36,6 +37,7 @@ const STATIC_ROUTES = [
   ["/scholarships", "0.6", "monthly"],
   ["/jee-resources", "0.6", "weekly"],
   ["/neet", "0.7", "weekly"],
+  ["/neet-colleges", "0.8", "weekly"],
   ["/mentorship", "0.7", "weekly"],
   ["/private-universities", "0.7", "weekly"],
   ["/how-to-use", "0.4", "monthly"],
@@ -55,6 +57,11 @@ for (const [path, priority, changefreq] of STATIC_ROUTES) {
 // College detail pages — the long-tail that ranks for "<college> cutoff/review"
 for (const c of COLLEGES) {
   if (c?.slug) add(`/colleges/${c.slug}`, "0.8", "weekly");
+}
+
+// NEET / MBBS medical-college detail pages — long-tail "<college> MBBS seats/cutoff"
+for (const c of NEET_COLLEGES) {
+  if (c?.slug) add(`/neet-colleges/${c.slug}`, "0.7", "weekly");
 }
 
 // Exam pages
