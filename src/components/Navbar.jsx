@@ -27,7 +27,7 @@ const JEE_MEGA = [
     ],
   },
   {
-    title: "JEE Main", to: "/jee-main", color: "#F47B20", icon: FileText,
+    title: "JEE Main", to: "/jee-main", color: "#F15A38", icon: FileText,
     items: [
       { label: "Eligibility Criteria",     to: "/jee-main#eligibility",   icon: BadgeCheck },
       { label: "Exam Pattern & Schedule",  to: "/exams/jee-main",         icon: CalendarDays },
@@ -64,7 +64,7 @@ const NEET_MEGA = [
     ],
   },
   {
-    title: "NEET UG 2026", to: "/neet", color: "#F47B20", icon: FileText,
+    title: "NEET UG 2026", to: "/neet", color: "#F15A38", icon: FileText,
     items: [
       { label: "Eligibility Criteria",    to: "/neet#eligibility", icon: BadgeCheck,   desc: "Age, qualification & attempts" },
       { label: "Exam Pattern & Syllabus", to: "/neet#pattern",     icon: CalendarDays, desc: "180 questions · 720 marks" },
@@ -103,7 +103,7 @@ const COLLEGES = [
 // the tool does — they shouldn't have to click to find out.
 const TOOLS_MEGA = [
   {
-    title: "Plan & Apply", to: "/planner", color: "#F47B20", icon: CalendarDays,
+    title: "Plan & Apply", to: "/planner", color: "#F15A38", icon: CalendarDays,
     items: [
       { label: "Branch Catalog",          to: "/branches",   icon: Landmark,     desc: "220+ branches across 10 clear paths" },
       { label: "Branch vs College",       to: "/branch-vs-college", icon: GitCompare, desc: "6 questions → what should win for you" },
@@ -145,7 +145,7 @@ const EXAM_NEWS_MEGA = [
     ],
   },
   {
-    title: "Entrance Exams", to: "/exams", color: "#F47B20", icon: FileText,
+    title: "Entrance Exams", to: "/exams", color: "#F15A38", icon: FileText,
     items: [
       { label: "All Entrance Exams", to: "/exams",            icon: FileText,  desc: "Eligibility, pattern & dates" },
       { label: "JEE Main",           to: "/exams/jee-main",   icon: Zap,       desc: "NTA · twice a year" },
@@ -234,7 +234,7 @@ export default function Navbar({ onSearch }) {
               width: 38,
               height: 38,
               borderRadius: "50%",
-              background: "#F47B20",
+              background: "#F15A38",
               display: "grid",
               placeItems: "center",
               flexShrink: 0,
@@ -259,7 +259,7 @@ export default function Navbar({ onSearch }) {
             College{" "}
             <span
               style={{
-                background: "linear-gradient(90deg, #F47B20 0%, #f97316 25%, #fbbf24 50%, #f97316 75%, #F47B20 100%)",
+                background: "linear-gradient(90deg, #F15A38 0%, #f97316 25%, #fbbf24 50%, #f97316 75%, #F15A38 100%)",
                 backgroundSize: "200% auto",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -439,7 +439,7 @@ export default function Navbar({ onSearch }) {
                 title="My Dashboard"
                 style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", border: "none", background: "transparent", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
               >
-                <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#F47B20", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
+                <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#F15A38", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
                   {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
                 </span>
                 {user?.name?.split(" ")[0] || "Account"}
@@ -459,14 +459,14 @@ export default function Navbar({ onSearch }) {
               <button
                 onClick={openLogin}
                 className="cta-desktop nav-ghost-cta"
-                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #F47B20", background: "#fff", color: "#F47B20", fontWeight: 700, cursor: "pointer" }}
+                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #F15A38", background: "#fff", color: "#F15A38", fontWeight: 700, cursor: "pointer" }}
               >
                 Login
               </button>
               <button
                 onClick={openSignup}
                 className="cta-desktop nav-primary-cta"
-                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #F47B20", background: "#F47B20", color: "#fff", fontWeight: 700, cursor: "pointer" }}
+                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #F15A38", background: "#F15A38", color: "#fff", fontWeight: 700, cursor: "pointer" }}
               >
                 Sign Up
               </button>
@@ -504,7 +504,7 @@ export default function Navbar({ onSearch }) {
                       width: 32,
                       height: 32,
                       borderRadius: "50%",
-                      background: "#F47B20",
+                      background: "#F15A38",
                       display: "grid",
                       placeItems: "center",
                     }}
@@ -516,7 +516,7 @@ export default function Navbar({ onSearch }) {
                   <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", whiteSpace: "nowrap" }}>
                     College{" "}
                     <span style={{
-                      background: "linear-gradient(90deg, #F47B20 0%, #f97316 25%, #fbbf24 50%, #f97316 75%, #F47B20 100%)",
+                      background: "linear-gradient(90deg, #F15A38 0%, #f97316 25%, #fbbf24 50%, #f97316 75%, #F15A38 100%)",
                       backgroundSize: "200% auto",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -538,7 +538,7 @@ export default function Navbar({ onSearch }) {
                   }}>
                   <span style={{
                     width: 32, height: 32, borderRadius: "50%",
-                    background: "#F47B20", color: "#fff",
+                    background: "#F15A38", color: "#fff",
                     display: "grid", placeItems: "center",
                     fontSize: 14, fontWeight: 800, flexShrink: 0,
                   }}>
@@ -548,7 +548,7 @@ export default function Navbar({ onSearch }) {
                     <span style={{ fontWeight: 700, color: "var(--navy)", fontSize: "0.9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {user?.name || user?.phone || "My Account"}
                     </span>
-                    <span style={{ fontSize: "0.72rem", color: "#ea580c", fontWeight: 600 }}>View my dashboard →</span>
+                    <span style={{ fontSize: "0.72rem", color: "#E0421F", fontWeight: 600 }}>View my dashboard →</span>
                   </span>
                 </button>
               )}
@@ -582,7 +582,7 @@ export default function Navbar({ onSearch }) {
                         width: "100%", margin: "10px 0", padding: "13px 16px",
                         borderRadius: 12, border: "none", cursor: "pointer",
                         color: "#fff", fontWeight: 800, fontSize: "0.98rem",
-                        background: "linear-gradient(120deg, #F47B20 0%, #f97316 40%, #fb923c 60%, #F47B20 100%)",
+                        background: "linear-gradient(120deg, #F15A38 0%, #f97316 40%, #fb923c 60%, #F15A38 100%)",
                         backgroundSize: "200% auto",
                         boxShadow: "0 8px 20px -8px rgba(244,123,32,.7)",
                         animation: "brandGradient 3s linear infinite",
@@ -610,12 +610,12 @@ export default function Navbar({ onSearch }) {
                         display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
                         fontWeight: 700, fontSize: "1rem", padding: "0.85rem 0.7rem",
                         width: "100%", borderRadius: 10, cursor: "pointer",
-                        color: active || expanded ? "#ea580c" : "var(--navy)",
+                        color: active || expanded ? "#E0421F" : "var(--navy)",
                         background: active ? "rgba(244,123,32,.1)" : "transparent",
                       }}
                     >
                       <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        {active && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#F47B20" }} />}
+                        {active && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#F15A38" }} />}
                         {item.label}
                       </span>
                       {hasChildren && (
@@ -690,7 +690,7 @@ export default function Navbar({ onSearch }) {
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                   width: "100%", marginTop: 14, padding: "12px 16px",
                   borderRadius: 10, border: "1.5px solid rgba(244,123,32,.28)",
-                  background: "rgba(244,123,32,.1)", color: "#ea580c",
+                  background: "rgba(244,123,32,.1)", color: "#E0421F",
                   fontWeight: 700, fontSize: "0.95rem", textDecoration: "none",
                 }}
               >
@@ -718,7 +718,7 @@ export default function Navbar({ onSearch }) {
                 >
                   <span style={{
                     width: 28, height: 28, borderRadius: "50%",
-                    background: "#F47B20", color: "#fff",
+                    background: "#F15A38", color: "#fff",
                     display: "grid", placeItems: "center",
                     fontSize: 13, fontWeight: 800, flexShrink: 0,
                   }}>
@@ -749,7 +749,7 @@ export default function Navbar({ onSearch }) {
                     style={{
                       width: "100%", marginTop: 8, padding: "13px 16px",
                       borderRadius: 10, border: "none",
-                      background: "#F47B20", color: "#fff",
+                      background: "#F15A38", color: "#fff",
                       fontWeight: 700, cursor: "pointer", fontSize: "0.95rem",
                     }}
                   >
@@ -793,7 +793,7 @@ export default function Navbar({ onSearch }) {
                 width: 56, height: 56, borderRadius: "50%", margin: "0 auto 14px",
                 background: "#FFF1E9", display: "grid", placeItems: "center",
               }}>
-                <LogOut size={26} color="#F47B20" />
+                <LogOut size={26} color="#F15A38" />
               </div>
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.25rem", color: "var(--navy)", margin: "0 0 6px" }}>
                 Log out?
@@ -835,7 +835,7 @@ export default function Navbar({ onSearch }) {
 const navLinkStyle = (active) => ({
   display: "flex", alignItems: "center", gap: 5,
   padding: "0.46rem 0.9rem", fontSize: "0.88rem", fontWeight: active ? 700 : 600,
-  color: active ? "#ea580c" : "#374151",
+  color: active ? "#E0421F" : "#374151",
   borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   fontFamily: "inherit",
   background: active ? "rgba(244,123,32,.12)" : "transparent",
@@ -850,7 +850,7 @@ const navHighlightStyle = (active) => ({
   color: "#fff",
   borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   fontFamily: "inherit",
-  background: "linear-gradient(120deg, #F47B20 0%, #f97316 45%, #fbbf24 100%)",
+  background: "linear-gradient(120deg, #F15A38 0%, #f97316 45%, #fbbf24 100%)",
   backgroundSize: "200% auto",
   border: "1.5px solid rgba(255,255,255,.5)",
   boxShadow: active ? "0 8px 20px -6px rgba(244,123,32,.8)" : "0 6px 16px -8px rgba(244,123,32,.6)",
@@ -863,7 +863,7 @@ const navFeatureStyle = {
   padding: "0.45rem 0.85rem", fontSize: "0.86rem", fontWeight: 700,
   color: "#fff", borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   border: "none",
-  background: "linear-gradient(120deg, #F47B20 0%, #f97316 40%, #fb923c 60%, #F47B20 100%)",
+  background: "linear-gradient(120deg, #F15A38 0%, #f97316 40%, #fb923c 60%, #F15A38 100%)",
   backgroundSize: "200% auto",
   boxShadow: "0 6px 16px -6px rgba(244,123,32,.75)",
   animation: "brandGradient 3s linear infinite",

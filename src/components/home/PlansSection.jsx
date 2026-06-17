@@ -34,49 +34,96 @@ const TABS = [
   { key: "mentorship",  label: "1-on-1 Mentorship", icon: GraduationCap },
 ];
 
-function CounsellingView() {
+const COUNSELLING_TIERS = [
+  {
+    badge: "Essential", price: "299", old: "999", featured: false,
+    tagline: "A personalised, mistake-proofed choice list and expert support through every round — for the price of a textbook.",
+    bullets: COUNSELLING_BULLETS,
+  },
+  {
+    badge: "Pro · Most Picked", price: "499", old: "1499", featured: true,
+    tagline: "Everything in Essential, plus deeper 1-on-1 attention and end-to-end handling right up to seat acceptance.",
+    bullets: [
+      ...COUNSELLING_BULLETS,
+      "Two 1-on-1 mentor calls (pre-fill + after Round 1)",
+      "Priority same-day WhatsApp response",
+      "Float / Slide / Freeze decision help every round",
+      "Document & reporting handled end-to-end with you",
+    ],
+  },
+];
+
+function PriceCard({ tier }) {
+  const featured = tier.featured;
+  const fg = featured ? "#fff" : CL.ink;
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 24, maxWidth: 1000, margin: "0 auto", alignItems: "stretch" }}>
-      {/* bullets card */}
-      <div style={{ background: CL.card, borderRadius: 22, border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: "30px 28px" }}>
-        <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.3rem", color: CL.ink, marginBottom: 6 }}>What you get</h3>
-        <p style={{ color: CL.body, fontSize: 13.5, marginBottom: 18 }}>A ready-to-fill, rank-specific JoSAA + CSAB choice list — done with you.</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {COUNSELLING_BULLETS.map((b) => (
-            <div key={b} style={{ display: "flex", gap: 11, alignItems: "flex-start" }}>
-              <span style={{ width: 20, height: 20, borderRadius: "50%", background: CL.greenSoft, display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
-                <Check size={12} color="#0a8f5b" strokeWidth={3} />
+    <div style={{
+      background: featured ? CL.coral : CL.card, color: fg,
+      borderRadius: 22, padding: "30px 28px", position: "relative", overflow: "hidden",
+      border: `1px solid ${featured ? CL.coral : CL.line}`,
+      boxShadow: featured ? "0 22px 52px -18px rgba(241,90,56,.6)" : CL.shadow,
+      display: "flex", flexDirection: "column",
+    }}>
+      {featured && <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(255,255,255,.1)" }} />}
+      <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", height: "100%" }}>
+        <span style={{
+          display: "inline-flex", alignItems: "center", gap: 7, fontSize: 11, fontWeight: 800, letterSpacing: "1px",
+          background: featured ? "rgba(255,255,255,.2)" : CL.coralSoft, color: featured ? "#fff" : CL.coralDk,
+          padding: "6px 14px", borderRadius: 50, alignSelf: "flex-start", marginBottom: 16,
+        }}>
+          <Sparkles size={13} /> {tier.badge}
+        </span>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 8 }}>
+          <span style={{ fontSize: 18, opacity: 0.65, textDecoration: "line-through" }}>₹{tier.old}</span>
+          <span style={{ fontFamily: CL.display, fontWeight: 900, fontSize: 50, lineHeight: 1 }}>₹{tier.price}</span>
+          <span style={{ fontSize: 12, opacity: 0.8 }}>one-time</span>
+        </div>
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 800,
+          background: featured ? "rgba(255,255,255,.18)" : "rgba(224,66,31,.08)", color: featured ? "#fff" : CL.coralDk,
+          padding: "5px 12px", borderRadius: 50, alignSelf: "flex-start", marginBottom: 16,
+        }}>
+          <Flame size={13} /> Limited counselling slots this season
+        </div>
+        <p style={{ fontSize: 13.5, lineHeight: 1.6, opacity: featured ? 0.95 : 0.85, marginBottom: 18, color: featured ? "#fff" : CL.body }}>{tier.tagline}</p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 22 }}>
+          {tier.bullets.map((b) => (
+            <div key={b} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+              <span style={{ width: 18, height: 18, borderRadius: "50%", background: featured ? "rgba(255,255,255,.22)" : CL.greenSoft, display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                <Check size={11} color={featured ? "#fff" : "#0a8f5b"} strokeWidth={3} />
               </span>
-              <span style={{ fontSize: 13.8, color: CL.ink2, lineHeight: 1.5 }}>{b}</span>
+              <span style={{ fontSize: 13, lineHeight: 1.5, color: featured ? "rgba(255,255,255,.95)" : CL.ink2 }}>{b}</span>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* price card */}
-      <div style={{ background: CL.coral, borderRadius: 22, boxShadow: "0 20px 50px -18px rgba(241,90,56,.6)", padding: "32px 30px", color: "#fff", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(255,255,255,.1)" }} />
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 11, fontWeight: 800, letterSpacing: "1px", background: "rgba(255,255,255,.2)", padding: "6px 14px", borderRadius: 50, alignSelf: "flex-start", marginBottom: 18 }}>
-          <Sparkles size={13} /> JoSAA 2026 Expert Plan
-        </span>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 8 }}>
-          <span style={{ fontSize: 18, opacity: 0.7, textDecoration: "line-through" }}>₹999</span>
-          <span style={{ fontFamily: CL.display, fontWeight: 900, fontSize: 52, lineHeight: 1 }}>₹299</span>
-        </div>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 800, background: "rgba(255,255,255,.18)", padding: "5px 12px", borderRadius: 50, alignSelf: "flex-start", marginBottom: 18 }}>
-          <Flame size={13} /> Limited counselling slots this season
-        </div>
-        <p style={{ fontSize: 14, lineHeight: 1.65, opacity: 0.95, marginBottom: 24 }}>
-          A personalised, mistake-proofed choice list and expert support through every round — for the price of a textbook.
-        </p>
-        <Link to="/josaa-2026" style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "#fff", color: CL.coralDk, padding: "15px 24px", borderRadius: 13, fontFamily: CL.display, fontWeight: 800, fontSize: 15 }}>
-            Get my ₹299 plan <ArrowRight size={17} />
+        <Link to="/josaa-2026" style={{
+          marginTop: "auto", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+          background: featured ? "#fff" : CL.coral, color: featured ? CL.coralDk : "#fff",
+          padding: "14px 24px", borderRadius: 13, fontFamily: CL.display, fontWeight: 800, fontSize: 15,
+        }}>
+          Get my ₹{tier.price} plan <ArrowRight size={17} />
         </Link>
-        <div style={{ display: "flex", gap: 16, justifyContent: "center", marginTop: 16, fontSize: 12, opacity: 0.9 }}>
+        <div style={{ display: "flex", gap: 16, justifyContent: "center", marginTop: 14, fontSize: 12, opacity: 0.85 }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}><ShieldCheck size={13} /> Secure</span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}><Phone size={13} /> WhatsApp support</span>
         </div>
       </div>
+    </div>
+  );
+}
+
+function CounsellingView() {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 24, maxWidth: 880, margin: "0 auto", alignItems: "stretch" }}>
+      {COUNSELLING_TIERS.map((t) => (
+        <motion.div key={t.badge}
+          initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+          whileHover={{ y: -6 }} style={{ display: "flex" }}>
+          <PriceCard tier={t} />
+        </motion.div>
+      ))}
     </div>
   );
 }

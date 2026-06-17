@@ -7,7 +7,7 @@ import { TiltCard, FloatingOrbs, StaggerReveal, StaggerItem } from "../Animation
 const CARDS = [
   {
     icon: Gauge, title: "Rank Predictor", accent: "#F97316",
-    gradient: "linear-gradient(135deg, #F97316, #ea580c)",
+    gradient: "linear-gradient(135deg, #F97316, #E0421F)",
     desc: "Enter your expected marks and instantly see your projected JEE Main rank, percentile and category rank.",
     to: "/jee-main#rank", cta: "Predict My Rank",
     donut: { data: [{ name: "Physics", value: 33 }, { name: "Chemistry", value: 33 }, { name: "Maths", value: 34 }], label: "300", sub: "max marks" },
@@ -47,9 +47,9 @@ export default function PredictorCards() {
           transition={{ duration: 0.5 }}
           style={{ position: "relative", zIndex: 1 }}
         >
-          <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F47B20" }}>Smart Tools</span>
+          <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F15A38" }}>Smart Tools</span>
           <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#1a1a2e", letterSpacing: "-1.5px" }}>
-            Everything you need, <span style={{ background: "linear-gradient(90deg,#F47B20,#ea580c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>before you fill a single choice</span>
+            Everything you need, <span style={{ background: "linear-gradient(90deg,#F15A38,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>before you fill a single choice</span>
           </h2>
           <p className="section-sub" style={{ color: "#4b5563" }}>Three connected tools: marks → rank → the exact colleges within your reach.</p>
         </motion.div>

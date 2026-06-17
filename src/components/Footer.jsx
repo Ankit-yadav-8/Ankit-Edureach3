@@ -124,7 +124,7 @@ function DevCard({ t, index = 0 }) {
             borderRadius: 14,
             display: "grid",
             placeItems: "center",
-            background: `linear-gradient(135deg, ${t.accent} 0%, #ea580c 100%)`,
+            background: `linear-gradient(135deg, ${t.accent} 0%, #E0421F 100%)`,
             fontFamily: "Sora, sans-serif",
             fontWeight: 900,
             fontSize: "1.25rem",
@@ -240,7 +240,7 @@ export default function Footer() {
                   borderRadius: "50%",
                   display: "grid",
                   placeItems: "center",
-                  background: "#F47B20",
+                  background: "#F15A38",
                   flexShrink: 0,
                 }}
               >
@@ -299,7 +299,7 @@ export default function Footer() {
                 gap: 7,
                 padding: "5px 18px",
                 borderRadius: 99,
-                background: "#F47B20",
+                background: "#F15A38",
                 fontSize: ".78rem",
                 fontWeight: 700,
                 letterSpacing: 1.2,

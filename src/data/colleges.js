@@ -264,7 +264,7 @@ export const COLLEGES = [
       "lng": 77.19
     },
     "estd": 1961,
-    "accent": "#ea580c",
+    "accent": "#E0421F",
     "heroImage": "/assets/team/IITs/IITs/IIT DELHI.jpg",
     "website": "https://home.iitd.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
@@ -4344,7 +4344,7 @@ export const COLLEGES = [
       "lng": 81.38
     },
     "estd": 2016,
-    "accent": "#ea580c",
+    "accent": "#E0421F",
     "heroImage": "/assets/team/IITs/IITs/IIT BHILAI.jpg",
     "website": "https://iitbhilai.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
@@ -8010,7 +8010,7 @@ export const COLLEGES = [
       "lng": 81.52
     },
     "estd": 2015,
-    "accent": "#ea580c",
+    "accent": "#E0421F",
     "heroImage": "/assets/team/NITs/NIT ANDHRAPRADESH.webp",
     "website": "https://nitandhra.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
@@ -11147,7 +11147,7 @@ export const COLLEGES = [
       "lng": 79.05
     },
     "estd": 2016,
-    "accent": "#ea580c",
+    "accent": "#E0421F",
     "heroImage": "/assets/team/IIITs/IIIT NAGPUR.jpeg",
     "website": "https://iiitn.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",

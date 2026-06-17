@@ -11,7 +11,7 @@ import {
 
 const VARIANTS = {
   main: {
-    accent: "#F47B20",
+    accent: "#F15A38",
     accentDark: "#c75b0a",
     grad: "linear-gradient(135deg,#1a1a2e 0%,#2a1c12 55%,#3d2410 100%)",
     label: "JoSAA + CSAB · NIT / IIIT / GFTI",

@@ -6,7 +6,7 @@ import { COLLEGES } from "../../data/colleges.js";
 import { fmtINR } from "../../utils/format.js";
 
 const TYPES = [
-  { id: "IIT",  label: "IITs",  color: "#F47B20", desc: "Indian Institutes of Technology" },
+  { id: "IIT",  label: "IITs",  color: "#F15A38", desc: "Indian Institutes of Technology" },
   { id: "NIT",  label: "NITs",  color: "#3b3b98", desc: "National Institutes of Technology" },
   { id: "IIIT", label: "IIITs", color: "#0b525b", desc: "Indian Institutes of Information Technology" },
 ];
@@ -219,7 +219,7 @@ function CollegeCard({ c, typeAccent, typeBg, index }) {
           border: "1px solid rgba(0,0,0,.06)",
         }}>
           {[
-            { icon: TrendingUp, label: "Avg Pkg",  value: fmtINR(c.placements.avg),     color: "#F47B20" },
+            { icon: TrendingUp, label: "Avg Pkg",  value: fmtINR(c.placements.avg),     color: "#F15A38" },
             { icon: Trophy,     label: "Highest",  value: fmtINR(c.placements.highest),  color: "#15a06e" },
             { icon: Percent,    label: "Placed",   value: `${c.placements.placedPct}%`,  color: "#3b3b98" },
           ].map(({ icon: Icon, label, value, color }, i) => (
@@ -256,8 +256,8 @@ function CollegeCard({ c, typeAccent, typeBg, index }) {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = "#fff3e6";
-                e.currentTarget.style.borderColor = "#F47B20";
-                e.currentTarget.style.color = "#F47B20";
+                e.currentTarget.style.borderColor = "#F15A38";
+                e.currentTarget.style.color = "#F15A38";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "#f3f4f6";

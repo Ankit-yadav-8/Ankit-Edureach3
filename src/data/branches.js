@@ -405,6 +405,206 @@ export const BRANCHES = [
       { myth: "You can't switch to CS.", reality: "Strong math/physics base makes a software/ML pivot very achievable." },
     ],
   },
+  {
+    slug: "aerospace-avionics",
+    name: "Aerospace & Avionics",
+    icon: "Rocket",
+    color: "#3A86FF",
+    desc: "Aerodynamics, propulsion, flight mechanics, and spacecraft systems.",
+    tags: ["Math-heavy", "Core-heavy", "Defence / Space"],
+    branchCount: 9,
+    stats: { jobGrowth: "Space Boom", medianSalary: "₹13 LPA", aiRisk: 30 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Aerospace engineers design and analyse aircraft, rockets and satellites — combining fluid dynamics, structures, propulsion and control. India's private-space surge (ISRO + NewSpace startups) has revived demand sharply.",
+      coreSubjects: ["Aerodynamics", "Propulsion", "Flight Mechanics", "Aerospace Structures", "Orbital Mechanics", "Control Systems"],
+      outcomes: ["Aerospace / Avionics Engineer", "Propulsion Engineer", "ISRO / DRDO / HAL", "Space-tech Startups", "Higher studies (MS)"],
+    },
+    insights: {
+      skills: { coursework: 60, selfLearning: 40 },
+      tierMatters: 54,
+      research: [{ label: "Academic Pubs", value: 84 }, { label: "Industry R&D", value: 76 }, { label: "Lab Funding", value: 80 }],
+      researchNote:
+        "ISRO's commercialisation and NewSpace startups (Skyroot, Agnikul) plus DRDO/HAL programmes are expanding aerospace hiring well beyond the public sector.",
+      salaryArc: {
+        median: { entry: 13, y3: 19, y5: 27 },
+        top:    { entry: 28, y3: 42, y5: 58 },
+      },
+    },
+    branchesList: ["Aerospace Engineering", "Aeronautical Engineering", "Avionics", "Space Technology", "Aerospace & Mechanical"],
+    colleges: [
+      { name: "IIT Bombay", tag: "Aero strong", chance: "high" },
+      { name: "IIT Madras", tag: "NIRF #1", chance: "medium" },
+      { name: "IIT Kanpur", tag: "Flight lab", chance: "high" },
+      { name: "MIT Manipal", tag: "Aero", chance: "high" },
+    ],
+    myths: [
+      { myth: "Only ISRO hires aerospace grads.", reality: "Private space, drones, defence and even auto-aero CFD roles now recruit widely." },
+      { myth: "You must clear NDA / be a pilot.", reality: "Aerospace is design and analysis engineering — entirely separate from flying." },
+      { myth: "No scope in India.", reality: "NewSpace startups and ISRO commercialisation have made it one of the fastest-rising core fields." },
+    ],
+  },
+  {
+    slug: "mining-earth",
+    name: "Mining Engineering",
+    icon: "Mountain",
+    color: "#E29A2E",
+    desc: "Mine planning, rock mechanics, and safe, sustainable resource extraction.",
+    tags: ["Core-heavy", "PSU-friendly", "Field work"],
+    branchCount: 7,
+    stats: { jobGrowth: "PSU Demand", medianSalary: "₹12 LPA", aiRisk: 24 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Mining engineers plan and run safe, efficient extraction of coal, metals and minerals. The field offers strong PSU pay (Coal India, NMDC), early site responsibility and a growing automation/safety-tech angle.",
+      coreSubjects: ["Mine Planning & Design", "Rock Mechanics", "Mine Ventilation", "Surveying", "Mineral Economics", "Mine Safety Engg"],
+      outcomes: ["Mining Engineer", "Mine Planner", "PSU (Coal India, NMDC)", "Mining-tech / Drones", "Higher studies / Civil services"],
+    },
+    insights: {
+      skills: { coursework: 66, selfLearning: 34 },
+      tierMatters: 40,
+      research: [{ label: "Academic Pubs", value: 70 }, { label: "Industry R&D", value: 60 }, { label: "Lab Funding", value: 64 }],
+      researchNote:
+        "Among the highest PSU starting pay of all branches. Automation, drone-survey and mine-safety analytics are adding modern tech roles to a traditional field.",
+      salaryArc: {
+        median: { entry: 12, y3: 17, y5: 24 },
+        top:    { entry: 24, y3: 34, y5: 46 },
+      },
+    },
+    branchesList: ["Mining Engineering", "Mining Machinery", "Mineral Engineering", "Petroleum & Mining", "Geological Technology"],
+    colleges: [
+      { name: "ISM Dhanbad", tag: "Mining #1", chance: "high" },
+      { name: "IIT Kharagpur", tag: "Mining", chance: "medium" },
+      { name: "IIT BHU", tag: "Mining", chance: "high" },
+      { name: "NIT Rourkela", tag: "Mining", chance: "high" },
+    ],
+    myths: [
+      { myth: "Mining means a dangerous life underground.", reality: "Modern mining is heavily mechanised and safety-regulated; many roles are planning and supervisory." },
+      { myth: "Lowest-paying branch.", reality: "PSU mining pay is among the highest starting packages of any core branch." },
+      { myth: "No tech future.", reality: "Drone surveys, automation and mine-safety analytics are reshaping the field." },
+    ],
+  },
+  {
+    slug: "petroleum-energy",
+    name: "Petroleum & Energy",
+    icon: "Fuel",
+    color: "#0FAE6E",
+    desc: "Reservoir engineering, drilling, and the clean-energy transition.",
+    tags: ["Core-heavy", "Energy sector", "High pay"],
+    branchCount: 8,
+    stats: { jobGrowth: "Energy Shift", medianSalary: "₹14 LPA", aiRisk: 32 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Petroleum & energy engineers handle exploration, drilling and reservoir management — and increasingly the transition to clean energy (hydrogen, CCUS, geothermal). Strong pay in oil & gas, with a widening green-energy door.",
+      coreSubjects: ["Reservoir Engineering", "Drilling Technology", "Petroleum Geology", "Production Engineering", "Energy Systems", "Process Safety"],
+      outcomes: ["Reservoir / Drilling Engineer", "Energy Analyst", "Oil & Gas (ONGC, Shell)", "Renewables / Hydrogen", "Higher studies (MS)"],
+    },
+    insights: {
+      skills: { coursework: 62, selfLearning: 38 },
+      tierMatters: 50,
+      research: [{ label: "Academic Pubs", value: 74 }, { label: "Industry R&D", value: 78 }, { label: "Lab Funding", value: 70 }],
+      researchNote:
+        "Oil & gas still pays among the highest core packages, while the clean-energy transition (green hydrogen, CCUS, geothermal) is opening a fast-growing second career track.",
+      salaryArc: {
+        median: { entry: 14, y3: 21, y5: 30 },
+        top:    { entry: 30, y3: 46, y5: 64 },
+      },
+    },
+    branchesList: ["Petroleum Engineering", "Energy Engineering", "Petroleum & Gas", "Renewable Energy", "Energy Science & Engg"],
+    colleges: [
+      { name: "IIT Madras", tag: "Energy", chance: "high" },
+      { name: "ISM Dhanbad", tag: "Petroleum #1", chance: "high" },
+      { name: "IIT Bombay", tag: "Energy Sci", chance: "medium" },
+      { name: "PDEU Gandhinagar", tag: "Petroleum", chance: "high" },
+    ],
+    myths: [
+      { myth: "Petroleum is a dying field.", reality: "Oil & gas demand persists for decades and clean-energy skills extend the career further." },
+      { myth: "Only Gulf jobs pay well.", reality: "Indian PSUs and global energy majors offer strong packages domestically too." },
+      { myth: "No link to renewables.", reality: "Reservoir and process skills transfer directly to hydrogen, CCUS and geothermal." },
+    ],
+  },
+  {
+    slug: "production-industrial",
+    name: "Production & Industrial",
+    icon: "Factory",
+    color: "#7B5EA7",
+    desc: "Manufacturing systems, operations research, and supply-chain optimisation.",
+    tags: ["Core + Ops", "Management pivot", "Analytics"],
+    branchCount: 9,
+    stats: { jobGrowth: "Ops Demand", medianSalary: "₹13 LPA", aiRisk: 36 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Production & industrial engineering blends manufacturing with operations research, quality and supply-chain optimisation. It's a natural launchpad into operations, consulting, analytics and management roles.",
+      coreSubjects: ["Operations Research", "Manufacturing Processes", "Quality Engineering", "Supply Chain & Logistics", "Industrial Automation", "Ergonomics"],
+      outcomes: ["Operations / Supply-chain Engineer", "Industrial Engineer", "Consulting / Analytics", "Manufacturing (PLI sector)", "MBA pivot"],
+    },
+    insights: {
+      skills: { coursework: 56, selfLearning: 44 },
+      tierMatters: 50,
+      research: [{ label: "Academic Pubs", value: 72 }, { label: "Industry R&D", value: 70 }, { label: "Lab Funding", value: 62 }],
+      researchNote:
+        "India's manufacturing push (PLI, 'Make in India') plus e-commerce supply chains have made operations and industrial-engineering skills highly employable across sectors.",
+      salaryArc: {
+        median: { entry: 13, y3: 20, y5: 28 },
+        top:    { entry: 27, y3: 41, y5: 56 },
+      },
+    },
+    branchesList: ["Production Engineering", "Industrial Engineering", "Manufacturing Engineering", "Industrial & Production", "Smart Manufacturing"],
+    colleges: [
+      { name: "IIT Delhi", tag: "Prod & Ind", chance: "high" },
+      { name: "NIT Trichy", tag: "Prod #1", chance: "high" },
+      { name: "IIT Kharagpur", tag: "Ind Engg", chance: "medium" },
+      { name: "NIT Calicut", tag: "Production", chance: "high" },
+    ],
+    myths: [
+      { myth: "It's just shop-floor work.", reality: "Operations research, analytics and consulting are common, well-paid exits." },
+      { myth: "Weaker than Mechanical.", reality: "The ops + analytics edge often opens management and consulting roles faster." },
+      { myth: "No software relevance.", reality: "Supply-chain analytics and process optimisation are increasingly data-driven." },
+    ],
+  },
+  {
+    slug: "naval-ocean",
+    name: "Naval & Ocean",
+    icon: "Anchor",
+    color: "#F15A38",
+    desc: "Ship design, marine structures, and ocean & offshore engineering.",
+    tags: ["Core-heavy", "Niche", "Defence / Marine"],
+    branchCount: 6,
+    stats: { jobGrowth: "Niche", medianSalary: "₹12 LPA", aiRisk: 28 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Naval architecture and ocean engineering design ships, submarines, offshore platforms and marine structures. A small, specialised field with strong defence-shipbuilding and offshore-energy demand.",
+      coreSubjects: ["Ship Hydrodynamics", "Marine Structures", "Ship Design", "Offshore Engineering", "Marine Propulsion", "Coastal Engineering"],
+      outcomes: ["Naval Architect", "Marine / Offshore Engineer", "Shipyards (Cochin, MDL)", "Classification societies", "Higher studies (MS)"],
+    },
+    insights: {
+      skills: { coursework: 64, selfLearning: 36 },
+      tierMatters: 52,
+      research: [{ label: "Academic Pubs", value: 76 }, { label: "Industry R&D", value: 64 }, { label: "Lab Funding", value: 70 }],
+      researchNote:
+        "India's shipbuilding and naval-modernisation push, plus offshore wind and oil platforms, sustains demand for a small but well-paid pool of specialists.",
+      salaryArc: {
+        median: { entry: 12, y3: 18, y5: 25 },
+        top:    { entry: 26, y3: 38, y5: 52 },
+      },
+    },
+    branchesList: ["Naval Architecture & Ocean Engg", "Ocean Engineering", "Marine Engineering", "Ship Technology", "Offshore Engineering"],
+    colleges: [
+      { name: "IIT Madras", tag: "Ocean #1", chance: "high" },
+      { name: "IIT Kharagpur", tag: "Naval Arch", chance: "high" },
+      { name: "IMU Chennai", tag: "Marine", chance: "high" },
+      { name: "AMET University", tag: "Marine", chance: "medium" },
+    ],
+    myths: [
+      { myth: "Only useful for the Navy.", reality: "Shipyards, offshore energy and classification societies hire naval architects widely." },
+      { myth: "No jobs in India.", reality: "Indigenous shipbuilding and offshore projects keep this niche field employed." },
+      { myth: "Same as a sailor's career.", reality: "Naval architecture is design engineering on land, distinct from sailing roles." },
+    ],
+  },
 ];
 
 export const TOTAL_BRANCHES = BRANCHES.reduce((s, b) => s + (b.branchCount || 0), 0);

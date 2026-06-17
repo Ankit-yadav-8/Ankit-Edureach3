@@ -21,7 +21,7 @@ const EXAM_CYCLE = [
         fee: "₹1,000 (Gen) · ₹500 (SC/ST)",
         seats: "~43,600 (NITs+IIITs+GFTIs)",
         body: "NTA",
-        color: "#F47B20",
+        color: "#F15A38",
         status: "deadline_gone",
         what_you_get: [
           "NIT / IIIT / GFTI admission via JoSAA",
@@ -56,7 +56,7 @@ const EXAM_CYCLE = [
   {
     phase: "Main Exam Season",
     period: "Jan – Apr 2026",
-    phaseColor: "#F47B20",
+    phaseColor: "#F15A38",
     phaseBg: "rgba(244,123,32,.08)",
     exams: [
       {
@@ -66,7 +66,7 @@ const EXAM_CYCLE = [
         fee: "₹1,000 (Gen) · ₹500 (SC/ST/PwD)",
         seats: "~43,600 (NIT+IIIT+GFTI)",
         body: "NTA",
-        color: "#F47B20",
+        color: "#F15A38",
         status: "deadline_gone",
         what_you_get: [
           "First attempt at qualifying rank for JEE Advanced",
@@ -144,7 +144,7 @@ const EXAM_CYCLE = [
         fee: "₹1,000 (Gen) · ₹500 (SC/ST/PwD)",
         seats: "~43,600 (shared with S1)",
         body: "NTA",
-        color: "#F47B20",
+        color: "#F15A38",
         status: "deadline_gone",
         what_you_get: [
           "Second chance to improve JEE Main score",
@@ -222,7 +222,7 @@ const EXAM_CYCLE = [
         fee: "₹15,000 (seat acceptance fee)",
         seats: "60,000+ (IIT+NIT+IIIT+GFTI combined)",
         body: "JoSAA (JOSAA.NIC.IN)",
-        color: "#F47B20",
+        color: "#F15A38",
         status: "upcoming",
         what_you_get: [
           "Admission to IITs, NITs, IIITs, GFTIs",
@@ -271,8 +271,8 @@ const EXAM_CYCLE = [
 ];
 
 const STATUS_META = {
-  upcoming:      { label: "Upcoming",      bg: "rgba(244,123,32,.13)", color: "#F47B20",  icon: "🔜" },
-  flagship:      { label: "Flagship",      bg: "rgba(244,123,32,.15)", color: "#F47B20",  icon: "⭐" },
+  upcoming:      { label: "Upcoming",      bg: "rgba(244,123,32,.13)", color: "#F15A38",  icon: "🔜" },
+  flagship:      { label: "Flagship",      bg: "rgba(244,123,32,.15)", color: "#F15A38",  icon: "⭐" },
   open:          { label: "Open Now",      bg: "rgba(21,160,110,.13)", color: "#15a06e",  icon: "✅" },
   deadline_gone: { label: "Deadline Gone", bg: "rgba(107,114,128,.10)", color: "#9ca3af", icon: "⏰" },
   completed:     { label: "Completed",     bg: "rgba(99,102,241,.12)", color: "#6366f1",  icon: "✔" },
@@ -463,7 +463,7 @@ export default function ExamCycle() {
           >
             <div className="etl-rail-card">
               <div className="etl-rail-head">
-                <Calendar size={15} color="#F47B20" /> Sep 2025 → Dec 2026
+                <Calendar size={15} color="#F15A38" /> Sep 2025 → Dec 2026
               </div>
               <div className="etl-nodes">
                 {EXAM_CYCLE.map((phase, i) => {

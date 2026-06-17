@@ -16,7 +16,7 @@ import { TiltCard } from "../Animations.jsx";
 const PREDICTOR_CARDS = [
   {
     icon: Gauge, title: "Rank Predictor", accent: "#F97316",
-    gradient: "linear-gradient(135deg, #F97316, #ea580c)",
+    gradient: "linear-gradient(135deg, #F97316, #E0421F)",
     desc: "Enter your expected marks and instantly see your projected JEE Main rank, percentile and category rank.",
     to: "/jee-main#rank", cta: "Predict My Rank",
     donut: { data: [{ name: "Physics", value: 33 }, { name: "Chemistry", value: 33 }, { name: "Maths", value: 34 }], label: "300", sub: "max marks" },
@@ -172,11 +172,11 @@ export default function SmartToolsHub() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F47B20" }}>
+          <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F15A38" }}>
             <Sparkles size={12} style={{ marginRight: 5, verticalAlign: "-2px" }} /> Smart Tools
           </span>
           <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#1a1a2e", letterSpacing: "-1.5px" }}>
-            Everything you need, <span style={{ background: "linear-gradient(90deg,#F47B20,#ea580c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>in one toolkit</span>
+            Everything you need, <span style={{ background: "linear-gradient(90deg,#F15A38,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>in one toolkit</span>
           </h2>
           <p className="section-sub" style={{ color: "#4b5563" }}>From rank prediction to personalised college lists — pick a set and dive in.</p>
         </motion.div>
@@ -196,7 +196,7 @@ export default function SmartToolsHub() {
                   padding: "11px 22px", borderRadius: 50, cursor: "pointer",
                   fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 14.5,
                   border: on ? "1.5px solid transparent" : "1.5px solid rgba(244,123,32,.3)",
-                  background: on ? "linear-gradient(135deg,#F47B20,#ea580c)" : "#fff",
+                  background: on ? "linear-gradient(135deg,#F15A38,#E0421F)" : "#fff",
                   color: on ? "#fff" : "#c2410c",
                   boxShadow: on ? "0 10px 24px -8px rgba(244,123,32,.6)" : "0 2px 10px rgba(0,0,0,.05)",
                   transition: "all .25s",
@@ -207,7 +207,7 @@ export default function SmartToolsHub() {
                   minWidth: 22, height: 22, padding: "0 7px", borderRadius: 50,
                   display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800,
                   background: on ? "rgba(255,255,255,.25)" : "rgba(244,123,32,.12)",
-                  color: on ? "#fff" : "#F47B20",
+                  color: on ? "#fff" : "#F15A38",
                 }}>
                   {g.cards.length}
                 </span>

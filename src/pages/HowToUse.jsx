@@ -9,7 +9,7 @@ import {
 import Reveal from "../components/Reveal.jsx";
 import Seo from "../components/Seo.jsx";
 
-const OR = "#F47B20";
+const OR = "#F15A38";
 
 /* ── The 4-step big-picture journey ─────────────────────────── */
 const JOURNEY = [
@@ -259,7 +259,7 @@ function StepCard({ item, last }) {
               <h3 style={{ fontFamily: "Space Grotesk", fontWeight: 800, fontSize: "1.32rem", color: "var(--navy)" }}>
                 {item.title}
               </h3>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#ea580c", background: "rgba(244,123,32,.12)", padding: "3px 9px", borderRadius: 6, textTransform: "uppercase", letterSpacing: ".04em" }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#E0421F", background: "rgba(244,123,32,.12)", padding: "3px 9px", borderRadius: 6, textTransform: "uppercase", letterSpacing: ".04em" }}>
                 {item.tag}
               </span>
             </div>
@@ -287,9 +287,9 @@ function StepCard({ item, last }) {
                 borderRadius: 12, padding: "11px 14px", marginBottom: item.to ? 16 : 0,
               }}
             >
-              <Lightbulb size={17} color="#ea580c" style={{ marginTop: 1, flexShrink: 0 }} />
+              <Lightbulb size={17} color="#E0421F" style={{ marginTop: 1, flexShrink: 0 }} />
               <span style={{ fontSize: "0.9rem", color: "var(--navy)", lineHeight: 1.5 }}>
-                <strong style={{ color: "#ea580c" }}>How it helps: </strong>{item.help}
+                <strong style={{ color: "#E0421F" }}>How it helps: </strong>{item.help}
               </span>
             </div>
 
@@ -354,7 +354,7 @@ export default function HowToUse() {
             <span
               style={{
                 display: "inline-flex", alignItems: "center", gap: 7,
-                background: "rgba(244,123,32,.12)", color: "#ea580c",
+                background: "rgba(244,123,32,.12)", color: "#E0421F",
                 fontWeight: 700, fontSize: 13, padding: "6px 15px",
                 borderRadius: 999, marginBottom: 18, letterSpacing: ".02em",
               }}
@@ -365,7 +365,7 @@ export default function HowToUse() {
               How to use{" "}
               <span
                 style={{
-                  background: "linear-gradient(90deg, #F47B20, #f97316, #fbbf24)",
+                  background: "linear-gradient(90deg, #F15A38, #f97316, #fbbf24)",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                 }}
               >
@@ -494,7 +494,7 @@ export default function HowToUse() {
           <Reveal>
             <div
               style={{
-                background: "linear-gradient(135deg, #F47B20 0%, #f97316 55%, #fb923c 100%)",
+                background: "linear-gradient(135deg, #F15A38 0%, #f97316 55%, #fb923c 100%)",
                 borderRadius: 26, padding: "44px 32px", textAlign: "center",
                 boxShadow: "0 20px 50px -16px rgba(244,123,32,.6)",
               }}

@@ -265,7 +265,7 @@ export default function CollegeDetail() {
           {[
             ["Avg package", fmtINR(college.placements.avg),         "var(--navy)",   "#1c1c28"],
             ["Highest",     fmtINR(college.placements.highest),      "var(--green)",  "#15a06e"],
-            ["Placed",      `${college.placements.placedPct}%`,      "var(--orange)", "#F47B20"],
+            ["Placed",      `${college.placements.placedPct}%`,      "var(--orange)", "#F15A38"],
             ["Total fees",  `${fmtINR(totalFee)}/yr`,                "var(--violet)", "#f97316"],
           ].map(([l, v, c, hex], i) => (
             <motion.div

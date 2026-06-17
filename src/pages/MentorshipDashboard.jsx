@@ -15,7 +15,7 @@ import Community from "../components/mentorship/Community.jsx";
 import { Trend, Gauge, PieWithLegend, Bars } from "../components/Charts.jsx";
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
 
-const ORANGE = "#F47B20";
+const ORANGE = "#F15A38";
 const GOLD = "#f5a623";
 const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
@@ -49,7 +49,7 @@ const SUBJECT_COLORS = {
   "Organic Chemistry": "#15a06e",
   "Inorganic Chemistry": "#84cc16",
   Chemistry: "#15a06e",
-  Maths: "#F47B20",
+  Maths: "#F15A38",
   Biology: "#ec4899",
   Science: "#06b6d4",
 };
@@ -1738,7 +1738,7 @@ function DashboardBody({ urlPlan = "" }) {
           <div style={{ background: overdueBacklog.length || studyIrregular ? "#fff7ed" : "#fff", border: `1px solid ${overdueBacklog.length || studyIrregular ? "#fdba74" : "#fde68a"}`, borderRadius: 20, padding: "22px 24px", boxShadow: "0 20px 46px -30px rgba(234,88,12,.6)", position: "relative", overflow: "hidden", marginBottom: 18 }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#f59e0b,#ef4444)" }} />
             <div style={{ display: "flex", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
-              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#ffedd5", display: "grid", placeItems: "center", flexShrink: 0 }}><AlertCircle size={22} color="#ea580c" /></span>
+              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#ffedd5", display: "grid", placeItems: "center", flexShrink: 0 }}><AlertCircle size={22} color="#E0421F" /></span>
               <div style={{ flex: 1, minWidth: 240 }}>
                 <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                   Backlog alert to parent
@@ -1750,7 +1750,7 @@ function DashboardBody({ urlPlan = "" }) {
                     ? <strong style={{ color: "#c2410c" }}>Currently flagged: {overdueBacklog.length ? `${overdueBacklog.length} overdue chapter${overdueBacklog.length === 1 ? "" : "s"}` : "irregular study"}.</strong>
                     : <span style={{ color: "#15803d", fontWeight: 700 }}>All on track right now — nothing to flag.</span>}
                 </p>
-                <SendControls color="#ea580c" state={alertState} onSend={() => sendReport("backlog")} sendLabel="Send backlog alert now"
+                <SendControls color="#E0421F" state={alertState} onSend={() => sendReport("backlog")} sendLabel="Send backlog alert now"
                   auto={reportPrefs.autoBacklogAlert} onToggle={() => setReportPrefs((p) => ({ ...p, autoBacklogAlert: !p.autoBacklogAlert }))}
                   autoLabel="Auto-alert when behind" parentEmail={parentEmail} />
               </div>

@@ -63,7 +63,7 @@ export const MENTORSHIP = {
         { name: "Maths",     Before: 38, After: 81 },
       ],
       outcomes: [
-        { v: "+130",      l: "Marks gained in 8 weeks", c: "#F47B20" },
+        { v: "+130",      l: "Marks gained in 8 weeks", c: "#F15A38" },
         { v: "86%",       l: "Average accuracy",        c: "#22c55e" },
         { v: "88 → 99.2", l: "Percentile jump",         c: "#6366f1" },
         { v: "23 days",   l: "Avg study streak",        c: "#ef4444" },
@@ -71,7 +71,7 @@ export const MENTORSHIP = {
       weekHours: [4.5, 6, 5, 7, 6, 8, 2.5],
       goalPct: 86,
       liveTiles: [
-        { icon: "clock",    c: "#F47B20", v: "6h 12m",  l: "Today" },
+        { icon: "clock",    c: "#F15A38", v: "6h 12m",  l: "Today" },
         { icon: "activity", c: "#6366f1", v: "39h",     l: "This week" },
         { icon: "flame",    c: "#ef4444", v: "23 days", l: "Streak" },
         { icon: "check",    c: "#22c55e", v: "18 / 21", l: "Tasks done" },
@@ -84,7 +84,7 @@ export const MENTORSHIP = {
       parent: {
         week: "Week 6",
         rows: [
-          { icon: "clock",    c: "#F47B20", l: "Study hours this week", v: "39 hrs",  note: "+5h vs last week" },
+          { icon: "clock",    c: "#F15A38", l: "Study hours this week", v: "39 hrs",  note: "+5h vs last week" },
           { icon: "file",     c: "#6366f1", l: "Tests attempted",       v: "2 tests", note: "Both fully analysed" },
           { icon: "trend",    c: "#22c55e", l: "Score improvement",     v: "+18%",    note: "126 → 178 / 300" },
           { icon: "check",    c: "#0ea5a4", l: "Tasks completed",       v: "18 / 21", note: "86% consistency" },
@@ -169,7 +169,7 @@ export const MENTORSHIP = {
         { name: "Maths",     Before: 28, After: 70 },
       ],
       outcomes: [
-        { v: "+50%",    l: "Concept mastery gain", c: "#F47B20" },
+        { v: "+50%",    l: "Concept mastery gain", c: "#F15A38" },
         { v: "82%",     l: "Average accuracy",     c: "#22c55e" },
         { v: "2-yr",    l: "Head start built",     c: "#6366f1" },
         { v: "19 days", l: "Avg study streak",     c: "#ef4444" },
@@ -177,7 +177,7 @@ export const MENTORSHIP = {
       weekHours: [3, 4, 3.5, 5, 4.5, 6, 2],
       goalPct: 78,
       liveTiles: [
-        { icon: "clock",    c: "#F47B20", v: "4h 20m",  l: "Today" },
+        { icon: "clock",    c: "#F15A38", v: "4h 20m",  l: "Today" },
         { icon: "activity", c: "#6366f1", v: "28h",     l: "This week" },
         { icon: "flame",    c: "#ef4444", v: "19 days", l: "Streak" },
         { icon: "check",    c: "#22c55e", v: "16 / 20", l: "Tasks done" },
@@ -190,7 +190,7 @@ export const MENTORSHIP = {
       parent: {
         week: "Week 6",
         rows: [
-          { icon: "clock",    c: "#F47B20", l: "Study hours this week", v: "28 hrs",  note: "+4h vs last week" },
+          { icon: "clock",    c: "#F15A38", l: "Study hours this week", v: "28 hrs",  note: "+4h vs last week" },
           { icon: "file",     c: "#6366f1", l: "Tests attempted",       v: "1 test",  note: "Concept checkpoint" },
           { icon: "trend",    c: "#22c55e", l: "Mastery improvement",   v: "+22%",    note: "66% → 88% concepts" },
           { icon: "check",    c: "#0ea5a4", l: "Tasks completed",       v: "16 / 20", note: "80% consistency" },
@@ -281,7 +281,7 @@ export const MENTORSHIP = {
         { name: "Mental Abil.", Before: 45, After: 79 },
       ],
       outcomes: [
-        { v: "+38%",    l: "Foundation score gain", c: "#F47B20" },
+        { v: "+38%",    l: "Foundation score gain", c: "#F15A38" },
         { v: "88%",     l: "Average accuracy",      c: "#22c55e" },
         { v: "NTSE",    l: "Olympiad-ready",        c: "#6366f1" },
         { v: "17 days", l: "Avg study streak",      c: "#ef4444" },
@@ -289,7 +289,7 @@ export const MENTORSHIP = {
       weekHours: [2, 3, 2.5, 3.5, 3, 4, 1.5],
       goalPct: 84,
       liveTiles: [
-        { icon: "clock",    c: "#F47B20", v: "3h 05m",  l: "Today" },
+        { icon: "clock",    c: "#F15A38", v: "3h 05m",  l: "Today" },
         { icon: "activity", c: "#6366f1", v: "21h",     l: "This week" },
         { icon: "flame",    c: "#ef4444", v: "17 days", l: "Streak" },
         { icon: "check",    c: "#22c55e", v: "14 / 18", l: "Tasks done" },
@@ -302,7 +302,7 @@ export const MENTORSHIP = {
       parent: {
         week: "Week 6",
         rows: [
-          { icon: "clock",    c: "#F47B20", l: "Study hours this week", v: "21 hrs",  note: "+3h vs last week" },
+          { icon: "clock",    c: "#F15A38", l: "Study hours this week", v: "21 hrs",  note: "+3h vs last week" },
           { icon: "file",     c: "#6366f1", l: "Tests attempted",       v: "1 test",  note: "Foundation + board" },
           { icon: "trend",    c: "#22c55e", l: "Score improvement",     v: "+20%",    note: "70% → 90% test" },
           { icon: "check",    c: "#0ea5a4", l: "Tasks completed",       v: "14 / 18", note: "78% consistency" },

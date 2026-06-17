@@ -96,7 +96,7 @@ const ORGANISING_IITS = {
   2021: { iit: "IIT Kharagpur", short: "IITKgp", city: "Kharagpur, WB",   color: "#7C3AED", setterNote: "Pushed more non-negative numerical-answer questions; Maths very lengthy." },
   2022: { iit: "IIT Bombay",    short: "IITB",   city: "Mumbai, MH",      color: "#0891B2", setterNote: "Set a brutal multi-correct Maths section — one of the toughest years." },
   2023: { iit: "IIT Guwahati",  short: "IITG",   city: "Guwahati, AS",    color: "#16A34A", setterNote: "Unconventional Maths problem types drove difficulty to a multi-year high." },
-  2024: { iit: "IIT Madras",    short: "IITM",   city: "Chennai, TN",     color: "#EA580C", setterNote: "Physics turned unusually demanding; rich application-based framing." },
+  2024: { iit: "IIT Madras",    short: "IITM",   city: "Chennai, TN",     color: "#E0421F", setterNote: "Physics turned unusually demanding; rich application-based framing." },
   2025: { iit: "IIT Kanpur",    short: "IITK",   city: "Kanpur, UP",      color: "#0EA5A4", setterNote: "Lengthy, unconventional Maths peaking in Paper 2; Chemistry stayed the scoring section." },
   2026: { iit: "IIT Roorkee",   short: "IITR",   city: "Roorkee, UK",     color: "#2563EB", setterNote: "Set a more balanced paper — Paper 1 Easy-Moderate and Paper 2 leaning moderate; easier than 2025 but tougher than 2024." },
 };
@@ -667,11 +667,10 @@ export default function JeeAdvanced() {
               <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a "Page Unresponsive" pop-up, click <strong>"Wait"</strong> — do <em>not</em> click "Exit Page".
             </span>
           </div>
-          <div className="predictor-layout" style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
-            <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="predictor-layout" style={{ display: "block" }}>
+            <div style={{ minWidth: 0 }}>
               <CollegePredictorTool basePath="/jee-advanced" />
             </div>
-            <CounsellingCard exam="advanced" />
           </div>
         </Block>
       </div>

@@ -7,7 +7,7 @@ import Hero from "../components/home/Hero.jsx";
 import CollegeTicker from "../components/home/CollegeTicker.jsx";
 import ToolsGrid from "../components/home/ToolsGrid.jsx";
 import BranchCatalog from "../components/home/BranchCatalog.jsx";
-import RankToCutoff from "../components/home/RankToCutoff.jsx";
+import AdvancedPredictorHome from "../components/home/AdvancedPredictorHome.jsx";
 import BranchVsCollege from "../components/home/BranchVsCollege.jsx";
 import PlansSection from "../components/home/PlansSection.jsx";
 import ExamBuzzHome from "../components/home/ExamBuzzHome.jsx";
@@ -31,8 +31,8 @@ export default function Home({ onSearch }) {
       {/* ── Branch Catalog — 220+ branches, 10 paths ── */}
       <BranchCatalog />
 
-      {/* ── JEE Advanced rank → cutoff predictor ── */}
-      <RankToCutoff />
+      {/* ── JEE Advanced college predictor (full tool) ── */}
+      <AdvancedPredictorHome />
 
       {/* ── Branch vs College — 6-question assessment ── */}
       <BranchVsCollege />

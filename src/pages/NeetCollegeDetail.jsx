@@ -78,7 +78,7 @@ export default function NeetCollegeDetail() {
   const stats = [
     ["MBBS seats", fmt(college.seats), accent],
     ["Management", mgmtLabel, "#1c1c28"],
-    ["Established", college.year || "—", "#F47B20"],
+    ["Established", college.year || "—", "#F15A38"],
     ["State", college.state, "#3b3b98"],
   ];
 

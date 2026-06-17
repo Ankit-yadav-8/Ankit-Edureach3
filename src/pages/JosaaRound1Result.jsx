@@ -64,7 +64,7 @@ const TIMELINE = [
   ["CSAB special rounds", "Jul 2026", "After JoSAA closes, CSAB fills the leftover NIT / IIIT / GFTI seats — often the biggest last-minute upgrades."],
 ];
 
-const FFS_COLOR_BY_TIER = { iit: "#F47B20", nit: "#6366f1", iiit: "#0ea5a4" };
+const FFS_COLOR_BY_TIER = { iit: "#F15A38", nit: "#6366f1", iiit: "#0ea5a4" };
 const TIER_LABEL = { iit: "IIT", nit: "NIT", iiit: "IIIT" };
 
 function ActionTab({ opt, active, onClick }) {
@@ -220,7 +220,7 @@ export default function JosaaRound1Result() {
           </motion.div>
 
           <div className="josr-ffs-help">
-            <ShieldCheck size={18} color="#F47B20" />
+            <ShieldCheck size={18} color="#F15A38" />
             <span>Not sure which to pick for your rank &amp; preferences? Our mentors decide it with you, every round.</span>
             <button className="josr-btn josr-btn--primary josr-btn--sm" onClick={() => openEnrol("josaa")}>Get expert help</button>
           </div>
@@ -292,7 +292,7 @@ export default function JosaaRound1Result() {
               const Ic = l.icon;
               const inner = (
                 <>
-                  <span className="josr-link__ic" style={{ background: l.hot ? "#F47B20" : "rgba(244,123,32,.12)", color: l.hot ? "#fff" : "#F47B20" }}>
+                  <span className="josr-link__ic" style={{ background: l.hot ? "#F15A38" : "rgba(244,123,32,.12)", color: l.hot ? "#fff" : "#F15A38" }}>
                     <Ic size={18} />
                   </span>
                   <span className="josr-link__txt">
@@ -355,7 +355,7 @@ function Section({ title, pill, children }) {
 ═══════════════════════════════════════════════════════════ */
 const CSS = `
 .josr-page{
-  --o:#F47B20; --o2:#ff9f45; --navy:#1a1a2e; --muted:#6b7280;
+  --o:#F15A38; --o2:#ff9f45; --navy:#1a1a2e; --muted:#6b7280;
   --card:#ffffff; --line:rgba(13,27,62,.08);
   background:#ffffff;
   color:var(--navy); min-height:100vh; position:relative; overflow-x:hidden;
@@ -378,19 +378,19 @@ const CSS = `
 .josr-hero{text-align:center; padding:30px 0 34px; border-bottom:1px solid var(--line); margin-bottom:8px}
 .josr-live{display:inline-flex; align-items:center; gap:7px; background:linear-gradient(135deg,var(--o),var(--o2)); color:#fff; font-size:11px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; padding:7px 16px; border-radius:30px; margin-bottom:18px}
 .josr-hero h1{font-weight:800; font-size:clamp(1.9rem,4.6vw,3rem); line-height:1.12; letter-spacing:-.5px; margin:0 auto 14px; max-width:820px;
-  background:linear-gradient(105deg,#c2410c 0%,#F47B20 45%,#ea580c 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text}
+  background:linear-gradient(105deg,#c2410c 0%,#F15A38 45%,#E0421F 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text}
 .josr-hero__sub{color:rgba(28,28,40,.7); font-size:1.04rem; line-height:1.65; max-width:680px; margin:0 auto}
 .josr-hero__sub strong{color:var(--o); font-weight:700}
 .josr-hero__cta{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:24px}
 .josr-hero__stats{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-top:30px}
 .josr-hstat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 22px; min-width:140px; backdrop-filter:blur(6px); box-shadow:0 6px 22px rgba(13,27,62,.06)}
-.josr-hstat__v{font-size:1.6rem; font-weight:800; line-height:1; background:linear-gradient(135deg,var(--o),#ea580c); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text}
+.josr-hstat__v{font-size:1.6rem; font-weight:800; line-height:1; background:linear-gradient(135deg,var(--o),#E0421F); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text}
 .josr-hstat__l{font-size:11.5px; color:var(--muted); margin-top:6px; letter-spacing:.3px}
 
 /* buttons */
 .josr-btn{display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:14.5px; padding:13px 22px; border-radius:12px; cursor:pointer; border:none; text-decoration:none; transition:transform .2s, box-shadow .2s; font-family:inherit}
 .josr-btn--sm{padding:9px 16px; font-size:13px}
-.josr-btn--primary{background:linear-gradient(135deg,var(--o),#ea580c); color:#fff; box-shadow:0 8px 22px rgba(244,123,32,.36)}
+.josr-btn--primary{background:linear-gradient(135deg,var(--o),#E0421F); color:#fff; box-shadow:0 8px 22px rgba(244,123,32,.36)}
 .josr-btn--primary:hover{transform:translateY(-2px); box-shadow:0 12px 30px rgba(244,123,32,.5)}
 .josr-btn--ghost{background:#fff; color:var(--navy); border:1.5px solid rgba(244,123,32,.3)}
 .josr-btn--ghost:hover{transform:translateY(-2px); box-shadow:0 8px 22px rgba(13,27,62,.1)}
@@ -459,7 +459,7 @@ const CSS = `
 .josr-timeline{display:flex; flex-direction:column; gap:12px}
 .josr-tl{display:flex; gap:16px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; backdrop-filter:blur(6px); transition:transform .2s, box-shadow .2s}
 .josr-tl:hover{transform:translateX(3px); box-shadow:0 10px 28px rgba(13,27,62,.08)}
-.josr-tl__node{width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--o),#ea580c); color:#fff; display:grid; place-items:center; font-weight:800; font-size:16px; flex-shrink:0}
+.josr-tl__node{width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--o),#E0421F); color:#fff; display:grid; place-items:center; font-weight:800; font-size:16px; flex-shrink:0}
 .josr-tl__top{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:4px}
 .josr-tl__top h4{font-size:1rem; font-weight:800; color:var(--navy)}
 .josr-tl__when{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; color:var(--o); background:rgba(244,123,32,.1); padding:2px 9px; border-radius:20px}
@@ -477,7 +477,7 @@ const CSS = `
 .josr-link__arr{color:var(--o); flex-shrink:0}
 
 /* cta */
-.josr-cta{margin-top:56px; text-align:center; background:linear-gradient(135deg,var(--o),#ea580c); border-radius:24px; padding:44px 28px; color:#fff; box-shadow:0 20px 50px rgba(244,123,32,.34)}
+.josr-cta{margin-top:56px; text-align:center; background:linear-gradient(135deg,var(--o),#E0421F); border-radius:24px; padding:44px 28px; color:#fff; box-shadow:0 20px 50px rgba(244,123,32,.34)}
 .josr-cta h2{font-size:clamp(1.5rem,3.4vw,2.1rem); font-weight:800; margin:12px 0 8px}
 .josr-cta p{color:rgba(255,255,255,.92); max-width:560px; margin:0 auto 22px; line-height:1.6}
 .josr-cta__btns{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}

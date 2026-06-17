@@ -272,7 +272,7 @@ export default function Josaa2026() {
               <Sparkles size={13} /> JoSAA + CSAB 2026 Counselling
             </span>
             <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(2rem,4.5vw,3.1rem)", lineHeight: 1.12, margin: "16px 0 14px", color: "#1c1c28" }}>
-              Don't lose your dream college to a <span style={{ color: "#F47B20" }}>wrong choice list</span>.
+              Don't lose your dream college to a <span style={{ color: "#F15A38" }}>wrong choice list</span>.
             </h1>
             <p style={{ color: "rgba(28,28,40,.65)", fontSize: "1.1rem", maxWidth: 540, lineHeight: 1.6 }}>
               Get a personalised, data-backed JoSAA choice-filling plan and 1-on-1 mentorship from people who've done it — for just ₹299.
@@ -282,9 +282,9 @@ export default function Josaa2026() {
               <a href={WA} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 15, padding: "14px 22px" }}><MessageCircle size={17} /> Talk on WhatsApp</a>
             </div>
             <div style={{ display: "flex", gap: 20, marginTop: 24, flexWrap: "wrap", fontSize: 13.5, color: "rgba(28,28,40,.65)" }}>
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><BadgeCheck size={15} color="#F47B20" /> Built by IITians</span>
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Users size={15} color="#F47B20" /> 2,000+ students guided</span>
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Star size={15} color="#F47B20" fill="#F47B20" /> 4.8/5 rating</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><BadgeCheck size={15} color="#F15A38" /> Built by IITians</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Users size={15} color="#F15A38" /> 2,000+ students guided</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Star size={15} color="#F15A38" fill="#F15A38" /> 4.8/5 rating</span>
             </div>
           </div>
 
@@ -481,7 +481,7 @@ export default function Josaa2026() {
       </section>
 
       {/* FINAL CTA */}
-      <section style={{ background: "linear-gradient(135deg,var(--coral),#ea580c)", color: "#fff", padding: "56px 0", textAlign: "center" }}>
+      <section style={{ background: "linear-gradient(135deg,var(--coral),#E0421F)", color: "#fff", padding: "56px 0", textAlign: "center" }}>
         <div className="container">
           <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,3.5vw,2.3rem)", marginBottom: 10 }}>Counselling opens soon. Be ready.</h2>
           <p style={{ color: "rgba(255,255,255,.9)", maxWidth: 560, margin: "0 auto 22px" }}>Lock your ₹299 plan now and get your personalised choice list before the rush.</p>

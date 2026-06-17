@@ -27,7 +27,7 @@ function SquarePhotoCard({ dev }) {
       <div style={{
         position: "absolute", inset: -3,
         borderRadius: 20,
-        background: `linear-gradient(135deg, ${dev.accent}, #fbbf24, ${dev.accent}88, #ea580c, ${dev.accent})`,
+        background: `linear-gradient(135deg, ${dev.accent}, #fbbf24, ${dev.accent}88, #E0421F, ${dev.accent})`,
         backgroundSize: "300% 300%",
         animation: "photoGlowBorder 3s ease infinite",
         pointerEvents: "none",
@@ -77,7 +77,7 @@ function DevGlowLogo({ initials, accent, size = 110 }) {
       }} />
       <div style={{
         width: size, height: size, borderRadius: "50%",
-        background: `linear-gradient(135deg, ${accent} 0%, #ea580c 55%, #c2410c 100%)`,
+        background: `linear-gradient(135deg, ${accent} 0%, #E0421F 55%, #c2410c 100%)`,
         display: "grid", placeItems: "center",
         fontFamily: "Sora", fontWeight: 800, fontSize: size * 0.3, color: "#fff",
         boxShadow: `0 0 0 4px rgba(255,255,255,.15), 0 8px 40px ${accent}88, 0 0 80px ${accent}44`,
@@ -197,7 +197,7 @@ export default function Developer() {
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 18 }}>
                 <div style={{ color: "rgba(28,28,40,.65)", display: "flex", alignItems: "center", gap: 5, fontSize: 13.5 }}>
-                  <MapPin size={14} color="#F47B20" /> {dev.location}
+                  <MapPin size={14} color="#F15A38" /> {dev.location}
                 </div>
                 {dev.jeeRank && (
                   <div style={{

@@ -479,7 +479,7 @@ export default function JeeMain() {
           font-size: 13px; font-weight: 600; text-decoration: none;
           transition: all 0.18s;
         }
-        .nav-pill:hover { background: #F47B20; color: #fff; border-color: #F47B20; }
+        .nav-pill:hover { background: #F15A38; color: #fff; border-color: #F15A38; }
 
         .section-divider {
           height: 3px;
@@ -535,11 +535,10 @@ export default function JeeMain() {
               <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a "Page Unresponsive" pop-up, click <strong>"Wait"</strong> — do <em>not</em> click "Exit Page".
             </span>
           </div>
-          <div className="predictor-layout" style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
-            <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="predictor-layout" style={{ display: "block" }}>
+            <div style={{ minWidth: 0 }}>
               <CollegePredictorTool basePath="/jee-main" />
             </div>
-            <CounsellingCard exam="main" />
           </div>
         </Block>
       </div>

@@ -2,7 +2,7 @@
    EduReach — Global Stylesheet  v8
    Warm light theme · Sora + DM Sans
    Full mobile-responsive + overflow fix
-   Mobile: light bg + #F47B20 accents
+   Mobile: light bg + #F15A38 accents
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
@@ -18,10 +18,10 @@
   --navy-light:  #f0e8df;
   --navy-mid:    #e8dcd4;
   --navy-dark:   #d8ccbf;
-  --coral:       #F47B20;
-  --coral-light: #f9953d;
+  --coral:       #F15A38;
+  --coral-light: #f47a5e;
   --gold:        #f4a261;
-  --orange:      #F47B20;
+  --orange:      #F15A38;
   --teal:        #0ea5a4;
   --violet:      #f97316;
   --green:       #15a06e;
@@ -178,10 +178,10 @@ input,select,textarea { font-family:inherit; }
   border-radius:4px;
   transition:width .25s ease;
 }
-.desktop-nav a:hover { color:#F47B20; }
+.desktop-nav a:hover { color:#F15A38; }
 .desktop-nav a:hover::after,
 .desktop-nav a.active::after { width:100%; }
-.desktop-nav a.active { color:#F47B20; font-weight:600; }
+.desktop-nav a.active { color:#F15A38; font-weight:600; }
 
 /* Button-based nav items (JEE / Colleges / Tools …) — subtle lift + glow on hover */
 .desktop-nav > li > button {
@@ -204,7 +204,7 @@ input,select,textarea { font-family:inherit; }
 }
 .mega-item:hover {
   background:var(--mega-accent, rgba(244,123,32,.5));
-  background:color-mix(in srgb, var(--mega-accent, #F47B20) 10%, transparent);
+  background:color-mix(in srgb, var(--mega-accent, #F15A38) 10%, transparent);
   transform:translateX(2px);
 }
 .mega-col-head:hover { filter:brightness(.97); }
@@ -224,7 +224,7 @@ input,select,textarea { font-family:inherit; }
 
 /* Merged utility icon group (Help · Search · Compare · Wishlist) */
 .nav-icon-btn { background:transparent; color:#374151; }
-.nav-icon-btn:hover { background:rgba(244,123,32,.14); color:#F47B20; transform:translateY(-1px); }
+.nav-icon-btn:hover { background:rgba(244,123,32,.14); color:#F15A38; transform:translateY(-1px); }
 .nav-icon-btn:active { transform:translateY(0) scale(.94); }
 
 /* ── Unified navbar button colour effects — simple, dynamic ──────────────
@@ -234,7 +234,7 @@ input,select,textarea { font-family:inherit; }
 /* Standard links: Home · Colleges · Exams · Tools — warm orange wash */
 .nav-link-btn:hover {
   background:rgba(244,123,32,.12) !important;
-  color:#ea580c !important;
+  color:#E0421F !important;
   border-color:rgba(244,123,32,.3) !important;
   box-shadow:0 6px 16px -8px rgba(244,123,32,.55) !important;
 }
@@ -253,8 +253,8 @@ input,select,textarea { font-family:inherit; }
 /* Login / Logout ghost CTA — outline turns orange and lifts */
 .nav-ghost-cta { transition:transform .2s ease, border-color .2s ease, color .2s ease, background .2s ease, box-shadow .2s ease; }
 .nav-ghost-cta:hover {
-  border-color:#F47B20 !important;
-  color:#ea580c !important;
+  border-color:#F15A38 !important;
+  color:#E0421F !important;
   background:rgba(244,123,32,.07) !important;
   transform:translateY(-2px);
   box-shadow:0 8px 18px -8px rgba(244,123,32,.45);
@@ -264,7 +264,7 @@ input,select,textarea { font-family:inherit; }
 /* Sign Up primary CTA — solid fills into a lively gradient on hover */
 .nav-primary-cta { transition:transform .2s ease, box-shadow .2s ease, background-position .4s ease, background .3s ease; }
 .nav-primary-cta:hover {
-  background-image:linear-gradient(120deg,#F47B20 0%,#f97316 45%,#fb923c 100%) !important;
+  background-image:linear-gradient(120deg,#F15A38 0%,#f97316 45%,#fb923c 100%) !important;
   background-position:100% center;
   transform:translateY(-2px);
   box-shadow:0 10px 24px -6px rgba(244,123,32,.7);
@@ -280,7 +280,7 @@ input,select,textarea { font-family:inherit; }
   font-weight:600;
   transition:var(--transition);
 }
-.btn-nav-ghost:hover { background:rgba(244,123,32,.08); color:#F47B20; border-color:rgba(244,123,32,.4); }
+.btn-nav-ghost:hover { background:rgba(244,123,32,.08); color:#F15A38; border-color:rgba(244,123,32,.4); }
 .btn-nav-cta {
   background:var(--coral);
   color:#fff;
@@ -298,7 +298,7 @@ input,select,textarea { font-family:inherit; }
   width:42px; height:42px;
   border-radius:10px;
   border:1.5px solid rgba(244,123,32,.3);
-  color:#F47B20;
+  color:#F15A38;
   font-size:1.2rem;
   display:none;
   place-items:center;
@@ -328,7 +328,7 @@ input,select,textarea { font-family:inherit; }
   justify-content:space-between;
 }
 .mobile-drawer a:last-child { border-bottom:none; }
-.mobile-drawer a:hover { color:#F47B20; padding-left:.3rem; }
+.mobile-drawer a:hover { color:#F15A38; padding-left:.3rem; }
 .mobile-drawer .btn-nav-cta { width:100%; justify-content:center; margin-top:.5rem; text-align:center; }
 
 /* Mobile drawer logout button */
@@ -368,7 +368,7 @@ input,select,textarea { font-family:inherit; }
    HERO SECTION — no negative margins
 ════════════════════════════════════════════════ */
 .hero {
-  background:linear-gradient(160deg,#3d1800 0%,#7a3000 22%,#c25200 52%,#F47B20 78%,#f9953d 100%);
+  background:linear-gradient(160deg,#3d1800 0%,#7a3000 22%,#c25200 52%,#F15A38 78%,#f9953d 100%);
   padding:7rem 1.5rem 3.5rem;
   text-align:center;
   position:relative;
@@ -447,7 +447,7 @@ input,select,textarea { font-family:inherit; }
 }
 @keyframes rankGlow {
   from { box-shadow: 0 0 8px rgba(244,123,32,.5), 0 0 16px rgba(244,123,32,.25); }
-  to   { box-shadow: 0 0 20px rgba(244,123,32,.9), 0 0 40px rgba(244,123,32,.5), 0 0 6px #F47B20; }
+  to   { box-shadow: 0 0 20px rgba(244,123,32,.9), 0 0 40px rgba(244,123,32,.5), 0 0 6px #F15A38; }
 }
 @keyframes photoGlowBorder {
   0%   { background-position: 0% 50%; }
@@ -525,7 +525,7 @@ input,select,textarea { font-family:inherit; }
 }
 .hero-search input::placeholder { color:#9ca3af; }
 .hero-search button {
-  background:#F47B20;
+  background:#F15A38;
   color:#fff;
   padding:.95rem 1.6rem;
   font-weight:700;
@@ -652,7 +652,7 @@ input,select,textarea { font-family:inherit; }
   white-space:nowrap;
 }
 .btn-coral {
-  background: #F47B20;
+  background: #F15A38;
   color: #fff;
   box-shadow: 0 6px 18px rgba(244,123,32,.30);
 }
@@ -660,15 +660,15 @@ input,select,textarea { font-family:inherit; }
 /* Every site button is the same flat orange now (navbar buttons are excluded —
    they use their own inline styles). */
 .btn-ghost {
-  background: #F47B20;
+  background: #F15A38;
   color: #fff;
   border: none;
 }
 .btn-ghost:hover { background:#e36a14; transform:translateY(-1px); box-shadow: 0 8px 22px rgba(244,123,32,.4); }
-.btn-navy { background: #F47B20; color:#fff; border: none; }
+.btn-navy { background: #F15A38; color:#fff; border: none; }
 .btn-navy:hover { background: #e36a14; transform:translateY(-1px); }
 .btn-light {
-  background: #F47B20;
+  background: #F15A38;
   color: #fff;
   border: none;
 }
@@ -834,7 +834,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
 ════════════════════════════════════════════════ */
 .tabs { display:inline-flex; gap:.3rem; background: rgba(0,0,0,.05); border: 1px solid rgba(0,0,0,.1); padding:.3rem; border-radius:var(--radius-pill); flex-wrap:wrap; }
 .tab { padding:.55rem 1.2rem; border-radius:var(--radius-pill); font-weight:600; font-size:.88rem; color: #6b7280; transition:var(--transition); cursor:pointer; }
-.tab.active { background: #F47B20; color:#fff; box-shadow:0 4px 18px rgba(244,123,32,.45); }
+.tab.active { background: #F15A38; color:#fff; box-shadow:0 4px 18px rgba(244,123,32,.45); }
 
 /* ════════════════════════════════════════════════
    INFO BANNER
@@ -921,7 +921,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
 .cp-data-banner strong { color:#7a3000; font-weight:800; }
 .cp-data-banner-cta {
   font-weight:800;
-  background:linear-gradient(90deg,#F47B20,#ef4444 45%,#7c3aed 90%);
+  background:linear-gradient(90deg,#F15A38,#ef4444 45%,#7c3aed 90%);
   background-size:200% auto;
   -webkit-background-clip:text; background-clip:text;
   -webkit-text-fill-color:transparent; color:transparent;
@@ -932,7 +932,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
 /* ── "Explore full college details" colour-effect button ── */
 .cp-explore-btn {
   position:relative; overflow:hidden; border:none; color:#fff; font-weight:700;
-  background:linear-gradient(115deg,#F47B20,#ef4444 40%,#7c3aed 75%,#F47B20 100%);
+  background:linear-gradient(115deg,#F15A38,#ef4444 40%,#7c3aed 75%,#F15A38 100%);
   background-size:240% auto;
   box-shadow:0 4px 16px rgba(124,58,237,.28);
   animation:cpExploreFlow 6s linear infinite;
@@ -963,7 +963,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
 /* ════════════════════════════════════════════════
    PREDICTOR PROMO
 ════════════════════════════════════════════════ */
-.pred-promo { background:linear-gradient(135deg,#ffffff,#ffffff,#F47B20); border-radius:22px; padding:2.5rem; display:flex; align-items:center; gap:2rem; flex-wrap:wrap; }
+.pred-promo { background:linear-gradient(135deg,#ffffff,#ffffff,#F15A38); border-radius:22px; padding:2.5rem; display:flex; align-items:center; gap:2rem; flex-wrap:wrap; }
 .pred-promo h3 { font-size:1.5rem; font-weight:800; color:#1a1a2e; margin-bottom:.35rem; }
 .pred-promo p  { color:#4b5563; font-size:.9rem; max-width:420px; line-height:1.6; }
 
@@ -1036,7 +1036,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   margin-bottom:1rem;
 }
 .josaa-promo-inner h2 .highlight {
-  color:#F47B20;
+  color:#F15A38;
   position:relative;
 }
 .josaa-promo-inner p {
@@ -1068,7 +1068,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   place-items:center;
   flex-shrink:0;
   font-size:.7rem;
-  color:#F47B20;
+  color:#F15A38;
 }
 .josaa-price-card {
   background:linear-gradient(180deg,#fff 0%,#fff8f3 100%);
@@ -1111,7 +1111,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
 }
 .josaa-price-header-icon {
   width:42px; height:42px; border-radius:12px;
-  background:linear-gradient(135deg,#F47B20,#ea580c);
+  background:linear-gradient(135deg,#F15A38,#E0421F);
   border:1.5px solid rgba(255,255,255,.2);
   display:grid; place-items:center; flex-shrink:0;
   box-shadow:0 4px 14px rgba(244,123,32,.5);
@@ -1199,7 +1199,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   font-size:2.2rem;
   font-weight:700;
   margin-top:.45rem;
-  color:#F47B20;
+  color:#F15A38;
 }
 .josaa-new-price .josaa-per {
   font-size:1.15rem;
@@ -1220,7 +1220,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   font-weight:800;
   letter-spacing:1.2px;
   text-transform:uppercase;
-  color:#F47B20;
+  color:#F15A38;
   text-align:left;
   margin-bottom:.7rem;
 }
@@ -1315,7 +1315,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   box-shadow:0 1px 3px rgba(0,0,0,.06),0 28px 34px -6px rgba(244,123,32,.28),0 12px 12px -6px rgba(0,0,0,.06);
 }
 .plan-card--featured .josaa-price-header {
-  background:linear-gradient(135deg,#F47B20 0%,#ea580c 60%,#c2410c 100%);
+  background:linear-gradient(135deg,#F15A38 0%,#E0421F 60%,#c2410c 100%);
 }
 .plan-card--featured .josaa-price-header-glow {
   background:radial-gradient(circle,rgba(255,255,255,.28) 0%,transparent 70%);
@@ -1725,7 +1725,7 @@ table.data-table tbody tr:hover           { background: rgba(244,123,32,.07); }
   transform:translateY(-4px);
 }
 .gradient-text{
-  background:linear-gradient(90deg,#F47B20 0%,#fbbf24 50%,#F47B20 100%);
+  background:linear-gradient(90deg,#F15A38 0%,#fbbf24 50%,#F15A38 100%);
   background-size:200% auto;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -1841,7 +1841,7 @@ a.section-link:hover { color:var(--coral); transform:translateX(2px); display:in
 
 /* Gradient sweep on text */
 .glow-sweep-text {
-  background: linear-gradient(90deg, #F47B20 0%, #fbbf24 40%, #fff 50%, #fbbf24 60%, #F47B20 100%);
+  background: linear-gradient(90deg, #F15A38 0%, #fbbf24 40%, #fff 50%, #fbbf24 60%, #F15A38 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -2075,10 +2075,10 @@ textarea.input { width:100%; }
     grid-template-columns: 1fr !important;
   }
   .brand-logo             { color:#1a1a2e !important; }
-  .brand-logo .dot-in     { color:#F47B20 !important; }
+  .brand-logo .dot-in     { color:#F15A38 !important; }
   .hamburger {
     border:1.5px solid rgba(244,123,32,.35) !important;
-    color:#F47B20 !important;
+    color:#F15A38 !important;
     background:rgba(244,123,32,.08) !important;
   }
   .hamburger:hover        { background:rgba(244,123,32,.16) !important; }
@@ -2092,9 +2092,9 @@ textarea.input { width:100%; }
     color:#374151 !important;
     border-bottom-color:rgba(0,0,0,.07) !important;
   }
-  .mobile-drawer a:hover { color:#F47B20 !important; }
+  .mobile-drawer a:hover { color:#F15A38 !important; }
   .mobile-drawer .btn-nav-cta {
-    background:linear-gradient(135deg,#F47B20,#f9953d) !important;
+    background:linear-gradient(135deg,#F15A38,#f9953d) !important;
     color:#fff !important;
     box-shadow:0 4px 14px rgba(244,123,32,.30) !important;
   }
@@ -2104,7 +2104,7 @@ textarea.input { width:100%; }
   }
   .btn-nav-ghost:hover {
     background:rgba(244,123,32,.08) !important;
-    color:#F47B20 !important;
+    color:#F15A38 !important;
     border-color:rgba(244,123,32,.4) !important;
   }
   /* Mobile logout button on light bg */
@@ -2128,7 +2128,7 @@ textarea.input { width:100%; }
 
   /* ── Hero: dark background matching hero section ── */
   .hero {
-    background:linear-gradient(160deg,#3d1800 0%,#7a3000 22%,#c25200 52%,#F47B20 78%,#f9953d 100%) !important;
+    background:linear-gradient(160deg,#3d1800 0%,#7a3000 22%,#c25200 52%,#F15A38 78%,#f9953d 100%) !important;
     padding:2.8rem 1rem 2.2rem;
     width:100%;
   }
@@ -2161,7 +2161,7 @@ textarea.input { width:100%; }
   }
   .hero-search input   { color:#1c1c28; }
   .hero-search button  {
-    background: #F47B20 !important;
+    background: #F15A38 !important;
     color:#fff !important;
   }
 
@@ -2185,7 +2185,7 @@ textarea.input { width:100%; }
   .btn-predict,
   .btn-eligibility,
   .btn-nav-cta {
-    background: #F47B20 !important;
+    background: #F15A38 !important;
     color:#fff !important;
     box-shadow:0 6px 22px rgba(244,123,32,.45) !important;
   }
@@ -2200,7 +2200,7 @@ textarea.input { width:100%; }
 
   /* Ghost button */
   .btn-ghost {
-    background: #F47B20 !important;
+    background: #F15A38 !important;
     color:#fff !important;
     border:none !important;
   }
@@ -2212,7 +2212,7 @@ textarea.input { width:100%; }
 
   /* Light button */
   .btn-light {
-    background: #F47B20 !important;
+    background: #F15A38 !important;
     color: #fff !important;
     border: none !important;
   }
@@ -2261,7 +2261,7 @@ textarea.input { width:100%; }
 
   /* Promo */
   .pred-promo {
-    background:linear-gradient(135deg,#fff0e4 0%,#fde0c0 50%,#F47B20 100%) !important;
+    background:linear-gradient(135deg,#fff0e4 0%,#fde0c0 50%,#F15A38 100%) !important;
     flex-direction:column;
     padding:1.8rem;
   }
@@ -2279,7 +2279,7 @@ textarea.input { width:100%; }
   /* Tabs */
   .tab { color:#6b7280 !important; }
   .tab.active {
-    background:linear-gradient(135deg,#F47B20,#f9953d) !important;
+    background:linear-gradient(135deg,#F15A38,#f9953d) !important;
     color:#fff !important;
     box-shadow:0 4px 14px rgba(244,123,32,.32) !important;
   }
@@ -2287,13 +2287,13 @@ textarea.input { width:100%; }
   /* Eyebrow */
   .eyebrow {
     background:rgba(244,123,32,.10) !important;
-    color:#F47B20 !important;
+    color:#F15A38 !important;
   }
 
   /* Pill hover */
   .pill:hover {
-    background:#F47B20 !important;
-    border-color:#F47B20 !important;
+    background:#F15A38 !important;
+    border-color:#F15A38 !important;
     color:#fff !important;
   }
 
@@ -2303,9 +2303,9 @@ textarea.input { width:100%; }
   .footer-team-strip  { padding:1.2rem 1rem; }
 
   /* Progress bar & back-to-top */
-  #progress-bar  { background:linear-gradient(90deg,#F47B20,#f9953d) !important; }
+  #progress-bar  { background:linear-gradient(90deg,#F15A38,#f9953d) !important; }
   .back-to-top   {
-    background:linear-gradient(135deg,#F47B20,#f9953d) !important;
+    background:linear-gradient(135deg,#F15A38,#f9953d) !important;
     box-shadow:0 4px 20px rgba(244,123,32,.40) !important;
   }
   .back-to-top:hover {
@@ -2386,8 +2386,8 @@ textarea.input { width:100%; }
 }
 .news-ticker-dot {
   width:6px;height:6px;border-radius:50%;
-  background:#F47B20;
-  box-shadow:0 0 6px #F47B20;
+  background:#F15A38;
+  box-shadow:0 0 6px #F15A38;
   flex-shrink:0;
 }
 
@@ -2654,7 +2654,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 }
 .mfe-glow {
   position:absolute; inset:-2px; border-radius:20px; z-index:-1;
-  background:linear-gradient(135deg,#F47B20,#f5a623,#F47B20);
+  background:linear-gradient(135deg,#F15A38,#f5a623,#F15A38);
   filter:blur(15px); opacity:.5;
 }
 .mfe-close {
@@ -2676,7 +2676,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   font-weight:800; font-size:12px; cursor:pointer; transition:all .15s;
 }
 .mfe-toggle .mfe-toggle-on {
-  background:linear-gradient(135deg,#F47B20,#f5a623); color:#fff; border-color:transparent;
+  background:linear-gradient(135deg,#F15A38,#f5a623); color:#fff; border-color:transparent;
 }
 .mfe-exam {
   font-family:"Space Grotesk",sans-serif; font-weight:800;
@@ -2685,7 +2685,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 .mfe-cta {
   display:flex; align-items:center; justify-content:center; gap:7px; width:100%;
   padding:12px; border:none; border-radius:11px;
-  background:linear-gradient(135deg,#F47B20,#ea580c); color:#fff;
+  background:linear-gradient(135deg,#F15A38,#E0421F); color:#fff;
   font-family:"Space Grotesk",sans-serif; font-weight:800; font-size:14.5px;
   cursor:pointer; box-shadow:0 8px 20px rgba(244,123,32,.4); transition:filter .15s;
 }
@@ -2879,7 +2879,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 
 /* Animated gradient headline text */
 .auth-grad-text {
-  background: linear-gradient(90deg,#F47B20,#ea580c,#f59e0b,#F47B20);
+  background: linear-gradient(90deg,#F15A38,#E0421F,#f59e0b,#F15A38);
   background-size: 220% auto;
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
@@ -2981,7 +2981,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 }
 .faq-chip:hover { border-color: rgba(244,123,32,.45); color: var(--coral); }
 .faq-chip.is-active {
-  background: linear-gradient(135deg, #F47B20, #ea580c);
+  background: linear-gradient(135deg, #F15A38, #E0421F);
   border-color: transparent; color: #fff;
   box-shadow: 0 6px 18px rgba(244,123,32,.34);
 }
@@ -3045,7 +3045,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 /* soft animated colour aura that breathes behind the content */
 .josaa-price-aura {
   position: absolute; inset: -2px;
-  background: conic-gradient(from 0deg, #F47B20, #fbbf24, #ea580c, #F47B20);
+  background: conic-gradient(from 0deg, #F15A38, #fbbf24, #E0421F, #F15A38);
   filter: blur(26px);
   opacity: .18;
   animation: rotateBorder 9s linear infinite;
@@ -3055,7 +3055,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 .josaa-ribbon {
   position: absolute; top: 16px; right: -34px;
   transform: rotate(45deg);
-  background: linear-gradient(135deg,#ef4444,#ea580c);
+  background: linear-gradient(135deg,#ef4444,#E0421F);
   color: #fff; font-family: Sora, sans-serif; font-weight: 800; font-size: 11.5px;
   letter-spacing: .04em; padding: 5px 40px;
   box-shadow: 0 4px 12px rgba(234,88,12,.4);
@@ -3064,7 +3064,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 /* gradient, animated price figure */
 .josaa-price-amt {
   font-family: Sora, sans-serif; font-weight: 800; font-size: 3.1rem;
-  background: linear-gradient(90deg,#F47B20,#fbbf24,#ea580c,#F47B20);
+  background: linear-gradient(90deg,#F15A38,#fbbf24,#E0421F,#F15A38);
   background-size: 220% auto;
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
@@ -3434,7 +3434,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   width: 26px; height: 26px;
   border-radius: 50%;
   display: grid; place-items: center;
-  background: linear-gradient(135deg, #F47B20, #ea580c);
+  background: linear-gradient(135deg, #F15A38, #E0421F);
   color: #fff;
   font-family: "Sora", sans-serif;
   font-weight: 800;

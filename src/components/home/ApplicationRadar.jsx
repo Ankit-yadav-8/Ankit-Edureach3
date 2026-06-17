@@ -4,7 +4,7 @@ import { RADAR } from "../../data/counselling.js";
 
 const TONE = {
   red:    { bg: "rgba(239,68,68,.12)",   fg: "#dc2626", dot: "#ef4444", glow: "rgba(239,68,68,.28)",  border: "rgba(239,68,68,.30)",  pulse: true  },
-  orange: { bg: "rgba(244,123,32,.12)",  fg: "#c2540a", dot: "#F47B20", glow: "rgba(244,123,32,.28)", border: "rgba(244,123,32,.30)", pulse: true  },
+  orange: { bg: "rgba(244,123,32,.12)",  fg: "#c2540a", dot: "#F15A38", glow: "rgba(244,123,32,.28)", border: "rgba(244,123,32,.30)", pulse: true  },
   teal:   { bg: "rgba(14,165,164,.12)",  fg: "#0e7490", dot: "#0ea5a4", glow: "rgba(14,165,164,.24)", border: "rgba(14,165,164,.28)", pulse: false },
 };
 
@@ -89,7 +89,7 @@ export default function ApplicationRadar() {
             </span>
             <h2 className="section-title" style={{ color: "#1a1a2e", letterSpacing: "-1px", marginTop: 10 }}>
               Application &amp; Counselling{" "}
-              <span style={{ color: "#F47B20" }}>Radar</span>
+              <span style={{ color: "#F15A38" }}>Radar</span>
             </h2>
             <p className="section-sub" style={{ marginLeft: 0, color: "#4b5563" }}>
               Never miss a date — every major counselling and application window in one timeline.
@@ -107,7 +107,7 @@ export default function ApplicationRadar() {
                   width: 42, height: 42, borderRadius: "50%",
                   background: "rgba(244,123,32,.12)",
                   border: "1.5px solid rgba(244,123,32,.35)",
-                  color: "#F47B20",
+                  color: "#F15A38",
                   display: "grid", placeItems: "center",
                   cursor: "pointer", transition: "all .22s",
                 }}

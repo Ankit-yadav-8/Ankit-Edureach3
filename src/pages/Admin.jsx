@@ -7,7 +7,7 @@ import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
 
 const TOKEN_STORAGE = "edureach:adminToken";
-const ORANGE = "#F47B20";
+const ORANGE = "#F15A38";
 
 const fmtDate = (iso) => {
   if (!iso) return "—";

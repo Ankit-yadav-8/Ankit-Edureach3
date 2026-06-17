@@ -18,7 +18,6 @@ import { chanceTone } from "../components/home/clTheme.js";
 const TABS = [
   { key: "academics", label: "Academics & Outcomes", icon: GraduationCap },
   { key: "insights",  label: "Advanced Insights",    icon: TrendingUp },
-  { key: "colleges",  label: "Colleges & Branches",  icon: Building2 },
   { key: "myths",     label: "Common Myths",         icon: AlertCircle },
 ];
 
@@ -32,33 +31,41 @@ function Panel({ children, title, style }) {
   );
 }
 
-function GaugeArc({ value, color }) {
-  // semicircle gauge, green → amber → coral
+function GaugeArc({ value, color, riskLabel }) {
+  // semicircle gauge, green → amber → coral. Number + label sit BELOW the arc
+  // (no negative margins) so they never overlap the dial.
   const angle = -90 + (value / 100) * 180;
   return (
-    <div style={{ position: "relative", width: 200, height: 118, margin: "0 auto" }}>
-      <svg viewBox="0 0 200 110" width="200" height="110">
-        <defs>
-          <linearGradient id="gauge-cl" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor={CL.green} />
-            <stop offset="55%" stopColor={CL.amber} />
-            <stop offset="100%" stopColor={CL.coral} />
-          </linearGradient>
-        </defs>
-        <path d="M16 100 A 84 84 0 0 1 184 100" fill="none" stroke="url(#gauge-cl)" strokeWidth="16" strokeLinecap="round" />
-        {/* needle */}
-        <line
-          x1="100" y1="100"
-          x2={100 + 70 * Math.cos((angle - 90) * Math.PI / 180)}
-          y2={100 + 70 * Math.sin((angle - 90) * Math.PI / 180)}
-          stroke={CL.ink} strokeWidth="3.5" strokeLinecap="round"
-        />
-        <circle cx="100" cy="100" r="7" fill={CL.ink} />
-      </svg>
-      <div style={{ textAlign: "center", marginTop: -6 }}>
-        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 30, color }}>{value}</span>
+    <div style={{ textAlign: "center" }}>
+      <div style={{ position: "relative", width: 200, height: 112, margin: "0 auto" }}>
+        <svg viewBox="0 0 200 112" width="200" height="112">
+          <defs>
+            <linearGradient id="gauge-cl" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor={CL.green} />
+              <stop offset="55%" stopColor={CL.amber} />
+              <stop offset="100%" stopColor={CL.coral} />
+            </linearGradient>
+          </defs>
+          <path d="M16 100 A 84 84 0 0 1 184 100" fill="none" stroke="url(#gauge-cl)" strokeWidth="16" strokeLinecap="round" />
+          {/* needle */}
+          <line
+            x1="100" y1="100"
+            x2={100 + 68 * Math.cos((angle - 90) * Math.PI / 180)}
+            y2={100 + 68 * Math.sin((angle - 90) * Math.PI / 180)}
+            stroke={CL.ink} strokeWidth="3.5" strokeLinecap="round"
+          />
+          <circle cx="100" cy="100" r="7" fill={CL.ink} />
+        </svg>
+      </div>
+      <div style={{ marginTop: 10, display: "flex", alignItems: "baseline", justifyContent: "center", gap: 3 }}>
+        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 34, color, lineHeight: 1 }}>{value}</span>
         <span style={{ fontSize: 14, color: CL.muted, fontWeight: 600 }}>/100</span>
       </div>
+      {riskLabel && (
+        <div style={{ marginTop: 7, fontFamily: CL.display, fontWeight: 800, color, fontSize: 12.5, letterSpacing: ".05em" }}>
+          {riskLabel}
+        </div>
+      )}
     </div>
   );
 }
@@ -128,10 +135,10 @@ function Insights({ b }) {
     <div style={{ display: "grid", gap: 18 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 18 }}>
         <Panel title="AI Replaceability">
-          <GaugeArc value={b.stats.aiRisk} color={riskColor} />
-          <div style={{ textAlign: "center", marginTop: 6, fontFamily: CL.display, fontWeight: 800, color: riskColor, fontSize: 13, letterSpacing: ".04em" }}>
-            {b.aiRiskLabel}
-          </div>
+          <GaugeArc value={b.stats.aiRisk} color={riskColor} riskLabel={b.aiRiskLabel} />
+          <p style={{ marginTop: 14, fontSize: 12.5, color: CL.body, lineHeight: 1.55, textAlign: "center" }}>
+            How exposed this path's core work is to automation over the next decade.
+          </p>
         </Panel>
 
         <Panel title="Skills origin">
@@ -312,7 +319,6 @@ export default function BranchDetail() {
             transition={{ duration: 0.25 }}>
             {tab === "academics" && <Academics b={b} />}
             {tab === "insights" && <Insights b={b} />}
-            {tab === "colleges" && <Colleges b={b} />}
             {tab === "myths" && <Myths b={b} />}
           </motion.div>
         </AnimatePresence>

@@ -63,7 +63,7 @@ export default function PrivateDetail() {
             className="btn"
             style={{
               marginBottom: 18,
-              background: "#F47B20",
+              background: "#F15A38",
               color: "#fff",
               border: "none",
               fontWeight: 700,
@@ -71,13 +71,13 @@ export default function PrivateDetail() {
               transition: "all .2s",
             }}
             onMouseEnter={(e) => { e.currentTarget.style.background = "#e36a14"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#F47B20"; e.currentTarget.style.transform = ""; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#F15A38"; e.currentTarget.style.transform = ""; }}
           >
             <ArrowLeft size={16} /> Back
           </button>
           <span className="eyebrow">Private University · {u.exam}</span>
           <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", margin: "10px 0 4px", color: "#1c1c28" }}>{u.name}</h1>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(28,28,40,.65)", marginTop: 6 }}><MapPin size={16} color="#F47B20" /> {u.state} · Fees {u.fees}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(28,28,40,.65)", marginTop: 6 }}><MapPin size={16} color="#F15A38" /> {u.state} · Fees {u.fees}</div>
           <div style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
             <a
               href={u.apply}
@@ -95,12 +95,12 @@ export default function PrivateDetail() {
               className="btn"
               style={{
                 background: "#fff",
-                color: "#ea580c",
+                color: "#E0421F",
                 border: "1.5px solid rgba(244,123,32,.4)",
                 fontWeight: 700,
                 transition: "all .2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(244,123,32,.09)"; e.currentTarget.style.borderColor = "#F47B20"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(244,123,32,.09)"; e.currentTarget.style.borderColor = "#F15A38"; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(244,123,32,.4)"; }}
             >
               <Globe size={15} /> Website

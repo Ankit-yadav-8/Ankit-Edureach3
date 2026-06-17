@@ -30,11 +30,47 @@ const LOADING_TIPS = [
   "Ranking results by NIRF & branch value…",
 ];
 
+function domainOf(url) {
+  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return null; }
+}
+
+/* College "logo" pulled from Google's favicon service (the institute's own
+   site icon), with a coral monogram fallback when none is available. */
+function CollegeLogo({ slug, name }) {
+  const [err, setErr] = useState(false);
+  const college = COLLEGE_BY_SLUG[slug];
+  const domain  = college?.website ? domainOf(college.website) : null;
+  const initials = name.split(/\s+/).filter((w) => /^[A-Za-z]/.test(w)).slice(0, 3).map((w) => w[0]).join("").toUpperCase();
+  if (domain && !err) {
+    return (
+      <img
+        src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+        alt="" width={30} height={30} loading="lazy" onError={() => setErr(true)}
+        style={{ borderRadius: 8, flexShrink: 0, background: "#fff", border: "1px solid var(--line)", objectFit: "contain", padding: 2 }}
+      />
+    );
+  }
+  return (
+    <span style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(241,90,56,.12)", color: "#E0421F", display: "grid", placeItems: "center", fontSize: 9.5, fontWeight: 800, flexShrink: 0, fontFamily: "'Space Grotesk','Sora',sans-serif" }}>
+      {initials}
+    </span>
+  );
+}
+
 function RoundDetail({ row }) {
   const college   = COLLEGE_BY_SLUG[row.slug];
   const rounds    = row.roundData ?? [];
   const chart     = rounds.map((r) => ({ name: r.round, Opening: r.opening, Closing: r.closing }));
   const estimated = row.relaxMultiplier && row.relaxMultiplier !== 1;
+
+  const r1   = rounds[0];
+  const last = rounds[rounds.length - 1];
+  const statCards = [
+    { label: "Round 1 Opening", value: r1 ? fmtRank(r1.opening) : "—", color: "#0e9c90" },
+    { label: "Round 1 Closing", value: r1 ? fmtRank(r1.closing) : "—", color: "#F15A38" },
+    { label: "Final Closing",   value: last ? fmtRank(last.closing) : "—", color: "#6366f1" },
+    { label: "Avg Package",     value: row.avgPackage ? fmtINR(row.avgPackage) : "—", color: "#15a06e" },
+  ];
 
   return (
     <div style={{ padding: "16px 4px 4px" }}>
@@ -43,6 +79,17 @@ function RoundDetail({ row }) {
           {row.fullProgramName}
         </p>
       )}
+
+      {/* ── Cutoff snapshot stat cards ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 10, marginBottom: 16 }}>
+        {statCards.map((s) => (
+          <div key={s.label} style={{ background: "#fff", border: "1px solid var(--line)", borderRadius: 12, padding: "12px 14px", borderTop: `3px solid ${s.color}` }}>
+            <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: ".04em", color: "var(--muted)", textTransform: "uppercase", marginBottom: 4 }}>{s.label}</div>
+            <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 18, color: s.color }}>{s.value}</div>
+          </div>
+        ))}
+      </div>
+
       <div className="grid-2 rd-grid" style={{ gap: 18, alignItems: "start" }}>
         <div style={{ overflowX: "auto" }}>
           {rounds.length === 0 ? (
@@ -352,7 +399,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
           <div style={{
             width: 48, height: 48, borderRadius: "50%",
             border: "4px solid #f3f0ec",
-            borderTop: "4px solid #F47B20",
+            borderTop: "4px solid #F15A38",
             animation: "spin 0.8s linear infinite",
             margin: "0 auto 18px",
           }} />
@@ -486,15 +533,20 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
                           style={{ cursor: "pointer", background: isOpen ? "var(--sky)" : undefined }}
                         >
                           <td data-label="College">
-                            <Link
-                              to={`/colleges/${r.slug}`}
-                              onClick={(e) => e.stopPropagation()}
-                              style={{ fontWeight: 700, color: "var(--navy)" }}
-                            >
-                              {r.college}
-                            </Link>
-                            <div style={{ fontSize: 11, color: "var(--muted)", display: "flex", alignItems: "center", gap: 3 }}>
-                              <MapPin size={11} /> {r.state} · NIRF #{r.nirf}
+                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                              <CollegeLogo slug={r.slug} name={r.college} />
+                              <div>
+                                <Link
+                                  to={`/colleges/${r.slug}`}
+                                  onClick={(e) => e.stopPropagation()}
+                                  style={{ fontWeight: 700, color: "var(--navy)" }}
+                                >
+                                  {r.college}
+                                </Link>
+                                <div style={{ fontSize: 11, color: "var(--muted)", display: "flex", alignItems: "center", gap: 3 }}>
+                                  <MapPin size={11} /> {r.state} · NIRF #{r.nirf}
+                                </div>
+                              </div>
                             </div>
                           </td>
                           <td data-label="Branch">{r.branch}</td>

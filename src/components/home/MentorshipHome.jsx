@@ -14,7 +14,7 @@ const PROGRAMS = [
   {
     to: "/mentorship/jee-2027",
     icon: Trophy,
-    color: "#F47B20",
+    color: "#F15A38",
     exam: "JEE & NEET 2027",
     tag: "Class 12 · Droppers",
     price: "1",
@@ -76,7 +76,7 @@ export default function MentorshipHome() {
             </span>
             <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.8rem)", lineHeight: 1.12, letterSpacing: "-1px", color: "#1a1a2e", margin: "0 0 14px" }}>
               Know Your Path.{" "}
-              <span style={{ background: "linear-gradient(90deg,#F47B20,#f5a623)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Own Your Future.</span>
+              <span style={{ background: "linear-gradient(90deg,#F15A38,#f5a623)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Own Your Future.</span>
             </h2>
             <p style={{ color: "#4b5563", fontSize: "1.05rem", lineHeight: 1.75, maxWidth: 660, margin: "0 auto" }}>
               CollegeParichay's 1-on-1 mentorship helps serious JEE &amp; NEET aspirants cut through the confusion — a personal IITian / doctor mentor, daily accountability, and a plan that actually works. Pick the program that fits where you are.
@@ -166,7 +166,7 @@ export default function MentorshipHome() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", marginTop: 34 }}>
             {TRUST.map(({ icon: Icon, label }) => (
               <span key={label} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "9px 16px", borderRadius: 50, background: "#fff", border: "1px solid rgba(244,123,32,.22)", boxShadow: "0 2px 10px rgba(244,123,32,.08)", fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>
-                <Icon size={15} color="#F47B20" /> {label}
+                <Icon size={15} color="#F15A38" /> {label}
               </span>
             ))}
           </div>

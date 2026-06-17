@@ -83,7 +83,7 @@ function StatsBar({ isMobile, isXs }) {
   ];
 
   const palette = {
-    orange: { bg: "rgba(244,123,32,.18)",  border: "rgba(244,123,32,.35)", color: "#F47B20" },
+    orange: { bg: "rgba(244,123,32,.18)",  border: "rgba(244,123,32,.35)", color: "#F15A38" },
     teal:   { bg: "rgba(14,165,164,.15)",  border: "rgba(14,165,164,.30)", color: "#0ea5a4" },
     green:  { bg: "rgba(34,197,94,.13)",   border: "rgba(34,197,94,.28)",  color: "#22c55e" },
   };
@@ -275,12 +275,12 @@ function AboutUsCard() {
                     fontFamily: "'Sora', sans-serif",
                     fontWeight: 800,
                     fontSize: 13,
-                    color: "#F47B20",
+                    color: "#F15A38",
                     letterSpacing: "0.5px",
                   }}>CP</span>
                 </div>
         <div>
-          <div style={{ fontSize: 9.5, color: "#F47B20", fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>About Us</div>
+          <div style={{ fontSize: 9.5, color: "#F15A38", fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>About Us</div>
           <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#1c1c28", fontSize: "1rem" }}>College Parichay</div>
         </div>
         <span style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block", flexShrink: 0 }} />
@@ -296,7 +296,7 @@ function AboutUsCard() {
       }}>
         <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", marginBottom: 6 }}>Our Story</div>
         <p style={{ fontSize: 12, color: "rgba(28,28,40,.7)", lineHeight: 1.65, margin: 0 }}>
-          Built in an <span style={{ color: "#F47B20", fontWeight: 700 }}>IIT Roorkee</span> hostel room by students who lived the JoSAA chaos — and decided to fix it for everyone after them.
+          Built in an <span style={{ color: "#F15A38", fontWeight: 700 }}>IIT Roorkee</span> hostel room by students who lived the JoSAA chaos — and decided to fix it for everyone after them.
         </p>
       </div>
 
@@ -341,14 +341,14 @@ function AboutUsCard() {
         onClick={() => nav("/about")}
         style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: "#F47B20",
+          background: "#F15A38",
           color: "#fff", border: "none", borderRadius: 11,
           padding: "10px 14px", fontSize: 12.5, fontWeight: 800,
           fontFamily: "Sora", cursor: "pointer", marginTop: "auto",
           transition: "background .2s",
         }}
         onMouseEnter={(e) => { e.currentTarget.style.background = "#e36a14"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "#F47B20"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "#F15A38"; }}
       >
         Our Story <ArrowRight size={13} />
       </button>
@@ -361,7 +361,7 @@ function AboutUsCard() {
 ════════════════════════════════════════════════ */
 function DevProfileCard() {
   const nav = useNavigate();
-  const ACCENT = "#F47B20";
+  const ACCENT = "#F15A38";
   const SKILLS = ["React", "Node.js", "AI / GPT", "Python", "MongoDB", "REST APIs"];
 
   return (
@@ -408,7 +408,7 @@ function DevProfileCard() {
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <div style={{
           width: 56, height: 56, borderRadius: 14, flexShrink: 0,
-          background: `linear-gradient(135deg, ${ACCENT}, #ea580c)`,
+          background: `linear-gradient(135deg, ${ACCENT}, #E0421F)`,
           display: "grid", placeItems: "center",
           border: `2px solid ${ACCENT}66`,
           boxShadow: `0 0 22px ${ACCENT}44`,
@@ -455,7 +455,7 @@ function DevProfileCard() {
         onClick={() => nav("/developer")}
         style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: `linear-gradient(135deg, ${ACCENT}, #ea580c)`,
+          background: `linear-gradient(135deg, ${ACCENT}, #E0421F)`,
           color: "#fff", border: "none", borderRadius: 11,
           padding: "10px 14px", fontSize: 12.5, fontWeight: 700,
           fontFamily: "Sora", cursor: "pointer", marginTop: "auto",
@@ -573,7 +573,7 @@ function LiveCollegePanel({ isTablet }) {
         onClick={() => window.location.href = "/colleges"}
         style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: "linear-gradient(135deg, #F97316, #ea580c)",
+          background: "linear-gradient(135deg, #F97316, #E0421F)",
           color: "#fff", border: "none", borderRadius: 11,
           padding: isTablet ? "9px 12px" : "11px 16px",
           fontSize: isTablet ? 12 : 13, fontWeight: 700,
@@ -624,10 +624,10 @@ function MentorshipHeroCard({ isTablet }) {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <div style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(244,123,32,.12)", border: "1.5px solid rgba(244,123,32,.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-          <GraduationCap size={20} color="#F47B20" />
+          <GraduationCap size={20} color="#F15A38" />
         </div>
         <div>
-          <div style={{ fontSize: 9.5, color: "#F47B20", fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>1-on-1 Mentorship</div>
+          <div style={{ fontSize: 9.5, color: "#F15A38", fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>1-on-1 Mentorship</div>
           <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#1c1c28", fontSize: isTablet ? ".9rem" : "1rem" }}>JEE & NEET · 2027 · 2028</div>
         </div>
         <span style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block" }} />
@@ -670,7 +670,7 @@ function MentorshipHeroCard({ isTablet }) {
         onClick={() => nav("/mentorship/jee-2027")}
         style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: "#F47B20",
+          background: "#F15A38",
           color: "#fff", border: "none", borderRadius: 11,
           padding: isTablet ? "9px 12px" : "11px 16px",
           fontSize: isTablet ? 12 : 13, fontWeight: 800,
@@ -678,7 +678,7 @@ function MentorshipHeroCard({ isTablet }) {
           transition: "background .2s",
         }}
         onMouseEnter={(e) => { e.currentTarget.style.background = "#e36a14"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "#F47B20"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "#F15A38"; }}
       >
         Explore Mentorship <ArrowRight size={14} />
       </button>
@@ -694,7 +694,7 @@ function MentorshipHeroCard({ isTablet }) {
 ════════════════════════════════════════════════ */
 const HERO_CARDS = [
   {
-    key: "jee-main", accent: "#F47B20", Icon: Crosshair,
+    key: "jee-main", accent: "#F15A38", Icon: Crosshair,
     eyebrow: "Free Tool", title: "JEE Main Rank Predictor",
     rows: [
       ["Percentile → Rank", "Instant"],
@@ -866,7 +866,7 @@ const STORY_LINES = [
 ];
 
 const FEATURE_CARDS = [
-  { key: "jee-main", accent: "#F47B20", Icon: Crosshair, eyebrow: "Free Tool", title: "JEE Main",
+  { key: "jee-main", accent: "#F15A38", Icon: Crosshair, eyebrow: "Free Tool", title: "JEE Main",
     rows: [["Percentile → Rank", "Instant"], ["College chances", "IIT·NIT·IIIT"], ["Updated", "2026"]],
     cta: "Open JEE Main", to: "/jee-main" },
   { key: "jee-adv", accent: "#8b5cf6", Icon: Trophy, eyebrow: "Free Tool", title: "JEE Advanced",
@@ -985,7 +985,7 @@ function HeroFeatureCards({ isMobile, isXs }) {
    bottom CTA, with dot navigation.
 ════════════════════════════════════════════════ */
 const HERO_RADAR = [
-  { key: "jee-main", accent: "#F47B20", eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College Predictor",
+  { key: "jee-main", accent: "#F15A38", eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College Predictor",
     desc: "Turn your NTA percentile into a rank and see every IIT, NIT & IIIT you can get.",
     links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"], ["Exam dates & pattern", "/exams"]],
     cta: "Open JEE Main", to: "/jee-main" },
@@ -1123,7 +1123,7 @@ const HERO_LEFT = [
     highlights: ["ROI calc", "College map", "Choice list"],
     links: [["ROI / Fees Calculator", "/scholarships"], ["College Map View", "/map"], ["Choice Filling Helper", "/planner"], ["Colleges for You", "/for-you"]],
     cta: "Explore All Tools", to: "/for-you" },
-  { key: "colleges", accent: "#F47B20", Icon: GraduationCap, eyebrow: "850+ COLLEGES", title: "Explore Colleges",
+  { key: "colleges", accent: "#F15A38", Icon: GraduationCap, eyebrow: "850+ COLLEGES", title: "Explore Colleges",
     desc: "Verified reviews, year-wise cutoffs, placements and fees for every IIT, NIT, IIIT and top private university in India.",
     highlights: ["850+ listed", "Cutoffs", "Placements"],
     links: [["All IIT · NIT · IIIT", "/colleges"], ["Compare colleges side-by-side", "/compare"], ["Private universities", "/private-universities"], ["Colleges on the map", "/map"]],
@@ -1141,7 +1141,7 @@ const HERO_RIGHT = [
     highlights: ["Marks → AIR", "23 IITs", "Category-wise"],
     links: [["JEE Advanced Rank Predictor", "/jee-advanced"], ["Result & Rank List 2026", "/jee-advanced-result-2026"], ["IIT Cutoffs & branches", "/cutoffs"], ["JoSAA Round 1 result", "/josaa-round-1-result-2026"]],
     cta: "Open JEE Advanced", to: "/jee-advanced" },
-  { key: "jee-main", accent: "#F47B20", Icon: Crosshair, eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College",
+  { key: "jee-main", accent: "#F15A38", Icon: Crosshair, eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College",
     desc: "Turn your NTA percentile into a rank, then discover every IIT, NIT, IIIT and GFTI seat you can realistically get this year.",
     highlights: ["%ile → Rank", "NIT · IIIT", "2026 data"],
     links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"], ["Exam dates & pattern", "/exams"]],
@@ -1308,7 +1308,7 @@ function HeroRotatingCard({ slides, isMobile, interval = 4600, minHeight = 492 }
 ════════════════════════════════════════════════ */
 const SIX_CARDS = [
   { key: "jee-adv", Icon: Trophy, accent: "#8b5cf6", title: "JEE Advanced", desc: "Cutoffs · Predictor · IIT Seat Matrix", cta: "Explore JEE Advanced", to: "/jee-advanced" },
-  { key: "jee-main", Icon: GraduationCap, accent: "#F47B20", title: "JEE Mains", desc: "Rank Predict · NIT Cutoffs · Sessions", cta: "Explore JEE Mains", to: "/jee-main" },
+  { key: "jee-main", Icon: GraduationCap, accent: "#F15A38", title: "JEE Mains", desc: "Rank Predict · NIT Cutoffs · Sessions", cta: "Explore JEE Mains", to: "/jee-main" },
   { key: "neet", Icon: Stethoscope, accent: "#22c55e", title: "NEET", desc: "MBBS Colleges · State Cutoffs · AIQ", cta: "Explore NEET", to: "/neet" },
   { key: "mentorship", Icon: Users, accent: "#f5a623", title: "Mentorship", desc: "1-on-1 with IITian Mentors · Personalised Guidance", cta: "Book a Session", to: "/mentorship/jee-2027" },
   { key: "radar", Icon: Radar, accent: "#f97316", title: "Application & Counselling Radar", radar: true, colleges: ["IIT Bombay", "IIT Delhi", "NIT Trichy", "NIT Warangal", "BITS Pilani", "KIIT", "VIT"], cta: "View Radar", to: "/planner" },
@@ -1489,7 +1489,7 @@ export default function Hero({ onSearch }) {
                   display: "inline-flex", alignItems: "center", gap: 7,
                   background: "rgba(244,123,32,.10)",
                   border: "1px solid rgba(244,123,32,.30)",
-                  color: "#F47B20",
+                  color: "#F15A38",
                   fontSize: isXs ? 11 : 12, fontWeight: 700, letterSpacing: "0.5px",
                   padding: isXs ? "5px 12px" : "6px 16px", borderRadius: 50,
                   marginBottom: isXs ? 16 : 22,
@@ -1513,7 +1513,7 @@ export default function Hero({ onSearch }) {
               }}>
                 Know Your Rank.{" "}
                 <br />
-                <span style={{ color: "#F47B20" }}>Find Your College.</span>
+                <span style={{ color: "#F15A38" }}>Find Your College.</span>
               </h1>
 
               {/* IIT Roorkee startup line — brand identity + SEO signal.
@@ -1528,8 +1528,8 @@ export default function Hero({ onSearch }) {
                 whiteSpace: "nowrap",
                 maxWidth: "100%",
               }}>
-                <GraduationCap size={isXs ? 14 : 17} color="#F47B20" style={{ flexShrink: 0 }} />
-                An&nbsp;<span style={{ color: "#F47B20" }}>IIT Roorkee</span>&nbsp;startup — built by IITians, trusted by aspirants
+                <GraduationCap size={isXs ? 14 : 17} color="#F15A38" style={{ flexShrink: 0 }} />
+                An&nbsp;<span style={{ color: "#F15A38" }}>IIT Roorkee</span>&nbsp;startup — built by IITians, trusted by aspirants
               </div>
 
               <p style={{
@@ -1590,7 +1590,7 @@ export default function Hero({ onSearch }) {
                     fontWeight: 700,
                     whiteSpace: "nowrap",
                     flexShrink: 0,
-                    background: "#F47B20",
+                    background: "#F15A38",
                     color: "#fff",
                     boxShadow: "none",
                   }}
