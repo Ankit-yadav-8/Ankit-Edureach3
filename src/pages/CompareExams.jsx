@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { X, Plus, ArrowRight, GitCompare } from "lucide-react";
 import { EXAMS, EXAM_BY_SLUG } from "../data/exams.js";
 import Seo from "../components/Seo.jsx";
+import BackButton from "../components/BackButton.jsx";
 
 export default function CompareExams() {
   const [picked, setPicked] = useState(["jee-main", "jee-advanced"]);
@@ -23,6 +24,7 @@ export default function CompareExams() {
 
   return (
     <div className="page">
+      <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="Compare Engineering Exams — JEE Main vs Advanced vs BITSAT"
         description="Side-by-side comparison of JEE Main, JEE Advanced, BITSAT and other engineering entrance exams — pattern, eligibility, difficulty and cutoffs on CollegeParichay."

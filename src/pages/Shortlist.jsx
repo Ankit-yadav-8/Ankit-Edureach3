@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Seo from "../components/Seo.jsx";
+import BackButton from "../components/BackButton.jsx";
 import { Heart, MapPin, Trophy, ArrowRight, GitCompare, Share2, Printer, Check, Sparkles } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { COLLEGE_BY_SLUG, COLLEGES } from "../data/colleges.js";
@@ -46,6 +47,7 @@ export default function Shortlist() {
 
   return (
     <div className="page">
+      <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="Shortlist Your College"
         description="Build and share your personalised college shortlist on CollegeParichay — save IITs, NITs and IIITs, compare them side by side, and plan your JoSAA choices. Free by IIT Roorkee alumni."

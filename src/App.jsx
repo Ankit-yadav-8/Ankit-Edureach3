@@ -55,6 +55,7 @@ import BranchDetail from "./pages/BranchDetail.jsx";
 import BranchVsCollegePage from "./pages/BranchVsCollegePage.jsx";
 import ExamBuzz from "./pages/ExamBuzz.jsx";
 import Blog from "./pages/Blog.jsx";
+import BlogPost from "./pages/BlogPost.jsx";
 import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
@@ -171,6 +172,7 @@ export default function App() {
           <Route path="/branch-vs-college" element={<BranchVsCollegePage />} />
           <Route path="/exam-buzz" element={<ExamBuzz />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

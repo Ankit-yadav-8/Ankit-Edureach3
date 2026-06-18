@@ -4,6 +4,7 @@ import { MapPin, Layers, ArrowRight } from "lucide-react";
 import { COLLEGES } from "../data/colleges.js";
 import { fmtINR } from "../utils/format.js";
 import Seo from "../components/Seo.jsx";
+import BackButton from "../components/BackButton.jsx";
 
 const TYPE_COLOR = { IIT: "#F15A38", NIT: "#0ea5a4", IIIT: "#d97706", Private: "#15803d" };
 const TYPES = ["All", "IIT", "NIT", "IIIT"];
@@ -65,6 +66,7 @@ export default function CollegeMap() {
       />
       <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "44px 0" }}>
         <div className="container">
+          <BackButton style={{ marginBottom: 16 }} />
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Interactive Map</span>
           <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.5rem)", margin: "8px 0 4px" }}>Colleges on the map</h1>
           <p style={{ color: "var(--muted)" }}>All {COLLEGES.length} engineering colleges — IITs, NITs &amp; IIITs pinned across India.</p>

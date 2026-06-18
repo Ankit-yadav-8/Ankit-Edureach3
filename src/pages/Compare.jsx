@@ -7,6 +7,7 @@ import { realFinalClose2025 } from "../utils/cutoffEngine.js";
 import { Bars } from "../components/Charts.jsx";
 import { fmtINR, fmtRank } from "../utils/format.js";
 import Seo from "../components/Seo.jsx";
+import BackButton from "../components/BackButton.jsx";
 
 export default function Compare() {
   const { compare, toggleCompare, MAX_COMPARE } = useShortlist();
@@ -35,6 +36,7 @@ export default function Compare() {
 
   return (
     <div className="page">
+      <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="Compare Colleges — IIT vs NIT vs IIIT Side by Side"
         description="Compare IITs, NITs and IIITs side by side — JoSAA cutoffs, placements, average package, fees and branches — to make the right counselling choice on CollegeParichay."

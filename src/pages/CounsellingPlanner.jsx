@@ -7,6 +7,7 @@ import { useCollegePredictor } from "../hooks/useCollegePredictor.js";
 import { CATEGORIES, BRANCHES, STATES } from "../data/colleges.js";
 import { fmtRank, fmtINR } from "../utils/format.js";
 import Seo from "../components/Seo.jsx";
+import BackButton from "../components/BackButton.jsx";
 
 export default function CounsellingPlanner() {
   const [form, setForm] = useState({ rank: "", category: "OPEN", state: "", branch: "", exam: "advanced" });
@@ -54,6 +55,7 @@ export default function CounsellingPlanner() {
 
   return (
     <div className="page">
+      <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="JoSAA Counselling Planner — Build Your Choice-Filling Order"
         description="Free JoSAA 2026 counselling planner — arrange your IIT/NIT/IIIT choice list in the smartest order based on your rank, category and preferences, by IIT Roorkee alumni."

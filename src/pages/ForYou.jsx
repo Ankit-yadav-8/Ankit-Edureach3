@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Seo from "../components/Seo.jsx";
+import BackButton from "../components/BackButton.jsx";
 import { useNavigate } from "react-router-dom";
 import { Reorder } from "framer-motion";
 import { Sparkles, MapPin, Trophy, ArrowRight, Wand2, Loader2, Award, GraduationCap, Download, Plus, Check, X, GripVertical, ListOrdered, Trash2 } from "lucide-react";
@@ -178,6 +179,7 @@ export default function ForYou() {
 
   return (
     <div className="page">
+      <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="College For You — Personalised IIT NIT IIIT Shortlist by JEE Rank"
         description="Get a personalised list of IITs, NITs and IIITs you can get with your JEE rank, category, home state and branch preference. Free college shortlist tool based on JoSAA cutoffs."
