@@ -19,12 +19,12 @@ export default function BlogFab() {
       style={{
         position: "fixed", right: 0, top: "50%", transform: "translateY(-50%)",
         zIndex: 1300,
-        display: "flex", alignItems: "center", gap: 7,
-        padding: "11px 13px", border: "none", cursor: "pointer",
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 9,
+        padding: "13px", minHeight: 168, border: "none", cursor: "pointer",
         background: "linear-gradient(135deg, #F15A38, #E0421F)", color: "#fff",
         borderRadius: "14px 0 0 14px",
         boxShadow: "0 10px 26px -8px rgba(241,90,56,.6)",
-        fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 12.5,
+        fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 13, letterSpacing: ".04em",
         writingMode: "vertical-rl",
       }}
     >

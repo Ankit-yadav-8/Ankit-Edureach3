@@ -11,15 +11,15 @@ export default function Branches() {
   const nav = useNavigate();
   useEffect(() => { document.title = "Branch Catalog — 220+ engineering branches · College Parichay"; }, []);
 
-  const goBack = () => { if (window.history.length > 1) nav(-1); else nav("/"); };
+  const goHome = () => nav("/");
 
   return (
     <div style={{ background: CL.cream2, paddingTop: 110, minHeight: "100vh" }}>
       <Seo path="/branches" />
       <div className="container" style={{ marginBottom: 8 }}>
         <button
-          onClick={goBack}
-          aria-label="Go back"
+          onClick={goHome}
+          aria-label="Back to home"
           style={{
             display: "inline-flex", alignItems: "center", gap: 8, color: CL.ink,
             fontSize: 13.5, fontWeight: 700, fontFamily: CL.display,

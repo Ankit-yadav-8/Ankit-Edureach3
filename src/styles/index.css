@@ -309,6 +309,21 @@ input,select,textarea { font-family:inherit; }
 }
 .hamburger:hover { background:rgba(244,123,32,.14); }
 
+/* Mobile-only quick-action icons (account / community) beside the menu.
+   Hidden on desktop; shown on tablet/phone alongside the hamburger. */
+.nav-mobile-ic {
+  width:42px; height:42px;
+  border-radius:10px;
+  border:1.5px solid rgba(244,123,32,.3);
+  background:rgba(244,123,32,.06);
+  display:none;
+  place-items:center;
+  cursor:pointer;
+  transition:background .15s ease, transform .15s ease;
+}
+.nav-mobile-ic:hover { background:rgba(244,123,32,.14); transform:translateY(-1px); }
+.nav-mobile-ic:active { transform:scale(.94); }
+
 /* Mobile drawer */
 .mobile-drawer {
   background:rgba(255,252,249,.99);
@@ -1935,6 +1950,7 @@ textarea.input { width:100%; }
   .desktop-nav  { display:none !important; }
   .cta-desktop  { display:none !important; }
   .hamburger    { display:grid !important; }
+  .nav-mobile-ic { display:grid !important; }
   .hero-grid { grid-template-columns: 1fr 300px !important; }
   .hero-about-col:first-child { display: none !important; }
   .college-grid { grid-template-columns:repeat(3,1fr); }
@@ -1964,6 +1980,7 @@ textarea.input { width:100%; }
   .desktop-nav  { display:none !important; }
   .cta-desktop  { display:none !important; }
   .hamburger    { display:grid !important; }
+  .nav-mobile-ic { display:grid !important; }
   .college-grid { grid-template-columns:repeat(3,1fr); }
   .footer-grid  { grid-template-columns:repeat(2,1fr); gap:2rem; }
   .features-grid{ grid-template-columns:repeat(2,1fr); }
@@ -1980,6 +1997,7 @@ textarea.input { width:100%; }
 /* ≥1280px: MacBook Air 13" and up — full desktop nav */
 @media (min-width:1280px) {
   .hamburger     { display:none !important; }
+  .nav-mobile-ic { display:none !important; }
   .mobile-drawer { display:none !important; }
   .desktop-nav   { display:flex !important; }
   .cta-desktop   { display:flex !important; }

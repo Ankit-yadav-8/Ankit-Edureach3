@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronDown, Search, Target, Menu, X,
+  ChevronDown, Search, Target, Menu, X, User,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut, Sparkles,
   HelpCircle, Newspaper, Flame, Medal, Megaphone, Globe2,
@@ -203,7 +203,6 @@ export default function Navbar({ onSearch }) {
     { label: "Mentorship", drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
     { label: "Colleges", drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Exam Buzz", mega: EXAM_NEWS_MEGA, base: "/exams", match: (p) => p.startsWith("/exam") || p.startsWith("/compare-exams") || p.startsWith("/news") || p.startsWith("/josaa-round-1") },
-    { label: "Blog", to: "/blog", match: (p) => p.startsWith("/blog") },
     { label: "Tools", mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa"].some((x) => p.startsWith(x)) },
   ];
 
@@ -470,8 +469,16 @@ export default function Navbar({ onSearch }) {
               </button>
             </>
           )}
+          {/* Mobile-only quick icons — account + community sit to the right of
+              the menu, with the same small edge padding as the logo on the left. */}
+          <button className="nav-mobile-ic" onClick={() => (isLoggedIn ? navigate("/dashboard") : openLogin())} aria-label="Account">
+            <User size={20} color="var(--navy)" />
+          </button>
+          <button className="nav-mobile-ic" onClick={() => navigate("/community")} aria-label="Community">
+            <Globe2 size={20} color="var(--navy)" />
+          </button>
           <button className="hamburger" onClick={() => { setExpandedSection(null); setMobileOpen(true); }} aria-label="Menu" style={{ display: "none" }}>
-            <Menu size={24} color="var(--navy)" />
+            <Menu size={22} color="var(--navy)" />
           </button>
         </div>
       </nav>
