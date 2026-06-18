@@ -68,8 +68,8 @@ html {
   overflow-x:hidden !important;
   width:100%;
   max-width:100%;
-  /* Slightly smaller base so rem-based type across the site eases down ~5%. */
-  font-size:15.2px;
+  /* Slightly smaller base so rem-based type across the site eases down ~8%. */
+  font-size:14.7px;
 }
 body {
   font-family:"DM Sans",sans-serif;

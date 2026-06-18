@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Seo from "../components/Seo.jsx";
+import PageHero from "../components/home/PageHero.jsx";
 import { EXAM_BY_SLUG } from "../data/exams.js";
 import RankPredictorTool from "../components/predictor/RankPredictorTool.jsx";
 import CollegePredictorTool from "../components/predictor/CollegePredictorTool.jsx";
@@ -488,20 +489,18 @@ export default function JeeMain() {
         }
       `}</style>
 
-      {/* ── Hero ── */}
-      <section className="warm-page-header" style={{ padding: "36px 0 28px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 90%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
-        <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <span className="eyebrow" style={{ marginBottom: 14, display: "inline-flex" }}>JEE Main 2026</span>
-          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.9rem,4vw,2.8rem)", margin: "0 0 10px", lineHeight: 1.2, color: "#1c1c28" }}>
-            JEE Main — Rank &amp; College Predictor Hub
-          </h1>
-          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 620, marginBottom: 0 }}>
-            Predict your rank, find every NIT/IIIT/GFTI you qualify for, analyse session-wise difficulty, and follow the complete syllabus, study roadmap &amp; top coaching options.
-          </p>
-        </div>
-      </section>
+      {/* ── Hero (blog-style) ── */}
+      <PageHero
+        eyebrow="JEE Main 2026" eyebrowIcon={Target} accent="#F15A38"
+        titleLead="JEE Main —" highlight="rank & college" titleTail="" highlightTail="predictor hub."
+        sub="Predict your rank, find every NIT, IIIT & GFTI you qualify for, analyse session-wise difficulty, and follow the complete syllabus, roadmap & coaching options."
+        cta={{ label: "Predict my rank", to: "#rank" }}
+        cards={[
+          { icon: Calculator, accent: "#F15A38", category: "Tool", title: "JEE Main Rank Predictor", meta: "Marks → percentile → CRL", badge: "LIVE" },
+          { icon: Target, accent: "#0ea5a4", category: "Tool", title: "College Predictor", meta: "Every NIT · IIIT · GFTI", badge: "LIVE" },
+          { icon: TrendingUp, accent: "#6366f1", category: "Trends", title: "Qualifying Cutoffs 2021–25", meta: "Category-wise percentile" },
+        ]}
+      />
       {/* #cutoffs anchor kept for the "Top Cutoffs" sub-nav pill */}
       <div id="cutoffs" style={{ scrollMarginTop: 90 }} />
 

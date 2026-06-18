@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Seo from "../components/Seo.jsx";
+import PageHero from "../components/home/PageHero.jsx";
 import { EXAM_BY_SLUG } from "../data/exams.js";
 import RankPredictorTool from "../components/predictor/RankPredictorTool.jsx";
 import CollegePredictorTool from "../components/predictor/CollegePredictorTool.jsx";
@@ -620,20 +621,18 @@ export default function JeeAdvanced() {
         }
       `}</style>
 
-      {/* ── Hero ── */}
-      <section className="warm-page-header" style={{ padding: "36px 0 28px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(124,58,237,.18) 0%, transparent 60%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 90%, rgba(167,139,250,.14) 0%, transparent 60%)" }} />
-        <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <span className="eyebrow" style={{ marginBottom: 14, display: "inline-flex" }}>JEE Advanced 2026</span>
-          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.9rem,4vw,2.8rem)", margin: "0 0 10px", lineHeight: 1.2, color: "#1c1c28" }}>
-            JEE Advanced — IIT Rank &amp; Seat Predictor Hub
-          </h1>
-          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 620, marginBottom: 0 }}>
-            Estimate your IIT rank, find which IIT branches you qualify for, analyse Paper 1 &amp; 2 difficulty subject-wise, and explore the complete syllabus, study roadmap &amp; top coaching options.
-          </p>
-        </div>
-      </section>
+      {/* ── Hero (blog-style) ── */}
+      <PageHero
+        eyebrow="JEE Advanced 2026" eyebrowIcon={Building2} accent="#7C3AED"
+        titleLead="JEE Advanced —" highlight="IIT rank & seat" titleTail="" highlightTail="predictor hub."
+        sub="Estimate your IIT rank, find which IIT branches you qualify for, analyse Paper 1 & 2 difficulty subject-wise, and explore the syllabus, roadmap & coaching."
+        cta={{ label: "Estimate my IIT rank", to: "#rank" }}
+        cards={[
+          { icon: Calculator, accent: "#7C3AED", category: "Tool", title: "JEE Advanced Rank Predictor", meta: "Marks → All-India Rank", badge: "LIVE" },
+          { icon: Building2, accent: "#F15A38", category: "Tool", title: "IIT Branch Predictor", meta: "All 23 IITs · category-wise", badge: "LIVE" },
+          { icon: TrendingUp, accent: "#0ea5a4", category: "Trends", title: "Qualifying Cutoffs 2021–26", meta: "Aggregate marks out of 360" },
+        ]}
+      />
       {/* #cutoffs anchor kept for the "IIT Cutoffs" sub-nav pill */}
       <div id="cutoffs" style={{ scrollMarginTop: 90 }} />
 

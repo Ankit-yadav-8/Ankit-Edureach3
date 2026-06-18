@@ -30,7 +30,10 @@ const QUESTIONS = [
     options: [
       { label: "A top IIT/NIT with an average branch", lean: "college", w: 2 },
       { label: "A mid-tier college with my dream branch", lean: "branch", w: 2 },
+      { label: "A top IIT/NIT with a decent (not dream) branch", lean: "college", w: 2 },
+      { label: "A great branch even at a lesser-known college", lean: "branch", w: 2 },
       { label: "Whichever has better placements overall", lean: "college", w: 1 },
+      { label: "The one my dream branch is in, location aside", lean: "branch", w: 1 },
     ],
   },
   {
@@ -39,6 +42,9 @@ const QUESTIONS = [
       { label: "Crystal clear — I know my exact branch", lean: "branch", w: 2 },
       { label: "Broadly know the field, not the exact branch", lean: "branch", w: 1 },
       { label: "Still exploring — I want options open", lean: "college", w: 2 },
+      { label: "Two or three branches in mind, not decided", lean: "branch", w: 1 },
+      { label: "No idea yet — the college matters more", lean: "college", w: 2 },
+      { label: "I'll figure it out once I'm on campus", lean: "college", w: 1 },
     ],
   },
   {
@@ -47,6 +53,9 @@ const QUESTIONS = [
       { label: "Brand recognition on my resume", lean: "college", w: 2 },
       { label: "Specific, in-demand domain skills", lean: "branch", w: 2 },
       { label: "Strong on-campus placement pipeline", lean: "college", w: 1 },
+      { label: "Doing work I'm genuinely interested in", lean: "branch", w: 2 },
+      { label: "The salary and the company name", lean: "college", w: 2 },
+      { label: "Flexibility to switch roles later", lean: "branch", w: 1 },
     ],
   },
   {
@@ -55,6 +64,9 @@ const QUESTIONS = [
       { label: "A lot — I grow with ambitious people around me", lean: "college", w: 2 },
       { label: "Somewhat — but I can self-drive anywhere", lean: "branch", w: 1 },
       { label: "Not much — the subject is what I care about", lean: "branch", w: 2 },
+      { label: "The network and seniors are a big draw", lean: "college", w: 2 },
+      { label: "I value labs and faculty over peers", lean: "branch", w: 1 },
+      { label: "Fests, clubs and campus life matter to me", lean: "college", w: 1 },
     ],
   },
   {
@@ -63,6 +75,9 @@ const QUESTIONS = [
       { label: "Keep options open — MS, startup, or pivot", lean: "college", w: 2 },
       { label: "Build deep expertise and stay in my domain", lean: "branch", w: 2 },
       { label: "Crack a great first job, then decide", lean: "college", w: 1 },
+      { label: "Research / higher studies in my subject", lean: "branch", w: 2 },
+      { label: "Civil services / management / non-core", lean: "college", w: 2 },
+      { label: "Start up around something I'm passionate about", lean: "branch", w: 1 },
     ],
   },
 ];
@@ -113,30 +128,38 @@ function StepDots({ total, current }) {
 
 const FACTOR_COLORS = [CL.coral, CL.green, CL.amber, CL.blue, CL.violet];
 
-/* Weights stacked inside a pan — a little dot per "point" leaning that way. */
-function PanWeights({ count, cx, cy, color }) {
-  const n = Math.min(count, 8);
-  return Array.from({ length: n }).map((_, i) => {
-    const row = Math.floor(i / 4);
-    const inRow = Math.min(4, n - row * 4);
-    const x = cx - (inRow - 1) * 5 + (i % 4) * 10;
-    const y = cy - 4 - row * 8;
-    return (
-      <motion.circle
-        key={i} cx={x} cy={y} r="3.4" fill={color}
-        initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: "spring", stiffness: 320, damping: 18, delay: i * 0.03 }}
-      />
-    );
-  });
+/* A small head-to-head tower whose height grows with that side's points. */
+function Tower({ pct, color, soft, label, points, big }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, flex: 1 }}>
+      <div style={{ position: "relative", width: "100%", maxWidth: big ? 92 : 78, height: big ? 150 : 124, borderRadius: 16, background: soft, overflow: "hidden", display: "flex", alignItems: "flex-end", border: `1px solid ${color}33` }}>
+        <motion.div
+          animate={{ height: `${Math.max(8, pct)}%` }}
+          transition={{ type: "spring", stiffness: 90, damping: 14 }}
+          style={{ width: "100%", background: `linear-gradient(180deg, ${color}, ${color}cc)`, display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 8 }}
+        >
+          <span style={{ color: "#fff", fontFamily: CL.display, fontWeight: 800, fontSize: big ? 16 : 14 }}>{pct}%</span>
+        </motion.div>
+      </div>
+      <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 15 : 13.5, color }}>{label}</div>
+      <span style={{ fontSize: 11, fontWeight: 700, color, background: soft, border: `1px solid ${color}33`, padding: "3px 11px", borderRadius: 50 }}>{points} pts</span>
+    </div>
+  );
 }
 
-/* Animated weighing-machine balance — tilts toward Branch or College and the
-   pans fill with weights as answers come in. `tilt` is -1 (branch) … +1 (college). */
+/* Animated "balance meter" — an original head-to-head design (twin towers +
+   a sliding centre marker) that reacts live as answers come in.
+   `tilt` is -1 (branch) … +1 (college). */
 export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total = 6, big = false, showMeta = true }) {
-  const angle = Math.max(-14, Math.min(14, tilt * 14)); // degrees, + = college (right) down
-  const dyL = Math.round(-Math.sin((angle * Math.PI) / 180) * 95); // left pan vertical shift
-  const dyR = -dyL;
+  const sum = tally.c + tally.b;
+  const collegePct = sum ? Math.round((tally.c / sum) * 100) : 50;
+  const branchPct = 100 - collegePct;
+  const even = tally.c === tally.b;
+  const leadCollege = tally.c > tally.b;
+  const leadColor = !sum || even ? CL.muted : leadCollege ? CL.green : CL.coral;
+  const leadPct = Math.max(collegePct, branchPct);
+  const spring = { type: "spring", stiffness: 90, damping: 14 };
+
   return (
     <div style={{
       background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`,
@@ -145,52 +168,36 @@ export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total
     }}>
       {showMeta && (
         <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".12em", color: CL.muted, textTransform: "uppercase", textAlign: "center" }}>
-          {tally.c + tally.b ? "Your leaning so far" : "Watch the scale decide"}
+          Your leaning so far
         </div>
       )}
 
-      <div style={{ flex: 1, display: "grid", placeItems: "center", minHeight: big ? 260 : 200 }}>
-        <svg viewBox="0 0 300 210" width="100%" style={{ maxWidth: big ? 420 : 320 }}>
-          {/* base + stand */}
-          <ellipse cx="150" cy="190" rx="56" ry="9" fill="rgba(33,29,46,.08)" />
-          <rect x="118" y="182" width="64" height="9" rx="4" fill={CL.ink} />
-          <rect x="146" y="58" width="8" height="128" rx="4" fill="#8a6b5e" />
-          <motion.circle cx="150" cy="58" r="8" fill={CL.coral}
-            animate={{ opacity: [1, 0.5, 1], scale: [1, 1.18, 1] }}
-            transition={{ duration: 2, repeat: Infinity }} />
-
-          {/* beam (rotates around the pivot) */}
-          <motion.g
-            animate={{ rotate: angle }}
-            transition={{ type: "spring", stiffness: 80, damping: 11 }}
-            style={{ transformOrigin: "150px 58px" }}
-          >
-            <rect x="42" y="54" width="216" height="8" rx="4" fill="#6f4f43" />
-            <circle cx="60" cy="58" r="4" fill="#6f4f43" />
-            <circle cx="240" cy="58" r="4" fill="#6f4f43" />
-          </motion.g>
-
-          {/* left pan (Branch) — hangs from the beam end, shifts vertically with tilt */}
-          <motion.g animate={{ y: dyL }} transition={{ type: "spring", stiffness: 80, damping: 11 }}>
-            <line x1="60" y1="58" x2="40" y2="96" stroke="#b3a399" strokeWidth="1.6" />
-            <line x1="60" y1="58" x2="80" y2="96" stroke="#b3a399" strokeWidth="1.6" />
-            <path d="M34 96 A26 15 0 0 0 86 96 Z" fill={CL.coralSoft} stroke={CL.coral} strokeWidth="2" />
-            <PanWeights count={tally.b} cx={60} cy={96} color={CL.coral} />
-          </motion.g>
-
-          {/* right pan (College) */}
-          <motion.g animate={{ y: dyR }} transition={{ type: "spring", stiffness: 80, damping: 11 }}>
-            <line x1="240" y1="58" x2="220" y2="96" stroke="#b3a399" strokeWidth="1.6" />
-            <line x1="240" y1="58" x2="260" y2="96" stroke="#b3a399" strokeWidth="1.6" />
-            <path d="M214 96 A26 15 0 0 0 266 96 Z" fill={CL.greenSoft} stroke={CL.green} strokeWidth="2" />
-            <PanWeights count={tally.c} cx={240} cy={96} color={CL.green} />
-          </motion.g>
-        </svg>
+      {/* live readout */}
+      <div style={{ textAlign: "center", margin: big ? "12px 0 16px" : "8px 0 14px" }}>
+        <motion.div key={`${leadPct}-${leadCollege}`} initial={{ scale: 0.82, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={spring}
+          style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 44 : 38, color: leadColor, lineHeight: 1 }}>
+          {sum ? `${leadPct}%` : "50 / 50"}
+        </motion.div>
+        <div style={{ fontSize: 12.5, fontWeight: 700, color: leadColor, marginTop: 6 }}>
+          {!sum ? "Answer to see it tilt live" : even ? "Evenly balanced — keep going" : leadCollege ? "Leaning College" : "Leaning Branch"}
+        </div>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between", padding: "0 8px", marginTop: 2 }}>
-        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 15 : 13.5, color: CL.coral }}>Branch</span>
-        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 15 : 13.5, color: CL.green }}>College</span>
+      {/* twin towers */}
+      <div style={{ display: "flex", alignItems: "flex-end", gap: big ? 22 : 16, justifyContent: "center" }}>
+        <Tower pct={branchPct} color={CL.coral} soft={CL.coralSoft} label="Branch" points={tally.b} big={big} />
+        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 14 : 12, color: CL.muted, paddingBottom: big ? 64 : 52 }}>vs</span>
+        <Tower pct={collegePct} color={CL.green} soft={CL.greenSoft} label="College" points={tally.c} big={big} />
+      </div>
+
+      {/* sliding balance track */}
+      <div style={{ position: "relative", height: 8, borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber}, ${CL.green})`, margin: big ? "22px 4px 4px" : "18px 4px 4px" }}>
+        <motion.span
+          animate={{ left: `${branchPct}%` }} transition={spring}
+          style={{ position: "absolute", top: "50%", width: big ? 24 : 20, height: big ? 24 : 20, borderRadius: "50%", background: "#fff", transform: "translate(-50%,-50%)", boxShadow: CL.shadow, border: `2.5px solid ${leadColor}`, display: "grid", placeItems: "center" }}
+        >
+          <GitCompareArrows size={big ? 12 : 10} color={leadColor} />
+        </motion.span>
       </div>
 
       {showMeta && (

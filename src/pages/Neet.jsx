@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Seo from "../components/Seo.jsx";
+import PageHero from "../components/home/PageHero.jsx";
 import { Bars, Trend, Gauge } from "../components/Charts.jsx";
 import Reveal from "../components/Reveal.jsx";
 import { NEET_COLLEGES, NEET_STATES, NEET_TOTAL_SEATS } from "../data/neetColleges.js";
@@ -681,19 +682,18 @@ export default function Neet() {
         @media (max-width: 720px) { .paper-char-grid { grid-template-columns: 1fr !important; } }
       `}</style>
 
-      {/* ── Hero ── */}
-      <section className="warm-page-header" style={{ padding: "36px 0 28px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(21,160,110,.18) 0%, transparent 60%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 90%, rgba(14,165,164,.14) 0%, transparent 60%)" }} />
-        <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <span className="eyebrow" style={{ marginBottom: 14, display: "inline-flex", alignItems: "center", gap: 6 }}><Stethoscope size={12} /> NEET UG 2026</span>
-          <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.9rem,4vw,2.8rem)", margin: "0 0 10px", lineHeight: 1.2, color: "#1c1c28" }}>NEET — Rank &amp; Medical College Predictor Hub</h1>
-          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, marginBottom: 0 }}>
-            Predict your NEET rank &amp; the MBBS colleges you can get, analyse 5-year difficulty (Physics · Chemistry · Biology),
-            track cut-off &amp; topper trends, and explore the full 720-mark syllabus, pattern, roadmap &amp; coaching.
-          </p>
-        </div>
-      </section>
+      {/* ── Hero (blog-style) ── */}
+      <PageHero
+        eyebrow="NEET UG 2026" eyebrowIcon={Stethoscope} accent="#15a06e"
+        titleLead="NEET —" highlight="rank & medical college" titleTail="" highlightTail="predictor hub."
+        sub="Predict your NEET rank & the MBBS colleges you can get, analyse 5-year difficulty (Physics · Chemistry · Biology), track cut-off & topper trends, and explore the full 720-mark syllabus."
+        cta={{ label: "Predict my NEET rank", to: "#rank" }}
+        cards={[
+          { icon: GaugeIcon, accent: "#15a06e", category: "Tool", title: "NEET Rank Predictor", meta: "720 marks → All-India Rank", badge: "LIVE" },
+          { icon: Building2, accent: "#F15A38", category: "Tool", title: "MBBS College Finder", meta: "AIQ + state quota cutoffs", badge: "LIVE" },
+          { icon: TrendingUp, accent: "#6366f1", category: "Trends", title: "Cut-off & Topper Trends", meta: "Category-wise closing ranks" },
+        ]}
+      />
 
       {/* ── Tool 1 — Rank Predictor ── */}
       <Anchor id="rank" />
