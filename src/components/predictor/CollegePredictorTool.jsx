@@ -90,7 +90,10 @@ function RoundDetail({ row }) {
         ))}
       </div>
 
-      <div className="grid-2 rd-grid" style={{ gap: 18, alignItems: "start" }}>
+      {/* Table (left) gets ~1 part, chart+actions (right) gets ~1.4 parts so the
+          graph reads as a wide landscape and the buttons sit under it, using the
+          width that was previously blank. */}
+      <div className="grid-2 rd-grid" style={{ gap: 18, alignItems: "stretch", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.4fr)" }}>
         <div style={{ overflowX: "auto" }}>
           {rounds.length === 0 ? (
             <p style={{ fontSize: 12.5, color: "var(--muted)" }}>
@@ -123,35 +126,40 @@ function RoundDetail({ row }) {
               : "Actual JoSAA 2025 opening & closing ranks for this program — verify on josaa.nic.in / csab.nic.in."}
           </p>
         </div>
-        {chart.length > 0 && (
-          <div className="cp-cutoff-chart">
-            <div className="cp-cutoff-chart-head">
-              <BarChart3 size={15} color="#F15A38" />
-              <span>Opening vs Closing rank by round</span>
-            </div>
-            <Bars
-              data={chart}
-              bars={[
-                { key: "Opening", label: "Opening rank", color: "#2EC4B6" },
-                { key: "Closing", label: "Closing rank", color: "#F15A38" },
-              ]}
-              height={230} fmt={fmtRank} angle={-30}
-            />
+
+        {/* right column — wide chart with the action buttons filling the space
+            that used to be blank below the graph */}
+        <div className="cp-cutoff-chart" style={{ display: "flex", flexDirection: "column" }}>
+          {chart.length > 0 && (
+            <>
+              <div className="cp-cutoff-chart-head">
+                <BarChart3 size={15} color="#F15A38" />
+                <span>Opening vs Closing rank by round</span>
+              </div>
+              <Bars
+                data={chart}
+                bars={[
+                  { key: "Opening", label: "Opening rank", color: "#2EC4B6" },
+                  { key: "Closing", label: "Closing rank", color: "#F15A38" },
+                ]}
+                height={230} fmt={fmtRank} angle={-30}
+              />
+            </>
+          )}
+          <div style={{ display: "flex", gap: 10, marginTop: "auto", paddingTop: 14, flexWrap: "wrap" }}>
+            <Link to={`/colleges/${row.slug}?tab=placements`} className="btn btn-ghost" style={{ fontSize: 13 }}>
+              Placements <ArrowRight size={14} />
+            </Link>
+            <Link to={`/colleges/${row.slug}`} className="btn cp-explore-btn" style={{ fontSize: 13 }}>
+              Explore full college details <ArrowRight size={14} />
+            </Link>
+            {college?.website && (
+              <a href={college.website} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 13 }}>
+                Official site <ExternalLink size={13} />
+              </a>
+            )}
           </div>
-        )}
-      </div>
-      <div style={{ display: "flex", gap: 10, marginTop: 8, flexWrap: "wrap" }}>
-        <Link to={`/colleges/${row.slug}?tab=placements`} className="btn btn-ghost" style={{ fontSize: 13 }}>
-          Placements <ArrowRight size={14} />
-        </Link>
-        <Link to={`/colleges/${row.slug}`} className="btn cp-explore-btn" style={{ fontSize: 13 }}>
-          Explore full college details <ArrowRight size={14} />
-        </Link>
-        {college?.website && (
-        <a href={college.website} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 13 }}>
-          Official site <ExternalLink size={13} />
-        </a>
-        )}
+        </div>
       </div>
     </div>
   );
