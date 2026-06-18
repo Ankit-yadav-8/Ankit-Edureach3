@@ -4,7 +4,7 @@ import { TiltCard, StaggerReveal, StaggerItem } from "../Animations.jsx";
 
 const TOOLS = [
   {
-    icon: Calculator, accent: "#f97316", badge: "NEW",
+    icon: Calculator, accent: "#F15A38", badge: "NEW",
     title: "ROI Calculator",
     desc: "Calculate total degree cost, EMI, scholarship savings & long-term return.",
     cta: "Calculate ROI", to: "/scholarships",

@@ -202,7 +202,7 @@ export default function PlansSection() {
         </div>
 
         {/* two-button toggle */}
-        <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 36 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center", marginBottom: 36 }}>
           {TABS.map((t) => {
             const on = tab === t.key;
             const TIcon = t.icon;

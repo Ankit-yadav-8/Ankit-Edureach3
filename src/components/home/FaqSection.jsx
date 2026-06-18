@@ -57,7 +57,7 @@ export default function FaqSection() {
   const [open, setOpen] = useState(0);
   return (
     <section id="faq" style={{ background: CL.cream2, padding: "84px 0", position: "relative", overflow: "hidden" }}>
-      <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 820 }}>
+      <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 1040 }}>
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <span style={clEyebrow}><HelpCircle size={13} /> FAQ</span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", color: CL.ink, letterSpacing: "-1px", margin: "16px 0 10px", lineHeight: 1.12 }}>
@@ -65,7 +65,7 @@ export default function FaqSection() {
           </h2>
           <p style={{ color: CL.body, fontSize: "1.02rem" }}>Everything students and parents ask us before getting started.</p>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div className="faq-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(330px,1fr))", gap: 14, alignItems: "start" }}>
           {FAQS.map((f, i) => (
             <Item key={i} item={f} open={open === i} onToggle={() => setOpen(open === i ? -1 : i)} />
           ))}

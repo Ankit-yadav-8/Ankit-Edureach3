@@ -23,7 +23,7 @@
   --gold:        #f4a261;
   --orange:      #F15A38;
   --teal:        #0ea5a4;
-  --violet:      #f97316;
+  --violet:      #F15A38;
   --green:       #15a06e;
   --gray:        #6b7280;
   --gray-2:      #94a3b8;
@@ -32,7 +32,7 @@
   --ink:         #1a1a2e;
   --muted:       #6b7280;
   --line:        rgba(0,0,0,.1);
-  --phys:        #f97316;
+  --phys:        #F15A38;
   --chem:        #0ea5a4;
   --math:        #f4a261;
 
@@ -264,7 +264,7 @@ input,select,textarea { font-family:inherit; }
 /* Sign Up primary CTA — solid fills into a lively gradient on hover */
 .nav-primary-cta { transition:transform .2s ease, box-shadow .2s ease, background-position .4s ease, background .3s ease; }
 .nav-primary-cta:hover {
-  background-image:linear-gradient(120deg,#F15A38 0%,#f97316 45%,#fb923c 100%) !important;
+  background-image:linear-gradient(120deg,#F15A38 0%,#F15A38 45%,#fb923c 100%) !important;
   background-position:100% center;
   transform:translateY(-2px);
   box-shadow:0 10px 24px -6px rgba(244,123,32,.7);
@@ -2654,7 +2654,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 }
 .mfe-glow {
   position:absolute; inset:-2px; border-radius:20px; z-index:-1;
-  background:linear-gradient(135deg,#F15A38,#f5a623,#F15A38);
+  background:linear-gradient(135deg,#F15A38,#F15A38,#F15A38);
   filter:blur(15px); opacity:.5;
 }
 .mfe-close {
@@ -2676,7 +2676,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   font-weight:800; font-size:12px; cursor:pointer; transition:all .15s;
 }
 .mfe-toggle .mfe-toggle-on {
-  background:linear-gradient(135deg,#F15A38,#f5a623); color:#fff; border-color:transparent;
+  background:linear-gradient(135deg,#F15A38,#F15A38); color:#fff; border-color:transparent;
 }
 .mfe-exam {
   font-family:"Space Grotesk",sans-serif; font-weight:800;
@@ -3213,7 +3213,10 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
    screens). The sticky <thead> now pins against the viewport while you scroll. */
 .cp-results-scroll {
   overflow-x: auto;
-  overflow-y: visible;
+  /* Bounded height on laptop / Mac so a coral vertical scrollbar appears for
+     long result lists while the page itself stays put. */
+  overflow-y: auto;
+  max-height: 620px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: var(--coral) #f3f0ec;
@@ -3457,4 +3460,65 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 @media (max-width:640px) {
   .cp-empty       { padding: 24px 18px; }
   .cp-empty-steps { grid-template-columns: 1fr; }
+}
+/* ════════════════════════════════════════════════
+   Campusloom Branch Catalog row — responsive
+════════════════════════════════════════════════ */
+.cl-branch-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+}
+.cl-branch-row__arrow {
+  position: absolute;
+  top: 50%;
+  right: 22px;
+  transform: translateY(-50%);
+  flex-shrink: 0;
+}
+.cl-branch-row__stats {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  padding-right: 58px; /* clear the floating arrow */
+}
+@media (max-width: 860px) {
+  .cl-branch-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .cl-branch-row__arrow {
+    top: 18px;
+    right: 16px;
+    transform: none;
+  }
+  .cl-branch-row__main { padding-right: 48px; } /* keep title clear of arrow */
+  .cl-branch-row__stats {
+    padding-right: 0;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+    border-top: 1px solid rgba(33, 29, 46, .07);
+    padding-top: 14px;
+  }
+}
+
+/* ── Branch vs College quiz — scale + question two-column layout ── */
+.bvc-quiz-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: 22px;
+  align-items: stretch;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+@media (max-width: 860px) {
+  .bvc-quiz-grid { grid-template-columns: 1fr; max-width: 680px; }
+  .bvc-scale-col { display: none; }
+}
+
+/* ── FAQ two-column grid: collapse to one column on small screens ── */
+@media (max-width: 700px) {
+  .faq-grid { grid-template-columns: 1fr !important; }
 }

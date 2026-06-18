@@ -37,7 +37,7 @@ import { fmtRank } from "../utils/format.js";
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const T = {
-  orange:  "#F97316",
+  orange:  "#F15A38",
   teal:    "#2EC4B6",
   violet:  "#8B5CF6",
   coral:   "#EF4444",
@@ -58,7 +58,7 @@ const YR_COLOR = {
   "2022": "#A78BFA",
   "2023": "#8B5CF6",
   "2024": "#FB923C",
-  "2025": "#F97316",
+  "2025": "#F15A38",
 };
 
 const fmt = (v) => (v ? fmtRank(v) : "—");

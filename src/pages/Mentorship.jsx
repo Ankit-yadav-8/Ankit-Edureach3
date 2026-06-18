@@ -13,7 +13,7 @@ import { Trend, Bars, Gauge } from "../components/Charts.jsx";
 import Seo from "../components/Seo.jsx";
 
 const ACCENT = "#F15A38";        // brand orange
-const GOLD = "#f5a623";          // highlight gold
+const GOLD = "#F15A38";          // highlight gold
 const INK = "#1a1a2e";           // dark text
 const MUTE = "#5b6472";          // grey text
 const WA_NUMBER = "917877596464";
@@ -435,7 +435,7 @@ function TestAnalysis({ m }) {
         {/* Right — mock report */}
         <Reveal delay={0.08}>
           <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.16)", borderRadius: 18, padding: "24px 24px", height: "100%", boxShadow: "0 18px 44px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#f5a623)" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#F15A38)" }} />
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
               <div>
                 <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: ACCENT }}>Weekly Report</div>
@@ -452,7 +452,7 @@ function TestAnalysis({ m }) {
                 <div key={d.t} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
                   <motion.div
                     initial={{ height: 0 }} whileInView={{ height: `${d.v}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.07 }}
-                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#F15A38,#f5a623)" : "rgba(244,123,32,.35)" }} />
+                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#F15A38,#F15A38)" : "rgba(244,123,32,.35)" }} />
                   <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 600 }}>{d.t}</span>
                 </div>
               ))}
@@ -493,7 +493,7 @@ function TestAnalysis({ m }) {
 function ChartCard({ title, hint, children }) {
   return (
     <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.16)", borderRadius: 18, padding: "22px 22px 18px", height: "100%", boxShadow: "0 16px 40px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#f5a623)" }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#F15A38)" }} />
       <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: "1.05rem", color: INK, margin: "0 0 4px" }}>{title}</h3>
       {hint && <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 14px" }}>{hint}</p>}
       {children}
@@ -557,7 +557,7 @@ function LiveTracking({ m }) {
 
             {/* header */}
             <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
-              <div style={{ width: 46, height: 46, borderRadius: "50%", background: "linear-gradient(135deg,#F15A38,#f5a623)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>{m.student.name[0]}</div>
+              <div style={{ width: 46, height: 46, borderRadius: "50%", background: "linear-gradient(135deg,#F15A38,#F15A38)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>{m.student.name[0]}</div>
               <div style={{ flex: 1, minWidth: 160 }}>
                 <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.05rem", color: INK }}>{m.student.name} · {m.student.exam}</div>
                 <div style={{ fontSize: 12.5, color: MUTE }}>Mentor: {m.student.mentor}</div>
@@ -592,7 +592,7 @@ function LiveTracking({ m }) {
                       <span style={{ fontSize: 10.5, fontWeight: 700, color: INK }}>{x.h}h</span>
                       <motion.div
                         initial={{ height: 0 }} whileInView={{ height: `${(x.h / maxH) * 100}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }}
-                        style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === maxIdx ? "linear-gradient(180deg,#F15A38,#f5a623)" : "rgba(244,123,32,.4)" }} />
+                        style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === maxIdx ? "linear-gradient(180deg,#F15A38,#F15A38)" : "rgba(244,123,32,.4)" }} />
                       <span style={{ fontSize: 10.5, color: MUTE }}>{x.d}</span>
                     </div>
                   ))}
@@ -900,7 +900,7 @@ function PhoneFrame({ contact, messages, accent = "#25D366" }) {
             return (
               <div key={i} style={{ alignSelf: out ? "flex-end" : "flex-start", maxWidth: "82%" }}>
                 <div style={{ background: out ? "#005c4b" : "#202c33", color: "#e9edef", borderRadius: 9, borderTopRightRadius: out ? 2 : 9, borderTopLeftRadius: out ? 9 : 2, padding: "6px 9px 5px", fontSize: 9.5, lineHeight: 1.4, whiteSpace: "pre-line" }}>
-                  {m.name && <div style={{ fontSize: 8.5, fontWeight: 800, color: "#f5a623", marginBottom: 1 }}>{m.name}</div>}
+                  {m.name && <div style={{ fontSize: 8.5, fontWeight: 800, color: "#F15A38", marginBottom: 1 }}>{m.name}</div>}
                   {m.text}
                   <span style={{ display: "block", textAlign: "right", fontSize: 7.5, color: out ? "rgba(233,237,239,.6)" : "#8696a0", marginTop: 2 }}>{m.time}{out ? " ✓✓" : ""}</span>
                 </div>

@@ -126,14 +126,14 @@ function RoundDetail({ row }) {
         {chart.length > 0 && (
           <div className="cp-cutoff-chart">
             <div className="cp-cutoff-chart-head">
-              <BarChart3 size={15} color="#F97316" />
+              <BarChart3 size={15} color="#F15A38" />
               <span>Opening vs Closing rank by round</span>
             </div>
             <Bars
               data={chart}
               bars={[
                 { key: "Opening", label: "Opening rank", color: "#2EC4B6" },
-                { key: "Closing", label: "Closing rank", color: "#F97316" },
+                { key: "Closing", label: "Closing rank", color: "#F15A38" },
               ]}
               height={230} fmt={fmtRank} angle={-30}
             />
@@ -230,7 +230,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
       {/* ── Form ── */}
       <div className="card">
         <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.2rem", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-          <Crosshair size={20} color="#F97316" /> Find every college within your reach
+          <Crosshair size={20} color="#F15A38" /> Find every college within your reach
         </h3>
         <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 16, lineHeight: 1.5 }}>
           Enter your rank below — the rest is optional. We'll instantly match it against real JoSAA&nbsp;2025 cutoffs and show you every college you can get.
@@ -293,7 +293,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
                     style={{
                       padding: "7px 16px", borderRadius: 7, border: "none", cursor: "pointer",
                       fontSize: 13, fontWeight: 700, fontFamily: "Sora",
-                      background: active ? "#F97316" : "transparent",
+                      background: active ? "#F15A38" : "transparent",
                       color: active ? "#fff" : "var(--muted)",
                       boxShadow: active ? "0 2px 8px rgba(249,115,22,.30)" : "none",
                       transition: "all .18s",
@@ -351,7 +351,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
           borderRadius: 10, padding: "11px 16px", marginTop: 14,
           fontSize: 13, color: "var(--navy)",
         }}>
-          <Info size={16} style={{ color: "#F97316", marginTop: 1, flexShrink: 0 }} />
+          <Info size={16} style={{ color: "#F15A38", marginTop: 1, flexShrink: 0 }} />
           <span>
             <strong>Note:</strong> JoSAA publishes reserved-category cutoffs as{" "}
             <strong>category ranks</strong>. Pick{" "}
@@ -367,7 +367,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
       {/* ── Empty state — guides the user before the first prediction ── */}
       {!results && !loading && !error && (
         <div className="cp-empty">
-          <div className="cp-empty-icon"><Crosshair size={26} color="#F97316" /></div>
+          <div className="cp-empty-icon"><Crosshair size={26} color="#F15A38" /></div>
           <h4 className="cp-empty-title">Ready when you are</h4>
           <p className="cp-empty-sub">
             Type your rank in the box above and hit <strong>Predict Colleges</strong>. Here's what you'll get:
@@ -460,7 +460,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
             </div>
             <PieWithLegend
               data={summary.dist}
-              colors={["#2EC4B6", "#F97316", "#EF4444"]}
+              colors={["#2EC4B6", "#F15A38", "#EF4444"]}
               height={200}
             />
           </div>
@@ -496,7 +496,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
             </strong>
             <span className="cp-rank-legend">
               <span className="cp-legend-dot" style={{ background: "#2EC4B6" }} /> Opening
-              <span className="cp-legend-dot" style={{ background: "#F97316", marginLeft: 12 }} /> Closing
+              <span className="cp-legend-dot" style={{ background: "#F15A38", marginLeft: 12 }} /> Closing
               <span style={{ marginLeft: 14, color: "var(--muted)" }}>· Tap a row for all rounds</span>
             </span>
           </div>
@@ -592,7 +592,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
 
       {/* ── How the College Predictor works ── */}
       <NotesBlock
-        accent="#F97316"
+        accent="#F15A38"
         eyebrow="About this tool"
         heading="How the College Predictor works"
         points={[

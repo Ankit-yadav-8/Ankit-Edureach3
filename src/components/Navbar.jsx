@@ -259,7 +259,7 @@ export default function Navbar({ onSearch }) {
             College{" "}
             <span
               style={{
-                background: "linear-gradient(90deg, #F15A38 0%, #f97316 25%, #fbbf24 50%, #f97316 75%, #F15A38 100%)",
+                background: "linear-gradient(90deg, #F15A38 0%, #F15A38 25%, #fbbf24 50%, #F15A38 75%, #F15A38 100%)",
                 backgroundSize: "200% auto",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -516,7 +516,7 @@ export default function Navbar({ onSearch }) {
                   <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", whiteSpace: "nowrap" }}>
                     College{" "}
                     <span style={{
-                      background: "linear-gradient(90deg, #F15A38 0%, #f97316 25%, #fbbf24 50%, #f97316 75%, #F15A38 100%)",
+                      background: "linear-gradient(90deg, #F15A38 0%, #F15A38 25%, #fbbf24 50%, #F15A38 75%, #F15A38 100%)",
                       backgroundSize: "200% auto",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -582,7 +582,7 @@ export default function Navbar({ onSearch }) {
                         width: "100%", margin: "10px 0", padding: "13px 16px",
                         borderRadius: 12, border: "none", cursor: "pointer",
                         color: "#fff", fontWeight: 800, fontSize: "0.98rem",
-                        background: "linear-gradient(120deg, #F15A38 0%, #f97316 40%, #fb923c 60%, #F15A38 100%)",
+                        background: "linear-gradient(120deg, #F15A38 0%, #F15A38 40%, #fb923c 60%, #F15A38 100%)",
                         backgroundSize: "200% auto",
                         boxShadow: "0 8px 20px -8px rgba(244,123,32,.7)",
                         animation: "brandGradient 3s linear infinite",
@@ -850,7 +850,7 @@ const navHighlightStyle = (active) => ({
   color: "#fff",
   borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   fontFamily: "inherit",
-  background: "linear-gradient(120deg, #F15A38 0%, #f97316 45%, #fbbf24 100%)",
+  background: "linear-gradient(120deg, #F15A38 0%, #F15A38 45%, #fbbf24 100%)",
   backgroundSize: "200% auto",
   border: "1.5px solid rgba(255,255,255,.5)",
   boxShadow: active ? "0 8px 20px -6px rgba(244,123,32,.8)" : "0 6px 16px -8px rgba(244,123,32,.6)",
@@ -863,7 +863,7 @@ const navFeatureStyle = {
   padding: "0.45rem 0.85rem", fontSize: "0.86rem", fontWeight: 700,
   color: "#fff", borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   border: "none",
-  background: "linear-gradient(120deg, #F15A38 0%, #f97316 40%, #fb923c 60%, #F15A38 100%)",
+  background: "linear-gradient(120deg, #F15A38 0%, #F15A38 40%, #fb923c 60%, #F15A38 100%)",
   backgroundSize: "200% auto",
   boxShadow: "0 6px 16px -6px rgba(244,123,32,.75)",
   animation: "brandGradient 3s linear infinite",

@@ -11,7 +11,7 @@ import { useEnrol } from "../components/EnrolModal.jsx";
 import { apiMyEnrollments, apiUpdateProfile } from "../auth/api.js";
 
 const ORANGE = "#F15A38";
-const GOLD = "#f5a623";
+const GOLD = "#F15A38";
 const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
 

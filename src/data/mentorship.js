@@ -136,7 +136,7 @@ export const MENTORSHIP = {
     ],
 
     tracks: [
-      { plan: "mentor-jee-2027",  exam: "JEE 2027",  accent: "#f5a623", line: "IITian mentors · backlog + rank push" },
+      { plan: "mentor-jee-2027",  exam: "JEE 2027",  accent: "#F15A38", line: "IITian mentors · backlog + rank push" },
       { plan: "mentor-neet-2027", exam: "NEET 2027", accent: "#22c55e", line: "Doctor / NEET-topper mentors · biology-first" },
     ],
   },
@@ -248,7 +248,7 @@ export const MENTORSHIP = {
     ],
 
     tracks: [
-      { plan: "mentor-jee-2028",  exam: "JEE 2028",  accent: "#f5a623", line: "2-year IITian mentorship · concept-first" },
+      { plan: "mentor-jee-2028",  exam: "JEE 2028",  accent: "#F15A38", line: "2-year IITian mentorship · concept-first" },
       { plan: "mentor-neet-2028", exam: "NEET 2028", accent: "#22c55e", line: "2-year doctor mentorship · biology-first" },
     ],
   },

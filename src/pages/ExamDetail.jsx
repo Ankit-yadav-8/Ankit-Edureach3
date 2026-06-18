@@ -44,7 +44,7 @@ export default function ExamDetail() {
               boxShadow: "0 16px 44px -26px rgba(244,123,32,.55)",
             }}
           >
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#f5a623)" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#F15A38)" }} />
             <span style={{ display: "inline-flex", alignItems: "center", gap: 6, alignSelf: "flex-start", fontSize: 11, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: "#c2410c", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.28)", padding: "4px 11px", borderRadius: 50 }}>
               <Sparkles size={12} /> 1-on-1 Mentorship
             </span>
@@ -59,7 +59,7 @@ export default function ExamDetail() {
             <p style={{ color: "#5b6472", fontSize: 13, lineHeight: 1.55, margin: 0 }}>
               A personal IITian / doctor mentor, a study plan and weekly accountability.
             </p>
-            <span style={{ marginTop: 2, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(135deg,#F15A38,#f5a623)", color: "#fff", padding: "11px 18px", borderRadius: 11, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 13.5, boxShadow: "0 10px 24px -8px rgba(244,123,32,.6)" }}>
+            <span style={{ marginTop: 2, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(135deg,#F15A38,#F15A38)", color: "#fff", padding: "11px 18px", borderRadius: 11, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 13.5, boxShadow: "0 10px 24px -8px rgba(244,123,32,.6)" }}>
               Explore Mentorship <ArrowRight size={15} />
             </span>
           </Link>
@@ -111,7 +111,7 @@ export default function ExamDetail() {
               { key: "open", label: "General", color: "#1c1c28" },
               { key: "obc", label: "OBC-NCL", color: "#F4A261" },
               { key: "sc", label: "SC", color: "#2EC4B6" },
-              { key: "st", label: "ST", color: "#F97316" },
+              { key: "st", label: "ST", color: "#F15A38" },
             ]} height={300} />
           </div>
         </Reveal>

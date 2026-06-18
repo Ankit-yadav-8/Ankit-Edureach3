@@ -16,7 +16,7 @@ export default function ParticleBackground({ density = 70 }) {
     let w, h;
     let particles = [];
 
-    const COLORS = ["#F97316", "#f4a261", "#2ec4b6", "#fb923c", "#0EA5A4"];
+    const COLORS = ["#F15A38", "#f4a261", "#2ec4b6", "#fb923c", "#0EA5A4"];
 
     function resize() {
       w = canvas.width = canvas.offsetWidth;

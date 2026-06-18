@@ -31,45 +31,44 @@ function BranchRow({ b, nav }) {
       transition={{ duration: 0.4 }}
       whileHover={{ y: -3 }}
       onClick={() => nav(`/branches/${b.slug}`)}
-      className="branch-row"
+      className="cl-branch-row"
       style={{
         textAlign: "left", width: "100%", cursor: "pointer",
         background: CL.card, borderRadius: 20, border: `1px solid ${CL.line}`,
         boxShadow: CL.shadow, padding: "20px 22px",
-        display: "grid", gridTemplateColumns: "1fr auto auto", alignItems: "center", gap: 22,
       }}
     >
-      {/* left: icon + title + tags */}
-      <div style={{ display: "flex", gap: 16, alignItems: "flex-start", minWidth: 0 }}>
-        <span style={{ width: 50, height: 50, borderRadius: 14, background: `${b.color}18`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-          <Icon size={24} color={b.color} />
-        </span>
-        <div style={{ minWidth: 0 }}>
-          <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.12rem", color: CL.ink, letterSpacing: "-0.3px", marginBottom: 4 }}>{b.name}</h3>
-          <p style={{ fontSize: 13, color: CL.body, lineHeight: 1.5, marginBottom: 10, maxWidth: 440 }}>{b.desc}</p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-            {b.tags.map((t) => (
-              <span key={t} style={{ fontSize: 11, fontWeight: 700, color: CL.ink2, background: CL.cream2, border: `1px solid ${CL.cream3}`, padding: "3px 10px", borderRadius: 7 }}>{t}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* middle: stats */}
-      <div className="branch-row-stats" style={{ display: "flex", gap: 26, alignItems: "center" }}>
-        <Stat icon={Briefcase} value={b.stats.jobGrowth} label="Job Growth" color={CL.green} />
-        <Stat icon={IndianRupee} value={b.stats.medianSalary} label="Median Salary" color={CL.amber} />
-        <Stat icon={ShieldCheck} value={`${b.stats.aiRisk}/100`} label="AI Risk" color={CL.coral} />
-      </div>
-
-      {/* right: arrow */}
-      <span style={{
-        width: 42, height: 42, borderRadius: "50%", flexShrink: 0,
+      {/* arrow — absolutely positioned so layout reflows cleanly on mobile */}
+      <span className="cl-branch-row__arrow" style={{
+        width: 42, height: 42, borderRadius: "50%",
         background: CL.coral, display: "grid", placeItems: "center",
         boxShadow: "0 8px 20px rgba(241,90,56,.35)",
       }}>
         <ArrowRight size={18} color="#fff" />
       </span>
+
+      {/* left: icon + title + tags */}
+      <div className="cl-branch-row__main" style={{ display: "flex", gap: 16, alignItems: "flex-start", minWidth: 0 }}>
+        <span style={{ width: 50, height: 50, borderRadius: 14, background: `${b.color}18`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+          <Icon size={24} color={b.color} />
+        </span>
+        <div style={{ minWidth: 0 }}>
+          <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.12rem", color: CL.ink, letterSpacing: "-0.3px", marginBottom: 4 }}>{b.name}</h3>
+          <p style={{ fontSize: 13, color: CL.body, lineHeight: 1.5, marginBottom: 10 }}>{b.desc}</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+            {b.tags.map((t) => (
+              <span key={t} style={{ fontSize: 11, fontWeight: 700, color: CL.ink2, background: CL.cream2, border: `1px solid ${CL.cream3}`, padding: "3px 10px", borderRadius: 7, whiteSpace: "nowrap" }}>{t}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* stats */}
+      <div className="cl-branch-row__stats">
+        <Stat icon={Briefcase} value={b.stats.jobGrowth} label="Job Growth" color={CL.green} />
+        <Stat icon={IndianRupee} value={b.stats.medianSalary} label="Median Salary" color={CL.amber} />
+        <Stat icon={ShieldCheck} value={`${b.stats.aiRisk}/100`} label="AI Risk" color={CL.coral} />
+      </div>
     </motion.button>
   );
 }

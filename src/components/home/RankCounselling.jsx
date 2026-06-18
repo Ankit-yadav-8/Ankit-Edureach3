@@ -177,7 +177,7 @@ export default function RankCounselling() {
               const color = featured ? "#6366f1" : "#F15A38";
               const ctaStyle = {
                 margin: "auto 24px 24px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
-                background: `linear-gradient(135deg,${color},#f5a623)`, color: "#fff",
+                background: `linear-gradient(135deg,${color},#F15A38)`, color: "#fff",
                 padding: "13px 20px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif",
                 fontWeight: 800, fontSize: 14.5, textDecoration: "none", boxShadow: `0 10px 24px -8px ${color}aa`,
               };
@@ -193,7 +193,7 @@ export default function RankCounselling() {
                       boxShadow: featured ? `0 28px 60px -28px ${color}88, 0 0 0 2px ${color}44` : `0 18px 44px -26px ${color}77`,
                     }}
                   >
-                    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${color},#f5a623)` }} />
+                    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${color},#F15A38)` }} />
                     {featured && (
                       <div style={{ position: "absolute", top: 14, right: -34, transform: "rotate(45deg)", background: `linear-gradient(135deg,${color},#818cf8)`, color: "#fff", fontWeight: 800, fontSize: 10.5, letterSpacing: "0.5px", padding: "4px 40px", boxShadow: "0 4px 12px rgba(0,0,0,.2)" }}>
                         MOST POPULAR
@@ -276,7 +276,7 @@ export default function RankCounselling() {
                 display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 14,
               }}
             >
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#f5a623)" }} />
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#F15A38)" }} />
               <div style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#c2410c", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.28)", padding: "5px 12px", borderRadius: 50 }}>
                 <Flame size={14} /> Serious aspirants only
               </div>
@@ -302,7 +302,7 @@ export default function RankCounselling() {
               </div>
               <Link
                 to="/mentorship/jee-2027"
-                style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 9, background: "linear-gradient(135deg,#F15A38,#f5a623)", color: "#fff", padding: "14px 26px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 15, textDecoration: "none", boxShadow: "0 12px 28px -8px rgba(244,123,32,.6)" }}
+                style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 9, background: "linear-gradient(135deg,#F15A38,#F15A38)", color: "#fff", padding: "14px 26px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 15, textDecoration: "none", boxShadow: "0 12px 28px -8px rgba(244,123,32,.6)" }}
               >
                 Explore Mentorship <ArrowRight size={17} />
               </Link>
@@ -413,7 +413,7 @@ export default function RankCounselling() {
         {/* ── 9 · CTA FOOTER BANNER (right column beside FAQ) ── */}
           <Reveal style={{ display: "flex" }}>
             <div style={{ width: "100%", background: "linear-gradient(160deg, #fff7ef 0%, #ffffff 55%, #fff3e6 100%)", border: "1px solid rgba(244,123,32,.28)", borderRadius: 20, padding: "30px", position: "relative", overflow: "hidden", boxShadow: "0 18px 50px -28px rgba(244,123,32,.45)", display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#f5a623)" }} />
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#F15A38)" }} />
               <div style={{ display: "inline-flex", alignSelf: "flex-start", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#c2410c", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.28)", padding: "5px 12px", borderRadius: 50 }}>
                 <Sparkles size={13} /> Free first session
               </div>
@@ -453,7 +453,7 @@ export default function RankCounselling() {
                     <Phone size={17} /> {PHONE_DISPLAY}
                   </a>
                   <button type="button" onClick={() => openEnrol("all-colleges")}
-                    style={{ flex: 1, minWidth: 150, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(135deg,#F15A38,#f5a623)", color: "#fff", padding: "13px 18px", borderRadius: 12, fontSize: 14.5, fontWeight: 800, fontFamily: "'Space Grotesk',sans-serif", border: "none", cursor: "pointer", boxShadow: "0 10px 24px -8px rgba(244,123,32,.6)" }}>
+                    style={{ flex: 1, minWidth: 150, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(135deg,#F15A38,#F15A38)", color: "#fff", padding: "13px 18px", borderRadius: 12, fontSize: 14.5, fontWeight: 800, fontFamily: "'Space Grotesk',sans-serif", border: "none", cursor: "pointer", boxShadow: "0 10px 24px -8px rgba(244,123,32,.6)" }}>
                     Enrol ₹499 <ArrowRight size={15} />
                   </button>
                 </div>

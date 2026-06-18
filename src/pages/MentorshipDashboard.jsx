@@ -16,7 +16,7 @@ import { Trend, Gauge, PieWithLegend, Bars } from "../components/Charts.jsx";
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
 
 const ORANGE = "#F15A38";
-const GOLD = "#f5a623";
+const GOLD = "#F15A38";
 const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
 const INK = "#1a1a2e";

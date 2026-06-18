@@ -16,9 +16,10 @@ import { Trend } from "../components/Charts.jsx";
 import { chanceTone } from "../components/home/clTheme.js";
 
 const TABS = [
-  { key: "academics", label: "Academics & Outcomes", icon: GraduationCap },
-  { key: "insights",  label: "Advanced Insights",    icon: TrendingUp },
-  { key: "myths",     label: "Common Myths",         icon: AlertCircle },
+  { key: "academics", label: "Study & Curriculum",      icon: GraduationCap },
+  { key: "insights",  label: "Career & Salary Insights", icon: TrendingUp },
+  { key: "colleges",  label: "Top Colleges & Branches",  icon: Building2 },
+  { key: "myths",     label: "Myths vs Reality",         icon: AlertCircle },
 ];
 
 /* ── small UI atoms ── */
@@ -263,8 +264,13 @@ export default function BranchDetail() {
   return (
     <div style={{ background: CL.cream, minHeight: "100vh", paddingTop: 92, paddingBottom: 72 }}>
       <div className="container" style={{ maxWidth: 1060 }}>
-        <Link to="/branches" style={{ display: "inline-flex", alignItems: "center", gap: 7, color: CL.body, fontSize: 13.5, fontWeight: 600, marginBottom: 18 }}>
-          <ArrowLeft size={15} /> Back to Branch Catalog
+        <Link to="/branches" style={{
+          display: "inline-flex", alignItems: "center", gap: 8, color: CL.ink,
+          fontSize: 13.5, fontWeight: 700, fontFamily: CL.display, marginBottom: 20,
+          background: CL.card, border: `1px solid ${CL.line}`, borderRadius: 50,
+          padding: "9px 18px", boxShadow: CL.shadow, textDecoration: "none",
+        }}>
+          <ArrowLeft size={16} /> Back to Branch Catalog
         </Link>
 
         {/* header card */}
@@ -294,7 +300,7 @@ export default function BranchDetail() {
         </div>
 
         {/* tabs */}
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", borderBottom: `1px solid ${CL.line}`, marginBottom: 26 }}>
+        <div style={{ display: "flex", gap: 6, flexWrap: "nowrap", overflowX: "auto", WebkitOverflowScrolling: "touch", borderBottom: `1px solid ${CL.line}`, marginBottom: 26, scrollbarWidth: "none" }}>
           {TABS.map((t) => {
             const on = tab === t.key;
             const TIcon = t.icon;
@@ -304,7 +310,7 @@ export default function BranchDetail() {
                 padding: "12px 16px", fontSize: 13.5, fontWeight: 700, fontFamily: CL.display,
                 color: on ? CL.coralDk : CL.body, cursor: "pointer",
                 borderBottom: on ? `2.5px solid ${CL.coral}` : "2.5px solid transparent",
-                marginBottom: -1,
+                marginBottom: -1, whiteSpace: "nowrap", flexShrink: 0, background: "transparent",
               }}>
                 <TIcon size={15} /> {t.label}
               </button>
@@ -319,6 +325,7 @@ export default function BranchDetail() {
             transition={{ duration: 0.25 }}>
             {tab === "academics" && <Academics b={b} />}
             {tab === "insights" && <Insights b={b} />}
+            {tab === "colleges" && <Colleges b={b} />}
             {tab === "myths" && <Myths b={b} />}
           </motion.div>
         </AnimatePresence>

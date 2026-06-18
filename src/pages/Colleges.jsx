@@ -317,7 +317,7 @@ export default function Colleges() {
                   {/* NIRF badge */}
                   <span style={{
                     position: "absolute", top: 10, right: 10,
-                    background: "linear-gradient(135deg,#F97316,#f4a261)",
+                    background: "linear-gradient(135deg,#F15A38,#f4a261)",
                     color: "#fff", fontSize: 10.5, fontWeight: 700,
                     padding: "3px 9px", borderRadius: 50,
                     display: "inline-flex", alignItems: "center", gap: 4,

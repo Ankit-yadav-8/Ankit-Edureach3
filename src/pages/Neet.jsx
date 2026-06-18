@@ -120,8 +120,8 @@ const MARKS_VS_RANK = [
   { lo: 620, label: "620 – 649", airLo: 2800,   airHi: 7500,    rank: "2,800 – 7,500",     color: "#0EA5A4" },
   { lo: 600, label: "600 – 619", airLo: 7500,   airHi: 15000,   rank: "7,500 – 15,000",    color: "#EAB308" },
   { lo: 580, label: "580 – 599", airLo: 15000,  airHi: 27000,   rank: "15,000 – 27,000",   color: "#EAB308" },
-  { lo: 550, label: "550 – 579", airLo: 27000,  airHi: 52000,   rank: "27,000 – 52,000",   color: "#F97316" },
-  { lo: 500, label: "500 – 549", airLo: 52000,  airHi: 95000,   rank: "52,000 – 95,000",   color: "#F97316" },
+  { lo: 550, label: "550 – 579", airLo: 27000,  airHi: 52000,   rank: "27,000 – 52,000",   color: "#F15A38" },
+  { lo: 500, label: "500 – 549", airLo: 52000,  airHi: 95000,   rank: "52,000 – 95,000",   color: "#F15A38" },
   { lo: 450, label: "450 – 499", airLo: 95000,  airHi: 160000,  rank: "95,000 – 1.6 L",    color: "#EF4444" },
   { lo: 0,   label: "Below 450", airLo: 160000, airHi: 1100000, rank: "1.6 L – 11 L",      color: "#EF4444" },
 ];
@@ -252,13 +252,13 @@ const ELIGIBILITY = [
 /* ── Helpers ── */
 function diffIndex(val) {
   if (val >= 80) return { label: "Very Hard", color: "#EF4444", bg: "#fee2e2" };
-  if (val >= 70) return { label: "Hard",      color: "#F97316", bg: "#fff7ed" };
+  if (val >= 70) return { label: "Hard",      color: "#F15A38", bg: "#fff7ed" };
   if (val >= 55) return { label: "Moderate",  color: "#EAB308", bg: "#fefce8" };
   return               { label: "Easy",      color: "#15A06E", bg: "#d1fae5" };
 }
 function overallMeta(t) {
   const s = t.toLowerCase();
-  if (s.includes("difficult") || s.includes("toughest")) return { color: "#F97316", bg: "#fff7ed" };
+  if (s.includes("difficult") || s.includes("toughest")) return { color: "#F15A38", bg: "#fff7ed" };
   if (s.includes("easy")) return { color: "#15A06E", bg: "#d1fae5" };
   return { color: "#EAB308", bg: "#fefce8" };
 }

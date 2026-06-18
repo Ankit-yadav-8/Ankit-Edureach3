@@ -47,7 +47,7 @@ const SUBJECTS = [
     name: "Physics",
     short: "Phy",
     icon: Zap,
-    color: "#f97316",
+    color: "#F15A38",
     light: "#ffffff",
     chapters: 25,
     desc: "Mechanics, Electrodynamics, Optics, Modern Physics",
@@ -437,7 +437,7 @@ export default function JeeResources() {
               {[
                 { icon: BookOpen, label: "19 Math chapters",     color: "#F15A38" },
                 { icon: Zap,      label: "25 Physics chapters",  color: "#E0421F" },
-                { icon: FlaskConical, label: "29 Chem chapters", color: "#f97316" },
+                { icon: FlaskConical, label: "29 Chem chapters", color: "#F15A38" },
               ].map(({ icon: Icon, label, color }) => (
                 <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(28,28,40,.75)", fontSize: 13.5, fontWeight: 600 }}>
                   <Icon size={15} color={color} /> {label}

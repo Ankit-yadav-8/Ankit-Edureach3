@@ -76,7 +76,7 @@ export default function MentorshipHome() {
             </span>
             <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.8rem)", lineHeight: 1.12, letterSpacing: "-1px", color: "#1a1a2e", margin: "0 0 14px" }}>
               Know Your Path.{" "}
-              <span style={{ background: "linear-gradient(90deg,#F15A38,#f5a623)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Own Your Future.</span>
+              <span style={{ background: "linear-gradient(90deg,#F15A38,#F15A38)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Own Your Future.</span>
             </h2>
             <p style={{ color: "#4b5563", fontSize: "1.05rem", lineHeight: 1.75, maxWidth: 660, margin: "0 auto" }}>
               CollegeParichay's 1-on-1 mentorship helps serious JEE &amp; NEET aspirants cut through the confusion — a personal IITian / doctor mentor, daily accountability, and a plan that actually works. Pick the program that fits where you are.
@@ -102,7 +102,7 @@ export default function MentorshipHome() {
                       : `0 18px 44px -26px ${p.color}77`,
                   }}
                 >
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${p.color},#f5a623)` }} />
+                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${p.color},#F15A38)` }} />
                   {p.featured && (
                     <div style={{ position: "absolute", top: 14, right: -34, transform: "rotate(45deg)", background: `linear-gradient(135deg,${p.color},#818cf8)`, color: "#fff", fontWeight: 800, fontSize: 10.5, letterSpacing: "0.5px", padding: "4px 40px", boxShadow: "0 4px 12px rgba(0,0,0,.2)" }}>
                       BEST VALUE
@@ -147,7 +147,7 @@ export default function MentorshipHome() {
                     to={p.to}
                     style={{
                       margin: "auto 24px 24px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
-                      background: `linear-gradient(135deg,${p.color},#f5a623)`, color: "#fff",
+                      background: `linear-gradient(135deg,${p.color},#F15A38)`, color: "#fff",
                       padding: "13px 20px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif",
                       fontWeight: 800, fontSize: 14.5, textDecoration: "none",
                       boxShadow: `0 10px 24px -8px ${p.color}aa`,

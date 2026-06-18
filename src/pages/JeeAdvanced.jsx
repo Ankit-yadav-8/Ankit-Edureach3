@@ -111,7 +111,7 @@ const PAPER_CHARACTER = [
     paper: "Paper 1",
     time: "9:00 AM – 12:00 PM",
     rating: "Moderate → Difficult",
-    color: "#F97316",
+    color: "#F15A38",
     bg: "#ffffff",
     summary:
       "Generally rated Moderate to Difficult. It usually features a balanced mix of conceptual problems, with a higher tendency for non-negative numerical / integer-type questions where there is no negative marking.",
@@ -171,7 +171,7 @@ const COLLEGE_CUTOFFS = [
 /* Syllabus */
 const SYLLABUS = {
   Physics: {
-    color: "#F97316", icon: Atom,
+    color: "#F15A38", icon: Atom,
     topics: [
       "Mechanics — Kinematics, Laws of Motion, Work & Energy",
       "Rotational Motion — Moment of Inertia, Angular Momentum",
@@ -214,7 +214,7 @@ const SYLLABUS = {
 /* Roadmap */
 const ROADMAP = [
   {
-    month: "Jun–Aug", label: "Foundation & NCERT Mastery", color: "#F97316", icon: "📚",
+    month: "Jun–Aug", label: "Foundation & NCERT Mastery", color: "#F15A38", icon: "📚",
     tip: "Complete NCERT Physics & Chemistry thoroughly. Solve H.C. Verma Part 1 (Chapters 1–15). Build concept clarity over speed — JEE Advanced tests deep understanding, not shortcuts.",
     tasks: [
       "NCERT Physics Class 11 — all chapters with derivations",
@@ -290,7 +290,7 @@ const ROADMAP = [
 /* Coaching institutes */
 const COACHING = [
   {
-    name: "Allen Career Institute", city: "Kota, Rajasthan", color: "#F97316", badge: "🏆 #1 Results",
+    name: "Allen Career Institute", city: "Kota, Rajasthan", color: "#F15A38", badge: "🏆 #1 Results",
     highlights: [
       "Largest coaching institute for IIT-JEE in India",
       "Classroom + Distance learning (DLPD) programs",
@@ -354,13 +354,13 @@ const COACHING = [
 /* ── Helpers ── */
 function diffIndex(val) {
   if (val >= 80) return { label: "Very Hard", color: "#EF4444", bg: "#fee2e2" };
-  if (val >= 70) return { label: "Hard",      color: "#F97316", bg: "#ffffff" };
+  if (val >= 70) return { label: "Hard",      color: "#F15A38", bg: "#ffffff" };
   if (val >= 60) return { label: "Medium",    color: "#EAB308", bg: "#fefce8" };
   return               { label: "Easy",      color: "#15A06E", bg: "#d1fae5" };
 }
 function labelMeta(label) {
   if (label === "Very Hard")      return { color: "#EF4444", bg: "#fee2e2" };
-  if (label.includes("Hard"))    return { color: "#F97316", bg: "#ffffff" };
+  if (label.includes("Hard"))    return { color: "#F15A38", bg: "#ffffff" };
   return                                { color: "#15A06E", bg: "#d1fae5" };
 }
 
@@ -388,7 +388,7 @@ function SubjectBar({ label, p1, p2, animate }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
         <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "var(--navy)" }}>{label}</span>
         <div style={{ display: "flex", gap: 10, fontSize: 11, color: "var(--muted)" }}>
-          <span style={{ color: "#F97316", fontWeight: 700 }}>P1: {p1}</span>
+          <span style={{ color: "#F15A38", fontWeight: 700 }}>P1: {p1}</span>
           <span style={{ color: "#7C3AED", fontWeight: 700 }}>P2: {p2}</span>
         </div>
       </div>
@@ -399,7 +399,7 @@ function SubjectBar({ label, p1, p2, animate }) {
             <div style={{
               height: "100%",
               width: animate ? `${(p1 / maxVal) * 100}%` : "0%",
-              background: "linear-gradient(90deg, #F97316, #fb923c)",
+              background: "linear-gradient(90deg, #F15A38, #fb923c)",
               borderRadius: 6,
               transition: "width 0.9s cubic-bezier(.4,0,.2,1)",
             }} />
@@ -612,7 +612,7 @@ export default function JeeAdvanced() {
 
         .section-divider-adv {
           height: 3px;
-          background: linear-gradient(90deg, #F97316 0%, #7C3AED 40%, #0EA5A4 70%, #EC4899 100%);
+          background: linear-gradient(90deg, #F15A38 0%, #7C3AED 40%, #0EA5A4 70%, #EC4899 100%);
           border-radius: 2px; margin: 0;
         }
         @media (max-width: 720px) {
@@ -658,7 +658,7 @@ export default function JeeAdvanced() {
           sub="See which IIT branches you can secure across all 6 JoSAA rounds. IITs do not participate in CSAB." bg="transparent">
           <div style={{
             display: "flex", alignItems: "center", gap: 10,
-            background: "#fff8ed", border: "1px solid #f97316",
+            background: "#fff8ed", border: "1px solid #F15A38",
             borderRadius: 10, padding: "12px 16px", marginBottom: 20,
             fontSize: 13, color: "#92400e",
           }}>
@@ -821,7 +821,7 @@ export default function JeeAdvanced() {
               </div>
               <div style={{ display: "flex", gap: 14, fontSize: 12, color: "var(--muted)" }}>
                 <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                  <span style={{ width: 10, height: 10, borderRadius: 2, background: "#F97316", display: "inline-block" }} />Paper 1
+                  <span style={{ width: 10, height: 10, borderRadius: 2, background: "#F15A38", display: "inline-block" }} />Paper 1
                 </span>
                 <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
                   <span style={{ width: 10, height: 10, borderRadius: 2, background: "#7C3AED", display: "inline-block" }} />Paper 2
@@ -845,7 +845,7 @@ export default function JeeAdvanced() {
               key={`bars-${selectedYear}`}
               data={subjectBars}
               bars={[
-                { key: "Paper1", label: "Paper 1", color: "#F97316" },
+                { key: "Paper1", label: "Paper 1", color: "#F15A38" },
                 { key: "Paper2", label: "Paper 2", color: "#7C3AED" },
               ]}
               height={280}
@@ -998,7 +998,7 @@ export default function JeeAdvanced() {
 
           <div className="grid-3" style={{ gap: 22, marginBottom: 22 }}>
             {[
-              { label: "Physics",   data: TREND_PHYSICS,   c1: "#F97316", c2: "#fdba74", note: "Rising steadily — application-based Modern Physics and EMI problems increasing" },
+              { label: "Physics",   data: TREND_PHYSICS,   c1: "#F15A38", c2: "#fdba74", note: "Rising steadily — application-based Modern Physics and EMI problems increasing" },
               { label: "Chemistry", data: TREND_CHEMISTRY, c1: "#0EA5A4", c2: "#5eead4", note: "Most scoring subject consistently — Named reactions and Physical Chemistry key" },
               { label: "Maths",     data: TREND_MATHS,     c1: "#7C3AED", c2: "#c084fc", note: "Toughest every year — multi-correct calculus and 3D Geometry dominate" },
             ].map(({ label, data, c1, c2, note }) => (
@@ -1030,7 +1030,7 @@ export default function JeeAdvanced() {
           {/* Trend insight mini cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }}>
             {[
-              { icon: "⚛", color: "#F97316", title: "Physics",   stat: "↓ eased in 2026", sub: "Climbed to a ~83 (2025 P2) peak, then eased to ~74 in 2026 as Roorkee set a more application-friendly paper" },
+              { icon: "⚛", color: "#F15A38", title: "Physics",   stat: "↓ eased in 2026", sub: "Climbed to a ~83 (2025 P2) peak, then eased to ~74 in 2026 as Roorkee set a more application-friendly paper" },
               { icon: "⚗", color: "#0EA5A4", title: "Chemistry", stat: "Most scoring",    sub: "Stayed the most scoring subject — 2026 a touch easier than 2025; focus on Named Reactions and Physical Chem" },
               { icon: "∑",  color: "#7C3AED", title: "Maths",    stat: "Still #1 hardest", sub: "Toughest every year incl. 2026, though noticeably more approachable than 2025's peak — calculus & 3D geometry still decisive" },
             ].map(({ icon, color, title, stat, sub }) => (
@@ -1067,7 +1067,7 @@ export default function JeeAdvanced() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 28 }}>
             {[
               { cat: "CRL (General)", key: "crl",       color: "#7C3AED" },
-              { cat: "OBC-NCL & EWS", key: "obc_ews",   color: "#F97316" },
+              { cat: "OBC-NCL & EWS", key: "obc_ews",   color: "#F15A38" },
               { cat: "SC / ST / PwD", key: "sc_st_pwd", color: "#0EA5A4" },
             ].map(({ cat, key, color }) => {
               const latest = QUALIFYING_TREND[QUALIFYING_TREND.length - 1];
@@ -1109,7 +1109,7 @@ export default function JeeAdvanced() {
                     <tr key={row.year} className="qty-row-adv">
                       <td><strong style={{ fontFamily: "Sora", fontSize: 14 }}>{row.year}</strong></td>
                       <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 800, color: "#7C3AED" }}>{row.crl} marks</span></td>
-                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#F97316" }}>{row.obc_ews} marks</span></td>
+                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#F15A38" }}>{row.obc_ews} marks</span></td>
                       <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#0EA5A4" }}>{row.sc_st_pwd} marks</span></td>
                     </tr>
                   ))}
@@ -1123,7 +1123,7 @@ export default function JeeAdvanced() {
                 📊 2026 Qualifying Marks — Category Visual (out of 360)
               </div>
               <MarksBar label="CRL (General)"  value={92} color="#7C3AED" maxValue={180} />
-              <MarksBar label="OBC-NCL / EWS"  value={82} color="#F97316" maxValue={180} />
+              <MarksBar label="OBC-NCL / EWS"  value={82} color="#F15A38" maxValue={180} />
               <MarksBar label="SC / ST / PwD"  value={46} color="#0EA5A4" maxValue={180} />
             </div>
 
@@ -1131,7 +1131,7 @@ export default function JeeAdvanced() {
               data={QUALIFYING_TREND}
               lines={[
                 { key: "crl",       label: "CRL (General)",     color: "#7C3AED" },
-                { key: "obc_ews",   label: "OBC-NCL & GEN-EWS", color: "#F97316" },
+                { key: "obc_ews",   label: "OBC-NCL & GEN-EWS", color: "#F15A38" },
                 { key: "sc_st_pwd", label: "SC, ST & PwD",      color: "#0EA5A4" },
               ]}
               height={320}
@@ -1183,7 +1183,7 @@ export default function JeeAdvanced() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 28 }}>
             {[
               { label: "Total Papers", value: "2",       sub: "Paper 1 + Paper 2",  color: "#7C3AED" },
-              { label: "Total Marks",  value: "360",     sub: "180 per paper",      color: "#F97316" },
+              { label: "Total Marks",  value: "360",     sub: "180 per paper",      color: "#F15A38" },
               { label: "Duration",     value: "3 hrs",   sub: "per paper (6 hrs total)", color: "#0EA5A4" },
             ].map(({ label, value, sub, color }) => (
               <div key={label} className="card" style={{ textAlign: "center", borderTop: `4px solid ${color}`, padding: "20px 12px" }}>
@@ -1224,7 +1224,7 @@ export default function JeeAdvanced() {
             {[
               {
                 title: "Paper 1 — Question Types",
-                color: "#F97316",
+                color: "#F15A38",
                 types: [
                   "MCQ — Single Correct (3 marks, −1 penalty)",
                   "MCQ — Multiple Correct (4 marks, partial credit)",
@@ -1270,7 +1270,7 @@ export default function JeeAdvanced() {
           <div style={{ position: "relative", maxWidth: 960, margin: "0 auto" }}>
             <div style={{
               position: "absolute", left: "50%", top: 0, bottom: 0, width: 3,
-              background: "linear-gradient(180deg,#F97316,#0EA5A4,#7C3AED,#EC4899,#EAB308,#15A06E)",
+              background: "linear-gradient(180deg,#F15A38,#0EA5A4,#7C3AED,#EC4899,#EAB308,#15A06E)",
               transform: "translateX(-50%)", borderRadius: 4,
             }} />
             {ROADMAP.map((step, i) => (
@@ -1320,7 +1320,7 @@ export default function JeeAdvanced() {
             <h4 style={{ fontFamily: "Sora", fontWeight: 800, marginBottom: 16, color: "#1a1a2e" }}>📚 Complete Book List — JEE Advanced</h4>
             <div className="grid-3" style={{ gap: 14 }}>
               {[
-                { subj: "Physics",   books: ["H.C. Verma Vol 1 & 2 (must)", "Irodov Problems in General Physics", "DC Pandey (Series)", "FIITJEE Physics Study Material"], color: "#F97316" },
+                { subj: "Physics",   books: ["H.C. Verma Vol 1 & 2 (must)", "Irodov Problems in General Physics", "DC Pandey (Series)", "FIITJEE Physics Study Material"], color: "#F15A38" },
                 { subj: "Chemistry", books: ["NCERT 11 & 12 (mandatory base)", "JD Lee Inorganic Chemistry", "Morrison & Boyd Organic", "Narendra Awasthi Physical Chem"], color: "#0EA5A4" },
                 { subj: "Maths",     books: ["RD Sharma / SL Loney Trigonometry", "ML Khanna IIT Mathematics", "FIITJEE Maths Study Material", "Arihant 41 Years PYQ"], color: "#7C3AED" },
               ].map(({ subj, books, color }) => (

@@ -108,6 +108,70 @@ function StepDots({ total, current }) {
   );
 }
 
+/* Animated balance scale — tilts toward Branch or College as answers come in.
+   `tilt` is -1 (branch-heavy) … 0 (even) … +1 (college-heavy). */
+function BalanceScale({ tilt = 0, step, total }) {
+  const angle = Math.max(-13, Math.min(13, tilt * 13)); // degrees, + = college (right) down
+  const FACTOR_COLORS = [CL.coral, CL.green, CL.amber, CL.blue, CL.violet];
+  return (
+    <div style={{
+      background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`,
+      boxShadow: CL.shadow, padding: "26px 24px 22px",
+      display: "flex", flexDirection: "column", height: "100%",
+    }}>
+      <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".12em", color: CL.muted, textTransform: "uppercase", textAlign: "center" }}>
+        Your leaning so far
+      </div>
+
+      <div style={{ flex: 1, display: "grid", placeItems: "center", minHeight: 200 }}>
+        <svg viewBox="0 0 300 200" width="100%" style={{ maxWidth: 320 }}>
+          {/* base + stand */}
+          <rect x="118" y="178" width="64" height="9" rx="4" fill={CL.ink} />
+          <rect x="146" y="58" width="8" height="124" rx="4" fill="#8a6b5e" />
+          <circle cx="150" cy="58" r="7" fill={CL.coral}>
+            <animate attributeName="opacity" values="1;.55;1" dur="2.2s" repeatCount="indefinite" />
+          </circle>
+
+          {/* tilting assembly */}
+          <motion.g
+            animate={{ rotate: angle }}
+            transition={{ type: "spring", stiffness: 90, damping: 12 }}
+            style={{ transformOrigin: "150px 58px" }}
+          >
+            {/* beam */}
+            <rect x="45" y="54" width="210" height="8" rx="4" fill="#6f4f43" />
+            {/* left pan (Branch) */}
+            <line x1="60" y1="58" x2="60" y2="92" stroke="#a98" strokeWidth="2" />
+            <path d="M36 92 A24 14 0 0 0 84 92 Z" fill={CL.coralSoft} stroke={CL.coral} strokeWidth="2" />
+            {/* right pan (College) */}
+            <line x1="240" y1="58" x2="240" y2="92" stroke="#a98" strokeWidth="2" />
+            <path d="M216 92 A24 14 0 0 0 264 92 Z" fill={CL.greenSoft} stroke={CL.green} strokeWidth="2" />
+          </motion.g>
+        </svg>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "space-between", padding: "0 8px", marginTop: 2 }}>
+        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 13.5, color: CL.coral }}>Branch</span>
+        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 13.5, color: CL.green }}>College</span>
+      </div>
+
+      <div style={{ height: 1, background: CL.line, margin: "16px 0 14px" }} />
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 9, justifyContent: "center" }}>
+        {FACTORS.map((f, i) => (
+          <span key={f} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, color: CL.body, fontWeight: 600 }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: FACTOR_COLORS[i % FACTOR_COLORS.length] }} /> {f}
+          </span>
+        ))}
+      </div>
+
+      <div style={{ marginTop: 14, fontSize: 11.5, color: CL.muted, textAlign: "center" }}>
+        Question {Math.min(step + 1, total)} of {total} · live, private
+      </div>
+    </div>
+  );
+}
+
 function ResultCard({ result, onReset }) {
   return (
     <motion.div
@@ -227,6 +291,13 @@ export default function BranchVsCollege({ asPage = false }) {
   const q = QUESTIONS[step];
   const result = done ? computeResult(answers) : null;
 
+  /* running lean for the balance scale: +1 college … -1 branch */
+  const tally = answers.reduce((acc, a) => {
+    if (a) { if (a.lean === "college") acc.c += a.w; else acc.b += a.w; }
+    return acc;
+  }, { c: 0, b: 0 });
+  const tilt = (tally.c + tally.b) ? (tally.c - tally.b) / (tally.c + tally.b) : 0;
+
   return (
     <section id="branch-vs-college" style={{ background: asPage ? CL.cream : CL.cream, padding: asPage ? "104px 0 80px" : "84px 0", scrollMarginTop: 80 }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
@@ -240,11 +311,15 @@ export default function BranchVsCollege({ asPage = false }) {
           </p>
         </div>
 
-        <AnimatePresence mode="wait">
-          {!done ? (
+        {!done ? (
+          <div className="bvc-quiz-grid">
+            <div className="bvc-scale-col">
+              <BalanceScale tilt={tilt} step={step} total={QUESTIONS.length} />
+            </div>
+            <AnimatePresence mode="wait">
             <motion.div key={`q-${step}`}
               initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.28 }}
-              style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "30px 28px", maxWidth: 680, margin: "0 auto" }}
+              style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "30px 28px" }}
             >
               <StepDots total={QUESTIONS.length} current={step} />
               <div style={{ fontSize: 12, fontWeight: 700, color: CL.muted, textAlign: "center", marginBottom: 8 }}>Question {step + 1} of {QUESTIONS.length}</div>
@@ -276,13 +351,11 @@ export default function BranchVsCollege({ asPage = false }) {
                 </div>
               )}
             </motion.div>
+            </AnimatePresence>
+          </div>
           ) : (
-            <motion.div key="result"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <ResultCard result={result} onReset={reset} />
-            </motion.div>
+            <ResultCard result={result} onReset={reset} />
           )}
-        </AnimatePresence>
       </div>
     </section>
   );

@@ -14,7 +14,7 @@ import {
 import { uploadToCloudinary, validateFile, compressImage, getUploadSignature } from "../../utils/cloudinaryUpload.js";
 
 /* ── palette ──────────────────────────────────────────────────────── */
-export const ORANGE = "#F15A38", GOLD = "#f5a623", GREEN = "#15a06e";
+export const ORANGE = "#F15A38", GOLD = "#F15A38", GREEN = "#15a06e";
 export const NAVY = "#0d1b3e", INK = "#1a1a2e", MUTE = "#5b6472", CYAN = "#0ea5e9";
 
 export const TAG_META = {

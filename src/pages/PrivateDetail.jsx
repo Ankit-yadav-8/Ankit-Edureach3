@@ -127,7 +127,7 @@ export default function PrivateDetail() {
           <Reveal delay={0.08}>
             <div className="card">
               <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Placements</h3>
-              <CenterDonut data={placeData} centerLabel={`${u.placements.placedPct}%`} centerSub="placed" colors={["#2EC4B6", "#F97316"]} height={190} />
+              <CenterDonut data={placeData} centerLabel={`${u.placements.placedPct}%`} centerSub="placed" colors={["#2EC4B6", "#F15A38"]} height={190} />
               <div className="grid-2" style={{ gap: 12, marginTop: 12 }}>
                 {[["Average", u.placements.avg], ["Highest", u.placements.highest]].map(([l, v]) => (
                   <div key={l} style={{ background: "var(--sky)", borderRadius: 12, padding: 14 }}>
@@ -136,7 +136,7 @@ export default function PrivateDetail() {
                   </div>
                 ))}
               </div>
-              <span className="pill" style={{ marginTop: 14, background: "#fff3e6", color: "#F97316" }}>Application deadline: {u.deadline}</span>
+              <span className="pill" style={{ marginTop: 14, background: "#fff3e6", color: "#F15A38" }}>Application deadline: {u.deadline}</span>
             </div>
           </Reveal>
         </div>

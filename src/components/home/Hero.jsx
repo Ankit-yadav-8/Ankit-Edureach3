@@ -61,11 +61,11 @@ function useBreakpoint() {
 /* ════════════════════════════════════════════════
    CONSTANTS
 ════════════════════════════════════════════════ */
-const ABOUT_ACCENT = "#f5a623";
+const ABOUT_ACCENT = "#F15A38";
 
 const TOP_COLLEGES = [
   { name: "IIT Bombay",  type: "IIT",  nirf: 3,  avg: "₹33.8L", placed: 96, color: "#6366f1" },
-  { name: "IIT Delhi",   type: "IIT",  nirf: 2,  avg: "₹32.3L", placed: 96, color: "#F97316" },
+  { name: "IIT Delhi",   type: "IIT",  nirf: 2,  avg: "₹32.3L", placed: 96, color: "#F15A38" },
   { name: "IIT Roorkee",  type: "IIT",  nirf: 6,  avg: "₹30.7L", placed: 95, color: "#0ea5a4" },
   { name: "IIT Madras",  type: "IIT",  nirf: 1, avg: "₹31.2L", placed: 97, color: "#8b5cf6" },
   { name: "IIT Kanpur",    type: "IIT", nirf: 4, avg: "₹32.6L", placed: 97, color: "#10b981" },
@@ -183,7 +183,7 @@ function MeshDots({ dotCount = 80 }) {
     };
     resize();
     window.addEventListener("resize", resize);
-    const COLORS = ["#6366f1", "#F97316", "#0ea5a4", "#8b5cf6", "#f4a261", "#ffffff"];
+    const COLORS = ["#6366f1", "#F15A38", "#0ea5a4", "#8b5cf6", "#f4a261", "#ffffff"];
     const dots = Array.from({ length: dotCount }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -573,7 +573,7 @@ function LiveCollegePanel({ isTablet }) {
         onClick={() => window.location.href = "/colleges"}
         style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: "linear-gradient(135deg, #F97316, #E0421F)",
+          background: "linear-gradient(135deg, #F15A38, #E0421F)",
           color: "#fff", border: "none", borderRadius: 11,
           padding: isTablet ? "9px 12px" : "11px 16px",
           fontSize: isTablet ? 12 : 13, fontWeight: 700,
@@ -595,14 +595,14 @@ function LiveCollegePanel({ isTablet }) {
 ════════════════════════════════════════════════ */
 function MentorshipHeroCard({ isTablet }) {
   const nav = useNavigate();
-  const GOLD = "#f5a623";
+  const GOLD = "#F15A38";
   const [active, setActive] = useState(0);
 
   // rotating spotlight across the JEE/NEET tracks
   const tracks = [
-    { exam: "JEE 2027",  price: "₹1", color: "#f5a623", to: "/mentorship/jee-2027" },
+    { exam: "JEE 2027",  price: "₹1", color: "#F15A38", to: "/mentorship/jee-2027" },
     { exam: "NEET 2027", price: "₹1", color: "#22c55e", to: "/mentorship/jee-2027" },
-    { exam: "JEE 2028",  price: "₹1", color: "#f5a623", to: "/mentorship/jee-2028" },
+    { exam: "JEE 2028",  price: "₹1", color: "#F15A38", to: "/mentorship/jee-2028" },
     { exam: "NEET 2028", price: "₹1", color: "#22c55e", to: "/mentorship/jee-2028" },
   ];
   return (
@@ -724,7 +724,7 @@ const HERO_CARDS = [
     cta: "Find my colleges", to: "/for-you",
   },
   {
-    key: "mentorship", accent: "#f5a623", Icon: Users,
+    key: "mentorship", accent: "#F15A38", Icon: Users,
     eyebrow: "1-on-1", title: "JEE & NEET Mentorship",
     rows: [
       ["Daily targets", "Yes"],
@@ -875,7 +875,7 @@ const FEATURE_CARDS = [
   { key: "neet", accent: "#22c55e", Icon: Award, eyebrow: "Free Tool", title: "NEET",
     rows: [["Rank predictor", "Yes"], ["MBBS colleges", "Explore"], ["Cutoffs", "All-India"]],
     cta: "Open NEET", to: "/neet" },
-  { key: "mentorship", accent: "#f5a623", Icon: Users, eyebrow: "1-on-1", title: "Mentorship",
+  { key: "mentorship", accent: "#F15A38", Icon: Users, eyebrow: "1-on-1", title: "Mentorship",
     rows: [["JEE & NEET", "2027·2028"], ["Daily targets", "Yes"], ["Starts at", "₹1"]],
     cta: "Explore Mentorship", to: "/mentorship/jee-2027" },
   { key: "counselling", accent: "#0ea5a4", Icon: GraduationCap, eyebrow: "Counselling", title: "Colleges",
@@ -997,7 +997,7 @@ const HERO_RADAR = [
     desc: "Predict your NEET rank and explore MBBS & medical colleges with cutoffs.",
     links: [["NEET Rank Predictor", "/neet"], ["Medical College Finder", "/neet"], ["NEET Cutoffs", "/neet"], ["Counselling guidance", "/planner"]],
     cta: "Open NEET", to: "/neet" },
-  { key: "mentorship", accent: "#f5a623", eyebrow: "1-ON-1 MENTORSHIP", title: "Mentorship by IITians",
+  { key: "mentorship", accent: "#F15A38", eyebrow: "1-ON-1 MENTORSHIP", title: "Mentorship by IITians",
     desc: "Daily targets, test analysis & live tracking for JEE and NEET aspirants.",
     links: [["JEE 2027 Mentorship", "/mentorship/jee-2027"], ["JEE 2028 Mentorship", "/mentorship/jee-2028"], ["NEET Mentorship", "/mentorship/jee-2027"], ["How it works", "/mentorship/jee-2027"]],
     cta: "Explore Mentorship", to: "/mentorship/jee-2027" },
@@ -1131,7 +1131,7 @@ const HERO_LEFT = [
 ];
 
 const HERO_RIGHT = [
-  { key: "mentorship", accent: "#f5a623", Icon: Users, eyebrow: "1-ON-1 MENTORSHIP", title: "Mentorship by IITians",
+  { key: "mentorship", accent: "#F15A38", Icon: Users, eyebrow: "1-ON-1 MENTORSHIP", title: "Mentorship by IITians",
     desc: "A personal IITian / doctor mentor, daily targets and weekly test analysis for JEE & NEET — every plan, Foundation to Droppers, in one place.",
     highlights: ["1-on-1", "Daily targets", "IITian mentors"],
     links: [["JEE & NEET 2027 plan", "/mentorship"], ["JEE & NEET 2028 plan", "/mentorship"], ["Foundation · Class 9–10", "/mentorship"], ["View all mentorship plans", "/mentorship"]],
@@ -1310,8 +1310,8 @@ const SIX_CARDS = [
   { key: "jee-adv", Icon: Trophy, accent: "#8b5cf6", title: "JEE Advanced", desc: "Cutoffs · Predictor · IIT Seat Matrix", cta: "Explore JEE Advanced", to: "/jee-advanced" },
   { key: "jee-main", Icon: GraduationCap, accent: "#F15A38", title: "JEE Mains", desc: "Rank Predict · NIT Cutoffs · Sessions", cta: "Explore JEE Mains", to: "/jee-main" },
   { key: "neet", Icon: Stethoscope, accent: "#22c55e", title: "NEET", desc: "MBBS Colleges · State Cutoffs · AIQ", cta: "Explore NEET", to: "/neet" },
-  { key: "mentorship", Icon: Users, accent: "#f5a623", title: "Mentorship", desc: "1-on-1 with IITian Mentors · Personalised Guidance", cta: "Book a Session", to: "/mentorship/jee-2027" },
-  { key: "radar", Icon: Radar, accent: "#f97316", title: "Application & Counselling Radar", radar: true, colleges: ["IIT Bombay", "IIT Delhi", "NIT Trichy", "NIT Warangal", "BITS Pilani", "KIIT", "VIT"], cta: "View Radar", to: "/planner" },
+  { key: "mentorship", Icon: Users, accent: "#F15A38", title: "Mentorship", desc: "1-on-1 with IITian Mentors · Personalised Guidance", cta: "Book a Session", to: "/mentorship/jee-2027" },
+  { key: "radar", Icon: Radar, accent: "#F15A38", title: "Application & Counselling Radar", radar: true, colleges: ["IIT Bombay", "IIT Delhi", "NIT Trichy", "NIT Warangal", "BITS Pilani", "KIIT", "VIT"], cta: "View Radar", to: "/planner" },
   { key: "about", Icon: Info, accent: "#6366f1", title: "About Us / Our Story", desc: "IIT Roorkee Startup · Built by IITians", cta: "Our Story", to: "/about" },
 ];
 
@@ -1337,7 +1337,7 @@ function SixFeatureCards({ isMobile, isXs }) {
             cursor: "pointer", display: "flex", flexDirection: "column", gap: 8,
             minHeight: c.radar ? 232 : 200, textAlign: "left",
             background: "#fff",
-            border: c.radar ? "1.5px solid #f97316" : "1px solid rgba(0,0,0,.08)",
+            border: c.radar ? "1.5px solid #F15A38" : "1px solid rgba(0,0,0,.08)",
             borderRadius: 16, padding: "16px 14px", position: "relative",
             boxShadow: "0 1px 3px rgba(0,0,0,.05)",
             transition: "box-shadow .25s, transform .25s",
@@ -1346,7 +1346,7 @@ function SixFeatureCards({ isMobile, isXs }) {
           onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,.05)"; e.currentTarget.style.transform = ""; }}
         >
           {c.radar && (
-            <span style={{ position: "absolute", top: 10, right: 10, fontSize: 9, fontWeight: 800, letterSpacing: ".5px", color: "#f97316", background: "rgba(249,115,22,.12)", border: "1px solid rgba(249,115,22,.3)", borderRadius: 9999, padding: "2px 8px" }}>Radar</span>
+            <span style={{ position: "absolute", top: 10, right: 10, fontSize: 9, fontWeight: 800, letterSpacing: ".5px", color: "#F15A38", background: "rgba(249,115,22,.12)", border: "1px solid rgba(249,115,22,.3)", borderRadius: 9999, padding: "2px 8px" }}>Radar</span>
           )}
           <span style={{ width: 40, height: 40, borderRadius: 11, background: `${c.accent}18`, border: `1.5px solid ${c.accent}38`, display: "grid", placeItems: "center", flexShrink: 0 }}>
             <c.Icon size={20} color={c.accent} />

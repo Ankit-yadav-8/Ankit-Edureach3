@@ -6,8 +6,8 @@ import { TiltCard, FloatingOrbs, StaggerReveal, StaggerItem } from "../Animation
 
 const CARDS = [
   {
-    icon: Gauge, title: "Rank Predictor", accent: "#F97316",
-    gradient: "linear-gradient(135deg, #F97316, #E0421F)",
+    icon: Gauge, title: "Rank Predictor", accent: "#F15A38",
+    gradient: "linear-gradient(135deg, #F15A38, #E0421F)",
     desc: "Enter your expected marks and instantly see your projected JEE Main rank, percentile and category rank.",
     to: "/jee-main#rank", cta: "Predict My Rank",
     donut: { data: [{ name: "Physics", value: 33 }, { name: "Chemistry", value: 33 }, { name: "Maths", value: 34 }], label: "300", sub: "max marks" },
@@ -20,7 +20,7 @@ const CARDS = [
     desc: "Turn your rank into a personalised list of colleges — across all JoSAA & CSAB rounds, with packages & placements.",
     to: "/jee-main#college", cta: "Find My Colleges",
     donut: { data: [{ name: "Safe", value: 40 }, { name: "Moderate", value: 35 }, { name: "Ambitious", value: 25 }], label: "6+2", sub: "JoSAA + CSAB" },
-    colors: ["#2EC4B6", "#6366f1", "#F97316"],
+    colors: ["#2EC4B6", "#6366f1", "#F15A38"],
     badge: "850+ colleges",
   },
   {
@@ -29,7 +29,7 @@ const CARDS = [
     desc: "Deep-dive into IITs, NITs & IIITs — cutoffs, fees, branch-wise placements, recruiters and campus life.",
     to: "/colleges", cta: "Explore Colleges",
     donut: { data: [{ name: "IITs", value: 23 }, { name: "NITs", value: 31 }, { name: "IIITs", value: 26 } ], label: "80+", sub: "institutes" },
-    colors: ["#F97316", "#0EA5A4", "#6366f1"],
+    colors: ["#F15A38", "#0EA5A4", "#6366f1"],
     badge: "Real cutoffs",
   },
 ];

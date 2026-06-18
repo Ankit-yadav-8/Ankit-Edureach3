@@ -4,9 +4,9 @@
    stays visually consistent. */
 
 export const CL = {
-  cream:    "#FDF6F0",   // page / section background
-  cream2:   "#FBF1E9",   // inset card / soft fill
-  cream3:   "#F7EBE0",   // borders on cream
+  cream:    "#FFFFFF",   // page / section background (white)
+  cream2:   "#F7F7F8",   // inset card / soft fill (barely-there neutral)
+  cream3:   "#ECEAEF",   // borders on cream
   card:     "#FFFFFF",
   ink:      "#211D2E",   // headings
   ink2:     "#3B3743",

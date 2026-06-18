@@ -2,7 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { photosForCollege } from "../data/gallery.js";
 
-const FALLBACK = ["linear-gradient(135deg,#1c1c28,#2EC4B6)", "linear-gradient(135deg,#F97316,#F4A261)", "linear-gradient(135deg,#2a2a3c,#0EA5A4)", "linear-gradient(135deg,#2d6a4f,#2EC4B6)"];
+const FALLBACK = ["linear-gradient(135deg,#1c1c28,#2EC4B6)", "linear-gradient(135deg,#F15A38,#F4A261)", "linear-gradient(135deg,#2a2a3c,#0EA5A4)", "linear-gradient(135deg,#2d6a4f,#2EC4B6)"];
 
 export default function Gallery({ slug, accent = "#1c1c28" }) {
   const photos = photosForCollege(slug, 6);

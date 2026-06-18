@@ -115,7 +115,7 @@ export default function CommunityModeration({ token }) {
           <textarea value={annText} onChange={(e) => setAnnText(e.target.value)} rows={2} placeholder="Write your announcement…"
             style={{ flex: 1, minWidth: 240, padding: "10px 12px", borderRadius: 9, border: "1.5px solid #e5e7eb", fontSize: 13.5, resize: "vertical", fontFamily: "inherit" }} />
           <button onClick={postAnnouncement} disabled={annBusy}
-            style={{ ...btn(`linear-gradient(135deg,${ORANGE},#f5a623)`, "#fff", "none"), height: 40, padding: "0 16px" }}>
+            style={{ ...btn(`linear-gradient(135deg,${ORANGE},#F15A38)`, "#fff", "none"), height: 40, padding: "0 16px" }}>
             {annBusy ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Send size={14} />} Post & pin
           </button>
         </div>
