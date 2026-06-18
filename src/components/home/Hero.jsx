@@ -1613,20 +1613,20 @@ export default function Hero({ onSearch }) {
               <button
                 onClick={() => nav("/community")}
                 style={{
-                  display: "inline-flex", alignItems: "center", gap: 9,
-                  padding: "11px 20px", borderRadius: 50, cursor: "pointer",
-                  background: "#fff", border: "1.5px solid rgba(14,165,233,.45)",
-                  boxShadow: "0 10px 26px -14px rgba(14,165,233,.6)",
-                  fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: "#0284c7",
-                  transition: "all .2s",
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  padding: "10px 18px", borderRadius: 50, cursor: "pointer",
+                  background: "#F15A38", border: "1.5px solid #F15A38",
+                  boxShadow: "0 10px 24px -12px rgba(241,90,56,.7)",
+                  fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: "#fff",
+                  transition: "all .2s", whiteSpace: "nowrap",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.borderColor = "#0ea5e9"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(14,165,233,.45)"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.background = "#E0421F"; e.currentTarget.style.borderColor = "#E0421F"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#F15A38"; e.currentTarget.style.borderColor = "#F15A38"; }}
               >
-                <span style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(14,165,233,.12)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <Globe2 size={15} color="#0ea5e9" />
+                <span style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(255,255,255,.2)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <Globe2 size={14} color="#fff" />
                 </span>
-                Join the Community — share tricks, strategies &amp; notes
+                Join the Community
                 <ArrowRight size={15} />
               </button>
             </motion.div>

@@ -34,7 +34,6 @@ import OfficialCutoffs from "./pages/OfficialCutoffs.jsx";
 import CompareTray from "./components/CompareTray.jsx";
 import Chatbot from "./components/Chatbot.jsx";
 import WhatsAppButton from "./components/WhatsAppButton.jsx";
-import BlogFab from "./components/BlogFab.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
 import SearchResults from "./pages/SearchResults.jsx";
 import NotFound from "./pages/NotFound.jsx";
@@ -56,6 +55,7 @@ import BranchVsCollegePage from "./pages/BranchVsCollegePage.jsx";
 import ExamBuzz from "./pages/ExamBuzz.jsx";
 import Blog from "./pages/Blog.jsx";
 import BlogPost from "./pages/BlogPost.jsx";
+import ChapterAnalysis from "./pages/ChapterAnalysis.jsx";
 import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
@@ -173,6 +173,7 @@ export default function App() {
           <Route path="/exam-buzz" element={<ExamBuzz />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/jee-analysis" element={<ChapterAnalysis />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
@@ -182,7 +183,6 @@ export default function App() {
       <CompareTray />
       <Chatbot />
       <WhatsAppButton />
-      <BlogFab />
       <AuthModal />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>

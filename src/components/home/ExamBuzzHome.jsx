@@ -3,9 +3,10 @@
    dedicated /exam-buzz page; this card invites users in. */
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Radio, Newspaper, CalendarClock, ArrowRight } from "lucide-react";
+import { Radio, Newspaper, CalendarClock, ArrowRight, BookOpen } from "lucide-react";
 import { NEWS } from "../../data/news.js";
 import { RADAR } from "../../data/counselling.js";
+import { BLOG_POSTS } from "../../data/blog.js";
 import { CL, clEyebrow } from "./clTheme.js";
 
 export default function ExamBuzzHome() {
@@ -70,6 +71,32 @@ export default function ExamBuzzHome() {
             </div>
             <Link to="/exam-buzz" style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 7, color: CL.coralDk, fontWeight: 700, fontSize: 13.5, fontFamily: CL.display }}>
               Open the full radar <ArrowRight size={15} />
+            </Link>
+          </motion.div>
+
+          {/* blog preview */}
+          <motion.div whileHover={{ y: -5 }} style={{ background: CL.card, borderRadius: 20, border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: "24px 24px", display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 16 }}>
+              <span style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(58,134,255,.12)", display: "grid", placeItems: "center" }}>
+                <BookOpen size={20} color={CL.blue} />
+              </span>
+              <div>
+                <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.15rem", color: CL.ink }}>From the Blog</h3>
+                <span style={{ fontSize: 12, color: CL.blue, fontWeight: 700 }}>Guides by IIT Roorkee alumni</span>
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
+              {BLOG_POSTS.slice(0, 3).map((p) => (
+                <Link key={p.slug} to={`/blog/${p.slug}`} style={{ display: "flex", gap: 9, alignItems: "flex-start", textDecoration: "none" }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: CL.blue, marginTop: 7, flexShrink: 0 }} />
+                  <span style={{ fontSize: 13, color: CL.ink2, lineHeight: 1.45 }}>
+                    <strong style={{ color: CL.coralDk }}>{p.category}</strong> · {p.title}
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <Link to="/blog" style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 7, color: CL.coralDk, fontWeight: 700, fontSize: 13.5, fontFamily: CL.display }}>
+              Read the blog <ArrowRight size={15} />
             </Link>
           </motion.div>
         </div>

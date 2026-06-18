@@ -23,6 +23,8 @@ const JEE_MEGA = [
       { label: "Mathematics (19 chapters)", to: "/jee-resources?subject=math",      icon: Sigma },
       { label: "Physics (25 chapters)",     to: "/jee-resources?subject=physics",   icon: Zap },
       { label: "Chemistry (29 chapters)",   to: "/jee-resources?subject=chemistry", icon: FlaskConical },
+      { label: "JEE Advanced Analysis",     to: "/jee-analysis?exam=advanced",      icon: BarChart3 },
+      { label: "JEE Mains Analysis",        to: "/jee-analysis?exam=main",          icon: BarChart3 },
       { label: "Exam Cycle 2025–26",        to: "/exam-buzz",                       icon: CalendarClock },
     ],
   },
