@@ -157,7 +157,7 @@ function DevCard({ t, index = 0 }) {
               <span
                 key={r}
                 className="frole-chip"
-                style={{ background: `linear-gradient(135deg, ${t.accent}, #fbbf24)` }}
+                style={{ background: "rgba(255,255,255,.07)", border: "1px solid rgba(241,90,56,.45)", color: "#fb9b85" }}
               >
                 {r}
               </span>
@@ -267,7 +267,9 @@ export default function Footer() {
                 marginBottom: "1.4rem",
               }}
             >
-              Founded by IIT Roorkee alumni Ankit Yadav &amp; Ankit Kumar — a
+              Founded by IIT Roorkee alumni{" "}
+              <span style={{ color: "#F15A38", fontWeight: 800, background: "rgba(241,90,56,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Yadav</span>{" "}&amp;{" "}
+              <span style={{ color: "#F15A38", fontWeight: 800, background: "rgba(241,90,56,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Kumar</span>{" "}— a
               student-first JEE rank predictor &amp; college discovery platform,
               headquartered in Jaipur, Rajasthan.
             </p>
@@ -293,7 +295,7 @@ export default function Footer() {
           {/* "Built by developers" badge */}
           <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
             <span
-              className="fteam-badge"
+              className="fteam-badge glow-pulse"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -306,10 +308,11 @@ export default function Footer() {
                 letterSpacing: 1.2,
                 textTransform: "uppercase",
                 color: "#fff",
+                boxShadow: "0 0 22px rgba(241,90,56,.6), 0 0 0 1px rgba(255,255,255,.12)",
               }}
             >
               <Code2 size={13} />
-              Built by IIT Roorkee Alumni · Trusted by Aspirants
+              Built by IITians · Trusted by Aspirants
             </span>
           </div>
 

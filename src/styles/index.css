@@ -3125,16 +3125,8 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .cp-expand-cell             { text-align:center; }
   .cp-swipe-hint              { display:block; }
 
-  /* Pin the college column so each option stays identifiable while scrolling. */
-  .cp-results-table thead th:first-child,
-  .cp-results-table tbody td[data-label="College"] {
-    position:sticky;
-    left:0;
-    z-index:2;
-    background:#fff;
-    box-shadow:6px 0 8px -6px rgba(0,0,0,.18);
-  }
-  .cp-results-table thead th:first-child { z-index:3; background:#ffffff; }
+  /* College column scrolls horizontally with the rest of the table (not pinned). */
+  .cp-results-table tbody td[data-label="College"] { background:#fff; }
 
   /* Expanded round-by-round detail stacks to full width. */
   .cp-detail-cell .grid-2     { grid-template-columns:1fr !important; }
@@ -3178,14 +3170,8 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
     -webkit-overflow-scrolling:touch;
   }
 
-  /* Pin the college column while scrolling sideways. */
-  .cp-results-table thead th:first-child,
-  .cp-results-table tbody td[data-label="College"] {
-    position:sticky; left:0; z-index:2;
-    background:#fff; box-shadow:6px 0 8px -6px rgba(0,0,0,.18);
-  }
-  /* Top-left header cell sits above both the sticky row and sticky column. */
-  .cp-results-table thead th:first-child { z-index:5; background:#ffffff; }
+  /* College column scrolls sideways with the rest of the table (not pinned). */
+  .cp-results-table tbody td[data-label="College"] { background:#fff; }
 
   /* Expanded round-by-round detail stacks into a single column. */
   .cp-detail-cell .grid-2     { grid-template-columns:1fr !important; }
