@@ -19,6 +19,9 @@ const QUESTIONS = [
     options: [
       { label: "The brand, network and alumni of a top institute", lean: "college", w: 2 },
       { label: "Working deeply in a subject I genuinely love", lean: "branch", w: 2 },
+      { label: "The placement pipeline and recruiter footfall", lean: "college", w: 2 },
+      { label: "Mastering an in-demand, future-proof skill", lean: "branch", w: 2 },
+      { label: "A vibrant campus, fests and peer group", lean: "college", w: 1 },
       { label: "A bit of both — I'm still figuring it out", lean: "college", w: 1 },
     ],
   },
@@ -108,66 +111,103 @@ function StepDots({ total, current }) {
   );
 }
 
-/* Animated balance scale — tilts toward Branch or College as answers come in.
-   `tilt` is -1 (branch-heavy) … 0 (even) … +1 (college-heavy). */
-function BalanceScale({ tilt = 0, step, total }) {
-  const angle = Math.max(-13, Math.min(13, tilt * 13)); // degrees, + = college (right) down
-  const FACTOR_COLORS = [CL.coral, CL.green, CL.amber, CL.blue, CL.violet];
+const FACTOR_COLORS = [CL.coral, CL.green, CL.amber, CL.blue, CL.violet];
+
+/* Weights stacked inside a pan — a little dot per "point" leaning that way. */
+function PanWeights({ count, cx, cy, color }) {
+  const n = Math.min(count, 8);
+  return Array.from({ length: n }).map((_, i) => {
+    const row = Math.floor(i / 4);
+    const inRow = Math.min(4, n - row * 4);
+    const x = cx - (inRow - 1) * 5 + (i % 4) * 10;
+    const y = cy - 4 - row * 8;
+    return (
+      <motion.circle
+        key={i} cx={x} cy={y} r="3.4" fill={color}
+        initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 320, damping: 18, delay: i * 0.03 }}
+      />
+    );
+  });
+}
+
+/* Animated weighing-machine balance — tilts toward Branch or College and the
+   pans fill with weights as answers come in. `tilt` is -1 (branch) … +1 (college). */
+export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total = 6, big = false, showMeta = true }) {
+  const angle = Math.max(-14, Math.min(14, tilt * 14)); // degrees, + = college (right) down
+  const dyL = Math.round(-Math.sin((angle * Math.PI) / 180) * 95); // left pan vertical shift
+  const dyR = -dyL;
   return (
     <div style={{
       background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`,
-      boxShadow: CL.shadow, padding: "26px 24px 22px",
+      boxShadow: CL.shadow, padding: big ? "30px 28px 26px" : "26px 24px 22px",
       display: "flex", flexDirection: "column", height: "100%",
     }}>
-      <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".12em", color: CL.muted, textTransform: "uppercase", textAlign: "center" }}>
-        Your leaning so far
-      </div>
+      {showMeta && (
+        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".12em", color: CL.muted, textTransform: "uppercase", textAlign: "center" }}>
+          {tally.c + tally.b ? "Your leaning so far" : "Watch the scale decide"}
+        </div>
+      )}
 
-      <div style={{ flex: 1, display: "grid", placeItems: "center", minHeight: 200 }}>
-        <svg viewBox="0 0 300 200" width="100%" style={{ maxWidth: 320 }}>
+      <div style={{ flex: 1, display: "grid", placeItems: "center", minHeight: big ? 260 : 200 }}>
+        <svg viewBox="0 0 300 210" width="100%" style={{ maxWidth: big ? 420 : 320 }}>
           {/* base + stand */}
-          <rect x="118" y="178" width="64" height="9" rx="4" fill={CL.ink} />
-          <rect x="146" y="58" width="8" height="124" rx="4" fill="#8a6b5e" />
-          <circle cx="150" cy="58" r="7" fill={CL.coral}>
-            <animate attributeName="opacity" values="1;.55;1" dur="2.2s" repeatCount="indefinite" />
-          </circle>
+          <ellipse cx="150" cy="190" rx="56" ry="9" fill="rgba(33,29,46,.08)" />
+          <rect x="118" y="182" width="64" height="9" rx="4" fill={CL.ink} />
+          <rect x="146" y="58" width="8" height="128" rx="4" fill="#8a6b5e" />
+          <motion.circle cx="150" cy="58" r="8" fill={CL.coral}
+            animate={{ opacity: [1, 0.5, 1], scale: [1, 1.18, 1] }}
+            transition={{ duration: 2, repeat: Infinity }} />
 
-          {/* tilting assembly */}
+          {/* beam (rotates around the pivot) */}
           <motion.g
             animate={{ rotate: angle }}
-            transition={{ type: "spring", stiffness: 90, damping: 12 }}
+            transition={{ type: "spring", stiffness: 80, damping: 11 }}
             style={{ transformOrigin: "150px 58px" }}
           >
-            {/* beam */}
-            <rect x="45" y="54" width="210" height="8" rx="4" fill="#6f4f43" />
-            {/* left pan (Branch) */}
-            <line x1="60" y1="58" x2="60" y2="92" stroke="#a98" strokeWidth="2" />
-            <path d="M36 92 A24 14 0 0 0 84 92 Z" fill={CL.coralSoft} stroke={CL.coral} strokeWidth="2" />
-            {/* right pan (College) */}
-            <line x1="240" y1="58" x2="240" y2="92" stroke="#a98" strokeWidth="2" />
-            <path d="M216 92 A24 14 0 0 0 264 92 Z" fill={CL.greenSoft} stroke={CL.green} strokeWidth="2" />
+            <rect x="42" y="54" width="216" height="8" rx="4" fill="#6f4f43" />
+            <circle cx="60" cy="58" r="4" fill="#6f4f43" />
+            <circle cx="240" cy="58" r="4" fill="#6f4f43" />
+          </motion.g>
+
+          {/* left pan (Branch) — hangs from the beam end, shifts vertically with tilt */}
+          <motion.g animate={{ y: dyL }} transition={{ type: "spring", stiffness: 80, damping: 11 }}>
+            <line x1="60" y1="58" x2="40" y2="96" stroke="#b3a399" strokeWidth="1.6" />
+            <line x1="60" y1="58" x2="80" y2="96" stroke="#b3a399" strokeWidth="1.6" />
+            <path d="M34 96 A26 15 0 0 0 86 96 Z" fill={CL.coralSoft} stroke={CL.coral} strokeWidth="2" />
+            <PanWeights count={tally.b} cx={60} cy={96} color={CL.coral} />
+          </motion.g>
+
+          {/* right pan (College) */}
+          <motion.g animate={{ y: dyR }} transition={{ type: "spring", stiffness: 80, damping: 11 }}>
+            <line x1="240" y1="58" x2="220" y2="96" stroke="#b3a399" strokeWidth="1.6" />
+            <line x1="240" y1="58" x2="260" y2="96" stroke="#b3a399" strokeWidth="1.6" />
+            <path d="M214 96 A26 15 0 0 0 266 96 Z" fill={CL.greenSoft} stroke={CL.green} strokeWidth="2" />
+            <PanWeights count={tally.c} cx={240} cy={96} color={CL.green} />
           </motion.g>
         </svg>
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between", padding: "0 8px", marginTop: 2 }}>
-        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 13.5, color: CL.coral }}>Branch</span>
-        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 13.5, color: CL.green }}>College</span>
+        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 15 : 13.5, color: CL.coral }}>Branch</span>
+        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 15 : 13.5, color: CL.green }}>College</span>
       </div>
 
-      <div style={{ height: 1, background: CL.line, margin: "16px 0 14px" }} />
-
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 9, justifyContent: "center" }}>
-        {FACTORS.map((f, i) => (
-          <span key={f} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, color: CL.body, fontWeight: 600 }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: FACTOR_COLORS[i % FACTOR_COLORS.length] }} /> {f}
-          </span>
-        ))}
-      </div>
-
-      <div style={{ marginTop: 14, fontSize: 11.5, color: CL.muted, textAlign: "center" }}>
-        Question {Math.min(step + 1, total)} of {total} · live, private
-      </div>
+      {showMeta && (
+        <>
+          <div style={{ height: 1, background: CL.line, margin: "16px 0 14px" }} />
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 9, justifyContent: "center" }}>
+            {FACTORS.map((f, i) => (
+              <span key={f} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, color: CL.body, fontWeight: 600 }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: FACTOR_COLORS[i % FACTOR_COLORS.length] }} /> {f}
+              </span>
+            ))}
+          </div>
+          <div style={{ marginTop: 14, fontSize: 11.5, color: CL.muted, textAlign: "center" }}>
+            Question {Math.min(step + 1, total)} of {total} · live, private
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -314,7 +354,7 @@ export default function BranchVsCollege({ asPage = false }) {
         {!done ? (
           <div className="bvc-quiz-grid">
             <div className="bvc-scale-col">
-              <BalanceScale tilt={tilt} step={step} total={QUESTIONS.length} />
+              <BalanceScale tilt={tilt} tally={tally} step={step} total={QUESTIONS.length} />
             </div>
             <AnimatePresence mode="wait">
             <motion.div key={`q-${step}`}

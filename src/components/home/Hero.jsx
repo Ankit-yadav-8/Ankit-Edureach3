@@ -1631,8 +1631,7 @@ export default function Hero({ onSearch }) {
               </button>
             </motion.div>
 
-            {/* ── Stats bar ── */}
-            <StatsBar isMobile={isMobile} isXs={isXs} />
+            {/* Stats bar moved to the About page ("What we've built so far"). */}
 
           </div>
           {/* ══ end CENTER ══ */}

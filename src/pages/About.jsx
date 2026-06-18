@@ -1,6 +1,6 @@
 import {
   ShieldCheck, Mail, Phone, GraduationCap, Heart, Lightbulb,
-  Linkedin, Quote, Trophy, Code2, Zap, Users,
+  Linkedin, Quote, Trophy, Code2, Zap, Users, BookOpen, Target, TrendingUp,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Seo from "../components/Seo.jsx";
@@ -509,6 +509,34 @@ export default function About() {
       <section style={{ background: "#ffffff", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
         <div className="container">
           <SectionHead eyebrow="By the numbers" title="What we've built so far" />
+
+          {/* Headline impact metrics (moved here from the home hero) */}
+          <div style={{
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
+            gap: 16, maxWidth: 880, margin: "0 auto 44px",
+          }}>
+            {[
+              { icon: Users,       val: "3,200+", lbl: "Students helped",    bg: "rgba(244,123,32,.12)", color: "#F15A38" },
+              { icon: BookOpen,    val: "850+",   lbl: "Colleges listed",    bg: "rgba(14,165,164,.12)", color: "#0ea5a4" },
+              { icon: Target,      val: "98% acc",lbl: "Rank predictions",   bg: "rgba(34,197,94,.12)",  color: "#22c55e" },
+              { icon: TrendingUp,  val: "1.2M+",  lbl: "Cutoff data points", bg: "rgba(244,123,32,.12)", color: "#F15A38" },
+            ].map(({ icon: Icon, val, lbl, bg, color }) => (
+              <div key={lbl} style={{
+                display: "flex", alignItems: "center", gap: 12,
+                background: "#fff", border: "1px solid rgba(0,0,0,.08)",
+                borderRadius: 16, padding: "16px 18px", boxShadow: "0 2px 14px rgba(13,27,62,.05)",
+              }}>
+                <span style={{ width: 44, height: 44, borderRadius: 12, background: bg, color, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <Icon size={22} />
+                </span>
+                <div>
+                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.15rem", color: "var(--navy)", lineHeight: 1.1 }}>{val}</div>
+                  <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 3 }}>{lbl}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div className="grid-4">
             <Stat target={COLLEGES.length} suffix="+" label="Colleges profiled"     color="#F15A38" />
             <Stat target={EXAMS.length}   suffix=""  label="Entrance exams tracked" color="#a855f7" />

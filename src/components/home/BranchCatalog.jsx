@@ -23,14 +23,18 @@ function Stat({ icon: Icon, value, label, color }) {
 
 function BranchRow({ b, nav }) {
   const Icon = BRANCH_ICONS[b.icon] || Briefcase;
+  const open = () => nav(`/branches/${b.slug}`);
   return (
-    <motion.button
+    <motion.div
+      role="button"
+      tabIndex={0}
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.4 }}
       whileHover={{ y: -3 }}
-      onClick={() => nav(`/branches/${b.slug}`)}
+      onClick={open}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } }}
       className="cl-branch-row"
       style={{
         textAlign: "left", width: "100%", cursor: "pointer",
@@ -69,7 +73,7 @@ function BranchRow({ b, nav }) {
         <Stat icon={IndianRupee} value={b.stats.medianSalary} label="Median Salary" color={CL.amber} />
         <Stat icon={ShieldCheck} value={`${b.stats.aiRisk}/100`} label="AI Risk" color={CL.coral} />
       </div>
-    </motion.button>
+    </motion.div>
   );
 }
 
