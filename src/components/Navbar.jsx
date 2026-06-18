@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronDown, Search, Target, Menu, X, User,
+  ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut, Sparkles,
   HelpCircle, Newspaper, Flame, Medal, Megaphone, Globe2,
@@ -424,7 +424,7 @@ export default function Navbar({ onSearch }) {
           ))}
         </ul>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end", gridColumn: 3 }}>
           {/* Search removed from the navbar for a cleaner campusloom-style bar. */}
           {/* Public community lives in the home hero on desktop (see Hero.jsx) and
               in the mobile drawer on phones/tablets — so no navbar button here. */}
@@ -469,14 +469,6 @@ export default function Navbar({ onSearch }) {
               </button>
             </>
           )}
-          {/* Mobile-only quick icons — account + community sit to the right of
-              the menu, with the same small edge padding as the logo on the left. */}
-          <button className="nav-mobile-ic" onClick={() => (isLoggedIn ? navigate("/dashboard") : openLogin())} aria-label="Account">
-            <User size={20} color="var(--navy)" />
-          </button>
-          <button className="nav-mobile-ic" onClick={() => navigate("/community")} aria-label="Community">
-            <Globe2 size={20} color="var(--navy)" />
-          </button>
           <button className="hamburger" onClick={() => { setExpandedSection(null); setMobileOpen(true); }} aria-label="Menu" style={{ display: "none" }}>
             <Menu size={22} color="var(--navy)" />
           </button>

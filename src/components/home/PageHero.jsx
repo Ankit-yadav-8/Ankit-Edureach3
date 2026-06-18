@@ -8,15 +8,16 @@ import { CL, clEyebrow } from "./clTheme.js";
 
 function Preview({ cards, accent }) {
   const offsets = [
-    { top: 0, right: 60, rotate: -4, z: 2 },
-    { top: 28, right: 0, rotate: 5, z: 3 },
-    { top: 118, right: 104, rotate: -2, z: 1 },
+    { top: 0, right: 84, rotate: -4, z: 2 },
+    { top: 40, right: 0, rotate: 5, z: 3 },
+    { top: 168, right: 132, rotate: -2, z: 1 },
   ];
   return (
-    <div className="ph-preview" style={{ position: "relative", height: 296 }}>
+    <div className="ph-preview" style={{ position: "relative", height: 372 }}>
       {cards.slice(0, 3).map((c, i) => {
         const o = offsets[i] || offsets[0];
-        const ac = c.accent || accent;
+        /* Single consistent accent across the whole hero (the page's colour). */
+        const ac = accent;
         const Ic = c.icon;
         return (
           <motion.div
@@ -24,22 +25,22 @@ function Preview({ cards, accent }) {
             initial={{ opacity: 0, y: 24, rotate: o.rotate }}
             animate={{ opacity: 1, y: 0, rotate: o.rotate }}
             transition={{ duration: 0.5, delay: 0.15 + i * 0.12 }}
-            whileHover={{ y: -4, rotate: 0, zIndex: 5 }}
+            whileHover={{ y: -5, rotate: 0, zIndex: 5 }}
             style={{
-              position: "absolute", top: o.top, right: o.right, zIndex: o.z, width: 212,
-              background: CL.card, borderRadius: 16, border: `1px solid ${CL.line}`,
-              boxShadow: CL.shadowLg, padding: "14px 15px",
+              position: "absolute", top: o.top, right: o.right, zIndex: o.z, width: 264,
+              background: CL.card, borderRadius: 18, border: `1px solid ${CL.line}`,
+              boxShadow: CL.shadowLg, padding: "20px 20px",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-              <span style={{ width: 30, height: 30, borderRadius: 9, background: `${ac}18`, display: "grid", placeItems: "center" }}>
-                {Ic && <Ic size={15} color={ac} />}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+              <span style={{ width: 40, height: 40, borderRadius: 11, background: `${ac}18`, display: "grid", placeItems: "center" }}>
+                {Ic && <Ic size={20} color={ac} />}
               </span>
-              {c.badge && <span style={{ fontSize: 8.5, fontWeight: 800, color: CL.muted, background: CL.cream2, padding: "3px 8px", borderRadius: 50 }}>{c.badge}</span>}
+              {c.badge && <span style={{ fontSize: 9.5, fontWeight: 800, color: CL.muted, background: CL.cream2, padding: "4px 10px", borderRadius: 50 }}>{c.badge}</span>}
             </div>
-            <div style={{ fontSize: 9.5, fontWeight: 800, color: ac, textTransform: "uppercase", marginBottom: 4 }}>{c.category}</div>
-            <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 12.5, color: CL.ink, lineHeight: 1.3, marginBottom: 6 }}>{c.title}</div>
-            {c.meta && <div style={{ fontSize: 10, color: CL.muted }}>{c.meta}</div>}
+            <div style={{ fontSize: 10.5, fontWeight: 800, color: ac, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6 }}>{c.category}</div>
+            <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 15.5, color: CL.ink, lineHeight: 1.3, marginBottom: 8 }}>{c.title}</div>
+            {c.meta && <div style={{ fontSize: 12, color: CL.muted, lineHeight: 1.5 }}>{c.meta}</div>}
           </motion.div>
         );
       })}
@@ -63,7 +64,7 @@ export default function PageHero({
             </span>
             <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2rem,4.8vw,3.2rem)", color: CL.ink, letterSpacing: "-1.4px", lineHeight: 1.07, margin: "18px 0 16px" }}>
               {titleLead}{" "}
-              <span style={{ background: CL.amberSoft, padding: "0 10px", borderRadius: 10, boxDecorationBreak: "clone", WebkitBoxDecorationBreak: "clone" }}>{highlight}</span>
+              <span style={{ background: `${accent}1f`, color: accent, padding: "0 10px", borderRadius: 10, boxDecorationBreak: "clone", WebkitBoxDecorationBreak: "clone" }}>{highlight}</span>
               {titleTail && <><br />{titleTail}{" "}</>}
               {highlightTail && <span style={{ color: accent }}>{highlightTail}</span>}
             </h1>
