@@ -834,13 +834,13 @@ export default function Navbar({ onSearch }) {
 const navLinkStyle = (active) => ({
   display: "flex", alignItems: "center", gap: 5,
   padding: "0.46rem 0.9rem", fontSize: "0.88rem", fontWeight: active ? 700 : 600,
-  color: active ? "#E0421F" : "#374151",
+  color: active ? "#211D2E" : "#374151",
   borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   fontFamily: "inherit",
-  background: active ? "rgba(244,123,32,.12)" : "transparent",
-  border: `1.5px solid ${active ? "rgba(244,123,32,.3)" : "transparent"}`,
-  boxShadow: active ? "0 4px 14px -6px rgba(244,123,32,.5)" : "none",
-  transition: "all .2s",
+  background: active ? "rgba(33,29,46,.06)" : "transparent",
+  border: "1.5px solid transparent",
+  boxShadow: "none",
+  transition: "background .2s ease, color .2s ease",
 });
 
 const navHighlightStyle = (active) => ({

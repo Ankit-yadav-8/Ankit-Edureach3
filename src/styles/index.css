@@ -192,7 +192,7 @@ input,select,textarea { font-family:inherit; }
   will-change:transform;
 }
 .desktop-nav > li > button:hover {
-  transform:translateY(-2px);
+  transform:none;
 }
 .desktop-nav > li:hover { z-index:5; }
 
@@ -233,14 +233,15 @@ input,select,textarea { font-family:inherit; }
    Every clickable item in the bar reacts on hover with a soft tint + lift,
    so the whole navbar feels alive while staying calm and consistent. */
 
-/* Standard links: Home · Colleges · Exams · Tools — warm orange wash */
+/* Standard links: Home · Colleges · Exams · Tools — simple neutral grey pill,
+   no orange tint / glow / lift (kept calm and minimal). */
 .nav-link-btn:hover {
-  background:rgba(244,123,32,.12) !important;
-  color:#E0421F !important;
-  border-color:rgba(244,123,32,.3) !important;
-  box-shadow:0 6px 16px -8px rgba(244,123,32,.55) !important;
+  background:rgba(33,29,46,.06) !important;
+  color:#211D2E !important;
+  border-color:transparent !important;
+  box-shadow:none !important;
 }
-.nav-link-btn:active { transform:translateY(0) scale(.97); }
+.nav-link-btn:active { background:rgba(33,29,46,.10) !important; }
 
 /* JEE highlight — keep its indigo identity, deepen the glow on hover */
 .nav-highlight-btn:hover {
@@ -252,26 +253,21 @@ input,select,textarea { font-family:inherit; }
 .nav-highlight-btn:hover svg { color:#fff; }
 .nav-highlight-btn:active { transform:translateY(0) scale(.97); }
 
-/* Login / Logout ghost CTA — outline turns orange and lifts */
-.nav-ghost-cta { transition:transform .2s ease, border-color .2s ease, color .2s ease, background .2s ease, box-shadow .2s ease; }
+/* Login / Logout ghost CTA — simple neutral hover (no orange / lift / glow) */
+.nav-ghost-cta { transition:border-color .2s ease, color .2s ease, background .2s ease; }
 .nav-ghost-cta:hover {
-  border-color:#F15A38 !important;
-  color:#E0421F !important;
-  background:rgba(244,123,32,.07) !important;
-  transform:translateY(-2px);
-  box-shadow:0 8px 18px -8px rgba(244,123,32,.45);
+  border-color:rgba(33,29,46,.18) !important;
+  color:#211D2E !important;
+  background:rgba(33,29,46,.05) !important;
 }
-.nav-ghost-cta:active { transform:translateY(0) scale(.97); }
+.nav-ghost-cta:active { background:rgba(33,29,46,.08) !important; }
 
-/* Sign Up primary CTA — solid fills into a lively gradient on hover */
-.nav-primary-cta { transition:transform .2s ease, box-shadow .2s ease, background-position .4s ease, background .3s ease; }
+/* Sign Up primary CTA — stays solid coral, just a subtle darken on hover */
+.nav-primary-cta { transition:background .2s ease; }
 .nav-primary-cta:hover {
-  background-image:linear-gradient(120deg,#F15A38 0%,#F15A38 45%,#fb923c 100%) !important;
-  background-position:100% center;
-  transform:translateY(-2px);
-  box-shadow:0 10px 24px -6px rgba(244,123,32,.7);
+  background:#E0421F !important;
 }
-.nav-primary-cta:active { transform:translateY(0) scale(.97); }
+.nav-primary-cta:active { background:#cf3a1a !important; }
 .btn-nav-ghost {
   background:transparent;
   color:#374151;
