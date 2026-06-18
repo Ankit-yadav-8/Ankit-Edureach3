@@ -489,7 +489,7 @@ export default function JeeMain() {
       `}</style>
 
       {/* ── Hero ── */}
-      <section className="warm-page-header" style={{ padding: "56px 0 48px", position: "relative", overflow: "hidden" }}>
+      <section className="warm-page-header" style={{ padding: "36px 0 28px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 90%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
@@ -497,18 +497,9 @@ export default function JeeMain() {
           <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.9rem,4vw,2.8rem)", margin: "0 0 10px", lineHeight: 1.2, color: "#1c1c28" }}>
             JEE Main — Rank &amp; College Predictor Hub
           </h1>
-          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 620, marginBottom: 28 }}>
+          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 620, marginBottom: 0 }}>
             Predict your rank, find every NIT/IIIT/GFTI you qualify for, analyse session-wise difficulty, and follow the complete syllabus, study roadmap &amp; top coaching options.
           </p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            {[
-              ["#rank","Rank Predictor"],["#college","College Predictor"],["#cutoffs","Top Cutoffs"],
-              ["#difficulty","Difficulty"],["#syllabus","Syllabus"],["#roadmap","Roadmap"],
-              ["#coaching","Coaching"],["#trend","Cutoff Trends"],
-            ].map(([href, label]) => (
-              <a key={href} href={href} className="nav-pill">{label}</a>
-            ))}
-          </div>
         </div>
       </section>
       {/* #cutoffs anchor kept for the "Top Cutoffs" sub-nav pill */}

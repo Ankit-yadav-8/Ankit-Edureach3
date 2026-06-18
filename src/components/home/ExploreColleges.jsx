@@ -38,6 +38,16 @@ const IITS = [
     location: "Roorkee, Uttarakhand", img: "/assets/team/IITs/IITs/IIT ROORKEE.jpg",
     bullets: ["NIRF #6 · 175+ years of legacy", "Avg package ₹30.7 L · 95% placed", "Core + CSE strength, the CP home turf"],
   },
+  {
+    slug: "iit-guwahati", name: "IIT Guwahati", short: "IITG", nirf: 7,
+    location: "Guwahati, Assam", img: "/assets/team/IITs/IITs/IIT GUWAHATI.jpg",
+    bullets: ["NIRF #7 · stunning riverside campus", "Avg package ₹28.6 L · 92% placed", "Top CSE, Data Science & design"],
+  },
+  {
+    slug: "iit-hyderabad", name: "IIT Hyderabad", short: "IITH", nirf: 8,
+    location: "Sangareddy, Telangana", img: "/assets/team/IITs/IITs/IIT HYDERABAD.jpg",
+    bullets: ["NIRF #8 · the fast-rising new IIT", "Avg package ₹27.9 L · 91% placed", "AI, CSE & fractal-academics pioneer"],
+  },
 ];
 
 const containerV = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
@@ -46,12 +56,13 @@ const itemV = {
   show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
 };
 
-function CollegeCard({ c, nav }) {
+function CollegeCard({ c, nav, extra }) {
   return (
     <motion.div
       variants={itemV}
       role="button"
       tabIndex={0}
+      className={extra ? "ec-card ec-card-extra" : "ec-card"}
       whileHover={{ y: -6 }}
       transition={{ type: "spring", stiffness: 280, damping: 22 }}
       onClick={() => nav(`/colleges/${c.slug}`)}
@@ -132,8 +143,11 @@ export default function ExploreColleges() {
           viewport={{ once: true, margin: "-80px" }}
           style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: 22 }}
         >
-          {IITS.map((c) => <CollegeCard key={c.slug} c={c} nav={nav} />)}
+          {IITS.map((c, i) => <CollegeCard key={c.slug} c={c} nav={nav} extra={i >= 6} />)}
         </motion.div>
+
+        {/* On phones only the first 6 colleges show; the last two are desktop-only. */}
+        <style>{`@media (max-width: 760px){ .ec-card-extra{ display:none !important; } }`}</style>
 
         <div style={{ textAlign: "center", marginTop: 40 }}>
           <button

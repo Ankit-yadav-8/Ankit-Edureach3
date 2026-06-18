@@ -682,23 +682,16 @@ export default function Neet() {
       `}</style>
 
       {/* ── Hero ── */}
-      <section className="warm-page-header" style={{ padding: "56px 0 48px", position: "relative", overflow: "hidden" }}>
+      <section className="warm-page-header" style={{ padding: "36px 0 28px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(21,160,110,.18) 0%, transparent 60%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 90%, rgba(14,165,164,.14) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <span className="eyebrow" style={{ marginBottom: 14, display: "inline-flex", alignItems: "center", gap: 6 }}><Stethoscope size={12} /> NEET UG 2026</span>
           <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.9rem,4vw,2.8rem)", margin: "0 0 10px", lineHeight: 1.2, color: "#1c1c28" }}>NEET — Rank &amp; Medical College Predictor Hub</h1>
-          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, marginBottom: 28 }}>
+          <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, marginBottom: 0 }}>
             Predict your NEET rank &amp; the MBBS colleges you can get, analyse 5-year difficulty (Physics · Chemistry · Biology),
             track cut-off &amp; topper trends, and explore the full 720-mark syllabus, pattern, roadmap &amp; coaching.
           </p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            {[
-              ["#predictor", "Rank Predictor"], ["#college", "College Predictor"], ["#difficulty", "Difficulty"],
-              ["#cutoffs", "Cut-off Trends"], ["#result", "Toppers"], ["#pattern", "Exam Pattern"],
-              ["#syllabus", "Syllabus"], ["#cycle", "Exam Cycle"], ["#roadmap", "Roadmap"], ["#coaching", "Coaching"],
-            ].map(([href, label]) => <a key={href} href={href} className="nav-pill-neet">{label}</a>)}
-          </div>
         </div>
       </section>
 

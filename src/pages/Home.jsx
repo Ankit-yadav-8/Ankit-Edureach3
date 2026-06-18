@@ -11,6 +11,7 @@ import AdvancedPredictorHome from "../components/home/AdvancedPredictorHome.jsx"
 import BranchVsCollege from "../components/home/BranchVsCollege.jsx";
 import PlansSection from "../components/home/PlansSection.jsx";
 import ExploreColleges from "../components/home/ExploreColleges.jsx";
+import PremiumColleges from "../components/home/PremiumColleges.jsx";
 import ExamBuzzHome from "../components/home/ExamBuzzHome.jsx";
 import Testimonials from "../components/home/Testimonials.jsx";
 import FaqSection from "../components/home/FaqSection.jsx";
@@ -41,8 +42,11 @@ export default function Home({ onSearch }) {
       {/* ── Counselling + Mentorship plans (merged) ── */}
       <PlansSection />
 
-      {/* ── Explore Colleges — 6 flagship IITs (tool-style cards) ── */}
+      {/* ── Explore Colleges — flagship IITs (tool-style cards) ── */}
       <ExploreColleges />
+
+      {/* ── Premium colleges that take your JEE rank (outside JoSAA) ── */}
+      <PremiumColleges />
 
       {/* ── Exam Buzz teaser (news + radar live on /exam-buzz) ── */}
       <ExamBuzzHome />

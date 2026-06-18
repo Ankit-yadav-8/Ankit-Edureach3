@@ -203,6 +203,7 @@ export default function Navbar({ onSearch }) {
     { label: "Mentorship", drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
     { label: "Colleges", drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Exam Buzz", mega: EXAM_NEWS_MEGA, base: "/exams", match: (p) => p.startsWith("/exam") || p.startsWith("/compare-exams") || p.startsWith("/news") || p.startsWith("/josaa-round-1") },
+    { label: "Blog", to: "/blog", match: (p) => p.startsWith("/blog") },
     { label: "Tools", mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa"].some((x) => p.startsWith(x)) },
   ];
 
@@ -214,7 +215,7 @@ export default function Navbar({ onSearch }) {
         style={{
           position: "fixed", top: 34, left: 0, right: 0, zIndex: 1000,
           height: 68, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
-          padding: "0 1.4rem",
+          padding: "0 clamp(1.2rem, 4.5vw, 3.4rem)",
           background: scrolled ? "rgba(250,249,247,0.96)" : "rgba(250,249,247,0.82)",
           backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
           borderBottom: "1px solid rgba(214,224,245,0.5)",
@@ -391,12 +392,14 @@ export default function Navbar({ onSearch }) {
                         {item.drop.map((d) => {
                           const Ic = d.icon;
                           return (
-                            <button key={d.label} onClick={() => goHash(d.to)} className="drop-item" style={d.tag ? { ...dropItemStyle, flexDirection: "column", alignItems: "flex-start", gap: 1 } : dropItemStyle}>
-                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <button key={d.label} onClick={() => goHash(d.to)} className="mega-item" style={{ ...megaItemStyle, alignItems: "flex-start", "--mega-accent": "#F15A38" }}>
+                              <span style={{ width: 30, height: 30, borderRadius: 9, background: "rgba(244,123,32,.1)", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
                                 <Ic size={15} color="var(--coral)" />
-                                <span style={{ fontWeight: 600, fontSize: "0.85rem" }}>{d.label}</span>
-                              </div>
-                              {d.tag && <span style={{ fontSize: 11, color: "#9ca3af", paddingLeft: 23 }}>{d.tag}</span>}
+                              </span>
+                              <span style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                                <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--navy)" }}>{d.label}</span>
+                                {d.tag && <span style={{ fontSize: "0.72rem", color: "#9ca3af", lineHeight: 1.35 }}>{d.tag}</span>}
+                              </span>
                             </button>
                           );
                         })}
@@ -423,12 +426,7 @@ export default function Navbar({ onSearch }) {
         </ul>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end" }}>
-          {/* Quick search — single labelled action (utility icon cluster removed
-              for a clean jastro-style bar; compare/saved live in the menus). */}
-          <button onClick={onSearch} className="cta-desktop nav-ghost-cta" aria-label="Search"
-            style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}>
-            <Search size={16} /> Search
-          </button>
+          {/* Search removed from the navbar for a cleaner campusloom-style bar. */}
           {/* Public community lives in the home hero on desktop (see Hero.jsx) and
               in the mobile drawer on phones/tablets — so no navbar button here. */}
           {isLoggedIn ? (
