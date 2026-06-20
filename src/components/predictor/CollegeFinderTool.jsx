@@ -123,11 +123,11 @@ function CollegeCard({ group, defaultOpen }) {
           )}
         </div>
         <div className="cf-card-actions">
+          <Link to={`/colleges/${c.slug}`} className="cf-detailbtn">Details</Link>
           <button className="cf-viewbtn" onClick={() => setOpen((o) => !o)}>
             {open ? "Hide" : "View"} Branches
             <ChevronDown size={14} style={{ transform: open ? "rotate(180deg)" : "none", transition: ".2s" }} />
           </button>
-          <Link to={`/colleges/${c.slug}`} className="cf-detailbtn">Details</Link>
         </div>
       </div>
       {open && <BranchList rows={c.rows} />}
@@ -419,10 +419,14 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
                 No colleges match these filters. Try clearing a few from the sidebar.
               </div>
             ) : (
-              <div className="cf-cardlist">
-                {groups.map((g, i) => (
-                  <CollegeCard key={g.slug} group={g} defaultOpen={i === 0} />
-                ))}
+              <div className="cf-scrollwrap">
+                <div className="cf-cardlist">
+                  {groups.map((g, i) => (
+                    <div className="cf-cardanim" style={{ animationDelay: `${Math.min(i, 12) * 0.04}s` }} key={g.slug}>
+                      <CollegeCard group={g} defaultOpen={i === 0} />
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -521,7 +525,6 @@ const CF_STYLES = `
 .cf-searchbar input { flex:1; border:none; outline:none; padding:12px 0; font-size:14px; background:transparent; color:#1a1a2e; }
 .cf-searchbar button { border:none; background:none; cursor:pointer; color:#9a9189; display:grid; place-items:center; }
 
-.cf-cardlist { display:flex; flex-direction:column; gap:12px; }
 .cf-card { background:#fff; border:1px solid var(--cf-line); border-radius:14px; overflow:hidden;
   transition:box-shadow .18s, border-color .18s; }
 .cf-card:hover { box-shadow:0 8px 26px rgba(0,0,0,.07); border-color:#e0d8cf; }
@@ -543,13 +546,27 @@ const CF_STYLES = `
 .cf-flexrow { display:flex; gap:6px; margin-top:9px; flex-wrap:wrap; }
 .cf-flexchip { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700;
   border:1px solid; border-radius:50px; padding:3px 9px; }
-.cf-card-actions { display:flex; flex-direction:column; gap:7px; align-items:flex-end; flex-shrink:0; }
+.cf-card-actions { display:flex; flex-direction:row; gap:9px; align-items:center; flex-shrink:0; }
 .cf-viewbtn { display:inline-flex; align-items:center; gap:6px; background:var(--cf-coral); color:#fff; border:none;
-  border-radius:9px; padding:9px 15px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;
+  border-radius:10px; padding:10px 16px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;
   box-shadow:0 3px 10px rgba(244,126,32,.25); transition:transform .1s; }
 .cf-viewbtn:hover { transform:translateY(-1px); }
-.cf-detailbtn { font-size:12.5px; color:#6b6258; text-decoration:none; font-weight:600; padding:2px 4px; }
-.cf-detailbtn:hover { color:var(--cf-coral); }
+.cf-detailbtn { display:inline-flex; align-items:center; font-size:13px; color:#6b6258; text-decoration:none; font-weight:700;
+  padding:9px 15px; border:1.5px solid var(--cf-line); border-radius:10px; white-space:nowrap; transition:all .15s; background:#fff; }
+.cf-detailbtn:hover { color:var(--cf-coral); border-color:var(--cf-coral); }
+
+/* scrollable results — keeps the (sticky) filter rail in view beside a long list */
+.cf-scrollwrap { position:relative; }
+.cf-scrollwrap::after { content:""; position:absolute; left:0; right:8px; bottom:0; height:34px; pointer-events:none;
+  background:linear-gradient(to top, var(--cf-bg), transparent); border-radius:0 0 14px 14px; }
+.cf-cardlist { display:flex; flex-direction:column; gap:12px; max-height:74vh; overflow-y:auto; padding:2px 8px 30px 2px;
+  scroll-behavior:smooth; scrollbar-width:thin; scrollbar-color:rgba(244,126,32,.45) transparent; }
+.cf-cardlist::-webkit-scrollbar { width:9px; }
+.cf-cardlist::-webkit-scrollbar-track { background:transparent; }
+.cf-cardlist::-webkit-scrollbar-thumb { background:rgba(244,126,32,.4); border-radius:50px; border:2px solid var(--cf-bg); }
+.cf-cardlist::-webkit-scrollbar-thumb:hover { background:rgba(244,126,32,.65); }
+.cf-cardanim { animation:cfIn .42s cubic-bezier(.4,0,.2,1) both; }
+@keyframes cfIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
 
 .cf-branchlist { border-top:1px dashed var(--cf-line); padding:6px 18px 14px; }
 .cf-branchrow { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:9px 0;

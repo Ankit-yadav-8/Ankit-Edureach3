@@ -427,6 +427,15 @@ export default function Navbar({ onSearch }) {
         </ul>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end", gridColumn: 3 }}>
+          {/* College Parichay AI — our own Claude-style assistant */}
+          <button
+            onClick={() => navigate("/ai")}
+            className="cta-desktop"
+            title="College Parichay AI"
+            style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 15px", borderRadius: 10, border: "1.5px solid transparent", background: "linear-gradient(135deg,#F47E20,#E0421F)", color: "#fff", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 14px rgba(244,126,32,.3)" }}
+          >
+            <Sparkles size={15} /> Ask AI
+          </button>
           {/* Search removed from the navbar for a cleaner campusloom-style bar. */}
           {/* Public community lives in the home hero on desktop (see Hero.jsx) and
               in the mobile drawer on phones/tablets — so no navbar button here. */}
@@ -526,6 +535,22 @@ export default function Navbar({ onSearch }) {
                 </div>
                 <button onClick={() => setMobileOpen(false)}><X size={22} /></button>
               </div>
+
+              {/* College Parichay AI — prominent in the mobile drawer */}
+              <button
+                onClick={() => { setMobileOpen(false); navigate("/ai"); }}
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
+                  background: "linear-gradient(135deg,#F47E20,#E0421F)", borderRadius: 10, padding: "11px 12px",
+                  marginBottom: "0.8rem", border: "none", cursor: "pointer", color: "#fff",
+                  boxShadow: "0 6px 18px rgba(244,126,32,.3)",
+                }}>
+                <Sparkles size={18} />
+                <span style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                  <span style={{ fontWeight: 800, fontSize: "0.92rem" }}>College Parichay AI</span>
+                  <span style={{ fontSize: "0.72rem", opacity: .9 }}>Solve doubts, notes & quizzes →</span>
+                </span>
+              </button>
 
               {isLoggedIn && (
                 <button

@@ -12,6 +12,7 @@ import mentorshipRoutes from "./routes/mentorship.js";
 import communityRoutes from "./routes/community.js";
 import publicCommunityRoutes from "./routes/publicCommunity.js";
 import adminRoutes from "./routes/admin.js";
+import aiRoutes from "./routes/ai.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 
 dotenv.config();
@@ -35,6 +36,11 @@ app.use((_req, res, next) => {
   res.setHeader("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; base-uri 'none'");
   next();
 });
+
+// The AI proxy carries chat history (and optionally uploaded note text), so it
+// needs a roomier body than the rest of the API — parse it first, then the
+// strict 16kb parser below becomes a no-op for these requests.
+app.use("/api/ai", express.json({ limit: "2mb" }));
 
 // Reject oversized payloads early — these endpoints only ever take small JSON.
 app.use(express.json({ limit: "16kb" }));
@@ -78,6 +84,9 @@ app.use("/api/payment", apiLimiter, paymentRoutes);
 app.use("/api/mentorship", apiLimiter, mentorshipRoutes);
 app.use("/api/community", apiLimiter, communityRoutes);
 app.use("/api/public-community", apiLimiter, publicCommunityRoutes);
+// AI assistant — moderate per-minute cap (streaming replies are expensive).
+const aiLimiter = rl({ windowMs: 60 * 1000, max: 30 });
+app.use("/api/ai", aiLimiter, aiRoutes);
 
 connectDB()
   .then(() => {

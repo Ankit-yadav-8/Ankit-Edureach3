@@ -343,8 +343,17 @@ export default function Admin() {
 
   // ── DASHBOARD ─────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: "100vh", background: "#f8f7f5", padding: "32px 0 60px" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
+    <div style={{ minHeight: "100vh", background: "radial-gradient(1200px 500px at 100% -10%, #fdeede 0%, transparent 55%), radial-gradient(1000px 460px at -10% 110%, #eef0fb 0%, transparent 50%), linear-gradient(180deg,#faf8f4 0%,#f5f3ef 100%)", padding: "32px 0 60px", position: "relative" }}>
+      <style>{`
+        @keyframes admUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: none; } }
+        @keyframes admSpin { to { transform: rotate(360deg); } }
+        .adm-stat { animation: admUp .5s cubic-bezier(.4,0,.2,1) both; transition: transform .2s, box-shadow .22s; }
+        .adm-stat:hover { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(13,27,62,.12); }
+        .adm-stat:nth-child(2){ animation-delay:.07s } .adm-stat:nth-child(3){ animation-delay:.14s } .adm-stat:nth-child(4){ animation-delay:.21s }
+        .adm-card { animation: admUp .55s .12s cubic-bezier(.4,0,.2,1) both; }
+        .adm-tab { transition: background .18s, color .18s, box-shadow .18s; }
+      `}</style>
+      <div style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
 
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
@@ -381,7 +390,7 @@ export default function Admin() {
         </div>
 
         {/* Tabs */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 22, borderBottom: "1px solid #ececec" }}>
+        <div style={{ display: "inline-flex", gap: 6, marginBottom: 24, background: "#fff", border: "1px solid #f0e9e0", borderRadius: 50, padding: 6, boxShadow: "0 4px 16px rgba(13,27,62,.05)", flexWrap: "wrap" }}>
           {[
             { k: "users", label: "Users", icon: Users, count: total },
             { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
@@ -389,18 +398,18 @@ export default function Admin() {
           ].map(({ k, label, icon: Icon, count }) => {
             const active = tab === k;
             return (
-              <button key={k} onClick={() => switchTab(k)}
+              <button key={k} onClick={() => switchTab(k)} className="adm-tab"
                 style={{
-                  display: "flex", alignItems: "center", gap: 7, padding: "10px 18px",
-                  border: "none", background: "transparent", cursor: "pointer",
+                  display: "flex", alignItems: "center", gap: 7, padding: "9px 18px",
+                  border: "none", cursor: "pointer", borderRadius: 50,
                   fontFamily: "Sora", fontWeight: 700, fontSize: 14,
-                  color: active ? ORANGE : "#888",
-                  borderBottom: active ? `2.5px solid ${ORANGE}` : "2.5px solid transparent",
-                  marginBottom: -1,
+                  color: active ? "#fff" : "#7c7368",
+                  background: active ? "linear-gradient(135deg,#F47E20,#E0421F)" : "transparent",
+                  boxShadow: active ? "0 6px 16px rgba(244,126,32,.32)" : "none",
                 }}>
                 <Icon size={16} /> {label}
                 {count !== undefined && (
-                  <span style={{ background: active ? `${ORANGE}15` : "#f3f4f6", color: active ? ORANGE : "#999", borderRadius: 20, padding: "1px 9px", fontSize: 12, fontWeight: 700 }}>
+                  <span style={{ background: active ? "rgba(255,255,255,.25)" : "#f3f0eb", color: active ? "#fff" : "#9a9189", borderRadius: 20, padding: "1px 9px", fontSize: 12, fontWeight: 700 }}>
                     {count}
                   </span>
                 )}
@@ -412,7 +421,7 @@ export default function Admin() {
         {/* Stat cards */}
         {tab === "community" ? null : tab === "users" ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 28 }}>
-          <div style={{ background: "#0d1b3e", borderRadius: 16, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16 }}>
+          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
               <Users size={22} color={ORANGE} />
             </div>
@@ -421,7 +430,7 @@ export default function Admin() {
               <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Total signups</div>
             </div>
           </div>
-          <div style={{ background: "#fff", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #eee" }}>
+          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
               <Calendar size={22} color="#16a34a" />
             </div>
@@ -436,8 +445,8 @@ export default function Admin() {
               <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Joined today</div>
             </div>
           </div>
-          <div style={{ background: "#fff", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #eee" }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#ffffff", display: "grid", placeItems: "center" }}>
+          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}14`, display: "grid", placeItems: "center" }}>
               <Clock size={22} color={ORANGE} />
             </div>
             <div>
@@ -454,7 +463,7 @@ export default function Admin() {
         </div>
         ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 28 }}>
-          <div style={{ background: "#0d1b3e", borderRadius: 16, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16 }}>
+          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
               <CreditCard size={22} color={ORANGE} />
             </div>
@@ -463,7 +472,7 @@ export default function Admin() {
               <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Successful payments</div>
             </div>
           </div>
-          <div style={{ background: "#fff", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #eee" }}>
+          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
               <IndianRupee size={22} color="#16a34a" />
             </div>
@@ -474,7 +483,7 @@ export default function Admin() {
               <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Total revenue</div>
             </div>
           </div>
-          <div style={{ background: "#fff", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #eee" }}>
+          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
               <Calendar size={22} color="#16a34a" />
             </div>
@@ -498,7 +507,7 @@ export default function Admin() {
         {tab === "community" ? (
           <CommunityModeration token={token} />
         ) : tab === "users" ? (
-        <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+        <div className="adm-card" style={{ background: "#fff", borderRadius: 20, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 8px 30px rgba(13,27,62,.06)" }}>
 
           {/* Search bar */}
           <div style={{ padding: "16px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>

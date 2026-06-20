@@ -56,6 +56,7 @@ import ExamBuzz from "./pages/ExamBuzz.jsx";
 import Blog from "./pages/Blog.jsx";
 import BlogPost from "./pages/BlogPost.jsx";
 import ChapterAnalysis from "./pages/ChapterAnalysis.jsx";
+import CollegeParichayAI from "./pages/CollegeParichayAI.jsx";
 import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
@@ -115,6 +116,22 @@ export default function App() {
         <Routes>
           <Route path="/admin" element={<Admin />} />
         </Routes>
+      </>
+    );
+  }
+
+  // College Parichay AI is a full-screen Claude-style app — render it on its own
+  // (no public navbar / footer / floating widgets), but keep the auth gate so a
+  // guest is still asked to log in before chatting.
+  if (pathname === "/ai") {
+    return (
+      <>
+        <ScrollManager />
+        <AuthGate />
+        <Routes>
+          <Route path="/ai" element={<CollegeParichayAI />} />
+        </Routes>
+        <AuthModal />
       </>
     );
   }
