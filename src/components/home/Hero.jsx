@@ -1411,7 +1411,7 @@ function HeroStoryCard() {
       {/* campus image */}
       {imgOk && (
         <img
-          src="/Album_18885/IIT%20ROORKEE.jpg"
+          src="/iit-roorkee-campus.jpg"
           alt="IIT Roorkee campus — where College Parichay was built"
           onError={() => setImgOk(false)}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
@@ -1439,8 +1439,8 @@ function HeroStoryCard() {
         <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "1.8px", textTransform: "uppercase", color: "#fdba74", marginBottom: 8 }}>
           Our Story
         </div>
-        <p style={{ margin: 0, fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 15, lineHeight: 1.55, color: "#fff", letterSpacing: "-.01em" }}>
-          Made by <span style={{ color: "#FF9d76" }}>Ankit Yadav &amp; Ankit Kumar</span>, two IIT Roorkee students —<br />
+        <p style={{ margin: 0, fontFamily: "'Georgia','Times New Roman',serif", fontStyle: "italic", fontWeight: 500, fontSize: 15.5, lineHeight: 1.6, color: "#fff", letterSpacing: "-.005em" }}>
+          Made by <span style={{ color: "#FF9d76", fontWeight: 700 }}>Ankit Yadav &amp; Ankit Kumar</span>, two IIT Roorkee students —<br />
           who lived the JoSAA chaos and built this free for every aspirant after them.
         </p>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 14, color: "#fff", fontWeight: 800, fontFamily: "Sora", fontSize: 12.5 }}>
@@ -1601,9 +1601,11 @@ export default function Hero({ onSearch }) {
 
               <p style={{
                 color: subColor,
-                fontSize: isXs ? ".85rem" : "clamp(.92rem,1.7vw,1.08rem)",
+                fontSize: isXs ? ".88rem" : "clamp(.95rem,1.7vw,1.12rem)",
                 maxWidth: 560, margin: isMobile ? "0 auto 0.6rem" : "0 0 0.6rem",
                 lineHeight: 1.75,
+                fontStyle: "italic",
+                fontFamily: "'Georgia', 'Times New Roman', serif",
               }}>
                 Predict your JEE rank from marks, discover every college you can get into across all JoSAA &amp; CSAB rounds, and track every deadline — all in one place.
               </p>
@@ -1675,7 +1677,7 @@ export default function Hero({ onSearch }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.42 }}
               className="hero-community-cta"
-              style={{ justifyContent: "flex-start", margin: "20px 0 6px" }}
+              style={{ justifyContent: "flex-start", gap: 12, margin: "20px 0 6px" }}
             >
               <button
                 onClick={() => nav("/community")}
@@ -1694,6 +1696,26 @@ export default function Hero({ onSearch }) {
                   <Globe2 size={14} color="#fff" />
                 </span>
                 Join the Community
+                <ArrowRight size={15} />
+              </button>
+
+              {/* Blog button */}
+              <button
+                onClick={() => nav("/blog")}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  padding: "10px 18px", borderRadius: 50, cursor: "pointer",
+                  background: "#fff", border: "1.5px solid rgba(255, 105, 61,.4)",
+                  fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: "#FF693D",
+                  transition: "all .2s", whiteSpace: "nowrap",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.background = "rgba(255, 105, 61,.08)"; e.currentTarget.style.borderColor = "#FF693D"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(255, 105, 61,.4)"; }}
+              >
+                <span style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(255, 105, 61,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <BookOpen size={14} color="#FF693D" />
+                </span>
+                Read the Blog
                 <ArrowRight size={15} />
               </button>
             </motion.div>
