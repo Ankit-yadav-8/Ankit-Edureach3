@@ -32,6 +32,10 @@ const HISTORY_TURNS = { search: 6, math: 20, code: 20, general: 24 };
 // Per-request timeout in ms (Groq compound can be slow while browsing)
 const STREAM_TIMEOUT_MS = { search: 60_000, math: 45_000, code: 45_000, general: 30_000 };
 
+// Image generation — Pollinations is keyless & free; swap via env for a paid provider
+const IMAGE_BASE  = process.env.IMAGE_API_BASE || "https://image.pollinations.ai/prompt/";
+const IMAGE_MODEL = process.env.IMAGE_MODEL || "flux";
+
 // ─── Routing regexes ─────────────────────────────────────────────────────────
 
 /* Live-data questions — route to web-search model for fresh information */
@@ -149,6 +153,18 @@ function buildSearchSystemPrompt() {
     "You are College Parichay AI with live web search. Search the web and answer the student accurately and concisely. " +
     "Base every number, cutoff, rank and date on what you actually find, and cite the source with its year. " +
     "Never invent statistics; if the search finds nothing, say so. Use Markdown, and write any maths in LaTeX ($...$)."
+  );
+}
+
+/* Persistent, cross-chat memory the client sends each turn (the student's class,
+   target exam/year, branches, city, preferences). Injected so replies feel
+   personalised — like ChatGPT/Claude memory. */
+function buildUserContext(ctx) {
+  const s = (typeof ctx === "string" ? ctx : "").trim().slice(0, 1_500);
+  if (!s) return "";
+  return (
+    "\n\n— WHAT YOU KNOW ABOUT THIS STUDENT (use it naturally to personalise answers; " +
+    "do not recite it back unless relevant) —\n" + s
   );
 }
 
@@ -375,11 +391,12 @@ router.post("/chat", requireAuth, async (req, res) => {
   const temperature  = callerTemp ?? meta.temp;
 
   // Prepare mode-specific message list and system prompt
-  const isSearch    = mode === "search";
-  const messages    = isSearch ? leanForSearch(rawMessages) : rawMessages.slice(-HISTORY_TURNS[mode]);
-  const systemPrompt = isSearch
+  const isSearch     = mode === "search";
+  const userContext  = buildUserContext(req.body?.context);
+  const messages     = isSearch ? leanForSearch(rawMessages) : rawMessages.slice(-HISTORY_TURNS[mode]);
+  const systemPrompt = (isSearch
     ? buildSearchSystemPrompt()
-    : buildDateHeader() + SYSTEM_PROMPT + MEMORY_NOTE;
+    : buildDateHeader() + SYSTEM_PROMPT + MEMORY_NOTE) + userContext;
 
   // SSE headers
   res.setHeader("Content-Type",  "text/event-stream; charset=utf-8");
@@ -414,7 +431,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         model:      MODELS.general,
         maxTokens:  MODE_META.general.maxTokens,
         timeoutMs:  STREAM_TIMEOUT_MS.general,
-        systemPrompt: buildDateHeader() + SYSTEM_PROMPT + MEMORY_NOTE,
+        systemPrompt: buildDateHeader() + SYSTEM_PROMPT + MEMORY_NOTE + userContext,
         messages:     rawMessages.slice(-HISTORY_TURNS.general),
       });
     }
@@ -514,6 +531,70 @@ router.post("/followups", requireAuth, async (req, res) => {
     res.json({ followups });
   } catch {
     res.json({ followups: [] });
+  }
+});
+
+/* POST /api/ai/image — text-to-image. We refine the prompt with a fast LLM, then
+   return a keyless image URL the browser loads directly. */
+router.post("/image", requireAuth, async (req, res) => {
+  const raw = String(req.body?.prompt || "").trim().slice(0, 600);
+  if (!raw) return res.status(400).json({ error: "Describe the image you want." });
+
+  // Expand the request into a vivid prompt (best-effort; fall back to the raw text)
+  let prompt = raw;
+  if (process.env.GROQ_API_KEY) {
+    try {
+      const r = await fetch(GROQ_URL, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
+        body: JSON.stringify({
+          model: TITLE_MODEL, temperature: 0.7, max_tokens: 110,
+          messages: [
+            { role: "system", content: "Rewrite the user's request as ONE vivid, detailed image-generation prompt — name the subject, style, lighting, mood and composition. Reply with ONLY the prompt (no quotes, no preamble), under 55 words." },
+            { role: "user", content: raw },
+          ],
+        }),
+      });
+      if (r.ok) {
+        const refined = (await r.json()).choices?.[0]?.message?.content?.trim();
+        if (refined) prompt = refined.replace(/^["']|["']$/g, "").slice(0, 400);
+      }
+    } catch { /* keep raw prompt */ }
+  }
+
+  const seed = Number.isFinite(+req.body?.seed) ? Math.abs(+req.body.seed) % 1_000_000 : Math.floor(Math.random() * 1_000_000);
+  const url  = `${IMAGE_BASE}${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${seed}&model=${IMAGE_MODEL}`;
+  res.json({ url, prompt, seed });
+});
+
+/* POST /api/ai/memory — distil durable facts about the student into a compact,
+   persistent memory the client stores and replays on every turn. */
+router.post("/memory", requireAuth, async (req, res) => {
+  const existing = String(req.body?.memory || "").slice(0, 2_000);
+  const recent   = sanitizeMessages(req.body?.messages, 8)
+    .map((m) => `${m.role === "user" ? "Student" : "AI"}: ${m.content.split("\n\n--- Attached:")[0].slice(0, 600)}`)
+    .join("\n");
+  if (!recent.trim() || !process.env.GROQ_API_KEY) return res.json({ memory: existing });
+
+  try {
+    const r = await fetch(GROQ_URL, {
+      method:  "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
+      body: JSON.stringify({
+        model: TITLE_MODEL, temperature: 0.2, max_tokens: 260,
+        messages: [
+          { role: "system", content: "You maintain a tiny long-term memory about a student so an AI tutor can personalise help. Keep only STABLE, useful facts: class/year, target exam(s) & year, target branches/colleges, city/state, category, strengths & weak topics, and clear preferences. Ignore one-off question content and anything temporary. Merge new facts into the existing memory, dedupe, and keep it under 10 short bullet lines starting with '- '. Reply with ONLY the bullet list (no preamble). If there is nothing worth remembering, repeat the existing memory unchanged." },
+          { role: "user", content: `Existing memory:\n${existing || "(empty)"}\n\nRecent conversation:\n${recent}\n\nReturn the updated memory.` },
+        ],
+      }),
+    });
+    if (!r.ok) return res.json({ memory: existing });
+    let memory = (await r.json()).choices?.[0]?.message?.content?.trim() || existing;
+    // keep only bullet lines, cap size
+    memory = memory.split("\n").filter((l) => l.trim().startsWith("-")).join("\n").slice(0, 1_500) || existing;
+    res.json({ memory });
+  } catch {
+    res.json({ memory: existing });
   }
 });
 

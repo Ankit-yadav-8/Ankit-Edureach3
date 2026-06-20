@@ -1,17 +1,19 @@
 /* College Parichay AI — our own Claude-style study & admissions assistant,
    powered by Groq (the key lives only on the server). Clean left sidebar with
    chat history + New Chat, a large centered prompt on a fresh chat, streaming
-   responses, Markdown + code blocks, conversation memory, AI-generated titles,
-   dark/light theme, file/PDF upload, voice input & spoken replies, plus quick
-   Quiz / Notes / Flashcard tools. */
+   responses with a live mode badge (web search / reasoning / coding / image),
+   Markdown + KaTeX maths + code blocks, AI-generated titles, suggested
+   follow-ups, text-to-image generation, persistent cross-chat memory, chat
+   export, dark/light theme, file/PDF upload, and voice input & spoken replies. */
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, Send, Square, Sparkles, MessageSquare, Trash2, Menu, X, Sun, Moon,
   Paperclip, Mic, Volume2, VolumeX, RotateCcw, Copy, Check, User, GraduationCap,
-  BookOpen, FileText, ListChecks, Layers, Code2, Calculator, Mail, Bot,
-  Globe, Brain, Download, CornerDownRight,
+  BookOpen, FileText, ListChecks, Code2, Calculator, Bot,
+  Globe, Brain, Download, CornerDownRight, Image as ImageIcon, Wand2, RefreshCw,
+  BrainCircuit,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -58,11 +60,28 @@ const blankChat = () => ({ id: newId(), title: "New chat", messages: [], created
 
 /* engine badge shown live as the server routes each question */
 const MODES = {
-  search:  { label: "Web search", icon: Globe,  color: "#22c55e" },
-  math:    { label: "Reasoning",  icon: Brain,  color: "#a855f7" },
-  code:    { label: "Coding",     icon: Code2,  color: "#3b82f6" },
-  general: { label: "Chat",       icon: Sparkles, color: "#FF693D" },
+  search:  { label: "Web search", icon: Globe,    color: "#22c55e", busy: "Searching the web…" },
+  math:    { label: "Reasoning",  icon: Brain,    color: "#a855f7", busy: "Reasoning step by step…" },
+  code:    { label: "Coding",     icon: Code2,    color: "#3b82f6", busy: "Writing code…" },
+  image:   { label: "Image",      icon: ImageIcon, color: "#ec4899", busy: "Generating image…" },
+  general: { label: "Chat",       icon: Sparkles, color: "#FF693D", busy: "Thinking…" },
 };
+
+/* detect a text-to-image request so we route it to the image generator */
+const IMAGE_RE = /\b(generate|create|make|draw|design|sketch|paint|render|imagine|picture of|image of|photo of)\b.*\b(image|picture|photo|logo|poster|illustration|wallpaper|art|drawing|portrait|scene|painting|icon|banner|avatar)\b|^\/(image|imagine|img)\b/i;
+
+const MEM_KEY = "cpai:memory:v1";
+const PROFILE_KEY = "cpai:profile:v1";
+
+/* combine the editable profile + auto-captured memory into one context string */
+function buildContext(profile, memory) {
+  const lines = [];
+  if (profile?.name)  lines.push(`Name: ${profile.name}`);
+  if (profile?.goal)  lines.push(`Goal / class: ${profile.goal}`);
+  if (profile?.city)  lines.push(`City/State: ${profile.city}`);
+  if (memory?.trim()) lines.push(memory.trim());
+  return lines.join("\n").slice(0, 1500);
+}
 
 /* download the whole conversation as a Markdown file */
 function exportChat(chat) {
@@ -87,7 +106,7 @@ const QUICK = [
   { icon: Code2,       label: "Generate code",   prompt: "Write well-commented code for:\n\n" },
   { icon: ListChecks,  label: "Quiz me",         prompt: "Generate 10 MCQs (with an answer key at the end) on the topic: " },
   { icon: FileText,    label: "Short notes",     prompt: "Create crisp, exam-ready short notes for the chapter: " },
-  { icon: Layers,      label: "Flashcards",      prompt: "Make 10 Q&A flashcards (front/back) for: " },
+  { icon: ImageIcon,   label: "Generate image",  prompt: "Generate an image of " },
 ];
 
 export default function CollegeParichayAI() {
@@ -107,12 +126,22 @@ export default function CollegeParichayAI() {
   const [listening, setListening] = useState(false);
   const [speakId, setSpeakId] = useState(null);    // message index being spoken
   const [profileOpen, setProfileOpen] = useState(false);
+  const [memSaved, setMemSaved] = useState(false); // "memory updated" pulse
+
+  /* persistent, cross-chat memory + editable profile (ChatGPT-style) */
+  const [memory, setMemory] = useState(() => localStorage.getItem(MEM_KEY) || "");
+  const [profile, setProfile] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; } catch { return {}; }
+  });
+  useEffect(() => { localStorage.setItem(MEM_KEY, memory); }, [memory]);
+  useEffect(() => { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); }, [profile]);
 
   const abortRef = useRef(null);
   const scrollRef = useRef(null);
   const recogRef = useRef(null);
   const fileRef = useRef(null);
   const taRef = useRef(null);
+  const memTimer = useRef(null);
 
   const active = chats.find((c) => c.id === activeId) || chats[0];
 
@@ -155,6 +184,10 @@ export default function CollegeParichayAI() {
   const send = async (overrideText) => {
     const raw = (overrideText ?? input).trim();
     if (!raw || streaming) return;
+
+    // text-to-image requests take a different (non-streaming) path
+    if (IMAGE_RE.test(raw) && !attach?.text) return generateImage(raw);
+
     let content = raw;
     if (attach?.text) content += `\n\n--- Attached: ${attach.name} ---\n${attach.text}`;
 
@@ -173,7 +206,7 @@ export default function CollegeParichayAI() {
       const resp = await fetch(`${API_BASE}/api/ai/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ messages: baseMsgs }),
+        body: JSON.stringify({ messages: baseMsgs, context: buildContext(profile, memory) }),
         signal: controller.signal,
       });
       if (!resp.ok || !resp.body) {
@@ -209,7 +242,10 @@ export default function CollegeParichayAI() {
         }
       }
       if (!acc) appendDelta("⚠️ No response — please try again.");
-      else if (!acc.startsWith("⚠️")) genFollowups(chatId, raw, acc);
+      else if (!acc.startsWith("⚠️")) {
+        genFollowups(chatId, raw, acc);
+        updateMemory([...baseMsgs, { role: "assistant", content: acc }]);
+      }
     } catch (err) {
       if (err.name !== "AbortError") {
         setChats((prev) => prev.map((c) => {
@@ -264,6 +300,74 @@ export default function CollegeParichayAI() {
     } catch { /* no chips */ }
   };
 
+  /* ── text-to-image generation ── */
+  const setLastMsg = (chatId, patch) => setChats((prev) => prev.map((c) => {
+    if (c.id !== chatId) return c;
+    const msgs = [...c.messages];
+    msgs[msgs.length - 1] = typeof patch === "function" ? patch(msgs[msgs.length - 1]) : { ...msgs[msgs.length - 1], ...patch };
+    return { ...c, messages: msgs };
+  }));
+
+  const fetchImage = async (prompt, seed) => {
+    const r = await fetch(`${API_BASE}/api/ai/image`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ prompt: prompt.replace(/^\/(image|imagine|img)\s*/i, ""), seed }),
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.url) throw new Error(data.error || "Image generation failed.");
+    return data; // { url, prompt, seed }
+  };
+
+  const generateImage = async (rawPrompt) => {
+    const chatId = active?.id;
+    const base = [...(active?.messages || []), { role: "user", content: rawPrompt }];
+    setChats((prev) => prev.map((c) => (c.id === chatId
+      ? { ...c, mode: "image", suggest: [], messages: [...base, { role: "assistant", type: "image", url: "", prompt: "", loading: true, content: "" }] }
+      : c)));
+    setInput(""); setAttach(null); setStreaming(true);
+    if ((active?.messages?.length || 0) === 0) genTitle(chatId, rawPrompt);
+    try {
+      const data = await fetchImage(rawPrompt);
+      setLastMsg(chatId, { type: "image", url: data.url, prompt: data.prompt, seed: data.seed, loading: false, content: `🖼️ ${data.prompt}` });
+    } catch (err) {
+      setLastMsg(chatId, { type: undefined, content: `⚠️ ${err.message}`, loading: false });
+    } finally { setStreaming(false); }
+  };
+
+  /* re-roll the last image with a fresh seed, in place */
+  const rerollImage = async (prompt) => {
+    if (streaming) return;
+    const chatId = active?.id;
+    setStreaming(true);
+    setLastMsg(chatId, (m) => ({ ...m, loading: true }));
+    try {
+      const data = await fetchImage(prompt, Math.floor(Math.random() * 1e6));
+      setLastMsg(chatId, (m) => ({ ...m, url: data.url, prompt: data.prompt, seed: data.seed, loading: false, content: `🖼️ ${data.prompt}` }));
+    } catch {
+      setLastMsg(chatId, (m) => ({ ...m, loading: false }));
+    } finally { setStreaming(false); }
+  };
+
+  /* ── auto long-term memory (throttled) ── */
+  const updateMemory = (msgs) => {
+    if (memTimer.current) return;            // at most one refresh per window
+    memTimer.current = setTimeout(() => { memTimer.current = null; }, 25000);
+    fetch(`${API_BASE}/api/ai/memory`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ messages: msgs.slice(-8), memory }),
+    })
+      .then((r) => r.json())
+      .then(({ memory: m }) => {
+        if (m && m.trim() && m.trim() !== memory.trim()) {
+          setMemory(m.trim());
+          setMemSaved(true); setTimeout(() => setMemSaved(false), 2600);
+        }
+      })
+      .catch(() => {});
+  };
+
   /* ── file / PDF upload ── */
   const onFile = async (e) => {
     const f = e.target.files?.[0]; e.target.value = "";
@@ -306,6 +410,17 @@ export default function CollegeParichayAI() {
     u.lang = "en-IN"; u.rate = 1.02;
     u.onend = () => setSpeakId(null);
     window.speechSynthesis.speak(u); setSpeakId(idx);
+  };
+
+  /* ── save a generated image to disk ── */
+  const downloadImage = async (url, name) => {
+    try {
+      const blob = await (await fetch(url)).blob();
+      const u = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = u; a.download = `${(name || "image").replace(/[^\w]+/g, "-").slice(0, 40)}.jpg`; a.click();
+      URL.revokeObjectURL(u);
+    } catch { window.open(url, "_blank", "noopener"); }
   };
 
   const messages = active?.messages || [];
@@ -404,6 +519,15 @@ export default function CollegeParichayAI() {
               </span>
             );
           })()}
+          <AnimatePresence>
+            {memSaved && (
+              <motion.span initial={{ opacity: 0, scale: .8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .8 }}
+                className="cpai-hide-sm" title="Saved to long-term memory"
+                style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 700, color: "#a855f7", background: "rgba(168,85,247,.12)", border: "1px solid rgba(168,85,247,.3)", borderRadius: 50, padding: "4px 10px", whiteSpace: "nowrap" }}>
+                <BrainCircuit size={13} /> Memory updated
+              </motion.span>
+            )}
+          </AnimatePresence>
           {!empty && (
             <button onClick={() => exportChat(active)} style={iconBtn(t)} aria-label="Export chat" title="Download chat (.md)"><Download size={17} /></button>
           )}
@@ -422,10 +546,10 @@ export default function CollegeParichayAI() {
                   Hi {user?.name?.split(" ")[0] || "there"}, how can I help?
                 </h1>
                 <p style={{ color: t.textDim, marginTop: 8, fontSize: 15, fontStyle: "italic" }}>
-                  Doubts, derivations, code, notes, quizzes — your free JEE / NEET study partner.
+                  Doubts, derivations, code, notes, images — your free JEE / NEET study partner that remembers you.
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginTop: 14 }}>
-                  {[MODES.search, MODES.math, MODES.code].map((m) => (
+                  {[MODES.search, MODES.math, MODES.code, MODES.image].map((m) => (
                     <span key={m.label} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 600, color: t.textDim, border: `1px solid ${t.border}`, borderRadius: 50, padding: "4px 11px" }}>
                       <m.icon size={13} color={m.color} /> {m.label}
                     </span>
@@ -467,13 +591,32 @@ export default function CollegeParichayAI() {
                     <div style={{ fontSize: 12.5, fontWeight: 700, color: t.textDim, marginBottom: 3, fontFamily: t.display }}>
                       {m.role === "user" ? (user?.name?.split(" ")[0] || "You") : "College Parichay AI"}
                     </div>
-                    {m.role === "user"
-                      ? <div style={{ whiteSpace: "pre-wrap", color: t.body, lineHeight: 1.65, fontSize: 14.5 }}>{m.content.split("\n\n--- Attached:")[0]}{m.content.includes("--- Attached:") && <FileChip t={t} name={m.content.match(/--- Attached: (.*?) ---/)?.[1]} />}</div>
-                      : (m.content
-                          ? <Markdown text={m.content} theme={t} />
-                          : <TypingDots t={t} />)}
+                    {m.role === "user" ? (
+                      <div style={{ whiteSpace: "pre-wrap", color: t.body, lineHeight: 1.65, fontSize: 14.5 }}>
+                        {m.content.split("\n\n--- Attached:")[0]}
+                        {m.content.includes("--- Attached:") && <FileChip t={t} name={m.content.match(/--- Attached: (.*?) ---/)?.[1]} />}
+                      </div>
+                    ) : m.type === "image" ? (
+                      <ImageBubble t={t} msg={m} />
+                    ) : m.content ? (
+                      <div>
+                        <Markdown text={m.content} theme={t} />
+                        {streaming && i === messages.length - 1 && <span className="cpai-caret" style={{ background: t.accent }} />}
+                      </div>
+                    ) : (
+                      <ThinkingRow t={t} mode={active?.mode} />
+                    )}
 
-                    {m.role === "assistant" && m.content && (
+                    {/* image actions */}
+                    {m.role === "assistant" && m.type === "image" && !m.loading && m.url && (
+                      <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+                        <MiniBtn t={t} onClick={() => downloadImage(m.url, m.prompt)} icon={Download} label="Download" />
+                        {i === messages.length - 1 && !streaming && <MiniBtn t={t} onClick={() => rerollImage(m.prompt)} icon={RefreshCw} label="Re-roll" />}
+                      </div>
+                    )}
+
+                    {/* text actions */}
+                    {m.role === "assistant" && m.type !== "image" && m.content && !m.content.startsWith("⚠️") && (
                       <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
                         <MiniBtn t={t} onClick={() => navigator.clipboard?.writeText(m.content)} icon={Copy} label="Copy" />
                         <MiniBtn t={t} onClick={() => speak(i, m.content)} icon={speakId === i ? VolumeX : Volume2} label={speakId === i ? "Stop" : "Read"} />
@@ -519,7 +662,8 @@ export default function CollegeParichayAI() {
       {/* profile panel */}
       <AnimatePresence>
         {profileOpen && (
-          <ProfilePanel t={t} user={user} chats={chats} onClose={() => setProfileOpen(false)} />
+          <ProfilePanel t={t} user={user} chats={chats} profile={profile} setProfile={setProfile}
+            memory={memory} setMemory={setMemory} onClose={() => setProfileOpen(false)} />
         )}
       </AnimatePresence>
 
@@ -542,6 +686,10 @@ export default function CollegeParichayAI() {
         @media (max-width: 560px) { .cpai-hide-sm { display: none !important; } }
         .cpai-ta::placeholder { color: ${t.textMute}; }
         .cpai-ta { scrollbar-width: thin; }
+        .cpai-caret { display: inline-block; width: 7px; height: 15px; margin-left: 3px; border-radius: 2px; vertical-align: text-bottom; animation: cpaiBlink 1s steps(2,start) infinite; }
+        @keyframes cpaiBlink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+        .cpai-shimmer { background: linear-gradient(100deg, transparent 25%, ${theme === "dark" ? "rgba(255,255,255,.06)" : "rgba(0,0,0,.05)"} 45%, transparent 65%); background-size: 220% 100%; animation: cpaiSh 1.5s linear infinite; }
+        @keyframes cpaiSh { to { background-position: -220% 0; } }
       `}</style>
     </div>
   );
@@ -567,7 +715,7 @@ function Composer({ t, input, setInput, send, streaming, stop, taRef, attach, se
           ref={taRef} className="cpai-ta" value={input} rows={1}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-          placeholder={big ? "Ask anything — a doubt, a chapter, a coding task…" : "Reply to College Parichay AI…"}
+          placeholder={big ? "Ask anything — a doubt, a chapter, code, or “generate an image of…”" : "Reply to College Parichay AI…"}
           style={{ flex: 1, minWidth: 0, resize: "none", border: "none", outline: "none", background: "transparent", color: t.text, fontSize: 15, lineHeight: 1.5, fontFamily: "inherit", maxHeight: 200, padding: "7px 0" }}
         />
         <button onClick={toggleMic} style={{ ...iconBtn(t), color: listening ? t.accent : t.textDim }} aria-label="Voice input" title="Speak">
@@ -588,17 +736,20 @@ function Composer({ t, input, setInput, send, streaming, stop, taRef, attach, se
   );
 }
 
-function ProfilePanel({ t, user, chats, onClose }) {
-  const [course, setCourse] = useState(() => localStorage.getItem("cpai:course") || "");
-  useEffect(() => { localStorage.setItem("cpai:course", course); }, [course]);
+function ProfilePanel({ t, user, chats, profile, setProfile, memory, setMemory, onClose }) {
+  const [draft, setDraft] = useState(memory);
+  useEffect(() => { setDraft(memory); }, [memory]);
   const saved = chats.filter((c) => c.messages.length > 0);
+  const setField = (k, v) => setProfile((p) => ({ ...p, [k]: v }));
+  const inputStyle = { width: "100%", boxSizing: "border-box", background: t.panel, border: `1px solid ${t.border}`, borderRadius: 10, padding: "10px 12px", color: t.text, outline: "none", fontSize: 14, fontFamily: "inherit" };
+
   return (
     <>
       <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.5)", zIndex: 40 }} />
       <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 40 }} transition={{ type: "spring", stiffness: 320, damping: 32 }}
-        style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(380px,92vw)", background: t.sidebar, borderLeft: `1px solid ${t.border}`, zIndex: 41, padding: 22, overflowY: "auto", color: t.text }}>
+        style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(400px,94vw)", background: t.sidebar, borderLeft: `1px solid ${t.border}`, zIndex: 41, padding: 22, overflowY: "auto", color: t.text }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-          <h2 style={{ fontFamily: t.display, fontWeight: 800, fontSize: 19 }}>Profile</h2>
+          <h2 style={{ fontFamily: t.display, fontWeight: 800, fontSize: 19 }}>Profile & memory</h2>
           <button onClick={onClose} style={iconBtn(t)} aria-label="Close"><X size={18} /></button>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 13, marginBottom: 22 }}>
@@ -607,26 +758,40 @@ function ProfilePanel({ t, user, chats, onClose }) {
           </span>
           <div>
             <div style={{ fontWeight: 800, fontSize: 17, fontFamily: t.display }}>{user?.name || "Student"}</div>
-            <div style={{ fontSize: 13, color: t.textDim }}>{user?.studentId || "College Parichay"}</div>
+            <div style={{ fontSize: 13, color: t.textDim }}>{user?.email || "College Parichay"}</div>
           </div>
         </div>
-        {[
-          { icon: User, label: "Name", value: user?.name || "—" },
-          { icon: Mail, label: "Email", value: user?.email || "—" },
-        ].map((row) => (
-          <Field key={row.label} t={t} icon={row.icon} label={row.label} value={row.value} />
-        ))}
+
+        {/* editable context the AI personalises with */}
         <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em", color: t.textMute, marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
-            <GraduationCap size={14} /> Course
-          </div>
-          <input value={course} onChange={(e) => setCourse(e.target.value)} placeholder="e.g. Class 12 · JEE 2027"
-            style={{ width: "100%", boxSizing: "border-box", background: t.panel, border: `1px solid ${t.border}`, borderRadius: 10, padding: "10px 12px", color: t.text, outline: "none", fontSize: 14, fontFamily: "inherit" }} />
+          <FieldLabel t={t} icon={GraduationCap} label="Goal / class" />
+          <input value={profile?.goal || ""} onChange={(e) => setField("goal", e.target.value)} placeholder="e.g. Class 12 · JEE Advanced 2027" style={inputStyle} />
         </div>
-        <div style={{ marginTop: 18 }}>
-          <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em", color: t.textMute, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
-            <MessageSquare size={14} /> Saved chats · {saved.length}
+        <div style={{ marginBottom: 18 }}>
+          <FieldLabel t={t} icon={Globe} label="City / state" />
+          <input value={profile?.city || ""} onChange={(e) => setField("city", e.target.value)} placeholder="e.g. Jaipur, Rajasthan" style={inputStyle} />
+        </div>
+
+        {/* long-term memory (auto-captured, editable) */}
+        <div style={{ marginBottom: 18 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+            <FieldLabel t={t} icon={BrainCircuit} label="What the AI remembers" noMargin />
+            {memory?.trim() && (
+              <button onClick={() => { setMemory(""); setDraft(""); }} style={{ background: "none", border: "none", color: t.textMute, cursor: "pointer", fontSize: 11.5, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                <Trash2 size={12} /> Clear
+              </button>
+            )}
           </div>
+          <textarea value={draft} onChange={(e) => setDraft(e.target.value)} onBlur={() => setMemory(draft.slice(0, 1500))}
+            placeholder="Auto-fills as you chat — e.g. your target branches, weak topics, preferences. Edit freely."
+            style={{ ...inputStyle, minHeight: 110, resize: "vertical", lineHeight: 1.5 }} />
+          <div style={{ fontSize: 11, color: t.textMute, marginTop: 6 }}>
+            Carried into every chat so answers stay personal. Stored only in this browser.
+          </div>
+        </div>
+
+        <div style={{ marginTop: 18 }}>
+          <FieldLabel t={t} icon={MessageSquare} label={`Saved chats · ${saved.length}`} />
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {saved.slice(0, 12).map((c) => (
               <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 8, background: t.panel, border: `1px solid ${t.border}`, borderRadius: 10, padding: "9px 11px", fontSize: 13 }}>
@@ -642,13 +807,10 @@ function ProfilePanel({ t, user, chats, onClose }) {
   );
 }
 
-function Field({ t, icon: Icon, label, value }) {
+function FieldLabel({ t, icon: Icon, label, noMargin }) {
   return (
-    <div style={{ marginBottom: 14 }}>
-      <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em", color: t.textMute, marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
-        <Icon size={14} /> {label}
-      </div>
-      <div style={{ background: t.panel, border: `1px solid ${t.border}`, borderRadius: 10, padding: "10px 12px", fontSize: 14, color: t.text, wordBreak: "break-word" }}>{value}</div>
+    <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em", color: t.textMute, marginBottom: noMargin ? 0 : 8, display: "flex", alignItems: "center", gap: 6 }}>
+      <Icon size={14} /> {label}
     </div>
   );
 }
@@ -678,6 +840,49 @@ function TypingDots({ t }) {
         <motion.span key={i} animate={{ opacity: [0.3, 1, 0.3], y: [0, -3, 0] }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.15 }}
           style={{ width: 7, height: 7, borderRadius: "50%", background: t.accent, display: "inline-block" }} />
       ))}
+    </div>
+  );
+}
+
+/* mode-aware "thinking" row shown before the first token streams in */
+function ThinkingRow({ t, mode }) {
+  const label = (MODES[mode] || MODES.general).busy;
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
+      <TypingDots t={t} />
+      <motion.span animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.6, repeat: Infinity }}
+        style={{ fontSize: 12.5, color: t.textMute, fontWeight: 600, fontFamily: t.display }}>{label}</motion.span>
+    </div>
+  );
+}
+
+/* generated-image bubble with shimmer placeholder + fade-in */
+function ImageBubble({ t, msg }) {
+  const [loaded, setLoaded] = useState(false);
+  const busy = msg.loading || !msg.url;
+  return (
+    <div style={{ marginTop: 2 }}>
+      <div style={{ position: "relative", width: "min(420px, 100%)", aspectRatio: "1 / 1", borderRadius: 16, overflow: "hidden", border: `1px solid ${t.border}`, background: t.panelHi }}>
+        {(busy || !loaded) && (
+          <div className="cpai-shimmer" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: t.textMute }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+              <motion.span animate={{ rotate: [0, 8, -8, 0], scale: [1, 1.08, 1] }} transition={{ duration: 2, repeat: Infinity }}>
+                <Wand2 size={26} color={t.accent} />
+              </motion.span>
+              <span style={{ fontSize: 12.5, fontWeight: 600 }}>{busy ? "Generating image…" : "Loading…"}</span>
+            </div>
+          </div>
+        )}
+        {msg.url && (
+          <img src={msg.url} alt={msg.prompt || "Generated image"} onLoad={() => setLoaded(true)} loading="lazy"
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: loaded ? 1 : 0, transition: "opacity .45s ease" }} />
+        )}
+      </div>
+      {msg.prompt && (
+        <div style={{ fontSize: 12, color: t.textMute, marginTop: 7, maxWidth: "min(420px,100%)", lineHeight: 1.45, fontStyle: "italic" }}>
+          {msg.prompt}
+        </div>
+      )}
     </div>
   );
 }
