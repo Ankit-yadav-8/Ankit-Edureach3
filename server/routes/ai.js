@@ -7,101 +7,77 @@ import { requireAuth } from "../middleware/auth.js";
 
 const router = express.Router();
 
-const GROQ_URL   = "https://api.groq.com/openai/v1/chat/completions";
+// ─── Constants ───────────────────────────────────────────────────────────────
+
+const GROQ_URL    = "https://api.groq.com/openai/v1/chat/completions";
 const TITLE_MODEL = process.env.GROQ_TITLE_MODEL || "llama-3.1-8b-instant";
 
-/* Subject-routed models — one Groq key, the right model per question.
-   Each id is env-overridable so we can swap it if Groq renames/retires one.
-     • math / engineering / reasoning → DeepSeek-R1 (deep step-by-step working)
-     • coding / programming           → Qwen 3 (strong code + explanations)
-     • everything else                → Llama 3.3 70B (fast, well-rounded) */
 const MODELS = {
-  search:  process.env.GROQ_MODEL_SEARCH  || "groq/compound",          // built-in web search
-  math:    process.env.GROQ_MODEL_MATH    || "qwen/qwen3-32b",         // strong reasoning + thinking
+  search:  process.env.GROQ_MODEL_SEARCH  || "groq/compound",
+  math:    process.env.GROQ_MODEL_MATH    || "qwen/qwen3-32b",
   code:    process.env.GROQ_MODEL_CODE    || "qwen/qwen3-32b",
   general: process.env.GROQ_MODEL_GENERAL || process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
 };
 
-/* Live-data questions (admissions, cutoffs, placements, exam stats/dates) — route
-   to a web-search-capable model so answers reflect current reality, not training. */
-const SEARCH_RE = /\b(jee|neet|iit|nit|iiit|bits|cutoff|cut-off|cut off|rank|closing rank|opening rank|placement|package|lpa|admission|counsell?ing|josaa|csab|seat matrix|seats?|fees?|nirf|college|eligibilit|eligible|notification|registration|application|exam date|result|answer key|merit list|how many|number of (students|candidates|applicants)|applicants|appear(ed|ing)?|vacanc|scholarship|hostel|predictor|this year|latest|current|recent)\b/;
-const CODE_RE = /\b(code|coding|program|programming|python|javascript|typescript|java|c\+\+|c#|golang|rust|sql|html|css|react|node|api|function|algorithm|data structure|recursion|loop|array|pointer|compile|syntax|runtime error|stack trace|debug|leetcode|oop|class|inheritance|regex|bug|terminal|git)\b/;
-const MATH_RE = /\b(matrix|matrices|determinant|probability|permutation|combination|equation|inequalit|theorem|circuit|kirchhoff|physics|chemistry|thermodynamics|calculus|vector|trigonometr|algebra|geometry|limit|series|kinematics|electromagnet|capacitor|resistor|mole|stoichiometr|numerical)\b/;
-/* strong "solve this problem" intent — keeps real numericals on the reasoning
-   model even when they mention JEE/IIT (which would otherwise hit web search). */
-const SOLVE_RE = /\b(solve|simplify|evaluate|calculate|integrate|differentiate|derive|prove|compute|find the|value of|roots? of)\b/;
-
-/* Per-mode display label + generation tuning. Maths/code run cooler for
-   accuracy; the cap keeps latency and token cost in check. */
 const MODE_META = {
-  search:  { label: "Web search", model: MODELS.search,  temp: 0.5, maxTokens: 2048 },
-  math:    { label: "Reasoning",  model: MODELS.math,     temp: 0.3, maxTokens: 3072 },
-  code:    { label: "Coding",     model: MODELS.code,     temp: 0.3, maxTokens: 3072 },
-  general: { label: "Chat",       model: MODELS.general,  temp: 0.6, maxTokens: 2048 },
+  search:  { label: "Web search", model: MODELS.search,  temp: 0.5, maxTokens: null },
+  math:    { label: "Reasoning",  model: MODELS.math,    temp: 0.3, maxTokens: 3072 },
+  code:    { label: "Coding",     model: MODELS.code,    temp: 0.3, maxTokens: 3072 },
+  general: { label: "Chat",       model: MODELS.general, temp: 0.6, maxTokens: 2048 },
 };
 
-/* Choose the Groq model from the latest user message. Web-search wins first so
-   exam / college / cutoff queries get fresh data even if they also look mathy. */
+// How many turns of history to forward per mode (search is tight on TPM)
+const HISTORY_TURNS = { search: 6, math: 20, code: 20, general: 24 };
+
+// Per-request timeout in ms (Groq compound can be slow while browsing)
+const STREAM_TIMEOUT_MS = { search: 60_000, math: 45_000, code: 45_000, general: 30_000 };
+
+// ─── Routing regexes ─────────────────────────────────────────────────────────
+
+/* Live-data questions — route to web-search model for fresh information */
+const SEARCH_RE = /\b(jee|neet|iit|nit|iiit|bits|cutoff|cut-off|cut off|rank|closing rank|opening rank|placement|package|lpa|admission|counsell?ing|josaa|csab|seat matrix|seats?|fees?|nirf|college|eligibilit|eligible|notification|registration|application|exam date|result|answer key|merit list|how many|number of (students|candidates|applicants)|applicants|appear(ed|ing)?|vacanc|scholarship|hostel|predictor|this year|latest|current|recent)\b/i;
+
+const CODE_RE = /\b(code|coding|program|programming|python|javascript|typescript|java|c\+\+|c#|golang|rust|sql|html|css|react|node|api|function|algorithm|data structure|recursion|loop|array|pointer|compile|syntax|runtime error|stack trace|debug|leetcode|oop|class|inheritance|regex|bug|terminal|git)\b/i;
+
+const MATH_RE = /\b(matrix|matrices|determinant|probability|permutation|combination|equation|inequalit|theorem|circuit|kirchhoff|physics|chemistry|thermodynamics|calculus|vector|trigonometr|algebra|geometry|limit|series|kinematics|electromagnet|capacitor|resistor|mole|stoichiometr|numerical)\b/i;
+
+/* "Solve this" intent — keeps JEE numericals on the reasoning model */
+const SOLVE_RE = /\b(solve|simplify|evaluate|calculate|integrate|differentiate|derive|prove|compute|find the|value of|roots? of)\b/i;
+
+/* Detects LaTeX/math symbols in the raw message text */
+const MATH_SYMBOL_RE = /[∫∑√π∞≤≥×÷]|\\frac|\\int|\\sqrt|\\sum|\\theta/;
+
 function pickMode(text = "") {
-  const t = text.toLowerCase();
-  const solvey = SOLVE_RE.test(t) || /[∫∑√π∞≤≥×÷]|\\frac|\\int|\\sqrt|\\sum|\\theta/.test(text);
-  if (SEARCH_RE.test(t) && !solvey) return "search";   // admissions/data — unless it's a problem to solve
-  if (CODE_RE.test(t)) return "code";
-  if (solvey || MATH_RE.test(t)) return "math";
+  const solvey = SOLVE_RE.test(text) || MATH_SYMBOL_RE.test(text);
+  if (SEARCH_RE.test(text) && !solvey) return "search";
+  if (CODE_RE.test(text))              return "code";
+  if (solvey || MATH_RE.test(text))   return "math";
   return "general";
 }
 
-/* Today's date in IST so the assistant grounds "this year" / cutoff reasoning. */
+// ─── System prompts ──────────────────────────────────────────────────────────
+
 function todayIST() {
   return new Date().toLocaleDateString("en-IN", {
     timeZone: "Asia/Kolkata", day: "numeric", month: "long", year: "numeric",
   });
 }
 
-/* Reasoning models (DeepSeek-R1, Qwen 3) stream their chain-of-thought wrapped
-   in <think>…</think>. Strip it so students see only the final answer. The
-   filter is stateful and tolerant of tags split across streamed chunks. */
-function makeThinkStripper() {
-  const OPEN = "<think>", CLOSE = "</think>";
-  let inside = false, pending = "";
-  const partialTail = (s, tag) => {
-    const max = Math.min(s.length, tag.length - 1);
-    for (let k = max; k > 0; k--) if (tag.startsWith(s.slice(s.length - k))) return k;
-    return 0;
-  };
-  return {
-    push(chunk) {
-      let s = pending + chunk; pending = ""; let out = "";
-      while (s) {
-        if (!inside) {
-          const idx = s.indexOf(OPEN);
-          if (idx === -1) { const k = partialTail(s, OPEN); out += s.slice(0, s.length - k); pending = s.slice(s.length - k); break; }
-          out += s.slice(0, idx); s = s.slice(idx + OPEN.length); inside = true;
-        } else {
-          const idx = s.indexOf(CLOSE);
-          if (idx === -1) { const k = partialTail(s, CLOSE); pending = s.slice(s.length - k); break; }
-          s = s.slice(idx + CLOSE.length); inside = false;
-        }
-      }
-      return out;
-    },
-    flush() { const out = inside ? "" : pending; pending = ""; return out; },
-  };
+function buildDateHeader() {
+  return (
+    `Current date: ${todayIST()}.\n` +
+    "You know today's date. Never assume it is an earlier year. " +
+    "Treat any event dated on or before today as something that has ALREADY happened — " +
+    "do not claim a past exam, result or session 'has not been conducted yet'. " +
+    "Only a date strictly after today is the future. Always verify dates and years against today's date before answering.\n\n"
+  );
 }
 
-/* The compound web-search model streams its browsing + final answer inside the
-   `reasoning` field, wrapping internal work in <think>…</think> (and <output>…).
-   The real reply is the text after the last </think>; strip stray tags. */
-function finalFromReasoning(raw) {
-  const i = raw.lastIndexOf("</think>");
-  let ans = (i >= 0 ? raw.slice(i + "</think>".length) : raw);
-  ans = ans.replace(/<\/?(think|output|reasoning)>/gi, "").trim();
-  if (!ans) {
-    ans = raw.replace(/<think>[\s\S]*?<\/think>/gi, "")
-             .replace(/<\/?(think|output|reasoning)>/gi, "").trim();
-  }
-  return ans;
-}
+const MEMORY_NOTE =
+  "\n\nNO WEB-SEARCH RESULTS are available this turn — you are answering from memory only. " +
+  "Do NOT state any current or year-specific number, cutoff, closing rank, registration/candidate count " +
+  "or exam date as a confirmed fact. Instead give the official source to check, and only if you genuinely " +
+  "know it, a clearly-labelled historical range. Never output a specific fabricated figure.";
 
 const SYSTEM_PROMPT = `You are College Parichay AI, an expert educational assistant specializing in engineering, science, programming, college admissions, placements, and career guidance.
 
@@ -167,187 +143,323 @@ Core Principles:
 
 If the user asks for the latest information, use any web-search results provided to you — prefer and cite them over memory, noting the year/source (jeeadv.ac.in, josaa.nic.in, nta.ac.in, etc.). If current data is unavailable, clearly state the limitation and provide the best available explanation or estimate.`;
 
-/* keep payloads sane: cap how much history & text we forward to Groq */
-function sanitizeMessages(raw) {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
-    .slice(-24) // last 24 turns of memory
-    .map((m) => ({ role: m.role, content: m.content.slice(0, 24000) }));
-}
-
-/* The compound web-search model has a tight per-minute token budget (70K TPM)
-   and spends thousands of tokens browsing. Keep its request small: only recent
-   turns, drop big attachment dumps, and cap each message — this avoids the
-   HTTP 413 "request too large" that was silently breaking web search. */
-function leanForSearch(msgs) {
-  return msgs.slice(-6).map((m) => ({
-    role: m.role,
-    content: m.content.split("\n\n--- Attached:")[0].slice(0, 3000),
-  }));
-}
-
-/* ── POST /api/ai/chat — streamed completion (SSE) ── */
-router.post("/chat", requireAuth, async (req, res) => {
-  const messages = sanitizeMessages(req.body?.messages);
-  const temperature = Math.min(1.2, Math.max(0, Number(req.body?.temperature) || 0.6));
-  if (!messages.length) return res.status(400).json({ error: "No messages provided." });
-  if (!process.env.GROQ_API_KEY) return res.status(503).json({ error: "AI is not configured on the server." });
-
-  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
-  res.setHeader("Cache-Control", "no-cache, no-transform");
-  res.setHeader("Connection", "keep-alive");
-  res.setHeader("X-Accel-Buffering", "no");
-  res.flushHeaders?.();
-
-  const controller = new AbortController();
-  // Abort the upstream call only if the *client* disconnects mid-stream — not
-  // when the request body finishes (req 'close' fires early on Node 18+/20+).
-  res.on("close", () => { if (!res.writableEnded) controller.abort(); });
-
-  // Route to the best model for the latest question (search / math / code / general).
-  const lastUser = [...messages].reverse().find((m) => m.role === "user")?.content || "";
-  const mode = pickMode(lastUser);
-  const meta = MODE_META[mode];
-  // Respect a caller-supplied temperature, else use the mode's tuned default.
-  const temp = req.body?.temperature != null ? temperature : meta.temp;
-  const dateHead =
-    `Current date: ${todayIST()}.\n` +
-    "You know today's date. Never assume it is an earlier year. " +
-    "Treat any event dated on or before today as something that has ALREADY happened — do not claim a past exam, result or session 'has not been conducted yet'. " +
-    "Only a date strictly after today is the future. Always verify dates and years against today's date before answering.\n\n";
-
-  // The general/math/code models answer from memory only, so they must NOT assert
-  // current stats/cutoffs as fact — the main guard against confidently wrong data.
-  const memoryNote =
-    "\n\nNO WEB-SEARCH RESULTS are available this turn — you are answering from memory only. Do NOT state any current or year-specific number, cutoff, closing rank, registration/candidate count or exam date as a confirmed fact. Instead give the official source to check, and only if you genuinely know it, a clearly-labelled historical range. Never output a specific fabricated figure.";
-
-  // Compact prompt for the compound model: it browses the web, so it just needs
-  // to stay accurate, cited and small (to respect its 70K tokens/min limit).
-  const searchSys =
+function buildSearchSystemPrompt() {
+  return (
     `Current date: ${todayIST()}. Treat any event on or before today as already happened.\n` +
     "You are College Parichay AI with live web search. Search the web and answer the student accurately and concisely. " +
     "Base every number, cutoff, rank and date on what you actually find, and cite the source with its year. " +
-    "Never invent statistics; if the search finds nothing, say so. Use Markdown, and write any maths in LaTeX ($...$).";
+    "Never invent statistics; if the search finds nothing, say so. Use Markdown, and write any maths in LaTeX ($...$)."
+  );
+}
 
-  const callGroq = (model) => {
-    const isSearch = model === MODELS.search;
-    const body = {
-      model,
-      temperature: temp,
-      stream: true,
-      messages: isSearch
-        ? [{ role: "system", content: searchSys }, ...leanForSearch(messages)]
-        : [{ role: "system", content: dateHead + SYSTEM_PROMPT + memoryNote }, ...messages],
-    };
-    // Compound spends thousands of tokens browsing before it answers, so a cap
-    // would truncate it — let it use the default; cap the other models.
-    if (!isSearch) body.max_tokens = meta.maxTokens;
-    return fetch(GROQ_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-      },
-      body: JSON.stringify(body),
-      signal: controller.signal,
-    });
+// ─── Message sanitization ────────────────────────────────────────────────────
+
+function sanitizeMessages(raw, maxTurns = 24) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
+    .slice(-maxTurns)
+    .map((m) => ({ role: m.role, content: m.content.slice(0, 24_000) }));
+}
+
+/** Trim messages for the search model: drop attachment blobs, cap length, keep recent turns */
+function leanForSearch(msgs, maxTurns = 6) {
+  return msgs.slice(-maxTurns).map((m) => ({
+    role: m.role,
+    content: m.content.split("\n\n--- Attached:")[0].slice(0, 3_000),
+  }));
+}
+
+// ─── <think> stripper ────────────────────────────────────────────────────────
+
+/**
+ * Stateful streaming filter that removes <think>…</think> blocks from Groq's
+ * chain-of-thought models (DeepSeek-R1, Qwen 3). Handles tags split across chunks.
+ */
+function makeThinkStripper() {
+  const OPEN = "<think>", CLOSE = "</think>";
+  let inside = false, pending = "";
+
+  /** Returns how many trailing chars of `s` could be the start of `tag` */
+  const partialTail = (s, tag) => {
+    const max = Math.min(s.length, tag.length - 1);
+    for (let k = max; k > 0; k--) {
+      if (tag.startsWith(s.slice(s.length - k))) return k;
+    }
+    return 0;
   };
 
-  // Stream one model's completion to the client, dropping any <think>…</think>
-  // reasoning. Returns whether it produced visible content, so a routed model
-  // that streams nothing usable (e.g. web-search model returns only tool steps)
-  // can transparently fall back to the general model.
-  const streamGroq = async (model) => {
-    let upstream;
-    try { upstream = await callGroq(model); }
-    catch (e) { if (controller.signal.aborted) throw e; return { emitted: false }; }
-    if (!upstream.ok || !upstream.body) { await upstream.text?.().catch(() => {}); return { emitted: false }; }
+  return {
+    push(chunk) {
+      let s = pending + chunk;
+      pending = "";
+      let out = "";
+      while (s) {
+        if (!inside) {
+          const idx = s.indexOf(OPEN);
+          if (idx === -1) {
+            const k = partialTail(s, OPEN);
+            out    += s.slice(0, s.length - k);
+            pending = s.slice(s.length - k);
+            break;
+          }
+          out += s.slice(0, idx);
+          s    = s.slice(idx + OPEN.length);
+          inside = true;
+        } else {
+          const idx = s.indexOf(CLOSE);
+          if (idx === -1) {
+            const k = partialTail(s, CLOSE);
+            pending = s.slice(s.length - k);
+            break;
+          }
+          s      = s.slice(idx + CLOSE.length);
+          inside = false;
+        }
+      }
+      return out;
+    },
+    flush() {
+      const out = inside ? "" : pending;
+      pending   = "";
+      inside    = false; // reset so the instance is reusable
+      return out;
+    },
+  };
+}
 
-    const strip = makeThinkStripper();
-    const reader = upstream.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "", emitted = false, reasoningBuf = "";
+/**
+ * The compound search model emits the real answer after its last </think> block
+ * (or directly if it skips thinking). Strip any residual tags.
+ */
+function finalFromReasoning(raw) {
+  const i = raw.lastIndexOf("</think>");
+  let ans = (i >= 0 ? raw.slice(i + "</think>".length) : raw)
+    .replace(/<\/?(think|output|reasoning)>/gi, "")
+    .trim();
+
+  // Fallback: strip all think blocks and take whatever remains
+  if (!ans) {
+    ans = raw
+      .replace(/<think>[\s\S]*?<\/think>/gi, "")
+      .replace(/<\/?(think|output|reasoning)>/gi, "")
+      .trim();
+  }
+  return ans;
+}
+
+// ─── SSE helpers ─────────────────────────────────────────────────────────────
+
+function sseDelta(res, text)  { res.write(`data: ${JSON.stringify({ delta: text })}\n\n`); }
+function sseMeta(res, data)   { res.write(`event: meta\ndata: ${JSON.stringify(data)}\n\n`); }
+function sseError(res, msg, detail = "") {
+  res.write(`event: error\ndata: ${JSON.stringify({ error: msg, ...(detail ? { detail } : {}) })}\n\n`);
+}
+
+// ─── Core streaming logic ─────────────────────────────────────────────────────
+
+/**
+ * Open one streaming completion against Groq and pipe visible tokens to `res`.
+ * Returns { emitted: boolean } so the caller can decide to fall back.
+ */
+async function streamGroq({ res, model, messages, systemPrompt, temperature, maxTokens, timeoutMs, controller }) {
+  const body = {
+    model,
+    temperature,
+    stream: true,
+    messages: [{ role: "system", content: systemPrompt }, ...messages],
+    ...(maxTokens ? { max_tokens: maxTokens } : {}),
+  };
+
+  // Apply a per-request timeout on top of the AbortController used for client-disconnect.
+  const timeoutId = setTimeout(() => controller.abort("timeout"), timeoutMs);
+
+  let upstream;
+  try {
+    upstream = await fetch(GROQ_URL, {
+      method:  "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
+      body:    JSON.stringify(body),
+      signal:  controller.signal,
+    });
+  } catch (e) {
+    clearTimeout(timeoutId);
+    if (controller.signal.aborted) throw e; // propagate client-disconnect
+    return { emitted: false, error: e.message };
+  }
+
+  clearTimeout(timeoutId);
+
+  if (!upstream.ok) {
+    const errText = await upstream.text().catch(() => "");
+    // Surface rate-limit errors explicitly so the UI can show a friendly message
+    if (upstream.status === 429) return { emitted: false, rateLimited: true };
+    return { emitted: false, error: `Groq ${upstream.status}: ${errText.slice(0, 200)}` };
+  }
+
+  if (!upstream.body) return { emitted: false, error: "No response body" };
+
+  const strip    = makeThinkStripper();
+  const reader   = upstream.body.getReader();
+  const decoder  = new TextDecoder();
+  let buffer     = "";
+  let emitted    = false;
+  let reasonBuf  = ""; // for compound model's reasoning field
+
+  try {
     for (;;) {
       const { done, value } = await reader.read();
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split("\n");
-      buffer = lines.pop() || "";
+      buffer = lines.pop() ?? ""; // keep incomplete last line
+
       for (const line of lines) {
         const trimmed = line.trim();
         if (!trimmed.startsWith("data:")) continue;
         const payload = trimmed.slice(5).trim();
         if (payload === "[DONE]") continue;
-        try {
-          const delta = JSON.parse(payload).choices?.[0]?.delta || {};
-          if (delta.content) {
-            const clean = strip.push(delta.content);
-            if (clean) { res.write(`data: ${JSON.stringify({ delta: clean })}\n\n`); emitted = true; }
-          } else if (delta.reasoning) {
-            // The compound model puts its whole answer (after browsing) in the
-            // reasoning field; buffer it and extract the final answer at the end.
-            reasoningBuf += delta.reasoning;
-          }
-        } catch { /* ignore keep-alive / partial frames */ }
+
+        let parsed;
+        try { parsed = JSON.parse(payload); } catch { continue; }
+
+        const delta = parsed.choices?.[0]?.delta ?? {};
+
+        if (delta.content) {
+          const clean = strip.push(delta.content);
+          if (clean) { sseDelta(res, clean); emitted = true; }
+        } else if (delta.reasoning) {
+          // Compound model streams its full answer in the reasoning field
+          reasonBuf += delta.reasoning;
+        }
       }
     }
-    const tail = strip.flush();
-    if (tail) { res.write(`data: ${JSON.stringify({ delta: tail })}\n\n`); emitted = true; }
-    // If nothing streamed via content but the model reasoned (compound), emit the
-    // final answer it produced after its <think>/browsing block.
-    if (!emitted && reasoningBuf.trim()) {
-      const answer = finalFromReasoning(reasoningBuf);
-      if (answer) { res.write(`data: ${JSON.stringify({ delta: answer })}\n\n`); emitted = true; }
-    }
-    return { emitted };
-  };
+  } finally {
+    reader.releaseLock();
+  }
+
+  const tail = strip.flush();
+  if (tail) { sseDelta(res, tail); emitted = true; }
+
+  // If nothing came via `content`, try extracting from buffered reasoning
+  if (!emitted && reasonBuf.trim()) {
+    const answer = finalFromReasoning(reasonBuf);
+    if (answer) { sseDelta(res, answer); emitted = true; }
+  }
+
+  return { emitted };
+}
+
+// ─── Routes ──────────────────────────────────────────────────────────────────
+
+/* POST /api/ai/chat — streamed completion via SSE */
+router.post("/chat", requireAuth, async (req, res) => {
+  if (!process.env.GROQ_API_KEY) {
+    return res.status(503).json({ error: "AI is not configured on the server." });
+  }
+
+  const rawMessages = sanitizeMessages(req.body?.messages);
+  if (!rawMessages.length) {
+    return res.status(400).json({ error: "No messages provided." });
+  }
+
+  // Override temperature only when the caller explicitly passes it
+  const callerTemp = req.body?.temperature != null
+    ? Math.min(1.2, Math.max(0, Number(req.body.temperature) || 0))
+    : null;
+
+  // Detect mode from the most recent user turn
+  const lastUserText = [...rawMessages].reverse().find((m) => m.role === "user")?.content ?? "";
+  const mode         = pickMode(lastUserText);
+  const meta         = MODE_META[mode];
+  const temperature  = callerTemp ?? meta.temp;
+
+  // Prepare mode-specific message list and system prompt
+  const isSearch    = mode === "search";
+  const messages    = isSearch ? leanForSearch(rawMessages) : rawMessages.slice(-HISTORY_TURNS[mode]);
+  const systemPrompt = isSearch
+    ? buildSearchSystemPrompt()
+    : buildDateHeader() + SYSTEM_PROMPT + MEMORY_NOTE;
+
+  // SSE headers
+  res.setHeader("Content-Type",  "text/event-stream; charset=utf-8");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection",    "keep-alive");
+  res.setHeader("X-Accel-Buffering", "no");
+  res.flushHeaders?.();
+
+  // Shared AbortController — aborted on client disconnect or per-request timeout
+  const controller = new AbortController();
+  res.on("close", () => { if (!res.writableEnded) controller.abort("client-disconnect"); });
 
   try {
-    // Tell the client which engine is answering (drives the live mode badge).
-    res.write(`event: meta\ndata: ${JSON.stringify({ mode, label: meta.label })}\n\n`);
+    // Tell the UI which mode is active (drives the badge)
+    sseMeta(res, { mode, label: meta.label });
 
-    let { emitted } = await streamGroq(meta.model);
+    const sharedArgs = { res, messages, systemPrompt, temperature, controller };
 
-    // If the routed model was unavailable or streamed nothing usable, fall back.
-    if (!emitted && meta.model !== MODELS.general) {
-      res.write(`event: meta\ndata: ${JSON.stringify({ mode: "general", label: MODE_META.general.label })}\n\n`);
-      ({ emitted } = await streamGroq(MODELS.general));
+    let result = await streamGroq({
+      ...sharedArgs,
+      model:     meta.model,
+      maxTokens: meta.maxTokens,
+      timeoutMs: STREAM_TIMEOUT_MS[mode],
+    });
+
+    // Transparent fallback: if the routed model failed or produced nothing,
+    // try the general model before surfacing an error to the user.
+    if (!result.emitted && meta.model !== MODELS.general) {
+      sseMeta(res, { mode: "general", label: MODE_META.general.label });
+      result = await streamGroq({
+        ...sharedArgs,
+        model:      MODELS.general,
+        maxTokens:  MODE_META.general.maxTokens,
+        timeoutMs:  STREAM_TIMEOUT_MS.general,
+        systemPrompt: buildDateHeader() + SYSTEM_PROMPT + MEMORY_NOTE,
+        messages:     rawMessages.slice(-HISTORY_TURNS.general),
+      });
     }
 
-    if (!emitted) {
-      res.write(`event: error\ndata: ${JSON.stringify({ error: "The AI returned an empty response — please try again." })}\n\n`);
+    if (!result.emitted) {
+      const userMsg = result.rateLimited
+        ? "The AI is busy right now (rate limit reached). Please wait a moment and try again."
+        : "The AI returned an empty response — please try again.";
+      sseError(res, userMsg, result.error);
     }
+
     res.write("event: done\ndata: {}\n\n");
     res.end();
   } catch (e) {
     if (controller.signal.aborted) return res.end();
-    res.write(`event: error\ndata: ${JSON.stringify({ error: "AI request failed.", detail: String(e?.message || e).slice(0, 200) })}\n\n`);
+    sseError(res, "AI request failed.", String(e?.message || e).slice(0, 200));
     res.end();
   }
 });
 
-/* ── POST /api/ai/title — short conversation title ── */
+/* POST /api/ai/title — generate a short conversation title */
 router.post("/title", requireAuth, async (req, res) => {
-  const first = String(req.body?.prompt || "").slice(0, 1000);
-  if (!first.trim()) return res.json({ title: "New chat" });
   if (!process.env.GROQ_API_KEY) return res.json({ title: "New chat" });
+
+  const first = String(req.body?.prompt || "").trim().slice(0, 1_000);
+  if (!first) return res.json({ title: "New chat" });
+
   try {
     const r = await fetch(GROQ_URL, {
-      method: "POST",
+      method:  "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
       body: JSON.stringify({
-        model: TITLE_MODEL,
+        model:       TITLE_MODEL,
         temperature: 0.3,
-        max_tokens: 20,
+        max_tokens:  20,
         messages: [
           { role: "system", content: "Reply with ONLY a 2-5 word title (no quotes, no punctuation at the end) summarising the user's message." },
-          { role: "user", content: first },
+          { role: "user",   content: first },
         ],
       }),
     });
+
+    if (!r.ok) return res.json({ title: "New chat" });
     const data = await r.json();
-    let title = data.choices?.[0]?.message?.content?.trim() || "New chat";
+    let title  = data.choices?.[0]?.message?.content?.trim() ?? "";
     title = title.replace(/^["'#\s]+|["'.\s]+$/g, "").slice(0, 48);
     res.json({ title: title || "New chat" });
   } catch {
@@ -355,36 +467,50 @@ router.post("/title", requireAuth, async (req, res) => {
   }
 });
 
-/* ── POST /api/ai/followups — 3 suggested next questions for the chips ── */
+/* POST /api/ai/followups — 3 suggested follow-up questions */
 router.post("/followups", requireAuth, async (req, res) => {
-  const question = String(req.body?.question || "").slice(0, 1500);
-  const answer   = String(req.body?.answer || "").slice(0, 3000);
-  if (!question.trim() || !process.env.GROQ_API_KEY) return res.json({ followups: [] });
+  if (!process.env.GROQ_API_KEY) return res.json({ followups: [] });
+
+  const question = String(req.body?.question || "").trim().slice(0, 1_500);
+  const answer   = String(req.body?.answer   || "").trim().slice(0, 3_000);
+  if (!question) return res.json({ followups: [] });
+
   try {
     const r = await fetch(GROQ_URL, {
-      method: "POST",
+      method:  "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
       body: JSON.stringify({
-        model: TITLE_MODEL,
+        model:       TITLE_MODEL,
         temperature: 0.5,
-        max_tokens: 120,
+        max_tokens:  120,
         messages: [
-          { role: "system", content: "You suggest what a student might naturally ask next. Reply with ONLY a JSON array of exactly 3 short follow-up questions (each under 9 words), no prose, no numbering." },
-          { role: "user", content: `Question: ${question}\n\nAnswer: ${answer}\n\nGive 3 follow-up questions as a JSON array.` },
+          {
+            role:    "system",
+            content: "You suggest what a student might naturally ask next. Reply with ONLY a JSON array of exactly 3 short follow-up questions (each under 9 words), no prose, no numbering.",
+          },
+          {
+            role:    "user",
+            content: `Question: ${question}\n\nAnswer: ${answer}\n\nGive 3 follow-up questions as a JSON array.`,
+          },
         ],
       }),
     });
+
+    if (!r.ok) return res.json({ followups: [] });
     const data = await r.json();
-    const raw = data.choices?.[0]?.message?.content || "[]";
+    const raw  = data.choices?.[0]?.message?.content ?? "[]";
+
     let followups = [];
     try {
       const match = raw.match(/\[[\s\S]*\]/);
-      followups = JSON.parse(match ? match[0] : raw);
+      followups   = JSON.parse(match ? match[0] : raw);
     } catch { followups = []; }
+
     followups = (Array.isArray(followups) ? followups : [])
       .filter((q) => typeof q === "string" && q.trim())
       .map((q) => q.trim().replace(/^["'\d.\s-]+/, "").slice(0, 90))
       .slice(0, 3);
+
     res.json({ followups });
   } catch {
     res.json({ followups: [] });
