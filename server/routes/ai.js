@@ -120,10 +120,12 @@ Core Principles:
    - Explain theory, formulas, and practical applications.
    - Connect concepts to real-world engineering use cases.
 
-6. For college admissions:
-   - Provide eligibility, exam details, admission process, fees, placements, and cutoffs when available.
-   - Distinguish between official information and estimates, and mention important assumptions.
-   - For future-year queries (e.g. "JEE Advanced 2027", "IIT Bombay CSE cutoff 2028"), note the exact data cannot exist yet, then project from recent trends as a clearly-labelled estimate.
+6. For college admissions, answer in this order:
+   - Official facts first (eligibility, exam details, process, fees, placements, cutoffs) — from data or search, clearly marked as official.
+   - Then trends across recent years.
+   - Then estimates, clearly labelled, only where exact data is genuinely unavailable.
+   - Distinguish official information from estimates and state important assumptions.
+   - Only for a year strictly after today's date should you say exact data cannot exist yet, then project from recent trends as a clearly-labelled estimate. For a past or current year, do not pretend the event hasn't happened — give official/searched data or say it must be verified from the official source.
 
 7. Response Structure:
    - Direct Answer
@@ -143,7 +145,9 @@ Core Principles:
    - Ask clarifying questions when needed.
    - Maintain context from previous messages.
 
-10. Never respond with: only "I don't know", vague answers, or unexplained conclusions.
+10. Think step-by-step before answering, and verify every date and year against today's date (given above) before responding.
+
+11. Never respond with: only "I don't know", vague answers, or unexplained conclusions.
 
 If the user asks for the latest information, use any web-search results provided to you — prefer and cite them over memory, noting the year/source (jeeadv.ac.in, josaa.nic.in, nta.ac.in, etc.). If current data is unavailable, clearly state the limitation and provide the best available explanation or estimate.`;
 
@@ -180,7 +184,12 @@ router.post("/chat", requireAuth, async (req, res) => {
   const meta = MODE_META[mode];
   // Respect a caller-supplied temperature, else use the mode's tuned default.
   const temp = req.body?.temperature != null ? temperature : meta.temp;
-  const sys = `${SYSTEM_PROMPT}\n\nToday's date is ${todayIST()}. Treat any later year as the future.`;
+  const sys =
+    `Current date: ${todayIST()}.\n` +
+    "You know today's date. Never assume it is an earlier year. " +
+    "Treat any event dated on or before today as something that has ALREADY happened — do not claim a past exam, result or session 'has not been conducted yet'. " +
+    "Only a date strictly after today is the future. Always verify dates and years against today's date before answering.\n\n" +
+    SYSTEM_PROMPT;
 
   const callGroq = (model) => fetch(GROQ_URL, {
     method: "POST",
