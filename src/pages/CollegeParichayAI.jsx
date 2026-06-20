@@ -11,6 +11,7 @@ import {
   Plus, Send, Square, Sparkles, MessageSquare, Trash2, Menu, X, Sun, Moon,
   Paperclip, Mic, Volume2, VolumeX, RotateCcw, Copy, Check, User, GraduationCap,
   BookOpen, FileText, ListChecks, Layers, Code2, Calculator, Mail, Bot,
+  Globe, Brain, Download, CornerDownRight,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -54,6 +55,30 @@ const THEMES = {
 const STORE = "cpai:chats:v1";
 const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const blankChat = () => ({ id: newId(), title: "New chat", messages: [], createdAt: Date.now() });
+
+/* engine badge shown live as the server routes each question */
+const MODES = {
+  search:  { label: "Web search", icon: Globe,  color: "#22c55e" },
+  math:    { label: "Reasoning",  icon: Brain,  color: "#a855f7" },
+  code:    { label: "Coding",     icon: Code2,  color: "#3b82f6" },
+  general: { label: "Chat",       icon: Sparkles, color: "#FF693D" },
+};
+
+/* download the whole conversation as a Markdown file */
+function exportChat(chat) {
+  const lines = [`# ${chat.title || "College Parichay AI chat"}`, ""];
+  for (const m of chat.messages) {
+    const who = m.role === "user" ? "🧑 You" : "🤖 College Parichay AI";
+    lines.push(`## ${who}`, "", m.content.split("\n\n--- Attached:")[0].trim(), "");
+  }
+  const blob = new Blob([lines.join("\n")], { type: "text/markdown" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${(chat.title || "chat").replace(/[^\w-]+/g, "-").slice(0, 40)}.md`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 /* starter prompt chips on the empty screen */
 const QUICK = [
@@ -136,7 +161,7 @@ export default function CollegeParichayAI() {
     const userMsg = { role: "user", content };
     const baseMsgs = [...(active?.messages || []), userMsg];
     const chatId = active?.id;
-    setChats((prev) => prev.map((c) => (c.id === chatId ? { ...c, messages: [...baseMsgs, { role: "assistant", content: "" }] } : c)));
+    setChats((prev) => prev.map((c) => (c.id === chatId ? { ...c, messages: [...baseMsgs, { role: "assistant", content: "" }], suggest: [] } : c)));
     setInput(""); setAttach(null); setStreaming(true);
 
     const isFirst = (active?.messages?.length || 0) === 0;
@@ -178,11 +203,13 @@ export default function CollegeParichayAI() {
           const dataLine = part.split("\n").find((l) => l.startsWith("data:"));
           const data = dataLine ? dataLine.slice(5).trim() : "";
           if (evt === "error") { try { appendDelta(`\n\n⚠️ ${JSON.parse(data).error || "AI error."}`); } catch { /* */ } }
+          else if (evt === "meta") { try { const j = JSON.parse(data); setChats((prev) => prev.map((c) => (c.id === chatId ? { ...c, mode: j.mode } : c))); } catch { /* */ } }
           else if (evt === "done") { /* end */ }
           else if (data) { try { const j = JSON.parse(data); if (j.delta) appendDelta(j.delta); } catch { /* */ } }
         }
       }
       if (!acc) appendDelta("⚠️ No response — please try again.");
+      else if (!acc.startsWith("⚠️")) genFollowups(chatId, raw, acc);
     } catch (err) {
       if (err.name !== "AbortError") {
         setChats((prev) => prev.map((c) => {
@@ -221,6 +248,20 @@ export default function CollegeParichayAI() {
       const { title } = await r.json();
       if (title) setChats((prev) => prev.map((c) => (c.id === chatId ? { ...c, title } : c)));
     } catch { /* keep "New chat" */ }
+  };
+
+  /* ── suggested follow-up questions ── */
+  const genFollowups = async (chatId, question, answer) => {
+    try {
+      const r = await fetch(`${API_BASE}/api/ai/followups`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ question, answer }),
+      });
+      const { followups } = await r.json();
+      if (Array.isArray(followups) && followups.length)
+        setChats((prev) => prev.map((c) => (c.id === chatId ? { ...c, suggest: followups } : c)));
+    } catch { /* no chips */ }
   };
 
   /* ── file / PDF upload ── */
@@ -354,9 +395,18 @@ export default function CollegeParichayAI() {
             <Sparkles size={15} color={t.accent} style={{ flexShrink: 0 }} />
             <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{active?.title || "New chat"}</span>
           </div>
-          <span className="cpai-hide-sm" style={{ marginLeft: "auto", fontSize: 11.5, color: t.textMute, display: "inline-flex", alignItems: "center", gap: 6, border: `1px solid ${t.border}`, padding: "4px 10px", borderRadius: 50, whiteSpace: "nowrap", flexShrink: 0 }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} /> Llama 3.3 · Groq
-          </span>
+          {(() => {
+            const md = MODES[active?.mode] || MODES.general;
+            const MdIcon = md.icon;
+            return (
+              <span className="cpai-hide-sm" title={`Auto-routed engine · Groq`} style={{ marginLeft: "auto", fontSize: 11.5, color: t.textDim, display: "inline-flex", alignItems: "center", gap: 6, border: `1px solid ${t.border}`, padding: "4px 10px", borderRadius: 50, whiteSpace: "nowrap", flexShrink: 0 }}>
+                <MdIcon size={13} color={md.color} /> {md.label} · Groq
+              </span>
+            );
+          })()}
+          {!empty && (
+            <button onClick={() => exportChat(active)} style={iconBtn(t)} aria-label="Export chat" title="Download chat (.md)"><Download size={17} /></button>
+          )}
           <Link to="/" style={{ fontSize: 12.5, color: t.textDim, textDecoration: "none", fontWeight: 600, flexShrink: 0 }}>← Site</Link>
         </header>
 
@@ -374,6 +424,14 @@ export default function CollegeParichayAI() {
                 <p style={{ color: t.textDim, marginTop: 8, fontSize: 15, fontStyle: "italic" }}>
                   Doubts, derivations, code, notes, quizzes — your free JEE / NEET study partner.
                 </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginTop: 14 }}>
+                  {[MODES.search, MODES.math, MODES.code].map((m) => (
+                    <span key={m.label} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 600, color: t.textDim, border: `1px solid ${t.border}`, borderRadius: 50, padding: "4px 11px" }}>
+                      <m.icon size={13} color={m.color} /> {m.label}
+                    </span>
+                  ))}
+                  <span style={{ fontSize: 11.5, color: t.textMute, alignSelf: "center" }}>· auto-picked per question</span>
+                </div>
               </motion.div>
 
               <Composer t={t} input={input} setInput={setInput} send={send} streaming={streaming} stop={stop}
@@ -425,6 +483,20 @@ export default function CollegeParichayAI() {
                   </div>
                 </motion.div>
               ))}
+
+              {/* suggested follow-ups */}
+              {!streaming && active?.suggest?.length > 0 && messages[messages.length - 1]?.role === "assistant" && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "2px 0 26px 45px" }}>
+                  {active.suggest.map((q, j) => (
+                    <button key={j} onClick={() => send(q)}
+                      style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 13px", borderRadius: 10, background: t.panel, border: `1px solid ${t.border}`, color: t.text, cursor: "pointer", fontSize: 12.5, fontWeight: 600, textAlign: "left", lineHeight: 1.35 }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = t.accent; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = t.border; }}>
+                      <CornerDownRight size={14} color={t.accent} style={{ flexShrink: 0 }} /> {q}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
             </div>
           )}
         </div>

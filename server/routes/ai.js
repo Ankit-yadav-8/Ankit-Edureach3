@@ -28,14 +28,30 @@ const SEARCH_RE = /\b(iit|nit|iiit|bits|cutoff|cut-off|cut off|closing rank|open
 const CODE_RE = /\b(code|coding|program|programming|python|javascript|typescript|java|c\+\+|c#|golang|rust|sql|html|css|react|node|api|function|algorithm|data structure|recursion|loop|array|pointer|compile|syntax|runtime error|stack trace|debug|leetcode|oop|class|inheritance|regex|bug|terminal|git)\b/;
 const MATH_RE = /\b(solve|simplify|evaluate|calculate|integral|integrate|derivative|differentiat|matrix|matrices|determinant|probability|permutation|combination|equation|inequalit|prove|theorem|circuit|kirchhoff|physics|chemistry|thermodynamics|calculus|vector|trigonometr|algebra|geometry|limit|series|kinematics|electromagnet|capacitor|resistor|mole|stoichiometr|numerical|jee|neet)\b/;
 
+/* Per-mode display label + generation tuning. Maths/code run cooler for
+   accuracy; the cap keeps latency and token cost in check. */
+const MODE_META = {
+  search:  { label: "Web search", model: MODELS.search,  temp: 0.5, maxTokens: 2048 },
+  math:    { label: "Reasoning",  model: MODELS.math,     temp: 0.3, maxTokens: 3072 },
+  code:    { label: "Coding",     model: MODELS.code,     temp: 0.3, maxTokens: 3072 },
+  general: { label: "Chat",       model: MODELS.general,  temp: 0.6, maxTokens: 2048 },
+};
+
 /* Choose the Groq model from the latest user message. Web-search wins first so
    exam / college / cutoff queries get fresh data even if they also look mathy. */
-function pickModel(text = "") {
+function pickMode(text = "") {
   const t = text.toLowerCase();
-  if (SEARCH_RE.test(t)) return MODELS.search;
-  if (CODE_RE.test(t)) return MODELS.code;
-  if (MATH_RE.test(t) || /[∫∑√π∞≤≥×÷]|\\frac|\\int|\\sqrt|\\sum|\\theta/.test(text)) return MODELS.math;
-  return MODELS.general;
+  if (SEARCH_RE.test(t)) return "search";
+  if (CODE_RE.test(t)) return "code";
+  if (MATH_RE.test(t) || /[∫∑√π∞≤≥×÷]|\\frac|\\int|\\sqrt|\\sum|\\theta/.test(text)) return "math";
+  return "general";
+}
+
+/* Today's date in IST so the assistant grounds "this year" / cutoff reasoning. */
+function todayIST() {
+  return new Date().toLocaleDateString("en-IN", {
+    timeZone: "Asia/Kolkata", day: "numeric", month: "long", year: "numeric",
+  });
 }
 
 /* Reasoning models (DeepSeek-R1, Qwen 3) stream their chain-of-thought wrapped
@@ -151,9 +167,13 @@ router.post("/chat", requireAuth, async (req, res) => {
   // when the request body finishes (req 'close' fires early on Node 18+/20+).
   res.on("close", () => { if (!res.writableEnded) controller.abort(); });
 
-  // Route to the best model for the latest question (math / code / general).
+  // Route to the best model for the latest question (search / math / code / general).
   const lastUser = [...messages].reverse().find((m) => m.role === "user")?.content || "";
-  const chosen = pickModel(lastUser);
+  const mode = pickMode(lastUser);
+  const meta = MODE_META[mode];
+  // Respect a caller-supplied temperature, else use the mode's tuned default.
+  const temp = req.body?.temperature != null ? temperature : meta.temp;
+  const sys = `${SYSTEM_PROMPT}\n\nToday's date is ${todayIST()}. Treat any later year as the future.`;
 
   const callGroq = (model) => fetch(GROQ_URL, {
     method: "POST",
@@ -163,17 +183,22 @@ router.post("/chat", requireAuth, async (req, res) => {
     },
     body: JSON.stringify({
       model,
-      temperature,
+      temperature: temp,
+      max_tokens: meta.maxTokens,
       stream: true,
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+      messages: [{ role: "system", content: sys }, ...messages],
     }),
     signal: controller.signal,
   });
 
   try {
+    // Tell the client which engine is answering (drives the live mode badge).
+    res.write(`event: meta\ndata: ${JSON.stringify({ mode, label: meta.label })}\n\n`);
+
     // If the routed model is unavailable (e.g. retired id), fall back to general.
-    let upstream = await callGroq(chosen);
-    if ((!upstream.ok || !upstream.body) && chosen !== MODELS.general) {
+    let upstream = await callGroq(meta.model);
+    if ((!upstream.ok || !upstream.body) && meta.model !== MODELS.general) {
+      res.write(`event: meta\ndata: ${JSON.stringify({ mode: "general", label: MODE_META.general.label })}\n\n`);
       upstream = await callGroq(MODELS.general);
     }
 
@@ -251,6 +276,42 @@ router.post("/title", requireAuth, async (req, res) => {
     res.json({ title: title || "New chat" });
   } catch {
     res.json({ title: "New chat" });
+  }
+});
+
+/* ── POST /api/ai/followups — 3 suggested next questions for the chips ── */
+router.post("/followups", requireAuth, async (req, res) => {
+  const question = String(req.body?.question || "").slice(0, 1500);
+  const answer   = String(req.body?.answer || "").slice(0, 3000);
+  if (!question.trim() || !process.env.GROQ_API_KEY) return res.json({ followups: [] });
+  try {
+    const r = await fetch(GROQ_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
+      body: JSON.stringify({
+        model: TITLE_MODEL,
+        temperature: 0.5,
+        max_tokens: 120,
+        messages: [
+          { role: "system", content: "You suggest what a student might naturally ask next. Reply with ONLY a JSON array of exactly 3 short follow-up questions (each under 9 words), no prose, no numbering." },
+          { role: "user", content: `Question: ${question}\n\nAnswer: ${answer}\n\nGive 3 follow-up questions as a JSON array.` },
+        ],
+      }),
+    });
+    const data = await r.json();
+    const raw = data.choices?.[0]?.message?.content || "[]";
+    let followups = [];
+    try {
+      const match = raw.match(/\[[\s\S]*\]/);
+      followups = JSON.parse(match ? match[0] : raw);
+    } catch { followups = []; }
+    followups = (Array.isArray(followups) ? followups : [])
+      .filter((q) => typeof q === "string" && q.trim())
+      .map((q) => q.trim().replace(/^["'\d.\s-]+/, "").slice(0, 90))
+      .slice(0, 3);
+    res.json({ followups });
+  } catch {
+    res.json({ followups: [] });
   }
 });
 
