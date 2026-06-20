@@ -5,26 +5,51 @@
    into real React nodes (no dangerouslySetInnerHTML) so it stays XSS-safe. */
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
+import katex from "katex";
+import "katex/dist/katex.min.css";
 
-/* ── inline tokenizer: **bold**, *italic*, `code`, [text](url) ── */
+/* Render a LaTeX snippet with KaTeX. KaTeX's HTML output is its own sanitised
+   markup (trust:false), so dangerouslySetInnerHTML here is safe. On a parse
+   error we fall back to the raw source rather than throwing. */
+function mathNode(tex, display, key) {
+  let html;
+  try {
+    html = katex.renderToString(tex.trim(), { throwOnError: false, displayMode: display });
+  } catch {
+    return <code key={key}>{tex}</code>;
+  }
+  return (
+    <span
+      key={key}
+      style={display ? { display: "block", margin: "10px 0", overflowX: "auto" } : undefined}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
+}
+
+/* ── inline tokenizer: $math$, $$math$$, \(..\), \[..\], **bold**, *italic*, `code`, [text](url) ── */
 function inline(text, theme) {
   const nodes = [];
-  const re = /(\*\*([^*]+)\*\*)|(\*([^*]+)\*)|(`([^`]+)`)|(\[([^\]]+)\]\(([^)]+)\))/g;
+  const re = /(\$\$([\s\S]+?)\$\$)|(\\\[([\s\S]+?)\\\])|(\$(?!\s)([^$\n]+?)\$)|(\\\(([\s\S]+?)\\\))|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)|(`([^`]+)`)|(\[([^\]]+)\]\(([^)]+)\))/g;
   let last = 0, m, key = 0;
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) nodes.push(text.slice(last, m.index));
-    if (m[2]) nodes.push(<strong key={key++}>{m[2]}</strong>);
-    else if (m[4]) nodes.push(<em key={key++}>{m[4]}</em>);
-    else if (m[6]) nodes.push(
+    if (m[2] !== undefined) nodes.push(mathNode(m[2], true, key++));         // $$display$$
+    else if (m[4] !== undefined) nodes.push(mathNode(m[4], true, key++));    // \[display\]
+    else if (m[6] !== undefined) nodes.push(mathNode(m[6], false, key++));   // $inline$
+    else if (m[8] !== undefined) nodes.push(mathNode(m[8], false, key++));   // \(inline\)
+    else if (m[10] !== undefined) nodes.push(<strong key={key++}>{m[10]}</strong>);
+    else if (m[12] !== undefined) nodes.push(<em key={key++}>{m[12]}</em>);
+    else if (m[14] !== undefined) nodes.push(
       <code key={key++} style={{
         background: theme.inlineCodeBg, color: theme.inlineCodeFg,
         padding: "1.5px 6px", borderRadius: 6, fontSize: ".86em",
         fontFamily: "'Space Grotesk', ui-monospace, monospace",
-      }}>{m[6]}</code>
+      }}>{m[14]}</code>
     );
-    else if (m[8]) nodes.push(
-      <a key={key++} href={m[9]} target="_blank" rel="noreferrer"
-        style={{ color: theme.link, textDecoration: "underline" }}>{m[8]}</a>
+    else if (m[16] !== undefined) nodes.push(
+      <a key={key++} href={m[17]} target="_blank" rel="noreferrer"
+        style={{ color: theme.link, textDecoration: "underline" }}>{m[16]}</a>
     );
     last = re.lastIndex;
   }

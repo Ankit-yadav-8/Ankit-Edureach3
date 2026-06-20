@@ -371,7 +371,7 @@ export function MagneticButton({ children, style = {}, className = "", onClick }
 /* ─────────────────────────────────────────────────────────
    12. SCROLL PROGRESS LINE (top of page)
 ───────────────────────────────────────────────────────── */
-export function ScrollProgressBar({ color = "linear-gradient(90deg, #FF693D, #fbbf24, #FF693D)" }) {
+export function ScrollProgressBar({ color = "#FF693D" }) {
   const [progress, setProgress] = useState(0);
   useEffect(() => {
     const update = () => {
