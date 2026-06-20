@@ -4,7 +4,7 @@ import {
   Search, MapPin, ChevronDown, RotateCcw, SlidersHorizontal,
   Loader2, Crosshair, ArrowRight, GitBranch, Layers, Award, X,
 } from "lucide-react";
-import { COLLEGE_BY_SLUG, CATEGORIES } from "../../data/colleges.js";
+import { COLLEGE_BY_SLUG, CATEGORIES, STATES } from "../../data/colleges.js";
 import { useCollegePredictor } from "../../hooks/useCollegePredictor.js";
 import {
   FLEX_FLAGS, BRANCH_BUCKETS, CODE_TO_BUCKET,
@@ -138,7 +138,7 @@ function CollegeCard({ group, defaultOpen }) {
 export default function CollegeFinderTool({ basePath = "/jee-main" }) {
   const allowedTypes = TYPE_SETS[basePath] || ["IIT", "NIT", "IIIT", "GFTI"];
 
-  const [form, setForm] = useState({ rank: "", category: "OPEN" });
+  const [form, setForm] = useState({ rank: "", category: "OPEN", homeState: "", branch: "" });
   const [types, setTypes]         = useState(new Set(allowedTypes));
   const [degree, setDegree]       = useState("");
   const [buckets, setBuckets]     = useState(new Set());
@@ -178,6 +178,7 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
     setFlex({ branchChange: false, dualDegree: false, minorDegree: false, openElectives: false });
     setProbs(new Set());
     setQuery("");
+    setForm((f) => ({ ...f, homeState: "", branch: "" }));
   }
 
   /* Build college groups from flat branch rows, applying every filter */
@@ -188,6 +189,8 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
 
     for (const r of results) {
       if (!types.has(r.type)) continue;
+      if (form.homeState && r.state !== form.homeState) continue;
+      if (form.branch && CODE_TO_BUCKET[r.branchCode] !== form.branch) continue;
       if (degree && degreeOf(r.fullProgramName) !== degree) continue;
       if (buckets.size && !buckets.has(CODE_TO_BUCKET[r.branchCode])) continue;
       const prob = TIER_TO_PROB[r.tier] || "low";
@@ -234,7 +237,7 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
 
     out.sort((a, b) => (a.nirf || 999) - (b.nirf || 999));
     return out;
-  }, [results, types, degree, buckets, flex, probs, query]);
+  }, [results, types, degree, buckets, flex, probs, query, form.homeState, form.branch]);
 
   const totalBranches = groups.reduce((s, g) => s + g.branchCount, 0);
 
@@ -258,6 +261,20 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
             <label>Category</label>
             <select className="cf-select" value={form.category} onChange={(e) => set("category", e.target.value)}>
               {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div className="cf-field cf-field-cat">
+            <label>Home State</label>
+            <select className="cf-select" value={form.homeState} onChange={(e) => set("homeState", e.target.value)}>
+              <option value="">All States</option>
+              {STATES.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+          <div className="cf-field cf-field-cat">
+            <label>Branch</label>
+            <select className="cf-select" value={form.branch} onChange={(e) => set("branch", e.target.value)}>
+              <option value="">All Branches</option>
+              {BRANCH_BUCKETS.map((b) => <option key={b.id} value={b.id}>{b.label}</option>)}
             </select>
           </div>
           <button className="cf-runbtn" onClick={handleRun} disabled={loading || !form.rank}>

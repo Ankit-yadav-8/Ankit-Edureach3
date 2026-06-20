@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Seo from "../components/Seo.jsx";
 import ApplicationRadar from "../components/home/ApplicationRadar.jsx";
-import NewsSection from "../components/home/NewsSection.jsx";
+import ExamCalendar from "../components/home/ExamCalendar.jsx";
 import { Radio } from "lucide-react";
 import { CL } from "../components/home/clTheme.js";
 
@@ -31,8 +31,8 @@ export default function ExamBuzz() {
 
       {/* radar */}
       <ApplicationRadar />
-      {/* news */}
-      <NewsSection />
+      {/* exam & admission calendar (replaces the old news block) */}
+      <ExamCalendar surface={CL.cream2} />
     </div>
   );
 }

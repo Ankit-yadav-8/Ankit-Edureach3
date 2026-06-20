@@ -12,7 +12,7 @@ import BranchVsCollege from "../components/home/BranchVsCollege.jsx";
 import PlansSection from "../components/home/PlansSection.jsx";
 import ExploreColleges from "../components/home/ExploreColleges.jsx";
 import PremiumColleges from "../components/home/PremiumColleges.jsx";
-import ExamTimeline from "../components/home/ExamTimeline.jsx";
+import ExamCalendar from "../components/home/ExamCalendar.jsx";
 import ExamBuzzHome from "../components/home/ExamBuzzHome.jsx";
 import Testimonials from "../components/home/Testimonials.jsx";
 import FaqSection from "../components/home/FaqSection.jsx";
@@ -34,7 +34,7 @@ export default function Home({ onSearch }) {
       {/* ── Branch Explorer — 220+ branches, 10 paths ── */}
       <BranchCatalog />
 
-      {/* ── JEE Advanced college predictor (full tool) ── */}
+      {/* ── JoSAA · JEE Advanced rank predictor (full tool) ── */}
       <AdvancedPredictorHome />
 
       {/* ── Branch vs College — 6-question assessment ── */}
@@ -49,8 +49,8 @@ export default function Home({ onSearch }) {
       {/* ── Premium colleges that take your JEE rank (outside JoSAA) ── */}
       <PremiumColleges />
 
-      {/* ── Exam Time 2026 — key dates timeline (campusloom cards) ── */}
-      <ExamTimeline />
+      {/* ── Exam Calendar 2026–27 — auto-scrolling month rail ── */}
+      <ExamCalendar />
 
       {/* ── Exam Buzz teaser (news + radar live on /exam-buzz) ── */}
       <ExamBuzzHome />
