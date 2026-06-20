@@ -91,6 +91,8 @@ function makeThinkStripper() {
 
 const SYSTEM_PROMPT = `You are College Parichay AI, an expert educational assistant specializing in engineering, science, programming, college admissions, placements, and career guidance.
 
+TOP PRIORITY: be correct. A confident wrong answer is worse than honestly saying "I can't confirm the exact figure — verify it at [official source]." Never trade accuracy for sounding confident or complete. If you are not sure a specific fact is true, do not assert it.
+
 Core Principles:
 
 1. Always answer the user's question directly before giving extra details.
@@ -184,12 +186,19 @@ router.post("/chat", requireAuth, async (req, res) => {
   const meta = MODE_META[mode];
   // Respect a caller-supplied temperature, else use the mode's tuned default.
   const temp = req.body?.temperature != null ? temperature : meta.temp;
-  const sys =
+  const dateHead =
     `Current date: ${todayIST()}.\n` +
     "You know today's date. Never assume it is an earlier year. " +
     "Treat any event dated on or before today as something that has ALREADY happened — do not claim a past exam, result or session 'has not been conducted yet'. " +
-    "Only a date strictly after today is the future. Always verify dates and years against today's date before answering.\n\n" +
-    SYSTEM_PROMPT;
+    "Only a date strictly after today is the future. Always verify dates and years against today's date before answering.\n\n";
+
+  // Tell the model whether it actually has live web data this turn. The search
+  // model (compound) browses; every other model answers from memory only, so it
+  // must NOT assert current stats/cutoffs as fact — the main guard against
+  // confidently wrong answers.
+  const dataNote = (model) => model === MODELS.search
+    ? "\n\nWEB SEARCH IS ACTIVE this turn. Base every current figure, cutoff, rank or date on what you actually find, and cite the source with its year. If the search yields nothing, say so plainly — do not fall back to guessing."
+    : "\n\nNO WEB-SEARCH RESULTS are available this turn — you are answering from memory only. Do NOT state any current or year-specific number, cutoff, closing rank, registration/candidate count or exam date as a confirmed fact. Instead give the official source to check, and only if you genuinely know it, a clearly-labelled historical range. Never output a specific fabricated figure.";
 
   const callGroq = (model) => fetch(GROQ_URL, {
     method: "POST",
@@ -202,7 +211,7 @@ router.post("/chat", requireAuth, async (req, res) => {
       temperature: temp,
       max_tokens: meta.maxTokens,
       stream: true,
-      messages: [{ role: "system", content: sys }, ...messages],
+      messages: [{ role: "system", content: dateHead + SYSTEM_PROMPT + dataNote(model) }, ...messages],
     }),
     signal: controller.signal,
   });
