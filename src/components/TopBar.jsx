@@ -13,7 +13,7 @@ export default function TopBar() {
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 1001,
         height: 34, display: "flex", alignItems: "center", justifyContent: "center",
         gap: 14, padding: "0 1rem",
-        background: "#F47E20", color: "#fff",
+        background: "#FF693D", color: "#fff",
         fontFamily: "'Space Grotesk','Sora',sans-serif",
         fontSize: 12.5, fontWeight: 600, letterSpacing: ".2px",
         borderBottom: "1px solid rgba(255,255,255,.18)",
@@ -32,7 +32,7 @@ export default function TopBar() {
             display: "grid", placeItems: "center", flexShrink: 0,
           }}
         >
-          <span style={{ color: "#F47E20", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 8.5, letterSpacing: "-0.3px", lineHeight: 1 }}>
+          <span style={{ color: "#FF693D", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 8.5, letterSpacing: "-0.3px", lineHeight: 1 }}>
             CP
           </span>
         </span>

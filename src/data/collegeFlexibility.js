@@ -117,6 +117,7 @@ export const IIT_LOGOS = {
   "iit-patna":       `${A}/IIT PATNA.jpg`,
   "iit-mandi":       `${A}/IIT MANDI.jpg`,
   "iit-jodhpur":     `${A}/IIT JODHPUR.jpg`,
+  "iit-jammu":       `${A}/IIT JAMMU.jpg`,
   "iit-bhubaneswar": `${A}/IIT BHUBANESWAR.jpg`,
   "iit-tirupati":    `${A}/IIT TIRUPATI.jpg`,
   "iit-palakkad":    `${A}/IIT PALAKAD.jpg`,
