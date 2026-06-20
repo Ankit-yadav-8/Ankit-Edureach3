@@ -129,13 +129,13 @@ export default function RankCounselling() {
         {/* ── 1 · HERO ── */}
         <Reveal>
           <div style={{ textAlign: "center", maxWidth: 820, margin: "0 auto 56px" }}>
-            <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F15A38" }}>
+            <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F47E20" }}>
               <Sparkles size={13} style={{ marginRight: 6, verticalAlign: -2 }} />
               JEE Mains College Counselling
             </span>
             <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, color: "#1a1a2e", fontSize: "clamp(1.7rem,4vw,2.7rem)", lineHeight: 1.12, letterSpacing: "-1px", margin: "16px 0 14px" }}>
               Your Rank Is Not Your Limit —{" "}
-              <span style={{ background: "linear-gradient(90deg,#F15A38,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              <span style={{ background: "linear-gradient(90deg,#F47E20,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 Find the Right College for You
               </span>
             </h2>
@@ -151,7 +151,7 @@ export default function RankCounselling() {
               </a>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", borderRadius: 50, background: "#fff", border: "1.5px dashed rgba(244,123,32,.5)", fontSize: 14, fontWeight: 700, color: "#1a1a2e" }}>
                 <span style={{ color: "#9ca3af", textDecoration: "line-through", fontWeight: 600 }}>₹1999</span>
-                Full plan <span style={{ background: "linear-gradient(90deg,#F15A38,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontSize: 16 }}>₹{PRICE}</span>
+                Full plan <span style={{ background: "linear-gradient(90deg,#F47E20,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontSize: 16 }}>₹{PRICE}</span>
               </div>
             </div>
 
@@ -159,7 +159,7 @@ export default function RankCounselling() {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", marginTop: 26 }}>
               {TRUST.map(({ icon: Icon, label }) => (
                 <span key={label} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 16px", borderRadius: 50, background: "#fff", border: "1px solid rgba(244,123,32,.25)", boxShadow: "0 2px 10px rgba(244,123,32,.08)", fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>
-                  <Icon size={15} color="#F15A38" /> {label}
+                  <Icon size={15} color="#F47E20" /> {label}
                 </span>
               ))}
             </div>
@@ -174,10 +174,10 @@ export default function RankCounselling() {
             {PLANS.map((p, i) => {
               const Icon = p.icon;
               const featured = p.featured;
-              const color = featured ? "#6366f1" : "#F15A38";
+              const color = featured ? "#6366f1" : "#F47E20";
               const ctaStyle = {
                 margin: "auto 24px 24px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
-                background: `linear-gradient(135deg,${color},#F15A38)`, color: "#fff",
+                background: `linear-gradient(135deg,${color},#F47E20)`, color: "#fff",
                 padding: "13px 20px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif",
                 fontWeight: 800, fontSize: 14.5, textDecoration: "none", boxShadow: `0 10px 24px -8px ${color}aa`,
               };
@@ -193,7 +193,7 @@ export default function RankCounselling() {
                       boxShadow: featured ? `0 28px 60px -28px ${color}88, 0 0 0 2px ${color}44` : `0 18px 44px -26px ${color}77`,
                     }}
                   >
-                    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${color},#F15A38)` }} />
+                    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${color},#F47E20)` }} />
                     {featured && (
                       <div style={{ position: "absolute", top: 14, right: -34, transform: "rotate(45deg)", background: `linear-gradient(135deg,${color},#818cf8)`, color: "#fff", fontWeight: 800, fontSize: 10.5, letterSpacing: "0.5px", padding: "4px 40px", boxShadow: "0 4px 12px rgba(0,0,0,.2)" }}>
                         MOST POPULAR
@@ -247,10 +247,10 @@ export default function RankCounselling() {
 
           {/* trust strip under the plans */}
           <div className="plan-trust-strip">
-            <span><Users size={15} color="#F15A38" /> 10,000+ counselled</span>
+            <span><Users size={15} color="#F47E20" /> 10,000+ counselled</span>
             <span><Star size={15} color="#fbbf24" fill="#fbbf24" /> 4.8/5 rating</span>
-            <span><Award size={15} color="#F15A38" /> Expert advisors</span>
-            <span><ShieldCheck size={15} color="#F15A38" /> Free first session</span>
+            <span><Award size={15} color="#F47E20" /> Expert advisors</span>
+            <span><ShieldCheck size={15} color="#F47E20" /> Free first session</span>
           </div>
         </Reveal>
       </div>
@@ -276,7 +276,7 @@ export default function RankCounselling() {
                 display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 14,
               }}
             >
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#F15A38)" }} />
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F47E20,#F47E20)" }} />
               <div style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#c2410c", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.28)", padding: "5px 12px", borderRadius: 50 }}>
                 <Flame size={14} /> Serious aspirants only
               </div>
@@ -294,7 +294,7 @@ export default function RankCounselling() {
                 ].map((t) => (
                   <div key={t} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13.6, color: "#374151" }}>
                     <span style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(244,123,32,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                      <Check size={12} color="#F15A38" strokeWidth={3} />
+                      <Check size={12} color="#F47E20" strokeWidth={3} />
                     </span>
                     {t}
                   </div>
@@ -302,7 +302,7 @@ export default function RankCounselling() {
               </div>
               <Link
                 to="/mentorship/jee-2027"
-                style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 9, background: "linear-gradient(135deg,#F15A38,#F15A38)", color: "#fff", padding: "14px 26px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 15, textDecoration: "none", boxShadow: "0 12px 28px -8px rgba(244,123,32,.6)" }}
+                style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 9, background: "linear-gradient(135deg,#F47E20,#F47E20)", color: "#fff", padding: "14px 26px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 15, textDecoration: "none", boxShadow: "0 12px 28px -8px rgba(244,123,32,.6)" }}
               >
                 Explore Mentorship <ArrowRight size={17} />
               </Link>
@@ -331,7 +331,7 @@ export default function RankCounselling() {
                       transition={{ duration: 0.4 }}
                       style={{ background: "#fff", borderRadius: 20, border: "1px solid rgba(244,123,32,.2)", boxShadow: "0 10px 40px rgba(244,123,32,.12)", padding: "30px 32px", position: "relative", overflow: "hidden" }}
                     >
-                      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg,#F15A38,#fbbf24,#F15A38)" }} />
+                      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg,#F47E20,#fbbf24,#F47E20)" }} />
                       <Quote size={48} color="rgba(244,123,32,.14)" style={{ position: "absolute", top: 20, right: 24 }} />
 
                       <div style={{ display: "flex", gap: 4, marginBottom: 14 }}>
@@ -341,14 +341,14 @@ export default function RankCounselling() {
 
                       {/* notable note */}
                       <div style={{ display: "flex", alignItems: "flex-start", gap: 9, background: "linear-gradient(135deg,#ffffff,#ffffff)", border: "1px solid rgba(244,123,32,.25)", borderRadius: 12, padding: "12px 14px", marginBottom: 20 }}>
-                        <TrendingUp size={17} color="#F15A38" style={{ flexShrink: 0, marginTop: 1 }} />
+                        <TrendingUp size={17} color="#F47E20" style={{ flexShrink: 0, marginTop: 1 }} />
                         <span style={{ fontSize: ".84rem", color: "#7c3a12", lineHeight: 1.5, fontWeight: 600 }}>
                           <strong style={{ color: "#E0421F" }}>What worked:</strong> {s.note}
                         </span>
                       </div>
 
                       <div style={{ display: "flex", alignItems: "center", gap: 14, borderTop: "1px solid rgba(0,0,0,.07)", paddingTop: 16, flexWrap: "wrap" }}>
-                        <div style={{ width: 50, height: 50, borderRadius: "50%", background: "linear-gradient(135deg,#F15A38,#E0421F)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18, fontFamily: "'Space Grotesk',sans-serif", flexShrink: 0 }}>{s.name[0]}</div>
+                        <div style={{ width: 50, height: 50, borderRadius: "50%", background: "linear-gradient(135deg,#F47E20,#E0421F)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18, fontFamily: "'Space Grotesk',sans-serif", flexShrink: 0 }}>{s.name[0]}</div>
                         <div style={{ flex: 1, minWidth: 160 }}>
                           <div style={{ fontWeight: 700, color: "#1a1a2e", fontSize: ".98rem", fontFamily: "'Space Grotesk',sans-serif" }}>{s.name}</div>
                           <div style={{ fontSize: ".8rem", color: "#6b7280" }}>{s.city}</div>
@@ -356,7 +356,7 @@ export default function RankCounselling() {
                         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                           <span style={{ fontSize: ".74rem", fontWeight: 700, color: "#6366f1", background: "rgba(99,102,241,.1)", border: "1px solid rgba(99,102,241,.25)", padding: "5px 11px", borderRadius: 50 }}>Rank {s.rank}</span>
                           <span style={{ fontSize: ".74rem", fontWeight: 700, color: "#15a06e", background: "rgba(21,160,110,.1)", border: "1px solid rgba(21,160,110,.25)", padding: "5px 11px", borderRadius: 50 }}>{s.category}</span>
-                          <span style={{ fontSize: ".74rem", fontWeight: 700, color: "#F15A38", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", padding: "5px 11px", borderRadius: 50 }}>{s.college}</span>
+                          <span style={{ fontSize: ".74rem", fontWeight: 700, color: "#F47E20", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", padding: "5px 11px", borderRadius: 50 }}>{s.college}</span>
                         </div>
                       </div>
                     </motion.div>
@@ -368,17 +368,17 @@ export default function RankCounselling() {
             {/* controls */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 20 }}>
               <button onClick={() => gotoStory(story - 1)} aria-label="Previous story"
-                style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(244,123,32,.3)", background: "#fff", color: "#F15A38", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>
+                style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(244,123,32,.3)", background: "#fff", color: "#F47E20", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>
                 <ChevronLeft size={20} />
               </button>
               <div style={{ display: "flex", gap: 8 }}>
                 {STORIES.map((_, i) => (
                   <button key={i} onClick={() => gotoStory(i)} aria-label={`Story ${i + 1}`}
-                    style={{ width: i === story ? 26 : 9, height: 9, borderRadius: 50, border: "none", cursor: "pointer", background: i === story ? "linear-gradient(90deg,#F15A38,#E0421F)" : "rgba(244,123,32,.25)", transition: "all .3s" }} />
+                    style={{ width: i === story ? 26 : 9, height: 9, borderRadius: 50, border: "none", cursor: "pointer", background: i === story ? "linear-gradient(90deg,#F47E20,#E0421F)" : "rgba(244,123,32,.25)", transition: "all .3s" }} />
                 ))}
               </div>
               <button onClick={() => gotoStory(story + 1)} aria-label="Next story"
-                style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(244,123,32,.3)", background: "#fff", color: "#F15A38", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>
+                style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(244,123,32,.3)", background: "#fff", color: "#F47E20", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>
                 <ChevronRight size={20} />
               </button>
             </div>
@@ -399,7 +399,7 @@ export default function RankCounselling() {
                   <button onClick={() => setOpenFaq(open ? -1 : i)}
                     style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, padding: "16px 20px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: ".95rem", color: "#1a1a2e" }}>
                     {f.q}
-                    <ChevronDown size={18} color="#F15A38" style={{ flexShrink: 0, transform: open ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
+                    <ChevronDown size={18} color="#F47E20" style={{ flexShrink: 0, transform: open ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
                   </button>
                   {open && (
                     <div style={{ padding: "0 20px 18px", color: "#4b5563", fontSize: ".9rem", lineHeight: 1.65 }}>{f.a}</div>
@@ -413,12 +413,12 @@ export default function RankCounselling() {
         {/* ── 9 · CTA FOOTER BANNER (right column beside FAQ) ── */}
           <Reveal style={{ display: "flex" }}>
             <div style={{ width: "100%", background: "linear-gradient(160deg, #fff7ef 0%, #ffffff 55%, #fff3e6 100%)", border: "1px solid rgba(244,123,32,.28)", borderRadius: 20, padding: "30px", position: "relative", overflow: "hidden", boxShadow: "0 18px 50px -28px rgba(244,123,32,.45)", display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#F15A38)" }} />
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F47E20,#F47E20)" }} />
               <div style={{ display: "inline-flex", alignSelf: "flex-start", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: "#c2410c", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.28)", padding: "5px 12px", borderRadius: 50 }}>
                 <Sparkles size={13} /> Free first session
               </div>
               <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, color: "#1a1a2e", fontSize: "clamp(1.3rem,2.4vw,1.7rem)", lineHeight: 1.2, margin: 0 }}>
-                Don&apos;t miss your admission deadline — <span style={{ color: "#F15A38" }}>talk to a counsellor today</span>
+                Don&apos;t miss your admission deadline — <span style={{ color: "#F47E20" }}>talk to a counsellor today</span>
               </h3>
               <p style={{ color: "#5b6472", fontSize: ".95rem", lineHeight: 1.7, margin: 0 }}>
                 Get a personalised, rank-based college list and round-by-round guidance from advisors who&apos;ve navigated JoSAA, CSAB and state counselling hundreds of times — so you lock the best seat your rank can get.
@@ -431,7 +431,7 @@ export default function RankCounselling() {
                 ].map((t) => (
                   <div key={t} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13.6, color: "#374151" }}>
                     <span style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(244,123,32,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                      <Check size={12} color="#F15A38" strokeWidth={3} />
+                      <Check size={12} color="#F47E20" strokeWidth={3} />
                     </span>
                     {t}
                   </div>
@@ -453,7 +453,7 @@ export default function RankCounselling() {
                     <Phone size={17} /> {PHONE_DISPLAY}
                   </a>
                   <button type="button" onClick={() => openEnrol("all-colleges")}
-                    style={{ flex: 1, minWidth: 150, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(135deg,#F15A38,#F15A38)", color: "#fff", padding: "13px 18px", borderRadius: 12, fontSize: 14.5, fontWeight: 800, fontFamily: "'Space Grotesk',sans-serif", border: "none", cursor: "pointer", boxShadow: "0 10px 24px -8px rgba(244,123,32,.6)" }}>
+                    style={{ flex: 1, minWidth: 150, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(135deg,#F47E20,#F47E20)", color: "#fff", padding: "13px 18px", borderRadius: 12, fontSize: 14.5, fontWeight: 800, fontFamily: "'Space Grotesk',sans-serif", border: "none", cursor: "pointer", boxShadow: "0 10px 24px -8px rgba(244,123,32,.6)" }}>
                     Enrol ₹499 <ArrowRight size={15} />
                   </button>
                 </div>

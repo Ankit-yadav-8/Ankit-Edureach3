@@ -26,7 +26,7 @@ const TESTIMONIALS = [
   },
   {
     name: "Aditya K.", detail: "Dropper, JEE 2026 prep", initials: "AK", color: CL.coralDk,
-    text: "The Branch Catalog killed a lot of myths for me. I almost dropped ECE thinking it had 'no software scope' — turns out that's completely wrong. Changed my whole strategy.",
+    text: "The Branch Explorer killed a lot of myths for me. I almost dropped ECE thinking it had 'no software scope' — turns out that's completely wrong. Changed my whole strategy.",
   },
 ];
 

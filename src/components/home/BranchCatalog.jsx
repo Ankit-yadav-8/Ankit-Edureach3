@@ -46,7 +46,7 @@ function BranchRow({ b, nav }) {
       <span className="cl-branch-row__arrow" style={{
         width: 42, height: 42, borderRadius: "50%",
         background: CL.coral, display: "grid", placeItems: "center",
-        boxShadow: "0 8px 20px rgba(241,90,56,.35)",
+        boxShadow: "0 8px 20px rgba(244,126,32,.35)",
       }}>
         <ArrowRight size={18} color="#fff" />
       </span>
@@ -83,7 +83,7 @@ export default function BranchCatalog() {
     <section id="branches" style={{ background: CL.cream2, padding: "84px 0", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 40px" }}>
-          <span style={clEyebrow}>Branch Catalog</span>
+          <span style={clEyebrow}>Branch Explorer</span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2rem,4.4vw,3rem)", color: CL.ink, letterSpacing: "-1.4px", margin: "16px 0 6px", lineHeight: 1.05 }}>
             {TOTAL_BRANCHES}+ branches.
           </h2>

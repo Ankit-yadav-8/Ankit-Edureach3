@@ -12,8 +12,8 @@ import { useEnrol } from "../components/EnrolModal.jsx";
 import { Trend, Bars, Gauge } from "../components/Charts.jsx";
 import Seo from "../components/Seo.jsx";
 
-const ACCENT = "#F15A38";        // brand orange
-const GOLD = "#F15A38";          // highlight gold
+const ACCENT = "#F47E20";        // brand orange
+const GOLD = "#F47E20";          // highlight gold
 const INK = "#1a1a2e";           // dark text
 const MUTE = "#5b6472";          // grey text
 const WA_NUMBER = "917877596464";
@@ -365,7 +365,7 @@ function WhyFoundation({ cfg }) {
    HOW WE GUIDE
 ════════════════════════════════════════════════ */
 const GUIDE_ICONS = [Flame, Users, Target, Trophy, Rocket, Star];
-const GUIDE_COLORS = ["#F15A38", "#6366f1", "#0ea5a4", "#ef4444", "#8b5cf6", "#f59e0b"];
+const GUIDE_COLORS = ["#F47E20", "#6366f1", "#0ea5a4", "#ef4444", "#8b5cf6", "#f59e0b"];
 function HowWeGuide({ cfg }) {
   return (
     <Section style={{ background: "#fffaf5" }}>
@@ -413,7 +413,7 @@ function TestAnalysis({ m }) {
               What your mentor breaks down
             </h3>
             {[
-              { Icon: BarChart3, c: "#F15A38", t: "Score & accuracy trend", d: "See exactly how you're improving test over test." },
+              { Icon: BarChart3, c: "#F47E20", t: "Score & accuracy trend", d: "See exactly how you're improving test over test." },
               { Icon: Target,    c: "#ef4444", t: "Silly-mistake audit", d: "Marks lost to silly errors are tracked and killed." },
               { Icon: Zap,       c: "#8b5cf6", t: "Weak-chapter heatmap", d: "The exact topics dragging your score, ranked." },
               { Icon: Clock,     c: "#0ea5a4", t: "Time-management review", d: "Where you over-spent time in the paper." },
@@ -435,7 +435,7 @@ function TestAnalysis({ m }) {
         {/* Right — mock report */}
         <Reveal delay={0.08}>
           <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.16)", borderRadius: 18, padding: "24px 24px", height: "100%", boxShadow: "0 18px 44px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#F15A38)" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F47E20,#F47E20)" }} />
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
               <div>
                 <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: ACCENT }}>Weekly Report</div>
@@ -452,7 +452,7 @@ function TestAnalysis({ m }) {
                 <div key={d.t} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
                   <motion.div
                     initial={{ height: 0 }} whileInView={{ height: `${d.v}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.07 }}
-                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#F15A38,#F15A38)" : "rgba(244,123,32,.35)" }} />
+                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#F47E20,#F47E20)" : "rgba(244,123,32,.35)" }} />
                   <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 600 }}>{d.t}</span>
                 </div>
               ))}
@@ -493,7 +493,7 @@ function TestAnalysis({ m }) {
 function ChartCard({ title, hint, children }) {
   return (
     <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.16)", borderRadius: 18, padding: "22px 22px 18px", height: "100%", boxShadow: "0 16px 40px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F15A38,#F15A38)" }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F47E20,#F47E20)" }} />
       <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: "1.05rem", color: INK, margin: "0 0 4px" }}>{title}</h3>
       {hint && <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 14px" }}>{hint}</p>}
       {children}
@@ -511,12 +511,12 @@ function ImprovementCharts({ m }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: 22, maxWidth: 1040, margin: "0 auto" }}>
         <Reveal>
           <ChartCard title={m.growth.label} hint={m.growth.hint}>
-            <Trend data={growth} lines={[{ key: "you", label: "You", color: "#F15A38" }, { key: "batch", label: "Batch avg", color: "#6366f1" }]} height={250} />
+            <Trend data={growth} lines={[{ key: "you", label: "You", color: "#F47E20" }, { key: "batch", label: "Batch avg", color: "#6366f1" }]} height={250} />
           </ChartCard>
         </Reveal>
         <Reveal delay={0.08}>
           <ChartCard title="Before vs After — by subject" hint="Average score lift after mentorship">
-            <Bars data={m.subjects} bars={[{ key: "Before", label: "Before", color: "#cbd5e1" }, { key: "After", label: "After", color: "#F15A38" }]} height={250} />
+            <Bars data={m.subjects} bars={[{ key: "Before", label: "Before", color: "#cbd5e1" }, { key: "After", label: "After", color: "#F47E20" }]} height={250} />
           </ChartCard>
         </Reveal>
       </div>
@@ -553,11 +553,11 @@ function LiveTracking({ m }) {
       <div style={{ maxWidth: 1040, margin: "0 auto" }}>
         <Reveal>
           <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.18)", borderRadius: 20, padding: "24px 26px", boxShadow: "0 20px 46px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#22c55e,#F15A38)" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#22c55e,#F47E20)" }} />
 
             {/* header */}
             <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
-              <div style={{ width: 46, height: 46, borderRadius: "50%", background: "linear-gradient(135deg,#F15A38,#F15A38)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>{m.student.name[0]}</div>
+              <div style={{ width: 46, height: 46, borderRadius: "50%", background: "linear-gradient(135deg,#F47E20,#F47E20)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>{m.student.name[0]}</div>
               <div style={{ flex: 1, minWidth: 160 }}>
                 <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.05rem", color: INK }}>{m.student.name} · {m.student.exam}</div>
                 <div style={{ fontSize: 12.5, color: MUTE }}>Mentor: {m.student.mentor}</div>
@@ -592,7 +592,7 @@ function LiveTracking({ m }) {
                       <span style={{ fontSize: 10.5, fontWeight: 700, color: INK }}>{x.h}h</span>
                       <motion.div
                         initial={{ height: 0 }} whileInView={{ height: `${(x.h / maxH) * 100}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }}
-                        style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === maxIdx ? "linear-gradient(180deg,#F15A38,#F15A38)" : "rgba(244,123,32,.4)" }} />
+                        style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === maxIdx ? "linear-gradient(180deg,#F47E20,#F47E20)" : "rgba(244,123,32,.4)" }} />
                       <span style={{ fontSize: 10.5, color: MUTE }}>{x.d}</span>
                     </div>
                   ))}
@@ -623,7 +623,7 @@ function ParentBooklet({ m }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 0, maxWidth: 960, margin: "0 auto", boxShadow: "0 26px 60px -30px rgba(26,26,46,.5)", borderRadius: 20, overflow: "hidden" }}>
         {/* cover */}
         <Reveal>
-          <div style={{ background: "linear-gradient(150deg,#F15A38,#E0421F 60%,#c2410c)", color: "#fff", padding: "34px 30px", height: "100%", position: "relative", overflow: "hidden", minHeight: 360 }}>
+          <div style={{ background: "linear-gradient(150deg,#F47E20,#E0421F 60%,#c2410c)", color: "#fff", padding: "34px 30px", height: "100%", position: "relative", overflow: "hidden", minHeight: 360 }}>
             <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
             <div style={{ position: "relative" }}>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 11.5, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", background: "rgba(255,255,255,.2)", padding: "6px 14px", borderRadius: 50, marginBottom: 22 }}>
@@ -900,7 +900,7 @@ function PhoneFrame({ contact, messages, accent = "#25D366" }) {
             return (
               <div key={i} style={{ alignSelf: out ? "flex-end" : "flex-start", maxWidth: "82%" }}>
                 <div style={{ background: out ? "#005c4b" : "#202c33", color: "#e9edef", borderRadius: 9, borderTopRightRadius: out ? 2 : 9, borderTopLeftRadius: out ? 9 : 2, padding: "6px 9px 5px", fontSize: 9.5, lineHeight: 1.4, whiteSpace: "pre-line" }}>
-                  {m.name && <div style={{ fontSize: 8.5, fontWeight: 800, color: "#F15A38", marginBottom: 1 }}>{m.name}</div>}
+                  {m.name && <div style={{ fontSize: 8.5, fontWeight: 800, color: "#F47E20", marginBottom: 1 }}>{m.name}</div>}
                   {m.text}
                   <span style={{ display: "block", textAlign: "right", fontSize: 7.5, color: out ? "rgba(233,237,239,.6)" : "#8696a0", marginTop: 2 }}>{m.time}{out ? " ✓✓" : ""}</span>
                 </div>
@@ -984,7 +984,7 @@ function WhatsAppProof() {
    YOUR JOURNEY WITH COLLEGE PARICHAY — 6-step cards
 ════════════════════════════════════════════════ */
 const JOURNEY_STEPS = [
-  { Icon: Rocket,        c: "#F15A38", title: "Click on Join and Enroll",         desc: "Take the first bold step." },
+  { Icon: Rocket,        c: "#F47E20", title: "Click on Join and Enroll",         desc: "Take the first bold step." },
   { Icon: Handshake,     c: "#ef4444", title: "Mentor Contacts You in 24 Hours",  desc: "Your CollegeParichay mentor sends you the first WhatsApp message." },
   { Icon: Library,       c: "#8b5cf6", title: "Receive Study Materials",          desc: "Kickstart your journey with all your notes and plans ready." },
   { Icon: CalendarClock, c: "#0ea5a4", title: "Get Strict Guidance",              desc: "Daily accountability, weekly targets, zero procrastination." },

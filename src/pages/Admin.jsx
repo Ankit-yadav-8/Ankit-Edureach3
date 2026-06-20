@@ -7,7 +7,7 @@ import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
 
 const TOKEN_STORAGE = "edureach:adminToken";
-const ORANGE = "#F15A38";
+const ORANGE = "#F47E20";
 
 const fmtDate = (iso) => {
   if (!iso) return "—";
@@ -55,7 +55,7 @@ const fuzzyMatch = (value, q) => {
 };
 
 const avatarColor = (str) => {
-  const colors = ["#6366f1","#f59e0b","#10b981","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#F15A38"];
+  const colors = ["#6366f1","#f59e0b","#10b981","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#F47E20"];
   let hash = 0;
   for (let i = 0; i < (str || "").length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
   return colors[Math.abs(hash) % colors.length];

@@ -11,7 +11,7 @@ function NewsTicker() {
   return (
     <div className="news-ticker-wrap" style={{ marginBottom: 0 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, paddingLeft: 16, position: "absolute", left: 0, top: 0, bottom: 0, zIndex: 3 }}>
-        <span style={{ background: "#F15A38", color: "#fff", fontSize: 10, fontWeight: 800, padding: "3px 10px", borderRadius: 4, letterSpacing: "1.5px", textTransform: "uppercase", whiteSpace: "nowrap", fontFamily: "'Space Grotesk',sans-serif" }}>
+        <span style={{ background: "#F47E20", color: "#fff", fontSize: 10, fontWeight: 800, padding: "3px 10px", borderRadius: 4, letterSpacing: "1.5px", textTransform: "uppercase", whiteSpace: "nowrap", fontFamily: "'Space Grotesk',sans-serif" }}>
           🔔 LIVE
         </span>
       </div>
@@ -20,7 +20,7 @@ function NewsTicker() {
           {all.map((n, i) => (
             <span key={i} className="news-ticker-item">
               <span className="news-ticker-dot" />
-              <span style={{ color: "#F15A38", fontWeight: 700, marginRight: 4 }}>{n.tags[0]}</span>
+              <span style={{ color: "#F47E20", fontWeight: 700, marginRight: 4 }}>{n.tags[0]}</span>
               {n.title}
             </span>
           ))}
@@ -31,7 +31,7 @@ function NewsTicker() {
 }
 
 const TAG_COLORS = {
-  "JEE Main": "#F15A38",
+  "JEE Main": "#F47E20",
   "JEE Advanced": "#6366f1",
   "CBSE": "#0ea5a4",
   "JoSAA": "#15a06e",
@@ -86,7 +86,7 @@ export default function NewsSection() {
                   <div style={{ position: "absolute", top: 12, left: 12, display: "flex", gap: 6, flexWrap: "wrap", zIndex: 2 }}>
                     {n.tags.slice(0, 2).map((t) => (
                       <span key={t} style={{
-                        background: TAG_COLORS[t] || "#F15A38",
+                        background: TAG_COLORS[t] || "#F47E20",
                         color: "#fff", fontSize: 10, fontWeight: 700,
                         padding: "3px 10px", borderRadius: 20,
                         fontFamily: "'Space Grotesk',sans-serif",

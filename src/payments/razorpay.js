@@ -54,7 +54,7 @@ export async function startPayment(details) {
       },
       notes: { plan: details.plan },
       theme: {
-        color: "#F15A38",
+        color: "#F47E20",
         backdrop_color: "#1c1c28",
       },
       handler: async (response) => {

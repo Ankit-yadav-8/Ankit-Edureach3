@@ -10,8 +10,8 @@ const FAQS = [
     a: "Our predictions are built on previous years' official JoSAA and CSAB closing ranks plus normalisation trends. They give a reliable Safe / Moderate / Reach picture, but actual cutoffs shift slightly each year — always keep a ±5% buffer when filling choices.",
   },
   {
-    q: "What's the difference between Branch Catalog and Branch vs College?",
-    a: "The Branch Catalog is an encyclopaedia of 220+ branches across 10 paths — salaries, AI outlook, myths and where to study each. Branch vs College is a 6-question assessment that tells you whether the institute or the subject should win when the two conflict on your choice list.",
+    q: "What's the difference between Branch Explorer and Branch vs College?",
+    a: "The Branch Explorer is an encyclopaedia of 220+ branches across 10 paths — salaries, AI outlook, myths and where to study each. Branch vs College is a 6-question assessment that tells you whether the institute or the subject should win when the two conflict on your choice list.",
   },
   {
     q: "Is the ₹299 JoSAA counselling plan worth it over free tools?",
@@ -19,7 +19,7 @@ const FAQS = [
   },
   {
     q: "Do I need to log in to use the predictors?",
-    a: "You can explore the Branch Catalog, Branch vs College assessment and rank-to-cutoff demo freely. Saving shortlists, the full college predictor and counselling features ask you to sign in so your data stays with your account.",
+    a: "You can explore the Branch Explorer, Branch vs College assessment and rank-to-cutoff demo freely. Saving shortlists, the full college predictor and counselling features ask you to sign in so your data stays with your account.",
   },
   {
     q: "How is the 1-on-1 mentorship different from counselling?",
@@ -33,7 +33,7 @@ const FAQS = [
 
 function Item({ item, open, onToggle }) {
   return (
-    <div style={{ background: CL.card, border: `1px solid ${open ? CL.coral + "55" : CL.line}`, borderRadius: 16, boxShadow: open ? "0 8px 26px rgba(241,90,56,.08)" : CL.shadow, overflow: "hidden", transition: "border-color .2s" }}>
+    <div style={{ background: CL.card, border: `1px solid ${open ? CL.coral + "55" : CL.line}`, borderRadius: 16, boxShadow: open ? "0 8px 26px rgba(244,126,32,.08)" : CL.shadow, overflow: "hidden", transition: "border-color .2s" }}>
       <button onClick={onToggle} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "18px 22px", cursor: "pointer", textAlign: "left" }}>
         <span style={{ fontFamily: CL.display, fontWeight: 700, fontSize: 15.5, color: CL.ink }}>{item.q}</span>
         <span style={{ width: 28, height: 28, borderRadius: "50%", background: open ? CL.coral : CL.coralSoft, display: "grid", placeItems: "center", flexShrink: 0 }}>

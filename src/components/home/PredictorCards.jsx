@@ -6,8 +6,8 @@ import { TiltCard, FloatingOrbs, StaggerReveal, StaggerItem } from "../Animation
 
 const CARDS = [
   {
-    icon: Gauge, title: "Rank Predictor", accent: "#F15A38",
-    gradient: "linear-gradient(135deg, #F15A38, #E0421F)",
+    icon: Gauge, title: "Rank Predictor", accent: "#F47E20",
+    gradient: "linear-gradient(135deg, #F47E20, #E0421F)",
     desc: "Enter your expected marks and instantly see your projected JEE Main rank, percentile and category rank.",
     to: "/jee-main#rank", cta: "Predict My Rank",
     donut: { data: [{ name: "Physics", value: 33 }, { name: "Chemistry", value: 33 }, { name: "Maths", value: 34 }], label: "300", sub: "max marks" },
@@ -20,7 +20,7 @@ const CARDS = [
     desc: "Turn your rank into a personalised list of colleges — across all JoSAA & CSAB rounds, with packages & placements.",
     to: "/jee-main#college", cta: "Find My Colleges",
     donut: { data: [{ name: "Safe", value: 40 }, { name: "Moderate", value: 35 }, { name: "Ambitious", value: 25 }], label: "6+2", sub: "JoSAA + CSAB" },
-    colors: ["#2EC4B6", "#6366f1", "#F15A38"],
+    colors: ["#2EC4B6", "#6366f1", "#F47E20"],
     badge: "850+ colleges",
   },
   {
@@ -29,7 +29,7 @@ const CARDS = [
     desc: "Deep-dive into IITs, NITs & IIITs — cutoffs, fees, branch-wise placements, recruiters and campus life.",
     to: "/colleges", cta: "Explore Colleges",
     donut: { data: [{ name: "IITs", value: 23 }, { name: "NITs", value: 31 }, { name: "IIITs", value: 26 } ], label: "80+", sub: "institutes" },
-    colors: ["#F15A38", "#0EA5A4", "#6366f1"],
+    colors: ["#F47E20", "#0EA5A4", "#6366f1"],
     badge: "Real cutoffs",
   },
 ];
@@ -47,9 +47,9 @@ export default function PredictorCards() {
           transition={{ duration: 0.5 }}
           style={{ position: "relative", zIndex: 1 }}
         >
-          <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F15A38" }}>Smart Tools</span>
+          <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F47E20" }}>Smart Tools</span>
           <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#1a1a2e", letterSpacing: "-1.5px" }}>
-            Everything you need, <span style={{ background: "linear-gradient(90deg,#F15A38,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>before you fill a single choice</span>
+            Everything you need, <span style={{ background: "linear-gradient(90deg,#F47E20,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>before you fill a single choice</span>
           </h2>
           <p className="section-sub" style={{ color: "#4b5563" }}>Three connected tools: marks → rank → the exact colleges within your reach.</p>
         </motion.div>

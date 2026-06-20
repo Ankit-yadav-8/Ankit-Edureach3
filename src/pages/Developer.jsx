@@ -197,7 +197,7 @@ export default function Developer() {
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 18 }}>
                 <div style={{ color: "rgba(28,28,40,.65)", display: "flex", alignItems: "center", gap: 5, fontSize: 13.5 }}>
-                  <MapPin size={14} color="#F15A38" /> {dev.location}
+                  <MapPin size={14} color="#F47E20" /> {dev.location}
                 </div>
                 {dev.jeeRank && (
                   <div style={{

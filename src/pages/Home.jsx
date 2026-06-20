@@ -31,7 +31,7 @@ export default function Home({ onSearch }) {
       {/* ── Smart tools (campusloom LIVE-card grid) ── */}
       <ToolsGrid />
 
-      {/* ── Branch Catalog — 220+ branches, 10 paths ── */}
+      {/* ── Branch Explorer — 220+ branches, 10 paths ── */}
       <BranchCatalog />
 
       {/* ── JEE Advanced college predictor (full tool) ── */}

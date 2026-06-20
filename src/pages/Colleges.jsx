@@ -23,7 +23,7 @@ const PKG_BANDS = [
 ];
 const feeTotal = (c) => Object.values(c.fees).reduce((a, b) => a + b, 0);
 
-const TYPE_COLORS = { IIT: "#F15A38", NIT: "#3b3b98", IIIT: "#0b525b" };
+const TYPE_COLORS = { IIT: "#F47E20", NIT: "#3b3b98", IIIT: "#0b525b" };
 const TYPE_BG = {
   IIT:  "linear-gradient(135deg,#2d1b5e 0%,#5c2d91 60%,#1e0e47 100%)",
   NIT:  "linear-gradient(135deg,#0d3340 0%,#1a6b7a 60%,#0a2830 100%)",
@@ -140,7 +140,7 @@ export default function Colleges() {
                     cursor: "pointer", transition: "all .2s",
                     border: "none",
                     background: type === t
-                      ? (t === "All" ? "#F15A38" : (TYPE_COLORS[t] || "#F15A38"))
+                      ? (t === "All" ? "#F47E20" : (TYPE_COLORS[t] || "#F47E20"))
                       : "transparent",
                     color: type === t ? "#fff" : "#6b7280",
                     boxShadow: type === t ? "0 2px 10px rgba(0,0,0,.15)" : "none",
@@ -160,7 +160,7 @@ export default function Colleges() {
               flex: 1, minWidth: 200,
               transition: "border-color .2s",
             }}
-              onFocusCapture={(e) => e.currentTarget.style.borderColor = "#F15A38"}
+              onFocusCapture={(e) => e.currentTarget.style.borderColor = "#F47E20"}
               onBlurCapture={(e) => e.currentTarget.style.borderColor = "#e5e7eb"}
             >
               <Search size={16} color="#9ca3af" />
@@ -187,15 +187,15 @@ export default function Colleges() {
               style={{
                 display: "flex", alignItems: "center", gap: 6,
                 padding: "9px 14px", borderRadius: 10,
-                border: `1.5px solid ${hasFilters ? "#F15A38" : "#e5e7eb"}`,
+                border: `1.5px solid ${hasFilters ? "#F47E20" : "#e5e7eb"}`,
                 background: hasFilters ? "rgba(244,123,32,.08)" : "#fff",
-                color: hasFilters ? "#F15A38" : "#6b7280",
+                color: hasFilters ? "#F47E20" : "#6b7280",
                 fontSize: 13, fontWeight: 600, cursor: "pointer",
                 fontFamily: "DM Sans",
               }}
             >
               <SlidersHorizontal size={15} />
-              Filters {hasFilters && <span style={{ background: "#F15A38", color: "#fff", borderRadius: 50, width: 18, height: 18, display: "grid", placeItems: "center", fontSize: 10, fontWeight: 700 }}>!</span>}
+              Filters {hasFilters && <span style={{ background: "#F47E20", color: "#fff", borderRadius: 50, width: 18, height: 18, display: "grid", placeItems: "center", fontSize: 10, fontWeight: 700 }}>!</span>}
             </button>
           </div>
 
@@ -317,7 +317,7 @@ export default function Colleges() {
                   {/* NIRF badge */}
                   <span style={{
                     position: "absolute", top: 10, right: 10,
-                    background: "linear-gradient(135deg,#F15A38,#f4a261)",
+                    background: "linear-gradient(135deg,#F47E20,#f4a261)",
                     color: "#fff", fontSize: 10.5, fontWeight: 700,
                     padding: "3px 9px", borderRadius: 50,
                     display: "inline-flex", alignItems: "center", gap: 4,
@@ -329,7 +329,7 @@ export default function Colleges() {
                   {/* Type badge */}
                   <span style={{
                     position: "absolute", top: 10, left: c.heroImage ? 44 : 10,
-                    background: `${TYPE_COLORS[c.type] || "#F15A38"}cc`,
+                    background: `${TYPE_COLORS[c.type] || "#F47E20"}cc`,
                     color: "#fff", fontSize: 10, fontWeight: 700,
                     padding: "3px 8px", borderRadius: 50,
                     backdropFilter: "blur(4px)",
@@ -366,7 +366,7 @@ export default function Colleges() {
                     border: "1px solid rgba(0,0,0,.06)", overflow: "hidden",
                   }}>
                     {[
-                      { icon: TrendingUp, label: "Avg", value: fmtINR(c.placements.avg), color: "#F15A38" },
+                      { icon: TrendingUp, label: "Avg", value: fmtINR(c.placements.avg), color: "#F47E20" },
                       { icon: Trophy,     label: "Top",  value: fmtINR(c.placements.highest), color: "#15a06e" },
                       { icon: Percent,    label: "Placed", value: `${c.placements.placedPct}%`, color: "#3b3b98" },
                     ].map(({ icon: Icon, label, value, color }, i) => (

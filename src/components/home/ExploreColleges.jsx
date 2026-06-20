@@ -82,7 +82,7 @@ function CollegeCard({ c, nav, extra }) {
         <span style={{
           position: "absolute", top: 12, left: 12, display: "inline-flex", alignItems: "center", gap: 5,
           fontSize: 11, fontWeight: 800, color: "#fff", background: CL.coral,
-          padding: "5px 11px", borderRadius: 50, boxShadow: "0 6px 16px rgba(241,90,56,.4)",
+          padding: "5px 11px", borderRadius: 50, boxShadow: "0 6px 16px rgba(244,126,32,.4)",
         }}>
           <Trophy size={12} /> NIRF #{c.nirf}
         </span>
@@ -156,7 +156,7 @@ export default function ExploreColleges() {
               display: "inline-flex", alignItems: "center", gap: 9,
               background: CL.coral, color: "#fff", border: "none", borderRadius: 50,
               padding: "13px 26px", fontFamily: CL.display, fontWeight: 800, fontSize: 14.5,
-              cursor: "pointer", boxShadow: "0 10px 26px rgba(241,90,56,.35)",
+              cursor: "pointer", boxShadow: "0 10px 26px rgba(244,126,32,.35)",
             }}
           >
             <GraduationCap size={17} /> Explore all 850+ colleges <ArrowRight size={16} />

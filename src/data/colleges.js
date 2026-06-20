@@ -60,7 +60,7 @@ export const COLLEGES = [
       "lng": 80.23
     },
     "estd": 1959,
-    "accent": "#F15A38",
+    "accent": "#F47E20",
     "heroImage": "/assets/team/IITs/IITs/IIT MADRAS.jpg",
     "website": "https://iitm.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
@@ -3324,7 +3324,7 @@ export const COLLEGES = [
       "lng": 85.67
     },
     "estd": 2008,
-    "accent": "#F15A38",
+    "accent": "#F47E20",
     "heroImage": "/assets/team/IITs/IITs/IIT BHUBANESWAR.jpg",
     "website": "https://iitbbs.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
@@ -4140,7 +4140,7 @@ export const COLLEGES = [
       "lng": 75.02
     },
     "estd": 2016,
-    "accent": "#F15A38",
+    "accent": "#F47E20",
     "heroImage": "/assets/team/IITs/IITs/IIT DHARWAD.jpg",
     "website": "https://iitdh.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
@@ -7105,7 +7105,7 @@ export const COLLEGES = [
       "lng": 75.54
     },
     "estd": 1987,
-    "accent": "#F15A38",
+    "accent": "#F47E20",
     "heroImage": "/assets/team/NITs/NIT JHALANDAR.jpg",
     "website": "https://nitj.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
@@ -7829,7 +7829,7 @@ export const COLLEGES = [
       "lng": 85.17
     },
     "estd": 1886,
-    "accent": "#F15A38",
+    "accent": "#F47E20",
     "heroImage": "/assets/team/NITs/NIT PATNA.jpg",
     "website": "https://nitp.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
@@ -10587,7 +10587,7 @@ export const COLLEGES = [
       "lng": 78.21
     },
     "estd": 1997,
-    "accent": "#F15A38",
+    "accent": "#F47E20",
     "heroImage": "/assets/team/IIITs/IIIT GWALIOR.jpeg",
     "website": "https://iiitm.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
@@ -11035,7 +11035,7 @@ export const COLLEGES = [
       "lng": 80.94
     },
     "estd": 2015,
-    "accent": "#F15A38",
+    "accent": "#F47E20",
     "heroImage": "/assets/team/IIITs/IIIT LUCKNOW.jpeg",
     "website": "https://iiitl.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",

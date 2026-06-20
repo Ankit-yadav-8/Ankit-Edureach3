@@ -6,7 +6,7 @@ import { PRIVATE_UNIS } from "../../data/counselling.js";
 import { fmtINR } from "../../utils/format.js";
 
 const CATEGORIES = [
-  { id: "all",    label: "All Colleges",  color: "#F15A38" },
+  { id: "all",    label: "All Colleges",  color: "#F47E20" },
   { id: "premier",label: "Premier",       color: "#1a3a5c" },
   { id: "south",  label: "South India",   color: "#0b525b" },
   { id: "north",  label: "North India",   color: "#3b3b98" },
@@ -22,7 +22,7 @@ const TIER_META = {
 function StatusBadge({ status, tone }) {
   const colors = {
     teal:   { bg: "rgba(14,165,164,.12)", color: "#0ea5a4", dot: "#0ea5a4" },
-    orange: { bg: "rgba(244,123,32,.12)", color: "#F15A38",  dot: "#F15A38" },
+    orange: { bg: "rgba(244,123,32,.12)", color: "#F47E20",  dot: "#F47E20" },
     red:    { bg: "rgba(239,68,68,.12)",  color: "#ef4444",  dot: "#ef4444" },
   };
   const c = colors[tone] || colors.teal;
@@ -117,7 +117,7 @@ function UniCard({ u, index }) {
           <span>{u.state}</span>
           <span style={{ color: "#d1d5db" }}>·</span>
           <span style={{
-            background: "rgba(244,123,32,.10)", color: "#F15A38",
+            background: "rgba(244,123,32,.10)", color: "#F47E20",
             padding: "1px 7px", borderRadius: 50, fontSize: 11, fontWeight: 600,
           }}>
             {u.exam}
@@ -156,8 +156,8 @@ function UniCard({ u, index }) {
           display: "flex", alignItems: "center", gap: 6,
           fontSize: 11.5, color: "#6b7280", marginBottom: 14,
         }}>
-          <Star size={11} color={u.tone === "orange" ? "#F15A38" : "#9ca3af"} />
-          <span>Apply by <strong style={{ color: u.tone === "orange" ? "#F15A38" : "#374151" }}>{u.deadline}</strong></span>
+          <Star size={11} color={u.tone === "orange" ? "#F47E20" : "#9ca3af"} />
+          <span>Apply by <strong style={{ color: u.tone === "orange" ? "#F47E20" : "#374151" }}>{u.deadline}</strong></span>
         </div>
 
         {/* Action buttons */}

@@ -12,7 +12,7 @@ export const CL = {
   ink2:     "#3B3743",
   body:     "#6B6770",   // body copy
   muted:    "#9A949F",
-  coral:    "#F15A38",   // primary accent
+  coral:    "#F47E20",   // primary accent
   coralDk:  "#E0421F",
   coralSoft:"#FCE7E0",
   green:    "#0FAE6E",

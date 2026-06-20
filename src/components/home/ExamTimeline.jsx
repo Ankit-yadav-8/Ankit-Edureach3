@@ -86,7 +86,7 @@ export default function ExamTimeline() {
             display: "inline-flex", alignItems: "center", gap: 9,
             background: CL.coral, color: "#fff", border: "none", borderRadius: 50,
             padding: "13px 26px", fontFamily: CL.display, fontWeight: 800, fontSize: 14.5,
-            cursor: "pointer", boxShadow: "0 10px 26px rgba(241,90,56,.35)",
+            cursor: "pointer", boxShadow: "0 10px 26px rgba(244,126,32,.35)",
           }}>
             <CalendarClock size={17} /> See the full exam &amp; counselling radar <ArrowRight size={16} />
           </button>

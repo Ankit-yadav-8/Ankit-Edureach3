@@ -15,8 +15,8 @@ import { TiltCard } from "../Animations.jsx";
 /* ── Group 1: predictor tools (gradient + donut cards) ── */
 const PREDICTOR_CARDS = [
   {
-    icon: Gauge, title: "Rank Predictor", accent: "#F15A38",
-    gradient: "linear-gradient(135deg, #F15A38, #E0421F)",
+    icon: Gauge, title: "Rank Predictor", accent: "#F47E20",
+    gradient: "linear-gradient(135deg, #F47E20, #E0421F)",
     desc: "Enter your expected marks and instantly see your projected JEE Main rank, percentile and category rank.",
     to: "/jee-main#rank", cta: "Predict My Rank",
     donut: { data: [{ name: "Physics", value: 33 }, { name: "Chemistry", value: 33 }, { name: "Maths", value: 34 }], label: "300", sub: "max marks" },
@@ -29,7 +29,7 @@ const PREDICTOR_CARDS = [
     desc: "Turn your rank into a personalised list of colleges — across all JoSAA & CSAB rounds, with packages & placements.",
     to: "/jee-main#college", cta: "Find My Colleges",
     donut: { data: [{ name: "Safe", value: 40 }, { name: "Moderate", value: 35 }, { name: "Ambitious", value: 25 }], label: "6+2", sub: "JoSAA + CSAB" },
-    colors: ["#2EC4B6", "#6366f1", "#F15A38"],
+    colors: ["#2EC4B6", "#6366f1", "#F47E20"],
     badge: "850+ colleges",
   },
   {
@@ -38,14 +38,14 @@ const PREDICTOR_CARDS = [
     desc: "Deep-dive into IITs, NITs & IIITs — cutoffs, fees, branch-wise placements, recruiters and campus life.",
     to: "/colleges", cta: "Explore Colleges",
     donut: { data: [{ name: "IITs", value: 23 }, { name: "NITs", value: 31 }, { name: "IIITs", value: 26 }], label: "80+", sub: "institutes" },
-    colors: ["#F15A38", "#0EA5A4", "#6366f1"],
+    colors: ["#F47E20", "#0EA5A4", "#6366f1"],
     badge: "Real cutoffs",
   },
 ];
 
 /* ── Group 2: newly launched tools (simple cards) ── */
 const NEW_TOOLS = [
-  { icon: Calculator, accent: "#F15A38", badge: "NEW", title: "ROI Calculator",       desc: "Calculate total degree cost, EMI, scholarship savings & long-term return.",        cta: "Calculate ROI", to: "/scholarships" },
+  { icon: Calculator, accent: "#F47E20", badge: "NEW", title: "ROI Calculator",       desc: "Calculate total degree cost, EMI, scholarship savings & long-term return.",        cta: "Calculate ROI", to: "/scholarships" },
   { icon: ListChecks, accent: "#0ea5a4", badge: "NEW", title: "Choice Filling Helper", desc: "Smart JoSAA choice order based on your rank, category & branch preferences.",       cta: "Fill Choices",  to: "/planner" },
   { icon: Map,        accent: "#15803d", badge: "NEW", title: "College Map View",      desc: "Explore all IITs, NITs & IIITs on an interactive map. Filter by state & type.",     cta: "Open Map",      to: "/map" },
   { icon: Sparkles,   accent: "#d97706", badge: "NEW", title: "Colleges for You",      desc: "Answer a couple of questions and get a personalised college shortlist instantly.",   cta: "Get My List",   to: "/for-you" },
@@ -172,11 +172,11 @@ export default function SmartToolsHub() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F15A38" }}>
+          <span className="eyebrow" style={{ background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.25)", color: "#F47E20" }}>
             <Sparkles size={12} style={{ marginRight: 5, verticalAlign: "-2px" }} /> Smart Tools
           </span>
           <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#1a1a2e", letterSpacing: "-1.5px" }}>
-            Everything you need, <span style={{ background: "linear-gradient(90deg,#F15A38,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>in one toolkit</span>
+            Everything you need, <span style={{ background: "linear-gradient(90deg,#F47E20,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>in one toolkit</span>
           </h2>
           <p className="section-sub" style={{ color: "#4b5563" }}>From rank prediction to personalised college lists — pick a set and dive in.</p>
         </motion.div>
@@ -196,7 +196,7 @@ export default function SmartToolsHub() {
                   padding: "11px 22px", borderRadius: 50, cursor: "pointer",
                   fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 14.5,
                   border: on ? "1.5px solid transparent" : "1.5px solid rgba(244,123,32,.3)",
-                  background: on ? "linear-gradient(135deg,#F15A38,#E0421F)" : "#fff",
+                  background: on ? "linear-gradient(135deg,#F47E20,#E0421F)" : "#fff",
                   color: on ? "#fff" : "#c2410c",
                   boxShadow: on ? "0 10px 24px -8px rgba(244,123,32,.6)" : "0 2px 10px rgba(0,0,0,.05)",
                   transition: "all .25s",
@@ -207,7 +207,7 @@ export default function SmartToolsHub() {
                   minWidth: 22, height: 22, padding: "0 7px", borderRadius: 50,
                   display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800,
                   background: on ? "rgba(255,255,255,.25)" : "rgba(244,123,32,.12)",
-                  color: on ? "#fff" : "#F15A38",
+                  color: on ? "#fff" : "#F47E20",
                 }}>
                   {g.cards.length}
                 </span>

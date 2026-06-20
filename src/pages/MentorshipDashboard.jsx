@@ -15,8 +15,8 @@ import Community from "../components/mentorship/Community.jsx";
 import { Trend, Gauge, PieWithLegend, Bars } from "../components/Charts.jsx";
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
 
-const ORANGE = "#F15A38";
-const GOLD = "#F15A38";
+const ORANGE = "#F47E20";
+const GOLD = "#F47E20";
 const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
 const INK = "#1a1a2e";
@@ -49,7 +49,7 @@ const SUBJECT_COLORS = {
   "Organic Chemistry": "#15a06e",
   "Inorganic Chemistry": "#84cc16",
   Chemistry: "#15a06e",
-  Maths: "#F15A38",
+  Maths: "#F47E20",
   Biology: "#ec4899",
   Science: "#06b6d4",
 };

@@ -34,7 +34,7 @@ export const FFS_OPTIONS = [
     key: "float",
     label: "Float",
     icon: TrendingUp,
-    color: "#F15A38",
+    color: "#F47E20",
     tagline: "Keep it, aim higher",
     fn: "You accept the current seat but stay in the running for ANY higher choice in your locked list.",
     happens:

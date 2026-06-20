@@ -8,7 +8,7 @@ import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 /* ─────────────────────────────────────────────────────────
    1. FLOATING ORBS — animated background glow blobs
 ───────────────────────────────────────────────────────── */
-export function FloatingOrbs({ count = 5, colors = ["#F15A38", "#6366f1", "#0ea5a4", "#fbbf24", "#8b5cf6"], style = {} }) {
+export function FloatingOrbs({ count = 5, colors = ["#F47E20", "#6366f1", "#0ea5a4", "#fbbf24", "#8b5cf6"], style = {} }) {
   const orbs = Array.from({ length: count }, (_, i) => ({
     id: i,
     color: colors[i % colors.length],
@@ -51,7 +51,7 @@ export function FloatingOrbs({ count = 5, colors = ["#F15A38", "#6366f1", "#0ea5
 /* ─────────────────────────────────────────────────────────
    2. TYPEWRITER TEXT
 ───────────────────────────────────────────────────────── */
-export function TypewriterText({ words, interval = 2400, style = {}, cursorColor = "#F15A38" }) {
+export function TypewriterText({ words, interval = 2400, style = {}, cursorColor = "#F47E20" }) {
   const [idx, setIdx] = useState(0);
   const [displayed, setDisplayed] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -215,7 +215,7 @@ export function StaggerItem({ children, y = 24, style = {} }) {
 /* ─────────────────────────────────────────────────────────
    6. GRADIENT TEXT — animated shifting gradient
 ───────────────────────────────────────────────────────── */
-export function GradientText({ children, from = "#F15A38", via = "#fbbf24", to = "#F15A38", style = {}, animate = true }) {
+export function GradientText({ children, from = "#F47E20", via = "#fbbf24", to = "#F47E20", style = {}, animate = true }) {
   return (
     <span style={{
       background: `linear-gradient(90deg, ${from} 0%, ${via} 50%, ${to} 100%)`,
@@ -235,7 +235,7 @@ export function GradientText({ children, from = "#F15A38", via = "#fbbf24", to =
 /* ─────────────────────────────────────────────────────────
    7. GLOW BORDER CARD — animated rotating gradient border
 ───────────────────────────────────────────────────────── */
-export function GlowBorderCard({ children, color = "#F15A38", radius = 16, style = {} }) {
+export function GlowBorderCard({ children, color = "#F47E20", radius = 16, style = {} }) {
   return (
     <div style={{ position: "relative", borderRadius: radius, ...style }}>
       {/* Animated border */}
@@ -255,7 +255,7 @@ export function GlowBorderCard({ children, color = "#F15A38", radius = 16, style
 /* ─────────────────────────────────────────────────────────
    8. COUNTER BADGE — animated number with flash
 ───────────────────────────────────────────────────────── */
-export function CounterBadge({ value, label, color = "#F15A38", style = {} }) {
+export function CounterBadge({ value, label, color = "#F47E20", style = {} }) {
   const [triggered, setTriggered] = useState(false);
   const ref = useRef(null);
 
@@ -371,7 +371,7 @@ export function MagneticButton({ children, style = {}, className = "", onClick }
 /* ─────────────────────────────────────────────────────────
    12. SCROLL PROGRESS LINE (top of page)
 ───────────────────────────────────────────────────────── */
-export function ScrollProgressBar({ color = "linear-gradient(90deg, #F15A38, #fbbf24, #F15A38)" }) {
+export function ScrollProgressBar({ color = "linear-gradient(90deg, #F47E20, #fbbf24, #F47E20)" }) {
   const [progress, setProgress] = useState(0);
   useEffect(() => {
     const update = () => {

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const ITEMS = [
   { name: "IIT Bombay",       stat: "Avg ₹31.8L",  color: "#6366f1", to: "/colleges/iit-bombay" },
-  { name: "IIT Delhi",        stat: "NIRF #2",      color: "#F15A38", to: "/colleges/iit-delhi" },
+  { name: "IIT Delhi",        stat: "NIRF #2",      color: "#F47E20", to: "/colleges/iit-delhi" },
   { name: "IIT Madras",       stat: "Avg ₹34.4L",  color: "#0ea5a4", to: "/colleges/iit-madras" },
   { name: "NIT Trichy",       stat: "92% Placed",   color: "#8b5cf6", to: "/colleges/nit-trichy" },
   { name: "IIIT Hyderabad",   stat: "Avg ₹18.6L",  color: "#10b981", to: "/colleges/iiit-hyderabad" },

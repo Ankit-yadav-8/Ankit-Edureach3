@@ -47,7 +47,7 @@ const SUBJECTS = [
     name: "Physics",
     short: "Phy",
     icon: Zap,
-    color: "#F15A38",
+    color: "#F47E20",
     light: "#ffffff",
     chapters: 25,
     desc: "Mechanics, Electrodynamics, Optics, Modern Physics",
@@ -131,7 +131,7 @@ const DIFF_STYLE = {
 };
 
 const JEE_STYLE = {
-  Main:     { bg: "rgba(244,123,32,.12)", color: "#F15A38" },
+  Main:     { bg: "rgba(244,123,32,.12)", color: "#F47E20" },
   Advanced: { bg: "rgba(99,102,241,.12)", color: "#6366f1" },
 };
 
@@ -423,7 +423,7 @@ export default function JeeResources() {
               lineHeight: 1.12, margin: "0 0 16px",
             }}>
               Master JEE with{" "}
-              <span style={{ background: "linear-gradient(90deg, #F15A38, #E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              <span style={{ background: "linear-gradient(90deg, #F47E20, #E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 Subject-wise Chapters
               </span>
             </h1>
@@ -435,9 +435,9 @@ export default function JeeResources() {
             {/* Quick stats */}
             <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
               {[
-                { icon: BookOpen, label: "19 Math chapters",     color: "#F15A38" },
+                { icon: BookOpen, label: "19 Math chapters",     color: "#F47E20" },
                 { icon: Zap,      label: "25 Physics chapters",  color: "#E0421F" },
-                { icon: FlaskConical, label: "29 Chem chapters", color: "#F15A38" },
+                { icon: FlaskConical, label: "29 Chem chapters", color: "#F47E20" },
               ].map(({ icon: Icon, label, color }) => (
                 <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(28,28,40,.75)", fontSize: 13.5, fontWeight: 600 }}>
                   <Icon size={15} color={color} /> {label}

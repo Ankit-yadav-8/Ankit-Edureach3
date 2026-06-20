@@ -1,4 +1,4 @@
-/* branches.js — engineering branch families ("paths") for the Branch Catalog.
+/* branches.js — engineering branch families ("paths") for the Branch Explorer.
    Each family powers a catalog card + a full /branches/:slug detail page with
    Academics, Advanced Insights (gauge + 5-year salary arc), Colleges & Branches
    and Common Myths tabs. Numbers are indicative India-market estimates, not
@@ -89,7 +89,7 @@ export const BRANCHES = [
     slug: "electronics-electrical",
     name: "Electronics & Electrical",
     icon: "CircuitBoard",
-    color: "#F15A38",
+    color: "#F47E20",
     desc: "Power systems, microelectronics, VLSI design, and signal processing.",
     tags: ["Math-heavy", "Core & Tech options", "Hardware focus"],
     branchCount: 26,
@@ -369,7 +369,7 @@ export const BRANCHES = [
     slug: "sciences-applied",
     name: "Sciences & Applied",
     icon: "Atom",
-    color: "#F15A38",
+    color: "#F47E20",
     desc: "Engineering physics, chemistry, and interdisciplinary applied sciences.",
     tags: ["Research-led", "Flexible exits", "Higher-studies"],
     branchCount: 15,
@@ -569,7 +569,7 @@ export const BRANCHES = [
     slug: "naval-ocean",
     name: "Naval & Ocean",
     icon: "Anchor",
-    color: "#F15A38",
+    color: "#F47E20",
     desc: "Ship design, marine structures, and ocean & offshore engineering.",
     tags: ["Core-heavy", "Niche", "Defence / Marine"],
     branchCount: 6,

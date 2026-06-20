@@ -459,7 +459,7 @@ export default function JeeAdvancedResult() {
 ═══════════════════════════════════════════════════════════ */
 const CSS = `
 .jadv-page {
-  --orange:#f15a38; --orange2:#ff9f45; --gold:#e0911c; --gold2:#f5b942;
+  --orange:#F47E20; --orange2:#ff9f45; --gold:#e0911c; --gold2:#f5b942;
   --amber:#f08a24; --teal:#0bab9b; --rose:#f24e74; --violet:#8b6df0;
   --ink:#2a2342; --muted:#6c6587; --soft:#9a93b3;
   --white:#ffffff; --card:rgba(255,255,255,0.78);

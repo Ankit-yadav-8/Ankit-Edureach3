@@ -184,7 +184,7 @@ function EnrolModal({ plan, onClose }) {
           <>
             {/* ── Header with price ── */}
             <div style={{
-              background: "linear-gradient(135deg,#F15A38,#E0421F)", color: "#fff",
+              background: "linear-gradient(135deg,#F47E20,#E0421F)", color: "#fff",
               padding: "26px 28px 24px", position: "relative", overflow: "hidden",
             }}>
               <div style={{ position: "absolute", top: -30, right: -10, width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle,rgba(255,255,255,.18),transparent 70%)" }} />
@@ -241,7 +241,7 @@ function EnrolModal({ plan, onClose }) {
                     <Mail size={13} color="#16a34a" /> We email a weekly progress report here.
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#ffffff", border: "1px solid #fed7aa", borderRadius: 10, padding: "10px 12px", fontSize: 12.5, color: "#9a3412", fontWeight: 600 }}>
-                    <BadgeCheck size={15} color="#F15A38" /> Target: {meta.targetExam}
+                    <BadgeCheck size={15} color="#F47E20" /> Target: {meta.targetExam}
                   </div>
                 </>
               ) : (
@@ -263,7 +263,7 @@ function EnrolModal({ plan, onClose }) {
               <button onClick={handlePay} disabled={busy}
                 style={{
                   width: "100%", marginTop: 20, padding: "15px", border: "none", borderRadius: 14,
-                  background: busy ? "#f9a25e" : "linear-gradient(135deg,#F15A38,#E0421F)", color: "#fff",
+                  background: busy ? "#f9a25e" : "linear-gradient(135deg,#F47E20,#E0421F)", color: "#fff",
                   fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 16, cursor: busy ? "wait" : "pointer",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 9,
                   boxShadow: "0 10px 26px rgba(244,123,32,.4)",
@@ -277,7 +277,7 @@ function EnrolModal({ plan, onClose }) {
                   <ShieldCheck size={14} color="#22c55e" /> Secure payment by Razorpay
                 </span>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#6b7280", fontWeight: 600 }}>
-                  <BadgeCheck size={14} color="#F15A38" /> Mentor assigned within hours
+                  <BadgeCheck size={14} color="#F47E20" /> Mentor assigned within hours
                 </span>
               </div>
             </div>
@@ -306,7 +306,7 @@ function SuccessView({ meta, plan, paymentId, onClose }) {
         </div>
       </motion.div>
       <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: "#1a1a2e", marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-        <PartyPopper size={22} color="#F15A38" /> You're enrolled!
+        <PartyPopper size={22} color="#F47E20" /> You're enrolled!
       </h2>
       <p style={{ color: "#4b5563", fontSize: 15, lineHeight: 1.6, maxWidth: 380, margin: "0 auto 6px" }}>
         Payment successful for the <strong>{meta.title}</strong> plan. Our team will reach out on WhatsApp within a few hours to begin.
@@ -339,7 +339,7 @@ function Field({ label, icon: Icon, error, ...rest }) {
             borderRadius: 10, border: `1.5px solid ${error ? "#fca5a5" : "rgba(0,0,0,.13)"}`,
             outline: "none", background: error ? "#fffafa" : "#fff", color: "#1a1a2e",
           }}
-          onFocus={(e) => (e.target.style.borderColor = "#F15A38")}
+          onFocus={(e) => (e.target.style.borderColor = "#F47E20")}
           onBlur={(e) => (e.target.style.borderColor = error ? "#fca5a5" : "rgba(0,0,0,.13)")}
         />
       </span>
@@ -372,7 +372,7 @@ function SelectField({ label, icon: Icon, error, options, placeholder, ...rest }
 function Divider({ label, hint }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "6px 0 12px" }}>
-      <span style={{ fontSize: 12, fontWeight: 800, color: "#F15A38", textTransform: "uppercase", letterSpacing: ".4px" }}>{label}</span>
+      <span style={{ fontSize: 12, fontWeight: 800, color: "#F47E20", textTransform: "uppercase", letterSpacing: ".4px" }}>{label}</span>
       {hint && <span style={{ fontSize: 11.5, color: "#9ca3af", fontWeight: 600 }}>{hint}</span>}
       <span style={{ flex: 1, height: 1, background: "rgba(0,0,0,.08)" }} />
     </div>

@@ -243,7 +243,7 @@ function ResultCard({ result, onReset }) {
           {[170, 120, 72].map((d, i) => (
             <span key={d} style={{ position: "absolute", top: "50%", left: "50%", width: d, height: d, transform: "translate(-50%,-50%)", borderRadius: "50%", border: `1px dashed ${CL.cream3}` }} />
           ))}
-          <span style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 60, height: 60, borderRadius: 16, background: CL.coral, display: "grid", placeItems: "center", boxShadow: "0 10px 30px rgba(241,90,56,.4)" }}>
+          <span style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 60, height: 60, borderRadius: 16, background: CL.coral, display: "grid", placeItems: "center", boxShadow: "0 10px 30px rgba(244,126,32,.4)" }}>
             <GitCompareArrows size={26} color="#fff" />
           </span>
           {FACTORS.map((f, i) => {
@@ -286,7 +286,7 @@ function ResultCard({ result, onReset }) {
         <div>
           <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".08em", color: CL.coralDk, marginBottom: 14 }}>WHAT'S NEXT</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <NextCard to="/branches" icon={Layers} title="Explore the Branch Catalog" sub="See what each branch really gives you." primary />
+            <NextCard to="/branches" icon={Layers} title="Open the Branch Explorer" sub="See what each branch really gives you." primary />
             <NextCard to="/jee-main#college" icon={Crosshair} title="Try the College Predictor" sub="See which colleges your rank can get." />
             <NextCard to="/for-you" icon={Compass} title="Get a personalised shortlist" sub="Answer a few more and get your list." />
           </div>

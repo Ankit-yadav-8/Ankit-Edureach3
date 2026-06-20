@@ -102,7 +102,7 @@ export default function ExamBuzzHome() {
         </div>
 
         <div style={{ textAlign: "center", marginTop: 30 }}>
-          <Link to="/exam-buzz" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff", padding: "13px 26px", borderRadius: 12, fontFamily: CL.display, fontWeight: 800, fontSize: 14.5, boxShadow: "0 10px 26px rgba(241,90,56,.35)" }}>
+          <Link to="/exam-buzz" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff", padding: "13px 26px", borderRadius: 12, fontFamily: CL.display, fontWeight: 800, fontSize: 14.5, boxShadow: "0 10px 26px rgba(244,126,32,.35)" }}>
             Open Exam Buzz <ArrowRight size={16} />
           </Link>
         </div>

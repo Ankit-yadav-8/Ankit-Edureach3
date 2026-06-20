@@ -61,7 +61,7 @@ function PriceCard({ tier }) {
       background: featured ? CL.coral : CL.card, color: fg,
       borderRadius: 22, padding: "30px 28px", position: "relative", overflow: "hidden",
       border: `1px solid ${featured ? CL.coral : CL.line}`,
-      boxShadow: featured ? "0 22px 52px -18px rgba(241,90,56,.6)" : CL.shadow,
+      boxShadow: featured ? "0 22px 52px -18px rgba(244,126,32,.6)" : CL.shadow,
       display: "flex", flexDirection: "column",
     }}>
       {featured && <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(255,255,255,.1)" }} />}
@@ -140,7 +140,7 @@ function MentorshipView() {
             style={{
               position: "relative", display: "flex", flexDirection: "column", background: CL.card,
               borderRadius: 22, border: `1px solid ${p.featured ? CL.coral : CL.line}`,
-              boxShadow: p.featured ? "0 22px 50px -22px rgba(241,90,56,.55)" : CL.shadow,
+              boxShadow: p.featured ? "0 22px 50px -22px rgba(244,126,32,.55)" : CL.shadow,
               padding: "26px 24px", overflow: "hidden",
             }}>
             {p.featured && (
@@ -212,7 +212,7 @@ export default function PlansSection() {
                 fontFamily: CL.display, fontWeight: 800, fontSize: 14.5,
                 background: on ? CL.coral : CL.card, color: on ? "#fff" : CL.ink,
                 border: `1.5px solid ${on ? CL.coral : CL.line}`,
-                boxShadow: on ? "0 10px 24px -8px rgba(241,90,56,.5)" : CL.shadow,
+                boxShadow: on ? "0 10px 24px -8px rgba(244,126,32,.5)" : CL.shadow,
                 transition: "all .25s",
               }}>
                 <TIcon size={16} /> {t.label}

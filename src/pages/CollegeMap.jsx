@@ -6,7 +6,7 @@ import { fmtINR } from "../utils/format.js";
 import Seo from "../components/Seo.jsx";
 import BackButton from "../components/BackButton.jsx";
 
-const TYPE_COLOR = { IIT: "#F15A38", NIT: "#0ea5a4", IIIT: "#d97706", Private: "#15803d" };
+const TYPE_COLOR = { IIT: "#F47E20", NIT: "#0ea5a4", IIIT: "#d97706", Private: "#15803d" };
 const TYPES = ["All", "IIT", "NIT", "IIIT"];
 
 export default function CollegeMap() {
@@ -48,7 +48,7 @@ export default function CollegeMap() {
       const { lat, lng } = c.coords;
       pts.push([lat, lng]);
       const marker = L.circleMarker([lat, lng], {
-        radius: 7, weight: 2, color: "#fff", fillColor: TYPE_COLOR[c.type] || "#F15A38", fillOpacity: 1,
+        radius: 7, weight: 2, color: "#fff", fillColor: TYPE_COLOR[c.type] || "#F47E20", fillOpacity: 1,
       });
       marker.bindTooltip(`<strong>${c.short}</strong> · ${c.location}<br/>Avg ${fmtINR(c.placements.avg)}`, { direction: "top", offset: [0, -6] });
       marker.on("click", () => nav(`/colleges/${c.slug}`));

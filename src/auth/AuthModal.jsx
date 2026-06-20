@@ -10,7 +10,7 @@ import { useAuth } from "./AuthContext.jsx";
 import { apiForgot, apiReset, apiSendOtp, apiVerifyOtp } from "./api.js";
 
 /* ── constants ──────────────────────────────────────────────── */
-const OR  = "#F15A38";
+const OR  = "#F47E20";
 const ORD = "#E0421F";
 // Email is only accepted when it ends with "@gmail.com" or with ".in"
 const isEmail = (v) => {

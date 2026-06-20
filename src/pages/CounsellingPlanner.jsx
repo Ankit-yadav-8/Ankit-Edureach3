@@ -79,7 +79,7 @@ export default function CounsellingPlanner() {
             display: "flex", alignItems: "center", gap: 10,
             color: "#1c1c28",
           }}>
-            <ListOrdered size={28} color="#F15A38" /> Plan your JoSAA choice order
+            <ListOrdered size={28} color="#F47E20" /> Plan your JoSAA choice order
           </h1>
           <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, fontSize: "0.97rem", lineHeight: 1.7 }}>
             Get your eligible options, drag them into your preferred order, and we'll show which seat you'd most likely be allotted — exactly how JoSAA fills choices.
@@ -250,7 +250,7 @@ export default function CounsellingPlanner() {
                   <div style={{
                     position: "absolute", top: 0, left: 0, right: 0, height: 3,
                     background: allot
-                      ? "linear-gradient(90deg, #F15A38, #fbbf24, #F15A38)"
+                      ? "linear-gradient(90deg, #F47E20, #fbbf24, #F47E20)"
                       : "var(--green)",
                   }} />
 
@@ -260,7 +260,7 @@ export default function CounsellingPlanner() {
                       display: "flex", alignItems: "center", gap: 8,
                       color: allot ? "#fff" : "var(--navy)",
                     }}>
-                      <Trophy size={18} color={allot ? "#F15A38" : "var(--green)"} />
+                      <Trophy size={18} color={allot ? "#F47E20" : "var(--green)"} />
                       Likely allotment
                     </h3>
 
@@ -276,7 +276,7 @@ export default function CounsellingPlanner() {
                           <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: "#1a1a2e", margin: "6px 0 2px" }}>
                             {allot.college}
                           </div>
-                          <div style={{ color: "#F15A38", fontWeight: 600 }}>{allot.branch}</div>
+                          <div style={{ color: "#F47E20", fontWeight: 600 }}>{allot.branch}</div>
                           <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", marginTop: 6 }}>
                             Choice #{allotIndex + 1} · closing {fmtRank(allot.closing)} · avg {fmtINR(allot.avgPackage)}
                           </div>

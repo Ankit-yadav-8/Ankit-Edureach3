@@ -10,8 +10,8 @@ import { useAuth } from "../auth/AuthContext.jsx";
 import { useEnrol } from "../components/EnrolModal.jsx";
 import { apiMyEnrollments, apiUpdateProfile } from "../auth/api.js";
 
-const ORANGE = "#F15A38";
-const GOLD = "#F15A38";
+const ORANGE = "#F47E20";
+const GOLD = "#F47E20";
 const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
 
@@ -63,7 +63,7 @@ const fmtDate = (iso) =>
 const QUICK_LINKS = [
   { label: "JEE Resources",       desc: "Chapter-wise notes & PYQs", to: "/jee-resources",   color: "#6366f1", icon: BookOpen },
   { label: "NEET Prep",           desc: "Biology · Physics · Chem",  to: "/neet",            color: "#0ea5a4", icon: BookOpen },
-  { label: "College Predictor",   desc: "Rank → college list",       to: "/jee-main#college", color: "#F15A38", icon: Sparkles },
+  { label: "College Predictor",   desc: "Rank → college list",       to: "/jee-main#college", color: "#F47E20", icon: Sparkles },
   { label: "Counselling Planner", desc: "Every JoSAA & CSAB date",   to: "/planner",         color: "#15a06e", icon: Calendar },
 ];
 

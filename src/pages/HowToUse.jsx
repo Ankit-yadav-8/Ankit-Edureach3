@@ -9,7 +9,7 @@ import {
 import Reveal from "../components/Reveal.jsx";
 import Seo from "../components/Seo.jsx";
 
-const OR = "#F15A38";
+const OR = "#F47E20";
 
 /* ── The 4-step big-picture journey ─────────────────────────── */
 const JOURNEY = [
@@ -365,7 +365,7 @@ export default function HowToUse() {
               How to use{" "}
               <span
                 style={{
-                  background: "linear-gradient(90deg, #F15A38, #F15A38, #fbbf24)",
+                  background: "linear-gradient(90deg, #F47E20, #F47E20, #fbbf24)",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                 }}
               >
@@ -494,7 +494,7 @@ export default function HowToUse() {
           <Reveal>
             <div
               style={{
-                background: "linear-gradient(135deg, #F15A38 0%, #F15A38 55%, #fb923c 100%)",
+                background: "linear-gradient(135deg, #F47E20 0%, #F47E20 55%, #fb923c 100%)",
                 borderRadius: 26, padding: "44px 32px", textAlign: "center",
                 boxShadow: "0 20px 50px -16px rgba(244,123,32,.6)",
               }}

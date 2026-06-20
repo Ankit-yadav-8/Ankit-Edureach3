@@ -10,7 +10,7 @@ export const EXAMS = [
     body: "NTA",
     level: "National",
     website: "https://jeemain.nta.ac.in",
-    color: "#F15A38",
+    color: "#F47E20",
     accepts: "B.Tech / B.E / B.Arch admissions to NITs, IIITs, GFTIs",
     about:
       "JEE Main is the national-level entrance test conducted by the NTA in two sessions, serving as the gateway to NITs, IIITs and GFTIs and as the qualifier for JEE Advanced.",

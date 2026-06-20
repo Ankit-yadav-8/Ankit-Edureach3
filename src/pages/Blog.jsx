@@ -127,7 +127,7 @@ export default function Blog() {
                   fontWeight: 700, fontSize: 13, transition: "all .15s",
                   background: on ? CL.coral : CL.card, color: on ? "#fff" : CL.ink2,
                   border: `1px solid ${on ? CL.coral : CL.line}`,
-                  boxShadow: on ? "0 8px 20px rgba(241,90,56,.28)" : "none",
+                  boxShadow: on ? "0 8px 20px rgba(244,126,32,.28)" : "none",
                 }}>{c}</button>
               );
             })}

@@ -130,7 +130,7 @@ export default function NeetColleges() {
                   style={{
                     padding: "7px 15px", borderRadius: 50, fontSize: 13, fontWeight: 600,
                     fontFamily: "Sora", cursor: "pointer", border: "none",
-                    background: mgmt === t ? (t === "Government" ? "#15a06e" : t === "All" ? "#F15A38" : "#8b5cf6") : "transparent",
+                    background: mgmt === t ? (t === "Government" ? "#15a06e" : t === "All" ? "#F47E20" : "#8b5cf6") : "transparent",
                     color: mgmt === t ? "#fff" : "#6b7280",
                     boxShadow: mgmt === t ? "0 2px 10px rgba(0,0,0,.15)" : "none",
                   }}>

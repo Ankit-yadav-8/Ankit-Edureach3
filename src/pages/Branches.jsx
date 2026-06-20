@@ -1,4 +1,4 @@
-/* Branches — standalone Branch Catalog page. Reuses the home BranchCatalog
+/* Branches — standalone Branch Explorer page. Reuses the home BranchCatalog
    section under a page header with a back control. */
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { CL } from "../components/home/clTheme.js";
 
 export default function Branches() {
   const nav = useNavigate();
-  useEffect(() => { document.title = "Branch Catalog — 220+ engineering branches · College Parichay"; }, []);
+  useEffect(() => { document.title = "Branch Explorer — 220+ engineering branches · College Parichay"; }, []);
 
   const goHome = () => nav("/");
 

@@ -90,7 +90,7 @@ export default function RankToCutoff() {
                 </div>
               ))}
             </div>
-            <Link to="/jee-advanced" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff", padding: "13px 24px", borderRadius: 12, fontFamily: CL.display, fontWeight: 800, fontSize: 14.5, boxShadow: "0 10px 26px rgba(241,90,56,.35)" }}>
+            <Link to="/jee-advanced" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff", padding: "13px 24px", borderRadius: 12, fontFamily: CL.display, fontWeight: 800, fontSize: 14.5, boxShadow: "0 10px 26px rgba(244,126,32,.35)" }}>
               Open the full JEE Advanced predictor <ArrowRight size={16} />
             </Link>
           </div>
@@ -103,7 +103,7 @@ export default function RankToCutoff() {
             {/* browser chrome */}
             <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "13px 16px", background: CL.cream2, borderBottom: `1px solid ${CL.line}` }}>
               <span style={{ display: "flex", gap: 6 }}>
-                {["#f15a38", "#e29a2e", "#0fae6e"].map((c) => <span key={c} style={{ width: 11, height: 11, borderRadius: "50%", background: c }} />)}
+                {["#F47E20", "#e29a2e", "#0fae6e"].map((c) => <span key={c} style={{ width: 11, height: 11, borderRadius: "50%", background: c }} />)}
               </span>
               <span style={{ flex: 1, textAlign: "center", fontSize: 12, color: CL.muted, background: CL.card, border: `1px solid ${CL.line}`, borderRadius: 7, padding: "5px 10px", fontFamily: CL.display }}>
                 collegeparichay.in/college-predictor
@@ -122,7 +122,7 @@ export default function RankToCutoff() {
                     style={{ width: "100%", border: "none", background: "transparent", outline: "none", fontFamily: CL.display, fontWeight: 800, fontSize: 24, color: CL.ink, marginTop: 2 }}
                   />
                 </div>
-                <button style={{ background: CL.coral, color: "#fff", border: "none", borderRadius: 12, padding: "0 26px", fontFamily: CL.display, fontWeight: 800, fontSize: 15, cursor: "pointer", boxShadow: "0 8px 20px rgba(241,90,56,.3)" }}>
+                <button style={{ background: CL.coral, color: "#fff", border: "none", borderRadius: 12, padding: "0 26px", fontFamily: CL.display, fontWeight: 800, fontSize: 15, cursor: "pointer", boxShadow: "0 8px 20px rgba(244,126,32,.3)" }}>
                   Predict
                 </button>
               </div>

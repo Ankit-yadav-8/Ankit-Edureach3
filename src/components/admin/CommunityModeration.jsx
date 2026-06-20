@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { API_BASE } from "../../auth/api.js";
 
-const ORANGE = "#F15A38", NAVY = "#0d1b3e", MUTE = "#6b7280";
+const ORANGE = "#F47E20", NAVY = "#0d1b3e", MUTE = "#6b7280";
 
 const TAG_COLOR = { doubt: "#ef4444", discussion: "#6366f1", trick: "#f59e0b", strategy: "#8b5cf6", notes: "#0ea5e9", resource: "#15a06e", announcement: ORANGE };
 
@@ -115,7 +115,7 @@ export default function CommunityModeration({ token }) {
           <textarea value={annText} onChange={(e) => setAnnText(e.target.value)} rows={2} placeholder="Write your announcement…"
             style={{ flex: 1, minWidth: 240, padding: "10px 12px", borderRadius: 9, border: "1.5px solid #e5e7eb", fontSize: 13.5, resize: "vertical", fontFamily: "inherit" }} />
           <button onClick={postAnnouncement} disabled={annBusy}
-            style={{ ...btn(`linear-gradient(135deg,${ORANGE},#F15A38)`, "#fff", "none"), height: 40, padding: "0 16px" }}>
+            style={{ ...btn(`linear-gradient(135deg,${ORANGE},#F47E20)`, "#fff", "none"), height: 40, padding: "0 16px" }}>
             {annBusy ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Send size={14} />} Post & pin
           </button>
         </div>
