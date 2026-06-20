@@ -2005,7 +2005,7 @@ textarea.input { width:100%; }
 ════════════════════════════════════════════════ */
 @media (min-width:1440px) {
   .container { padding-inline:2rem; }
-  .hero-grid { grid-template-columns: 300px 1fr 300px !important; }
+  .hero-grid { grid-template-columns: minmax(0,1fr) 460px !important; }
   .college-grid { grid-template-columns:repeat(4,1fr); }
 }
 

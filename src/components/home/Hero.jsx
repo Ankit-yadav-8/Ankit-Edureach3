@@ -1382,6 +1382,75 @@ function SixFeatureCards({ isMobile, isXs }) {
 /* ════════════════════════════════════════════════
    HERO — MAIN EXPORT
 ════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   HERO STORY CARD (right column — desktop/laptop)
+   A single IIT Roorkee campus card with the founders'
+   story written across the bottom. Hidden on mobile
+   via .hero-about-col (mobile shows the centre text only).
+════════════════════════════════════════════════ */
+function HeroStoryCard() {
+  const nav = useNavigate();
+  const [imgOk, setImgOk] = useState(true);
+
+  return (
+    <motion.div
+      className="hero-about-col"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.25 }}
+      whileHover={{ y: -4 }}
+      onClick={() => nav("/about")}
+      style={{
+        position: "relative", width: "100%", aspectRatio: "4 / 5", minWidth: 0,
+        borderRadius: 22, overflow: "hidden", cursor: "pointer",
+        border: "1px solid rgba(255,105,61,.22)",
+        background: "linear-gradient(135deg, #1b1b2e, #0a0a1a)",
+        boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 30px 50px -18px rgba(255,105,61,.34), 0 12px 18px -10px rgba(0,0,0,.14)",
+      }}
+    >
+      {/* campus image */}
+      {imgOk && (
+        <img
+          src="/Album_18885/IIT%20ROORKEE.jpg"
+          alt="IIT Roorkee campus — where College Parichay was built"
+          onError={() => setImgOk(false)}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      )}
+
+      {/* top pill — IIT Roorkee */}
+      <div style={{
+        position: "absolute", top: 14, left: 14, zIndex: 2,
+        display: "inline-flex", alignItems: "center", gap: 7,
+        background: "rgba(255,255,255,.92)", backdropFilter: "blur(6px)",
+        borderRadius: 50, padding: "6px 13px", boxShadow: "0 6px 18px rgba(0,0,0,.18)",
+      }}>
+        <GraduationCap size={15} color="#FF693D" />
+        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 12, color: "#1c1c28", letterSpacing: "-.2px" }}>IIT Roorkee</span>
+        <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", marginLeft: 1 }} />
+      </div>
+
+      {/* bottom gradient + story */}
+      <div style={{
+        position: "absolute", left: 0, right: 0, bottom: 0, zIndex: 2,
+        padding: "56px 20px 20px",
+        background: "linear-gradient(to top, rgba(7,7,18,.95) 16%, rgba(7,7,18,.72) 48%, transparent)",
+      }}>
+        <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "1.8px", textTransform: "uppercase", color: "#fdba74", marginBottom: 8 }}>
+          Our Story
+        </div>
+        <p style={{ margin: 0, fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700, fontSize: 15, lineHeight: 1.55, color: "#fff", letterSpacing: "-.01em" }}>
+          Made by <span style={{ color: "#FF9d76" }}>Ankit Yadav &amp; Ankit Kumar</span>, two IIT Roorkee students —<br />
+          who lived the JoSAA chaos and built this free for every aspirant after them.
+        </p>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 14, color: "#fff", fontWeight: 800, fontFamily: "Sora", fontSize: 12.5 }}>
+          Read our story <ArrowRight size={14} />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Hero({ onSearch }) {
   const [q, setQ] = useState("");
   const nav = useNavigate();
@@ -1419,11 +1488,12 @@ export default function Hero({ onSearch }) {
     bp === "ipadpro"              ? "clamp(2.8rem,4vw,3.4rem)" :
     "clamp(3.2rem,4.8vw,4.2rem)";
 
-  /* ── Grid columns — About card · center text · Mentorship card ── */
+  /* ── Grid columns — laptop: hero text (left) · story card (right).
+     Mobile stays single-column (the card is hidden via .hero-about-col). ── */
   const gridCols =
     isMobile  ? "1fr" :
     isTablet  ? "1fr minmax(0,300px)" :
-    "300px 1fr 300px";
+    "minmax(0,1fr) 460px";
 
   /* ── Hero background — warm gradient on all sizes ── */
   const heroBg = "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 72%, #ffffff 100%)";
@@ -1476,11 +1546,8 @@ export default function Hero({ onSearch }) {
           }}
         >
 
-          {/* ══ LEFT — rotating card: Our Story · Tools · Explore Colleges (desktop only) ══ */}
-          <HeroRotatingCard slides={HERO_LEFT} isMobile={isMobile} />
-
-          {/* ══ CENTER — hero text ══ */}
-          <div style={{ textAlign: "center", minWidth: 0, width: "100%" }}>
+          {/* ══ LEFT — hero text (centred on mobile, shifted left on laptop) ══ */}
+          <div style={{ textAlign: isMobile ? "center" : "left", minWidth: 0, width: "100%", maxWidth: isMobile ? "100%" : 600, justifySelf: isMobile ? "center" : "start" }}>
 
             {/* Badge */}
             <div>
@@ -1535,7 +1602,7 @@ export default function Hero({ onSearch }) {
               <p style={{
                 color: subColor,
                 fontSize: isXs ? ".85rem" : "clamp(.92rem,1.7vw,1.08rem)",
-                maxWidth: 560, margin: "0 auto 0.6rem",
+                maxWidth: 560, margin: isMobile ? "0 auto 0.6rem" : "0 0 0.6rem",
                 lineHeight: 1.75,
               }}>
                 Predict your JEE rank from marks, discover every college you can get into across all JoSAA &amp; CSAB rounds, and track every deadline — all in one place.
@@ -1549,7 +1616,7 @@ export default function Hero({ onSearch }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.18 }}
-              style={{ maxWidth: 560, margin: "0 auto 1rem" }}
+              style={{ maxWidth: 560, margin: isMobile ? "0 auto 1rem" : "0 0 1rem" }}
             >
               <div style={{
                 display: "flex",
@@ -1608,7 +1675,7 @@ export default function Hero({ onSearch }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.42 }}
               className="hero-community-cta"
-              style={{ justifyContent: "center", margin: "20px 0 6px" }}
+              style={{ justifyContent: "flex-start", margin: "20px 0 6px" }}
             >
               <button
                 onClick={() => nav("/community")}
@@ -1636,8 +1703,8 @@ export default function Hero({ onSearch }) {
           </div>
           {/* ══ end CENTER ══ */}
 
-          {/* ══ RIGHT — rotating card: Mentorship · JEE Advanced · JEE Main · NEET ══ */}
-          <HeroRotatingCard slides={HERO_RIGHT} isMobile={isMobile} />
+          {/* ══ RIGHT — IIT Roorkee story card (laptop only; hidden on mobile) ══ */}
+          <HeroStoryCard />
 
         </div>
       </div>
