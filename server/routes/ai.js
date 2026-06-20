@@ -24,9 +24,12 @@ const MODELS = {
 
 /* Live-data questions (admissions, cutoffs, placements, exam stats/dates) — route
    to a web-search-capable model so answers reflect current reality, not training. */
-const SEARCH_RE = /\b(iit|nit|iiit|bits|cutoff|cut-off|cut off|closing rank|opening rank|placement|package|lpa|admission|counsell?ing|josaa|csab|seat matrix|seats?|fees?|nirf|eligibilit|notification|registration|application form|exam date|result|answer key|merit list|how many|number of (students|candidates|applicants)|applicants|appear(ed|ing)?|vacanc|scholarship|hostel|predictor|this year|latest|current|recent)\b/;
+const SEARCH_RE = /\b(jee|neet|iit|nit|iiit|bits|cutoff|cut-off|cut off|rank|closing rank|opening rank|placement|package|lpa|admission|counsell?ing|josaa|csab|seat matrix|seats?|fees?|nirf|college|eligibilit|eligible|notification|registration|application|exam date|result|answer key|merit list|how many|number of (students|candidates|applicants)|applicants|appear(ed|ing)?|vacanc|scholarship|hostel|predictor|this year|latest|current|recent)\b/;
 const CODE_RE = /\b(code|coding|program|programming|python|javascript|typescript|java|c\+\+|c#|golang|rust|sql|html|css|react|node|api|function|algorithm|data structure|recursion|loop|array|pointer|compile|syntax|runtime error|stack trace|debug|leetcode|oop|class|inheritance|regex|bug|terminal|git)\b/;
-const MATH_RE = /\b(solve|simplify|evaluate|calculate|integral|integrate|derivative|differentiat|matrix|matrices|determinant|probability|permutation|combination|equation|inequalit|prove|theorem|circuit|kirchhoff|physics|chemistry|thermodynamics|calculus|vector|trigonometr|algebra|geometry|limit|series|kinematics|electromagnet|capacitor|resistor|mole|stoichiometr|numerical|jee|neet)\b/;
+const MATH_RE = /\b(matrix|matrices|determinant|probability|permutation|combination|equation|inequalit|theorem|circuit|kirchhoff|physics|chemistry|thermodynamics|calculus|vector|trigonometr|algebra|geometry|limit|series|kinematics|electromagnet|capacitor|resistor|mole|stoichiometr|numerical)\b/;
+/* strong "solve this problem" intent — keeps real numericals on the reasoning
+   model even when they mention JEE/IIT (which would otherwise hit web search). */
+const SOLVE_RE = /\b(solve|simplify|evaluate|calculate|integrate|differentiate|derive|prove|compute|find the|value of|roots? of)\b/;
 
 /* Per-mode display label + generation tuning. Maths/code run cooler for
    accuracy; the cap keeps latency and token cost in check. */
@@ -41,9 +44,10 @@ const MODE_META = {
    exam / college / cutoff queries get fresh data even if they also look mathy. */
 function pickMode(text = "") {
   const t = text.toLowerCase();
-  if (SEARCH_RE.test(t)) return "search";
+  const solvey = SOLVE_RE.test(t) || /[∫∑√π∞≤≥×÷]|\\frac|\\int|\\sqrt|\\sum|\\theta/.test(text);
+  if (SEARCH_RE.test(t) && !solvey) return "search";   // admissions/data — unless it's a problem to solve
   if (CODE_RE.test(t)) return "code";
-  if (MATH_RE.test(t) || /[∫∑√π∞≤≥×÷]|\\frac|\\int|\\sqrt|\\sum|\\theta/.test(text)) return "math";
+  if (solvey || MATH_RE.test(t)) return "math";
   return "general";
 }
 
@@ -93,8 +97,11 @@ Core Principles:
 
 2. Be accurate and honest.
    - If information is uncertain, say so.
-   - Never invent facts, statistics, rankings, cutoffs, or dates.
-   - When exact future information is unavailable, provide a reasonable estimate based on available trends and clearly label it as an estimate (e.g. "≈ 1.9 lakh (estimate)") with the reasoning behind it. Never dead-end with a bare "I don't know".
+   - FACTS vs REASONING vs STATISTICS: facts and figures must come from provided data or web-search results; reasoning and explanations you may generate yourself; statistics must NEVER be generated without evidence.
+   - Never invent or guess official statistics — exam registration / candidate / applicant counts, cutoffs, closing ranks, placement numbers, percentages, rankings or dates — and never build a table of made-up numbers.
+   - For an official statistic with no verified source in front of you: state plainly that you cannot confirm the exact figure and that it should be taken from the official report (jeeadv.ac.in, josaa.nic.in, nta.ac.in, etc.). You MAY add a broad historical RANGE only if you genuinely know it from past years, clearly labelled as approximate (e.g. "historically ~1.5–2.0 lakh candidates appear; the exact 2025 figure must be verified officially"). Never present such a range as the confirmed answer, and never output a single fabricated exact number.
+   - Estimates are allowed only for genuinely predictive / non-official questions (e.g. a likely future trend), and must be clearly labelled with the reasoning. Never dead-end with a bare "I don't know" — give the honest framing plus whatever verified context or clearly-labelled range you can.
+   - FACT-CHECK before sending: if your answer contains any number, percentage, ranking, registration count or statistic, confirm it came from provided data or search results. If it did not, do not state it as a fact — express the uncertainty instead.
 
 3. For academic questions:
    - Explain concepts step by step.
@@ -191,29 +198,20 @@ router.post("/chat", requireAuth, async (req, res) => {
     signal: controller.signal,
   });
 
-  try {
-    // Tell the client which engine is answering (drives the live mode badge).
-    res.write(`event: meta\ndata: ${JSON.stringify({ mode, label: meta.label })}\n\n`);
+  // Stream one model's completion to the client, dropping any <think>…</think>
+  // reasoning. Returns whether it produced visible content, so a routed model
+  // that streams nothing usable (e.g. web-search model returns only tool steps)
+  // can transparently fall back to the general model.
+  const streamGroq = async (model) => {
+    let upstream;
+    try { upstream = await callGroq(model); }
+    catch (e) { if (controller.signal.aborted) throw e; return { emitted: false }; }
+    if (!upstream.ok || !upstream.body) { await upstream.text?.().catch(() => {}); return { emitted: false }; }
 
-    // If the routed model is unavailable (e.g. retired id), fall back to general.
-    let upstream = await callGroq(meta.model);
-    if ((!upstream.ok || !upstream.body) && meta.model !== MODELS.general) {
-      res.write(`event: meta\ndata: ${JSON.stringify({ mode: "general", label: MODE_META.general.label })}\n\n`);
-      upstream = await callGroq(MODELS.general);
-    }
-
-    if (!upstream.ok || !upstream.body) {
-      const errText = await upstream.text().catch(() => "");
-      res.write(`event: error\ndata: ${JSON.stringify({ error: `AI upstream error (${upstream.status})`, detail: errText.slice(0, 300) })}\n\n`);
-      return res.end();
-    }
-
-    // Re-emit Groq's OpenAI-style SSE as plain {delta} events the client reads,
-    // dropping any <think>…</think> reasoning that R1 / Qwen emit.
     const strip = makeThinkStripper();
     const reader = upstream.body.getReader();
     const decoder = new TextDecoder();
-    let buffer = "";
+    let buffer = "", emitted = false;
     for (;;) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -224,24 +222,37 @@ router.post("/chat", requireAuth, async (req, res) => {
         const trimmed = line.trim();
         if (!trimmed.startsWith("data:")) continue;
         const payload = trimmed.slice(5).trim();
-        if (payload === "[DONE]") {
-          const tail = strip.flush();
-          if (tail) res.write(`data: ${JSON.stringify({ delta: tail })}\n\n`);
-          res.write("event: done\ndata: {}\n\n");
-          continue;
-        }
+        if (payload === "[DONE]") continue;
         try {
           const json = JSON.parse(payload);
           const delta = json.choices?.[0]?.delta?.content;
           if (delta) {
             const clean = strip.push(delta);
-            if (clean) res.write(`data: ${JSON.stringify({ delta: clean })}\n\n`);
+            if (clean) { res.write(`data: ${JSON.stringify({ delta: clean })}\n\n`); emitted = true; }
           }
         } catch { /* ignore keep-alive / partial frames */ }
       }
     }
     const tail = strip.flush();
-    if (tail) res.write(`data: ${JSON.stringify({ delta: tail })}\n\n`);
+    if (tail) { res.write(`data: ${JSON.stringify({ delta: tail })}\n\n`); emitted = true; }
+    return { emitted };
+  };
+
+  try {
+    // Tell the client which engine is answering (drives the live mode badge).
+    res.write(`event: meta\ndata: ${JSON.stringify({ mode, label: meta.label })}\n\n`);
+
+    let { emitted } = await streamGroq(meta.model);
+
+    // If the routed model was unavailable or streamed nothing usable, fall back.
+    if (!emitted && meta.model !== MODELS.general) {
+      res.write(`event: meta\ndata: ${JSON.stringify({ mode: "general", label: MODE_META.general.label })}\n\n`);
+      ({ emitted } = await streamGroq(MODELS.general));
+    }
+
+    if (!emitted) {
+      res.write(`event: error\ndata: ${JSON.stringify({ error: "The AI returned an empty response — please try again." })}\n\n`);
+    }
     res.write("event: done\ndata: {}\n\n");
     res.end();
   } catch (e) {
