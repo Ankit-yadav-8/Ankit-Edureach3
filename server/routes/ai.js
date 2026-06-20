@@ -16,17 +16,23 @@ const TITLE_MODEL = process.env.GROQ_TITLE_MODEL || "llama-3.1-8b-instant";
      • coding / programming           → Qwen 3 (strong code + explanations)
      • everything else                → Llama 3.3 70B (fast, well-rounded) */
 const MODELS = {
+  search:  process.env.GROQ_MODEL_SEARCH  || "groq/compound",          // built-in web search
   math:    process.env.GROQ_MODEL_MATH    || "deepseek-r1-distill-llama-70b",
   code:    process.env.GROQ_MODEL_CODE    || "qwen/qwen3-32b",
   general: process.env.GROQ_MODEL_GENERAL || process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
 };
 
+/* Live-data questions (admissions, cutoffs, placements, exam stats/dates) — route
+   to a web-search-capable model so answers reflect current reality, not training. */
+const SEARCH_RE = /\b(iit|nit|iiit|bits|cutoff|cut-off|cut off|closing rank|opening rank|placement|package|lpa|admission|counsell?ing|josaa|csab|seat matrix|seats?|fees?|nirf|eligibilit|notification|registration|application form|exam date|result|answer key|merit list|how many|number of (students|candidates|applicants)|applicants|appear(ed|ing)?|vacanc|scholarship|hostel|predictor|this year|latest|current|recent)\b/;
 const CODE_RE = /\b(code|coding|program|programming|python|javascript|typescript|java|c\+\+|c#|golang|rust|sql|html|css|react|node|api|function|algorithm|data structure|recursion|loop|array|pointer|compile|syntax|runtime error|stack trace|debug|leetcode|oop|class|inheritance|regex|bug|terminal|git)\b/;
 const MATH_RE = /\b(solve|simplify|evaluate|calculate|integral|integrate|derivative|differentiat|matrix|matrices|determinant|probability|permutation|combination|equation|inequalit|prove|theorem|circuit|kirchhoff|physics|chemistry|thermodynamics|calculus|vector|trigonometr|algebra|geometry|limit|series|kinematics|electromagnet|capacitor|resistor|mole|stoichiometr|numerical|jee|neet)\b/;
 
-/* Choose the Groq model from the latest user message. */
+/* Choose the Groq model from the latest user message. Web-search wins first so
+   exam / college / cutoff queries get fresh data even if they also look mathy. */
 function pickModel(text = "") {
   const t = text.toLowerCase();
+  if (SEARCH_RE.test(t)) return MODELS.search;
   if (CODE_RE.test(t)) return MODELS.code;
   if (MATH_RE.test(t) || /[∫∑√π∞≤≥×÷]|\\frac|\\int|\\sqrt|\\sum|\\theta/.test(text)) return MODELS.math;
   return MODELS.general;
@@ -75,12 +81,23 @@ const SYSTEM_PROMPT =
   "display equations on their own line. Always use real LaTeX commands: \\frac{a}{b}, x^{2}, x_{n}, \\sqrt{x}, " +
   "\\theta, \\pi, \\sum, \\int, \\Rightarrow, \\leq, \\geq, \\times, \\cdot, \\alpha. " +
   "Never write things like 'x^2', 'sqrt(x)' or '(x+1)/2' outside LaTeX, and do not substitute Unicode glyphs for LaTeX.\n\n" +
-  "ACCURACY — never invent facts. Do NOT fabricate exam questions, cutoff numbers, ranks, or paper details. " +
-  "If you are not certain that a specific exam has actually been conducted, or that its question paper / answer key is officially public, " +
-  "say plainly that you don't have that official paper and do NOT make up 'the hardest question' or any sample from it. " +
-  "For a very recent or upcoming session you lack reliable data on, be honest about that first, then offer what you genuinely can — " +
-  "historically tough chapters, trends from clearly-labelled previous years, and preparation guidance. " +
-  "Be concise but complete; when unsure, say so and point to the official source.";
+  "ROLE — you are also a college-admission expert. When users ask about exams, cutoffs, ranks, placements, " +
+  "seats, fees or admissions, give a genuinely useful answer; never dead-end with a bare 'I don't know'.\n\n" +
+  "ESTIMATES — when exact or current figures are unavailable (data not released, or a future year), do NOT refuse. " +
+  "Instead: (1) use recent-year trends, (2) give a reasonable estimate or range, (3) clearly label it as an estimate " +
+  "(e.g. '≈ 1.9 lakh (estimate)'), and (4) explain the reasoning behind it. Never present an estimate as an official " +
+  "confirmed number, and never fabricate a specific exam question, paper, or an exact cutoff/rank as if it were real.\n\n" +
+  "FUTURE-YEAR QUESTIONS — for things like 'JEE Advanced 2027' or 'IIT Bombay CSE cutoff 2028', recognise the exact data " +
+  "cannot exist yet. Say so briefly, then project from the last few years' trend and give a clearly-labelled estimate with reasoning.\n\n" +
+  "WEB DATA — when web-search results are provided to you, prefer and cite them over memory, and note the year/source. " +
+  "Without fresh results, rely on the latest trends you know and flag that figures may have changed.\n\n" +
+  "STRUCTURE — for admissions, cutoff, placement, exam-statistics and similar fact/estimate questions, format the answer as:\n" +
+  "1. **Direct Answer** — the number/estimate or bottom line up front.\n" +
+  "2. **Explanation** — why, and any assumptions.\n" +
+  "3. **Data / Trend** — the recent-year figures or trend you based it on (a small table is great).\n" +
+  "4. **Conclusion** — a crisp takeaway or next step.\n" +
+  "(For pure derivations or coding doubts, keep the natural step-by-step style instead.)\n\n" +
+  "Be concise but complete, and point to the official source (jeeadv.ac.in, josaa.nic.in, nta.ac.in, etc.) where relevant.";
 
 /* keep payloads sane: cap how much history & text we forward to Groq */
 function sanitizeMessages(raw) {
