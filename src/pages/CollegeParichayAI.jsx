@@ -21,12 +21,12 @@ import Markdown from "../components/ai/Markdown.jsx";
 const THEMES = {
   dark: {
     bg: "#1f1d1a", bgGrid: "rgba(255,255,255,.03)",
-    glow1: "rgba(244,126,32,.16)", glow2: "rgba(123,94,167,.14)",
+    glow1: "rgba(255, 105, 61,.16)", glow2: "rgba(123,94,167,.14)",
     sidebar: "#181613", panel: "#26231f", panelHi: "#2f2b26",
     border: "rgba(255,255,255,.09)", borderHi: "rgba(255,255,255,.16)",
     text: "#ece7df", textDim: "#a39b8f", textMute: "#7d756b",
-    accent: "#F47E20", accentSoft: "rgba(244,126,32,.15)",
-    userBubble: "rgba(244,126,32,.14)", userBorder: "rgba(244,126,32,.3)",
+    accent: "#FF693D", accentSoft: "rgba(255, 105, 61,.15)",
+    userBubble: "rgba(255, 105, 61,.14)", userBorder: "rgba(255, 105, 61,.3)",
     display: "'Space Grotesk','Sora',sans-serif",
     heading: "#f5f1ea", body: "#d9d2c7", bodyDim: "#a39b8f", link: "#f0a868",
     inlineCodeBg: "rgba(255,255,255,.08)", inlineCodeFg: "#f0a868",
@@ -36,12 +36,12 @@ const THEMES = {
   },
   light: {
     bg: "#F7F4EE", bgGrid: "rgba(33,29,46,.035)",
-    glow1: "rgba(244,126,32,.12)", glow2: "rgba(123,94,167,.1)",
+    glow1: "rgba(255, 105, 61,.12)", glow2: "rgba(123,94,167,.1)",
     sidebar: "#F1ECE3", panel: "#ffffff", panelHi: "#FBF9F5",
     border: "rgba(33,29,46,.1)", borderHi: "rgba(33,29,46,.18)",
     text: "#2b2722", textDim: "#6b6258", textMute: "#9a9189",
-    accent: "#E0421F", accentSoft: "rgba(244,126,32,.12)",
-    userBubble: "rgba(244,126,32,.12)", userBorder: "rgba(244,126,32,.28)",
+    accent: "#E0421F", accentSoft: "rgba(255, 105, 61,.12)",
+    userBubble: "rgba(255, 105, 61,.12)", userBorder: "rgba(255, 105, 61,.28)",
     display: "'Space Grotesk','Sora',sans-serif",
     heading: "#211d2e", body: "#3a352f", bodyDim: "#6b6258", link: "#c2540a",
     inlineCodeBg: "rgba(33,29,46,.07)", inlineCodeFg: "#c2540a",
@@ -282,12 +282,12 @@ export default function CollegeParichayAI() {
       <AnimatePresence>
         {(sidebarOpen || typeof window !== "undefined") && (
           <aside style={{
-            position: "relative", zIndex: 20, width: 268, flexShrink: 0, height: "100%",
+            zIndex: 30,
             background: t.sidebar, borderRight: `1px solid ${t.border}`,
             display: "flex", flexDirection: "column",
           }} className="cpai-sidebar" data-open={sidebarOpen}>
             <div style={{ padding: "16px 14px 10px", display: "flex", alignItems: "center", gap: 9 }}>
-              <span style={{ width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg,#F47E20,#E0421F)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <span style={{ width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg,#FF693D,#E0421F)", display: "grid", placeItems: "center", flexShrink: 0 }}>
                 <Bot size={17} color="#fff" />
               </span>
               <div style={{ fontFamily: t.display, fontWeight: 800, fontSize: 15.5, letterSpacing: "-.3px" }}>College Parichay <span style={{ color: t.accent }}>AI</span></div>
@@ -297,9 +297,9 @@ export default function CollegeParichayAI() {
             <div style={{ padding: "4px 14px 12px" }}>
               <button onClick={newChat} style={{
                 width: "100%", display: "flex", alignItems: "center", gap: 9, justifyContent: "center",
-                background: "linear-gradient(135deg,#F47E20,#E0421F)", color: "#fff", border: "none",
+                background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", border: "none",
                 borderRadius: 11, padding: "11px 14px", fontWeight: 700, fontSize: 14, cursor: "pointer",
-                boxShadow: "0 6px 18px rgba(244,126,32,.3)", fontFamily: t.display,
+                boxShadow: "0 6px 18px rgba(255, 105, 61,.3)", fontFamily: t.display,
               }}><Plus size={17} /> New chat</button>
             </div>
 
@@ -350,13 +350,14 @@ export default function CollegeParichayAI() {
         {/* top bar */}
         <header style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", borderBottom: `1px solid ${t.border}`, flexShrink: 0 }}>
           <button onClick={() => setSidebarOpen(true)} className="cpai-only-mobile" style={iconBtn(t)} aria-label="Menu"><Menu size={19} /></button>
-          <div style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: t.display, fontWeight: 700, fontSize: 14 }}>
-            <Sparkles size={15} color={t.accent} /> {active?.title || "New chat"}
+          <div style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: t.display, fontWeight: 700, fontSize: 14, minWidth: 0, flex: 1 }}>
+            <Sparkles size={15} color={t.accent} style={{ flexShrink: 0 }} />
+            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{active?.title || "New chat"}</span>
           </div>
-          <span style={{ marginLeft: "auto", fontSize: 11.5, color: t.textMute, display: "inline-flex", alignItems: "center", gap: 6, border: `1px solid ${t.border}`, padding: "4px 10px", borderRadius: 50 }}>
+          <span className="cpai-hide-sm" style={{ marginLeft: "auto", fontSize: 11.5, color: t.textMute, display: "inline-flex", alignItems: "center", gap: 6, border: `1px solid ${t.border}`, padding: "4px 10px", borderRadius: 50, whiteSpace: "nowrap", flexShrink: 0 }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} /> Llama 3.3 · Groq
           </span>
-          <Link to="/" style={{ fontSize: 12.5, color: t.textDim, textDecoration: "none", fontWeight: 600 }}>← Site</Link>
+          <Link to="/" style={{ fontSize: 12.5, color: t.textDim, textDecoration: "none", fontWeight: 600, flexShrink: 0 }}>← Site</Link>
         </header>
 
         {/* messages / empty hero */}
@@ -364,7 +365,7 @@ export default function CollegeParichayAI() {
           {empty ? (
             <div style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px 18px", maxWidth: 760, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
               <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5 }} style={{ textAlign: "center", marginBottom: 26 }}>
-                <span style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg,#F47E20,#E0421F)", display: "grid", placeItems: "center", margin: "0 auto 16px", boxShadow: "0 12px 30px rgba(244,126,32,.35)" }}>
+                <span style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg,#FF693D,#E0421F)", display: "grid", placeItems: "center", margin: "0 auto 16px", boxShadow: "0 12px 30px rgba(255, 105, 61,.35)" }}>
                   <Bot size={30} color="#fff" />
                 </span>
                 <h1 style={{ fontFamily: t.display, fontWeight: 800, fontSize: "clamp(1.6rem,4vw,2.2rem)", letterSpacing: "-1px", color: t.heading }}>
@@ -400,7 +401,7 @@ export default function CollegeParichayAI() {
                 <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .3 }}
                   style={{ display: "flex", gap: 13, marginBottom: 22 }}>
                   <span style={{ width: 32, height: 32, borderRadius: 9, flexShrink: 0, display: "grid", placeItems: "center",
-                    background: m.role === "user" ? t.userBubble : "linear-gradient(135deg,#F47E20,#E0421F)",
+                    background: m.role === "user" ? t.userBubble : "linear-gradient(135deg,#FF693D,#E0421F)",
                     border: m.role === "user" ? `1px solid ${t.userBorder}` : "none" }}>
                     {m.role === "user" ? <User size={17} color={t.accent} /> : <Bot size={17} color="#fff" />}
                   </span>
@@ -454,14 +455,19 @@ export default function CollegeParichayAI() {
 
       <style>{`
         .cpai-only-mobile { display: none; }
-        .cpai-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 15; }
+        /* desktop sidebar layout lives here (not inline) so the media query below
+           can actually override it on phones */
+        .cpai-sidebar { position: relative; width: 268px; flex-shrink: 0; height: 100%; }
+        .cpai-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 25; }
         @media (max-width: 820px) {
-          .cpai-sidebar { position: fixed; left: 0; top: 0; bottom: 0; transform: translateX(-105%); transition: transform .25s ease; box-shadow: 0 0 40px rgba(0,0,0,.4); }
+          .cpai-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 84vw; max-width: 300px;
+            transform: translateX(-105%); transition: transform .25s ease; box-shadow: 0 0 40px rgba(0,0,0,.45); }
           .cpai-sidebar[data-open="true"] { transform: translateX(0); }
           .cpai-only-mobile { display: grid !important; }
           .cpai-backdrop { display: block; }
         }
         @media (min-width: 821px) { .cpai-backdrop { display: none; } }
+        @media (max-width: 560px) { .cpai-hide-sm { display: none !important; } }
         .cpai-ta::placeholder { color: ${t.textMute}; }
         .cpai-ta { scrollbar-width: thin; }
       `}</style>
@@ -490,7 +496,7 @@ function Composer({ t, input, setInput, send, streaming, stop, taRef, attach, se
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
           placeholder={big ? "Ask anything — a doubt, a chapter, a coding task…" : "Reply to College Parichay AI…"}
-          style={{ flex: 1, resize: "none", border: "none", outline: "none", background: "transparent", color: t.text, fontSize: 15, lineHeight: 1.5, fontFamily: "inherit", maxHeight: 200, padding: "7px 0" }}
+          style={{ flex: 1, minWidth: 0, resize: "none", border: "none", outline: "none", background: "transparent", color: t.text, fontSize: 15, lineHeight: 1.5, fontFamily: "inherit", maxHeight: 200, padding: "7px 0" }}
         />
         <button onClick={toggleMic} style={{ ...iconBtn(t), color: listening ? t.accent : t.textDim }} aria-label="Voice input" title="Speak">
           <Mic size={18} />
@@ -500,9 +506,9 @@ function Composer({ t, input, setInput, send, streaming, stop, taRef, attach, se
         ) : (
           <button onClick={() => send()} disabled={!input.trim()} style={{
             width: 38, height: 38, borderRadius: 11, border: "none", flexShrink: 0,
-            background: input.trim() ? "linear-gradient(135deg,#F47E20,#E0421F)" : t.panelHi,
+            background: input.trim() ? "linear-gradient(135deg,#FF693D,#E0421F)" : t.panelHi,
             color: input.trim() ? "#fff" : t.textMute, display: "grid", placeItems: "center",
-            cursor: input.trim() ? "pointer" : "not-allowed", boxShadow: input.trim() ? "0 4px 14px rgba(244,126,32,.35)" : "none",
+            cursor: input.trim() ? "pointer" : "not-allowed", boxShadow: input.trim() ? "0 4px 14px rgba(255, 105, 61,.35)" : "none",
           }} aria-label="Send"><Send size={17} /></button>
         )}
       </div>
@@ -524,7 +530,7 @@ function ProfilePanel({ t, user, chats, onClose }) {
           <button onClick={onClose} style={iconBtn(t)} aria-label="Close"><X size={18} /></button>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 13, marginBottom: 22 }}>
-          <span style={{ width: 54, height: 54, borderRadius: "50%", background: "linear-gradient(135deg,#F47E20,#E0421F)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 22, fontFamily: t.display }}>
+          <span style={{ width: 54, height: 54, borderRadius: "50%", background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 22, fontFamily: t.display }}>
             {(user?.name || "S").charAt(0).toUpperCase()}
           </span>
           <div>

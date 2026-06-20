@@ -66,7 +66,7 @@ export default function CounsellingPlanner() {
       <section className="warm-page-header" style={{ padding: "52px 0 48px" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 60% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 45% 55% at 5% 80%, rgba(244,162,97,.20) 0%, transparent 60%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 35% 45% at 50% 110%, rgba(244,123,32,.14) 0%, transparent 55%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 35% 45% at 50% 110%, rgba(255, 105, 61,.14) 0%, transparent 55%)" }} />
 
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <span className="eyebrow">
@@ -79,7 +79,7 @@ export default function CounsellingPlanner() {
             display: "flex", alignItems: "center", gap: 10,
             color: "#1c1c28",
           }}>
-            <ListOrdered size={28} color="#F47E20" /> Plan your JoSAA choice order
+            <ListOrdered size={28} color="#FF693D" /> Plan your JoSAA choice order
           </h1>
           <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, fontSize: "0.97rem", lineHeight: 1.7 }}>
             Get your eligible options, drag them into your preferred order, and we'll show which seat you'd most likely be allotted — exactly how JoSAA fills choices.
@@ -115,7 +115,7 @@ export default function CounsellingPlanner() {
                         background: on ? "var(--coral)" : "transparent",
                         color: on ? "#fff" : "var(--ink)",
                         border: `1.6px solid ${on ? "var(--coral)" : "var(--line)"}`,
-                        boxShadow: on ? "0 6px 20px rgba(244,123,32,.30)" : "none",
+                        boxShadow: on ? "0 6px 20px rgba(255, 105, 61,.30)" : "none",
                       }}
                     >
                       <span style={{ fontWeight: 800 }}>{e.label}</span>
@@ -231,9 +231,9 @@ export default function CounsellingPlanner() {
                     ? "linear-gradient(135deg, #0d0800 0%, #1a0e00 50%, #2a1600 100%)"
                     : "#fff",
                   borderRadius: "var(--radius)",
-                  border: allot ? "1px solid rgba(244,123,32,.35)" : "1px solid rgba(0,0,0,.06)",
+                  border: allot ? "1px solid rgba(255, 105, 61,.35)" : "1px solid rgba(0,0,0,.06)",
                   boxShadow: allot
-                    ? "0 8px 36px rgba(0,0,0,.28), 0 0 24px rgba(244,123,32,.15)"
+                    ? "0 8px 36px rgba(0,0,0,.28), 0 0 24px rgba(255, 105, 61,.15)"
                     : "0 2px 14px rgba(28,28,40,.06)",
                   padding: "1.3rem 1.4rem",
                   position: "relative", overflow: "hidden",
@@ -250,7 +250,7 @@ export default function CounsellingPlanner() {
                   <div style={{
                     position: "absolute", top: 0, left: 0, right: 0, height: 3,
                     background: allot
-                      ? "linear-gradient(90deg, #F47E20, #fbbf24, #F47E20)"
+                      ? "linear-gradient(90deg, #FF693D, #fbbf24, #FF693D)"
                       : "var(--green)",
                   }} />
 
@@ -260,15 +260,15 @@ export default function CounsellingPlanner() {
                       display: "flex", alignItems: "center", gap: 8,
                       color: allot ? "#fff" : "var(--navy)",
                     }}>
-                      <Trophy size={18} color={allot ? "#F47E20" : "var(--green)"} />
+                      <Trophy size={18} color={allot ? "#FF693D" : "var(--green)"} />
                       Likely allotment
                     </h3>
 
                     {allot ? (
                       <>
                         <div style={{
-                          background: "rgba(244,123,32,.06)", borderRadius: 12, padding: 16,
-                          border: "1px solid rgba(244,123,32,.25)",
+                          background: "rgba(255, 105, 61,.06)", borderRadius: 12, padding: 16,
+                          border: "1px solid rgba(255, 105, 61,.25)",
                         }}>
                           <div style={{ fontSize: 12, color: "#6b7280" }}>
                             With rank {fmtRank(rank)}, JoSAA would most likely allot:
@@ -276,7 +276,7 @@ export default function CounsellingPlanner() {
                           <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: "#1a1a2e", margin: "6px 0 2px" }}>
                             {allot.college}
                           </div>
-                          <div style={{ color: "#F47E20", fontWeight: 600 }}>{allot.branch}</div>
+                          <div style={{ color: "#FF693D", fontWeight: 600 }}>{allot.branch}</div>
                           <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", marginTop: 6 }}>
                             Choice #{allotIndex + 1} · closing {fmtRank(allot.closing)} · avg {fmtINR(allot.avgPackage)}
                           </div>

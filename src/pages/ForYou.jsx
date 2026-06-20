@@ -29,7 +29,7 @@ const EXAM_PROFILES = {
     sub: "IIT admissions",
     icon: Trophy,
     color: "#e05a2b",
-    gradient: "linear-gradient(135deg,#F47E20 0%,#e05a2b 100%)",
+    gradient: "linear-gradient(135deg,#FF693D 0%,#e05a2b 100%)",
     types: ["IIT"],
     rankLabel: "Your JEE Advanced rank (CRL / category)",
     note: "Showing every IIT branch you're eligible for with your JEE Advanced rank.",
@@ -194,7 +194,7 @@ export default function ForYou() {
             <Sparkles size={13} /> Personalized
           </span>
           <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.9rem,4.5vw,2.7rem)", margin: "10px 0 6px", display: "flex", alignItems: "center", gap: 12, color: "#1c1c28" }}>
-            <span style={{ display: "grid", placeItems: "center", width: 46, height: 46, borderRadius: 14, background: "linear-gradient(135deg,#F47E20,#e05a2b)", boxShadow: "0 8px 22px -8px rgba(244,123,32,.7)" }}>
+            <span style={{ display: "grid", placeItems: "center", width: 46, height: 46, borderRadius: 14, background: "linear-gradient(135deg,#FF693D,#e05a2b)", boxShadow: "0 8px 22px -8px rgba(255, 105, 61,.7)" }}>
               <Wand2 size={24} color="#fff" />
             </span>
             Colleges for you
@@ -572,7 +572,7 @@ export default function ForYou() {
         .fy-mylist-empty { text-align: center; padding: 24px 8px; color: var(--muted); }
         .fy-mylist-empty p { font-size: 12.5px; line-height: 1.6; margin: 10px 0 0; }
         .fy-mylist-item { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; box-shadow: 0 1px 6px rgba(13,27,62,.05); cursor: default; }
-        .fy-mylist-num { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg,#F47E20,#E0421F); color: #fff; font-family: "Sora",sans-serif; font-weight: 800; font-size: 11px; }
+        .fy-mylist-num { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg,#FF693D,#E0421F); color: #fff; font-family: "Sora",sans-serif; font-weight: 800; font-size: 11px; }
         .fy-mylist-x { flex-shrink: 0; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; border: none; background: rgba(239,68,68,.08); color: #ef4444; cursor: pointer; transition: background .15s; }
         .fy-mylist-x:hover { background: rgba(239,68,68,.18); }
 

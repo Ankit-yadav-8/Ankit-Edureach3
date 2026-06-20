@@ -26,7 +26,7 @@ const SUBJECTS = [
     ],
   },
   {
-    id: "physics", name: "Physics", short: "Phy", icon: Atom, color: "#F47E20",
+    id: "physics", name: "Physics", short: "Phy", icon: Atom, color: "#FF693D",
     chapters: [
       "Units & Dimensions", "Kinematics", "Laws of Motion", "Work, Energy & Power",
       "Rotational Motion", "Gravitation", "Properties of Matter", "Thermodynamics",
@@ -127,7 +127,7 @@ export default function ChapterAnalysis() {
   const exam = params.get("exam") === "advanced" ? "advanced" : "main";
   const [subject, setSubject] = useState("all");
   const examLabel = exam === "advanced" ? "JEE Advanced" : "JEE Main";
-  const accent = exam === "advanced" ? "#7C3AED" : "#F47E20";
+  const accent = exam === "advanced" ? "#7C3AED" : "#FF693D";
 
   useEffect(() => { document.title = `${examLabel} — Chapter Weightage & Difficulty · College Parichay`; window.scrollTo(0, 0); }, [examLabel]);
 

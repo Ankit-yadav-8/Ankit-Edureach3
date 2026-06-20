@@ -74,7 +74,7 @@ export default function NeetColleges() {
       {/* Page header */}
       <section className="warm-page-header">
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 30%, rgba(21,160,110,.18) 0%, transparent 60%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 60% at 0% 100%, rgba(244,123,32,.16) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 60% at 0% 100%, rgba(255, 105, 61,.16) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <span style={{
@@ -130,7 +130,7 @@ export default function NeetColleges() {
                   style={{
                     padding: "7px 15px", borderRadius: 50, fontSize: 13, fontWeight: 600,
                     fontFamily: "Sora", cursor: "pointer", border: "none",
-                    background: mgmt === t ? (t === "Government" ? "#15a06e" : t === "All" ? "#F47E20" : "#8b5cf6") : "transparent",
+                    background: mgmt === t ? (t === "Government" ? "#15a06e" : t === "All" ? "#FF693D" : "#8b5cf6") : "transparent",
                     color: mgmt === t ? "#fff" : "#6b7280",
                     boxShadow: mgmt === t ? "0 2px 10px rgba(0,0,0,.15)" : "none",
                   }}>

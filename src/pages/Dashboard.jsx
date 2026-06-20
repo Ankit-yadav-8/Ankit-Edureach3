@@ -10,8 +10,8 @@ import { useAuth } from "../auth/AuthContext.jsx";
 import { useEnrol } from "../components/EnrolModal.jsx";
 import { apiMyEnrollments, apiUpdateProfile } from "../auth/api.js";
 
-const ORANGE = "#F47E20";
-const GOLD = "#F47E20";
+const ORANGE = "#FF693D";
+const GOLD = "#FF693D";
 const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
 
@@ -63,7 +63,7 @@ const fmtDate = (iso) =>
 const QUICK_LINKS = [
   { label: "JEE Resources",       desc: "Chapter-wise notes & PYQs", to: "/jee-resources",   color: "#6366f1", icon: BookOpen },
   { label: "NEET Prep",           desc: "Biology · Physics · Chem",  to: "/neet",            color: "#0ea5a4", icon: BookOpen },
-  { label: "College Predictor",   desc: "Rank → college list",       to: "/jee-main#college", color: "#F47E20", icon: Sparkles },
+  { label: "College Predictor",   desc: "Rank → college list",       to: "/jee-main#college", color: "#FF693D", icon: Sparkles },
   { label: "Counselling Planner", desc: "Every JoSAA & CSAB date",   to: "/planner",         color: "#15a06e", icon: Calendar },
 ];
 
@@ -199,7 +199,7 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
 
         {/* header */}
         <div style={{ background: `linear-gradient(135deg, ${NAVY}, #14264f)`, color: "#fff", padding: "22px 24px", position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", top: -30, right: -10, width: 160, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.35), transparent 70%)" }} />
+          <div style={{ position: "absolute", top: -30, right: -10, width: 160, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(255, 105, 61,.35), transparent 70%)" }} />
           <button onClick={onClose} disabled={busy} aria-label="Close"
             style={{ position: "absolute", top: 14, right: 14, width: 34, height: 34, borderRadius: "50%", border: "none", background: "rgba(255,255,255,.16)", color: "#fff", cursor: busy ? "not-allowed" : "pointer", display: "grid", placeItems: "center" }}>
             <X size={17} />
@@ -313,7 +313,7 @@ export default function Dashboard() {
 
         {/* Hero header */}
         <div style={{ background: `linear-gradient(135deg, ${NAVY}, #14264f)`, borderRadius: 24, padding: "30px 28px", color: "#fff", display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap", position: "relative", overflow: "hidden", marginBottom: 24 }}>
-          <div style={{ position: "absolute", top: -40, right: -20, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.35), transparent 70%)" }} />
+          <div style={{ position: "absolute", top: -40, right: -20, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(255, 105, 61,.35), transparent 70%)" }} />
           <div style={{ width: 72, height: 72, borderRadius: "50%", background: ORANGE, display: "grid", placeItems: "center", fontSize: 30, fontWeight: 800, fontFamily: "Sora", flexShrink: 0 }}>
             {(user?.name || user?.email || "U").charAt(0).toUpperCase()}
           </div>

@@ -265,8 +265,8 @@ export default function CollegeDetail() {
           {[
             ["Avg package", fmtINR(college.placements.avg),         "var(--navy)",   "#1c1c28"],
             ["Highest",     fmtINR(college.placements.highest),      "var(--green)",  "#15a06e"],
-            ["Placed",      `${college.placements.placedPct}%`,      "var(--orange)", "#F47E20"],
-            ["Total fees",  `${fmtINR(totalFee)}/yr`,                "var(--violet)", "#F47E20"],
+            ["Placed",      `${college.placements.placedPct}%`,      "var(--orange)", "#FF693D"],
+            ["Total fees",  `${fmtINR(totalFee)}/yr`,                "var(--violet)", "#FF693D"],
           ].map(([l, v, c, hex], i) => (
             <motion.div
               key={l}
@@ -354,7 +354,7 @@ export default function CollegeDetail() {
                     data={placeData}
                     centerLabel={fmtINR(college.placements.avg)}
                     centerSub="avg package"
-                    colors={["#F47E20","#2EC4B6","#0EA5A4","#F47E20","#0EA5A4","#F4A261"]}
+                    colors={["#FF693D","#2EC4B6","#0EA5A4","#FF693D","#0EA5A4","#F4A261"]}
                     height={180}
                   />
                 </div>
@@ -419,7 +419,7 @@ export default function CollegeDetail() {
                   </h4>
                   <PieWithLegend
                     data={feeData}
-                    colors={["#F47E20","#2EC4B6","#0EA5A4","#0EA5A4"]}
+                    colors={["#FF693D","#2EC4B6","#0EA5A4","#0EA5A4"]}
                     height={240}
                     fmt={fmtINR}
                   />
@@ -496,7 +496,7 @@ export default function CollegeDetail() {
                 </h4>
                 <Bars
                   data={placeData}
-                  bars={[{ key: "value", label: "Avg package", color: "#F47E20" }]}
+                  bars={[{ key: "value", label: "Avg package", color: "#FF693D" }]}
                   height={300} fmt={fmtINR} angle={-20}
                 />
               </div>

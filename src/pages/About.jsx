@@ -39,7 +39,7 @@ const FOUNDERS = [
     initials: "AY",
     photo: "/assets/team/ankit2.PNG",
     role: "Founder & CEO",
-    accent: "#F47E20",
+    accent: "#FF693D",
     edu: "B.Tech, IIT Roorkee",
    bio: "Hi, I'm Ankit Yadav, an IIT Roorkee graduate and the founder of College Parichay — a platform built to make college guidance simpler, clearer, and more accessible for students across India. During my own journey, I saw how confusing the college and career decision process can be. That experience inspired me to create College Parichay with one simple belief: \"Students need clarity, not confusion.\" Through authentic insights, relatable experiences, and a community-driven approach, we aim to help students make informed decisions with confidence.",
     skills: ["Product Strategy", "React", "Leadership", "Data Analysis", "UX"],
@@ -50,7 +50,7 @@ const FOUNDERS = [
     initials: "AK",
     photo: "/assets/team/ankit.png?v=2",
     role: "Co-Founder & CTO",
-    accent: "#F47E20",
+    accent: "#FF693D",
     badge: "Visionary behind the Platform",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
     bio: "Hi,I’m Ankit Kumar, Co-Founder & CTO of College Parichay and an IIT Roorkee alumnus. I lead the technical vision and execution of our platform, architecting everything from intuitive user interfaces to scalable data pipelines and backend infrastructure. I know firsthand how chaotic the college admission process is—because I’ve been there. Building College Parichay is my way of using technology to solve a massive real-world problem. My mission is simple: to turn complex admission data into clear, actionable insights so every student can make confident decisions.",
@@ -66,7 +66,7 @@ const OPERATIONS = [
     initials: "KG",
     photo: "/assets/team/K.Gopal.jpeg",
     role: "COO & Operations Head",
-    accent: "#F47E20",
+    accent: "#FF693D",
     edu: "B.Tech, IIT Roorkee",
     bio: "Hi, I'm K. Gopal, Operations Head at College Parichay and an IIT Roorkee student. I oversee all operational aspects of the platform — ensuring seamless day-to-day functioning, team coordination, and execution across departments. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Being part of College Parichay is my way of channelling that experience into something that truly matters. One mission: helping every student make confident, data-driven decisions.",
     skills: ["Operations", "Team Coordination", "Execution", "Strategy", "Communication", "Management"],
@@ -76,7 +76,7 @@ const OPERATIONS = [
 
 /* ── Values ────────────────────────────────────────────────── */
 const VALUES = [
-  { icon: ShieldCheck, color: "#F47E20", t: "Honest, not hype",     d: "Real data and clear caveats. We tell you when a number is an estimate — never fake certainty." },
+  { icon: ShieldCheck, color: "#FF693D", t: "Honest, not hype",     d: "Real data and clear caveats. We tell you when a number is an estimate — never fake certainty." },
   { icon: Heart,       color: "#EC4899", t: "Student-first always", d: "Built by people who were students yesterday. Every feature answers a question we once had." },
   { icon: Lightbulb,   color: "#EAB308", t: "Clarity over clutter", d: "Clean, simple, fast. Counselling is stressful enough without a confusing website." },
   { icon: Code2,       color: "#7C3AED", t: "Data-driven",          d: "Every predictor and cutoff is backed by verified JoSAA & NTA data from 2019–2025." },
@@ -87,7 +87,7 @@ const VALUES = [
 /* ── Story timeline ────────────────────────────────────────── */
 const TIMELINE = [
   {
-    year: "May 2026", icon: "💡", color: "#F47E20",
+    year: "May 2026", icon: "💡", color: "#FF693D",
     title: "The Frustration That Started It All",
     content: "Sitting in a hostel room at IIT Roorkee right after JoSAA Round 1, we watched a batchmate nearly lose his preferred branch to bad information — outdated cutoff PDFs, contradictory WhatsApp forwards and no clear way to compare options. That single moment became the spark for College Parichay.",
   },
@@ -119,7 +119,7 @@ const TIMELINE = [
 ];
 
 /* ── Animated count-up stat (no glow) ──────────────────────── */
-function Stat({ target, suffix, label, color = "#F47E20" }) {
+function Stat({ target, suffix, label, color = "#FF693D" }) {
   const [ref, val] = useCountUp(target);
   return (
     <div ref={ref} style={{ textAlign: "center" }}>
@@ -209,7 +209,7 @@ function SectionHead({ icon: Icon, eyebrow, title, sub }) {
     >
       <span style={{
         display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 14,
-        background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.3)",
+        background: "rgba(255, 105, 61,.1)", border: "1px solid rgba(255, 105, 61,.3)",
         color: "#c2410c", padding: "5px 18px", borderRadius: 50, fontSize: 12, fontWeight: 700, letterSpacing: ".5px",
       }}>
         {Icon && <Icon size={12} />} {eyebrow}
@@ -247,10 +247,10 @@ function TeamCard({ f, idx, badgeIcon: BadgeIcon, badgeLabel }) {
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 10, alignSelf: "flex-start",
             padding: "10px 20px", borderRadius: 14,
-            background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.3)",
+            background: "rgba(255, 105, 61,.1)", border: "1px solid rgba(255, 105, 61,.3)",
           }}>
-            <GraduationCap size={22} color="#F47E20" />
-            <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: "1.25rem", color: "#F47E20", letterSpacing: "-0.02em" }}>IIT Roorkee</span>
+            <GraduationCap size={22} color="#FF693D" />
+            <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: "1.25rem", color: "#FF693D", letterSpacing: "-0.02em" }}>IIT Roorkee</span>
           </div>
 
           <span style={{
@@ -295,7 +295,7 @@ function TeamCard({ f, idx, badgeIcon: BadgeIcon, badgeLabel }) {
         {/* ── Right: photo column ── */}
         <div className="team-photo-col" style={{
           width: 420, flexShrink: 0,
-          background: "linear-gradient(160deg, rgba(244,123,32,.12) 0%, rgba(251,191,36,.07) 60%, rgba(244,123,32,.05) 100%)",
+          background: "linear-gradient(160deg, rgba(255, 105, 61,.12) 0%, rgba(251,191,36,.07) 60%, rgba(255, 105, 61,.05) 100%)",
           display: "flex", alignItems: "center", justifyContent: "center",
           position: "relative", overflow: "hidden", padding: "28px 20px",
         }}>
@@ -327,7 +327,7 @@ export default function About() {
       `}</style>
 
       {/* ── HERO ── */}
-      <section style={{ position: "relative", overflow: "hidden", background: "#ffffff", padding: "84px 0 72px", borderBottom: "1px solid rgba(244,123,32,.12)" }}>
+      <section style={{ position: "relative", overflow: "hidden", background: "#ffffff", padding: "84px 0 72px", borderBottom: "1px solid rgba(255, 105, 61,.12)" }}>
         {/* animated IIT Roorkee backdrop */}
         <motion.div
           aria-hidden="true"
@@ -348,11 +348,11 @@ export default function About() {
         <div className="container" style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
           <span style={{
             display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 22,
-            background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.3)",
+            background: "rgba(255, 105, 61,.1)", border: "1px solid rgba(255, 105, 61,.3)",
             color: "#c2410c", padding: "5px 16px 5px 5px", borderRadius: 50,
             fontSize: 13, fontWeight: 700, letterSpacing: ".5px",
           }}>
-            <span style={{ width: 26, height: 26, borderRadius: "50%", background: "#F47E20", display: "grid", placeItems: "center", flexShrink: 0 }}>
+            <span style={{ width: 26, height: 26, borderRadius: "50%", background: "#FF693D", display: "grid", placeItems: "center", flexShrink: 0 }}>
               <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: "11px", letterSpacing: "-0.5px", lineHeight: 1 }}>CP</span>
             </span>
             About College Parichay
@@ -365,7 +365,7 @@ export default function About() {
             textShadow: "0 1px 10px rgba(255,255,255,.9), 0 1px 2px rgba(255,255,255,.95)",
           }}>
             Made by students who've been{" "}
-            <span style={{ color: "#F47E20" }}>exactly where you are</span>
+            <span style={{ color: "#FF693D" }}>exactly where you are</span>
           </h1>
 
           <p style={{ color: "#334155", maxWidth: 640, margin: "0 auto 36px", fontSize: "1.08rem", lineHeight: 1.75, fontWeight: 500, textShadow: "0 1px 6px rgba(255,255,255,.92)" }}>
@@ -442,11 +442,11 @@ export default function About() {
 
           <Reveal>
             <div style={{
-              borderLeft: "5px solid #F47E20", borderRadius: "0 16px 16px 0",
-              background: "rgba(244,123,32,.06)", padding: "30px 34px",
+              borderLeft: "5px solid #FF693D", borderRadius: "0 16px 16px 0",
+              background: "rgba(255, 105, 61,.06)", padding: "30px 34px",
               display: "flex", gap: 18, marginBottom: 38, maxWidth: 1040,
             }}>
-              <Quote size={38} color="#F47E20" style={{ flexShrink: 0, marginTop: 4 }} />
+              <Quote size={38} color="#FF693D" style={{ flexShrink: 0, marginTop: 4 }} />
               <p style={{ fontStyle: "italic", color: "var(--navy)", fontSize: "1.32rem", lineHeight: 1.62, fontWeight: 500, margin: 0 }}>
                 "We're not a faceless portal. We're <strong>IIT&nbsp;Roorkee</strong> engineers who lived this chaos and decided to fix it for the next student. Every feature on College Parichay answers a question one of us once had — and found no good answer to."
               </p>
@@ -464,11 +464,11 @@ export default function About() {
                 <div key={name} style={{
                   display: "flex", flexDirection: "column", gap: 3,
                   padding: "16px 24px", borderRadius: 16, background: "#fff",
-                  border: "1px solid rgba(244,123,32,.28)", boxShadow: "0 4px 18px rgba(13,27,62,.06)",
+                  border: "1px solid rgba(255, 105, 61,.28)", boxShadow: "0 4px 18px rgba(13,27,62,.06)",
                   minWidth: 200, flex: "1 1 220px",
                 }}>
                   <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.18rem", color: "var(--navy)" }}>{name}</span>
-                  <span style={{ fontSize: 13.5, fontWeight: 700, color: "#F47E20" }}>{role}</span>
+                  <span style={{ fontSize: 13.5, fontWeight: 700, color: "#FF693D" }}>{role}</span>
                   <span style={{ fontSize: 12.5, color: "var(--muted)", display: "inline-flex", alignItems: "center", gap: 5, marginTop: 2 }}>
                     <GraduationCap size={13} /> IIT Roorkee
                   </span>
@@ -482,7 +482,7 @@ export default function About() {
           </h3>
 
           <div style={{ position: "relative" }}>
-            <div style={{ position: "absolute", left: 20, top: 0, bottom: 0, width: 2, background: "rgba(244,123,32,.25)", borderRadius: 2 }} />
+            <div style={{ position: "absolute", left: 20, top: 0, bottom: 0, width: 2, background: "rgba(255, 105, 61,.25)", borderRadius: 2 }} />
             {TIMELINE.map((item, i) => (
               <Reveal key={item.year} delay={i * 0.05}>
                 <div style={{ display: "flex", gap: 24, marginBottom: 28, position: "relative" }}>
@@ -516,10 +516,10 @@ export default function About() {
             gap: 16, maxWidth: 880, margin: "0 auto 44px",
           }}>
             {[
-              { icon: Users,       val: "3,200+", lbl: "Students helped",    bg: "rgba(244,123,32,.12)", color: "#F47E20" },
+              { icon: Users,       val: "3,200+", lbl: "Students helped",    bg: "rgba(255, 105, 61,.12)", color: "#FF693D" },
               { icon: BookOpen,    val: "850+",   lbl: "Colleges listed",    bg: "rgba(14,165,164,.12)", color: "#0ea5a4" },
               { icon: Target,      val: "98% acc",lbl: "Rank predictions",   bg: "rgba(34,197,94,.12)",  color: "#22c55e" },
-              { icon: TrendingUp,  val: "1.2M+",  lbl: "Cutoff data points", bg: "rgba(244,123,32,.12)", color: "#F47E20" },
+              { icon: TrendingUp,  val: "1.2M+",  lbl: "Cutoff data points", bg: "rgba(255, 105, 61,.12)", color: "#FF693D" },
             ].map(({ icon: Icon, val, lbl, bg, color }) => (
               <div key={lbl} style={{
                 display: "flex", alignItems: "center", gap: 12,
@@ -538,7 +538,7 @@ export default function About() {
           </div>
 
           <div className="grid-4">
-            <Stat target={COLLEGES.length} suffix="+" label="Colleges profiled"     color="#F47E20" />
+            <Stat target={COLLEGES.length} suffix="+" label="Colleges profiled"     color="#FF693D" />
             <Stat target={EXAMS.length}   suffix=""  label="Entrance exams tracked" color="#a855f7" />
             <Stat target={3200}           suffix="+" label="Students guided"        color="#2EC4B6" />
             <Stat target={5}              suffix="-yr" label="Cutoff history"       color="#EC4899" />
@@ -546,7 +546,7 @@ export default function About() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 44 }} className="about-highlight-grid">
             {[
-              { icon: "🏆", title: "AIR 3846", sub: "Co-Founder's JEE Advanced rank — built this from lived experience", color: "#F47E20" },
+              { icon: "🏆", title: "AIR 3846", sub: "Co-Founder's JEE Advanced rank — built this from lived experience", color: "#FF693D" },
               { icon: "📊", title: "7 Years of Data", sub: "JoSAA cutoffs from 2019–2025 across 800+ colleges structured & verified", color: "#a855f7" },
               { icon: "🎓", title: "IIT Roorkee", sub: "Built by B.Tech students — the same IIT grind that shaped the platform", color: "#2EC4B6" },
             ].map(({ icon, title, sub, color }, i) => (
@@ -596,7 +596,7 @@ export default function About() {
         <div className="container">
           <div style={{
             maxWidth: 720, margin: "0 auto", textAlign: "center",
-            background: "#fff", border: "1px solid rgba(244,123,32,.2)",
+            background: "#fff", border: "1px solid rgba(255, 105, 61,.2)",
             borderRadius: 28, padding: "48px 40px",
             boxShadow: "0 10px 36px rgba(13,27,62,.08)",
           }}>
@@ -625,7 +625,7 @@ export default function About() {
                   background: "#fff", border: "1px solid rgba(0,0,0,.12)",
                   color: "var(--navy)", textDecoration: "none", transition: "all .2s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(244,123,32,.5)"; e.currentTarget.style.color = "#c2410c"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(255, 105, 61,.5)"; e.currentTarget.style.color = "#c2410c"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,.12)"; e.currentTarget.style.color = "var(--navy)"; }}
                 >
                   <Icon size={14} /> {label}

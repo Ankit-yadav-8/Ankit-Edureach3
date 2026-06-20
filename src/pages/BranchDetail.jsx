@@ -292,7 +292,7 @@ export default function BranchDetail() {
               <HeaderStat icon={Briefcase} value={b.stats.jobGrowth} label="Job Growth" color={CL.green} />
               <HeaderStat icon={IndianRupee} value={b.stats.medianSalary} label="Median Salary" color={CL.amber} />
               <HeaderStat icon={ShieldCheck} value={`${b.stats.aiRisk}/100`} label="AI Risk" color={CL.coral} />
-              <button onClick={() => setTab("insights")} title="Jump to insights" style={{ width: 46, height: 46, borderRadius: "50%", background: CL.coral, display: "grid", placeItems: "center", boxShadow: "0 8px 20px rgba(244,126,32,.35)" }}>
+              <button onClick={() => setTab("insights")} title="Jump to insights" style={{ width: 46, height: 46, borderRadius: "50%", background: CL.coral, display: "grid", placeItems: "center", boxShadow: "0 8px 20px rgba(255, 105, 61,.35)" }}>
                 <ArrowDown size={20} color="#fff" />
               </button>
             </div>

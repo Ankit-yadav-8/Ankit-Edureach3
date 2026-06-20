@@ -243,7 +243,7 @@ function ResultCard({ result, onReset }) {
           {[170, 120, 72].map((d, i) => (
             <span key={d} style={{ position: "absolute", top: "50%", left: "50%", width: d, height: d, transform: "translate(-50%,-50%)", borderRadius: "50%", border: `1px dashed ${CL.cream3}` }} />
           ))}
-          <span style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 60, height: 60, borderRadius: 16, background: CL.coral, display: "grid", placeItems: "center", boxShadow: "0 10px 30px rgba(244,126,32,.4)" }}>
+          <span style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 60, height: 60, borderRadius: 16, background: CL.coral, display: "grid", placeItems: "center", boxShadow: "0 10px 30px rgba(255, 105, 61,.4)" }}>
             <GitCompareArrows size={26} color="#fff" />
           </span>
           {FACTORS.map((f, i) => {

@@ -7,7 +7,7 @@ import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
 
 const TOKEN_STORAGE = "edureach:adminToken";
-const ORANGE = "#F47E20";
+const ORANGE = "#FF693D";
 
 const fmtDate = (iso) => {
   if (!iso) return "—";
@@ -55,7 +55,7 @@ const fuzzyMatch = (value, q) => {
 };
 
 const avatarColor = (str) => {
-  const colors = ["#6366f1","#f59e0b","#10b981","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#F47E20"];
+  const colors = ["#6366f1","#f59e0b","#10b981","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#FF693D"];
   let hash = 0;
   for (let i = 0; i < (str || "").length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
   return colors[Math.abs(hash) % colors.length];
@@ -404,8 +404,8 @@ export default function Admin() {
                   border: "none", cursor: "pointer", borderRadius: 50,
                   fontFamily: "Sora", fontWeight: 700, fontSize: 14,
                   color: active ? "#fff" : "#7c7368",
-                  background: active ? "linear-gradient(135deg,#F47E20,#E0421F)" : "transparent",
-                  boxShadow: active ? "0 6px 16px rgba(244,126,32,.32)" : "none",
+                  background: active ? "linear-gradient(135deg,#FF693D,#E0421F)" : "transparent",
+                  boxShadow: active ? "0 6px 16px rgba(255, 105, 61,.32)" : "none",
                 }}>
                 <Icon size={16} /> {label}
                 {count !== undefined && (

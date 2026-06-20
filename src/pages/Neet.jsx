@@ -24,7 +24,7 @@ import {
 ═══════════════════════════════════════════════════════════ */
 
 const ACCENT = "#15a06e";   // NEET green
-const C_PHY = "#F47E20";    // Physics — orange
+const C_PHY = "#FF693D";    // Physics — orange
 const C_CHEM = "#0EA5A4";   // Chemistry — teal
 const C_BIO = "#15a06e";    // Biology — green
 
@@ -121,8 +121,8 @@ const MARKS_VS_RANK = [
   { lo: 620, label: "620 – 649", airLo: 2800,   airHi: 7500,    rank: "2,800 – 7,500",     color: "#0EA5A4" },
   { lo: 600, label: "600 – 619", airLo: 7500,   airHi: 15000,   rank: "7,500 – 15,000",    color: "#EAB308" },
   { lo: 580, label: "580 – 599", airLo: 15000,  airHi: 27000,   rank: "15,000 – 27,000",   color: "#EAB308" },
-  { lo: 550, label: "550 – 579", airLo: 27000,  airHi: 52000,   rank: "27,000 – 52,000",   color: "#F47E20" },
-  { lo: 500, label: "500 – 549", airLo: 52000,  airHi: 95000,   rank: "52,000 – 95,000",   color: "#F47E20" },
+  { lo: 550, label: "550 – 579", airLo: 27000,  airHi: 52000,   rank: "27,000 – 52,000",   color: "#FF693D" },
+  { lo: 500, label: "500 – 549", airLo: 52000,  airHi: 95000,   rank: "52,000 – 95,000",   color: "#FF693D" },
   { lo: 450, label: "450 – 499", airLo: 95000,  airHi: 160000,  rank: "95,000 – 1.6 L",    color: "#EF4444" },
   { lo: 0,   label: "Below 450", airLo: 160000, airHi: 1100000, rank: "1.6 L – 11 L",      color: "#EF4444" },
 ];
@@ -234,7 +234,7 @@ const ROADMAP = [
 
 const COACHING = [
   { name: "Aakash (BYJU'S)", city: "Pan-India (300+ centres)", color: "#0EA5A4", badge: "🏆 #1 for NEET", highlights: ["India's most NEET-focused coaching brand", "Largest medical-selection numbers each year", "ANTHE scholarship exam for fee waiver", "Classroom + hybrid + online (iTutor)"], website: "https://www.aakash.ac.in", fee: "₹1.2L – ₹2.6L/year", mode: "Offline / Online" },
-  { name: "Allen Career Institute", city: "Kota, Rajasthan", color: "#F47E20", badge: "⭐ Top Results", highlights: ["Legendary Kota ecosystem for NEET", "Strong Biology & Physical Chemistry faculty", "Dropper & 2-year integrated batches", "All-India test series for self-studiers"], website: "https://www.allen.ac.in", fee: "₹1.4L – ₹2.6L/year", mode: "Offline / Online" },
+  { name: "Allen Career Institute", city: "Kota, Rajasthan", color: "#FF693D", badge: "⭐ Top Results", highlights: ["Legendary Kota ecosystem for NEET", "Strong Biology & Physical Chemistry faculty", "Dropper & 2-year integrated batches", "All-India test series for self-studiers"], website: "https://www.allen.ac.in", fee: "₹1.4L – ₹2.6L/year", mode: "Offline / Online" },
   { name: "Narayana / Sri Chaitanya", city: "Hyderabad + Pan-India", color: "#7C3AED", badge: "📍 Residential", highlights: ["Strongest in South India medical results", "Integrated school + residential model", "Pinnacle / Super-30 batches for toppers", "Affordable, scholarship-driven admissions"], website: "https://www.narayanagroup.com", fee: "₹90K – ₹2.0L/year", mode: "Offline / Residential" },
   { name: "Physics Wallah (PW)", city: "Online + Vidyapeeth", color: "#15A06E", badge: "💻 Best Value", highlights: ["Most affordable quality NEET coaching", "Arjuna / Yakeen NEET batches", "Live + recorded lectures, strong faculty", "Great with disciplined NCERT self-study"], website: "https://www.pw.live", fee: "₹4K – ₹40K/year", mode: "Online / Offline" },
   { name: "Unacademy / Vedantu", city: "Online (Pan-India)", color: "#EC4899", badge: "🖥 Online Live", highlights: ["Live interactive classes with top educators", "Affordable vs offline Kota coaching", "Doubt sessions, test series & analytics", "Flexible — ideal for school-going aspirants"], website: "https://unacademy.com", fee: "₹25K – ₹1.0L/year", mode: "Online" },
@@ -253,13 +253,13 @@ const ELIGIBILITY = [
 /* ── Helpers ── */
 function diffIndex(val) {
   if (val >= 80) return { label: "Very Hard", color: "#EF4444", bg: "#fee2e2" };
-  if (val >= 70) return { label: "Hard",      color: "#F47E20", bg: "#fff7ed" };
+  if (val >= 70) return { label: "Hard",      color: "#FF693D", bg: "#fff7ed" };
   if (val >= 55) return { label: "Moderate",  color: "#EAB308", bg: "#fefce8" };
   return               { label: "Easy",      color: "#15A06E", bg: "#d1fae5" };
 }
 function overallMeta(t) {
   const s = t.toLowerCase();
-  if (s.includes("difficult") || s.includes("toughest")) return { color: "#F47E20", bg: "#fff7ed" };
+  if (s.includes("difficult") || s.includes("toughest")) return { color: "#FF693D", bg: "#fff7ed" };
   if (s.includes("easy")) return { color: "#15A06E", bg: "#d1fae5" };
   return { color: "#EAB308", bg: "#fefce8" };
 }
@@ -690,7 +690,7 @@ export default function Neet() {
         cta={{ label: "Predict my NEET rank", to: "#rank" }}
         cards={[
           { icon: GaugeIcon, accent: "#15a06e", category: "Tool", title: "NEET Rank Predictor", meta: "720 marks → All-India Rank", badge: "LIVE" },
-          { icon: Building2, accent: "#F47E20", category: "Tool", title: "MBBS College Finder", meta: "AIQ + state quota cutoffs", badge: "LIVE" },
+          { icon: Building2, accent: "#FF693D", category: "Tool", title: "MBBS College Finder", meta: "AIQ + state quota cutoffs", badge: "LIVE" },
           { icon: TrendingUp, accent: "#6366f1", category: "Trends", title: "Cut-off & Topper Trends", meta: "Category-wise closing ranks" },
         ]}
       />

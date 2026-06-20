@@ -4,7 +4,7 @@ import { RADAR } from "../../data/counselling.js";
 
 const TONE = {
   red:    { bg: "rgba(239,68,68,.12)",   fg: "#dc2626", dot: "#ef4444", glow: "rgba(239,68,68,.28)",  border: "rgba(239,68,68,.30)",  pulse: true  },
-  orange: { bg: "rgba(244,123,32,.12)",  fg: "#c2540a", dot: "#F47E20", glow: "rgba(244,123,32,.28)", border: "rgba(244,123,32,.30)", pulse: true  },
+  orange: { bg: "rgba(255, 105, 61,.12)",  fg: "#c2540a", dot: "#FF693D", glow: "rgba(255, 105, 61,.28)", border: "rgba(255, 105, 61,.30)", pulse: true  },
   teal:   { bg: "rgba(14,165,164,.12)",  fg: "#0e7490", dot: "#0ea5a4", glow: "rgba(14,165,164,.24)", border: "rgba(14,165,164,.28)", pulse: false },
 };
 
@@ -59,8 +59,8 @@ export default function ApplicationRadar() {
       <div style={{
         position: "absolute", inset: 0,
         backgroundImage:
-          "linear-gradient(rgba(244,123,32,.04) 1px, transparent 1px)," +
-          "linear-gradient(90deg, rgba(244,123,32,.04) 1px, transparent 1px)",
+          "linear-gradient(rgba(255, 105, 61,.04) 1px, transparent 1px)," +
+          "linear-gradient(90deg, rgba(255, 105, 61,.04) 1px, transparent 1px)",
         backgroundSize: "40px 40px",
         pointerEvents: "none",
       }} />
@@ -75,8 +75,8 @@ export default function ApplicationRadar() {
             <span
               className="eyebrow"
               style={{
-                background: "rgba(244,123,32,.1)",
-                border: "1px solid rgba(244,123,32,.28)",
+                background: "rgba(255, 105, 61,.1)",
+                border: "1px solid rgba(255, 105, 61,.28)",
                 color: "#c2540a",
                 gap: 8,
               }}
@@ -89,7 +89,7 @@ export default function ApplicationRadar() {
             </span>
             <h2 className="section-title" style={{ color: "#1a1a2e", letterSpacing: "-1px", marginTop: 10 }}>
               Application &amp; Counselling{" "}
-              <span style={{ color: "#F47E20" }}>Radar</span>
+              <span style={{ color: "#FF693D" }}>Radar</span>
             </h2>
             <p className="section-sub" style={{ marginLeft: 0, color: "#4b5563" }}>
               Never miss a date — every major counselling and application window in one timeline.
@@ -105,20 +105,20 @@ export default function ApplicationRadar() {
                 aria-label={dir < 0 ? "Scroll left" : "Scroll right"}
                 style={{
                   width: 42, height: 42, borderRadius: "50%",
-                  background: "rgba(244,123,32,.12)",
-                  border: "1.5px solid rgba(244,123,32,.35)",
-                  color: "#F47E20",
+                  background: "rgba(255, 105, 61,.12)",
+                  border: "1.5px solid rgba(255, 105, 61,.35)",
+                  color: "#FF693D",
                   display: "grid", placeItems: "center",
                   cursor: "pointer", transition: "all .22s",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background   = "rgba(244,123,32,.26)";
-                  e.currentTarget.style.borderColor  = "rgba(244,123,32,.60)";
-                  e.currentTarget.style.boxShadow    = "0 0 18px rgba(244,123,32,.35)";
+                  e.currentTarget.style.background   = "rgba(255, 105, 61,.26)";
+                  e.currentTarget.style.borderColor  = "rgba(255, 105, 61,.60)";
+                  e.currentTarget.style.boxShadow    = "0 0 18px rgba(255, 105, 61,.35)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background   = "rgba(244,123,32,.12)";
-                  e.currentTarget.style.borderColor  = "rgba(244,123,32,.35)";
+                  e.currentTarget.style.background   = "rgba(255, 105, 61,.12)";
+                  e.currentTarget.style.borderColor  = "rgba(255, 105, 61,.35)";
                   e.currentTarget.style.boxShadow    = "";
                 }}
               >

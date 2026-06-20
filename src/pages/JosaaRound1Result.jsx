@@ -64,7 +64,7 @@ const TIMELINE = [
   ["CSAB special rounds", "Jul 2026", "After JoSAA closes, CSAB fills the leftover NIT / IIIT / GFTI seats — often the biggest last-minute upgrades."],
 ];
 
-const FFS_COLOR_BY_TIER = { iit: "#F47E20", nit: "#6366f1", iiit: "#0ea5a4" };
+const FFS_COLOR_BY_TIER = { iit: "#FF693D", nit: "#6366f1", iiit: "#0ea5a4" };
 const TIER_LABEL = { iit: "IIT", nit: "NIT", iiit: "IIIT" };
 
 function ActionTab({ opt, active, onClick }) {
@@ -128,7 +128,7 @@ export default function JosaaRound1Result() {
         >
           <motion.span
             className="josr-live"
-            animate={{ boxShadow: ["0 4px 16px rgba(244,123,32,.25)", "0 8px 30px rgba(244,123,32,.55)", "0 4px 16px rgba(244,123,32,.25)"] }}
+            animate={{ boxShadow: ["0 4px 16px rgba(255, 105, 61,.25)", "0 8px 30px rgba(255, 105, 61,.55)", "0 4px 16px rgba(255, 105, 61,.25)"] }}
             transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
           >
             <Megaphone size={12} /> LIVE · ROUND 1 RESULT OUT
@@ -220,7 +220,7 @@ export default function JosaaRound1Result() {
           </motion.div>
 
           <div className="josr-ffs-help">
-            <ShieldCheck size={18} color="#F47E20" />
+            <ShieldCheck size={18} color="#FF693D" />
             <span>Not sure which to pick for your rank &amp; preferences? Our mentors decide it with you, every round.</span>
             <button className="josr-btn josr-btn--primary josr-btn--sm" onClick={() => openEnrol("josaa")}>Get expert help</button>
           </div>
@@ -292,7 +292,7 @@ export default function JosaaRound1Result() {
               const Ic = l.icon;
               const inner = (
                 <>
-                  <span className="josr-link__ic" style={{ background: l.hot ? "#F47E20" : "rgba(244,123,32,.12)", color: l.hot ? "#fff" : "#F47E20" }}>
+                  <span className="josr-link__ic" style={{ background: l.hot ? "#FF693D" : "rgba(255, 105, 61,.12)", color: l.hot ? "#fff" : "#FF693D" }}>
                     <Ic size={18} />
                   </span>
                   <span className="josr-link__txt">
@@ -355,7 +355,7 @@ function Section({ title, pill, children }) {
 ═══════════════════════════════════════════════════════════ */
 const CSS = `
 .josr-page{
-  --o:#F47E20; --o2:#ff9f45; --navy:#1a1a2e; --muted:#6b7280;
+  --o:#FF693D; --o2:#ff9f45; --navy:#1a1a2e; --muted:#6b7280;
   --card:#ffffff; --line:rgba(13,27,62,.08);
   background:#ffffff;
   color:var(--navy); min-height:100vh; position:relative; overflow-x:hidden;
@@ -368,17 +368,17 @@ const CSS = `
 
 /* action bar */
 .josr-actionbar{position:sticky; top:108px; z-index:20; display:flex; justify-content:space-between; align-items:center; max-width:1040px; margin:0 auto; padding:10px 22px 0}
-.josr-back,.josr-share{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:700; padding:8px 15px; border-radius:50px; cursor:pointer; border:1px solid rgba(244,123,32,.2); transition:all .22s}
+.josr-back,.josr-share{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:700; padding:8px 15px; border-radius:50px; cursor:pointer; border:1px solid rgba(255, 105, 61,.2); transition:all .22s}
 .josr-back{background:rgba(255,255,255,.8); color:var(--navy); backdrop-filter:blur(8px)}
 .josr-back:hover{background:#fff; transform:translateX(-2px); box-shadow:0 6px 18px rgba(13,27,62,.12)}
-.josr-share{background:linear-gradient(135deg,var(--o),var(--o2)); color:#fff; border-color:transparent; box-shadow:0 4px 14px rgba(244,123,32,.32)}
-.josr-share:hover{transform:translateY(-1px); box-shadow:0 8px 22px rgba(244,123,32,.45)}
+.josr-share{background:linear-gradient(135deg,var(--o),var(--o2)); color:#fff; border-color:transparent; box-shadow:0 4px 14px rgba(255, 105, 61,.32)}
+.josr-share:hover{transform:translateY(-1px); box-shadow:0 8px 22px rgba(255, 105, 61,.45)}
 
 /* hero */
 .josr-hero{text-align:center; padding:30px 0 34px; border-bottom:1px solid var(--line); margin-bottom:8px}
 .josr-live{display:inline-flex; align-items:center; gap:7px; background:linear-gradient(135deg,var(--o),var(--o2)); color:#fff; font-size:11px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; padding:7px 16px; border-radius:30px; margin-bottom:18px}
 .josr-hero h1{font-weight:800; font-size:clamp(1.9rem,4.6vw,3rem); line-height:1.12; letter-spacing:-.5px; margin:0 auto 14px; max-width:820px;
-  background:linear-gradient(105deg,#c2410c 0%,#F47E20 45%,#E0421F 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text}
+  background:linear-gradient(105deg,#c2410c 0%,#FF693D 45%,#E0421F 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text}
 .josr-hero__sub{color:rgba(28,28,40,.7); font-size:1.04rem; line-height:1.65; max-width:680px; margin:0 auto}
 .josr-hero__sub strong{color:var(--o); font-weight:700}
 .josr-hero__cta{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:24px}
@@ -390,9 +390,9 @@ const CSS = `
 /* buttons */
 .josr-btn{display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:14.5px; padding:13px 22px; border-radius:12px; cursor:pointer; border:none; text-decoration:none; transition:transform .2s, box-shadow .2s; font-family:inherit}
 .josr-btn--sm{padding:9px 16px; font-size:13px}
-.josr-btn--primary{background:linear-gradient(135deg,var(--o),#E0421F); color:#fff; box-shadow:0 8px 22px rgba(244,123,32,.36)}
-.josr-btn--primary:hover{transform:translateY(-2px); box-shadow:0 12px 30px rgba(244,123,32,.5)}
-.josr-btn--ghost{background:#fff; color:var(--navy); border:1.5px solid rgba(244,123,32,.3)}
+.josr-btn--primary{background:linear-gradient(135deg,var(--o),#E0421F); color:#fff; box-shadow:0 8px 22px rgba(255, 105, 61,.36)}
+.josr-btn--primary:hover{transform:translateY(-2px); box-shadow:0 12px 30px rgba(255, 105, 61,.5)}
+.josr-btn--ghost{background:#fff; color:var(--navy); border:1.5px solid rgba(255, 105, 61,.3)}
 .josr-btn--ghost:hover{transform:translateY(-2px); box-shadow:0 8px 22px rgba(13,27,62,.1)}
 .josr-btn--light{background:#fff; color:var(--o)}
 .josr-btn--light:hover{transform:translateY(-2px)}
@@ -402,8 +402,8 @@ const CSS = `
 .josr-section{margin-top:48px}
 .josr-section__head{display:flex; align-items:center; gap:12px; margin-bottom:16px}
 .josr-section__head h2{font-size:clamp(1.2rem,2.6vw,1.55rem); font-weight:800; color:var(--navy); letter-spacing:-.3px}
-.josr-section__pill{background:rgba(244,123,32,.1); border:1px solid rgba(244,123,32,.22); color:var(--o); font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; padding:4px 11px; border-radius:30px; white-space:nowrap}
-.josr-section__bar{flex:1; height:2px; border-radius:2px; background:linear-gradient(90deg,var(--o),rgba(244,123,32,.1),transparent)}
+.josr-section__pill{background:rgba(255, 105, 61,.1); border:1px solid rgba(255, 105, 61,.22); color:var(--o); font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; padding:4px 11px; border-radius:30px; white-space:nowrap}
+.josr-section__bar{flex:1; height:2px; border-radius:2px; background:linear-gradient(90deg,var(--o),rgba(255, 105, 61,.1),transparent)}
 .josr-lead{color:rgba(28,28,40,.72); font-size:1rem; line-height:1.7; max-width:760px; margin:0 0 22px}
 .josr-lead strong{color:var(--navy)}
 
@@ -434,18 +434,18 @@ const CSS = `
 .josr-ffs-block{background:rgba(255,255,255,.6); border:1px solid var(--line); border-radius:12px; padding:14px 16px}
 .josr-ffs-block__h{display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--ffs); margin-bottom:6px}
 .josr-ffs-block p{font-size:13.8px; line-height:1.6; color:rgba(28,28,40,.78); margin:0}
-.josr-ffs-warn{display:flex; align-items:center; gap:8px; margin-top:16px; background:rgba(244,123,32,.08); border:1px dashed rgba(244,123,32,.35); border-radius:10px; padding:10px 14px; font-size:13px; font-weight:600; color:#9a3412}
-.josr-ffs-help{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:18px; background:#fff; border:1px solid rgba(244,123,32,.22); border-radius:14px; padding:14px 18px; box-shadow:0 6px 20px rgba(13,27,62,.05)}
+.josr-ffs-warn{display:flex; align-items:center; gap:8px; margin-top:16px; background:rgba(255, 105, 61,.08); border:1px dashed rgba(255, 105, 61,.35); border-radius:10px; padding:10px 14px; font-size:13px; font-weight:600; color:#9a3412}
+.josr-ffs-help{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:18px; background:#fff; border:1px solid rgba(255, 105, 61,.22); border-radius:14px; padding:14px 18px; box-shadow:0 6px 20px rgba(13,27,62,.05)}
 .josr-ffs-help span{flex:1; min-width:200px; font-size:13.8px; font-weight:600; color:var(--navy)}
 
 /* table */
 .josr-table{background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:auto; backdrop-filter:blur(6px); box-shadow:0 8px 26px rgba(13,27,62,.06)}
 .josr-table table{width:100%; border-collapse:collapse; min-width:560px}
-.josr-table thead tr{background:linear-gradient(90deg,rgba(244,123,32,.1),rgba(99,102,241,.06))}
+.josr-table thead tr{background:linear-gradient(90deg,rgba(255, 105, 61,.1),rgba(99,102,241,.06))}
 .josr-table th{text-align:left; padding:13px 16px; font-size:11px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:var(--o)}
 .josr-table th.right{text-align:right}
 .josr-table tbody tr{border-top:1px solid var(--line); transition:background .2s}
-.josr-table tbody tr:hover{background:rgba(244,123,32,.05)}
+.josr-table tbody tr:hover{background:rgba(255, 105, 61,.05)}
 .josr-table td{padding:12px 16px; font-size:13.5px; color:var(--navy)}
 .josr-table td.right{text-align:right}
 .josr-tier{display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.5px; padding:2px 7px; border-radius:5px; margin-right:8px; vertical-align:middle}
@@ -462,13 +462,13 @@ const CSS = `
 .josr-tl__node{width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--o),#E0421F); color:#fff; display:grid; place-items:center; font-weight:800; font-size:16px; flex-shrink:0}
 .josr-tl__top{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:4px}
 .josr-tl__top h4{font-size:1rem; font-weight:800; color:var(--navy)}
-.josr-tl__when{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; color:var(--o); background:rgba(244,123,32,.1); padding:2px 9px; border-radius:20px}
+.josr-tl__when{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; color:var(--o); background:rgba(255, 105, 61,.1); padding:2px 9px; border-radius:20px}
 .josr-tl__body p{font-size:13.6px; line-height:1.6; color:rgba(28,28,40,.72); margin:0}
 
 /* links */
 .josr-links{display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:12px}
 .josr-link{display:flex; align-items:center; gap:13px; text-align:left; width:100%; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; cursor:pointer; text-decoration:none; backdrop-filter:blur(6px); transition:transform .2s, box-shadow .2s, border-color .2s}
-.josr-link:hover{transform:translateY(-3px); border-color:rgba(244,123,32,.4); box-shadow:0 14px 32px rgba(244,123,32,.16)}
+.josr-link:hover{transform:translateY(-3px); border-color:rgba(255, 105, 61,.4); box-shadow:0 14px 32px rgba(255, 105, 61,.16)}
 .josr-link__ic{width:40px; height:40px; border-radius:11px; display:grid; place-items:center; flex-shrink:0}
 .josr-link__txt{flex:1; min-width:0}
 .josr-link__lbl{display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px; color:var(--navy)}
@@ -477,7 +477,7 @@ const CSS = `
 .josr-link__arr{color:var(--o); flex-shrink:0}
 
 /* cta */
-.josr-cta{margin-top:56px; text-align:center; background:linear-gradient(135deg,var(--o),#E0421F); border-radius:24px; padding:44px 28px; color:#fff; box-shadow:0 20px 50px rgba(244,123,32,.34)}
+.josr-cta{margin-top:56px; text-align:center; background:linear-gradient(135deg,var(--o),#E0421F); border-radius:24px; padding:44px 28px; color:#fff; box-shadow:0 20px 50px rgba(255, 105, 61,.34)}
 .josr-cta h2{font-size:clamp(1.5rem,3.4vw,2.1rem); font-weight:800; margin:12px 0 8px}
 .josr-cta p{color:rgba(255,255,255,.92); max-width:560px; margin:0 auto 22px; line-height:1.6}
 .josr-cta__btns{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}

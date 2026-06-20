@@ -29,7 +29,7 @@ const JEE_MEGA = [
     ],
   },
   {
-    title: "JEE Main", to: "/jee-main", color: "#F47E20", icon: FileText,
+    title: "JEE Main", to: "/jee-main", color: "#FF693D", icon: FileText,
     items: [
       { label: "Eligibility Criteria",     to: "/jee-main#eligibility",   icon: BadgeCheck },
       { label: "Exam Pattern & Schedule",  to: "/exams/jee-main",         icon: CalendarDays },
@@ -66,7 +66,7 @@ const NEET_MEGA = [
     ],
   },
   {
-    title: "NEET UG 2026", to: "/neet", color: "#F47E20", icon: FileText,
+    title: "NEET UG 2026", to: "/neet", color: "#FF693D", icon: FileText,
     items: [
       { label: "Eligibility Criteria",    to: "/neet#eligibility", icon: BadgeCheck,   desc: "Age, qualification & attempts" },
       { label: "Exam Pattern & Syllabus", to: "/neet#pattern",     icon: CalendarDays, desc: "180 questions · 720 marks" },
@@ -105,7 +105,7 @@ const COLLEGES = [
 // the tool does — they shouldn't have to click to find out.
 const TOOLS_MEGA = [
   {
-    title: "Plan & Apply", to: "/planner", color: "#F47E20", icon: CalendarDays,
+    title: "Plan & Apply", to: "/planner", color: "#FF693D", icon: CalendarDays,
     items: [
       { label: "Branch Explorer",         to: "/branches",   icon: Landmark,     desc: "220+ branches across 10 clear paths" },
       { label: "Branch vs College",       to: "/branch-vs-college", icon: GitCompare, desc: "6 questions → what should win for you" },
@@ -147,7 +147,7 @@ const EXAM_NEWS_MEGA = [
     ],
   },
   {
-    title: "Entrance Exams", to: "/exams", color: "#F47E20", icon: FileText,
+    title: "Entrance Exams", to: "/exams", color: "#FF693D", icon: FileText,
     items: [
       { label: "All Entrance Exams", to: "/exams",            icon: FileText,  desc: "Eligibility, pattern & dates" },
       { label: "JEE Main",           to: "/exams/jee-main",   icon: Zap,       desc: "NTA · twice a year" },
@@ -236,7 +236,7 @@ export default function Navbar({ onSearch }) {
               width: 38,
               height: 38,
               borderRadius: "50%",
-              background: "#F47E20",
+              background: "#FF693D",
               display: "grid",
               placeItems: "center",
               flexShrink: 0,
@@ -257,21 +257,8 @@ export default function Navbar({ onSearch }) {
           </span>
 
           {/* Brand text — clamps down on narrow phones so the bar never overflows */}
-          <span id="cp-wordmark" style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1rem, 4.4vw, 1.3rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
-            College{" "}
-            <span
-              style={{
-                background: "linear-gradient(90deg, #F47E20 0%, #F47E20 25%, #fbbf24 50%, #F47E20 75%, #F47E20 100%)",
-                backgroundSize: "200% auto",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                animation: "brandGradient 3s linear infinite",
-                display: "inline",
-              }}
-            >
-              Parichay
-            </span>
+          <span id="cp-wordmark" style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1rem, 4.4vw, 1.3rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap", color: "#1a1a2e" }}>
+            College <span style={{ color: "#1a1a2e" }}>Parichay</span>
           </span>
         </Link>
 
@@ -393,8 +380,8 @@ export default function Navbar({ onSearch }) {
                         {item.drop.map((d) => {
                           const Ic = d.icon;
                           return (
-                            <button key={d.label} onClick={() => goHash(d.to)} className="mega-item" style={{ ...megaItemStyle, alignItems: "flex-start", "--mega-accent": "#F47E20" }}>
-                              <span style={{ width: 30, height: 30, borderRadius: 9, background: "rgba(244,123,32,.1)", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                            <button key={d.label} onClick={() => goHash(d.to)} className="mega-item" style={{ ...megaItemStyle, alignItems: "flex-start", "--mega-accent": "#FF693D" }}>
+                              <span style={{ width: 30, height: 30, borderRadius: 9, background: "rgba(255, 105, 61,.1)", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
                                 <Ic size={15} color="var(--coral)" />
                               </span>
                               <span style={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -432,7 +419,7 @@ export default function Navbar({ onSearch }) {
             onClick={() => navigate("/ai")}
             className="cta-desktop"
             title="College Parichay AI"
-            style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 15px", borderRadius: 10, border: "1.5px solid transparent", background: "linear-gradient(135deg,#F47E20,#E0421F)", color: "#fff", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 14px rgba(244,126,32,.3)" }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 15px", borderRadius: 10, border: "1.5px solid #FF693D", background: "#FF693D", color: "#fff", fontWeight: 700, cursor: "pointer" }}
           >
             <Sparkles size={15} /> Ask AI
           </button>
@@ -447,7 +434,7 @@ export default function Navbar({ onSearch }) {
                 title="My Dashboard"
                 style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", border: "none", background: "transparent", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
               >
-                <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#F47E20", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
+                <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#FF693D", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
                   {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
                 </span>
                 {user?.name?.split(" ")[0] || "Account"}
@@ -467,14 +454,14 @@ export default function Navbar({ onSearch }) {
               <button
                 onClick={openLogin}
                 className="cta-desktop nav-ghost-cta"
-                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #F47E20", background: "#fff", color: "#F47E20", fontWeight: 700, cursor: "pointer" }}
+                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #FF693D", background: "#fff", color: "#FF693D", fontWeight: 700, cursor: "pointer" }}
               >
                 Login
               </button>
               <button
                 onClick={openSignup}
                 className="cta-desktop nav-primary-cta"
-                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #F47E20", background: "#F47E20", color: "#fff", fontWeight: 700, cursor: "pointer" }}
+                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #FF693D", background: "#FF693D", color: "#fff", fontWeight: 700, cursor: "pointer" }}
               >
                 Sign Up
               </button>
@@ -512,7 +499,7 @@ export default function Navbar({ onSearch }) {
                       width: 32,
                       height: 32,
                       borderRadius: "50%",
-                      background: "#F47E20",
+                      background: "#FF693D",
                       display: "grid",
                       placeItems: "center",
                     }}
@@ -521,16 +508,8 @@ export default function Navbar({ onSearch }) {
                       CP
                     </span>
                   </span>
-                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", whiteSpace: "nowrap" }}>
-                    College{" "}
-                    <span style={{
-                      background: "linear-gradient(90deg, #F47E20 0%, #F47E20 25%, #fbbf24 50%, #F47E20 75%, #F47E20 100%)",
-                      backgroundSize: "200% auto",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      animation: "brandGradient 3s linear infinite",
-                    }}>Parichay</span>
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", whiteSpace: "nowrap", color: "#1a1a2e" }}>
+                    College <span style={{ color: "#1a1a2e" }}>Parichay</span>
                   </span>
                 </div>
                 <button onClick={() => setMobileOpen(false)}><X size={22} /></button>
@@ -541,9 +520,8 @@ export default function Navbar({ onSearch }) {
                 onClick={() => { setMobileOpen(false); navigate("/ai"); }}
                 style={{
                   display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
-                  background: "linear-gradient(135deg,#F47E20,#E0421F)", borderRadius: 10, padding: "11px 12px",
+                  background: "#FF693D", borderRadius: 10, padding: "11px 12px",
                   marginBottom: "0.8rem", border: "none", cursor: "pointer", color: "#fff",
-                  boxShadow: "0 6px 18px rgba(244,126,32,.3)",
                 }}>
                 <Sparkles size={18} />
                 <span style={{ display: "flex", flexDirection: "column", flex: 1 }}>
@@ -562,7 +540,7 @@ export default function Navbar({ onSearch }) {
                   }}>
                   <span style={{
                     width: 32, height: 32, borderRadius: "50%",
-                    background: "#F47E20", color: "#fff",
+                    background: "#FF693D", color: "#fff",
                     display: "grid", placeItems: "center",
                     fontSize: 14, fontWeight: 800, flexShrink: 0,
                   }}>
@@ -606,9 +584,9 @@ export default function Navbar({ onSearch }) {
                         width: "100%", margin: "10px 0", padding: "13px 16px",
                         borderRadius: 12, border: "none", cursor: "pointer",
                         color: "#fff", fontWeight: 800, fontSize: "0.98rem",
-                        background: "linear-gradient(120deg, #F47E20 0%, #F47E20 40%, #fb923c 60%, #F47E20 100%)",
+                        background: "linear-gradient(120deg, #FF693D 0%, #FF693D 40%, #fb923c 60%, #FF693D 100%)",
                         backgroundSize: "200% auto",
-                        boxShadow: "0 8px 20px -8px rgba(244,123,32,.7)",
+                        boxShadow: "0 8px 20px -8px rgba(255, 105, 61,.7)",
                         animation: "brandGradient 3s linear infinite",
                       }}
                     >
@@ -635,11 +613,11 @@ export default function Navbar({ onSearch }) {
                         fontWeight: 700, fontSize: "1rem", padding: "0.85rem 0.7rem",
                         width: "100%", borderRadius: 10, cursor: "pointer",
                         color: active || expanded ? "#E0421F" : "var(--navy)",
-                        background: active ? "rgba(244,123,32,.1)" : "transparent",
+                        background: active ? "rgba(255, 105, 61,.1)" : "transparent",
                       }}
                     >
                       <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        {active && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#F47E20" }} />}
+                        {active && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF693D" }} />}
                         {item.label}
                       </span>
                       {hasChildren && (
@@ -713,8 +691,8 @@ export default function Navbar({ onSearch }) {
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                   width: "100%", marginTop: 14, padding: "12px 16px",
-                  borderRadius: 10, border: "1.5px solid rgba(244,123,32,.28)",
-                  background: "rgba(244,123,32,.1)", color: "#E0421F",
+                  borderRadius: 10, border: "1.5px solid rgba(255, 105, 61,.28)",
+                  background: "rgba(255, 105, 61,.1)", color: "#E0421F",
                   fontWeight: 700, fontSize: "0.95rem", textDecoration: "none",
                 }}
               >
@@ -742,7 +720,7 @@ export default function Navbar({ onSearch }) {
                 >
                   <span style={{
                     width: 28, height: 28, borderRadius: "50%",
-                    background: "#F47E20", color: "#fff",
+                    background: "#FF693D", color: "#fff",
                     display: "grid", placeItems: "center",
                     fontSize: 13, fontWeight: 800, flexShrink: 0,
                   }}>
@@ -773,7 +751,7 @@ export default function Navbar({ onSearch }) {
                     style={{
                       width: "100%", marginTop: 8, padding: "13px 16px",
                       borderRadius: 10, border: "none",
-                      background: "#F47E20", color: "#fff",
+                      background: "#FF693D", color: "#fff",
                       fontWeight: 700, cursor: "pointer", fontSize: "0.95rem",
                     }}
                   >
@@ -817,7 +795,7 @@ export default function Navbar({ onSearch }) {
                 width: 56, height: 56, borderRadius: "50%", margin: "0 auto 14px",
                 background: "#FFF1E9", display: "grid", placeItems: "center",
               }}>
-                <LogOut size={26} color="#F47E20" />
+                <LogOut size={26} color="#FF693D" />
               </div>
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.25rem", color: "var(--navy)", margin: "0 0 6px" }}>
                 Log out?
@@ -874,10 +852,10 @@ const navHighlightStyle = (active) => ({
   color: "#fff",
   borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   fontFamily: "inherit",
-  background: "linear-gradient(120deg, #F47E20 0%, #F47E20 45%, #fbbf24 100%)",
+  background: "linear-gradient(120deg, #FF693D 0%, #FF693D 45%, #fbbf24 100%)",
   backgroundSize: "200% auto",
   border: "1.5px solid rgba(255,255,255,.5)",
-  boxShadow: active ? "0 8px 20px -6px rgba(244,123,32,.8)" : "0 6px 16px -8px rgba(244,123,32,.6)",
+  boxShadow: active ? "0 8px 20px -6px rgba(255, 105, 61,.8)" : "0 6px 16px -8px rgba(255, 105, 61,.6)",
   animation: "brandGradient 3s linear infinite",
   transition: "all .2s",
 });
@@ -887,9 +865,9 @@ const navFeatureStyle = {
   padding: "0.45rem 0.85rem", fontSize: "0.86rem", fontWeight: 700,
   color: "#fff", borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   border: "none",
-  background: "linear-gradient(120deg, #F47E20 0%, #F47E20 40%, #fb923c 60%, #F47E20 100%)",
+  background: "linear-gradient(120deg, #FF693D 0%, #FF693D 40%, #fb923c 60%, #FF693D 100%)",
   backgroundSize: "200% auto",
-  boxShadow: "0 6px 16px -6px rgba(244,123,32,.75)",
+  boxShadow: "0 6px 16px -6px rgba(255, 105, 61,.75)",
   animation: "brandGradient 3s linear infinite",
   transition: "transform .2s ease, box-shadow .2s ease",
 };

@@ -261,7 +261,7 @@ export default function ExamCalendar({
             display: "inline-flex", alignItems: "center", gap: 9,
             background: CL.coral, color: "#fff", border: "none", borderRadius: 50,
             padding: "12px 24px", fontFamily: CL.display, fontWeight: 800, fontSize: 14,
-            cursor: "pointer", boxShadow: "0 10px 26px rgba(244,126,32,.35)",
+            cursor: "pointer", boxShadow: "0 10px 26px rgba(255, 105, 61,.35)",
           }}>
             Open the live counselling radar <ArrowRight size={16} />
           </button>

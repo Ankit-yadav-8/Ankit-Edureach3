@@ -21,7 +21,7 @@ export default function BackButton({ to = "/", label = "Back", style }) {
         transition: "background .18s, border-color .18s, transform .18s",
         ...style,
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.background = "#FCE7E0"; e.currentTarget.style.borderColor = "rgba(244,126,32,.4)"; e.currentTarget.style.transform = "translateX(-2px)"; }}
+      onMouseEnter={(e) => { e.currentTarget.style.background = "#FCE7E0"; e.currentTarget.style.borderColor = "rgba(255, 105, 61,.4)"; e.currentTarget.style.transform = "translateX(-2px)"; }}
       onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(33,29,46,.10)"; e.currentTarget.style.transform = ""; }}
     >
       <ArrowLeft size={16} /> {label}

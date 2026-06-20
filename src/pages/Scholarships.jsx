@@ -56,7 +56,7 @@ export default function Scholarships() {
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <span className="eyebrow">Scholarships &amp; Loans</span>
           <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.4rem)", margin: "8px 0 4px", display: "flex", alignItems: "center", gap: 10, color: "#1c1c28" }}>
-            <Award size={28} color="#F47E20" /> Fund your engineering education
+            <Award size={28} color="#FF693D" /> Fund your engineering education
           </h1>
           <p style={{ color: "rgba(28,28,40,.62)" }}>Major scholarships, fee waivers and an education-loan EMI calculator in one place.</p>
         </div>

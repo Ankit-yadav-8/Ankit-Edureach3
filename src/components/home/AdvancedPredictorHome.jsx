@@ -75,7 +75,7 @@ export default function AdvancedPredictorHome() {
           <>
             <div style={{
               display: "flex", alignItems: "center", gap: 10, maxWidth: 760, margin: "0 auto 18px",
-              background: "#fff8ed", border: "1px solid #F47E20", borderRadius: 10, padding: "12px 16px",
+              background: "#fff8ed", border: "1px solid #FF693D", borderRadius: 10, padding: "12px 16px",
               fontSize: 13, color: "#92400e",
             }}>
               <span style={{ fontSize: 18 }}>⏳</span>

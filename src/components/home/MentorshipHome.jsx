@@ -14,7 +14,7 @@ const PROGRAMS = [
   {
     to: "/mentorship/jee-2027",
     icon: Trophy,
-    color: "#F47E20",
+    color: "#FF693D",
     exam: "JEE & NEET 2027",
     tag: "Class 12 · Droppers",
     price: "1",
@@ -71,12 +71,12 @@ export default function MentorshipHome() {
         {/* ── Header ── */}
         <Reveal>
           <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 18px" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: "#c2410c", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.3)", padding: "7px 16px", borderRadius: 50, marginBottom: 18 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: "#c2410c", background: "rgba(255, 105, 61,.1)", border: "1px solid rgba(255, 105, 61,.3)", padding: "7px 16px", borderRadius: 50, marginBottom: 18 }}>
               <Sparkles size={13} /> New · 1-on-1 Mentorship
             </span>
             <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.8rem)", lineHeight: 1.12, letterSpacing: "-1px", color: "#1a1a2e", margin: "0 0 14px" }}>
               Know Your Path.{" "}
-              <span style={{ background: "linear-gradient(90deg,#F47E20,#F47E20)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Own Your Future.</span>
+              <span style={{ background: "linear-gradient(90deg,#FF693D,#FF693D)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Own Your Future.</span>
             </h2>
             <p style={{ color: "#4b5563", fontSize: "1.05rem", lineHeight: 1.75, maxWidth: 660, margin: "0 auto" }}>
               CollegeParichay's 1-on-1 mentorship helps serious JEE &amp; NEET aspirants cut through the confusion — a personal IITian / doctor mentor, daily accountability, and a plan that actually works. Pick the program that fits where you are.
@@ -102,7 +102,7 @@ export default function MentorshipHome() {
                       : `0 18px 44px -26px ${p.color}77`,
                   }}
                 >
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${p.color},#F47E20)` }} />
+                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${p.color},#FF693D)` }} />
                   {p.featured && (
                     <div style={{ position: "absolute", top: 14, right: -34, transform: "rotate(45deg)", background: `linear-gradient(135deg,${p.color},#818cf8)`, color: "#fff", fontWeight: 800, fontSize: 10.5, letterSpacing: "0.5px", padding: "4px 40px", boxShadow: "0 4px 12px rgba(0,0,0,.2)" }}>
                       BEST VALUE
@@ -147,7 +147,7 @@ export default function MentorshipHome() {
                     to={p.to}
                     style={{
                       margin: "auto 24px 24px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
-                      background: `linear-gradient(135deg,${p.color},#F47E20)`, color: "#fff",
+                      background: `linear-gradient(135deg,${p.color},#FF693D)`, color: "#fff",
                       padding: "13px 20px", borderRadius: 12, fontFamily: "'Space Grotesk',sans-serif",
                       fontWeight: 800, fontSize: 14.5, textDecoration: "none",
                       boxShadow: `0 10px 24px -8px ${p.color}aa`,
@@ -165,8 +165,8 @@ export default function MentorshipHome() {
         <Reveal delay={0.1}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", marginTop: 34 }}>
             {TRUST.map(({ icon: Icon, label }) => (
-              <span key={label} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "9px 16px", borderRadius: 50, background: "#fff", border: "1px solid rgba(244,123,32,.22)", boxShadow: "0 2px 10px rgba(244,123,32,.08)", fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>
-                <Icon size={15} color="#F47E20" /> {label}
+              <span key={label} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "9px 16px", borderRadius: 50, background: "#fff", border: "1px solid rgba(255, 105, 61,.22)", boxShadow: "0 2px 10px rgba(255, 105, 61,.08)", fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>
+                <Icon size={15} color="#FF693D" /> {label}
               </span>
             ))}
           </div>

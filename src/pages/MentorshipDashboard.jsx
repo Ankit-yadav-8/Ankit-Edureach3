@@ -15,8 +15,8 @@ import Community from "../components/mentorship/Community.jsx";
 import { Trend, Gauge, PieWithLegend, Bars } from "../components/Charts.jsx";
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
 
-const ORANGE = "#F47E20";
-const GOLD = "#F47E20";
+const ORANGE = "#FF693D";
+const GOLD = "#FF693D";
 const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
 const INK = "#1a1a2e";
@@ -49,7 +49,7 @@ const SUBJECT_COLORS = {
   "Organic Chemistry": "#15a06e",
   "Inorganic Chemistry": "#84cc16",
   Chemistry: "#15a06e",
-  Maths: "#F47E20",
+  Maths: "#FF693D",
   Biology: "#ec4899",
   Science: "#06b6d4",
 };
@@ -256,7 +256,7 @@ function OtpGate({ email, name, onVerified }) {
   return (
     <section style={{ background: "#f8f7f5", minHeight: "100vh", display: "grid", placeItems: "center", padding: "120px 16px 60px" }}>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-        style={{ width: "100%", maxWidth: 440, background: "#fff", borderRadius: 24, border: "1px solid rgba(244,123,32,.18)", padding: "34px 30px", boxShadow: "0 30px 70px -40px rgba(13,27,62,.5)", position: "relative", overflow: "hidden" }}>
+        style={{ width: "100%", maxWidth: 440, background: "#fff", borderRadius: 24, border: "1px solid rgba(255, 105, 61,.18)", padding: "34px 30px", boxShadow: "0 30px 70px -40px rgba(13,27,62,.5)", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${ORANGE},${GREEN})` }} />
 
         <div style={{ width: 62, height: 62, borderRadius: 18, background: `linear-gradient(135deg,${ORANGE}1a,${GREEN}1a)`, border: `1px solid ${ORANGE}33`, display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
@@ -926,7 +926,7 @@ function DashboardBody({ urlPlan = "" }) {
             opening "Foundation" never lands them on the JEE 2027 dashboard. */}
         {myBatches.length > 1 && (
           <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 }}
-            style={{ display: "inline-flex", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", marginTop: 16, background: "#fff", border: "1px solid rgba(244,123,32,.2)", borderRadius: 50, padding: "6px 8px", boxShadow: "0 14px 30px -24px rgba(13,27,62,.5)" }}>
+            style={{ display: "inline-flex", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", marginTop: 16, background: "#fff", border: "1px solid rgba(255, 105, 61,.2)", borderRadius: 50, padding: "6px 8px", boxShadow: "0 14px 30px -24px rgba(13,27,62,.5)" }}>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: MUTE, padding: "0 6px 0 10px" }}>
               <GraduationCap size={14} color={ORANGE} /> Your batches
             </span>
@@ -950,11 +950,11 @@ function DashboardBody({ urlPlan = "" }) {
         <div style={{
           position: "relative", overflow: "hidden", borderRadius: 26,
           background: "linear-gradient(160deg,#fffaf5 0%,#ffffff 55%,#f3faf6 100%)",
-          border: "1px solid rgba(244,123,32,.16)", padding: "10px",
+          border: "1px solid rgba(255, 105, 61,.16)", padding: "10px",
           boxShadow: "0 30px 70px -40px rgba(13,27,62,.4)",
         }}>
           <motion.div aria-hidden animate={{ opacity: [.5, .85, .5] }} transition={{ duration: 5, repeat: Infinity }}
-            style={{ position: "absolute", top: -60, left: "4%", width: 320, height: 260, borderRadius: "50%", background: "radial-gradient(circle,rgba(244,123,32,.18),transparent 65%)", pointerEvents: "none" }} />
+            style={{ position: "absolute", top: -60, left: "4%", width: 320, height: 260, borderRadius: "50%", background: "radial-gradient(circle,rgba(255, 105, 61,.18),transparent 65%)", pointerEvents: "none" }} />
           <motion.div aria-hidden animate={{ opacity: [.4, .7, .4] }} transition={{ duration: 6, repeat: Infinity }}
             style={{ position: "absolute", bottom: -50, right: "6%", width: 280, height: 220, borderRadius: "50%", background: "radial-gradient(circle,rgba(21,160,110,.16),transparent 65%)", pointerEvents: "none" }} />
 
@@ -1031,7 +1031,7 @@ function DashboardBody({ urlPlan = "" }) {
             {/* MIDDLE — programme description */}
             <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .08 }}
               style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "8px 6px" }}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#c2410c", background: "rgba(244,123,32,.12)", border: "1px solid rgba(244,123,32,.35)", padding: "6px 14px", borderRadius: 50, alignSelf: "flex-start", marginBottom: 16 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#c2410c", background: "rgba(255, 105, 61,.12)", border: "1px solid rgba(255, 105, 61,.35)", padding: "6px 14px", borderRadius: 50, alignSelf: "flex-start", marginBottom: 16 }}>
                 <Sparkles size={13} /> Your private mentorship space
               </span>
               <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.4rem,2.6vw,2rem)", color: INK, lineHeight: 1.2, margin: "0 0 14px", letterSpacing: "-0.5px" }}>
@@ -1121,7 +1121,7 @@ function DashboardBody({ urlPlan = "" }) {
         {/* ── LIVE STUDENT TRACKING ── */}
         <Section id="live-tracking" kicker={`Always on · up to ${MAX_LOGS_PER_DAY}× a day`} title="Live Student Tracking" tColor="#ef4444"
           sub={`Log each subject's study hours and tasks — and update them up to ${MAX_LOGS_PER_DAY} times a day. The charts refresh instantly so nothing slips through the cracks.`}>
-          <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+          <div style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},${ORANGE})` }} />
 
             {/* header */}
@@ -1146,7 +1146,7 @@ function DashboardBody({ urlPlan = "" }) {
                 { icon: CheckCircle2, c: "#22c55e", v: tasksLabel, l: "Tasks done" },
                 { icon: Target, c: "#8b5cf6", v: `${routinePct}%`, l: "Routine kept" },
               ].map(({ icon: Icon, c, v, l }) => (
-                <div key={l} style={{ background: "#fff", border: "1px solid rgba(244,123,32,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
+                <div key={l} style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
                   <Icon size={18} color={c} style={{ marginBottom: 6 }} />
                   <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, color: INK }}>{v}</div>
                   <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{l}</div>
@@ -1190,7 +1190,7 @@ function DashboardBody({ urlPlan = "" }) {
                 </div>
               </div>
             ) : (
-              <form onSubmit={addLog} style={{ background: "#fffaf5", border: "1px solid rgba(244,123,32,.22)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
+              <form onSubmit={addLog} style={{ background: "#fffaf5", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
                 <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412", marginBottom: 12 }}>
                   {editingLog ? "Update today" : "Log today"} ({fmtDay(todayIso)}) · hours & tasks completed per subject
                 </div>
@@ -1234,7 +1234,7 @@ function DashboardBody({ urlPlan = "" }) {
             {/* weekly hours bars + goal gauge */}
             <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 22, alignItems: "center" }} className="md-track-grid">
               {/* weekly-hours bar chart — premium card with gridlines */}
-              <div style={{ background: "#fff", border: "1px solid rgba(244,123,32,.18)", borderRadius: 16, padding: "16px 16px 14px", boxShadow: "0 16px 40px -30px rgba(244,123,32,.8)" }}>
+              <div style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 16, padding: "16px 16px 14px", boxShadow: "0 16px 40px -30px rgba(255, 105, 61,.8)" }}>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 14 }}>
                   <span style={{ fontSize: 12.5, fontWeight: 800, color: NAVY }}>Total study hours · last 7 days</span>
                   <span style={{ fontSize: 11, fontWeight: 800, color: ORANGE, background: `${ORANGE}12`, borderRadius: 50, padding: "3px 9px" }}>{round1(weekHours)}h total</span>
@@ -1265,7 +1265,7 @@ function DashboardBody({ urlPlan = "" }) {
                           <span style={{ fontSize: 11, fontWeight: 800, color: isToday ? ORANGE : INK }}>{h}h</span>
                           <motion.div initial={{ height: 0 }} animate={{ height: barPx }} transition={{ type: "spring", stiffness: 120, damping: 18, delay: i * 0.06 }}
                             style={{ width: "100%", maxWidth: 30, borderRadius: "8px 8px 2px 2px",
-                              background: isToday ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "linear-gradient(180deg,rgba(244,123,32,.6),rgba(244,123,32,.26))",
+                              background: isToday ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "linear-gradient(180deg,rgba(255, 105, 61,.6),rgba(255, 105, 61,.26))",
                               boxShadow: isToday ? `0 8px 18px -8px ${ORANGE}` : "none" }} />
                         </div>
                       );

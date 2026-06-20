@@ -106,7 +106,7 @@ const COLLEGE_CUTOFFS = [
 /* Syllabus */
 const SYLLABUS = {
   Physics: {
-    color: "#F47E20", icon: Atom,
+    color: "#FF693D", icon: Atom,
     topics: [
       "Mechanics — Kinematics, Newton's Laws, Friction",
       "Work, Energy & Power",
@@ -152,7 +152,7 @@ const SYLLABUS = {
 /* Roadmap */
 const ROADMAP = [
   {
-    month: "Apr–May", label: "Foundation Build — NCERT First", color: "#F47E20", icon: "📚",
+    month: "Apr–May", label: "Foundation Build — NCERT First", color: "#FF693D", icon: "📚",
     tip: "JEE Main is NCERT-heavy, especially Chemistry (Inorganic). Master all NCERT concepts before going to reference books. Class 11 syllabus should be your starting priority.",
     tasks: [
       "NCERT Physics 11 — Mechanics, Thermodynamics, Waves",
@@ -240,7 +240,7 @@ const ROADMAP = [
 /* Coaching institutes */
 const COACHING = [
   {
-    name: "Allen Career Institute", city: "Kota, Rajasthan", color: "#F47E20", badge: "🏆 #1 in India",
+    name: "Allen Career Institute", city: "Kota, Rajasthan", color: "#FF693D", badge: "🏆 #1 in India",
     highlights: [
       "Largest coaching institute — 1.5 lakh+ students annually",
       "JEE Main 100 percentile scorers every year from Allen",
@@ -304,12 +304,12 @@ const COACHING = [
 /* ── Helpers ── */
 function diffIndex(val) {
   if (val >= 75) return { label: "Hard",   color: "#EF4444", bg: "#fee2e2" };
-  if (val >= 65) return { label: "Medium", color: "#F47E20", bg: "#ffffff" };
+  if (val >= 65) return { label: "Medium", color: "#FF693D", bg: "#ffffff" };
   return               { label: "Easy",   color: "#15A06E", bg: "#d1fae5" };
 }
 function labelMeta(label) {
   if (label.includes("Tough"))     return { color: "#EF4444", bg: "#fee2e2" };
-  if (label.includes("Difficult")) return { color: "#F47E20", bg: "#ffffff" };
+  if (label.includes("Difficult")) return { color: "#FF693D", bg: "#ffffff" };
   return                                  { color: "#15A06E", bg: "#d1fae5" };
 }
 
@@ -337,7 +337,7 @@ function SubjectBar({ label, s1, s2, color, animate }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
         <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "var(--navy)" }}>{label}</span>
         <div style={{ display: "flex", gap: 10, fontSize: 11, color: "var(--muted)" }}>
-          <span style={{ color: "#F47E20", fontWeight: 700 }}>S1: {s1}</span>
+          <span style={{ color: "#FF693D", fontWeight: 700 }}>S1: {s1}</span>
           <span style={{ color: "#7C3AED", fontWeight: 700 }}>S2: {s2}</span>
         </div>
       </div>
@@ -349,7 +349,7 @@ function SubjectBar({ label, s1, s2, color, animate }) {
             <div style={{
               height: "100%",
               width: animate ? `${(s1 / maxVal) * 100}%` : "0%",
-              background: `linear-gradient(90deg, #F47E20, #fb923c)`,
+              background: `linear-gradient(90deg, #FF693D, #fb923c)`,
               borderRadius: 6,
               transition: "width 0.9s cubic-bezier(.4,0,.2,1)",
             }} />
@@ -457,8 +457,8 @@ export default function JeeMain() {
           display: inline-block;
           font-size: 11px; font-weight: 700;
           padding: 4px 11px; border-radius: 50px;
-          background: rgba(244,123,32,.12); color: #c75b0a;
-          border: 1px solid rgba(244,123,32,.25);
+          background: rgba(255, 105, 61,.12); color: #c75b0a;
+          border: 1px solid rgba(255, 105, 61,.25);
           margin: 3px 3px 3px 0; letter-spacing: .2px;
         }
 
@@ -475,28 +475,28 @@ export default function JeeMain() {
         .qty-row:hover td { background: #f0f9ff !important; }
 
         .nav-pill {
-          background: rgba(244,123,32,.11); border: 1px solid rgba(244,123,32,.3);
+          background: rgba(255, 105, 61,.11); border: 1px solid rgba(255, 105, 61,.3);
           color: #c75b0a; padding: 8px 16px; border-radius: 50px;
           font-size: 13px; font-weight: 600; text-decoration: none;
           transition: all 0.18s;
         }
-        .nav-pill:hover { background: #F47E20; color: #fff; border-color: #F47E20; }
+        .nav-pill:hover { background: #FF693D; color: #fff; border-color: #FF693D; }
 
         .section-divider {
           height: 3px;
-          background: linear-gradient(90deg, #F47E20 0%, #0EA5A4 40%, #7C3AED 70%, #EC4899 100%);
+          background: linear-gradient(90deg, #FF693D 0%, #0EA5A4 40%, #7C3AED 70%, #EC4899 100%);
           border-radius: 2px; margin: 0;
         }
       `}</style>
 
       {/* ── Hero (blog-style) ── */}
       <PageHero
-        eyebrow="JEE Main 2026" eyebrowIcon={Target} accent="#F47E20"
+        eyebrow="JEE Main 2026" eyebrowIcon={Target} accent="#FF693D"
         titleLead="JEE Main —" highlight="rank & college" titleTail="" highlightTail="predictor hub."
         sub="Predict your rank, find every NIT, IIIT & GFTI you qualify for, analyse session-wise difficulty, and follow the complete syllabus, roadmap & coaching options."
         cta={{ label: "Predict my rank", to: "#rank" }}
         cards={[
-          { icon: Calculator, accent: "#F47E20", category: "Tool", title: "JEE Main Rank Predictor", meta: "Marks → percentile → CRL", badge: "LIVE" },
+          { icon: Calculator, accent: "#FF693D", category: "Tool", title: "JEE Main Rank Predictor", meta: "Marks → percentile → CRL", badge: "LIVE" },
           { icon: Target, accent: "#0ea5a4", category: "Tool", title: "College Predictor", meta: "Every NIT · IIIT · GFTI", badge: "LIVE" },
           { icon: TrendingUp, accent: "#6366f1", category: "Trends", title: "Qualifying Cutoffs 2021–25", meta: "Category-wise percentile" },
         ]}
@@ -507,7 +507,7 @@ export default function JeeMain() {
       {/* ── Rank Predictor ── */}
       <Block id="rank" eyebrow="Tool 1" title="JEE Main Rank Predictor"
         sub="Convert your expected marks into an All-India rank (CRL) and your category rank.">
-        <RankPredictorTool accent="#F47E20" />
+        <RankPredictorTool accent="#FF693D" />
       </Block>
 
       {/* ── College Predictor ── */}
@@ -516,7 +516,7 @@ export default function JeeMain() {
           sub="Enter your rank to see every eligible NIT, IIIT & GFTI with JoSAA and CSAB round cutoffs." bg="transparent">
           <div style={{
             display: "flex", alignItems: "center", gap: 10,
-            background: "#fff8ed", border: "1px solid #F47E20",
+            background: "#fff8ed", border: "1px solid #FF693D",
             borderRadius: 10, padding: "12px 16px", marginBottom: 20,
             fontSize: 13, color: "#92400e",
           }}>
@@ -564,7 +564,7 @@ export default function JeeMain() {
                   style={{
                     padding: "9px 24px", borderRadius: 50, fontWeight: 700, fontSize: 14,
                     border: "none", cursor: "pointer", fontFamily: "Sora",
-                    background: selectedYear === y ? "linear-gradient(135deg,#F47E20,#fb923c)" : "transparent",
+                    background: selectedYear === y ? "linear-gradient(135deg,#FF693D,#fb923c)" : "transparent",
                     color: selectedYear === y ? "#fff" : "var(--navy)",
                     boxShadow: selectedYear === y ? "0 4px 16px rgba(249,115,22,.35)" : "none",
                     transition: "all 0.22s",
@@ -630,14 +630,14 @@ export default function JeeMain() {
               </div>
               <div style={{ display: "flex", gap: 14, fontSize: 12, color: "var(--muted)" }}>
                 <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                  <span style={{ width: 10, height: 10, borderRadius: 2, background: "#F47E20", display: "inline-block" }} />Session 1
+                  <span style={{ width: 10, height: 10, borderRadius: 2, background: "#FF693D", display: "inline-block" }} />Session 1
                 </span>
                 <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
                   <span style={{ width: 10, height: 10, borderRadius: 2, background: "#7C3AED", display: "inline-block" }} />Session 2
                 </span>
               </div>
             </div>
-            <SubjectBar label="⚛ Physics"   s1={d.s1.phy}  s2={d.s2.phy}  color="#F47E20" animate={animateBars} />
+            <SubjectBar label="⚛ Physics"   s1={d.s1.phy}  s2={d.s2.phy}  color="#FF693D" animate={animateBars} />
             <SubjectBar label="⚗ Chemistry" s1={d.s1.chem} s2={d.s2.chem} color="#0EA5A4" animate={animateBars} />
             <SubjectBar label="∑ Maths"     s1={d.s1.math} s2={d.s2.math} color="#7C3AED" animate={animateBars} />
           </div>
@@ -654,7 +654,7 @@ export default function JeeMain() {
               key={`bars-${selectedYear}`}
               data={subjectBars}
               bars={[
-                { key: "Session1", label: "Session 1", color: "#F47E20" },
+                { key: "Session1", label: "Session 1", color: "#FF693D" },
                 { key: "Session2", label: "Session 2", color: "#7C3AED" },
               ]}
               height={280}
@@ -662,7 +662,7 @@ export default function JeeMain() {
           </div>
 
           {/* ── Key Trends Card ── */}
-          <div className={`card fade-up`} style={{ borderLeft: "4px solid #F47E20", padding: "20px 24px", marginBottom: 28 }}>
+          <div className={`card fade-up`} style={{ borderLeft: "4px solid #FF693D", padding: "20px 24px", marginBottom: 28 }}>
             <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
               <span style={{ fontSize: 28, flexShrink: 0 }}>💡</span>
               <div style={{ flex: 1 }}>
@@ -671,7 +671,7 @@ export default function JeeMain() {
                 </h4>
                 <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.7, marginBottom: 12 }}>{d.keyTrend}</p>
                 <div>
-                  <span style={{ fontWeight: 700, fontSize: 11, color: "#F47E20", marginRight: 6, textTransform: "uppercase", letterSpacing: .5 }}>
+                  <span style={{ fontWeight: 700, fontSize: 11, color: "#FF693D", marginRight: 6, textTransform: "uppercase", letterSpacing: .5 }}>
                     <TrendingUp size={12} style={{ display: "inline", marginRight: 4 }} />Highlights:
                   </span>
                   {d.tags.map((tag) => (
@@ -704,7 +704,7 @@ export default function JeeMain() {
                     return (
                       <tr key={y} className="yr-row">
                         <td>
-                          <strong style={{ fontFamily: "Sora", fontSize: 15, color: selectedYear === y ? "#F47E20" : "var(--navy)" }}>
+                          <strong style={{ fontFamily: "Sora", fontSize: 15, color: selectedYear === y ? "#FF693D" : "var(--navy)" }}>
                             {y}{selectedYear === y ? " ◀" : ""}
                           </strong>
                         </td>
@@ -748,7 +748,7 @@ export default function JeeMain() {
 
           <div className="grid-3" style={{ gap: 22, marginBottom: 22 }}>
             {[
-              { label: "Physics",   data: TREND_PHYSICS,   c1: "#F47E20", c2: "#fdba74", note: "Becoming harder each year — application-based questions rising" },
+              { label: "Physics",   data: TREND_PHYSICS,   c1: "#FF693D", c2: "#fdba74", note: "Becoming harder each year — application-based questions rising" },
               { label: "Chemistry", data: TREND_CHEMISTRY, c1: "#0EA5A4", c2: "#5eead4", note: "Most scoring subject consistently — NCERT-based prep sufficient" },
               { label: "Maths",     data: TREND_MATHS,     c1: "#7C3AED", c2: "#c084fc", note: "Toughest every year — Calculus & 3D Geometry heavily weighted" },
             ].map(({ label, data, c1, c2, note }) => (
@@ -780,7 +780,7 @@ export default function JeeMain() {
           {/* Trend insight mini cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
             {[
-              { icon: "⚛", color: "#F47E20", title: "Physics",   stat: "↑ +14 pts", sub: "Index rose from ~60 (2021) to ~72 (2025 S2) — harder every year" },
+              { icon: "⚛", color: "#FF693D", title: "Physics",   stat: "↑ +14 pts", sub: "Index rose from ~60 (2021) to ~72 (2025 S2) — harder every year" },
               { icon: "⚗", color: "#0EA5A4", title: "Chemistry", stat: "↑ +8 pts",  sub: "Mild increase overall — still the most scoring subject consistently" },
               { icon: "∑",  color: "#7C3AED", title: "Maths",    stat: "↑ +17 pts", sub: "Steepest rise — from ~65 (2021) to ~82 (2025 S2). Calculus is key" },
             ].map(({ icon, color, title, stat, sub }) => (
@@ -820,7 +820,7 @@ export default function JeeMain() {
               { cat: "GEN-EWS",  key: "ews",  color: "#7C3AED" },
               { cat: "OBC-NCL",  key: "obc",  color: "#F4A261" },
               { cat: "SC",       key: "sc",   color: "#2EC4B6" },
-              { cat: "ST",       key: "st",   color: "#F47E20" },
+              { cat: "ST",       key: "st",   color: "#FF693D" },
             ].map(({ cat, key, color }) => {
               const latest = QUALIFYING_TREND[QUALIFYING_TREND.length - 1];
               const prev   = QUALIFYING_TREND[QUALIFYING_TREND.length - 2];
@@ -866,7 +866,7 @@ export default function JeeMain() {
                       <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#7C3AED" }}>{row.ews}%ile</span></td>
                       <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#F4A261" }}>{row.obc}%ile</span></td>
                       <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#2EC4B6" }}>{row.sc}%ile</span></td>
-                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#F47E20" }}>{row.st}%ile</span></td>
+                      <td style={{ textAlign: "center" }}><span style={{ fontFamily: "Sora", fontWeight: 700, color: "#FF693D" }}>{row.st}%ile</span></td>
                     </tr>
                   ))}
                 </tbody>
@@ -882,7 +882,7 @@ export default function JeeMain() {
               <PctBar label="GEN-EWS"  value={80.38} color="#7C3AED" />
               <PctBar label="OBC-NCL"  value={79.43} color="#F4A261" />
               <PctBar label="SC"       value={60.09} color="#2EC4B6" />
-              <PctBar label="ST"       value={46.69} color="#F47E20" />
+              <PctBar label="ST"       value={46.69} color="#FF693D" />
             </div>
 
             <Trend
@@ -892,7 +892,7 @@ export default function JeeMain() {
                 { key: "ews",  label: "GEN-EWS",  color: "#7C3AED" },
                 { key: "obc",  label: "OBC-NCL",  color: "#F4A261" },
                 { key: "sc",   label: "SC",        color: "#2EC4B6" },
-                { key: "st",   label: "ST",        color: "#F47E20" },
+                { key: "st",   label: "ST",        color: "#FF693D" },
               ]}
               height={320}
             />
@@ -916,7 +916,7 @@ export default function JeeMain() {
             <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 14, textAlign: "center" }}>
               * NTA percentile scores from official JEE Main result notifications. Qualifying cutoff for JoSAA counselling.
               Verify at{" "}
-              <a href="https://jeemain.nta.ac.in" target="_blank" rel="noreferrer" style={{ color: "#F47E20", fontWeight: 600 }}>
+              <a href="https://jeemain.nta.ac.in" target="_blank" rel="noreferrer" style={{ color: "#FF693D", fontWeight: 600 }}>
                 jeemain.nta.ac.in
               </a>
             </p>
@@ -937,7 +937,7 @@ export default function JeeMain() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 14, marginBottom: 28 }}>
             {[
-              { label: "Total Questions", value: "75",    sub: "25 per subject", color: "#F47E20" },
+              { label: "Total Questions", value: "75",    sub: "25 per subject", color: "#FF693D" },
               { label: "Total Marks",     value: "300",   sub: "4 marks each",   color: "#0EA5A4" },
               { label: "Duration",        value: "3 hrs", sub: "180 minutes",    color: "#7C3AED" },
             ].map(({ label, value, sub, color }) => (
@@ -991,7 +991,7 @@ export default function JeeMain() {
           <div style={{ position: "relative", maxWidth: 960, margin: "0 auto" }}>
             <div style={{
               position: "absolute", left: "50%", top: 0, bottom: 0, width: 3,
-              background: "linear-gradient(180deg,#F47E20,#0EA5A4,#7C3AED,#EC4899,#EAB308,#6366F1,#15A06E)",
+              background: "linear-gradient(180deg,#FF693D,#0EA5A4,#7C3AED,#EC4899,#EAB308,#6366F1,#15A06E)",
               transform: "translateX(-50%)", borderRadius: 4,
             }} />
             {ROADMAP.map((step, i) => (
@@ -1037,11 +1037,11 @@ export default function JeeMain() {
           </div>
 
           {/* Book list */}
-          <div className="card" style={{ marginTop: 16, background: "linear-gradient(135deg,#ffffff,#ffffff)", border: "1px solid rgba(244,123,32,.2)" }}>
+          <div className="card" style={{ marginTop: 16, background: "linear-gradient(135deg,#ffffff,#ffffff)", border: "1px solid rgba(255, 105, 61,.2)" }}>
             <h4 style={{ fontFamily: "Sora", fontWeight: 800, marginBottom: 16, color: "#1a1a2e" }}>📚 Complete Book List — JEE Main</h4>
             <div className="grid-3" style={{ gap: 14 }}>
               {[
-                { subj: "Physics",   books: ["NCERT 11 & 12 (mandatory)", "DC Pandey (full series)", "HC Verma (select chapters)", "Arihant JEE Main Past Years"], color: "#F47E20" },
+                { subj: "Physics",   books: ["NCERT 11 & 12 (mandatory)", "DC Pandey (full series)", "HC Verma (select chapters)", "Arihant JEE Main Past Years"], color: "#FF693D" },
                 { subj: "Chemistry", books: ["NCERT 11 & 12 (inorganic = enough)", "OP Tandon Organic Chemistry", "Narendra Awasthi Physical Chem", "VK Jaiswal Inorganic (optional)"], color: "#0ea5a4" },
                 { subj: "Maths",     books: ["RD Sharma (Class 11 & 12)", "Cengage Series (topic-wise)", "Arihant 40 Days JEE Main Maths", "NTA Mock Papers (official free)"], color: "#8b5cf6" },
               ].map(({ subj, books, color }) => (
@@ -1098,7 +1098,7 @@ export default function JeeMain() {
             ))}
           </div>
 
-          <div className="card" style={{ marginTop: 20, borderLeft: "4px solid #F47E20", padding: "16px 20px" }}>
+          <div className="card" style={{ marginTop: 20, borderLeft: "4px solid #FF693D", padding: "16px 20px" }}>
             <h4 style={{ fontFamily: "Sora", fontWeight: 800, marginBottom: 10, fontSize: 15 }}>💡 How to Choose the Right Coaching for JEE Main</h4>
             <div className="grid-2" style={{ gap: 12 }}>
               {[
@@ -1108,7 +1108,7 @@ export default function JeeMain() {
                 { title: "Premium / Kota Coaching",    tip: "Allen or Resonance Kota if you can relocate. Hostel + coaching is ₹2.5L–4L/year all-in. Best peer group, most competitive environment." },
               ].map(({ title, tip }) => (
                 <div key={title} style={{ display: "flex", gap: 10 }}>
-                  <Star size={15} color="#F47E20" style={{ flexShrink: 0, marginTop: 2 }} />
+                  <Star size={15} color="#FF693D" style={{ flexShrink: 0, marginTop: 2 }} />
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 3 }}>{title}</div>
                     <div style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.6 }}>{tip}</div>

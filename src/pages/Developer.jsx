@@ -145,7 +145,7 @@ export default function Developer() {
         {/* Background glow blobs */}
         <div style={{ position: "absolute", top: -80, right: -40, width: 500, height: 500, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}25 0%, transparent 65%)`, pointerEvents: "none", zIndex: 0 }} />
         <div style={{ position: "absolute", bottom: -60, left: -40, width: 350, height: 350, borderRadius: "50%", background: `radial-gradient(circle, rgba(244,162,97,.18) 0%, transparent 65%)`, pointerEvents: "none", zIndex: 0 }} />
-        <div style={{ position: "absolute", top: "40%", left: "30%", width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, rgba(244,123,32,.14) 0%, transparent 70%)`, pointerEvents: "none", zIndex: 0 }} />
+        <div style={{ position: "absolute", top: "40%", left: "30%", width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, rgba(255, 105, 61,.14) 0%, transparent 70%)`, pointerEvents: "none", zIndex: 0 }} />
 
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 28, color: "#fff" }}>
@@ -197,16 +197,16 @@ export default function Developer() {
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 18 }}>
                 <div style={{ color: "rgba(28,28,40,.65)", display: "flex", alignItems: "center", gap: 5, fontSize: 13.5 }}>
-                  <MapPin size={14} color="#F47E20" /> {dev.location}
+                  <MapPin size={14} color="#FF693D" /> {dev.location}
                 </div>
                 {dev.jeeRank && (
                   <div style={{
                     display: "inline-flex", alignItems: "center", gap: 6,
-                    background: "rgba(244,123,32,.12)",
-                    border: `1px solid rgba(244,123,32,.38)`,
+                    background: "rgba(255, 105, 61,.12)",
+                    border: `1px solid rgba(255, 105, 61,.38)`,
                     borderRadius: 99, padding: "4px 14px",
                     fontSize: 13, fontWeight: 600, color: "#c75b0a",
-                    boxShadow: `0 0 14px rgba(244,123,32,.2)`,
+                    boxShadow: `0 0 14px rgba(255, 105, 61,.2)`,
                     animation: "rankGlow 2s ease-in-out infinite alternate",
                   }}>
                     🏆 {dev.jeeRank} · {dev.exam}
@@ -215,12 +215,12 @@ export default function Developer() {
                 {dev.college && (
                   <div style={{
                     display: "inline-flex", alignItems: "center", gap: 6,
-                    background: `rgba(244,123,32,.12)`,
-                    border: `1px solid rgba(244,123,32,.35)`,
+                    background: `rgba(255, 105, 61,.12)`,
+                    border: `1px solid rgba(255, 105, 61,.35)`,
                     borderRadius: 99, padding: "4px 14px",
                     fontSize: 13, fontWeight: 600,
                     color: "#c75b0a",
-                    boxShadow: `0 0 14px rgba(244,123,32,.18)`,
+                    boxShadow: `0 0 14px rgba(255, 105, 61,.18)`,
                     animation: "rankGlow 2s ease-in-out infinite alternate",
                   }}>
                     🎓 {dev.college}
@@ -267,8 +267,8 @@ export default function Developer() {
                   {dev.skills.slice(0, 4).map((s) => (
                     <span key={s} style={{
                       padding: "3px 10px", borderRadius: 50,
-                      background: "rgba(244,123,32,.1)",
-                      border: "1px solid rgba(244,123,32,.25)",
+                      background: "rgba(255, 105, 61,.1)",
+                      border: "1px solid rgba(255, 105, 61,.25)",
                       fontSize: 11, color: "#c2540a", fontWeight: 600,
                     }}>{s}</span>
                   ))}

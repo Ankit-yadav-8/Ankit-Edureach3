@@ -39,18 +39,18 @@ export default function ExamDetail() {
               flex: "0 1 320px", maxWidth: 340, alignSelf: "stretch",
               display: "flex", flexDirection: "column", gap: 10,
               background: "linear-gradient(160deg, #fff7ef 0%, #ffffff 60%, #fff3e6 100%)",
-              border: "1px solid rgba(244,123,32,.28)", borderRadius: 18,
+              border: "1px solid rgba(255, 105, 61,.28)", borderRadius: 18,
               padding: "20px 22px", textDecoration: "none", position: "relative", overflow: "hidden",
-              boxShadow: "0 16px 44px -26px rgba(244,123,32,.55)",
+              boxShadow: "0 16px 44px -26px rgba(255, 105, 61,.55)",
             }}
           >
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#F47E20,#F47E20)" }} />
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, alignSelf: "flex-start", fontSize: 11, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: "#c2410c", background: "rgba(244,123,32,.1)", border: "1px solid rgba(244,123,32,.28)", padding: "4px 11px", borderRadius: 50 }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#FF693D)" }} />
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, alignSelf: "flex-start", fontSize: 11, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: "#c2410c", background: "rgba(255, 105, 61,.1)", border: "1px solid rgba(255, 105, 61,.28)", padding: "4px 11px", borderRadius: 50 }}>
               <Sparkles size={12} /> 1-on-1 Mentorship
             </span>
             <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
-              <span style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(244,123,32,.14)", border: "1px solid rgba(244,123,32,.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                <GraduationCap size={20} color="#F47E20" />
+              <span style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(255, 105, 61,.14)", border: "1px solid rgba(255, 105, 61,.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <GraduationCap size={20} color="#FF693D" />
               </span>
               <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.02rem", color: "#1a1a2e", margin: 0, lineHeight: 1.2 }}>
                 Crack {exam.name} with a mentor
@@ -59,7 +59,7 @@ export default function ExamDetail() {
             <p style={{ color: "#5b6472", fontSize: 13, lineHeight: 1.55, margin: 0 }}>
               A personal IITian / doctor mentor, a study plan and weekly accountability.
             </p>
-            <span style={{ marginTop: 2, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(135deg,#F47E20,#F47E20)", color: "#fff", padding: "11px 18px", borderRadius: 11, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 13.5, boxShadow: "0 10px 24px -8px rgba(244,123,32,.6)" }}>
+            <span style={{ marginTop: 2, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(135deg,#FF693D,#FF693D)", color: "#fff", padding: "11px 18px", borderRadius: 11, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 13.5, boxShadow: "0 10px 24px -8px rgba(255, 105, 61,.6)" }}>
               Explore Mentorship <ArrowRight size={15} />
             </span>
           </Link>
@@ -111,7 +111,7 @@ export default function ExamDetail() {
               { key: "open", label: "General", color: "#1c1c28" },
               { key: "obc", label: "OBC-NCL", color: "#F4A261" },
               { key: "sc", label: "SC", color: "#2EC4B6" },
-              { key: "st", label: "ST", color: "#F47E20" },
+              { key: "st", label: "ST", color: "#FF693D" },
             ]} height={300} />
           </div>
         </Reveal>

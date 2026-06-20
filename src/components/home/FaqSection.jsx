@@ -33,7 +33,7 @@ const FAQS = [
 
 function Item({ item, open, onToggle }) {
   return (
-    <div style={{ background: CL.card, border: `1px solid ${open ? CL.coral + "55" : CL.line}`, borderRadius: 16, boxShadow: open ? "0 8px 26px rgba(244,126,32,.08)" : CL.shadow, overflow: "hidden", transition: "border-color .2s" }}>
+    <div style={{ background: CL.card, border: `1px solid ${open ? CL.coral + "55" : CL.line}`, borderRadius: 16, boxShadow: open ? "0 8px 26px rgba(255, 105, 61,.08)" : CL.shadow, overflow: "hidden", transition: "border-color .2s" }}>
       <button onClick={onToggle} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "18px 22px", cursor: "pointer", textAlign: "left" }}>
         <span style={{ fontFamily: CL.display, fontWeight: 700, fontSize: 15.5, color: CL.ink }}>{item.q}</span>
         <span style={{ width: 28, height: 28, borderRadius: "50%", background: open ? CL.coral : CL.coralSoft, display: "grid", placeItems: "center", flexShrink: 0 }}>

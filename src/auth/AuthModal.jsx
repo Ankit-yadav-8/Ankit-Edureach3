@@ -10,7 +10,7 @@ import { useAuth } from "./AuthContext.jsx";
 import { apiForgot, apiReset, apiSendOtp, apiVerifyOtp } from "./api.js";
 
 /* ── constants ──────────────────────────────────────────────── */
-const OR  = "#F47E20";
+const OR  = "#FF693D";
 const ORD = "#E0421F";
 // Email is only accepted when it ends with "@gmail.com" or with ".in"
 const isEmail = (v) => {
@@ -597,7 +597,7 @@ export default function AuthModal() {
           {/* ─── HEADER BAND ─── */}
           <div className="auth-header-band" style={{
             background: `linear-gradient(135deg, #fff7ef 0%, #ffe9d4 45%, #ffdfc2 100%)`,
-            borderBottom: "1px solid rgba(244,123,32,.16)",
+            borderBottom: "1px solid rgba(255, 105, 61,.16)",
             position: "relative", overflow: "hidden",
           }}>
             {/* glow orbs */}
@@ -610,7 +610,7 @@ export default function AuthModal() {
                 <motion.button
                   whileHover={{ x: -2 }}
                   onClick={() => go(mode === "otpCode" ? "otpEmail" : "login")}
-                  style={{ background: "rgba(244,123,32,.10)", border: "1px solid rgba(244,123,32,.25)", borderRadius: 8, cursor: "pointer", color: "#c2410c", padding: "5px 12px", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 5 }}
+                  style={{ background: "rgba(255, 105, 61,.10)", border: "1px solid rgba(255, 105, 61,.25)", borderRadius: 8, cursor: "pointer", color: "#c2410c", padding: "5px 12px", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 5 }}
                 >
                   <ArrowLeft size={14} /> Back
                 </motion.button>
@@ -628,9 +628,9 @@ export default function AuthModal() {
 
               {!mandatory && (
                 <button onClick={close} aria-label="Close"
-                  style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(244,123,32,.10)", border: "1px solid rgba(244,123,32,.22)", cursor: "pointer", color: "#c2410c", display: "grid", placeItems: "center", transition: "background .15s" }}
-                  onMouseEnter={e => e.currentTarget.style.background = "rgba(244,123,32,.2)"}
-                  onMouseLeave={e => e.currentTarget.style.background = "rgba(244,123,32,.10)"}
+                  style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(255, 105, 61,.10)", border: "1px solid rgba(255, 105, 61,.22)", cursor: "pointer", color: "#c2410c", display: "grid", placeItems: "center", transition: "background .15s" }}
+                  onMouseEnter={e => e.currentTarget.style.background = "rgba(255, 105, 61,.2)"}
+                  onMouseLeave={e => e.currentTarget.style.background = "rgba(255, 105, 61,.10)"}
                   title="Close"
                 >
                   <X size={15} />
@@ -660,7 +660,7 @@ export default function AuthModal() {
             {/* Login / Sign up tab switcher (only on login/signup) */}
             {(mode === "login" || mode === "signup") && (
               <div style={{
-                display: "flex", background: "rgba(244,123,32,.10)", border: "1px solid rgba(244,123,32,.18)", borderRadius: 10,
+                display: "flex", background: "rgba(255, 105, 61,.10)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 10,
                 padding: 3, marginTop: 18, position: "relative", zIndex: 1,
               }}>
                 {[["login", "Log in"], ["signup", "Sign up"]].map(([m, lbl]) => (
@@ -887,7 +887,7 @@ export default function AuthModal() {
                   style={{
                     marginTop: 10,
                     background: "linear-gradient(135deg,#ffffff,#ffffff)",
-                    border: "1px solid rgba(244,123,32,.22)",
+                    border: "1px solid rgba(255, 105, 61,.22)",
                     borderRadius: 10,
                     padding: "10px 14px",
                     display: "flex", alignItems: "flex-start", gap: 8,

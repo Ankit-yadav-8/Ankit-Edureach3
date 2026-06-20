@@ -148,7 +148,7 @@ function highlight(text, term) {
   if (i === -1) return text;
   return (<>
     {text.slice(0, i)}
-    <mark style={{ background: "rgba(244,123,32,.22)", color: "#c2410c", borderRadius: 3, padding: "0 2px" }}>{text.slice(i, i + term.length)}</mark>
+    <mark style={{ background: "rgba(255, 105, 61,.22)", color: "#c2410c", borderRadius: 3, padding: "0 2px" }}>{text.slice(i, i + term.length)}</mark>
     {text.slice(i + term.length)}
   </>);
 }
@@ -159,7 +159,7 @@ function Faq({ q, a, term, defaultOpen = false }) {
     <div
       className="faq-card"
       onClick={() => setOpen((o) => !o)}
-      style={{ borderColor: open ? "rgba(244,123,32,.45)" : "rgba(0,0,0,.08)" }}
+      style={{ borderColor: open ? "rgba(255, 105, 61,.45)" : "rgba(0,0,0,.08)" }}
     >
       <div className="faq-card__head">
         <span className="faq-card__q">{highlight(q, term)}</span>
@@ -268,11 +268,11 @@ export default function Josaa2026() {
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 50% 50% at 0% 80%, rgba(244,162,97,.20) 0%, transparent 60%)" }} />
         <div className="container josaa-hero-grid" style={{ display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: 40, alignItems: "center", position: "relative", zIndex: 1 }}>
           <div>
-            <span className="pill" style={{ background: "rgba(244,123,32,.12)", color: "#c75b0a", border: "1px solid rgba(244,123,32,.38)" }}>
+            <span className="pill" style={{ background: "rgba(255, 105, 61,.12)", color: "#c75b0a", border: "1px solid rgba(255, 105, 61,.38)" }}>
               <Sparkles size={13} /> JoSAA + CSAB 2026 Counselling
             </span>
             <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(2rem,4.5vw,3.1rem)", lineHeight: 1.12, margin: "16px 0 14px", color: "#1c1c28" }}>
-              Don't lose your dream college to a <span style={{ color: "#F47E20" }}>wrong choice list</span>.
+              Don't lose your dream college to a <span style={{ color: "#FF693D" }}>wrong choice list</span>.
             </h1>
             <p style={{ color: "rgba(28,28,40,.65)", fontSize: "1.1rem", maxWidth: 540, lineHeight: 1.6 }}>
               Get a personalised, data-backed JoSAA choice-filling plan and 1-on-1 mentorship from people who've done it — for just ₹299.
@@ -282,9 +282,9 @@ export default function Josaa2026() {
               <a href={WA} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 15, padding: "14px 22px" }}><MessageCircle size={17} /> Talk on WhatsApp</a>
             </div>
             <div style={{ display: "flex", gap: 20, marginTop: 24, flexWrap: "wrap", fontSize: 13.5, color: "rgba(28,28,40,.65)" }}>
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><BadgeCheck size={15} color="#F47E20" /> Built by IITians</span>
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Users size={15} color="#F47E20" /> 2,000+ students guided</span>
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Star size={15} color="#F47E20" fill="#F47E20" /> 4.8/5 rating</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><BadgeCheck size={15} color="#FF693D" /> Built by IITians</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Users size={15} color="#FF693D" /> 2,000+ students guided</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Star size={15} color="#FF693D" fill="#FF693D" /> 4.8/5 rating</span>
             </div>
           </div>
 

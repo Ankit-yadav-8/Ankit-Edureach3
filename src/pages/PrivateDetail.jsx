@@ -63,28 +63,28 @@ export default function PrivateDetail() {
             className="btn"
             style={{
               marginBottom: 18,
-              background: "#F47E20",
+              background: "#FF693D",
               color: "#fff",
               border: "none",
               fontWeight: 700,
-              boxShadow: "0 4px 14px rgba(244,123,32,.3)",
+              boxShadow: "0 4px 14px rgba(255, 105, 61,.3)",
               transition: "all .2s",
             }}
             onMouseEnter={(e) => { e.currentTarget.style.background = "#e36a14"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#F47E20"; e.currentTarget.style.transform = ""; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#FF693D"; e.currentTarget.style.transform = ""; }}
           >
             <ArrowLeft size={16} /> Back
           </button>
           <span className="eyebrow">Private University · {u.exam}</span>
           <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", margin: "10px 0 4px", color: "#1c1c28" }}>{u.name}</h1>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(28,28,40,.65)", marginTop: 6 }}><MapPin size={16} color="#F47E20" /> {u.state} · Fees {u.fees}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(28,28,40,.65)", marginTop: 6 }}><MapPin size={16} color="#FF693D" /> {u.state} · Fees {u.fees}</div>
           <div style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
             <a
               href={u.apply}
               target="_blank"
               rel="noreferrer"
               className="btn btn-coral"
-              style={{ fontWeight: 700, boxShadow: "0 6px 18px rgba(244,123,32,.32)" }}
+              style={{ fontWeight: 700, boxShadow: "0 6px 18px rgba(255, 105, 61,.32)" }}
             >
               Apply Now <ExternalLink size={15} />
             </a>
@@ -96,12 +96,12 @@ export default function PrivateDetail() {
               style={{
                 background: "#fff",
                 color: "#E0421F",
-                border: "1.5px solid rgba(244,123,32,.4)",
+                border: "1.5px solid rgba(255, 105, 61,.4)",
                 fontWeight: 700,
                 transition: "all .2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(244,123,32,.09)"; e.currentTarget.style.borderColor = "#F47E20"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(244,123,32,.4)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255, 105, 61,.09)"; e.currentTarget.style.borderColor = "#FF693D"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(255, 105, 61,.4)"; }}
             >
               <Globe size={15} /> Website
             </a>
@@ -127,7 +127,7 @@ export default function PrivateDetail() {
           <Reveal delay={0.08}>
             <div className="card">
               <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Placements</h3>
-              <CenterDonut data={placeData} centerLabel={`${u.placements.placedPct}%`} centerSub="placed" colors={["#2EC4B6", "#F47E20"]} height={190} />
+              <CenterDonut data={placeData} centerLabel={`${u.placements.placedPct}%`} centerSub="placed" colors={["#2EC4B6", "#FF693D"]} height={190} />
               <div className="grid-2" style={{ gap: 12, marginTop: 12 }}>
                 {[["Average", u.placements.avg], ["Highest", u.placements.highest]].map(([l, v]) => (
                   <div key={l} style={{ background: "var(--sky)", borderRadius: 12, padding: 14 }}>
@@ -136,7 +136,7 @@ export default function PrivateDetail() {
                   </div>
                 ))}
               </div>
-              <span className="pill" style={{ marginTop: 14, background: "#fff3e6", color: "#F47E20" }}>Application deadline: {u.deadline}</span>
+              <span className="pill" style={{ marginTop: 14, background: "#fff3e6", color: "#FF693D" }}>Application deadline: {u.deadline}</span>
             </div>
           </Reveal>
         </div>

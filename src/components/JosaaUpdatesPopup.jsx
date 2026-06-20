@@ -120,7 +120,7 @@ export default function JosaaUpdatesPopup() {
                   const Ic = l.icon;
                   const inner = (
                     <>
-                      <span className="jpop-link__ic" style={{ background: l.hot ? "#F47E20" : "rgba(244,123,32,.12)", color: l.hot ? "#fff" : "#F47E20" }}>
+                      <span className="jpop-link__ic" style={{ background: l.hot ? "#FF693D" : "rgba(255, 105, 61,.12)", color: l.hot ? "#fff" : "#FF693D" }}>
                         <Ic size={15} />
                       </span>
                       <span className="jpop-link__txt">
@@ -168,7 +168,7 @@ const CSS = `
 .jpop-close:hover{background:rgba(255,255,255,.34)}
 
 /* header */
-.jpop-head{background:linear-gradient(135deg,#F47E20,#E0421F); color:#fff; padding:22px 24px 20px; position:relative; overflow:hidden}
+.jpop-head{background:linear-gradient(135deg,#FF693D,#E0421F); color:#fff; padding:22px 24px 20px; position:relative; overflow:hidden}
 .jpop-head::after{content:''; position:absolute; top:-40px; right:-20px; width:180px; height:180px; border-radius:50%;
   background:radial-gradient(circle,rgba(255,255,255,.18),transparent 70%)}
 .jpop-live{display:inline-flex; align-items:center; gap:6px; font-size:10px; font-weight:800; letter-spacing:1.5px;
@@ -184,20 +184,20 @@ const CSS = `
 
 /* featured */
 .jpop-feature{display:flex; flex-direction:column; align-items:flex-start; gap:3px; width:100%; text-align:left; cursor:pointer;
-  background:linear-gradient(135deg,#ffffff,#ffedd5); border:1.5px solid rgba(244,123,32,.4); border-radius:14px; padding:14px 16px;
+  background:linear-gradient(135deg,#ffffff,#ffedd5); border:1.5px solid rgba(255, 105, 61,.4); border-radius:14px; padding:14px 16px;
   transition:transform .2s, box-shadow .2s}
-.jpop-feature:hover{transform:translateY(-2px); box-shadow:0 12px 28px rgba(244,123,32,.22)}
+.jpop-feature:hover{transform:translateY(-2px); box-shadow:0 12px 28px rgba(255, 105, 61,.22)}
 .jpop-feature__tag{font-size:9.5px; font-weight:800; letter-spacing:.6px; color:#fff; background:#ef4444; padding:3px 8px; border-radius:5px}
 .jpop-feature__title{font-size:15px; font-weight:800; color:#1a1a2e; margin-top:6px; line-height:1.3}
 .jpop-feature__sub{font-size:12px; color:#6b7280}
-.jpop-feature__cta{display:inline-flex; align-items:center; gap:5px; font-size:12.5px; font-weight:800; color:#F47E20; margin-top:7px}
+.jpop-feature__cta{display:inline-flex; align-items:center; gap:5px; font-size:12.5px; font-weight:800; color:#FF693D; margin-top:7px}
 
 /* ffs */
 .jpop-ffs-tabs{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
 .jpop-ffs-tab{display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:9px 6px; border-radius:10px;
   border:1.5px solid rgba(0,0,0,.1); background:#fff; color:#374151; font-weight:700; font-size:13px; cursor:pointer;
   font-family:inherit; transition:all .18s}
-.jpop-ffs-tab:hover{border-color:rgba(244,123,32,.4)}
+.jpop-ffs-tab:hover{border-color:rgba(255, 105, 61,.4)}
 .jpop-ffs-detail{margin-top:10px; border:1.5px solid; border-radius:12px; padding:12px 14px; background:#fafafa}
 .jpop-ffs-detail__fn{font-size:11px; font-weight:800; letter-spacing:.5px; text-transform:uppercase}
 .jpop-ffs-detail p{font-size:13px; line-height:1.55; color:#374151; margin:5px 0 0}
@@ -207,18 +207,18 @@ const CSS = `
 .jpop-links{display:flex; flex-direction:column; gap:8px}
 .jpop-link{display:flex; align-items:center; gap:11px; width:100%; text-align:left; cursor:pointer; text-decoration:none;
   background:#fff; border:1px solid rgba(0,0,0,.09); border-radius:12px; padding:10px 13px; transition:transform .18s, box-shadow .18s, border-color .18s}
-.jpop-link:hover{transform:translateX(3px); border-color:rgba(244,123,32,.4); box-shadow:0 8px 20px rgba(244,123,32,.14)}
+.jpop-link:hover{transform:translateX(3px); border-color:rgba(255, 105, 61,.4); box-shadow:0 8px 20px rgba(255, 105, 61,.14)}
 .jpop-link__ic{width:34px; height:34px; border-radius:9px; display:grid; place-items:center; flex-shrink:0}
 .jpop-link__txt{flex:1; min-width:0}
 .jpop-link__lbl{display:flex; align-items:center; gap:6px; font-weight:700; font-size:13.3px; color:#1a1a2e}
 .jpop-link__hot{font-size:8.5px; font-weight:800; letter-spacing:.4px; color:#fff; background:#ef4444; padding:1px 5px; border-radius:4px}
 .jpop-link__tag{display:block; font-size:11.3px; color:#9ca3af; margin-top:1px}
-.jpop-link__arr{color:#F47E20; flex-shrink:0}
+.jpop-link__arr{color:#FF693D; flex-shrink:0}
 
 /* footer */
 .jpop-foot{display:flex; align-items:center; gap:9px; flex-wrap:wrap; padding:14px 22px 18px; border-top:1px solid rgba(0,0,0,.07); background:#fff}
 .jpop-btn{display:inline-flex; align-items:center; gap:7px; font-weight:800; font-size:13px; padding:11px 16px; border-radius:11px; cursor:pointer; border:none; text-decoration:none; font-family:inherit; transition:transform .18s, box-shadow .18s}
-.jpop-btn--primary{flex:1; justify-content:center; background:linear-gradient(135deg,#F47E20,#E0421F); color:#fff; box-shadow:0 8px 20px rgba(244,123,32,.34)}
+.jpop-btn--primary{flex:1; justify-content:center; background:linear-gradient(135deg,#FF693D,#E0421F); color:#fff; box-shadow:0 8px 20px rgba(255, 105, 61,.34)}
 .jpop-btn--primary:hover{transform:translateY(-1px)}
 .jpop-btn--wa{background:#25D366; color:#fff}
 .jpop-foot__note{display:inline-flex; align-items:center; gap:4px; width:100%; justify-content:center; font-size:11px; color:#9ca3af; font-weight:600; margin-top:2px}

@@ -47,7 +47,7 @@ const SUBJECTS = [
     name: "Physics",
     short: "Phy",
     icon: Zap,
-    color: "#F47E20",
+    color: "#FF693D",
     light: "#ffffff",
     chapters: 25,
     desc: "Mechanics, Electrodynamics, Optics, Modern Physics",
@@ -131,7 +131,7 @@ const DIFF_STYLE = {
 };
 
 const JEE_STYLE = {
-  Main:     { bg: "rgba(244,123,32,.12)", color: "#F47E20" },
+  Main:     { bg: "rgba(255, 105, 61,.12)", color: "#FF693D" },
   Advanced: { bg: "rgba(99,102,241,.12)", color: "#6366f1" },
 };
 
@@ -404,7 +404,7 @@ export default function JeeResources() {
       <section className="warm-page-header" style={{ padding: "60px 0 48px" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 45% 55% at 0% 80%, rgba(244,162,97,.20) 0%, transparent 60%)" }} />
-        <div style={{ position: "absolute", top: 20, right: -40, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(244,123,32,.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 20, right: -40, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(255, 105, 61,.15) 0%, transparent 70%)", pointerEvents: "none" }} />
 
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <motion.div
@@ -423,7 +423,7 @@ export default function JeeResources() {
               lineHeight: 1.12, margin: "0 0 16px",
             }}>
               Master JEE with{" "}
-              <span style={{ background: "linear-gradient(90deg, #F47E20, #E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              <span style={{ background: "linear-gradient(90deg, #FF693D, #E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 Subject-wise Chapters
               </span>
             </h1>
@@ -435,9 +435,9 @@ export default function JeeResources() {
             {/* Quick stats */}
             <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
               {[
-                { icon: BookOpen, label: "19 Math chapters",     color: "#F47E20" },
+                { icon: BookOpen, label: "19 Math chapters",     color: "#FF693D" },
                 { icon: Zap,      label: "25 Physics chapters",  color: "#E0421F" },
-                { icon: FlaskConical, label: "29 Chem chapters", color: "#F47E20" },
+                { icon: FlaskConical, label: "29 Chem chapters", color: "#FF693D" },
               ].map(({ icon: Icon, label, color }) => (
                 <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(28,28,40,.75)", fontSize: 13.5, fontWeight: 600 }}>
                   <Icon size={15} color={color} /> {label}

@@ -10,7 +10,7 @@ import {
 
 
 const TOP_IIT = [
-  { name: "IIT Madras",    nirf: 1,  loc: "Chennai",   avg: 3990000, placed: 94, cse: "83–185",    color: "#F47E20" },
+  { name: "IIT Madras",    nirf: 1,  loc: "Chennai",   avg: 3990000, placed: 94, cse: "83–185",    color: "#FF693D" },
   { name: "IIT Bombay",   nirf: 3,  loc: "Mumbai",    avg: 3730000, placed: 96, cse: "67–150",    color: "#6366f1" },
   { name: "IIT Delhi",    nirf: 2,  loc: "New Delhi", avg: 3590000, placed: 95, cse: "98–203",    color: "#0ea5a4" },
   { name: "IIT Kanpur",   nirf: 5,  loc: "Kanpur",    avg: 3510000, placed: 92, cse: "290–450",   color: "#8b5cf6" },
@@ -30,7 +30,7 @@ const TOP_NIT = [
 
 const BRANCH_PKG_IIT = [
   { branch: "CSE / AI",        avg: 4800000, trend: "+14%", color: "#6366f1" },
-  { branch: "ECE",             avg: 3200000, trend: "+9%",  color: "#F47E20" },
+  { branch: "ECE",             avg: 3200000, trend: "+9%",  color: "#FF693D" },
   { branch: "Electrical (EE)", avg: 2900000, trend: "+8%",  color: "#f59e0b" },
   { branch: "Mechanical",      avg: 2400000, trend: "+5%",  color: "#0ea5a4" },
   { branch: "Civil",           avg: 1900000, trend: "+4%",  color: "#8b5cf6" },
@@ -39,7 +39,7 @@ const BRANCH_PKG_IIT = [
 
 const BRANCH_PKG_NIT = [
   { branch: "CSE / AI",        avg: 2200000, trend: "+12%", color: "#6366f1" },
-  { branch: "ECE",             avg: 1450000, trend: "+8%",  color: "#F47E20" },
+  { branch: "ECE",             avg: 1450000, trend: "+8%",  color: "#FF693D" },
   { branch: "Electrical (EE)", avg: 1180000, trend: "+6%",  color: "#f59e0b" },
   { branch: "Mechanical",      avg: 980000,  trend: "+4%",  color: "#0ea5a4" },
   { branch: "Civil",           avg: 760000,  trend: "+3%",  color: "#8b5cf6" },
@@ -162,26 +162,26 @@ export default function CollegeSnapshot() {
             marginBottom: 28,
             position: "relative",
             overflow: "hidden",
-            boxShadow: "0 4px 24px rgba(244,123,32,.1)",
-            border: "1px solid rgba(244,123,32,.2)",
+            boxShadow: "0 4px 24px rgba(255, 105, 61,.1)",
+            border: "1px solid rgba(255, 105, 61,.2)",
           }}
         >
           {/* Top gradient line */}
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #F47E20, #fbbf24, #F47E20)" }} />
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #FF693D, #fbbf24, #FF693D)" }} />
           {/* Glow blob */}
 
           {/* IIT Section Header */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22, flexWrap: "wrap", gap: 12 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(244,123,32,.2)", border: "1.5px solid rgba(244,123,32,.4)", display: "grid", placeItems: "center" }}>
-                <Flame size={22} color="#F47E20" />
+              <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(255, 105, 61,.2)", border: "1.5px solid rgba(255, 105, 61,.4)", display: "grid", placeItems: "center" }}>
+                <Flame size={22} color="#FF693D" />
               </div>
               <div>
                 <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.25rem", color: "#1a1a2e" }}>IIT Placements 2026</div>
-                <div style={{ fontSize: 12, color: "#6b7280" }}>23 Institutes · 17,385 seats · <span style={{ color: "#F47E20", fontWeight: 700 }}>Avg +₹15.5L from last year</span></div>
+                <div style={{ fontSize: 12, color: "#6b7280" }}>23 Institutes · 17,385 seats · <span style={{ color: "#FF693D", fontWeight: 700 }}>Avg +₹15.5L from last year</span></div>
               </div>
             </div>
-            <button onClick={() => nav("/colleges?type=IIT")} style={{ display: "flex", alignItems: "center", gap: 5, background: "rgba(244,123,32,.15)", border: "1px solid rgba(244,123,32,.35)", borderRadius: 50, padding: "7px 16px", cursor: "pointer", color: "#F47E20", fontSize: 12.5, fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif" }}>
+            <button onClick={() => nav("/colleges?type=IIT")} style={{ display: "flex", alignItems: "center", gap: 5, background: "rgba(255, 105, 61,.15)", border: "1px solid rgba(255, 105, 61,.35)", borderRadius: 50, padding: "7px 16px", cursor: "pointer", color: "#FF693D", fontSize: 12.5, fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif" }}>
               All IITs <ArrowRight size={13} />
             </button>
           </div>
@@ -203,7 +203,7 @@ export default function CollegeSnapshot() {
                   border: `1px solid ${c.color}22`,
                   cursor: "pointer", transition: "all .2s",
                 }}
-                whileHover={{ background: `rgba(244,123,32,.06)`, borderColor: `${c.color}44` }}
+                whileHover={{ background: `rgba(255, 105, 61,.06)`, borderColor: `${c.color}44` }}
               >
                 <div style={{ width: 34, height: 34, borderRadius: 9, background: `${c.color}28`, border: `1.5px solid ${c.color}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
                   <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 10, color: c.color }}>#{c.nirf}</span>
@@ -213,7 +213,7 @@ export default function CollegeSnapshot() {
                   <div style={{ fontSize: 10.5, color: "#6b7280" }}>{c.loc}</div>
                 </div>
                 <div style={{ textAlign: "right", flexShrink: 0 }}>
-                  <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 14, color: "#F47E20" }}>{fmtL(c.avg)}</div>
+                  <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 14, color: "#FF693D" }}>{fmtL(c.avg)}</div>
                   <div style={{ fontSize: 10, color: "#6b7280" }}>{c.placed}% placed</div>
                 </div>
               </motion.div>

@@ -5,7 +5,7 @@ import { search, answerFor } from "../utils/searchIndex.js";
 import { fmtINR } from "../utils/format.js";
 import Seo from "../components/Seo.jsx";
 
-const KIND_COLOR = { College: "#0EA5A4", Private: "#0EA5A4", Exam: "#F47E20", News: "#F4A261", Tool: "#2EC4B6" };
+const KIND_COLOR = { College: "#0EA5A4", Private: "#0EA5A4", Exam: "#FF693D", News: "#F4A261", Tool: "#2EC4B6" };
 const FILTERS = ["All", "College", "Exam", "Private", "News", "Tool"];
 const SUGGESTIONS = ["Top IITs with package above 20 lakh", "CSE colleges in Tamil Nadu", "Best NITs for placements", "Affordable IIITs"];
 

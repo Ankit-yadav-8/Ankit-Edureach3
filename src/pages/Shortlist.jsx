@@ -59,7 +59,7 @@ export default function Shortlist() {
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <span className="eyebrow">My Colleges</span>
           <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.4rem)", margin: "8px 0 4px", display: "flex", alignItems: "center", gap: 10, color: "#1c1c28" }}>
-            <Heart size={28} fill="#F47E20" color="#F47E20" /> Your shortlist
+            <Heart size={28} fill="#FF693D" color="#FF693D" /> Your shortlist
           </h1>
           <p style={{ color: "rgba(28,28,40,.62)" }}>{cols.length ? `${cols.length} saved college${cols.length > 1 ? "s" : ""}.` : "Save colleges with the heart button to build your shortlist."}</p>
         </div>

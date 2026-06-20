@@ -32,7 +32,7 @@ export function DifficultyAnalysis() {
         {[["Physics", s.phys], ["Chemistry", s.chem], ["Maths", s.math], ["Overall", overall]].map(([label, val]) => (
           <div className="card" key={label} style={{ textAlign: "center" }}>
             <CenterDonut data={donut(label, val)} centerLabel={`${val}%`} centerSub={label}
-              colors={[SUBJECT_COLOR[label] || "#F47E20", "#eef0f5"]} height={150} />
+              colors={[SUBJECT_COLOR[label] || "#FF693D", "#eef0f5"]} height={150} />
             <div style={{ fontSize: 13, fontWeight: 600, color: "var(--navy)", marginTop: 4 }}>
               {val >= 65 ? "Tough" : val >= 50 ? "Moderate" : "Easy"} difficulty
             </div>

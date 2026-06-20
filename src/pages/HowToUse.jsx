@@ -9,7 +9,7 @@ import {
 import Reveal from "../components/Reveal.jsx";
 import Seo from "../components/Seo.jsx";
 
-const OR = "#F47E20";
+const OR = "#FF693D";
 
 /* ── The 4-step big-picture journey ─────────────────────────── */
 const JOURNEY = [
@@ -236,7 +236,7 @@ function StepCard({ item, last }) {
                 width: 58, height: 58, borderRadius: 16,
                 background: `linear-gradient(135deg, ${OR}, #f9953d)`,
                 display: "grid", placeItems: "center",
-                boxShadow: "0 8px 20px -6px rgba(244,123,32,.6)",
+                boxShadow: "0 8px 20px -6px rgba(255, 105, 61,.6)",
                 flexShrink: 0,
               }}
             >
@@ -245,7 +245,7 @@ function StepCard({ item, last }) {
             <span
               style={{
                 fontFamily: "Sora", fontWeight: 800, fontSize: 13,
-                color: OR, background: "rgba(244,123,32,.1)",
+                color: OR, background: "rgba(255, 105, 61,.1)",
                 borderRadius: 999, padding: "3px 11px", whiteSpace: "nowrap",
               }}
             >
@@ -259,7 +259,7 @@ function StepCard({ item, last }) {
               <h3 style={{ fontFamily: "Space Grotesk", fontWeight: 800, fontSize: "1.32rem", color: "var(--navy)" }}>
                 {item.title}
               </h3>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#E0421F", background: "rgba(244,123,32,.12)", padding: "3px 9px", borderRadius: 6, textTransform: "uppercase", letterSpacing: ".04em" }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#E0421F", background: "rgba(255, 105, 61,.12)", padding: "3px 9px", borderRadius: 6, textTransform: "uppercase", letterSpacing: ".04em" }}>
                 {item.tag}
               </span>
             </div>
@@ -282,8 +282,8 @@ function StepCard({ item, last }) {
             <div
               style={{
                 display: "flex", alignItems: "flex-start", gap: 10,
-                background: "linear-gradient(120deg, rgba(244,123,32,.07), rgba(251,191,36,.07))",
-                border: "1px solid rgba(244,123,32,.18)",
+                background: "linear-gradient(120deg, rgba(255, 105, 61,.07), rgba(251,191,36,.07))",
+                border: "1px solid rgba(255, 105, 61,.18)",
                 borderRadius: 12, padding: "11px 14px", marginBottom: item.to ? 16 : 0,
               }}
             >
@@ -301,7 +301,7 @@ function StepCard({ item, last }) {
                   display: "inline-flex", alignItems: "center", gap: 7,
                   background: OR, color: "#fff", fontWeight: 700, fontSize: "0.9rem",
                   padding: "9px 18px", borderRadius: 10, textDecoration: "none",
-                  boxShadow: "0 8px 18px -8px rgba(244,123,32,.7)",
+                  boxShadow: "0 8px 18px -8px rgba(255, 105, 61,.7)",
                 }}
               >
                 Try it now <ArrowRight size={16} />
@@ -320,7 +320,7 @@ function StepCard({ item, last }) {
             viewport={{ once: true }}
             style={{
               width: 38, height: 38, borderRadius: "50%",
-              background: "rgba(244,123,32,.1)", border: "1.5px solid rgba(244,123,32,.3)",
+              background: "rgba(255, 105, 61,.1)", border: "1.5px solid rgba(255, 105, 61,.3)",
               display: "grid", placeItems: "center",
             }}
           >
@@ -354,7 +354,7 @@ export default function HowToUse() {
             <span
               style={{
                 display: "inline-flex", alignItems: "center", gap: 7,
-                background: "rgba(244,123,32,.12)", color: "#E0421F",
+                background: "rgba(255, 105, 61,.12)", color: "#E0421F",
                 fontWeight: 700, fontSize: 13, padding: "6px 15px",
                 borderRadius: 999, marginBottom: 18, letterSpacing: ".02em",
               }}
@@ -365,7 +365,7 @@ export default function HowToUse() {
               How to use{" "}
               <span
                 style={{
-                  background: "linear-gradient(90deg, #F47E20, #F47E20, #fbbf24)",
+                  background: "linear-gradient(90deg, #FF693D, #FF693D, #fbbf24)",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                 }}
               >
@@ -391,8 +391,8 @@ export default function HowToUse() {
                     className="htu-journey-card"
                     style={{
                       background: "#fff", borderRadius: 16,
-                      border: "1px solid rgba(244,123,32,.2)",
-                      boxShadow: "0 6px 20px -8px rgba(244,123,32,.4)",
+                      border: "1px solid rgba(255, 105, 61,.2)",
+                      boxShadow: "0 6px 20px -8px rgba(255, 105, 61,.4)",
                       padding: "16px 18px", width: 132, textAlign: "center",
                     }}
                   >
@@ -473,7 +473,7 @@ export default function HowToUse() {
                     <div
                       style={{
                         width: 46, height: 46, borderRadius: 12, marginBottom: 14,
-                        background: "rgba(244,123,32,.12)", display: "grid", placeItems: "center",
+                        background: "rgba(255, 105, 61,.12)", display: "grid", placeItems: "center",
                       }}
                     >
                       <Ic size={22} color={OR} />
@@ -494,9 +494,9 @@ export default function HowToUse() {
           <Reveal>
             <div
               style={{
-                background: "linear-gradient(135deg, #F47E20 0%, #F47E20 55%, #fb923c 100%)",
+                background: "linear-gradient(135deg, #FF693D 0%, #FF693D 55%, #fb923c 100%)",
                 borderRadius: 26, padding: "44px 32px", textAlign: "center",
-                boxShadow: "0 20px 50px -16px rgba(244,123,32,.6)",
+                boxShadow: "0 20px 50px -16px rgba(255, 105, 61,.6)",
               }}
             >
               <div style={{ width: 60, height: 60, borderRadius: "50%", background: "rgba(255,255,255,.18)", display: "grid", placeItems: "center", margin: "0 auto 18px" }}>

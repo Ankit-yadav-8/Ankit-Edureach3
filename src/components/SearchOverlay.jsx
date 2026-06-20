@@ -17,8 +17,8 @@ const KIND_COLOR = {
   Medical: "#15a06e",
   Private: "#0EA5A4",
   Exam: "#2ec4b6",
-  News: "#F47E20",
-  Tool: "#F47E20",
+  News: "#FF693D",
+  Tool: "#FF693D",
 };
 
 const SUGGESTED = ["IIT Bombay", "NIT Trichy", "JEE Main", "BITSAT", "Rank Predictor", "VIT"];

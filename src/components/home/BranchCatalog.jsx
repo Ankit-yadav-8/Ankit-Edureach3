@@ -46,7 +46,7 @@ function BranchRow({ b, nav }) {
       <span className="cl-branch-row__arrow" style={{
         width: 42, height: 42, borderRadius: "50%",
         background: CL.coral, display: "grid", placeItems: "center",
-        boxShadow: "0 8px 20px rgba(244,126,32,.35)",
+        boxShadow: "0 8px 20px rgba(255, 105, 61,.35)",
       }}>
         <ArrowRight size={18} color="#fff" />
       </span>

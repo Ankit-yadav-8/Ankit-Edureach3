@@ -54,8 +54,8 @@ export default function Exams() {
                     </div>
                     <p style={{ fontSize: 13.5, color: "var(--muted)", lineHeight: 1.55, margin: 0 }}>{e.accepts}</p>
                     {nextDate && (
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, color: "#374151", background: "rgba(244,123,32,.06)", border: "1px solid rgba(244,123,32,.18)", borderRadius: 10, padding: "8px 11px" }}>
-                        <CalendarDays size={14} color="#F47E20" style={{ flexShrink: 0 }} />
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, color: "#374151", background: "rgba(255, 105, 61,.06)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 10, padding: "8px 11px" }}>
+                        <CalendarDays size={14} color="#FF693D" style={{ flexShrink: 0 }} />
                         <span style={{ minWidth: 0 }}><strong style={{ color: "#1c1c28" }}>{nextDate[0]}:</strong> {nextDate[1]}</span>
                       </div>
                     )}

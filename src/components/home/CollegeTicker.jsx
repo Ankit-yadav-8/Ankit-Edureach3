@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const ITEMS = [
   { name: "IIT Bombay",       stat: "Avg ₹31.8L",  color: "#6366f1", to: "/colleges/iit-bombay" },
-  { name: "IIT Delhi",        stat: "NIRF #2",      color: "#F47E20", to: "/colleges/iit-delhi" },
+  { name: "IIT Delhi",        stat: "NIRF #2",      color: "#FF693D", to: "/colleges/iit-delhi" },
   { name: "IIT Madras",       stat: "Avg ₹34.4L",  color: "#0ea5a4", to: "/colleges/iit-madras" },
   { name: "NIT Trichy",       stat: "92% Placed",   color: "#8b5cf6", to: "/colleges/nit-trichy" },
   { name: "IIIT Hyderabad",   stat: "Avg ₹18.6L",  color: "#10b981", to: "/colleges/iiit-hyderabad" },
@@ -28,8 +28,8 @@ export default function CollegeTicker() {
   return (
     <div style={{
       background: "linear-gradient(135deg, #ffffff 0%, #ffffff 100%)",
-      borderTop: "1px solid rgba(244,123,32,.18)",
-      borderBottom: "1px solid rgba(244,123,32,.18)",
+      borderTop: "1px solid rgba(255, 105, 61,.18)",
+      borderBottom: "1px solid rgba(255, 105, 61,.18)",
       padding: "14px 0",
     }}>
       <style>{`
@@ -42,11 +42,11 @@ export default function CollegeTicker() {
         .cp-ticker-track:hover { animation-play-state: paused; }
         .cp-ticker-item {
           display: flex; align-items: center; gap: 8px;
-          padding: 0 24px; border-right: 1px solid rgba(244,123,32,.12);
+          padding: 0 24px; border-right: 1px solid rgba(255, 105, 61,.12);
           white-space: nowrap; text-decoration: none;
           transition: background .18s;
         }
-        .cp-ticker-item:hover { background: rgba(244,123,32,.07); }
+        .cp-ticker-item:hover { background: rgba(255, 105, 61,.07); }
         @media (prefers-reduced-motion: reduce) { .cp-ticker-track { animation: none; } }
       `}</style>
 

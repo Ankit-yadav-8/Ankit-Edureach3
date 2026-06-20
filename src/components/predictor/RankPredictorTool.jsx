@@ -26,12 +26,12 @@ const CAT_TO_COLLEGE = {
 
 // Per-subject visual identity for the input cards
 const SUBJECTS = [
-  { key: "physics",   label: "Physics",   icon: Atom,         color: "#F47E20" },
+  { key: "physics",   label: "Physics",   icon: Atom,         color: "#FF693D" },
   { key: "chemistry", label: "Chemistry", icon: FlaskConical, color: "#0EA5A4" },
   { key: "maths",     label: "Maths",     icon: Calculator,   color: "#7C3AED" },
 ];
 
-export default function RankPredictorTool({ accent = "#F47E20", advanced = false }) {
+export default function RankPredictorTool({ accent = "#FF693D", advanced = false }) {
   const cap      = maxPerSubject(advanced);
   const totalMax = maxTotal(advanced);
   const cats     = advanced ? CATS_ADV : CATS_MAIN;

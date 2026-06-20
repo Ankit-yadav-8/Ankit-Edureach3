@@ -157,7 +157,7 @@ function DevCard({ t, index = 0 }) {
               <span
                 key={r}
                 className="frole-chip"
-                style={{ background: "rgba(255,255,255,.07)", border: "1px solid rgba(244,126,32,.45)", color: "#fb9b85" }}
+                style={{ background: "rgba(255,255,255,.07)", border: "1px solid rgba(255, 105, 61,.45)", color: "#fb9b85" }}
               >
                 {r}
               </span>
@@ -241,7 +241,7 @@ export default function Footer() {
                   borderRadius: "50%",
                   display: "grid",
                   placeItems: "center",
-                  background: "#F47E20",
+                  background: "#FF693D",
                   flexShrink: 0,
                 }}
               >
@@ -268,8 +268,8 @@ export default function Footer() {
               }}
             >
               Founded by IIT Roorkee alumni{" "}
-              <span style={{ color: "#F47E20", fontWeight: 800, background: "rgba(244,126,32,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Yadav</span>{" "}&amp;{" "}
-              <span style={{ color: "#F47E20", fontWeight: 800, background: "rgba(244,126,32,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Kumar</span>{" "}— a
+              <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Yadav</span>{" "}&amp;{" "}
+              <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Kumar</span>{" "}— a
               student-first JEE rank predictor &amp; college discovery platform,
               headquartered in Jaipur, Rajasthan.
             </p>
@@ -302,13 +302,13 @@ export default function Footer() {
                 gap: 7,
                 padding: "5px 18px",
                 borderRadius: 99,
-                background: "#F47E20",
+                background: "#FF693D",
                 fontSize: ".78rem",
                 fontWeight: 700,
                 letterSpacing: 1.2,
                 textTransform: "uppercase",
                 color: "#fff",
-                boxShadow: "0 0 22px rgba(244,126,32,.6), 0 0 0 1px rgba(255,255,255,.12)",
+                boxShadow: "0 0 22px rgba(255, 105, 61,.6), 0 0 0 1px rgba(255,255,255,.12)",
               }}
             >
               <Code2 size={13} />

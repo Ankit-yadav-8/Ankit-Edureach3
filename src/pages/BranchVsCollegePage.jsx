@@ -40,7 +40,7 @@ function Hero() {
               display: "inline-flex", alignItems: "center", gap: 10,
               background: CL.coral, color: "#fff", border: "none", borderRadius: 50,
               padding: "15px 30px", fontFamily: CL.display, fontWeight: 800, fontSize: 16,
-              cursor: "pointer", boxShadow: "0 12px 30px rgba(244,126,32,.38)",
+              cursor: "pointer", boxShadow: "0 12px 30px rgba(255, 105, 61,.38)",
             }}>
               <BarChart3 size={18} /> Find My Balance <ArrowRight size={18} />
             </button>
