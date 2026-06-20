@@ -17,7 +17,7 @@ const TITLE_MODEL = process.env.GROQ_TITLE_MODEL || "llama-3.1-8b-instant";
      • everything else                → Llama 3.3 70B (fast, well-rounded) */
 const MODELS = {
   search:  process.env.GROQ_MODEL_SEARCH  || "groq/compound",          // built-in web search
-  math:    process.env.GROQ_MODEL_MATH    || "deepseek-r1-distill-llama-70b",
+  math:    process.env.GROQ_MODEL_MATH    || "qwen/qwen3-32b",         // strong reasoning + thinking
   code:    process.env.GROQ_MODEL_CODE    || "qwen/qwen3-32b",
   general: process.env.GROQ_MODEL_GENERAL || process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
 };
@@ -87,6 +87,20 @@ function makeThinkStripper() {
     },
     flush() { const out = inside ? "" : pending; pending = ""; return out; },
   };
+}
+
+/* The compound web-search model streams its browsing + final answer inside the
+   `reasoning` field, wrapping internal work in <think>…</think> (and <output>…).
+   The real reply is the text after the last </think>; strip stray tags. */
+function finalFromReasoning(raw) {
+  const i = raw.lastIndexOf("</think>");
+  let ans = (i >= 0 ? raw.slice(i + "</think>".length) : raw);
+  ans = ans.replace(/<\/?(think|output|reasoning)>/gi, "").trim();
+  if (!ans) {
+    ans = raw.replace(/<think>[\s\S]*?<\/think>/gi, "")
+             .replace(/<\/?(think|output|reasoning)>/gi, "").trim();
+  }
+  return ans;
 }
 
 const SYSTEM_PROMPT = `You are College Parichay AI, an expert educational assistant specializing in engineering, science, programming, college admissions, placements, and career guidance.
@@ -162,6 +176,17 @@ function sanitizeMessages(raw) {
     .map((m) => ({ role: m.role, content: m.content.slice(0, 24000) }));
 }
 
+/* The compound web-search model has a tight per-minute token budget (70K TPM)
+   and spends thousands of tokens browsing. Keep its request small: only recent
+   turns, drop big attachment dumps, and cap each message — this avoids the
+   HTTP 413 "request too large" that was silently breaking web search. */
+function leanForSearch(msgs) {
+  return msgs.slice(-6).map((m) => ({
+    role: m.role,
+    content: m.content.split("\n\n--- Attached:")[0].slice(0, 3000),
+  }));
+}
+
 /* ── POST /api/ai/chat — streamed completion (SSE) ── */
 router.post("/chat", requireAuth, async (req, res) => {
   const messages = sanitizeMessages(req.body?.messages);
@@ -192,29 +217,42 @@ router.post("/chat", requireAuth, async (req, res) => {
     "Treat any event dated on or before today as something that has ALREADY happened — do not claim a past exam, result or session 'has not been conducted yet'. " +
     "Only a date strictly after today is the future. Always verify dates and years against today's date before answering.\n\n";
 
-  // Tell the model whether it actually has live web data this turn. The search
-  // model (compound) browses; every other model answers from memory only, so it
-  // must NOT assert current stats/cutoffs as fact — the main guard against
-  // confidently wrong answers.
-  const dataNote = (model) => model === MODELS.search
-    ? "\n\nWEB SEARCH IS ACTIVE this turn. Base every current figure, cutoff, rank or date on what you actually find, and cite the source with its year. If the search yields nothing, say so plainly — do not fall back to guessing."
-    : "\n\nNO WEB-SEARCH RESULTS are available this turn — you are answering from memory only. Do NOT state any current or year-specific number, cutoff, closing rank, registration/candidate count or exam date as a confirmed fact. Instead give the official source to check, and only if you genuinely know it, a clearly-labelled historical range. Never output a specific fabricated figure.";
+  // The general/math/code models answer from memory only, so they must NOT assert
+  // current stats/cutoffs as fact — the main guard against confidently wrong data.
+  const memoryNote =
+    "\n\nNO WEB-SEARCH RESULTS are available this turn — you are answering from memory only. Do NOT state any current or year-specific number, cutoff, closing rank, registration/candidate count or exam date as a confirmed fact. Instead give the official source to check, and only if you genuinely know it, a clearly-labelled historical range. Never output a specific fabricated figure.";
 
-  const callGroq = (model) => fetch(GROQ_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-    },
-    body: JSON.stringify({
+  // Compact prompt for the compound model: it browses the web, so it just needs
+  // to stay accurate, cited and small (to respect its 70K tokens/min limit).
+  const searchSys =
+    `Current date: ${todayIST()}. Treat any event on or before today as already happened.\n` +
+    "You are College Parichay AI with live web search. Search the web and answer the student accurately and concisely. " +
+    "Base every number, cutoff, rank and date on what you actually find, and cite the source with its year. " +
+    "Never invent statistics; if the search finds nothing, say so. Use Markdown, and write any maths in LaTeX ($...$).";
+
+  const callGroq = (model) => {
+    const isSearch = model === MODELS.search;
+    const body = {
       model,
       temperature: temp,
-      max_tokens: meta.maxTokens,
       stream: true,
-      messages: [{ role: "system", content: dateHead + SYSTEM_PROMPT + dataNote(model) }, ...messages],
-    }),
-    signal: controller.signal,
-  });
+      messages: isSearch
+        ? [{ role: "system", content: searchSys }, ...leanForSearch(messages)]
+        : [{ role: "system", content: dateHead + SYSTEM_PROMPT + memoryNote }, ...messages],
+    };
+    // Compound spends thousands of tokens browsing before it answers, so a cap
+    // would truncate it — let it use the default; cap the other models.
+    if (!isSearch) body.max_tokens = meta.maxTokens;
+    return fetch(GROQ_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+  };
 
   // Stream one model's completion to the client, dropping any <think>…</think>
   // reasoning. Returns whether it produced visible content, so a routed model
@@ -229,7 +267,7 @@ router.post("/chat", requireAuth, async (req, res) => {
     const strip = makeThinkStripper();
     const reader = upstream.body.getReader();
     const decoder = new TextDecoder();
-    let buffer = "", emitted = false;
+    let buffer = "", emitted = false, reasoningBuf = "";
     for (;;) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -242,17 +280,26 @@ router.post("/chat", requireAuth, async (req, res) => {
         const payload = trimmed.slice(5).trim();
         if (payload === "[DONE]") continue;
         try {
-          const json = JSON.parse(payload);
-          const delta = json.choices?.[0]?.delta?.content;
-          if (delta) {
-            const clean = strip.push(delta);
+          const delta = JSON.parse(payload).choices?.[0]?.delta || {};
+          if (delta.content) {
+            const clean = strip.push(delta.content);
             if (clean) { res.write(`data: ${JSON.stringify({ delta: clean })}\n\n`); emitted = true; }
+          } else if (delta.reasoning) {
+            // The compound model puts its whole answer (after browsing) in the
+            // reasoning field; buffer it and extract the final answer at the end.
+            reasoningBuf += delta.reasoning;
           }
         } catch { /* ignore keep-alive / partial frames */ }
       }
     }
     const tail = strip.flush();
     if (tail) { res.write(`data: ${JSON.stringify({ delta: tail })}\n\n`); emitted = true; }
+    // If nothing streamed via content but the model reasoned (compound), emit the
+    // final answer it produced after its <think>/browsing block.
+    if (!emitted && reasoningBuf.trim()) {
+      const answer = finalFromReasoning(reasoningBuf);
+      if (answer) { res.write(`data: ${JSON.stringify({ delta: answer })}\n\n`); emitted = true; }
+    }
     return { emitted };
   };
 
