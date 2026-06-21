@@ -1947,7 +1947,7 @@ textarea.input { width:100%; }
   .cta-desktop  { display:none !important; }
   .hamburger    { display:grid !important; }
   .nav-mobile-ic { display:grid !important; }
-  .hero-grid { grid-template-columns: 1fr 300px !important; }
+  .hero-grid { grid-template-columns: 1fr !important; }
   .hero-about-col:first-child { display: none !important; }
   .college-grid { grid-template-columns:repeat(3,1fr); }
   .footer-grid  { grid-template-columns:repeat(2,1fr); gap:2rem; }
@@ -1960,7 +1960,7 @@ textarea.input { width:100%; }
    iPad 10th gen, iPad Air 5th portrait
 ════════════════════════════════════════════════ */
 @media (min-width:769px) and (max-width:820px) {
-  .hero-grid { grid-template-columns: 1fr 240px !important; }
+  .hero-grid { grid-template-columns: 1fr !important; }
   .hero-about-col:first-child { display: none !important; }
   .college-grid { grid-template-columns:repeat(2,1fr) !important; }
   .grid-3 { grid-template-columns:repeat(2,1fr); }
@@ -1981,8 +1981,8 @@ textarea.input { width:100%; }
   .footer-grid  { grid-template-columns:repeat(2,1fr); gap:2rem; }
   .features-grid{ grid-template-columns:repeat(2,1fr); }
   .josaa-promo-inner { grid-template-columns:1fr; gap:2rem; }
-  /* Hero: center + right panel only */
-  .hero-grid { grid-template-columns: 1fr 280px !important; }
+  /* Hero: single centred column (story card removed) */
+  .hero-grid { grid-template-columns: 1fr !important; }
   .hero-about-col:first-child { display: none !important; }
 }
 
@@ -2005,7 +2005,7 @@ textarea.input { width:100%; }
 ════════════════════════════════════════════════ */
 @media (min-width:1440px) {
   .container { padding-inline:2rem; }
-  .hero-grid { grid-template-columns: minmax(0,1fr) 460px !important; }
+  .hero-grid { grid-template-columns: 1fr !important; }
   .college-grid { grid-template-columns:repeat(4,1fr); }
 }
 

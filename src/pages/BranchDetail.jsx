@@ -190,7 +190,7 @@ function fallbackJourney(b) {
     { title: "Common courses, settling in", tag: "FOUNDATION", subjects: ["Mathematics I & II", "Physics & Chemistry", "Intro to Programming", "Engineering Graphics"] },
     { title: "Core branch subjects begin", tag: "CORE LOAD", subjects: [...core.slice(0, 3)] },
     { title: "Specialisation + internships", tag: "PEAK PRESSURE", subjects: core.slice(2, 5).length ? core.slice(2, 5) : core.slice(0, 3) },
-    { title: "Electives, projects, thesis", tag: "EXIT YEAR", subjects: [...core.slice(4), "Major Project / Thesis", "Open Electives"].filter(Boolean) },
+    { title: "Electives, projects, thesis", tag: "EXIT YEAR", subjects: [...core.slice(4), "Major Project / Thesis"].filter(Boolean) },
   ];
 }
 
@@ -570,18 +570,17 @@ export default function BranchDetail() {
           })}
         </div>
 
-        {/* panels */}
+        {/* panels — keyed remount on tab change for an instant, reliable swap
+           (no AnimatePresence "wait" that could leave a tab unresponsive). */}
         <PanelBoundary tabKey={tab}>
-          <AnimatePresence mode="wait">
-            <motion.div key={tab}
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25 }}>
-              {tab === "academics" && <Academics b={b} />}
-              {tab === "insights" && <Insights b={b} />}
-              {tab === "colleges" && <Colleges b={b} />}
-              {tab === "myths" && <Myths b={b} />}
-            </motion.div>
-          </AnimatePresence>
+          <motion.div key={tab}
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}>
+            {tab === "academics" && <Academics b={b} />}
+            {tab === "insights" && <Insights b={b} />}
+            {tab === "colleges" && <Colleges b={b} />}
+            {tab === "myths" && <Myths b={b} />}
+          </motion.div>
         </PanelBoundary>
 
         {/* next branch */}

@@ -1483,12 +1483,9 @@ export default function Hero({ onSearch }) {
     bp === "ipadpro"              ? "clamp(2.8rem,4vw,3.4rem)" :
     "clamp(3.2rem,4.8vw,4.2rem)";
 
-  /* ── Grid columns — laptop: hero text (left) · story card (right).
-     Mobile stays single-column (the card is hidden via .hero-about-col). ── */
-  const gridCols =
-    isMobile  ? "1fr" :
-    isTablet  ? "1fr minmax(0,400px)" :
-    "minmax(0,1fr) 640px";
+  /* ── Single centred column on every size — the hero text sits in the
+     middle with the IIT Roorkee campus behind it at low opacity. ── */
+  const gridCols = "1fr";
 
   /* ── Hero background — warm gradient on all sizes ── */
   const heroBg = "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 72%, #ffffff 100%)";
@@ -1539,6 +1536,24 @@ export default function Hero({ onSearch }) {
         <path d="M-40 680 C 420 760, 1020 760, 1480 600" fill="none" stroke="rgba(33,29,46,.10)" strokeWidth="1.5" strokeDasharray="7 9" />
       </svg>
 
+      {/* ═══ IIT Roorkee campus — faint background watermark (laptop/tablet) ═══ */}
+      {!isMobile && (
+        <>
+          <img
+            aria-hidden
+            src="/assets/team/IITs/IITs/IIT%20ROORKEE.jpg"
+            alt=""
+            style={{
+              position: "absolute", inset: 0, width: "100%", height: "100%",
+              objectFit: "cover", objectPosition: "center 38%",
+              opacity: 0.08, zIndex: 0, pointerEvents: "none",
+            }}
+          />
+          {/* soft white wash so text stays crisp over the photo */}
+          <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 80% 70% at 50% 45%, rgba(255,255,255,.55) 0%, rgba(255,255,255,.78) 60%, #fff 100%)" }} />
+        </>
+      )}
+
       {/* ═══ Content wrapper ═══ */}
       <div
         ref={containerRef}
@@ -1562,10 +1577,8 @@ export default function Hero({ onSearch }) {
           }}
         >
 
-          {/* ══ LEFT — hero text (centred on mobile, shifted left on laptop).
-               On desktop the column hugs the headline (width:fit-content) so the
-               centred badge sits exactly over the headline below it. ══ */}
-          <div style={{ textAlign: isMobile ? "center" : "left", minWidth: 0, width: isMobile ? "100%" : "fit-content", maxWidth: "100%", justifySelf: isMobile ? "center" : "start" }}>
+          {/* ══ CENTER — hero text, centred on every size (story card removed) ══ */}
+          <div style={{ textAlign: "center", minWidth: 0, width: "100%", maxWidth: 760, margin: "0 auto", justifySelf: "center" }}>
 
             {/* Badge — centred over the headline / bottom text */}
             <div style={{ textAlign: "center" }}>
@@ -1626,7 +1639,7 @@ export default function Hero({ onSearch }) {
               <p style={{
                 color: subColor,
                 fontSize: isXs ? ".88rem" : "clamp(.95rem,1.7vw,1.12rem)",
-                maxWidth: 560, margin: isMobile ? "0 auto 0.6rem" : "0 0 0.6rem",
+                maxWidth: 560, margin: "0 auto 0.6rem",
                 lineHeight: 1.75,
                 fontStyle: "italic",
                 fontFamily: "'Georgia', 'Times New Roman', serif",
@@ -1642,7 +1655,7 @@ export default function Hero({ onSearch }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.18 }}
-              style={{ maxWidth: 560, margin: isMobile ? "0 auto 1rem" : "0 0 1rem" }}
+              style={{ maxWidth: 560, margin: "0 auto 1rem" }}
             >
               <div style={{
                 display: "flex",
@@ -1700,7 +1713,7 @@ export default function Hero({ onSearch }) {
               transition={{ delay: 0.34 }}
               style={{
                 display: "flex", flexWrap: "wrap",
-                justifyContent: isMobile ? "center" : "flex-start",
+                justifyContent: "center",
                 gap: 12, margin: "18px 0 4px",
               }}
             >
@@ -1743,7 +1756,7 @@ export default function Hero({ onSearch }) {
               transition={{ delay: 0.46 }}
               style={{
                 display: "flex", alignItems: "center", gap: 12, marginTop: 22,
-                justifyContent: isMobile ? "center" : "flex-start",
+                justifyContent: "center",
               }}
             >
               <div style={{ display: "flex" }}>
@@ -1767,9 +1780,6 @@ export default function Hero({ onSearch }) {
 
           </div>
           {/* ══ end CENTER ══ */}
-
-          {/* ══ RIGHT — IIT Roorkee story card (laptop only; hidden on mobile) ══ */}
-          <HeroStoryCard />
 
         </div>
       </div>

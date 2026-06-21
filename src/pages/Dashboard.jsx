@@ -87,9 +87,8 @@ function PlanTile({ plan, group, enrolled, purchase, onEnrol, onView }) {
   const Icon = group.icon;
   const a = group.accent;
   return (
-    <motion.div whileHover={{ y: -6, boxShadow: "0 18px 40px rgba(33,29,46,.12)" }}
+    <motion.div whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 280, damping: 22 }}
-      className="cp-bento-card"
       style={{
         background: enrolled ? group.soft : "#fff",
         borderRadius: 16,
@@ -97,13 +96,6 @@ function PlanTile({ plan, group, enrolled, purchase, onEnrol, onView }) {
         height: "100%", minHeight: 252, display: "flex", flexDirection: "column",
         position: "relative", overflow: "hidden", boxShadow: CARD_SHADOW,
       }}>
-      {/* decorative corner wash (reference bento style) */}
-      <span aria-hidden className="cp-bento-corner" style={{
-        position: "absolute", top: 0, right: 0, width: 130, height: 130,
-        background: tint(a, 0.07), borderBottomLeftRadius: 100,
-        transition: "transform .35s ease", pointerEvents: "none",
-      }} />
-
       <div style={{ padding: "26px 24px 24px", display: "flex", flexDirection: "column", flex: 1, position: "relative" }}>
         {/* header: icon + status badge */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
@@ -399,24 +391,23 @@ export default function Dashboard() {
             <Pencil size={15} /> Edit info
           </button>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14, marginBottom: 34 }}>
-          {details.map(({ label, value, icon: Icon }) => (
-            <div key={label} className="cp-bento-card"
-              style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, padding: "16px 18px", display: "flex", alignItems: "center", gap: 12, boxShadow: CARD_SHADOW, position: "relative", overflow: "hidden", transition: "box-shadow .15s, transform .15s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 14px 32px rgba(33,29,46,.1)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = CARD_SHADOW; e.currentTarget.style.transform = "none"; }}>
-              <span aria-hidden style={{ position: "absolute", top: 0, right: 0, width: 70, height: 70, background: tint(ORANGE, 0.05), borderBottomLeftRadius: 70, pointerEvents: "none" }} />
-              <div style={{ width: 42, height: 42, borderRadius: 12, background: tint(ORANGE, 0.12), display: "grid", placeItems: "center", flexShrink: 0, position: "relative" }}>
-                <Icon size={18} color={ORANGE} />
-              </div>
-              <div style={{ minWidth: 0, position: "relative" }}>
-                <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}>{label}</div>
-                <div style={{ fontSize: 15, color: NAVY, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {value || "—"}
+        {/* All details in ONE simple card — light, flat, no bento washes. */}
+        <div style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, padding: "20px 22px", marginBottom: 34, boxShadow: CARD_SHADOW }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: "18px 26px" }}>
+            {details.map(({ label, value, icon: Icon }) => (
+              <div key={label} style={{ display: "flex", alignItems: "center", gap: 11, minWidth: 0 }}>
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: tint(ORANGE, 0.1), display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <Icon size={17} color={ORANGE} />
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}>{label}</div>
+                  <div style={{ fontSize: 14.5, color: NAVY, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {value || "—"}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* ── Enrolled plans (a dedicated section for what you own) ── */}
@@ -434,30 +425,31 @@ export default function Dashboard() {
             <div style={{ fontSize: 14, color: "#6b7280", marginBottom: 16 }}>Pick a mentorship or counselling plan below to get started.</div>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginBottom: 34 }}>
-            {plans.map((p) => {
+          /* All enrolled plans together in ONE simple card, one row each. */
+          <div style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, padding: "4px 22px", marginBottom: 34, boxShadow: CARD_SHADOW }}>
+            {plans.map((p, i) => {
               const g = groupForPlan(p.plan);
               const Icon = g.icon;
+              const mentor = isMentorshipPlan(p.plan);
               return (
-                <div key={p._id} className="cp-bento-card" style={{ background: g.soft, border: `1.5px solid ${g.accent}`, borderRadius: 16, padding: "18px 20px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", boxShadow: CARD_SHADOW, position: "relative", overflow: "hidden" }}>
-                  <span aria-hidden style={{ position: "absolute", top: 0, right: 0, width: 130, height: 130, background: tint(g.accent, 0.08), borderBottomLeftRadius: 100, pointerEvents: "none" }} />
-                  <div style={{ width: 46, height: 46, borderRadius: 13, background: "#fff", border: `1px solid ${g.accent}33`, display: "grid", placeItems: "center", flexShrink: 0, position: "relative" }}>
-                    <Icon size={22} color={g.accent} />
+                <div key={p._id} style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", padding: "16px 0", borderTop: i ? `1px solid ${CARD_LINE}` : "none" }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: tint(g.accent, 0.1), display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <Icon size={21} color={g.accent} />
                   </div>
-                  <div style={{ flex: 1, minWidth: 170, position: "relative" }}>
-                    <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15.5, color: NAVY }}>{p.planLabel || p.plan}</div>
+                  <div style={{ flex: 1, minWidth: 170 }}>
+                    <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: NAVY }}>{p.planLabel || p.plan}</div>
                     <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>
                       Purchased {fmtDate(p.createdAt)} · ID {p.razorpayPaymentId || "—"}
                     </div>
                   </div>
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, color: NAVY }}>₹{Number(p.amount || 0).toLocaleString("en-IN")}</div>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "6px 13px" }}>
+                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 16, color: NAVY }}>₹{Number(p.amount || 0).toLocaleString("en-IN")}</div>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "6px 12px" }}>
                     <CheckCircle2 size={14} /> Active
                   </span>
-                  {isMentorshipPlan(p.plan) && (
+                  {mentor && (
                     <button onClick={() => navigate(`/mentorship-dashboard?plan=${encodeURIComponent(p.plan)}`)}
-                      style={{ flexBasis: "100%", marginTop: 4, padding: "12px", borderRadius: 12, border: "none", background: `linear-gradient(135deg, ${g.accent}, ${g.accent2 || GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: `0 12px 26px -12px ${g.accent}` }}>
-                      <LayoutDashboard size={16} /> Open {p.planLabel || "mentorship"} dashboard <ArrowRight size={15} />
+                      style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 16px", borderRadius: 11, border: `1.5px solid ${g.accent}55`, background: "#fff", color: g.accent, fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer" }}>
+                      <LayoutDashboard size={15} /> Open dashboard <ArrowRight size={14} />
                     </button>
                   )}
                 </div>
@@ -466,12 +458,15 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ── All plans — every mentorship & counselling plan ── */}
-        <h2 id="all-plans" style={{ ...sectionTitle, marginBottom: 6, scrollMarginTop: 96 }}><CreditCard size={18} color={ORANGE} /> All plans</h2>
-        <p style={{ fontSize: 13.5, color: "#9ca3af", margin: "0 0 22px" }}>Browse every plan — the ones you’re enrolled in are highlighted.</p>
+        {/* ── More plans — plans the student hasn't enrolled in yet ──
+             Enrolled plans are hidden here (they live in "Your enrolled plans"). */}
+        <h2 id="all-plans" style={{ ...sectionTitle, marginBottom: 6, scrollMarginTop: 96 }}><CreditCard size={18} color={ORANGE} /> More plans</h2>
+        <p style={{ fontSize: 13.5, color: "#9ca3af", margin: "0 0 22px" }}>Plans you haven’t enrolled in yet.</p>
 
         {PLAN_CATALOG.map((group) => {
           const GroupIcon = group.icon;
+          const available = group.plans.filter((plan) => !enrolledKeys.has(plan.key));
+          if (!available.length) return null;
           return (
             <div key={group.key} style={{ marginBottom: 30 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 14 }}>
@@ -484,13 +479,12 @@ export default function Dashboard() {
                 </div>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 18 }}>
-                {group.plans.map((plan) => (
+                {available.map((plan) => (
                   <PlanTile
                     key={plan.key}
                     plan={plan}
                     group={group}
-                    enrolled={enrolledKeys.has(plan.key)}
-                    purchase={plans.find((p) => p.plan === plan.key)}
+                    enrolled={false}
                     onEnrol={(k) => openEnrol?.(k)}
                     onView={(to) => navigate(to)}
                   />
