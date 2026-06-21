@@ -498,7 +498,12 @@ export default function BranchDetail() {
   const b = getBranch(slug);
   const [tab, setTab] = useState("academics");
 
-  useEffect(() => { setTab("academics"); if (b) document.title = `${b.name} — Branch Guide · College Parichay`; }, [slug, b]);
+  // Reset to the first tab only when the branch slug changes — NOT on every
+  // render. getBranch() returns a fresh object each call, so depending on `b`
+  // re-ran this effect on every render and snapped the active tab back to
+  // "academics" the instant another tab was clicked.
+  useEffect(() => { setTab("academics"); }, [slug]);
+  useEffect(() => { if (b) document.title = `${b.name} — Branch Guide · College Parichay`; }, [b?.name]);
 
   if (!b) {
     return (
