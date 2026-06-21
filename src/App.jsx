@@ -35,6 +35,7 @@ import CompareTray from "./components/CompareTray.jsx";
 import Chatbot from "./components/Chatbot.jsx";
 import WhatsAppButton from "./components/WhatsAppButton.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
+import ReviewPopup from "./components/ReviewPopup.jsx";
 import SearchResults from "./pages/SearchResults.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Admin from "./pages/Admin.jsx";
@@ -201,6 +202,7 @@ export default function App() {
       <Chatbot />
       <WhatsAppButton />
       <AuthModal />
+      <ReviewPopup />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );

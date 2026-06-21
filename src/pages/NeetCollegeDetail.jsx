@@ -92,7 +92,7 @@ export default function NeetCollegeDetail() {
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 3, zIndex: 3, background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
         <div className="container" style={{ position: "relative", zIndex: 4 }}>
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }}>
-            <button onClick={() => nav(-1)} className="btn btn-light" style={{ marginBottom: 20 }}><ArrowLeft size={16} /> Back</button>
+            <button onClick={() => nav(-1)} className="cp-back-btn" style={{ marginBottom: 20 }}><ArrowLeft size={16} /> Back</button>
           </motion.div>
           <span className="badge orange" style={{ display: "inline-flex", gap: 4, alignItems: "center" }}>
             <Stethoscope size={12} /> {mgmtLabel} · MBBS

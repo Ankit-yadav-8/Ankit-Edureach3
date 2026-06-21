@@ -58,21 +58,7 @@ export default function PrivateDetail() {
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: `radial-gradient(ellipse 60% 70% at 100% 20%, ${u.accent}30 0%, transparent 60%)` }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 100%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <button
-            onClick={() => nav(-1)}
-            className="btn"
-            style={{
-              marginBottom: 18,
-              background: "#FF693D",
-              color: "#fff",
-              border: "none",
-              fontWeight: 700,
-              boxShadow: "0 4px 14px rgba(255, 105, 61,.3)",
-              transition: "all .2s",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#e36a14"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#FF693D"; e.currentTarget.style.transform = ""; }}
-          >
+          <button onClick={() => nav(-1)} className="cp-back-btn" style={{ marginBottom: 18 }}>
             <ArrowLeft size={16} /> Back
           </button>
           <span className="eyebrow">Private University · {u.exam}</span>

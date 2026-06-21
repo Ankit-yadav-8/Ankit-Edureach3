@@ -107,12 +107,7 @@ export default function Developer() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="warm-page-header" style={{ padding: "52px 0 60px" }}>
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <button onClick={() => nav(-1)} style={{
-            display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 28,
-            background: "#f8f8fa", border: "1px solid #e5e7eb", borderRadius: 99,
-            padding: "9px 18px", fontSize: 14, fontWeight: 600, fontFamily: "Sora",
-            color: "#1c1c28", cursor: "pointer",
-          }}>
+          <button onClick={() => nav(-1)} className="cp-back-btn" style={{ marginBottom: 28 }}>
             <ArrowLeft size={16} /> Back
           </button>
 

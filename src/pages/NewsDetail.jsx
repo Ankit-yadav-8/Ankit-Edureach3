@@ -34,7 +34,7 @@ export default function NewsDetail() {
       <Seo title={n.title} description={seoDesc} path={`/news/${slug}`} type="article" jsonLd={seoJsonLd} />
       <section style={{ background: n.image, height: 240, position: "relative" }}>
         <div className="container" style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingBottom: 24 }}>
-          <button onClick={() => nav(-1)} className="btn btn-light" style={{ alignSelf: "flex-start", marginBottom: "auto", marginTop: 20 }}><ArrowLeft size={16} /> Back</button>
+          <button onClick={() => nav(-1)} className="cp-back-btn" style={{ alignSelf: "flex-start", marginBottom: "auto", marginTop: 20 }}><ArrowLeft size={16} /> Back</button>
           <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>{n.tags.map((t) => <span key={t} style={{ background: "rgba(255,255,255,.92)", color: "var(--navy)", fontWeight: 700, fontSize: 11.5, padding: "4px 10px", borderRadius: 20 }}>{t}</span>)}</div>
           <h1 style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: "clamp(1.5rem,3.5vw,2.3rem)", lineHeight: 1.2, maxWidth: 800 }}>{n.title}</h1>
         </div>

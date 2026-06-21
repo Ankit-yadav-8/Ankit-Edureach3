@@ -3,7 +3,7 @@
    should win when the two conflict in JoSAA choice filling. Renders an
    animated result card with a confidence match, the reasoning, and what
    to do next. Used both as a home section and on /branch-vs-college. */
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -128,21 +128,50 @@ function StepDots({ total, current }) {
 
 const FACTOR_COLORS = [CL.coral, CL.green, CL.amber, CL.blue, CL.violet];
 
-/* A small head-to-head tower whose height grows with that side's points. */
+/* Eased count-up for the live numbers — animates smoothly between values. */
+function useCountUp(target, dur = 650) {
+  const [n, setN] = useState(target);
+  const prev = useRef(target);
+  useEffect(() => {
+    const from = prev.current, to = target;
+    prev.current = target;
+    if (from === to) { setN(to); return; }
+    let raf, start;
+    const tick = (t) => {
+      if (!start) start = t;
+      const p = Math.min(1, (t - start) / dur);
+      setN(Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, dur]);
+  return n;
+}
+
+/* A small head-to-head tower whose height grows with that side's points,
+   with a glossy fill, a repeating shine sweep and a soft glow. */
 function Tower({ pct, color, soft, label, points, big }) {
+  const shown = useCountUp(pct);
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, flex: 1 }}>
       <div style={{ position: "relative", width: "100%", maxWidth: big ? 92 : 78, height: big ? 150 : 124, borderRadius: 16, background: soft, overflow: "hidden", display: "flex", alignItems: "flex-end", border: `1px solid ${color}33` }}>
         <motion.div
           animate={{ height: `${Math.max(8, pct)}%` }}
           transition={{ type: "spring", stiffness: 90, damping: 14 }}
-          style={{ width: "100%", background: `linear-gradient(180deg, ${color}, ${color}cc)`, display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 8 }}
+          style={{ position: "relative", width: "100%", background: `linear-gradient(180deg, ${color}, ${color}cc)`, display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 8, borderTopLeftRadius: 11, borderTopRightRadius: 11, boxShadow: `0 -3px 22px ${color}66` }}
         >
-          <span style={{ color: "#fff", fontFamily: CL.display, fontWeight: 800, fontSize: big ? 16 : 14 }}>{pct}%</span>
+          <span style={{ color: "#fff", fontFamily: CL.display, fontWeight: 800, fontSize: big ? 16 : 14, fontStyle: "italic", position: "relative", zIndex: 1 }}>{shown}%</span>
+          {/* glossy shine sweeping up the bar */}
+          <motion.span aria-hidden
+            initial={{ y: "130%" }} animate={{ y: ["130%", "-130%"] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", repeatDelay: 1.1 }}
+            style={{ position: "absolute", left: 0, right: 0, height: "45%", background: "linear-gradient(180deg, transparent, rgba(255,255,255,.42), transparent)", pointerEvents: "none" }} />
         </motion.div>
       </div>
       <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 15 : 13.5, color }}>{label}</div>
-      <span style={{ fontSize: 11, fontWeight: 700, color, background: soft, border: `1px solid ${color}33`, padding: "3px 11px", borderRadius: 50 }}>{points} pts</span>
+      <motion.span key={points} initial={{ scale: 0.78, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 320, damping: 18 }}
+        style={{ fontSize: 11, fontWeight: 700, color, background: soft, border: `1px solid ${color}33`, padding: "3px 11px", borderRadius: 50 }}>{points} pts</motion.span>
     </div>
   );
 }
@@ -159,44 +188,61 @@ export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total
   const leadColor = !sum || even ? CL.muted : leadCollege ? CL.green : CL.coral;
   const leadPct = Math.max(collegePct, branchPct);
   const spring = { type: "spring", stiffness: 90, damping: 14 };
+  const shownLead = useCountUp(leadPct);
 
   return (
-    <div style={{
-      background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`,
-      boxShadow: CL.shadow, padding: big ? "30px 28px 26px" : "26px 24px 22px",
-      display: "flex", flexDirection: "column", height: "100%",
-    }}>
+    <motion.div
+      initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        position: "relative", overflow: "hidden",
+        background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`,
+        boxShadow: CL.shadow, padding: big ? "30px 28px 26px" : "26px 24px 22px",
+        display: "flex", flexDirection: "column", height: "100%",
+      }}>
+      {/* soft animated glow that tints toward the leading side */}
+      <motion.div aria-hidden
+        animate={{ opacity: [0.5, 0.85, 0.5] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        style={{ position: "absolute", top: -60, right: -40, width: 180, height: 180, borderRadius: "50%", background: `radial-gradient(circle, ${leadColor}1f, transparent 70%)`, pointerEvents: "none" }} />
+
       {showMeta && (
-        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".12em", color: CL.muted, textTransform: "uppercase", textAlign: "center" }}>
+        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".12em", color: CL.muted, textTransform: "uppercase", textAlign: "center", position: "relative" }}>
           Your leaning so far
         </div>
       )}
 
       {/* live readout */}
-      <div style={{ textAlign: "center", margin: big ? "12px 0 16px" : "8px 0 14px" }}>
-        <motion.div key={`${leadPct}-${leadCollege}`} initial={{ scale: 0.82, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={spring}
-          style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 44 : 38, color: leadColor, lineHeight: 1 }}>
-          {sum ? `${leadPct}%` : "50 / 50"}
+      <div style={{ textAlign: "center", margin: big ? "12px 0 16px" : "8px 0 14px", position: "relative" }}>
+        <motion.div animate={{ color: leadColor }} transition={{ duration: 0.4 }}
+          style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 44 : 38, color: leadColor, lineHeight: 1, fontStyle: "italic" }}>
+          {sum ? `${shownLead}%` : "50 / 50"}
         </motion.div>
-        <div style={{ fontSize: 12.5, fontWeight: 700, color: leadColor, marginTop: 6 }}>
+        <motion.div key={`${even}-${leadCollege}-${!!sum}`} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+          style={{ fontSize: 12.5, fontWeight: 700, color: leadColor, marginTop: 6 }}>
           {!sum ? "Answer to see it tilt live" : even ? "Evenly balanced — keep going" : leadCollege ? "Leaning College" : "Leaning Branch"}
-        </div>
+        </motion.div>
       </div>
 
       {/* twin towers */}
-      <div style={{ display: "flex", alignItems: "flex-end", gap: big ? 22 : 16, justifyContent: "center" }}>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: big ? 22 : 16, justifyContent: "center", position: "relative" }}>
         <Tower pct={branchPct} color={CL.coral} soft={CL.coralSoft} label="Branch" points={tally.b} big={big} />
-        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 14 : 12, color: CL.muted, paddingBottom: big ? 64 : 52 }}>vs</span>
+        <span style={{ fontFamily: CL.display, fontWeight: 800, fontStyle: "italic", fontSize: big ? 14 : 12, color: CL.muted, paddingBottom: big ? 64 : 52 }}>vs</span>
         <Tower pct={collegePct} color={CL.green} soft={CL.greenSoft} label="College" points={tally.c} big={big} />
       </div>
 
-      {/* sliding balance track */}
-      <div style={{ position: "relative", height: 8, borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber}, ${CL.green})`, margin: big ? "22px 4px 4px" : "18px 4px 4px" }}>
+      {/* sliding balance track with a moving sheen */}
+      <div style={{ position: "relative", height: 8, borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber}, ${CL.green})`, margin: big ? "22px 4px 4px" : "18px 4px 4px", overflow: "visible" }}>
+        {/* pulsing halo behind the marker */}
         <motion.span
           animate={{ left: `${branchPct}%` }} transition={spring}
-          style={{ position: "absolute", top: "50%", width: big ? 24 : 20, height: big ? 24 : 20, borderRadius: "50%", background: "#fff", transform: "translate(-50%,-50%)", boxShadow: CL.shadow, border: `2.5px solid ${leadColor}`, display: "grid", placeItems: "center" }}
+          style={{ position: "absolute", top: "50%", transform: "translate(-50%,-50%)", width: big ? 24 : 20, height: big ? 24 : 20 }}
         >
-          <GitCompareArrows size={big ? 12 : 10} color={leadColor} />
+          <motion.span aria-hidden
+            animate={{ scale: [1, 2.1, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+            style={{ position: "absolute", inset: 0, borderRadius: "50%", background: leadColor, pointerEvents: "none" }} />
+          <span style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "#fff", boxShadow: CL.shadow, border: `2.5px solid ${leadColor}`, display: "grid", placeItems: "center" }}>
+            <GitCompareArrows size={big ? 12 : 10} color={leadColor} />
+          </span>
         </motion.span>
       </div>
 
@@ -206,7 +252,10 @@ export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total
           <div style={{ display: "flex", flexWrap: "wrap", gap: 9, justifyContent: "center" }}>
             {FACTORS.map((f, i) => (
               <span key={f} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, color: CL.body, fontWeight: 600 }}>
-                <span style={{ width: 8, height: 8, borderRadius: "50%", background: FACTOR_COLORS[i % FACTOR_COLORS.length] }} /> {f}
+                <motion.span
+                  animate={{ scale: [1, 1.45, 1], opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.35 }}
+                  style={{ width: 8, height: 8, borderRadius: "50%", background: FACTOR_COLORS[i % FACTOR_COLORS.length] }} /> {f}
               </span>
             ))}
           </div>
@@ -215,7 +264,7 @@ export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total
           </div>
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
 

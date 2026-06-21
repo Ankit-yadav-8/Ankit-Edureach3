@@ -87,9 +87,28 @@ body {
   max-width:100%;
   position:relative;
 }
-h1,h2,h3,h4,h5,h6 { font-family:"Space Grotesk","Sora",sans-serif; line-height:1.18; color:inherit; }
+h1,h2,h3,h4,h5,h6 { font-family:"Space Grotesk","Sora",sans-serif; line-height:1.18; color:inherit; font-style:italic; }
 a   { text-decoration:none; color:inherit; }
 img { max-width:100%; display:block; }
+
+/* ── Canonical "Back" button — one consistent pill used site-wide.
+   White surface by default, warm peach wash on hover (see BackButton.jsx
+   and every page-level back control). ── */
+.cp-back-btn {
+  display:inline-flex; align-items:center; gap:8px;
+  background:#fff; color:#211D2E;
+  border:1px solid rgba(33,29,46,.10); border-radius:50px;
+  padding:9px 18px; font-family:"Space Grotesk","Sora",sans-serif;
+  font-weight:700; font-size:13.5px; font-style:normal; line-height:1;
+  cursor:pointer; text-decoration:none;
+  box-shadow:0 6px 18px rgba(33,29,46,.07);
+  transition:background .18s ease, border-color .18s ease, transform .18s ease;
+}
+.cp-back-btn:hover {
+  background:#FCE7E0;
+  border-color:rgba(255,105,61,.40);
+  transform:translateX(-2px);
+}
 button { font-family:inherit; cursor:pointer; border:none; background:none; }
 ul  { list-style:none; }
 input,select,textarea { font-family:inherit; }

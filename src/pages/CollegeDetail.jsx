@@ -195,7 +195,7 @@ export default function CollegeDetail() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <button onClick={() => nav(-1)} className="btn btn-light" style={{ marginBottom: 20 }}>
+            <button onClick={() => nav(-1)} className="cp-back-btn" style={{ marginBottom: 20 }}>
               <ArrowLeft size={16} /> Back
             </button>
           </motion.div>

@@ -516,12 +516,7 @@ export default function BranchDetail() {
   return (
     <div style={{ background: CL.cream, minHeight: "100vh", paddingTop: 92, paddingBottom: 72 }}>
       <div className="container" style={{ maxWidth: 1060 }}>
-        <Link to="/branches" style={{
-          display: "inline-flex", alignItems: "center", gap: 8, color: CL.ink,
-          fontSize: 13.5, fontWeight: 700, fontFamily: CL.display, marginBottom: 20,
-          background: CL.card, border: `1px solid ${CL.line}`, borderRadius: 50,
-          padding: "9px 18px", boxShadow: CL.shadow, textDecoration: "none",
-        }}>
+        <Link to="/branches" className="cp-back-btn" style={{ marginBottom: 20 }}>
           <ArrowLeft size={16} /> Back to Branch Explorer
         </Link>
 

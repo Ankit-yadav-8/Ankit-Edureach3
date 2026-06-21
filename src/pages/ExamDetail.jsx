@@ -26,7 +26,7 @@ export default function ExamDetail() {
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 100%, rgba(244,162,97,.18) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1, display: "flex", gap: 28, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
           <div style={{ flex: "1 1 440px", minWidth: 0 }}>
-            <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 18, color: "#fff" }}><ArrowLeft size={16} /> Back</button>
+            <button onClick={() => nav(-1)} className="cp-back-btn" style={{ marginBottom: 18 }}><ArrowLeft size={16} /> Back</button>
             <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", color: "#1c1c28" }}>{exam.name}</h1>
             <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, margin: "6px 0 14px" }}>{exam.about}</p>
             <a href={exam.website} target="_blank" rel="noreferrer" className="btn btn-coral"><Globe size={16} /> Official Website</a>
