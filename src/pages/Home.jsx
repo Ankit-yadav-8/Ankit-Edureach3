@@ -8,6 +8,7 @@ import CollegeTicker from "../components/home/CollegeTicker.jsx";
 import ToolsGrid from "../components/home/ToolsGrid.jsx";
 import BranchCatalog from "../components/home/BranchCatalog.jsx";
 import AdvancedPredictorHome from "../components/home/AdvancedPredictorHome.jsx";
+import CollegeReviews from "../components/home/CollegeReviews.jsx";
 import BranchVsCollege from "../components/home/BranchVsCollege.jsx";
 import PlansSection from "../components/home/PlansSection.jsx";
 import ExploreColleges from "../components/home/ExploreColleges.jsx";
@@ -36,6 +37,9 @@ export default function Home({ onSearch }) {
 
       {/* ── JoSAA · JEE Advanced rank predictor (full tool) ── */}
       <AdvancedPredictorHome />
+
+      {/* ── College Reviews — give a review / browse by college ── */}
+      <CollegeReviews />
 
       {/* ── Branch vs College — 6-question assessment ── */}
       <BranchVsCollege />

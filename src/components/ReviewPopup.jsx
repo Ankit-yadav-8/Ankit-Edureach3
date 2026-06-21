@@ -7,19 +7,11 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, X, Home, Utensils, Send, CheckCircle2 } from "lucide-react";
+import { addReview, HOSTEL_TAGS, MESS_TAGS } from "../utils/reviews.js";
 
 const ORANGE = "#FF693D";
 const DELAY_MS = 2 * 60 * 1000;        // 2 minutes
 const DONE_KEY = "cp:review:done";     // set once submitted or dismissed
-
-const HOSTEL_TAGS = [
-  "Clean rooms", "Good Wi-Fi", "Spacious", "AC rooms", "Safe & secure",
-  "Friendly warden", "Great common areas", "Poor maintenance", "Water issues",
-];
-const MESS_TAGS = [
-  "Tasty food", "Hygienic", "Good variety", "Veg + Non-veg", "Affordable",
-  "Repetitive menu", "Limited timings", "Needs improvement", "Special meals",
-];
 
 /* Clickable 5-star rating. */
 function Stars({ value, onChange }) {
@@ -128,17 +120,12 @@ export default function ReviewPopup() {
 
   const submit = () => {
     if (!canSubmit) return;
-    const review = {
+    addReview({
       name: name.trim(), college: college.trim(),
       hostel: { rating: hostelRating, tags: hostelTags, text: hostelText.trim() },
       mess: { rating: messRating, tags: messTags, text: messText.trim() },
       at: new Date().toISOString(),
-    };
-    try {
-      const all = JSON.parse(localStorage.getItem("cp:reviews") || "[]");
-      all.push(review);
-      localStorage.setItem("cp:reviews", JSON.stringify(all));
-    } catch { /* ignore */ }
+    });
     finish();
     setDone(true);
     setTimeout(() => setOpen(false), 1700);
