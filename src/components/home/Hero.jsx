@@ -1534,20 +1534,25 @@ export default function Hero({ onSearch }) {
           {/* ══ LEFT — hero text (centred on mobile, shifted left on laptop) ══ */}
           <div style={{ textAlign: isMobile ? "center" : "left", minWidth: 0, width: "100%", maxWidth: isMobile ? "100%" : 600, justifySelf: isMobile ? "center" : "start" }}>
 
-            {/* Badge */}
-            <div>
+            {/* Badge — centred within the hero text column */}
+            <div style={{ textAlign: "center" }}>
               <span
                 style={{
-                  display: "inline-flex", alignItems: "center", gap: 7,
+                  display: "inline-flex", alignItems: "center", gap: 8,
                   background: "rgba(255, 105, 61,.10)",
                   border: "1px solid rgba(255, 105, 61,.30)",
                   color: "#FF693D",
-                  fontSize: isXs ? 11 : 12, fontWeight: 700, letterSpacing: "0.5px",
-                  padding: isXs ? "5px 12px" : "6px 16px", borderRadius: 50,
-                  marginBottom: isXs ? 16 : 22,
+                  fontSize: isXs ? 11 : 12.5, fontWeight: 700, letterSpacing: "0.5px",
+                  padding: isXs ? "6px 14px" : "8px 18px", borderRadius: 50,
+                  marginBottom: isXs ? 18 : 26,
                   fontFamily: "'Space Grotesk',sans-serif",
+                  boxShadow: "0 6px 18px -8px rgba(255,105,61,.45)",
                 }}>
-                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
+                <motion.span
+                  animate={{ scale: [1, 1.25, 1], opacity: [1, 0.6, 1] }}
+                  transition={{ duration: 1.8, repeat: Infinity }}
+                  style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }}
+                />
                 {isXs ? "JEE 2026 is Live" : "JEE 2026 Season is Live — Start Your Journey"}
               </span>
             </div>
@@ -1608,11 +1613,11 @@ export default function Hero({ onSearch }) {
               <div style={{
                 display: "flex",
                 gap: 6,
-                background: "rgba(255,255,255,.97)",
-                padding: isXs ? 5 : 6,
-                borderRadius: 14,
-                boxShadow: "0 8px 28px rgba(13,27,62,.10), 0 0 0 1px rgba(255, 105, 61,.16)",
-                border: "1px solid rgba(255, 105, 61,.18)",
+                background: "#ffffff",
+                padding: isXs ? 6 : 7,
+                borderRadius: 16,
+                boxShadow: "0 10px 30px rgba(13,27,62,.08)",
+                border: "1px solid rgba(0,0,0,.07)",
               }}>
                 <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 8, paddingLeft: isXs ? 10 : 14, minWidth: 0 }}>
                   <Search size={16} color="#9ca3af" style={{ flexShrink: 0 }} />
