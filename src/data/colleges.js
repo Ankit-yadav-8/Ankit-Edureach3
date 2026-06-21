@@ -11821,7 +11821,7 @@ export const COLLEGES = [
     "estd": 2014,
     "accent": "#fb923c",
     "heroImage": "/assets/team/IIITs/IIIT UNA.jpg",
-    "website": "https://iiituna.ac.in",
+    "website": "https://iiitu.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
     "about": "IIIT Una is an Indian Institute of Information Technology located in Una, Himachal Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
     "fees": {

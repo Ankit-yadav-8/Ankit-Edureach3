@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { NotesBlock } from "./RankPredictorTool.jsx";
 import { COLLEGE_BY_SLUG, BRANCHES, CATEGORIES, STATES } from "../../data/colleges.js";
+import { collegeLogo } from "../../data/collegeFlexibility.js";
 import { useCollegePredictor } from "../../hooks/useCollegePredictor.js";
 import { Bars, PieWithLegend } from "../Charts.jsx";
 import { fmtRank, fmtINR } from "../../utils/format.js";
@@ -30,21 +31,16 @@ const LOADING_TIPS = [
   "Ranking results by NIRF & branch value…",
 ];
 
-function domainOf(url) {
-  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return null; }
-}
-
-/* College "logo" pulled from Google's favicon service (the institute's own
-   site icon), with a coral monogram fallback when none is available. */
+/* College logo — official IIT emblem for IITs, the institute's own site logo
+   (favicon) for NITs / IIITs / GFTIs, with a coral monogram fallback. */
 function CollegeLogo({ slug, name }) {
   const [err, setErr] = useState(false);
-  const college = COLLEGE_BY_SLUG[slug];
-  const domain  = college?.website ? domainOf(college.website) : null;
+  const src = collegeLogo(COLLEGE_BY_SLUG[slug]);
   const initials = name.split(/\s+/).filter((w) => /^[A-Za-z]/.test(w)).slice(0, 3).map((w) => w[0]).join("").toUpperCase();
-  if (domain && !err) {
+  if (src && !err) {
     return (
       <img
-        src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+        src={src}
         alt="" width={30} height={30} loading="lazy" onError={() => setErr(true)}
         style={{ borderRadius: 8, flexShrink: 0, background: "#fff", border: "1px solid var(--line)", objectFit: "contain", padding: 2 }}
       />

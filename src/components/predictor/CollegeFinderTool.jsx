@@ -8,7 +8,7 @@ import { COLLEGE_BY_SLUG, CATEGORIES, STATES } from "../../data/colleges.js";
 import { useCollegePredictor } from "../../hooks/useCollegePredictor.js";
 import {
   FLEX_FLAGS, BRANCH_BUCKETS, CODE_TO_BUCKET,
-  degreeOf, DEGREE_OPTIONS, IIT_LOGOS,
+  degreeOf, DEGREE_OPTIONS, collegeLogo,
 } from "../../data/collegeFlexibility.js";
 import { fmtRank, fmtINR } from "../../utils/format.js";
 
@@ -27,22 +27,15 @@ const PROB_META = {
   low:    { label: "Low",    color: "#dc2626", bg: "rgba(239,68,68,.12)" },
 };
 
-function domainOf(url) {
-  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return null; }
-}
-
 /* Circular institute mark — the college's own site icon (its logo), with a
    coral monogram fallback. Mirrors the campusloom card avatar. */
 function InstituteLogo({ slug, name, size = 44 }) {
   const [err, setErr] = useState(false);
-  const college = COLLEGE_BY_SLUG[slug];
-  const domain  = college?.website ? domainOf(college.website) : null;
   const initials = name.split(/\s+/).filter((w) => /^[A-Za-z]/.test(w))
     .slice(0, 3).map((w) => w[0]).join("").toUpperCase();
-  // Prefer the official IIT emblem when we have one; otherwise the institute's
-  // own site favicon (effectively its logo) for NITs / IIITs / GFTIs.
-  const src = IIT_LOGOS[slug]
-    || (domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=64` : null);
+  // Official IIT emblem when we have one; otherwise the institute's own site
+  // logo (favicon) for NITs / IIITs / GFTIs.
+  const src = collegeLogo(COLLEGE_BY_SLUG[slug]);
   if (src && !err) {
     return (
       <img

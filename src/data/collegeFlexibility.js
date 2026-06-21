@@ -126,6 +126,24 @@ export const IIT_LOGOS = {
   "iit-goa":         `${A}/IIT GOA.jpg`,
 };
 
+/* Strip a website URL down to its bare hostname (no protocol / www). */
+export function domainOf(url) {
+  if (!url) return null;
+  try { return new URL(url).hostname.replace(/^www\./, ""); }
+  catch { return String(url).replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0] || null; }
+}
+
+/* One source of truth for a college's logo, used everywhere emblems show.
+   IITs use their official local emblem (high-res); every other institute
+   (NITs · IIITs · GFTIs · private) resolves to its own site favicon from the
+   official website domain — so NIT/IIIT logos appear just like the IITs. */
+export function collegeLogo(college) {
+  if (!college) return null;
+  if (IIT_LOGOS[college.slug]) return IIT_LOGOS[college.slug];
+  const d = college.website ? domainOf(college.website) : null;
+  return d ? `https://www.google.com/s2/favicons?domain=${d}&sz=128` : null;
+}
+
 export const DEGREE_OPTIONS = [
   { value: "",      label: "All Degrees" },
   { value: "btech", label: "B.Tech (4-year)" },

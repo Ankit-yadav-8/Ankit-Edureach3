@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, GraduationCap, FileText, Newspaper, Wrench, Building2, Stethoscope } from "lucide-react";
 import { search } from "../utils/searchIndex.js";
-import { IIT_LOGOS } from "../data/collegeFlexibility.js";
+import { collegeLogo } from "../data/collegeFlexibility.js";
+import { COLLEGE_BY_SLUG } from "../data/colleges.js";
 
 const KIND_ICON = {
   College: GraduationCap,
@@ -141,9 +142,9 @@ export default function SearchOverlay({ open, onClose }) {
               {results.map((r, i) => {
                 const Icon = KIND_ICON[r.kind] || Search;
                 const color = KIND_COLOR[r.kind] || "#888";
-                // Use the official IIT emblem for IIT college results.
+                // IIT emblem (local) for IITs, official site logo for NITs/IIITs/GFTIs.
                 const slug = r.to?.startsWith("/colleges/") ? r.to.slice("/colleges/".length) : null;
-                const logo = slug ? IIT_LOGOS[slug] : null;
+                const logo = slug ? collegeLogo(COLLEGE_BY_SLUG[slug]) : null;
                 return (
                   <button
                     key={r.to + i}
