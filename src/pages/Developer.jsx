@@ -1,90 +1,54 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft, Github, Linkedin, Dribbble, Globe,
-  Mail, MapPin, Sparkles, ExternalLink, Code2, Trophy,
+  ArrowLeft, Github, Linkedin, Dribbble, Globe, Instagram, MessageCircle,
+  Mail, MapPin, Sparkles, ExternalLink,
 } from "lucide-react";
 import { TEAM_BY_ID } from "../data/team.js";
 import Reveal from "../components/Reveal.jsx";
 
-const ICON = { github: Github, linkedin: Linkedin, dribbble: Dribbble, website: Globe };
+const ICON = { github: Github, linkedin: Linkedin, dribbble: Dribbble, website: Globe, instagram: Instagram, whatsapp: MessageCircle, email: Mail };
+const SOCIAL_LABEL = { website: "Website", email: "Email" };
 
-/* ── Square Photo Card for Ankit (large, glowing border) ─────── */
+/* ── Square Photo Card — clean, no glow ─────────────────────────── */
 function SquarePhotoCard({ dev }) {
   return (
-    <div style={{ position: "relative", flexShrink: 0 }}>
-      {/* Outer ambient glow */}
+    <div style={{
+      width: 220, height: 270, borderRadius: 18, overflow: "hidden",
+      position: "relative", flexShrink: 0,
+      border: "1px solid rgba(0,0,0,.08)",
+      boxShadow: "0 10px 30px rgba(13,27,62,.12)",
+    }}>
+      <img
+        src={dev.photo}
+        alt={dev.name}
+        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
+      />
+      {/* Bottom name overlay */}
       <div style={{
-        position: "absolute",
-        inset: -20,
-        borderRadius: 24,
-        background: `radial-gradient(circle, ${dev.accent}55 0%, ${dev.accent}22 50%, transparent 75%)`,
-        animation: "akGlow 3s ease-in-out infinite alternate",
-        pointerEvents: "none",
-        filter: "blur(10px)",
-      }} />
-      {/* Animated border glow ring */}
-      <div style={{
-        position: "absolute", inset: -3,
-        borderRadius: 20,
-        background: `linear-gradient(135deg, ${dev.accent}, #fbbf24, ${dev.accent}88, #E0421F, ${dev.accent})`,
-        backgroundSize: "300% 300%",
-        animation: "photoGlowBorder 3s ease infinite",
-        pointerEvents: "none",
-        zIndex: 0,
-      }} />
-      {/* Photo container */}
-      <div style={{
-        width: 220,
-        height: 270,
-        borderRadius: 18,
-        overflow: "hidden",
-        position: "relative",
-        zIndex: 1,
-        boxShadow: `0 0 30px ${dev.accent}88, 0 0 60px ${dev.accent}44`,
+        position: "absolute", bottom: 0, left: 0, right: 0,
+        padding: "32px 14px 14px",
+        background: "linear-gradient(to top, rgba(13,27,62,.78) 0%, transparent 100%)",
       }}>
-        <img
-          src={dev.photo}
-          alt={dev.name}
-          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
-        />
-        {/* Bottom name overlay */}
-        <div style={{
-          position: "absolute", bottom: 0, left: 0, right: 0,
-          padding: "32px 14px 14px",
-          background: `linear-gradient(to top, ${dev.accent}ee 0%, transparent 100%)`,
-        }}>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: "#fff", lineHeight: 1.2 }}>{dev.name}</div>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,.85)", marginTop: 2 }}>{dev.role}</div>
-        </div>
+        <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: "#fff", lineHeight: 1.2 }}>{dev.name}</div>
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,.85)", marginTop: 2 }}>{dev.role}</div>
       </div>
     </div>
   );
 }
 
-/* ── AK Glow Logo (fallback for non-photo devs) ─────────────────── */
+/* ── Initials avatar (fallback for non-photo devs) — clean, no glow ── */
 function DevGlowLogo({ initials, accent, size = 110 }) {
   return (
-    <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
-      <div style={{
-        position: "absolute", inset: -20, borderRadius: "50%",
-        background: `radial-gradient(circle, ${accent}55 0%, ${accent}22 45%, transparent 72%)`,
-        animation: "akGlow 3s ease-in-out infinite alternate", pointerEvents: "none",
-      }} />
-      <div style={{
-        position: "absolute", inset: -6, borderRadius: "50%",
-        border: `2px dashed ${accent}50`, animation: "spin 8s linear infinite", pointerEvents: "none",
-      }} />
-      <div style={{
-        width: size, height: size, borderRadius: "50%",
-        background: `linear-gradient(135deg, ${accent} 0%, #E0421F 55%, #c2410c 100%)`,
-        display: "grid", placeItems: "center",
-        fontFamily: "Sora", fontWeight: 800, fontSize: size * 0.3, color: "#fff",
-        boxShadow: `0 0 0 4px rgba(255,255,255,.15), 0 8px 40px ${accent}88, 0 0 80px ${accent}44`,
-        position: "relative", zIndex: 1, userSelect: "none",
-      }}>
-        {initials}
-      </div>
+    <div style={{
+      width: size, height: size, borderRadius: "50%",
+      background: `linear-gradient(135deg, ${accent} 0%, #E0421F 100%)`,
+      display: "grid", placeItems: "center",
+      fontFamily: "Sora", fontWeight: 800, fontSize: size * 0.3, color: "#fff",
+      boxShadow: "0 8px 24px rgba(13,27,62,.16)",
+      flexShrink: 0, userSelect: "none",
+    }}>
+      {initials}
     </div>
   );
 }
@@ -142,13 +106,13 @@ export default function Developer() {
     <div className="page">
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="warm-page-header" style={{ padding: "52px 0 60px" }}>
-        {/* Background glow blobs */}
-        <div style={{ position: "absolute", top: -80, right: -40, width: 500, height: 500, borderRadius: "50%", background: `radial-gradient(circle, ${dev.accent}25 0%, transparent 65%)`, pointerEvents: "none", zIndex: 0 }} />
-        <div style={{ position: "absolute", bottom: -60, left: -40, width: 350, height: 350, borderRadius: "50%", background: `radial-gradient(circle, rgba(244,162,97,.18) 0%, transparent 65%)`, pointerEvents: "none", zIndex: 0 }} />
-        <div style={{ position: "absolute", top: "40%", left: "30%", width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, rgba(255, 105, 61,.14) 0%, transparent 70%)`, pointerEvents: "none", zIndex: 0 }} />
-
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <button onClick={() => nav(-1)} className="btn btn-ghost" style={{ marginBottom: 28, color: "#fff" }}>
+          <button onClick={() => nav(-1)} style={{
+            display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 28,
+            background: "#f8f8fa", border: "1px solid #e5e7eb", borderRadius: 99,
+            padding: "9px 18px", fontSize: 14, fontWeight: 600, fontFamily: "Sora",
+            color: "#1c1c28", cursor: "pointer",
+          }}>
             <ArrowLeft size={16} /> Back
           </button>
 
@@ -165,7 +129,7 @@ export default function Developer() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.55 }}
             >
-              <span className="eyebrow" style={{ marginBottom: 16 }}>
+              <span className="eyebrow" style={{ marginBottom: 16, background: "#f3f4f6", color: "#6b7280", border: "1px solid #e5e7eb" }}>
                 <Sparkles size={12} /> Team College Parichay · {dev.role.split("&")[0].trim()}
               </span>
 
@@ -181,13 +145,15 @@ export default function Developer() {
                   .map((p, i) => (
                     <motion.span
                       key={p}
-                      className="role-chip"
                       initial={{ opacity: 0, y: 10, scale: 0.8 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       transition={{ delay: 0.2 + i * 0.12, type: "spring", bounce: 0.5 }}
                       style={{
+                        display: "inline-flex", alignItems: "center", gap: 6,
+                        padding: "6px 15px", borderRadius: 50,
+                        fontFamily: "Sora", fontSize: 12.5, fontWeight: 800, letterSpacing: ".3px",
+                        color: "#fff", whiteSpace: "nowrap",
                         background: `linear-gradient(135deg, ${dev.accent}, #fbbf24)`,
-                        boxShadow: `0 5px 18px ${dev.accent}66, inset 0 1px 0 rgba(255,255,255,.35)`,
                       }}
                     >
                       <Sparkles size={12} /> {p}
@@ -195,19 +161,16 @@ export default function Developer() {
                   ))}
               </div>
 
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 18 }}>
-                <div style={{ color: "rgba(28,28,40,.65)", display: "flex", alignItems: "center", gap: 5, fontSize: 13.5 }}>
-                  <MapPin size={14} color="#FF693D" /> {dev.location}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 18 }}>
+                <div style={{ color: "rgba(28,28,40,.6)", display: "flex", alignItems: "center", gap: 5, fontSize: 13.5 }}>
+                  <MapPin size={14} color="#9ca3af" /> {dev.location}
                 </div>
                 {dev.jeeRank && (
                   <div style={{
                     display: "inline-flex", alignItems: "center", gap: 6,
-                    background: "rgba(255, 105, 61,.12)",
-                    border: `1px solid rgba(255, 105, 61,.38)`,
+                    background: "#f3f4f6", border: "1px solid #e5e7eb",
                     borderRadius: 99, padding: "4px 14px",
-                    fontSize: 13, fontWeight: 600, color: "#c75b0a",
-                    boxShadow: `0 0 14px rgba(255, 105, 61,.2)`,
-                    animation: "rankGlow 2s ease-in-out infinite alternate",
+                    fontSize: 13, fontWeight: 600, color: "#374151",
                   }}>
                     🏆 {dev.jeeRank} · {dev.exam}
                   </div>
@@ -215,35 +178,48 @@ export default function Developer() {
                 {dev.college && (
                   <div style={{
                     display: "inline-flex", alignItems: "center", gap: 6,
-                    background: `rgba(255, 105, 61,.12)`,
-                    border: `1px solid rgba(255, 105, 61,.35)`,
+                    background: "#f3f4f6", border: "1px solid #e5e7eb",
                     borderRadius: 99, padding: "4px 14px",
-                    fontSize: 13, fontWeight: 600,
-                    color: "#c75b0a",
-                    boxShadow: `0 0 14px rgba(255, 105, 61,.18)`,
-                    animation: "rankGlow 2s ease-in-out infinite alternate",
+                    fontSize: 13, fontWeight: 600, color: "#374151",
                   }}>
                     🎓 {dev.college}
                   </div>
                 )}
               </div>
 
-              <p style={{ color: "rgba(28,28,40,.62)", fontSize: "1.02rem", maxWidth: 560, fontStyle: "italic", lineHeight: 1.7, marginBottom: 22 }}>
+              <p style={{ color: "rgba(28,28,40,.62)", fontSize: "1.02rem", maxWidth: 560, fontStyle: "italic", lineHeight: 1.7, marginBottom: 18 }}>
                 "{dev.tagline}"
               </p>
 
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                {Object.entries(dev.socials).map(([k, url]) => {
-                  const I = ICON[k] || Globe;
-                  return (
-                    <a key={k} href={url} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ fontSize: 13, textTransform: "capitalize" }}>
-                      <I size={15} /> {k}
-                    </a>
-                  );
-                })}
-                <a href={`mailto:${dev.email}`} className="btn btn-coral" style={{ fontSize: 13 }}>
-                  <Mail size={15} /> Email
-                </a>
+              {/* All connect links in one simple card — uniform clickable buttons */}
+              <div style={{
+                background: "#fff", border: "1px solid #ececec", borderRadius: 16,
+                padding: "16px 18px", boxShadow: "0 6px 20px rgba(13,27,62,.06)", maxWidth: 560,
+              }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "#9ca3af", marginBottom: 12 }}>
+                  Connect
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+                  {[...Object.entries(dev.socials), ...(dev.email ? [["email", `mailto:${dev.email}`]] : [])].map(([k, url]) => {
+                    const I = ICON[k] || Globe;
+                    const label = SOCIAL_LABEL[k] || k.charAt(0).toUpperCase() + k.slice(1);
+                    const external = !url.startsWith("mailto:");
+                    return (
+                      <a key={k} href={url} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+                        style={{
+                          display: "inline-flex", alignItems: "center", gap: 7,
+                          padding: "9px 16px", borderRadius: 10,
+                          background: "#f8f8fa", border: "1px solid #e5e7eb",
+                          color: "#1c1c28", fontSize: 13, fontWeight: 600, fontFamily: "Sora",
+                          textDecoration: "none", transition: "background .15s, border-color .15s",
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = "#f1f1f4"; e.currentTarget.style.borderColor = "#d8d8de"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = "#f8f8fa"; e.currentTarget.style.borderColor = "#e5e7eb"; }}>
+                        <I size={15} color="#6b7280" /> {label}
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
             </motion.div>
 
@@ -267,9 +243,9 @@ export default function Developer() {
                   {dev.skills.slice(0, 4).map((s) => (
                     <span key={s} style={{
                       padding: "3px 10px", borderRadius: 50,
-                      background: "rgba(255, 105, 61,.1)",
-                      border: "1px solid rgba(255, 105, 61,.25)",
-                      fontSize: 11, color: "#c2540a", fontWeight: 600,
+                      background: "#f3f4f6",
+                      border: "1px solid #e5e7eb",
+                      fontSize: 11, color: "#6b7280", fontWeight: 600,
                     }}>{s}</span>
                   ))}
                 </div>
