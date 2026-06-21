@@ -607,8 +607,213 @@ export const BRANCHES = [
   },
 ];
 
+/* ── Deep "rich-page" data, keyed by slug ──────────────────────────────
+   Powers the upgraded BranchDetail layout: study-intensity meters, the
+   where-graduates-land donut, tech-placement access, the 4-year curriculum
+   journey, typical career roles (direct vs needs-prep) and top recruiters.
+   Levels: HEAVY · MODERATE · LIGHT · MINIMAL. Numbers are indicative. ── */
+export const BRANCH_DEEP = {
+  "cs-it": {
+    studyMeters: [{ label: "Coding", level: "HEAVY" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "MINIMAL" }],
+    outcomeSplit: [{ label: "IT / Software", pct: 70 }, { label: "Core roles", pct: 15 }, { label: "Higher studies", pct: 10 }, { label: "Other paths", pct: 5 }],
+    placement: { headline: "Most tech roles open", note: "Standard tech recruitment targets CS/IT batches first. Zero barriers to entry." },
+    careerRoles: [
+      { role: "Software Development Engineer (SDE)", direct: true }, { role: "Frontend Engineer", direct: true },
+      { role: "Backend Engineer", direct: true }, { role: "Full Stack Developer", direct: true },
+      { role: "DevOps Engineer", direct: true }, { role: "Site Reliability Engineer", direct: true },
+      { role: "Security Analyst", direct: true }, { role: "System Architect", direct: false },
+      { role: "Database Administrator", direct: false }, { role: "Systems Researcher", direct: false },
+    ],
+    recruiters: ["Google", "Microsoft", "Amazon", "Adobe", "Flipkart"],
+  },
+  "ai-data-science": {
+    studyMeters: [{ label: "Coding", level: "HEAVY" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "LIGHT" }],
+    outcomeSplit: [{ label: "AI / ML roles", pct: 60 }, { label: "Software", pct: 20 }, { label: "Higher studies", pct: 15 }, { label: "Other paths", pct: 5 }],
+    placement: { headline: "Strong AI/ML demand", note: "Top labs and product teams recruit data-science cohorts early — strong project portfolios win." },
+    careerRoles: [
+      { role: "AI Engineer", direct: true }, { role: "ML Engineer", direct: true },
+      { role: "Data Scientist", direct: true }, { role: "Data Analyst", direct: true },
+      { role: "MLOps Engineer", direct: true }, { role: "NLP Engineer", direct: true },
+      { role: "Computer Vision Engineer", direct: true }, { role: "Research Engineer", direct: false },
+      { role: "Applied Scientist", direct: false }, { role: "Quant Researcher", direct: false },
+    ],
+    recruiters: ["Google", "Microsoft", "NVIDIA", "OpenAI", "Amazon"],
+  },
+  "electronics-electrical": {
+    studyMeters: [{ label: "Coding", level: "MODERATE" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "Core electronics", pct: 45 }, { label: "Software", pct: 30 }, { label: "Higher studies", pct: 15 }, { label: "Other paths", pct: 10 }],
+    placement: { headline: "Core + tech both open", note: "VLSI / embedded core roles plus a strong software pivot keep both doors open." },
+    careerRoles: [
+      { role: "VLSI Engineer", direct: true }, { role: "Embedded Engineer", direct: true },
+      { role: "Hardware Engineer", direct: true }, { role: "Firmware Engineer", direct: true },
+      { role: "Power Engineer", direct: true }, { role: "Software Engineer", direct: true },
+      { role: "Chip Design Engineer", direct: false }, { role: "RF Engineer", direct: false },
+      { role: "Verification Engineer", direct: false }, { role: "Control Systems Engineer", direct: false },
+    ],
+    recruiters: ["Intel", "Qualcomm", "Texas Instruments", "Samsung", "NVIDIA"],
+  },
+  "mechanical-robotics": {
+    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "Core / Manufacturing", pct: 50 }, { label: "Software / Analytics", pct: 20 }, { label: "Higher studies", pct: 20 }, { label: "Other paths", pct: 10 }],
+    placement: { headline: "Broad core hiring", note: "Auto, EV, robotics and PSU recruiters hire widely; an analytics pivot is common." },
+    careerRoles: [
+      { role: "Design Engineer", direct: true }, { role: "Manufacturing Engineer", direct: true },
+      { role: "Automotive Engineer", direct: true }, { role: "CAD / CAE Engineer", direct: true },
+      { role: "Production Engineer", direct: true }, { role: "Quality Engineer", direct: true },
+      { role: "Robotics Engineer", direct: false }, { role: "Mechatronics Engineer", direct: false },
+      { role: "R&D Engineer", direct: false }, { role: "Project Engineer", direct: true },
+    ],
+    recruiters: ["Tata Motors", "Mahindra", "L&T", "Bosch", "Ola Electric"],
+  },
+  "civil-architecture": {
+    studyMeters: [{ label: "Coding", level: "MINIMAL" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "Core / Construction", pct: 55 }, { label: "Govt / PSU", pct: 20 }, { label: "Higher studies", pct: 15 }, { label: "Other paths", pct: 10 }],
+    placement: { headline: "Infra + PSU stability", note: "Construction majors, design consultancies and PSUs (via GATE) hire steadily." },
+    careerRoles: [
+      { role: "Structural Engineer", direct: true }, { role: "Site Engineer", direct: true },
+      { role: "Geotechnical Engineer", direct: true }, { role: "Transportation Engineer", direct: true },
+      { role: "BIM Engineer", direct: true }, { role: "Surveyor", direct: true },
+      { role: "Project Manager", direct: false }, { role: "Urban Planner", direct: false },
+      { role: "Construction Manager", direct: false }, { role: "Govt / PSU Engineer", direct: false },
+    ],
+    recruiters: ["L&T", "AECOM", "Tata Projects", "Jacobs", "Afcons"],
+  },
+  "chemical": {
+    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "Process / Core", pct: 50 }, { label: "Analytics / Software", pct: 20 }, { label: "Higher studies", pct: 20 }, { label: "Other paths", pct: 10 }],
+    placement: { headline: "Energy + pharma hiring", note: "Refineries, FMCG and pharma recruit core; analytics roles add a strong pivot." },
+    careerRoles: [
+      { role: "Process Engineer", direct: true }, { role: "Production Engineer", direct: true },
+      { role: "Refinery Engineer", direct: true }, { role: "Pharma Engineer", direct: true },
+      { role: "Quality Engineer", direct: true }, { role: "Process Safety Engineer", direct: false },
+      { role: "Plant Design Engineer", direct: false }, { role: "Energy Analyst", direct: false },
+      { role: "R&D Engineer", direct: false }, { role: "Data Analyst", direct: false },
+    ],
+    recruiters: ["Reliance", "IOCL", "Pfizer", "Asian Paints", "Unilever"],
+  },
+  "materials-mining": {
+    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "Core / Metallurgy", pct: 45 }, { label: "PSU", pct: 25 }, { label: "Higher studies", pct: 20 }, { label: "Other paths", pct: 10 }],
+    placement: { headline: "PSU + R&D routes", note: "Steel, battery and semiconductor-materials firms plus PSUs absorb most graduates." },
+    careerRoles: [
+      { role: "Metallurgist", direct: true }, { role: "Materials Engineer", direct: true },
+      { role: "Quality / Failure Engineer", direct: true }, { role: "Process Engineer", direct: true },
+      { role: "Welding Engineer", direct: true }, { role: "NDT Engineer", direct: true },
+      { role: "Battery / Semiconductor R&D", direct: false }, { role: "PSU Engineer", direct: false },
+      { role: "R&D Scientist", direct: false }, { role: "Researcher", direct: false },
+    ],
+    recruiters: ["Tata Steel", "JSW", "SAIL", "Vedanta", "Hindalco"],
+  },
+  "biotech-biosciences": {
+    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "LIGHT" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "Pharma / R&D", pct: 40 }, { label: "Bioinformatics / SW", pct: 25 }, { label: "Higher studies", pct: 25 }, { label: "Other paths", pct: 10 }],
+    placement: { headline: "Research-led + health-tech", note: "Pharma R&D, bioinformatics and health-tech roles; best outcomes pair biology with coding." },
+    careerRoles: [
+      { role: "Bioinformatics Engineer", direct: true }, { role: "Biomedical Engineer", direct: true },
+      { role: "Bioprocess Engineer", direct: true }, { role: "Lab / QC Analyst", direct: true },
+      { role: "Clinical Research Associate", direct: true }, { role: "Research Scientist", direct: false },
+      { role: "Genomics Analyst", direct: false }, { role: "Data Analyst", direct: false },
+      { role: "R&D Scientist", direct: false }, { role: "Regulatory Affairs", direct: false },
+    ],
+    recruiters: ["Biocon", "Dr. Reddy's", "Syngene", "Novartis", "GE Healthcare"],
+  },
+  "mathematics-computing": {
+    studyMeters: [{ label: "Coding", level: "HEAVY" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "MINIMAL" }],
+    outcomeSplit: [{ label: "Software / ML", pct: 40 }, { label: "Quant / Finance", pct: 35 }, { label: "Higher studies", pct: 20 }, { label: "Other paths", pct: 5 }],
+    placement: { headline: "Highest-paying roles", note: "Quant firms and global tech recruit top M&C cohorts at premium packages." },
+    careerRoles: [
+      { role: "Quant Developer", direct: true }, { role: "Software Engineer", direct: true },
+      { role: "Data Scientist", direct: true }, { role: "ML Engineer", direct: true },
+      { role: "Risk Analyst", direct: true }, { role: "Quant Analyst", direct: false },
+      { role: "Quant Trader", direct: false }, { role: "Quant Researcher", direct: false },
+      { role: "Actuary", direct: false }, { role: "Research Scientist", direct: false },
+    ],
+    recruiters: ["Tower Research", "Jane Street", "Goldman Sachs", "Optiver", "Google"],
+  },
+  "sciences-applied": {
+    studyMeters: [{ label: "Coding", level: "MODERATE" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "Research / Core", pct: 40 }, { label: "Software / Data", pct: 30 }, { label: "Higher studies", pct: 25 }, { label: "Other paths", pct: 5 }],
+    placement: { headline: "Deep-tech + software", note: "Engineering-physics cohorts place strongly in software, deep-tech and core R&D." },
+    careerRoles: [
+      { role: "Data Analyst", direct: true }, { role: "Software Engineer", direct: true },
+      { role: "ML Engineer", direct: true }, { role: "Research Engineer", direct: false },
+      { role: "Scientist", direct: false }, { role: "Semiconductor Engineer", direct: false },
+      { role: "Photonics Engineer", direct: false }, { role: "R&D Engineer", direct: false },
+      { role: "Quant / Analyst", direct: false }, { role: "Deep-tech Founder", direct: false },
+    ],
+    recruiters: ["ISRO", "BARC", "Intel", "Applied Materials", "TCS Research"],
+  },
+  "aerospace-avionics": {
+    studyMeters: [{ label: "Coding", level: "MODERATE" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "Aerospace / Core", pct: 45 }, { label: "Software / CFD", pct: 25 }, { label: "Higher studies", pct: 25 }, { label: "Other paths", pct: 5 }],
+    placement: { headline: "Space-sector growth", note: "ISRO, DRDO/HAL, NewSpace startups and CFD / auto-aero roles recruit widely." },
+    careerRoles: [
+      { role: "Aerospace Engineer", direct: true }, { role: "CFD Engineer", direct: true },
+      { role: "Avionics Engineer", direct: true }, { role: "Structures Engineer", direct: true },
+      { role: "Drone Engineer", direct: true }, { role: "Aircraft Design Engineer", direct: false },
+      { role: "Propulsion Engineer", direct: false }, { role: "Space Systems Engineer", direct: false },
+      { role: "GNC Engineer", direct: false }, { role: "Researcher", direct: false },
+    ],
+    recruiters: ["ISRO", "HAL", "DRDO", "Boeing", "Airbus"],
+  },
+  "mining-earth": {
+    studyMeters: [{ label: "Coding", level: "MINIMAL" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "PSU / Mining", pct: 55 }, { label: "Mining-tech", pct: 15 }, { label: "Higher studies", pct: 20 }, { label: "Other paths", pct: 10 }],
+    placement: { headline: "Top PSU packages", note: "Coal India, NMDC and metals majors offer among the highest core PSU pay." },
+    careerRoles: [
+      { role: "Mining Engineer", direct: true }, { role: "Mine Planner", direct: true },
+      { role: "Safety Engineer", direct: true }, { role: "Operations Engineer", direct: true },
+      { role: "Mineral Processing Engineer", direct: true }, { role: "Blasting Engineer", direct: true },
+      { role: "Drone-Survey Engineer", direct: false }, { role: "Geotechnical Engineer", direct: false },
+      { role: "PSU Engineer", direct: false }, { role: "Researcher", direct: false },
+    ],
+    recruiters: ["Coal India", "NMDC", "Vedanta", "Tata Steel", "Hindustan Zinc"],
+  },
+  "petroleum-energy": {
+    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "Oil & Gas", pct: 50 }, { label: "Renewables", pct: 15 }, { label: "Higher studies", pct: 25 }, { label: "Other paths", pct: 10 }],
+    placement: { headline: "High-paying core", note: "Oil & gas majors pay top core packages; clean-energy adds a fast-growing track." },
+    careerRoles: [
+      { role: "Drilling Engineer", direct: true }, { role: "Production Engineer", direct: true },
+      { role: "Energy Analyst", direct: true }, { role: "Renewables Engineer", direct: true },
+      { role: "Field Engineer", direct: true }, { role: "Pipeline Engineer", direct: true },
+      { role: "Reservoir Engineer", direct: false }, { role: "Petroleum Geologist", direct: false },
+      { role: "Process Safety Engineer", direct: false }, { role: "Researcher", direct: false },
+    ],
+    recruiters: ["ONGC", "Shell", "Schlumberger", "Reliance", "IOCL"],
+  },
+  "production-industrial": {
+    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "MODERATE" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "MODERATE" }],
+    outcomeSplit: [{ label: "Operations / Core", pct: 45 }, { label: "Analytics / Consulting", pct: 25 }, { label: "Higher studies / MBA", pct: 20 }, { label: "Other paths", pct: 10 }],
+    placement: { headline: "Ops + analytics demand", note: "Manufacturing, e-commerce ops and consulting hire industrial engineers widely." },
+    careerRoles: [
+      { role: "Operations Engineer", direct: true }, { role: "Supply-chain Engineer", direct: true },
+      { role: "Industrial Engineer", direct: true }, { role: "Quality Engineer", direct: true },
+      { role: "Manufacturing Engineer", direct: true }, { role: "Planning Engineer", direct: true },
+      { role: "Process Improvement Engineer", direct: true }, { role: "Analytics / Consulting", direct: false },
+      { role: "Project Manager", direct: false }, { role: "MBA Pivot", direct: false },
+    ],
+    recruiters: ["Amazon", "Flipkart", "Tata Steel", "Maruti Suzuki", "Delhivery"],
+  },
+  "naval-ocean": {
+    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
+    outcomeSplit: [{ label: "Shipbuilding / Core", pct: 50 }, { label: "Offshore / Energy", pct: 20 }, { label: "Higher studies", pct: 25 }, { label: "Other paths", pct: 5 }],
+    placement: { headline: "Shipbuilding + offshore", note: "Shipyards, classification societies and offshore energy hire a small, well-paid pool." },
+    careerRoles: [
+      { role: "Naval Architect", direct: true }, { role: "Marine Engineer", direct: true },
+      { role: "Structural Engineer", direct: true }, { role: "CFD Engineer", direct: true },
+      { role: "Offshore Engineer", direct: false }, { role: "Ship Design Engineer", direct: false },
+      { role: "Classification Surveyor", direct: false }, { role: "Coastal Engineer", direct: false },
+      { role: "R&D Engineer", direct: false }, { role: "Researcher", direct: false },
+    ],
+    recruiters: ["Cochin Shipyard", "Mazagon Dock", "L&T Shipbuilding", "ABS", "DNV"],
+  },
+};
+
 export const TOTAL_BRANCHES = BRANCHES.reduce((s, b) => s + (b.branchCount || 0), 0);
 
 export function getBranch(slug) {
-  return BRANCHES.find((b) => b.slug === slug) || null;
+  const base = BRANCHES.find((b) => b.slug === slug);
+  if (!base) return null;
+  return { ...base, ...(BRANCH_DEEP[slug] || {}) };
 }

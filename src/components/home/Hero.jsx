@@ -1408,7 +1408,7 @@ function HeroStoryCard() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: 0.25 }}
       style={{
-        position: "relative", width: "100%", aspectRatio: "1 / 1", minWidth: 0,
+        position: "relative", width: "100%", aspectRatio: "5 / 4", minWidth: 0,
         borderRadius: 24, overflow: "hidden",
         border: "1px solid rgba(0,0,0,.06)",
         background: "linear-gradient(135deg, #1b1b2e, #0a0a1a)",
@@ -1487,8 +1487,8 @@ export default function Hero({ onSearch }) {
      Mobile stays single-column (the card is hidden via .hero-about-col). ── */
   const gridCols =
     isMobile  ? "1fr" :
-    isTablet  ? "1fr minmax(0,360px)" :
-    "minmax(0,1fr) 560px";
+    isTablet  ? "1fr minmax(0,400px)" :
+    "minmax(0,1fr) 640px";
 
   /* ── Hero background — warm gradient on all sizes ── */
   const heroBg = "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 72%, #ffffff 100%)";
@@ -1562,10 +1562,12 @@ export default function Hero({ onSearch }) {
           }}
         >
 
-          {/* ══ LEFT — hero text (centred on mobile, shifted left on laptop) ══ */}
-          <div style={{ textAlign: isMobile ? "center" : "left", minWidth: 0, width: "100%", maxWidth: isMobile ? "100%" : 600, justifySelf: isMobile ? "center" : "start" }}>
+          {/* ══ LEFT — hero text (centred on mobile, shifted left on laptop).
+               On desktop the column hugs the headline (width:fit-content) so the
+               centred badge sits exactly over the headline below it. ══ */}
+          <div style={{ textAlign: isMobile ? "center" : "left", minWidth: 0, width: isMobile ? "100%" : "fit-content", maxWidth: "100%", justifySelf: isMobile ? "center" : "start" }}>
 
-            {/* Badge — centred within the hero text column */}
+            {/* Badge — centred over the headline / bottom text */}
             <div style={{ textAlign: "center" }}>
               <span
                 style={{

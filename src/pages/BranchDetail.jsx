@@ -1,13 +1,15 @@
 /* BranchDetail — full deep-dive page for one branch family.
    Campusloom layout: a header card with at-a-glance stats, then four tabs:
-   Academics & Outcomes · Advanced Insights (gauge + 5-yr salary arc) ·
-   Colleges & Branches · Common Myths. Reached via /branches/:slug. */
+   Academics & Outcomes (study meters · outcome donut · 4-year journey) ·
+   Advanced Insights (AI gauge · skills origin · research · salary arc · career
+   roles · top recruiters) · Colleges & Branches · Common Myths.
+   Reached via /branches/:slug. */
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   GraduationCap, TrendingUp, Building2, AlertCircle, ArrowLeft, ArrowDown,
-  Briefcase, IndianRupee, ShieldCheck, CheckCircle2, XCircle, Check,
+  Briefcase, IndianRupee, ShieldCheck, CheckCircle2, XCircle, ChevronDown,
 } from "lucide-react";
 import { getBranch, BRANCHES } from "../data/branches.js";
 import { BRANCH_ICONS } from "../components/home/branchIcons.js";
@@ -16,25 +18,35 @@ import { Trend } from "../components/Charts.jsx";
 import { chanceTone } from "../components/home/clTheme.js";
 
 const TABS = [
-  { key: "academics", label: "Study & Curriculum",      icon: GraduationCap },
-  { key: "insights",  label: "Career & Salary Insights", icon: TrendingUp },
-  { key: "colleges",  label: "Top Colleges & Branches",  icon: Building2 },
-  { key: "myths",     label: "Myths vs Reality",         icon: AlertCircle },
+  { key: "academics", label: "Academics & Outcomes", icon: GraduationCap },
+  { key: "insights",  label: "Advanced Insights",    icon: TrendingUp },
+  { key: "colleges",  label: "Colleges & Branches",  icon: Building2 },
+  { key: "myths",     label: "Common Myths",         icon: AlertCircle },
 ];
 
+/* study-intensity level → fill fraction + colour */
+const LEVELS = { HEAVY: 0.92, MODERATE: 0.6, LIGHT: 0.35, MINIMAL: 0.16 };
+const METER_COLORS = { Coding: CL.violet, Theory: CL.coral, Math: CL.blue, "Lab Work": CL.green };
+const SPLIT_COLORS = [CL.coral, CL.green, CL.blue, CL.violet];
+
 /* ── small UI atoms ── */
-function Panel({ children, title, style }) {
+function Panel({ children, title, right, style }) {
   return (
     <div style={{ background: CL.cream2, border: `1px solid ${CL.cream3}`, borderRadius: 16, padding: "20px 22px", ...style }}>
-      {title && <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: "1.2px", color: CL.muted, textTransform: "uppercase", marginBottom: 16 }}>{title}</div>}
+      {(title || right) && (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 16 }}>
+          {title && <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: "1.2px", color: CL.muted, textTransform: "uppercase" }}>{title}</div>}
+          {right}
+        </div>
+      )}
       {children}
     </div>
   );
 }
 
+const chipStyle = { fontSize: 13, fontWeight: 700, color: CL.ink2, background: CL.card, border: `1px solid ${CL.line}`, padding: "8px 14px", borderRadius: 10 };
+
 function GaugeArc({ value, color, riskLabel }) {
-  // semicircle gauge, green → amber → coral. Number + label sit BELOW the arc
-  // (no negative margins) so they never overlap the dial.
   const angle = -90 + (value / 100) * 180;
   return (
     <div style={{ textAlign: "center" }}>
@@ -48,7 +60,6 @@ function GaugeArc({ value, color, riskLabel }) {
             </linearGradient>
           </defs>
           <path d="M16 100 A 84 84 0 0 1 184 100" fill="none" stroke="url(#gauge-cl)" strokeWidth="16" strokeLinecap="round" />
-          {/* needle */}
           <line
             x1="100" y1="100"
             x2={100 + 68 * Math.cos((angle - 90) * Math.PI / 180)}
@@ -95,13 +106,152 @@ function DotBar({ value }) {
   );
 }
 
+/* horizontal study-intensity meter (Coding / Theory / Math / Lab Work) */
+function StudyMeter({ label, level }) {
+  const frac = LEVELS[level] ?? 0.5;
+  const color = METER_COLORS[label] || CL.coral;
+  const filled = Math.round(frac * 12);
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7 }}>
+        <span style={{ fontWeight: 800, fontSize: 13.5, color: CL.ink }}>{label}</span>
+        <span style={{ fontWeight: 800, fontSize: 10.5, letterSpacing: ".08em", color }}>{level}</span>
+      </div>
+      <div style={{ display: "flex", gap: 3 }}>
+        {Array.from({ length: 12 }).map((_, i) => (
+          <span key={i} style={{ flex: 1, height: 8, borderRadius: 2, background: i < filled ? color : CL.cream3 }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* where-graduates-land donut + legend */
+function Donut({ data }) {
+  const total = data.reduce((s, d) => s + d.pct, 0) || 100;
+  const R = 52, C = 2 * Math.PI * R;
+  let acc = 0;
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+      <div style={{ position: "relative", width: 138, height: 138, flexShrink: 0 }}>
+        <svg width="138" height="138" viewBox="0 0 138 138">
+          <circle cx="69" cy="69" r={R} fill="none" stroke={CL.cream3} strokeWidth="15" />
+          {data.map((d, i) => {
+            const len = (d.pct / total) * C;
+            const seg = (
+              <circle key={i} cx="69" cy="69" r={R} fill="none"
+                stroke={SPLIT_COLORS[i % SPLIT_COLORS.length]} strokeWidth="15"
+                strokeDasharray={`${len} ${C - len}`} strokeDashoffset={-acc}
+                transform="rotate(-90 69 69)" />
+            );
+            acc += len;
+            return seg;
+          })}
+        </svg>
+        <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
+          <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 24, color: CL.ink }}>{data[0]?.pct}%</span>
+        </div>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1, minWidth: 130 }}>
+        {data.map((d, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}>
+            <span style={{ width: 11, height: 11, borderRadius: 3, background: SPLIT_COLORS[i % SPLIT_COLORS.length], flexShrink: 0 }} />
+            <span style={{ fontWeight: 800, color: CL.ink, minWidth: 34 }}>{d.pct}%</span>
+            <span style={{ color: CL.body }}>{d.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* build a 4-year curriculum journey from the branch's core subjects */
+function buildJourney(b) {
+  const core = b.academics.coreSubjects || [];
+  return [
+    { title: "Foundations & common courses", subjects: ["Mathematics I & II", "Physics & Chemistry", "Intro to Programming", "Engineering Graphics"] },
+    { title: "Core branch subjects begin", subjects: [...core.slice(0, 2), "Branch fundamentals"] },
+    { title: "Specialisation + internships", subjects: core.slice(2, 5).length ? core.slice(2, 5) : core.slice(0, 3) },
+    { title: "Electives, projects & placements", subjects: [...core.slice(5), "Major Project / Thesis", "Open Electives"].filter(Boolean) },
+  ];
+}
+
+function Journey({ b }) {
+  const years = buildJourney(b);
+  const [active, setActive] = useState(2);
+  return (
+    <Panel title="The 4-year journey · Curriculum"
+      right={<span style={{ fontSize: 11.5, color: CL.muted }}>Tap a year to see representative coursework</span>}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 12 }}>
+        {years.map((y, i) => {
+          const on = i === active;
+          return (
+            <button key={i} onClick={() => setActive(i)} style={{
+              textAlign: "left", cursor: "pointer",
+              background: on ? CL.coralSoft + "88" : CL.card,
+              border: `1px solid ${on ? CL.coral + "66" : CL.line}`,
+              borderRadius: 14, padding: "13px 15px",
+            }}>
+              <div style={{ display: "flex", gap: 3, marginBottom: 9 }}>
+                {Array.from({ length: 8 }).map((_, k) => (
+                  <span key={k} style={{ flex: 1, height: 4, borderRadius: 2, background: k < (i + 1) * 2 ? CL.coral : CL.cream3 }} />
+                ))}
+              </div>
+              <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: ".08em", color: CL.muted, textTransform: "uppercase" }}>Year {i + 1}</div>
+              <div style={{ fontSize: 12.5, fontWeight: 700, color: on ? CL.coralDk : CL.ink2, marginTop: 3, lineHeight: 1.35 }}>{y.title}</div>
+            </button>
+          );
+        })}
+      </div>
+      <div style={{ marginTop: 18 }}>
+        <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: "1px", color: CL.muted, textTransform: "uppercase", marginBottom: 12 }}>
+          Year {active + 1} · Representative coursework
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 9 }}>
+          {years[active].subjects.map((s) => <span key={s} style={chipStyle}>{s}</span>)}
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
 /* ── tab panels ── */
 function Academics({ b }) {
+  const meters = b.studyMeters || [];
+  const split = b.outcomeSplit || [];
+  const placement = b.placement;
   return (
     <div style={{ display: "grid", gap: 18 }}>
       <Panel title="What you actually study">
-        <p style={{ color: CL.ink2, fontSize: 14.5, lineHeight: 1.75 }}>{b.academics.summary}</p>
+        <p style={{ color: CL.ink2, fontSize: 14.5, lineHeight: 1.75, margin: 0 }}>{b.academics.summary}</p>
       </Panel>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 18 }}>
+        {meters.length > 0 && (
+          <Panel title="What you'll study">
+            {meters.map((m) => <StudyMeter key={m.label} label={m.label} level={m.level} />)}
+          </Panel>
+        )}
+        {split.length > 0 && (
+          <Panel title="Where graduates land">
+            <Donut data={split} />
+          </Panel>
+        )}
+        {placement && (
+          <Panel title="Tech placement access">
+            <span style={{ display: "inline-block", fontSize: 13, fontWeight: 800, color: "#0a8f5b", background: CL.greenSoft, borderRadius: 9, padding: "8px 14px", marginBottom: 14 }}>{placement.headline}</span>
+            <div style={{ display: "flex", gap: 5, marginBottom: 14 }}>
+              {Array.from({ length: 18 }).map((_, i) => (
+                <span key={i} style={{ flex: 1, height: 7, borderRadius: 2, background: i < 14 ? CL.green : CL.cream3 }} />
+              ))}
+            </div>
+            <p style={{ fontSize: 13, color: CL.body, lineHeight: 1.6, margin: 0 }}>{placement.note}</p>
+          </Panel>
+        )}
+      </div>
+
+      <Journey b={b} />
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18 }}>
         <Panel title="Core subjects">
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -114,9 +264,7 @@ function Academics({ b }) {
         </Panel>
         <Panel title="Where graduates go">
           <div style={{ display: "flex", flexWrap: "wrap", gap: 9 }}>
-            {b.academics.outcomes.map((o) => (
-              <span key={o} style={{ fontSize: 13, fontWeight: 700, color: CL.ink2, background: CL.card, border: `1px solid ${CL.line}`, padding: "8px 14px", borderRadius: 10 }}>{o}</span>
-            ))}
+            {b.academics.outcomes.map((o) => <span key={o} style={chipStyle}>{o}</span>)}
           </div>
         </Panel>
       </div>
@@ -127,19 +275,36 @@ function Academics({ b }) {
 function Insights({ b }) {
   const ins = b.insights;
   const riskColor = b.stats.aiRisk >= 60 ? CL.coral : b.stats.aiRisk >= 40 ? CL.amber : CL.green;
+  const [showRisk, setShowRisk] = useState(false);
+  const [showResearch, setShowResearch] = useState(false);
+  const roles = b.careerRoles || [];
+  const recruiters = b.recruiters || [];
+  const arc = ins.salaryArc;
   const salaryData = [
-    { year: "Entry", Median: ins.salaryArc.median.entry, "Top 10%": ins.salaryArc.top.entry },
-    { year: "Year 3", Median: ins.salaryArc.median.y3, "Top 10%": ins.salaryArc.top.y3 },
-    { year: "Year 5", Median: ins.salaryArc.median.y5, "Top 10%": ins.salaryArc.top.y5 },
+    { year: "Entry", Median: arc.median.entry, "Top 10%": arc.top.entry },
+    { year: "Year 3", Median: arc.median.y3, "Top 10%": arc.top.y3 },
+    { year: "Year 5", Median: arc.median.y5, "Top 10%": arc.top.y5 },
   ];
+  const researchLong = "Funding and hiring momentum here are shaped by national missions and private R&D — strong performers find both academic and industry routes open.";
+
   return (
     <div style={{ display: "grid", gap: 18 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 18 }}>
         <Panel title="AI Replaceability">
           <GaugeArc value={b.stats.aiRisk} color={riskColor} riskLabel={b.aiRiskLabel} />
-          <p style={{ marginTop: 14, fontSize: 12.5, color: CL.body, lineHeight: 1.55, textAlign: "center" }}>
-            How exposed this path's core work is to automation over the next decade.
-          </p>
+          <div style={{ textAlign: "center", marginTop: 12 }}>
+            <button onClick={() => setShowRisk((v) => !v)} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 800, color: CL.coralDk, background: CL.coralSoft, border: "none", borderRadius: 50, padding: "7px 14px", cursor: "pointer", fontFamily: CL.display }}>
+              {showRisk ? "Show less" : "Know more"} <ChevronDown size={14} style={{ transform: showRisk ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
+            </button>
+          </div>
+          <AnimatePresence>
+            {showRisk && (
+              <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                style={{ overflow: "hidden", marginTop: 12, fontSize: 12.5, color: CL.body, lineHeight: 1.6, textAlign: "center" }}>
+                How exposed this path's core work is to automation over the next decade. Judgement, design and physical/regulated work stay human-led; repetitive analysis is most exposed.
+              </motion.p>
+            )}
+          </AnimatePresence>
         </Panel>
 
         <Panel title="Skills origin">
@@ -163,22 +328,90 @@ function Insights({ b }) {
               </div>
             ))}
           </div>
-          <p style={{ marginTop: 16, fontSize: 12.8, color: CL.body, lineHeight: 1.6 }}>{ins.researchNote}</p>
+          <p style={{ marginTop: 16, fontSize: 12.8, color: CL.body, lineHeight: 1.6 }}>
+            {ins.researchNote}{showResearch ? " " + researchLong : ""}
+          </p>
+          <button onClick={() => setShowResearch((v) => !v)} style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: CL.coralDk, background: "transparent", border: "none", padding: 0, cursor: "pointer", fontFamily: CL.display }}>
+            {showResearch ? "Show less" : "Show more"} <ChevronDown size={13} style={{ transform: showResearch ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
+          </button>
         </Panel>
       </div>
 
-      <Panel title={`5-year salary arc · India median (₹ LPA)`}>
-        <Trend
-          data={salaryData}
-          lines={[
-            { key: "Top 10%", label: "Top performer", color: CL.coral },
-            { key: "Median", label: "Median performer", color: CL.muted },
-          ]}
-          height={260}
-          fmt={(v) => `₹${v}L`}
-        />
+      {/* salary arc + table */}
+      <Panel title="5-year salary arc · India median (₹ LPA)">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 20, alignItems: "center" }}>
+          <Trend
+            data={salaryData}
+            lines={[
+              { key: "Top 10%", label: "Top performer", color: CL.coral },
+              { key: "Median", label: "Median performer", color: CL.muted },
+            ]}
+            height={230}
+            fmt={(v) => `₹${v}L`}
+          />
+          <div>
+            <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr 1fr 1fr", gap: 0, fontSize: 12.5 }}>
+              {["Career stage", "Entry", "Year 3", "Year 5"].map((h, i) => (
+                <div key={h} style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".05em", color: CL.muted, textTransform: "uppercase", padding: "8px 6px", textAlign: i === 0 ? "left" : "right" }}>{h}</div>
+              ))}
+              <RowCells label="Median" color={CL.muted} cells={[arc.median.entry, arc.median.y3, arc.median.y5]} />
+              <RowCells label="Top 10%" color={CL.coralDk} cells={[arc.top.entry, arc.top.y3, arc.top.y5]} highlight />
+            </div>
+          </div>
+        </div>
       </Panel>
+
+      {/* career paths */}
+      {(roles.length > 0 || recruiters.length > 0) && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 18 }}>
+          {roles.length > 0 && (
+            <Panel title="Typical career roles" style={{ gridColumn: recruiters.length ? "auto" : "1 / -1" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14, fontSize: 11.5, color: CL.muted }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><span style={{ width: 11, height: 11, borderRadius: 3, background: CL.coral }} /> Direct entry-level</span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><span style={{ width: 11, height: 11, borderRadius: 3, background: CL.card, border: `1px solid ${CL.line}` }} /> Needs more prep / higher studies</span>
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {roles.map((r) => (
+                  <span key={r.role} style={{
+                    fontSize: 12.5, fontWeight: 700, padding: "7px 13px", borderRadius: 9,
+                    background: r.direct ? CL.coralSoft : CL.card,
+                    color: r.direct ? CL.coralDk : CL.ink2,
+                    border: `1px solid ${r.direct ? CL.coral + "55" : CL.line}`,
+                  }}>{r.role}</span>
+                ))}
+              </div>
+              <p style={{ marginTop: 14, fontSize: 11.5, color: CL.muted, lineHeight: 1.5 }}>
+                Highlighted chips are common direct entry-level roles. Others usually need extra preparation, specialisation or higher studies.
+              </p>
+            </Panel>
+          )}
+          {recruiters.length > 0 && (
+            <Panel title="Top recruiters">
+              {recruiters.map((r, i) => (
+                <div key={r} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 0", borderBottom: i < recruiters.length - 1 ? `1px solid ${CL.line}` : "none" }}>
+                  <span style={{ fontFamily: CL.display, fontWeight: 800, color: CL.muted, fontSize: 12, width: 20 }}>{String(i + 1).padStart(2, "0")}</span>
+                  <span style={{ fontWeight: 800, color: CL.ink, fontSize: 14 }}>{r}</span>
+                </div>
+              ))}
+            </Panel>
+          )}
+        </div>
+      )}
     </div>
+  );
+}
+
+function RowCells({ label, cells, color, highlight }) {
+  return (
+    <>
+      <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "10px 6px", borderTop: `1px solid ${CL.line}` }}>
+        <span style={{ width: 9, height: 9, borderRadius: 2, background: color }} />
+        <span style={{ fontWeight: 700, color: CL.ink2 }}>{label}</span>
+      </div>
+      {cells.map((c, i) => (
+        <div key={i} style={{ padding: "10px 6px", borderTop: `1px solid ${CL.line}`, textAlign: "right", fontFamily: CL.display, fontWeight: 800, color: highlight ? CL.coralDk : CL.ink }}>₹{c} LPA</div>
+      ))}
+    </>
   );
 }
 
@@ -188,7 +421,7 @@ function Colleges({ b }) {
       <Panel title="Branches in this path">
         <div style={{ display: "flex", flexWrap: "wrap", gap: 9 }}>
           {b.branchesList.map((br) => (
-            <span key={br} style={{ fontSize: 13, fontWeight: 700, color: CL.ink2, background: CL.card, border: `1px solid ${CL.line}`, padding: "9px 15px", borderRadius: 10 }}>{br}</span>
+            <span key={br} style={{ ...chipStyle, padding: "9px 15px" }}>{br}</span>
           ))}
         </div>
       </Panel>
