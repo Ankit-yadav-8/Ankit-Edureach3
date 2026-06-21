@@ -810,10 +810,107 @@ export const BRANCH_DEEP = {
   },
 };
 
+/* ── Per-branch 4-year curriculum journey ──────────────────────────────
+   Each branch has its OWN year-by-year progression (title · phase tag ·
+   representative subjects), so the "4-year journey" reads correctly for
+   every path instead of a generic template. ── */
+export const BRANCH_JOURNEY = {
+  "cs-it": [
+    { title: "Common courses, settling in", tag: "FOUNDATION", subjects: ["Calculus & Linear Algebra", "Intro to Programming (C/Python)", "Basic Electronics", "Engineering Graphics", "Communication Skills"] },
+    { title: "Core CS kicks in", tag: "CORE LOAD", subjects: ["Data Structures & Algorithms", "Discrete Mathematics", "Object-Oriented Programming", "Digital Logic Design", "Computer Organisation"] },
+    { title: "Internship pressure + projects", tag: "PEAK PRESSURE", subjects: ["Theory of Computation", "Computer Networks", "Compiler Design", "Software Engineering", "DBMS", "Artificial Intelligence"] },
+    { title: "Electives, placements, thesis", tag: "EXIT YEAR", subjects: ["Machine Learning", "Distributed Systems", "Cloud Computing", "Cyber Security", "Major Project / Thesis"] },
+  ],
+  "ai-data-science": [
+    { title: "Maths & coding foundations", tag: "FOUNDATION", subjects: ["Calculus & Linear Algebra", "Probability & Statistics", "Intro to Programming", "Data Handling Basics", "Communication Skills"] },
+    { title: "Algorithms + statistics core", tag: "CORE LOAD", subjects: ["Data Structures & Algorithms", "Statistical Inference", "Database Systems", "Optimization", "Python for Data Science"] },
+    { title: "Modelling + internships", tag: "PEAK PRESSURE", subjects: ["Machine Learning", "Deep Learning", "Big Data Systems", "Data Visualisation", "Internships / Projects"] },
+    { title: "Specialise, deploy, thesis", tag: "EXIT YEAR", subjects: ["Natural Language Processing", "Computer Vision", "MLOps & Deployment", "Reinforcement Learning", "Capstone / Thesis"] },
+  ],
+  "electronics-electrical": [
+    { title: "Circuits & maths basics", tag: "FOUNDATION", subjects: ["Calculus & Differential Equations", "Basic Electrical Engineering", "Intro to Programming", "Engineering Physics", "Network Theory"] },
+    { title: "Signals & devices core", tag: "CORE LOAD", subjects: ["Signals & Systems", "Analog Circuits", "Digital Electronics", "Electromagnetics", "Electrical Machines"] },
+    { title: "Systems + internships", tag: "PEAK PRESSURE", subjects: ["Microprocessors", "Control Systems", "Communication Systems", "VLSI Design", "Internships / Projects"] },
+    { title: "Electives, placements, thesis", tag: "EXIT YEAR", subjects: ["Embedded Systems", "Power Electronics", "Digital Signal Processing", "Electives", "Major Project / Thesis"] },
+  ],
+  "mechanical-robotics": [
+    { title: "Mechanics & graphics basics", tag: "FOUNDATION", subjects: ["Engineering Mechanics", "Calculus", "Engineering Graphics / CAD", "Intro to Programming", "Workshop Practice"] },
+    { title: "Thermal & solid core", tag: "CORE LOAD", subjects: ["Thermodynamics", "Strength of Materials", "Fluid Mechanics", "Kinematics of Machines", "Manufacturing Processes"] },
+    { title: "Design + internships", tag: "PEAK PRESSURE", subjects: ["Heat Transfer", "Machine Design", "Dynamics of Machinery", "Robotics & Control", "Internships / Projects"] },
+    { title: "Electives, placements, thesis", tag: "EXIT YEAR", subjects: ["Mechatronics", "CAD/CAM", "Industrial Automation", "Electives", "Major Project / Thesis"] },
+  ],
+  "civil-architecture": [
+    { title: "Mechanics & materials basics", tag: "FOUNDATION", subjects: ["Engineering Mechanics", "Calculus", "Engineering Graphics", "Surveying Basics", "Building Materials"] },
+    { title: "Structures & fluids core", tag: "CORE LOAD", subjects: ["Strength of Materials", "Fluid Mechanics", "Structural Analysis I", "Surveying", "Concrete Technology"] },
+    { title: "Field work + internships", tag: "PEAK PRESSURE", subjects: ["Structural Analysis II", "Geotechnical Engineering", "Transportation Engineering", "Environmental Engineering", "Internships / Projects"] },
+    { title: "Design, estimation, thesis", tag: "EXIT YEAR", subjects: ["Design of RCC & Steel Structures", "Construction Management", "Estimation & Costing", "Electives", "Major Project / Thesis"] },
+  ],
+  "chemical": [
+    { title: "Balances & chemistry basics", tag: "FOUNDATION", subjects: ["Calculus", "Engineering Chemistry", "Intro to Programming", "Material & Energy Balances", "Engineering Graphics"] },
+    { title: "Transport & thermo core", tag: "CORE LOAD", subjects: ["Fluid Mechanics", "Thermodynamics", "Heat Transfer", "Chemical Process Calculations", "Physical Chemistry"] },
+    { title: "Reactions + internships", tag: "PEAK PRESSURE", subjects: ["Mass Transfer", "Reaction Engineering", "Process Control", "Transport Phenomena", "Internships / Projects"] },
+    { title: "Plant design, safety, thesis", tag: "EXIT YEAR", subjects: ["Plant Design & Economics", "Process Safety", "Petrochemicals / Polymers", "Electives", "Major Project / Thesis"] },
+  ],
+  "materials-mining": [
+    { title: "Science & maths basics", tag: "FOUNDATION", subjects: ["Calculus", "Engineering Chemistry", "Intro to Programming", "Materials Science Basics", "Crystallography"] },
+    { title: "Metallurgy core", tag: "CORE LOAD", subjects: ["Physical Metallurgy", "Thermodynamics of Materials", "Mechanical Behaviour of Materials", "Mineral Processing", "Phase Diagrams"] },
+    { title: "Processing + internships", tag: "PEAK PRESSURE", subjects: ["Phase Transformations", "Materials Characterization", "Extractive Metallurgy", "Mining Methods", "Internships / Projects"] },
+    { title: "Advanced materials, thesis", tag: "EXIT YEAR", subjects: ["Nanomaterials", "Corrosion & Failure Analysis", "Welding Metallurgy", "Electives", "Major Project / Thesis"] },
+  ],
+  "biotech-biosciences": [
+    { title: "Biology & maths basics", tag: "FOUNDATION", subjects: ["Biology Fundamentals", "Calculus & Statistics", "Intro to Programming", "General Chemistry", "Cell Biology"] },
+    { title: "Biochemistry core", tag: "CORE LOAD", subjects: ["Biochemistry", "Microbiology", "Genetics", "Molecular Biology", "Bioprocess Principles"] },
+    { title: "Engineering + internships", tag: "PEAK PRESSURE", subjects: ["Genetic Engineering", "Bioprocess Engineering", "Bioinformatics", "Immunology", "Internships / Projects"] },
+    { title: "Genomics, scale-up, thesis", tag: "EXIT YEAR", subjects: ["Genomics & Proteomics", "Biomedical Engineering", "Bioprocess Scale-up", "Electives", "Major Project / Thesis"] },
+  ],
+  "mathematics-computing": [
+    { title: "Analysis & coding basics", tag: "FOUNDATION", subjects: ["Real Analysis I", "Linear Algebra", "Intro to Programming", "Calculus", "Discrete Mathematics"] },
+    { title: "Probability & algorithms core", tag: "CORE LOAD", subjects: ["Probability Theory", "Data Structures & Algorithms", "Real & Complex Analysis", "Abstract Algebra", "Numerical Methods"] },
+    { title: "Quant + internships", tag: "PEAK PRESSURE", subjects: ["Stochastic Processes", "Optimization", "Mathematical Finance", "Statistical Inference", "Internships / Projects"] },
+    { title: "Finance, ML, thesis", tag: "EXIT YEAR", subjects: ["Machine Learning", "Quantitative Finance", "Computational Methods", "Electives", "Major Project / Thesis"] },
+  ],
+  "sciences-applied": [
+    { title: "Physics & maths basics", tag: "FOUNDATION", subjects: ["Calculus", "Classical Mechanics", "Intro to Programming", "Engineering Chemistry", "Mathematical Methods"] },
+    { title: "Quantum & EM core", tag: "CORE LOAD", subjects: ["Quantum Mechanics", "Electromagnetism", "Thermodynamics & Stat Mech", "Mathematical Physics", "Electronics"] },
+    { title: "Applied physics + internships", tag: "PEAK PRESSURE", subjects: ["Solid State Physics", "Computational Methods", "Photonics / Optics", "Atomic & Molecular Physics", "Internships / Projects"] },
+    { title: "Deep-tech electives, thesis", tag: "EXIT YEAR", subjects: ["Semiconductor Physics", "Quantum Technologies", "Lasers & Photonics", "Electives", "Major Project / Thesis"] },
+  ],
+  "aerospace-avionics": [
+    { title: "Mechanics & maths basics", tag: "FOUNDATION", subjects: ["Calculus & Differential Equations", "Engineering Mechanics", "Intro to Programming", "Engineering Graphics", "Thermodynamics Basics"] },
+    { title: "Aerodynamics core", tag: "CORE LOAD", subjects: ["Fluid Mechanics", "Aerodynamics I", "Aerospace Structures", "Solid Mechanics", "Materials Science"] },
+    { title: "Propulsion + internships", tag: "PEAK PRESSURE", subjects: ["Propulsion", "Flight Mechanics", "Aerodynamics II", "Control Systems", "Internships / Projects"] },
+    { title: "Space systems, thesis", tag: "EXIT YEAR", subjects: ["Orbital Mechanics", "Avionics", "Spacecraft / Aircraft Design", "Electives", "Major Project / Thesis"] },
+  ],
+  "mining-earth": [
+    { title: "Geology & mechanics basics", tag: "FOUNDATION", subjects: ["Calculus", "Engineering Mechanics", "Intro to Programming", "Geology Basics", "Engineering Graphics"] },
+    { title: "Rock & survey core", tag: "CORE LOAD", subjects: ["Rock Mechanics", "Mine Surveying", "Mineral Processing", "Geotechnics", "Fluid Mechanics"] },
+    { title: "Mine ops + internships", tag: "PEAK PRESSURE", subjects: ["Mine Planning & Design", "Mine Ventilation", "Drilling & Blasting", "Mine Safety Engineering", "Internships / Projects"] },
+    { title: "Machinery, economics, thesis", tag: "EXIT YEAR", subjects: ["Mine Machinery", "Mineral Economics", "Mine Automation", "Electives", "Major Project / Thesis"] },
+  ],
+  "petroleum-energy": [
+    { title: "Geology & balances basics", tag: "FOUNDATION", subjects: ["Calculus", "Engineering Chemistry", "Intro to Programming", "Geology Basics", "Material & Energy Balances"] },
+    { title: "Reservoir & thermo core", tag: "CORE LOAD", subjects: ["Fluid Mechanics", "Thermodynamics", "Petroleum Geology", "Heat & Mass Transfer", "Reservoir Rock Properties"] },
+    { title: "Drilling + internships", tag: "PEAK PRESSURE", subjects: ["Reservoir Engineering", "Drilling Technology", "Production Engineering", "Process Safety", "Internships / Projects"] },
+    { title: "EOR, clean energy, thesis", tag: "EXIT YEAR", subjects: ["Enhanced Oil Recovery", "Energy Systems", "Renewables & Hydrogen", "Electives", "Major Project / Thesis"] },
+  ],
+  "production-industrial": [
+    { title: "Mechanics & shop basics", tag: "FOUNDATION", subjects: ["Calculus", "Engineering Mechanics", "Intro to Programming", "Engineering Graphics", "Workshop Practice"] },
+    { title: "Manufacturing & OR core", tag: "CORE LOAD", subjects: ["Manufacturing Processes", "Thermodynamics", "Strength of Materials", "Operations Research I", "Materials Science"] },
+    { title: "Operations + internships", tag: "PEAK PRESSURE", subjects: ["Operations Research II", "Quality Engineering", "Supply Chain & Logistics", "Industrial Automation", "Internships / Projects"] },
+    { title: "Planning, lean, thesis", tag: "EXIT YEAR", subjects: ["Production Planning & Control", "Ergonomics", "Lean & Six Sigma", "Electives", "Major Project / Thesis"] },
+  ],
+  "naval-ocean": [
+    { title: "Mechanics & fluids basics", tag: "FOUNDATION", subjects: ["Calculus", "Engineering Mechanics", "Intro to Programming", "Engineering Graphics", "Fluid Mechanics Basics"] },
+    { title: "Hydrostatics core", tag: "CORE LOAD", subjects: ["Ship Hydrostatics", "Strength of Materials", "Marine Hydrodynamics", "Thermodynamics", "Materials & Welding"] },
+    { title: "Ship design + internships", tag: "PEAK PRESSURE", subjects: ["Ship Structures", "Ship Design", "Marine Propulsion", "Seakeeping & Maneuvering", "Internships / Projects"] },
+    { title: "Offshore, production, thesis", tag: "EXIT YEAR", subjects: ["Offshore Engineering", "Ship Production Technology", "Coastal Engineering", "Electives", "Major Project / Thesis"] },
+  ],
+};
+
 export const TOTAL_BRANCHES = BRANCHES.reduce((s, b) => s + (b.branchCount || 0), 0);
 
 export function getBranch(slug) {
   const base = BRANCHES.find((b) => b.slug === slug);
   if (!base) return null;
-  return { ...base, ...(BRANCH_DEEP[slug] || {}) };
+  return { ...base, ...(BRANCH_DEEP[slug] || {}), journey: BRANCH_JOURNEY[slug] || null };
 }

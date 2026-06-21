@@ -81,12 +81,15 @@ const CATEGORIES = ["General", "OBC-NCL", "EWS", "SC", "ST"];
 const WEEK_TARGET_HRS = 40;
 const MAX_LOGS_PER_DAY = 3; // student may add/update today's log up to 3× a day
 
-// JEE Advanced runs as TWO 3-hour papers (P1 + P2). Each paper carries ~60
-// marks/subject (180/paper · 360 combined) and is 180 minutes long.
-const isAdvPaper = (type) => type === "adv1" || type === "adv2";
-const ADV_PAPER_SUB_MAX = 60;   // marks per subject in one Advanced paper
-const ADV_PAPER_TOTAL   = 180;  // marks per Advanced paper
-const ADV_PAPER_MINUTES = 180;  // each Advanced paper is 3 hours
+// JEE Advanced runs as TWO 3-hour papers (P1 + P2), logged together in one
+// place. Each paper carries ~60 marks/subject (180/paper · 360 combined) and
+// runs 180 minutes — so the full exam is 6 hours (3h + 3h).
+const isAdv = (type) => type === "adv";
+const ADV_PAPER_SUB_MAX = 60;    // marks per subject in one Advanced paper
+const ADV_PAPER_TOTAL   = 180;   // marks per Advanced paper
+const ADV_FULL_TOTAL    = 360;   // both papers combined (indicative — varies by year)
+const ADV_FULL_QUESTIONS = 102;  // typical total questions across both papers (varies by year)
+const ADV_PAPER_MINUTES = 180;   // each Advanced paper is 3 hours (6h total)
 
 /* sticky in-page navigation */
 const SECTIONS = [
@@ -380,7 +383,7 @@ function DashboardBody({ urlPlan = "" }) {
 
   const [logForm, setLogForm] = useState({ subjects: {}, tasksTotal: "", routine: true });
   const [editingLog, setEditingLog] = useState(false); // re-open today's log to update it
-  const [testForm, setTestForm] = useState({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General", times: {} });
+  const [testForm, setTestForm] = useState({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", mp2: "", mc2: "", mm2: "", advTotal: String(ADV_FULL_TOTAL), advQuestions: String(ADV_FULL_QUESTIONS), category: "General", times: {} });
   const [blForm, setBlForm] = useState({ subject: "", topic: "", strength: "weak", targetDate: "" });
   const [wtInput, setWtInput] = useState("");
   const [wtEdit, setWtEdit] = useState({ id: null, text: "" });
@@ -702,21 +705,26 @@ function DashboardBody({ urlPlan = "" }) {
 
   function addTest(e) {
     e.preventDefault();
-    const advPaper = isAdvPaper(testForm.type);
+    const advPaper = isAdv(testForm.type);
     const isRankTest = rankEnabled && (testForm.type === "main" || advPaper);
     let total, scored, rank = null;
     if (isRankTest) {
       const p = Number(testForm.mp) || 0, c = Number(testForm.mc) || 0, m = Number(testForm.mm) || 0;
       const aggregate = p + c + m;
       if (advPaper) {
-        // One JEE Advanced paper → project the full 2-paper score for the rank
-        // by assuming a similar showing in the other paper (×2 the section marks).
-        total = ADV_PAPER_TOTAL;  // this paper's max (180)
-        scored = aggregate;       // marks the student got in THIS paper
-        const r = predictRank({ physics: p * 2, chemistry: c * 2, maths: m * 2, category: testForm.category, advanced: true });
+        // JEE Advanced = both papers logged together. Combine Paper 1 + Paper 2
+        // section marks (each capped at 120 combined) for an accurate full rank.
+        const p2 = Number(testForm.mp2) || 0, c2 = Number(testForm.mc2) || 0, m2 = Number(testForm.mm2) || 0;
+        const combPhy = p + p2, combChem = c + c2, combMath = m + m2;
+        const combTotal = combPhy + combChem + combMath;
+        total = Number(testForm.advTotal) || ADV_FULL_TOTAL;  // exam max (varies by year)
+        scored = combTotal;                                    // marks across both papers
+        const r = predictRank({ physics: combPhy, chemistry: combChem, maths: combMath, category: testForm.category, advanced: true });
         rank = {
-          type: testForm.type, advanced: true, paper: testForm.type === "adv1" ? 1 : 2,
-          projected: true, paperMarks: aggregate, category: testForm.category, total: aggregate * 2,
+          type: testForm.type, advanced: true,
+          questions: Number(testForm.advQuestions) || null, examMax: total,
+          paper1: aggregate, paper2: p2 + c2 + m2,
+          category: testForm.category, total: combTotal,
           ranked: r.ranked, crl: r.crl, crlLo: r.crlLo ?? null, crlHi: r.crlHi ?? null,
           rank: r.rank, low: r.low, high: r.high,
           percentile: r.percentile, categoryRank: r.categoryRank, isGeneral: r.isGeneral,
@@ -758,15 +766,15 @@ function DashboardBody({ urlPlan = "" }) {
       rank,
     };
     setTests((prevT) => [...prevT, t]);
-    setTestForm({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", category: "General", times: {} });
+    setTestForm({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", mp2: "", mc2: "", mm2: "", advTotal: String(ADV_FULL_TOTAL), advQuestions: String(ADV_FULL_QUESTIONS), category: "General", times: {} });
   }
   function setTestType(type) {
-    const autoName = { main: "JEE Mains", adv1: "JEE Advanced · Paper 1", adv2: "JEE Advanced · Paper 2" };
+    const autoName = { main: "JEE Mains", adv: "JEE Advanced (Paper 1 + 2)" };
     const wasAuto = (s) => s.name === "JEE Mains" || /^JEE Advanced/.test(s.name);
     setTestForm((s) => ({
       ...s, type,
       name: autoName[type] ? autoName[type] : wasAuto(s) ? "" : s.name,
-      total: isAdvPaper(type) ? String(ADV_PAPER_TOTAL) : "300",
+      total: isAdv(type) ? String(ADV_FULL_TOTAL) : "300",
     }));
   }
 
@@ -1358,12 +1366,12 @@ function DashboardBody({ urlPlan = "" }) {
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#8b5cf6,#22c55e)" }} />
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "0 0 14px" }}>Add a test result</h3>
 
-              {/* JEE-only test type toggle — Advanced is split into Paper 1 & Paper 2 */}
+              {/* JEE-only test type toggle — Advanced logs both papers together */}
               {rankEnabled && (
                 <div style={{ display: "flex", gap: 7, marginBottom: 14, flexWrap: "wrap" }}>
-                  {[["mock", "Mock / Other"], ["main", "JEE Mains"], ["adv1", "JEE Adv P1"], ["adv2", "JEE Adv P2"]].map(([val, lbl]) => (
+                  {[["mock", "Mock / Other"], ["main", "JEE Mains"], ["adv", "JEE Advanced"]].map(([val, lbl]) => (
                     <button type="button" key={val} onClick={() => setTestType(val)}
-                      style={{ flex: "1 1 84px", padding: "9px 8px", borderRadius: 10, border: `1.5px solid ${testForm.type === val ? "#8b5cf6" : "#e5e7eb"}`, background: testForm.type === val ? "#8b5cf610" : "#fff", color: testForm.type === val ? "#6d28d9" : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
+                      style={{ flex: "1 1 96px", padding: "9px 8px", borderRadius: 10, border: `1.5px solid ${testForm.type === val ? "#8b5cf6" : "#e5e7eb"}`, background: testForm.type === val ? "#8b5cf610" : "#fff", color: testForm.type === val ? "#6d28d9" : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
                       {val !== "mock" && <Trophy size={13} />}{lbl}
                     </button>
                   ))}
@@ -1373,12 +1381,41 @@ function DashboardBody({ urlPlan = "" }) {
               <form onSubmit={addTest} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <TextField label="Test name" value={testForm.name} onChange={(v) => setTestForm((s) => ({ ...s, name: v }))} placeholder="e.g. Mock 4" />
 
-                {rankEnabled && (testForm.type === "main" || isAdvPaper(testForm.type)) ? (
+                {rankEnabled && isAdv(testForm.type) ? (
+                  <>
+                    {/* both papers logged together — full exam is 6 hours (3h + 3h) */}
+                    <div style={{ background: "#f5f3ff", border: "1px solid #ddd6fe", borderRadius: 12, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <Timer size={14} color="#6d28d9" />
+                      <span style={{ fontSize: 11.5, fontWeight: 800, color: "#6d28d9" }}>Full exam · 6 hours total</span>
+                      <span style={{ fontSize: 11, color: "#7c3aed" }}>Paper 1 · 3h + Paper 2 · 3h — enter both papers below</span>
+                    </div>
+
+                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#6d28d9" }}>Paper 1 · marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                      <NumField label="Physics" value={testForm.mp} onChange={(v) => setTestForm((s) => ({ ...s, mp: v }))} placeholder="0" full />
+                      <NumField label="Chemistry" value={testForm.mc} onChange={(v) => setTestForm((s) => ({ ...s, mc: v }))} placeholder="0" full />
+                      <NumField label="Maths" value={testForm.mm} onChange={(v) => setTestForm((s) => ({ ...s, mm: v }))} placeholder="0" full />
+                    </div>
+
+                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#6d28d9" }}>Paper 2 · marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                      <NumField label="Physics" value={testForm.mp2} onChange={(v) => setTestForm((s) => ({ ...s, mp2: v }))} placeholder="0" full />
+                      <NumField label="Chemistry" value={testForm.mc2} onChange={(v) => setTestForm((s) => ({ ...s, mc2: v }))} placeholder="0" full />
+                      <NumField label="Maths" value={testForm.mm2} onChange={(v) => setTestForm((s) => ({ ...s, mm2: v }))} placeholder="0" full />
+                    </div>
+
+                    {/* exam totals — editable because JEE Advanced's pattern changes every year */}
+                    <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.45 }}>JEE Advanced's total marks &amp; question count change every year — confirm yours below.</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                      <NumField label="Total marks of exam" value={testForm.advTotal} onChange={(v) => setTestForm((s) => ({ ...s, advTotal: v }))} placeholder={String(ADV_FULL_TOTAL)} full />
+                      <NumField label="Total questions in exam" value={testForm.advQuestions} onChange={(v) => setTestForm((s) => ({ ...s, advQuestions: v }))} placeholder={String(ADV_FULL_QUESTIONS)} full />
+                    </div>
+                    <SelectField label="Category" value={testForm.category} onChange={(v) => setTestForm((s) => ({ ...s, category: v }))} options={CATEGORIES} />
+                  </>
+                ) : rankEnabled && testForm.type === "main" ? (
                   <>
                     <div style={{ fontSize: 11.5, fontWeight: 700, color: "#6d28d9", marginTop: -2 }}>
-                      {isAdvPaper(testForm.type)
-                        ? <>Paper {testForm.type === "adv1" ? "1" : "2"} marks per section (out of {ADV_PAPER_SUB_MAX} each · paper total {ADV_PAPER_TOTAL} · 3-hour paper)</>
-                        : <>Marks per section (out of {maxPerSubject(false)} each · total {maxTotal(false)})</>}
+                      Marks per section (out of {maxPerSubject(false)} each · total {maxTotal(false)})
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
                       <NumField label="Physics" value={testForm.mp} onChange={(v) => setTestForm((s) => ({ ...s, mp: v }))} placeholder="0" full />
@@ -1427,7 +1464,7 @@ function DashboardBody({ urlPlan = "" }) {
                 <SelectField label="Over-spent time on (quick pick)" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
                 <TextField label="Weak chapters (comma separated)" value={testForm.weak} onChange={(v) => setTestForm((s) => ({ ...s, weak: v }))} placeholder="e.g. Rotational Motion, p-Block" />
                 <button type="submit" style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                  <Plus size={16} /> {rankEnabled && (testForm.type === "main" || isAdvPaper(testForm.type)) ? "Analyse & predict rank" : "Analyse this test"}
+                  <Plus size={16} /> {rankEnabled && (testForm.type === "main" || isAdv(testForm.type)) ? "Analyse & predict rank" : "Analyse this test"}
                 </button>
               </form>
 
@@ -1999,15 +2036,20 @@ function RankCard({ r, name }) {
   const rng = (lo, hi) => `${inr(lo)} – ${inr(hi)}`;
   return (
     <div style={{ marginTop: 16, background: "linear-gradient(135deg,#f5f3ff,#fff)", border: `1px solid ${purple}33`, borderRadius: 14, padding: "16px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: r.projected ? 4 : 10, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: (r.projected || (r.advanced && r.paper1 != null)) ? 4 : 10, flexWrap: "wrap" }}>
         <Trophy size={17} color={purple} />
         <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: INK }}>
-          Predicted {r.advanced ? "JEE Advanced" : "JEE Main"} 2026 rank · {r.total} marks
+          Predicted {r.advanced ? "JEE Advanced" : "JEE Main"} 2026 rank · {r.total}{r.examMax ? `/${r.examMax}` : ""} marks
         </span>
         {r.paper && (
           <span style={{ fontSize: 10.5, fontWeight: 800, color: purple, background: `${purple}14`, borderRadius: 50, padding: "2px 8px" }}>Paper {r.paper}</span>
         )}
       </div>
+      {r.advanced && r.paper1 != null && (
+        <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.5, marginBottom: 10 }}>
+          Both papers combined — Paper 1: {r.paper1}/{ADV_PAPER_TOTAL} · Paper 2: {r.paper2}/{ADV_PAPER_TOTAL}{r.questions ? ` · ${r.questions} questions` : ""} · 6-hour exam (3h + 3h).
+        </div>
+      )}
       {r.projected && (
         <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.5, marginBottom: 10 }}>
           Projected full-test rank from Paper {r.paper} ({r.paperMarks}/{ADV_PAPER_TOTAL}) — assumes a similar Paper {r.paper === 1 ? 2 : 1}. Log both papers for a sharper estimate.

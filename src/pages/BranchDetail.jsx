@@ -4,7 +4,7 @@
    Advanced Insights (AI gauge · skills origin · research · salary arc · career
    roles · top recruiters) · Colleges & Branches · Common Myths.
    Reached via /branches/:slug. */
-import { useState, useEffect } from "react";
+import { useState, useEffect, Component } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -18,16 +18,34 @@ import { Trend } from "../components/Charts.jsx";
 import { chanceTone } from "../components/home/clTheme.js";
 
 const TABS = [
-  { key: "academics", label: "Academics & Outcomes", icon: GraduationCap },
-  { key: "insights",  label: "Advanced Insights",    icon: TrendingUp },
-  { key: "colleges",  label: "Colleges & Branches",  icon: Building2 },
-  { key: "myths",     label: "Common Myths",         icon: AlertCircle },
+  { key: "academics", label: "Inside the Degree",    icon: GraduationCap },
+  { key: "insights",  label: "Career & Pay Reality", icon: TrendingUp },
+  { key: "colleges",  label: "Where to Study",       icon: Building2 },
+  { key: "myths",     label: "Myth Busters",         icon: AlertCircle },
 ];
 
 /* study-intensity level → fill fraction + colour */
 const LEVELS = { HEAVY: 0.92, MODERATE: 0.6, LIGHT: 0.35, MINIMAL: 0.16 };
 const METER_COLORS = { Coding: CL.violet, Theory: CL.coral, Math: CL.blue, "Lab Work": CL.green };
 const SPLIT_COLORS = [CL.coral, CL.green, CL.blue, CL.violet];
+
+/* Keeps a single tab's render error from blanking the whole page — the tab
+   still "opens" with a graceful fallback instead of an unmounted SPA. */
+class PanelBoundary extends Component {
+  constructor(props) { super(props); this.state = { err: false }; }
+  static getDerivedStateFromError() { return { err: true }; }
+  componentDidUpdate(prev) { if (prev.tabKey !== this.props.tabKey && this.state.err) this.setState({ err: false }); }
+  render() {
+    if (this.state.err) {
+      return (
+        <div style={{ background: CL.cream2, border: `1px solid ${CL.cream3}`, borderRadius: 16, padding: "28px 22px", textAlign: "center", color: CL.body }}>
+          This section couldn’t load for this branch. Try another tab.
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 /* ── small UI atoms ── */
 function Panel({ children, title, right, style }) {
@@ -165,20 +183,21 @@ function Donut({ data }) {
   );
 }
 
-/* build a 4-year curriculum journey from the branch's core subjects */
-function buildJourney(b) {
+/* fallback journey if a branch has no authored journey data */
+function fallbackJourney(b) {
   const core = b.academics.coreSubjects || [];
   return [
-    { title: "Foundations & common courses", subjects: ["Mathematics I & II", "Physics & Chemistry", "Intro to Programming", "Engineering Graphics"] },
-    { title: "Core branch subjects begin", subjects: [...core.slice(0, 2), "Branch fundamentals"] },
-    { title: "Specialisation + internships", subjects: core.slice(2, 5).length ? core.slice(2, 5) : core.slice(0, 3) },
-    { title: "Electives, projects & placements", subjects: [...core.slice(5), "Major Project / Thesis", "Open Electives"].filter(Boolean) },
+    { title: "Common courses, settling in", tag: "FOUNDATION", subjects: ["Mathematics I & II", "Physics & Chemistry", "Intro to Programming", "Engineering Graphics"] },
+    { title: "Core branch subjects begin", tag: "CORE LOAD", subjects: [...core.slice(0, 3)] },
+    { title: "Specialisation + internships", tag: "PEAK PRESSURE", subjects: core.slice(2, 5).length ? core.slice(2, 5) : core.slice(0, 3) },
+    { title: "Electives, projects, thesis", tag: "EXIT YEAR", subjects: [...core.slice(4), "Major Project / Thesis", "Open Electives"].filter(Boolean) },
   ];
 }
 
 function Journey({ b }) {
-  const years = buildJourney(b);
+  const years = (b.journey && b.journey.length === 4) ? b.journey : fallbackJourney(b);
   const [active, setActive] = useState(2);
+  const cur = years[active] || years[0];
   return (
     <Panel title="The 4-year journey · Curriculum"
       right={<span style={{ fontSize: 11.5, color: CL.muted }}>Tap a year to see representative coursework</span>}>
@@ -204,11 +223,11 @@ function Journey({ b }) {
         })}
       </div>
       <div style={{ marginTop: 18 }}>
-        <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: "1px", color: CL.muted, textTransform: "uppercase", marginBottom: 12 }}>
-          Year {active + 1} · Representative coursework
+        <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: "1px", color: CL.coralDk, textTransform: "uppercase", marginBottom: 12 }}>
+          Year {active + 1} · {cur.tag || "Representative coursework"}
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 9 }}>
-          {years[active].subjects.map((s) => <span key={s} style={chipStyle}>{s}</span>)}
+          {cur.subjects.map((s) => <span key={s} style={chipStyle}>{s}</span>)}
         </div>
       </div>
     </Panel>
@@ -552,16 +571,18 @@ export default function BranchDetail() {
         </div>
 
         {/* panels */}
-        <AnimatePresence mode="wait">
-          <motion.div key={tab}
-            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}>
-            {tab === "academics" && <Academics b={b} />}
-            {tab === "insights" && <Insights b={b} />}
-            {tab === "colleges" && <Colleges b={b} />}
-            {tab === "myths" && <Myths b={b} />}
-          </motion.div>
-        </AnimatePresence>
+        <PanelBoundary tabKey={tab}>
+          <AnimatePresence mode="wait">
+            <motion.div key={tab}
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}>
+              {tab === "academics" && <Academics b={b} />}
+              {tab === "insights" && <Insights b={b} />}
+              {tab === "colleges" && <Colleges b={b} />}
+              {tab === "myths" && <Myths b={b} />}
+            </motion.div>
+          </AnimatePresence>
+        </PanelBoundary>
 
         {/* next branch */}
         <div style={{ marginTop: 36, textAlign: "center" }}>
