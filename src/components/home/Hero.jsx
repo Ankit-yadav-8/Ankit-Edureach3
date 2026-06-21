@@ -63,6 +63,16 @@ function useBreakpoint() {
 ════════════════════════════════════════════════ */
 const ABOUT_ACCENT = "#FF693D";
 
+/* warm cream marker-highlight (reference editorial style) — wraps inline so
+   it stays glued to its words across line breaks. */
+const HIGHLIGHT = {
+  background: "#FCE3C7",
+  borderRadius: 6,
+  padding: "0.02em 0.2em",
+  boxDecorationBreak: "clone",
+  WebkitBoxDecorationBreak: "clone",
+};
+
 const TOP_COLLEGES = [
   { name: "IIT Bombay",  type: "IIT",  nirf: 3,  avg: "₹33.8L", placed: 96, color: "#6366f1" },
   { name: "IIT Delhi",   type: "IIT",  nirf: 2,  avg: "₹32.3L", placed: 96, color: "#FF693D" },
@@ -1581,15 +1591,16 @@ export default function Hero({ onSearch }) {
             {/* Headline */}
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.05 }}>
               <h1 style={{
-                fontFamily: "'Space Grotesk','Sora',sans-serif",
-                fontWeight: 800,
+                fontFamily: "'Playfair Display','Georgia',serif",
+                fontWeight: 900,
+                fontStyle: "italic",
                 color: textColor,
                 fontSize: headingSize,
-                lineHeight: 1.04,
+                lineHeight: 1.08,
                 margin: "0 0 1.1rem",
-                letterSpacing: "-0.03em",
+                letterSpacing: "-0.01em",
               }}>
-                Know Your Rank.{" "}
+                Know Your <span style={HIGHLIGHT}>Rank.</span>{" "}
                 <br />
                 <span style={{ color: "#FF693D" }}>Find Your College.</span>
               </h1>
@@ -1607,7 +1618,7 @@ export default function Hero({ onSearch }) {
                 maxWidth: "100%",
               }}>
                 <GraduationCap size={isXs ? 14 : 17} color="#FF693D" style={{ flexShrink: 0 }} />
-                An&nbsp;<span style={{ color: "#FF693D" }}>IIT Roorkee</span>&nbsp;startup — built by IITians, trusted by aspirants
+                An&nbsp;<span style={{ color: "#E0421F", ...HIGHLIGHT }}>IIT Roorkee</span>&nbsp;startup — built by IITians, trusted by aspirants
               </div>
 
               <p style={{

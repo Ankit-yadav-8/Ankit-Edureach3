@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, GraduationCap, FileText, Newspaper, Wrench, Building2, Stethoscope } from "lucide-react";
 import { search } from "../utils/searchIndex.js";
+import { IIT_LOGOS } from "../data/collegeFlexibility.js";
 
 const KIND_ICON = {
   College: GraduationCap,
@@ -140,6 +141,9 @@ export default function SearchOverlay({ open, onClose }) {
               {results.map((r, i) => {
                 const Icon = KIND_ICON[r.kind] || Search;
                 const color = KIND_COLOR[r.kind] || "#888";
+                // Use the official IIT emblem for IIT college results.
+                const slug = r.to?.startsWith("/colleges/") ? r.to.slice("/colleges/".length) : null;
+                const logo = slug ? IIT_LOGOS[slug] : null;
                 return (
                   <button
                     key={r.to + i}
@@ -153,8 +157,10 @@ export default function SearchOverlay({ open, onClose }) {
                       border: "none", cursor: "pointer",
                     }}
                   >
-                    <span style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "grid", placeItems: "center", background: color + "1a", color }}>
-                      <Icon size={18} />
+                    <span style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "grid", placeItems: "center", overflow: "hidden", background: logo ? "#fff" : color + "1a", border: logo ? "1px solid rgba(0,0,0,.08)" : "none", color }}>
+                      {logo
+                        ? <img src={logo} alt="" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "contain", padding: 4, boxSizing: "border-box" }} />
+                        : <Icon size={18} />}
                     </span>
                     <span style={{ flex: 1, minWidth: 0 }}>
                       <span style={{ display: "block", fontWeight: 700, color: "var(--navy)", fontSize: ".95rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r.title}</span>

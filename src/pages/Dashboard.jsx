@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Mail, Phone, MapPin, GraduationCap, Hash, Calendar, LogOut,
   CreditCard, CheckCircle2, ArrowRight, Sparkles, ShieldCheck, BookOpen, Loader2,
-  Check, Compass, Pencil, X, LayoutDashboard,
+  Check, Compass, Pencil, X, LayoutDashboard, Users, HelpCircle, Settings, Rocket,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { useEnrol } from "../components/EnrolModal.jsx";
@@ -14,6 +14,15 @@ const ORANGE = "#FF693D";
 const GOLD = "#FF693D";
 const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
+
+/* hex → rgba helper for translucent accent washes (matches home bento cards) */
+const tint = (hex, a) => {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+};
+
+const CARD_SHADOW = "0 6px 28px rgba(33,29,46,.07)";
+const CARD_LINE = "rgba(33,29,46,.08)";
 
 // Which plan keys belong to which product line (kept in sync with
 // server/routes/payment.js PLANS). Mentorship keys all start with "mentor-".
@@ -72,64 +81,66 @@ const sectionTitle = {
   margin: 0, display: "flex", alignItems: "center", gap: 8,
 };
 
-/* ── A single catalogue plan tile — styled like the mentorship pricing
-      cards (top accent bar, equal height, text only). ─────────────── */
+/* ── A single catalogue plan tile — styled like the home-page bento cards:
+      white surface, soft icon tile, decorative corner wash, hover lift. ─ */
 function PlanTile({ plan, group, enrolled, purchase, onEnrol, onView }) {
   const Icon = group.icon;
+  const a = group.accent;
   return (
-    <motion.div whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
+    <motion.div whileHover={{ y: -6, boxShadow: "0 18px 40px rgba(33,29,46,.12)" }}
+      transition={{ type: "spring", stiffness: 280, damping: 22 }}
+      className="cp-bento-card"
       style={{
         background: enrolled ? group.soft : "#fff",
-        borderRadius: 20,
-        border: enrolled ? `2px solid ${group.accent}` : `1px solid ${group.accent}33`,
-        height: "100%", minHeight: 250, display: "flex", flexDirection: "column",
-        position: "relative", overflow: "hidden",
-        boxShadow: `0 24px 50px -26px ${group.accent}66`,
+        borderRadius: 16,
+        border: enrolled ? `1.5px solid ${a}` : `1px solid ${CARD_LINE}`,
+        height: "100%", minHeight: 252, display: "flex", flexDirection: "column",
+        position: "relative", overflow: "hidden", boxShadow: CARD_SHADOW,
       }}>
-      {/* top accent bar */}
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg, ${group.accent}, ${group.accent2})` }} />
+      {/* decorative corner wash (reference bento style) */}
+      <span aria-hidden className="cp-bento-corner" style={{
+        position: "absolute", top: 0, right: 0, width: 130, height: 130,
+        background: tint(a, 0.07), borderBottomLeftRadius: 100,
+        transition: "transform .35s ease", pointerEvents: "none",
+      }} />
 
-      <div style={{ padding: "26px 24px 24px", display: "flex", flexDirection: "column", flex: 1 }}>
-        {/* header: icon + title */}
-        <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 12 }}>
-          <span style={{ width: 44, height: 44, borderRadius: 13, background: `${group.accent}18`, border: `1px solid ${group.accent}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-            <Icon size={22} color={group.accent} />
+      <div style={{ padding: "26px 24px 24px", display: "flex", flexDirection: "column", flex: 1, position: "relative" }}>
+        {/* header: icon + status badge */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+          <span style={{ width: 50, height: 50, borderRadius: 15, background: tint(a, 0.12), display: "grid", placeItems: "center", flexShrink: 0 }}>
+            <Icon size={24} color={a} />
           </span>
-          <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.12rem", color: NAVY, margin: 0, lineHeight: 1.2, flex: 1, minWidth: 0 }}>{plan.label}</h3>
-        </div>
-
-        {/* status badge */}
-        <div style={{ marginBottom: 12 }}>
           {enrolled ? (
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11.5, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "5px 11px" }}>
-              <CheckCircle2 size={13} /> Enrolled
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10, fontWeight: 800, letterSpacing: ".06em", color: "#0a8f5b", background: "#D8F3E6", borderRadius: 50, padding: "5px 11px" }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: GREEN }} /> ENROLLED
             </span>
           ) : (
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", background: "#f3f4f6", borderRadius: 20, padding: "5px 11px" }}>Not enrolled</span>
+            <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", color: "#9ca3af", background: "#f1f1f3", borderRadius: 50, padding: "5px 11px" }}>NOT ENROLLED</span>
           )}
         </div>
 
-        <p style={{ color: "#6b7280", fontSize: 13.5, lineHeight: 1.55, margin: "0 0 16px" }}>{plan.tag}</p>
+        <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.12rem", color: NAVY, margin: "0 0 8px", lineHeight: 1.2, letterSpacing: "-0.3px" }}>{plan.label}</h3>
+        <p style={{ color: "#6b7280", fontSize: 13, lineHeight: 1.55, margin: "0 0 16px" }}>{plan.tag}</p>
 
         {/* price */}
         <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
-          <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 28, color: NAVY }}>₹{plan.price.toLocaleString("en-IN")}</span>
+          <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 27, color: NAVY }}>₹{plan.price.toLocaleString("en-IN")}</span>
           <span style={{ fontSize: 12.5, color: "#9ca3af" }}>one-time</span>
         </div>
 
         {enrolled && purchase && (
-          <div style={{ fontSize: 12, color: group.accent, fontWeight: 700, marginTop: 6 }}>Purchased {fmtDate(purchase.createdAt)}</div>
+          <div style={{ fontSize: 12, color: a, fontWeight: 700, marginTop: 6 }}>Purchased {fmtDate(purchase.createdAt)}</div>
         )}
 
         {/* action */}
         {enrolled ? (
           <button onClick={() => onView(plan.to)}
-            style={{ marginTop: "auto", width: "100%", padding: "14px", borderRadius: 12, border: `1.5px solid ${group.accent}66`, background: "#fff", color: group.accent, fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+            style={{ marginTop: "auto", width: "100%", padding: "14px", borderRadius: 12, border: `1.5px solid ${a}66`, background: "#fff", color: a, fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
             View details <ArrowRight size={16} />
           </button>
         ) : (
           <button onClick={() => onEnrol(plan.key)}
-            style={{ marginTop: "auto", width: "100%", padding: "15px", borderRadius: 12, border: "none", background: `linear-gradient(135deg, ${group.accent}, ${group.accent2})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: `0 10px 26px -10px ${group.accent}99` }}>
+            style={{ marginTop: "auto", width: "100%", padding: "15px", borderRadius: 12, border: "none", background: `linear-gradient(135deg, ${a}, ${group.accent2})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: `0 10px 26px -10px ${a}99` }}>
             Enrol now — ₹{plan.price.toLocaleString("en-IN")} <ArrowRight size={16} />
           </button>
         )}
@@ -307,42 +318,99 @@ export default function Dashboard() {
   const enrolledKeys = new Set(plans.map((p) => p.plan));
   const hasAnyPlan = plans.length > 0;
 
-  return (
-    <section style={{ background: "#f8f7f5", minHeight: "100vh", padding: "120px 0 70px" }}>
-      <div style={{ maxWidth: 1040, margin: "0 auto", padding: "0 20px" }}>
+  const navItems = [
+    { label: "Dashboard",        icon: LayoutDashboard, to: "/dashboard",     active: true },
+    { label: "Mentorship Plans", icon: GraduationCap,   to: "/mentorship" },
+    { label: "Resource Center",  icon: BookOpen,        to: "/jee-resources" },
+    { label: "Community",        icon: Users,           to: "/community" },
+    { label: "Help Center",      icon: HelpCircle,      to: "/how-to-use" },
+  ];
 
-        {/* Hero header */}
-        <div style={{ background: `linear-gradient(135deg, ${NAVY}, #14264f)`, borderRadius: 24, padding: "30px 28px", color: "#fff", display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap", position: "relative", overflow: "hidden", marginBottom: 24 }}>
-          <div style={{ position: "absolute", top: -40, right: -20, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(255, 105, 61,.35), transparent 70%)" }} />
-          <div style={{ width: 72, height: 72, borderRadius: "50%", background: ORANGE, display: "grid", placeItems: "center", fontSize: 30, fontWeight: 800, fontFamily: "Sora", flexShrink: 0 }}>
-            {(user?.name || user?.email || "U").charAt(0).toUpperCase()}
+  const scrollToPlans = () => {
+    const el = document.getElementById("all-plans");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  return (
+    <section style={{ background: "#f4f5f9", minHeight: "100vh", padding: "104px 0 70px" }}>
+      <div className="dash-shell" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 20px" }}>
+
+        {/* ── Left sidebar ── */}
+        <aside className="dash-side">
+          <div style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 20, boxShadow: CARD_SHADOW, padding: "26px 18px 20px", display: "flex", flexDirection: "column", gap: 6 }}>
+            {/* identity */}
+            <div style={{ textAlign: "center", padding: "0 6px 18px", borderBottom: `1px solid ${CARD_LINE}`, marginBottom: 14 }}>
+              <div style={{ width: 64, height: 64, borderRadius: "50%", background: `linear-gradient(135deg, ${ORANGE}, ${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontSize: 26, fontWeight: 800, fontFamily: "Sora", margin: "0 auto 12px", boxShadow: `0 10px 24px -10px ${ORANGE}` }}>
+                {(user?.name || user?.email || "U").charAt(0).toUpperCase()}
+              </div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 16, color: NAVY }}>{user?.name || "Student"}</div>
+              <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.email}</div>
+            </div>
+
+            {/* nav */}
+            {navItems.map(({ label, icon: Icon, to, active }) => (
+              <button key={label} onClick={() => navigate(to)}
+                style={{
+                  display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left",
+                  padding: "11px 14px", borderRadius: 12, cursor: "pointer", fontFamily: "Sora",
+                  fontWeight: active ? 800 : 600, fontSize: 14,
+                  border: active ? "none" : "1px solid transparent",
+                  background: active ? `linear-gradient(135deg, ${ORANGE}, ${GOLD})` : "transparent",
+                  color: active ? "#fff" : "#475067",
+                  boxShadow: active ? `0 10px 24px -12px ${ORANGE}` : "none",
+                  transition: "background .15s, color .15s",
+                }}
+                onMouseEnter={(e) => { if (!active) e.currentTarget.style.background = "#f4f5f9"; }}
+                onMouseLeave={(e) => { if (!active) e.currentTarget.style.background = "transparent"; }}>
+                <Icon size={18} color={active ? "#fff" : ORANGE} /> {label}
+              </button>
+            ))}
+
+            {/* footer actions */}
+            <div style={{ borderTop: `1px solid ${CARD_LINE}`, marginTop: 14, paddingTop: 14, display: "flex", flexDirection: "column", gap: 6 }}>
+              <button onClick={scrollToPlans}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", padding: "12px", borderRadius: 12, border: "none", cursor: "pointer", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: ORANGE, background: tint(ORANGE, 0.12) }}>
+                <Rocket size={16} /> Upgrade Plan
+              </button>
+              <button onClick={() => setEditOpen(true)}
+                style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left", padding: "11px 14px", borderRadius: 12, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 14, border: "1px solid transparent", background: "transparent", color: "#475067" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "#f4f5f9"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
+                <Settings size={18} color={ORANGE} /> Settings
+              </button>
+              <button onClick={() => setConfirmLogout(true)}
+                style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left", padding: "11px 14px", borderRadius: 12, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 14, border: "1px solid transparent", background: "transparent", color: "#e5484d" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "#fef2f2"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
+                <LogOut size={18} color="#e5484d" /> Sign Out
+              </button>
+            </div>
           </div>
-          <div style={{ flex: 1, minWidth: 160, position: "relative" }}>
-            <div style={{ fontSize: 13, opacity: .8 }}>Welcome back,</div>
-            <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.7rem", margin: "2px 0 4px" }}>{user?.name || "Student"}</h1>
-            <div style={{ fontSize: 13.5, opacity: .8 }}>{user?.email}</div>
-          </div>
-          <button onClick={() => setConfirmLogout(true)} style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,.12)", border: "1px solid rgba(255,255,255,.25)", color: "#fff", padding: "10px 16px", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontFamily: "Sora", position: "relative" }}>
-            <LogOut size={16} /> Logout
-          </button>
-        </div>
+        </aside>
+
+        {/* ── Main content ── */}
+        <main className="dash-main" style={{ flex: 1, minWidth: 0 }}>
 
         {/* Profile details + Edit info */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
           <h2 style={sectionTitle}><User size={18} color={ORANGE} /> Your details</h2>
           <button onClick={() => setEditOpen(true)}
             style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", border: `1.5px solid ${ORANGE}55`, color: ORANGE, padding: "8px 16px", borderRadius: 11, fontWeight: 800, fontFamily: "Sora", fontSize: 13.5, cursor: "pointer" }}>
             <Pencil size={15} /> Edit info
           </button>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 34 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14, marginBottom: 34 }}>
           {details.map(({ label, value, icon: Icon }) => (
-            <div key={label} style={{ background: "#fff", border: "1px solid #eee", borderRadius: 14, padding: "16px 18px", display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: `${ORANGE}12`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+            <div key={label} className="cp-bento-card"
+              style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, padding: "16px 18px", display: "flex", alignItems: "center", gap: 12, boxShadow: CARD_SHADOW, position: "relative", overflow: "hidden", transition: "box-shadow .15s, transform .15s" }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 14px 32px rgba(33,29,46,.1)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = CARD_SHADOW; e.currentTarget.style.transform = "none"; }}>
+              <span aria-hidden style={{ position: "absolute", top: 0, right: 0, width: 70, height: 70, background: tint(ORANGE, 0.05), borderBottomLeftRadius: 70, pointerEvents: "none" }} />
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: tint(ORANGE, 0.12), display: "grid", placeItems: "center", flexShrink: 0, position: "relative" }}>
                 <Icon size={18} color={ORANGE} />
               </div>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 11.5, color: "#9ca3af", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".04em" }}>{label}</div>
+              <div style={{ minWidth: 0, position: "relative" }}>
+                <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}>{label}</div>
                 <div style={{ fontSize: 15, color: NAVY, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {value || "—"}
                 </div>
@@ -371,11 +439,12 @@ export default function Dashboard() {
               const g = groupForPlan(p.plan);
               const Icon = g.icon;
               return (
-                <div key={p._id} style={{ background: g.soft, border: `2px solid ${g.accent}`, borderRadius: 18, padding: "18px 20px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", boxShadow: `0 18px 40px -26px ${g.accent}99` }}>
-                  <div style={{ width: 46, height: 46, borderRadius: 13, background: "#fff", border: `1px solid ${g.accent}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <div key={p._id} className="cp-bento-card" style={{ background: g.soft, border: `1.5px solid ${g.accent}`, borderRadius: 16, padding: "18px 20px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", boxShadow: CARD_SHADOW, position: "relative", overflow: "hidden" }}>
+                  <span aria-hidden style={{ position: "absolute", top: 0, right: 0, width: 130, height: 130, background: tint(g.accent, 0.08), borderBottomLeftRadius: 100, pointerEvents: "none" }} />
+                  <div style={{ width: 46, height: 46, borderRadius: 13, background: "#fff", border: `1px solid ${g.accent}33`, display: "grid", placeItems: "center", flexShrink: 0, position: "relative" }}>
                     <Icon size={22} color={g.accent} />
                   </div>
-                  <div style={{ flex: 1, minWidth: 170 }}>
+                  <div style={{ flex: 1, minWidth: 170, position: "relative" }}>
                     <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15.5, color: NAVY }}>{p.planLabel || p.plan}</div>
                     <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>
                       Purchased {fmtDate(p.createdAt)} · ID {p.razorpayPaymentId || "—"}
@@ -398,7 +467,7 @@ export default function Dashboard() {
         )}
 
         {/* ── All plans — every mentorship & counselling plan ── */}
-        <h2 style={{ ...sectionTitle, marginBottom: 6 }}><CreditCard size={18} color={ORANGE} /> All plans</h2>
+        <h2 id="all-plans" style={{ ...sectionTitle, marginBottom: 6, scrollMarginTop: 96 }}><CreditCard size={18} color={ORANGE} /> All plans</h2>
         <p style={{ fontSize: 13.5, color: "#9ca3af", margin: "0 0 22px" }}>Browse every plan — the ones you’re enrolled in are highlighted.</p>
 
         {PLAN_CATALOG.map((group) => {
@@ -449,6 +518,7 @@ export default function Dashboard() {
             </button>
           ))}
         </div>
+        </main>
       </div>
 
       {/* Edit info modal */}
@@ -486,7 +556,17 @@ export default function Dashboard() {
         )}
       </AnimatePresence>
 
-      <style>{`@keyframes dashspin{to{transform:rotate(360deg)}}.dash-spin{display:inline-block;animation:dashspin .8s linear infinite;vertical-align:middle;margin-right:6px}`}</style>
+      <style>{`
+        @keyframes dashspin{to{transform:rotate(360deg)}}
+        .dash-spin{display:inline-block;animation:dashspin .8s linear infinite;vertical-align:middle;margin-right:6px}
+        .dash-shell{display:flex;gap:26px;align-items:flex-start}
+        .dash-side{width:252px;flex-shrink:0;position:sticky;top:96px}
+        .cp-bento-card:hover .cp-bento-corner{transform:scale(1.25)}
+        @media (max-width:900px){
+          .dash-shell{flex-direction:column}
+          .dash-side{width:100%;position:static;top:auto}
+        }
+      `}</style>
     </section>
   );
 }
