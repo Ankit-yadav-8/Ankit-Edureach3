@@ -1477,8 +1477,8 @@ export default function Hero({ onSearch }) {
      Mobile stays single-column (the card is hidden via .hero-about-col). ── */
   const gridCols =
     isMobile  ? "1fr" :
-    isTablet  ? "1fr minmax(0,300px)" :
-    "minmax(0,1fr) 460px";
+    isTablet  ? "1fr minmax(0,360px)" :
+    "minmax(0,1fr) 560px";
 
   /* ── Hero background — warm gradient on all sizes ── */
   const heroBg = "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 72%, #ffffff 100%)";
@@ -1508,6 +1508,27 @@ export default function Hero({ onSearch }) {
         boxSizing: "border-box",
       }}
     >
+      {/* ═══ Dotted-grid background (campusloom / reference style) ═══ */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: "radial-gradient(rgba(33,29,46,.07) 1.2px, transparent 1.2px)",
+          backgroundSize: "26px 26px",
+          maskImage: "radial-gradient(ellipse 90% 80% at 50% 40%, #000 55%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 90% 80% at 50% 40%, #000 55%, transparent 100%)",
+        }}
+      />
+
+      {/* ═══ Subtle decorative dashed arcs ═══ */}
+      <svg
+        aria-hidden viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice"
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none", opacity: 0.5 }}
+      >
+        <path d="M-40 120 C 360 40, 1080 40, 1480 200" fill="none" stroke="rgba(255,105,61,.18)" strokeWidth="1.5" strokeDasharray="7 9" />
+        <path d="M-40 680 C 420 760, 1020 760, 1480 600" fill="none" stroke="rgba(33,29,46,.10)" strokeWidth="1.5" strokeDasharray="7 9" />
+      </svg>
+
       {/* ═══ Content wrapper ═══ */}
       <div
         ref={containerRef}

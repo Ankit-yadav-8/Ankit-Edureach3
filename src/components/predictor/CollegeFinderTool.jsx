@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Search, MapPin, ChevronDown, RotateCcw, SlidersHorizontal,
@@ -57,6 +57,48 @@ function InstituteLogo({ slug, name, size = 44 }) {
     <span className="cf-logo cf-logo-fallback" style={{ width: size, height: size, fontSize: size * 0.3 }}>
       {initials}
     </span>
+  );
+}
+
+/* Custom click-to-open dropdown — no native <select> arrow. Click the field,
+   the options drop in; click an option to pick it. Closes on outside click. */
+function SelectMenu({ value, onChange, options, placeholder, ariaLabel }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("mousedown", onDoc); document.removeEventListener("keydown", onKey); };
+  }, [open]);
+
+  const current = options.find((o) => o.value === value);
+  return (
+    <div className="cf-dd" ref={ref}>
+      <button
+        type="button" aria-haspopup="listbox" aria-expanded={open} aria-label={ariaLabel}
+        className={`cf-ddbtn ${open ? "open" : ""}`}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span className={current ? "" : "cf-dd-ph"}>{current ? current.label : placeholder}</span>
+        <ChevronDown size={15} className="cf-dd-chev" />
+      </button>
+      {open && (
+        <div className="cf-ddmenu" role="listbox">
+          {options.map((o) => (
+            <button
+              type="button" key={o.value} role="option" aria-selected={o.value === value}
+              className={`cf-ddopt ${o.value === value ? "sel" : ""}`}
+              onClick={() => { onChange(o.value); setOpen(false); }}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -259,23 +301,30 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
           </div>
           <div className="cf-field cf-field-cat">
             <label>Category</label>
-            <select className="cf-select" value={form.category} onChange={(e) => set("category", e.target.value)}>
-              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
+            <SelectMenu
+              ariaLabel="Category"
+              value={form.category}
+              onChange={(v) => set("category", v)}
+              options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+            />
           </div>
           <div className="cf-field cf-field-cat">
             <label>Home State</label>
-            <select className="cf-select" value={form.homeState} onChange={(e) => set("homeState", e.target.value)}>
-              <option value="">All States</option>
-              {STATES.map((s) => <option key={s} value={s}>{s}</option>)}
-            </select>
+            <SelectMenu
+              ariaLabel="Home State"
+              value={form.homeState}
+              onChange={(v) => set("homeState", v)}
+              options={[{ value: "", label: "All States" }, ...STATES.map((s) => ({ value: s, label: s }))]}
+            />
           </div>
           <div className="cf-field cf-field-cat">
             <label>Branch</label>
-            <select className="cf-select" value={form.branch} onChange={(e) => set("branch", e.target.value)}>
-              <option value="">All Branches</option>
-              {BRANCH_BUCKETS.map((b) => <option key={b.id} value={b.id}>{b.label}</option>)}
-            </select>
+            <SelectMenu
+              ariaLabel="Branch"
+              value={form.branch}
+              onChange={(v) => set("branch", v)}
+              options={[{ value: "", label: "All Branches" }, ...BRANCH_BUCKETS.map((b) => ({ value: b.id, label: b.label }))]}
+            />
           </div>
           <button className="cf-runbtn" onClick={handleRun} disabled={loading || !form.rank}>
             {loading
@@ -447,23 +496,46 @@ const CF_STYLES = `
 .cf-spin { animation: cf-spin .8s linear infinite; }
 @keyframes cf-spin { to { transform: rotate(360deg); } }
 
-/* rank bar */
-.cf-rankbar { display:flex; justify-content:space-between; align-items:flex-end; gap:14px; flex-wrap:wrap;
-  background:#fff; border:1px solid var(--cf-line); border-radius:16px; padding:16px 18px; margin-bottom:18px; }
-.cf-rankbar-fields { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; }
-.cf-field { display:flex; flex-direction:column; gap:5px; }
+/* rank bar — full-width grid: rank · category · home state · branch · button */
+.cf-rankbar { display:flex; flex-direction:column; align-items:stretch; gap:12px;
+  background:#fff; border:1px solid var(--cf-line); border-radius:16px; padding:18px 20px; margin-bottom:18px; }
+.cf-rankbar-fields { display:grid; grid-template-columns:1.3fr 1fr 1.1fr 1.5fr auto; gap:14px; align-items:end; width:100%; }
+.cf-field { display:flex; flex-direction:column; gap:6px; min-width:0; }
 .cf-field label { font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:#8a8178; }
-.cf-field-cat { min-width:120px; }
+.cf-field-cat { min-width:0; }
 .cf-input, .cf-select { border:1px solid var(--cf-line); border-radius:10px; padding:10px 12px; font-size:14px;
   background:#fff; color:#1a1a2e; outline:none; transition:border .15s, box-shadow .15s; }
-.cf-input { width:180px; }
+.cf-input { width:100%; box-sizing:border-box; }
 .cf-input:focus, .cf-select:focus { border-color:var(--cf-coral); box-shadow:0 0 0 3px rgba(255, 105, 61,.12); }
-.cf-runbtn { display:inline-flex; align-items:center; gap:7px; background:var(--cf-coral); color:#fff; border:none;
-  border-radius:10px; padding:11px 20px; font-size:14px; font-weight:700; cursor:pointer;
+.cf-runbtn { display:inline-flex; align-items:center; justify-content:center; gap:7px; background:var(--cf-coral); color:#fff; border:none;
+  border-radius:10px; padding:11px 22px; font-size:14px; font-weight:700; cursor:pointer; white-space:nowrap; height:42px;
   box-shadow:0 4px 14px rgba(255, 105, 61,.28); transition:opacity .15s, transform .1s; }
 .cf-runbtn:hover:not(:disabled) { transform:translateY(-1px); }
 .cf-runbtn:disabled { opacity:.55; cursor:not-allowed; box-shadow:none; }
 .cf-mobile-filter { display:none; }
+
+/* custom click-to-open dropdown (replaces native <select> in the rank bar) */
+.cf-dd { position:relative; width:100%; }
+.cf-ddbtn { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; box-sizing:border-box;
+  border:1px solid var(--cf-line); border-radius:10px; padding:10px 12px; font-size:14px; background:#fff;
+  color:#1a1a2e; cursor:pointer; text-align:left; transition:border .15s, box-shadow .15s; }
+.cf-ddbtn:hover { border-color:#d8cfc4; }
+.cf-ddbtn.open { border-color:var(--cf-coral); box-shadow:0 0 0 3px rgba(255, 105, 61,.12); }
+.cf-ddbtn > span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cf-dd-ph { color:#9a9189; }
+.cf-dd-chev { color:#9a9189; flex-shrink:0; transition:transform .2s; }
+.cf-ddbtn.open .cf-dd-chev { transform:rotate(180deg); }
+.cf-ddmenu { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:40; background:#fff;
+  border:1px solid var(--cf-line); border-radius:12px; box-shadow:0 14px 36px rgba(0,0,0,.14);
+  padding:6px; max-height:288px; overflow-y:auto; animation:cfDD .14s ease;
+  scrollbar-width:thin; scrollbar-color:rgba(255, 105, 61,.45) transparent; }
+@keyframes cfDD { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
+.cf-ddmenu::-webkit-scrollbar { width:8px; }
+.cf-ddmenu::-webkit-scrollbar-thumb { background:rgba(255, 105, 61,.4); border-radius:50px; border:2px solid #fff; }
+.cf-ddopt { display:block; width:100%; text-align:left; border:none; background:none; cursor:pointer;
+  padding:9px 12px; border-radius:8px; font-size:13.5px; color:#3a3a4a; transition:background .12s; }
+.cf-ddopt:hover { background:#faf7f3; }
+.cf-ddopt.sel { background:rgba(255, 105, 61,.1); color:var(--cf-coral); font-weight:700; }
 
 .cf-error { background:#fff0f0; border:1px solid #fca5a5; color:#dc2626; border-radius:12px; padding:12px 16px; font-size:13px; }
 
@@ -587,6 +659,8 @@ const CF_STYLES = `
 
 @media (max-width:860px){
   .cf-layout { grid-template-columns:1fr; }
+  .cf-rankbar-fields { grid-template-columns:1fr 1fr; }
+  .cf-rankbar-fields .cf-field:first-child, .cf-runbtn { grid-column:1 / -1; }
   .cf-mobile-filter { display:inline-flex; align-items:center; gap:6px; background:#fff; border:1px solid var(--cf-line);
     border-radius:10px; padding:10px 16px; font-size:13px; font-weight:700; color:#3a3a4a; cursor:pointer; }
   .cf-sidebar { position:fixed; top:0; left:0; bottom:0; width:300px; max-width:86vw; z-index:60; border-radius:0;
@@ -601,5 +675,8 @@ const CF_STYLES = `
 }
 @media (min-width:861px){
   .cf-sidebar-close { display:none; }
+}
+@media (max-width:520px){
+  .cf-rankbar-fields { grid-template-columns:1fr; }
 }
 `;

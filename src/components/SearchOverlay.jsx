@@ -89,10 +89,21 @@ export default function SearchOverlay({ open, onClose }) {
             onClick={(e) => e.stopPropagation()}
             style={{
               width: "min(680px,92vw)", background: "#fff",
-              borderRadius: 18, boxShadow: "var(--shadow-lg)", overflow: "hidden",
+              borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 30px 60px -20px rgba(13,27,62,.32)",
+              border: "1px solid rgba(0,0,0,.05)", overflow: "hidden",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "1rem 1.2rem", borderBottom: "1px solid var(--gray-light)" }}>
+            <style>{`
+              .so-scroll { scrollbar-width: thin; scrollbar-color: rgba(13,27,62,.18) transparent; }
+              .so-scroll::-webkit-scrollbar { width: 8px; }
+              .so-scroll::-webkit-scrollbar-track { background: transparent; }
+              .so-scroll::-webkit-scrollbar-thumb { background: rgba(13,27,62,.16); border-radius: 50px; border: 2px solid #fff; }
+              .so-scroll::-webkit-scrollbar-thumb:hover { background: rgba(13,27,62,.3); }
+              .so-row { transition: background .14s, transform .05s; }
+              .so-row:active { transform: scale(.995); }
+            `}</style>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "1.05rem 1.3rem", borderBottom: "1px solid var(--gray-light)" }}>
               <Search size={22} color="var(--coral)" />
               <input
                 ref={inputRef}
@@ -106,10 +117,10 @@ export default function SearchOverlay({ open, onClose }) {
               </button>
             </div>
 
-            <div style={{ maxHeight: "56vh", overflowY: "auto" }}>
+            <div className="so-scroll" style={{ maxHeight: "56vh", overflowY: "auto", padding: "8px" }}>
               {!q && (
-                <div style={{ padding: "1rem 1.2rem" }}>
-                  <p style={{ fontSize: ".75rem", letterSpacing: 1, color: "var(--gray)", textTransform: "uppercase", marginBottom: ".6rem" }}>
+                <div style={{ padding: ".7rem .8rem" }}>
+                  <p style={{ fontSize: ".72rem", letterSpacing: 1, color: "var(--gray)", textTransform: "uppercase", marginBottom: ".65rem", fontWeight: 700 }}>
                     Trending
                   </p>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: ".5rem" }}>
@@ -128,26 +139,32 @@ export default function SearchOverlay({ open, onClose }) {
 
               {results.map((r, i) => {
                 const Icon = KIND_ICON[r.kind] || Search;
+                const color = KIND_COLOR[r.kind] || "#888";
                 return (
                   <button
                     key={r.to + i}
+                    className="so-row"
                     onMouseEnter={() => setActive(i)}
                     onClick={() => go(r.to)}
                     style={{
-                      display: "flex", alignItems: "center", gap: 14, width: "100%",
-                      textAlign: "left", padding: "0.85rem 1.2rem",
+                      display: "flex", alignItems: "center", gap: 13, width: "100%",
+                      textAlign: "left", padding: "10px 12px", borderRadius: 12,
                       background: i === active ? "var(--sky)" : "transparent",
-                      borderLeft: i === active ? "3px solid var(--coral)" : "3px solid transparent",
+                      border: "none", cursor: "pointer",
                     }}
                   >
-                    <span style={{ width: 36, height: 36, borderRadius: 9, display: "grid", placeItems: "center", background: (KIND_COLOR[r.kind] || "#888") + "1a", color: KIND_COLOR[r.kind] }}>
+                    <span style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "grid", placeItems: "center", background: color + "1a", color }}>
                       <Icon size={18} />
                     </span>
-                    <span style={{ flex: 1 }}>
-                      <span style={{ display: "block", fontWeight: 600, color: "var(--navy)", fontSize: ".95rem" }}>{r.title}</span>
-                      <span style={{ display: "block", fontSize: ".8rem", color: "var(--gray)" }}>{r.sub}</span>
+                    <span style={{ flex: 1, minWidth: 0 }}>
+                      <span style={{ display: "block", fontWeight: 700, color: "var(--navy)", fontSize: ".95rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r.title}</span>
+                      <span style={{ display: "block", fontSize: ".8rem", color: "var(--gray)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r.sub}</span>
                     </span>
-                    <span className="badge badge-red">{r.kind}</span>
+                    <span style={{
+                      flexShrink: 0, fontSize: "10px", fontWeight: 800, letterSpacing: ".04em",
+                      textTransform: "uppercase", padding: "4px 9px", borderRadius: 50,
+                      color, background: color + "16",
+                    }}>{r.kind}</span>
                   </button>
                 );
               })}

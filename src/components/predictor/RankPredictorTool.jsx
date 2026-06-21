@@ -117,7 +117,7 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
 
   return (
     <>
-      <div className="grid-2" style={{ alignItems: "start", gap: 28 }}>
+      <div className="grid-2" style={{ alignItems: "stretch", gap: 28 }}>
 
       {/* ── INPUT FORM ─────────────────────────────────────── */}
       <div className="card" style={{ borderTop: `3px solid ${accent}`, position: "relative", overflow: "hidden" }}>
@@ -284,9 +284,9 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
       </div>
 
       {/* ── RESULT PANEL ───────────────────────────────────── */}
-      <div className="card" style={{ minHeight: 320 }}>
+      <div className="card" style={{ minHeight: 320, display: "flex", flexDirection: "column" }}>
         {!res ? (
-          <div style={{ display: "grid", placeItems: "center", height: 320, color: "var(--muted)", textAlign: "center" }}>
+          <div style={{ display: "grid", placeItems: "center", flex: 1, minHeight: 320, color: "var(--muted)", textAlign: "center" }}>
             <div>
               <div style={{
                 display: "grid", placeItems: "center", width: 76, height: 76, borderRadius: "50%",
