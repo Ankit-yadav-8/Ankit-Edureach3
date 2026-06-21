@@ -1402,19 +1402,19 @@ function HeroStoryCard() {
       onClick={() => nav("/about")}
       style={{
         position: "relative", width: "100%", aspectRatio: "4 / 5", minWidth: 0,
-        borderRadius: 22, overflow: "hidden", cursor: "pointer",
-        border: "1px solid rgba(255,105,61,.22)",
+        borderRadius: 24, overflow: "hidden", cursor: "pointer",
+        border: "1px solid rgba(0,0,0,.06)",
         background: "linear-gradient(135deg, #1b1b2e, #0a0a1a)",
-        boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 30px 50px -18px rgba(255,105,61,.34), 0 12px 18px -10px rgba(0,0,0,.14)",
+        boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 30px 60px -20px rgba(13,27,62,.28), 0 12px 18px -10px rgba(0,0,0,.10)",
       }}
     >
       {/* campus image */}
       {imgOk && (
         <img
-          src="/iit-roorkee-campus.jpg"
-          alt="IIT Roorkee campus — where College Parichay was built"
+          src="/assets/team/IITs/IITs/IIT%20ROORKEE.jpg"
+          alt="IIT Roorkee main building — where College Parichay was built"
           onError={() => setImgOk(false)}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 35%", transition: "transform .7s ease" }}
         />
       )}
 
@@ -1428,6 +1428,23 @@ function HeroStoryCard() {
         <GraduationCap size={15} color="#FF693D" />
         <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 12, color: "#1c1c28", letterSpacing: "-.2px" }}>IIT Roorkee</span>
         <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", marginLeft: 1 }} />
+      </div>
+
+      {/* floating glass badge — rank accuracy (reference style) */}
+      <div style={{
+        position: "absolute", top: 14, right: 14, zIndex: 2,
+        display: "flex", alignItems: "center", gap: 9,
+        background: "rgba(255,255,255,.85)", backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,.35)",
+        borderRadius: 14, padding: "8px 11px", boxShadow: "0 8px 24px rgba(0,0,0,.18)",
+      }}>
+        <span style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(15,174,110,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+          <Check size={17} color="#0FAE6E" />
+        </span>
+        <div>
+          <div style={{ fontSize: 9.5, fontWeight: 700, color: "rgba(28,28,40,.6)", letterSpacing: ".3px" }}>Rank Accuracy</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: "#1c1c28", lineHeight: 1.1 }}>98%</div>
+        </div>
       </div>
 
       {/* bottom gradient + story */}
@@ -1669,58 +1686,77 @@ export default function Hero({ onSearch }) {
               </div>
             </motion.div>
 
-            {/* ── Community entry — desktop only (macbook / laptop / computer).
-                On mobile · iPhone · tablet the entry stays in the navbar drawer,
-                so this is hidden ≤1279px to match the navbar breakpoint. ── */}
+            {/* ── Primary + secondary CTAs (reference split-hero style) ── */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.42 }}
-              className="hero-community-cta"
-              style={{ justifyContent: "flex-start", gap: 12, margin: "20px 0 6px" }}
+              transition={{ delay: 0.34 }}
+              style={{
+                display: "flex", flexWrap: "wrap",
+                justifyContent: isMobile ? "center" : "flex-start",
+                gap: 12, margin: "18px 0 4px",
+              }}
             >
               <button
-                onClick={() => nav("/community")}
+                onClick={() => nav("/jee-main#college")}
                 style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  padding: "10px 18px", borderRadius: 50, cursor: "pointer",
-                  background: "#FF693D", border: "1.5px solid #FF693D",
-                  boxShadow: "0 10px 24px -12px rgba(255, 105, 61,.7)",
-                  fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: "#fff",
+                  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
+                  padding: isXs ? "12px 20px" : "14px 26px", borderRadius: 12, cursor: "pointer",
+                  background: "#FF693D", border: "1.5px solid #FF693D", color: "#fff",
+                  fontFamily: "Sora", fontWeight: 800, fontSize: isXs ? 13.5 : 14.5,
+                  boxShadow: "0 12px 30px -10px rgba(255,105,61,.65)",
                   transition: "all .2s", whiteSpace: "nowrap",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.background = "#E0421F"; e.currentTarget.style.borderColor = "#E0421F"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#E0421F"; e.currentTarget.style.borderColor = "#E0421F"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#FF693D"; e.currentTarget.style.borderColor = "#FF693D"; }}
               >
-                <span style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(255,255,255,.2)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <Globe2 size={14} color="#fff" />
-                </span>
-                Join the Community
-                <ArrowRight size={15} />
+                Predict My Rank <ArrowRight size={16} />
               </button>
 
-              {/* Blog button */}
               <button
-                onClick={() => nav("/blog")}
+                onClick={() => nav("/mentorship/jee-2027")}
                 style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  padding: "10px 18px", borderRadius: 50, cursor: "pointer",
-                  background: "#fff", border: "1.5px solid rgba(255, 105, 61,.4)",
-                  fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: "#FF693D",
+                  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
+                  padding: isXs ? "12px 20px" : "14px 26px", borderRadius: 12, cursor: "pointer",
+                  background: "#fff", border: "1.5px solid rgba(28,28,40,.18)", color: "#1c1c28",
+                  fontFamily: "Sora", fontWeight: 800, fontSize: isXs ? 13.5 : 14.5,
                   transition: "all .2s", whiteSpace: "nowrap",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.background = "rgba(255, 105, 61,.08)"; e.currentTarget.style.borderColor = "#FF693D"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(255, 105, 61,.4)"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#1c1c28"; e.currentTarget.style.borderColor = "#1c1c28"; e.currentTarget.style.color = "#fff"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(28,28,40,.18)"; e.currentTarget.style.color = "#1c1c28"; }}
               >
-                <span style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(255, 105, 61,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <BookOpen size={14} color="#FF693D" />
-                </span>
-                Read the Blog
-                <ArrowRight size={15} />
+                Book Free Counselling
               </button>
             </motion.div>
 
-            {/* Stats bar moved to the About page ("What we've built so far"). */}
+            {/* ── Trust row — overlapping avatars (reference style) ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.46 }}
+              style={{
+                display: "flex", alignItems: "center", gap: 12, marginTop: 22,
+                justifyContent: isMobile ? "center" : "flex-start",
+              }}
+            >
+              <div style={{ display: "flex" }}>
+                {[
+                  { g: "linear-gradient(135deg,#FF693D,#E0421F)", t: "AY" },
+                  { g: "linear-gradient(135deg,#6366f1,#4f46e5)", t: "PS" },
+                  { g: "linear-gradient(135deg,#0FAE6E,#0a8f5b)", t: "RK" },
+                ].map((a, i) => (
+                  <span key={a.t} style={{
+                    width: 36, height: 36, borderRadius: "50%", background: a.g,
+                    border: "2.5px solid #fff", display: "grid", placeItems: "center",
+                    marginLeft: i === 0 ? 0 : -12, boxShadow: "0 2px 8px rgba(0,0,0,.12)",
+                    fontFamily: "Sora", fontWeight: 800, fontSize: 11.5, color: "#fff",
+                  }}>{a.t}</span>
+                ))}
+              </div>
+              <p style={{ margin: 0, fontSize: isXs ? 12 : 13, color: "rgba(28,28,40,.62)", fontFamily: "'DM Sans',sans-serif", lineHeight: 1.4 }}>
+                Trusted by <strong style={{ color: "#1c1c28", fontWeight: 800 }}>3,200+</strong> JEE &amp; NEET aspirants
+              </p>
+            </motion.div>
 
           </div>
           {/* ══ end CENTER ══ */}

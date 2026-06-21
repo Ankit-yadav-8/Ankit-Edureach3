@@ -3524,3 +3524,6 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 @media (max-width: 700px) {
   .faq-grid { grid-template-columns: 1fr !important; }
 }
+
+/* ── Bento tool cards — corner wash expands on hover (reference style) ── */
+.cp-bento-card:hover .cp-bento-corner { transform: scale(1.18); }
