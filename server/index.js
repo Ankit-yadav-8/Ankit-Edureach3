@@ -11,6 +11,7 @@ import paymentRoutes from "./routes/payment.js";
 import mentorshipRoutes from "./routes/mentorship.js";
 import communityRoutes from "./routes/community.js";
 import publicCommunityRoutes from "./routes/publicCommunity.js";
+import reviewRoutes from "./routes/reviews.js";
 import adminRoutes from "./routes/admin.js";
 import aiRoutes from "./routes/ai.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
@@ -84,6 +85,7 @@ app.use("/api/payment", apiLimiter, paymentRoutes);
 app.use("/api/mentorship", apiLimiter, mentorshipRoutes);
 app.use("/api/community", apiLimiter, communityRoutes);
 app.use("/api/public-community", apiLimiter, publicCommunityRoutes);
+app.use("/api/reviews", apiLimiter, reviewRoutes);
 // AI assistant — moderate per-minute cap (streaming replies are expensive).
 const aiLimiter = rl({ windowMs: 60 * 1000, max: 30 });
 app.use("/api/ai", aiLimiter, aiRoutes);

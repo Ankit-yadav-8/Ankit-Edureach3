@@ -109,6 +109,10 @@ img { max-width:100%; display:block; }
   border-color:rgba(255,105,61,.40);
   transform:translateX(-2px);
 }
+
+/* Reusable inline spinner (works anywhere, unlike the dashboard-scoped one). */
+@keyframes cpspin { to { transform: rotate(360deg); } }
+.cp-spin { display:inline-block; animation:cpspin .8s linear infinite; vertical-align:middle; }
 button { font-family:inherit; cursor:pointer; border:none; background:none; }
 ul  { list-style:none; }
 input,select,textarea { font-family:inherit; }

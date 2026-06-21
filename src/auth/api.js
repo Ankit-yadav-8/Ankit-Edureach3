@@ -75,3 +75,8 @@ export const apiPublicReplies     = (token, id) => req(`/api/public-community/po
 export const apiPublicReply       = (token, id, b) => req(`/api/public-community/posts/${id}/replies`, { method: "POST", body: b, token });
 export const apiPublicLikeReply   = (token, id) => req(`/api/public-community/replies/${id}/like`, { method: "POST", token });
 export const apiPublicSignUpload  = (token) => req("/api/public-community/sign-upload", { method: "POST", body: {}, token });
+
+// ── College reviews (hostel & mess) — reading is public, writing needs auth ──
+export const apiReviewColleges   = () => req("/api/reviews/colleges");
+export const apiReviewsForCollege = (college) => req(`/api/reviews?college=${encodeURIComponent(college)}`);
+export const apiCreateReview     = (token, b) => req("/api/reviews", { method: "POST", body: b, token });

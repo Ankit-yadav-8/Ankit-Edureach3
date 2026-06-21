@@ -6,8 +6,10 @@
    review locally. Mounted globally from App.jsx. */
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, X, Home, Utensils, Send, CheckCircle2 } from "lucide-react";
-import { addReview, HOSTEL_TAGS, MESS_TAGS } from "../utils/reviews.js";
+import { Star, X, Home, Utensils, Send, CheckCircle2, Loader2 } from "lucide-react";
+import { HOSTEL_TAGS, MESS_TAGS } from "../utils/reviews.js";
+import { useAuth } from "../auth/AuthContext.jsx";
+import { apiCreateReview } from "../auth/api.js";
 
 const ORANGE = "#FF693D";
 const DELAY_MS = 2 * 60 * 1000;        // 2 minutes
@@ -82,9 +84,12 @@ function ReviewBlock({ icon: Icon, title, accent, rating, setRating, tags, allTa
 }
 
 export default function ReviewPopup() {
+  const { token } = useAuth();
   const [open, setOpen] = useState(false);
   const [colleges, setColleges] = useState([]);
   const [done, setDone] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
 
   const [name, setName] = useState("");
   const [college, setCollege] = useState("");
@@ -116,19 +121,24 @@ export default function ReviewPopup() {
   const toggle = (list, set) => (t) =>
     set(list.includes(t) ? list.filter((x) => x !== t) : [...list, t]);
 
-  const canSubmit = name.trim() && college.trim() && (hostelRating || messRating);
+  const canSubmit = name.trim() && college.trim() && (hostelRating || messRating) && !busy;
 
-  const submit = () => {
+  const submit = async () => {
     if (!canSubmit) return;
-    addReview({
-      name: name.trim(), college: college.trim(),
-      hostel: { rating: hostelRating, tags: hostelTags, text: hostelText.trim() },
-      mess: { rating: messRating, tags: messTags, text: messText.trim() },
-      at: new Date().toISOString(),
-    });
-    finish();
-    setDone(true);
-    setTimeout(() => setOpen(false), 1700);
+    setBusy(true); setErr("");
+    try {
+      await apiCreateReview(token, {
+        name: name.trim(), college: college.trim(),
+        hostel: { rating: hostelRating, tags: hostelTags, text: hostelText.trim() },
+        mess: { rating: messRating, tags: messTags, text: messText.trim() },
+      });
+      finish();
+      setDone(true);
+      setTimeout(() => setOpen(false), 1700);
+    } catch (e) {
+      setErr(e?.message || "Could not submit. Please try again.");
+      setBusy(false);
+    }
   };
 
   return (
@@ -193,6 +203,8 @@ export default function ReviewPopup() {
                     tags={messTags} allTags={MESS_TAGS} toggleTag={toggle(messTags, setMessTags)}
                     text={messText} setText={setMessText} placeholder="Taste, hygiene, variety, timings…" />
 
+                  {err && <div style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", padding: "9px 11px", borderRadius: 10, fontSize: 12.5, fontWeight: 600 }}>{err}</div>}
+
                   <button onClick={submit} disabled={!canSubmit}
                     style={{
                       display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
@@ -202,9 +214,9 @@ export default function ReviewPopup() {
                       cursor: canSubmit ? "pointer" : "not-allowed",
                       boxShadow: canSubmit ? `0 12px 26px -12px ${ORANGE}` : "none",
                     }}>
-                    <Send size={16} /> Submit review
+                    {busy ? <><Loader2 size={16} className="cp-spin" /> Submitting…</> : <><Send size={16} /> Submit review</>}
                   </button>
-                  <div style={{ fontSize: 11.5, color: "#9ca3af", textAlign: "center" }}>Private · stored on your device · helps other students</div>
+                  <div style={{ fontSize: 11.5, color: "#9ca3af", textAlign: "center" }}>Shared with other students · helps them choose</div>
                 </div>
               </>
             )}

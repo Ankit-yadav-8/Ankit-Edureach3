@@ -1,21 +1,21 @@
 /* CollegeReviews — home section just below the rank predictor.
    Two paths:
      • "Give a review"  → an animated form (name, college, overall + hostel +
-        mess ratings, quick tags, free text). Saved to the shared review store.
-     • "See all reviews" → a search-bar-style college picker; choose a college
-        to read every review left for it (average rating, breakdown, comments).
-   Reviews are stored on the device and shared with the 2-minute popup. */
-import { useState, useEffect, useRef, useMemo } from "react";
+        mess ratings, quick tags, free-text comment). Saved server-side.
+     • "See all reviews" → a search-bar-style college picker (most-reviewed
+        shown first, search any college) → opens that college's reviews with
+        average rating, hostel/mess breakdown, tags and comments.
+   Reviews are stored server-side, so every visitor sees the same reviews. */
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Star, PenSquare, Search, ArrowLeft, Home as HomeIcon, Utensils, Send,
-  CheckCircle2, MessageSquareQuote, ChevronRight, Building2, Quote,
+  CheckCircle2, MessageSquareQuote, ChevronRight, Building2, Quote, Loader2,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
-import {
-  loadReviews, addReview, reviewOverall, groupByCollege, avg,
-  HOSTEL_TAGS, MESS_TAGS, REVIEWS_EVENT,
-} from "../../utils/reviews.js";
+import { reviewOverall, HOSTEL_TAGS, MESS_TAGS } from "../../utils/reviews.js";
+import { useAuth } from "../../auth/AuthContext.jsx";
+import { apiReviewColleges, apiReviewsForCollege, apiCreateReview } from "../../auth/api.js";
 
 /* ── Stars ─────────────────────────────────────────────────────── */
 function StarInput({ value, onChange, size = 24 }) {
@@ -92,7 +92,7 @@ function FormBlock({ icon: Icon, title, accent, rating, setRating, tags, allTags
 }
 
 /* ── GIVE A REVIEW ─────────────────────────────────────────────── */
-function GiveForm({ colleges, presetCollege, onBack, onSubmitted }) {
+function GiveForm({ token, colleges, presetCollege, onBack, onSubmitted }) {
   const [name, setName] = useState("");
   const [college, setCollege] = useState(presetCollege || "");
   const [overall, setOverall] = useState(0);
@@ -103,23 +103,29 @@ function GiveForm({ colleges, presetCollege, onBack, onSubmitted }) {
   const [mRating, setMRating] = useState(0);
   const [mTags, setMTags] = useState([]);
   const [mText, setMText] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
   const [done, setDone] = useState(false);
 
   const toggle = (list, set) => (t) => set(list.includes(t) ? list.filter((x) => x !== t) : [...list, t]);
-  const canSubmit = name.trim() && college.trim() && (overall || hRating || mRating);
+  const canSubmit = name.trim() && college.trim() && (overall || hRating || mRating) && !busy;
 
-  const submit = () => {
+  const submit = async () => {
     if (!canSubmit) return;
-    addReview({
-      name: name.trim(), college: college.trim(),
-      overall: overall || Math.round(reviewOverall({ hostel: { rating: hRating }, mess: { rating: mRating } })) || 0,
-      comment: comment.trim(),
-      hostel: { rating: hRating, tags: hTags, text: hText.trim() },
-      mess: { rating: mRating, tags: mTags, text: mText.trim() },
-      at: new Date().toISOString(),
-    });
-    setDone(true);
-    setTimeout(() => onSubmitted(college.trim()), 1500);
+    setBusy(true); setErr("");
+    try {
+      await apiCreateReview(token, {
+        name: name.trim(), college: college.trim(), overall,
+        comment: comment.trim(),
+        hostel: { rating: hRating, tags: hTags, text: hText.trim() },
+        mess: { rating: mRating, tags: mTags, text: mText.trim() },
+      });
+      setDone(true);
+      setTimeout(() => onSubmitted(college.trim()), 1400);
+    } catch (e) {
+      setErr(e?.message || "Could not submit your review. Please try again.");
+      setBusy(false);
+    }
   };
 
   if (done) {
@@ -171,7 +177,9 @@ function GiveForm({ colleges, presetCollege, onBack, onSubmitted }) {
       </div>
 
       <textarea value={comment} onChange={(e) => setComment(e.target.value)} rows={3} placeholder="Anything else about campus life, faculty, location…"
-        style={{ ...taStyle, marginBottom: 16 }} onFocus={(e) => (e.target.style.borderColor = CL.coral)} onBlur={(e) => (e.target.style.borderColor = CL.cream3)} />
+        style={{ ...taStyle, marginBottom: 14 }} onFocus={(e) => (e.target.style.borderColor = CL.coral)} onBlur={(e) => (e.target.style.borderColor = CL.cream3)} />
+
+      {err && <div style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", padding: "10px 12px", borderRadius: 10, fontSize: 13, marginBottom: 12, fontWeight: 600 }}>{err}</div>}
 
       <button onClick={submit} disabled={!canSubmit}
         style={{
@@ -181,7 +189,7 @@ function GiveForm({ colleges, presetCollege, onBack, onSubmitted }) {
           color: canSubmit ? "#fff" : CL.muted, fontFamily: CL.display, fontWeight: 800, fontSize: 15,
           cursor: canSubmit ? "pointer" : "not-allowed", boxShadow: canSubmit ? `0 12px 26px -12px ${CL.coral}` : "none",
         }}>
-        <Send size={16} /> Submit review
+        {busy ? <><Loader2 size={16} className="cp-spin" /> Submitting…</> : <><Send size={16} /> Submit review</>}
       </button>
     </motion.div>
   );
@@ -231,15 +239,30 @@ function ReviewCard({ r, i }) {
   );
 }
 
-/* ── SEE REVIEWS — search + per-college list ───────────────────── */
-function Browse({ colleges, reviews, onBack, onGiveFor }) {
+/* ── SEE REVIEWS — search + per-college list (server-backed) ───── */
+function Browse({ colleges, summary, initialCollege, onBack, onGiveFor }) {
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState(null);
-  const grouped = useMemo(() => groupByCollege(reviews), [reviews]);
+  const [selected, setSelected] = useState(initialCollege || null);
+  const [data, setData] = useState(null);     // { reviews, count, avg }
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!selected) { setData(null); return; }
+    let alive = true;
+    setLoading(true);
+    apiReviewsForCollege(selected)
+      .then((d) => { if (alive) setData(d); })
+      .catch(() => { if (alive) setData({ reviews: [], count: 0, avg: 0 }); })
+      .finally(() => { if (alive) setLoading(false); });
+    return () => { alive = false; };
+  }, [selected]);
+
+  const summaryMap = new Map(summary.map((s) => [s.college, s]));
+  const countFor = (name) => summaryMap.get(name)?.count || 0;
 
   if (selected) {
-    const list = grouped.get(selected) || [];
-    const overallAvg = avg(list.map((r) => reviewOverall(r)).filter(Boolean));
+    const list = data?.reviews || [];
+    const overallAvg = data?.avg || 0;
     return (
       <motion.div key="college" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }} style={panel}>
         <button onClick={() => setSelected(null)} className="cp-back-btn" style={{ marginBottom: 18 }}><ArrowLeft size={16} /> All colleges</button>
@@ -249,32 +272,38 @@ function Browse({ colleges, reviews, onBack, onGiveFor }) {
             <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.35rem", color: CL.ink, margin: 0 }}>{selected}</h3>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
               <StarRow value={overallAvg} size={16} />
-              <span style={{ fontWeight: 800, color: CL.ink, fontSize: 14 }}>{overallAvg.toFixed(1)}</span>
+              <span style={{ fontWeight: 800, color: CL.ink, fontSize: 14 }}>{overallAvg ? overallAvg.toFixed(1) : "—"}</span>
               <span style={{ color: CL.muted, fontSize: 13 }}>· {list.length} review{list.length !== 1 ? "s" : ""}</span>
             </div>
           </div>
           <button onClick={() => onGiveFor(selected)} style={ctaSm}><PenSquare size={15} /> Add yours</button>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          {list.map((r, i) => <ReviewCard key={i} r={r} i={i} />)}
-        </div>
+
+        {loading ? (
+          <div style={{ textAlign: "center", color: CL.muted, padding: "30px 10px" }}><Loader2 size={22} className="cp-spin" /> Loading reviews…</div>
+        ) : list.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "30px 16px" }}>
+            <div style={{ color: CL.body, fontSize: 14, marginBottom: 14 }}>No reviews yet for {selected}. Be the first!</div>
+            <button onClick={() => onGiveFor(selected)} style={ctaSm}><PenSquare size={15} /> Write the first review</button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {list.map((r, i) => <ReviewCard key={r.id || i} r={r} i={i} />)}
+          </div>
+        )}
       </motion.div>
     );
   }
 
   // college picker (search-bar style)
-  const withCounts = [...grouped.keys()].map((name) => ({ name, count: grouped.get(name).length }));
   const q = query.trim().toLowerCase();
-  const results = q
-    ? colleges.filter((c) => c.toLowerCase().includes(q)).slice(0, 40)
-    : withCounts.sort((a, b) => b.count - a.count).map((x) => x.name);
-  const countFor = (name) => grouped.get(name)?.length || 0;
+  const results = q ? colleges.filter((c) => c.toLowerCase().includes(q)).slice(0, 40) : summary.map((s) => s.college);
 
   return (
     <motion.div key="see" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }} style={panel}>
       <button onClick={onBack} className="cp-back-btn" style={{ marginBottom: 18 }}><ArrowLeft size={16} /> Back</button>
       <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.5rem", color: CL.ink, margin: "0 0 6px" }}>Browse college reviews</h3>
-      <p style={{ color: CL.body, fontSize: 14, margin: "0 0 16px" }}>{q ? "Pick a college to read its reviews." : reviews.length ? "Most-reviewed colleges — or search any college below." : "No reviews yet. Search a college and be the first to review it."}</p>
+      <p style={{ color: CL.body, fontSize: 14, margin: "0 0 16px" }}>{q ? "Pick a college to read its reviews." : summary.length ? "Most-reviewed colleges — or search any college below." : "No reviews yet. Search a college and be the first to review it."}</p>
 
       {/* search bar */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, background: "#fff", border: `1.5px solid ${CL.cream3}`, borderRadius: 14, padding: "11px 16px", marginBottom: 14, boxShadow: CL.shadow }}>
@@ -285,7 +314,9 @@ function Browse({ colleges, reviews, onBack, onGiveFor }) {
 
       <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 360, overflowY: "auto" }}>
         {results.length === 0 && (
-          <div style={{ textAlign: "center", color: CL.muted, padding: "26px 10px", fontSize: 14 }}>No colleges match “{query}”.</div>
+          <div style={{ textAlign: "center", color: CL.muted, padding: "26px 10px", fontSize: 14 }}>
+            {q ? `No colleges match “${query}”.` : "Search a college above to add the first review."}
+          </div>
         )}
         {results.map((name) => {
           const c = countFor(name);
@@ -308,19 +339,15 @@ function Browse({ colleges, reviews, onBack, onGiveFor }) {
 
 /* ── SECTION ───────────────────────────────────────────────────── */
 export default function CollegeReviews() {
+  const { token } = useAuth();
   const [view, setView] = useState("home");      // home | give | see
-  const [colleges, setColleges] = useState([]);
-  const [reviews, setReviews] = useState(loadReviews());
+  const [colleges, setColleges] = useState([]);  // full searchable list (lazy)
+  const [summary, setSummary] = useState([]);    // [{ college, count, avg }]
   const [preset, setPreset] = useState("");
   const loadedRef = useRef(false);
 
-  // keep reviews in sync when one is added anywhere
-  useEffect(() => {
-    const sync = () => setReviews(loadReviews());
-    window.addEventListener(REVIEWS_EVENT, sync);
-    window.addEventListener("storage", sync);
-    return () => { window.removeEventListener(REVIEWS_EVENT, sync); window.removeEventListener("storage", sync); };
-  }, []);
+  const refreshSummary = () => apiReviewColleges().then((d) => setSummary(d.colleges || [])).catch(() => {});
+  useEffect(() => { refreshSummary(); }, []);
 
   // lazily pull the (large) college list the first time the user leaves the chooser
   useEffect(() => {
@@ -331,9 +358,10 @@ export default function CollegeReviews() {
       .catch(() => setColleges([]));
   }, [view]);
 
-  const totalReviews = reviews.length;
-  const totalColleges = useMemo(() => groupByCollege(reviews).size, [reviews]);
+  const totalReviews = summary.reduce((a, c) => a + (c.count || 0), 0);
+  const totalColleges = summary.length;
   const openGiveFor = (name) => { setPreset(name); setView("give"); };
+  const afterSubmit = (name) => { refreshSummary(); setPreset(name); setView("see"); };
 
   return (
     <section id="college-reviews" style={{ background: CL.cream2, padding: "84px 0" }}>
@@ -360,8 +388,8 @@ export default function CollegeReviews() {
                   cta="Browse reviews" onClick={() => setView("see")} />
               </motion.div>
             )}
-            {view === "give" && <GiveForm key="give" colleges={colleges} presetCollege={preset} onBack={() => setView("home")} onSubmitted={(name) => { setPreset(name); setView("see"); }} />}
-            {view === "see" && <Browse key="see" colleges={colleges} reviews={reviews} onBack={() => setView("home")} onGiveFor={openGiveFor} />}
+            {view === "give" && <GiveForm key="give" token={token} colleges={colleges} presetCollege={preset} onBack={() => setView("home")} onSubmitted={afterSubmit} />}
+            {view === "see" && <Browse key="see" colleges={colleges} summary={summary} initialCollege={preset} onBack={() => { setPreset(""); setView("home"); }} onGiveFor={openGiveFor} />}
           </AnimatePresence>
         </div>
       </div>
