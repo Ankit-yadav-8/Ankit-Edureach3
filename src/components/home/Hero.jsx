@@ -1389,79 +1389,47 @@ function SixFeatureCards({ isMobile, isXs }) {
    via .hero-about-col (mobile shows the centre text only).
 ════════════════════════════════════════════════ */
 function HeroStoryCard() {
-  const nav = useNavigate();
   const [imgOk, setImgOk] = useState(true);
 
   return (
     <motion.div
-      className="hero-about-col"
+      className="hero-about-col cp-hero-img"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: 0.25 }}
-      whileHover={{ y: -4 }}
-      onClick={() => nav("/about")}
       style={{
-        position: "relative", width: "100%", aspectRatio: "4 / 5", minWidth: 0,
-        borderRadius: 24, overflow: "hidden", cursor: "pointer",
+        position: "relative", width: "100%", aspectRatio: "1 / 1", minWidth: 0,
+        borderRadius: 24, overflow: "hidden",
         border: "1px solid rgba(0,0,0,.06)",
         background: "linear-gradient(135deg, #1b1b2e, #0a0a1a)",
         boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 30px 60px -20px rgba(13,27,62,.28), 0 12px 18px -10px rgba(0,0,0,.10)",
       }}
     >
-      {/* campus image */}
+      {/* campus image — IIT Roorkee main building */}
       {imgOk && (
         <img
           src="/assets/team/IITs/IITs/IIT%20ROORKEE.jpg"
           alt="IIT Roorkee main building — where College Parichay was built"
           onError={() => setImgOk(false)}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 35%", transition: "transform .7s ease" }}
+          className="cp-hero-img__photo"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", transition: "transform .7s ease" }}
         />
       )}
 
-      {/* top pill — IIT Roorkee */}
+      {/* floating glass badge — Data Accuracy (reference style, bottom-left) */}
       <div style={{
-        position: "absolute", top: 14, left: 14, zIndex: 2,
-        display: "inline-flex", alignItems: "center", gap: 7,
-        background: "rgba(255,255,255,.92)", backdropFilter: "blur(6px)",
-        borderRadius: 50, padding: "6px 13px", boxShadow: "0 6px 18px rgba(0,0,0,.18)",
-      }}>
-        <GraduationCap size={15} color="#FF693D" />
-        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 12, color: "#1c1c28", letterSpacing: "-.2px" }}>IIT Roorkee</span>
-        <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", marginLeft: 1 }} />
-      </div>
-
-      {/* floating glass badge — rank accuracy (reference style) */}
-      <div style={{
-        position: "absolute", top: 14, right: 14, zIndex: 2,
-        display: "flex", alignItems: "center", gap: 9,
+        position: "absolute", bottom: 16, left: 16, zIndex: 2,
+        display: "flex", alignItems: "center", gap: 10,
         background: "rgba(255,255,255,.85)", backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,.35)",
-        borderRadius: 14, padding: "8px 11px", boxShadow: "0 8px 24px rgba(0,0,0,.18)",
+        borderRadius: 14, padding: "10px 13px", boxShadow: "0 10px 28px rgba(0,0,0,.20)",
       }}>
-        <span style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(15,174,110,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-          <Check size={17} color="#0FAE6E" />
+        <span style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(15,174,110,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+          <Check size={20} color="#0FAE6E" />
         </span>
         <div>
-          <div style={{ fontSize: 9.5, fontWeight: 700, color: "rgba(28,28,40,.6)", letterSpacing: ".3px" }}>Rank Accuracy</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: "#1c1c28", lineHeight: 1.1 }}>98%</div>
-        </div>
-      </div>
-
-      {/* bottom gradient + story */}
-      <div style={{
-        position: "absolute", left: 0, right: 0, bottom: 0, zIndex: 2,
-        padding: "56px 20px 20px",
-        background: "linear-gradient(to top, rgba(7,7,18,.95) 16%, rgba(7,7,18,.72) 48%, transparent)",
-      }}>
-        <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "1.8px", textTransform: "uppercase", color: "#fdba74", marginBottom: 8 }}>
-          Our Story
-        </div>
-        <p style={{ margin: 0, fontFamily: "'Georgia','Times New Roman',serif", fontStyle: "italic", fontWeight: 500, fontSize: 15.5, lineHeight: 1.6, color: "#fff", letterSpacing: "-.005em" }}>
-          Made by <span style={{ color: "#FF9d76", fontWeight: 700 }}>Ankit Yadav &amp; Ankit Kumar</span>, two IIT Roorkee students —<br />
-          who lived the JoSAA chaos and built this free for every aspirant after them.
-        </p>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 14, color: "#fff", fontWeight: 800, fontFamily: "Sora", fontSize: 12.5 }}>
-          Read our story <ArrowRight size={14} />
+          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(28,28,40,.6)", letterSpacing: ".3px" }}>Data Accuracy</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 20, color: "#1c1c28", lineHeight: 1.1, marginTop: 1 }}>98.5%</div>
         </div>
       </div>
     </motion.div>
@@ -1698,7 +1666,7 @@ export default function Hero({ onSearch }) {
               }}
             >
               <button
-                onClick={() => nav("/jee-main#college")}
+                onClick={() => nav("/community")}
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
                   padding: isXs ? "12px 20px" : "14px 26px", borderRadius: 12, cursor: "pointer",
@@ -1710,11 +1678,11 @@ export default function Hero({ onSearch }) {
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#E0421F"; e.currentTarget.style.borderColor = "#E0421F"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#FF693D"; e.currentTarget.style.borderColor = "#FF693D"; }}
               >
-                Predict My Rank <ArrowRight size={16} />
+                Join Community <ArrowRight size={16} />
               </button>
 
               <button
-                onClick={() => nav("/mentorship/jee-2027")}
+                onClick={() => nav("/blog")}
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
                   padding: isXs ? "12px 20px" : "14px 26px", borderRadius: 12, cursor: "pointer",
@@ -1725,7 +1693,7 @@ export default function Hero({ onSearch }) {
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#1c1c28"; e.currentTarget.style.borderColor = "#1c1c28"; e.currentTarget.style.color = "#fff"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(28,28,40,.18)"; e.currentTarget.style.color = "#1c1c28"; }}
               >
-                Book Free Counselling
+                Blog
               </button>
             </motion.div>
 
