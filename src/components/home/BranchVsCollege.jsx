@@ -161,7 +161,7 @@ function Tower({ pct, color, soft, label, points, big }) {
           transition={{ type: "spring", stiffness: 90, damping: 14 }}
           style={{ position: "relative", width: "100%", background: `linear-gradient(180deg, ${color}, ${color}cc)`, display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 8, borderTopLeftRadius: 11, borderTopRightRadius: 11, boxShadow: `0 -3px 22px ${color}66` }}
         >
-          <span style={{ color: "#fff", fontFamily: CL.display, fontWeight: 800, fontSize: big ? 16 : 14, fontStyle: "italic", position: "relative", zIndex: 1 }}>{shown}%</span>
+          <span style={{ color: "#fff", fontFamily: CL.display, fontWeight: 800, fontSize: big ? 16 : 14, position: "relative", zIndex: 1 }}>{shown}%</span>
           {/* glossy shine sweeping up the bar */}
           <motion.span aria-hidden
             initial={{ y: "130%" }} animate={{ y: ["130%", "-130%"] }}
@@ -214,7 +214,7 @@ export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total
       {/* live readout */}
       <div style={{ textAlign: "center", margin: big ? "12px 0 16px" : "8px 0 14px", position: "relative" }}>
         <motion.div animate={{ color: leadColor }} transition={{ duration: 0.4 }}
-          style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 44 : 38, color: leadColor, lineHeight: 1, fontStyle: "italic" }}>
+          style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 44 : 38, color: leadColor, lineHeight: 1 }}>
           {sum ? `${shownLead}%` : "50 / 50"}
         </motion.div>
         <motion.div key={`${even}-${leadCollege}-${!!sum}`} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
@@ -226,7 +226,7 @@ export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total
       {/* twin towers */}
       <div style={{ display: "flex", alignItems: "flex-end", gap: big ? 22 : 16, justifyContent: "center", position: "relative" }}>
         <Tower pct={branchPct} color={CL.coral} soft={CL.coralSoft} label="Branch" points={tally.b} big={big} />
-        <span style={{ fontFamily: CL.display, fontWeight: 800, fontStyle: "italic", fontSize: big ? 14 : 12, color: CL.muted, paddingBottom: big ? 64 : 52 }}>vs</span>
+        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 14 : 12, color: CL.muted, paddingBottom: big ? 64 : 52 }}>vs</span>
         <Tower pct={collegePct} color={CL.green} soft={CL.greenSoft} label="College" points={tally.c} big={big} />
       </div>
 

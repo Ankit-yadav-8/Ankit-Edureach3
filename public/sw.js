@@ -1,6 +1,6 @@
 /* Minimal service worker — caches the app shell for offline/installable PWA.
    Paths are relative so it works under the GitHub Pages repo subpath. */
-const CACHE = "edureach-v6";
+const CACHE = "edureach-v7";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./favicon.svg"];
 
 self.addEventListener("install", (e) => {

@@ -74,7 +74,7 @@ function ReviewBlock({ icon: Icon, title, accent, rating, setRating, tags, allTa
           <span style={{ width: 30, height: 30, borderRadius: 9, background: `${accent}16`, display: "grid", placeItems: "center" }}>
             <Icon size={16} color={accent} />
           </span>
-          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: "#211D2E", fontStyle: "italic" }}>{title}</span>
+          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: "#211D2E" }}>{title}</span>
         </div>
         <Stars value={rating} onChange={setRating} />
       </div>
