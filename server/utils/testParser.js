@@ -172,26 +172,107 @@ function parseKeyGrid(clean) {
   return map;
 }
 
+// ── LLM converter (Groq) ─────────────────────────────────────────────────────
+// Real exam PDFs vary too much for regex alone, so when the rules parser does
+// poorly we hand the extracted text to an LLM and ask for structured questions.
+// Returns a normalised question array, or null if unavailable/failed.
+const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+
+const LLM_SYS =
+  "You convert a raw exam paper into structured JSON for a computer-based test (CBT). " +
+  'Output ONLY valid JSON of the form {"questions":[{"qno":1,"text":"...","type":"single","options":[{"key":"1","text":"..."},{"key":"2","text":"..."},{"key":"3","text":"..."},{"key":"4","text":"..."}],"correct":"1"}]}. ' +
+  "Rules: keep the original question order and numbering; normalise option labels to \"1\",\"2\",\"3\",\"4\" (map A/B/C/D to 1/2/3/4); for numerical/integer-answer questions set type to \"integer\", options to [] and correct to the number; " +
+  "use the provided ANSWER KEY to fill each correct field (\"1\"-\"4\" for MCQ, the number for integer); if an answer is missing set correct to \"\"; keep text plain and concise; do NOT invent questions or answers. Output JSON only, no prose.";
+
+async function parseWithLLM(qText, kText) {
+  if (!process.env.GROQ_API_KEY) return null;
+  const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+  const user =
+    `QUESTION PAPER (raw text):\n${qText.slice(0, 45000)}\n\n` +
+    `ANSWER KEY (raw text):\n${(kText || "(none provided)").slice(0, 8000)}`;
+  let res;
+  try {
+    res = await fetch(GROQ_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
+      body: JSON.stringify({
+        model,
+        temperature: 0,
+        max_tokens: 8000,
+        response_format: { type: "json_object" },
+        messages: [{ role: "system", content: LLM_SYS }, { role: "user", content: user }],
+      }),
+    });
+  } catch { return null; }
+  if (!res.ok) return null;
+  let content;
+  try { content = (await res.json()).choices?.[0]?.message?.content || ""; } catch { return null; }
+
+  let parsed;
+  try { parsed = JSON.parse(content); }
+  catch {
+    const m = content.match(/\{[\s\S]*\}/);
+    if (!m) return null;
+    try { parsed = JSON.parse(m[0]); } catch { return null; }
+  }
+  const arr = Array.isArray(parsed) ? parsed : parsed?.questions;
+  if (!Array.isArray(arr) || !arr.length) return null;
+
+  return arr.slice(0, 200).map((q, i) => {
+    const type = q?.type === "integer" ? "integer" : "single";
+    const options = type === "single" && Array.isArray(q?.options)
+      ? q.options.slice(0, 4).map((o, j) => ({ key: normalizeAnswer(o?.key) || String(j + 1), text: String(o?.text || "").slice(0, 1000) }))
+      : [];
+    return {
+      qno: Number(q?.qno) || i + 1,
+      text: String(q?.text || "").slice(0, 4000),
+      options,
+      type,
+      subject: String(q?.subject || "").slice(0, 40),
+      correct: normalizeAnswer(q?.correct),
+    };
+  });
+}
+
 // Parse both PDFs and merge the answer key into the questions. Returns the
 // questions array plus a human-readable note for the admin review screen.
+// Strategy: try the fast rules parser; if it does poorly but the PDF has a text
+// layer, fall back to the LLM converter. A PDF with no text layer is scanned and
+// can't be auto-read — the admin then fills the grid manually.
 export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
   const [qText, kText] = await Promise.all([
     fetchPdfText(testPdfUrl),
     keyPdfUrl ? fetchPdfText(keyPdfUrl) : Promise.resolve(""),
   ]);
 
-  const questions = parseQuestions(qText);
+  let questions = parseQuestions(qText);
   const key = parseAnswerKey(kText);
-
   let matched = 0;
   for (const q of questions) {
     const a = key[q.qno];
     if (a) { q.correct = a; matched++; }
   }
+  let method = "rules";
 
-  const note = questions.length
-    ? `Parsed ${questions.length} question${questions.length === 1 ? "" : "s"}; answer key matched ${matched}/${questions.length}.`
-    : "No questions could be read from the PDF (it may be scanned/image-only). Add them manually below.";
+  const textLen = qText.trim().length;
+  const poor = questions.length === 0 || matched < Math.ceil(questions.length / 2);
+  if (poor && textLen > 40 && process.env.GROQ_API_KEY) {
+    const llm = await parseWithLLM(qText, kText);
+    if (llm && llm.length >= questions.length) {
+      questions = llm;
+      matched = llm.filter((q) => q.correct).length;
+      method = "AI";
+    }
+  }
 
-  return { questions, matched, note };
+  let note;
+  if (questions.length) {
+    note = `Converted ${questions.length} question${questions.length === 1 ? "" : "s"} (${method === "AI" ? "AI" : "auto"}); answer key matched ${matched}/${questions.length}. Review below before publishing.`;
+  } else if (textLen === 0) {
+    note = "This PDF has no text layer — it's a scanned image/photo, so it can't be auto-read. Add questions manually below (students still see the uploaded paper).";
+  } else {
+    note = `Read ${textLen} characters of text but couldn't detect the question format automatically. Add questions manually below.`;
+  }
+
+  return { questions, matched, note, method };
 }
