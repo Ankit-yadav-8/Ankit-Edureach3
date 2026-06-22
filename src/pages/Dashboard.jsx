@@ -355,7 +355,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <section id="top" style={{ background: "#f4f5f9", padding: "100px 0 24px" }}>
+    <section id="top" style={{ background: "#f4f5f9", padding: "112px 0 24px" }}>
       <div className="dash-shell" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 18px" }}>
 
         {/* ── Left sidebar ── */}
@@ -470,8 +470,9 @@ export default function Dashboard() {
           </Reveal>
 
           {/* Enrolled plans + Upcoming live sessions */}
-          <Reveal><div className="dash-two">
-            <Panel id="enrolled-plans" title="Your enrolled plans" icon={CheckCircle2} iconColor={GREEN}
+          <div className="dash-two">
+            <Reveal style={{ height: "100%" }}>
+            <Panel id="enrolled-plans" title="Your enrolled plans" icon={CheckCircle2} iconColor={GREEN} style={{ height: "100%" }}
               action={<ViewAll onClick={() => navigate("/mentorship")} />}>
               {loading ? (
                 <div style={{ padding: "24px", textAlign: "center", color: "#9ca3af" }}><Loader2 size={20} className="dash-spin" /> Loading…</div>
@@ -525,8 +526,10 @@ export default function Dashboard() {
                 </div>
               )}
             </Panel>
+            </Reveal>
 
-            <Panel id="live-sessions" title="Upcoming live sessions" icon={Video} iconColor={INDIGO}
+            <Reveal delay={0.1} style={{ height: "100%" }}>
+            <Panel id="live-sessions" title="Upcoming live sessions" icon={Video} iconColor={INDIGO} style={{ height: "100%" }}
               action={<ViewAll onClick={() => navigate("/mentorship-dashboard")} />}>
               <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
                 {LIVE_SESSIONS.map((s) => (
@@ -548,11 +551,13 @@ export default function Dashboard() {
                 ))}
               </div>
             </Panel>
-          </div></Reveal>
+            </Reveal>
+          </div>
 
           {/* Performance overview + Quick actions / Achievements */}
-          <Reveal><div className="dash-perf">
-            <Panel id="performance" title="Performance overview" icon={BarChart3} iconColor={ORANGE}
+          <div className="dash-perf">
+            <Reveal style={{ height: "100%" }}>
+            <Panel id="performance" title="Performance overview" icon={BarChart3} iconColor={ORANGE} style={{ height: "100%" }}
               action={<span style={{ fontSize: 11.5, fontWeight: 700, color: "#475067", border: `1px solid ${CARD_LINE}`, borderRadius: 8, padding: "4px 10px" }}>This Month</span>}>
               <div className="dash-perf-inner">
                 <div style={{ minWidth: 0 }}>
@@ -585,8 +590,10 @@ export default function Dashboard() {
                 </div>
               </div>
             </Panel>
+            </Reveal>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 16, minWidth: 0 }}>
+            <Reveal delay={0.1} style={{ height: "100%" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, minWidth: 0, height: "100%" }}>
               <Panel title="Quick actions" icon={Zap} iconColor="#f59e0b">
                 <div className="dash-quick">
                   {QUICK_ACTIONS.map(({ label, icon: Icon, color, to }) => (
@@ -626,7 +633,8 @@ export default function Dashboard() {
                 </div>
               </Panel>
             </div>
-          </div></Reveal>
+            </Reveal>
+          </div>
         </main>
       </div>
 
@@ -667,8 +675,8 @@ export default function Dashboard() {
         .dash-side{width:228px;flex-shrink:0;position:sticky;top:92px}
         .dash-info{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 22px}
         .dash-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-        .dash-two{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:start}
-        .dash-perf{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;align-items:start}
+        .dash-two{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:stretch}
+        .dash-perf{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;align-items:stretch}
         .dash-perf-inner{display:grid;grid-template-columns:1fr 150px;gap:14px;align-items:start}
         .dash-quick{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
         .dash-badges{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
