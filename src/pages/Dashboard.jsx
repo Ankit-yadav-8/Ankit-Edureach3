@@ -246,6 +246,21 @@ function Sparkline({ points, color }) {
   );
 }
 
+/* ── Scroll-reveal wrapper — sections fade + rise in as they enter view ── */
+function Reveal({ children, delay = 0, style }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1], delay }}
+      style={style}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 /* ── Right-aligned "View all" link used in section headers ── */
 const ViewAll = ({ onClick }) => (
   <button onClick={onClick} style={{ background: "transparent", border: "none", color: ORANGE, fontFamily: "Sora", fontWeight: 700, fontSize: 12, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 3 }}>
@@ -340,7 +355,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <section id="top" style={{ background: "#f4f5f9", minHeight: "100vh", padding: "100px 0 60px" }}>
+    <section id="top" style={{ background: "#f4f5f9", padding: "100px 0 24px" }}>
       <div className="dash-shell" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 18px" }}>
 
         {/* ── Left sidebar ── */}
@@ -431,7 +446,7 @@ export default function Dashboard() {
           </div>
 
           {/* Profile details — ONE compact card, 3-col grid */}
-          <div style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, boxShadow: CARD_SHADOW, padding: "16px 18px" }}>
+          <Reveal style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, boxShadow: CARD_SHADOW, padding: "16px 18px" }}>
             <div className="dash-info">
               {details.map(({ label, value, icon: Icon }) => (
                 <div key={label} style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
@@ -445,15 +460,17 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-          </div>
+          </Reveal>
 
           {/* Stats row */}
-          <div className="dash-stats">
-            {stats.map((s) => <StatCard key={s.label} {...s} />)}
-          </div>
+          <Reveal>
+            <div className="dash-stats">
+              {stats.map((s) => <StatCard key={s.label} {...s} />)}
+            </div>
+          </Reveal>
 
           {/* Enrolled plans + Upcoming live sessions */}
-          <div className="dash-two">
+          <Reveal><div className="dash-two">
             <Panel id="enrolled-plans" title="Your enrolled plans" icon={CheckCircle2} iconColor={GREEN}
               action={<ViewAll onClick={() => navigate("/mentorship")} />}>
               {loading ? (
@@ -531,10 +548,10 @@ export default function Dashboard() {
                 ))}
               </div>
             </Panel>
-          </div>
+          </div></Reveal>
 
           {/* Performance overview + Quick actions / Achievements */}
-          <div className="dash-perf">
+          <Reveal><div className="dash-perf">
             <Panel id="performance" title="Performance overview" icon={BarChart3} iconColor={ORANGE}
               action={<span style={{ fontSize: 11.5, fontWeight: 700, color: "#475067", border: `1px solid ${CARD_LINE}`, borderRadius: 8, padding: "4px 10px" }}>This Month</span>}>
               <div className="dash-perf-inner">
@@ -609,7 +626,7 @@ export default function Dashboard() {
                 </div>
               </Panel>
             </div>
-          </div>
+          </div></Reveal>
         </main>
       </div>
 
