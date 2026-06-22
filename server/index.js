@@ -14,6 +14,7 @@ import publicCommunityRoutes from "./routes/publicCommunity.js";
 import reviewRoutes from "./routes/reviews.js";
 import adminRoutes from "./routes/admin.js";
 import aiRoutes from "./routes/ai.js";
+import testRoutes from "./routes/tests.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 
 dotenv.config();
@@ -42,6 +43,10 @@ app.use((_req, res, next) => {
 // needs a roomier body than the rest of the API — parse it first, then the
 // strict 16kb parser below becomes a no-op for these requests.
 app.use("/api/ai", express.json({ limit: "2mb" }));
+
+// Test papers carry many parsed questions, so they need a roomier body than the
+// strict 16kb parser below (which then no-ops for these requests).
+app.use("/api/tests", express.json({ limit: "2mb" }));
 
 // Reject oversized payloads early — these endpoints only ever take small JSON.
 app.use(express.json({ limit: "16kb" }));
@@ -89,6 +94,7 @@ app.use("/api/reviews", apiLimiter, reviewRoutes);
 // AI assistant — moderate per-minute cap (streaming replies are expensive).
 const aiLimiter = rl({ windowMs: 60 * 1000, max: 30 });
 app.use("/api/ai", aiLimiter, aiRoutes);
+app.use("/api/tests", apiLimiter, testRoutes);
 
 connectDB()
   .then(() => {

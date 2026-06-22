@@ -49,6 +49,44 @@ export async function getUploadSignature(token, signFn = apiCommunitySignUpload,
   return signFn(token, plan);
 }
 
+// Largest PDF we accept for a test paper / answer key.
+export const MAX_PDF_MB = 25;
+
+export function validatePdf(file) {
+  const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name || "");
+  if (!isPdf) return "Please choose a PDF file.";
+  if (file.size / (1024 * 1024) > MAX_PDF_MB) return `PDF is too large (max ${MAX_PDF_MB} MB).`;
+  return null;
+}
+
+// Upload a PDF (test paper / answer key) to Cloudinary and return its URL.
+// Uses the same signed direct-upload flow; only the secure_url matters here.
+export async function uploadPdf(file, sig, onProgress) {
+  const { signature, timestamp, apiKey, cloudName, folder } = sig;
+  const form = new FormData();
+  form.append("file", file);
+  form.append("api_key", apiKey);
+  form.append("timestamp", timestamp);
+  form.append("signature", signature);
+  form.append("folder", folder);
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
+  const res = await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.upload.onprogress = (e) => { if (e.lengthComputable && onProgress) onProgress(Math.round((e.loaded / e.total) * 100)); };
+    xhr.onload = () => {
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300) resolve(data);
+        else reject(new Error(data?.error?.message || "Upload failed"));
+      } catch { reject(new Error("Upload failed")); }
+    };
+    xhr.onerror = () => reject(new Error("Upload failed — check your connection."));
+    xhr.send(form);
+  });
+  return res.secure_url;
+}
+
 // Upload one file straight to Cloudinary with a pre-fetched signature.
 // The file bytes go browser → Cloudinary directly; our API only sees the URL.
 export async function uploadToCloudinary(file, sig, onProgress) {

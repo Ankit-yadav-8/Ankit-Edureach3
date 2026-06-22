@@ -12,6 +12,7 @@ import {
 import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiSendParentReport } from "../auth/api.js";
 import Community from "../components/mentorship/Community.jsx";
+import TestSeries from "../components/mentorship/TestSeries.jsx";
 import { Trend, Gauge, PieWithLegend, Bars } from "../components/Charts.jsx";
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
 
@@ -99,6 +100,7 @@ const SECTIONS = [
   { id: "test-analysis",   label: "Tests",           icon: LineIcon,  color: "#8b5cf6" },
   { id: "mentor-tools",    label: "Mentor tools",    icon: Brain,     color: GOLD },
   { id: "backlog",         label: "Backlog",         icon: Rocket,    color: "#7c3aed" },
+  { id: "test-series",     label: "CBT Tests",       icon: ListChecks, color: "#0ea5a4" },
   { id: "community",       label: "Community",       icon: MessagesSquare, color: "#0ea5e9" },
   { id: "parent-report",   label: "Reports",         icon: Mail,      color: GREEN },
 ];
@@ -1742,6 +1744,12 @@ function DashboardBody({ urlPlan = "" }) {
               </div>
             )}
           </div>
+        </Section>
+
+        {/* ── CBT TEST SERIES ── */}
+        <Section id="test-series" kicker="Daily · Weekly · Full tests" title="CBT Test Series" tColor="#0ea5a4"
+          sub="Attempt your mentor's uploaded tests in NTA-style CBT mode. They're auto-graded against the answer key the moment you submit, and your score flows into the performance stats below.">
+          <TestSeries plan={selectedPlan || urlPlan || undefined} />
         </Section>
 
         {/* ── BATCH COMMUNITY ── */}

@@ -76,6 +76,34 @@ export const apiPublicReply       = (token, id, b) => req(`/api/public-community
 export const apiPublicLikeReply   = (token, id) => req(`/api/public-community/replies/${id}/like`, { method: "POST", token });
 export const apiPublicSignUpload  = (token) => req("/api/public-community/sign-upload", { method: "POST", body: {}, token });
 
+// ── Test series (CBT) ───────────────────────────────────────────────────────
+// Admin endpoints use the x-admin-token header (passed via `adminToken`); the
+// student endpoints use the normal Bearer token and are scoped to the batch.
+function adminReq(path, adminToken, { method = "GET", body } = {}) {
+  return fetch(API_BASE + path, {
+    method,
+    headers: { "Content-Type": "application/json", "x-admin-token": adminToken },
+    cache: "no-store",
+    body: body ? JSON.stringify(body) : undefined,
+  }).then(async (res) => {
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) { const e = new Error(data.error || `Server error ${res.status}`); e.status = res.status; throw e; }
+    return data;
+  });
+}
+
+export const apiAdminTestSignUpload = (adminToken, plan) => adminReq("/api/tests/admin/sign-upload", adminToken, { method: "POST", body: { plan } });
+export const apiAdminTestParse      = (adminToken, b) => adminReq("/api/tests/admin/parse", adminToken, { method: "POST", body: b });
+export const apiAdminTestCreate     = (adminToken, b) => adminReq("/api/tests/admin", adminToken, { method: "POST", body: b });
+export const apiAdminTestList       = (adminToken, plan, category) => adminReq(`/api/tests/admin${batchQ(plan, category ? `category=${category}` : "")}`, adminToken);
+export const apiAdminTestDelete     = (adminToken, id) => adminReq(`/api/tests/admin/${id}`, adminToken, { method: "DELETE" });
+
+export const apiTestList        = (token, plan, category) => req(`/api/tests${batchQ(plan, category ? `category=${category}` : "")}`, { token });
+export const apiTestGet         = (token, id, plan) => req(`/api/tests/${id}${batchQ(plan)}`, { token });
+export const apiTestSubmit      = (token, id, b, plan) => req(`/api/tests/${id}/submit${batchQ(plan)}`, { method: "POST", body: b, token });
+export const apiTestResult      = (token, id, plan) => req(`/api/tests/${id}/result${batchQ(plan)}`, { token });
+export const apiTestPerformance = (token, plan) => req(`/api/tests/performance${batchQ(plan)}`, { token });
+
 // ── College reviews (hostel & mess) — reading is public, writing needs auth ──
 export const apiReviewColleges   = () => req("/api/reviews/colleges");
 export const apiReviewsForCollege = (college) => req(`/api/reviews?college=${encodeURIComponent(college)}`);
