@@ -2,9 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, CartesianGrid,
+} from "recharts";
+import {
   User, Mail, Phone, MapPin, GraduationCap, Hash, Calendar, LogOut,
   CreditCard, CheckCircle2, ArrowRight, Sparkles, ShieldCheck, BookOpen, Loader2,
   Check, Compass, Pencil, X, LayoutDashboard, Users, HelpCircle, Settings, Rocket,
+  Clock, Video, ClipboardList, FileText, BarChart3, UserCheck, Award, Crosshair,
+  MessageCircle, NotebookPen, PlayCircle, TrendingUp, Zap, Target, Flame, Medal,
+  Star, Crown, Lock, Trophy, ChevronRight,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { useEnrol } from "../components/EnrolModal.jsx";
@@ -14,6 +20,8 @@ const ORANGE = "#FF693D";
 const GOLD = "#FF693D";
 const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
+const INDIGO = "#6366f1";
+const TEAL = "#0ea5a4";
 
 /* hex → rgba helper for translucent accent washes (matches home bento cards) */
 const tint = (hex, a) => {
@@ -74,6 +82,38 @@ const QUICK_LINKS = [
   { label: "NEET Prep",           desc: "Biology · Physics · Chem",  to: "/neet",            color: "#0ea5a4", icon: BookOpen },
   { label: "College Predictor",   desc: "Rank → college list",       to: "/jee-main#college", color: "#FF693D", icon: Sparkles },
   { label: "Counselling Planner", desc: "Every JoSAA & CSAB date",   to: "/planner",         color: "#15a06e", icon: Calendar },
+];
+
+/* ── Demo learning data — UI scaffold for the activity widgets. These mirror the
+      design mockup; wire to real progress endpoints when the backend exists. ── */
+const PERF_DATA = [
+  { m: "Jan", s: 62 }, { m: "Feb", s: 68 }, { m: "Mar", s: 64 }, { m: "Apr", s: 72 },
+  { m: "May", s: 70 }, { m: "Jun", s: 78 }, { m: "Jul", s: 75 }, { m: "Aug", s: 82 },
+  { m: "Sep", s: 80 }, { m: "Oct", s: 85 }, { m: "Nov", s: 83 }, { m: "Dec", s: 88 },
+];
+
+const LIVE_SESSIONS = [
+  { subject: "Physics",     topic: "Current Electricity",   when: "Today · 6:00 PM",     color: INDIGO,  live: true },
+  { subject: "Mathematics", topic: "Quadratic Equations",   when: "Tomorrow · 5:00 PM",  color: ORANGE,  live: false },
+  { subject: "Chemistry",   topic: "Chemical Bonding",      when: "Wed · 7:00 PM",       color: TEAL,    live: false },
+];
+
+const QUICK_ACTIONS = [
+  { label: "Take a Test",   icon: FileText,      color: INDIGO,  to: "/jee-resources" },
+  { label: "Ask Doubt",     icon: MessageCircle, color: ORANGE,  to: "/ai" },
+  { label: "Study Notes",   icon: NotebookPen,   color: TEAL,    to: "/jee-resources" },
+  { label: "My Schedule",   icon: Calendar,      color: "#8b5cf6", to: "/planner" },
+  { label: "Predict Rank",  icon: Crosshair,     color: GREEN,   to: "/jee-main#rank" },
+  { label: "Find Colleges", icon: Compass,       color: "#0ea5e9", to: "/for-you" },
+];
+
+const ACHIEVEMENTS = [
+  { label: "First Steps",     desc: "Joined College Parichay", icon: Star,     color: ORANGE,  unlocked: true },
+  { label: "Test Taker",      desc: "Attempted 10+ tests",     icon: FileText,  color: INDIGO,  unlocked: true },
+  { label: "On Fire",         desc: "7-day study streak",      icon: Flame,     color: "#ef4444", unlocked: true },
+  { label: "Top Performer",   desc: "80%+ average score",      icon: Trophy,    color: "#f59e0b", unlocked: false },
+  { label: "Century",         desc: "Solved 100 doubts",       icon: Medal,     color: TEAL,    unlocked: false },
+  { label: "Champion",        desc: "#1 in your batch",        icon: Crown,     color: "#8b5cf6", unlocked: false },
 ];
 
 const sectionTitle = {
@@ -253,6 +293,44 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
   );
 }
 
+/* ── A reusable section panel — white card with title + optional action ── */
+function Panel({ id, title, icon: Icon, iconColor = ORANGE, action, children, style }) {
+  return (
+    <section id={id} style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 18, boxShadow: CARD_SHADOW, padding: "20px 22px", ...style }}>
+      {title && (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16 }}>
+          <h2 style={sectionTitle}>{Icon && <Icon size={18} color={iconColor} />} {title}</h2>
+          {action}
+        </div>
+      )}
+      {children}
+    </section>
+  );
+}
+
+/* ── Top stat card — icon, value, label and a small trend pill ── */
+function StatCard({ icon: Icon, value, label, color, trend }) {
+  return (
+    <motion.div whileHover={{ y: -3 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
+      style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, boxShadow: CARD_SHADOW, padding: "16px 16px 14px", display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <span style={{ width: 40, height: 40, borderRadius: 12, background: tint(color, 0.12), display: "grid", placeItems: "center", flexShrink: 0 }}>
+          <Icon size={20} color={color} />
+        </span>
+        {trend && (
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 11, fontWeight: 800, color: GREEN, background: tint(GREEN, 0.1), borderRadius: 50, padding: "3px 8px" }}>
+            <TrendingUp size={11} /> {trend}
+          </span>
+        )}
+      </div>
+      <div>
+        <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 24, color: NAVY, lineHeight: 1.1 }}>{value}</div>
+        <div style={{ fontSize: 12, color: "#9ca3af", fontWeight: 600, marginTop: 3 }}>{label}</div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Dashboard() {
   const { user, token, isLoggedIn, logout, openLogin, updateUser } = useAuth();
   const { open: openEnrol } = useEnrol() || {};
@@ -296,42 +374,66 @@ export default function Dashboard() {
     );
   }
 
-  const details = [
-    { label: "Full name",         value: user?.name,            icon: User },
-    { label: "Email",             value: user?.email,           icon: Mail },
-    { label: "Phone",             value: user?.phone,           icon: Phone },
-    { label: "Coaching",          value: user?.coaching,        icon: GraduationCap },
-    { label: "Home state",        value: user?.homeState,       icon: MapPin },
-    { label: "JEE Main rank",     value: user?.jeeMainsRank,    icon: Hash },
-    { label: "JEE Advanced rank", value: user?.jeeAdvancedRank, icon: Hash },
-    { label: "Member since",      value: fmtDate(user?.createdAt), icon: Calendar },
+  const firstName = (user?.name || "").trim().split(" ")[0] || "Student";
+
+  // Compact profile chips shown across the top of the main column.
+  const profileCards = [
+    { label: "Name",         value: user?.name || "Student",      icon: User,          color: ORANGE },
+    { label: "Email",        value: user?.email || "—",           icon: Mail,          color: INDIGO },
+    { label: "Phone",        value: user?.phone || "—",           icon: Phone,         color: TEAL },
+    { label: "Coaching",     value: user?.coaching || "—",        icon: GraduationCap, color: "#8b5cf6" },
+    { label: "Home state",   value: user?.homeState || "—",       icon: MapPin,        color: GREEN },
+    { label: "Member since", value: fmtDate(user?.createdAt),      icon: Calendar,      color: "#f59e0b" },
   ];
 
   const enrolledKeys = new Set(plans.map((p) => p.plan));
   const hasAnyPlan = plans.length > 0;
 
+  // Top metrics — "Courses enrolled" is real (from enrollments); the learning
+  // activity figures are UI scaffold until the progress backend lands.
+  const stats = [
+    { icon: BookOpen, value: plans.length, label: "Courses Enrolled", color: ORANGE, trend: plans.length ? `+${plans.length}` : null },
+    { icon: Clock,    value: "48.5",       label: "Study Hours",      color: INDIGO,  trend: "+12" },
+    { icon: FileText, value: "18",         label: "Tests Attempted",  color: TEAL,    trend: "+5" },
+    { icon: Target,   value: "82%",        label: "Avg Score",        color: GREEN,   trend: "+4%" },
+    { icon: Zap,      value: "620",        label: "Reward Points",    color: "#f59e0b", trend: "+620" },
+  ];
+
+  const goTo = (to) => {
+    if (!to) return;
+    if (to.startsWith("#")) {
+      document.getElementById(to.slice(1))?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      navigate(to);
+    }
+  };
+
   const navItems = [
-    { label: "Dashboard",        icon: LayoutDashboard, to: "/dashboard",     active: true },
-    { label: "Mentorship Plans", icon: GraduationCap,   to: "/mentorship" },
-    { label: "Resource Center",  icon: BookOpen,        to: "/jee-resources" },
-    { label: "Community",        icon: Users,           to: "/community" },
-    { label: "Help Center",      icon: HelpCircle,      to: "/how-to-use" },
+    { label: "Dashboard",     icon: LayoutDashboard, to: "#top",            active: true },
+    { label: "My Plans",      icon: CreditCard,      to: "#enrolled-plans" },
+    { label: "Live Sessions", icon: Video,           to: "#live-sessions" },
+    { label: "Assignments",   icon: ClipboardList,   to: "/mentorship-dashboard" },
+    { label: "Test Series",   icon: FileText,        to: "/jee-resources" },
+    { label: "Performance",   icon: BarChart3,       to: "#performance" },
+    { label: "Resources",     icon: BookOpen,        to: "/jee-resources" },
+    { label: "Mentor Connect",icon: UserCheck,       to: "/mentorship-dashboard" },
+    { label: "Community",     icon: Users,           to: "/community" },
+    { label: "Certificates",  icon: Award,           to: "#achievements" },
   ];
 
   const scrollToPlans = () => {
-    const el = document.getElementById("all-plans");
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("all-plans")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <section style={{ background: "#f4f5f9", minHeight: "100vh", padding: "104px 0 70px" }}>
-      <div className="dash-shell" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 20px" }}>
+    <section id="top" style={{ background: "#f4f5f9", minHeight: "100vh", padding: "104px 0 70px" }}>
+      <div className="dash-shell" style={{ maxWidth: 1280, margin: "0 auto", padding: "0 20px" }}>
 
         {/* ── Left sidebar ── */}
         <aside className="dash-side">
-          <div style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 20, boxShadow: CARD_SHADOW, padding: "26px 18px 20px", display: "flex", flexDirection: "column", gap: 6 }}>
+          <div style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 20, boxShadow: CARD_SHADOW, padding: "26px 16px 18px", display: "flex", flexDirection: "column", gap: 4 }}>
             {/* identity */}
-            <div style={{ textAlign: "center", padding: "0 6px 18px", borderBottom: `1px solid ${CARD_LINE}`, marginBottom: 14 }}>
+            <div style={{ textAlign: "center", padding: "0 6px 18px", borderBottom: `1px solid ${CARD_LINE}`, marginBottom: 12 }}>
               <div style={{ width: 64, height: 64, borderRadius: "50%", background: `linear-gradient(135deg, ${ORANGE}, ${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontSize: 26, fontWeight: 800, fontFamily: "Sora", margin: "0 auto 12px", boxShadow: `0 10px 24px -10px ${ORANGE}` }}>
                 {(user?.name || user?.email || "U").charAt(0).toUpperCase()}
               </div>
@@ -341,12 +443,12 @@ export default function Dashboard() {
 
             {/* nav */}
             {navItems.map(({ label, icon: Icon, to, active }) => (
-              <button key={label} onClick={() => navigate(to)}
+              <button key={label} onClick={() => goTo(to)}
                 style={{
-                  display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left",
-                  padding: "11px 14px", borderRadius: 12, cursor: "pointer", fontFamily: "Sora",
-                  fontWeight: active ? 800 : 600, fontSize: 14,
-                  border: active ? "none" : "1px solid transparent",
+                  display: "flex", alignItems: "center", gap: 11, width: "100%", textAlign: "left",
+                  padding: "10px 13px", borderRadius: 11, cursor: "pointer", fontFamily: "Sora",
+                  fontWeight: active ? 800 : 600, fontSize: 13.5,
+                  border: "1px solid transparent",
                   background: active ? `linear-gradient(135deg, ${ORANGE}, ${GOLD})` : "transparent",
                   color: active ? "#fff" : "#475067",
                   boxShadow: active ? `0 10px 24px -12px ${ORANGE}` : "none",
@@ -354,176 +456,283 @@ export default function Dashboard() {
                 }}
                 onMouseEnter={(e) => { if (!active) e.currentTarget.style.background = "#f4f5f9"; }}
                 onMouseLeave={(e) => { if (!active) e.currentTarget.style.background = "transparent"; }}>
-                <Icon size={18} color={active ? "#fff" : ORANGE} /> {label}
+                <Icon size={17} color={active ? "#fff" : ORANGE} /> {label}
               </button>
             ))}
 
             {/* footer actions */}
-            <div style={{ borderTop: `1px solid ${CARD_LINE}`, marginTop: 14, paddingTop: 14, display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ borderTop: `1px solid ${CARD_LINE}`, marginTop: 12, paddingTop: 12, display: "flex", flexDirection: "column", gap: 4 }}>
               <button onClick={scrollToPlans}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", padding: "12px", borderRadius: 12, border: "none", cursor: "pointer", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: ORANGE, background: tint(ORANGE, 0.12) }}>
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", padding: "11px", borderRadius: 11, border: "none", cursor: "pointer", fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: ORANGE, background: tint(ORANGE, 0.12), marginBottom: 4 }}>
                 <Rocket size={16} /> Upgrade Plan
               </button>
               <button onClick={() => setEditOpen(true)}
-                style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left", padding: "11px 14px", borderRadius: 12, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 14, border: "1px solid transparent", background: "transparent", color: "#475067" }}
+                style={{ display: "flex", alignItems: "center", gap: 11, width: "100%", textAlign: "left", padding: "10px 13px", borderRadius: 11, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 13.5, border: "1px solid transparent", background: "transparent", color: "#475067" }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = "#f4f5f9"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-                <Settings size={18} color={ORANGE} /> Settings
+                <User size={17} color={ORANGE} /> Profile
+              </button>
+              <button onClick={() => setEditOpen(true)}
+                style={{ display: "flex", alignItems: "center", gap: 11, width: "100%", textAlign: "left", padding: "10px 13px", borderRadius: 11, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 13.5, border: "1px solid transparent", background: "transparent", color: "#475067" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "#f4f5f9"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
+                <Settings size={17} color={ORANGE} /> Settings
+              </button>
+              <button onClick={() => navigate("/how-to-use")}
+                style={{ display: "flex", alignItems: "center", gap: 11, width: "100%", textAlign: "left", padding: "10px 13px", borderRadius: 11, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 13.5, border: "1px solid transparent", background: "transparent", color: "#475067" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "#f4f5f9"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
+                <HelpCircle size={17} color={ORANGE} /> Help Center
               </button>
               <button onClick={() => setConfirmLogout(true)}
-                style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left", padding: "11px 14px", borderRadius: 12, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 14, border: "1px solid transparent", background: "transparent", color: "#e5484d" }}
+                style={{ display: "flex", alignItems: "center", gap: 11, width: "100%", textAlign: "left", padding: "10px 13px", borderRadius: 11, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 13.5, border: "1px solid transparent", background: "transparent", color: "#e5484d" }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = "#fef2f2"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-                <LogOut size={18} color="#e5484d" /> Sign Out
+                <LogOut size={17} color="#e5484d" /> Log out
               </button>
             </div>
           </div>
         </aside>
 
         {/* ── Main content ── */}
-        <main className="dash-main" style={{ flex: 1, minWidth: 0 }}>
+        <main className="dash-main" style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 22 }}>
 
-        {/* Profile details + Edit info */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
-          <h2 style={sectionTitle}><User size={18} color={ORANGE} /> Your details</h2>
-          <button onClick={() => setEditOpen(true)}
-            style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", border: `1.5px solid ${ORANGE}55`, color: ORANGE, padding: "8px 16px", borderRadius: 11, fontWeight: 800, fontFamily: "Sora", fontSize: 13.5, cursor: "pointer" }}>
-            <Pencil size={15} /> Edit info
-          </button>
-        </div>
-        {/* All details in ONE simple card — light, flat, no bento washes. */}
-        <div style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, padding: "20px 22px", marginBottom: 34, boxShadow: CARD_SHADOW }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: "18px 26px" }}>
-            {details.map(({ label, value, icon: Icon }) => (
-              <div key={label} style={{ display: "flex", alignItems: "center", gap: 11, minWidth: 0 }}>
-                <div style={{ width: 38, height: 38, borderRadius: 10, background: tint(ORANGE, 0.1), display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <Icon size={17} color={ORANGE} />
-                </div>
+          {/* Welcome header */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
+            <div>
+              <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.4rem,3.4vw,1.9rem)", color: NAVY, margin: 0, fontStyle: "normal" }}>
+                Welcome back, {firstName}! <span style={{ fontStyle: "normal" }}>👋</span>
+              </h1>
+              <p style={{ color: "#6b7280", margin: "6px 0 0", fontSize: 14.5 }}>Keep learning, keep growing.</p>
+            </div>
+            <button onClick={() => setEditOpen(true)}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg, ${ORANGE}, ${GOLD})`, border: "none", color: "#fff", padding: "11px 20px", borderRadius: 12, fontWeight: 800, fontFamily: "Sora", fontSize: 14, cursor: "pointer", boxShadow: `0 10px 26px -12px ${ORANGE}` }}>
+              <Pencil size={15} /> Edit Profile
+            </button>
+          </div>
+
+          {/* Profile info cards */}
+          <div className="dash-info">
+            {profileCards.map(({ label, value, icon: Icon, color }) => (
+              <div key={label} style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 14, boxShadow: CARD_SHADOW, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+                <span style={{ width: 40, height: 40, borderRadius: 11, background: tint(color, 0.12), display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <Icon size={18} color={color} />
+                </span>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}>{label}</div>
-                  <div style={{ fontSize: 14.5, color: NAVY, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {value || "—"}
-                  </div>
+                  <div style={{ fontSize: 14.5, color: NAVY, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
 
-        {/* ── Enrolled plans (a dedicated section for what you own) ── */}
-        <h2 style={{ ...sectionTitle, marginBottom: 14 }}><CheckCircle2 size={18} color={GREEN} /> Your enrolled plans</h2>
-        {loading ? (
-          <div style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "40px", textAlign: "center", color: "#9ca3af", marginBottom: 34 }}>
-            <Loader2 size={22} className="dash-spin" /> Loading your plans…
+          {/* Stats row */}
+          <div className="dash-stats">
+            {stats.map((s) => <StatCard key={s.label} {...s} />)}
           </div>
-        ) : !hasAnyPlan ? (
-          <div style={{ background: "#fff", border: "1px dashed #e5b894", borderRadius: 16, padding: "34px 24px", textAlign: "center", marginBottom: 34 }}>
-            <div style={{ width: 52, height: 52, borderRadius: 15, background: `${ORANGE}12`, display: "grid", placeItems: "center", margin: "0 auto 14px" }}>
-              <Sparkles size={24} color={ORANGE} />
-            </div>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 16, marginBottom: 4 }}>No active plans yet</div>
-            <div style={{ fontSize: 14, color: "#6b7280", marginBottom: 16 }}>Pick a mentorship or counselling plan below to get started.</div>
-          </div>
-        ) : (
-          /* All enrolled plans together in ONE simple card, one row each. */
-          <div style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, padding: "4px 22px", marginBottom: 34, boxShadow: CARD_SHADOW }}>
-            {plans.map((p, i) => {
-              const g = groupForPlan(p.plan);
-              const Icon = g.icon;
-              const mentor = isMentorshipPlan(p.plan);
-              return (
-                <div key={p._id} style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", padding: "16px 0", borderTop: i ? `1px solid ${CARD_LINE}` : "none" }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: tint(g.accent, 0.1), display: "grid", placeItems: "center", flexShrink: 0 }}>
-                    <Icon size={21} color={g.accent} />
+
+          {/* Enrolled plans + Upcoming live sessions */}
+          <div className="dash-two">
+            <Panel id="enrolled-plans" title="Your enrolled plans" icon={CheckCircle2} iconColor={GREEN}
+              action={<button onClick={scrollToPlans} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "transparent", border: "none", color: ORANGE, fontFamily: "Sora", fontWeight: 800, fontSize: 13, cursor: "pointer" }}>Browse plans <ChevronRight size={15} /></button>}>
+              {loading ? (
+                <div style={{ padding: "30px", textAlign: "center", color: "#9ca3af" }}><Loader2 size={22} className="dash-spin" /> Loading your plans…</div>
+              ) : !hasAnyPlan ? (
+                <div style={{ border: "1px dashed #e5b894", borderRadius: 14, padding: "28px 20px", textAlign: "center" }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 14, background: `${ORANGE}12`, display: "grid", placeItems: "center", margin: "0 auto 12px" }}>
+                    <Sparkles size={22} color={ORANGE} />
                   </div>
-                  <div style={{ flex: 1, minWidth: 170 }}>
-                    <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: NAVY }}>{p.planLabel || p.plan}</div>
-                    <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>
-                      Purchased {fmtDate(p.createdAt)} · ID {p.razorpayPaymentId || "—"}
+                  <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 15, marginBottom: 4 }}>No active plans yet</div>
+                  <div style={{ fontSize: 13.5, color: "#6b7280", marginBottom: 14 }}>Pick a mentorship or counselling plan to get started.</div>
+                  <button onClick={scrollToPlans} style={{ background: `linear-gradient(135deg, ${ORANGE}, ${GOLD})`, color: "#fff", border: "none", padding: "10px 18px", borderRadius: 11, fontWeight: 800, fontFamily: "Sora", fontSize: 13.5, cursor: "pointer" }}>Explore plans</button>
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  {plans.map((p, i) => {
+                    const g = groupForPlan(p.plan);
+                    const Icon = g.icon;
+                    const mentor = isMentorshipPlan(p.plan);
+                    return (
+                      <div key={p._id} style={{ display: "flex", alignItems: "center", gap: 13, flexWrap: "wrap", padding: "14px 0", borderTop: i ? `1px solid ${CARD_LINE}` : "none" }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 12, background: tint(g.accent, 0.1), display: "grid", placeItems: "center", flexShrink: 0 }}>
+                          <Icon size={21} color={g.accent} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 150 }}>
+                          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, color: NAVY }}>{p.planLabel || p.plan}</div>
+                          <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>Purchased {fmtDate(p.createdAt)}</div>
+                        </div>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "5px 11px" }}>
+                          <CheckCircle2 size={13} /> Active
+                        </span>
+                        {mentor && (
+                          <button onClick={() => navigate(`/mentorship-dashboard?plan=${encodeURIComponent(p.plan)}`)}
+                            style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 14px", borderRadius: 11, border: `1.5px solid ${g.accent}55`, background: "#fff", color: g.accent, fontFamily: "Sora", fontWeight: 800, fontSize: 13, cursor: "pointer" }}>
+                            <LayoutDashboard size={14} /> Open
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </Panel>
+
+            <Panel id="live-sessions" title="Upcoming live sessions" icon={Video} iconColor={INDIGO}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {LIVE_SESSIONS.map((s) => (
+                  <div key={s.subject + s.topic} style={{ display: "flex", alignItems: "center", gap: 12, background: tint(s.color, 0.06), border: `1px solid ${tint(s.color, 0.18)}`, borderRadius: 12, padding: "11px 12px" }}>
+                    <span style={{ width: 38, height: 38, borderRadius: 10, background: tint(s.color, 0.14), display: "grid", placeItems: "center", flexShrink: 0 }}>
+                      <PlayCircle size={19} color={s.color} />
+                    </span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, color: NAVY }}>{s.subject} · {s.topic}</div>
+                      <div style={{ fontSize: 11.5, color: "#6b7280", marginTop: 2, display: "flex", alignItems: "center", gap: 5 }}>
+                        <Clock size={11} /> {s.when}
+                      </div>
+                    </div>
+                    {s.live ? (
+                      <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: ".05em", color: "#fff", background: "#ef4444", borderRadius: 50, padding: "4px 9px" }}>LIVE</span>
+                    ) : (
+                      <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: ".05em", color: s.color, background: tint(s.color, 0.14), borderRadius: 50, padding: "4px 9px" }}>SOON</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Panel>
+          </div>
+
+          {/* Performance overview + Quick actions / Achievements */}
+          <div className="dash-perf">
+            <Panel id="performance" title="Performance overview" icon={BarChart3} iconColor={ORANGE}
+              action={<span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: GREEN, background: tint(GREEN, 0.1), borderRadius: 50, padding: "4px 10px" }}><TrendingUp size={12} /> Improving</span>}>
+              <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginBottom: 8 }}>
+                <div>
+                  <div style={{ fontSize: 12, color: "#9ca3af", fontWeight: 700 }}>Average score</div>
+                  <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 30, color: NAVY }}>77%</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 12, color: "#9ca3af", fontWeight: 700 }}>Tests this year</div>
+                  <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 30, color: NAVY }}>18</div>
+                </div>
+              </div>
+              <div style={{ width: "100%", height: 210 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={PERF_DATA} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="perfFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={ORANGE} stopOpacity={0.35} />
+                        <stop offset="100%" stopColor={ORANGE} stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(33,29,46,.06)" vertical={false} />
+                    <XAxis dataKey="m" tick={{ fontSize: 11, fill: "#9ca3af" }} axisLine={false} tickLine={false} />
+                    <Tooltip
+                      contentStyle={{ borderRadius: 12, border: `1px solid ${CARD_LINE}`, boxShadow: CARD_SHADOW, fontFamily: "Sora", fontSize: 12 }}
+                      formatter={(v) => [`${v}%`, "Score"]} labelStyle={{ color: NAVY, fontWeight: 700 }} />
+                    <Area type="monotone" dataKey="s" stroke={ORANGE} strokeWidth={2.5} fill="url(#perfFill)" dot={false} activeDot={{ r: 4, fill: ORANGE }} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </Panel>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 22, minWidth: 0 }}>
+              <Panel title="Quick actions" icon={Zap} iconColor="#f59e0b">
+                <div className="dash-quick">
+                  {QUICK_ACTIONS.map(({ label, icon: Icon, color, to }) => (
+                    <button key={label} onClick={() => goTo(to)}
+                      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, padding: "14px 8px", borderRadius: 13, border: `1px solid ${CARD_LINE}`, background: "#fff", cursor: "pointer", transition: "transform .15s, box-shadow .15s" }}
+                      onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = CARD_SHADOW; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
+                      <span style={{ width: 42, height: 42, borderRadius: 12, background: tint(color, 0.12), display: "grid", placeItems: "center" }}>
+                        <Icon size={20} color={color} />
+                      </span>
+                      <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12, color: NAVY, textAlign: "center", lineHeight: 1.25 }}>{label}</span>
+                    </button>
+                  ))}
+                </div>
+              </Panel>
+
+              <Panel id="achievements" title="Achievements" icon={Trophy} iconColor="#f59e0b">
+                <div className="dash-badges">
+                  {ACHIEVEMENTS.map(({ label, desc, icon: Icon, color, unlocked }) => (
+                    <div key={label} title={desc}
+                      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7, padding: "14px 8px", borderRadius: 13, border: `1px solid ${unlocked ? tint(color, 0.3) : CARD_LINE}`, background: unlocked ? tint(color, 0.06) : "#f8f8fb", textAlign: "center", opacity: unlocked ? 1 : 0.65 }}>
+                      <span style={{ width: 42, height: 42, borderRadius: "50%", background: unlocked ? tint(color, 0.16) : "#eceef3", display: "grid", placeItems: "center", position: "relative" }}>
+                        <Icon size={20} color={unlocked ? color : "#9ca3af"} />
+                        {!unlocked && (
+                          <span style={{ position: "absolute", bottom: -2, right: -2, width: 18, height: 18, borderRadius: "50%", background: "#fff", border: `1px solid ${CARD_LINE}`, display: "grid", placeItems: "center" }}>
+                            <Lock size={10} color="#9ca3af" />
+                          </span>
+                        )}
+                      </span>
+                      <div>
+                        <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12, color: NAVY, lineHeight: 1.2 }}>{label}</div>
+                        <div style={{ fontSize: 10.5, color: "#9ca3af", marginTop: 2, lineHeight: 1.3 }}>{desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Panel>
+            </div>
+          </div>
+
+          {/* Continue learning — quick links to heavy content pages */}
+          <Panel title="Continue learning" icon={BookOpen} iconColor={ORANGE}>
+            <div className="dash-learn">
+              {QUICK_LINKS.map(({ label, desc, to, color, icon: Icon }) => (
+                <button key={label} onClick={() => navigate(to)}
+                  style={{ textAlign: "left", background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 14, padding: "16px", cursor: "pointer", display: "flex", gap: 12, alignItems: "flex-start", transition: "box-shadow .15s, transform .15s" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 10px 26px -12px rgba(13,27,62,.25)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: `${color}15`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <Icon size={19} color={color} />
+                  </div>
+                  <div>
+                    <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 14.5, color: NAVY, display: "flex", alignItems: "center", gap: 6 }}>{label} <ArrowRight size={14} color="#9ca3af" /></div>
+                    <div style={{ fontSize: 12.5, color: "#9ca3af", marginTop: 3 }}>{desc}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </Panel>
+
+          {/* ── More plans — plans the student hasn't enrolled in yet ── */}
+          <div id="all-plans" style={{ scrollMarginTop: 96 }}>
+            <h2 style={{ ...sectionTitle, marginBottom: 6 }}><CreditCard size={18} color={ORANGE} /> More plans</h2>
+            <p style={{ fontSize: 13.5, color: "#9ca3af", margin: "0 0 20px" }}>Plans you haven’t enrolled in yet.</p>
+
+            {PLAN_CATALOG.map((group) => {
+              const GroupIcon = group.icon;
+              const available = group.plans.filter((plan) => !enrolledKeys.has(plan.key));
+              if (!available.length) return null;
+              return (
+                <div key={group.key} style={{ marginBottom: 28 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 14 }}>
+                    <div style={{ width: 38, height: 38, borderRadius: 11, background: `${group.accent}14`, border: `1px solid ${group.accent}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                      <GroupIcon size={19} color={group.accent} />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.02rem", color: NAVY }}>{group.title}</div>
+                      <div style={{ fontSize: 12, color: "#9ca3af", fontWeight: 600 }}>{group.subtitle}</div>
                     </div>
                   </div>
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 16, color: NAVY }}>₹{Number(p.amount || 0).toLocaleString("en-IN")}</div>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "6px 12px" }}>
-                    <CheckCircle2 size={14} /> Active
-                  </span>
-                  {mentor && (
-                    <button onClick={() => navigate(`/mentorship-dashboard?plan=${encodeURIComponent(p.plan)}`)}
-                      style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 16px", borderRadius: 11, border: `1.5px solid ${g.accent}55`, background: "#fff", color: g.accent, fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer" }}>
-                      <LayoutDashboard size={15} /> Open dashboard <ArrowRight size={14} />
-                    </button>
-                  )}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 18 }}>
+                    {available.map((plan) => (
+                      <PlanTile key={plan.key} plan={plan} group={group} enrolled={false}
+                        onEnrol={(k) => openEnrol?.(k)} onView={(to) => navigate(to)} />
+                    ))}
+                  </div>
                 </div>
               );
             })}
           </div>
-        )}
-
-        {/* ── More plans — plans the student hasn't enrolled in yet ──
-             Enrolled plans are hidden here (they live in "Your enrolled plans"). */}
-        <h2 id="all-plans" style={{ ...sectionTitle, marginBottom: 6, scrollMarginTop: 96 }}><CreditCard size={18} color={ORANGE} /> More plans</h2>
-        <p style={{ fontSize: 13.5, color: "#9ca3af", margin: "0 0 22px" }}>Plans you haven’t enrolled in yet.</p>
-
-        {PLAN_CATALOG.map((group) => {
-          const GroupIcon = group.icon;
-          const available = group.plans.filter((plan) => !enrolledKeys.has(plan.key));
-          if (!available.length) return null;
-          return (
-            <div key={group.key} style={{ marginBottom: 30 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 14 }}>
-                <div style={{ width: 38, height: 38, borderRadius: 11, background: `${group.accent}14`, border: `1px solid ${group.accent}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <GroupIcon size={19} color={group.accent} />
-                </div>
-                <div>
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.02rem", color: NAVY }}>{group.title}</div>
-                  <div style={{ fontSize: 12, color: "#9ca3af", fontWeight: 600 }}>{group.subtitle}</div>
-                </div>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 18 }}>
-                {available.map((plan) => (
-                  <PlanTile
-                    key={plan.key}
-                    plan={plan}
-                    group={group}
-                    enrolled={false}
-                    onEnrol={(k) => openEnrol?.(k)}
-                    onView={(to) => navigate(to)}
-                  />
-                ))}
-              </div>
-            </div>
-          );
-        })}
-
-        {/* Quick links to the heavy content pages */}
-        <h2 style={{ ...sectionTitle, marginBottom: 14, marginTop: 8 }}><BookOpen size={18} color={ORANGE} /> Continue learning</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
-          {QUICK_LINKS.map(({ label, desc, to, color, icon: Icon }) => (
-            <button key={label} onClick={() => navigate(to)}
-              style={{ textAlign: "left", background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "18px", cursor: "pointer", display: "flex", gap: 12, alignItems: "flex-start", transition: "box-shadow .15s, transform .15s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 10px 26px -12px rgba(13,27,62,.25)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: `${color}15`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                <Icon size={19} color={color} />
-              </div>
-              <div>
-                <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 15, color: NAVY, display: "flex", alignItems: "center", gap: 6 }}>{label} <ArrowRight size={14} color="#9ca3af" /></div>
-                <div style={{ fontSize: 12.5, color: "#9ca3af", marginTop: 3 }}>{desc}</div>
-              </div>
-            </button>
-          ))}
-        </div>
         </main>
       </div>
 
       {/* Edit info modal */}
       <AnimatePresence>
         {editOpen && (
-          <EditInfoModal
-            user={user}
-            token={token}
-            onClose={() => setEditOpen(false)}
-            onSaved={(u) => updateUser?.(u)}
-          />
+          <EditInfoModal user={user} token={token} onClose={() => setEditOpen(false)} onSaved={(u) => updateUser?.(u)} />
         )}
       </AnimatePresence>
 
@@ -553,12 +762,33 @@ export default function Dashboard() {
       <style>{`
         @keyframes dashspin{to{transform:rotate(360deg)}}
         .dash-spin{display:inline-block;animation:dashspin .8s linear infinite;vertical-align:middle;margin-right:6px}
-        .dash-shell{display:flex;gap:26px;align-items:flex-start}
-        .dash-side{width:252px;flex-shrink:0;position:sticky;top:96px}
-        .cp-bento-card:hover .cp-bento-corner{transform:scale(1.25)}
+        .dash-shell{display:flex;gap:24px;align-items:flex-start}
+        .dash-side{width:248px;flex-shrink:0;position:sticky;top:96px}
+        .dash-info{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+        .dash-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+        .dash-two{display:grid;grid-template-columns:1.45fr 1fr;gap:22px;align-items:start}
+        .dash-perf{display:grid;grid-template-columns:1.55fr 1fr;gap:22px;align-items:start}
+        .dash-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+        .dash-badges{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+        .dash-learn{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+        @media (max-width:1100px){
+          .dash-stats{grid-template-columns:repeat(3,1fr)}
+          .dash-perf{grid-template-columns:1fr}
+        }
         @media (max-width:900px){
           .dash-shell{flex-direction:column}
           .dash-side{width:100%;position:static;top:auto}
+          .dash-two{grid-template-columns:1fr}
+        }
+        @media (max-width:640px){
+          .dash-info{grid-template-columns:1fr 1fr}
+          .dash-stats{grid-template-columns:1fr 1fr}
+          .dash-quick{grid-template-columns:repeat(3,1fr)}
+          .dash-badges{grid-template-columns:repeat(2,1fr)}
+        }
+        @media (max-width:400px){
+          .dash-info{grid-template-columns:1fr}
+          .dash-stats{grid-template-columns:1fr 1fr}
         }
       `}</style>
     </section>
