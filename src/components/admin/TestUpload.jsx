@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FileText, UploadCloud, Loader2, Trash2, CheckCircle2, AlertTriangle,
-  RefreshCw, Wand2, ClipboardList, Clock, FileCheck2, X,
+  RefreshCw, Wand2, ClipboardList, Clock, FileCheck2, X, Plus, Layers, Info,
 } from "lucide-react";
 import {
   apiAdminTestSignUpload, apiAdminTestParse, apiAdminTestCreate,
@@ -37,8 +37,21 @@ export default function TestUpload({ token }) {
   // upload form
   const [title, setTitle] = useState("");
   const [durationMin, setDurationMin] = useState(60);
+  const [examType, setExamType] = useState("mains"); // mains | advanced | neet | standard
+  const [sections, setSections] = useState([]);      // JEE Advanced per-section marking
   const [mCorrect, setMCorrect] = useState(4);
   const [mWrong, setMWrong] = useState(-1);
+
+  // Exam pattern is driven by the plan: NEET → neet, Foundation → standard,
+  // JEE → mains/advanced (admin toggles). Mains & NEET lock to +4 / −1 / 0.
+  const isJee = plan.includes("jee");
+  const fixedMarking = examType === "mains" || examType === "neet";
+  useEffect(() => {
+    if (plan.includes("neet")) setExamType("neet");
+    else if (plan.includes("foundation")) setExamType("standard");
+    else setExamType((t) => (t === "advanced" ? "advanced" : "mains"));
+  }, [plan]);
+  useEffect(() => { if (fixedMarking) { setMCorrect(4); setMWrong(-1); } }, [fixedMarking]);
   const [testPdfUrl, setTestPdfUrl] = useState("");
   const [keyPdfUrl, setKeyPdfUrl] = useState("");
   const [up, setUp] = useState({ test: 0, key: 0 }); // upload progress
@@ -67,12 +80,20 @@ export default function TestUpload({ token }) {
   useEffect(() => { loadList(); }, [loadList]);
 
   const resetForm = () => {
-    setTitle(""); setDurationMin(60); setMCorrect(4); setMWrong(-1);
+    setTitle(""); setDurationMin(60); setMCorrect(4); setMWrong(-1); setSections([]);
     setTestPdfUrl(""); setKeyPdfUrl(""); setUp({ test: 0, key: 0 });
     setQuestions(null); setNote(""); setErr("");
     if (testRef.current) testRef.current.value = "";
     if (keyRef.current) keyRef.current.value = "";
   };
+
+  const addSection = () => setSections((s) => {
+    const last = s[s.length - 1];
+    const from = last ? Number(last.toQ) + 1 : 1;
+    return [...s, { name: `Section ${String.fromCharCode(65 + s.length)}`, fromQ: from, toQ: from + 4, correct: 4, wrong: -1 }];
+  });
+  const setSection = (i, patch) => setSections((s) => s.map((x, j) => (j === i ? { ...x, ...patch } : x)));
+  const delSection = (i) => setSections((s) => s.filter((_, j) => j !== i));
 
   async function handleFile(e, which) {
     const file = e.target.files?.[0];
@@ -99,8 +120,13 @@ export default function TestUpload({ token }) {
       const d = await apiAdminTestParse(token, { testPdfUrl, keyPdfUrl });
       setQuestions(d.questions || []);
       setNote(d.note || "");
-    } catch (ex) { setErr(ex.message || "Could not parse the PDF"); }
-    finally { setParsing(false); }
+    } catch (ex) {
+      // Scanned/image PDFs have no text layer — fall back to a manual grid so the
+      // admin can still build the test (students read the paper from the PDF).
+      setErr(ex.message || "Could not parse the PDF");
+      setQuestions([]);
+      setNote("Couldn't read the PDF automatically. Add questions and answers manually below — students still see the uploaded paper.");
+    } finally { setParsing(false); }
   }
 
   const setQ = (i, patch) => setQuestions((qs) => qs.map((q, j) => (j === i ? { ...q, ...patch } : q)));
@@ -116,7 +142,9 @@ export default function TestUpload({ token }) {
     try {
       await apiAdminTestCreate(token, {
         plan, category, title: title.trim(), durationMin: Number(durationMin) || 60,
+        examType,
         marking: { correct: Number(mCorrect) || 4, wrong: Number(mWrong) },
+        sections: examType === "advanced" ? sections : [],
         testPdfUrl, keyPdfUrl, questions, parseNote: note,
       });
       resetForm();
@@ -190,7 +218,7 @@ export default function TestUpload({ token }) {
           </h3>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 14, marginBottom: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 14, marginBottom: 14 }}>
           <div style={{ gridColumn: "1 / -1" }}>
             <span style={lbl}>Test title</span>
             <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Daily Test 12 — Kinematics" style={inp} />
@@ -199,15 +227,84 @@ export default function TestUpload({ token }) {
             <span style={lbl}>Duration (minutes)</span>
             <input type="number" min={1} value={durationMin} onChange={(e) => setDurationMin(e.target.value)} style={inp} />
           </div>
-          <div>
-            <span style={lbl}>Marks · correct</span>
-            <input type="number" value={mCorrect} onChange={(e) => setMCorrect(e.target.value)} style={inp} />
-          </div>
-          <div>
-            <span style={lbl}>Marks · wrong</span>
-            <input type="number" value={mWrong} onChange={(e) => setMWrong(e.target.value)} style={inp} />
+          <div style={{ gridColumn: isJee ? "span 2" : "auto" }}>
+            <span style={lbl}>Exam pattern</span>
+            {isJee ? (
+              <div style={{ display: "inline-flex", gap: 6, background: "#f5f3ef", borderRadius: 10, padding: 4 }}>
+                {[{ k: "mains", l: "JEE Mains" }, { k: "advanced", l: "JEE Advanced" }].map((e) => {
+                  const on = examType === e.k;
+                  return (
+                    <button key={e.k} type="button" onClick={() => setExamType(e.k)}
+                      style={{ padding: "7px 16px", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: on ? "#fff" : "#7c7368", background: on ? NAVY : "transparent" }}>
+                      {e.l}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div style={{ ...inp, display: "flex", alignItems: "center", fontWeight: 700, background: "#f9fafb", color: NAVY }}>
+                {plan.includes("neet") ? "NEET" : "Standard"}
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Marking scheme */}
+        {examType === "advanced" ? (
+          <div style={{ border: "1px solid #f0e9e0", borderRadius: 12, padding: "14px 16px", marginBottom: 16, background: "#fcfbf9" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontWeight: 800, fontFamily: "Sora", color: NAVY, fontSize: 14 }}>
+                <Layers size={16} color={ORANGE} /> Marks per section
+              </span>
+              <button type="button" onClick={addSection} style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 13, fontWeight: 700, color: ORANGE, background: "none", border: "none", cursor: "pointer" }}>
+                <Plus size={15} /> Add section
+              </button>
+            </div>
+            {sections.length === 0 ? (
+              <div style={{ fontSize: 12.5, color: MUTE, display: "flex", alignItems: "center", gap: 6 }}>
+                <Info size={14} /> JEE Advanced marks differ per section — add a section per question range. Questions outside every section use the fallback marking below.
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {sections.map((s, i) => (
+                  <div key={i} style={{ display: "grid", gridTemplateColumns: "1.4fr .7fr .7fr .7fr .7fr auto", gap: 8, alignItems: "center" }}>
+                    <input value={s.name} onChange={(e) => setSection(i, { name: e.target.value })} placeholder="Section name" style={{ ...inp, height: 36, fontSize: 13 }} />
+                    <input type="number" value={s.fromQ} onChange={(e) => setSection(i, { fromQ: e.target.value })} placeholder="From Q" style={{ ...inp, height: 36, fontSize: 13 }} title="From question" />
+                    <input type="number" value={s.toQ} onChange={(e) => setSection(i, { toQ: e.target.value })} placeholder="To Q" style={{ ...inp, height: 36, fontSize: 13 }} title="To question" />
+                    <input type="number" value={s.correct} onChange={(e) => setSection(i, { correct: e.target.value })} placeholder="+" style={{ ...inp, height: 36, fontSize: 13, color: GREEN, fontWeight: 700 }} title="Marks for correct" />
+                    <input type="number" value={s.wrong} onChange={(e) => setSection(i, { wrong: e.target.value })} placeholder="−" style={{ ...inp, height: 36, fontSize: 13, color: "#ef4444", fontWeight: 700 }} title="Marks for wrong" />
+                    <button type="button" onClick={() => delSection(i)} style={{ background: "none", border: "none", cursor: "pointer", color: "#cbd5e1" }}><Trash2 size={15} /></button>
+                  </div>
+                ))}
+                <div style={{ fontSize: 11.5, color: MUTE, marginTop: 2 }}>Q-no ranges, then +correct / −wrong. Unattempted is always 0.</div>
+              </div>
+            )}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 12, paddingTop: 12, borderTop: "1px dashed #e5d3c4" }}>
+              <div>
+                <span style={lbl}>Fallback · correct</span>
+                <input type="number" value={mCorrect} onChange={(e) => setMCorrect(e.target.value)} style={{ ...inp, height: 36 }} />
+              </div>
+              <div>
+                <span style={lbl}>Fallback · wrong</span>
+                <input type="number" value={mWrong} onChange={(e) => setMWrong(e.target.value)} style={{ ...inp, height: 36 }} />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 14, marginBottom: 16, alignItems: "end" }}>
+            <div>
+              <span style={lbl}>Marks · correct</span>
+              <input type="number" value={mCorrect} disabled={fixedMarking} onChange={(e) => setMCorrect(e.target.value)} style={{ ...inp, background: fixedMarking ? "#f9fafb" : "#fff" }} />
+            </div>
+            <div>
+              <span style={lbl}>Marks · wrong</span>
+              <input type="number" value={mWrong} disabled={fixedMarking} onChange={(e) => setMWrong(e.target.value)} style={{ ...inp, background: fixedMarking ? "#f9fafb" : "#fff" }} />
+            </div>
+            <div style={{ fontSize: 12.5, color: MUTE, display: "inline-flex", alignItems: "center", gap: 6, paddingBottom: 10 }}>
+              <Info size={14} /> {fixedMarking ? `${plan.includes("neet") ? "NEET" : "JEE Mains"}: +4 / −1 / 0 (locked)` : "Unattempted = 0"}
+            </div>
+          </div>
+        )}
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 16 }}>
           <UploadBox which="test" label="Question paper PDF *" url={testPdfUrl} />
@@ -310,6 +407,7 @@ export default function TestUpload({ token }) {
                   <div style={{ fontWeight: 700, color: NAVY, fontSize: 14, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.title}</div>
                   <div style={{ fontSize: 12, color: MUTE, marginTop: 2, display: "flex", gap: 12, flexWrap: "wrap" }}>
                     <span>{t.categoryLabel}</span>
+                    {t.examTypeLabel && <span style={{ color: NAVY, fontWeight: 700 }}>{t.examTypeLabel}</span>}
                     <span>{t.totalQuestions} Qs · {t.maxMarks} marks</span>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Clock size={11} /> {t.durationMin}m</span>
                     <span>{t.attempts} attempt{t.attempts === 1 ? "" : "s"}</span>

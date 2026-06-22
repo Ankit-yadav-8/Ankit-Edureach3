@@ -28,6 +28,7 @@ const mmss = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s %
 export default function TestSeries({ plan }) {
   const { token } = useAuth();
   const [cat, setCat] = useState("");
+  const [examFilter, setExamFilter] = useState(""); // "" | mains | advanced (JEE only)
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -51,13 +52,16 @@ export default function TestSeries({ plan }) {
   useEffect(() => { load(); }, [load]);
   useEffect(() => { loadPerf(); }, [loadPerf]);
 
+  const showExamFilter = tests.some((t) => t.examType === "mains" || t.examType === "advanced");
+  const shown = examFilter ? tests.filter((t) => t.examType === examFilter) : tests;
+
   return (
     <div>
       {/* performance summary — fed by graded CBT attempts */}
       {perf && perf.testsAttempted > 0 && <PerfStrip perf={perf} />}
 
       {/* category filter */}
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
         {CATS.map((c) => {
           const on = cat === c.key;
           return (
@@ -69,6 +73,21 @@ export default function TestSeries({ plan }) {
         })}
       </div>
 
+      {/* JEE exam-pattern filter — only when the batch has JEE Mains/Advanced tests */}
+      {showExamFilter && (
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
+          {[{ k: "", l: "All patterns" }, { k: "mains", l: "JEE Mains" }, { k: "advanced", l: "JEE Advanced" }].map((e) => {
+            const on = examFilter === e.k;
+            return (
+              <button key={e.k} onClick={() => setExamFilter(e.k)}
+                style={{ padding: "6px 14px", borderRadius: 50, border: `1.5px solid ${on ? NAVY : "#e5e7eb"}`, background: on ? NAVY : "#fff", color: on ? "#fff" : NAVY, fontFamily: "Sora", fontWeight: 700, fontSize: 12.5, cursor: "pointer" }}>
+                {e.l}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {err && (
         <div style={{ background: "#fff0f0", border: "1px solid #fca5a5", borderRadius: 10, padding: "10px 14px", color: "#dc2626", fontSize: 13, marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
           <AlertTriangle size={15} /> {err}
@@ -77,7 +96,7 @@ export default function TestSeries({ plan }) {
 
       {loading ? (
         <div style={{ display: "flex", alignItems: "center", gap: 8, color: MUTE, padding: 20 }}><Loader2 size={16} className="ts-spin" /> Loading tests…</div>
-      ) : tests.length === 0 ? (
+      ) : shown.length === 0 ? (
         <div style={{ background: "#fff", border: "1px dashed #e5d3c4", borderRadius: 16, padding: "40px 20px", textAlign: "center" }}>
           <div style={{ width: 48, height: 48, borderRadius: 14, background: `${ORANGE}12`, display: "grid", placeItems: "center", margin: "0 auto 12px" }}><FileText size={22} color={ORANGE} /></div>
           <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 15 }}>No tests yet</div>
@@ -85,7 +104,7 @@ export default function TestSeries({ plan }) {
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(290px,1fr))", gap: 14 }}>
-          {tests.map((t) => (
+          {shown.map((t) => (
             <TestCard key={t.id} t={t} onStart={() => setActiveId(t.id)} />
           ))}
         </div>
@@ -145,9 +164,14 @@ function TestCard({ t, onStart }) {
   return (
     <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", gap: 12, boxShadow: "0 10px 30px -24px rgba(13,27,62,.5)" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, color, background: `${color}14`, borderRadius: 50, padding: "4px 10px" }}>
-          <FileText size={12} /> {t.categoryLabel}
-        </span>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, color, background: `${color}14`, borderRadius: 50, padding: "4px 10px" }}>
+            <FileText size={12} /> {t.categoryLabel}
+          </span>
+          {t.examTypeLabel && t.examType !== "standard" && (
+            <span style={{ fontSize: 11, fontWeight: 800, color: NAVY, background: "#eef2ff", borderRadius: 50, padding: "4px 10px" }}>{t.examTypeLabel}</span>
+          )}
+        </div>
         {done && <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 800, color: GREEN, background: "#dcfce7", borderRadius: 50, padding: "4px 9px" }}><CheckCircle2 size={12} /> Done</span>}
       </div>
       <div>
@@ -322,9 +346,18 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
             <div style={{ padding: "16px 18px", overflowY: "auto", flex: 1 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 15 }}>Question {idx + 1} <span style={{ color: MUTE, fontWeight: 600, fontSize: 13 }}>/ {questions.length}</span></div>
-                <span style={{ fontSize: 11, fontWeight: 700, color: q?.type === "integer" ? "#8b5cf6" : INDIGO, background: q?.type === "integer" ? "#f5f3ff" : "#eef2ff", borderRadius: 50, padding: "3px 10px" }}>
-                  {q?.type === "integer" ? "Integer" : "Single correct"}
-                </span>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  {q?.marks && (
+                    <span style={{ display: "inline-flex", gap: 5, fontSize: 11, fontWeight: 800, borderRadius: 50, padding: "3px 9px", background: "#f1f5f9" }}>
+                      <span style={{ color: GREEN }}>+{q.marks.correct}</span>
+                      <span style={{ color: RED }}>{q.marks.wrong}</span>
+                      <span style={{ color: MUTE }}>0</span>
+                    </span>
+                  )}
+                  <span style={{ fontSize: 11, fontWeight: 700, color: q?.type === "integer" ? "#8b5cf6" : INDIGO, background: q?.type === "integer" ? "#f5f3ff" : "#eef2ff", borderRadius: 50, padding: "3px 10px" }}>
+                    {q?.type === "integer" ? "Integer" : "Single correct"}
+                  </span>
+                </div>
               </div>
 
               {q?.text && (

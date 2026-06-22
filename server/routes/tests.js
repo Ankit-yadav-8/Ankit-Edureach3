@@ -36,6 +36,7 @@ const PLANS = new Set([
   "mentor-foundation",
 ]);
 const CAT_LABEL = { daily: "Daily Test", weekly: "Weekly Test", full: "Full / Major Test" };
+const EXAM_LABEL = { mains: "JEE Mains", advanced: "JEE Advanced", neet: "NEET", standard: "Standard" };
 
 // Never let a proxy cache test data — attempts & listings must be live.
 router.use((_req, res, next) => { res.set("Cache-Control", "no-store"); next(); });
@@ -63,8 +64,52 @@ function cleanQuestions(arr) {
   });
 }
 
-const maxMarksOf = (questions, marking) =>
-  questions.length * (Number(marking?.correct) || 4);
+// Marking for one question: JEE Advanced uses the section covering its qno;
+// everything else (and uncovered Advanced questions) uses the flat scheme.
+// Unattempted is always 0 — handled at grade time, not here.
+function markingForQ(test, qno) {
+  if (test.examType === "advanced" && Array.isArray(test.sections) && test.sections.length) {
+    const s = test.sections.find((x) => qno >= x.fromQ && qno <= x.toQ);
+    if (s) return { correct: Number(s.correct) || 0, wrong: Number(s.wrong) || 0 };
+  }
+  const pos = Number(test.marking?.correct) || 4;
+  const neg = test.marking?.wrong === undefined ? -1 : Number(test.marking.wrong);
+  return { correct: pos, wrong: neg };
+}
+
+const maxMarksOf = (test) =>
+  (test.questions || []).reduce((sum, q) => sum + markingForQ(test, q.qno).correct, 0);
+
+// JEE plans split into mains/advanced; NEET → neet; everything else standard.
+// Derived from the plan so a JEE test can never be saved as a NEET pattern.
+function examTypeFor(plan, requested) {
+  if (/neet/.test(plan)) return "neet";
+  if (/foundation/.test(plan)) return "standard";
+  return requested === "advanced" ? "advanced" : "mains";
+}
+
+// Mains & NEET are fixed at the NTA scheme; Advanced/standard keep what's sent.
+function markingFor(examType, body) {
+  if (examType === "mains" || examType === "neet") return { correct: 4, wrong: -1 };
+  return {
+    correct: Number(body?.marking?.correct) || 4,
+    wrong: body?.marking?.wrong === undefined ? -1 : Number(body.marking.wrong),
+  };
+}
+
+function cleanSections(arr) {
+  if (!Array.isArray(arr)) return [];
+  return arr
+    .slice(0, 12)
+    .map((s) => ({
+      name: String(s?.name || "").slice(0, 40),
+      fromQ: Math.max(1, Number(s?.fromQ) || 1),
+      toQ: Math.max(1, Number(s?.toQ) || 1),
+      correct: Number(s?.correct) || 0,
+      wrong: Number(s?.wrong) || 0,
+    }))
+    .filter((s) => s.toQ >= s.fromQ);
+}
 
 // ── ADMIN: Cloudinary signature for a PDF upload (folder per plan) ───────────
 router.post("/admin/sign-upload", requireAdmin, (req, res) => {
@@ -107,26 +152,28 @@ router.post("/admin", requireAdmin, async (req, res) => {
     const questions = cleanQuestions(req.body?.questions);
     if (!questions.length) return res.status(400).json({ error: "The test has no questions." });
 
-    const marking = {
-      correct: Number(req.body?.marking?.correct) || 4,
-      wrong: req.body?.marking?.wrong === undefined ? -1 : Number(req.body.marking.wrong),
-    };
+    const examType = examTypeFor(plan, req.body?.examType);
+    const marking = markingFor(examType, req.body);
+    const sections = examType === "advanced" ? cleanSections(req.body?.sections) : [];
 
-    const doc = await Test.create({
+    const draft = {
       plan,
       category,
       title,
       subject: String(req.body?.subject || "").slice(0, 40),
       durationMin: Math.min(600, Math.max(1, Number(req.body?.durationMin) || 60)),
+      examType,
       testPdfUrl,
       keyPdfUrl: isOurCloudinaryUrl(keyPdfUrl) ? keyPdfUrl : "",
       marking,
+      sections,
       questions,
       totalQuestions: questions.length,
-      maxMarks: maxMarksOf(questions, marking),
       status: "published",
       parseNote: String(req.body?.parseNote || "").slice(0, 300),
-    });
+    };
+    draft.maxMarks = maxMarksOf(draft);
+    const doc = await Test.create(draft);
     res.status(201).json({ ok: true, id: String(doc._id) });
   } catch (e) {
     console.error("[tests/admin:create]", e?.message || e);
@@ -141,7 +188,7 @@ router.get("/admin", requireAdmin, async (req, res) => {
     if (PLANS.has(req.query.plan)) q.plan = req.query.plan;
     if (CATEGORIES.has(req.query.category)) q.category = req.query.category;
     const docs = await Test.find(q).sort({ createdAt: -1 }).limit(300)
-      .select("plan category title totalQuestions maxMarks durationMin status createdAt testPdfUrl keyPdfUrl parseNote")
+      .select("plan category title totalQuestions maxMarks durationMin status createdAt testPdfUrl keyPdfUrl parseNote examType")
       .lean();
     const tests = await Promise.all(docs.map(async (t) => ({
       id: String(t._id),
@@ -150,6 +197,8 @@ router.get("/admin", requireAdmin, async (req, res) => {
       batchLabel: batchLabelFor(t.plan),
       category: t.category,
       categoryLabel: CAT_LABEL[t.category],
+      examType: t.examType,
+      examTypeLabel: EXAM_LABEL[t.examType] || "",
       title: t.title,
       totalQuestions: t.totalQuestions,
       maxMarks: t.maxMarks,
@@ -187,7 +236,7 @@ router.get("/", requireAuth, requireBatch, async (req, res) => {
     const q = { plan: req.batch.plan, status: "published" };
     if (CATEGORIES.has(req.query.category)) q.category = req.query.category;
     const docs = await Test.find(q).sort({ createdAt: -1 }).limit(200)
-      .select("plan category title totalQuestions maxMarks durationMin createdAt subject")
+      .select("plan category title totalQuestions maxMarks durationMin createdAt subject examType")
       .lean();
     const ids = docs.map((d) => d._id);
     const mine = await TestAttempt.find({ test: { $in: ids }, userId: req.batch.userId })
@@ -200,6 +249,8 @@ router.get("/", requireAuth, requireBatch, async (req, res) => {
         id: String(t._id),
         category: t.category,
         categoryLabel: CAT_LABEL[t.category],
+        examType: t.examType,
+        examTypeLabel: EXAM_LABEL[t.examType] || "",
         title: t.title,
         subject: t.subject,
         totalQuestions: t.totalQuestions,
@@ -268,12 +319,19 @@ router.get("/:id", requireAuth, requireBatch, async (req, res) => {
       categoryLabel: CAT_LABEL[t.category],
       subject: t.subject,
       durationMin: t.durationMin,
+      examType: t.examType,
+      examTypeLabel: EXAM_LABEL[t.examType] || "",
       marking: t.marking,
+      sections: t.sections || [],
       testPdfUrl: t.testPdfUrl,
       totalQuestions: t.totalQuestions,
       maxMarks: t.maxMarks,
       // Strip the correct answer — never sent to the client before submission.
-      questions: t.questions.map((q) => ({ qno: q.qno, text: q.text, options: q.options, type: q.type, subject: q.subject })),
+      // `marks` lets the player show +x / −y / 0 for the current question.
+      questions: t.questions.map((q) => {
+        const mk = markingForQ(t, q.qno);
+        return { qno: q.qno, text: q.text, options: q.options, type: q.type, subject: q.subject, marks: { correct: mk.correct, wrong: mk.wrong } };
+      }),
       alreadyAttempted: !!existing,
     });
   } catch (e) {
@@ -293,16 +351,13 @@ router.post("/:id/submit", requireAuth, requireBatch, async (req, res) => {
     const submitted = req.body?.answers && typeof req.body.answers === "object" ? req.body.answers : {};
     const durationSec = Math.max(0, Math.min(60 * 600, Number(req.body?.durationSec) || 0));
 
-    const pos = Number(t.marking?.correct) || 4;
-    const neg = t.marking?.wrong === undefined ? -1 : Number(t.marking.wrong);
-
     let score = 0, correctCount = 0, wrongCount = 0, skippedCount = 0;
     const answers = t.questions.map((q) => {
-      const raw = submitted[String(q.qno)];
-      const stud = q.type === "integer" ? normalizeAnswer(raw) : normalizeAnswer(raw);
+      const { correct: pos, wrong: neg } = markingForQ(t, q.qno);
+      const stud = normalizeAnswer(submitted[String(q.qno)]);
       const key = normalizeAnswer(q.correct);
       let status = "skipped", marks = 0;
-      if (!stud) { skippedCount++; }
+      if (!stud) { skippedCount++; }                                  // 0 for skipped
       else if (key && stud === key) { status = "correct"; marks = pos; correctCount++; }
       else { status = "wrong"; marks = neg; wrongCount++; }
       score += marks;
@@ -310,7 +365,7 @@ router.post("/:id/submit", requireAuth, requireBatch, async (req, res) => {
     });
 
     const totalQuestions = t.questions.length;
-    const maxMarks = totalQuestions * pos;
+    const maxMarks = maxMarksOf(t);
     const attempted = correctCount + wrongCount;
     const accuracy = attempted ? Math.round((correctCount / attempted) * 100) : 0;
     const percent = maxMarks ? Math.round((score / maxMarks) * 100) : 0;
