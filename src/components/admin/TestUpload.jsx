@@ -262,7 +262,7 @@ export default function TestUpload({ token }) {
             </div>
             {sections.length === 0 ? (
               <div style={{ fontSize: 12.5, color: MUTE, display: "flex", alignItems: "center", gap: 6 }}>
-                <Info size={14} /> JEE Advanced marks differ per section — add a section per question range. Questions outside every section use the fallback marking below.
+                <Info size={14} /> JEE Advanced marks differ per section — add one section per question range, covering every question.
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -276,19 +276,9 @@ export default function TestUpload({ token }) {
                     <button type="button" onClick={() => delSection(i)} style={{ background: "none", border: "none", cursor: "pointer", color: "#cbd5e1" }}><Trash2 size={15} /></button>
                   </div>
                 ))}
-                <div style={{ fontSize: 11.5, color: MUTE, marginTop: 2 }}>Q-no ranges, then +correct / −wrong. Unattempted is always 0.</div>
+                <div style={{ fontSize: 11.5, color: MUTE, marginTop: 2 }}>Section name · Q-no range · +correct · −wrong. Unattempted is always 0.</div>
               </div>
             )}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 12, paddingTop: 12, borderTop: "1px dashed #e5d3c4" }}>
-              <div>
-                <span style={lbl}>Fallback · correct</span>
-                <input type="number" value={mCorrect} onChange={(e) => setMCorrect(e.target.value)} style={{ ...inp, height: 36 }} />
-              </div>
-              <div>
-                <span style={lbl}>Fallback · wrong</span>
-                <input type="number" value={mWrong} onChange={(e) => setMWrong(e.target.value)} style={{ ...inp, height: 36 }} />
-              </div>
-            </div>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 14, marginBottom: 16, alignItems: "end" }}>
