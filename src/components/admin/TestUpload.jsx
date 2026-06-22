@@ -323,9 +323,14 @@ export default function TestUpload({ token }) {
           )}
         </div>
 
-        {note && (
-          <div style={{ marginTop: 14, background: "#f0f6ff", border: "1px solid #bfdbfe", borderRadius: 10, padding: "10px 14px", color: "#1e40af", fontSize: 13 }}>{note}</div>
-        )}
+        {note && (() => {
+          const warn = questions && questions.length === 0;
+          return (
+            <div style={{ marginTop: 14, background: warn ? "#fffbeb" : "#f0f6ff", border: `1px solid ${warn ? "#fde68a" : "#bfdbfe"}`, borderRadius: 10, padding: "10px 14px", color: warn ? "#92400e" : "#1e40af", fontSize: 13, display: "flex", gap: 8 }}>
+              <Info size={15} style={{ flexShrink: 0, marginTop: 1 }} /> <span>{note}</span>
+            </div>
+          );
+        })()}
 
         {/* Parsed question review */}
         {questions && (

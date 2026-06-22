@@ -129,8 +129,16 @@ router.post("/admin/parse", requireAdmin, async (req, res) => {
     const { questions, matched, note } = await buildTestFromPdfs(testPdfUrl, keyPdfUrl);
     res.json({ questions, matched, note, totalQuestions: questions.length });
   } catch (e) {
-    console.error("[tests/admin/parse]", e?.message || e);
-    res.status(500).json({ error: "Could not read the PDF. It may be scanned/image-only — add questions manually." });
+    // Don't 500 — return an empty set + the real reason so the admin lands on the
+    // manual grid with an accurate message (delivery blocked vs scanned PDF).
+    console.error("[tests/admin/parse]", e?.code || "", e?.message || e);
+    res.json({
+      questions: [],
+      matched: 0,
+      totalQuestions: 0,
+      reason: e?.code || "ERROR",
+      note: e?.message || "Could not read the PDF — add questions manually below.",
+    });
   }
 });
 

@@ -61,6 +61,9 @@ export function validatePdf(file) {
 
 // Upload a PDF (test paper / answer key) to Cloudinary and return its URL.
 // Uses the same signed direct-upload flow; only the secure_url matters here.
+// We upload as `raw` (not `image`): raw delivery isn't subject to Cloudinary's
+// default "block PDF/ZIP delivery" setting, so the server can always fetch the
+// bytes to parse, and the file stays downloadable for students.
 export async function uploadPdf(file, sig, onProgress) {
   const { signature, timestamp, apiKey, cloudName, folder } = sig;
   const form = new FormData();
@@ -69,7 +72,7 @@ export async function uploadPdf(file, sig, onProgress) {
   form.append("timestamp", timestamp);
   form.append("signature", signature);
   form.append("folder", folder);
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`;
   const res = await new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", url);

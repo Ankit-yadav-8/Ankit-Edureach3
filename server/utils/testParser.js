@@ -27,11 +27,32 @@ export function normalizeAnswer(raw) {
 }
 
 // Download a (Cloudinary-hosted) PDF and return its extracted text.
+// Throws a tagged Error (err.code) so callers can give an accurate reason:
+//   FETCH   — the file couldn't be downloaded (e.g. Cloudinary delivery blocked)
+//   SCANNED — downloaded fine but has no text layer (image-only / scanned)
 export async function fetchPdfText(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Could not fetch PDF (${res.status})`);
+  let res;
+  try {
+    res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 CollegeParichay" }, redirect: "follow" });
+  } catch (e) {
+    const err = new Error(`Network error fetching the PDF: ${e.message}`);
+    err.code = "FETCH";
+    throw err;
+  }
+  if (!res.ok) {
+    const err = new Error(`Couldn't download the PDF from storage (HTTP ${res.status}). If these are stored on Cloudinary, enable "PDF and ZIP files delivery" in Settings → Security.`);
+    err.code = "FETCH";
+    throw err;
+  }
   const buf = Buffer.from(await res.arrayBuffer());
-  const data = await pdfParse(buf);
+  let data;
+  try {
+    data = await pdfParse(buf);
+  } catch (e) {
+    const err = new Error(`The file isn't a readable PDF: ${e.message}`);
+    err.code = "SCANNED";
+    throw err;
+  }
   return String(data.text || "");
 }
 
