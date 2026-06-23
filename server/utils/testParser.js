@@ -26,6 +26,26 @@ export function normalizeAnswer(raw) {
   return num || "";
 }
 
+// Strip site watermarks / page-footer boilerplate that PDF extraction leaves in
+// the question text — URLs, hashtags, vendor branding, the "Answer Key(s)"
+// label and the "JEE Main 2026 · 02 April (Morning Shift)" header. Extra
+// patterns can be added via TEST_PDF_STRIP (comma-separated, case-insensitive).
+const EXTRA_STRIP = String(process.env.TEST_PDF_STRIP || "")
+  .split(",").map((s) => s.trim()).filter(Boolean);
+export function stripNoise(s) {
+  let out = String(s || "")
+    .replace(/https?:\/\/\S+|www\.\S+/gi, " ")                 // urls
+    .replace(/#\w+/g, " ")                                      // hashtags (#PaperPhodnaHai)
+    .replace(/\bMathonGo\b/gi, " ")                             // vendor branding
+    .replace(/\bAnswer\s*Keys?\b/gi, " ")                       // footer / leftover label
+    .replace(/\bJEE\s*Main\s*\d{4}\b/gi, " ")                   // paper header
+    .replace(/\b\d{1,2}\s+[A-Za-z]+\s*\((?:Morning|Afternoon|Evening)[^)]*\)/gi, " "); // date · shift
+  for (const w of EXTRA_STRIP) {
+    try { out = out.replace(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), " "); } catch { /* ignore */ }
+  }
+  return out.replace(/\s+([,.:;)])/g, "$1").replace(/\s+/g, " ").trim();
+}
+
 // Download a (Cloudinary-hosted) PDF and return its extracted text.
 // Throws a tagged Error (err.code) so callers can give an accurate reason:
 //   FETCH   — the file couldn't be downloaded (e.g. Cloudinary delivery blocked)
@@ -159,8 +179,7 @@ function parseOneBlock(qno, block) {
   for (let i = 0; i < opts.length; i++) {
     const from = opts[i].contentFrom;
     const to = i + 1 < opts.length ? opts[i + 1].at : body.length;
-    const txt = body.slice(from, to).replace(/\s+/g, " ").trim();
-    cleaned.push({ key: normalizeAnswer(opts[i].label), text: txt });
+    cleaned.push({ key: normalizeAnswer(opts[i].label), text: stripNoise(body.slice(from, to)) });
   }
   // De-dupe to the canonical 1..4 keys, keep first occurrence, drop empties.
   const seen = new Set();
@@ -184,12 +203,12 @@ function parseOneBlock(qno, block) {
   }
 
   // Stem = text before the first option marker (or the whole body for an
-  // option-less question), with any run of glued option labels removed so
-  // "(1)(2)(3)(4)" doesn't clutter the question text.
-  const stem = (firstOptAt >= 0 ? body.slice(0, firstOptAt) : body)
-    .replace(/(?:\(\s*[A-Da-d1-4]\s*\)\s*){2,}/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  // option-less question), with glued option-label runs and site watermarks
+  // ("MathonGo", footers, URLs) stripped so they don't clutter the question.
+  const stem = stripNoise(
+    (firstOptAt >= 0 ? body.slice(0, firstOptAt) : body)
+      .replace(/(?:\(\s*[A-Da-d1-4]\s*\)\s*){2,}/g, " ")
+  );
 
   if (options.length >= 2) {
     return { qno, text: stem, options: options.slice(0, 4), type: "single", correct: inlineCorrect };
@@ -289,11 +308,11 @@ function normalizeLLMQuestions(arr) {
   return arr.slice(0, 200).map((q, i) => {
     const type = q?.type === "integer" ? "integer" : "single";
     const options = type === "single" && Array.isArray(q?.options)
-      ? q.options.slice(0, 4).map((o, j) => ({ key: normalizeAnswer(o?.key) || String(j + 1), text: String(o?.text || "").slice(0, 1000) }))
+      ? q.options.slice(0, 4).map((o, j) => ({ key: normalizeAnswer(o?.key) || String(j + 1), text: stripNoise(o?.text).slice(0, 1000) }))
       : [];
     return {
       qno: Number(q?.qno) || i + 1,
-      text: String(q?.text || "").slice(0, 4000),
+      text: stripNoise(q?.text).slice(0, 4000),
       options,
       type,
       subject: String(q?.subject || "").slice(0, 40),
