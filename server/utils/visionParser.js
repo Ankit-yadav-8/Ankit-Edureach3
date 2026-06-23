@@ -105,15 +105,14 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
   if (!process.env.GROQ_API_KEY) return { questions: [], error: "AI vision is off (GROQ_API_KEY not set on the server)" };
 
   const model = process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
-  // Defaults tuned for Groq's free tier (30k tokens/min): one page per request
-  // at scale 1.5 is ~2.5k tokens and still transcribes maths cleanly. Bump
-  // TEST_VISION_PAGES / _CONCURRENCY / _SCALE on a paid tier for faster runs.
+  // Defaults tuned for Groq's free tier (30k tokens/min): 2 pages per request at
+  // scale 1.5 is ~5k tokens, and 2 in flight (~10k) stays under the cap while
+  // overlapping work — ~2x faster than one-at-a-time. Bump TEST_VISION_PAGES /
+  // _CONCURRENCY / _SCALE on a paid tier (higher TPM) for sub-minute runs.
   const scale = Math.min(3, Math.max(1, Number(process.env.TEST_VISION_SCALE) || 1.5));
-  const perBatch = Math.min(5, Math.max(1, Number(process.env.TEST_VISION_PAGES) || 1));
+  const perBatch = Math.min(5, Math.max(1, Number(process.env.TEST_VISION_PAGES) || 2));
   const maxPages = Math.min(80, Math.max(1, Number(process.env.TEST_VISION_MAXPAGES) || 50));
-  // Serial by default: on the free tier, two in-flight requests both racing the
-  // per-minute token budget is what starves a batch into exhausting its retries.
-  const concurrency = Math.min(6, Math.max(1, Number(process.env.TEST_VISION_CONCURRENCY) || 1));
+  const concurrency = Math.min(6, Math.max(1, Number(process.env.TEST_VISION_CONCURRENCY) || 2));
 
   let pages;
   try { pages = await renderPages(pdfBuffer, scale); }

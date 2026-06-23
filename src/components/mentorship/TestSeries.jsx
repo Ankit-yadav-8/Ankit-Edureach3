@@ -333,10 +333,6 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
           {test.testPdfUrl && (
             <div style={{ background: "#525659", minHeight: 0, position: "relative", display: "flex", flexDirection: "column" }}>
               <iframe title="Question paper" src={test.testPdfUrl} style={{ flex: 1, width: "100%", border: "none" }} />
-              <a href={test.testPdfUrl} target="_blank" rel="noreferrer"
-                style={{ position: "absolute", bottom: 12, right: 12, display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,.6)", color: "#fff", borderRadius: 8, padding: "6px 10px", fontSize: 12, fontWeight: 600, textDecoration: "none" }}>
-                <ExternalLink size={13} /> Open PDF
-              </a>
             </div>
           )}
 
