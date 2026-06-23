@@ -62,13 +62,26 @@ async function callVision(model, key, images, maxTokens, retries = 9) {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
       body: payload,
     });
-    if ((res.status === 429 || res.status >= 500) && attempt < retries) {
+    if (res.status === 429 || res.status >= 500) {
       const body = await res.text().catch(() => "");
-      const ra = Number(res.headers.get("retry-after"));
-      const hint = Number((body.match(/try again in ([\d.]+)\s*s/i) || [])[1]);
-      const waitMs = Math.min(30000, Math.ceil(((ra || hint || 3 + attempt) + 0.5) * 1000));
-      await sleep(waitMs);
-      continue;
+      // Per-DAY quota (TPD/RPD) won't reset for hours — retrying is pointless and
+      // would hang for ages. Fail fast with a clear, distinct reason.
+      if (/per day|\bTPD\b|\bRPD\b|tokens per day|requests per day/i.test(body)) {
+        const e = new Error("daily AI quota reached");
+        e.code = "DAILY_LIMIT";
+        e.detail = body.slice(0, 200);
+        throw e;
+      }
+      if (attempt < retries) {
+        const ra = Number(res.headers.get("retry-after"));
+        const hint = Number((body.match(/try again in ([\d.]+)\s*s/i) || [])[1]);
+        const waitMs = Math.min(30000, Math.ceil(((ra || hint || 3 + attempt) + 0.5) * 1000));
+        await sleep(waitMs);
+        continue;
+      }
+      const e = new Error(`HTTP ${res.status}`);
+      e.detail = body.slice(0, 200);
+      throw e;
     }
     if (!res.ok) {
       const body = await res.text().catch(() => "");
@@ -125,10 +138,17 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
   for (let i = 0; i < pages.length; i += perBatch) batches.push(pages.slice(i, i + perBatch));
 
   let firstErr = "";
+  let dailyLimit = false;
   const results = await mapPool(batches, concurrency, async (imgs) => {
+    if (dailyLimit) return []; // stop hammering once the daily quota is gone
     try { return await callVision(model, process.env.GROQ_API_KEY, imgs, 4000); }
     catch (e) {
-      if (!firstErr) firstErr = `AI vision error (${e.message}${e.detail ? `: ${e.detail}` : ""})`;
+      if (e.code === "DAILY_LIMIT") {
+        dailyLimit = true;
+        firstErr = "Daily AI quota reached — try again tomorrow, or set a paid GROQ_API_KEY for higher limits";
+      } else if (!firstErr) {
+        firstErr = `AI vision error (${e.message}${e.detail ? `: ${e.detail}` : ""})`;
+      }
       console.error("[visionParser]", e.message, e.detail || "");
       return [];
     }

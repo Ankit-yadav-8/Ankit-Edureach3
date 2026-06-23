@@ -25,6 +25,7 @@ import { requireBatch } from "../middleware/batchGuard.js";
 import { requireAdmin } from "../middleware/admin.js";
 import { signUpload, cloudinaryReady, isOurCloudinaryUrl } from "../utils/cloudinary.js";
 import { buildTestFromPdfs, normalizeAnswer } from "../utils/testParser.js";
+import { normalizeSubject, orderSubjects } from "../utils/subjects.js";
 import { planLabel, batchLabelFor } from "../utils/plans.js";
 
 const router = express.Router();
@@ -62,10 +63,22 @@ function cleanQuestions(arr) {
       image: img(q?.image),
       options: type === "single" ? options : [],
       type,
-      subject: String(q?.subject || "").slice(0, 40),
+      subject: normalizeSubject(q?.subject),
+      topic: String(q?.topic || "").slice(0, 60),
       correct: normalizeAnswer(q?.correct),
       explanation: String(q?.explanation || "").slice(0, 2000),
     };
+  });
+}
+
+// Group questions into ordered subject sections, each numbered 1..k for display
+// (the global qno stays the stable id used for answers/grading).
+function buildSections(questions) {
+  const subs = orderSubjects(questions.map((q) => q.subject));
+  if (!subs.length) return [];
+  return subs.map((name) => {
+    const qs = questions.filter((q) => normalizeSubject(q.subject) === name);
+    return { name, count: qs.length, qnos: qs.map((q) => q.qno) };
   });
 }
 
@@ -368,7 +381,8 @@ router.get("/:id", requireAuth, requireBatch, async (req, res) => {
       examType: t.examType,
       examTypeLabel: EXAM_LABEL[t.examType] || "",
       marking: t.marking,
-      sections: t.sections || [],
+      sections: t.sections || [],                  // per-section MARKING (Advanced)
+      subjectSections: buildSections(t.questions),  // P/C/M · P/C/B navigation tabs
       testPdfUrl: t.testPdfUrl,
       totalQuestions: t.totalQuestions,
       maxMarks: t.maxMarks,
@@ -379,7 +393,8 @@ router.get("/:id", requireAuth, requireBatch, async (req, res) => {
         return {
           qno: q.qno, text: q.text, image: q.image || "",
           options: (q.options || []).map((o) => ({ key: o.key, text: o.text, image: o.image || "" })),
-          type: q.type, subject: q.subject, marks: { correct: mk.correct, wrong: mk.wrong },
+          type: q.type, subject: normalizeSubject(q.subject), topic: q.topic || "",
+          marks: { correct: mk.correct, wrong: mk.wrong },
         };
       }),
       alreadyAttempted: !!existing,
@@ -397,9 +412,15 @@ router.post("/:id/submit", requireAuth, requireBatch, async (req, res) => {
     const t = await Test.findOne({ _id: req.params.id, plan: req.batch.plan, status: "published" }).lean();
     if (!t) return res.status(404).json({ error: "Test not found for your batch." });
 
-    // Client sends { answers: { "<qno>": "<choice>" } }.
+    // Client sends { answers: { "<qno>": "<choice>" }, sectionTimes: { Physics: 1200, … } }.
     const submitted = req.body?.answers && typeof req.body.answers === "object" ? req.body.answers : {};
     const durationSec = Math.max(0, Math.min(60 * 600, Number(req.body?.durationSec) || 0));
+    const rawTimes = req.body?.sectionTimes && typeof req.body.sectionTimes === "object" ? req.body.sectionTimes : {};
+    const sectionTimes = {};
+    for (const k of Object.keys(rawTimes).slice(0, 8)) {
+      const s = normalizeSubject(k);
+      if (s) sectionTimes[s] = Math.max(0, Math.min(60 * 600, Number(rawTimes[k]) || 0));
+    }
 
     let score = 0, correctCount = 0, wrongCount = 0, skippedCount = 0;
     const answers = t.questions.map((q) => {
@@ -424,7 +445,7 @@ router.post("/:id/submit", requireAuth, requireBatch, async (req, res) => {
       test: t._id, userId: req.batch.userId, email: req.batch.email,
       plan: t.plan, category: t.category, title: t.title,
       answers, score, maxMarks, correctCount, wrongCount, skippedCount,
-      totalQuestions, accuracy, percent, durationSec, submittedAt: new Date(),
+      totalQuestions, accuracy, percent, durationSec, sectionTimes, submittedAt: new Date(),
     };
     // One canonical attempt per (test, student) — re-submitting overwrites.
     await TestAttempt.findOneAndUpdate(
@@ -460,21 +481,57 @@ router.get("/:id/result", requireAuth, requireBatch, async (req, res) => {
       return {
         ...ans,
         text: q?.text || "",
+        image: q?.image || "",
         type: q?.type || "single",
+        subject: normalizeSubject(q?.subject),
+        topic: q?.topic || "",
         options: (q?.options || []).map((o) => ({ key: o.key, text: o.text, image: o.image || "" })),
         explanation: q?.explanation || "",
       };
     });
 
+    // Per-subject breakdown (Subject Proficiency / Time Allocation in the report).
+    const subjOrder = orderSubjects(answers.map((x) => x.subject));
+    const subjects = subjOrder.map((name) => {
+      const qs = answers.filter((x) => x.subject === name);
+      const correct = qs.filter((x) => x.status === "correct").length;
+      const wrong = qs.filter((x) => x.status === "wrong").length;
+      const skipped = qs.filter((x) => x.status === "skipped").length;
+      const score = qs.reduce((s, x) => s + (x.marks || 0), 0);
+      const maxMarks = qs.reduce((s, x) => s + Math.max(0, markingForQ(t, x.qno).correct), 0);
+      const attempted = correct + wrong;
+      return {
+        name, total: qs.length, correct, wrong, skipped, score, maxMarks,
+        accuracy: attempted ? Math.round((correct / attempted) * 100) : 0,
+        percent: maxMarks ? Math.round((score / maxMarks) * 100) : 0,
+        timeSec: Math.round(Number(a.sectionTimes?.[name]) || 0),
+      };
+    });
+
+    // Topic accuracy heatmap (only when topics were tagged).
+    const topicMap = new Map();
+    for (const x of answers) {
+      if (!x.topic) continue;
+      const key = `${x.subject}|${x.topic}`;
+      const e = topicMap.get(key) || { subject: x.subject, topic: x.topic, total: 0, correct: 0 };
+      e.total++; if (x.status === "correct") e.correct++;
+      topicMap.set(key, e);
+    }
+    const topics = [...topicMap.values()].map((e) => ({ ...e, accuracy: e.total ? Math.round((e.correct / e.total) * 100) : 0 }));
+
     res.json({
       title: t.title,
+      examType: t.examType,
+      examTypeLabel: EXAM_LABEL[t.examType] || "",
       keyPdfUrl: t.keyPdfUrl,
       marking: t.marking,
       result: {
         score: a.score, maxMarks: a.maxMarks, percent: a.percent, accuracy: a.accuracy,
         correctCount: a.correctCount, wrongCount: a.wrongCount, skippedCount: a.skippedCount,
-        totalQuestions: a.totalQuestions, submittedAt: a.submittedAt,
+        totalQuestions: a.totalQuestions, durationSec: a.durationSec, submittedAt: a.submittedAt,
       },
+      subjects,
+      topics,
       answers,
     });
   } catch (e) {

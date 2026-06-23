@@ -25,6 +25,14 @@ const CATEGORIES = [
   { key: "full", label: "Full / Major Test" },
 ];
 
+// Subject sections per exam pattern (drives the per-section upload picker + the
+// student's section tabs). NEET swaps Maths → Biology.
+const SUBJECTS_BY_EXAM = {
+  mains: ["Physics", "Chemistry", "Maths"],
+  advanced: ["Physics", "Chemistry", "Maths"],
+  neet: ["Physics", "Chemistry", "Biology"],
+};
+
 const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "—");
 
 const card = { background: "#fff", borderRadius: 16, border: "1px solid #f0e9e0", boxShadow: "0 8px 30px rgba(13,27,62,.06)" };
@@ -42,11 +50,16 @@ export default function TestUpload({ token }) {
   const [sections, setSections] = useState([]);      // JEE Advanced per-section marking
   const [mCorrect, setMCorrect] = useState(4);
   const [mWrong, setMWrong] = useState(-1);
+  // Which subject section the current upload belongs to. "" = full paper (the
+  // model auto-detects subjects). Picking one tags every parsed question with it
+  // and APPENDS to the test — so you can upload Physics, then Chemistry, then Maths.
+  const [uploadSubject, setUploadSubject] = useState("");
 
   // Exam pattern is driven by the plan: NEET → neet, Foundation → standard,
   // JEE → mains/advanced (admin toggles). Mains & NEET lock to +4 / −1 / 0.
   const isJee = plan.includes("jee");
   const fixedMarking = examType === "mains" || examType === "neet";
+  const sectionSubjects = SUBJECTS_BY_EXAM[examType] || [];
   useEffect(() => {
     if (plan.includes("neet")) setExamType("neet");
     else if (plan.includes("foundation")) setExamType("standard");
@@ -83,7 +96,7 @@ export default function TestUpload({ token }) {
 
   const resetForm = () => {
     setTitle(""); setDurationMin(60); setMCorrect(4); setMWrong(-1); setSections([]);
-    setTestPdfUrl(""); setKeyPdfUrl(""); setUp({ test: 0, key: 0 });
+    setTestPdfUrl(""); setKeyPdfUrl(""); setUp({ test: 0, key: 0 }); setUploadSubject("");
     setQuestions(null); setNote(""); setErr("");
     if (testRef.current) testRef.current.value = "";
     if (keyRef.current) keyRef.current.value = "";
@@ -133,8 +146,19 @@ export default function TestUpload({ token }) {
         if (s.status === "done") { d = s; break; }
       }
       if (!d) throw new Error("Conversion is taking too long — please try again.");
-      setQuestions(d.questions || []);
-      setNote(d.note || "");
+      const parsed = d.questions || [];
+      // A specific section → tag every question with it and APPEND to the test;
+      // "full paper" → replace and keep the auto-detected subjects.
+      setQuestions((prev) => {
+        const incoming = uploadSubject ? parsed.map((q) => ({ ...q, subject: uploadSubject })) : parsed;
+        const base = uploadSubject ? (prev || []) : [];
+        return [...base, ...incoming].map((q, i) => ({ ...q, qno: i + 1 }));
+      });
+      setNote(uploadSubject
+        ? `Added ${parsed.length} ${uploadSubject} question${parsed.length === 1 ? "" : "s"}. ${d.note || ""} Upload another section or publish.`
+        : (d.note || ""));
+      // Clear the upload slot so the next section can be uploaded cleanly.
+      if (uploadSubject) { setTestPdfUrl(""); setKeyPdfUrl(""); setUp({ test: 0, key: 0 }); }
     } catch (ex) {
       // Scanned/image PDFs or a failed job — fall back to a manual grid so the
       // admin can still build the test (students read the paper from the PDF).
@@ -147,7 +171,7 @@ export default function TestUpload({ token }) {
   const setQ = (i, patch) => setQuestions((qs) => qs.map((q, j) => (j === i ? { ...q, ...patch } : q)));
   const addQ = () => setQuestions((qs) => [...qs, {
     qno: (qs[qs.length - 1]?.qno || qs.length) + 1, text: "", image: "", type: "single", correct: "",
-    options: ["1", "2", "3", "4"].map((k) => ({ key: k, text: "", image: "" })), explanation: "",
+    subject: uploadSubject || "", options: ["1", "2", "3", "4"].map((k) => ({ key: k, text: "", image: "" })), explanation: "",
   }]);
   const delQ = (i) => setQuestions((qs) => qs.filter((_, j) => j !== i));
 
@@ -336,8 +360,31 @@ export default function TestUpload({ token }) {
           </div>
         )}
 
+        {/* Section picker — upload one paper per subject, or a full paper. */}
+        {sectionSubjects.length > 0 && (
+          <div style={{ marginBottom: 12 }}>
+            <span style={lbl}>This upload is for</span>
+            <div style={{ display: "inline-flex", flexWrap: "wrap", gap: 6, background: "#f5f3ef", borderRadius: 10, padding: 4 }}>
+              {[{ k: "", l: "Full paper (auto)" }, ...sectionSubjects.map((s) => ({ k: s, l: s }))].map((o) => {
+                const on = uploadSubject === o.k;
+                return (
+                  <button key={o.k} type="button" onClick={() => setUploadSubject(o.k)}
+                    style={{ padding: "7px 14px", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: on ? "#fff" : "#7c7368", background: on ? NAVY : "transparent" }}>
+                    {o.l}
+                  </button>
+                );
+              })}
+            </div>
+            {uploadSubject && (
+              <div style={{ fontSize: 12, color: MUTE, marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
+                <Info size={13} /> Questions from this PDF are tagged <b style={{ color: NAVY }}>{uploadSubject}</b> and added to the test — upload each section, then publish.
+              </div>
+            )}
+          </div>
+        )}
+
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 8 }}>
-          <UploadBox which="test" label="Question paper PDF *" url={testPdfUrl} />
+          <UploadBox which="test" label={uploadSubject ? `${uploadSubject} paper PDF *` : "Question paper PDF *"} url={testPdfUrl} />
           <UploadBox which="key" label="Answer key PDF (optional)" url={keyPdfUrl} />
         </div>
         <div style={{ fontSize: 12, color: MUTE, display: "flex", alignItems: "flex-start", gap: 6, marginBottom: 16 }}>
@@ -348,7 +395,7 @@ export default function TestUpload({ token }) {
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <button onClick={parse} disabled={!testPdfUrl || parsing || busy}
             style={{ display: "inline-flex", alignItems: "center", gap: 8, background: NAVY, color: "#fff", border: "none", height: 42, padding: "0 18px", borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: !testPdfUrl || parsing ? "not-allowed" : "pointer", opacity: !testPdfUrl || parsing ? 0.6 : 1 }}>
-            {parsing ? <Loader2 size={16} className="adm-spin" /> : <Wand2 size={16} />} {parsing ? "Converting to CBT…" : "Auto-convert to CBT"}
+            {parsing ? <Loader2 size={16} className="adm-spin" /> : <Wand2 size={16} />} {parsing ? "Converting to CBT…" : uploadSubject ? `Convert & add ${uploadSubject}` : "Auto-convert to CBT"}
           </button>
           {!questions && (
             <button onClick={startManual} disabled={busy}
@@ -383,15 +430,21 @@ export default function TestUpload({ token }) {
         {questions && (
           <div style={{ marginTop: 18 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
-              <div style={{ fontWeight: 800, fontFamily: "Sora", color: NAVY, fontSize: 14 }}>
-                Review · {questions.length} question{questions.length === 1 ? "" : "s"}
-                {unanswered > 0 && <span style={{ marginLeft: 8, color: "#b45309", background: "#fef3c7", borderRadius: 20, padding: "2px 10px", fontSize: 12, fontWeight: 700 }}>{unanswered} missing answer</span>}
+              <div style={{ fontWeight: 800, fontFamily: "Sora", color: NAVY, fontSize: 14, display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+                <span>Review · {questions.length} question{questions.length === 1 ? "" : "s"}</span>
+                {/* per-section counts */}
+                {[...new Set(questions.map((q) => q.subject).filter(Boolean))].map((s) => (
+                  <span key={s} style={{ color: NAVY, background: "#eef2ff", borderRadius: 20, padding: "2px 10px", fontSize: 12, fontWeight: 700 }}>
+                    {s} {questions.filter((q) => q.subject === s).length}
+                  </span>
+                ))}
+                {unanswered > 0 && <span style={{ color: "#b45309", background: "#fef3c7", borderRadius: 20, padding: "2px 10px", fontSize: 12, fontWeight: 700 }}>{unanswered} missing answer</span>}
               </div>
               <button onClick={addQ} style={{ fontSize: 13, fontWeight: 700, color: ORANGE, background: "none", border: "none", cursor: "pointer" }}>+ Add question</button>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {questions.map((q, i) => (
-                <QuestionCard key={i} q={q} i={i} onChange={(patch) => setQ(i, patch)} onDelete={() => delQ(i)} uploadImage={uploadImage} />
+                <QuestionCard key={i} q={q} i={i} onChange={(patch) => setQ(i, patch)} onDelete={() => delQ(i)} uploadImage={uploadImage} subjectOptions={sectionSubjects} />
               ))}
             </div>
 
@@ -460,7 +513,7 @@ const iconBtn = { background: "none", border: "none", cursor: "pointer", color: 
 // with text + image), correct-answer picker and a worked solution. Collapses to
 // a one-line summary so a long paper stays scannable. `uploadImage(file)` pushes
 // to Cloudinary and returns the URL.
-function QuestionCard({ q, onChange, onDelete, uploadImage }) {
+function QuestionCard({ q, onChange, onDelete, uploadImage, subjectOptions = [] }) {
   const [open, setOpen] = useState(true);
   const [busySlot, setBusySlot] = useState(""); // "q" | "opt-1" … while uploading
   const [imgErr, setImgErr] = useState("");
@@ -510,6 +563,12 @@ function QuestionCard({ q, onChange, onDelete, uploadImage }) {
           {q.text || <span style={{ color: "#bbb", fontStyle: "italic" }}>Question {q.qno} — read from the paper</span>}
         </div>
         {!correctOk && <span style={{ fontSize: 10.5, fontWeight: 800, color: "#b45309", background: "#fef3c7", borderRadius: 20, padding: "2px 8px", flexShrink: 0 }}>no answer</span>}
+        {subjectOptions.length > 0 && (
+          <select value={q.subject || ""} onChange={(e) => onChange({ subject: e.target.value })} style={{ ...inp, height: 30, width: 110, fontSize: 12, flexShrink: 0 }} title="Section / subject">
+            <option value="">Subject…</option>
+            {subjectOptions.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+        )}
         <select value={q.type} onChange={(e) => onChange({ type: e.target.value })} style={{ ...inp, height: 30, width: 92, fontSize: 12, flexShrink: 0 }}>
           <option value="single">MCQ</option>
           <option value="integer">Integer</option>

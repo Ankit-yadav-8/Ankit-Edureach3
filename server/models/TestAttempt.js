@@ -35,6 +35,9 @@ const attemptSchema = new mongoose.Schema(
     accuracy: { type: Number, default: 0 }, // % of attempted that were correct
     percent: { type: Number, default: 0 }, // score / maxMarks
     durationSec: { type: Number, default: 0 },
+    // Seconds spent per subject section (Physics/Chemistry/…) — optional, for
+    // the result "Time Allocation" widget. Stored as a free-form object.
+    sectionTimes: { type: Object, default: {} },
 
     submittedAt: { type: Date, default: Date.now },
   },

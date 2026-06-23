@@ -11,7 +11,8 @@ const questionSchema = new mongoose.Schema(
     // option text and/or image; empty for integer type
     options: [{ key: String, text: String, image: { type: String, default: "" } }],
     type: { type: String, enum: ["single", "integer"], default: "single" },
-    subject: { type: String, default: "" },
+    subject: { type: String, default: "" }, // Physics / Chemistry / Maths / Biology — drives section tabs
+    topic: { type: String, default: "" },   // chapter, for the result heatmap (best-effort)
     correct: { type: String, default: "" }, // from the answer-key PDF
     explanation: { type: String, default: "" }, // worked solution shown after submit
   },
