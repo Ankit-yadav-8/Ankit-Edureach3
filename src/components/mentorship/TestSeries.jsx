@@ -327,19 +327,18 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
       ) : result ? (
         <ResultView token={token} plan={plan} testId={testId} result={result} onClose={onSubmitted} />
       ) : (
-        <div className="cbt-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: "1.35fr 1fr", minHeight: 0 }}>
-          {/* PDF pane */}
-          <div style={{ background: "#525659", minHeight: 0, position: "relative", display: "flex", flexDirection: "column" }}>
-            {test.testPdfUrl ? (
+        <div className="cbt-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: test.testPdfUrl ? "1.35fr 1fr" : "1fr", minHeight: 0 }}>
+          {/* PDF pane — only when a question paper was attached. A manual test
+              has no PDF: the question text/options are shown in the answer pane. */}
+          {test.testPdfUrl && (
+            <div style={{ background: "#525659", minHeight: 0, position: "relative", display: "flex", flexDirection: "column" }}>
               <iframe title="Question paper" src={test.testPdfUrl} style={{ flex: 1, width: "100%", border: "none" }} />
-            ) : (
-              <div style={{ flex: 1, display: "grid", placeItems: "center", color: "#fff" }}>No paper attached</div>
-            )}
-            <a href={test.testPdfUrl} target="_blank" rel="noreferrer"
-              style={{ position: "absolute", bottom: 12, right: 12, display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,.6)", color: "#fff", borderRadius: 8, padding: "6px 10px", fontSize: 12, fontWeight: 600, textDecoration: "none" }}>
-              <ExternalLink size={13} /> Open PDF
-            </a>
-          </div>
+              <a href={test.testPdfUrl} target="_blank" rel="noreferrer"
+                style={{ position: "absolute", bottom: 12, right: 12, display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,.6)", color: "#fff", borderRadius: 8, padding: "6px 10px", fontSize: 12, fontWeight: 600, textDecoration: "none" }}>
+                <ExternalLink size={13} /> Open PDF
+              </a>
+            </div>
+          )}
 
           {/* answer + palette pane */}
           <div style={{ background: "#fff", borderLeft: "1px solid #e5e7eb", display: "flex", flexDirection: "column", minHeight: 0 }}>
@@ -368,7 +367,9 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
                 <img src={q.image} alt={`Question ${q.qno}`} style={{ maxWidth: "100%", borderRadius: 10, border: "1px solid #e5e7eb", marginBottom: 14 }} />
               )}
               {!q?.text && !q?.image && (
-                <div style={{ fontSize: 13, color: MUTE, marginBottom: 14, fontStyle: "italic" }}>Read question {q?.qno} from the paper on the left, then mark your answer below.</div>
+                <div style={{ fontSize: 13, color: MUTE, marginBottom: 14, fontStyle: "italic" }}>
+                  {test.testPdfUrl ? `Read question ${q?.qno} from the paper on the left, then mark your answer below.` : "Mark your answer below."}
+                </div>
               )}
 
               {q?.type === "integer" ? (

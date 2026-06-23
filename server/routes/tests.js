@@ -157,12 +157,21 @@ router.post("/admin", requireAdmin, async (req, res) => {
     const title = String(req.body?.title || "").trim().slice(0, 160);
     if (!title) return res.status(400).json({ error: "Give the test a title." });
 
+    // The question paper PDF is optional — a test can be built entirely from
+    // manually-typed questions (students then read them from the CBT pane). If a
+    // PDF is provided it must be one of ours.
     const testPdfUrl = String(req.body?.testPdfUrl || "");
-    if (!isOurCloudinaryUrl(testPdfUrl)) return res.status(400).json({ error: "Upload the question paper PDF." });
+    if (testPdfUrl && !isOurCloudinaryUrl(testPdfUrl)) return res.status(400).json({ error: "The question paper PDF link looks invalid — re-upload it." });
     const keyPdfUrl = String(req.body?.keyPdfUrl || "");
 
     const questions = cleanQuestions(req.body?.questions);
-    if (!questions.length) return res.status(400).json({ error: "The test has no questions." });
+    if (!questions.length) return res.status(400).json({ error: "Add at least one question (parse a PDF or add questions manually)." });
+
+    // With no PDF, the questions themselves must carry the content students see.
+    const hasContent = questions.some((q) => q.text || q.image || (q.options || []).some((o) => o.text || o.image));
+    if (!isOurCloudinaryUrl(testPdfUrl) && !hasContent) {
+      return res.status(400).json({ error: "Upload the question paper PDF, or give the questions some text / options." });
+    }
 
     const examType = examTypeFor(plan, req.body?.examType);
     const marking = markingFor(examType, req.body);
@@ -175,7 +184,7 @@ router.post("/admin", requireAdmin, async (req, res) => {
       subject: String(req.body?.subject || "").slice(0, 40),
       durationMin: Math.min(600, Math.max(1, Number(req.body?.durationMin) || 60)),
       examType,
-      testPdfUrl,
+      testPdfUrl: isOurCloudinaryUrl(testPdfUrl) ? testPdfUrl : "",
       keyPdfUrl: isOurCloudinaryUrl(keyPdfUrl) ? keyPdfUrl : "",
       marking,
       sections,

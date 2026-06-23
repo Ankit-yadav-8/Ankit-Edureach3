@@ -149,9 +149,21 @@ export default function TestUpload({ token }) {
 
   const unanswered = (questions || []).filter((q) => !String(q.correct).trim()).length;
 
+  // Start a manual test with one blank question — no PDF needed. Students read
+  // the question text/options/images straight from the CBT pane.
+  const blankQ = (qno) => ({
+    qno, text: "", image: "", type: "single", correct: "",
+    options: ["1", "2", "3", "4"].map((k) => ({ key: k, text: "", image: "" })), explanation: "",
+  });
+  const startManual = () => { setErr(""); setNote(""); setQuestions([blankQ(1)]); };
+
   async function publish() {
     if (!title.trim()) { setErr("Give the test a title."); return; }
-    if (!questions?.length) { setErr("Parse the PDF (or add questions) first."); return; }
+    if (!questions?.length) { setErr("Add at least one question (parse a PDF or add manually)."); return; }
+    if (!testPdfUrl && !questions.some((q) => String(q.text).trim() || q.image || (q.options || []).some((o) => String(o.text).trim() || o.image))) {
+      setErr("Add a question paper PDF, or give the questions some text / options.");
+      return;
+    }
     setPublishing(true); setErr("");
     try {
       await apiAdminTestCreate(token, {
@@ -324,6 +336,12 @@ export default function TestUpload({ token }) {
             style={{ display: "inline-flex", alignItems: "center", gap: 8, background: NAVY, color: "#fff", border: "none", height: 42, padding: "0 18px", borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: !testPdfUrl || parsing ? "not-allowed" : "pointer", opacity: !testPdfUrl || parsing ? 0.6 : 1 }}>
             {parsing ? <Loader2 size={16} className="adm-spin" /> : <Wand2 size={16} />} {parsing ? "Converting to CBT…" : "Auto-convert to CBT"}
           </button>
+          {!questions && (
+            <button onClick={startManual} disabled={busy}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: NAVY, border: "1.5px solid #e5e7eb", height: 42, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13.5, cursor: "pointer" }}>
+              <Plus size={15} /> Add questions manually
+            </button>
+          )}
           {questions && (
             <button onClick={resetForm} style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", color: MUTE, border: "1.5px solid #e5e7eb", height: 42, padding: "0 16px", borderRadius: 10, fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
               <X size={15} /> Clear
@@ -355,6 +373,12 @@ export default function TestUpload({ token }) {
                 <QuestionCard key={i} q={q} i={i} onChange={(patch) => setQ(i, patch)} onDelete={() => delQ(i)} uploadImage={uploadImage} />
               ))}
             </div>
+
+            {err && (
+              <div style={{ marginTop: 16, background: "#fff0f0", border: "1px solid #fca5a5", borderRadius: 10, padding: "10px 14px", color: "#dc2626", fontSize: 13, display: "flex", alignItems: "center", gap: 8 }}>
+                <AlertTriangle size={15} style={{ flexShrink: 0 }} /> {err}
+              </div>
+            )}
 
             <button onClick={publish} disabled={publishing}
               style={{ marginTop: 16, display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", border: "none", height: 46, padding: "0 24px", borderRadius: 12, fontWeight: 800, fontFamily: "Sora", fontSize: 15, cursor: publishing ? "wait" : "pointer", boxShadow: "0 10px 24px -10px #FF693D" }}>
