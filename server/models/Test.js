@@ -7,10 +7,13 @@ const questionSchema = new mongoose.Schema(
   {
     qno: { type: Number, required: true },
     text: { type: String, default: "" },
-    options: [{ key: String, text: String }], // empty for integer type
+    image: { type: String, default: "" }, // optional question image (Cloudinary)
+    // option text and/or image; empty for integer type
+    options: [{ key: String, text: String, image: { type: String, default: "" } }],
     type: { type: String, enum: ["single", "integer"], default: "single" },
     subject: { type: String, default: "" },
     correct: { type: String, default: "" }, // from the answer-key PDF
+    explanation: { type: String, default: "" }, // worked solution shown after submit
   },
   { _id: false }
 );

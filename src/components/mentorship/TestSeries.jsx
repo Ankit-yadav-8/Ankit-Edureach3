@@ -8,6 +8,7 @@ import {
 import { useAuth } from "../../auth/AuthContext.jsx";
 import { apiTestList, apiTestGet, apiTestSubmit, apiTestResult, apiTestPerformance } from "../../auth/api.js";
 import { Trend } from "../Charts.jsx";
+import MathText from "./MathText.jsx";
 
 const ORANGE = "#FF693D", NAVY = "#0d1b3e", GREEN = "#15a06e", INDIGO = "#6366f1", MUTE = "#6b7280";
 const RED = "#ef4444", AMBER = "#f59e0b";
@@ -361,9 +362,12 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
               </div>
 
               {q?.text && (
-                <div style={{ fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 14, whiteSpace: "pre-wrap" }}>{q.text}</div>
+                <div style={{ fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: q?.image ? 10 : 14 }}><MathText text={q.text} /></div>
               )}
-              {!q?.text && (
+              {q?.image && (
+                <img src={q.image} alt={`Question ${q.qno}`} style={{ maxWidth: "100%", borderRadius: 10, border: "1px solid #e5e7eb", marginBottom: 14 }} />
+              )}
+              {!q?.text && !q?.image && (
                 <div style={{ fontSize: 13, color: MUTE, marginBottom: 14, fontStyle: "italic" }}>Read question {q?.qno} from the paper on the left, then mark your answer below.</div>
               )}
 
@@ -385,7 +389,9 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
                       <button key={k} onClick={() => choose(key)}
                         style={{ display: "flex", alignItems: "center", gap: 12, textAlign: "left", border: `1.5px solid ${on ? ORANGE : "#e5e7eb"}`, background: on ? `${ORANGE}0f` : "#fff", borderRadius: 12, padding: "11px 13px", cursor: "pointer", transition: "all .12s" }}>
                         <span style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, display: "grid", placeItems: "center", fontWeight: 800, fontFamily: "Sora", fontSize: 13, background: on ? ORANGE : "#f1f5f9", color: on ? "#fff" : NAVY }}>{key}</span>
-                        <span style={{ fontSize: 13.5, color: NAVY }}>{opt?.text || `Option ${key}`}</span>
+                        {opt?.image
+                          ? <img src={opt.image} alt={`Option ${key}`} style={{ maxHeight: 72, maxWidth: "100%", borderRadius: 8 }} />
+                          : <span style={{ fontSize: 13.5, color: NAVY }}><MathText text={opt?.text || `Option ${key}`} /></span>}
                       </button>
                     );
                   })}
@@ -524,21 +530,73 @@ function ResultView({ token, plan, testId, result, onClose }) {
                 <ExternalLink size={14} /> Open full answer-key / solutions PDF
               </a>
             )}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(78px,1fr))", gap: 8 }}>
-              {review.answers.map((a) => {
-                const c = a.status === "correct" ? GREEN : a.status === "wrong" ? RED : "#cbd5e1";
-                return (
-                  <div key={a.qno} style={{ border: `1.5px solid ${c}`, borderRadius: 10, padding: "8px 6px", textAlign: "center", background: `${c}0d` }}>
-                    <div style={{ fontSize: 11, color: MUTE, fontWeight: 700 }}>Q{a.qno}</div>
-                    <div style={{ fontSize: 12.5, fontWeight: 800, color: NAVY }}>You: {a.answer || "—"}</div>
-                    <div style={{ fontSize: 11.5, color: c, fontWeight: 700 }}>Key: {a.correct || "—"}</div>
-                  </div>
-                );
-              })}
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {review.answers.map((a) => <SolutionCard key={a.qno} a={a} />)}
             </div>
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+/* One question in the post-submit review: stem, options (correct/your-pick
+   highlighted), your answer vs the key, and the worked solution. */
+function SolutionCard({ a }) {
+  const c = a.status === "correct" ? GREEN : a.status === "wrong" ? RED : "#94a3b8";
+  const label = a.status === "correct" ? "Correct" : a.status === "wrong" ? "Wrong" : "Skipped";
+  const options = a.options || [];
+
+  return (
+    <div style={{ border: "1px solid #eef2f7", borderLeft: `3px solid ${c}`, borderRadius: 12, padding: "12px 14px", background: "#fff" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: a.text ? 8 : 6 }}>
+        <span style={{ fontSize: 12, fontWeight: 800, color: MUTE }}>Q{a.qno}</span>
+        <span style={{ fontSize: 11, fontWeight: 800, color: c, background: `${c}14`, borderRadius: 50, padding: "2px 9px" }}>{label}</span>
+        <div style={{ flex: 1 }} />
+        <span style={{ fontSize: 12, fontWeight: 800, color: a.marks > 0 ? GREEN : a.marks < 0 ? RED : MUTE }}>
+          {a.marks > 0 ? `+${a.marks}` : a.marks}
+        </span>
+      </div>
+
+      {a.text && <div style={{ fontSize: 13.5, color: NAVY, lineHeight: 1.6, marginBottom: 10 }}><MathText text={a.text} /></div>}
+
+      {a.type === "integer" ? (
+        <div style={{ display: "flex", gap: 18, fontSize: 13, marginBottom: a.explanation ? 10 : 0 }}>
+          <span style={{ color: MUTE }}>Your answer: <b style={{ color: a.status === "wrong" ? RED : NAVY }}>{a.answer || "—"}</b></span>
+          <span style={{ color: MUTE }}>Correct: <b style={{ color: GREEN }}>{a.correct || "—"}</b></span>
+        </div>
+      ) : options.length ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: a.explanation ? 10 : 0 }}>
+          {options.map((o) => {
+            const isKey = String(a.correct) === String(o.key);
+            const isYours = String(a.answer) === String(o.key);
+            const bg = isKey ? "#ecfdf5" : isYours ? "#fef2f2" : "#fff";
+            const bd = isKey ? GREEN : isYours ? RED : "#e5e7eb";
+            return (
+              <div key={o.key} style={{ display: "flex", alignItems: "center", gap: 10, border: `1.5px solid ${bd}`, background: bg, borderRadius: 10, padding: "8px 11px" }}>
+                <span style={{ width: 24, height: 24, borderRadius: "50%", flexShrink: 0, display: "grid", placeItems: "center", fontWeight: 800, fontSize: 12, background: isKey ? GREEN : isYours ? RED : "#f1f5f9", color: isKey || isYours ? "#fff" : NAVY }}>{o.key}</span>
+                <span style={{ fontSize: 13, color: NAVY, flex: 1 }}>
+                  {o.image ? <img src={o.image} alt={`Option ${o.key}`} style={{ maxHeight: 60, maxWidth: "100%", borderRadius: 6 }} /> : <MathText text={o.text || `Option ${o.key}`} />}
+                </span>
+                {isKey && <span style={{ fontSize: 11, fontWeight: 800, color: GREEN }}>Correct answer</span>}
+                {isYours && !isKey && <span style={{ fontSize: 11, fontWeight: 800, color: RED }}>Your answer</span>}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div style={{ display: "flex", gap: 18, fontSize: 13, marginBottom: a.explanation ? 10 : 0 }}>
+          <span style={{ color: MUTE }}>You: <b style={{ color: a.status === "wrong" ? RED : NAVY }}>{a.answer || "—"}</b></span>
+          <span style={{ color: MUTE }}>Key: <b style={{ color: GREEN }}>{a.correct || "—"}</b></span>
+        </div>
+      )}
+
+      {a.explanation && (
+        <div style={{ display: "flex", gap: 8, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
+          <BookOpenCheck size={15} color={INDIGO} style={{ flexShrink: 0, marginTop: 1 }} />
+          <div style={{ fontSize: 13, color: NAVY, lineHeight: 1.6 }}><b style={{ color: INDIGO }}>Solution:</b> <MathText text={a.explanation} /></div>
+        </div>
+      )}
     </div>
   );
 }

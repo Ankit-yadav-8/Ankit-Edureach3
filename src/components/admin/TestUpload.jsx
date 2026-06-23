@@ -2,12 +2,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FileText, UploadCloud, Loader2, Trash2, CheckCircle2, AlertTriangle,
   RefreshCw, Wand2, ClipboardList, Clock, FileCheck2, X, Plus, Layers, Info,
+  ImagePlus, ChevronDown, ChevronUp,
 } from "lucide-react";
 import {
   apiAdminTestSignUpload, apiAdminTestParse, apiAdminTestCreate,
   apiAdminTestList, apiAdminTestDelete,
 } from "../../auth/api.js";
-import { uploadPdf, validatePdf } from "../../utils/cloudinaryUpload.js";
+import { uploadPdf, validatePdf, uploadToCloudinary, validateFile, compressImage } from "../../utils/cloudinaryUpload.js";
 
 const ORANGE = "#FF693D", NAVY = "#0d1b3e", GREEN = "#15a06e", MUTE = "#6b7280";
 
@@ -130,8 +131,21 @@ export default function TestUpload({ token }) {
   }
 
   const setQ = (i, patch) => setQuestions((qs) => qs.map((q, j) => (j === i ? { ...q, ...patch } : q)));
-  const addQ = () => setQuestions((qs) => [...qs, { qno: (qs[qs.length - 1]?.qno || qs.length) + 1, text: "", options: [], type: "single", correct: "" }]);
+  const addQ = () => setQuestions((qs) => [...qs, {
+    qno: (qs[qs.length - 1]?.qno || qs.length) + 1, text: "", image: "", type: "single", correct: "",
+    options: ["1", "2", "3", "4"].map((k) => ({ key: k, text: "", image: "" })), explanation: "",
+  }]);
   const delQ = (i) => setQuestions((qs) => qs.filter((_, j) => j !== i));
+
+  // Upload an image (question or option) straight to Cloudinary; returns its URL.
+  const uploadImage = useCallback(async (file) => {
+    const v = validateFile(file);
+    if (v) throw new Error(v);
+    const sig = await apiAdminTestSignUpload(token, plan);
+    const prepared = await compressImage(file);
+    const media = await uploadToCloudinary(prepared, sig);
+    return media.url;
+  }, [token, plan]);
 
   const unanswered = (questions || []).filter((q) => !String(q.correct).trim()).length;
 
@@ -296,9 +310,13 @@ export default function TestUpload({ token }) {
           </div>
         )}
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 8 }}>
           <UploadBox which="test" label="Question paper PDF *" url={testPdfUrl} />
-          <UploadBox which="key" label="Answer key PDF" url={keyPdfUrl} />
+          <UploadBox which="key" label="Answer key PDF (optional)" url={keyPdfUrl} />
+        </div>
+        <div style={{ fontSize: 12, color: MUTE, display: "flex", alignItems: "flex-start", gap: 6, marginBottom: 16 }}>
+          <Info size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+          <span>One self-contained PDF works too — if each question has its answer inline (e.g. “Ans: B” / “Correct option: 2”), leave the answer-key box empty and we’ll detect it.</span>
         </div>
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -332,42 +350,10 @@ export default function TestUpload({ token }) {
               </div>
               <button onClick={addQ} style={{ fontSize: 13, fontWeight: 700, color: ORANGE, background: "none", border: "none", cursor: "pointer" }}>+ Add question</button>
             </div>
-            <div style={{ maxHeight: 360, overflowY: "auto", border: "1px solid #f0e9e0", borderRadius: 12 }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                <thead>
-                  <tr style={{ background: "#faf8f4", position: "sticky", top: 0 }}>
-                    {["#", "Question (stem)", "Type", "Correct", ""].map((h, i) => (
-                      <th key={i} style={{ textAlign: "left", padding: "8px 10px", fontSize: 11, color: "#999", textTransform: "uppercase", letterSpacing: ".05em", borderBottom: "1px solid #f0e9e0", whiteSpace: "nowrap" }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {questions.map((q, i) => (
-                    <tr key={i} style={{ borderBottom: "1px solid #f5f3ef" }}>
-                      <td style={{ padding: "8px 10px", color: MUTE, fontWeight: 700 }}>{q.qno}</td>
-                      <td style={{ padding: "8px 10px", maxWidth: 360 }}>
-                        <div style={{ color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 360 }} title={q.text}>{q.text || <em style={{ color: "#bbb" }}>—</em>}</div>
-                        {q.type === "single" && q.options?.length > 0 && (
-                          <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{q.options.map((o) => `${o.key}) ${o.text}`).join("  ·  ").slice(0, 120)}</div>
-                        )}
-                      </td>
-                      <td style={{ padding: "8px 10px" }}>
-                        <select value={q.type} onChange={(e) => setQ(i, { type: e.target.value })} style={{ ...inp, height: 32, width: 96, fontSize: 12 }}>
-                          <option value="single">MCQ</option>
-                          <option value="integer">Integer</option>
-                        </select>
-                      </td>
-                      <td style={{ padding: "8px 10px" }}>
-                        <input value={q.correct} onChange={(e) => setQ(i, { correct: e.target.value })} placeholder={q.type === "single" ? "1–4 / A–D" : "number"}
-                          style={{ ...inp, height: 32, width: 90, fontSize: 13, fontWeight: 700, textAlign: "center", borderColor: String(q.correct).trim() ? "#e5e7eb" : "#fca5a5" }} />
-                      </td>
-                      <td style={{ padding: "8px 10px" }}>
-                        <button onClick={() => delQ(i)} style={{ background: "none", border: "none", cursor: "pointer", color: "#cbd5e1" }}><Trash2 size={15} /></button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {questions.map((q, i) => (
+                <QuestionCard key={i} q={q} i={i} onChange={(patch) => setQ(i, patch)} onDelete={() => delQ(i)} uploadImage={uploadImage} />
+              ))}
             </div>
 
             <button onClick={publish} disabled={publishing}
@@ -419,6 +405,127 @@ export default function TestUpload({ token }) {
       </div>
 
       <style>{`.adm-spin{animation:admSpin .8s linear infinite}`}</style>
+    </div>
+  );
+}
+
+const iconBtn = { background: "none", border: "none", cursor: "pointer", color: "#94a3b8", display: "grid", placeItems: "center", padding: 4, flexShrink: 0 };
+
+// Rich editor for one parsed/added question: stem + image, four options (each
+// with text + image), correct-answer picker and a worked solution. Collapses to
+// a one-line summary so a long paper stays scannable. `uploadImage(file)` pushes
+// to Cloudinary and returns the URL.
+function QuestionCard({ q, onChange, onDelete, uploadImage }) {
+  const [open, setOpen] = useState(true);
+  const [busySlot, setBusySlot] = useState(""); // "q" | "opt-1" … while uploading
+  const [imgErr, setImgErr] = useState("");
+
+  const isInt = q.type === "integer";
+  const options = q.options?.length ? q.options : ["1", "2", "3", "4"].map((k) => ({ key: k, text: "", image: "" }));
+  const setOpt = (k, patch) => onChange({ options: options.map((o) => (o.key === k ? { ...o, ...patch } : o)) });
+  const correctOk = String(q.correct).trim().length > 0;
+
+  function pickImage(slot, apply) {
+    const el = document.createElement("input");
+    el.type = "file";
+    el.accept = "image/*";
+    el.onchange = async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setImgErr(""); setBusySlot(slot);
+      try { apply(await uploadImage(file)); }
+      catch (ex) { setImgErr(ex.message || "Image upload failed"); }
+      finally { setBusySlot(""); }
+    };
+    el.click();
+  }
+
+  const ImgCtl = ({ slot, url, onSet }) =>
+    url ? (
+      <div style={{ position: "relative", display: "inline-block" }}>
+        <img src={url} alt="" style={{ maxHeight: 64, maxWidth: 140, borderRadius: 8, border: "1px solid #e5e7eb", display: "block" }} />
+        <button type="button" onClick={() => onSet("")} title="Remove image"
+          style={{ position: "absolute", top: -8, right: -8, width: 22, height: 22, borderRadius: "50%", border: "none", background: "#ef4444", color: "#fff", cursor: "pointer", display: "grid", placeItems: "center" }}>
+          <X size={12} />
+        </button>
+      </div>
+    ) : (
+      <button type="button" onClick={() => pickImage(slot, onSet)} disabled={busySlot === slot}
+        style={{ display: "inline-flex", alignItems: "center", gap: 6, border: "1.5px dashed #d6cdc0", background: "#fafafa", color: MUTE, borderRadius: 8, padding: "7px 11px", fontSize: 12, fontWeight: 600, cursor: busySlot === slot ? "wait" : "pointer" }}>
+        {busySlot === slot ? <Loader2 size={13} className="adm-spin" /> : <ImagePlus size={13} />} Image
+      </button>
+    );
+
+  return (
+    <div style={{ border: `1.5px solid ${correctOk ? "#f0e9e0" : "#fca5a5"}`, borderRadius: 12, background: "#fff", overflow: "hidden" }}>
+      {/* header / summary row */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "#faf8f4", borderBottom: open ? "1px solid #f0e9e0" : "none" }}>
+        <span style={{ width: 28, height: 28, borderRadius: 8, background: `${ORANGE}15`, color: ORANGE, fontWeight: 800, fontSize: 13, display: "grid", placeItems: "center", flexShrink: 0 }}>{q.qno}</span>
+        <div style={{ flex: 1, minWidth: 0, fontSize: 13, color: NAVY, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {q.text || <span style={{ color: "#bbb", fontStyle: "italic" }}>Question {q.qno} — read from the paper</span>}
+        </div>
+        {!correctOk && <span style={{ fontSize: 10.5, fontWeight: 800, color: "#b45309", background: "#fef3c7", borderRadius: 20, padding: "2px 8px", flexShrink: 0 }}>no answer</span>}
+        <select value={q.type} onChange={(e) => onChange({ type: e.target.value })} style={{ ...inp, height: 30, width: 92, fontSize: 12, flexShrink: 0 }}>
+          <option value="single">MCQ</option>
+          <option value="integer">Integer</option>
+        </select>
+        <button type="button" onClick={() => setOpen((o) => !o)} style={iconBtn}>{open ? <ChevronUp size={15} /> : <ChevronDown size={15} />}</button>
+        <button type="button" onClick={onDelete} style={{ ...iconBtn, color: "#ef4444" }}><Trash2 size={15} /></button>
+      </div>
+
+      {open && (
+        <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 12 }}>
+          {/* stem + image */}
+          <div>
+            <span style={lbl}>Question</span>
+            <textarea value={q.text || ""} onChange={(e) => onChange({ text: e.target.value })}
+              placeholder="Question text (optional — students can also read it from the PDF)"
+              rows={2} style={{ ...inp, height: "auto", minHeight: 56, padding: "9px 12px", resize: "vertical", lineHeight: 1.5 }} />
+            <div style={{ marginTop: 8 }}><ImgCtl slot="q" url={q.image} onSet={(url) => onChange({ image: url })} /></div>
+          </div>
+
+          {/* answer */}
+          {isInt ? (
+            <div>
+              <span style={lbl}>Correct answer (number)</span>
+              <input value={q.correct || ""} onChange={(e) => onChange({ correct: e.target.value })} inputMode="decimal"
+                placeholder="e.g. 9.8" style={{ ...inp, maxWidth: 200, fontWeight: 700, color: GREEN, borderColor: correctOk ? "#e5e7eb" : "#fca5a5" }} />
+            </div>
+          ) : (
+            <div>
+              <span style={lbl}>Options — tap the circle to mark the correct one</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {options.map((o) => {
+                  const on = String(q.correct) === String(o.key);
+                  return (
+                    <div key={o.key} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                      <button type="button" onClick={() => onChange({ correct: o.key })} title="Mark as correct"
+                        style={{ width: 30, height: 30, borderRadius: "50%", flexShrink: 0, marginTop: 3, border: `1.5px solid ${on ? GREEN : "#d6cdc0"}`, background: on ? GREEN : "#fff", color: on ? "#fff" : NAVY, fontWeight: 800, fontSize: 13, cursor: "pointer", display: "grid", placeItems: "center" }}>
+                        {o.key}
+                      </button>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <input value={o.text || ""} onChange={(e) => setOpt(o.key, { text: e.target.value })}
+                          placeholder={`Option ${o.key} text`} style={{ ...inp, height: 36, fontSize: 13 }} />
+                        <div style={{ marginTop: 6 }}><ImgCtl slot={`opt-${o.key}`} url={o.image} onSet={(url) => setOpt(o.key, { image: url })} /></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* worked solution */}
+          <div>
+            <span style={lbl}>Solution / explanation <span style={{ color: "#bbb", fontWeight: 500 }}>(shown to students after they submit)</span></span>
+            <textarea value={q.explanation || ""} onChange={(e) => onChange({ explanation: e.target.value })}
+              placeholder="Worked solution or why the answer is correct"
+              rows={2} style={{ ...inp, height: "auto", minHeight: 52, padding: "9px 12px", resize: "vertical", lineHeight: 1.5 }} />
+          </div>
+
+          {imgErr && <div style={{ color: "#dc2626", fontSize: 12 }}>{imgErr}</div>}
+        </div>
+      )}
     </div>
   );
 }

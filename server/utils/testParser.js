@@ -62,6 +62,26 @@ export async function fetchPdfText(url) {
 // or "1.…4." style. Fewer than 2 options ⇒ treated as an integer-type question.
 const OPTION_RE = /(?:^|\s)\(?([A-Da-d1-4])\)\s+|(?:^|\n)\s*([A-Da-d1-4])[.)]\s+/g;
 
+// Inline answer marker embedded in the same block as the question — for papers
+// where the key sits right under each question ("Ans: B", "Answer (3)",
+// "Correct option: 2", "Correct answer is D", "Answer key - 4"). The captured
+// group is an option label (A–D / 1–4) or an integer. We anchor on a keyword +
+// the value so ordinary option text ("…the answer to…") doesn't trigger it.
+// "solution" is deliberately excluded — it usually precedes a worked explanation
+// whose first number would be mistaken for the answer.
+const ANSWER_RE_G = /\b(?:ans(?:wer)?(?:\s*key)?|correct(?:\s*(?:option|answer|choice))?(?:\s*is)?|answer\s*key)\b\s*[:.\-–=)]*\s*\(?\s*([A-Da-d]|[1-4]|-?\d{1,4}(?:\.\d+)?)\s*\)?/gi;
+
+// Find the LAST inline answer marker in a block (the answer almost always comes
+// after the options). Returns { value, index } or null.
+function extractInlineAnswer(block) {
+  ANSWER_RE_G.lastIndex = 0;
+  let m, last = null;
+  while ((m = ANSWER_RE_G.exec(block)) !== null) last = m;
+  if (!last) return null;
+  const value = normalizeAnswer(last[1]);
+  return value ? { value, index: last.index } : null;
+}
+
 export function parseQuestions(text) {
   const clean = String(text || "").replace(/\r/g, "");
   const markerRe = /(?:^|\n)\s*(\d{1,3})[.)]\s+/g;
@@ -89,6 +109,7 @@ export function parseQuestions(text) {
 
 function parseOneBlock(qno, block) {
   if (!block) return null;
+
   OPTION_RE.lastIndex = 0;
   const opts = [];
   let firstOptAt = -1;
@@ -99,11 +120,26 @@ function parseOneBlock(qno, block) {
     if (firstOptAt === -1) firstOptAt = at;
     opts.push({ label, at, contentFrom: OPTION_RE.lastIndex });
   }
-  // Slice each option's text up to the next option marker.
+
+  // Inline answer marker ("Ans: B" under the question). For an MCQ we only trust
+  // a marker that appears at/after the options, so a stray "…is 4" in the stem
+  // can't hijack the answer or wipe out the options; for an option-less (integer)
+  // block we accept it anywhere after the stem. `cut` is where the answer text
+  // begins, so it's trimmed off the last option / the stem rather than kept.
+  let inlineCorrect = "";
+  let cut = block.length;
+  const ans = extractInlineAnswer(block);
+  if (ans) {
+    const minAt = opts.length ? opts[opts.length - 1].contentFrom : 1;
+    if (ans.index >= minAt) { inlineCorrect = ans.value; cut = ans.index; }
+  }
+
+  // Slice each option's text up to the next option marker; the last option stops
+  // at the answer marker (cut) so "Ans: X" doesn't bleed into it.
   const cleaned = [];
   for (let i = 0; i < opts.length; i++) {
     const from = opts[i].contentFrom;
-    const to = i + 1 < opts.length ? opts[i + 1].at : block.length;
+    const to = i + 1 < opts.length ? opts[i + 1].at : cut;
     const txt = block.slice(from, to).replace(/\s+/g, " ").trim();
     cleaned.push({ key: normalizeAnswer(opts[i].label), text: txt });
   }
@@ -116,14 +152,14 @@ function parseOneBlock(qno, block) {
     options.push(o);
   }
 
-  const stem = (firstOptAt >= 0 ? block.slice(0, firstOptAt) : block)
+  const stem = (firstOptAt >= 0 ? block.slice(0, firstOptAt) : block.slice(0, cut))
     .replace(/\s+/g, " ")
     .trim();
 
   if (options.length >= 2) {
-    return { qno, text: stem, options: options.slice(0, 4), type: "single", correct: "" };
+    return { qno, text: stem, options: options.slice(0, 4), type: "single", correct: inlineCorrect };
   }
-  return { qno, text: stem, options: [], type: "integer", correct: "" };
+  return { qno, text: stem, options: [], type: "integer", correct: inlineCorrect };
 }
 
 // ── Answer key ──────────────────────────────────────────────────────────────
@@ -180,16 +216,20 @@ const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 const LLM_SYS =
   "You convert a raw exam paper into structured JSON for a computer-based test (CBT). " +
-  'Output ONLY valid JSON of the form {"questions":[{"qno":1,"text":"...","type":"single","options":[{"key":"1","text":"..."},{"key":"2","text":"..."},{"key":"3","text":"..."},{"key":"4","text":"..."}],"correct":"1"}]}. ' +
+  'Output ONLY valid JSON of the form {"questions":[{"qno":1,"text":"...","subject":"Physics","type":"single","options":[{"key":"1","text":"..."},{"key":"2","text":"..."},{"key":"3","text":"..."},{"key":"4","text":"..."}],"correct":"1","explanation":"..."}]}. ' +
   "Rules: keep the original question order and numbering; normalise option labels to \"1\",\"2\",\"3\",\"4\" (map A/B/C/D to 1/2/3/4); for numerical/integer-answer questions set type to \"integer\", options to [] and correct to the number; " +
-  "use the provided ANSWER KEY to fill each correct field (\"1\"-\"4\" for MCQ, the number for integer); if an answer is missing set correct to \"\"; keep text plain and concise; do NOT invent questions or answers. Output JSON only, no prose.";
+  "the correct answer may be given INLINE inside the question paper itself (e.g. \"Ans: B\", \"Answer (3)\", \"Correct option: 2\", \"Correct answer is D\") — detect it and remove that marker from the question/option text; a separate ANSWER KEY, when provided, takes precedence over the inline marker; " +
+  "fill each correct field (\"1\"-\"4\" for MCQ, the number for integer); if no answer can be found set correct to \"\"; " +
+  "set subject to the topic/subject when it is evident (e.g. Physics, Chemistry, Maths, Biology), else \"\"; " +
+  "write a short explanation (1-3 sentences) justifying the correct answer — prefer the official solution if the ANSWER KEY/SOLUTIONS text provides one, otherwise reason it out concisely; if you cannot justify it, set explanation to \"\"; " +
+  "keep text plain and concise; do NOT invent questions or answers. Output JSON only, no prose.";
 
 async function parseWithLLM(qText, kText) {
   if (!process.env.GROQ_API_KEY) return null;
   const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
   const user =
     `QUESTION PAPER (raw text):\n${qText.slice(0, 45000)}\n\n` +
-    `ANSWER KEY (raw text):\n${(kText || "(none provided)").slice(0, 8000)}`;
+    `ANSWER KEY (raw text):\n${(kText || "(none provided — the answers may be inline in the question paper above)").slice(0, 8000)}`;
   let res;
   try {
     res = await fetch(GROQ_URL, {
@@ -230,6 +270,7 @@ async function parseWithLLM(qText, kText) {
       type,
       subject: String(q?.subject || "").slice(0, 40),
       correct: normalizeAnswer(q?.correct),
+      explanation: String(q?.explanation || "").slice(0, 2000),
     };
   });
 }
@@ -246,11 +287,15 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
   ]);
 
   let questions = parseQuestions(qText);
+  // Answers can come from (a) inline markers in the question paper itself
+  // ("Ans: B" under each question) — already filled by parseOneBlock — and/or
+  // (b) a separate answer-key PDF. The separate key fills only what's missing,
+  // so a single self-contained PDF works without a second upload.
   const key = parseAnswerKey(kText);
   let matched = 0;
   for (const q of questions) {
-    const a = key[q.qno];
-    if (a) { q.correct = a; matched++; }
+    if (!q.correct && key[q.qno]) q.correct = key[q.qno];
+    if (q.correct) matched++;
   }
   let method = "rules";
 
@@ -267,7 +312,8 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
 
   let note;
   if (questions.length) {
-    note = `Converted ${questions.length} question${questions.length === 1 ? "" : "s"} (${method === "AI" ? "AI" : "auto"}); answer key matched ${matched}/${questions.length}. Review below before publishing.`;
+    const src = keyPdfUrl ? "answer key" : "answers";
+    note = `Converted ${questions.length} question${questions.length === 1 ? "" : "s"} (${method === "AI" ? "AI" : "auto"}); ${src} matched ${matched}/${questions.length}${keyPdfUrl ? "" : " (detected inline in the paper)"}. Review below before publishing.`;
   } else if (textLen === 0) {
     note = "This PDF has no text layer — it's a scanned image/photo, so it can't be auto-read. Add questions manually below (students still see the uploaded paper).";
   } else {

@@ -19,6 +19,16 @@
 
 const FREE_WEBMAIL = /@(gmail|googlemail|yahoo|ymail|outlook|hotmail|live|msn|icloud|me|aol|proton|protonmail|zoho)\./i;
 
+// Log-only ("dev") mode vs. real sending. We send for real whenever a Brevo key
+// is configured; without a key there's nothing to send through, so we log. Set
+// OTP_DEV_MODE=true to force log-only even when a key is present (useful in
+// staging). The previous default required OTP_DEV_MODE=false to ever send, which
+// silently swallowed mail in production when that var wasn't set.
+function isDevMode() {
+  if (String(process.env.OTP_DEV_MODE || "").toLowerCase() === "true") return true;
+  return !process.env.BREVO_API_KEY;
+}
+
 // Resolve the Brevo "from" address, falling back to the verified domain sender
 // when SMTP_FROM_EMAIL is missing or a free-webmail address Brevo won't send from.
 function resolveSender() {
@@ -53,14 +63,12 @@ async function postToBrevo(body) {
 }
 
 /**
- * Generic transactional email. In dev mode (OTP_DEV_MODE !== "false") or when no
- * Brevo key is set, it only logs — so it never sends real mail during local dev.
- * Returns { ok, dev }.
+ * Generic transactional email. Without a Brevo key (or with OTP_DEV_MODE=true)
+ * it only logs — so it never sends real mail during local dev. Returns { ok, dev }.
  */
 export async function sendMail({ to, subject, html, text }) {
-  const devMode = process.env.OTP_DEV_MODE !== "false";
-  if (devMode || !process.env.BREVO_API_KEY) {
-    console.log(`\n[DEV EMAIL] to ${to}\n  Subject: ${subject}\n`);
+  if (isDevMode()) {
+    console.log(`\n[DEV EMAIL] to ${to}\n  Subject: ${subject}\n  (set BREVO_API_KEY to send for real; OTP_DEV_MODE=true forces this log-only mode)\n`);
     return { ok: true, dev: true };
   }
   const { fromEmail, fromName, replyTo } = resolveSender();
@@ -80,9 +88,8 @@ export async function sendMail({ to, subject, html, text }) {
 }
 
 export async function sendOtpEmail(email, code) {
-  const devMode = process.env.OTP_DEV_MODE !== "false";
-  if (devMode || !process.env.BREVO_API_KEY) {
-    console.log(`\n[DEV EMAIL] to ${email}\n  Code: ${code}\n`);
+  if (isDevMode()) {
+    console.log(`\n[DEV EMAIL] to ${email}\n  Code: ${code}\n  (set BREVO_API_KEY to send for real; OTP_DEV_MODE=true forces this log-only mode)\n`);
     return { ok: true, dev: true };
   }
 

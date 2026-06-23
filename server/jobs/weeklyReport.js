@@ -3,9 +3,9 @@
 //
 // Once a week (checked daily), every paid mentorship enrolment that has a parent
 // email is sent a progress check-in, and the student is nudged to keep their
-// dashboard up to date. It's best-effort and fully guarded: in dev mode
-// (OTP_DEV_MODE !== "false") or without a Brevo key, sendMail only logs, so this
-// never sends real mail locally. A DB/email hiccup is caught and skipped.
+// dashboard up to date. It's best-effort and fully guarded: without a Brevo key
+// (or with OTP_DEV_MODE=true), sendMail only logs, so this never sends real mail
+// locally. A DB/email hiccup is caught and skipped.
 //
 // NOTE: live tracking / test data currently lives in the browser (localStorage),
 // so the email is a weekly nudge + link rather than a numeric report. Moving the

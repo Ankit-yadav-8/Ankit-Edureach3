@@ -45,21 +45,25 @@ router.use((_req, res, next) => { res.set("Cache-Control", "no-store"); next(); 
 // crafted payload can't blow up the document).
 function cleanQuestions(arr) {
   if (!Array.isArray(arr)) return [];
+  const img = (u) => (isOurCloudinaryUrl(u) ? String(u) : "");
   return arr.slice(0, 400).map((q, i) => {
     const type = q?.type === "integer" ? "integer" : "single";
     const options = Array.isArray(q?.options)
       ? q.options.slice(0, 4).map((o, j) => ({
           key: String(o?.key || j + 1).slice(0, 2),
           text: String(o?.text || "").slice(0, 1000),
+          image: img(o?.image),
         }))
       : [];
     return {
       qno: Number(q?.qno) || i + 1,
       text: String(q?.text || "").slice(0, 4000),
+      image: img(q?.image),
       options: type === "single" ? options : [],
       type,
       subject: String(q?.subject || "").slice(0, 40),
       correct: normalizeAnswer(q?.correct),
+      explanation: String(q?.explanation || "").slice(0, 2000),
     };
   });
 }
@@ -338,7 +342,11 @@ router.get("/:id", requireAuth, requireBatch, async (req, res) => {
       // `marks` lets the player show +x / −y / 0 for the current question.
       questions: t.questions.map((q) => {
         const mk = markingForQ(t, q.qno);
-        return { qno: q.qno, text: q.text, options: q.options, type: q.type, subject: q.subject, marks: { correct: mk.correct, wrong: mk.wrong } };
+        return {
+          qno: q.qno, text: q.text, image: q.image || "",
+          options: (q.options || []).map((o) => ({ key: o.key, text: o.text, image: o.image || "" })),
+          type: q.type, subject: q.subject, marks: { correct: mk.correct, wrong: mk.wrong },
+        };
       }),
       alreadyAttempted: !!existing,
     });
@@ -409,6 +417,21 @@ router.get("/:id/result", requireAuth, requireBatch, async (req, res) => {
     if (!t) return res.status(404).json({ error: "Test not found." });
     const a = await TestAttempt.findOne({ test: t._id, userId: req.batch.userId }).lean();
     if (!a) return res.status(404).json({ error: "You haven't attempted this test yet." });
+
+    // Merge the question text/options/solution into each graded answer so the
+    // review screen can show the full question + worked solution, not just keys.
+    const byQno = new Map((t.questions || []).map((q) => [q.qno, q]));
+    const answers = (a.answers || []).map((ans) => {
+      const q = byQno.get(ans.qno);
+      return {
+        ...ans,
+        text: q?.text || "",
+        type: q?.type || "single",
+        options: (q?.options || []).map((o) => ({ key: o.key, text: o.text, image: o.image || "" })),
+        explanation: q?.explanation || "",
+      };
+    });
+
     res.json({
       title: t.title,
       keyPdfUrl: t.keyPdfUrl,
@@ -418,7 +441,7 @@ router.get("/:id/result", requireAuth, requireBatch, async (req, res) => {
         correctCount: a.correctCount, wrongCount: a.wrongCount, skippedCount: a.skippedCount,
         totalQuestions: a.totalQuestions, submittedAt: a.submittedAt,
       },
-      answers: a.answers,
+      answers,
     });
   } catch (e) {
     console.error("[tests:result]", e?.message || e);
