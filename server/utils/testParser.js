@@ -46,11 +46,9 @@ export function stripNoise(s) {
   return out.replace(/\s+([,.:;)])/g, "$1").replace(/\s+/g, " ").trim();
 }
 
-// Download a (Cloudinary-hosted) PDF and return its extracted text.
-// Throws a tagged Error (err.code) so callers can give an accurate reason:
-//   FETCH   — the file couldn't be downloaded (e.g. Cloudinary delivery blocked)
-//   SCANNED — downloaded fine but has no text layer (image-only / scanned)
-export async function fetchPdfText(url) {
+// Download a (Cloudinary-hosted) PDF and return its raw bytes.
+// Throws a tagged Error (err.code = "FETCH") if it can't be downloaded.
+export async function fetchPdfBuffer(url) {
   let res;
   try {
     res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 CollegeParichay" }, redirect: "follow" });
@@ -64,7 +62,25 @@ export async function fetchPdfText(url) {
     err.code = "FETCH";
     throw err;
   }
-  const buf = Buffer.from(await res.arrayBuffer());
+  return Buffer.from(await res.arrayBuffer());
+}
+
+// Extract the text layer from a PDF buffer. Returns "" for image-only/scanned
+// PDFs (no throw) so callers can fall back to vision instead of failing.
+export async function pdfTextFromBuffer(buf) {
+  try {
+    return String((await pdfParse(buf)).text || "");
+  } catch {
+    return "";
+  }
+}
+
+// Download a (Cloudinary-hosted) PDF and return its extracted text.
+// Throws a tagged Error (err.code) so callers can give an accurate reason:
+//   FETCH   — the file couldn't be downloaded (e.g. Cloudinary delivery blocked)
+//   SCANNED — downloaded fine but has no text layer (image-only / scanned)
+export async function fetchPdfText(url) {
+  const buf = await fetchPdfBuffer(url);
   let data;
   try {
     data = await pdfParse(buf);
@@ -370,16 +386,33 @@ async function parseWithLLM(qText, kText) {
   return { questions: normalizeLLMQuestions(arr) };
 }
 
+// True when the rules parse is too thin to use as-is: no questions, or most
+// MCQs came out with no option text (math PDFs whose options don't survive text
+// extraction). Such papers need the vision model to read the actual content.
+function isLowQuality(questions) {
+  if (!questions.length) return true;
+  const singles = questions.filter((q) => q.type === "single");
+  if (!singles.length) return false; // all-integer papers extract fine as text
+  const emptyOpts = singles.filter((q) => !q.options.some((o) => String(o.text).trim())).length;
+  return emptyOpts / singles.length > 0.4;
+}
+
+const visionEnabled = () => String(process.env.TEST_VISION || "").toLowerCase() !== "off";
+
 // Parse both PDFs and merge the answer key into the questions. Returns the
 // questions array plus a human-readable note for the admin review screen.
-// Strategy: try the fast rules parser; if it does poorly but the PDF has a text
-// layer, fall back to the LLM converter. A PDF with no text layer is scanned and
-// can't be auto-read — the admin then fills the grid manually.
+// Strategy:
+//   1. fast rules parser on the text layer (+ inline / answer-key merge);
+//   2. if that's empty or low quality (math papers), read the page IMAGES with a
+//      vision model — recovers the real questions, options and maths (LaTeX);
+//   3. otherwise, for text-rich papers the rules parser couldn't structure, fall
+//      back to the text LLM.
 export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
-  const [qText, kText] = await Promise.all([
-    fetchPdfText(testPdfUrl),
+  const [qBuf, kText] = await Promise.all([
+    fetchPdfBuffer(testPdfUrl),
     keyPdfUrl ? fetchPdfText(keyPdfUrl) : Promise.resolve(""),
   ]);
+  const qText = await pdfTextFromBuffer(qBuf);
 
   let questions = parseQuestions(qText);
   // Answers can come from (a) inline markers in the question paper itself
@@ -393,31 +426,66 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
     if (q.correct) matched++;
   }
   let method = "rules";
-  let llmError = "";
+  let aiError = "";
+
+  // The deterministic answer key from the text layer: a separate key PDF plus
+  // any inline "Answer Key : (N)" markers the rules parser already read. This is
+  // more trustworthy than the vision model for the answer itself, so we use it to
+  // set answers even when vision supplies the question/option text.
+  const textKey = { ...key };
+  for (const q of questions) if (q.correct) textKey[q.qno] = q.correct;
 
   const textLen = qText.trim().length;
-  // Fall back to the LLM when the rules parser finds nothing or can't fill at
-  // least half the answers — real exam PDFs vary too much for regex alone.
-  const poor = questions.length === 0 || matched < Math.ceil(questions.length / 2);
-  if (poor && textLen > 40) {
-    const llm = await parseWithLLM(qText, kText);
-    if (llm.questions.length >= questions.length && llm.questions.length > 0) {
-      questions = llm.questions;
-      matched = llm.questions.filter((q) => q.correct).length;
-      method = "AI";
-    } else if (llm.error) {
-      llmError = llm.error;
+
+  // ── Vision pass — for scanned papers and math PDFs whose text is unusable ──
+  if (visionEnabled() && process.env.GROQ_API_KEY && isLowQuality(questions)) {
+    try {
+      const { extractWithVision } = await import("./visionParser.js");
+      const v = await extractWithVision(qBuf, { answerKey: textKey });
+      // Accept vision when it transcribed a comparable set of questions (it
+      // carries real option text + maths, which the rules result lacked).
+      if (v.questions.length && v.questions.length >= Math.max(3, Math.floor(questions.length * 0.6))) {
+        // Trust the deterministic text key for the answer; keep vision's
+        // answer only where the text layer had none.
+        for (const q of v.questions) { const k = normalizeAnswer(textKey[q.qno]); if (k) q.correct = k; }
+        questions = v.questions;
+        matched = questions.filter((q) => q.correct).length;
+        method = "vision";
+      } else if (v.error) {
+        aiError = v.error;
+      }
+    } catch (e) {
+      aiError = `AI vision unavailable (${e?.message || "error"})`;
+      console.error("[testParser] vision import/run failed", e?.message || e);
     }
   }
 
+  // ── Text-LLM fallback — text-rich papers the rules parser couldn't structure ──
+  if (method !== "vision") {
+    const poor = questions.length === 0 || matched < Math.ceil(questions.length / 2);
+    if (poor && textLen > 40) {
+      const llm = await parseWithLLM(qText, kText);
+      if (llm.questions.length >= questions.length && llm.questions.length > 0) {
+        for (const q of llm.questions) if (!q.correct && key[q.qno]) q.correct = key[q.qno];
+        questions = llm.questions;
+        matched = llm.questions.filter((q) => q.correct).length;
+        method = "AI";
+      } else if (llm.error && !aiError) {
+        aiError = llm.error;
+      }
+    }
+  }
+
+  const howLabel = { vision: "AI vision", AI: "AI", rules: "auto" };
   let note;
   if (questions.length) {
     const src = keyPdfUrl ? "answer key" : "answers";
-    note = `Converted ${questions.length} question${questions.length === 1 ? "" : "s"} (${method === "AI" ? "AI" : "auto"}); ${src} matched ${matched}/${questions.length}${keyPdfUrl ? "" : " (detected inline in the paper)"}. Review below before publishing.`;
+    note = `Converted ${questions.length} question${questions.length === 1 ? "" : "s"} (${howLabel[method]}); ${src} matched ${matched}/${questions.length}${keyPdfUrl || method !== "rules" ? "" : " (detected inline in the paper)"}. Review below before publishing.`;
+    if (method === "vision") note += " Maths is shown in LaTeX — check the tricky ones.";
+  } else if (aiError) {
+    note = `${aiError}. Add questions manually below, or try converting again.`;
   } else if (textLen === 0) {
-    note = "This PDF has no text layer — it's a scanned image/photo, so it can't be auto-read. Add questions manually below (students still see the uploaded paper).";
-  } else if (llmError) {
-    note = `Read ${textLen} characters of text. ${llmError}. Add questions manually below, or try converting again.`;
+    note = "This PDF couldn't be read automatically. Add questions manually below (students still see the uploaded paper).";
   } else {
     note = `Read ${textLen} characters of text but couldn't detect the question format automatically. Add questions manually below.`;
   }

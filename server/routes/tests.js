@@ -17,6 +17,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import express from "express";
 import mongoose from "mongoose";
+import { randomUUID } from "node:crypto";
 import Test from "../models/Test.js";
 import TestAttempt from "../models/TestAttempt.js";
 import { requireAuth } from "../middleware/auth.js";
@@ -123,27 +124,51 @@ router.post("/admin/sign-upload", requireAdmin, (req, res) => {
 });
 
 // ── ADMIN: auto-parse the uploaded PDFs into questions + answer key ──────────
-router.post("/admin/parse", requireAdmin, async (req, res) => {
-  try {
-    const testPdfUrl = String(req.body?.testPdfUrl || "");
-    const keyPdfUrl = String(req.body?.keyPdfUrl || "");
-    if (!isOurCloudinaryUrl(testPdfUrl)) return res.status(400).json({ error: "Upload the question paper PDF first." });
-    if (keyPdfUrl && !isOurCloudinaryUrl(keyPdfUrl)) return res.status(400).json({ error: "Answer-key URL looks invalid." });
+// Vision conversion of a big math paper can take a few minutes (the free Groq
+// tier is token-rate-limited), which would blow past proxy/CDN request timeouts.
+// So parsing runs as a background job: POST starts it and returns a jobId; the
+// client polls GET /admin/parse/:jobId until it's done. Jobs live in memory and
+// expire after a while — fine for a single-instance admin tool.
+const parseJobs = new Map(); // jobId -> { status, startedAt, result }
+const PARSE_JOB_TTL = 20 * 60 * 1000;
+function gcParseJobs() {
+  const now = Date.now();
+  for (const [id, j] of parseJobs) if (now - j.startedAt > PARSE_JOB_TTL) parseJobs.delete(id);
+}
 
-    const { questions, matched, note } = await buildTestFromPdfs(testPdfUrl, keyPdfUrl);
-    res.json({ questions, matched, note, totalQuestions: questions.length });
-  } catch (e) {
-    // Don't 500 — return an empty set + the real reason so the admin lands on the
-    // manual grid with an accurate message (delivery blocked vs scanned PDF).
-    console.error("[tests/admin/parse]", e?.code || "", e?.message || e);
-    res.json({
-      questions: [],
-      matched: 0,
-      totalQuestions: 0,
-      reason: e?.code || "ERROR",
-      note: e?.message || "Could not read the PDF — add questions manually below.",
+router.post("/admin/parse", requireAdmin, (req, res) => {
+  const testPdfUrl = String(req.body?.testPdfUrl || "");
+  const keyPdfUrl = String(req.body?.keyPdfUrl || "");
+  if (!isOurCloudinaryUrl(testPdfUrl)) return res.status(400).json({ error: "Upload the question paper PDF first." });
+  if (keyPdfUrl && !isOurCloudinaryUrl(keyPdfUrl)) return res.status(400).json({ error: "Answer-key URL looks invalid." });
+
+  gcParseJobs();
+  const jobId = randomUUID();
+  parseJobs.set(jobId, { status: "running", startedAt: Date.now() });
+
+  buildTestFromPdfs(testPdfUrl, keyPdfUrl)
+    .then(({ questions, matched, note }) => {
+      parseJobs.set(jobId, { status: "done", startedAt: Date.now(), result: { questions, matched, note, totalQuestions: questions.length } });
+    })
+    .catch((e) => {
+      // Don't fail the job hard — hand back an empty set + the real reason so the
+      // admin lands on the manual grid with an accurate message.
+      console.error("[tests/admin/parse]", e?.code || "", e?.message || e);
+      parseJobs.set(jobId, {
+        status: "done", startedAt: Date.now(),
+        result: { questions: [], matched: 0, totalQuestions: 0, reason: e?.code || "ERROR", note: e?.message || "Could not read the PDF — add questions manually below." },
+      });
     });
-  }
+
+  res.status(202).json({ jobId });
+});
+
+// ── ADMIN: poll a parse job ─────────────────────────────────────────────────
+router.get("/admin/parse/:jobId", requireAdmin, (req, res) => {
+  const job = parseJobs.get(req.params.jobId);
+  if (!job) return res.status(404).json({ error: "Parse job expired — please convert again." });
+  if (job.status === "running") return res.json({ status: "running" });
+  res.json({ status: "done", ...job.result });
 });
 
 // ── ADMIN: create & publish a test (with the reviewed/edited questions) ──────

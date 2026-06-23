@@ -5,7 +5,7 @@ import {
   ImagePlus, ChevronDown, ChevronUp,
 } from "lucide-react";
 import {
-  apiAdminTestSignUpload, apiAdminTestParse, apiAdminTestCreate,
+  apiAdminTestSignUpload, apiAdminTestParseStart, apiAdminTestParseStatus, apiAdminTestCreate,
   apiAdminTestList, apiAdminTestDelete,
 } from "../../auth/api.js";
 import { uploadPdf, validatePdf, uploadToCloudinary, validateFile, compressImage } from "../../utils/cloudinaryUpload.js";
@@ -58,6 +58,7 @@ export default function TestUpload({ token }) {
   const [up, setUp] = useState({ test: 0, key: 0 }); // upload progress
   const [busy, setBusy] = useState(false);
   const [parsing, setParsing] = useState(false);
+  const [parseMsg, setParseMsg] = useState("");
   const [publishing, setPublishing] = useState(false);
   const [err, setErr] = useState("");
   const [note, setNote] = useState("");
@@ -117,17 +118,30 @@ export default function TestUpload({ token }) {
   async function parse() {
     if (!testPdfUrl) { setErr("Upload the question paper PDF first."); return; }
     setParsing(true); setErr(""); setNote("");
+    setParseMsg("Reading the PDF…");
     try {
-      const d = await apiAdminTestParse(token, { testPdfUrl, keyPdfUrl });
+      // Parsing is a background job — math papers go through vision OCR, which can
+      // take a couple of minutes — so we start it and poll until it's done.
+      const { jobId } = await apiAdminTestParseStart(token, { testPdfUrl, keyPdfUrl });
+      const started = Date.now();
+      let d = null;
+      while (Date.now() - started < 8 * 60 * 1000) {
+        await new Promise((r) => setTimeout(r, 2500));
+        const secs = Math.round((Date.now() - started) / 1000);
+        setParseMsg(`Converting to CBT… reading questions & maths (${secs}s)`);
+        const s = await apiAdminTestParseStatus(token, jobId);
+        if (s.status === "done") { d = s; break; }
+      }
+      if (!d) throw new Error("Conversion is taking too long — please try again.");
       setQuestions(d.questions || []);
       setNote(d.note || "");
     } catch (ex) {
-      // Scanned/image PDFs have no text layer — fall back to a manual grid so the
+      // Scanned/image PDFs or a failed job — fall back to a manual grid so the
       // admin can still build the test (students read the paper from the PDF).
       setErr(ex.message || "Could not parse the PDF");
       setQuestions([]);
       setNote("Couldn't read the PDF automatically. Add questions and answers manually below — students still see the uploaded paper.");
-    } finally { setParsing(false); }
+    } finally { setParsing(false); setParseMsg(""); }
   }
 
   const setQ = (i, patch) => setQuestions((qs) => qs.map((q, j) => (j === i ? { ...q, ...patch } : q)));
@@ -342,12 +356,19 @@ export default function TestUpload({ token }) {
               <Plus size={15} /> Add questions manually
             </button>
           )}
-          {questions && (
+          {questions && !parsing && (
             <button onClick={resetForm} style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", color: MUTE, border: "1.5px solid #e5e7eb", height: 42, padding: "0 16px", borderRadius: 10, fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
               <X size={15} /> Clear
             </button>
           )}
         </div>
+
+        {parsing && parseMsg && (
+          <div style={{ marginTop: 12, background: "#f0f6ff", border: "1px solid #bfdbfe", borderRadius: 10, padding: "10px 14px", color: "#1e40af", fontSize: 13, display: "flex", alignItems: "center", gap: 8 }}>
+            <Loader2 size={15} className="adm-spin" style={{ flexShrink: 0 }} />
+            <span>{parseMsg} <span style={{ color: "#60a5fa" }}>— large maths papers can take 2–3 minutes; keep this tab open.</span></span>
+          </div>
+        )}
 
         {note && (() => {
           const warn = questions && questions.length === 0;

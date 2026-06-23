@@ -1,0 +1,166 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Vision-based test extractor.
+//
+// Math-heavy exam PDFs (JEE/NEET) store their equations as vector glyphs, not as
+// a readable text layer — so text parsing recovers garbled stems and empty
+// options. Instead we render each page to an image and ask a Groq vision model
+// to transcribe the questions, options and answer key as JSON, with all maths in
+// LaTeX ($…$) so the player renders it via KaTeX.
+//
+// Pages are rendered with pdf-to-img (pdfjs + @napi-rs/canvas, prebuilt — no
+// system deps) and sent in small page-batches with limited concurrency to stay
+// within model image limits and keep latency reasonable.
+//
+// Tunables (env): GROQ_VISION_MODEL, TEST_VISION_SCALE (render DPI factor),
+// TEST_VISION_PAGES (pages per request), TEST_VISION_MAXPAGES, TEST_VISION=off.
+// ─────────────────────────────────────────────────────────────────────────────
+import { createRequire } from "node:module";
+import { pathToFileURL } from "node:url";
+import { normalizeAnswer, stripNoise } from "./testParser.js";
+
+const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+
+const VISION_SYS =
+  'You read images of exam-paper pages and output ONLY JSON of the form ' +
+  '{"questions":[{"qno":1,"text":"...","subject":"","type":"single","options":[{"key":"1","text":"..."},{"key":"2","text":"..."},{"key":"3","text":"..."},{"key":"4","text":"..."}],"correct":"1","explanation":""}]}. ' +
+  "Transcribe each question and ALL its options exactly as printed, including every mathematical expression — wrap ALL maths in LaTeX delimiters $...$ (e.g. $\\frac{\\beta}{\\alpha}$, $x^2+1$, $\\alpha,\\beta\\in\\mathbb{R}$). " +
+  'Use the printed question number for "qno". Map option labels A/B/C/D or (1)-(4) to "1","2","3","4". ' +
+  'For numerical / integer-answer questions set "type":"integer", "options":[] and "correct" to the number. ' +
+  'If the page shows the answer (e.g. "Answer Key : (3)") put it in "correct" ("1"-"4" for MCQ, the number for integer); otherwise "correct":"". ' +
+  'Set "subject" to the topic when obvious (Physics/Chemistry/Maths/Biology), else "". ' +
+  "Ignore page headers, footers, watermarks and website names. Do not invent questions. Output JSON only, no prose.";
+
+// Render every page of the PDF buffer to a PNG Buffer.
+async function renderPages(pdfBuffer, scale) {
+  const require = createRequire(import.meta.url);
+  const { pdf } = await import(pathToFileURL(require.resolve("pdf-to-img")).href);
+  const doc = await pdf(pdfBuffer, { scale });
+  const pages = [];
+  for await (const img of doc) pages.push(img);
+  return pages;
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// One vision request, retrying on rate-limit (429) and transient 5xx. Groq's
+// free tier caps tokens-per-minute, so we honour the Retry-After header / the
+// "try again in Ns" hint instead of failing the whole conversion.
+async function callVision(model, key, images, maxTokens, retries = 9) {
+  const content = [{ type: "text", text: "Transcribe every question shown in these page image(s)." }];
+  for (const png of images) {
+    content.push({ type: "image_url", image_url: { url: "data:image/png;base64," + png.toString("base64") } });
+  }
+  const payload = JSON.stringify({
+    model, temperature: 0, max_tokens: maxTokens,
+    response_format: { type: "json_object" },
+    messages: [{ role: "system", content: VISION_SYS }, { role: "user", content }],
+  });
+
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(GROQ_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+      body: payload,
+    });
+    if ((res.status === 429 || res.status >= 500) && attempt < retries) {
+      const body = await res.text().catch(() => "");
+      const ra = Number(res.headers.get("retry-after"));
+      const hint = Number((body.match(/try again in ([\d.]+)\s*s/i) || [])[1]);
+      const waitMs = Math.min(30000, Math.ceil(((ra || hint || 3 + attempt) + 0.5) * 1000));
+      await sleep(waitMs);
+      continue;
+    }
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      const e = new Error(`HTTP ${res.status}`);
+      e.detail = body.slice(0, 200);
+      throw e;
+    }
+    const c = (await res.json()).choices?.[0]?.message?.content || "";
+    try { const p = JSON.parse(c); return Array.isArray(p) ? p : (p?.questions || []); }
+    catch { return []; }
+  }
+}
+
+// Run fn over items with a bounded number of workers in flight.
+async function mapPool(items, concurrency, fn) {
+  const out = new Array(items.length);
+  let next = 0;
+  async function worker() {
+    while (next < items.length) { const i = next++; out[i] = await fn(items[i], i); }
+  }
+  await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, worker));
+  return out;
+}
+
+const richness = (q) =>
+  (q.text?.length || 0) +
+  (q.options?.reduce((s, o) => s + (String(o.text).trim() ? 1 : 0), 0) || 0) * 60 +
+  (q.correct ? 40 : 0);
+
+// Render the PDF and transcribe its questions with a vision model.
+// answerKey (qno -> answer, parsed from the text layer) fills any answer the
+// model misses. Returns { questions, error } — questions [] on failure.
+export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
+  if (!process.env.GROQ_API_KEY) return { questions: [], error: "AI vision is off (GROQ_API_KEY not set on the server)" };
+
+  const model = process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
+  // Defaults tuned for Groq's free tier (30k tokens/min): one page per request
+  // at scale 1.5 is ~2.5k tokens and still transcribes maths cleanly. Bump
+  // TEST_VISION_PAGES / _CONCURRENCY / _SCALE on a paid tier for faster runs.
+  const scale = Math.min(3, Math.max(1, Number(process.env.TEST_VISION_SCALE) || 1.5));
+  const perBatch = Math.min(5, Math.max(1, Number(process.env.TEST_VISION_PAGES) || 1));
+  const maxPages = Math.min(80, Math.max(1, Number(process.env.TEST_VISION_MAXPAGES) || 50));
+  // Serial by default: on the free tier, two in-flight requests both racing the
+  // per-minute token budget is what starves a batch into exhausting its retries.
+  const concurrency = Math.min(6, Math.max(1, Number(process.env.TEST_VISION_CONCURRENCY) || 1));
+
+  let pages;
+  try { pages = await renderPages(pdfBuffer, scale); }
+  catch (e) { return { questions: [], error: `Couldn't render the PDF to images (${e?.message || "render error"})` }; }
+  if (!pages.length) return { questions: [], error: "The PDF has no pages to read" };
+  const truncated = pages.length > maxPages;
+  pages = pages.slice(0, maxPages);
+
+  const batches = [];
+  for (let i = 0; i < pages.length; i += perBatch) batches.push(pages.slice(i, i + perBatch));
+
+  let firstErr = "";
+  const results = await mapPool(batches, concurrency, async (imgs) => {
+    try { return await callVision(model, process.env.GROQ_API_KEY, imgs, 4000); }
+    catch (e) {
+      if (!firstErr) firstErr = `AI vision error (${e.message}${e.detail ? `: ${e.detail}` : ""})`;
+      console.error("[visionParser]", e.message, e.detail || "");
+      return [];
+    }
+  });
+
+  // Merge across batches, de-duping by qno and keeping the richest transcription.
+  const byQno = new Map();
+  for (const arr of results) {
+    for (const q of Array.isArray(arr) ? arr : []) {
+      const qno = Number(q?.qno);
+      if (!qno || qno < 1 || qno > 400) continue;
+      const type = q?.type === "integer" ? "integer" : "single";
+      const options = type === "single" && Array.isArray(q?.options)
+        ? q.options.slice(0, 4).map((o, j) => ({ key: normalizeAnswer(o?.key) || String(j + 1), text: stripNoise(o?.text).slice(0, 1000), image: "" }))
+        : [];
+      const cand = {
+        qno,
+        text: stripNoise(q?.text).slice(0, 4000),
+        image: "",
+        options,
+        type,
+        subject: String(q?.subject || "").slice(0, 40),
+        correct: normalizeAnswer(q?.correct) || normalizeAnswer(answerKey[qno]),
+        explanation: stripNoise(q?.explanation).slice(0, 2000),
+      };
+      const prev = byQno.get(qno);
+      if (!prev || richness(cand) > richness(prev)) byQno.set(qno, cand);
+    }
+  }
+
+  const questions = [...byQno.values()].sort((a, b) => a.qno - b.qno);
+  if (!questions.length) return { questions: [], error: firstErr || "AI vision couldn't read any questions from the PDF" };
+  return { questions, error: truncated ? `Only the first ${maxPages} pages were read` : firstErr };
+}

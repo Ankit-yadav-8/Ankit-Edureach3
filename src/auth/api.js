@@ -93,7 +93,10 @@ function adminReq(path, adminToken, { method = "GET", body } = {}) {
 }
 
 export const apiAdminTestSignUpload = (adminToken, plan) => adminReq("/api/tests/admin/sign-upload", adminToken, { method: "POST", body: { plan } });
-export const apiAdminTestParse      = (adminToken, b) => adminReq("/api/tests/admin/parse", adminToken, { method: "POST", body: b });
+// Parsing runs as a background job (vision OCR can take minutes): start it, then
+// poll until { status: "done", questions, note, ... }.
+export const apiAdminTestParseStart  = (adminToken, b) => adminReq("/api/tests/admin/parse", adminToken, { method: "POST", body: b });
+export const apiAdminTestParseStatus = (adminToken, jobId) => adminReq(`/api/tests/admin/parse/${jobId}`, adminToken);
 export const apiAdminTestCreate     = (adminToken, b) => adminReq("/api/tests/admin", adminToken, { method: "POST", body: b });
 export const apiAdminTestList       = (adminToken, plan, category) => adminReq(`/api/tests/admin${batchQ(plan, category ? `category=${category}` : "")}`, adminToken);
 export const apiAdminTestDelete     = (adminToken, id) => adminReq(`/api/tests/admin/${id}`, adminToken, { method: "DELETE" });
