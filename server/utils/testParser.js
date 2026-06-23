@@ -82,9 +82,26 @@ function extractInlineAnswer(block) {
   return value ? { value, index: last.index } : null;
 }
 
+// Does this text contain 2+ option labels — either spaced ("(1) text (2) …")
+// or glued ("(1)(2)(3)(4)")? Used to tell a real answer line (options precede
+// it) from a stray "…is 4" mid-stem.
+function hasOptionish(s) {
+  const labels = new Set();
+  const lr = /\(\s*([A-Da-d1-4])\s*\)/g;
+  let m;
+  while ((m = lr.exec(s)) !== null) { const k = normalizeAnswer(m[1]); if (k) labels.add(k); }
+  if (labels.size >= 2) return true;
+  OPTION_RE.lastIndex = 0;
+  const seen = new Set();
+  while ((m = OPTION_RE.exec(s)) !== null) { const k = normalizeAnswer(m[1] || m[2] || ""); if (k) seen.add(k); }
+  return seen.size >= 2;
+}
+
 export function parseQuestions(text) {
   const clean = String(text || "").replace(/\r/g, "");
-  const markerRe = /(?:^|\n)\s*(\d{1,3})[.)]\s+/g;
+  // Question marker at a line start: "1." / "1)" and also "Q1." / "Q.1)" /
+  // "Question 1." — exam PDFs commonly prefix the number with Q/Question.
+  const markerRe = /(?:^|\n)\s*(?:Q(?:ues(?:tion)?)?\.?\s*)?(\d{1,3})[.)]\s+/gi;
   const marks = [];
   let m;
   while ((m = markerRe.exec(clean)) !== null) {
@@ -110,49 +127,67 @@ export function parseQuestions(text) {
 function parseOneBlock(qno, block) {
   if (!block) return null;
 
+  // Inline answer marker ("Ans: B" / "Answer Key : (2)" under the question).
+  // Cut the block at the answer FIRST so trailing junk (page footers, garbled
+  // math blobs) can't be mistaken for options. Guard against a stray mid-stem
+  // match by only cutting when the part before it actually holds the options
+  // (or the part after it doesn't) — otherwise we'd chop a real question.
+  let inlineCorrect = "";
+  let body = block;
+  const ans = extractInlineAnswer(block);
+  if (ans && ans.index > 0) {
+    const head = block.slice(0, ans.index);
+    if (hasOptionish(head) || !hasOptionish(block.slice(ans.index))) {
+      inlineCorrect = ans.value;
+      body = head;
+    }
+  }
+
   OPTION_RE.lastIndex = 0;
   const opts = [];
   let firstOptAt = -1;
   let m;
-  while ((m = OPTION_RE.exec(block)) !== null) {
+  while ((m = OPTION_RE.exec(body)) !== null) {
     const label = (m[1] || m[2] || "").toUpperCase();
     const at = m.index;
     if (firstOptAt === -1) firstOptAt = at;
     opts.push({ label, at, contentFrom: OPTION_RE.lastIndex });
   }
 
-  // Inline answer marker ("Ans: B" under the question). For an MCQ we only trust
-  // a marker that appears at/after the options, so a stray "…is 4" in the stem
-  // can't hijack the answer or wipe out the options; for an option-less (integer)
-  // block we accept it anywhere after the stem. `cut` is where the answer text
-  // begins, so it's trimmed off the last option / the stem rather than kept.
-  let inlineCorrect = "";
-  let cut = block.length;
-  const ans = extractInlineAnswer(block);
-  if (ans) {
-    const minAt = opts.length ? opts[opts.length - 1].contentFrom : 1;
-    if (ans.index >= minAt) { inlineCorrect = ans.value; cut = ans.index; }
-  }
-
-  // Slice each option's text up to the next option marker; the last option stops
-  // at the answer marker (cut) so "Ans: X" doesn't bleed into it.
+  // Slice each option's text up to the next option marker.
   const cleaned = [];
   for (let i = 0; i < opts.length; i++) {
     const from = opts[i].contentFrom;
-    const to = i + 1 < opts.length ? opts[i + 1].at : cut;
-    const txt = block.slice(from, to).replace(/\s+/g, " ").trim();
+    const to = i + 1 < opts.length ? opts[i + 1].at : body.length;
+    const txt = body.slice(from, to).replace(/\s+/g, " ").trim();
     cleaned.push({ key: normalizeAnswer(opts[i].label), text: txt });
   }
   // De-dupe to the canonical 1..4 keys, keep first occurrence, drop empties.
   const seen = new Set();
-  const options = [];
+  let options = [];
   for (const o of cleaned) {
     if (!o.key || seen.has(o.key)) continue;
     seen.add(o.key);
     options.push(o);
   }
 
-  const stem = (firstOptAt >= 0 ? block.slice(0, firstOptAt) : block.slice(0, cut))
+  // Glued / textless option labels — math-heavy PDFs often collapse
+  // "(1) … (2) … (3) … (4)" into "(1)(2)(3)(4)" (the real values land in a
+  // separate garbled blob). Detect the labels so it's still a gradable MCQ:
+  // students read the actual options from the PDF shown beside the player.
+  if (options.length < 2) {
+    const labels = new Set();
+    const lr = /\(\s*([A-Da-d1-4])\s*\)/g;
+    let lm;
+    while ((lm = lr.exec(body)) !== null) { const k = normalizeAnswer(lm[1]); if (k) labels.add(k); }
+    if (labels.size >= 2) options = [...labels].sort().map((k) => ({ key: k, text: "" }));
+  }
+
+  // Stem = text before the first option marker (or the whole body for an
+  // option-less question), with any run of glued option labels removed so
+  // "(1)(2)(3)(4)" doesn't clutter the question text.
+  const stem = (firstOptAt >= 0 ? body.slice(0, firstOptAt) : body)
+    .replace(/(?:\(\s*[A-Da-d1-4]\s*\)\s*){2,}/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 
@@ -224,40 +259,33 @@ const LLM_SYS =
   "write a short explanation (1-3 sentences) justifying the correct answer — prefer the official solution if the ANSWER KEY/SOLUTIONS text provides one, otherwise reason it out concisely; if you cannot justify it, set explanation to \"\"; " +
   "keep text plain and concise; do NOT invent questions or answers. Output JSON only, no prose.";
 
-async function parseWithLLM(qText, kText) {
-  if (!process.env.GROQ_API_KEY) return null;
-  const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
-  const user =
-    `QUESTION PAPER (raw text):\n${qText.slice(0, 45000)}\n\n` +
-    `ANSWER KEY (raw text):\n${(kText || "(none provided — the answers may be inline in the question paper above)").slice(0, 8000)}`;
-  let res;
-  try {
-    res = await fetch(GROQ_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
-      body: JSON.stringify({
-        model,
-        temperature: 0,
-        max_tokens: 8000,
-        response_format: { type: "json_object" },
-        messages: [{ role: "system", content: LLM_SYS }, { role: "user", content: user }],
-      }),
-    });
-  } catch { return null; }
-  if (!res.ok) return null;
-  let content;
-  try { content = (await res.json()).choices?.[0]?.message?.content || ""; } catch { return null; }
-
-  let parsed;
-  try { parsed = JSON.parse(content); }
-  catch {
-    const m = content.match(/\{[\s\S]*\}/);
-    if (!m) return null;
-    try { parsed = JSON.parse(m[0]); } catch { return null; }
+// Walk the `"questions": [ … ]` array and pull out each complete top-level
+// object, even when the response was truncated (max_tokens hit) or has trailing
+// junk — a brace/string-aware scan, so the last partial object is just skipped
+// instead of throwing away every question. Returns an array of raw objects.
+function salvageQuestions(content) {
+  const at = content.indexOf('"questions"');
+  const arrStart = content.indexOf("[", at >= 0 ? at : 0);
+  if (arrStart < 0) return [];
+  const objs = [];
+  let depth = 0, start = -1, inStr = false, esc = false;
+  for (let i = arrStart + 1; i < content.length; i++) {
+    const c = content[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (c === "\\") esc = true;
+      else if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') inStr = true;
+    else if (c === "{") { if (depth === 0) start = i; depth++; }
+    else if (c === "}") { depth--; if (depth === 0 && start >= 0) { try { objs.push(JSON.parse(content.slice(start, i + 1))); } catch { /* skip */ } start = -1; } }
+    else if (c === "]" && depth === 0) break;
   }
-  const arr = Array.isArray(parsed) ? parsed : parsed?.questions;
-  if (!Array.isArray(arr) || !arr.length) return null;
+  return objs;
+}
 
+function normalizeLLMQuestions(arr) {
   return arr.slice(0, 200).map((q, i) => {
     const type = q?.type === "integer" ? "integer" : "single";
     const options = type === "single" && Array.isArray(q?.options)
@@ -273,6 +301,54 @@ async function parseWithLLM(qText, kText) {
       explanation: String(q?.explanation || "").slice(0, 2000),
     };
   });
+}
+
+// Hand the extracted text to Groq and ask for structured questions. Returns
+// { questions, error } — questions is [] on any failure and error carries a
+// short reason for the admin note (so a silent null no longer hides the cause).
+async function parseWithLLM(qText, kText) {
+  if (!process.env.GROQ_API_KEY) return { questions: [], error: "AI conversion is off (GROQ_API_KEY not set on the server)" };
+  const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+  // Big enough for a full paper of MCQs (text + options + short solution each);
+  // combined with salvageQuestions(), even a truncated reply still yields Qs.
+  const maxTokens = Math.max(2000, Number(process.env.GROQ_MAX_TOKENS) || 16000);
+  const user =
+    `QUESTION PAPER (raw text):\n${qText.slice(0, 45000)}\n\n` +
+    `ANSWER KEY (raw text):\n${(kText || "(none provided — the answers may be inline in the question paper above)").slice(0, 8000)}`;
+
+  let res;
+  try {
+    res = await fetch(GROQ_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
+      body: JSON.stringify({
+        model,
+        temperature: 0,
+        max_tokens: maxTokens,
+        response_format: { type: "json_object" },
+        messages: [{ role: "system", content: LLM_SYS }, { role: "user", content: user }],
+      }),
+    });
+  } catch (e) {
+    return { questions: [], error: `AI request failed (${e?.message || "network error"})` };
+  }
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    console.error("[testParser] Groq error", res.status, body.slice(0, 500));
+    return { questions: [], error: `AI service error ${res.status} (model "${model}")` };
+  }
+
+  let content;
+  try { content = (await res.json()).choices?.[0]?.message?.content || ""; } catch { content = ""; }
+  if (!content) return { questions: [], error: "AI returned an empty response" };
+
+  // Prefer a clean parse; fall back to a tolerant salvage for truncated output.
+  let arr = null;
+  try { const p = JSON.parse(content); arr = Array.isArray(p) ? p : p?.questions; } catch { /* salvage below */ }
+  if (!Array.isArray(arr) || !arr.length) arr = salvageQuestions(content);
+  if (!Array.isArray(arr) || !arr.length) return { questions: [], error: "AI couldn't structure this paper into questions" };
+
+  return { questions: normalizeLLMQuestions(arr) };
 }
 
 // Parse both PDFs and merge the answer key into the questions. Returns the
@@ -298,15 +374,20 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
     if (q.correct) matched++;
   }
   let method = "rules";
+  let llmError = "";
 
   const textLen = qText.trim().length;
+  // Fall back to the LLM when the rules parser finds nothing or can't fill at
+  // least half the answers — real exam PDFs vary too much for regex alone.
   const poor = questions.length === 0 || matched < Math.ceil(questions.length / 2);
-  if (poor && textLen > 40 && process.env.GROQ_API_KEY) {
+  if (poor && textLen > 40) {
     const llm = await parseWithLLM(qText, kText);
-    if (llm && llm.length >= questions.length) {
-      questions = llm;
-      matched = llm.filter((q) => q.correct).length;
+    if (llm.questions.length >= questions.length && llm.questions.length > 0) {
+      questions = llm.questions;
+      matched = llm.questions.filter((q) => q.correct).length;
       method = "AI";
+    } else if (llm.error) {
+      llmError = llm.error;
     }
   }
 
@@ -316,6 +397,8 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
     note = `Converted ${questions.length} question${questions.length === 1 ? "" : "s"} (${method === "AI" ? "AI" : "auto"}); ${src} matched ${matched}/${questions.length}${keyPdfUrl ? "" : " (detected inline in the paper)"}. Review below before publishing.`;
   } else if (textLen === 0) {
     note = "This PDF has no text layer — it's a scanned image/photo, so it can't be auto-read. Add questions manually below (students still see the uploaded paper).";
+  } else if (llmError) {
+    note = `Read ${textLen} characters of text. ${llmError}. Add questions manually below, or try converting again.`;
   } else {
     note = `Read ${textLen} characters of text but couldn't detect the question format automatically. Add questions manually below.`;
   }
