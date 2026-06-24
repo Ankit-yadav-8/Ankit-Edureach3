@@ -16,7 +16,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
-import { normalizeAnswer, stripNoise } from "./testParser.js";
+import { normalizeAnswer, stripNoise, repairLatexBackslashes } from "./testParser.js";
 import { uploadImageBuffer, cloudinaryReady } from "./cloudinary.js";
 
 const clamp01 = (n) => Math.max(0, Math.min(1, Number(n) || 0));
@@ -82,8 +82,10 @@ const VISION_SYS =
   'For numerical / integer-answer questions set "type":"integer", "options":[] and "correct" to the number. ' +
   'If the page shows the answer (e.g. "Answer Key : (3)") put it in "correct" ("1"-"4" for MCQ, the number for integer); otherwise "correct":"". ' +
   'Set "subject" to the topic when obvious (Physics/Chemistry/Maths/Biology), else "". ' +
-  'If a question includes a FIGURE / DIAGRAM / GRAPH / CIRCUIT / STRUCTURE (not just text or equations), add "hasDiagram":true, ' +
-  '"page": the 1-based index of the image it appears in, and "bbox":[x0,y0,x1,y1] as the diagram\'s bounding box in fractions of that page (0=left/top, 1=right/bottom). Otherwise omit these. ' +
+  'If a question includes or refers to a FIGURE / DIAGRAM / GRAPH / CIRCUIT / RAY DIAGRAM / STRUCTURE / TABLE-as-image, you MUST add ' +
+  '"hasDiagram":true, "page": the 1-based index (among the images in THIS request) of the page it appears on, and ' +
+  '"bbox":[x0,y0,x1,y1] — a generous bounding box around the whole figure in fractions of that page (0=left/top, 1=right/bottom). ' +
+  'Phrases like "refer the figure", "as shown", "in the figure/diagram/graph", "the circuit shown", "the arrangement shown" ALWAYS mean a figure is present — never omit hasDiagram/bbox for those. Only omit these when the question is purely text/equations. ' +
   "Ignore page headers, footers, watermarks and website names. Do not invent questions. Output JSON only, no prose.";
 
 // Render every page of the PDF buffer to a PNG Buffer.
@@ -145,7 +147,9 @@ async function callVision(model, key, images, maxTokens, retries = 9) {
       e.detail = body.slice(0, 200);
       throw e;
     }
-    const c = (await res.json()).choices?.[0]?.message?.content || "";
+    // Repair under-escaped LaTeX backslashes before parsing, else \frac/\sqrt get
+    // mangled into control chars (or rejected) by JSON.parse.
+    const c = repairLatexBackslashes((await res.json()).choices?.[0]?.message?.content || "");
     try { const p = JSON.parse(c); return Array.isArray(p) ? p : (p?.questions || []); }
     catch { return salvageQuestions(c); } // truncated/!valid JSON — keep what completed
   }

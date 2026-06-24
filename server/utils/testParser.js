@@ -32,6 +32,20 @@ export function normalizeAnswer(raw) {
 // patterns can be added via TEST_PDF_STRIP (comma-separated, case-insensitive).
 const EXTRA_STRIP = String(process.env.TEST_PDF_STRIP || "")
   .split(",").map((s) => s.trim()).filter(Boolean);
+// LLMs (vision and text) routinely emit LaTeX with SINGLE backslashes (\frac,
+// \sqrt) inside JSON strings, which is invalid: JSON.parse turns \f \b \n \r \t
+// into control characters (so "\frac" becomes formfeed+"rac", which stripNoise
+// then collapses to " rac") and rejects the rest. Repair the raw response by
+// escaping every lone backslash that isn't a genuine JSON escape, so each LaTeX
+// command survives JSON.parse as a real backslash KaTeX can render.
+export function repairLatexBackslashes(raw) {
+  if (typeof raw !== "string" || raw.indexOf("\\") < 0) return raw;
+  return raw.replace(/\\(\\|"|\/|u[0-9a-fA-F]{4}|[\s\S])/g, (m, g) => {
+    if (g === "\\" || g === '"' || g === "/" || /^u[0-9a-fA-F]{4}$/.test(g)) return m;
+    return "\\\\" + g;
+  });
+}
+
 export function stripNoise(s) {
   let out = String(s || "")
     .replace(/https?:\/\/\S+|www\.\S+/gi, " ")                 // urls
@@ -378,6 +392,7 @@ async function parseWithLLM(qText, kText) {
   if (!content) return { questions: [], error: "AI returned an empty response" };
 
   // Prefer a clean parse; fall back to a tolerant salvage for truncated output.
+  content = repairLatexBackslashes(content); // keep under-escaped LaTeX intact
   let arr = null;
   try { const p = JSON.parse(content); arr = Array.isArray(p) ? p : p?.questions; } catch { /* salvage below */ }
   if (!Array.isArray(arr) || !arr.length) arr = salvageQuestions(content);
