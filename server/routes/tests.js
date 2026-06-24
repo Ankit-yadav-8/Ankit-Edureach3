@@ -153,6 +153,8 @@ function gcParseJobs() {
 router.post("/admin/parse", requireAdmin, (req, res) => {
   const testPdfUrl = String(req.body?.testPdfUrl || "");
   const keyPdfUrl = String(req.body?.keyPdfUrl || "");
+  // Drives the fixed-pattern section safety net (JEE Mains/NEET); harmless if absent.
+  const examType = ["mains", "advanced", "neet", "standard"].includes(req.body?.examType) ? req.body.examType : "";
   if (!isOurCloudinaryUrl(testPdfUrl)) return res.status(400).json({ error: "Upload the question paper PDF first." });
   if (keyPdfUrl && !isOurCloudinaryUrl(keyPdfUrl)) return res.status(400).json({ error: "Answer-key URL looks invalid." });
 
@@ -160,7 +162,7 @@ router.post("/admin/parse", requireAdmin, (req, res) => {
   const jobId = randomUUID();
   parseJobs.set(jobId, { status: "running", startedAt: Date.now() });
 
-  buildTestFromPdfs(testPdfUrl, keyPdfUrl)
+  buildTestFromPdfs(testPdfUrl, keyPdfUrl, examType)
     .then(({ questions, matched, note }) => {
       parseJobs.set(jobId, { status: "done", startedAt: Date.now(), result: { questions, matched, note, totalQuestions: questions.length } });
     })

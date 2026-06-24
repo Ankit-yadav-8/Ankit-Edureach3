@@ -142,7 +142,10 @@ export default function TestUpload({ token }) {
       // kicking off a fresh (expensive) conversion.
       let jobId = jobRef.current;
       if (!jobId) {
-        ({ jobId } = await apiAdminTestParseStart(token, { testPdfUrl, keyPdfUrl }));
+        // examType lets the server apply the fixed-pattern section safety net
+        // (JEE Mains/NEET) when a full paper is auto-converted. A specific-section
+        // upload is force-tagged below, so the net is a no-op there.
+        ({ jobId } = await apiAdminTestParseStart(token, { testPdfUrl, keyPdfUrl, examType: uploadSubject ? "" : examType }));
         jobRef.current = jobId;
       }
       const started = Date.now();

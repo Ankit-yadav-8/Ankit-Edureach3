@@ -14,6 +14,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import { callGemini, geminiReady, geminiModel } from "./gemini.js";
+import { enforceSectionPattern } from "./subjects.js";
 
 // Normalise an answer token to the canonical form used for grading.
 // Single-correct → digit "1".."4" (letters A–D folded to 1–4). Integer answers
@@ -272,6 +273,28 @@ function parseKeyInline(clean) {
   return map;
 }
 
+// Many papers print a consolidated ANSWER KEY at the END of the question paper
+// (no separate key PDF, not inline under each question). Find the LAST
+// "Answer Key"/"Answers"/"Solutions" heading and parse only the text after it —
+// restricting to that tail stops question numbering ("1. A particle…") from being
+// misread as "Q1 → A". With no heading we fall back to the distinctive
+// number-row/answer-row grid, which is safe to scan over the whole document.
+export function parseSelfAnswerKey(text) {
+  const clean = String(text || "").replace(/\r/g, "");
+  // A REAL key heading — "Answer Key(s)" at a line start, OR a line that is ONLY
+  // "Answers"/"Solutions" (+ optional colon). Anchoring to the line and requiring
+  // either the word "key" or a heading-only line stops prose like "The answer is…"
+  // or "Answers must be marked on the OMR" from being mistaken for a key heading.
+  const headRe = /^[^\S\n]*(?:answer\s*keys?\b|(?:answers?|solutions?)\s*:?[^\S\n]*$)/gim;
+  let m, lastIdx = -1;
+  while ((m = headRe.exec(clean)) !== null) lastIdx = m.index;
+  if (lastIdx >= 0) {
+    const key = parseAnswerKey(clean.slice(lastIdx));
+    if (Object.keys(key).length) return key;
+  }
+  return parseKeyGrid(clean);
+}
+
 function parseKeyGrid(clean) {
   const lines = clean.split("\n").map((l) => l.trim()).filter(Boolean);
   const map = {};
@@ -304,7 +327,7 @@ const LLM_SYS =
   "Rules: keep the original question order and numbering; normalise option labels to \"1\",\"2\",\"3\",\"4\" (map A/B/C/D to 1/2/3/4); for numerical/integer-answer questions set type to \"integer\", options to [] and correct to the number; " +
   "the correct answer may be given INLINE inside the question paper itself (e.g. \"Ans: B\", \"Answer (3)\", \"Correct option: 2\", \"Correct answer is D\") — detect it and remove that marker from the question/option text; a separate ANSWER KEY, when provided, takes precedence over the inline marker; " +
   "fill each correct field (\"1\"-\"4\" for MCQ, the number for integer); if no answer can be found set correct to \"\"; " +
-  "set subject to the topic/subject when it is evident (e.g. Physics, Chemistry, Maths, Biology), else \"\"; " +
+  "set subject for EVERY question to exactly one of \"Physics\", \"Chemistry\", \"Maths\" or \"Biology\" — never leave it blank; use the section heading (e.g. \"PHYSICS\", \"SECTION B — Chemistry\") and carry it forward to every question under it, falling back to the question's own topic; " +
   "write a short explanation (1-3 sentences) justifying the correct answer — prefer the official solution if the ANSWER KEY/SOLUTIONS text provides one, otherwise reason it out concisely; if you cannot justify it, set explanation to \"\"; " +
   "keep text plain and concise; do NOT invent questions or answers. Output JSON only, no prose.";
 
@@ -408,7 +431,7 @@ const visionEnabled = () => String(process.env.TEST_VISION || "").toLowerCase() 
 //      vision model — recovers the real questions, options and maths (LaTeX);
 //   3. otherwise, for text-rich papers the rules parser couldn't structure, fall
 //      back to the text LLM.
-export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
+export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl, examType = "") {
   const [qBuf, kText] = await Promise.all([
     fetchPdfBuffer(testPdfUrl),
     keyPdfUrl ? fetchPdfText(keyPdfUrl) : Promise.resolve(""),
@@ -417,10 +440,11 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
 
   let questions = parseQuestions(qText);
   // Answers can come from (a) inline markers in the question paper itself
-  // ("Ans: B" under each question) — already filled by parseOneBlock — and/or
-  // (b) a separate answer-key PDF. The separate key fills only what's missing,
-  // so a single self-contained PDF works without a second upload.
-  const key = parseAnswerKey(kText);
+  // ("Ans: B" under each question) — already filled by parseOneBlock; (b) an
+  // ANSWER KEY printed at the END of the question paper; and/or (c) a separate
+  // answer-key PDF. We merge all three so a single self-contained PDF — in any of
+  // these formats — works without a second upload; the separate key PDF wins.
+  const key = { ...parseSelfAnswerKey(qText), ...parseAnswerKey(kText) };
   let matched = 0;
   for (const q of questions) {
     if (!q.correct && key[q.qno]) q.correct = key[q.qno];
@@ -487,6 +511,11 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
       }
     }
   }
+
+  // Last-resort safety net for fixed-pattern exams (JEE Mains · NEET): if a whole
+  // section was folded into its neighbour during detection ("Physics 50, Maths 25"
+  // with no Chemistry), re-tag questions by position from the known section split.
+  if (questions.length) questions = enforceSectionPattern(questions, examType);
 
   const howLabel = { vision: "AI vision", "vision+text": "AI vision (partial)", AI: "AI", rules: "auto" };
   let note;

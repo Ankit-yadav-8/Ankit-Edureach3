@@ -58,7 +58,7 @@ function salvageQuestions(text) {
 // Crop a diagram region (normalized bbox, padded a little) out of a page PNG and
 // return a PNG buffer, or null if the box is missing/too small. Uses the
 // prebuilt @napi-rs/canvas that ships with pdf-to-img — no extra dependency.
-async function cropDiagram(pngBuffer, bbox, pad = 0.02) {
+async function cropDiagram(pngBuffer, bbox, pad = 0.04) {
   if (!Array.isArray(bbox) || bbox.length < 4) return null;
   let [x0, y0, x1, y1] = bbox.map(clamp01);
   x0 = clamp01(x0 - pad); y0 = clamp01(y0 - pad); x1 = clamp01(x1 + pad); y1 = clamp01(y1 + pad);
@@ -79,12 +79,13 @@ const VISION_SYS =
   '{"questions":[{"qno":1,"text":"...","subject":"","type":"single","options":[{"key":"1","text":"..."},{"key":"2","text":"..."},{"key":"3","text":"..."},{"key":"4","text":"..."}],"correct":"1","explanation":""}]}. ' +
   "Transcribe each question and ALL its options exactly as printed, including every mathematical expression — wrap ALL maths in LaTeX delimiters $...$ (e.g. $\\frac{\\beta}{\\alpha}$, $x^2+1$, $\\alpha,\\beta\\in\\mathbb{R}$). " +
   'Use the printed question number for "qno". Map option labels A/B/C/D or (1)-(4) to "1","2","3","4". ' +
+  'NEVER leave an option\'s "text" blank for an MCQ: every "single" question MUST have all four options filled with the option text exactly as printed (use LaTeX for any maths). If an option is only a figure/structure with no text, still describe it briefly. Only "integer" questions may have empty options. ' +
   'For numerical / integer-answer questions set "type":"integer", "options":[] and "correct" to the number. ' +
   'If the page shows the answer (e.g. "Answer Key : (3)") put it in "correct" ("1"-"4" for MCQ, the number for integer); otherwise "correct":"". ' +
-  'Set "subject" to the topic when obvious (Physics/Chemistry/Maths/Biology), else "". ' +
+  'ALWAYS set "subject" for EVERY question to exactly one of "Physics", "Chemistry", "Maths" or "Biology" — never leave it blank. Section headings (e.g. "PHYSICS", "CHEMISTRY", "SECTION B — Chemistry"), the topic of the question, and the position in the paper all indicate the subject; carry the most recent section heading forward to every question under it. ' +
   'If a question includes or refers to a FIGURE / DIAGRAM / GRAPH / CIRCUIT / RAY DIAGRAM / STRUCTURE / TABLE-as-image, you MUST add ' +
   '"hasDiagram":true, "page": the 1-based index (among the images in THIS request) of the page it appears on, and ' +
-  '"bbox":[x0,y0,x1,y1] — a generous bounding box around the whole figure in fractions of that page (0=left/top, 1=right/bottom). ' +
+  '"bbox":[x0,y0,x1,y1] — a bounding box that encloses the WHOLE figure with all its parts and labels, but EXCLUDES any page watermark, logo, website/URL, coaching-institute name or batch/organisation branding text, in fractions of that page (0=left/top, 1=right/bottom). ' +
   'Phrases like "refer the figure", "as shown", "in the figure/diagram/graph", "the circuit shown", "the arrangement shown" ALWAYS mean a figure is present — never omit hasDiagram/bbox for those. Only omit these when the question is purely text/equations. ' +
   "Ignore page headers, footers, watermarks and website names. Do not invent questions. Output JSON only, no prose.";
 
@@ -143,7 +144,9 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
   // scale 1.5, 2 in flight, overlapping work — ~2x faster than one-at-a-time.
   // Bump TEST_VISION_PAGES / _CONCURRENCY / _SCALE on a paid tier (higher RPM)
   // for sub-minute runs.
-  const scale = Math.min(3, Math.max(1, Number(process.env.TEST_VISION_SCALE) || 1.5));
+  // Default 2 (was 1.5): sharper pages so the model reads dense maths/options
+  // accurately AND the diagram crops are crisp enough to read on a phone.
+  const scale = Math.min(3, Math.max(1, Number(process.env.TEST_VISION_SCALE) || 2));
   const perBatch = Math.min(5, Math.max(1, Number(process.env.TEST_VISION_PAGES) || 2));
   const maxPages = Math.min(80, Math.max(1, Number(process.env.TEST_VISION_MAXPAGES) || 50));
   const concurrency = Math.min(6, Math.max(1, Number(process.env.TEST_VISION_CONCURRENCY) || 2));
