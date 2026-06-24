@@ -13,6 +13,7 @@
 // no text layer and will yield nothing — the admin then fills the grid by hand.
 // ─────────────────────────────────────────────────────────────────────────────
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
+import { callGemini, geminiReady, geminiModel } from "./gemini.js";
 
 // Normalise an answer token to the canonical form used for grading.
 // Single-correct → digit "1".."4" (letters A–D folded to 1–4). Integer answers
@@ -292,11 +293,10 @@ function parseKeyGrid(clean) {
   return map;
 }
 
-// ── LLM converter (Groq) ─────────────────────────────────────────────────────
+// ── LLM converter (Gemini) ───────────────────────────────────────────────────
 // Real exam PDFs vary too much for regex alone, so when the rules parser does
 // poorly we hand the extracted text to an LLM and ask for structured questions.
 // Returns a normalised question array, or null if unavailable/failed.
-const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 const LLM_SYS =
   "You convert a raw exam paper into structured JSON for a computer-based test (CBT). " +
@@ -352,43 +352,29 @@ function normalizeLLMQuestions(arr) {
   });
 }
 
-// Hand the extracted text to Groq and ask for structured questions. Returns
+// Hand the extracted text to Gemini and ask for structured questions. Returns
 // { questions, error } — questions is [] on any failure and error carries a
 // short reason for the admin note (so a silent null no longer hides the cause).
 async function parseWithLLM(qText, kText) {
-  if (!process.env.GROQ_API_KEY) return { questions: [], error: "AI conversion is off (GROQ_API_KEY not set on the server)" };
-  const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+  if (!geminiReady()) return { questions: [], error: "AI conversion is off (GEMINI_API_KEY not set on the server)" };
+  const model = geminiModel();
   // Big enough for a full paper of MCQs (text + options + short solution each);
   // combined with salvageQuestions(), even a truncated reply still yields Qs.
-  const maxTokens = Math.max(2000, Number(process.env.GROQ_MAX_TOKENS) || 16000);
+  const maxTokens = Math.max(2000, Number(process.env.GEMINI_MAX_TOKENS) || 16000);
   const user =
     `QUESTION PAPER (raw text):\n${qText.slice(0, 45000)}\n\n` +
     `ANSWER KEY (raw text):\n${(kText || "(none provided — the answers may be inline in the question paper above)").slice(0, 8000)}`;
 
-  let res;
-  try {
-    res = await fetch(GROQ_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
-      body: JSON.stringify({
-        model,
-        temperature: 0,
-        max_tokens: maxTokens,
-        response_format: { type: "json_object" },
-        messages: [{ role: "system", content: LLM_SYS }, { role: "user", content: user }],
-      }),
-    });
-  } catch (e) {
-    return { questions: [], error: `AI request failed (${e?.message || "network error"})` };
-  }
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    console.error("[testParser] Groq error", res.status, body.slice(0, 500));
-    return { questions: [], error: `AI service error ${res.status} (model "${model}")` };
-  }
-
   let content;
-  try { content = (await res.json()).choices?.[0]?.message?.content || ""; } catch { content = ""; }
+  try {
+    content = await callGemini({ system: LLM_SYS, parts: [{ text: user }], maxTokens, model });
+  } catch (e) {
+    if (e.code === "DAILY_LIMIT") {
+      return { questions: [], error: "Daily AI quota reached — try again tomorrow, or use a paid GEMINI_API_KEY for higher limits" };
+    }
+    console.error("[testParser] Gemini error", e.message, e.detail || "");
+    return { questions: [], error: `AI request failed (${e?.message || "network error"}${e?.detail ? `: ${e.detail}` : ""})` };
+  }
   if (!content) return { questions: [], error: "AI returned an empty response" };
 
   // Prefer a clean parse; fall back to a tolerant salvage for truncated output.
@@ -453,7 +439,7 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
   const textLen = qText.trim().length;
 
   // ── Vision pass — for scanned papers and math PDFs whose text is unusable ──
-  if (visionEnabled() && process.env.GROQ_API_KEY && isLowQuality(questions)) {
+  if (visionEnabled() && geminiReady() && isLowQuality(questions)) {
     try {
       const { extractWithVision } = await import("./visionParser.js");
       const v = await extractWithVision(qBuf, { answerKey: textKey });
@@ -508,7 +494,7 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
     // The math couldn't be read: rules-only on a math paper leaves blank options
     // and stripped equations. Warn loudly so a broken test isn't published as-is.
     const why = aiError ? `${aiError}. ` : "AI vision couldn't read this paper. ";
-    note = `⚠️ The questions below have blank options/maths — ${why}This is a scanned/math paper that needs AI to read it. Re-convert when the AI quota resets (or set a paid GROQ_API_KEY), or fill the questions in manually. Do not publish as-is.`;
+    note = `⚠️ The questions below have blank options/maths — ${why}This is a scanned/math paper that needs AI to read it. Re-convert when the AI quota resets (or set a paid GEMINI_API_KEY), or fill the questions in manually. Do not publish as-is.`;
   } else if (questions.length) {
     const src = keyPdfUrl ? "answer key" : "answers";
     const inline = !keyPdfUrl && method === "rules" ? " (detected inline in the paper)" : "";

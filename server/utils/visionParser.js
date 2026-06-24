@@ -3,7 +3,7 @@
 //
 // Math-heavy exam PDFs (JEE/NEET) store their equations as vector glyphs, not as
 // a readable text layer — so text parsing recovers garbled stems and empty
-// options. Instead we render each page to an image and ask a Groq vision model
+// options. Instead we render each page to an image and ask a Gemini vision model
 // to transcribe the questions, options and answer key as JSON, with all maths in
 // LaTeX ($…$) so the player renders it via KaTeX.
 //
@@ -11,13 +11,15 @@
 // system deps) and sent in small page-batches with limited concurrency to stay
 // within model image limits and keep latency reasonable.
 //
-// Tunables (env): GROQ_VISION_MODEL, TEST_VISION_SCALE (render DPI factor),
-// TEST_VISION_PAGES (pages per request), TEST_VISION_MAXPAGES, TEST_VISION=off.
+// Tunables (env): GEMINI_VISION_MODEL (else GEMINI_MODEL), TEST_VISION_SCALE
+// (render DPI factor), TEST_VISION_PAGES (pages per request),
+// TEST_VISION_MAXPAGES, TEST_VISION=off.
 // ─────────────────────────────────────────────────────────────────────────────
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
 import { normalizeAnswer, stripNoise, repairLatexBackslashes } from "./testParser.js";
 import { uploadImageBuffer, cloudinaryReady } from "./cloudinary.js";
+import { callGemini, geminiReady, geminiModel } from "./gemini.js";
 
 const clamp01 = (n) => Math.max(0, Math.min(1, Number(n) || 0));
 
@@ -72,8 +74,6 @@ async function cropDiagram(pngBuffer, bbox, pad = 0.02) {
   return cv.toBuffer("image/png");
 }
 
-const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-
 const VISION_SYS =
   'You read images of exam-paper pages and output ONLY JSON of the form ' +
   '{"questions":[{"qno":1,"text":"...","subject":"","type":"single","options":[{"key":"1","text":"..."},{"key":"2","text":"..."},{"key":"3","text":"..."},{"key":"4","text":"..."}],"correct":"1","explanation":""}]}. ' +
@@ -98,70 +98,21 @@ async function renderPages(pdfBuffer, scale) {
   return pages;
 }
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-// One vision request, retrying on rate-limit (429) and transient 5xx. Groq's
-// free tier caps tokens-per-minute, so we honour the Retry-After header / the
-// "try again in Ns" hint instead of failing the whole conversion.
-async function callVision(model, key, images, maxTokens, retries = 9) {
-  const content = [{ type: "text", text: "Transcribe every question shown in these page image(s)." }];
+// One vision request. Gemini is multimodal, so we send the page PNGs as
+// inline_data alongside the prompt. callGemini handles 429/5xx retries (honouring
+// RetryInfo.retryDelay) and throws a tagged DAILY_LIMIT when the per-day quota is
+// gone, so the conversion fails fast rather than hanging.
+async function callVision(model, images, maxTokens) {
+  const parts = [{ text: "Transcribe every question shown in these page image(s)." }];
   for (const png of images) {
-    content.push({ type: "image_url", image_url: { url: "data:image/png;base64," + png.toString("base64") } });
+    parts.push({ inline_data: { mime_type: "image/png", data: png.toString("base64") } });
   }
-  let mt = maxTokens;
-  const buildPayload = () => JSON.stringify({
-    model, temperature: 0, max_tokens: mt,
-    response_format: { type: "json_object" },
-    messages: [{ role: "system", content: VISION_SYS }, { role: "user", content }],
-  });
-
-  for (let attempt = 0; ; attempt++) {
-    const res = await fetch(GROQ_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
-      body: buildPayload(),
-    });
-    if (res.status === 429 || res.status >= 500) {
-      const body = await res.text().catch(() => "");
-      // Per-DAY quota (TPD/RPD) won't reset for hours — retrying is pointless and
-      // would hang for ages. Fail fast with a clear, distinct reason.
-      if (/per day|\bTPD\b|\bRPD\b|tokens per day|requests per day/i.test(body)) {
-        const e = new Error("daily AI quota reached");
-        e.code = "DAILY_LIMIT";
-        e.detail = body.slice(0, 200);
-        throw e;
-      }
-      if (attempt < retries) {
-        const ra = Number(res.headers.get("retry-after"));
-        const hint = Number((body.match(/try again in ([\d.]+)\s*s/i) || [])[1]);
-        const waitMs = Math.min(30000, Math.ceil(((ra || hint || 3 + attempt) + 0.5) * 1000));
-        await sleep(waitMs);
-        continue;
-      }
-      const e = new Error(`HTTP ${res.status}`);
-      e.detail = body.slice(0, 200);
-      throw e;
-    }
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      // A too-high token cap (400) must NOT blank the whole paper — halve it and
-      // retry so the conversion still succeeds at a smaller, accepted cap.
-      if (res.status === 400 && mt > 1024 &&
-          /max.?(completion.?)?tokens|maximum context|reduce the length|too many tokens|exceeds? the/i.test(body)) {
-        mt = Math.max(1024, Math.floor(mt / 2));
-        console.warn(`[visionParser] token cap too high — retrying at max_tokens=${mt}`);
-        continue;
-      }
-      const e = new Error(`HTTP ${res.status}`);
-      e.detail = body.slice(0, 200);
-      throw e;
-    }
-    // Repair under-escaped LaTeX backslashes before parsing, else \frac/\sqrt get
-    // mangled into control chars (or rejected) by JSON.parse.
-    const c = repairLatexBackslashes((await res.json()).choices?.[0]?.message?.content || "");
-    try { const p = JSON.parse(c); return Array.isArray(p) ? p : (p?.questions || []); }
-    catch { return salvageQuestions(c); } // truncated/!valid JSON — keep what completed
-  }
+  const text = await callGemini({ system: VISION_SYS, parts, maxTokens, model });
+  // Repair under-escaped LaTeX backslashes before parsing, else \frac/\sqrt get
+  // mangled into control chars (or rejected) by JSON.parse.
+  const c = repairLatexBackslashes(text || "");
+  try { const p = JSON.parse(c); return Array.isArray(p) ? p : (p?.questions || []); }
+  catch { return salvageQuestions(c); } // truncated/!valid JSON — keep what completed
 }
 
 // Run fn over items with a bounded number of workers in flight.
@@ -185,13 +136,13 @@ const richness = (q) =>
 // answerKey (qno -> answer, parsed from the text layer) fills any answer the
 // model misses. Returns { questions, error } — questions [] on failure.
 export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
-  if (!process.env.GROQ_API_KEY) return { questions: [], error: "AI vision is off (GROQ_API_KEY not set on the server)" };
+  if (!geminiReady()) return { questions: [], error: "AI vision is off (GEMINI_API_KEY not set on the server)" };
 
-  const model = process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
-  // Defaults tuned for Groq's free tier (30k tokens/min): 2 pages per request at
-  // scale 1.5 is ~5k tokens, and 2 in flight (~10k) stays under the cap while
-  // overlapping work — ~2x faster than one-at-a-time. Bump TEST_VISION_PAGES /
-  // _CONCURRENCY / _SCALE on a paid tier (higher TPM) for sub-minute runs.
+  const model = process.env.GEMINI_VISION_MODEL || geminiModel();
+  // Defaults kept conservative for rate-limited tiers: 2 pages per request at
+  // scale 1.5, 2 in flight, overlapping work — ~2x faster than one-at-a-time.
+  // Bump TEST_VISION_PAGES / _CONCURRENCY / _SCALE on a paid tier (higher RPM)
+  // for sub-minute runs.
   const scale = Math.min(3, Math.max(1, Number(process.env.TEST_VISION_SCALE) || 1.5));
   const perBatch = Math.min(5, Math.max(1, Number(process.env.TEST_VISION_PAGES) || 2));
   const maxPages = Math.min(80, Math.max(1, Number(process.env.TEST_VISION_MAXPAGES) || 50));
@@ -218,11 +169,11 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
     let arr;
     // 6000 tokens (was 4000): dense 2-page batches overran 4000 and truncated;
     // callVision auto-halves if even this is too high for the model/tier.
-    try { arr = await callVision(model, process.env.GROQ_API_KEY, imgs, Number(process.env.TEST_VISION_MAXTOKENS) || 6000); }
+    try { arr = await callVision(model, imgs, Number(process.env.TEST_VISION_MAXTOKENS) || 8000); }
     catch (e) {
       if (e.code === "DAILY_LIMIT") {
         dailyLimit = true;
-        firstErr = "Daily AI quota reached — try again tomorrow, or set a paid GROQ_API_KEY for higher limits";
+        firstErr = "Daily AI quota reached — try again tomorrow, or set a paid GEMINI_API_KEY for higher limits";
       } else if (!firstErr) {
         firstErr = `AI vision error (${e.message}${e.detail ? `: ${e.detail}` : ""})`;
       }
