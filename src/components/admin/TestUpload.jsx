@@ -35,7 +35,7 @@ const SUBJECTS_BY_EXAM = {
 
 const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "—");
 
-const card = { background: "#fff", borderRadius: 16, border: "1px solid #f0e9e0", boxShadow: "0 8px 30px rgba(13,27,62,.06)" };
+const card = { background: "#fff", borderRadius: 16, border: "1px solid #f0e9e0", boxShadow: "0 8px 30px rgba(13,27,62,.06)", minWidth: 0, maxWidth: "100%", boxSizing: "border-box" };
 const lbl = { fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 6, display: "block" };
 const inp = { width: "100%", height: 40, padding: "0 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: NAVY };
 
@@ -213,9 +213,10 @@ export default function TestUpload({ token }) {
   const unanswered = (questions || []).filter((q) => !String(q.correct).trim()).length;
 
   // Start a manual test with one blank question — no PDF needed. Students read
-  // the question text/options/images straight from the CBT pane.
+  // the question text/options/images straight from the CBT pane. The blank
+  // question inherits the selected section so it lands in that subject tab.
   const blankQ = (qno) => ({
-    qno, text: "", image: "", type: "single", correct: "",
+    qno, text: "", image: "", type: "single", correct: "", subject: uploadSubject || "",
     options: ["1", "2", "3", "4"].map((k) => ({ key: k, text: "", image: "" })), explanation: "",
   });
   const startManual = () => { setErr(""); setNote(""); setQuestions([blankQ(1)]); };
@@ -268,7 +269,7 @@ export default function TestUpload({ token }) {
   );
 
   return (
-    <div style={{ display: "grid", gap: 20 }}>
+    <div style={{ display: "grid", gap: 20, minWidth: 0, maxWidth: "100%" }}>
       {/* Plan + category selector */}
       <div style={{ ...card, padding: "18px 20px" }}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "flex-end" }}>
@@ -293,8 +294,8 @@ export default function TestUpload({ token }) {
       </div>
 
       {err && (
-        <div style={{ background: "#fff0f0", border: "1px solid #fca5a5", borderRadius: 10, padding: "10px 14px", color: "#dc2626", fontSize: 13, display: "flex", alignItems: "center", gap: 8 }}>
-          <AlertTriangle size={15} /> {err}
+        <div style={{ background: "#fff0f0", border: "1px solid #fca5a5", borderRadius: 10, padding: "10px 14px", color: "#dc2626", fontSize: 13, display: "flex", alignItems: "flex-start", gap: 8 }}>
+          <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1 }} /> <span style={{ minWidth: 0, overflowWrap: "anywhere" }}>{err}</span>
         </div>
       )}
 
@@ -443,10 +444,10 @@ export default function TestUpload({ token }) {
         )}
 
         {note && (() => {
-          const warn = questions && questions.length === 0;
+          const warn = (questions && questions.length === 0) || /^\s*⚠️/.test(note);
           return (
-            <div style={{ marginTop: 14, background: warn ? "#fffbeb" : "#f0f6ff", border: `1px solid ${warn ? "#fde68a" : "#bfdbfe"}`, borderRadius: 10, padding: "10px 14px", color: warn ? "#92400e" : "#1e40af", fontSize: 13, display: "flex", gap: 8 }}>
-              <Info size={15} style={{ flexShrink: 0, marginTop: 1 }} /> <span>{note}</span>
+            <div style={{ marginTop: 14, background: warn ? "#fffbeb" : "#f0f6ff", border: `1px solid ${warn ? "#fde68a" : "#bfdbfe"}`, borderRadius: 10, padding: "10px 14px", color: warn ? "#92400e" : "#1e40af", fontSize: 13, display: "flex", gap: 8, alignItems: "flex-start" }}>
+              <Info size={15} style={{ flexShrink: 0, marginTop: 1 }} /> <span style={{ minWidth: 0, overflowWrap: "anywhere" }}>{note}</span>
             </div>
           );
         })()}

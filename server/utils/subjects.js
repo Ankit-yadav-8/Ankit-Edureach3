@@ -30,6 +30,35 @@ export function orderSubjects(list) {
 
 export const subjectRank = (s) => ORDER[normalizeSubject(s)] ?? 9;
 
+// Keyword fingerprints used to GUESS a question's subject from its text when the
+// AI left it blank (e.g. the vision pass was cut short by the daily quota). Even
+// a math paper whose equations didn't extract still has tell-tale words in the
+// stem ("roots of the quadratic", "two vectors", "velocity", "mole"), so this
+// recovers section tags while respecting the paper's actual order.
+const SUBJECT_KEYWORDS = {
+  Maths: /\b(equation|quadratic|roots?|function|integral|integrat\w*|deriv\w*|differentiat\w*|matri(?:x|ces)|determinant|probabilit\w*|vectors?|complex number|polynomial|coefficients?|tangent|circle|ellipse|parabola|hyperbola|sine?|cosine?|cos|sin|tan|logarithm|series|limits?|permutation|combination|binomial|locus|trigonometr\w*|set theory|relation)\b/gi,
+  Physics: /\b(velocit\w*|accelerat\w*|force|momentum|charge|magnetic|electric|current|resistance|resistor|capacitor|inductor|wavelength|frequenc\w*|photon|kinetic|potential energy|gravitation\w*|friction|newton|joule|watt|ohm|tesla|refractive|lens|mirror|displacement|projectile|amplitude|oscillat\w*|thermodynamic\w*|temperature|pressure|circuit|voltage|electron volt)\b/gi,
+  Chemistry: /\b(mole|molar|reaction|compound|atom\w*|orbital|acid|base|p\s?H\b|oxidation|reduction|enthalp\w*|bond|isomer|alkane|alkene|alkyne|benzene|polymer|catalyst|valenc\w*|aqueous|hybridi\w*|electroneg\w*|periodic table|ester|amine|aldehyde|ketone|hydrocarbon|salt|electrolys\w*|equilibrium constant)\b/gi,
+  Biology: /\b(cell|tissue|organ\w*|enzyme|protein|dna|rna|gene\w*|chromosome|photosynthesis|respiration|species|ecosystem|hormone|nucleus|mitosis|meiosis|bacteri\w*|virus|plant|animal|blood|neuron|reproduc\w*|digest\w*|kingdom|taxonom\w*)\b/gi,
+};
+
+// Best-guess subject from question text. Returns "" when nothing matches enough.
+// `allowed` (optional) restricts to that exam's subjects so a JEE paper never
+// gets tagged "Biology" from a stray "cell"/"plant".
+export function guessSubjectFromText(text, allowed = null) {
+  const s = String(text || "");
+  if (s.length < 4) return "";
+  const subs = allowed && allowed.length ? allowed : Object.keys(SUBJECT_KEYWORDS);
+  let best = "", bestN = 0;
+  for (const sub of subs) {
+    const re = SUBJECT_KEYWORDS[sub];
+    if (!re) continue;
+    const n = (s.match(re) || []).length;
+    if (n > bestN) { bestN = n; best = sub; }
+  }
+  return bestN >= 1 ? best : "";
+}
+
 // Fixed exam patterns whose papers run in CONTIGUOUS subject blocks, with the
 // fraction of questions each subject occupies, in order. JEE Mains is even
 // thirds (P·C·M, 25/25/25); NEET is 1:1:2 (P·C·B, 45/45/90).
@@ -58,6 +87,21 @@ export function enforceSectionPattern(questions, examType) {
   const count = {};
   for (const q of ordered) { const s = normalizeSubject(q.subject); if (s) count[s] = (count[s] || 0) + 1; }
   const present = expected.filter((s) => count[s]).length;
+
+  // Whole paper untagged (AI conversion cut short by the quota): give a full
+  // fixed-pattern paper the conventional section split by position so students
+  // still get section tabs. Large papers only, so small daily/manual tests
+  // aren't carved up; the admin can correct any question in review.
+  if (present === 0) {
+    if (n < 30) return questions;
+    const sizes = pat.map(([, f]) => Math.round(f * n));
+    sizes[sizes.length - 1] = n - sizes.slice(0, -1).reduce((a, b) => a + b, 0);
+    if (sizes.some((s) => s <= 0)) return questions;
+    let i = 0;
+    expected.forEach((sub, b) => { for (let k = 0; k < sizes[b]; k++, i++) ordered[i].subject = sub; });
+    return ordered;
+  }
+
   const missingSubs = expected.filter((s) => !count[s]);
   if (present < 2 || missingSubs.length < 1) return questions;
   // Compare each subject to its EXPECTED share (handles NEET's uneven 1:1:2).
