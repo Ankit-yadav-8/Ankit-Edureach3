@@ -221,46 +221,58 @@ function interpAdvBand(marks) {
 export const maxPerSubject = (advanced) => (advanced ? 120 : 100);
 export const maxTotal      = (advanced) => (advanced ? 360 : 300);
 
-// ── NEET UG: marks (/720) → All India Rank ────────────────────
-// Approximate marks-vs-rank from recent NEET results (~23–24 lakh candidates).
-// [marks, AIR] anchors, interpolated.
-const NEET_TABLE = [
-  [720,       1],
-  [715,      35],
-  [705,     250],
-  [690,    1400],
-  [675,    4000],
-  [660,    8500],
-  [645,   15500],
-  [630,   25000],
-  [610,   42000],
-  [590,   66000],
-  [565,  105000],
-  [540,  150000],
-  [515,  205000],
-  [490,  272000],
-  [460,  370000],
-  [430,  480000],
-  [400,  610000],
-  [360,  800000],
-  [320, 1000000],
-  [260, 1320000],
-  [200, 1640000],
-  [137, 2000000],
-  [0,   2400000],
+// ── NEET UG: marks (/720) → All India Rank (band table) ───────
+// Marks band → AIR range, per the supplied NEET mapping. Higher marks = better
+// (lower) rank, so within a band the top score maps to rankLo and the bottom
+// score to rankHi. The bands are contiguous from 300–720; below 300 they're
+// extrapolated to the full ~24-lakh candidate pool.
+// [marksHi, marksLo, rankLo, rankHi]
+const NEET_BANDS = [
+  [720, 680,       1,      20],
+  [679, 670,      20,     100],
+  [669, 650,     100,     500],
+  [649, 630,     500,    1000],
+  [629, 615,    1000,    2000],
+  [614, 590,    2000,    5000],
+  [589, 570,    5000,   10000],
+  [569, 550,   10000,   20000],
+  [549, 525,   20000,   40000],
+  [524, 505,   40000,   60000],
+  [504, 485,   60000,   80000],
+  [484, 455,   80000,  100000],
+  [454, 430,  100000,  150000],
+  [429, 400,  150000,  200000],
+  [399, 370,  200000,  300000],
+  [369, 335,  300000,  400000],
+  [334, 300,  400000,  500000],
+  // ── below the supplied table — extrapolated to the full pool ──
+  [299, 250,  500000,  720000],
+  [249, 200,  720000,  950000],
+  [199, 137,  950000, 1300000],
+  [136,   0, 1300000, 2400000],
 ];
 const NEET_CANDIDATES = 2400000;
 export const maxTotalNeet = () => 720;
 
+// Find the band for a NEET score and interpolate the point AIR inside it.
+function neetBand(marks) {
+  for (const [hi, lo, rLo, rHi] of NEET_BANDS) {
+    if (marks <= hi && marks >= lo) {
+      const frac = (hi - marks) / Math.max(hi - lo, 1); // 0 at top of band, 1 at bottom
+      return { air: Math.round(rLo + frac * (rHi - rLo)), low: rLo, high: rHi };
+    }
+  }
+  return { air: 1, low: 1, high: 20 };
+}
+
 export function predictNeetRank({ total }) {
   const t = clamp(Number(total) || 0, 0, 720);
-  const air = Math.max(1, interp(NEET_TABLE, t));
+  const { air, low, high } = neetBand(t);
   const percentile = Number(clamp(100 * (1 - (air - 1) / NEET_CANDIDATES), 0, 99.9999).toFixed(4));
   return {
     exam: "neet", total: t, ranked: true,
-    air, rank: air, crl: air, percentile,
-    low: Math.max(1, Math.round(air * 0.9)),
-    high: Math.round(air * 1.12),
+    air: Math.max(1, air), rank: Math.max(1, air), crl: Math.max(1, air), percentile,
+    low: Math.max(1, low), high,
   };
 }
 
