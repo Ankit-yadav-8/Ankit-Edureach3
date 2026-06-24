@@ -17,6 +17,28 @@
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
 import { normalizeAnswer, stripNoise } from "./testParser.js";
+import { uploadImageBuffer, cloudinaryReady } from "./cloudinary.js";
+
+const clamp01 = (n) => Math.max(0, Math.min(1, Number(n) || 0));
+
+// Crop a diagram region (normalized bbox, padded a little) out of a page PNG and
+// return a PNG buffer, or null if the box is missing/too small. Uses the
+// prebuilt @napi-rs/canvas that ships with pdf-to-img — no extra dependency.
+async function cropDiagram(pngBuffer, bbox, pad = 0.02) {
+  if (!Array.isArray(bbox) || bbox.length < 4) return null;
+  let [x0, y0, x1, y1] = bbox.map(clamp01);
+  x0 = clamp01(x0 - pad); y0 = clamp01(y0 - pad); x1 = clamp01(x1 + pad); y1 = clamp01(y1 + pad);
+  if (x1 - x0 < 0.03 || y1 - y0 < 0.03) return null;
+  const require = createRequire(import.meta.url);
+  const { createCanvas, loadImage } = await import(pathToFileURL(require.resolve("@napi-rs/canvas")).href);
+  const img = await loadImage(pngBuffer);
+  const sx = Math.round(x0 * img.width), sy = Math.round(y0 * img.height);
+  const sw = Math.round((x1 - x0) * img.width), sh = Math.round((y1 - y0) * img.height);
+  if (sw < 24 || sh < 24) return null;
+  const cv = createCanvas(sw, sh);
+  cv.getContext("2d").drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+  return cv.toBuffer("image/png");
+}
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
@@ -28,6 +50,8 @@ const VISION_SYS =
   'For numerical / integer-answer questions set "type":"integer", "options":[] and "correct" to the number. ' +
   'If the page shows the answer (e.g. "Answer Key : (3)") put it in "correct" ("1"-"4" for MCQ, the number for integer); otherwise "correct":"". ' +
   'Set "subject" to the topic when obvious (Physics/Chemistry/Maths/Biology), else "". ' +
+  'If a question includes a FIGURE / DIAGRAM / GRAPH / CIRCUIT / STRUCTURE (not just text or equations), add "hasDiagram":true, ' +
+  '"page": the 1-based index of the image it appears in, and "bbox":[x0,y0,x1,y1] as the diagram\'s bounding box in fractions of that page (0=left/top, 1=right/bottom). Otherwise omit these. ' +
   "Ignore page headers, footers, watermarks and website names. Do not invent questions. Output JSON only, no prose.";
 
 // Render every page of the PDF buffer to a PNG Buffer.
@@ -109,7 +133,8 @@ async function mapPool(items, concurrency, fn) {
 const richness = (q) =>
   (q.text?.length || 0) +
   (q.options?.reduce((s, o) => s + (String(o.text).trim() ? 1 : 0), 0) || 0) * 60 +
-  (q.correct ? 40 : 0);
+  (q.correct ? 40 : 0) +
+  (q.image ? 80 : 0);
 
 // Render the PDF and transcribe its questions with a vision model.
 // answerKey (qno -> answer, parsed from the text layer) fills any answer the
@@ -137,11 +162,15 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
   const batches = [];
   for (let i = 0; i < pages.length; i += perBatch) batches.push(pages.slice(i, i + perBatch));
 
+  // Extract diagram crops unless turned off / Cloudinary not configured.
+  const wantDiagrams = String(process.env.TEST_VISION_DIAGRAMS || "").toLowerCase() !== "off" && cloudinaryReady();
+
   let firstErr = "";
   let dailyLimit = false;
   const results = await mapPool(batches, concurrency, async (imgs) => {
     if (dailyLimit) return []; // stop hammering once the daily quota is gone
-    try { return await callVision(model, process.env.GROQ_API_KEY, imgs, 4000); }
+    let arr;
+    try { arr = await callVision(model, process.env.GROQ_API_KEY, imgs, 4000); }
     catch (e) {
       if (e.code === "DAILY_LIMIT") {
         dailyLimit = true;
@@ -152,6 +181,19 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
       console.error("[visionParser]", e.message, e.detail || "");
       return [];
     }
+    // Crop & upload any diagram the model located, attaching it as the question
+    // image so figure-based questions render natively in the CBT.
+    if (wantDiagrams && Array.isArray(arr)) {
+      for (const q of arr) {
+        if (!q?.hasDiagram || !q?.bbox) continue;
+        const pageIdx = Math.min(imgs.length, Math.max(1, Number(q.page) || 1)) - 1;
+        try {
+          const crop = await cropDiagram(imgs[pageIdx], q.bbox);
+          if (crop) q.image = await uploadImageBuffer(crop, { folder: "tests/diagrams" });
+        } catch (e) { console.error("[visionParser] diagram crop/upload failed", e.message); }
+      }
+    }
+    return arr;
   });
 
   // Merge across batches, de-duping by qno and keeping the richest transcription.
@@ -167,7 +209,7 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
       const cand = {
         qno,
         text: stripNoise(q?.text).slice(0, 4000),
-        image: "",
+        image: typeof q?.image === "string" && q.image.startsWith("http") ? q.image : "",
         options,
         type,
         subject: String(q?.subject || "").slice(0, 40),

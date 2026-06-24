@@ -35,6 +35,29 @@ export function signUpload({ folder }) {
   return { signature, timestamp, apiKey, cloudName, folder };
 }
 
+// Upload an image buffer to Cloudinary from the server (used for diagram crops
+// the vision converter extracts from question pages). Signs folder+timestamp the
+// same way as the browser path. Returns the secure URL.
+export async function uploadImageBuffer(buffer, { folder = "tests/diagrams" } = {}) {
+  const { cloudName, apiKey, apiSecret } = cfg();
+  if (!cloudName || !apiKey || !apiSecret) throw new Error("Cloudinary not configured");
+  const timestamp = Math.floor(Date.now() / 1000);
+  const toSign = `folder=${folder}&timestamp=${timestamp}`;
+  const signature = crypto.createHash("sha1").update(toSign + apiSecret).digest("hex");
+
+  const form = new FormData();
+  form.append("file", new Blob([buffer], { type: "image/png" }), "diagram.png");
+  form.append("api_key", apiKey);
+  form.append("timestamp", String(timestamp));
+  form.append("folder", folder);
+  form.append("signature", signature);
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, { method: "POST", body: form });
+  if (!res.ok) throw new Error(`Cloudinary upload failed (${res.status}): ${(await res.text().catch(() => "")).slice(0, 200)}`);
+  const j = await res.json();
+  return j.secure_url || j.url || "";
+}
+
 // Only ever trust media URLs that actually live on our own Cloudinary account —
 // stops a tampered request from posting arbitrary external links as "media".
 export function isOurCloudinaryUrl(url) {
