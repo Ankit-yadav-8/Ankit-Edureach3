@@ -27,6 +27,7 @@ import { signUpload, cloudinaryReady, isOurCloudinaryUrl } from "../utils/cloudi
 import { buildTestFromPdfs, normalizeAnswer } from "../utils/testParser.js";
 import { normalizeSubject, orderSubjects } from "../utils/subjects.js";
 import { planLabel, batchLabelFor } from "../utils/plans.js";
+import { sendParentTestReport } from "../utils/mailer.js";
 
 const router = express.Router();
 const isId = (v) => mongoose.Types.ObjectId.isValid(v);
@@ -447,6 +448,9 @@ router.post("/:id/submit", requireAuth, requireBatch, async (req, res) => {
       answers, score, maxMarks, correctCount, wrongCount, skippedCount,
       totalQuestions, accuracy, percent, durationSec, sectionTimes, submittedAt: new Date(),
     };
+    // Email the parent only the FIRST time this test is submitted, so re-attempts
+    // don't spam them. Check before the upsert creates/overwrites the attempt.
+    const isFirstSubmit = !(await TestAttempt.exists({ test: t._id, userId: req.batch.userId }));
     // One canonical attempt per (test, student) — re-submitting overwrites.
     await TestAttempt.findOneAndUpdate(
       { test: t._id, userId: req.batch.userId },
@@ -454,10 +458,40 @@ router.post("/:id/submit", requireAuth, requireBatch, async (req, res) => {
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
+    const parentNotified = Boolean(isFirstSubmit && req.batch.parentEmail);
     res.json({
       ok: true,
-      result: { score, maxMarks, percent, accuracy, correctCount, wrongCount, skippedCount, totalQuestions },
+      result: { score, maxMarks, percent, accuracy, correctCount, wrongCount, skippedCount, totalQuestions, parentNotified },
     });
+
+    // ── Parent progress email (fire-and-forget, after responding) ─────────────
+    if (isFirstSubmit && req.batch.parentEmail) {
+      // Per-subject breakdown for the email table (joins answers back to questions).
+      const qByQno = new Map(t.questions.map((q) => [q.qno, q]));
+      const bySubj = new Map();
+      for (const ans of answers) {
+        const name = normalizeSubject(qByQno.get(ans.qno)?.subject) || "General";
+        const e = bySubj.get(name) || { name, total: 0, correct: 0, score: 0, maxMarks: 0 };
+        e.total++;
+        if (ans.status === "correct") e.correct++;
+        e.score += ans.marks || 0;
+        e.maxMarks += Math.max(0, markingForQ(t, ans.qno).correct);
+        bySubj.set(name, e);
+      }
+      const subjects = orderSubjects([...bySubj.keys()]).map((name) => {
+        const e = bySubj.get(name);
+        const attempted = answers.filter((a) => normalizeSubject(qByQno.get(a.qno)?.subject) === name && a.status !== "skipped").length;
+        return { ...e, accuracy: attempted ? Math.round((e.correct / attempted) * 100) : 0 };
+      });
+      sendParentTestReport({
+        to: req.batch.parentEmail,
+        studentName: req.batch.name,
+        testTitle: t.title,
+        examLabel: EXAM_LABEL[t.examType] || "",
+        result: { score, maxMarks, percent, accuracy, correctCount, wrongCount, skippedCount, totalQuestions },
+        subjects,
+      }).catch((e) => console.error("[tests:submit] parent email failed", e?.message || e));
+    }
   } catch (e) {
     console.error("[tests:submit]", e?.message || e);
     res.status(500).json({ error: "Server error" });

@@ -54,6 +54,7 @@ export async function requireBatch(req, res, next) {
       studentId,
       name: enr.name || user.name || "Student",
       email: user.email.toLowerCase(),
+      parentEmail: (enr.parentEmail || "").toLowerCase(),
       createdAt: enr.createdAt,
     };
     next();

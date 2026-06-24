@@ -692,6 +692,37 @@ function ResultView({ token, plan, testId, result, onClose }) {
   const strong = ranked.slice(0, 2);
   const weakSet = ranked.slice(-2).reverse().filter((s) => !strong.includes(s));
 
+  // Derived analytics (all from the graded answers we already have).
+  const answers = review?.answers || [];
+  const marksGained = answers.reduce((s, a) => s + (a.marks > 0 ? a.marks : 0), 0);
+  const marksLost = answers.reduce((s, a) => s + (a.marks < 0 ? -a.marks : 0), 0);
+  const attempted = r.correctCount + r.wrongCount;
+  const attemptRate = r.totalQuestions ? Math.round((attempted / r.totalQuestions) * 100) : 0;
+  const avgSecPerQ = attempted ? Math.round((r.durationSec || 0) / attempted) : 0;
+  const marksPerMin = r.durationSec ? Math.round((r.score / (r.durationSec / 60)) * 10) / 10 : 0;
+
+  // Auto-generated coaching insights, most actionable first.
+  const insights = useMemo(() => {
+    const out = [];
+    if (!r.totalQuestions) return out;
+    if (marksLost > 0 && marksLost >= marksGained * 0.35)
+      out.push({ tone: "warn", text: `Negative marking cost you ${marksLost} marks. Skip questions you're genuinely unsure about instead of guessing.` });
+    if (attemptRate < 60)
+      out.push({ tone: "warn", text: `You attempted only ${attemptRate}% of the paper — work on pace so you reach more questions.` });
+    if (r.accuracy >= 80 && attemptRate < 85)
+      out.push({ tone: "good", text: `Excellent ${r.accuracy}% accuracy — you can safely attempt more questions to lift your score.` });
+    const weakTopic = [...topics].sort((a, b) => a.accuracy - b.accuracy)[0];
+    if (weakTopic && weakTopic.accuracy < 50)
+      out.push({ tone: "warn", text: `Revise the chapter “${weakTopic.topic}” (${weakTopic.subject}) — ${weakTopic.accuracy}% accuracy there.` });
+    else if (weakSet[0])
+      out.push({ tone: "warn", text: `Give ${weakSet[0].name} extra revision time (${weakSet[0].accuracy}% accuracy).` });
+    if (strong[0] && strong[0].accuracy >= 70)
+      out.push({ tone: "good", text: `${strong[0].name} is a clear strength (${strong[0].accuracy}% accuracy) — keep it sharp.` });
+    if (r.skippedCount > r.totalQuestions * 0.4)
+      out.push({ tone: "warn", text: `You left ${r.skippedCount} questions unattempted — even a few educated attempts add marks.` });
+    return out.slice(0, 5);
+  }, [r, topics, weakSet, strong, marksLost, marksGained, attemptRate]);
+
   const card = { background: "#fff", border: "1px solid #eef2f7", borderRadius: 16, padding: "16px 18px", boxShadow: "0 10px 30px -26px rgba(13,27,62,.5)" };
   const head = (icon, txt) => (
     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
@@ -717,6 +748,13 @@ function ResultView({ token, plan, testId, result, onClose }) {
         {loading && !review ? (
           <div style={{ display: "grid", placeItems: "center", padding: 40, color: MUTE }}><Loader2 size={20} className="ts-spin" /></div>
         ) : null}
+
+        {/* Parent notification confirmation (only on a fresh submit) */}
+        {result?.parentNotified && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#ecfdf5", border: "1px solid #a7f3d0", color: "#047857", borderRadius: 12, padding: "10px 14px", fontSize: 12.5, marginBottom: 14 }}>
+            <CheckCircle2 size={15} /> A copy of this report has been emailed to your parent.
+          </div>
+        )}
 
         {/* Performance summary — score + percentile + predicted AIR */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 12, marginBottom: 14 }}>
@@ -799,6 +837,64 @@ function ResultView({ token, plan, testId, result, onClose }) {
                   </div>
                 ));
               })()}
+            </div>
+          </div>
+        )}
+
+        {/* Marks breakdown + pace */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 12, marginBottom: 14 }}>
+          <div style={card}>
+            {head(<Award size={16} color={GREEN} />, "Marks Breakdown")}
+            {(() => {
+              const span = Math.max(marksGained + marksLost, 1);
+              return (
+                <>
+                  <div style={{ display: "flex", height: 22, borderRadius: 7, overflow: "hidden", background: "#eef0f5", marginBottom: 10 }}>
+                    <div style={{ width: `${(marksGained / span) * 100}%`, background: GREEN }} />
+                    <div style={{ width: `${(marksLost / span) * 100}%`, background: RED }} />
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5 }}>
+                    <span style={{ color: NAVY }}><b style={{ color: GREEN }}>+{marksGained}</b> earned</span>
+                    <span style={{ color: NAVY }}><b style={{ color: RED }}>−{marksLost}</b> lost to negatives</span>
+                  </div>
+                  <div style={{ marginTop: 10, fontSize: 13, color: NAVY, textAlign: "center", fontWeight: 700 }}>
+                    Net score <b style={{ color: NAVY }}>{r.score}</b>/{r.maxMarks}
+                  </div>
+                  {marksLost > 0 && (
+                    <div style={{ marginTop: 6, fontSize: 11.5, color: MUTE, textAlign: "center" }}>
+                      Without negative marking you'd have <b>{r.score + marksLost}</b>.
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+          </div>
+          <div style={card}>
+            {head(<Timer size={16} color={INDIGO} />, "Pace & Efficiency")}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, textAlign: "center" }}>
+              <DistCell n={`${attemptRate}%`} label="Attempted" color={INDIGO} />
+              <DistCell n={avgSecPerQ ? `${avgSecPerQ}s` : "—"} label="Avg / question" color="#0EA5A4" />
+              <DistCell n={marksPerMin || "—"} label="Marks / min" color={ORANGE} />
+            </div>
+            <div style={{ marginTop: 10, fontSize: 12, color: MUTE, textAlign: "center" }}>
+              Attempted <b style={{ color: NAVY }}>{attempted}</b> of {r.totalQuestions} in {mmToHM(r.durationSec)}.
+            </div>
+          </div>
+        </div>
+
+        {/* Insights & recommendations */}
+        {insights.length > 0 && (
+          <div style={{ ...card, marginBottom: 14, borderLeft: `3px solid ${INDIGO}` }}>
+            {head(<Flame size={16} color={INDIGO} />, "Insights & Recommendations")}
+            <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+              {insights.map((ins, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 13, color: NAVY, lineHeight: 1.55 }}>
+                  {ins.tone === "good"
+                    ? <CheckCircle2 size={15} color={GREEN} style={{ flexShrink: 0, marginTop: 2 }} />
+                    : <AlertTriangle size={15} color={AMBER} style={{ flexShrink: 0, marginTop: 2 }} />}
+                  <span>{ins.text}</span>
+                </div>
+              ))}
             </div>
           </div>
         )}

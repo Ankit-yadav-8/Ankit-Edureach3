@@ -87,6 +87,57 @@ export async function sendMail({ to, subject, html, text }) {
   }
 }
 
+// ── Parent test-report email ────────────────────────────────────────────────
+// Sent to a student's parent when they submit a daily/weekly test, so parents
+// get a plain-language progress snapshot without logging in.
+export async function sendParentTestReport({ to, studentName, testTitle, examLabel, result, subjects = [] }) {
+  const { score, maxMarks, percent, accuracy, correctCount, wrongCount, skippedCount, totalQuestions, rank } = result;
+  const grade = percent >= 75 ? "Excellent" : percent >= 50 ? "Good" : percent >= 30 ? "Needs improvement" : "Needs serious attention";
+  const gradeColor = percent >= 75 ? "#15a06e" : percent >= 50 ? "#6366f1" : percent >= 30 ? "#f59e0b" : "#ef4444";
+
+  const subjRows = subjects
+    .filter((s) => s.total)
+    .map(
+      (s) => `<tr>
+        <td style="padding:7px 10px;border-bottom:1px solid #eef0f5;color:#0d1b3e;font-weight:600">${s.name}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #eef0f5;text-align:center;color:#374151">${s.score}/${s.maxMarks}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #eef0f5;text-align:center;color:#374151">${s.accuracy}%</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #eef0f5;text-align:center;color:#374151">${s.correct}/${s.total}</td>
+      </tr>`
+    )
+    .join("");
+
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;color:#0d1b3e">
+    <h2 style="color:#F47B20;margin:0 0 4px">CollegeParichay</h2>
+    <p style="color:#6b7280;font-size:13px;margin:0 0 16px">Test report for your ward${examLabel ? ` · ${examLabel}` : ""}</p>
+    <p style="font-size:15px;margin:0 0 14px"><b>${studentName}</b> just completed <b>${testTitle}</b>. Here's how they did:</p>
+    <div style="background:#0d1b3e;border-radius:14px;padding:18px;text-align:center;color:#fff;margin-bottom:14px">
+      <div style="font-size:12px;opacity:.7">Score</div>
+      <div style="font-size:34px;font-weight:800;line-height:1.1">${score}<span style="font-size:16px;opacity:.6">/${maxMarks}</span></div>
+      <div style="font-size:13px;opacity:.9">${percent}% · ${accuracy}% accuracy</div>
+      <div style="display:inline-block;margin-top:10px;background:${gradeColor};color:#fff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:50px">${grade}</div>
+      ${rank ? `<div style="font-size:12px;opacity:.85;margin-top:10px">Estimated All-India Rank: <b>~${rank}</b></div>` : ""}
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px">
+      <tr style="background:#f4f6fb">
+        <td style="padding:8px 10px;text-align:center;border-radius:8px 0 0 8px"><div style="font-size:20px;font-weight:800;color:#15a06e">${correctCount}</div><div style="font-size:11px;color:#6b7280">Correct</div></td>
+        <td style="padding:8px 10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#ef4444">${wrongCount}</div><div style="font-size:11px;color:#6b7280">Wrong</div></td>
+        <td style="padding:8px 10px;text-align:center;border-radius:0 8px 8px 0"><div style="font-size:20px;font-weight:800;color:#94a3b8">${skippedCount}</div><div style="font-size:11px;color:#6b7280">Unattempted</div></td>
+      </tr>
+    </table>
+    ${subjRows ? `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px">
+      <thead><tr style="text-align:left;color:#6b7280;font-size:11px">
+        <th style="padding:6px 10px">Subject</th><th style="padding:6px 10px;text-align:center">Marks</th><th style="padding:6px 10px;text-align:center">Accuracy</th><th style="padding:6px 10px;text-align:center">Correct</th>
+      </tr></thead><tbody>${subjRows}</tbody></table>` : ""}
+    <p style="font-size:12.5px;color:#6b7280;line-height:1.6;margin:0 0 6px">Out of ${totalQuestions} questions, your ward attempted ${correctCount + wrongCount}. Encouraging consistent daily practice helps the most.</p>
+    <p style="font-size:11.5px;color:#9ca3af;margin-top:16px">You're receiving this because your email was given as the parent contact for ${studentName}'s mentorship enrolment.</p>
+  </div>`;
+
+  const text = `${studentName} completed ${testTitle}. Score: ${score}/${maxMarks} (${percent}%), accuracy ${accuracy}%. Correct ${correctCount}, wrong ${wrongCount}, unattempted ${skippedCount} of ${totalQuestions}.${rank ? ` Estimated AIR ~${rank}.` : ""}`;
+
+  return sendMail({ to, subject: `${studentName}'s test report — ${testTitle}`, html, text });
+}
+
 export async function sendOtpEmail(email, code) {
   if (isDevMode()) {
     console.log(`\n[DEV EMAIL] to ${email}\n  Code: ${code}\n  (set BREVO_API_KEY to send for real; OTP_DEV_MODE=true forces this log-only mode)\n`);
