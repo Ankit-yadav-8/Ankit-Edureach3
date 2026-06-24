@@ -3,12 +3,43 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Clock, CheckCircle2, Loader2, Play, Trophy, Target, X,
   ChevronLeft, ChevronRight, Flag, Eraser, ListChecks, ExternalLink,
-  AlertTriangle, RotateCcw, BookOpenCheck,
+  AlertTriangle, RotateCcw, BookOpenCheck, Award, Flame, TrendingDown,
+  Gauge, Timer,
 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext.jsx";
 import { apiTestList, apiTestGet, apiTestSubmit, apiTestResult, apiTestPerformance } from "../../auth/api.js";
 import { Trend } from "../Charts.jsx";
 import MathText from "./MathText.jsx";
+import { predictRank, predictNeetRank } from "../../utils/rankPredictor.js";
+import { fmtRank } from "../../utils/format.js";
+
+const SUBJECT_COLOR = { Physics: "#FF693D", Chemistry: "#0EA5A4", Maths: "#7C3AED", Biology: "#16a34a" };
+
+// Predict AIR + percentile from the graded result, scaling the paper to the real
+// exam's marks (JEE Main /300, Advanced /360, NEET /720).
+function predictForExam(examType, subjects, result) {
+  const frac = result.maxMarks ? result.score / result.maxMarks : 0;
+  if (examType === "neet") return predictNeetRank({ total: frac * 720 });
+  if (examType === "mains" || examType === "advanced") {
+    const cap = examType === "advanced" ? 120 : 100;
+    const m = {};
+    for (const s of subjects || []) if (s.maxMarks) m[s.name] = (s.score / s.maxMarks) * cap;
+    const has = m.Physics != null || m.Chemistry != null || m.Maths != null;
+    const each = frac * cap; // even split fallback when sections aren't tagged
+    return predictRank({
+      physics: has ? (m.Physics || 0) : each,
+      chemistry: has ? (m.Chemistry || 0) : each,
+      maths: has ? (m.Maths || 0) : each,
+      advanced: examType === "advanced",
+    });
+  }
+  return null;
+}
+
+const mmToHM = (sec) => {
+  const m = Math.round((sec || 0) / 60);
+  return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m`;
+};
 
 const ORANGE = "#FF693D", NAVY = "#0d1b3e", GREEN = "#15a06e", INDIGO = "#6366f1", MUTE = "#6b7280";
 const RED = "#ef4444", AMBER = "#f59e0b";
@@ -468,60 +499,188 @@ const Legend = ({ c, t }) => (
 /* ── Result + solutions review ──────────────────────────────────── */
 function ResultView({ token, plan, testId, result, onClose }) {
   const [review, setReview] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const r = result;
-  const pct = r.percent ?? (r.maxMarks ? Math.round((r.score / r.maxMarks) * 100) : 0);
+  const [loading, setLoading] = useState(true);
+  const [showAnswers, setShowAnswers] = useState(false);
 
-  const loadReview = () => {
-    setBusy(true);
+  useEffect(() => {
+    let alive = true;
     apiTestResult(token, testId, plan)
-      .then((d) => { setReview(d); setOpen(true); })
+      .then((d) => alive && setReview(d))
       .catch(() => {})
-      .finally(() => setBusy(false));
-  };
+      .finally(() => alive && setLoading(false));
+    return () => { alive = false; };
+  }, [token, testId, plan]);
 
-  const stat = (icon, label, value, color) => (
-    <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 14, padding: "14px 16px", textAlign: "center" }}>
-      <div style={{ width: 36, height: 36, borderRadius: 10, background: `${color}14`, display: "grid", placeItems: "center", margin: "0 auto 8px" }}>{icon}</div>
-      <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 20, color: NAVY }}>{value}</div>
-      <div style={{ fontSize: 11.5, color: MUTE, marginTop: 2 }}>{label}</div>
+  const r = review?.result || result;
+  const subjects = review?.subjects || [];
+  const topics = review?.topics || [];
+  const examType = review?.examType || "";
+  const examLabel = review?.examTypeLabel || "";
+  const pct = r.percent ?? (r.maxMarks ? Math.round((r.score / r.maxMarks) * 100) : 0);
+  const rank = useMemo(() => (examType ? predictForExam(examType, subjects, r) : null), [examType, subjects, r]);
+
+  const ranked = [...subjects].filter((s) => s.total).sort((a, b) => b.accuracy - a.accuracy);
+  const strong = ranked.slice(0, 2);
+  const weakSet = ranked.slice(-2).reverse().filter((s) => !strong.includes(s));
+
+  const card = { background: "#fff", border: "1px solid #eef2f7", borderRadius: 16, padding: "16px 18px", boxShadow: "0 10px 30px -26px rgba(13,27,62,.5)" };
+  const head = (icon, txt) => (
+    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+      {icon}<span style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 14.5 }}>{txt}</span>
     </div>
   );
 
   return (
-    <div style={{ flex: 1, overflowY: "auto", padding: "26px 18px" }}>
-      <div style={{ maxWidth: 720, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 22 }}>
-          <div style={{ width: 64, height: 64, borderRadius: 20, background: "linear-gradient(135deg,#FF693D,#E0421F)", display: "grid", placeItems: "center", margin: "0 auto 12px", boxShadow: "0 14px 30px -12px #FF693D" }}>
-            <Trophy size={30} color="#fff" />
+    <div style={{ flex: 1, overflowY: "auto", padding: "22px 16px", background: "#f4f6fb" }}>
+      <div style={{ maxWidth: 940, margin: "0 auto" }}>
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
+          <div style={{ width: 46, height: 46, borderRadius: 13, background: "linear-gradient(135deg,#FF693D,#E0421F)", display: "grid", placeItems: "center", boxShadow: "0 12px 26px -12px #FF693D" }}>
+            <Trophy size={22} color="#fff" />
           </div>
-          <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: "1.5rem", margin: 0 }}>Test submitted!</h2>
-          <p style={{ color: MUTE, fontSize: 13.5, marginTop: 4 }}>Auto-graded against the answer key · saved to your performance</p>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: "1.3rem", margin: 0, lineHeight: 1.2 }}>{review?.title || "Result Analysis"}</h2>
+            <div style={{ color: MUTE, fontSize: 12.5 }}>Auto-graded · saved to your performance{examLabel ? ` · ${examLabel}` : ""}</div>
+          </div>
+          <button onClick={onClose} style={{ background: NAVY, color: "#fff", border: "none", borderRadius: 11, padding: "10px 18px", fontWeight: 800, fontFamily: "Sora", cursor: "pointer", fontSize: 13.5 }}>Done</button>
         </div>
 
-        <div style={{ background: NAVY, borderRadius: 18, padding: "20px 24px", color: "#fff", textAlign: "center", marginBottom: 16 }}>
-          <div style={{ fontSize: 13, opacity: .7 }}>Your score</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 40, lineHeight: 1.1 }}>{r.score} <span style={{ fontSize: 18, opacity: .6 }}>/ {r.maxMarks}</span></div>
-          <div style={{ fontSize: 14, opacity: .85, marginTop: 4 }}>{pct}% · {r.accuracy}% accuracy</div>
+        {loading && !review ? (
+          <div style={{ display: "grid", placeItems: "center", padding: 40, color: MUTE }}><Loader2 size={20} className="ts-spin" /></div>
+        ) : null}
+
+        {/* Performance summary — score + percentile + predicted AIR */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 12, marginBottom: 14 }}>
+          <div style={{ ...card, background: NAVY, border: "none", color: "#fff", textAlign: "center" }}>
+            <div style={{ fontSize: 12, opacity: .7 }}>Score</div>
+            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 30, lineHeight: 1.1 }}>{r.score}<span style={{ fontSize: 15, opacity: .6 }}>/{r.maxMarks}</span></div>
+            <div style={{ fontSize: 12, opacity: .85 }}>{pct}% · {r.accuracy}% acc.</div>
+          </div>
+          {rank && rank.ranked !== false && (
+            <>
+              <BigStat icon={<Gauge size={16} color={INDIGO} />} label={examType === "neet" ? "Percentile (est.)" : "Percentile (est.)"} value={`${rank.percentile}`} sub="%ile" color={INDIGO} card={card} />
+              <BigStat icon={<Award size={16} color={ORANGE} />} label="All India Rank (est.)" value={`#${fmtRank(rank.rank)}`} sub={`range ${fmtRank(rank.low)}–${fmtRank(rank.high)}`} color={ORANGE} card={card} />
+            </>
+          )}
+          {rank && rank.ranked === false && (
+            <div style={{ ...card, gridColumn: "span 2", display: "flex", alignItems: "center", gap: 10, color: RED }}>
+              <AlertTriangle size={18} /> <span style={{ fontSize: 13, color: NAVY }}>Below the JEE Advanced qualifying cutoff — no AIR. Keep practising!</span>
+            </div>
+          )}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 12, marginBottom: 18 }}>
-          {stat(<CheckCircle2 size={18} color={GREEN} />, "Correct", r.correctCount, GREEN)}
-          {stat(<X size={18} color={RED} />, "Wrong", r.wrongCount, RED)}
-          {stat(<Target size={18} color={AMBER} />, "Skipped", r.skippedCount, AMBER)}
-          {stat(<ListChecks size={18} color={INDIGO} />, "Questions", r.totalQuestions, INDIGO)}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 12, marginBottom: 14 }}>
+          {/* Subject proficiency */}
+          {subjects.length > 0 && (
+            <div style={card}>
+              {head(<Target size={16} color={ORANGE} />, "Subject Proficiency")}
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {subjects.map((s) => {
+                  const col = SUBJECT_COLOR[s.name] || INDIGO;
+                  const p = s.maxMarks ? Math.round((s.score / s.maxMarks) * 100) : 0;
+                  return (
+                    <div key={s.name}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, marginBottom: 5 }}>
+                        <span style={{ fontWeight: 700, color: NAVY }}>{s.name}</span>
+                        <span style={{ color: MUTE, fontWeight: 700 }}>{s.score}/{s.maxMarks} · {p}%</span>
+                      </div>
+                      <div style={{ height: 8, borderRadius: 5, background: "#eef0f5", overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${Math.max(2, p)}%`, borderRadius: 5, background: col }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Question distribution */}
+          <div style={card}>
+            {head(<ListChecks size={16} color={INDIGO} />, "Question Distribution")}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, textAlign: "center" }}>
+              <DistCell n={r.correctCount} label="Correct" color={GREEN} />
+              <DistCell n={r.wrongCount} label="Incorrect" color={RED} />
+              <DistCell n={r.skippedCount} label="Unattempted" color="#94a3b8" />
+            </div>
+            <div style={{ marginTop: 12, height: 10, borderRadius: 6, overflow: "hidden", display: "flex", background: "#eef0f5" }}>
+              {r.totalQuestions > 0 && [["#15a06e", r.correctCount], ["#ef4444", r.wrongCount], ["#cbd5e1", r.skippedCount]].map(([c, n], i) => (
+                <div key={i} style={{ width: `${(n / r.totalQuestions) * 100}%`, background: c }} />
+              ))}
+            </div>
+            <div style={{ marginTop: 10, fontSize: 12, color: MUTE, display: "flex", alignItems: "center", gap: 6 }}>
+              <Timer size={13} /> Time taken: <b style={{ color: NAVY }}>{mmToHM(r.durationSec)}</b>
+            </div>
+          </div>
         </div>
 
-        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-          <button onClick={loadReview} disabled={busy} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", border: `1.5px solid ${NAVY}`, color: NAVY, borderRadius: 12, padding: "11px 18px", fontWeight: 800, fontFamily: "Sora", cursor: "pointer" }}>
-            {busy ? <Loader2 size={16} className="ts-spin" /> : <BookOpenCheck size={16} />} Review answers & solutions
+        {/* Time allocation per subject */}
+        {subjects.some((s) => s.timeSec > 0) && (
+          <div style={{ ...card, marginBottom: 14 }}>
+            {head(<Clock size={16} color="#0EA5A4" />, "Time Allocation")}
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {(() => {
+                const maxT = Math.max(...subjects.map((s) => s.timeSec || 0), 1);
+                return subjects.map((s) => (
+                  <div key={s.name} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{ width: 80, fontSize: 12.5, fontWeight: 700, color: NAVY, flexShrink: 0 }}>{s.name}</span>
+                    <div style={{ flex: 1, height: 18, borderRadius: 6, background: "#eef0f5", overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${((s.timeSec || 0) / maxT) * 100}%`, background: `${SUBJECT_COLOR[s.name] || INDIGO}cc`, borderRadius: 6 }} />
+                    </div>
+                    <span style={{ width: 48, fontSize: 12, color: MUTE, textAlign: "right", flexShrink: 0 }}>{mmToHM(s.timeSec)}</span>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+        )}
+
+        {/* Strong / weak areas */}
+        {(strong.length > 0 || weakSet.length > 0) && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 12, marginBottom: 14 }}>
+            <div style={{ ...card, borderLeft: `3px solid ${GREEN}` }}>
+              {head(<Flame size={16} color={GREEN} />, "Strong Areas")}
+              {strong.length ? strong.map((s) => (
+                <div key={s.name} style={{ fontSize: 13, color: NAVY, marginBottom: 6 }}><b>{s.name}</b> — {s.accuracy}% accuracy ({s.correct}/{s.total})</div>
+              )) : <div style={{ fontSize: 12.5, color: MUTE }}>Attempt more to see strengths.</div>}
+            </div>
+            <div style={{ ...card, borderLeft: `3px solid ${AMBER}` }}>
+              {head(<TrendingDown size={16} color={AMBER} />, "Needs Work")}
+              {weakSet.length ? weakSet.map((s) => (
+                <div key={s.name} style={{ fontSize: 13, color: NAVY, marginBottom: 6 }}><b>{s.name}</b> — {s.accuracy}% accuracy ({s.correct}/{s.total})</div>
+              )) : <div style={{ fontSize: 12.5, color: MUTE }}>Great — no weak section!</div>}
+            </div>
+          </div>
+        )}
+
+        {/* Topic accuracy heatmap */}
+        {topics.length > 0 && (
+          <div style={{ ...card, marginBottom: 14 }}>
+            {head(<Gauge size={16} color={ORANGE} />, "Chapter-wise Accuracy")}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(120px,1fr))", gap: 8 }}>
+              {topics.map((t, i) => {
+                const c = t.accuracy >= 70 ? GREEN : t.accuracy >= 40 ? AMBER : RED;
+                return (
+                  <div key={i} style={{ background: `${c}14`, border: `1px solid ${c}40`, borderRadius: 10, padding: "9px 10px" }}>
+                    <div style={{ fontSize: 11.5, fontWeight: 700, color: NAVY, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.topic}</div>
+                    <div style={{ fontSize: 12, fontWeight: 800, color: c }}>{t.accuracy}% <span style={{ color: MUTE, fontWeight: 600 }}>· {t.subject}</span></div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 14 }}>
+          <button onClick={() => setShowAnswers((v) => !v)} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", border: `1.5px solid ${NAVY}`, color: NAVY, borderRadius: 12, padding: "11px 18px", fontWeight: 800, fontFamily: "Sora", cursor: "pointer" }}>
+            <BookOpenCheck size={16} /> {showAnswers ? "Hide" : "Review"} answers & solutions
           </button>
           <button onClick={onClose} style={{ background: ORANGE, color: "#fff", border: "none", borderRadius: 12, padding: "11px 22px", fontWeight: 800, fontFamily: "Sora", cursor: "pointer" }}>Done</button>
         </div>
 
-        {open && review && (
-          <div style={{ marginTop: 22 }}>
+        {/* Answers review */}
+        {showAnswers && review && (
+          <div style={{ marginTop: 6 }}>
             {review.keyPdfUrl && (
               <a href={review.keyPdfUrl} target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 7, color: INDIGO, fontWeight: 700, fontSize: 13.5, marginBottom: 12, textDecoration: "none" }}>
                 <ExternalLink size={14} /> Open full answer-key / solutions PDF
@@ -536,6 +695,22 @@ function ResultView({ token, plan, testId, result, onClose }) {
     </div>
   );
 }
+
+const BigStat = ({ icon, label, value, sub, color, card }) => (
+  <div style={{ ...card, textAlign: "center" }}>
+    <div style={{ width: 34, height: 34, borderRadius: 10, background: `${color}14`, display: "grid", placeItems: "center", margin: "0 auto 8px" }}>{icon}</div>
+    <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 24, color: NAVY, lineHeight: 1.1 }}>{value}</div>
+    <div style={{ fontSize: 11, color: MUTE, marginTop: 3 }}>{label}</div>
+    {sub && <div style={{ fontSize: 10.5, color: "#9ca3af", marginTop: 2 }}>{sub}</div>}
+  </div>
+);
+
+const DistCell = ({ n, label, color }) => (
+  <div style={{ background: `${color}10`, borderRadius: 12, padding: "12px 6px" }}>
+    <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 22, color }}>{n}</div>
+    <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{label}</div>
+  </div>
+);
 
 /* One question in the post-submit review: stem, options (correct/your-pick
    highlighted), your answer vs the key, and the worked solution. */

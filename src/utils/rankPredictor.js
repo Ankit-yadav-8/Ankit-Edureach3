@@ -221,6 +221,49 @@ function interpAdvBand(marks) {
 export const maxPerSubject = (advanced) => (advanced ? 120 : 100);
 export const maxTotal      = (advanced) => (advanced ? 360 : 300);
 
+// ── NEET UG: marks (/720) → All India Rank ────────────────────
+// Approximate marks-vs-rank from recent NEET results (~23–24 lakh candidates).
+// [marks, AIR] anchors, interpolated.
+const NEET_TABLE = [
+  [720,       1],
+  [715,      35],
+  [705,     250],
+  [690,    1400],
+  [675,    4000],
+  [660,    8500],
+  [645,   15500],
+  [630,   25000],
+  [610,   42000],
+  [590,   66000],
+  [565,  105000],
+  [540,  150000],
+  [515,  205000],
+  [490,  272000],
+  [460,  370000],
+  [430,  480000],
+  [400,  610000],
+  [360,  800000],
+  [320, 1000000],
+  [260, 1320000],
+  [200, 1640000],
+  [137, 2000000],
+  [0,   2400000],
+];
+const NEET_CANDIDATES = 2400000;
+export const maxTotalNeet = () => 720;
+
+export function predictNeetRank({ total }) {
+  const t = clamp(Number(total) || 0, 0, 720);
+  const air = Math.max(1, interp(NEET_TABLE, t));
+  const percentile = Number(clamp(100 * (1 - (air - 1) / NEET_CANDIDATES), 0, 99.9999).toFixed(4));
+  return {
+    exam: "neet", total: t, ranked: true,
+    air, rank: air, crl: air, percentile,
+    low: Math.max(1, Math.round(air * 0.9)),
+    high: Math.round(air * 1.12),
+  };
+}
+
 // ── JEE Main 2026: PERCENTILE → RANK (exact 2026 formula) ─────
 // NTA hands every candidate a percentile (NTA score), not a raw rank, so this
 // path applies the 2026 formula straight from the candidate pools — no
