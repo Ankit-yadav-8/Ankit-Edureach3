@@ -442,15 +442,24 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
     try {
       const { extractWithVision } = await import("./visionParser.js");
       const v = await extractWithVision(qBuf, { answerKey: textKey });
-      // Accept vision when it transcribed a comparable set of questions (it
-      // carries real option text + maths, which the rules result lacked).
-      if (v.questions.length && v.questions.length >= Math.max(3, Math.floor(questions.length * 0.6))) {
-        // Trust the deterministic text key for the answer; keep vision's
-        // answer only where the text layer had none.
-        for (const q of v.questions) { const k = normalizeAnswer(textKey[q.qno]); if (k) q.correct = k; }
-        questions = v.questions;
+      if (v.questions.length) {
+        // MERGE vision over the rules result by qno — prefer vision's rich
+        // transcription, but keep every rules question vision missed (e.g. when
+        // the daily AI quota cut the run short), so no question is ever lost.
+        const rulesByQno = new Map(questions.map((q) => [q.qno, q]));
+        const visByQno = new Map(v.questions.map((q) => [q.qno, q]));
+        const allQnos = [...new Set([...rulesByQno.keys(), ...visByQno.keys()])].sort((a, b) => a - b);
+        const merged = allQnos.map((qno) => visByQno.get(qno) || rulesByQno.get(qno));
+        // Carry a section subject onto any rules-only leftover from its nearest
+        // tagged neighbour, so it still lands in a section tab.
+        let lastSub = "";
+        for (const q of merged) { if (q.subject) lastSub = q.subject; else if (lastSub) q.subject = lastSub; }
+        // Trust the deterministic text key for answers.
+        for (const q of merged) { const k = normalizeAnswer(textKey[q.qno]); if (k) q.correct = k; }
+        questions = merged;
         matched = questions.filter((q) => q.correct).length;
-        method = "vision";
+        method = v.questions.length >= questions.length ? "vision" : "vision+text";
+        if (v.error) aiError = v.error; // surface partial-run reason (e.g. daily quota)
       } else if (v.error) {
         aiError = v.error;
       }
@@ -461,7 +470,9 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
   }
 
   // ── Text-LLM fallback — text-rich papers the rules parser couldn't structure ──
-  if (method !== "vision") {
+  // Skip whenever vision contributed (incl. a partial "vision+text" merge): the
+  // text LLM would otherwise overwrite the richer vision transcription.
+  if (!method.startsWith("vision")) {
     const poor = questions.length === 0 || matched < Math.ceil(questions.length / 2);
     if (poor && textLen > 40) {
       const llm = await parseWithLLM(qText, kText);
@@ -476,12 +487,14 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
     }
   }
 
-  const howLabel = { vision: "AI vision", AI: "AI", rules: "auto" };
+  const howLabel = { vision: "AI vision", "vision+text": "AI vision (partial)", AI: "AI", rules: "auto" };
   let note;
   if (questions.length) {
     const src = keyPdfUrl ? "answer key" : "answers";
-    note = `Converted ${questions.length} question${questions.length === 1 ? "" : "s"} (${howLabel[method]}); ${src} matched ${matched}/${questions.length}${keyPdfUrl || method !== "rules" ? "" : " (detected inline in the paper)"}. Review below before publishing.`;
-    if (method === "vision") note += " Maths is shown in LaTeX — check the tricky ones.";
+    const inline = !keyPdfUrl && method === "rules" ? " (detected inline in the paper)" : "";
+    note = `Converted ${questions.length} question${questions.length === 1 ? "" : "s"} (${howLabel[method]}); ${src} matched ${matched}/${questions.length}${inline}. Review below before publishing.`;
+    if (method.startsWith("vision")) note += " Maths is shown in LaTeX — check the tricky ones.";
+    if (aiError && method === "vision+text") note += ` Note: ${aiError} — some questions came from the text layer; re-convert later for full transcription.`;
   } else if (aiError) {
     note = `${aiError}. Add questions manually below, or try converting again.`;
   } else if (textLen === 0) {

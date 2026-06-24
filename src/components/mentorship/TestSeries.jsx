@@ -276,9 +276,14 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
   const sections = useMemo(() => {
     const ss = test?.subjectSections?.length ? test.subjectSections : null;
     if (ss) {
-      return ss
+      const built = ss
         .map((s) => ({ name: s.name, items: (s.qnos || []).map((qno) => ({ qno, gi: questions.findIndex((x) => x.qno === qno) })).filter((x) => x.gi >= 0) }))
         .filter((s) => s.items.length);
+      // Only use section tabs if they cover every question — otherwise some
+      // would be unreachable, so fall back to one flat section.
+      const covered = new Set();
+      built.forEach((s) => s.items.forEach((it) => covered.add(it.gi)));
+      if (covered.size === questions.length && built.length) return built;
     }
     return [{ name: "", items: questions.map((x, gi) => ({ qno: x.qno, gi })) }];
   }, [test, questions]);

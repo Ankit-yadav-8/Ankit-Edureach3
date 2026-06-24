@@ -21,6 +21,38 @@ import { uploadImageBuffer, cloudinaryReady } from "./cloudinary.js";
 
 const clamp01 = (n) => Math.max(0, Math.min(1, Number(n) || 0));
 
+// Recover whole question objects from a response that didn't parse as JSON —
+// usually because the model overran max_tokens and the array was cut off
+// mid-element. Brace-matching pulls out every complete {...} that carries a
+// "qno", so a truncated batch still yields the questions that finished instead
+// of dropping the entire page batch (which silently loses ~4-6 questions).
+function salvageQuestions(text) {
+  const out = [];
+  if (typeof text !== "string") return out;
+  // Skip the outer {"questions":[ … ]} wrapper so we match the elements, not the
+  // (unterminated) outer object.
+  let i = text.indexOf("[");
+  if (i < 0) i = 0;
+  for (; i < text.length; i++) {
+    if (text[i] !== "{") continue;
+    let depth = 0, inStr = false, esc = false, closed = false, j = i;
+    for (; j < text.length; j++) {
+      const ch = text[j];
+      if (esc) { esc = false; continue; }
+      if (ch === "\\") { esc = true; continue; }
+      if (ch === '"') { inStr = !inStr; continue; }
+      if (inStr) continue;
+      if (ch === "{") depth++;
+      else if (ch === "}" && --depth === 0) { closed = true; break; }
+    }
+    if (!closed) break; // truncated final object — nothing complete past here
+    const chunk = text.slice(i, j + 1);
+    if (/"qno"\s*:/.test(chunk)) { try { out.push(JSON.parse(chunk)); } catch { /* skip */ } }
+    i = j;
+  }
+  return out;
+}
+
 // Crop a diagram region (normalized bbox, padded a little) out of a page PNG and
 // return a PNG buffer, or null if the box is missing/too small. Uses the
 // prebuilt @napi-rs/canvas that ships with pdf-to-img — no extra dependency.
@@ -115,7 +147,7 @@ async function callVision(model, key, images, maxTokens, retries = 9) {
     }
     const c = (await res.json()).choices?.[0]?.message?.content || "";
     try { const p = JSON.parse(c); return Array.isArray(p) ? p : (p?.questions || []); }
-    catch { return []; }
+    catch { return salvageQuestions(c); } // truncated/!valid JSON — keep what completed
   }
 }
 
@@ -167,10 +199,13 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
 
   let firstErr = "";
   let dailyLimit = false;
-  const results = await mapPool(batches, concurrency, async (imgs) => {
+  const results = await mapPool(batches, concurrency, async (imgs, bi) => {
     if (dailyLimit) return []; // stop hammering once the daily quota is gone
+    const batchStart = bi * perBatch; // absolute 0-based index of imgs[0]
     let arr;
-    try { arr = await callVision(model, process.env.GROQ_API_KEY, imgs, 4000); }
+    // 8000 tokens (was 4000): a 2-page batch of dense JEE questions with LaTeX
+    // options overran 4000, truncating the JSON and dropping the whole batch.
+    try { arr = await callVision(model, process.env.GROQ_API_KEY, imgs, 8000); }
     catch (e) {
       if (e.code === "DAILY_LIMIT") {
         dailyLimit = true;
@@ -186,7 +221,13 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
     if (wantDiagrams && Array.isArray(arr)) {
       for (const q of arr) {
         if (!q?.hasDiagram || !q?.bbox) continue;
-        const pageIdx = Math.min(imgs.length, Math.max(1, Number(q.page) || 1)) - 1;
+        // The model is asked for a batch-local page index but often returns the
+        // absolute document page. Accept both: a value within the batch is
+        // local; anything larger is absolute and mapped back into the batch.
+        const p = Number(q.page);
+        let pageIdx = 0;
+        if (Number.isFinite(p) && p >= 1) pageIdx = p <= imgs.length ? p - 1 : p - 1 - batchStart;
+        if (!(pageIdx >= 0 && pageIdx < imgs.length)) pageIdx = 0;
         try {
           const crop = await cropDiagram(imgs[pageIdx], q.bbox);
           if (crop) q.image = await uploadImageBuffer(crop, { folder: "tests/diagrams" });

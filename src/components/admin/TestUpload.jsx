@@ -79,6 +79,7 @@ export default function TestUpload({ token }) {
 
   const testRef = useRef(null);
   const keyRef = useRef(null);
+  const jobRef = useRef(null); // in-flight parse jobId, so a retry resumes it
 
   // existing tests
   const [list, setList] = useState([]);
@@ -98,6 +99,7 @@ export default function TestUpload({ token }) {
     setTitle(""); setDurationMin(60); setMCorrect(4); setMWrong(-1); setSections([]);
     setTestPdfUrl(""); setKeyPdfUrl(""); setUp({ test: 0, key: 0 }); setUploadSubject("");
     setQuestions(null); setNote(""); setErr("");
+    jobRef.current = null;
     if (testRef.current) testRef.current.value = "";
     if (keyRef.current) keyRef.current.value = "";
   };
@@ -121,7 +123,7 @@ export default function TestUpload({ token }) {
     try {
       const sig = await apiAdminTestSignUpload(token, plan);
       const url = await uploadPdf(file, sig, (p) => setUp((s) => ({ ...s, [which]: p })));
-      if (which === "test") setTestPdfUrl(url); else setKeyPdfUrl(url);
+      if (which === "test") { setTestPdfUrl(url); jobRef.current = null; } else setKeyPdfUrl(url);
     } catch (ex) {
       setErr(ex.message || "Upload failed");
       setUp((s) => ({ ...s, [which]: 0 }));
@@ -133,19 +135,35 @@ export default function TestUpload({ token }) {
     setParsing(true); setErr(""); setNote("");
     setParseMsg("Reading the PDF…");
     try {
-      // Parsing is a background job — math papers go through vision OCR, which can
-      // take a couple of minutes — so we start it and poll until it's done.
-      const { jobId } = await apiAdminTestParseStart(token, { testPdfUrl, keyPdfUrl });
+      // Parsing is a background job — math papers go through vision OCR, which on
+      // the rate-limited free tier can take several minutes — so we start it and
+      // poll until it's done. If a previous attempt timed out the client but the
+      // job is still running on the server, resume that same jobId instead of
+      // kicking off a fresh (expensive) conversion.
+      let jobId = jobRef.current;
+      if (!jobId) {
+        ({ jobId } = await apiAdminTestParseStart(token, { testPdfUrl, keyPdfUrl }));
+        jobRef.current = jobId;
+      }
       const started = Date.now();
       let d = null;
-      while (Date.now() - started < 8 * 60 * 1000) {
+      // Server keeps jobs for 20 min; poll a little under that so a slow paper
+      // finishes rather than erroring out.
+      while (Date.now() - started < 18 * 60 * 1000) {
         await new Promise((r) => setTimeout(r, 2500));
         const secs = Math.round((Date.now() - started) / 1000);
         setParseMsg(`Converting to CBT… reading questions & maths (${secs}s)`);
-        const s = await apiAdminTestParseStatus(token, jobId);
+        let s;
+        try { s = await apiAdminTestParseStatus(token, jobId); }
+        catch (pollErr) {
+          // 404 = the job expired/was lost; drop it so a retry starts cleanly.
+          if (/expired|not found|404/i.test(pollErr?.message || "")) { jobRef.current = null; throw pollErr; }
+          continue; // transient network blip — keep polling
+        }
         if (s.status === "done") { d = s; break; }
       }
-      if (!d) throw new Error("Conversion is taking too long — please try again.");
+      if (!d) throw new Error("Conversion is taking too long — click Auto-convert again to keep waiting (it's still running).");
+      jobRef.current = null; // consumed
       const parsed = d.questions || [];
       // A specific section → tag every question with it and APPEND to the test;
       // "full paper" → replace and keep the auto-detected subjects.
@@ -160,11 +178,15 @@ export default function TestUpload({ token }) {
       // Clear the upload slot so the next section can be uploaded cleanly.
       if (uploadSubject) { setTestPdfUrl(""); setKeyPdfUrl(""); setUp({ test: 0, key: 0 }); }
     } catch (ex) {
-      // Scanned/image PDFs or a failed job — fall back to a manual grid so the
-      // admin can still build the test (students read the paper from the PDF).
       setErr(ex.message || "Could not parse the PDF");
-      setQuestions([]);
-      setNote("Couldn't read the PDF automatically. Add questions and answers manually below — students still see the uploaded paper.");
+      // A resumable timeout (jobRef still set) keeps running on the server — don't
+      // wipe to the manual grid; the admin can click Auto-convert again to resume.
+      if (!jobRef.current) {
+        // Scanned/image PDFs or a failed job — fall back to a manual grid so the
+        // admin can still build the test (students read the paper from the PDF).
+        setQuestions([]);
+        setNote("Couldn't read the PDF automatically. Add questions and answers manually below — students still see the uploaded paper.");
+      }
     } finally { setParsing(false); setParseMsg(""); }
   }
 
