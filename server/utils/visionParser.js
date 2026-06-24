@@ -70,8 +70,29 @@ async function cropDiagram(pngBuffer, bbox, pad = 0.04) {
   const sw = Math.round((x1 - x0) * img.width), sh = Math.round((y1 - y0) * img.height);
   if (sw < 24 || sh < 24) return null;
   const cv = createCanvas(sw, sh);
-  cv.getContext("2d").drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+  const ctx = cv.getContext("2d");
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+  dewatermark(ctx, sw, sh);
   return cv.toBuffer("image/png");
+}
+
+// Coaching papers tile a faint "mathongo"-style watermark across every page, so
+// it inevitably lands inside a cropped figure. The watermark is LIGHT-coloured
+// while real figure lines/text/labels are dark — so we push every light-but-not-
+// pure-black pixel to white: the watermark vanishes and the diagram stays crisp.
+// Off via TEST_VISION_DEWATERMARK=off; TEST_VISION_DEWATERMARK_LEVEL (default 185)
+// is the luminance above which a pixel counts as background.
+function dewatermark(ctx, w, h) {
+  if (String(process.env.TEST_VISION_DEWATERMARK || "").toLowerCase() === "off") return;
+  const level = Math.min(245, Math.max(120, Number(process.env.TEST_VISION_DEWATERMARK_LEVEL) || 185));
+  let imgData;
+  try { imgData = ctx.getImageData(0, 0, w, h); } catch { return; }
+  const d = imgData.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+    if (lum >= level) { d[i] = d[i + 1] = d[i + 2] = 255; d[i + 3] = 255; }
+  }
+  ctx.putImageData(imgData, 0, 0);
 }
 
 const VISION_SYS =

@@ -39,8 +39,11 @@ const SECTION_PATTERN = {
 };
 
 // Last-resort safety net: when subject auto-detection folds a whole section into
-// its neighbour (e.g. Chemistry merged into Physics → "Physics 50, Maths 25"),
-// re-tag questions by their POSITION using the exam's known section proportions.
+// its neighbour (e.g. Chemistry carried-forward into Physics → "Physics 50,
+// Maths 25"), recover the missing section. It is ORDER-AWARE: it keeps the
+// subjects the model DID detect in the order they appear (papers can run
+// Maths→Physics→Chemistry, not just P→C→M) and carves the missing subject out of
+// the oversized block, so it never blindly relabels by a fixed P/C/M order.
 // Deliberately conservative — only fires for a fixed-pattern paper that:
 //   • already shows ≥2 of the expected subjects (so it's really multi-section), and
 //   • is missing ≥1 expected subject (a section vanished), and
@@ -51,19 +54,40 @@ export function enforceSectionPattern(questions, examType) {
   if (!pat || !Array.isArray(questions) || questions.length < pat.length) return questions;
   const expected = pat.map(([s]) => s);
   const n = questions.length;
+  const ordered = [...questions].sort((a, b) => a.qno - b.qno);
   const count = {};
-  for (const q of questions) { const s = normalizeSubject(q.subject); if (s) count[s] = (count[s] || 0) + 1; }
+  for (const q of ordered) { const s = normalizeSubject(q.subject); if (s) count[s] = (count[s] || 0) + 1; }
   const present = expected.filter((s) => count[s]).length;
-  const missing = expected.filter((s) => !count[s]).length;
-  if (present < 2 || missing < 1) return questions;
+  const missingSubs = expected.filter((s) => !count[s]);
+  if (present < 2 || missingSubs.length < 1) return questions;
   // Compare each subject to its EXPECTED share (handles NEET's uneven 1:1:2).
   const absorbed = pat.some(([s, f]) => (count[s] || 0) >= 1.7 * f * n);
   if (!absorbed) return questions;
-  const sizes = pat.map(([, f]) => Math.round(f * n));
-  sizes[sizes.length - 1] = n - sizes.slice(0, -1).reduce((a, b) => a + b, 0);
-  if (sizes.some((s) => s <= 0)) return questions;
-  const ordered = [...questions].sort((a, b) => a.qno - b.qno);
-  let i = 0;
-  expected.forEach((subject, b) => { for (let k = 0; k < sizes[b]; k++, i++) ordered[i].subject = subject; });
+
+  const sizeOf = (sub) => Math.round((pat.find(([s]) => s === sub)[1]) * n);
+  // Contiguous runs of the CURRENTLY-detected subject, in document (qno) order.
+  const runOf = () => {
+    const runs = [];
+    for (const q of ordered) {
+      const s = normalizeSubject(q.subject);
+      const last = runs[runs.length - 1];
+      if (last && last.sub === s) last.items.push(q);
+      else runs.push({ sub: s, items: [q] });
+    }
+    return runs;
+  };
+  // For each missing subject, split it off the LATER portion of the most
+  // oversized run (carry-forward absorbs the *following* section, so the overflow
+  // at the end of a run is the missing subject).
+  for (const miss of missingSubs) {
+    const runs = runOf().filter((r) => r.sub);
+    let big = null, bigOver = 0;
+    for (const r of runs) {
+      const over = r.items.length - sizeOf(r.sub);
+      if (over > bigOver) { bigOver = over; big = r; }
+    }
+    if (!big || bigOver < Math.max(2, Math.floor(sizeOf(miss) / 2))) break;
+    for (const q of big.items.slice(sizeOf(big.sub))) q.subject = miss;
+  }
   return ordered;
 }

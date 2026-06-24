@@ -14,7 +14,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import { callGemini, geminiReady, geminiModel } from "./gemini.js";
-import { enforceSectionPattern } from "./subjects.js";
+import { enforceSectionPattern, normalizeSubject } from "./subjects.js";
 
 // Normalise an answer token to the canonical form used for grading.
 // Single-correct → digit "1".."4" (letters A–D folded to 1–4). Integer answers
@@ -52,14 +52,28 @@ export function stripNoise(s) {
   let out = String(s || "")
     .replace(/https?:\/\/\S+|www\.\S+/gi, " ")                 // urls
     .replace(/#\w+/g, " ")                                      // hashtags (#PaperPhodnaHai)
-    .replace(/\bMathonGo\b/gi, " ")                             // vendor branding
+    .replace(/\bMathon\s?Go\b/gi, " ")                          // vendor branding (MathonGo / mathongo)
     .replace(/\bAnswer\s*Keys?\b/gi, " ")                       // footer / leftover label
-    .replace(/\bJEE\s*Main\s*\d{4}\b/gi, " ")                   // paper header
-    .replace(/\b\d{1,2}\s+[A-Za-z]+\s*\((?:Morning|Afternoon|Evening)[^)]*\)/gi, " "); // date · shift
+    .replace(/\bJEE[-\s]*Main(?:\s+\d{4})?\b/gi, " ")          // paper header (JEE Main / JEE-Main 2026)
+    .replace(/\b\d{1,2}\s+[A-Za-z]+\s*\((?:Morning|Afternoon|Evening)[^)]*\)/gi, " ") // date · shift
+    .replace(/\((?:Morning|Afternoon|Evening)\s*(?:Shift|Session)\)/gi, " ") // (Morning Session)
+    // ── Coaching paper footer that PDF extraction glues onto an option/stem ──
+    .replace(/\bPage\s*#\s*\d*/gi, " ")                         // "Page # 1"
+    .replace(/\b\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\b/g, " ")        // dd-mm-yyyy stamps
+    .replace(/\b\d{3,4}-\d{3,4}-\d{2,4}\b/g, " ")             // grouped phone numbers (8888-0000-21)
+    .replace(/\b\d{10}\b/g, " ")                                // 10-digit phone numbers
+    // Postal address ending in a 6-digit PIN + a state abbreviation, e.g.
+    // "OPPO. METRO MAS HOSPITAL, … JAIPUR - 302020 (RAJ.)".
+    .replace(/[A-Z][A-Za-z0-9.,/'’&\-\s]{6,90}?\b\d{6}\b\s*\(?\s*(?:RAJ|DELHI|DEL|U\.?P\.?|M\.?P\.?|HR|GUJ|MAH|KAR|TN|AP|TS|WB|BIHAR|UK)\.?\s*\)?/gi, " ");
   for (const w of EXTRA_STRIP) {
     try { out = out.replace(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), " "); } catch { /* ignore */ }
   }
-  return out.replace(/\s+([,.:;)])/g, "$1").replace(/\s+/g, " ").trim();
+  return out
+    .replace(/\s+([,.:;)])/g, "$1")
+    .replace(/([,;:])(?:\s*[,;:])+/g, "$1") // collapse "9.8,;" → "9.8,"
+    .replace(/\s+/g, " ")
+    .replace(/[\s,;:]+$/g, "")               // drop trailing stray punctuation
+    .trim();
 }
 
 // Download a (Cloudinary-hosted) PDF and return its raw bytes.
@@ -421,6 +435,50 @@ function isLowQuality(questions) {
   return emptyOpts / singles.length > 0.4;
 }
 
+// Math-heavy PDFs store equations as vector glyphs that the text layer extracts
+// as garbage: replacement chars (□ / ), private-use-area glyphs, or dense runs
+// of stray symbols ("29□□cd", "~^~^"). When the text is this corrupted the rules
+// parser produces gibberish stems and footer-as-option junk, so we must force the
+// vision pass even if it technically recovered "options". Returns true when a
+// meaningful fraction of the text is unreadable.
+function looksGarbled(text) {
+  const s = String(text || "");
+  if (s.length < 40) return false;
+  const bad = (s.match(/[\u25A1\uFFFD\u00AD\uE000-\uF8FF]/g) || []).length; // box/replacement/soft-hyphen/PUA glyphs
+  if (bad >= 8 || bad / s.length > 0.004) return true;
+  // Long runs of non-alphanumeric symbol soup (broken math), e.g. "□□cd~^~^".
+  const soup = (s.match(/[^\w\s.,;:()\-+=/*<>[\]{}$\\|]{4,}/g) || []).length;
+  return soup >= 10;
+}
+
+// Deterministically map question numbers → subject from the SECTION HEADINGS in
+// the paper's text layer ("PHYSICS", "SECTION - CHEMISTRY", "MATHEMATICS"). This
+// respects the paper's ACTUAL section order (some papers run Maths→Physics→
+// Chemistry), so it's far more reliable than guessing a subject from content or
+// position. Headings are matched line-anchored so prose ("the physics of…")
+// never counts. Returns {} when the text has no usable headings (scanned papers).
+function subjectsFromHeadings(text) {
+  const clean = String(text || "").replace(/\r/g, "");
+  const headRe = /^[^\S\n]*(?:section\s*[-:–]?\s*)?(PHYSICS|CHEMISTRY|MATHEMATICS|MATHS|BIOLOGY|BOTANY|ZOOLOGY)\b[^\n]{0,24}$/gim;
+  const qRe = /(?:^|\n)\s*(?:Q(?:ues(?:tion)?)?\.?\s*)?(\d{1,3})[.)]\s+/gi;
+  const events = [];
+  let m;
+  while ((m = headRe.exec(clean)) !== null) {
+    const sub = normalizeSubject(m[1]);
+    if (sub) events.push({ pos: m.index, head: sub });
+  }
+  if (!events.length) return {};
+  while ((m = qRe.exec(clean)) !== null) events.push({ pos: m.index, qno: Number(m[1]) });
+  events.sort((a, b) => a.pos - b.pos);
+  const map = {};
+  let cur = "";
+  for (const e of events) {
+    if (e.head) cur = e.head;
+    else if (cur && e.qno >= 1 && e.qno <= 400 && map[e.qno] === undefined) map[e.qno] = cur;
+  }
+  return map;
+}
+
 const visionEnabled = () => String(process.env.TEST_VISION || "").toLowerCase() !== "off";
 
 // Parse both PDFs and merge the answer key into the questions. Returns the
@@ -463,7 +521,10 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl, examType = "") {
   const textLen = qText.trim().length;
 
   // ── Vision pass — for scanned papers and math PDFs whose text is unusable ──
-  if (visionEnabled() && geminiReady() && isLowQuality(questions)) {
+  // Force it when the text layer is GARBLED too (math glyphs that extract as junk
+  // but still produced "options"), else the rules parser publishes gibberish.
+  const garbled = looksGarbled(qText);
+  if (visionEnabled() && geminiReady() && (isLowQuality(questions) || garbled)) {
     try {
       const { extractWithVision } = await import("./visionParser.js");
       const v = await extractWithVision(qBuf, { answerKey: textKey });
@@ -512,10 +573,14 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl, examType = "") {
     }
   }
 
-  // Last-resort safety net for fixed-pattern exams (JEE Mains · NEET): if a whole
-  // section was folded into its neighbour during detection ("Physics 50, Maths 25"
-  // with no Chemistry), re-tag questions by position from the known section split.
-  if (questions.length) questions = enforceSectionPattern(questions, examType);
+  // Subjects: trust the paper's SECTION HEADINGS first (deterministic & order-
+  // aware — handles Maths→Physics→Chemistry papers), then fall back to the
+  // fixed-pattern positional net only if a section is still missing/merged.
+  if (questions.length) {
+    const headingSubjects = subjectsFromHeadings(qText);
+    for (const q of questions) { const s = headingSubjects[q.qno]; if (s) q.subject = s; }
+    questions = enforceSectionPattern(questions, examType);
+  }
 
   const howLabel = { vision: "AI vision", "vision+text": "AI vision (partial)", AI: "AI", rules: "auto" };
   let note;
