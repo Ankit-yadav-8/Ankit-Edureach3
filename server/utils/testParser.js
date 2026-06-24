@@ -14,7 +14,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import { callGemini, geminiReady, geminiModel } from "./gemini.js";
-import { enforceSectionPattern, normalizeSubject, subjectsFor, guessSubjectFromText } from "./subjects.js";
+import { recoverSubjects, normalizeSubject } from "./subjects.js";
 
 // Normalise an answer token to the canonical form used for grading.
 // Single-correct → digit "1".."4" (letters A–D folded to 1–4). Integer answers
@@ -581,38 +581,11 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl, examType = "") {
   //      paper's real order (a Maths question stays Maths wherever it sits);
   //   4. the fixed-pattern positional net, to repair a merged/missing section.
   if (questions.length) {
+    // Headings (deterministic) take precedence; recoverSubjects fills the rest
+    // from question text + contiguous-block smearing + the fixed-pattern net.
     const headingSubjects = subjectsFromHeadings(qText);
-    const allowed = subjectsFor(examType);
-    for (const q of questions) {
-      if (headingSubjects[q.qno]) { q.subject = headingSubjects[q.qno]; continue; }
-      if (allowed.length && !normalizeSubject(q.subject)) {
-        const hay = `${q.text || ""} ${(q.options || []).map((o) => o.text).join(" ")}`;
-        const guess = guessSubjectFromText(hay, allowed);
-        if (guess) q.subject = guess;
-      }
-    }
-    if (allowed.length) {
-      questions.sort((a, b) => a.qno - b.qno);
-      // Equation-only stems carry no keywords, so fill blanks from neighbours
-      // (papers run in contiguous subject blocks): forward-fill, then back-fill
-      // leading blanks, so EVERY question lands in a section tab.
-      let last = "";
-      for (const q of questions) { if (normalizeSubject(q.subject)) last = q.subject; else if (last) q.subject = last; }
-      let next = "";
-      for (let i = questions.length - 1; i >= 0; i--) { if (normalizeSubject(questions[i].subject)) next = questions[i].subject; else if (next) questions[i].subject = next; }
-      // Snap a lone mis-guess wedged between two agreeing neighbours back to them.
-      for (let i = 1; i < questions.length - 1; i++) {
-        const a = questions[i - 1].subject, b = questions[i].subject, c = questions[i + 1].subject;
-        if (a && a === c && b !== a) questions[i].subject = a;
-      }
-      // Same for the endpoints: a stray first/last question after a stable block.
-      const L = questions.length;
-      if (L >= 3) {
-        if (questions[L - 1].subject !== questions[L - 2].subject && questions[L - 2].subject === questions[L - 3].subject) questions[L - 1].subject = questions[L - 2].subject;
-        if (questions[0].subject !== questions[1].subject && questions[1].subject === questions[2].subject) questions[0].subject = questions[1].subject;
-      }
-    }
-    questions = enforceSectionPattern(questions, examType);
+    for (const q of questions) { if (headingSubjects[q.qno]) q.subject = headingSubjects[q.qno]; }
+    questions = recoverSubjects(questions, examType);
   }
 
   const howLabel = { vision: "AI vision", "vision+text": "AI vision (partial)", AI: "AI", rules: "auto" };

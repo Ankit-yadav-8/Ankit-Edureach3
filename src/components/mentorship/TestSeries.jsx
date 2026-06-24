@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Clock, CheckCircle2, Loader2, Play, Trophy, Target, X,
@@ -14,6 +15,13 @@ import { predictRank, predictNeetRank } from "../../utils/rankPredictor.js";
 import { fmtRank } from "../../utils/format.js";
 
 const SUBJECT_COLOR = { Physics: "#FF693D", Chemistry: "#0EA5A4", Maths: "#7C3AED", Biology: "#16a34a" };
+
+// The CBT runs as a full-screen overlay (position:fixed). The mentorship
+// dashboard wraps its content in a framer-motion <motion.div> whose `transform`
+// makes `position:fixed` resolve against IT, not the viewport — which let the
+// dashboard bleed through behind the player. Rendering the overlay in a portal to
+// <body> escapes that transformed ancestor so it always covers the whole screen.
+const Portal = ({ children }) => createPortal(children, document.body);
 
 // Predict AIR + percentile from the graded result, scaling the paper to the real
 // exam's marks (JEE Main /300, Advanced /360, NEET /720).
@@ -279,11 +287,14 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
       const built = ss
         .map((s) => ({ name: s.name, items: (s.qnos || []).map((qno) => ({ qno, gi: questions.findIndex((x) => x.qno === qno) })).filter((x) => x.gi >= 0) }))
         .filter((s) => s.items.length);
-      // Only use section tabs if they cover every question — otherwise some
-      // would be unreachable, so fall back to one flat section.
+      // Gather any question NOT in a subject section into a trailing "Other" tab
+      // so a partially-tagged paper still shows section tabs (and no question is
+      // ever unreachable) instead of collapsing to one flat list.
       const covered = new Set();
       built.forEach((s) => s.items.forEach((it) => covered.add(it.gi)));
-      if (covered.size === questions.length && built.length) return built;
+      const leftover = questions.map((_, gi) => gi).filter((gi) => !covered.has(gi));
+      if (leftover.length) built.push({ name: "Other", items: leftover.map((gi) => ({ qno: questions[gi].qno, gi })) });
+      if (built.length) return built;
     }
     return [{ name: "", items: questions.map((x, gi) => ({ qno: x.qno, gi })) }];
   }, [test, questions]);
@@ -369,6 +380,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
   // ── Loading / error ────────────────────────────────────────────────────────
   if (loading || (err && !test)) {
     return (
+      <Portal>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#eef0f4", display: "grid", placeItems: "center" }}>
         {loading ? <Loader2 size={24} className="ts-spin" color={MUTE} /> : (
@@ -379,16 +391,19 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
           </div>
         )}
       </motion.div>
+      </Portal>
     );
   }
 
   // ── Result ──────────────────────────────────────────────────────────────────
   if (result) {
     return (
+      <Portal>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#f4f6fb", display: "flex", flexDirection: "column" }}>
         <ResultView token={token} plan={plan} testId={testId} result={result} onClose={onSubmitted} />
       </motion.div>
+      </Portal>
     );
   }
 
@@ -402,6 +417,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
 
   // ── Test interface ───────────────────────────────────────────────────────────
   return (
+    <Portal>
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#eef0f4", display: "flex", flexDirection: "column" }}>
       {/* top bar — title + candidate + timer */}
@@ -547,6 +563,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
 
       <style>{`@media(max-width:820px){.cbt-grid{grid-template-columns:1fr !important}}`}</style>
     </motion.div>
+    </Portal>
   );
 }
 
@@ -568,6 +585,7 @@ function InstructionsScreen({ test, sections, candidate, left, onProceed, onClos
     { c: "#8b5cf6", t: "You have NOT answered, but marked for review." },
   ];
   return (
+    <Portal>
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#f4f6fb", display: "flex", flexDirection: "column" }}>
       {/* header */}
@@ -654,6 +672,7 @@ function InstructionsScreen({ test, sections, candidate, left, onProceed, onClos
       </div>
       <style>{`@media(max-width:760px){.instr-grid{grid-template-columns:1fr !important}}`}</style>
     </motion.div>
+    </Portal>
   );
 }
 

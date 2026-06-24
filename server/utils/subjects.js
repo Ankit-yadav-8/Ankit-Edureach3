@@ -59,6 +59,35 @@ export function guessSubjectFromText(text, allowed = null) {
   return bestN >= 1 ? best : "";
 }
 
+// Give every question a subject so the paper shows section tabs. Fills blanks
+// from the question text (keyword guess), then smears the result across
+// equation-only stems that carry no keywords (papers run in contiguous subject
+// blocks): forward-fill, back-fill leading blanks, snap lone mis-guesses
+// (incl. endpoints), and finally repair a merged/missing section. Existing
+// (admin- or AI-) tagged subjects are never overwritten. No-op for exams without
+// fixed subjects (foundation/standard). Mutates & returns the array.
+export function recoverSubjects(questions, examType) {
+  const allowed = subjectsFor(examType);
+  if (!allowed.length || !Array.isArray(questions) || !questions.length) return questions;
+  for (const q of questions) {
+    if (!normalizeSubject(q.subject)) {
+      const hay = `${q.text || ""} ${(q.options || []).map((o) => o.text).join(" ")}`;
+      const g = guessSubjectFromText(hay, allowed);
+      if (g) q.subject = g;
+    }
+  }
+  questions.sort((a, b) => a.qno - b.qno);
+  let last = ""; for (const q of questions) { if (normalizeSubject(q.subject)) last = q.subject; else if (last) q.subject = last; }
+  let next = ""; for (let i = questions.length - 1; i >= 0; i--) { if (normalizeSubject(questions[i].subject)) next = questions[i].subject; else if (next) questions[i].subject = next; }
+  for (let i = 1; i < questions.length - 1; i++) { const a = questions[i - 1].subject, b = questions[i].subject, c = questions[i + 1].subject; if (a && a === c && b !== a) questions[i].subject = a; }
+  const L = questions.length;
+  if (L >= 3) {
+    if (questions[L - 1].subject !== questions[L - 2].subject && questions[L - 2].subject === questions[L - 3].subject) questions[L - 1].subject = questions[L - 2].subject;
+    if (questions[0].subject !== questions[1].subject && questions[1].subject === questions[2].subject) questions[0].subject = questions[1].subject;
+  }
+  return enforceSectionPattern(questions, examType);
+}
+
 // Fixed exam patterns whose papers run in CONTIGUOUS subject blocks, with the
 // fraction of questions each subject occupies, in order. JEE Mains is even
 // thirds (P·C·M, 25/25/25); NEET is 1:1:2 (P·C·B, 45/45/90).

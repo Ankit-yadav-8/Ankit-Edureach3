@@ -25,7 +25,7 @@ import { requireBatch } from "../middleware/batchGuard.js";
 import { requireAdmin } from "../middleware/admin.js";
 import { signUpload, cloudinaryReady, isOurCloudinaryUrl } from "../utils/cloudinary.js";
 import { buildTestFromPdfs, normalizeAnswer } from "../utils/testParser.js";
-import { normalizeSubject, orderSubjects } from "../utils/subjects.js";
+import { normalizeSubject, orderSubjects, recoverSubjects } from "../utils/subjects.js";
 import { planLabel, batchLabelFor } from "../utils/plans.js";
 import { sendParentTestReport } from "../utils/mailer.js";
 
@@ -205,7 +205,7 @@ router.post("/admin", requireAdmin, async (req, res) => {
     if (testPdfUrl && !isOurCloudinaryUrl(testPdfUrl)) return res.status(400).json({ error: "The question paper PDF link looks invalid — re-upload it." });
     const keyPdfUrl = String(req.body?.keyPdfUrl || "");
 
-    const questions = cleanQuestions(req.body?.questions);
+    let questions = cleanQuestions(req.body?.questions);
     if (!questions.length) return res.status(400).json({ error: "Add at least one question (parse a PDF or add questions manually)." });
 
     // With no PDF, the questions themselves must carry the content students see.
@@ -215,6 +215,9 @@ router.post("/admin", requireAdmin, async (req, res) => {
     }
 
     const examType = examTypeFor(plan, req.body?.examType);
+    // Fill any missing subject tags so the test shows section tabs (P/C/M · P/C/B)
+    // — covers manual/section-wise builds where some questions were left untagged.
+    questions = recoverSubjects(questions, examType);
     const marking = markingFor(examType, req.body);
     const sections = examType === "advanced" ? cleanSections(req.body?.sections) : [];
 
