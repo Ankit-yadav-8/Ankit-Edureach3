@@ -241,9 +241,11 @@ function TestCard({ t, onStart }) {
 const OPT_KEYS = ["1", "2", "3", "4"];
 
 function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
+  const { user } = useAuth();
   const [test, setTest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
+  const [stage, setStage] = useState("instructions"); // instructions | test
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState({}); // qno -> choice
   const [marked, setMarked] = useState({});   // qno -> bool (review)
@@ -261,30 +263,65 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
         if (!alive) return;
         setTest(d);
         setLeft((d.durationMin || 60) * 60);
-        setVisited({ [d.questions?.[0]?.qno]: true });
       })
       .catch((e) => alive && setErr(e.message))
       .finally(() => alive && setLoading(false));
     return () => { alive = false; };
   }, [token, testId, plan]);
 
-  // countdown — auto-submits at zero.
+  const questions = test?.questions || [];
+  const q = questions[idx];
+
+  // Sections (subject tabs). Falls back to one untitled section for old tests.
+  const sections = useMemo(() => {
+    const ss = test?.subjectSections?.length ? test.subjectSections : null;
+    if (ss) {
+      return ss
+        .map((s) => ({ name: s.name, items: (s.qnos || []).map((qno) => ({ qno, gi: questions.findIndex((x) => x.qno === qno) })).filter((x) => x.gi >= 0) }))
+        .filter((s) => s.items.length);
+    }
+    return [{ name: "", items: questions.map((x, gi) => ({ qno: x.qno, gi })) }];
+  }, [test, questions]);
+
+  const curSecIdx = Math.max(0, sections.findIndex((s) => s.items.some((it) => it.gi === idx)));
+  const curSec = sections[curSecIdx] || sections[0];
+  const posInSec = curSec ? curSec.items.findIndex((it) => it.gi === idx) : 0;
+
+  // countdown — only while actually taking the test; auto-submits at zero.
   useEffect(() => {
-    if (loading || result || !test) return;
+    if (stage !== "test" || result || !test) return;
     if (left <= 0) { doSubmit(); return; }
     const id = setInterval(() => setLeft((s) => s - 1), 1000);
     return () => clearInterval(id);
-  }, [left, loading, result, test]);
+  }, [left, stage, result, test]);
 
-  const questions = test?.questions || [];
-  const q = questions[idx];
+  // Per-subject time tracking — flush the elapsed segment whenever the active
+  // subject changes (or on submit), so the report's Time Allocation is accurate.
+  const segRef = useRef({ subject: null, ts: Date.now() });
+  const accumRef = useRef({});
+  const curSubject = curSec?.name || "";
+  useEffect(() => {
+    if (stage !== "test") return;
+    const seg = segRef.current;
+    if (seg.subject != null) accumRef.current[seg.subject] = (accumRef.current[seg.subject] || 0) + (Date.now() - seg.ts);
+    segRef.current = { subject: curSubject, ts: Date.now() };
+  }, [curSubject, stage]);
+
+  function buildSectionTimes() {
+    const acc = { ...accumRef.current };
+    const seg = segRef.current;
+    if (seg.subject != null) acc[seg.subject] = (acc[seg.subject] || 0) + (Date.now() - seg.ts);
+    const out = {};
+    for (const k in acc) if (k) out[k] = Math.round(acc[k] / 1000);
+    return out;
+  }
 
   const goto = (i) => {
     if (i < 0 || i >= questions.length) return;
     setIdx(i);
-    const qn = questions[i]?.qno;
-    setVisited((v) => ({ ...v, [qn]: true }));
+    setVisited((v) => ({ ...v, [questions[i]?.qno]: true }));
   };
+  const startTest = () => { setStage("test"); startRef.current = Date.now(); segRef.current = { subject: questions[0]?.subject || "", ts: Date.now() }; setVisited({ [questions[0]?.qno]: true }); };
 
   const choose = (val) => setAnswers((a) => ({ ...a, [q.qno]: val }));
   const clearAns = () => setAnswers((a) => { const n = { ...a }; delete n[q.qno]; return n; });
@@ -306,7 +343,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
     setSubmitting(true); setErr("");
     try {
       const durationSec = Math.round((Date.now() - startRef.current) / 1000);
-      const d = await apiTestSubmit(token, testId, { answers, durationSec }, plan);
+      const d = await apiTestSubmit(token, testId, { answers, durationSec, sectionTimes: buildSectionTimes() }, plan);
       setResult(d.result);
     } catch (e) { setErr(e.message); setConfirm(false); }
     finally { setSubmitting(false); }
@@ -322,143 +359,158 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
   const PAL_BG = { answered: GREEN, ansmarked: "#8b5cf6", marked: "#8b5cf6", notanswered: RED, notvisited: "#fff" };
   const PAL_FG = { answered: "#fff", ansmarked: "#fff", marked: "#fff", notanswered: "#fff", notvisited: NAVY };
 
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#eef0f4", display: "flex", flexDirection: "column" }}>
-      {/* top bar */}
-      <div style={{ background: NAVY, color: "#fff", padding: "10px 16px", display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
-        <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {test?.title || "Loading…"}
-        </div>
-        {!result && test && (
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: left < 60 ? "#7f1d1d" : "rgba(255,255,255,.12)", borderRadius: 10, padding: "6px 12px", fontWeight: 800, fontVariantNumeric: "tabular-nums", fontSize: 15 }}>
-            <Clock size={15} /> {mmss(Math.max(0, left))}
-          </div>
-        )}
-        {!result ? (
-          <button onClick={() => setConfirm(true)} disabled={submitting}
-            style={{ background: ORANGE, color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontWeight: 800, fontFamily: "Sora", fontSize: 13.5, cursor: "pointer" }}>
-            Submit Test
-          </button>
-        ) : (
-          <button onClick={onSubmitted} style={{ background: "rgba(255,255,255,.16)", color: "#fff", border: "none", borderRadius: 10, width: 34, height: 34, display: "grid", placeItems: "center", cursor: "pointer" }}><X size={18} /></button>
-        )}
-      </div>
+  const candidate = user?.name || (user?.email ? user.email.split("@")[0] : "Candidate");
 
-      {loading ? (
-        <div style={{ flex: 1, display: "grid", placeItems: "center", color: MUTE }}><Loader2 size={22} className="ts-spin" /></div>
-      ) : err && !test ? (
-        <div style={{ flex: 1, display: "grid", placeItems: "center", padding: 24 }}>
-          <div style={{ textAlign: "center" }}>
+  // ── Loading / error ────────────────────────────────────────────────────────
+  if (loading || (err && !test)) {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#eef0f4", display: "grid", placeItems: "center" }}>
+        {loading ? <Loader2 size={24} className="ts-spin" color={MUTE} /> : (
+          <div style={{ textAlign: "center", padding: 24 }}>
             <AlertTriangle size={28} color={RED} />
             <div style={{ marginTop: 10, color: NAVY, fontWeight: 700 }}>{err}</div>
             <button onClick={onClose} style={{ marginTop: 14, background: NAVY, color: "#fff", border: "none", borderRadius: 10, padding: "9px 18px", fontWeight: 700, cursor: "pointer" }}>Close</button>
           </div>
-        </div>
-      ) : result ? (
+        )}
+      </motion.div>
+    );
+  }
+
+  // ── Result ──────────────────────────────────────────────────────────────────
+  if (result) {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#f4f6fb", display: "flex", flexDirection: "column" }}>
         <ResultView token={token} plan={plan} testId={testId} result={result} onClose={onSubmitted} />
-      ) : (
-        <div className="cbt-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: test.testPdfUrl ? "1.35fr 1fr" : "1fr", minHeight: 0 }}>
-          {/* PDF pane — only when a question paper was attached. A manual test
-              has no PDF: the question text/options are shown in the answer pane. */}
-          {test.testPdfUrl && (
-            <div style={{ background: "#525659", minHeight: 0, position: "relative", display: "flex", flexDirection: "column" }}>
-              <iframe title="Question paper" src={test.testPdfUrl} style={{ flex: 1, width: "100%", border: "none" }} />
-            </div>
-          )}
+      </motion.div>
+    );
+  }
 
-          {/* answer + palette pane */}
-          <div style={{ background: "#fff", borderLeft: "1px solid #e5e7eb", display: "flex", flexDirection: "column", minHeight: 0 }}>
-            {/* question + options */}
-            <div style={{ padding: "16px 18px", overflowY: "auto", flex: 1 }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 15 }}>Question {idx + 1} <span style={{ color: MUTE, fontWeight: 600, fontSize: 13 }}>/ {questions.length}</span></div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  {q?.marks && (
-                    <span style={{ display: "inline-flex", gap: 5, fontSize: 11, fontWeight: 800, borderRadius: 50, padding: "3px 9px", background: "#f1f5f9" }}>
-                      <span style={{ color: GREEN }}>+{q.marks.correct}</span>
-                      <span style={{ color: RED }}>{q.marks.wrong}</span>
-                      <span style={{ color: MUTE }}>0</span>
-                    </span>
-                  )}
-                  <span style={{ fontSize: 11, fontWeight: 700, color: q?.type === "integer" ? "#8b5cf6" : INDIGO, background: q?.type === "integer" ? "#f5f3ff" : "#eef2ff", borderRadius: 50, padding: "3px 10px" }}>
-                    {q?.type === "integer" ? "Integer" : "Single correct"}
-                  </span>
-                </div>
+  // ── Pre-test General Instructions ────────────────────────────────────────────
+  if (stage === "instructions") {
+    return (
+      <InstructionsScreen test={test} sections={sections} candidate={candidate} left={left}
+        onProceed={startTest} onClose={onClose} />
+    );
+  }
+
+  // ── Test interface ───────────────────────────────────────────────────────────
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#eef0f4", display: "flex", flexDirection: "column" }}>
+      {/* top bar — title + candidate + timer */}
+      <div style={{ background: NAVY, color: "#fff", padding: "9px 16px", display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
+        <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{test?.title}</div>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: left < 60 ? "#7f1d1d" : "rgba(255,255,255,.12)", borderRadius: 10, padding: "6px 12px", fontWeight: 800, fontVariantNumeric: "tabular-nums", fontSize: 15 }}>
+          <Clock size={15} /> {mmss(Math.max(0, left))}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, paddingLeft: 6, borderLeft: "1px solid rgba(255,255,255,.18)" }}>
+          <span style={{ width: 30, height: 30, borderRadius: "50%", background: ORANGE, display: "grid", placeItems: "center", fontWeight: 800, fontSize: 13 }}>{candidate[0]?.toUpperCase()}</span>
+          <span style={{ fontSize: 13, fontWeight: 700, maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{candidate}</span>
+        </div>
+        <button onClick={() => setConfirm(true)} disabled={submitting}
+          style={{ background: ORANGE, color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontWeight: 800, fontFamily: "Sora", fontSize: 13.5, cursor: "pointer" }}>Submit Test</button>
+      </div>
+
+      {/* section tabs */}
+      {sections.length > 1 && (
+        <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "8px 16px", display: "flex", gap: 8, flexShrink: 0, overflowX: "auto" }}>
+          {sections.map((s, i) => {
+            const on = i === curSecIdx;
+            const col = SUBJECT_COLOR[s.name] || INDIGO;
+            return (
+              <button key={s.name || i} onClick={() => goto(s.items[0].gi)}
+                style={{ padding: "7px 16px", borderRadius: 50, border: `1.5px solid ${on ? col : "#e5e7eb"}`, background: on ? col : "#fff", color: on ? "#fff" : NAVY, fontFamily: "Sora", fontWeight: 700, fontSize: 13, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>
+                {s.name || "Section"} <span style={{ opacity: .7, fontWeight: 600 }}>· {s.items.length}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="cbt-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 320px", minHeight: 0 }}>
+        {/* question pane */}
+        <div style={{ background: "#fff", display: "flex", flexDirection: "column", minHeight: 0 }}>
+          <div style={{ padding: "14px 20px", borderBottom: "1px solid #eef2f7", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 15 }}>Question {posInSec + 1}</span>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: MUTE, textTransform: "uppercase", letterSpacing: ".03em" }}>{q?.type === "integer" ? "Numerical" : "Single Choice Correct"}</span>
+            </div>
+            {q?.marks && (
+              <div style={{ display: "inline-flex", gap: 6 }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: GREEN, background: "#dcfce7", borderRadius: 50, padding: "3px 10px" }}>+{q.marks.correct} Marks</span>
+                <span style={{ fontSize: 11, fontWeight: 800, color: RED, background: "#fee2e2", borderRadius: 50, padding: "3px 10px" }}>{q.marks.wrong} Negative</span>
               </div>
+            )}
+          </div>
 
-              {q?.text && (
-                <div style={{ fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: q?.image ? 10 : 14 }}><MathText text={q.text} /></div>
-              )}
-              {q?.image && (
-                <img src={q.image} alt={`Question ${q.qno}`} style={{ maxWidth: "100%", borderRadius: 10, border: "1px solid #e5e7eb", marginBottom: 14 }} />
-              )}
-              {!q?.text && !q?.image && (
-                <div style={{ fontSize: 13, color: MUTE, marginBottom: 14, fontStyle: "italic" }}>
-                  {test.testPdfUrl ? `Read question ${q?.qno} from the paper on the left, then mark your answer below.` : "Mark your answer below."}
-                </div>
-              )}
+          <div style={{ padding: "18px 20px", overflowY: "auto", flex: 1 }}>
+            {q?.text && <div style={{ fontSize: 14.5, color: NAVY, lineHeight: 1.7, marginBottom: q?.image ? 12 : 16 }}><MathText text={q.text} /></div>}
+            {q?.image && <img src={q.image} alt={`Question ${q.qno}`} style={{ maxWidth: "100%", borderRadius: 10, border: "1px solid #e5e7eb", marginBottom: 16, display: "block" }} />}
+            {!q?.text && !q?.image && <div style={{ fontSize: 13, color: MUTE, marginBottom: 16, fontStyle: "italic" }}>Choose your answer below.</div>}
 
-              {q?.type === "integer" ? (
-                <input
-                  value={answers[q.qno] ?? ""}
-                  onChange={(e) => choose(e.target.value.replace(/[^0-9.\-]/g, ""))}
-                  placeholder="Type your answer"
-                  inputMode="decimal"
-                  style={{ width: "100%", height: 48, padding: "0 14px", borderRadius: 12, border: "1.5px solid #e5e7eb", fontSize: 16, fontWeight: 700, color: NAVY, outline: "none", boxSizing: "border-box" }}
-                />
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {OPT_KEYS.map((k, i) => {
-                    const opt = q?.options?.find((o) => o.key === k) || q?.options?.[i];
-                    const key = opt?.key || k;
-                    const on = answers[q.qno] === key;
-                    return (
-                      <button key={k} onClick={() => choose(key)}
-                        style={{ display: "flex", alignItems: "center", gap: 12, textAlign: "left", border: `1.5px solid ${on ? ORANGE : "#e5e7eb"}`, background: on ? `${ORANGE}0f` : "#fff", borderRadius: 12, padding: "11px 13px", cursor: "pointer", transition: "all .12s" }}>
-                        <span style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, display: "grid", placeItems: "center", fontWeight: 800, fontFamily: "Sora", fontSize: 13, background: on ? ORANGE : "#f1f5f9", color: on ? "#fff" : NAVY }}>{key}</span>
-                        {opt?.image
-                          ? <img src={opt.image} alt={`Option ${key}`} style={{ maxHeight: 72, maxWidth: "100%", borderRadius: 8 }} />
-                          : <span style={{ fontSize: 13.5, color: NAVY }}><MathText text={opt?.text || `Option ${key}`} /></span>}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            {/* action buttons */}
-            <div style={{ borderTop: "1px solid #eef2f7", padding: "10px 14px", display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <button onClick={toggleMark} style={ctlBtn(marked[q?.qno] ? "#8b5cf6" : "#fff", marked[q?.qno] ? "#fff" : MUTE)}><Flag size={14} /> {marked[q?.qno] ? "Marked" : "Mark for review"}</button>
-              <button onClick={clearAns} style={ctlBtn("#fff", MUTE)}><Eraser size={14} /> Clear</button>
-              <div style={{ flex: 1 }} />
-              <button onClick={() => goto(idx - 1)} disabled={idx === 0} style={{ ...ctlBtn("#fff", NAVY), opacity: idx === 0 ? 0.4 : 1 }}><ChevronLeft size={15} /> Prev</button>
-              <button onClick={() => goto(idx + 1)} disabled={idx >= questions.length - 1} style={{ ...ctlBtn(NAVY, "#fff"), opacity: idx >= questions.length - 1 ? 0.4 : 1 }}>Save & Next <ChevronRight size={15} /></button>
-            </div>
-
-            {/* palette */}
-            <div style={{ borderTop: "1px solid #eef2f7", background: "#f8fafc", padding: "10px 14px", maxHeight: 188, overflowY: "auto" }}>
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", fontSize: 10.5, color: MUTE, marginBottom: 8 }}>
-                <Legend c={GREEN} t={`Answered ${counts.answered}`} />
-                <Legend c={RED} t={`Not ans. ${counts.notAnswered - counts.notVisited}`} />
-                <Legend c="#8b5cf6" t={`Review ${counts.marked}`} />
-                <Legend c="#cbd5e1" t={`Not visited ${counts.notVisited}`} />
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(34px,1fr))", gap: 6 }}>
-                {questions.map((qq, i) => {
-                  const st = palStatus(qq);
+            {q?.type === "integer" ? (
+              <input value={answers[q.qno] ?? ""} onChange={(e) => choose(e.target.value.replace(/[^0-9.\-]/g, ""))}
+                placeholder="Type your numerical answer" inputMode="decimal"
+                style={{ width: "100%", maxWidth: 320, height: 48, padding: "0 14px", borderRadius: 12, border: "1.5px solid #e5e7eb", fontSize: 16, fontWeight: 700, color: NAVY, outline: "none", boxSizing: "border-box" }} />
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 11, maxWidth: 640 }}>
+                {OPT_KEYS.map((k, i) => {
+                  const opt = q?.options?.find((o) => o.key === k) || q?.options?.[i];
+                  const key = opt?.key || k;
+                  const on = answers[q.qno] === key;
                   return (
-                    <button key={qq.qno} onClick={() => goto(i)}
-                      style={{ height: 32, borderRadius: 7, border: `1.5px solid ${st === "notvisited" ? "#cbd5e1" : PAL_BG[st]}`, background: PAL_BG[st], color: PAL_FG[st], fontWeight: 800, fontSize: 12, cursor: "pointer", outline: i === idx ? `2px solid ${ORANGE}` : "none" }}>
-                      {i + 1}
+                    <button key={k} onClick={() => choose(key)}
+                      style={{ display: "flex", alignItems: "center", gap: 13, textAlign: "left", border: `1.5px solid ${on ? ORANGE : "#e5e7eb"}`, background: on ? `${ORANGE}0c` : "#fff", borderRadius: 12, padding: "12px 14px", cursor: "pointer", transition: "all .12s" }}>
+                      <span style={{ width: 26, height: 26, borderRadius: "50%", flexShrink: 0, display: "grid", placeItems: "center", fontWeight: 800, fontFamily: "Sora", fontSize: 12.5, background: on ? ORANGE : "#f1f5f9", color: on ? "#fff" : NAVY }}>{"ABCD"[i]}</span>
+                      {opt?.image
+                        ? <img src={opt.image} alt={`Option ${key}`} style={{ maxHeight: 80, maxWidth: "100%", borderRadius: 8 }} />
+                        : <span style={{ fontSize: 14, color: NAVY, flex: 1 }}><MathText text={opt?.text || `Option ${"ABCD"[i]}`} /></span>}
+                      {on && <CheckCircle2 size={18} color={ORANGE} style={{ flexShrink: 0 }} />}
                     </button>
                   );
                 })}
               </div>
+            )}
+          </div>
+
+          {/* bottom nav */}
+          <div style={{ borderTop: "1px solid #eef2f7", padding: "11px 16px", display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", background: "#fff" }}>
+            <button onClick={() => goto(idx - 1)} disabled={idx === 0} style={{ ...ctlBtn("#fff", NAVY), opacity: idx === 0 ? 0.4 : 1 }}><ChevronLeft size={15} /> Previous</button>
+            <button onClick={() => { toggleMark(); goto(idx + 1); }} style={ctlBtn("#ede9fe", "#7c3aed")}><Flag size={14} /> Mark for Review &amp; Next</button>
+            <div style={{ flex: 1 }} />
+            <button onClick={clearAns} style={ctlBtn("#fff", MUTE)}><Eraser size={14} /> Clear Response</button>
+            <button onClick={() => goto(idx + 1)} disabled={idx >= questions.length - 1} style={{ ...ctlBtn(NAVY, "#fff"), opacity: idx >= questions.length - 1 ? 0.4 : 1 }}>Save &amp; Next <ChevronRight size={15} /></button>
+          </div>
+        </div>
+
+        {/* palette pane */}
+        <div style={{ background: "#fff", borderLeft: "1px solid #e5e7eb", display: "flex", flexDirection: "column", minHeight: 0 }}>
+          <div style={{ padding: "12px 14px", borderBottom: "1px solid #eef2f7", fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 13.5, display: "flex", alignItems: "center", gap: 7 }}>
+            <ListChecks size={15} color={ORANGE} /> {curSec?.name || "Question"} Palette
+          </div>
+          <div style={{ padding: "10px 14px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5px 10px", fontSize: 10.5, color: MUTE, borderBottom: "1px solid #eef2f7" }}>
+            <Legend c={GREEN} t={`Answered ${counts.answered}`} />
+            <Legend c={RED} t={`Not answered ${Math.max(0, counts.total - counts.answered - counts.notVisited)}`} />
+            <Legend c="#8b5cf6" t={`Marked ${counts.marked}`} />
+            <Legend c="#cbd5e1" t={`Not visited ${counts.notVisited}`} />
+          </div>
+          <div style={{ padding: "12px 14px", overflowY: "auto", flex: 1 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 8 }}>
+              {curSec?.items.map((it, i) => {
+                const st = palStatus(questions[it.gi]);
+                return (
+                  <button key={it.qno} onClick={() => goto(it.gi)}
+                    style={{ height: 36, borderRadius: 8, border: `1.5px solid ${st === "notvisited" ? "#cbd5e1" : PAL_BG[st]}`, background: PAL_BG[st], color: PAL_FG[st], fontWeight: 800, fontSize: 12.5, cursor: "pointer", outline: it.gi === idx ? `2px solid ${ORANGE}` : "none" }}>
+                    {i + 1}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* submit confirmation */}
       <AnimatePresence>
@@ -467,12 +519,17 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
             onClick={() => setConfirm(false)}
             style={{ position: "fixed", inset: 0, zIndex: 5100, background: "rgba(13,27,62,.55)", display: "grid", placeItems: "center", padding: 20 }}>
             <motion.div initial={{ scale: .94, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: .95 }} onClick={(e) => e.stopPropagation()}
-              style={{ width: "min(420px,100%)", background: "#fff", borderRadius: 18, padding: "24px 22px", textAlign: "center" }}>
+              style={{ width: "min(440px,100%)", background: "#fff", borderRadius: 18, padding: "24px 22px", textAlign: "center" }}>
               <div style={{ width: 52, height: 52, borderRadius: "50%", background: "#FFF1E9", display: "grid", placeItems: "center", margin: "0 auto 12px" }}><ListChecks size={24} color={ORANGE} /></div>
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, margin: "0 0 6px" }}>Submit the test?</h3>
-              <p style={{ color: MUTE, fontSize: 13.5, margin: "0 0 8px" }}>Answered <b style={{ color: GREEN }}>{counts.answered}</b> of {counts.total}. Unanswered questions score 0.</p>
+              <p style={{ color: MUTE, fontSize: 13.5, margin: "0 0 10px" }}>Answered <b style={{ color: GREEN }}>{counts.answered}</b> of {counts.total}. Unanswered questions score 0.</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 12 }}>
+                <MiniStat n={counts.answered} label="Answered" c={GREEN} />
+                <MiniStat n={counts.total - counts.answered} label="Unanswered" c={RED} />
+                <MiniStat n={counts.marked} label="Marked" c="#8b5cf6" />
+              </div>
               {err && <div style={{ color: RED, fontSize: 12.5, marginBottom: 8 }}>{err}</div>}
-              <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+              <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
                 <button onClick={() => setConfirm(false)} style={{ flex: 1, padding: "11px 0", borderRadius: 11, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, fontWeight: 700, cursor: "pointer" }}>Keep going</button>
                 <button onClick={doSubmit} disabled={submitting} style={{ flex: 1.3, padding: "11px 0", borderRadius: 11, border: "none", background: ORANGE, color: "#fff", fontWeight: 800, fontFamily: "Sora", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
                   {submitting ? <Loader2 size={16} className="ts-spin" /> : <CheckCircle2 size={16} />} Submit
@@ -484,6 +541,113 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
       </AnimatePresence>
 
       <style>{`@media(max-width:820px){.cbt-grid{grid-template-columns:1fr !important}}`}</style>
+    </motion.div>
+  );
+}
+
+const MiniStat = ({ n, label, c }) => (
+  <div style={{ background: `${c}10`, borderRadius: 10, padding: "8px 4px" }}>
+    <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 18, color: c }}>{n}</div>
+    <div style={{ fontSize: 10.5, color: MUTE }}>{label}</div>
+  </div>
+);
+
+/* ── Pre-test General Instructions (NTA-style) ─────────────────────────────── */
+function InstructionsScreen({ test, sections, candidate, left, onProceed, onClose }) {
+  const [agree, setAgree] = useState(false);
+  const [lang, setLang] = useState("English");
+  const legend = [
+    { c: "#cbd5e1", t: "You have not visited the question yet." },
+    { c: RED, t: "You have not answered the question." },
+    { c: GREEN, t: "You have answered the question." },
+    { c: "#8b5cf6", t: "You have NOT answered, but marked for review." },
+  ];
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#f4f6fb", display: "flex", flexDirection: "column" }}>
+      {/* header */}
+      <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "12px 18px", display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
+        <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 16, flex: 1 }}>{test?.title}</div>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 10.5, color: MUTE, fontWeight: 700, letterSpacing: ".05em" }}>TIME REMAINING</div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontVariantNumeric: "tabular-nums" }}>{mmss(left)}</div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, paddingLeft: 12, borderLeft: "1px solid #eef2f7" }}>
+          <span style={{ width: 32, height: 32, borderRadius: "50%", background: ORANGE, color: "#fff", display: "grid", placeItems: "center", fontWeight: 800 }}>{candidate[0]?.toUpperCase()}</span>
+          <div style={{ fontSize: 13, fontWeight: 700, color: NAVY }}>{candidate}</div>
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: "auto", padding: "18px" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto", display: "grid", gridTemplateColumns: "1.7fr 1fr", gap: 16 }} className="instr-grid">
+          {/* instructions */}
+          <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 16, padding: "18px 20px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+              <h3 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 16, margin: 0, display: "flex", alignItems: "center", gap: 8 }}><FileText size={17} color={ORANGE} /> General Instructions</h3>
+              <span style={{ fontSize: 12, fontWeight: 700, color: NAVY, background: "#eef2ff", borderRadius: 50, padding: "4px 12px" }}>Duration: {test?.durationMin} Mins</span>
+            </div>
+            <ol style={{ margin: 0, paddingLeft: 18, color: "#374151", fontSize: 13, lineHeight: 1.7 }}>
+              <li style={{ marginBottom: 10 }}><b style={{ color: NAVY }}>General:</b> The total duration is {test?.durationMin} minutes. The server clock counts down the time remaining; the exam ends automatically when it reaches zero.</li>
+              <li style={{ marginBottom: 10 }}>
+                <b style={{ color: NAVY }}>Question Palette:</b> the colour of each question button shows its status:
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
+                  {legend.map((l, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12 }}>
+                      <span style={{ width: 22, height: 22, borderRadius: 6, background: l.c, flexShrink: 0 }} /> {l.t}
+                    </div>
+                  ))}
+                </div>
+              </li>
+              <li style={{ marginBottom: 10 }}><b style={{ color: NAVY }}>Answering:</b> click an option to select it; click <b>Clear Response</b> to deselect. You MUST click <b>Save &amp; Next</b> to save an answer.</li>
+              <li><b style={{ color: NAVY }}>Sections:</b> you can attempt the sections in any order and move freely between questions using the palette.</li>
+            </ol>
+            <div style={{ marginTop: 14, background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "10px 14px", fontSize: 12.5, color: "#9a3412" }}>
+              <b>Important:</b> Make sure you click <b>Save &amp; Next</b> to record answers — questions only marked for review (without an answer) are not scored.
+            </div>
+          </div>
+
+          {/* candidate panel (name only, no photo) */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 16, overflow: "hidden" }}>
+              <div style={{ background: NAVY, color: "#fff", padding: "10px 16px", fontFamily: "Sora", fontWeight: 700, fontSize: 13.5 }}>Candidate</div>
+              <div style={{ padding: "18px 16px", textAlign: "center" }}>
+                <div style={{ width: 64, height: 64, borderRadius: "50%", background: `${ORANGE}1a`, color: ORANGE, display: "grid", placeItems: "center", margin: "0 auto 10px", fontFamily: "Sora", fontWeight: 900, fontSize: 26 }}>{candidate[0]?.toUpperCase()}</div>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 16 }}>{candidate}</div>
+                <div style={{ fontSize: 12, color: MUTE, marginTop: 2 }}>{test?.examTypeLabel || test?.categoryLabel}</div>
+              </div>
+              <div style={{ borderTop: "1px solid #eef2f7", padding: "14px 16px" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: MUTE, marginBottom: 6 }}>Choose Language</div>
+                <select value={lang} onChange={(e) => setLang(e.target.value)} style={{ width: "100%", height: 38, borderRadius: 9, border: "1.5px solid #e5e7eb", padding: "0 10px", fontSize: 13, color: NAVY, outline: "none" }}>
+                  <option>English</option><option>Hindi</option>
+                </select>
+                <div style={{ fontSize: 11, fontWeight: 700, color: MUTE, margin: "14px 0 8px" }}>SUBJECTS &amp; QUESTIONS</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                  {sections.map((s, i) => (
+                    <div key={s.name || i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f8fafc", borderRadius: 8, padding: "8px 11px" }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: NAVY }}>{s.name || "All questions"}</span>
+                      <span style={{ fontSize: 12, color: MUTE, fontWeight: 700 }}>{s.items.length} Qs</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* footer */}
+      <div style={{ background: "#fff", borderTop: "1px solid #e5e7eb", padding: "12px 18px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: NAVY, cursor: "pointer", flex: 1, minWidth: 240 }}>
+          <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} style={{ width: 16, height: 16, accentColor: ORANGE }} />
+          I have read and understood all the instructions.
+        </label>
+        <button onClick={onClose} style={{ background: "#fff", color: MUTE, border: "1.5px solid #e5e7eb", borderRadius: 11, padding: "10px 18px", fontWeight: 700, cursor: "pointer" }}>Cancel</button>
+        <button onClick={onProceed} disabled={!agree}
+          style={{ display: "inline-flex", alignItems: "center", gap: 8, background: agree ? "linear-gradient(135deg,#FF693D,#E0421F)" : "#cbd5e1", color: "#fff", border: "none", borderRadius: 11, padding: "11px 24px", fontWeight: 800, fontFamily: "Sora", fontSize: 14, cursor: agree ? "pointer" : "not-allowed", boxShadow: agree ? "0 10px 22px -10px #FF693D" : "none" }}>
+          Proceed to Test <ChevronRight size={16} />
+        </button>
+      </div>
+      <style>{`@media(max-width:760px){.instr-grid{grid-template-columns:1fr !important}}`}</style>
     </motion.div>
   );
 }
