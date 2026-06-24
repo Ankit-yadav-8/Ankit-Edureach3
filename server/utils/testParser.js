@@ -504,7 +504,12 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl) {
 
   const howLabel = { vision: "AI vision", "vision+text": "AI vision (partial)", AI: "AI", rules: "auto" };
   let note;
-  if (questions.length) {
+  if (questions.length && method === "rules" && isLowQuality(questions)) {
+    // The math couldn't be read: rules-only on a math paper leaves blank options
+    // and stripped equations. Warn loudly so a broken test isn't published as-is.
+    const why = aiError ? `${aiError}. ` : "AI vision couldn't read this paper. ";
+    note = `⚠️ The questions below have blank options/maths — ${why}This is a scanned/math paper that needs AI to read it. Re-convert when the AI quota resets (or set a paid GROQ_API_KEY), or fill the questions in manually. Do not publish as-is.`;
+  } else if (questions.length) {
     const src = keyPdfUrl ? "answer key" : "answers";
     const inline = !keyPdfUrl && method === "rules" ? " (detected inline in the paper)" : "";
     note = `Converted ${questions.length} question${questions.length === 1 ? "" : "s"} (${howLabel[method]}); ${src} matched ${matched}/${questions.length}${inline}. Review below before publishing.`;

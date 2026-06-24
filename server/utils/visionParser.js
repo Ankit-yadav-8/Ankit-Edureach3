@@ -108,8 +108,9 @@ async function callVision(model, key, images, maxTokens, retries = 9) {
   for (const png of images) {
     content.push({ type: "image_url", image_url: { url: "data:image/png;base64," + png.toString("base64") } });
   }
-  const payload = JSON.stringify({
-    model, temperature: 0, max_tokens: maxTokens,
+  let mt = maxTokens;
+  const buildPayload = () => JSON.stringify({
+    model, temperature: 0, max_tokens: mt,
     response_format: { type: "json_object" },
     messages: [{ role: "system", content: VISION_SYS }, { role: "user", content }],
   });
@@ -118,7 +119,7 @@ async function callVision(model, key, images, maxTokens, retries = 9) {
     const res = await fetch(GROQ_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
-      body: payload,
+      body: buildPayload(),
     });
     if (res.status === 429 || res.status >= 500) {
       const body = await res.text().catch(() => "");
@@ -143,6 +144,14 @@ async function callVision(model, key, images, maxTokens, retries = 9) {
     }
     if (!res.ok) {
       const body = await res.text().catch(() => "");
+      // A too-high token cap (400) must NOT blank the whole paper — halve it and
+      // retry so the conversion still succeeds at a smaller, accepted cap.
+      if (res.status === 400 && mt > 1024 &&
+          /max.?(completion.?)?tokens|maximum context|reduce the length|too many tokens|exceeds? the/i.test(body)) {
+        mt = Math.max(1024, Math.floor(mt / 2));
+        console.warn(`[visionParser] token cap too high — retrying at max_tokens=${mt}`);
+        continue;
+      }
       const e = new Error(`HTTP ${res.status}`);
       e.detail = body.slice(0, 200);
       throw e;
@@ -207,9 +216,9 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
     if (dailyLimit) return []; // stop hammering once the daily quota is gone
     const batchStart = bi * perBatch; // absolute 0-based index of imgs[0]
     let arr;
-    // 8000 tokens (was 4000): a 2-page batch of dense JEE questions with LaTeX
-    // options overran 4000, truncating the JSON and dropping the whole batch.
-    try { arr = await callVision(model, process.env.GROQ_API_KEY, imgs, 8000); }
+    // 6000 tokens (was 4000): dense 2-page batches overran 4000 and truncated;
+    // callVision auto-halves if even this is too high for the model/tier.
+    try { arr = await callVision(model, process.env.GROQ_API_KEY, imgs, Number(process.env.TEST_VISION_MAXTOKENS) || 6000); }
     catch (e) {
       if (e.code === "DAILY_LIMIT") {
         dailyLimit = true;
@@ -267,6 +276,8 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
   }
 
   const questions = [...byQno.values()].sort((a, b) => a.qno - b.qno);
+  const withDiagrams = questions.filter((q) => q.image).length;
+  console.log(`[visionParser] ${batches.length} batch(es) → ${questions.length} questions, ${withDiagrams} with diagrams${firstErr ? ` · note: ${firstErr}` : ""}`);
   if (!questions.length) return { questions: [], error: firstErr || "AI vision couldn't read any questions from the PDF" };
   return { questions, error: truncated ? `Only the first ${maxPages} pages were read` : firstErr };
 }
