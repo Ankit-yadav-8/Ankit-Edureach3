@@ -148,6 +148,7 @@ export default function CampusNotes() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [notes, setNotes] = useState(() => load("notes", []));
   const [liked, setLiked] = useState(() => load("liked", []));
+  const [customSubjects, setCustomSubjects] = useState(() => load("c_subj", {}));
   const [collegeSearch, setCollegeSearch] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const fileRef = useRef(null);
@@ -158,6 +159,7 @@ export default function CampusNotes() {
   useEffect(() => { save("college", college); }, [college]);
   useEffect(() => { save("notes", notes); }, [notes]);
   useEffect(() => { save("liked", liked); }, [liked]);
+  useEffect(() => { save("c_subj", customSubjects); }, [customSubjects]);
 
   /* ── pick student type ── */
   const pickType = (t) => { setStudentType(t); setStep("college"); };
@@ -461,32 +463,62 @@ export default function CampusNotes() {
                     <span style={{ color: selectedBranch.color }}>{selectedBranch.short}</span> · {selectedSem} — Subjects
                   </h2>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12 }}>
-                    {getSubjects(selectedBranch.id, selectedSem).map((sub) => {
-                      const count = notes.filter((n) => n.subject === sub && n.branch === selectedBranch.id && n.semester === selectedSem).length;
+                    {(() => {
+                      const predefined = getSubjects(selectedBranch.id, selectedSem);
+                      const custom = customSubjects[`${selectedBranch.id}-${selectedSem}`] || [];
+                      const allSubjects = [...predefined, ...custom];
+
                       return (
-                        <motion.button
-                          key={sub}
-                          whileHover={{ y: -2 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => setSelectedSubject(sub)}
-                          style={{
-                            display: "flex", alignItems: "center", gap: 12, padding: "16px 18px",
-                            borderRadius: 14, background: "#fff", cursor: "pointer",
-                            border: "1.5px solid rgba(0,0,0,0.05)", fontFamily: "inherit", textAlign: "left",
-                            boxShadow: "0 2px 8px -4px rgba(0,0,0,0.04)",
-                          }}
-                        >
-                          <span style={{ width: 40, height: 40, borderRadius: 12, background: "#F0F0FF", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                            <BookOpen size={18} color="#6366f1" />
-                          </span>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#1a1a2e" }}>{sub}</div>
-                            <div style={{ fontSize: "0.78rem", color: "#64748b", marginTop: 2 }}>{count} note{count !== 1 ? "s" : ""} uploaded</div>
-                          </div>
-                          <ChevronRight size={16} color="#ccc" />
-                        </motion.button>
+                        <>
+                          {allSubjects.map((sub) => {
+                            const count = notes.filter((n) => n.subject === sub && n.branch === selectedBranch.id && n.semester === selectedSem).length;
+                            return (
+                              <motion.button
+                                key={sub}
+                                whileHover={{ y: -2 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => setSelectedSubject(sub)}
+                                style={{
+                                  display: "flex", alignItems: "center", gap: 12, padding: "16px 18px",
+                                  borderRadius: 14, background: "#fff", cursor: "pointer",
+                                  border: "1.5px solid rgba(0,0,0,0.05)", fontFamily: "inherit", textAlign: "left",
+                                  boxShadow: "0 2px 8px -4px rgba(0,0,0,0.04)",
+                                }}
+                              >
+                                <span style={{ width: 40, height: 40, borderRadius: 12, background: "#F0F0FF", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                                  <BookOpen size={18} color="#6366f1" />
+                                </span>
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#1a1a2e" }}>{sub}</div>
+                                  <div style={{ fontSize: "0.78rem", color: "#64748b", marginTop: 2 }}>{count} note{count !== 1 ? "s" : ""} uploaded</div>
+                                </div>
+                                <ChevronRight size={16} color="#ccc" />
+                              </motion.button>
+                            );
+                          })}
+                          <motion.button
+                            whileHover={{ y: -2, background: "#f8f9fa" }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => {
+                              const name = prompt("Enter Subject Name & Code (e.g., Data Structures CS201):");
+                              if (name && name.trim()) {
+                                const key = `${selectedBranch.id}-${selectedSem}`;
+                                const newCustom = { ...customSubjects, [key]: [...(customSubjects[key] || []), name.trim()] };
+                                setCustomSubjects(newCustom);
+                              }
+                            }}
+                            style={{
+                              display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "16px",
+                              borderRadius: 14, background: "#fafafa", cursor: "pointer",
+                              border: "1.5px dashed rgba(0,0,0,0.15)", fontFamily: "inherit", color: "#64748b", fontWeight: 700,
+                              minHeight: 75
+                            }}
+                          >
+                            <Plus size={18} /> Add Subject with Code
+                          </motion.button>
+                        </>
                       );
-                    })}
+                    })()}
                   </div>
                 </>
               )}
