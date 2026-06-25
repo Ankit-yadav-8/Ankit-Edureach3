@@ -207,7 +207,7 @@ export default function Navbar({ onSearch }) {
     { label: "JEE", icon: BookOpen, mega: JEE_MEGA, base: "/jee-resources", match: (p) => p.startsWith("/jee") },
     { label: "NEET", icon: FlaskConical, mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
     { label: "Colleges", icon: Landmark, drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
-    { label: "Connect", icon: Heart, drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
+    { label: "Mentorship", icon: Heart, drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
     { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa", "/campus-notes", "/community"].some((x) => p.startsWith(x)) },
   ];
 
@@ -217,10 +217,10 @@ export default function Navbar({ onSearch }) {
     <>
       <nav
         style={{
-          position: "fixed", top: 20, left: "50%", transform: "translateX(-50%)", zIndex: 1000,
+          position: "fixed", top: 42, left: "50%", transform: "translateX(-50%)", zIndex: 1000,
           height: 64, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
           padding: "0 10px 0 24px",
-          width: "95%", maxWidth: 1100,
+          width: "95%", maxWidth: 1280,
           background: scrolled ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.9)",
           borderRadius: 999,
           backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
