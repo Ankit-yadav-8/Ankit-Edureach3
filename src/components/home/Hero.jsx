@@ -1505,38 +1505,6 @@ export default function Hero({ onSearch }) {
         boxSizing: "border-box",
       }}
     >
-      {/* ═══ Dotted-grid background ═══ */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-          backgroundImage: "radial-gradient(rgba(0,0,0,.04) 1.5px, transparent 1.5px)",
-          backgroundSize: "32px 32px",
-          maskImage: "radial-gradient(ellipse 90% 80% at 50% 40%, #000 40%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 90% 80% at 50% 40%, #000 40%, transparent 100%)",
-        }}
-      />
-
-      {/* ═══ Subtle decorative dashed arcs with glowing dots ═══ */}
-      <svg
-        aria-hidden viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none", opacity: 0.6 }}
-      >
-        <path d="M-100 200 C 300 -100, 800 600, 1500 100" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="1.2" strokeDasharray="6 8" />
-        <path d="M-100 600 C 400 900, 1000 -100, 1500 500" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="1.2" strokeDasharray="6 8" />
-        <path d="M 1200 -100 C 1000 300, 1300 700, 1600 800" fill="none" stroke="rgba(0,0,0,0.04)" strokeWidth="1.2" strokeDasharray="6 8" />
-        
-        {/* Glowing nodes */}
-        <circle cx="350" cy="180" r="3.5" fill="#FF8060" />
-        <circle cx="350" cy="180" r="16" fill="#FF8060" opacity="0.25" filter="blur(4px)" />
-        
-        <circle cx="1080" cy="380" r="4.5" fill="#FF8060" />
-        <circle cx="1080" cy="380" r="20" fill="#FF8060" opacity="0.2" filter="blur(5px)" />
-        
-        <circle cx="450" cy="620" r="3.5" fill="#FF8060" />
-        <circle cx="450" cy="620" r="15" fill="#FF8060" opacity="0.25" filter="blur(4px)" />
-      </svg>
-
       {/* ═══ Content wrapper ═══ */}
       <div
         ref={containerRef}
