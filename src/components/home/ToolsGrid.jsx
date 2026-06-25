@@ -6,13 +6,19 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Gauge, Crosshair, BarChart3, BookOpen, Map, ListChecks,
-  GitCompareArrows, Layers, ArrowRight, Sparkles,
+  GitCompareArrows, Layers, ArrowRight, Sparkles, Ticket,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
 /* per-card accent — bento style: each card carries its own colour for the
    icon tile, decorative corner wash and the "Explore tool" link. */
 const TOOLS = [
+  {
+    icon: Ticket, title: "Events & Fest marketplace", accent: "#e5484d",
+    desc: "Book hackathons, cultural fests, seminars across colleges. Students discover events nearby.",
+    bullets: ["Ticket booking commission", "High Impact", "Cross-college network"],
+    to: "/campus-fests", live: true, hot: true,
+  },
   {
     icon: Gauge, title: "Rank Predictor", accent: "#FF693D",
     desc: "Enter your expected marks and instantly project your JEE Main rank, percentile and category rank.",

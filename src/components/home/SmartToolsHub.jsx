@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Gauge, Crosshair, Building2, ArrowRight, Rocket, Sparkles,
-  Calculator, ListChecks, Map,
+  Calculator, ListChecks, Map, Ticket,
 } from "lucide-react";
 import { CenterDonut } from "../Charts.jsx";
 import { TiltCard } from "../Animations.jsx";
@@ -45,6 +45,7 @@ const PREDICTOR_CARDS = [
 
 /* ── Group 2: newly launched tools (simple cards) ── */
 const NEW_TOOLS = [
+  { icon: Ticket,     accent: "#e5484d", badge: "NEW", title: "Campus Fests",        desc: "Book hackathons, cultural fests, seminars across colleges. Students discover events nearby.",  cta: "Find Fests", to: "/campus-fests" },
   { icon: Calculator, accent: "#FF693D", badge: "NEW", title: "ROI Calculator",       desc: "Calculate total degree cost, EMI, scholarship savings & long-term return.",        cta: "Calculate ROI", to: "/scholarships" },
   { icon: ListChecks, accent: "#0ea5a4", badge: "NEW", title: "Choice Filling Helper", desc: "Smart JoSAA choice order based on your rank, category & branch preferences.",       cta: "Fill Choices",  to: "/planner" },
   { icon: Map,        accent: "#15803d", badge: "NEW", title: "College Map View",      desc: "Explore all IITs, NITs & IIITs on an interactive map. Filter by state & type.",     cta: "Open Map",      to: "/map" },

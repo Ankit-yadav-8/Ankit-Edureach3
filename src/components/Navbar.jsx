@@ -133,6 +133,7 @@ const TOOLS_MEGA = [
     items: [
       { label: "Campus Notes",       to: "/campus-notes", icon: BookOpen,   desc: "Upload & share study notes", iconBg: "#FFF3E0", iconColor: "#8B5E34" },
       { label: "Public Community",   to: "/community",    icon: Globe2,     desc: "Peer discussions & Q&A", iconBg: "#E0F2F1", iconColor: "#00695C" },
+      { label: "Events & Fests",     to: "/campus-fests", icon: Sparkles,   desc: "Discover cultural & tech fests", iconBg: "#FCE4EC", iconColor: "#C2185B" },
     ],
   },
 ];
