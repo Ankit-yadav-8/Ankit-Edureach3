@@ -82,17 +82,24 @@ export default function BranchCatalog() {
   return (
     <section id="branches" style={{ background: CL.cream2, padding: "84px 0", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 40px" }}>
-          <span style={clEyebrow}>Branch Explorer</span>
-          <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2rem,4.4vw,3rem)", color: CL.ink, letterSpacing: "-1.4px", margin: "16px 0 6px", lineHeight: 1.05 }}>
-            {TOTAL_BRANCHES}+ branches.
-          </h2>
-          <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2rem,4.4vw,3rem)", color: CL.coral, letterSpacing: "-1.4px", margin: "0 0 14px", lineHeight: 1.05 }}>
-            {BRANCHES.length} clear paths.
-          </h2>
-          <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7 }}>
-            Bucketed into {BRANCHES.length} domains with deep insights on placements, salaries, AI outlook and more — so nothing slips through the cracks.
-          </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 60, alignItems: "center", marginBottom: 40 }}>
+          <div style={{ textAlign: "left" }}>
+            <span style={clEyebrow}>Branch Explorer</span>
+            <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2rem,4.4vw,3rem)", color: CL.ink, letterSpacing: "-1.4px", margin: "16px 0 6px", lineHeight: 1.05 }}>
+              {TOTAL_BRANCHES}+ branches.
+            </h2>
+            <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2rem,4.4vw,3rem)", color: CL.coral, letterSpacing: "-1.4px", margin: "0 0 14px", lineHeight: 1.05 }}>
+              {BRANCHES.length} clear paths.
+            </h2>
+            <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7 }}>
+              Bucketed into {BRANCHES.length} domains with deep insights on placements, salaries, AI outlook and more — so nothing slips through the cracks.
+            </p>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+            style={{ borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.2)", boxShadow: "0 22px 48px -24px rgba(255, 105, 61,.3)" }}>
+            <img src="/images/branch_explorer_ai.png" alt="Branch Explorer" style={{ width: "100%", display: "block" }} />
+          </motion.div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>

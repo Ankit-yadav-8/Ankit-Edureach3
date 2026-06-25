@@ -164,22 +164,29 @@ export default function SmartToolsHub() {
       onMouseLeave={() => { paused.current = false; }}
     >
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        {/* ── Header ── */}
-        <motion.div
-          className="title-bar"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="eyebrow" style={{ background: "rgba(255, 105, 61,.1)", border: "1px solid rgba(255, 105, 61,.25)", color: "#FF693D" }}>
-            <Sparkles size={12} style={{ marginRight: 5, verticalAlign: "-2px" }} /> Smart Tools
-          </span>
-          <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#1a1a2e", letterSpacing: "-1.5px" }}>
-            Everything you need, <span style={{ background: "linear-gradient(90deg,#FF693D,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>in one toolkit</span>
-          </h2>
-          <p className="section-sub" style={{ color: "#4b5563" }}>From rank prediction to personalised college lists — pick a set and dive in.</p>
-        </motion.div>
+        {/* ── Header with Image Grid ── */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 60, alignItems: "center", marginBottom: 40 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            style={{ textAlign: "left" }}
+          >
+            <span className="eyebrow" style={{ display: "inline-flex", background: "rgba(255, 105, 61,.1)", border: "1px solid rgba(255, 105, 61,.25)", color: "#FF693D", marginBottom: 16 }}>
+              <Sparkles size={12} style={{ marginRight: 5, verticalAlign: "-2px" }} /> Smart Tools
+            </span>
+            <h2 className="section-title" style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#1a1a2e", letterSpacing: "-1.5px", textAlign: "left", margin: "0 0 16px" }}>
+              Everything you need, <span style={{ background: "linear-gradient(90deg,#FF693D,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>in one toolkit</span>
+            </h2>
+            <p className="section-sub" style={{ color: "#4b5563", textAlign: "left", margin: 0, maxWidth: "100%" }}>From rank prediction to personalised college lists — pick a set and dive in.</p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+            style={{ borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.2)", boxShadow: "0 22px 48px -24px rgba(255, 105, 61,.3)" }}>
+            <img src="/images/smart_tools_ai.png" alt="Smart Tools" style={{ width: "100%", display: "block" }} />
+          </motion.div>
+        </div>
 
         {/* ── Named group buttons (timeline strategy) ── */}
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 34 }}>

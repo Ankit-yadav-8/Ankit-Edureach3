@@ -14,8 +14,8 @@ import Seo from "../components/Seo.jsx";
 
 const ACCENT = "#FF693D";        // brand orange
 const GOLD = "#FF693D";          // highlight gold
-const INK = "#fafafa";           // light text for dark mode
-const MUTE = "#a1a1aa";          // soft grey for dark mode
+const INK = "#0f172a";           // dark text for light mode
+const MUTE = "#475569";          // soft grey for light mode
 const WA_NUMBER = "917877596464";
 
 /* string → icon, so per-page metrics can live in the data file */
@@ -114,39 +114,7 @@ function SeatsBar({ compact }) {
   );
 }
 
-/* ════════════════════════════════════════════════
-   TOP ENROL BAR — quick enrol at the top of the page
-════════════════════════════════════════════════ */
-function EnrolTopBar({ cfg, scrollToEnrol }) {
-  const { open: openEnrol } = useEnrol();
-  const primary = cfg.tracks[0];
-  const meta = MENTOR_PLANS[primary.plan];
-  return (
-    <div style={{ background: "rgba(25, 25, 30, 0.95)", borderBottom: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(12px)", position: "relative", overflow: "hidden", zIndex: 50 }}>
-      <div className="container" style={{ position: "relative", zIndex: 1, padding: "16px 0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-            {meta.drops.slice(0, -1).map((d) => (
-              <span key={d} style={{ fontSize: 15, color: "rgba(255,255,255,.45)", textDecoration: "line-through", textDecorationColor: "#ef4444", fontWeight: 700 }}>₹{d}</span>
-            ))}
-            <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: 26, color: "#fff" }}>₹{meta.amount}</span>
-          </div>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 800, color: "#fbbf24", background: "rgba(245,166,35,.14)", border: "1px solid rgba(245,166,35,.4)", padding: "5px 12px", borderRadius: 50 }}>
-            <Flame size={13} /> Only {SEATS_LEFT}/{SEATS_LIMIT} seats left
-          </span>
-        </div>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button onClick={() => openEnrol(primary.plan)} style={{ ...ctaSolid, padding: "11px 22px", fontSize: 14 }}>
-            Enrol Now — ₹{meta.amount} <ArrowRight size={16} />
-          </button>
-          <button onClick={scrollToEnrol} style={{ background: "rgba(255,255,255,.1)", color: "#fff", border: "1px solid rgba(255,255,255,.22)", borderRadius: 12, padding: "11px 18px", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
-            View plans
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+
 
 /* ════════════════════════════════════════════════
    FLOATING ENROL CARD — dynamic, follows the user through every
@@ -222,14 +190,14 @@ function Hero({ cfg, scrollToEnrol }) {
   return (
     <section style={{
       position: "relative", overflow: "hidden",
-      background: "#0a0a0a",
+      background: "#ffffff",
       paddingTop: 140, paddingBottom: 80,
     }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 60, alignItems: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 60, alignItems: "center", maxWidth: 840, margin: "0 auto" }}>
           
-          {/* Left: Text & CTA */}
-          <div style={{ textAlign: "left" }}>
+          {/* Centered Text & CTA */}
+          <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
               style={{ fontSize: 13, fontWeight: 800, letterSpacing: "3px", textTransform: "uppercase", marginBottom: 16 }}>
               <Accent>{cfg.tagline}</Accent>
@@ -265,7 +233,7 @@ function Hero({ cfg, scrollToEnrol }) {
 
             <motion.div
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}
-              style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 36 }}>
+              style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", marginBottom: 36 }}>
               <button onClick={scrollToEnrol} style={ctaSolid}>JOIN NOW <ArrowRight size={18} /></button>
               <a href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! I want to know more about the " + cfg.eyebrow)}`}
                 target="_blank" rel="noreferrer" style={ctaGhost}>
@@ -277,9 +245,9 @@ function Hero({ cfg, scrollToEnrol }) {
             {cfg.stats && (
               <motion.div
                 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }}
-                style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+                style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
                 {cfg.stats.map((s) => (
-                  <div key={s.lbl} style={{ flex: 1, minWidth: 120, background: "rgba(25, 25, 30, 0.6)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 14, padding: "14px 12px", backdropFilter: "blur(12px)", boxShadow: "0 8px 24px rgba(0,0,0,0.4)" }}>
+                  <div key={s.lbl} style={{ flex: 1, minWidth: 120, background: "#ffffff", border: "1px solid rgba(0, 0, 0, 0.08)", borderRadius: 14, padding: "14px 12px", boxShadow: "0 4px 14px rgba(0,0,0,0.04)" }}>
                     <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK }}>{s.val}</div>
                     <div style={{ fontSize: 11.5, color: MUTE, marginTop: 3 }}>{s.lbl}</div>
                   </div>
@@ -287,19 +255,6 @@ function Hero({ cfg, scrollToEnrol }) {
               </motion.div>
             )}
           </div>
-
-          {/* Right: Image */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.42 }}
-            style={{
-              position: "relative",
-              borderRadius: 24,
-              border: "1px solid rgba(255, 105, 61,.2)",
-              boxShadow: "0 30px 70px -30px rgba(255, 105, 61,.3)",
-              overflow: "hidden"
-            }}>
-            <img src={cfg.heroImage || "/images/hero_mentorship.png"} alt="Mentorship Dashboard" style={{ width: "100%", display: "block" }} />
-          </motion.div>
         </div>
       </div>
     </section>
@@ -311,7 +266,7 @@ function Hero({ cfg, scrollToEnrol }) {
 ════════════════════════════════════════════════ */
 function ForYou({ cfg }) {
   return (
-    <Section style={{ background: "#0a0a0a" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="Sound familiar?">This Plan Is <Accent>For You</Accent> If…</SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16, maxWidth: 940, margin: "0 auto" }}>
         {cfg.forYou.map((t, i) => (
@@ -333,7 +288,7 @@ function ForYou({ cfg }) {
 function WhyFoundation({ cfg }) {
   if (!cfg.whyFoundation) return null;
   return (
-    <Section style={{ background: "#0a0a0a" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="Why it matters">Why <Accent>Foundation</Accent> Matters</SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18 }}>
         {cfg.whyFoundation.map((t, i) => (
@@ -352,62 +307,59 @@ function WhyFoundation({ cfg }) {
 /* ════════════════════════════════════════════════
    HOW WE GUIDE
 ════════════════════════════════════════════════ */
-const GUIDE_ICONS = [Flame, Users, Target, Trophy, Rocket, Star];
+const GUIDE_ICONS = [Rocket, Users, Target, Trophy, Flame, Star];
 function HowWeGuide({ cfg }) {
-  // Merge the 6 steps into 3 comprehensive vertical steps
-  const mergedSteps = [
-    {
-      title: "1. Micro-Targets & Accountability",
-      desc: "Daily bite-sized targets pushed directly on WhatsApp so you always know the exact next step. Gamified streaks, ranks, and rewards keep you completely consistent even on your lowest days.",
-      Icon: Rocket,
-      color: "#FF693D"
-    },
-    {
-      title: "2. Personal Mentor & Backlog Clearing",
-      desc: "You're assigned a dedicated IITian or Doctor mentor who knows your name, your backlog, and your goal. We run structured catch-up sprints to clear months of pending chapters without burning you out.",
-      Icon: Users,
-      color: "#8b5cf6"
-    },
-    {
-      title: "3. Test Analysis & Exam Strategy",
-      desc: "Every single test is dissected — silly mistakes, weak chapters, and time management — into a one-page actionable plan. As the exam nears, we shift to aggressive mock tests and rank-push revision loops.",
-      Icon: Target,
-      color: "#0ea5a4"
-    }
-  ];
-
   return (
-    <Section style={{ background: "#0a0a0a" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="The system" sub="A 1-on-1 mentorship engine built to fix the exact reasons most aspirants fail.">
         How We <Accent>Guide</Accent> You
       </SectionTitle>
       
-      {/* 3-card vertical animated strip layout */}
+      {/* 6-card vertical alternating strip layout */}
       <div style={{ display: "flex", flexDirection: "column", gap: 32, maxWidth: 840, margin: "0 auto", position: "relative" }}>
         
         {/* The glowing vertical timeline line */}
-        <div style={{ position: "absolute", left: 32, top: 20, bottom: 20, width: 2, background: "linear-gradient(180deg, rgba(255, 105, 61, 0) 0%, rgba(255, 105, 61, 0.4) 15%, rgba(139, 92, 246, 0.4) 50%, rgba(14, 165, 164, 0.4) 85%, rgba(14, 165, 164, 0) 100%)", zIndex: 0 }} />
+        <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", top: 20, bottom: 20, width: 2, background: "linear-gradient(180deg, rgba(255, 105, 61, 0) 0%, rgba(255, 105, 61, 0.4) 15%, rgba(139, 92, 246, 0.4) 50%, rgba(14, 165, 164, 0.4) 85%, rgba(14, 165, 164, 0) 100%)", zIndex: 0 }} className="desktop-timeline" />
+        <style>{`
+          @media (max-width: 768px) {
+            .desktop-timeline { left: 32px !important; transform: none !important; }
+            .timeline-card { width: 100% !important; margin-left: 0 !important; align-self: flex-start !important; }
+            .timeline-dot { left: -42px !important; right: auto !important; }
+          }
+        `}</style>
 
-        {mergedSteps.map((g, i) => {
-          const Icon = g.Icon;
-          const c = g.color;
+        {cfg.howWeGuide.map((g, i) => {
+          const Icon = GUIDE_ICONS[i % GUIDE_ICONS.length];
+          const isEven = i % 2 === 0;
+          const c = isEven ? "#FF693D" : "#8b5cf6";
+          
           return (
-            <Reveal key={g.title} delay={i * 0.15}>
-              <motion.div whileHover={{ x: 8 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                style={{ 
-                  ...card, 
-                  flexDirection: "row", alignItems: "center", gap: 24, 
-                  position: "relative", zIndex: 1, padding: "28px 32px",
-                  borderLeft: `4px solid ${c}`
+            <Reveal key={g.title} delay={i * 0.1}>
+              <div className="timeline-card" style={{ 
+                  display: "flex", width: "45%", alignSelf: isEven ? "flex-end" : "flex-start",
+                  position: "relative"
                 }}>
-                <div style={{ width: 64, height: 64, borderRadius: 16, background: `${c}16`, border: `1px solid ${c}33`, display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0, boxShadow: `0 0 20px ${c}22` }}>
-                  <Icon size={28} color={c} />
-                </div>
-                <div>
-                  <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.3rem", color: INK, margin: "0 0 8px" }}>{g.title}</h3>
-                  <p style={{ color: MUTE, fontSize: 15, lineHeight: 1.65, margin: 0 }}>{g.desc}</p>
-                </div>
-              </motion.div>
+                
+                {/* Center dot for desktop */}
+                <div className="timeline-dot" style={{ position: "absolute", [isEven ? "left" : "right"]: -54, top: "50%", transform: "translateY(-50%)", width: 16, height: 16, borderRadius: "50%", background: "#fff", border: `3px solid ${c}`, zIndex: 2 }} />
+
+                <motion.div whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                  style={{ 
+                    ...card, 
+                    flexDirection: "column", alignItems: "flex-start", gap: 16, 
+                    position: "relative", zIndex: 1, padding: "28px 32px",
+                    borderTop: `4px solid ${c}`, width: "100%",
+                    background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 4px 20px rgba(0,0,0,0.04)"
+                  }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 12, background: `${c}16`, border: `1px solid ${c}33`, display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0 }}>
+                    <Icon size={24} color={c} />
+                  </div>
+                  <div>
+                    <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK, margin: "0 0 8px" }}>{g.title}</h3>
+                    <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.6, margin: 0 }}>{g.desc}</p>
+                  </div>
+                </motion.div>
+              </div>
             </Reveal>
           );
         })}
@@ -423,7 +375,7 @@ function TestAnalysis({ cfg }) {
   const m = cfg.metrics;
   const trend = m.test.trend.map((v, i) => ({ t: `T${i + 1}`, v }));
   return (
-    <Section style={{ background: "#0a0a0a" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="Every test counts" sub="No test is just a score. Every week your mentor turns it into a one-page action plan.">
         Weekly <Accent>Test Analysis</Accent>
       </SectionTitle>
@@ -464,7 +416,7 @@ function TestAnalysis({ cfg }) {
         <Reveal delay={0.08}>
           <div style={{ display: "flex", flexDirection: "column", gap: 20, height: "100%" }}>
             <div style={{ borderRadius: 18, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.16)", boxShadow: "0 18px 44px -24px rgba(0,0,0,.6)" }}>
-              <img src={cfg.analyticsImage || "/images/analytics_mentorship.png"} alt="Analytics Dashboard" style={{ width: "100%", display: "block" }} />
+              <img src={cfg.analyticsImage || "/images/analytics_mentorship.png"} alt="Analytics Dashboard" style={{ width: "100%", maxHeight: 380, objectFit: "contain", display: "block" }} />
             </div>
             
             <div style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 18, padding: "28px 24px", flex: 1, boxShadow: "0 18px 44px -24px rgba(0,0,0,.6)", position: "relative", overflow: "hidden" }}>
@@ -526,7 +478,7 @@ function TestAnalysis({ cfg }) {
 ════════════════════════════════════════════════ */
 function ChartCard({ title, hint, children }) {
   return (
-    <div style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 18, padding: "22px 22px 18px", height: "100%", boxShadow: "0 16px 40px -24px rgba(0,0,0,.6)", position: "relative", overflow: "hidden" }}>
+    <div style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 18, padding: "22px 22px 18px", height: "100%", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#FF693D)" }} />
       <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: "1.05rem", color: INK, margin: "0 0 4px" }}>{title}</h3>
       {hint && <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 14px" }}>{hint}</p>}
@@ -537,7 +489,7 @@ function ChartCard({ title, hint, children }) {
 function ImprovementCharts({ m }) {
   const growth = m.growth.you.map((you, i) => ({ year: `Wk ${i + 1}`, you, batch: m.growth.batch[i] }));
   return (
-    <Section style={{ background: "#0a0a0a" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="Proof, not promises" sub="Real, visible improvement — tracked every week and shared with you and your parents.">
         Improvement <Accent>Charts</Accent>
       </SectionTitle>
@@ -579,14 +531,14 @@ function LiveTracking({ m }) {
   const maxH = Math.max(...m.weekHours);
   const maxIdx = m.weekHours.indexOf(maxH);
   return (
-    <Section style={{ background: "#0a0a0a" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="Always on" sub="Your mentor sees your effort live — so nothing ever slips through the cracks.">
         Live Student <Accent>Tracking</Accent>
       </SectionTitle>
 
       <div style={{ maxWidth: 1040, margin: "0 auto" }}>
         <Reveal>
-          <div style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 20, padding: "24px 26px", boxShadow: "0 20px 46px -24px rgba(0,0,0,.6)", position: "relative", overflow: "hidden" }}>
+          <div style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 20, padding: "24px 26px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#22c55e,#FF693D)" }} />
 
             {/* header */}
@@ -649,7 +601,7 @@ function LiveTracking({ m }) {
 ════════════════════════════════════════════════ */
 function ParentBooklet({ m }) {
   return (
-    <Section style={{ background: "#0a0a0a" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="Parents stay in the loop" sub="Every Sunday, parents get a simple weekly booklet — exactly what their child did and how they're improving.">
         Parent <Accent>Weekly Booklet</Accent>
       </SectionTitle>
@@ -791,7 +743,7 @@ function Enrol({ cfg }) {
               <Reveal key={tr.plan} delay={i * 0.08}>
                 <motion.div whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
-                    background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", borderRadius: 20, border: `1px solid ${tr.accent}33`, padding: "30px 26px",
+                    background: "#ffffff", borderRadius: 20, border: `1px solid ${tr.accent}33`, padding: "30px 26px",
                     height: "100%", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden",
                     boxShadow: `0 24px 50px -26px ${tr.accent}66`,
                   }}>
@@ -883,7 +835,7 @@ function Faqs({ cfg }) {
         {cfg.faqs.map((q, i) => {
           const isOpen = open === i;
           return (
-            <div key={q.q} style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: `1px solid ${isOpen ? "rgba(255, 105, 61,.45)" : "rgba(255,255,255,.08)"}`, borderRadius: 14, marginBottom: 12, overflow: "hidden", boxShadow: isOpen ? "0 6px 20px rgba(255, 105, 61,.12)" : "0 1px 6px rgba(0,0,0,.04)" }}>
+            <div key={q.q} style={{ background: "#ffffff", border: `1px solid ${isOpen ? "rgba(255, 105, 61,.45)" : "rgba(0,0,0,.08)"}`, borderRadius: 14, marginBottom: 12, overflow: "hidden", boxShadow: isOpen ? "0 6px 20px rgba(255, 105, 61,.12)" : "0 1px 6px rgba(0,0,0,.04)" }}>
               <button onClick={() => setOpen(isOpen ? -1 : i)} style={{
                 width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14,
                 padding: "18px 20px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left",
@@ -914,7 +866,7 @@ function PhoneFrame({ contact, messages, accent = "#25D366" }) {
   return (
     <div style={{
       width: "100%", maxWidth: 230, margin: "0 auto", aspectRatio: "9 / 18",
-      background: "#0a0a0a", borderRadius: 28, border: "1px solid rgba(0,0,0,.2)",
+      background: "#ffffff", borderRadius: 28, border: "1px solid rgba(0,0,0,.2)",
       boxShadow: "0 18px 40px -16px rgba(0,0,0,.5), inset 0 0 0 5px #1c1c1c",
       padding: 6, position: "relative", overflow: "hidden",
     }}>
@@ -992,7 +944,7 @@ const PROOF_CARDS = [
 
 function WhatsAppProof() {
   return (
-    <Section style={{ background: "#0a0a0a" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="From the inside" sub="This is what mentorship looks like from the inside.">
         Real Mentorship. <Accent>Real Results.</Accent>
       </SectionTitle>
@@ -1000,7 +952,7 @@ function WhatsAppProof() {
         {PROOF_CARDS.map((c, i) => (
           <Reveal key={i} delay={(i % 3) * 0.06}>
             <motion.div whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 12, padding: "24px 22px", boxShadow: "0 14px 34px -18px rgba(0,0,0,.6)", height: "100%", display: "flex", flexDirection: "column", gap: 18 }}>
+              style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,.08)", borderRadius: 12, padding: "24px 22px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", height: "100%", display: "flex", flexDirection: "column", gap: 18 }}>
               <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.12rem", lineHeight: 1.3, color: INK, margin: 0 }}>
                 {c.head[0]}<span style={{ color: ACCENT }}>{c.head[1]}</span>{c.head[2] || ""}
               </h3>
@@ -1035,7 +987,7 @@ function JourneyBrand({ cfg }) {
 
         <Reveal delay={0.1}>
           <div style={{ maxWidth: 860, margin: "0 auto 40px", borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.2)", boxShadow: "0 22px 48px -24px rgba(26,26,46,.4)" }}>
-            <img src={cfg.roadmapImage || "/images/roadmap_mentorship.png"} alt="Mentorship Roadmap" style={{ width: "100%", display: "block" }} />
+            <img src={cfg.roadmapImage || "/images/roadmap_mentorship.png"} alt="Mentorship Roadmap" style={{ width: "100%", maxHeight: 420, objectFit: "contain", display: "block" }} />
           </div>
         </Reveal>
 
@@ -1046,7 +998,7 @@ function JourneyBrand({ cfg }) {
               <Reveal key={s.title} delay={(i % 3) * 0.07}>
                 <motion.div whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
-                    background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", borderRadius: 18, padding: "34px 28px", height: "100%",
+                    background: "#ffffff", borderRadius: 18, padding: "34px 28px", height: "100%",
                     boxShadow: "0 22px 48px -24px rgba(26,26,46,.42), 0 2px 10px rgba(0,0,0,.05)",
                     border: "1px solid rgba(255, 105, 61,.12)", textAlign: "center",
                     display: "flex", flexDirection: "column", alignItems: "center", gap: 12, position: "relative", overflow: "hidden",
@@ -1086,7 +1038,7 @@ function JourneyBrand({ cfg }) {
 function MentorTabs({ variant }) {
   const label = (slug) => slug === "neet" ? "NEET" : slug === "jee-2027" ? "JEE 2027" : "JEE 2028";
   return (
-    <div style={{ position: "relative", zIndex: 2, background: "#0a0a0a", borderBottom: "1px solid rgba(255, 105, 61,.14)", paddingTop: 114 }}>
+    <div style={{ position: "relative", zIndex: 2, background: "#ffffff", borderBottom: "1px solid rgba(255, 105, 61,.14)", paddingTop: 114 }}>
       <div className="container" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", padding: "12px 0" }}>
         {Object.values(MENTORSHIP).map((m) => {
           const active = m.slug === variant;
@@ -1116,24 +1068,7 @@ export default function Mentorship() {
   const scrollToEnrol = () => document.getElementById("enrol")?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <div style={{ background: "#0a0a0a", color: INK, minHeight: "100vh", position: "relative" }}>
-      <style>{`
-        .campusloom-bg {
-          position: fixed; inset: 0; zIndex: 0; pointerEvents: none;
-          background-image: 
-            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-          background-size: 40px 40px;
-          mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
-          -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
-          animation: panBackground 40s linear infinite;
-        }
-        @keyframes panBackground {
-          0% { transform: translateY(0); }
-          100% { transform: translateY(-40px); }
-        }
-      `}</style>
-      <div className="campusloom-bg" />
+    <div style={{ background: "#ffffff", color: INK, minHeight: "100vh", position: "relative" }}>
       <div style={{ position: "relative", zIndex: 1 }}>
         <Seo
         title={`${(variant || "jee-2027").replace(/-/g, " ").toUpperCase()} Mentorship by IITians — 1-on-1 Guidance`}
@@ -1141,7 +1076,6 @@ export default function Mentorship() {
         path={`/mentorship/${variant}`}
       />
       <MentorTabs variant={variant} />
-      <EnrolTopBar cfg={cfg} scrollToEnrol={scrollToEnrol} />
       <FloatingEnrol cfg={cfg} scrollToEnrol={scrollToEnrol} />
       <Hero cfg={cfg} scrollToEnrol={scrollToEnrol} />
       <ForYou cfg={cfg} />
@@ -1174,17 +1108,16 @@ const ctaSolid = {
 };
 const ctaGhost = {
   display: "inline-flex", alignItems: "center", gap: 9, padding: "14px 26px", borderRadius: 12,
-  background: "rgba(255,255,255,0.05)", color: "#fff", fontFamily: "'Space Grotesk',sans-serif",
-  fontWeight: 700, fontSize: 15, border: "1.5px solid rgba(255, 105, 61,.35)", cursor: "pointer", textDecoration: "none",
+  background: "#fff", color: ACCENT, fontFamily: "'Space Grotesk',sans-serif",
+  fontWeight: 700, fontSize: 15, border: `1.5px solid ${ACCENT}`, cursor: "pointer", textDecoration: "none",
 };
 const card = {
-  display: "flex", alignItems: "center", gap: 14, background: "rgba(25, 25, 30, 0.6)",
-  border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 16, padding: "20px 22px",
-  boxShadow: "0 8px 32px 0 rgba(0,0,0,0.37)",
-  backdropFilter: "blur(12px)",
+  display: "flex", alignItems: "center", gap: 14, background: "#fff",
+  border: "1px solid rgba(0,0,0,0.08)", borderRadius: 16, padding: "20px 22px",
+  boxShadow: "0 4px 20px 0 rgba(0,0,0,0.04)",
 };
 const input = {
   width: "100%", padding: "14px 16px", fontSize: 15, borderRadius: 12,
-  background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255, 255, 255, 0.1)", color: INK, outline: "none",
+  background: "#f8fafc", border: "1.5px solid rgba(0,0,0,0.06)", color: INK, outline: "none",
   fontFamily: "'DM Sans',sans-serif", boxSizing: "border-box",
 };
