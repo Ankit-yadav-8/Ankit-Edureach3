@@ -1268,14 +1268,25 @@ function DashboardBody({ urlPlan = "" }) {
                     {last7.map((e, i) => {
                       const h = Number(e.hours) || 0;
                       const isToday = i === last7.length - 1;
-                      const barPx = Math.max(5, Math.round((h / maxH) * 132)); // up to 132px tall
+                      const isMissing = h === 0 && !isToday;
+                      const nonZeroDays = last7.filter(d => Number(d.hours) > 0);
+                      const avgH = Math.round(nonZeroDays.reduce((sum, d) => sum + Number(d.hours), 0) / (nonZeroDays.length || 1));
+                      const displayH = isMissing ? (avgH || 5) : h;
+                      const barPx = Math.max(5, Math.round((displayH / maxH) * 132)); // up to 132px tall
+                      
                       return (
-                        <div key={e.date} title={`${h}h on ${DOW[new Date(e.date).getDay()]}`}
+                        <div key={e.date} title={isMissing ? `AI Predicted: ${displayH}h (Forgot to log)` : `${h}h on ${DOW[new Date(e.date).getDay()]}`}
                           style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
-                          <span style={{ fontSize: 11, fontWeight: 800, color: isToday ? ORANGE : INK }}>{h}h</span>
+                          
+                          <span style={{ fontSize: 11, fontWeight: 800, color: isMissing ? "#8b5cf6" : (isToday ? ORANGE : INK), display: "flex", alignItems: "center", gap: 2 }}>
+                            {isMissing && <Sparkles size={10} color="#8b5cf6" />}
+                            {displayH}h
+                          </span>
+                          
                           <motion.div initial={{ height: 0 }} animate={{ height: barPx }} transition={{ type: "spring", stiffness: 120, damping: 18, delay: i * 0.06 }}
                             style={{ width: "100%", maxWidth: 30, borderRadius: "8px 8px 2px 2px",
-                              background: isToday ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "linear-gradient(180deg,rgba(255, 105, 61,.6),rgba(255, 105, 61,.26))",
+                              background: isMissing ? "repeating-linear-gradient(45deg, rgba(139,92,246,0.08), rgba(139,92,246,0.08) 4px, rgba(139,92,246,0.18) 4px, rgba(139,92,246,0.18) 8px)" : (isToday ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "linear-gradient(180deg,rgba(255, 105, 61,.6),rgba(255, 105, 61,.26))"),
+                              border: isMissing ? "1px dashed rgba(139,92,246,0.6)" : "none",
                               boxShadow: isToday ? `0 8px 18px -8px ${ORANGE}` : "none" }} />
                         </div>
                       );
