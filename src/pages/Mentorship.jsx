@@ -449,10 +449,12 @@ function TestAnalysis({ cfg }) {
             {/* score trend bars */}
             <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130, padding: "0 4px 8px", borderBottom: "1px solid rgba(0,0,0,.08)", marginBottom: 18 }}>
               {trend.map((d, i) => (
-                <div key={d.t} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                  <motion.div
-                    initial={{ height: 0 }} whileInView={{ height: `${d.v}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.07 }}
-                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#FF693D,#FF693D)" : "rgba(255, 105, 61,.4)" }} />
+                <div key={d.t} style={{ flex: 1, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center", gap: 6 }}>
+                  <div style={{ flex: 1, width: "100%", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
+                    <motion.div
+                      initial={{ height: 0 }} whileInView={{ height: `${d.v}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.07 }}
+                      style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#FF693D,#FF693D)" : "rgba(255, 105, 61,.4)" }} />
+                  </div>
                   <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 700 }}>{d.t}</span>
                 </div>
               ))}
@@ -589,11 +591,13 @@ function LiveTracking({ m }) {
                 <div style={{ fontSize: 12.5, fontWeight: 700, color: MUTE, marginBottom: 10 }}>Study hours · this week</div>
                 <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130 }}>
                   {week.map((x, i) => (
-                    <div key={x.d} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                    <div key={x.d} style={{ flex: 1, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center", gap: 6 }}>
                       <span style={{ fontSize: 10.5, fontWeight: 700, color: INK }}>{x.h}h</span>
-                      <motion.div
-                        initial={{ height: 0 }} whileInView={{ height: `${(x.h / maxH) * 100}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }}
-                        style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === maxIdx ? "linear-gradient(180deg,#FF693D,#FF693D)" : "rgba(255, 105, 61,.4)" }} />
+                      <div style={{ flex: 1, width: "100%", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
+                        <motion.div
+                          initial={{ height: 0 }} whileInView={{ height: `${(x.h / maxH) * 100}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }}
+                          style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === maxIdx ? "linear-gradient(180deg,#FF693D,#FF693D)" : "rgba(255, 105, 61,.4)" }} />
+                      </div>
                       <span style={{ fontSize: 10.5, color: MUTE }}>{x.d}</span>
                     </div>
                   ))}
