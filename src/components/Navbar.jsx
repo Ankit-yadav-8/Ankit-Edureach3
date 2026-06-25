@@ -5,7 +5,7 @@ import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut, Sparkles,
-  HelpCircle, Newspaper, Flame, Medal, Megaphone, Globe2,
+  HelpCircle, Newspaper, Flame, Medal, Megaphone, Globe2, Edit3, Activity, Clock, ClipboardCheck
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -20,12 +20,10 @@ const JEE_MEGA = [
   {
     title: "JEE Prep Resources", to: "/jee-resources", color: "#6366f1", icon: BookOpen,
     items: [
-      { label: "Mathematics (19 chapters)", to: "/jee-resources?subject=math",      icon: Sigma },
-      { label: "Physics (25 chapters)",     to: "/jee-resources?subject=physics",   icon: Zap },
-      { label: "Chemistry (29 chapters)",   to: "/jee-resources?subject=chemistry", icon: FlaskConical },
-      { label: "JEE Advanced Analysis",     to: "/jee-analysis?exam=advanced",      icon: BarChart3 },
-      { label: "JEE Mains Analysis",        to: "/jee-analysis?exam=main",          icon: BarChart3 },
-      { label: "Exam Cycle 2025–26",        to: "/exam-buzz",                       icon: CalendarClock },
+      { label: "Study Resources", to: "/jee-resources", icon: Edit3, desc: "Handwritten notes for Physics, Chemistry, Maths", iconBg: "#FFF3E0", iconColor: "#8B5E34" },
+      { label: "JEE Advanced Analysis", to: "/jee-analysis?exam=advanced", icon: Activity, desc: "Chapter weightage, trends, difficulty patterns", iconBg: "#E0F2F1", iconColor: "#00695C" },
+      { label: "JEE Mains Analysis", to: "/jee-analysis?exam=main", icon: Clock, desc: "Year-on-year breakdowns and heatmaps", badge: "SOON", iconBg: "#F3F0F5", iconColor: "#7E57C2" },
+      { label: "Other Entrance Exams", to: "/exams", icon: ClipboardCheck, desc: "BITSAT, VITEEE, MET and more", iconBg: "#FCE4EC", iconColor: "#AD1457" },
     ],
   },
   {
@@ -199,13 +197,11 @@ export default function Navbar({ onSearch }) {
   // state — gives every one of the six parts a consistent highlight so users
   // always know where they are.
   const navItems = [
-    { label: "Home", to: "/", match: (p) => p === "/" },
-    { label: "JEE", mega: JEE_MEGA, base: "/jee-resources", match: (p) => p.startsWith("/jee") },
-    { label: "NEET", mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
-    { label: "Mentorship", drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
-    { label: "Colleges", drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
-    { label: "Exam Buzz", mega: EXAM_NEWS_MEGA, base: "/exams", match: (p) => p.startsWith("/exam") || p.startsWith("/compare-exams") || p.startsWith("/news") || p.startsWith("/josaa-round-1") },
-    { label: "Tools", mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa"].some((x) => p.startsWith(x)) },
+    { label: "JEE", icon: BookOpen, mega: JEE_MEGA, base: "/jee-resources", match: (p) => p.startsWith("/jee") },
+    { label: "NEET", icon: FlaskConical, mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
+    { label: "Colleges", icon: Landmark, drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
+    { label: "Connect", icon: Heart, drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
+    { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa"].some((x) => p.startsWith(x)) },
   ];
 
   const isActive = (item) => (item.match ? item.match(location.pathname) : false);
@@ -214,13 +210,15 @@ export default function Navbar({ onSearch }) {
     <>
       <nav
         style={{
-          position: "fixed", top: 34, left: 0, right: 0, zIndex: 1000,
-          height: 68, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
-          padding: "0 clamp(1.2rem, 4.5vw, 3.4rem)",
-          background: scrolled ? "rgba(250,249,247,0.96)" : "rgba(250,249,247,0.82)",
-          backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
-          borderBottom: "1px solid rgba(214,224,245,0.5)",
-          boxShadow: scrolled ? "var(--shadow-sm)" : "none",
+          position: "fixed", top: 20, left: "50%", transform: "translateX(-50%)", zIndex: 1000,
+          height: 64, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
+          padding: "0 10px 0 24px",
+          width: "95%", maxWidth: 1100,
+          background: scrolled ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.9)",
+          borderRadius: 999,
+          backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+          border: "1px solid rgba(0,0,0,0.06)",
+          boxShadow: scrolled ? "0 10px 40px -10px rgba(0,0,0,0.08)" : "0 4px 20px -8px rgba(0,0,0,0.06)",
           transition: "all .3s ease",
         }}
       >
@@ -326,8 +324,17 @@ export default function Navbar({ onSearch }) {
                                 </span>
                                 <span style={{ fontWeight: 800, fontSize: "0.82rem", color: col.color, letterSpacing: "-0.01em" }}>{col.title}</span>
                               </button>
-                              {col.items.map((d) => {
+                              {col.items.map((d, i) => {
                                 const Ic = d.icon;
+                                const defaultColors = [
+                                  { bg: "#FFF4E5", color: "#8B5E34" },
+                                  { bg: "#E0F2F1", color: "#00695C" },
+                                  { bg: "#F3F0F5", color: "#7E57C2" },
+                                  { bg: "#FCE4EC", color: "#AD1457" },
+                                  { bg: "#E3F2FD", color: "#1565C0" },
+                                  { bg: "#E8F5E9", color: "#2E7D32" }
+                                ];
+                                const theme = defaultColors[i % defaultColors.length];
                                 return (
                                   <button
                                     key={d.label}
@@ -335,12 +342,15 @@ export default function Navbar({ onSearch }) {
                                     className="mega-item"
                                     style={{ ...megaItemStyle, alignItems: d.desc ? "flex-start" : "center", "--mega-accent": col.color }}
                                   >
-                                    <span style={{ width: 26, height: 26, borderRadius: 8, background: `${col.color}16`, display: "grid", placeItems: "center", flexShrink: 0, marginTop: d.desc ? 1 : 0 }}>
-                                      <Ic size={15} color={col.color} />
+                                    <span style={{ width: 40, height: 40, borderRadius: 12, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: d.desc ? 2 : 0 }}>
+                                      <Ic size={18} color={d.iconColor || theme.color} style={{ strokeWidth: 1.8 }} />
                                     </span>
-                                    <span style={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                                      <span style={{ fontWeight: 700, fontSize: "0.83rem", color: "var(--navy)" }}>{d.label}</span>
-                                      {d.desc && <span style={{ fontSize: "0.72rem", color: "#9ca3af", lineHeight: 1.35 }}>{d.desc}</span>}
+                                    <span style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+                                      <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                        <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--navy)" }}>{d.label}</span>
+                                        {d.badge && <span style={{ background: "#FFF0F0", color: "#FF8A8A", fontSize: "0.6rem", fontWeight: 800, padding: "2px 6px", borderRadius: 4, letterSpacing: "0.05em" }}>{d.badge}</span>}
+                                      </span>
+                                      {d.desc && <span style={{ fontSize: "0.78rem", color: "#888", lineHeight: 1.3 }}>{d.desc}</span>}
                                     </span>
                                   </button>
                                 );
@@ -359,7 +369,7 @@ export default function Navbar({ onSearch }) {
                     className={item.highlight ? "nav-highlight-btn" : "nav-link-btn"}
                     style={item.highlight ? navHighlightStyle(open === item.label || isActive(item)) : navLinkStyle(open === item.label || isActive(item))}
                   >
-                    {item.highlight && <BookOpen size={13} />}
+                    {item.icon && <item.icon size={15} style={{ color: "rgba(0,0,0,0.35)", marginRight: 2 }} />}
                     {item.label}
                   </button>
                   <AnimatePresence>
@@ -375,16 +385,28 @@ export default function Navbar({ onSearch }) {
                           minWidth: 252, padding: 8, border: "1px solid var(--border)",
                         }}
                       >
-                        {item.drop.map((d) => {
+                        {item.drop.map((d, i) => {
                           const Ic = d.icon;
+                          const defaultColors = [
+                            { bg: "#FFF4E5", color: "#8B5E34" },
+                            { bg: "#E0F2F1", color: "#00695C" },
+                            { bg: "#F3F0F5", color: "#7E57C2" },
+                            { bg: "#FCE4EC", color: "#AD1457" },
+                            { bg: "#E3F2FD", color: "#1565C0" },
+                            { bg: "#E8F5E9", color: "#2E7D32" }
+                          ];
+                          const theme = defaultColors[i % defaultColors.length];
                           return (
                             <button key={d.label} onClick={() => goHash(d.to)} className="mega-item" style={{ ...megaItemStyle, alignItems: "flex-start", "--mega-accent": "#FF693D" }}>
-                              <span style={{ width: 30, height: 30, borderRadius: 9, background: "rgba(255, 105, 61,.1)", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
-                                <Ic size={15} color="var(--coral)" />
+                              <span style={{ width: 40, height: 40, borderRadius: 12, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                                <Ic size={18} color={d.iconColor || theme.color} style={{ strokeWidth: 1.8 }} />
                               </span>
-                              <span style={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                                <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--navy)" }}>{d.label}</span>
-                                {d.tag && <span style={{ fontSize: "0.72rem", color: "#9ca3af", lineHeight: 1.35 }}>{d.tag}</span>}
+                              <span style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+                                <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                  <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--navy)" }}>{d.label}</span>
+                                  {d.badge && <span style={{ background: "#FFF0F0", color: "#FF8A8A", fontSize: "0.6rem", fontWeight: 800, padding: "2px 6px", borderRadius: 4, letterSpacing: "0.05em" }}>{d.badge}</span>}
+                                </span>
+                                {d.tag && <span style={{ fontSize: "0.78rem", color: "#888", lineHeight: 1.3 }}>{d.tag}</span>}
                               </span>
                             </button>
                           );
@@ -404,6 +426,7 @@ export default function Navbar({ onSearch }) {
                 </button>
               ) : (
                 <button onClick={() => goHash(item.to)} className="nav-link-btn" style={navLinkStyle(isActive(item))}>
+                  {item.icon && <item.icon size={15} style={{ color: "rgba(0,0,0,0.35)", marginRight: 2 }} />}
                   {item.label}
                 </button>
               )}
@@ -411,59 +434,43 @@ export default function Navbar({ onSearch }) {
           ))}
         </ul>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end", gridColumn: 3 }}>
-          {/* College Parichay AI — our own Claude-style assistant */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, justifySelf: "end", gridColumn: 3 }}>
           <button
-            onClick={() => navigate("/ai")}
+            onClick={() => navigate("/jee-main#college")}
             className="cta-desktop"
-            title="College Parichay AI"
-            style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 15px", borderRadius: 10, border: "1.5px solid #FF693D", background: "#FF693D", color: "#fff", fontWeight: 700, cursor: "pointer" }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 20px", borderRadius: 999, border: "none", background: "#FF693D", color: "#fff", fontWeight: 700, cursor: "pointer", fontSize: "0.95rem" }}
           >
-            <Sparkles size={15} /> Ask AI
+            Predict My College <Target size={16} />
           </button>
-          {/* Search removed from the navbar for a cleaner campusloom-style bar. */}
-          {/* Public community lives in the home hero on desktop (see Hero.jsx) and
-              in the mobile drawer on phones/tablets — so no navbar button here. */}
+          
           {isLoggedIn ? (
-            <div className="cta-desktop" style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1.5px solid var(--line)", background: "#fff", overflow: "hidden" }}>
-              {/* Chip → opens the user's personal dashboard */}
+            <div className="cta-desktop" style={{ display: "flex", alignItems: "stretch", borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)", background: "#fff", overflow: "hidden" }}>
               <button
                 onClick={() => navigate("/dashboard")}
                 title="My Dashboard"
-                style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", border: "none", background: "transparent", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
+                style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 10px", border: "none", background: "transparent", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
               >
                 <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#FF693D", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
                   {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
                 </span>
                 {user?.name?.split(" ")[0] || "Account"}
               </button>
-              {/* Logout → asks for confirmation (yes/no) */}
               <button
                 onClick={() => setConfirmLogout(true)}
                 title="Logout"
-                aria-label="Logout"
-                style={{ display: "grid", placeItems: "center", padding: "0 12px", border: "none", borderLeft: "1.5px solid var(--line)", background: "transparent", cursor: "pointer" }}
+                style={{ display: "grid", placeItems: "center", padding: "0 10px", border: "none", borderLeft: "1px solid rgba(0,0,0,0.06)", background: "transparent", cursor: "pointer" }}
               >
-                <LogOut size={15} style={{ color: "#e5484d" }} />
+                <LogOut size={14} style={{ color: "#e5484d" }} />
               </button>
             </div>
           ) : (
-            <>
-              <button
-                onClick={openLogin}
-                className="cta-desktop nav-ghost-cta"
-                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #FF693D", background: "#fff", color: "#FF693D", fontWeight: 700, cursor: "pointer" }}
-              >
-                Login
-              </button>
-              <button
-                onClick={openSignup}
-                className="cta-desktop nav-primary-cta"
-                style={{ padding: "9px 18px", borderRadius: 10, border: "1.5px solid #FF693D", background: "#FF693D", color: "#fff", fontWeight: 700, cursor: "pointer" }}
-              >
-                Sign Up
-              </button>
-            </>
+            <button
+              onClick={openLogin}
+              className="cta-desktop nav-ghost-cta"
+              style={{ padding: "8px 16px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer", fontSize: "0.85rem" }}
+            >
+              Login
+            </button>
           )}
           <button className="hamburger" onClick={() => { setExpandedSection(null); setMobileOpen(true); }} aria-label="Menu" style={{ display: "none" }}>
             <Menu size={22} color="var(--navy)" />
@@ -834,12 +841,12 @@ export default function Navbar({ onSearch }) {
 
 const navLinkStyle = (active) => ({
   display: "flex", alignItems: "center", gap: 5,
-  padding: "0.46rem 0.9rem", fontSize: "0.88rem", fontWeight: active ? 700 : 600,
-  color: active ? "#211D2E" : "#374151",
-  borderRadius: 10, whiteSpace: "nowrap", cursor: "pointer",
+  padding: "0.46rem 0.8rem", fontSize: "0.93rem", fontWeight: active ? 700 : 600,
+  color: active ? "#111" : "#444",
+  borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   fontFamily: "inherit", fontStyle: "normal",
-  background: active ? "rgba(33,29,46,.06)" : "transparent",
-  border: "1.5px solid transparent",
+  background: active ? "rgba(0,0,0,.04)" : "transparent",
+  border: "none",
   boxShadow: "none",
   transition: "background .2s ease, color .2s ease",
 });
