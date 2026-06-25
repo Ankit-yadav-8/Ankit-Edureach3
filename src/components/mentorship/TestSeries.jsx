@@ -81,10 +81,10 @@ function QuestionImage({ src, alt = "Diagram", maxH = 280, style: extraStyle }) 
 
   return (
     <>
-      <div style={{ position: "relative", display: "inline-block", cursor: "zoom-in", marginBottom: 12, ...extraStyle }}
+      <div style={{ position: "relative", display: "inline-block", cursor: "zoom-in", marginBottom: 16, width: "100%", ...extraStyle }}
         onClick={() => setZoom(true)}>
         <img src={src} alt={alt} onError={() => setBroken(true)}
-          style={{ maxWidth: "100%", maxHeight: maxH, borderRadius: 12, border: "1.5px solid #e2e8f0", display: "block", boxShadow: "0 4px 16px rgba(13,27,62,.08)" }} />
+          style={{ maxWidth: "100%", maxHeight: "500px", objectFit: "contain", borderRadius: 12, border: "1.5px solid #e2e8f0", display: "block", boxShadow: "0 4px 16px rgba(13,27,62,.08)", background: "#fff" }} />
         <span style={{ position: "absolute", bottom: 8, right: 8, background: "rgba(13,27,62,.7)", color: "#fff", borderRadius: 8, padding: "4px 8px", fontSize: 11, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 4, backdropFilter: "blur(4px)" }}>
           <ZoomIn size={12} /> Zoom
         </span>
@@ -120,7 +120,7 @@ function OptionImage({ src, alt = "Option", maxH = 90 }) {
   return (
     <>
       <img src={src} alt={alt} onClick={() => setZoom(true)} onError={() => setBroken(true)}
-        style={{ maxHeight: maxH, maxWidth: "100%", borderRadius: 8, cursor: "zoom-in", border: "1px solid #e5e7eb" }} />
+        style={{ maxHeight: maxH, maxWidth: "100%", objectFit: "contain", borderRadius: 8, cursor: "zoom-in", border: "1px solid #e5e7eb", background: "#fff", display: "block", marginBottom: 6 }} />
       <AnimatePresence>
         {zoom && (
           <Portal>
@@ -658,7 +658,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
                       style={{ width: "100%", maxWidth: 360, height: 52, padding: "0 16px", borderRadius: 14, border: `2px solid ${answers[q.qno] ? ORANGE : "#e5e7eb"}`, fontSize: 18, fontWeight: 700, color: NAVY, outline: "none", boxSizing: "border-box", background: answers[q.qno] ? `${ORANGE}08` : "#fff", transition: "all .15s", fontFamily: "inherit" }} />
                   </div>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 680 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 12, maxWidth: 860 }}>
                     {displayOptions.map((opt, i) => {
                       const on = answers[q?.qno] === opt.key;
                       const hasText = opt.text && opt.text.trim();
@@ -667,15 +667,15 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
                       return (
                         <motion.button key={opt.key}
                           onClick={() => choose(opt.key)}
-                          whileHover={{ scale: 1.01 }}
-                          whileTap={{ scale: 0.99 }}
+                          whileHover={{ scale: 1.02, boxShadow: "0 8px 24px -8px rgba(0,0,0,0.12)", borderColor: on ? ORANGE : "#cbd5e1" }}
+                          whileTap={{ scale: 0.98 }}
                           style={{
                             display: "flex", alignItems: "center", gap: 14, textAlign: "left",
-                            border: `2px solid ${on ? ORANGE : "#e5e7eb"}`,
+                            border: `2px solid ${on ? ORANGE : "#e2e8f0"}`,
                             background: on ? `${ORANGE}0c` : "#fff",
-                            borderRadius: 14, padding: "14px 16px", cursor: "pointer",
-                            transition: "all .15s", minHeight: 52,
-                            boxShadow: on ? `0 4px 16px -6px ${ORANGE}40` : "none",
+                            borderRadius: 16, padding: "16px 20px", cursor: "pointer",
+                            transition: "all .2s ease", minHeight: 64,
+                            boxShadow: on ? `0 8px 24px -8px ${ORANGE}50` : "0 2px 8px rgba(0,0,0,0.02)",
                           }}>
                           {/* Option letter badge */}
                           <span style={{
@@ -716,7 +716,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
           </div>
 
           {/* bottom nav */}
-          <div style={{ borderTop: "1px solid #eef2f7", padding: "12px 16px", display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", background: "#fff" }}>
+          <div style={{ borderTop: "1px solid #eef2f7", padding: "16px 20px", display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", background: "#fff", boxShadow: "0 -4px 20px rgba(13,27,62,0.04)" }}>
             <button onClick={() => goto(idx - 1)} disabled={idx === 0}
               style={{ ...ctlBtn("#fff", NAVY), opacity: idx === 0 ? 0.4 : 1 }}>
               <ChevronLeft size={15} /> Previous
