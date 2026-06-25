@@ -532,6 +532,8 @@ export function Trend({ data, lines, height = 280, fmt }) {
             tick={{ fontSize: 11.5, fill: "#9ca3af", fontWeight: 500 }}
             axisLine={false}
             tickLine={false}
+            tickFormatter={(v) => String(v).length > 8 ? String(v).slice(0, 8) + "…" : v}
+            minTickGap={12}
           />
           <YAxis
             tick={{ fontSize: 11, fill: "#9ca3af", fontWeight: 500 }}
