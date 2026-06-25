@@ -128,6 +128,13 @@ const TOOLS_MEGA = [
       { label: "Admin Data",            to: "/admin",        icon: ShieldCheck, desc: "Manage portal data" },
     ],
   },
+  {
+    title: "Community", to: "/campus-notes", color: "#e5484d", icon: Heart,
+    items: [
+      { label: "Campus Notes",       to: "/campus-notes", icon: BookOpen,   desc: "Upload & share study notes", iconBg: "#FFF3E0", iconColor: "#8B5E34" },
+      { label: "Public Community",   to: "/community",    icon: Globe2,     desc: "Peer discussions & Q&A", iconBg: "#E0F2F1", iconColor: "#00695C" },
+    ],
+  },
 ];
 
 // ── "Exam Buzz" mega-menu: the old Exams tab merged with News into one ────────
@@ -201,7 +208,7 @@ export default function Navbar({ onSearch }) {
     { label: "NEET", icon: FlaskConical, mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
     { label: "Colleges", icon: Landmark, drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Connect", icon: Heart, drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
-    { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa"].some((x) => p.startsWith(x)) },
+    { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa", "/campus-notes", "/community"].some((x) => p.startsWith(x)) },
   ];
 
   const isActive = (item) => (item.match ? item.match(location.pathname) : false);
