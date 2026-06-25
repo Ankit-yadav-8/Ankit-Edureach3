@@ -14,8 +14,8 @@ import Seo from "../components/Seo.jsx";
 
 const ACCENT = "#FF693D";        // brand orange
 const GOLD = "#FF693D";          // highlight gold
-const INK = "#1a1a2e";           // dark text
-const MUTE = "#5b6472";          // grey text
+const INK = "#fafafa";           // light text for dark mode
+const MUTE = "#a1a1aa";          // soft grey for dark mode
 const WA_NUMBER = "917877596464";
 
 /* string → icon, so per-page metrics can live in the data file */
@@ -226,7 +226,7 @@ function Hero({ cfg, scrollToEnrol }) {
   return (
     <section style={{
       position: "relative", overflow: "hidden",
-      background: "#ffffff",
+      background: "#0a0a0a",
       paddingTop: 140, paddingBottom: 80,
     }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
@@ -315,7 +315,7 @@ function Hero({ cfg, scrollToEnrol }) {
 ════════════════════════════════════════════════ */
 function ForYou({ cfg }) {
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "#0a0a0a" }}>
       <SectionTitle kicker="Sound familiar?">This Plan Is <Accent>For You</Accent> If…</SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16, maxWidth: 940, margin: "0 auto" }}>
         {cfg.forYou.map((t, i) => (
@@ -337,7 +337,7 @@ function ForYou({ cfg }) {
 function WhyFoundation({ cfg }) {
   if (!cfg.whyFoundation) return null;
   return (
-    <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
+    <Section style={{ background: "#0a0a0a" }}>
       <SectionTitle kicker="Why it matters">Why <Accent>Foundation</Accent> Matters</SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18 }}>
         {cfg.whyFoundation.map((t, i) => (
@@ -357,26 +357,60 @@ function WhyFoundation({ cfg }) {
    HOW WE GUIDE
 ════════════════════════════════════════════════ */
 const GUIDE_ICONS = [Flame, Users, Target, Trophy, Rocket, Star];
-const GUIDE_COLORS = ["#FF693D", "#6366f1", "#0ea5a4", "#ef4444", "#8b5cf6", "#f59e0b"];
 function HowWeGuide({ cfg }) {
+  // Merge the 6 steps into 3 comprehensive vertical steps
+  const mergedSteps = [
+    {
+      title: "1. Micro-Targets & Accountability",
+      desc: "Daily bite-sized targets pushed directly on WhatsApp so you always know the exact next step. Gamified streaks, ranks, and rewards keep you completely consistent even on your lowest days.",
+      Icon: Rocket,
+      color: "#FF693D"
+    },
+    {
+      title: "2. Personal Mentor & Backlog Clearing",
+      desc: "You're assigned a dedicated IITian or Doctor mentor who knows your name, your backlog, and your goal. We run structured catch-up sprints to clear months of pending chapters without burning you out.",
+      Icon: Users,
+      color: "#8b5cf6"
+    },
+    {
+      title: "3. Test Analysis & Exam Strategy",
+      desc: "Every single test is dissected — silly mistakes, weak chapters, and time management — into a one-page actionable plan. As the exam nears, we shift to aggressive mock tests and rank-push revision loops.",
+      Icon: Target,
+      color: "#0ea5a4"
+    }
+  ];
+
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "#0a0a0a" }}>
       <SectionTitle kicker="The system" sub="A 1-on-1 mentorship engine built to fix the exact reasons most aspirants fail.">
         How We <Accent>Guide</Accent> You
       </SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 18 }}>
-        {cfg.howWeGuide.map((g, i) => {
-          const Icon = GUIDE_ICONS[i % GUIDE_ICONS.length];
-          const c = GUIDE_COLORS[i % GUIDE_COLORS.length];
+      
+      {/* 3-card vertical animated strip layout */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 32, maxWidth: 840, margin: "0 auto", position: "relative" }}>
+        
+        {/* The glowing vertical timeline line */}
+        <div style={{ position: "absolute", left: 32, top: 20, bottom: 20, width: 2, background: "linear-gradient(180deg, rgba(255, 105, 61, 0) 0%, rgba(255, 105, 61, 0.4) 15%, rgba(139, 92, 246, 0.4) 50%, rgba(14, 165, 164, 0.4) 85%, rgba(14, 165, 164, 0) 100%)", zIndex: 0 }} />
+
+        {mergedSteps.map((g, i) => {
+          const Icon = g.Icon;
+          const c = g.color;
           return (
-            <Reveal key={g.title} delay={i * 0.05}>
-              <motion.div whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 14, height: "100%", borderTop: `3px solid ${c}` }}>
-                <div style={{ width: 48, height: 48, borderRadius: 13, background: `${c}16`, border: `1px solid ${c}33`, display: "grid", placeItems: "center" }}>
-                  <Icon size={23} color={c} />
+            <Reveal key={g.title} delay={i * 0.15}>
+              <motion.div whileHover={{ x: 8 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                style={{ 
+                  ...card, 
+                  flexDirection: "row", alignItems: "center", gap: 24, 
+                  position: "relative", zIndex: 1, padding: "28px 32px",
+                  borderLeft: `4px solid ${c}`
+                }}>
+                <div style={{ width: 64, height: 64, borderRadius: 16, background: `${c}16`, border: `1px solid ${c}33`, display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0, boxShadow: `0 0 20px ${c}22` }}>
+                  <Icon size={28} color={c} />
                 </div>
-                <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: "1.08rem", color: INK, margin: 0 }}>{g.title}</h3>
-                <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.65, margin: 0 }}>{g.desc}</p>
+                <div>
+                  <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.3rem", color: INK, margin: "0 0 8px" }}>{g.title}</h3>
+                  <p style={{ color: MUTE, fontSize: 15, lineHeight: 1.65, margin: 0 }}>{g.desc}</p>
+                </div>
               </motion.div>
             </Reveal>
           );
@@ -393,7 +427,7 @@ function TestAnalysis({ cfg }) {
   const m = cfg.metrics;
   const trend = m.test.trend.map((v, i) => ({ t: `T${i + 1}`, v }));
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "#0a0a0a" }}>
       <SectionTitle kicker="Every test counts" sub="No test is just a score. Every week your mentor turns it into a one-page action plan.">
         Weekly <Accent>Test Analysis</Accent>
       </SectionTitle>
@@ -401,80 +435,85 @@ function TestAnalysis({ cfg }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 26, alignItems: "stretch", maxWidth: 1040, margin: "0 auto" }}>
         {/* Left — what we analyse */}
         <Reveal>
-          <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 16, height: "100%" }}>
-            <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.3rem", color: INK, margin: 0 }}>
-              What your mentor breaks down
+          <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 20, height: "100%", padding: "32px 36px" }}>
+            <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: "1.6rem", color: INK, margin: 0 }}>
+              Deep Diagnostics <br/><span style={{ color: ACCENT }}>Every Week</span>
             </h3>
-            {[
-              { Icon: BarChart3, c: "#FF693D", t: "Score & accuracy trend", d: "See exactly how you're improving test over test." },
-              { Icon: Target,    c: "#ef4444", t: "Silly-mistake audit", d: "Marks lost to silly errors are tracked and killed." },
-              { Icon: Zap,       c: "#8b5cf6", t: "Weak-chapter heatmap", d: "The exact topics dragging your score, ranked." },
-              { Icon: Clock,     c: "#0ea5a4", t: "Time-management review", d: "Where you over-spent time in the paper." },
-              { Icon: ListChecks,c: "#22c55e", t: "A weekly fix-list", d: "3–5 concrete actions to do before the next test." },
-            ].map(({ Icon, c, t, d }) => (
-              <div key={t} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <span style={{ width: 38, height: 38, borderRadius: 11, background: `${c}16`, border: `1px solid ${c}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <Icon size={18} color={c} />
-                </span>
-                <div>
-                  <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 14.5, color: INK }}>{t}</div>
-                  <div style={{ fontSize: 13, color: MUTE, lineHeight: 1.5 }}>{d}</div>
+            <p style={{ color: MUTE, fontSize: 15, lineHeight: 1.6, marginBottom: 8 }}>
+              Giving tests is useless if you don't learn from them. Our mentors don't just ask for your score; they perform a surgical strike on your performance to extract exactly where you're losing marks.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 22, width: "100%" }}>
+              {[
+                { Icon: BarChart3, c: "#FF693D", t: "Score & Accuracy Trend", d: "A clear visual graph mapping your trajectory and striking rate over time." },
+                { Icon: Target,    c: "#ef4444", t: "Silly-Mistake Audit", d: "We track marks lost to calculation errors or misreading the question to kill them permanently." },
+                { Icon: Zap,       c: "#8b5cf6", t: "Weak-Chapter Heatmap", d: "A ranked list of topics dragging your score down, turning blindspots into targets." },
+                { Icon: Clock,     c: "#0ea5a4", t: "Time-Management Review", d: "Detailed breakdown of where you over-spent time vs where you rushed." },
+                { Icon: ListChecks,c: "#22c55e", t: "Actionable Fix-List", d: "You walk away with 3-5 concrete actions to execute before the next test." },
+              ].map(({ Icon, c, t, d }) => (
+                <div key={t} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+                  <span style={{ width: 44, height: 44, borderRadius: 14, background: `${c}16`, border: `1px solid ${c}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <Icon size={20} color={c} />
+                  </span>
+                  <div>
+                    <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 15.5, color: INK, marginBottom: 4 }}>{t}</div>
+                    <div style={{ fontSize: 14, color: MUTE, lineHeight: 1.5 }}>{d}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </Reveal>
 
         {/* Right — mock report & analytics image */}
         <Reveal delay={0.08}>
           <div style={{ display: "flex", flexDirection: "column", gap: 20, height: "100%" }}>
-            <div style={{ borderRadius: 18, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.16)", boxShadow: "0 18px 44px -24px rgba(26,26,46,.4)" }}>
+            <div style={{ borderRadius: 18, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.16)", boxShadow: "0 18px 44px -24px rgba(0,0,0,.6)" }}>
               <img src={cfg.analyticsImage || "/images/analytics_mentorship.png"} alt="Analytics Dashboard" style={{ width: "100%", display: "block" }} />
             </div>
             
-            <div style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 18, padding: "24px 24px", flex: 1, boxShadow: "0 18px 44px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#FF693D)" }} />
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+            <div style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 18, padding: "28px 24px", flex: 1, boxShadow: "0 18px 44px -24px rgba(0,0,0,.6)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#8b5cf6)" }} />
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
               <div>
-                <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: ACCENT }}>Weekly Report</div>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.05rem", color: INK }}>Test Analysis · {m.test.week}</div>
+                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: ACCENT }}>Weekly Report</div>
+                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK }}>Test Analysis · {m.test.week}</div>
               </div>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: "#22c55e", background: "rgba(34,197,94,.12)", border: "1px solid rgba(34,197,94,.3)", padding: "5px 10px", borderRadius: 50 }}>
-                <TrendingUp size={13} /> {m.test.gain}
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 13, fontWeight: 800, color: "#22c55e", background: "rgba(34,197,94,.12)", border: "1px solid rgba(34,197,94,.3)", padding: "6px 12px", borderRadius: 50 }}>
+                <TrendingUp size={14} /> {m.test.gain}
               </span>
             </div>
 
             {/* score trend bars */}
-            <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130, padding: "0 4px 8px", borderBottom: "1px solid rgba(0,0,0,.08)", marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130, padding: "0 4px 8px", borderBottom: "1px solid rgba(255,255,255,.08)", marginBottom: 18 }}>
               {trend.map((d, i) => (
                 <div key={d.t} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
                   <motion.div
                     initial={{ height: 0 }} whileInView={{ height: `${d.v}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.07 }}
-                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#FF693D,#FF693D)" : "rgba(255, 105, 61,.35)" }} />
-                  <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 600 }}>{d.t}</span>
+                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#FF693D,#FF693D)" : "rgba(255, 105, 61,.25)" }} />
+                  <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 700 }}>{d.t}</span>
                 </div>
               ))}
             </div>
 
             {/* weak chapters */}
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 8 }}>Weak chapters this week</div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+            <div style={{ marginBottom: 18 }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: MUTE, marginBottom: 10 }}>Critical Weak Chapters</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                 {m.test.weak.map((w) => (
-                  <span key={w} style={{ fontSize: 11.5, fontWeight: 700, color: "#b91c1c", background: "rgba(239,68,68,.1)", border: "1px solid rgba(239,68,68,.25)", padding: "4px 10px", borderRadius: 50 }}>{w}</span>
+                  <span key={w} style={{ fontSize: 12, fontWeight: 800, color: "#fca5a5", background: "rgba(239,68,68,.15)", border: "1px solid rgba(239,68,68,.3)", padding: "5px 12px", borderRadius: 50 }}>{w}</span>
                 ))}
               </div>
             </div>
 
             {/* fix list */}
-            <div style={{ background: "#ffffff", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 12, padding: "12px 14px" }}>
-              <div style={{ fontSize: 12, fontWeight: 800, color: "#9a3412", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
-                <ListChecks size={14} /> Your fix-list before next test
+            <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 14, padding: "16px 18px" }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#fdba74", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+                <ListChecks size={15} /> Your priority fix-list
               </div>
               {m.test.fix.map((a) => (
-                <div key={a} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
-                  <Check size={14} color="#22c55e" strokeWidth={3} />
-                  <span style={{ fontSize: 12.5, color: "#374151" }}>{a}</span>
+                <div key={a} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 8 }}>
+                  <Check size={16} color="#22c55e" strokeWidth={3} style={{ flexShrink: 0, marginTop: 2 }} />
+                  <span style={{ fontSize: 13.5, color: "#d1d5db", lineHeight: 1.4 }}>{a}</span>
                 </div>
               ))}
             </div>
@@ -491,7 +530,7 @@ function TestAnalysis({ cfg }) {
 ════════════════════════════════════════════════ */
 function ChartCard({ title, hint, children }) {
   return (
-    <div style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 18, padding: "22px 22px 18px", height: "100%", boxShadow: "0 16px 40px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+    <div style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 18, padding: "22px 22px 18px", height: "100%", boxShadow: "0 16px 40px -24px rgba(0,0,0,.6)", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#FF693D)" }} />
       <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: "1.05rem", color: INK, margin: "0 0 4px" }}>{title}</h3>
       {hint && <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 14px" }}>{hint}</p>}
@@ -502,7 +541,7 @@ function ChartCard({ title, hint, children }) {
 function ImprovementCharts({ m }) {
   const growth = m.growth.you.map((you, i) => ({ year: `Wk ${i + 1}`, you, batch: m.growth.batch[i] }));
   return (
-    <Section style={{ background: "#fffaf5" }}>
+    <Section style={{ background: "#0a0a0a" }}>
       <SectionTitle kicker="Proof, not promises" sub="Real, visible improvement — tracked every week and shared with you and your parents.">
         Improvement <Accent>Charts</Accent>
       </SectionTitle>
@@ -544,14 +583,14 @@ function LiveTracking({ m }) {
   const maxH = Math.max(...m.weekHours);
   const maxIdx = m.weekHours.indexOf(maxH);
   return (
-    <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
+    <Section style={{ background: "#0a0a0a" }}>
       <SectionTitle kicker="Always on" sub="Your mentor sees your effort live — so nothing ever slips through the cracks.">
         Live Student <Accent>Tracking</Accent>
       </SectionTitle>
 
       <div style={{ maxWidth: 1040, margin: "0 auto" }}>
         <Reveal>
-          <div style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 20, padding: "24px 26px", boxShadow: "0 20px 46px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+          <div style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 20, padding: "24px 26px", boxShadow: "0 20px 46px -24px rgba(0,0,0,.6)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#22c55e,#FF693D)" }} />
 
             {/* header */}
@@ -572,7 +611,7 @@ function LiveTracking({ m }) {
               {m.liveTiles.map(({ icon, c, v, l }) => {
                 const Icon = ICONS[icon];
                 return (
-                  <div key={l} style={{ background: "#ffffff", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
+                  <div key={l} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
                     <Icon size={18} color={c} style={{ marginBottom: 6 }} />
                     <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 17, color: INK }}>{v}</div>
                     <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{l}</div>
@@ -614,7 +653,7 @@ function LiveTracking({ m }) {
 ════════════════════════════════════════════════ */
 function ParentBooklet({ m }) {
   return (
-    <Section style={{ background: "#fffaf5" }}>
+    <Section style={{ background: "#0a0a0a" }}>
       <SectionTitle kicker="Parents stay in the loop" sub="Every Sunday, parents get a simple weekly booklet — exactly what their child did and how they're improving.">
         Parent <Accent>Weekly Booklet</Accent>
       </SectionTitle>
@@ -958,7 +997,7 @@ const PROOF_CARDS = [
 
 function WhatsAppProof() {
   return (
-    <Section style={{ background: "#fffaf5" }}>
+    <Section style={{ background: "#0a0a0a" }}>
       <SectionTitle kicker="From the inside" sub="This is what mentorship looks like from the inside.">
         Real Mentorship. <Accent>Real Results.</Accent>
       </SectionTitle>
@@ -966,7 +1005,7 @@ function WhatsAppProof() {
         {PROOF_CARDS.map((c, i) => (
           <Reveal key={i} delay={(i % 3) * 0.06}>
             <motion.div whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 12, padding: "24px 22px", boxShadow: "0 14px 34px -18px rgba(26,26,46,.4)", height: "100%", display: "flex", flexDirection: "column", gap: 18 }}>
+              style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 12, padding: "24px 22px", boxShadow: "0 14px 34px -18px rgba(0,0,0,.6)", height: "100%", display: "flex", flexDirection: "column", gap: 18 }}>
               <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.12rem", lineHeight: 1.3, color: INK, margin: 0 }}>
                 {c.head[0]}<span style={{ color: ACCENT }}>{c.head[1]}</span>{c.head[2] || ""}
               </h3>
@@ -993,7 +1032,7 @@ const JOURNEY_STEPS = [
 
 function JourneyBrand({ cfg }) {
   return (
-    <section style={{ padding: "92px 0", background: "#ffffff", position: "relative", overflow: "hidden" }}>
+    <section style={{ padding: "92px 0", background: "#0a0a0a", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: -60, left: "8%", width: 360, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(255, 105, 61,.18), transparent 65%)", pointerEvents: "none" }} />
       <div style={{ position: "absolute", bottom: -40, right: "10%", width: 280, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.12), transparent 65%)", pointerEvents: "none" }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
@@ -1014,7 +1053,7 @@ function JourneyBrand({ cfg }) {
               <Reveal key={s.title} delay={(i % 3) * 0.07}>
                 <motion.div whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
-                    background: "#fff", borderRadius: 18, padding: "34px 28px", height: "100%",
+                    background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", borderRadius: 18, padding: "34px 28px", height: "100%",
                     boxShadow: "0 22px 48px -24px rgba(26,26,46,.42), 0 2px 10px rgba(0,0,0,.05)",
                     border: "1px solid rgba(255, 105, 61,.12)", textAlign: "center",
                     display: "flex", flexDirection: "column", alignItems: "center", gap: 12, position: "relative", overflow: "hidden",
@@ -1054,7 +1093,7 @@ function JourneyBrand({ cfg }) {
 function MentorTabs({ variant }) {
   const label = (slug) => slug === "neet" ? "NEET" : slug === "jee-2027" ? "JEE 2027" : "JEE 2028";
   return (
-    <div style={{ position: "relative", zIndex: 2, background: "#ffffff", borderBottom: "1px solid rgba(255, 105, 61,.14)", paddingTop: 114 }}>
+    <div style={{ position: "relative", zIndex: 2, background: "#0a0a0a", borderBottom: "1px solid rgba(255, 105, 61,.14)", paddingTop: 114 }}>
       <div className="container" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", padding: "12px 0" }}>
         {Object.values(MENTORSHIP).map((m) => {
           const active = m.slug === variant;
@@ -1084,7 +1123,7 @@ export default function Mentorship() {
   const scrollToEnrol = () => document.getElementById("enrol")?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <div style={{ background: "#ffffff", color: INK }}>
+    <div style={{ background: "#0a0a0a", color: INK }}>
       <Seo
         title={`${(variant || "jee-2027").replace(/-/g, " ").toUpperCase()} Mentorship by IITians — 1-on-1 Guidance`}
         description="1-on-1 JEE & NEET mentorship by IIT Roorkee alumni — daily targets, test analysis, live tracking and parent reports. Limited seats. Enrol on CollegeParichay."
@@ -1123,16 +1162,17 @@ const ctaSolid = {
 };
 const ctaGhost = {
   display: "inline-flex", alignItems: "center", gap: 9, padding: "14px 26px", borderRadius: 12,
-  background: "#fff", color: "#c2410c", fontFamily: "'Space Grotesk',sans-serif",
+  background: "rgba(255,255,255,0.05)", color: "#fff", fontFamily: "'Space Grotesk',sans-serif",
   fontWeight: 700, fontSize: 15, border: "1.5px solid rgba(255, 105, 61,.35)", cursor: "pointer", textDecoration: "none",
 };
 const card = {
-  display: "flex", alignItems: "center", gap: 14, background: "#fff",
-  border: "1px solid rgba(255, 105, 61,.14)", borderRadius: 16, padding: "20px 22px",
-  boxShadow: "0 6px 20px -12px rgba(26,26,46,.3)",
+  display: "flex", alignItems: "center", gap: 14, background: "rgba(25, 25, 30, 0.6)",
+  border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 16, padding: "20px 22px",
+  boxShadow: "0 8px 32px 0 rgba(0,0,0,0.37)",
+  backdropFilter: "blur(12px)",
 };
 const input = {
   width: "100%", padding: "14px 16px", fontSize: 15, borderRadius: 12,
-  background: "#fff", border: "1.5px solid rgba(255, 105, 61,.25)", color: INK, outline: "none",
+  background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255, 255, 255, 0.1)", color: INK, outline: "none",
   fontFamily: "'DM Sans',sans-serif", boxSizing: "border-box",
 };
