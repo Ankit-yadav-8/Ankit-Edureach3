@@ -1,86 +1,205 @@
 export const FESTS_DB = [
   // ── IITs ──
-  { id: "mood-indigo", name: "Mood Indigo", college: "IIT Bombay", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Largest Cultural Fest", "Flagship Fest"] },
-  { id: "techfest", name: "Techfest", college: "IIT Bombay", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: ["Largest Technical Fest", "Hackathon"] },
-  { id: "rendezvous", name: "Rendezvous", college: "IIT Delhi", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Largest North India Fest", "Flagship Fest"] },
-  { id: "tryst", name: "Tryst", college: "IIT Delhi", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: ["Tech Symposia", "Robotics"] },
-  { id: "antaragni", name: "Antaragni", college: "IIT Kanpur", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Kavi Sammelan", "Rock Nite"] },
-  { id: "techkriti", name: "Techkriti", college: "IIT Kanpur", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: ["Flagship Fest", "Entrepreneurship"] },
-  { id: "springfest", name: "Spring Fest", college: "IIT Kharagpur", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["True Emotion", "Pronites"] },
-  { id: "kshitij", name: "Kshitij", college: "IIT Kharagpur", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: ["Largest Tech Competition Fest", "Flagship Fest"] },
-  { id: "saarang", name: "Saarang", college: "IIT Madras", type: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80", link: "#", tags: ["ISO Certified", "Pro-Shows"] },
-  { id: "shaastra", name: "Shaastra", college: "IIT Madras", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: ["Most Prestigious Tech Fest", "Flagship Fest"] },
-  { id: "alcheringa", name: "Alcheringa", college: "IIT Guwahati", type: "Cultural", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80", link: "#", tags: ["North East Largest", "Flagship Fest"] },
-  { id: "techniche", name: "Techniche", college: "IIT Guwahati", type: "Technical", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80", link: "#", tags: ["Marathon", "Lecture Series"] },
-  { id: "thomso", name: "Thomso", college: "IIT Roorkee", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Recognized by Govt", "Flagship Fest"] },
-  { id: "cognizance", name: "Cognizance", college: "IIT Roorkee", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: ["RoboWars", "Hackathons"] },
-  { id: "kashiyatra", name: "Kashiyatra", college: "IIT BHU", type: "Cultural", img: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "technex", name: "Technex", college: "IIT BHU", type: "Technical", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80", link: "#", tags: ["Tech Fest", "Flagship Fest"] },
-  { id: "alma-fiesta", name: "Alma Fiesta", college: "IIT Bhubaneswar", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest", "Socio-Cultural"] },
-  { id: "wissenaire", name: "Wissenaire", college: "IIT Bhubaneswar", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: ["Tech Fest"] },
-  { id: "elan-nvision", name: "ELAN & nVision", college: "IIT Hyderabad", type: "Cultural", img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80", link: "#", tags: ["Techno-Cultural", "Flagship Fest"] },
-  { id: "fluxus", name: "Fluxus", college: "IIT Indore", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "invento", name: "Invento", college: "IIT Indore", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: ["Tech Fest"] },
-  { id: "zeitgeist", name: "Zeitgeist", college: "IIT Ropar", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "advitiya", name: "Advitiya", college: "IIT Ropar", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: ["Flagship Fest", "Technical"] },
-  { id: "exodia", name: "Exodia", college: "IIT Mandi", type: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "utkarsh", name: "Utkarsh", college: "IIT Mandi", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: ["Technical Fest"] },
-  { id: "anwesha", name: "Anwesha", college: "IIT Patna", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "celesta", name: "Celesta", college: "IIT Patna", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "ignus", name: "Ignus", college: "IIT Jodhpur", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "prometeo", name: "Prometeo", college: "IIT Jodhpur", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: ["Technical Fest"] },
-  { id: "blithchron", name: "Blithchron", college: "IIT Gandhinagar", type: "Cultural", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "amalthea", name: "Amalthea", college: "IIT Gandhinagar", type: "Technical", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "srijan", name: "Srijan", college: "IIT Dhanbad", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "concetto", name: "Concetto", college: "IIT Dhanbad", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: ["Technical Fest"] },
-  { id: "cultrang", name: "CULTRANG", college: "IIT Goa", type: "Cultural", img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "technovate", name: "Technovate", college: "IIT Goa", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: ["Technical Fest"] },
-  { id: "anhad", name: "Anhad", college: "IIT Jammu", type: "Cultural", img: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "innovision-jammu", name: "Innovision", college: "IIT Jammu", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "tirutsava", name: "Tirutsava", college: "IIT Tirupati", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "tattva", name: "Tattva", college: "IIT Tirupati", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitb-cult", name: "Mood Indigo", college: "IIT Bombay", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitb-tech", name: "Techfest", college: "IIT Bombay", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
+  
+  { id: "iitd-cult", name: "Rendezvous", college: "IIT Delhi", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitd-tech", name: "Techniche", college: "IIT Delhi", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitm-cult", name: "Saarang", college: "IIT Madras", type: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitm-tech", name: "Shaastra", college: "IIT Madras", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitkgp-cult", name: "Spring Fest", college: "IIT Kharagpur", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitkgp-tech", name: "Kshitij", college: "IIT Kharagpur", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitk-cult", name: "Antarang", college: "IIT Kanpur", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitk-tech", name: "Technex", college: "IIT Kanpur", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitr-cult", name: "Cognizance", college: "IIT Roorkee", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitr-tech", name: "Thomso", college: "IIT Roorkee", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitg-cult", name: "Alcheringa", college: "IIT Guwahati", type: "Cultural", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitg-tech", name: "Techniche", college: "IIT Guwahati", type: "Technical", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iith-cult", name: "Sangam", college: "IIT Hyderabad", type: "Cultural", img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iith-tech", name: "Techniche", college: "IIT Hyderabad", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiti-cult", name: "Fluxus", college: "IIT Indore", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiti-tech", name: "Technex", college: "IIT Indore", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitbbs-cult", name: "Utkarsh", college: "IIT Bhubaneswar", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitbbs-tech", name: "Technozion", college: "IIT Bhubaneswar", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitgn-cult", name: "RefleXion", college: "IIT Gandhinagar", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitgn-tech", name: "Technovanza", college: "IIT Gandhinagar", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitropar-cult", name: "Riviera", college: "IIT Ropar", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitropar-tech", name: "Techniche", college: "IIT Ropar", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitp-cult", name: "Confluence", college: "IIT Patna", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitp-tech", name: "Technex", college: "IIT Patna", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitmandi-cult", name: "Udbhav", college: "IIT Mandi", type: "Cultural", img: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitmandi-tech", name: "Techknow", college: "IIT Mandi", type: "Technical", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitbhu-cult", name: "Spandan", college: "IIT (BHU) Varanasi", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitbhu-tech", name: "Technex", college: "IIT (BHU) Varanasi", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitj-cult", name: "Prastuti", college: "IIT Jodhpur", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitj-tech", name: "Technovation", college: "IIT Jodhpur", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitt-cult", name: "Srujan", college: "IIT Tirupati", type: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitt-tech", name: "Techniche", college: "IIT Tirupati", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitpal-cult", name: "Felicity", college: "IIT Palakkad", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitpal-tech", name: "Techade", college: "IIT Palakkad", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iitism-cult", name: "Nimbus", college: "IIT Dhanbad", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iitism-tech", name: "Technex", college: "IIT Dhanbad", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: [] },
 
   // ── NITs ──
-  { id: "festember", name: "Festember", college: "NIT Trichy", type: "Cultural", img: "https://images.unsplash.com/photo-1520113412646-05cd19bb5a34?w=800&q=80", link: "#", tags: ["Award Winning", "Pro Shows"] },
-  { id: "pragyan", name: "Pragyan", college: "NIT Trichy", type: "Technical", img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80", link: "#", tags: ["Largest NIT Technical Fest", "Flagship Fest"] },
-  { id: "springspree", name: "SpringSpree", college: "NIT Warangal", type: "Cultural", img: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=80", link: "#", tags: ["South India's Oldest", "Pronites"] },
-  { id: "technozion", name: "Technozion", college: "NIT Warangal", type: "Technical", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80", link: "#", tags: ["Flagship Fest", "Robotics"] },
-  { id: "incident", name: "Incident", college: "NIT Surathkal", type: "Cultural", img: "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=800&q=80", link: "#", tags: ["Largest NIT Cultural Fest", "Flagship Fest"] },
-  { id: "engineer", name: "Engineer", college: "NIT Surathkal", type: "Technical", img: "https://images.unsplash.com/photo-1503694978374-8a2fa686963a?w=800&q=80", link: "#", tags: ["Tech Symposium"] },
-  { id: "nitrutsav", name: "NITRUTSAV", college: "NIT Rourkela", type: "Cultural", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80", link: "#", tags: ["East India", "Cultural Extravaganza"] },
-  { id: "innovision-nitr", name: "Innovision", college: "NIT Rourkela", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: ["Flagship Fest", "Tech Fest"] },
-  { id: "ragam", name: "Ragam", college: "NIT Calicut", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Flagship Fest", "Choreo Nite"] },
-  { id: "tathva", name: "Tathva", college: "NIT Calicut", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: ["Tech Fest", "Competitions"] },
-  { id: "blitzschlag", name: "Blitzschlag", college: "MNIT Jaipur", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "sphinx", name: "Sphinx", college: "MNIT Jaipur", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: ["Technical Fest"] },
-  { id: "aarohi", name: "Aarohi", college: "VNIT Nagpur", type: "Cultural", img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "axis", name: "Axis", college: "VNIT Nagpur", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "culfest", name: "Culfest", college: "NIT Jamshedpur", type: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "ojass", name: "Ojass", college: "NIT Jamshedpur", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "hillffair", name: "Hill'ffair", college: "NIT Hamirpur", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "nimbus", name: "Nimbus", college: "NIT Hamirpur", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "incandescence", name: "Incandescence", college: "NIT Silchar", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "tecnoesis", name: "Tecnoesis", college: "NIT Silchar", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: ["Technical Fest"] },
+  { id: "nitw-cult", name: "Srujan", college: "NIT Warangal", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitw-tech", name: "Pragyan", college: "NIT Warangal", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitt-cult", name: "Saarang", college: "NIT Tiruchirappalli", type: "Cultural", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitt-tech", name: "NITTirich", college: "NIT Tiruchirappalli", type: "Technical", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitsk-cult", name: "Pravaah", college: "NIT Surathkal", type: "Cultural", img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitsk-tech", name: "TechTatva", college: "NIT Surathkal", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitr-cult", name: "Riviera", college: "NIT Rourkela", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitr-tech", name: "Robocon", college: "NIT Rourkela", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitc-cult", name: "Nirvana", college: "NIT Calicut", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitc-tech", name: "NITC", college: "NIT Calicut", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitd-cult", name: "Utsav", college: "NIT Durgapur", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitd-tech", name: "Pragati", college: "NIT Durgapur", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitkk-cult", name: "Confluence", college: "NIT Kurukshetra", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitkk-tech", name: "Technicon", college: "NIT Kurukshetra", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitp-cult", name: "Aarambh", college: "NIT Patna", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitp-tech", name: "Prajna", college: "NIT Patna", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitrr-cult", name: "Abhivyakti", college: "NIT Raipur", type: "Cultural", img: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitrr-tech", name: "Technovate", college: "NIT Raipur", type: "Technical", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitjsr-cult", name: "Crescendo", college: "NIT Jamshedpur", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitjsr-tech", name: "Technovanza", college: "NIT Jamshedpur", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
+
+  { id: "mnnit-cult", name: "Symbiosis", college: "NIT Allahabad", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "mnnit-tech", name: "Technex", college: "NIT Allahabad", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: [] },
+
+  { id: "vnit-cult", name: "Umang", college: "NIT Nagpur", type: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "vnit-tech", name: "Technocrats", college: "NIT Nagpur", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nith-cult", name: "Varchasva", college: "NIT Hamirpur", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nith-tech", name: "TechSparsh", college: "NIT Hamirpur", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitj-cult", name: "Nouvelle", college: "NIT Jalandhar", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitj-tech", name: "Techniche", college: "NIT Jalandhar", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitgoa-cult", name: "Phoenix", college: "NIT Goa", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitgoa-tech", name: "Technovision", college: "NIT Goa", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nits-cult", name: "Incandescence", college: "NIT Silchar", type: "Cultural", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nits-tech", name: "Technex", college: "NIT Silchar", type: "Technical", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitsri-cult", name: "Horizon", college: "NIT Srinagar", type: "Cultural", img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitsri-tech", name: "Technovate", college: "NIT Srinagar", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitaga-cult", name: "Aagam", college: "NIT Agartala", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitaga-tech", name: "Techniche", college: "NIT Agartala", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitb-cult", name: "Samarpan", college: "NIT Bhopal", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitb-tech", name: "Technex", college: "NIT Bhopal", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: [] },
+
+  { id: "mnit-cult", name: "Tharangana", college: "NIT Jaipur", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "mnit-tech", name: "Technovanza", college: "NIT Jaipur", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: [] },
+
+  { id: "svnit-cult", name: "Prerna", college: "NIT Surat", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "svnit-tech", name: "Technocrats", college: "NIT Surat", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitap-cult", name: "Sankalp", college: "NIT Andhra Pradesh", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitap-tech", name: "Techniche", college: "NIT Andhra Pradesh", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitpy-cult", name: "Rendezvous", college: "NIT Puducherry", type: "Cultural", img: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitpy-tech", name: "Techniche", college: "NIT Puducherry", type: "Technical", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitmn-cult", name: "Echos", college: "NIT Manipur", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitmn-tech", name: "Technovate", college: "NIT Manipur", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitm-cult", name: "Blaze", college: "NIT Meghalaya", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitm-tech", name: "Techniche", college: "NIT Meghalaya", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitmz-cult", name: "Synapse", college: "NIT Mizoram", type: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitmz-tech", name: "Techniche", college: "NIT Mizoram", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitn-cult", name: "Reverie", college: "NIT Nagaland", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitn-tech", name: "Technovate", college: "NIT Nagaland", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitsik-cult", name: "Sangam", college: "NIT Sikkim", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitsik-tech", name: "Techniche", college: "NIT Sikkim", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitar-cult", name: "Driwang", college: "NIT Arunachal Pradesh", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitar-tech", name: "Techniche", college: "NIT Arunachal Pradesh", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nitdel-cult", name: "Aarohan", college: "NIT Delhi", type: "Cultural", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nitdel-tech", name: "Techniche", college: "NIT Delhi", type: "Technical", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80", link: "#", tags: [] },
+
+  { id: "nituk-cult", name: "Arohan", college: "NIT Uttarakhand", type: "Cultural", img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "nituk-tech", name: "Technovate", college: "NIT Uttarakhand", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
 
   // ── IIITs ──
-  { id: "felicity", name: "Felicity", college: "IIIT Hyderabad", type: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80", link: "#", tags: ["Largest IIIT Fest", "Flagship Fest"] },
-  { id: "effervescence", name: "Effervescence", college: "IIIT Allahabad", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest", "North India"] },
-  { id: "aparoksha", name: "Aparoksha", college: "IIIT Allahabad", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: ["Technical Fest"] },
-  { id: "odyssey", name: "Odyssey", college: "IIIT Delhi", type: "Cultural", img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "esya", name: "Esya", college: "IIIT Delhi", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "aurora", name: "Aurora", college: "IIIT Gwalior", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "infotsav", name: "Infotsav", college: "IIIT Gwalior", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "tarang", name: "Tarang", college: "IIIT Jabalpur", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "abhikalpan", name: "Abhikalpan", college: "IIIT Jabalpur", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "euphony", name: "Euphony", college: "IIIT Lucknow", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Cultural Fest"] },
-  { id: "advaita-lucknow", name: "Advaita", college: "IIIT Lucknow", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "samgatha", name: "Samgatha", college: "IIIT Kancheepuram", type: "Technical", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "advaita-bbsr", name: "Advaita", college: "IIIT Bhubaneswar", type: "Cultural", img: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
-  { id: "innova", name: "Innova", college: "IIIT Bhubaneswar", type: "Technical", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80", link: "#", tags: ["Technical Fest"] },
+  { id: "iiith-cult", name: "Oorja", college: "IIIT Hyderabad", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiith-tech", name: "HackOverflow", college: "IIIT Hyderabad", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
 
-  // ── BITS ──
-  { id: "oasis", name: "Oasis", college: "BITS Pilani", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["96 Hours Non-Stop", "Rocktaves"] },
-  { id: "apogee", name: "Apogee", college: "BITS Pilani", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: ["Innovation", "Paper Presentations"] },
-  { id: "waves", name: "Waves", college: "BITS Goa", type: "Cultural", img: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=80", link: "#", tags: ["Sea-side fest", "EDM"] },
-  { id: "quark", name: "Quark", college: "BITS Goa", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: ["Tech Excellence", "Exhibits"] },
+  { id: "iiitb-cult", name: "Samanvay", college: "IIIT Bangalore", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitb-tech", name: "Codefest", college: "IIIT Bangalore", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiita-cult", name: "Prayag", college: "IIIT Allahabad", type: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiita-tech", name: "Hackncode", college: "IIIT Allahabad", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitd-cult", name: "Rang", college: "IIIT Delhi", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitd-tech", name: "Converge", college: "IIIT Delhi", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitm-cult", name: "Techniche", college: "IIIT Gwalior", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitm-tech", name: "Hackover", college: "IIIT Gwalior", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitj-cult", name: "Pulse", college: "IIIT Jabalpur", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitj-tech", name: "Codefiesta", college: "IIIT Jabalpur", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitk-cult", name: "Kreativity", college: "IIIT Kalyani", type: "Cultural", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitk-tech", name: "Algorithmix", college: "IIIT Kalyani", type: "Technical", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitl-cult", name: "Samanvay", college: "IIIT Lucknow", type: "Cultural", img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitl-tech", name: "Hackfest", college: "IIIT Lucknow", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitp-cult", name: "Dhwani", college: "IIIT Pune", type: "Cultural", img: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitp-tech", name: "TechTatva", college: "IIIT Pune", type: "Technical", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiits-cult", name: "Udbhav", college: "IIIT Sri City", type: "Cultural", img: "https://images.unsplash.com/photo-1540039155732-d688126b4859?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiits-tech", name: "CodeCon", college: "IIIT Sri City", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitv-cult", name: "Vibes", college: "IIIT Vadodara", type: "Cultural", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitv-tech", name: "Algozenith", college: "IIIT Vadodara", type: "Technical", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitkota-cult", name: "Sargam", college: "IIIT Kota", type: "Cultural", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitkota-tech", name: "TechX", college: "IIIT Kota", type: "Technical", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitbh-cult", name: "Aarambh", college: "IIIT Bhagalpur", type: "Cultural", img: "https://images.unsplash.com/photo-1470229722913-7c090be5c282?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitbh-tech", name: "CodeCraze", college: "IIIT Bhagalpur", type: "Technical", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitran-cult", name: "Rhythm", college: "IIIT Ranchi", type: "Cultural", img: "https://images.unsplash.com/photo-1533174000273-e18e3881cae1?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitran-tech", name: "HackInfinity", college: "IIIT Ranchi", type: "Technical", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitu-cult", name: "Unnati", college: "IIIT Una", type: "Cultural", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitu-tech", name: "TechFusion", college: "IIIT Una", type: "Technical", img: "https://images.unsplash.com/photo-1531297172867-4f5050ceced6?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitnr-cult", name: "Sahityam", college: "IIIT Naya Raipur", type: "Cultural", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitnr-tech", name: "CodeSprint", college: "IIIT Naya Raipur", type: "Technical", img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80", link: "#", tags: [] },
+
+  { id: "iiitbhop-cult", name: "Spectrum", college: "IIIT Bhopal", type: "Cultural", img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80", link: "#", tags: ["Flagship Fest"] },
+  { id: "iiitbhop-tech", name: "TechMania", college: "IIIT Bhopal", type: "Technical", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80", link: "#", tags: [] },
 ];
