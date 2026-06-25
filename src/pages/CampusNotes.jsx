@@ -574,7 +574,19 @@ export default function CampusNotes() {
                             <button onClick={() => toggleLike(note.id)} style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 10px", borderRadius: 8, border: "none", background: liked.includes(note.id) ? "#FFF0F0" : "#F8F8F8", cursor: "pointer", color: liked.includes(note.id) ? "#e5484d" : "#64748b", fontWeight: 600, fontSize: "0.8rem" }}>
                               <Heart size={14} fill={liked.includes(note.id) ? "#e5484d" : "none"} /> {note.likes}
                             </button>
-                            <button onClick={() => setNotes((p) => p.map((n) => n.id === note.id ? { ...n, downloads: n.downloads + 1 } : n))} style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 10px", borderRadius: 8, border: "none", background: "#F8F8F8", cursor: "pointer", color: "#64748b", fontWeight: 600, fontSize: "0.8rem" }}>
+                            <button onClick={() => {
+                              setNotes((p) => p.map((n) => n.id === note.id ? { ...n, downloads: n.downloads + 1 } : n));
+                              const content = `Mock content for: ${note.title}\nUploaded by: ${note.author}\n\nNote: This is a prototype. Real file storage is not implemented in this demo.`;
+                              const blob = new Blob([content], { type: "text/plain" });
+                              const url = URL.createObjectURL(blob);
+                              const a = document.createElement("a");
+                              a.href = url;
+                              a.download = note.fileName || `${note.title}.txt`;
+                              document.body.appendChild(a);
+                              a.click();
+                              document.body.removeChild(a);
+                              URL.revokeObjectURL(url);
+                            }} style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 10px", borderRadius: 8, border: "none", background: "#F8F8F8", cursor: "pointer", color: "#64748b", fontWeight: 600, fontSize: "0.8rem" }}>
                               <Download size={14} /> {note.downloads}
                             </button>
                             <span style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 10px", fontSize: "0.8rem", color: "#94a3b8" }}>
