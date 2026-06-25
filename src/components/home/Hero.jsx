@@ -1477,36 +1477,26 @@ export default function Hero({ onSearch }) {
 
   /* ── Responsive heading font size ── */
   const headingSize =
-    isXs                          ? "1.8rem"  :
-    isMobile                      ? "2rem"    :
-    bp === "tablet"               ? "2.4rem"  :
-    bp === "ipadpro"              ? "clamp(2.8rem,4vw,3.4rem)" :
-    "clamp(3.2rem,4.8vw,4.2rem)";
+    isXs                          ? "2.4rem"  :
+    isMobile                      ? "3.2rem"    :
+    bp === "tablet"               ? "4.2rem"  :
+    bp === "ipadpro"              ? "clamp(4.5rem,5.5vw,5rem)" :
+    "clamp(5rem,6vw,6rem)";
 
-  /* ── Single centred column on every size — the hero text sits in the
-     middle with the IIT Roorkee campus behind it at low opacity. ── */
+  /* ── Single centred column on every size ── */
   const gridCols = "1fr";
 
-  /* ── Hero background — warm gradient on all sizes ── */
-  const heroBg = "linear-gradient(160deg, #ffffff 0%, #ffffff 40%, #ffffff 72%, #ffffff 100%)";
-
-  /* ── Dot/orb counts for performance ── */
-  const dotCount  = isMobile ? 30 : isTablet ? 50 : 80;
-  const orbCount  = isMobile ? 3 : isTablet ? 4 : 6;
-
-  /* ── Text/accent colors — warm light theme on all sizes ── */
-  const textColor    = "#1c1c28";
-  const subColor     = "rgba(28,28,40,.62)";
-  const borderColor  = "rgba(255, 105, 61,.18)";
+  /* ── Hero background — very light warm cream ── */
+  const heroBg = "#FFFDF9";
 
   return (
     <section
       style={{
         position: "relative",
-        overflow: "hidden",           /* ← stops framer-motion x offset from causing scroll */
+        overflow: "hidden",
         background: heroBg,
         paddingTop: isXs ? 114 : isMobile ? 124 : isTablet ? 134 : 144,
-        paddingBottom: isXs ? 40 : isMobile ? 52 : isTablet ? 60 : 70,
+        paddingBottom: isXs ? 60 : isMobile ? 80 : isTablet ? 100 : 120,
         minHeight: isMobile ? "auto" : isTablet ? "90vh" : "95vh",
         display: "flex",
         alignItems: "center",
@@ -1515,44 +1505,37 @@ export default function Hero({ onSearch }) {
         boxSizing: "border-box",
       }}
     >
-      {/* ═══ Dotted-grid background (campusloom / reference style) ═══ */}
+      {/* ═══ Dotted-grid background ═══ */}
       <div
         aria-hidden
         style={{
           position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-          backgroundImage: "radial-gradient(rgba(33,29,46,.07) 1.2px, transparent 1.2px)",
-          backgroundSize: "26px 26px",
-          maskImage: "radial-gradient(ellipse 90% 80% at 50% 40%, #000 55%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 90% 80% at 50% 40%, #000 55%, transparent 100%)",
+          backgroundImage: "radial-gradient(rgba(0,0,0,.04) 1.5px, transparent 1.5px)",
+          backgroundSize: "32px 32px",
+          maskImage: "radial-gradient(ellipse 90% 80% at 50% 40%, #000 40%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 90% 80% at 50% 40%, #000 40%, transparent 100%)",
         }}
       />
 
-      {/* ═══ Subtle decorative dashed arcs ═══ */}
+      {/* ═══ Subtle decorative dashed arcs with glowing dots ═══ */}
       <svg
         aria-hidden viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none", opacity: 0.5 }}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none", opacity: 0.6 }}
       >
-        <path d="M-40 120 C 360 40, 1080 40, 1480 200" fill="none" stroke="rgba(255,105,61,.18)" strokeWidth="1.5" strokeDasharray="7 9" />
-        <path d="M-40 680 C 420 760, 1020 760, 1480 600" fill="none" stroke="rgba(33,29,46,.10)" strokeWidth="1.5" strokeDasharray="7 9" />
+        <path d="M-100 200 C 300 -100, 800 600, 1500 100" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="1.2" strokeDasharray="6 8" />
+        <path d="M-100 600 C 400 900, 1000 -100, 1500 500" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="1.2" strokeDasharray="6 8" />
+        <path d="M 1200 -100 C 1000 300, 1300 700, 1600 800" fill="none" stroke="rgba(0,0,0,0.04)" strokeWidth="1.2" strokeDasharray="6 8" />
+        
+        {/* Glowing nodes */}
+        <circle cx="350" cy="180" r="3.5" fill="#FF8060" />
+        <circle cx="350" cy="180" r="16" fill="#FF8060" opacity="0.25" filter="blur(4px)" />
+        
+        <circle cx="1080" cy="380" r="4.5" fill="#FF8060" />
+        <circle cx="1080" cy="380" r="20" fill="#FF8060" opacity="0.2" filter="blur(5px)" />
+        
+        <circle cx="450" cy="620" r="3.5" fill="#FF8060" />
+        <circle cx="450" cy="620" r="15" fill="#FF8060" opacity="0.25" filter="blur(4px)" />
       </svg>
-
-      {/* ═══ IIT Roorkee campus — faint background watermark (laptop/tablet) ═══ */}
-      {!isMobile && (
-        <>
-          <img
-            aria-hidden
-            src="/assets/team/IITs/IITs/IIT%20ROORKEE.jpg"
-            alt=""
-            style={{
-              position: "absolute", inset: 0, width: "100%", height: "100%",
-              objectFit: "cover", objectPosition: "center 38%",
-              opacity: 0.08, zIndex: 0, pointerEvents: "none",
-            }}
-          />
-          {/* soft white wash so text stays crisp over the photo */}
-          <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 80% 70% at 50% 45%, rgba(255,255,255,.55) 0%, rgba(255,255,255,.78) 60%, #fff 100%)" }} />
-        </>
-      )}
 
       {/* ═══ Content wrapper ═══ */}
       <div
@@ -1567,37 +1550,31 @@ export default function Hero({ onSearch }) {
         }}
       >
         <div
-          className="hero-grid"
           style={{
-            display: "grid",
-            gridTemplateColumns: gridCols,
-            gap: isMobile ? "1.8rem" : isTablet ? "1.5rem" : "1.9rem",
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             width: "100%",
           }}
         >
+          {/* ══ CENTER — hero text ══ */}
+          <div style={{ textAlign: "center", minWidth: 0, width: "100%", maxWidth: 860, margin: "0 auto" }}>
 
-          {/* ══ CENTER — hero text, centred on every size (story card removed) ══ */}
-          <div style={{ textAlign: "center", minWidth: 0, width: "100%", maxWidth: 760, margin: "0 auto", justifySelf: "center" }}>
-
-            {/* Badge — centred over the headline / bottom text */}
-            <div style={{ textAlign: "center" }}>
+            {/* Badge */}
+            <div style={{ textAlign: "center", marginBottom: isXs ? 24 : 36 }}>
               <span
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 8,
-                  background: "rgba(255, 105, 61,.10)",
-                  border: "1px solid rgba(255, 105, 61,.30)",
-                  color: "#FF693D",
-                  fontSize: isXs ? 11 : 12.5, fontWeight: 700, letterSpacing: "0.5px",
-                  padding: isXs ? "6px 14px" : "8px 18px", borderRadius: 50,
-                  marginBottom: isXs ? 18 : 26,
-                  fontFamily: "'Space Grotesk',sans-serif",
-                  boxShadow: "0 6px 18px -8px rgba(255,105,61,.45)",
+                  background: "#FFF3E6",
+                  color: "#D95E33",
+                  fontSize: isXs ? 10 : 11.5, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase",
+                  padding: isXs ? "8px 16px" : "10px 22px", borderRadius: 50,
+                  fontFamily: "'Inter', 'Space Grotesk', system-ui, sans-serif",
                 }}>
                 <motion.span
                   animate={{ scale: [1, 1.25, 1], opacity: [1, 0.6, 1] }}
                   transition={{ duration: 1.8, repeat: Infinity }}
-                  style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }}
+                  style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }}
                 />
                 {isXs ? "JEE 2026 is Live" : "JEE 2026 Season is Live — Start Your Journey"}
               </span>
@@ -1606,48 +1583,57 @@ export default function Hero({ onSearch }) {
             {/* Headline */}
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.05 }}>
               <h1 style={{
-                fontFamily: "'Playfair Display','Georgia',serif",
-                fontWeight: 900,
-                fontStyle: "italic",
-                color: textColor,
+                fontFamily: "'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
+                fontWeight: 800,
+                color: "#111111",
                 fontSize: headingSize,
-                lineHeight: 1.08,
-                margin: "0 0 1.1rem",
-                letterSpacing: "-0.01em",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+                margin: "0 0 1.8rem",
               }}>
-                Know Your <span style={HIGHLIGHT}>Rank.</span>{" "}
+                Know Your <span style={{ position: "relative", zIndex: 1, whiteSpace: "nowrap" }}>
+                  Rank.
+                  <span style={{ position: "absolute", bottom: "8%", left: 0, right: 0, height: "14%", background: "#FCE3C7", zIndex: -1 }}></span>
+                </span>
                 <br />
-                <span style={{ color: "#FF693D" }}>Find Your College.</span>
+                Find Your <span style={{
+                  fontFamily: "'Playfair Display', 'Georgia', serif",
+                  fontStyle: "italic",
+                  color: "#FF5A36",
+                  textShadow: "0 0 45px rgba(255, 90, 54, 0.55)",
+                  fontWeight: 700,
+                  whiteSpace: "nowrap",
+                }}>College.</span>
               </h1>
 
-              {/* IIT Roorkee startup line — brand identity + SEO signal.
-                  Stays on a single line on every device; font scales down to fit. */}
+              {/* Startup line */}
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 7,
-                marginBottom: "1rem",
-                fontFamily: "'Space Grotesk','Sora',sans-serif",
-                fontWeight: 700,
-                fontSize: "clamp(8.5px, 2.8vw, 13.5px)",
-                color: "#1c1c28",
+                marginBottom: "1.2rem",
+                fontFamily: "'Inter', 'Space Grotesk', system-ui, sans-serif",
+                fontWeight: 600,
+                fontSize: "clamp(12px, 2.8vw, 15px)",
+                color: "#444",
                 whiteSpace: "nowrap",
                 maxWidth: "100%",
               }}>
-                <GraduationCap size={isXs ? 14 : 17} color="#FF693D" style={{ flexShrink: 0 }} />
-                An&nbsp;<span style={{ color: "#E0421F", ...HIGHLIGHT }}>IIT Roorkee</span>&nbsp;startup — built by IITians, trusted by aspirants
+                <GraduationCap size={isXs ? 15 : 18} color="#FF5A36" style={{ flexShrink: 0 }} />
+                An <span style={{ color: "#FF5A36" }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
               </div>
 
+              {/* Subtext */}
               <p style={{
-                color: subColor,
-                fontSize: isXs ? ".88rem" : "clamp(.95rem,1.7vw,1.12rem)",
-                maxWidth: 560, margin: "0 auto 0.6rem",
-                lineHeight: 1.75,
-                fontStyle: "italic",
-                fontFamily: "'Georgia', 'Times New Roman', serif",
+                color: "#666",
+                fontSize: isXs ? "1rem" : "1.15rem",
+                maxWidth: 680, margin: "0 auto",
+                lineHeight: 1.6,
+                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+                fontWeight: 400,
               }}>
                 Predict your JEE rank from marks, discover every college you can get into across all JoSAA &amp; CSAB rounds, and track every deadline — all in one place.
               </p>
 
-              <div style={{ marginBottom: "1.4rem" }} />
+              <div style={{ marginBottom: "2.5rem" }} />
             </motion.div>
 
             {/* ── Search bar ── */}
@@ -1655,19 +1641,19 @@ export default function Hero({ onSearch }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.18 }}
-              style={{ maxWidth: 560, margin: "0 auto 1rem" }}
+              style={{ width: "100%", maxWidth: 640, margin: "0 auto 1.5rem" }}
             >
               <div style={{
                 display: "flex",
                 gap: 6,
                 background: "#ffffff",
-                padding: isXs ? 6 : 7,
-                borderRadius: 16,
-                boxShadow: "0 10px 30px rgba(13,27,62,.08)",
-                border: "1px solid rgba(0,0,0,.07)",
+                padding: isXs ? 6 : 8,
+                borderRadius: 9999,
+                boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
+                border: "1px solid rgba(0,0,0,.04)",
               }}>
-                <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 8, paddingLeft: isXs ? 10 : 14, minWidth: 0 }}>
-                  <Search size={16} color="#9ca3af" style={{ flexShrink: 0 }} />
+                <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 10, paddingLeft: isXs ? 16 : 24, minWidth: 0 }}>
+                  <Search size={18} color="#9ca3af" style={{ flexShrink: 0 }} />
                   <input
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
@@ -1679,34 +1665,39 @@ export default function Hero({ onSearch }) {
                       outline: "none",
                       flex: 1,
                       minWidth: 0,
-                      fontSize: 14,        /* ← min 14px prevents iOS auto-zoom */
-                      fontFamily: "DM Sans",
+                      fontSize: 15,
+                      fontFamily: "'Inter', system-ui, sans-serif",
                       background: "transparent",
                       color: "#111",
                     }}
                   />
                 </div>
                 <button
-                  className="btn"
                   onClick={() => go()}
                   style={{
-                    borderRadius: 10,
-                    padding: isXs ? "8px 14px" : "9px 20px",
-                    fontSize: isXs ? 13 : 14,   /* ← never below 13px */
-                    fontWeight: 700,
+                    borderRadius: 9999,
+                    padding: isXs ? "10px 20px" : "12px 32px",
+                    fontSize: isXs ? 13 : 15,
+                    fontWeight: 600,
+                    fontFamily: "'Inter', system-ui, sans-serif",
                     whiteSpace: "nowrap",
                     flexShrink: 0,
-                    background: "#FF693D",
+                    background: "#FF5A36",
                     color: "#fff",
                     boxShadow: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    transition: "background 0.2s",
                   }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "#E0421F"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "#FF5A36"; }}
                 >
                   Search
                 </button>
               </div>
             </motion.div>
 
-            {/* ── Primary + secondary CTAs (reference split-hero style) ── */}
+            {/* ── Primary + secondary CTAs ── */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1714,48 +1705,49 @@ export default function Hero({ onSearch }) {
               style={{
                 display: "flex", flexWrap: "wrap",
                 justifyContent: "center",
-                gap: 12, margin: "18px 0 4px",
+                gap: 16, margin: "10px 0 30px",
               }}
             >
               <button
                 onClick={() => nav("/community")}
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
-                  padding: isXs ? "12px 20px" : "14px 26px", borderRadius: 12, cursor: "pointer",
-                  background: "#FF693D", border: "1.5px solid #FF693D", color: "#fff",
-                  fontFamily: "Sora", fontWeight: 800, fontSize: isXs ? 13.5 : 14.5,
-                  boxShadow: "0 12px 30px -10px rgba(255,105,61,.65)",
+                  padding: isXs ? "12px 24px" : "14px 32px", borderRadius: 9999, cursor: "pointer",
+                  background: "#FF5A36", border: "none", color: "#fff",
+                  fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
+                  boxShadow: "0 8px 24px rgba(255, 90, 54, 0.3)",
                   transition: "all .2s", whiteSpace: "nowrap",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#E0421F"; e.currentTarget.style.borderColor = "#E0421F"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#FF693D"; e.currentTarget.style.borderColor = "#FF693D"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#E0421F"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#FF5A36"; }}
               >
-                Join Community <ArrowRight size={16} />
+                Join Community <ArrowRight size={18} />
               </button>
 
               <button
                 onClick={() => nav("/blog")}
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
-                  padding: isXs ? "12px 20px" : "14px 26px", borderRadius: 12, cursor: "pointer",
-                  background: "#fff", border: "1.5px solid rgba(28,28,40,.18)", color: "#1c1c28",
-                  fontFamily: "Sora", fontWeight: 800, fontSize: isXs ? 13.5 : 14.5,
+                  padding: isXs ? "12px 24px" : "14px 32px", borderRadius: 9999, cursor: "pointer",
+                  background: "#fff", border: "1px solid rgba(0,0,0,.1)", color: "#111",
+                  fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
+                  boxShadow: "0 4px 12px rgba(0,0,0,.03)",
                   transition: "all .2s", whiteSpace: "nowrap",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#1c1c28"; e.currentTarget.style.borderColor = "#1c1c28"; e.currentTarget.style.color = "#fff"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(28,28,40,.18)"; e.currentTarget.style.color = "#1c1c28"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.2)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(0,0,0,.1)"; }}
               >
                 Blog
               </button>
             </motion.div>
 
-            {/* ── Trust row — overlapping avatars (reference style) ── */}
+            {/* ── Trust row ── */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.46 }}
               style={{
-                display: "flex", alignItems: "center", gap: 12, marginTop: 22,
+                display: "flex", alignItems: "center", gap: 12, marginTop: 12,
                 justifyContent: "center",
               }}
             >
@@ -1767,23 +1759,20 @@ export default function Hero({ onSearch }) {
                 ].map((a, i) => (
                   <span key={a.t} style={{
                     width: 36, height: 36, borderRadius: "50%", background: a.g,
-                    border: "2.5px solid #fff", display: "grid", placeItems: "center",
+                    border: "2.5px solid #FFFDF9", display: "grid", placeItems: "center",
                     marginLeft: i === 0 ? 0 : -12, boxShadow: "0 2px 8px rgba(0,0,0,.12)",
                     fontFamily: "Sora", fontWeight: 800, fontSize: 11.5, color: "#fff",
                   }}>{a.t}</span>
                 ))}
               </div>
-              <p style={{ margin: 0, fontSize: isXs ? 12 : 13, color: "rgba(28,28,40,.62)", fontFamily: "'DM Sans',sans-serif", lineHeight: 1.4 }}>
-                Trusted by <strong style={{ color: "#1c1c28", fontWeight: 800 }}>3,200+</strong> JEE &amp; NEET aspirants
+              <p style={{ margin: 0, fontSize: isXs ? 12 : 13, color: "#666", fontFamily: "'Inter', system-ui, sans-serif", lineHeight: 1.4 }}>
+                Trusted by <strong style={{ color: "#111", fontWeight: 700 }}>3,200+</strong> JEE &amp; NEET aspirants
               </p>
             </motion.div>
 
           </div>
-          {/* ══ end CENTER ══ */}
-
         </div>
       </div>
-
     </section>
   );
-}
+}
