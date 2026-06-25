@@ -291,7 +291,6 @@ export default function Navbar({ onSearch }) {
                   >
                     {item.highlight && <BookOpen size={13} />}
                     {item.label}
-                    <ChevronDown size={13} style={{ transform: open === item.label ? "rotate(180deg)" : "none", transition: ".2s" }} />
                   </button>
                   <AnimatePresence>
                     {open === item.label && (
@@ -362,7 +361,6 @@ export default function Navbar({ onSearch }) {
                   >
                     {item.highlight && <BookOpen size={13} />}
                     {item.label}
-                    <ChevronDown size={13} style={{ transform: open === item.label ? "rotate(180deg)" : "none", transition: ".2s" }} />
                   </button>
                   <AnimatePresence>
                     {open === item.label && (
