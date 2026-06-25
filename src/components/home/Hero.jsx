@@ -1551,12 +1551,12 @@ export default function Hero({ onSearch }) {
             {/* Headline */}
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.05 }}>
               <h1 style={{
-                fontFamily: "'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
+                fontFamily: "'Space Grotesk', 'Sora', system-ui, -apple-system, sans-serif",
                 fontWeight: 800,
                 color: "#111111",
                 fontSize: headingSize,
                 lineHeight: 1.05,
-                letterSpacing: "-0.03em",
+                letterSpacing: "-0.04em",
                 margin: "0 0 1.8rem",
               }}>
                 Know Your <span style={{ position: "relative", zIndex: 1, whiteSpace: "nowrap" }}>
