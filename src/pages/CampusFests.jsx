@@ -150,23 +150,73 @@ export default function CampusFests() {
         )}
       </div>
 
-      {/* ── BOOKING MODAL (Simulated) ── */}
+      {/* ── DETAILS / BOOKING MODAL ── */}
       <AnimatePresence>
         {booking && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setBooking(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)", zIndex: 2000 }} />
             <div style={{ position: "fixed", inset: 0, zIndex: 2001, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, pointerEvents: "none" }}>
-              <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} style={{ width: "min(400px, 100%)", background: "#fff", borderRadius: 24, padding: 32, textAlign: "center", pointerEvents: "auto", boxShadow: "0 32px 64px -16px rgba(0,0,0,0.3)" }}>
-                <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#E0F2FE", color: "#0ea5e9", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-                  <CheckCircle2 size={32} />
+              <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} style={{ width: "min(600px, 100%)", maxHeight: "90vh", overflowY: "auto", background: "#fff", borderRadius: 24, padding: 32, textAlign: "left", pointerEvents: "auto", boxShadow: "0 32px 64px -16px rgba(0,0,0,0.3)" }}>
+                
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #eee", paddingBottom: 16, marginBottom: 20 }}>
+                  <div>
+                    <h3 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#1a1a2e", margin: 0 }}>{booking.name}</h3>
+                    <p style={{ color: "#FF693D", fontSize: "1rem", fontWeight: 700, margin: "4px 0 0" }}>{booking.college} • {booking.type} Fest</p>
+                  </div>
+                  <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#E0F2FE", color: "#0ea5e9", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <CheckCircle2 size={24} />
+                  </div>
                 </div>
-                <h3 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1a1a2e", marginBottom: 12 }}>Redirecting to {booking.name}</h3>
-                <p style={{ color: "#64748b", fontSize: "0.95rem", lineHeight: 1.5, marginBottom: 24 }}>
-                  You are being redirected to the official {booking.college} portal to complete your registration for {booking.name}.
-                </p>
-                <button onClick={() => setBooking(null)} style={{ width: "100%", padding: "14px", borderRadius: 12, background: "#F1F5F9", color: "#334155", fontWeight: 700, border: "none", cursor: "pointer", fontSize: "0.95rem" }}>
-                  Close
-                </button>
+                
+                <div style={{ color: "#475569", fontSize: "0.95rem", lineHeight: 1.6, marginBottom: 24 }}>
+                  {booking.details ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                      {booking.details.month && <div><strong style={{ color: "#1e293b" }}>Month:</strong> {booking.details.month}</div>}
+                      {booking.details.founded && <div><strong style={{ color: "#1e293b" }}>Founded:</strong> {booking.details.founded}</div>}
+                      {booking.details.scale && <div><strong style={{ color: "#1e293b" }}>Scale:</strong> {booking.details.scale}</div>}
+                      {booking.details.footfall && <div><strong style={{ color: "#1e293b" }}>Footfall:</strong> {booking.details.footfall}</div>}
+                      {booking.details.participation && <div><strong style={{ color: "#1e293b" }}>Participation:</strong> {booking.details.participation}</div>}
+                      {booking.details.flagshipEvents && <div><strong style={{ color: "#1e293b" }}>Flagship Events:</strong> {booking.details.flagshipEvents}</div>}
+                      
+                      {booking.details.highlights && booking.details.highlights.length > 0 && (
+                        <div>
+                          <strong style={{ color: "#1e293b" }}>Highlights:</strong>
+                          <ul style={{ margin: "8px 0 0", paddingLeft: 20, color: "#475569" }}>
+                            {booking.details.highlights.map((h, i) => <li key={i}>{h}</li>)}
+                          </ul>
+                        </div>
+                      )}
+                      {booking.details.whyFamous && booking.details.whyFamous.length > 0 && (
+                        <div>
+                          <strong style={{ color: "#1e293b" }}>Why Famous:</strong>
+                          <ul style={{ margin: "8px 0 0", paddingLeft: 20, color: "#475569" }}>
+                            {booking.details.whyFamous.map((h, i) => <li key={i}>{h}</li>)}
+                          </ul>
+                        </div>
+                      )}
+                      {booking.details.specialFeatures && booking.details.specialFeatures.length > 0 && (
+                        <div>
+                          <strong style={{ color: "#1e293b" }}>Special Features:</strong>
+                          <ul style={{ margin: "8px 0 0", paddingLeft: 20, color: "#475569" }}>
+                            {booking.details.specialFeatures.map((h, i) => <li key={i}>{h}</li>)}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <p>Details and schedule for this fest are currently being finalized. Please check back later or visit the official {booking.college} portal.</p>
+                  )}
+                </div>
+
+                <div style={{ display: "flex", gap: 12 }}>
+                  <button onClick={() => setBooking(null)} style={{ flex: 1, padding: "14px", borderRadius: 12, background: "#F1F5F9", color: "#334155", fontWeight: 700, border: "none", cursor: "pointer", fontSize: "0.95rem" }}>
+                    Close
+                  </button>
+                  <button onClick={() => alert(`Redirecting to ${booking.college} portal...`)} style={{ flex: 1, padding: "14px", borderRadius: 12, background: "linear-gradient(135deg, #FF693D, #FF4500)", color: "#fff", fontWeight: 700, border: "none", cursor: "pointer", fontSize: "0.95rem" }}>
+                    Register on Portal
+                  </button>
+                </div>
+
               </motion.div>
             </div>
           </>
