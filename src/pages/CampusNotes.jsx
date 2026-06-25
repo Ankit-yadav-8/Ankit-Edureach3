@@ -650,6 +650,7 @@ function UploadModal({ onClose, onUpload, subject, branch, semester, branches })
 
   return (
     <>
+      {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -657,79 +658,90 @@ function UploadModal({ onClose, onUpload, subject, branch, semester, branches })
         onClick={onClose}
         style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 2000, backdropFilter: "blur(4px)" }}
       />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      {/* Scrollable wrapper — fills the viewport so the modal can scroll */}
+      <div
         style={{
-          position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-          width: "min(480px, 92vw)", maxHeight: "85vh", overflowY: "auto",
-          background: "#fff", borderRadius: 20, zIndex: 2001,
-          padding: "28px", boxShadow: "0 32px 64px -16px rgba(0,0,0,0.25)",
+          position: "fixed", inset: 0, zIndex: 2001,
+          display: "flex", alignItems: "flex-start", justifyContent: "center",
+          overflowY: "auto", WebkitOverflowScrolling: "touch",
+          padding: "60px 16px 40px",
         }}
+        onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-          <h3 style={{ fontWeight: 800, color: "#1a1a2e", margin: 0 }}>📤 Upload Notes</h3>
-          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer" }}><X size={20} color="#999" /></button>
-        </div>
-
-        {subject && (
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#F0F0FF", borderRadius: 8, padding: "6px 12px", marginBottom: 16, fontSize: "0.82rem", fontWeight: 700, color: "#6366f1" }}>
-            <BookOpen size={14} /> {subject}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div>
-            <label style={labelStyle}>Title *</label>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Operating Systems — Unit 3 Handwritten Notes" required style={inputStyle} />
-          </div>
-          <div>
-            <label style={labelStyle}>Description</label>
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Brief description of what's covered…" rows={3} style={{ ...inputStyle, resize: "vertical" }} />
-          </div>
-          <div>
-            <label style={labelStyle}>Your Name</label>
-            <input value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="Anonymous" style={inputStyle} />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          style={{
+            width: "min(480px, 100%)",
+            background: "#fff", borderRadius: 20,
+            padding: "28px", boxShadow: "0 32px 64px -16px rgba(0,0,0,0.25)",
+            flexShrink: 0,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+            <h3 style={{ fontWeight: 800, color: "#1a1a2e", margin: 0 }}>📤 Upload Notes</h3>
+            <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer" }}><X size={20} color="#999" /></button>
           </div>
 
-          {/* File picker */}
-          <div>
-            <label style={labelStyle}>Attach File</label>
-            <input type="file" ref={fileRef} onChange={handleFile} accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.zip" style={{ display: "none" }} />
-            <button type="button" onClick={() => fileRef.current?.click()} style={{
-              width: "100%", padding: "16px", borderRadius: 12, border: "2px dashed rgba(0,0,0,0.1)",
-              background: "#FAFAFA", cursor: "pointer", textAlign: "center", fontFamily: "inherit",
-            }}>
-              {fileName ? (
-                <span style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "center" }}>
-                  <Check size={16} color="#22c55e" />
-                  <span style={{ fontWeight: 700, color: "#1a1a2e" }}>{fileName}</span>
-                  <span style={{ fontSize: "0.78rem", color: "#94a3b8" }}>({fileSize})</span>
-                </span>
-              ) : (
-                <span style={{ color: "#64748b" }}>
-                  <Upload size={20} style={{ marginBottom: 4 }} /><br />
-                  Click to select a file (PDF, DOCX, PPT, Images)
-                </span>
-              )}
-            </button>
-          </div>
+          {subject && (
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#F0F0FF", borderRadius: 8, padding: "6px 12px", marginBottom: 16, fontSize: "0.82rem", fontWeight: 700, color: "#6366f1" }}>
+              <BookOpen size={14} /> {subject}
+            </div>
+          )}
 
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            type="submit"
-            style={{
-              padding: "13px", borderRadius: 12, background: "#FF693D", color: "#fff",
-              fontWeight: 800, border: "none", cursor: "pointer", fontSize: "0.95rem", marginTop: 4,
-            }}
-          >
-            Upload Notes
-          </motion.button>
-        </form>
-      </motion.div>
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div>
+              <label style={labelStyle}>Title *</label>
+              <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Operating Systems — Unit 3 Handwritten Notes" required style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>Description</label>
+              <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Brief description of what's covered…" rows={2} style={{ ...inputStyle, resize: "vertical" }} />
+            </div>
+            <div>
+              <label style={labelStyle}>Your Name</label>
+              <input value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="Anonymous" style={inputStyle} />
+            </div>
+
+            {/* File picker */}
+            <div>
+              <label style={labelStyle}>Attach File</label>
+              <input type="file" ref={fileRef} onChange={handleFile} accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.zip" style={{ display: "none" }} />
+              <button type="button" onClick={() => fileRef.current?.click()} style={{
+                width: "100%", padding: "14px", borderRadius: 12, border: "2px dashed rgba(0,0,0,0.1)",
+                background: "#FAFAFA", cursor: "pointer", textAlign: "center", fontFamily: "inherit",
+              }}>
+                {fileName ? (
+                  <span style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "center" }}>
+                    <Check size={16} color="#22c55e" />
+                    <span style={{ fontWeight: 700, color: "#1a1a2e" }}>{fileName}</span>
+                    <span style={{ fontSize: "0.78rem", color: "#94a3b8" }}>({fileSize})</span>
+                  </span>
+                ) : (
+                  <span style={{ color: "#64748b", fontSize: "0.88rem" }}>
+                    <Upload size={18} style={{ marginBottom: 4 }} /><br />
+                    Click to select file (PDF, DOCX, PPT, Images)
+                  </span>
+                )}
+              </button>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              style={{
+                padding: "13px", borderRadius: 12, background: "#FF693D", color: "#fff",
+                fontWeight: 800, border: "none", cursor: "pointer", fontSize: "0.95rem", marginTop: 4,
+              }}
+            >
+              Upload Notes
+            </motion.button>
+          </form>
+        </motion.div>
+      </div>
     </>
   );
 }
