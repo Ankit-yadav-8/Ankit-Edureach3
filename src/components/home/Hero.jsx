@@ -1487,7 +1487,7 @@ export default function Hero({ onSearch }) {
   const gridCols = "1fr";
 
   /* ── Hero background — very light warm cream ── */
-  const heroBg = "#FFFDF9";
+  const heroBg = "#FFFFFF";
 
   return (
     <section
