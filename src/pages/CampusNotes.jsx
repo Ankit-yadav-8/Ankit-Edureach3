@@ -657,21 +657,29 @@ function UploadModal({ onClose, onUpload, subject, branch, semester, branches })
         onClick={onClose}
         style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 2000, backdropFilter: "blur(4px)" }}
       />
-      
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        style={{
-          position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-          width: "min(480px, 92vw)", maxHeight: "90vh",
-          display: "flex", flexDirection: "column",
-          background: "#fff", borderRadius: 20, zIndex: 2001,
-          boxShadow: "0 32px 64px -16px rgba(0,0,0,0.25)",
-          overflow: "hidden"
+      {/* Scrollable Wrapper to prevent any cutoff */}
+      <div 
+        style={{ 
+          position: "fixed", inset: 0, zIndex: 2001, 
+          overflowY: "auto", WebkitOverflowScrolling: "touch",
+          padding: "8vh 16px 40px" 
         }}
+        onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          style={{
+            margin: "0 auto",
+            width: "min(480px, 100%)",
+            display: "flex", flexDirection: "column",
+            background: "#fff", borderRadius: 20,
+            boxShadow: "0 32px 64px -16px rgba(0,0,0,0.25)",
+            overflow: "hidden"
+          }}
+        >
         {/* Fixed Header */}
         <div style={{ padding: "28px 28px 20px", flexShrink: 0, borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: subject ? 16 : 0 }}>
@@ -739,6 +747,7 @@ function UploadModal({ onClose, onUpload, subject, branch, semester, branches })
           </form>
         </div>
       </motion.div>
+      </div>
     </>
   );
 }
