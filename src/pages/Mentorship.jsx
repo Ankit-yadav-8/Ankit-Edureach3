@@ -67,9 +67,6 @@ function Reveal({ children, delay = 0 }) {
 function Section({ children, style }) {
   return (
     <section style={{ padding: "92px 0", position: "relative", overflow: "hidden", ...style }}>
-      {/* soft ambient orbs */}
-      <div style={{ position: "absolute", top: -60, left: "8%", width: 360, height: 280, borderRadius: "50%", background: "radial-gradient(circle,rgba(255, 105, 61,.10),transparent 65%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: -50, right: "6%", width: 300, height: 220, borderRadius: "50%", background: "radial-gradient(circle,rgba(245,166,35,.08),transparent 65%)", pointerEvents: "none" }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>{children}</div>
     </section>
   );
@@ -125,8 +122,7 @@ function EnrolTopBar({ cfg, scrollToEnrol }) {
   const primary = cfg.tracks[0];
   const meta = MENTOR_PLANS[primary.plan];
   return (
-    <div style={{ background: "linear-gradient(135deg,#1a1208,#2a1c0a)", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: -40, right: -20, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle,rgba(245,166,35,.3),transparent 70%)", pointerEvents: "none" }} />
+    <div style={{ background: "rgba(25, 25, 30, 0.95)", borderBottom: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(12px)", position: "relative", overflow: "hidden", zIndex: 50 }}>
       <div className="container" style={{ position: "relative", zIndex: 1, padding: "16px 0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
@@ -283,7 +279,7 @@ function Hero({ cfg, scrollToEnrol }) {
                 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }}
                 style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 {cfg.stats.map((s) => (
-                  <div key={s.lbl} style={{ flex: 1, minWidth: 120, background: "rgba(255,255,255,.78)", border: "1px solid rgba(255, 105, 61,.2)", borderRadius: 14, padding: "14px 12px", backdropFilter: "blur(8px)" }}>
+                  <div key={s.lbl} style={{ flex: 1, minWidth: 120, background: "rgba(25, 25, 30, 0.6)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 14, padding: "14px 12px", backdropFilter: "blur(12px)", boxShadow: "0 8px 24px rgba(0,0,0,0.4)" }}>
                     <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK }}>{s.val}</div>
                     <div style={{ fontSize: 11.5, color: MUTE, marginTop: 3 }}>{s.lbl}</div>
                   </div>
@@ -750,7 +746,7 @@ function TwoYearPlan({ cfg }) {
 ════════════════════════════════════════════════ */
 function Testimonials({ cfg }) {
   return (
-    <Section style={{ background: "#fffaf5" }}>
+    <Section style={{ background: "transparent" }}>
       <SectionTitle kicker="Real results">Students From The <Accent>2025 Batch</Accent></SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 18 }}>
         {cfg.testimonials.map((t, i) => (
@@ -782,8 +778,7 @@ function Testimonials({ cfg }) {
 function Enrol({ cfg }) {
   const { open: openEnrol } = useEnrol();
   return (
-    <section id="enrol" style={{ padding: "92px 0", background: "linear-gradient(160deg,#ffffff,#ffffff)", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: -60, left: "10%", width: 360, height: 280, borderRadius: "50%", background: "radial-gradient(circle,rgba(255, 105, 61,.16),transparent 65%)", pointerEvents: "none" }} />
+    <section id="enrol" style={{ padding: "92px 0", background: "transparent", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <SectionTitle kicker="Limited spots" sub="One-time enrolment. Serious aspirants only. Pick your track below.">
           Join the <Accent>Mentorship</Accent> Program
@@ -796,7 +791,7 @@ function Enrol({ cfg }) {
               <Reveal key={tr.plan} delay={i * 0.08}>
                 <motion.div whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
-                    background: "#fff", borderRadius: 20, border: `1px solid ${tr.accent}33`, padding: "30px 26px",
+                    background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", borderRadius: 20, border: `1px solid ${tr.accent}33`, padding: "30px 26px",
                     height: "100%", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden",
                     boxShadow: `0 24px 50px -26px ${tr.accent}66`,
                   }}>
@@ -820,7 +815,7 @@ function Enrol({ cfg }) {
                     {["Personal 1-on-1 mentor", "Daily targets + accountability", "Weekly test analysis", "Backlog clearing sprints", "WhatsApp support throughout"].map((b) => (
                       <div key={b} style={{ display: "flex", alignItems: "center", gap: 9 }}>
                         <Check size={16} color="#22c55e" strokeWidth={3} />
-                        <span style={{ color: "#374151", fontSize: 13.5 }}>{b}</span>
+                        <span style={{ color: MUTE, fontSize: 13.5 }}>{b}</span>
                       </div>
                     ))}
                   </div>
@@ -864,7 +859,7 @@ function Contact({ cfg }) {
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, "_blank");
   };
   return (
-    <Section style={{ background: "#fffaf5" }}>
+    <Section style={{ background: "transparent" }}>
       <SectionTitle kicker="Get in touch">Join Our <Accent>Mentorship</Accent> Program</SectionTitle>
       <form onSubmit={submit} style={{ maxWidth: 520, margin: "0 auto", display: "flex", flexDirection: "column", gap: 14 }}>
         <input required value={f.name} onChange={set("name")} placeholder="Your name" style={input} />
@@ -882,13 +877,13 @@ function Contact({ cfg }) {
 function Faqs({ cfg }) {
   const [open, setOpen] = useState(0);
   return (
-    <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
+    <Section style={{ background: "transparent" }}>
       <SectionTitle kicker="Questions">Frequently Asked <Accent>Questions</Accent></SectionTitle>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         {cfg.faqs.map((q, i) => {
           const isOpen = open === i;
           return (
-            <div key={q.q} style={{ background: "#fff", border: `1px solid ${isOpen ? "rgba(255, 105, 61,.45)" : "rgba(0,0,0,.08)"}`, borderRadius: 14, marginBottom: 12, overflow: "hidden", boxShadow: isOpen ? "0 6px 20px rgba(255, 105, 61,.12)" : "0 1px 6px rgba(0,0,0,.04)" }}>
+            <div key={q.q} style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: `1px solid ${isOpen ? "rgba(255, 105, 61,.45)" : "rgba(255,255,255,.08)"}`, borderRadius: 14, marginBottom: 12, overflow: "hidden", boxShadow: isOpen ? "0 6px 20px rgba(255, 105, 61,.12)" : "0 1px 6px rgba(0,0,0,.04)" }}>
               <button onClick={() => setOpen(isOpen ? -1 : i)} style={{
                 width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14,
                 padding: "18px 20px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left",
@@ -1032,9 +1027,7 @@ const JOURNEY_STEPS = [
 
 function JourneyBrand({ cfg }) {
   return (
-    <section style={{ padding: "92px 0", background: "#0a0a0a", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: -60, left: "8%", width: 360, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(255, 105, 61,.18), transparent 65%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: -40, right: "10%", width: 280, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.12), transparent 65%)", pointerEvents: "none" }} />
+    <section style={{ padding: "92px 0", background: "transparent", position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <SectionTitle kicker="How it works" sub="Six steps from where you are to where you deserve to be.">
           Your Journey With <Accent>CollegeParichay</Accent>
@@ -1123,8 +1116,26 @@ export default function Mentorship() {
   const scrollToEnrol = () => document.getElementById("enrol")?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <div style={{ background: "#0a0a0a", color: INK }}>
-      <Seo
+    <div style={{ background: "#0a0a0a", color: INK, minHeight: "100vh", position: "relative" }}>
+      <style>{`
+        .campusloom-bg {
+          position: fixed; inset: 0; zIndex: 0; pointerEvents: none;
+          background-image: 
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+          background-size: 40px 40px;
+          mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+          -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+          animation: panBackground 40s linear infinite;
+        }
+        @keyframes panBackground {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-40px); }
+        }
+      `}</style>
+      <div className="campusloom-bg" />
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <Seo
         title={`${(variant || "jee-2027").replace(/-/g, " ").toUpperCase()} Mentorship by IITians — 1-on-1 Guidance`}
         description="1-on-1 JEE & NEET mentorship by IIT Roorkee alumni — daily targets, test analysis, live tracking and parent reports. Limited seats. Enrol on CollegeParichay."
         path={`/mentorship/${variant}`}
@@ -1147,6 +1158,7 @@ export default function Mentorship() {
       <Enrol cfg={cfg} />
       <Contact cfg={cfg} />
       <Faqs cfg={cfg} />
+      </div>
     </div>
   );
 }
