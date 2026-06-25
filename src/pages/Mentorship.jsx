@@ -293,25 +293,17 @@ function Hero({ cfg, scrollToEnrol }) {
           </motion.div>
         )}
 
-        {/* video placeholder */}
+        {/* hero image */}
         <motion.div
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.42 }}
           style={{
-            maxWidth: 760, margin: "44px auto 0", aspectRatio: "16/9",
-            background: "linear-gradient(135deg,#1a1208,#241a0c)", borderRadius: 18,
-            border: "1px solid rgba(255, 105, 61,.3)", display: "grid", placeItems: "center",
-            position: "relative", overflow: "hidden", cursor: "pointer",
+            maxWidth: 860, margin: "44px auto 0",
+            borderRadius: 24,
+            border: "1px solid rgba(255, 105, 61,.3)",
+            position: "relative", overflow: "hidden",
             boxShadow: "0 30px 70px -30px rgba(255, 105, 61,.6)",
           }}>
-          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 50%, rgba(245,166,35,.2), transparent 65%)" }} />
-          <div style={{ position: "relative", textAlign: "center" }}>
-            <motion.div
-              animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 2, repeat: Infinity }}
-              style={{ width: 74, height: 74, borderRadius: "50%", background: GOLD, display: "grid", placeItems: "center", margin: "0 auto 14px", boxShadow: "0 0 44px rgba(245,166,35,.6)" }}>
-              <Play size={28} color="#1a1208" fill="#1a1208" style={{ marginLeft: 4 }} />
-            </motion.div>
-            <div style={{ color: "rgba(255,255,255,.78)", fontSize: 14, fontWeight: 600 }}>{cfg.videoNote}</div>
-          </div>
+          <img src="/images/hero_mentorship.png" alt="Mentorship Dashboard" style={{ width: "100%", display: "block" }} />
         </motion.div>
       </div>
     </section>
@@ -432,10 +424,15 @@ function TestAnalysis({ m }) {
           </div>
         </Reveal>
 
-        {/* Right — mock report */}
+        {/* Right — mock report & analytics image */}
         <Reveal delay={0.08}>
-          <div style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 18, padding: "24px 24px", height: "100%", boxShadow: "0 18px 44px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#FF693D)" }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 20, height: "100%" }}>
+            <div style={{ borderRadius: 18, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.16)", boxShadow: "0 18px 44px -24px rgba(26,26,46,.4)" }}>
+              <img src="/images/analytics_mentorship.png" alt="Analytics Dashboard" style={{ width: "100%", display: "block" }} />
+            </div>
+            
+            <div style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 18, padding: "24px 24px", flex: 1, boxShadow: "0 18px 44px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#FF693D)" }} />
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
               <div>
                 <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", color: ACCENT }}>Weekly Report</div>
@@ -480,6 +477,7 @@ function TestAnalysis({ m }) {
                 </div>
               ))}
             </div>
+          </div>
           </div>
         </Reveal>
       </div>
@@ -1002,6 +1000,12 @@ function JourneyBrand() {
           Your Journey With <Accent>CollegeParichay</Accent>
         </SectionTitle>
 
+        <Reveal delay={0.1}>
+          <div style={{ maxWidth: 860, margin: "0 auto 40px", borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.2)", boxShadow: "0 22px 48px -24px rgba(26,26,46,.4)" }}>
+            <img src="/images/roadmap_mentorship.png" alt="Mentorship Roadmap" style={{ width: "100%", display: "block" }} />
+          </div>
+        </Reveal>
+
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 22, maxWidth: 1040, margin: "0 auto" }}>
           {JOURNEY_STEPS.map((s, i) => {
             const Icon = s.Icon;
@@ -1047,7 +1051,7 @@ function JourneyBrand() {
    CROSS-PAGE NAV
 ════════════════════════════════════════════════ */
 function MentorTabs({ variant }) {
-  const label = (slug) => slug === "foundation" ? "Foundation 9–10" : slug === "jee-2027" ? "JEE / NEET 2027" : "JEE / NEET 2028";
+  const label = (slug) => slug === "neet" ? "NEET" : slug === "jee-2027" ? "JEE 2027" : "JEE 2028";
   return (
     <div style={{ position: "relative", zIndex: 2, background: "#fffaf5", borderBottom: "1px solid rgba(255, 105, 61,.14)", paddingTop: 114 }}>
       <div className="container" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", padding: "12px 0" }}>
