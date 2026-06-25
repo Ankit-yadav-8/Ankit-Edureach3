@@ -36,23 +36,61 @@ export default function CampusFests() {
       </div>
 
       {/* ── SEARCH & FILTERS ── */}
-      <div className="container" style={{ marginTop: "-28px", position: "relative", zIndex: 10 }}>
-        <div style={{ background: "#fff", padding: "16px 24px", borderRadius: 20, boxShadow: "0 20px 40px -12px rgba(0,0,0,0.08)", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ flex: "1 1 300px", position: "relative" }}>
-            <Search size={18} color="#94a3b8" style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)" }} />
-            <input 
-              value={searchQ} onChange={(e) => setSearchQ(e.target.value)}
-              placeholder="Search by fest name or college..." 
-              style={{ width: "100%", padding: "14px 16px 14px 44px", borderRadius: 12, border: "1px solid rgba(0,0,0,0.08)", background: "#F8F9FA", fontSize: "0.95rem", fontFamily: "inherit", outline: "none" }}
-            />
+      <div className="container" style={{ marginTop: "-32px", position: "relative", zIndex: 10, display: "flex", justifyContent: "center" }}>
+        <div style={{ width: "100%", maxWidth: 800, display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* Main Search Pill */}
+          <div style={{
+            display: "flex",
+            gap: 6,
+            background: "#ffffff",
+            padding: "8px",
+            borderRadius: 9999,
+            boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
+            border: "1px solid rgba(0,0,0,.04)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 10, paddingLeft: 24, minWidth: 0 }}>
+              <Search size={18} color="#9ca3af" style={{ flexShrink: 0 }} />
+              <input 
+                value={searchQ} onChange={(e) => setSearchQ(e.target.value)}
+                placeholder="Search by fest name or college..." 
+                style={{
+                  border: "none",
+                  outline: "none",
+                  flex: 1,
+                  minWidth: 0,
+                  fontSize: 15,
+                  fontFamily: "'Inter', system-ui, sans-serif",
+                  background: "transparent",
+                  color: "#111",
+                }}
+              />
+            </div>
+            <button
+              style={{
+                borderRadius: 9999,
+                padding: "12px 32px",
+                fontSize: 15,
+                fontWeight: 600,
+                fontFamily: "'Inter', system-ui, sans-serif",
+                background: "linear-gradient(135deg, #FF693D, #FF4500)",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                boxShadow: "0 4px 12px rgba(255,105,61,0.3)"
+              }}
+            >
+              Search
+            </button>
           </div>
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <select value={filterType} onChange={(e) => setFilterType(e.target.value)} style={{ padding: "14px 20px", borderRadius: 12, border: "1px solid rgba(0,0,0,0.08)", background: "#F8F9FA", fontSize: "0.9rem", fontWeight: 600, color: "#1a1a2e", cursor: "pointer", outline: "none", fontFamily: "inherit" }}>
+          
+          {/* Filters */}
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+            <select value={filterType} onChange={(e) => setFilterType(e.target.value)} style={{ padding: "10px 20px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "#fff", fontSize: "0.9rem", fontWeight: 600, color: "#1a1a2e", cursor: "pointer", outline: "none", fontFamily: "inherit", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
               <option value="All">All Types</option>
               <option value="Cultural">Cultural Fests</option>
               <option value="Technical">Technical Fests</option>
             </select>
-            <select value={filterInstitute} onChange={(e) => setFilterInstitute(e.target.value)} style={{ padding: "14px 20px", borderRadius: 12, border: "1px solid rgba(0,0,0,0.08)", background: "#F8F9FA", fontSize: "0.9rem", fontWeight: 600, color: "#1a1a2e", cursor: "pointer", outline: "none", fontFamily: "inherit" }}>
+            <select value={filterInstitute} onChange={(e) => setFilterInstitute(e.target.value)} style={{ padding: "10px 20px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "#fff", fontSize: "0.9rem", fontWeight: 600, color: "#1a1a2e", cursor: "pointer", outline: "none", fontFamily: "inherit", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
               <option value="All">All Institutes</option>
               <option value="IIT">IITs</option>
               <option value="NIT">NITs</option>
