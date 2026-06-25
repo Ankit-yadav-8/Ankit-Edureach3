@@ -664,7 +664,8 @@ function UploadModal({ onClose, onUpload, subject, branch, semester, branches })
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         style={{
           position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-          width: "min(480px, 92vw)", background: "#fff", borderRadius: 20, zIndex: 2001,
+          width: "min(480px, 92vw)", maxHeight: "85vh", overflowY: "auto",
+          background: "#fff", borderRadius: 20, zIndex: 2001,
           padding: "28px", boxShadow: "0 32px 64px -16px rgba(0,0,0,0.25)",
         }}
       >

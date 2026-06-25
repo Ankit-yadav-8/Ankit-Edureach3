@@ -58,7 +58,7 @@ function Hero() {
             }}>
               <Users size={16} color={CL.coral} />
               <span style={{ fontSize: 13.5, color: CL.body, fontWeight: 600 }}>
-                <strong style={{ color: CL.ink }}>3,701+</strong> students have already made their{" "}
+                <strong style={{ color: CL.ink }}>3,200+</strong> students have already made their{" "}
                 <strong style={{ color: CL.coral }}>smarter choice.</strong>
               </span>
             </div>
