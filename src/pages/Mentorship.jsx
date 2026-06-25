@@ -194,10 +194,10 @@ function Hero({ cfg, scrollToEnrol }) {
       paddingTop: 140, paddingBottom: 80,
     }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 60, alignItems: "center", maxWidth: 840, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 60, alignItems: "center", maxWidth: 1040, margin: "0 auto" }}>
           
-          {/* Centered Text & CTA */}
-          <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
+          {/* Left: Text & CTA */}
+          <div style={{ textAlign: "left" }}>
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
               style={{ fontSize: 13, fontWeight: 800, letterSpacing: "3px", textTransform: "uppercase", marginBottom: 16 }}>
               <Accent>{cfg.tagline}</Accent>
@@ -233,7 +233,7 @@ function Hero({ cfg, scrollToEnrol }) {
 
             <motion.div
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}
-              style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", marginBottom: 36 }}>
+              style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 36 }}>
               <button onClick={scrollToEnrol} style={ctaSolid}>JOIN NOW <ArrowRight size={18} /></button>
               <a href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! I want to know more about the " + cfg.eyebrow)}`}
                 target="_blank" rel="noreferrer" style={ctaGhost}>
@@ -245,7 +245,7 @@ function Hero({ cfg, scrollToEnrol }) {
             {cfg.stats && (
               <motion.div
                 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }}
-                style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
+                style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 {cfg.stats.map((s) => (
                   <div key={s.lbl} style={{ flex: 1, minWidth: 120, background: "#ffffff", border: "1px solid rgba(0, 0, 0, 0.08)", borderRadius: 14, padding: "14px 12px", boxShadow: "0 4px 14px rgba(0,0,0,0.04)" }}>
                     <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK }}>{s.val}</div>
@@ -255,6 +255,21 @@ function Hero({ cfg, scrollToEnrol }) {
               </motion.div>
             )}
           </div>
+
+          {/* Right: Small Image */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.42 }}
+            style={{
+              position: "relative",
+              borderRadius: 24,
+              border: "1px solid rgba(255, 105, 61,.2)",
+              boxShadow: "0 30px 70px -30px rgba(255, 105, 61,.3)",
+              overflow: "hidden",
+              maxWidth: 400,
+              margin: "0 auto"
+            }}>
+            <img src={cfg.heroImage || "/images/hero_mentorship.png"} alt="Mentorship Dashboard" style={{ width: "100%", display: "block" }} />
+          </motion.div>
         </div>
       </div>
     </section>
@@ -419,7 +434,7 @@ function TestAnalysis({ cfg }) {
               <img src={cfg.analyticsImage || "/images/analytics_mentorship.png"} alt="Analytics Dashboard" style={{ width: "100%", maxHeight: 380, objectFit: "contain", display: "block" }} />
             </div>
             
-            <div style={{ background: "rgba(25, 25, 30, 0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 18, padding: "28px 24px", flex: 1, boxShadow: "0 18px 44px -24px rgba(0,0,0,.6)", position: "relative", overflow: "hidden" }}>
+            <div style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 18, padding: "28px 24px", flex: 1, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#8b5cf6)" }} />
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
               <div>
@@ -432,12 +447,12 @@ function TestAnalysis({ cfg }) {
             </div>
 
             {/* score trend bars */}
-            <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130, padding: "0 4px 8px", borderBottom: "1px solid rgba(255,255,255,.08)", marginBottom: 18 }}>
+            <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130, padding: "0 4px 8px", borderBottom: "1px solid rgba(0,0,0,.08)", marginBottom: 18 }}>
               {trend.map((d, i) => (
                 <div key={d.t} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
                   <motion.div
                     initial={{ height: 0 }} whileInView={{ height: `${d.v}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.07 }}
-                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#FF693D,#FF693D)" : "rgba(255, 105, 61,.25)" }} />
+                    style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#FF693D,#FF693D)" : "rgba(255, 105, 61,.4)" }} />
                   <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 700 }}>{d.t}</span>
                 </div>
               ))}
@@ -448,20 +463,20 @@ function TestAnalysis({ cfg }) {
               <div style={{ fontSize: 13, fontWeight: 800, color: MUTE, marginBottom: 10 }}>Critical Weak Chapters</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                 {m.test.weak.map((w) => (
-                  <span key={w} style={{ fontSize: 12, fontWeight: 800, color: "#fca5a5", background: "rgba(239,68,68,.15)", border: "1px solid rgba(239,68,68,.3)", padding: "5px 12px", borderRadius: 50 }}>{w}</span>
+                  <span key={w} style={{ fontSize: 12, fontWeight: 800, color: "#dc2626", background: "rgba(239,68,68,.1)", border: "1px solid rgba(239,68,68,.2)", padding: "5px 12px", borderRadius: 50 }}>{w}</span>
                 ))}
               </div>
             </div>
 
             {/* fix list */}
-            <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 14, padding: "16px 18px" }}>
+            <div style={{ background: "rgba(255, 105, 61,.04)", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 14, padding: "16px 18px" }}>
               <div style={{ fontSize: 13, fontWeight: 800, color: "#fdba74", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
                 <ListChecks size={15} /> Your priority fix-list
               </div>
               {m.test.fix.map((a) => (
                 <div key={a} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 8 }}>
                   <Check size={16} color="#22c55e" strokeWidth={3} style={{ flexShrink: 0, marginTop: 2 }} />
-                  <span style={{ fontSize: 13.5, color: "#d1d5db", lineHeight: 1.4 }}>{a}</span>
+                  <span style={{ fontSize: 13.5, color: INK, lineHeight: 1.4 }}>{a}</span>
                 </div>
               ))}
             </div>

@@ -183,7 +183,7 @@ export default function SmartToolsHub() {
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-            style={{ borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.2)", boxShadow: "0 22px 48px -24px rgba(255, 105, 61,.3)" }}>
+            style={{ borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.2)", boxShadow: "0 22px 48px -24px rgba(255, 105, 61,.3)", maxWidth: 420, margin: "0 auto" }}>
             <img src="/images/smart_tools_ai.png" alt="Smart Tools" style={{ width: "100%", display: "block" }} />
           </motion.div>
         </div>
