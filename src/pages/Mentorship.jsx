@@ -51,13 +51,15 @@ function Accent({ children }) {
   return <span style={{ background: `linear-gradient(90deg,${ACCENT},${GOLD})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{children}</span>;
 }
 
-function Reveal({ children, delay = 0 }) {
+function Reveal({ children, delay = 0, className, style }) {
   return (
     <motion.div
+      className={className}
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.55, delay }}
+      style={style}
     >
       {children}
     </motion.div>
@@ -349,11 +351,10 @@ function HowWeGuide({ cfg }) {
           const c = isEven ? "#FF693D" : "#8b5cf6";
           
           return (
-            <Reveal key={g.title} delay={i * 0.1}>
-              <div className="timeline-card" style={{ 
-                  display: "flex", width: "45%", alignSelf: isEven ? "flex-end" : "flex-start",
-                  position: "relative"
-                }}>
+            <Reveal key={g.title} delay={i * 0.1} className="timeline-card" style={{ 
+                display: "flex", width: "45%", alignSelf: isEven ? "flex-end" : "flex-start",
+                position: "relative"
+              }}>
                 
                 {/* Center dot for desktop */}
                 <div className="timeline-dot" style={{ position: "absolute", [isEven ? "left" : "right"]: -54, top: "50%", transform: "translateY(-50%)", width: 16, height: 16, borderRadius: "50%", background: "#fff", border: `3px solid ${c}`, zIndex: 2 }} />
@@ -374,7 +375,6 @@ function HowWeGuide({ cfg }) {
                     <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.6, margin: 0 }}>{g.desc}</p>
                   </div>
                 </motion.div>
-              </div>
             </Reveal>
           );
         })}
