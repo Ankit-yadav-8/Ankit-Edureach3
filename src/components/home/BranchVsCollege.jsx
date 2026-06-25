@@ -213,8 +213,8 @@ export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total
 
       {/* live readout */}
       <div style={{ textAlign: "center", margin: big ? "12px 0 16px" : "8px 0 14px", position: "relative" }}>
-        <motion.div animate={{ color: leadColor }} transition={{ duration: 0.4 }}
-          style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 44 : 38, color: leadColor, lineHeight: 1 }}>
+        <motion.div key={sum} initial={{ scale: 1.25, color: leadColor }} animate={{ scale: 1, color: leadColor }} transition={{ type: "spring", stiffness: 400, damping: 14 }}
+          style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 44 : 38, color: leadColor, lineHeight: 1, display: "inline-block" }}>
           {sum ? `${shownLead}%` : "50 / 50"}
         </motion.div>
         <motion.div key={`${even}-${leadCollege}-${!!sum}`} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
@@ -223,28 +223,35 @@ export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total
         </motion.div>
       </div>
 
-      {/* twin towers */}
-      <div style={{ display: "flex", alignItems: "flex-end", gap: big ? 22 : 16, justifyContent: "center", position: "relative" }}>
-        <Tower pct={branchPct} color={CL.coral} soft={CL.coralSoft} label="Branch" points={tally.b} big={big} />
-        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 14 : 12, color: CL.muted, paddingBottom: big ? 64 : 52 }}>vs</span>
-        <Tower pct={collegePct} color={CL.green} soft={CL.greenSoft} label="College" points={tally.c} big={big} />
-      </div>
+      {/* Tilt Wrapper for the physical seesaw effect */}
+      <motion.div
+        animate={{ rotate: sum ? (leadCollege ? 4 : even ? 0 : -4) : 0, y: sum ? (leadCollege ? 2 : even ? 0 : 2) : 0 }}
+        transition={{ type: "spring", stiffness: 100, damping: 12 }}
+        style={{ transformOrigin: "bottom center", position: "relative", zIndex: 1 }}
+      >
+        {/* twin towers */}
+        <div style={{ display: "flex", alignItems: "flex-end", gap: big ? 22 : 16, justifyContent: "center", position: "relative" }}>
+          <Tower pct={branchPct} color={CL.coral} soft={CL.coralSoft} label="Branch" points={tally.b} big={big} />
+          <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 14 : 12, color: CL.muted, paddingBottom: big ? 64 : 52 }}>vs</span>
+          <Tower pct={collegePct} color={CL.green} soft={CL.greenSoft} label="College" points={tally.c} big={big} />
+        </div>
 
-      {/* sliding balance track with a moving sheen */}
-      <div style={{ position: "relative", height: 8, borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber}, ${CL.green})`, margin: big ? "22px 4px 4px" : "18px 4px 4px", overflow: "visible" }}>
-        {/* pulsing halo behind the marker */}
-        <motion.span
-          animate={{ left: `${branchPct}%` }} transition={spring}
-          style={{ position: "absolute", top: "50%", transform: "translate(-50%,-50%)", width: big ? 24 : 20, height: big ? 24 : 20 }}
-        >
-          <motion.span aria-hidden
-            animate={{ scale: [1, 2.1, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
-            style={{ position: "absolute", inset: 0, borderRadius: "50%", background: leadColor, pointerEvents: "none" }} />
-          <span style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "#fff", boxShadow: CL.shadow, border: `2.5px solid ${leadColor}`, display: "grid", placeItems: "center" }}>
-            <GitCompareArrows size={big ? 12 : 10} color={leadColor} />
-          </span>
-        </motion.span>
-      </div>
+        {/* sliding balance track with a moving sheen */}
+        <div style={{ position: "relative", height: 8, borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber}, ${CL.green})`, margin: big ? "22px 4px 4px" : "18px 4px 4px", overflow: "visible" }}>
+          {/* pulsing halo behind the marker */}
+          <motion.span
+            animate={{ left: `${branchPct}%` }} transition={spring}
+            style={{ position: "absolute", top: "50%", transform: "translate(-50%,-50%)", width: big ? 24 : 20, height: big ? 24 : 20 }}
+          >
+            <motion.span aria-hidden
+              animate={{ scale: [1, 2.1, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+              style={{ position: "absolute", inset: 0, borderRadius: "50%", background: leadColor, pointerEvents: "none" }} />
+            <span style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "#fff", boxShadow: CL.shadow, border: `2.5px solid ${leadColor}`, display: "grid", placeItems: "center" }}>
+              <GitCompareArrows size={big ? 12 : 10} color={leadColor} />
+            </span>
+          </motion.span>
+        </div>
+      </motion.div>
 
       {showMeta && (
         <>

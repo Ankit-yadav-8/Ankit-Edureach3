@@ -68,8 +68,8 @@ html {
   overflow-x:hidden !important;
   width:100%;
   max-width:100%;
-  /* Slightly smaller base so rem-based type across the site eases down ~8%. */
-  font-size:14.7px;
+  /* Slightly smaller base so rem-based type across the site eases down. */
+  font-size:13.5px;
 }
 body {
   font-family:"DM Sans",sans-serif;
@@ -2625,7 +2625,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 
 /* ── QHD 1440p monitors (2560px) — bump base size ── */
 @media (min-width:2560px) {
-  html           { font-size:18px; }
+  html           { font-size:16px; }
   .container     { max-width:1900px; }
   .section       { padding:8rem 0; }
   .section-title { font-size:clamp(3.2rem,2.2vw,4.5rem); }
@@ -2633,14 +2633,14 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 
 /* ── Ultra-wide 3440px / 4K 3840px — max scale ── */
 @media (min-width:3440px) {
-  html           { font-size:20px; }
+  html           { font-size:18px; }
   .container     { max-width:2400px; }
   .section       { padding:9rem 0; }
 }
 
 /* ── iMac 24" Retina (2240px logical, DPR 2) ── */
 @media (min-width:2240px) and (max-width:2559px) {
-  html           { font-size:18px; }
+  html           { font-size:16px; }
   .container     { max-width:2000px; }
 }
 
