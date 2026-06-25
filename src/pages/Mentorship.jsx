@@ -226,85 +226,85 @@ function Hero({ cfg, scrollToEnrol }) {
   return (
     <section style={{
       position: "relative", overflow: "hidden",
-      background: "linear-gradient(160deg, #ffffff 0%, #ffffff 45%, #ffffff 100%)",
-      paddingTop: 132, paddingBottom: 80,
+      background: "#ffffff",
+      paddingTop: 140, paddingBottom: 80,
     }}>
-      {/* warm radial overlays */}
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 70% 60% at -5% 0%, rgba(255, 105, 61,.28) 0%, transparent 60%)" }} />
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 105% 15%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: "linear-gradient(rgba(255, 105, 61,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255, 105, 61,.05) 1px,transparent 1px)", backgroundSize: "48px 48px" }} />
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 60, alignItems: "center" }}>
+          
+          {/* Left: Text & CTA */}
+          <div style={{ textAlign: "left" }}>
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+              style={{ fontSize: 13, fontWeight: 800, letterSpacing: "3px", textTransform: "uppercase", marginBottom: 16 }}>
+              <Accent>{cfg.tagline}</Accent>
+            </motion.div>
 
-      <div className="container" style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
-        {/* tagline */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-          style={{ fontSize: 13, fontWeight: 800, letterSpacing: "3px", textTransform: "uppercase", marginBottom: 16 }}>
-          <Accent>{cfg.tagline}</Accent>
-        </motion.div>
+            <motion.span
+              initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700,
+                color: "#c2410c", background: "rgba(255, 105, 61,.12)", border: "1px solid rgba(255, 105, 61,.4)",
+                padding: "7px 18px", borderRadius: 50, marginBottom: 22,
+              }}>
+              {cfg.badge}
+            </motion.span>
 
-        <motion.span
-          initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-          style={{
-            display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700,
-            color: "#c2410c", background: "rgba(255, 105, 61,.12)", border: "1px solid rgba(255, 105, 61,.4)",
-            padding: "7px 18px", borderRadius: 50, marginBottom: 22,
-          }}>
-          {cfg.badge}
-        </motion.span>
+            <motion.h1
+              initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+              style={{
+                fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900,
+                fontSize: "clamp(2.3rem,5vw,4.2rem)", lineHeight: 1.05, letterSpacing: "-2px",
+                color: INK, margin: "0 0 20px",
+              }}>
+              {cfg.title[0]}<br />
+              <Accent>{cfg.title[1]}</Accent>
+              {cfg.title[2] ? <><br />{cfg.title[2]}</> : null}
+            </motion.h1>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          style={{
-            fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900,
-            fontSize: "clamp(2.3rem,6.4vw,4.6rem)", lineHeight: 1.05, letterSpacing: "-2px",
-            color: INK, margin: "0 0 20px",
-          }}>
-          {cfg.title[0]}<br />
-          <Accent>{cfg.title[1]}</Accent>
-          {cfg.title[2] ? <><br />{cfg.title[2]}</> : null}
-        </motion.h1>
+            <motion.p
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+              style={{ color: MUTE, fontSize: "clamp(1rem,2vw,1.15rem)", lineHeight: 1.75, maxWidth: 540, marginBottom: 32 }}>
+              {cfg.subtitle}
+            </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-          style={{ color: MUTE, fontSize: "clamp(1rem,2vw,1.18rem)", lineHeight: 1.75, maxWidth: 680, margin: "0 auto 32px" }}>
-          {cfg.subtitle}
-        </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}
+              style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 36 }}>
+              <button onClick={scrollToEnrol} style={ctaSolid}>JOIN NOW <ArrowRight size={18} /></button>
+              <a href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! I want to know more about the " + cfg.eyebrow)}`}
+                target="_blank" rel="noreferrer" style={ctaGhost}>
+                <MessageCircle size={18} /> Talk to a mentor
+              </a>
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}
-          style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", marginBottom: 30 }}>
-          <button onClick={scrollToEnrol} style={ctaSolid}>JOIN NOW <ArrowRight size={18} /></button>
-          <a href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! I want to know more about the " + cfg.eyebrow)}`}
-            target="_blank" rel="noreferrer" style={ctaGhost}>
-            <MessageCircle size={18} /> Talk to a mentor
-          </a>
-        </motion.div>
+            {/* stats strip */}
+            {cfg.stats && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }}
+                style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+                {cfg.stats.map((s) => (
+                  <div key={s.lbl} style={{ flex: 1, minWidth: 120, background: "rgba(255,255,255,.78)", border: "1px solid rgba(255, 105, 61,.2)", borderRadius: 14, padding: "14px 12px", backdropFilter: "blur(8px)" }}>
+                    <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK }}>{s.val}</div>
+                    <div style={{ fontSize: 11.5, color: MUTE, marginTop: 3 }}>{s.lbl}</div>
+                  </div>
+                ))}
+              </motion.div>
+            )}
+          </div>
 
-        {/* stats strip */}
-        {cfg.stats && (
+          {/* Right: Image */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }}
-            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 12, maxWidth: 720, margin: "0 auto" }}>
-            {cfg.stats.map((s) => (
-              <div key={s.lbl} style={{ background: "rgba(255,255,255,.78)", border: "1px solid rgba(255, 105, 61,.2)", borderRadius: 14, padding: "14px 10px", backdropFilter: "blur(8px)" }}>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK }}>{s.val}</div>
-                <div style={{ fontSize: 11.5, color: MUTE, marginTop: 3 }}>{s.lbl}</div>
-              </div>
-            ))}
+            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.42 }}
+            style={{
+              position: "relative",
+              borderRadius: 24,
+              border: "1px solid rgba(255, 105, 61,.2)",
+              boxShadow: "0 30px 70px -30px rgba(255, 105, 61,.3)",
+              overflow: "hidden"
+            }}>
+            <img src={cfg.heroImage || "/images/hero_mentorship.png"} alt="Mentorship Dashboard" style={{ width: "100%", display: "block" }} />
           </motion.div>
-        )}
-
-        {/* hero image */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.42 }}
-          style={{
-            maxWidth: 860, margin: "44px auto 0",
-            borderRadius: 24,
-            border: "1px solid rgba(255, 105, 61,.3)",
-            position: "relative", overflow: "hidden",
-            boxShadow: "0 30px 70px -30px rgba(255, 105, 61,.6)",
-          }}>
-          <img src="/images/hero_mentorship.png" alt="Mentorship Dashboard" style={{ width: "100%", display: "block" }} />
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -315,7 +315,7 @@ function Hero({ cfg, scrollToEnrol }) {
 ════════════════════════════════════════════════ */
 function ForYou({ cfg }) {
   return (
-    <Section style={{ background: "#fffaf5" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="Sound familiar?">This Plan Is <Accent>For You</Accent> If…</SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16, maxWidth: 940, margin: "0 auto" }}>
         {cfg.forYou.map((t, i) => (
@@ -360,7 +360,7 @@ const GUIDE_ICONS = [Flame, Users, Target, Trophy, Rocket, Star];
 const GUIDE_COLORS = ["#FF693D", "#6366f1", "#0ea5a4", "#ef4444", "#8b5cf6", "#f59e0b"];
 function HowWeGuide({ cfg }) {
   return (
-    <Section style={{ background: "#fffaf5" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="The system" sub="A 1-on-1 mentorship engine built to fix the exact reasons most aspirants fail.">
         How We <Accent>Guide</Accent> You
       </SectionTitle>
@@ -389,10 +389,11 @@ function HowWeGuide({ cfg }) {
 /* ════════════════════════════════════════════════
    WEEKLY TEST ANALYSIS — mock report card
 ════════════════════════════════════════════════ */
-function TestAnalysis({ m }) {
+function TestAnalysis({ cfg }) {
+  const m = cfg.metrics;
   const trend = m.test.trend.map((v, i) => ({ t: `T${i + 1}`, v }));
   return (
-    <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
+    <Section style={{ background: "#ffffff" }}>
       <SectionTitle kicker="Every test counts" sub="No test is just a score. Every week your mentor turns it into a one-page action plan.">
         Weekly <Accent>Test Analysis</Accent>
       </SectionTitle>
@@ -428,7 +429,7 @@ function TestAnalysis({ m }) {
         <Reveal delay={0.08}>
           <div style={{ display: "flex", flexDirection: "column", gap: 20, height: "100%" }}>
             <div style={{ borderRadius: 18, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.16)", boxShadow: "0 18px 44px -24px rgba(26,26,46,.4)" }}>
-              <img src="/images/analytics_mentorship.png" alt="Analytics Dashboard" style={{ width: "100%", display: "block" }} />
+              <img src={cfg.analyticsImage || "/images/analytics_mentorship.png"} alt="Analytics Dashboard" style={{ width: "100%", display: "block" }} />
             </div>
             
             <div style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 18, padding: "24px 24px", flex: 1, boxShadow: "0 18px 44px -24px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
@@ -990,9 +991,9 @@ const JOURNEY_STEPS = [
   { Icon: GraduationCap, c: "#6366f1", title: "Get Your Dream College",           desc: "Your dream IIT or medical college is waiting for you!" },
 ];
 
-function JourneyBrand() {
+function JourneyBrand({ cfg }) {
   return (
-    <section style={{ padding: "92px 0", background: "linear-gradient(160deg, #ffffff 0%, #ffffff 45%, #ffffff 100%)", position: "relative", overflow: "hidden" }}>
+    <section style={{ padding: "92px 0", background: "#ffffff", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: -60, left: "8%", width: 360, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(255, 105, 61,.18), transparent 65%)", pointerEvents: "none" }} />
       <div style={{ position: "absolute", bottom: -40, right: "10%", width: 280, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.12), transparent 65%)", pointerEvents: "none" }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
@@ -1002,7 +1003,7 @@ function JourneyBrand() {
 
         <Reveal delay={0.1}>
           <div style={{ maxWidth: 860, margin: "0 auto 40px", borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.2)", boxShadow: "0 22px 48px -24px rgba(26,26,46,.4)" }}>
-            <img src="/images/roadmap_mentorship.png" alt="Mentorship Roadmap" style={{ width: "100%", display: "block" }} />
+            <img src={cfg.roadmapImage || "/images/roadmap_mentorship.png"} alt="Mentorship Roadmap" style={{ width: "100%", display: "block" }} />
           </div>
         </Reveal>
 
@@ -1053,7 +1054,7 @@ function JourneyBrand() {
 function MentorTabs({ variant }) {
   const label = (slug) => slug === "neet" ? "NEET" : slug === "jee-2027" ? "JEE 2027" : "JEE 2028";
   return (
-    <div style={{ position: "relative", zIndex: 2, background: "#fffaf5", borderBottom: "1px solid rgba(255, 105, 61,.14)", paddingTop: 114 }}>
+    <div style={{ position: "relative", zIndex: 2, background: "#ffffff", borderBottom: "1px solid rgba(255, 105, 61,.14)", paddingTop: 114 }}>
       <div className="container" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", padding: "12px 0" }}>
         {Object.values(MENTORSHIP).map((m) => {
           const active = m.slug === variant;
@@ -1083,7 +1084,7 @@ export default function Mentorship() {
   const scrollToEnrol = () => document.getElementById("enrol")?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <div style={{ background: "#fffaf5", color: INK }}>
+    <div style={{ background: "#ffffff", color: INK }}>
       <Seo
         title={`${(variant || "jee-2027").replace(/-/g, " ").toUpperCase()} Mentorship by IITians — 1-on-1 Guidance`}
         description="1-on-1 JEE & NEET mentorship by IIT Roorkee alumni — daily targets, test analysis, live tracking and parent reports. Limited seats. Enrol on CollegeParichay."
@@ -1096,13 +1097,13 @@ export default function Mentorship() {
       <ForYou cfg={cfg} />
       <WhyFoundation cfg={cfg} />
       <HowWeGuide cfg={cfg} />
-      <TestAnalysis m={cfg.metrics} />
+      <TestAnalysis cfg={cfg} />
       <ImprovementCharts m={cfg.metrics} />
       <LiveTracking m={cfg.metrics} />
       <ParentBooklet m={cfg.metrics} />
       <WhatsAppProof />
       <TwoYearPlan cfg={cfg} />
-      <JourneyBrand />
+      <JourneyBrand cfg={cfg} />
       <Testimonials cfg={cfg} />
       <Enrol cfg={cfg} />
       <Contact cfg={cfg} />

@@ -130,53 +130,54 @@ function CounsellingView() {
 
 function MentorshipView() {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 22, maxWidth: 1040, margin: "0 auto", alignItems: "stretch" }}>
-      {MENTORSHIP_PLANS.map((p, i) => {
-        const Icon = p.icon;
-        return (
-          <motion.div key={p.to}
-            initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
-            whileHover={{ y: -8 }}
-            style={{
-              position: "relative", display: "flex", flexDirection: "column", background: CL.card,
-              borderRadius: 22, border: `1px solid ${p.featured ? CL.coral : CL.line}`,
-              boxShadow: p.featured ? "0 22px 50px -22px rgba(255, 105, 61,.55)" : CL.shadow,
-              padding: "26px 24px", overflow: "hidden",
-            }}>
-            {p.featured && (
-              <span style={{ position: "absolute", top: 16, right: 16, fontSize: 10, fontWeight: 800, letterSpacing: ".06em", color: "#fff", background: CL.coral, padding: "4px 11px", borderRadius: 50 }}>BEST VALUE</span>
-            )}
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-              <span style={{ width: 46, height: 46, borderRadius: 13, background: CL.coralSoft, display: "grid", placeItems: "center" }}>
-                <Icon size={23} color={CL.coral} />
-              </span>
-              <div>
-                <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.12rem", color: CL.ink, lineHeight: 1.2 }}>{p.exam}</h3>
-                <span style={{ fontSize: 12, color: CL.coralDk, fontWeight: 700 }}>{p.tag}</span>
-              </div>
-            </div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 9, marginBottom: 16 }}>
-              <span style={{ fontSize: 15, color: CL.muted, textDecoration: "line-through" }}>₹{p.old}</span>
-              <span style={{ fontFamily: CL.display, fontWeight: 900, fontSize: 34, color: CL.ink }}>₹{p.price}</span>
-              <span style={{ fontSize: 12, color: CL.body }}>one-time</span>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 20 }}>
-              {p.points.map((pt) => (
-                <div key={pt} style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                  <span style={{ width: 18, height: 18, borderRadius: "50%", background: CL.greenSoft, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                    <Check size={11} color="#0a8f5b" strokeWidth={3} />
-                  </span>
-                  <span style={{ color: CL.ink2, fontSize: 13.3 }}>{pt}</span>
-                </div>
-              ))}
-            </div>
-            <Link to={p.to} style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: CL.coral, color: "#fff", padding: "13px 20px", borderRadius: 12, fontFamily: CL.display, fontWeight: 800, fontSize: 14.5 }}>
-              Enrol — ₹{p.price} <ArrowRight size={16} />
-            </Link>
-          </motion.div>
-        );
-      })}
-    </div>
+    <motion.div 
+      initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+      style={{
+        display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 40,
+        maxWidth: 1040, margin: "0 auto", background: CL.card, borderRadius: 24,
+        border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: 32, alignItems: "center"
+      }}>
+      
+      {/* Left: Copy & CTA */}
+      <div style={{ textAlign: "left" }}>
+        <span style={{
+          display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1px",
+          background: CL.coralSoft, color: CL.coralDk, padding: "6px 14px", borderRadius: 50, marginBottom: 16, textTransform: "uppercase"
+        }}>
+          <Sparkles size={13} /> 1-on-1 Guidance
+        </span>
+        <h3 style={{ fontFamily: CL.display, fontWeight: 900, fontSize: "clamp(2rem, 3.5vw, 2.6rem)", color: CL.ink, lineHeight: 1.1, marginBottom: 18 }}>
+          Your Personal <span style={{ color: CL.coral }}>IITian Mentor</span>
+        </h3>
+        <p style={{ color: CL.body, fontSize: 16, lineHeight: 1.6, marginBottom: 28, maxWidth: 440 }}>
+          Stop guessing. Get a customized daily study plan, weekly test analysis, and real accountability from mentors who have cracked JEE and NEET.
+        </p>
+        
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
+          {["Daily Targets & Accountability", "Weekly Test Analysis", "1-on-1 Doubt Solving"].map(bullet => (
+             <div key={bullet} style={{ display: "flex", gap: 10, alignItems: "center" }}>
+               <span style={{ width: 22, height: 22, borderRadius: "50%", background: CL.greenSoft, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                 <Check size={13} color="#0a8f5b" strokeWidth={3} />
+               </span>
+               <span style={{ fontSize: 14.5, color: CL.ink2, fontWeight: 600 }}>{bullet}</span>
+             </div>
+          ))}
+        </div>
+
+        <Link to="/mentorship/jee-2027" style={{
+          display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff",
+          padding: "16px 28px", borderRadius: 14, fontFamily: CL.display, fontWeight: 800, fontSize: 16,
+          textDecoration: "none", boxShadow: "0 10px 24px -8px rgba(255, 105, 61,.6)"
+        }}>
+          Explore Mentorship <ArrowRight size={18} />
+        </Link>
+      </div>
+
+      {/* Right: AI Image */}
+      <div style={{ borderRadius: 18, overflow: "hidden", border: `1px solid ${CL.line}`, boxShadow: "0 18px 44px -24px rgba(26,26,46,.2)" }}>
+        <img src="/images/home_mentorship_overview.png" alt="Mentorship Overview" style={{ width: "100%", display: "block" }} />
+      </div>
+    </motion.div>
   );
 }
 

@@ -44,6 +44,9 @@ export const MENTORSHIP = {
     title: ["Right Guidance.", "Real Results.", ""],
     subtitle: "CollegeParichay helps serious JEE 2027 aspirants cut through the confusion — with a personal IITian mentor, daily accountability and a plan that actually works. No noise, just the path to your highest potential.",
     videoNote: "Watch how the CollegeParichay mentorship system works",
+    heroImage: "/images/jee_2027_hero.png",
+    analyticsImage: "/images/jee_2027_analytics.png",
+    roadmapImage: "/images/jee_2027_roadmap.png",
     stats: [
       { val: "1000+", lbl: "Students mentored" },
       { val: "1-on-1", lbl: "Personal mentor" },
@@ -148,6 +151,9 @@ export const MENTORSHIP = {
     title: ["You're Early.", "That's Your Edge.", ""],
     subtitle: "CollegeParichay mentors JEE 2028 aspirants from day one — a 2-year plan that builds deep concepts, daily discipline and an unbeatable head start. Start now, finish two full years ahead of everyone else.",
     videoNote: "See how a 2-year head start builds an unbeatable lead",
+    heroImage: "/images/jee_2028_hero.png",
+    analyticsImage: "/images/jee_2028_analytics.png",
+    roadmapImage: "/images/jee_2028_roadmap.png",
     stats: [
       { val: "2 Years", lbl: "Of mentorship" },
       { val: "1-on-1", lbl: "Same mentor" },
@@ -258,6 +264,9 @@ export const MENTORSHIP = {
     title: ["Biology First.", "Rank Guaranteed.", ""],
     subtitle: "CollegeParichay helps serious NEET aspirants cut through the confusion — with a personal Doctor / NEET topper mentor, daily accountability and a biology-first plan that actually works. Available for both 2027 and 2028.",
     videoNote: "Watch how the NEET mentorship system works",
+    heroImage: "/images/neet_hero.png",
+    analyticsImage: "/images/neet_analytics.png",
+    roadmapImage: "/images/neet_roadmap.png",
     stats: [
       { val: "1000+", lbl: "Future Doctors" },
       { val: "1-on-1", lbl: "Medical mentor" },
