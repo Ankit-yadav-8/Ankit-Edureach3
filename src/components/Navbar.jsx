@@ -210,6 +210,7 @@ export default function Navbar({ onSearch }) {
     { label: "Colleges", icon: Landmark, drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Mentorship", icon: Heart, drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
     { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa", "/campus-notes", "/community"].some((x) => p.startsWith(x)) },
+    { label: "Blog", icon: FileText, to: "/blog", match: (p) => p.startsWith("/blog") },
   ];
 
   const isActive = (item) => (item.match ? item.match(location.pathname) : false);

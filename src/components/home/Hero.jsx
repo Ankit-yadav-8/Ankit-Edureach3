@@ -1559,19 +1559,16 @@ export default function Hero({ onSearch }) {
                 letterSpacing: "-0.04em",
                 margin: "0 0 1.8rem",
               }}>
-                Know Your <span style={{ position: "relative", zIndex: 1, whiteSpace: "nowrap" }}>
-                  Rank.
-                  <span style={{ position: "absolute", bottom: "8%", left: 0, right: 0, height: "14%", background: "#FCE3C7", zIndex: -1 }}></span>
-                </span>
+                Know your rank.
                 <br />
-                Find Your <span style={{
-                  fontFamily: "'Playfair Display', 'Georgia', serif",
-                  fontStyle: "italic",
+                Find your <span style={{
                   color: "#FF5A36",
-                  textShadow: "0 0 45px rgba(255, 90, 54, 0.55)",
-                  fontWeight: 700,
                   whiteSpace: "nowrap",
-                }}>College.</span>
+                }}>college</span><span style={{ color: "#FF5A36", display: "inline-flex", alignItems: "center", margin: "0 2px" }}>
+                  <svg width="28" height="11" viewBox="0 0 28 11" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: "translateY(1px)" }}>
+                    <path d="M2 8C5 8 7 2 10 2C13 2 15 8 18 8C21 8 23 2 26 2" stroke="#FF5A36" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>.
               </h1>
 
               {/* Startup line */}
@@ -1585,7 +1582,6 @@ export default function Hero({ onSearch }) {
                 whiteSpace: "nowrap",
                 maxWidth: "100%",
               }}>
-                <GraduationCap size={isXs ? 15 : 18} color="#FF5A36" style={{ flexShrink: 0 }} />
                 An <span style={{ color: "#FF5A36" }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
               </div>
 
