@@ -443,34 +443,21 @@ export default function Navbar({ onSearch }) {
         </ul>
 
         <div style={{ display: "flex", alignItems: "center", gap: 8, justifySelf: "end", gridColumn: 3 }}>
-          <button
-            onClick={() => navigate("/jee-main#college")}
-            className="cta-desktop"
-            style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 20px", borderRadius: 999, border: "none", background: "#FF693D", color: "#fff", fontWeight: 700, cursor: "pointer", fontSize: "0.95rem" }}
-          >
-            Predict My College <Target size={16} />
-          </button>
-          
           {isLoggedIn ? (
-            <div className="cta-desktop" style={{ display: "flex", alignItems: "stretch", borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)", background: "#fff", overflow: "hidden" }}>
-              <button
-                onClick={() => navigate("/dashboard")}
-                title="My Dashboard"
-                style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 10px", border: "none", background: "transparent", color: "var(--navy)", fontWeight: 700, cursor: "pointer" }}
-              >
-                <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#FF693D", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800 }}>
-                  {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
-                </span>
-                {user?.name?.split(" ")[0] || "Account"}
-              </button>
-              <button
-                onClick={() => setConfirmLogout(true)}
-                title="Logout"
-                style={{ display: "grid", placeItems: "center", padding: "0 10px", border: "none", borderLeft: "1px solid rgba(0,0,0,0.06)", background: "transparent", cursor: "pointer" }}
-              >
-                <LogOut size={14} style={{ color: "#e5484d" }} />
-              </button>
-            </div>
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="cta-desktop"
+              title="My Dashboard"
+              style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 12px 5px 5px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "#fff", color: "var(--navy)", fontWeight: 600, cursor: "pointer", fontSize: "0.9rem", transition: "all 0.2s" }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.08)"; }}
+            >
+              <span style={{ width: 28, height: 28, borderRadius: "50%", background: "#FFF1E9", color: "#FF693D", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 800 }}>
+                {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
+              </span>
+              {user?.name?.split(" ")[0] || "Account"}
+              <ChevronDown size={14} style={{ color: "#9ca3af", marginLeft: 2 }} />
+            </button>
           ) : (
             <button
               onClick={openLogin}
@@ -711,14 +698,6 @@ export default function Navbar({ onSearch }) {
               >
                 <HelpCircle size={16} /> How to use College Parichay
               </Link>
-
-              <button
-                className="btn btn-coral full mt-3"
-                style={{ justifyContent: "center" }}
-                onClick={() => goHash("/jee-main#college")}
-              >
-                <Target size={16} /> Predict My College
-              </button>
 
               {isLoggedIn ? (
                 <button

@@ -1677,7 +1677,7 @@ export default function Hero({ onSearch }) {
               }}
             >
               <button
-                onClick={() => nav("/community")}
+                onClick={() => nav("/jee-main#college")}
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
                   padding: isXs ? "12px 24px" : "14px 32px", borderRadius: 9999, cursor: "pointer",
@@ -1689,11 +1689,11 @@ export default function Hero({ onSearch }) {
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#E0421F"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#FF5A36"; }}
               >
-                Join Community <ArrowRight size={18} />
+                Predict My College <Target size={18} />
               </button>
 
               <button
-                onClick={() => nav("/blog")}
+                onClick={() => nav("/community")}
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
                   padding: isXs ? "12px 24px" : "14px 32px", borderRadius: 9999, cursor: "pointer",
@@ -1705,7 +1705,7 @@ export default function Hero({ onSearch }) {
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.2)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(0,0,0,.1)"; }}
               >
-                Blog
+                Join community <ArrowRight size={18} />
               </button>
             </motion.div>
 
