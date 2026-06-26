@@ -80,7 +80,29 @@ async function cropDiagram(pngBuffer, bbox, pad = Number(process.env.TEST_VISION
   const ctx = cv.getContext("2d");
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
   dewatermark(ctx, sw, sh);
+  // The vision model frequently flags a figure where there is none (e.g. a plain
+  // text option) or gives a bbox that lands on blank page margin. That yields an
+  // all-white crop which renders as an ugly EMPTY image box next to the question/
+  // option. Drop a near-blank crop so the question shows no box and a text option
+  // shows just its text. TEST_VISION_DIAGRAM_MININK (default 0.003 = 0.3% of
+  // pixels must be ink) tunes the threshold.
+  if (isBlankCrop(ctx, sw, sh)) return null;
   return cv.toBuffer("image/png");
+}
+
+// True when a crop is effectively empty: fewer than a tiny fraction of its pixels
+// are "ink" (darker than light-grey, after the watermark has been whitened out).
+function isBlankCrop(ctx, w, h) {
+  const minInk = Math.min(0.05, Math.max(0, Number(process.env.TEST_VISION_DIAGRAM_MININK) || 0.003));
+  if (minInk <= 0) return false;
+  let data;
+  try { data = ctx.getImageData(0, 0, w, h).data; } catch { return false; }
+  let ink = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    const lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+    if (lum < 200) ink++; // darker than light grey ⇒ real content (line/label/text)
+  }
+  return ink / (w * h) < minInk;
 }
 
 // Coaching papers tile a faint "mathongo"-style watermark across every page, so
