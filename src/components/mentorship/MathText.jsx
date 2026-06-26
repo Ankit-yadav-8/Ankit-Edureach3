@@ -8,12 +8,23 @@
 import katex from "katex";
 import "katex/dist/katex.min.css";
 
+// Some converted papers lost the leading backslash on LaTeX commands that take a
+// braced argument (e.g. "vec{a}", "frac{1}{2}", "sqrt{2}"), so KaTeX rendered the
+// command name as literal italic letters ("veca" instead of an arrow over a).
+// Restore the backslash for a known, safe set of commands when one is missing —
+// fixes both already-saved questions and new conversions. A command already
+// preceded by a backslash (or letters, so it's mid-word) is left untouched.
+const BARE_CMD_RE = /(^|[^\\A-Za-z])(vec|hat|bar|tilde|widehat|widetilde|overrightarrow|overline|underline|dot|ddot|frac|dfrac|tfrac|binom|sqrt|operatorname|mathbb|mathbf|mathrm|mathcal|mathit|boldsymbol|text)(\s*\{)/g;
+function fixBareCommands(tex) {
+  return String(tex).replace(BARE_CMD_RE, (_, pre, cmd, brace) => `${pre}\\${cmd}${brace}`);
+}
+
 // KaTeX emits its own sanitised markup (throwOnError:false), so the
 // dangerouslySetInnerHTML below is safe. Returns null on a parse failure so the
 // caller can fall back to the raw source instead of throwing.
 function mathHtml(tex, display) {
   try {
-    return katex.renderToString(String(tex).trim(), { throwOnError: false, displayMode: display });
+    return katex.renderToString(fixBareCommands(String(tex).trim()), { throwOnError: false, displayMode: display });
   } catch {
     return null;
   }
@@ -179,16 +190,25 @@ export default function MathText({ text = "", style }) {
   const flushText = () => { if (buf.length) { blocks.push({ type: "text", text: buf.join("\n") }); buf = []; } };
 
   for (let i = 0; i < lines.length; i++) {
-    // A table = a header row, a separator row, then zero or more data rows.
-    if (isRow(lines[i]) && i + 1 < lines.length && isSepRow(lines[i + 1]) && lines[i + 1].includes("-")) {
+    const line = lines[i];
+    const next = lines[i + 1] ?? "";
+    // A table starts on a pipe row followed by EITHER a markdown separator row
+    // (| --- | --- |) OR another pipe row — the vision model and coaching papers
+    // routinely emit data/frequency tables WITHOUT the separator, and the old
+    // code rendered those as a wall of "|" text instead of a real table.
+    if (isRow(line) && ((isSepRow(next) && next.includes("-")) || isRow(next))) {
       flushText();
-      const rows = [splitRow(lines[i])];
-      i += 2; // consume header + separator
-      while (i < lines.length && isRow(lines[i]) && !isSepRow(lines[i])) { rows.push(splitRow(lines[i])); i++; }
-      i--; // the for-loop will re-increment
+      const rows = [splitRow(line)];
+      let j = i + 1;
+      if (isSepRow(lines[j])) j++; // skip the optional separator row
+      while (j < lines.length && isRow(lines[j])) {
+        if (!isSepRow(lines[j])) rows.push(splitRow(lines[j]));
+        j++;
+      }
       blocks.push({ type: "table", rows });
+      i = j - 1; // the for-loop will re-increment
     } else {
-      buf.push(lines[i]);
+      buf.push(line);
     }
   }
   flushText();

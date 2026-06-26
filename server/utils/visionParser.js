@@ -12,8 +12,11 @@
 // within model image limits and keep latency reasonable.
 //
 // Tunables (env): GROQ_VISION_MODEL (default meta-llama/llama-4-scout-17b-16e-
-// instruct), TEST_VISION_SCALE (render DPI factor), TEST_VISION_PAGES (pages per
-// request), TEST_VISION_MAXPAGES, TEST_VISION=off.
+// instruct), TEST_VISION_SCALE (render DPI factor, used for diagram crops),
+// TEST_VISION_OCR_SCALE (smaller effective scale of the images SENT to the model
+// — fewer tokens so long papers finish), TEST_VISION_PAGES (pages per request),
+// TEST_VISION_MAXPAGES, TEST_VISION_RETRIES, TEST_VISION_DIAGRAM_PAD,
+// TEST_VISION=off, TEST_VISION_DIAGRAMS=off.
 // ─────────────────────────────────────────────────────────────────────────────
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
@@ -58,17 +61,21 @@ function salvageQuestions(text) {
 // Crop a diagram region (normalized bbox, padded a little) out of a page PNG and
 // return a PNG buffer, or null if the box is missing/too small. Uses the
 // prebuilt @napi-rs/canvas that ships with pdf-to-img — no extra dependency.
-async function cropDiagram(pngBuffer, bbox, pad = 0.04) {
+async function cropDiagram(pngBuffer, bbox, pad = Number(process.env.TEST_VISION_DIAGRAM_PAD) || 0.04) {
   if (!Array.isArray(bbox) || bbox.length < 4) return null;
   let [x0, y0, x1, y1] = bbox.map(clamp01);
+  // Vision models often emit the corners swapped (x1<x0) or as [x,y,w,h]; sort so
+  // a valid figure isn't silently dropped as a zero/negative-area box.
+  if (x1 < x0) [x0, x1] = [x1, x0];
+  if (y1 < y0) [y0, y1] = [y1, y0];
   x0 = clamp01(x0 - pad); y0 = clamp01(y0 - pad); x1 = clamp01(x1 + pad); y1 = clamp01(y1 + pad);
-  if (x1 - x0 < 0.03 || y1 - y0 < 0.03) return null;
+  if (x1 - x0 < 0.02 || y1 - y0 < 0.02) return null;
   const require = createRequire(import.meta.url);
   const { createCanvas, loadImage } = await import(pathToFileURL(require.resolve("@napi-rs/canvas")).href);
   const img = await loadImage(pngBuffer);
   const sx = Math.round(x0 * img.width), sy = Math.round(y0 * img.height);
   const sw = Math.round((x1 - x0) * img.width), sh = Math.round((y1 - y0) * img.height);
-  if (sw < 24 || sh < 24) return null;
+  if (sw < 16 || sh < 16) return null;
   const cv = createCanvas(sw, sh);
   const ctx = cv.getContext("2d");
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
@@ -101,7 +108,8 @@ const VISION_SYS =
   "Transcribe each question and ALL its options exactly as printed, including every mathematical expression — wrap ALL maths in LaTeX delimiters $...$ (e.g. $\\frac{\\beta}{\\alpha}$, $x^2+1$, $\\alpha,\\beta\\in\\mathbb{R}$). " +
   'Use the printed question number for "qno". Map option labels A/B/C/D or (1)-(4) to "1","2","3","4". ' +
   'For an MCQ every "single" question MUST have all four options. Fill each option\'s "text" with the option exactly as printed (use LaTeX for any maths); never leave a purely-textual option blank. Only "integer" questions may have empty options. ' +
-  'For numerical / integer-answer questions set "type":"integer", "options":[] and "correct" to the number. ' +
+  'A question is "integer" ONLY when the paper prints NO labelled options for it. If FOUR labelled options (1)-(4) or (A)-(D) are printed — even when they are plain numbers like 0.5, 1.2, 0.25 — set "type":"single" and fill ALL four options; NEVER mark it "integer" just because the stem has a blank/underscore (e.g. "the height will be ____ cm"). Only when there are genuinely no printed options set "type":"integer", "options":[] and "correct" to the number. ' +
+  'TABLES — if a question contains a small data / values / frequency TABLE, reproduce it inside "text" as a GitHub-flavoured Markdown table: a header row, then a separator row of dashes (| --- | --- |), then each data row, with EACH ROW on its own line (real line breaks). Put any maths in the cells in $...$. ' +
   'If the page shows the answer (e.g. "Answer Key : (3)") put it in "correct" ("1"-"4" for MCQ, the number for integer); otherwise "correct":"". ' +
   'ALWAYS set "subject" for EVERY question to exactly one of "Physics", "Chemistry", "Maths" or "Biology" — never leave it blank. Section headings (e.g. "PHYSICS", "CHEMISTRY", "SECTION B — Chemistry"), the topic of the question, and the position in the paper all indicate the subject; carry the most recent section heading forward to every question under it. ' +
   'DIAGRAMS — give a bounding box for any figure so it can be cropped from the page. Coordinates are fractions of the page the figure is on (0=left/top, 1=right/bottom); "page" is the 1-based index of that page AMONG THE IMAGES IN THIS REQUEST. Every box must TIGHTLY enclose the WHOLE figure with all its parts/labels but EXCLUDE any page watermark, logo, website/URL, coaching-institute name or batch/branding text. ' +
@@ -120,6 +128,25 @@ async function renderPages(pdfBuffer, scale) {
   return pages;
 }
 
+// Return a downscaled copy of a page PNG (ratio < 1). The model reads these
+// smaller images, which cost FAR fewer vision tokens — so a long paper finishes
+// within a rate-limited tier's budget instead of dying after the first section —
+// while diagrams are still cropped from the full-res page so figures stay sharp.
+// Falls back to the original buffer if resize is unavailable, so OCR never fails.
+async function downscalePng(pngBuffer, ratio) {
+  if (!(ratio > 0) || ratio >= 1) return pngBuffer;
+  try {
+    const require = createRequire(import.meta.url);
+    const { createCanvas, loadImage } = await import(pathToFileURL(require.resolve("@napi-rs/canvas")).href);
+    const img = await loadImage(pngBuffer);
+    const w = Math.max(1, Math.round(img.width * ratio));
+    const h = Math.max(1, Math.round(img.height * ratio));
+    const cv = createCanvas(w, h);
+    cv.getContext("2d").drawImage(img, 0, 0, w, h);
+    return cv.toBuffer("image/png");
+  } catch { return pngBuffer; }
+}
+
 // One vision request. The page PNGs ride along as inline image parts (callGroq
 // maps them to OpenAI image_url data-URLs). callGroq handles 429/5xx retries
 // (honouring Retry-After), auto-halves an over-large token cap, and throws a
@@ -130,7 +157,10 @@ async function callVision(model, images, maxTokens) {
   for (const png of images) {
     parts.push({ inline_data: { mime_type: "image/png", data: png.toString("base64") } });
   }
-  const text = await callGroq({ system: VISION_SYS, parts, maxTokens, model });
+  // Be patient with sustained per-minute rate limits: a big paper fires many
+  // batches, and giving up too early is how later questions get silently dropped.
+  const retries = Math.min(20, Math.max(4, Number(process.env.TEST_VISION_RETRIES) || 12));
+  const text = await callGroq({ system: VISION_SYS, parts, maxTokens, model, retries });
   // Repair under-escaped LaTeX backslashes before parsing, else \frac/\sqrt get
   // mangled into control chars (or rejected) by JSON.parse.
   const c = repairLatexBackslashes(text || "");
@@ -171,6 +201,11 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
   // Default 2 (was 1.5): sharper pages so the model reads dense maths/options
   // accurately AND the diagram crops are crisp enough to read on a phone.
   const scale = Math.min(3, Math.max(1, Number(process.env.TEST_VISION_SCALE) || 2));
+  // OCR images are sent to the model DOWNSCALED to this effective scale: fewer
+  // vision tokens per page, so a full 75-question paper fits a rate-limited/free
+  // tier's budget and finishes, instead of stopping after the first section.
+  // Diagrams are still cropped from the full-res `pages`, so figures stay crisp.
+  const ocrScale = Math.min(scale, Math.max(0.7, Number(process.env.TEST_VISION_OCR_SCALE) || 1.5));
   const perBatch = Math.min(5, Math.max(1, Number(process.env.TEST_VISION_PAGES) || 2));
   const maxPages = Math.min(80, Math.max(1, Number(process.env.TEST_VISION_MAXPAGES) || 50));
   const concurrency = Math.min(6, Math.max(1, Number(process.env.TEST_VISION_CONCURRENCY) || 2));
@@ -182,21 +217,30 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
   const truncated = pages.length > maxPages;
   pages = pages.slice(0, maxPages);
 
+  // Downscaled copies for the model; the full-res `pages` are kept for crops.
+  const ocrPages = ocrScale < scale - 0.01
+    ? await Promise.all(pages.map((p) => downscalePng(p, ocrScale / scale)))
+    : pages;
+
+  // Batch by START INDEX so each worker reads the downscaled OCR copy of its
+  // pages but crops diagrams from the matching full-res pages.
   const batches = [];
-  for (let i = 0; i < pages.length; i += perBatch) batches.push(pages.slice(i, i + perBatch));
+  for (let i = 0; i < pages.length; i += perBatch) batches.push(i);
 
   // Extract diagram crops unless turned off / Cloudinary not configured.
   const wantDiagrams = String(process.env.TEST_VISION_DIAGRAMS || "").toLowerCase() !== "off" && cloudinaryReady();
 
   let firstErr = "";
   let dailyLimit = false;
-  const results = await mapPool(batches, concurrency, async (imgs, bi) => {
+  const results = await mapPool(batches, concurrency, async (start) => {
     if (dailyLimit) return []; // stop hammering once the daily quota is gone
-    const batchStart = bi * perBatch; // absolute 0-based index of imgs[0]
+    const batchStart = start; // absolute 0-based index of imgs[0]
+    const imgs = pages.slice(start, start + perBatch);        // full-res, for crops
+    const ocrImgs = ocrPages.slice(start, start + perBatch);  // downscaled, for OCR
     let arr;
     // 6000 tokens (was 4000): dense 2-page batches overran 4000 and truncated;
     // callVision auto-halves if even this is too high for the model/tier.
-    try { arr = await callVision(model, imgs, Number(process.env.TEST_VISION_MAXTOKENS) || 8000); }
+    try { arr = await callVision(model, ocrImgs, Number(process.env.TEST_VISION_MAXTOKENS) || 8000); }
     catch (e) {
       if (e.code === "DAILY_LIMIT") {
         dailyLimit = true;

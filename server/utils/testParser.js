@@ -40,10 +40,31 @@ const EXTRA_STRIP = String(process.env.TEST_PDF_STRIP || "")
 // then collapses to " rac") and rejects the rest. Repair the raw response by
 // escaping every lone backslash that isn't a genuine JSON escape, so each LaTeX
 // command survives JSON.parse as a real backslash KaTeX can render.
+// LaTeX commands that begin with a letter JSON ALSO uses as a whitespace escape
+// (n/r/t/b/f). This lets us keep a genuine "\n" line break (which data tables and
+// multi-line stems depend on) while still escaping real LaTeX like \nu, \theta,
+// \frac, \beta. Anchored at the start of the letter-run after the backslash.
+const LATEX_WS_CMD = /^(?:nu|nabla|neq|nleq|ngeq|notin|nmid|nparallel|nrightarrow|nleftarrow|rho|rightarrow|rfloor|rceil|rangle|theta|tau|times|tan|tanh|textbf|textit|textrm|text|tfrac|top|triangle|tilde|to|beta|binom|bmod|bullet|bigcup|bigcap|bigg|big|boxed|bar|frac|forall|floor|flat|frown)/;
+
 export function repairLatexBackslashes(raw) {
   if (typeof raw !== "string" || raw.indexOf("\\") < 0) return raw;
-  return raw.replace(/\\(\\|"|\/|u[0-9a-fA-F]{4}|[\s\S])/g, (m, g) => {
+  // Match (in order): a valid JSON escape, a run of LETTERS after a backslash (a
+  // LaTeX command name), or any single other char.
+  return raw.replace(/\\(\\|"|\/|u[0-9a-fA-F]{4}|[a-zA-Z]+|[\s\S])/g, (m, g) => {
+    // Genuine JSON escapes — leave untouched.
     if (g === "\\" || g === '"' || g === "/" || /^u[0-9a-fA-F]{4}$/.test(g)) return m;
+    if (/^[a-zA-Z]+$/.test(g)) {
+      // A letter-run that is a JSON whitespace escape (\n \r \t \b \f) followed by
+      // ordinary text — NOT a LaTeX command — keeps its single backslash so
+      // JSON.parse yields a real newline/tab. This is what makes the model's
+      // markdown tables and multi-line question stems render as separate lines
+      // instead of showing a literal "\n\n".
+      if (/^[nrtbf]/.test(g) && !LATEX_WS_CMD.test(g)) return m;
+      // Otherwise it's a LaTeX command with a lone backslash (\frac, \alpha, \nu) —
+      // double it so it survives JSON.parse as a real backslash KaTeX can render.
+      return "\\\\" + g;
+    }
+    // Lone backslash before a symbol (\{ \} \, \;) → LaTeX, escape it.
     return "\\\\" + g;
   });
 }
@@ -338,7 +359,9 @@ function parseKeyGrid(clean) {
 const LLM_SYS =
   "You convert a raw exam paper into structured JSON for a computer-based test (CBT). " +
   'Output ONLY valid JSON of the form {"questions":[{"qno":1,"text":"...","subject":"Physics","type":"single","options":[{"key":"1","text":"..."},{"key":"2","text":"..."},{"key":"3","text":"..."},{"key":"4","text":"..."}],"correct":"1","explanation":"..."}]}. ' +
-  "Rules: keep the original question order and numbering; normalise option labels to \"1\",\"2\",\"3\",\"4\" (map A/B/C/D to 1/2/3/4); for numerical/integer-answer questions set type to \"integer\", options to [] and correct to the number; " +
+  "Rules: keep the original question order and numbering; normalise option labels to \"1\",\"2\",\"3\",\"4\" (map A/B/C/D to 1/2/3/4); " +
+  "a question is \"integer\" ONLY when NO labelled options are printed for it — if four options (1)-(4)/(A)-(D) are printed, even plain numbers like 0.5/1.2, set type \"single\" and fill all four, never \"integer\" just because the stem has a blank; for genuinely option-less numerical questions set type \"integer\", options [] and correct to the number; " +
+  "if a question has a small data/frequency TABLE, reproduce it in \"text\" as a GitHub Markdown table (header row, a |---|---| separator row, then each data row on its own line) with maths in $...$; " +
   "the correct answer may be given INLINE inside the question paper itself (e.g. \"Ans: B\", \"Answer (3)\", \"Correct option: 2\", \"Correct answer is D\") — detect it and remove that marker from the question/option text; a separate ANSWER KEY, when provided, takes precedence over the inline marker; " +
   "fill each correct field (\"1\"-\"4\" for MCQ, the number for integer); if no answer can be found set correct to \"\"; " +
   "set subject for EVERY question to exactly one of \"Physics\", \"Chemistry\", \"Maths\" or \"Biology\" — never leave it blank; use the section heading (e.g. \"PHYSICS\", \"SECTION B — Chemistry\") and carry it forward to every question under it, falling back to the question's own topic; " +
@@ -600,7 +623,16 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl, examType = "") {
     const inline = !keyPdfUrl && method === "rules" ? " (detected inline in the paper)" : "";
     note = `Converted ${questions.length} question${questions.length === 1 ? "" : "s"} (${howLabel[method]}); ${src} matched ${matched}/${questions.length}${inline}. Review below before publishing.`;
     if (method.startsWith("vision")) note += " Maths is shown in LaTeX — check the tricky ones.";
-    if (aiError && method === "vision+text") note += ` Note: ${aiError} — some questions came from the text layer; re-convert later for full transcription.`;
+    // Always surface a partial-run reason on a vision pass — not only the
+    // "vision+text" merge. When the rules parser found nothing, a quota/rate-limit
+    // that cut the run short still leaves method === "vision", and silently hiding
+    // that reason is exactly why a 75-question paper can come back as 7 with no
+    // explanation. Make it loud so the admin knows to re-convert, not publish.
+    if (aiError && method === "vision+text") {
+      note += ` Note: ${aiError} — some questions came from the text layer; re-convert later for full transcription.`;
+    } else if (aiError && method.startsWith("vision")) {
+      note += ` ⚠️ Note: ${aiError} — the AI run stopped early, so questions/diagrams are likely MISSING. Re-convert when the quota resets (or use a paid GROQ_API_KEY) before publishing.`;
+    }
   } else if (aiError) {
     note = `${aiError}. Add questions manually below, or try converting again.`;
   } else if (textLen === 0) {

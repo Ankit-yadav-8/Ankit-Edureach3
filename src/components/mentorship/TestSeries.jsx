@@ -111,8 +111,10 @@ function QuestionImage({ src, alt = "Diagram", maxH = 280, style: extraStyle }) 
   );
 }
 
-/* OptionImage — smaller variant for option images */
-function OptionImage({ src, alt = "Option", maxH = 90 }) {
+/* OptionImage — variant for option figures (graphs/structures to choose between).
+   maxH was 90px, which made four-graph options unreadable; bigger by default and
+   still click-to-zoom for a full-size look. */
+function OptionImage({ src, alt = "Option", maxH = 170 }) {
   const [zoom, setZoom] = useState(false);
   const [broken, setBroken] = useState(false);
   if (!src) return null;
