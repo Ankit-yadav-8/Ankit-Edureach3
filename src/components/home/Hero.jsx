@@ -1717,19 +1717,19 @@ export default function Hero({ onSearch }) {
             >
               <div style={{ display: "flex" }}>
                 {[
-                  { g: "linear-gradient(135deg,#FF693D,#E0421F)", t: "AY" },
-                  { g: "linear-gradient(135deg,#6366f1,#4f46e5)", t: "PS" },
-                  { g: "linear-gradient(135deg,#0FAE6E,#0a8f5b)", t: "RK" },
+                  { bg: "#F15831", t: "AY" },
+                  { bg: "#5A57F6", t: "PS" },
+                  { bg: "#0FA25B", t: "RK" },
                 ].map((a, i) => (
                   <span key={a.t} style={{
-                    width: 36, height: 36, borderRadius: "50%", background: a.g,
-                    border: "2.5px solid #FFFDF9", display: "grid", placeItems: "center",
-                    marginLeft: i === 0 ? 0 : -12, boxShadow: "0 2px 8px rgba(0,0,0,.12)",
-                    fontFamily: "Sora", fontWeight: 800, fontSize: 11.5, color: "#fff",
+                    width: 40, height: 40, borderRadius: "50%", background: a.bg,
+                    border: "2.5px solid #ffffff", display: "grid", placeItems: "center",
+                    marginLeft: i === 0 ? 0 : -14, boxShadow: "0 4px 10px rgba(0,0,0,.08)",
+                    fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 900, fontSize: 13.5, color: "#fff", letterSpacing: "-0.2px"
                   }}>{a.t}</span>
                 ))}
               </div>
-              <p style={{ margin: 0, fontSize: isXs ? 12 : 13, color: "#666", fontFamily: "'Inter', system-ui, sans-serif", lineHeight: 1.4 }}>
+              <p style={{ margin: 0, fontSize: isXs ? 13 : 14.5, color: "#4B5563", fontFamily: "'Inter', system-ui, sans-serif", lineHeight: 1.4 }}>
                 Trusted by <strong style={{ color: "#111", fontWeight: 700 }}>3,200+</strong> JEE &amp; NEET aspirants
               </p>
             </motion.div>
