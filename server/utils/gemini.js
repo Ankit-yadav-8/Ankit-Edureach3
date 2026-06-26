@@ -1,10 +1,12 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Google Gemini client — shared by the test-paper converters (text + vision).
+// Google Gemini client — powers the College Parichay AI chat assistant
+// (server/routes/ai.js) for its short non-streaming helper calls (title,
+// follow-ups, memory distillation, image-prompt refinement). The streaming chat
+// itself lives in ai.js (streamGenerateContent + google_search grounding).
 //
-// Gemini is multimodal, so the SAME model reads both raw paper text and rendered
-// page images; callers just vary the `parts` they pass (text, or text + images).
-// We hit the generateContent REST endpoint directly (no SDK) and ask for a JSON
-// response via responseMimeType, mirroring what the Groq path used.
+// We hit the generateContent REST endpoint directly (no SDK). Pass `json:false`
+// for plain prose (titles, memory bullets) or leave it true to force a JSON
+// response via responseMimeType.
 //
 // Tunables (env): GEMINI_API_KEY, GEMINI_MODEL (default gemini-2.5-flash — Pro
 // has 0 free-tier quota and needs billing), GEMINI_THINKING_BUDGET (cap/disable
@@ -34,6 +36,8 @@ export async function callGemini({
   temperature = 0,
   model = geminiModel(),
   retries = 9,
+  json = true,
+  thinkingBudget = 0,
 } = {}) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("GEMINI_API_KEY not set");
@@ -42,13 +46,13 @@ export async function callGemini({
   const generationConfig = {
     temperature,
     maxOutputTokens: maxTokens,
-    responseMimeType: "application/json",
+    ...(json ? { responseMimeType: "application/json" } : {}),
   };
   // 2.5 models "think" before answering, which spends the output budget and can
-  // truncate the JSON. Cap the thinking budget so the transcription itself fits.
+  // starve a short reply of any visible text. Default the budget to 0 (off) — the
+  // helper calls here want a fast, direct answer, not chain-of-thought.
   if (/2\.5/.test(model)) {
-    const tb = Number(process.env.GEMINI_THINKING_BUDGET);
-    generationConfig.thinkingConfig = { thinkingBudget: Number.isFinite(tb) ? tb : 2048 };
+    generationConfig.thinkingConfig = { thinkingBudget };
   }
 
   const body = JSON.stringify({

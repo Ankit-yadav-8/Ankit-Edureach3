@@ -1,35 +1,37 @@
-/* AI proxy — College Parichay's own assistant, powered by Groq.
-   The Groq API key never leaves the server: the browser talks only to these
+/* AI proxy — College Parichay's own assistant, powered by Google Gemini.
+   The Gemini API key never leaves the server: the browser talks only to these
    endpoints. /chat streams tokens back as Server-Sent Events; /title returns a
-   short auto-generated conversation title. Both require a logged-in user. */
+   short auto-generated conversation title. Both require a logged-in user.
+   (Test-paper PDF→CBT conversion runs on Groq — see server/utils/groq.js.) */
 import express from "express";
 import { requireAuth } from "../middleware/auth.js";
+import { callGemini } from "../utils/gemini.js";
 
 const router = express.Router();
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const GROQ_URL    = "https://api.groq.com/openai/v1/chat/completions";
-const TITLE_MODEL = process.env.GROQ_TITLE_MODEL || "llama-3.1-8b-instant";
+const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
+// Main chat model (one multimodal model serves every mode). The "search" mode
+// layers Google Search grounding on top of it; FAST_MODEL handles the cheap
+// helper calls (titles, follow-ups, memory, image prompts).
+const CHAT_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const FAST_MODEL = process.env.GEMINI_TITLE_MODEL || "gemini-2.5-flash-lite";
 
-const MODELS = {
-  search:  process.env.GROQ_MODEL_SEARCH  || "groq/compound",
-  math:    process.env.GROQ_MODEL_MATH    || "qwen/qwen3-32b",
-  code:    process.env.GROQ_MODEL_CODE    || "qwen/qwen3-32b",
-  general: process.env.GROQ_MODEL_GENERAL || process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
-};
-
+// Per-mode generation knobs. `search` turns on the google_search tool; `think`
+// is the thinking-token budget (0 = off, for snappy replies; reasoning modes get
+// a small budget so multi-step maths/code is worked out before answering).
 const MODE_META = {
-  search:  { label: "Web search", model: MODELS.search,  temp: 0.5, maxTokens: null },
-  math:    { label: "Reasoning",  model: MODELS.math,    temp: 0.3, maxTokens: 3072 },
-  code:    { label: "Coding",     model: MODELS.code,    temp: 0.3, maxTokens: 3072 },
-  general: { label: "Chat",       model: MODELS.general, temp: 0.6, maxTokens: 2048 },
+  search:  { label: "Web search", temp: 0.5, maxTokens: 2048, search: true,  think: 0 },
+  math:    { label: "Reasoning",  temp: 0.3, maxTokens: 3072, search: false, think: 2048 },
+  code:    { label: "Coding",     temp: 0.3, maxTokens: 3072, search: false, think: 2048 },
+  general: { label: "Chat",       temp: 0.6, maxTokens: 2048, search: false, think: 0 },
 };
 
-// How many turns of history to forward per mode (search is tight on TPM)
+// How many turns of history to forward per mode (search stays lean for latency)
 const HISTORY_TURNS = { search: 6, math: 20, code: 20, general: 24 };
 
-// Per-request timeout in ms (Groq compound can be slow while browsing)
+// Per-request timeout in ms (search grounding can be slow while browsing)
 const STREAM_TIMEOUT_MS = { search: 60_000, math: 45_000, code: 45_000, general: 30_000 };
 
 // Image generation — Pollinations is keyless & free; swap via env for a paid provider
@@ -186,82 +188,14 @@ function leanForSearch(msgs, maxTurns = 6) {
   }));
 }
 
-// ─── <think> stripper ────────────────────────────────────────────────────────
+// ─── Gemini message conversion ───────────────────────────────────────────────
 
-/**
- * Stateful streaming filter that removes <think>…</think> blocks from Groq's
- * chain-of-thought models (DeepSeek-R1, Qwen 3). Handles tags split across chunks.
- */
-function makeThinkStripper() {
-  const OPEN = "<think>", CLOSE = "</think>";
-  let inside = false, pending = "";
-
-  /** Returns how many trailing chars of `s` could be the start of `tag` */
-  const partialTail = (s, tag) => {
-    const max = Math.min(s.length, tag.length - 1);
-    for (let k = max; k > 0; k--) {
-      if (tag.startsWith(s.slice(s.length - k))) return k;
-    }
-    return 0;
-  };
-
-  return {
-    push(chunk) {
-      let s = pending + chunk;
-      pending = "";
-      let out = "";
-      while (s) {
-        if (!inside) {
-          const idx = s.indexOf(OPEN);
-          if (idx === -1) {
-            const k = partialTail(s, OPEN);
-            out    += s.slice(0, s.length - k);
-            pending = s.slice(s.length - k);
-            break;
-          }
-          out += s.slice(0, idx);
-          s    = s.slice(idx + OPEN.length);
-          inside = true;
-        } else {
-          const idx = s.indexOf(CLOSE);
-          if (idx === -1) {
-            const k = partialTail(s, CLOSE);
-            pending = s.slice(s.length - k);
-            break;
-          }
-          s      = s.slice(idx + CLOSE.length);
-          inside = false;
-        }
-      }
-      return out;
-    },
-    flush() {
-      const out = inside ? "" : pending;
-      pending   = "";
-      inside    = false; // reset so the instance is reusable
-      return out;
-    },
-  };
-}
-
-/**
- * The compound search model emits the real answer after its last </think> block
- * (or directly if it skips thinking). Strip any residual tags.
- */
-function finalFromReasoning(raw) {
-  const i = raw.lastIndexOf("</think>");
-  let ans = (i >= 0 ? raw.slice(i + "</think>".length) : raw)
-    .replace(/<\/?(think|output|reasoning)>/gi, "")
-    .trim();
-
-  // Fallback: strip all think blocks and take whatever remains
-  if (!ans) {
-    ans = raw
-      .replace(/<think>[\s\S]*?<\/think>/gi, "")
-      .replace(/<\/?(think|output|reasoning)>/gi, "")
-      .trim();
-  }
-  return ans;
+/** Map OpenAI-style chat turns to Gemini `contents` (assistant → "model"). */
+function toGeminiContents(messages) {
+  return messages.map((m) => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: m.content }],
+  }));
 }
 
 // ─── SSE helpers ─────────────────────────────────────────────────────────────
@@ -275,16 +209,28 @@ function sseError(res, msg, detail = "") {
 // ─── Core streaming logic ─────────────────────────────────────────────────────
 
 /**
- * Open one streaming completion against Groq and pipe visible tokens to `res`.
- * Returns { emitted: boolean } so the caller can decide to fall back.
+ * Open one streaming generateContent call against Gemini and pipe visible tokens
+ * to `res`. Returns { emitted, rateLimited, error } so the caller can fall back.
+ * `search` adds Google Search grounding; `think` is the thinking-token budget.
  */
-async function streamGroq({ res, model, messages, systemPrompt, temperature, maxTokens, timeoutMs, controller }) {
-  const body = {
-    model,
+async function streamGemini({ res, model, messages, systemPrompt, temperature, maxTokens, search, think, timeoutMs, controller }) {
+  const url = `${GEMINI_BASE}/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`;
+
+  const generationConfig = {
     temperature,
-    stream: true,
-    messages: [{ role: "system", content: systemPrompt }, ...messages],
-    ...(maxTokens ? { max_tokens: maxTokens } : {}),
+    ...(maxTokens ? { maxOutputTokens: maxTokens } : {}),
+  };
+  // Cap "thinking" so 2.5 models answer promptly (0) or reason a little (math/code).
+  if (/2\.5/.test(model)) {
+    const tb = Number(process.env.GEMINI_CHAT_THINKING_BUDGET);
+    generationConfig.thinkingConfig = { thinkingBudget: Number.isFinite(tb) ? tb : (think ?? 0) };
+  }
+
+  const body = {
+    system_instruction: { parts: [{ text: systemPrompt }] },
+    contents: toGeminiContents(messages),
+    generationConfig,
+    ...(search ? { tools: [{ google_search: {} }] } : {}),
   };
 
   // Apply a per-request timeout on top of the AbortController used for client-disconnect.
@@ -292,9 +238,9 @@ async function streamGroq({ res, model, messages, systemPrompt, temperature, max
 
   let upstream;
   try {
-    upstream = await fetch(GROQ_URL, {
+    upstream = await fetch(url, {
       method:  "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
+      headers: { "Content-Type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY },
       body:    JSON.stringify(body),
       signal:  controller.signal,
     });
@@ -310,17 +256,15 @@ async function streamGroq({ res, model, messages, systemPrompt, temperature, max
     const errText = await upstream.text().catch(() => "");
     // Surface rate-limit errors explicitly so the UI can show a friendly message
     if (upstream.status === 429) return { emitted: false, rateLimited: true };
-    return { emitted: false, error: `Groq ${upstream.status}: ${errText.slice(0, 200)}` };
+    return { emitted: false, error: `Gemini ${upstream.status}: ${errText.slice(0, 200)}` };
   }
 
   if (!upstream.body) return { emitted: false, error: "No response body" };
 
-  const strip    = makeThinkStripper();
-  const reader   = upstream.body.getReader();
-  const decoder  = new TextDecoder();
-  let buffer     = "";
-  let emitted    = false;
-  let reasonBuf  = ""; // for compound model's reasoning field
+  const reader  = upstream.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer    = "";
+  let emitted   = false;
 
   try {
     for (;;) {
@@ -334,33 +278,20 @@ async function streamGroq({ res, model, messages, systemPrompt, temperature, max
         const trimmed = line.trim();
         if (!trimmed.startsWith("data:")) continue;
         const payload = trimmed.slice(5).trim();
-        if (payload === "[DONE]") continue;
+        if (!payload || payload === "[DONE]") continue;
 
         let parsed;
         try { parsed = JSON.parse(payload); } catch { continue; }
 
-        const delta = parsed.choices?.[0]?.delta ?? {};
-
-        if (delta.content) {
-          const clean = strip.push(delta.content);
-          if (clean) { sseDelta(res, clean); emitted = true; }
-        } else if (delta.reasoning) {
-          // Compound model streams its full answer in the reasoning field
-          reasonBuf += delta.reasoning;
+        const parts = parsed.candidates?.[0]?.content?.parts ?? [];
+        for (const p of parts) {
+          if (p?.thought) continue; // never leak chain-of-thought
+          if (typeof p?.text === "string" && p.text) { sseDelta(res, p.text); emitted = true; }
         }
       }
     }
   } finally {
     reader.releaseLock();
-  }
-
-  const tail = strip.flush();
-  if (tail) { sseDelta(res, tail); emitted = true; }
-
-  // If nothing came via `content`, try extracting from buffered reasoning
-  if (!emitted && reasonBuf.trim()) {
-    const answer = finalFromReasoning(reasonBuf);
-    if (answer) { sseDelta(res, answer); emitted = true; }
   }
 
   return { emitted };
@@ -370,7 +301,7 @@ async function streamGroq({ res, model, messages, systemPrompt, temperature, max
 
 /* POST /api/ai/chat — streamed completion via SSE */
 router.post("/chat", requireAuth, async (req, res) => {
-  if (!process.env.GROQ_API_KEY) {
+  if (!process.env.GEMINI_API_KEY) {
     return res.status(503).json({ error: "AI is not configured on the server." });
   }
 
@@ -413,23 +344,25 @@ router.post("/chat", requireAuth, async (req, res) => {
     // Tell the UI which mode is active (drives the badge)
     sseMeta(res, { mode, label: meta.label });
 
-    const sharedArgs = { res, messages, systemPrompt, temperature, controller };
+    const sharedArgs = { res, model: CHAT_MODEL, messages, systemPrompt, temperature, controller };
 
-    let result = await streamGroq({
+    let result = await streamGemini({
       ...sharedArgs,
-      model:     meta.model,
       maxTokens: meta.maxTokens,
+      search:    meta.search,
+      think:     meta.think,
       timeoutMs: STREAM_TIMEOUT_MS[mode],
     });
 
-    // Transparent fallback: if the routed model failed or produced nothing,
-    // try the general model before surfacing an error to the user.
-    if (!result.emitted && meta.model !== MODELS.general) {
+    // Transparent fallback: if a specialised mode (search grounding / reasoning)
+    // failed or produced nothing, retry as a plain general chat before erroring.
+    if (!result.emitted && mode !== "general") {
       sseMeta(res, { mode: "general", label: MODE_META.general.label });
-      result = await streamGroq({
+      result = await streamGemini({
         ...sharedArgs,
-        model:      MODELS.general,
         maxTokens:  MODE_META.general.maxTokens,
+        search:     false,
+        think:      MODE_META.general.think,
         timeoutMs:  STREAM_TIMEOUT_MS.general,
         systemPrompt: buildDateHeader() + SYSTEM_PROMPT + MEMORY_NOTE + userContext,
         messages:     rawMessages.slice(-HISTORY_TURNS.general),
@@ -454,30 +387,18 @@ router.post("/chat", requireAuth, async (req, res) => {
 
 /* POST /api/ai/title — generate a short conversation title */
 router.post("/title", requireAuth, async (req, res) => {
-  if (!process.env.GROQ_API_KEY) return res.json({ title: "New chat" });
+  if (!process.env.GEMINI_API_KEY) return res.json({ title: "New chat" });
 
   const first = String(req.body?.prompt || "").trim().slice(0, 1_000);
   if (!first) return res.json({ title: "New chat" });
 
   try {
-    const r = await fetch(GROQ_URL, {
-      method:  "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
-      body: JSON.stringify({
-        model:       TITLE_MODEL,
-        temperature: 0.3,
-        max_tokens:  20,
-        messages: [
-          { role: "system", content: "Reply with ONLY a 2-5 word title (no quotes, no punctuation at the end) summarising the user's message." },
-          { role: "user",   content: first },
-        ],
-      }),
+    const out = await callGemini({
+      model: FAST_MODEL, temperature: 0.3, maxTokens: 24, json: false, retries: 1,
+      system: "Reply with ONLY a 2-5 word title (no quotes, no punctuation at the end) summarising the user's message.",
+      parts: [{ text: first }],
     });
-
-    if (!r.ok) return res.json({ title: "New chat" });
-    const data = await r.json();
-    let title  = data.choices?.[0]?.message?.content?.trim() ?? "";
-    title = title.replace(/^["'#\s]+|["'.\s]+$/g, "").slice(0, 48);
+    let title = (out || "").trim().replace(/^["'#\s]+|["'.\s]+$/g, "").slice(0, 48);
     res.json({ title: title || "New chat" });
   } catch {
     res.json({ title: "New chat" });
@@ -486,36 +407,18 @@ router.post("/title", requireAuth, async (req, res) => {
 
 /* POST /api/ai/followups — 3 suggested follow-up questions */
 router.post("/followups", requireAuth, async (req, res) => {
-  if (!process.env.GROQ_API_KEY) return res.json({ followups: [] });
+  if (!process.env.GEMINI_API_KEY) return res.json({ followups: [] });
 
   const question = String(req.body?.question || "").trim().slice(0, 1_500);
   const answer   = String(req.body?.answer   || "").trim().slice(0, 3_000);
   if (!question) return res.json({ followups: [] });
 
   try {
-    const r = await fetch(GROQ_URL, {
-      method:  "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
-      body: JSON.stringify({
-        model:       TITLE_MODEL,
-        temperature: 0.5,
-        max_tokens:  120,
-        messages: [
-          {
-            role:    "system",
-            content: "You suggest what a student might naturally ask next. Reply with ONLY a JSON array of exactly 3 short follow-up questions (each under 9 words), no prose, no numbering.",
-          },
-          {
-            role:    "user",
-            content: `Question: ${question}\n\nAnswer: ${answer}\n\nGive 3 follow-up questions as a JSON array.`,
-          },
-        ],
-      }),
-    });
-
-    if (!r.ok) return res.json({ followups: [] });
-    const data = await r.json();
-    const raw  = data.choices?.[0]?.message?.content ?? "[]";
+    const raw = await callGemini({
+      model: FAST_MODEL, temperature: 0.5, maxTokens: 160, json: true, retries: 1,
+      system: "You suggest what a student might naturally ask next. Reply with ONLY a JSON array of exactly 3 short follow-up questions (each under 9 words), no prose, no numbering.",
+      parts: [{ text: `Question: ${question}\n\nAnswer: ${answer}\n\nGive 3 follow-up questions as a JSON array.` }],
+    }) || "[]";
 
     let followups = [];
     try {
@@ -542,23 +445,14 @@ router.post("/image", requireAuth, async (req, res) => {
 
   // Expand the request into a vivid prompt (best-effort; fall back to the raw text)
   let prompt = raw;
-  if (process.env.GROQ_API_KEY) {
+  if (process.env.GEMINI_API_KEY) {
     try {
-      const r = await fetch(GROQ_URL, {
-        method:  "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
-        body: JSON.stringify({
-          model: TITLE_MODEL, temperature: 0.7, max_tokens: 110,
-          messages: [
-            { role: "system", content: "Rewrite the user's request as ONE vivid, detailed image-generation prompt — name the subject, style, lighting, mood and composition. Reply with ONLY the prompt (no quotes, no preamble), under 55 words." },
-            { role: "user", content: raw },
-          ],
-        }),
-      });
-      if (r.ok) {
-        const refined = (await r.json()).choices?.[0]?.message?.content?.trim();
-        if (refined) prompt = refined.replace(/^["']|["']$/g, "").slice(0, 400);
-      }
+      const refined = (await callGemini({
+        model: FAST_MODEL, temperature: 0.7, maxTokens: 140, json: false, retries: 1,
+        system: "Rewrite the user's request as ONE vivid, detailed image-generation prompt — name the subject, style, lighting, mood and composition. Reply with ONLY the prompt (no quotes, no preamble), under 55 words.",
+        parts: [{ text: raw }],
+      }))?.trim();
+      if (refined) prompt = refined.replace(/^["']|["']$/g, "").slice(0, 400);
     } catch { /* keep raw prompt */ }
   }
 
@@ -574,22 +468,15 @@ router.post("/memory", requireAuth, async (req, res) => {
   const recent   = sanitizeMessages(req.body?.messages, 8)
     .map((m) => `${m.role === "user" ? "Student" : "AI"}: ${m.content.split("\n\n--- Attached:")[0].slice(0, 600)}`)
     .join("\n");
-  if (!recent.trim() || !process.env.GROQ_API_KEY) return res.json({ memory: existing });
+  if (!recent.trim() || !process.env.GEMINI_API_KEY) return res.json({ memory: existing });
 
   try {
-    const r = await fetch(GROQ_URL, {
-      method:  "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
-      body: JSON.stringify({
-        model: TITLE_MODEL, temperature: 0.2, max_tokens: 260,
-        messages: [
-          { role: "system", content: "You maintain a tiny long-term memory about a student so an AI tutor can personalise help. Keep only STABLE, useful facts: class/year, target exam(s) & year, target branches/colleges, city/state, category, strengths & weak topics, and clear preferences. Ignore one-off question content and anything temporary. Merge new facts into the existing memory, dedupe, and keep it under 10 short bullet lines starting with '- '. Reply with ONLY the bullet list (no preamble). If there is nothing worth remembering, repeat the existing memory unchanged." },
-          { role: "user", content: `Existing memory:\n${existing || "(empty)"}\n\nRecent conversation:\n${recent}\n\nReturn the updated memory.` },
-        ],
-      }),
+    const out = await callGemini({
+      model: FAST_MODEL, temperature: 0.2, maxTokens: 300, json: false, retries: 1,
+      system: "You maintain a tiny long-term memory about a student so an AI tutor can personalise help. Keep only STABLE, useful facts: class/year, target exam(s) & year, target branches/colleges, city/state, category, strengths & weak topics, and clear preferences. Ignore one-off question content and anything temporary. Merge new facts into the existing memory, dedupe, and keep it under 10 short bullet lines starting with '- '. Reply with ONLY the bullet list (no preamble). If there is nothing worth remembering, repeat the existing memory unchanged.",
+      parts: [{ text: `Existing memory:\n${existing || "(empty)"}\n\nRecent conversation:\n${recent}\n\nReturn the updated memory.` }],
     });
-    if (!r.ok) return res.json({ memory: existing });
-    let memory = (await r.json()).choices?.[0]?.message?.content?.trim() || existing;
+    let memory = (out || "").trim() || existing;
     // keep only bullet lines, cap size
     memory = memory.split("\n").filter((l) => l.trim().startsWith("-")).join("\n").slice(0, 1_500) || existing;
     res.json({ memory });

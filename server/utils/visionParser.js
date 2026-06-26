@@ -3,7 +3,7 @@
 //
 // Math-heavy exam PDFs (JEE/NEET) store their equations as vector glyphs, not as
 // a readable text layer — so text parsing recovers garbled stems and empty
-// options. Instead we render each page to an image and ask a Gemini vision model
+// options. Instead we render each page to an image and ask a Groq vision model
 // to transcribe the questions, options and answer key as JSON, with all maths in
 // LaTeX ($…$) so the player renders it via KaTeX.
 //
@@ -11,15 +11,15 @@
 // system deps) and sent in small page-batches with limited concurrency to stay
 // within model image limits and keep latency reasonable.
 //
-// Tunables (env): GEMINI_VISION_MODEL (else GEMINI_MODEL), TEST_VISION_SCALE
-// (render DPI factor), TEST_VISION_PAGES (pages per request),
-// TEST_VISION_MAXPAGES, TEST_VISION=off.
+// Tunables (env): GROQ_VISION_MODEL (default meta-llama/llama-4-scout-17b-16e-
+// instruct), TEST_VISION_SCALE (render DPI factor), TEST_VISION_PAGES (pages per
+// request), TEST_VISION_MAXPAGES, TEST_VISION=off.
 // ─────────────────────────────────────────────────────────────────────────────
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
 import { normalizeAnswer, stripNoise, repairLatexBackslashes } from "./testParser.js";
 import { uploadImageBuffer, cloudinaryReady } from "./cloudinary.js";
-import { callGemini, geminiReady, geminiModel } from "./gemini.js";
+import { callGroq, groqReady } from "./groq.js";
 
 const clamp01 = (n) => Math.max(0, Math.min(1, Number(n) || 0));
 
@@ -97,17 +97,17 @@ function dewatermark(ctx, w, h) {
 
 const VISION_SYS =
   'You read images of exam-paper pages and output ONLY JSON of the form ' +
-  '{"questions":[{"qno":1,"text":"...","subject":"","type":"single","options":[{"key":"1","text":"..."},{"key":"2","text":"..."},{"key":"3","text":"..."},{"key":"4","text":"..."}],"correct":"1","explanation":""}]}. ' +
+  '{"questions":[{"qno":1,"text":"...","subject":"","type":"single","options":[{"key":"1","text":"...","hasDiagram":false,"page":1,"bbox":[0,0,0,0]}],"correct":"1","explanation":"","hasDiagram":false,"page":1,"bbox":[0,0,0,0]}]}. ' +
   "Transcribe each question and ALL its options exactly as printed, including every mathematical expression — wrap ALL maths in LaTeX delimiters $...$ (e.g. $\\frac{\\beta}{\\alpha}$, $x^2+1$, $\\alpha,\\beta\\in\\mathbb{R}$). " +
   'Use the printed question number for "qno". Map option labels A/B/C/D or (1)-(4) to "1","2","3","4". ' +
-  'NEVER leave an option\'s "text" blank for an MCQ: every "single" question MUST have all four options filled with the option text exactly as printed (use LaTeX for any maths). If an option is only a figure/structure with no text, still describe it briefly. Only "integer" questions may have empty options. ' +
+  'For an MCQ every "single" question MUST have all four options. Fill each option\'s "text" with the option exactly as printed (use LaTeX for any maths); never leave a purely-textual option blank. Only "integer" questions may have empty options. ' +
   'For numerical / integer-answer questions set "type":"integer", "options":[] and "correct" to the number. ' +
   'If the page shows the answer (e.g. "Answer Key : (3)") put it in "correct" ("1"-"4" for MCQ, the number for integer); otherwise "correct":"". ' +
   'ALWAYS set "subject" for EVERY question to exactly one of "Physics", "Chemistry", "Maths" or "Biology" — never leave it blank. Section headings (e.g. "PHYSICS", "CHEMISTRY", "SECTION B — Chemistry"), the topic of the question, and the position in the paper all indicate the subject; carry the most recent section heading forward to every question under it. ' +
-  'If a question includes or refers to a FIGURE / DIAGRAM / GRAPH / CIRCUIT / RAY DIAGRAM / STRUCTURE / TABLE-as-image, you MUST add ' +
-  '"hasDiagram":true, "page": the 1-based index (among the images in THIS request) of the page it appears on, and ' +
-  '"bbox":[x0,y0,x1,y1] — a bounding box that encloses the WHOLE figure with all its parts and labels, but EXCLUDES any page watermark, logo, website/URL, coaching-institute name or batch/organisation branding text, in fractions of that page (0=left/top, 1=right/bottom). ' +
-  'Phrases like "refer the figure", "as shown", "in the figure/diagram/graph", "the circuit shown", "the arrangement shown" ALWAYS mean a figure is present — never omit hasDiagram/bbox for those. Only omit these when the question is purely text/equations. ' +
+  'DIAGRAMS — give a bounding box for any figure so it can be cropped from the page. Coordinates are fractions of the page the figure is on (0=left/top, 1=right/bottom); "page" is the 1-based index of that page AMONG THE IMAGES IN THIS REQUEST. Every box must TIGHTLY enclose the WHOLE figure with all its parts/labels but EXCLUDE any page watermark, logo, website/URL, coaching-institute name or batch/branding text. ' +
+  '(a) QUESTION figure — if the question stem includes or refers to a FIGURE / DIAGRAM / GRAPH / CIRCUIT / RAY DIAGRAM / STRUCTURE / TABLE-as-image, set "hasDiagram":true with "page" and "bbox" ON THE QUESTION object. Phrases like "refer the figure", "as shown", "in the figure/diagram/graph", "the circuit shown", "the arrangement shown" ALWAYS mean a figure is present — never omit it. ' +
+  '(b) OPTION figures — when the ANSWER OPTIONS THEMSELVES are pictures (e.g. four graphs / four structures / four circuits / four waveforms to choose between), set "hasDiagram":true with "page" and "bbox" ON EACH SUCH OPTION object, each box enclosing ONLY that one option\'s picture (never its A/B/C/D label or a neighbouring option). Keep a short caption in that option\'s "text" if printed, otherwise leave "text" empty for a picture-only option. ' +
+  'Set "hasDiagram":false (page/bbox may be omitted) for any part that is purely text/equations with no figure. ' +
   "Ignore page headers, footers, watermarks and website names. Do not invent questions. Output JSON only, no prose.";
 
 // Render every page of the PDF buffer to a PNG Buffer.
@@ -120,16 +120,17 @@ async function renderPages(pdfBuffer, scale) {
   return pages;
 }
 
-// One vision request. Gemini is multimodal, so we send the page PNGs as
-// inline_data alongside the prompt. callGemini handles 429/5xx retries (honouring
-// RetryInfo.retryDelay) and throws a tagged DAILY_LIMIT when the per-day quota is
-// gone, so the conversion fails fast rather than hanging.
+// One vision request. The page PNGs ride along as inline image parts (callGroq
+// maps them to OpenAI image_url data-URLs). callGroq handles 429/5xx retries
+// (honouring Retry-After), auto-halves an over-large token cap, and throws a
+// tagged DAILY_LIMIT when the per-day quota is gone, so the conversion fails fast
+// rather than hanging.
 async function callVision(model, images, maxTokens) {
   const parts = [{ text: "Transcribe every question shown in these page image(s)." }];
   for (const png of images) {
     parts.push({ inline_data: { mime_type: "image/png", data: png.toString("base64") } });
   }
-  const text = await callGemini({ system: VISION_SYS, parts, maxTokens, model });
+  const text = await callGroq({ system: VISION_SYS, parts, maxTokens, model });
   // Repair under-escaped LaTeX backslashes before parsing, else \frac/\sqrt get
   // mangled into control chars (or rejected) by JSON.parse.
   const c = repairLatexBackslashes(text || "");
@@ -150,7 +151,9 @@ async function mapPool(items, concurrency, fn) {
 
 const richness = (q) =>
   (q.text?.length || 0) +
-  (q.options?.reduce((s, o) => s + (String(o.text).trim() ? 1 : 0), 0) || 0) * 60 +
+  // an option counts as "filled" if it has text OR a cropped picture
+  (q.options?.reduce((s, o) => s + (String(o.text).trim() || o.image ? 1 : 0), 0) || 0) * 60 +
+  (q.options?.reduce((s, o) => s + (o.image ? 1 : 0), 0) || 0) * 20 + // prefer the variant that recovered option figures
   (q.correct ? 40 : 0) +
   (q.image ? 80 : 0);
 
@@ -158,9 +161,9 @@ const richness = (q) =>
 // answerKey (qno -> answer, parsed from the text layer) fills any answer the
 // model misses. Returns { questions, error } — questions [] on failure.
 export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
-  if (!geminiReady()) return { questions: [], error: "AI vision is off (GEMINI_API_KEY not set on the server)" };
+  if (!groqReady()) return { questions: [], error: "AI vision is off (GROQ_API_KEY not set on the server)" };
 
-  const model = process.env.GEMINI_VISION_MODEL || geminiModel();
+  const model = process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
   // Defaults kept conservative for rate-limited tiers: 2 pages per request at
   // scale 1.5, 2 in flight, overlapping work — ~2x faster than one-at-a-time.
   // Bump TEST_VISION_PAGES / _CONCURRENCY / _SCALE on a paid tier (higher RPM)
@@ -197,29 +200,44 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
     catch (e) {
       if (e.code === "DAILY_LIMIT") {
         dailyLimit = true;
-        firstErr = "Daily AI quota reached — try again tomorrow, or set a paid GEMINI_API_KEY for higher limits";
+        firstErr = "Daily AI quota reached — try again tomorrow, or set a paid GROQ_API_KEY for higher limits";
       } else if (!firstErr) {
         firstErr = `AI vision error (${e.message}${e.detail ? `: ${e.detail}` : ""})`;
       }
       console.error("[visionParser]", e.message, e.detail || "");
       return [];
     }
-    // Crop & upload any diagram the model located, attaching it as the question
-    // image so figure-based questions render natively in the CBT.
+    // Crop & upload any diagram the model located — for the question stem AND for
+    // figure-style options — so figure-based questions render natively in the CBT.
     if (wantDiagrams && Array.isArray(arr)) {
-      for (const q of arr) {
-        if (!q?.hasDiagram || !q?.bbox) continue;
-        // The model is asked for a batch-local page index but often returns the
-        // absolute document page. Accept both: a value within the batch is
-        // local; anything larger is absolute and mapped back into the batch.
-        const p = Number(q.page);
-        let pageIdx = 0;
-        if (Number.isFinite(p) && p >= 1) pageIdx = p <= imgs.length ? p - 1 : p - 1 - batchStart;
-        if (!(pageIdx >= 0 && pageIdx < imgs.length)) pageIdx = 0;
+      // The model is asked for a batch-local page index but often returns the
+      // absolute document page. Accept both: a value within the batch is local;
+      // anything larger is absolute and mapped back into the batch.
+      const pageIndexFor = (page) => {
+        const p = Number(page);
+        let idx = 0;
+        if (Number.isFinite(p) && p >= 1) idx = p <= imgs.length ? p - 1 : p - 1 - batchStart;
+        return idx >= 0 && idx < imgs.length ? idx : 0;
+      };
+      const cropUpload = async (pageIdx, bbox) => {
         try {
-          const crop = await cropDiagram(imgs[pageIdx], q.bbox);
-          if (crop) q.image = await uploadImageBuffer(crop, { folder: "tests/diagrams" });
+          const crop = await cropDiagram(imgs[pageIdx], bbox);
+          if (crop) return await uploadImageBuffer(crop, { folder: "tests/diagrams" });
         } catch (e) { console.error("[visionParser] diagram crop/upload failed", e.message); }
+        return "";
+      };
+      for (const q of arr) {
+        if (q?.hasDiagram && Array.isArray(q?.bbox)) {
+          const img = await cropUpload(pageIndexFor(q.page), q.bbox);
+          if (img) q.image = img;
+        }
+        // Picture options (four graphs/structures to choose between): crop each.
+        for (const o of Array.isArray(q?.options) ? q.options : []) {
+          if (o?.hasDiagram && Array.isArray(o?.bbox)) {
+            const img = await cropUpload(pageIndexFor(o.page ?? q.page), o.bbox);
+            if (img) o.image = img;
+          }
+        }
       }
     }
     return arr;
@@ -233,7 +251,11 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
       if (!qno || qno < 1 || qno > 400) continue;
       const type = q?.type === "integer" ? "integer" : "single";
       const options = type === "single" && Array.isArray(q?.options)
-        ? q.options.slice(0, 4).map((o, j) => ({ key: normalizeAnswer(o?.key) || String(j + 1), text: stripNoise(o?.text).slice(0, 1000), image: "" }))
+        ? q.options.slice(0, 4).map((o, j) => ({
+            key: normalizeAnswer(o?.key) || String(j + 1),
+            text: stripNoise(o?.text).slice(0, 1000),
+            image: typeof o?.image === "string" && o.image.startsWith("http") ? o.image : "",
+          }))
         : [];
       const cand = {
         qno,
