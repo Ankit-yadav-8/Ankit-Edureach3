@@ -1717,9 +1717,9 @@ export default function Hero({ onSearch }) {
             >
               <div style={{ display: "flex" }}>
                 {[
-                  { bg: "#F15831", t: "AY" },
-                  { bg: "#5A57F6", t: "PS" },
-                  { bg: "#0FA25B", t: "RK" },
+                  { bg: "#FF7A50", t: "A" },
+                  { bg: "#FF6636", t: "P" },
+                  { bg: "#E85223", t: "R" },
                 ].map((a, i) => (
                   <span key={a.t} style={{
                     width: 40, height: 40, borderRadius: "50%", background: a.bg,
