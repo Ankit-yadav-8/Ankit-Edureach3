@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Gauge, Crosshair, BarChart3, BookOpen, Map, ListChecks,
@@ -32,10 +33,10 @@ const TOOLS = [
     to: "/cutoffs", live: true,
   },
   {
-    icon: Layers, title: "Branch Explorer", accent: "#FF693D",
-    desc: "220+ branches bucketed into 10 clear paths — salaries, AI outlook, placements and common myths.",
-    bullets: ["10 domain paths, deep insights", "5-year salary arcs & charts", "Myth-vs-reality breakdowns"],
-    to: "/branches", live: true, hot: true,
+    icon: Layers, title: "Branch Catalog", accent: "#FF693D",
+    desc: "220+ engineering branches categorized into 10 buckets disclosing curriculums and CTC ranges.",
+    bullets: ["AI automation exposure scores", "Myth debunking highlights", "Top recruiter profiles"],
+    to: "/branches", live: true, hot: false,
   },
   {
     icon: GitCompareArrows, title: "Branch vs College", accent: "#FF693D",
@@ -70,60 +71,57 @@ const itemV = {
 };
 
 function ToolCard({ t, nav }) {
-  const badgeColor = t.hot ? "#FF693D" : "#22c55e"; // Orange for NEW, Green for LIVE
+  const [isHovered, setIsHovered] = useState(false);
+  const badgeColor = t.hot ? "#FF693D" : "#10b981"; // Orange for NEW, Green for LIVE
   const iconColor = t.accent;
 
   return (
     <motion.button
       variants={itemV}
       onClick={() => nav(t.to)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
         background: "#ffffff",
-        border: "1px solid #f0f0f0",
+        border: `1px solid ${isHovered ? iconColor : `${iconColor}15`}`,
         borderRadius: 20,
         padding: 24,
-        boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
+        boxShadow: isHovered ? `0 12px 30px ${iconColor}15` : "0 4px 20px rgba(0,0,0,0.02)",
         display: "flex",
         flexDirection: "column",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        transition: "all 0.3s ease",
         cursor: "pointer",
         textAlign: "left",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-4px)";
-        e.currentTarget.style.boxShadow = "0 12px 30px rgba(0,0,0,0.08)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.03)";
+        transform: isHovered ? "translateY(-4px)" : "translateY(0)"
       }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20, width: "100%" }}>
         <div style={{ 
-          width: 44, 
-          height: 44, 
-          borderRadius: 12, 
-          background: `${iconColor}15`, 
+          width: 48, 
+          height: 48, 
+          borderRadius: 14, 
+          background: isHovered ? iconColor : `${iconColor}10`, 
           display: "flex", 
           alignItems: "center", 
           justifyContent: "center",
-          color: iconColor
+          color: isHovered ? "#ffffff" : iconColor,
+          transition: "all 0.3s ease"
         }}>
-          <t.icon size={22} />
+          <t.icon size={24} />
         </div>
         {t.live && (
           <div style={{ 
             display: "flex", 
             alignItems: "center", 
             gap: 6, 
-            background: `${badgeColor}10`, 
+            background: `${badgeColor}15`, 
             color: badgeColor, 
-            padding: "4px 10px", 
+            padding: "4px 12px", 
             borderRadius: 50, 
             fontSize: 11, 
-            fontWeight: 700 
+            fontWeight: 800,
+            letterSpacing: "0.02em"
           }}>
-            <div style={{ width: 6, height: 6, borderRadius: "50%", background: badgeColor }} />
             {t.hot ? "NEW" : "LIVE"}
           </div>
         )}
@@ -131,17 +129,18 @@ function ToolCard({ t, nav }) {
 
       <h3 style={{ 
         fontFamily: "'Space Grotesk', 'Sora', sans-serif", 
-        fontSize: "1.2rem", 
+        fontSize: "1.3rem", 
         fontWeight: 800, 
         color: "#1a1a2e", 
-        margin: "0 0 12px 0" 
+        margin: "0 0 12px 0",
+        letterSpacing: "-0.5px"
       }}>
         {t.title}
       </h3>
       <p style={{ 
         color: "#6b7280", 
         fontSize: "0.95rem", 
-        lineHeight: 1.5, 
+        lineHeight: 1.6, 
         margin: "0 0 24px 0",
         flexGrow: 1
       }}>
@@ -158,7 +157,7 @@ function ToolCard({ t, nav }) {
       }}>
         {t.bullets.map((b) => (
           <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "0.9rem", color: "#4b5563" }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#1a1a2e", marginTop: 7, flexShrink: 0 }} />
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: iconColor, marginTop: 7, flexShrink: 0, opacity: 0.8 }} />
             <span style={{ lineHeight: 1.4 }}>{b}</span>
           </li>
         ))}
