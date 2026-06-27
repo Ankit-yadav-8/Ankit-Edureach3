@@ -181,10 +181,40 @@ function renderFormattedInline(src, keyBase = 0) {
 }
 
 export default function MathText({ text = "", style }) {
-  const src = String(text);
+  let src = String(text);
   if (!src.trim()) return null;
 
-  const lines = src.split("\n");
+  // Un-flatten inline markdown tables (vision model output without newlines)
+  src = src.replace(/\|\s+\|/g, "|\n|");
+  const rawLines = src.split("\n");
+  for (let i = 0; i < rawLines.length; i++) {
+    const line = rawLines[i];
+    if (isRow(line)) {
+      const next = rawLines[i + 1] ?? "";
+      if (isSepRow(next)) {
+        // This is a header row. Extract leading text.
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("|")) {
+          const firstPipe = line.indexOf("|");
+          if (firstPipe > 0) {
+            rawLines.splice(i, 1, line.slice(0, firstPipe).trim(), line.slice(firstPipe).trim());
+            i++;
+          }
+        }
+      } else if (i > 0 && (isSepRow(rawLines[i - 1]) || (isRow(rawLines[i - 1]) && rawLines[i - 1].trim().startsWith("|")))) {
+        // This is a body row. Extract trailing text.
+        const trimmed = line.trim();
+        if (!trimmed.endsWith("|")) {
+          const lastPipe = line.lastIndexOf("|");
+          if (lastPipe !== -1 && lastPipe !== line.length - 1) {
+            rawLines.splice(i, 1, line.slice(0, lastPipe + 1).trim(), line.slice(lastPipe + 1).trim());
+          }
+        }
+      }
+    }
+  }
+
+  const lines = rawLines;
   const blocks = [];
   let buf = [];
   const flushText = () => { if (buf.length) { blocks.push({ type: "text", text: buf.join("\n") }); buf = []; } };
