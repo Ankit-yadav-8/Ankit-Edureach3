@@ -219,7 +219,7 @@ export default function Navbar({ onSearch }) {
     <>
       <nav
         style={{
-          position: "fixed", top: 16, left: "50%", transform: "translateX(-50%)", zIndex: 1000,
+          position: "fixed", top: 42, left: "50%", transform: "translateX(-50%)", zIndex: 1000,
           height: 64, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
           padding: "0 14px 0 24px",
           width: "min(1280px, calc(100% - 3rem))",
