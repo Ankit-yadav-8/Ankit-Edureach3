@@ -1,22 +1,16 @@
-/* ToolsGrid — campusloom-style tools section.
-   White cards on a warm cream surface: soft icon tile, LIVE badge,
-   description and a bullet list of sub-features. Replaces the old
-   auto-rotating SmartToolsHub on the home page. */
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Gauge, Crosshair, BarChart3, BookOpen, Map, ListChecks,
-  GitCompareArrows, Layers, ArrowRight, Sparkles, Ticket,
+  GitCompareArrows, Layers, Check, Sparkles, Ticket,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
-/* per-card accent — bento style: each card carries its own colour for the
-   icon tile, decorative corner wash and the "Explore tool" link. */
 const TOOLS = [
   {
-    icon: Ticket, title: "Events & Fest marketplace", accent: "#e5484d",
+    icon: Ticket, title: "Events & Fest marketplace", accent: "#FF693D",
     desc: "Book hackathons, cultural fests, seminars across colleges. Students discover events nearby.",
-    bullets: ["Ticket booking commission", "High Impact", "Cross-college network"],
+    bullets: ["One-tap ticket booking", "Curated, high-impact events", "Connect across colleges"],
     to: "/campus-fests", live: true, hot: true,
   },
   {
@@ -26,19 +20,19 @@ const TOOLS = [
     to: "/jee-main#rank", live: true,
   },
   {
-    icon: Crosshair, title: "College Predictor", accent: "#6366f1",
+    icon: Crosshair, title: "College Predictor", accent: "#FF693D",
     desc: "Map your rank against previous years' cutoffs for IITs, NITs, IIITs and GFTIs in one shot.",
-    bullets: ["High / Medium probability tags", "All JoSAA + CSAB rounds", "Branch & quota filters"],
+    bullets: ["High / medium probability tags", "All JoSAA + CSAB rounds", "Branch & quota filters"],
     to: "/jee-advanced#college", live: true,
   },
   {
-    icon: BarChart3, title: "Official Cutoff Analysis", accent: "#0FAE6E",
+    icon: BarChart3, title: "Official Cutoff Analysis", accent: "#FF693D",
     desc: "Real JoSAA opening & closing ranks with weightage breakdowns built around your target scorecard.",
-    bullets: ["Interactive score slider", "2021–2025 question maps", "Priority checklist recommendations"],
+    bullets: ["Interactive score slider", "2021-2025 cutoff history", "Priority checklist recommendations"],
     to: "/cutoffs", live: true,
   },
   {
-    icon: Layers, title: "Branch Explorer", accent: "#7B5EA7",
+    icon: Layers, title: "Branch Explorer", accent: "#FF693D",
     desc: "220+ branches bucketed into 10 clear paths — salaries, AI outlook, placements and common myths.",
     bullets: ["10 domain paths, deep insights", "5-year salary arcs & charts", "Myth-vs-reality breakdowns"],
     to: "/branches", live: true, hot: true,
@@ -50,30 +44,24 @@ const TOOLS = [
     to: "/branch-vs-college", live: true, hot: true,
   },
   {
-    icon: BookOpen, title: "Study Resources", accent: "#3A86FF",
+    icon: BookOpen, title: "Study Resources", accent: "#FF693D",
     desc: "Chapter-wise notes, revision guides and cheat sheets across Maths, Physics and Chemistry.",
     bullets: ["73 chapters mapped", "Main vs Advanced coverage", "Difficulty-rated topics"],
     to: "/jee-resources", live: true,
   },
   {
-    icon: Map, title: "Campus Map Explorer", accent: "#0FAE6E",
+    icon: Map, title: "Campus Map Explorer", accent: "#FF693D",
     desc: "Explore every IIT, NIT and IIIT on an interactive map — filter by state, type and ranking.",
     bullets: ["80+ institutes mapped", "State & type filters", "Cutoff & placement drawers"],
     to: "/map", live: true,
   },
   {
-    icon: ListChecks, title: "Choice List Planner", accent: "#6366f1",
+    icon: ListChecks, title: "Choice List Planner", accent: "#FF693D",
     desc: "A smart, rank-aware JoSAA choice order built around your category and branch preferences.",
     bullets: ["Safe / Moderate / Reach mix", "Float, Slide & Upgrade guidance", "Printable export list"],
     to: "/planner", live: true,
   },
 ];
-
-/* hex → rgba helper for translucent accent washes */
-const tint = (hex, a) => {
-  const n = parseInt(hex.slice(1), 16);
-  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
-};
 
 const containerV = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const itemV = {
@@ -82,63 +70,99 @@ const itemV = {
 };
 
 function ToolCard({ t, nav }) {
-  const a = t.accent;
+  const badgeColor = t.hot ? "#FF693D" : "#22c55e"; // Orange for NEW, Green for LIVE
+  const iconColor = t.accent;
+
   return (
     <motion.button
       variants={itemV}
-      whileHover={{ y: -6, boxShadow: "0 18px 40px rgba(33,29,46,.12)" }}
-      transition={{ type: "spring", stiffness: 280, damping: 22 }}
       onClick={() => nav(t.to)}
-      className="cp-bento-card"
       style={{
-        textAlign: "left", cursor: "pointer", width: "100%", height: "100%",
-        background: CL.card, borderRadius: 16, border: `1px solid ${CL.line}`,
-        boxShadow: CL.shadow, padding: "30px 28px 26px",
-        display: "flex", flexDirection: "column", position: "relative", overflow: "hidden",
+        background: "#ffffff",
+        border: "1px solid #f0f0f0",
+        borderRadius: 20,
+        padding: 24,
+        boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
+        display: "flex",
+        flexDirection: "column",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        cursor: "pointer",
+        textAlign: "left",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-4px)";
+        e.currentTarget.style.boxShadow = "0 12px 30px rgba(0,0,0,0.08)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.03)";
       }}
     >
-      {/* decorative corner wash (reference bento style) */}
-      <span aria-hidden style={{
-        position: "absolute", top: 0, right: 0, width: 130, height: 130,
-        background: tint(a, 0.06), borderBottomLeftRadius: 100,
-        transition: "transform .35s ease", pointerEvents: "none",
-      }} className="cp-bento-corner" />
-
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18, position: "relative" }}>
-        <span style={{ width: 54, height: 54, borderRadius: 16, background: tint(a, 0.12), display: "grid", placeItems: "center" }}>
-          <t.icon size={26} color={a} />
-        </span>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+        <div style={{ 
+          width: 44, 
+          height: 44, 
+          borderRadius: 12, 
+          background: `${iconColor}15`, 
+          display: "flex", 
+          alignItems: "center", 
+          justifyContent: "center",
+          color: iconColor
+        }}>
+          <t.icon size={22} />
+        </div>
         {t.live && (
-          <span style={{
-            display: "inline-flex", alignItems: "center", gap: 5,
-            fontSize: 10, fontWeight: 800, letterSpacing: ".06em",
-            color: t.hot ? CL.coralDk : "#0a8f5b",
-            background: t.hot ? CL.coralSoft : CL.greenSoft,
-            padding: "4px 10px", borderRadius: 50,
+          <div style={{ 
+            display: "flex", 
+            alignItems: "center", 
+            gap: 6, 
+            background: `${badgeColor}10`, 
+            color: badgeColor, 
+            padding: "4px 10px", 
+            borderRadius: 50, 
+            fontSize: 11, 
+            fontWeight: 700 
           }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: t.hot ? CL.coral : CL.green }} />
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: badgeColor }} />
             {t.hot ? "NEW" : "LIVE"}
-          </span>
+          </div>
         )}
       </div>
 
-      <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.2rem", color: CL.ink, marginBottom: 9, letterSpacing: "-0.3px", position: "relative" }}>
+      <h3 style={{ 
+        fontFamily: "'Space Grotesk', 'Sora', sans-serif", 
+        fontSize: "1.2rem", 
+        fontWeight: 800, 
+        color: "#1a1a2e", 
+        margin: "0 0 12px 0" 
+      }}>
         {t.title}
       </h3>
-      <p style={{ color: CL.body, fontSize: 13.5, lineHeight: 1.6, marginBottom: 16, position: "relative" }}>{t.desc}</p>
+      <p style={{ 
+        color: "#6b7280", 
+        fontSize: "0.95rem", 
+        lineHeight: 1.5, 
+        margin: "0 0 24px 0",
+        flexGrow: 1
+      }}>
+        {t.desc}
+      </p>
 
-      <ul style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 18, position: "relative" }}>
+      <ul style={{ 
+        listStyle: "none", 
+        padding: 0, 
+        margin: 0, 
+        display: "flex", 
+        flexDirection: "column", 
+        gap: 12 
+      }}>
         {t.bullets.map((b) => (
-          <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 9, fontSize: 12.8, color: CL.ink2 }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: a, marginTop: 6, flexShrink: 0 }} />
-            {b}
+          <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "0.9rem", color: "#4b5563" }}>
+            <Check size={16} color={iconColor} style={{ marginTop: 2, flexShrink: 0 }} />
+            <span style={{ lineHeight: 1.4 }}>{b}</span>
           </li>
         ))}
       </ul>
-
-      <span style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 7, color: a, fontWeight: 800, fontSize: 13, fontFamily: CL.display, position: "relative" }}>
-        Explore tool <ArrowRight size={15} />
-      </span>
     </motion.button>
   );
 }
@@ -146,24 +170,54 @@ function ToolCard({ t, nav }) {
 export default function ToolsGrid() {
   const nav = useNavigate();
   return (
-    <section id="tools" style={{ background: CL.cream, padding: "84px 0", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
-      <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 44px" }}>
-          <span style={clEyebrow}><Sparkles size={13} /> Smart Tools</span>
-          <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4vw,2.7rem)", color: CL.ink, letterSpacing: "-1px", margin: "16px 0 12px", lineHeight: 1.12 }}>
-            Everything you need, <span style={{ color: CL.coral }}>in one toolkit.</span>
+    <section id="tools" style={{ background: "#ffffff", padding: "80px 0" }}>
+      <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+        
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: 60 }}>
+          <span style={{ 
+            display: "inline-flex", 
+            alignItems: "center", 
+            gap: 6, 
+            background: "#fff0eb", 
+            color: "#FF693D", 
+            padding: "6px 14px", 
+            borderRadius: 50, 
+            fontSize: 12, 
+            fontWeight: 700, 
+            letterSpacing: "0.05em",
+            marginBottom: 20
+          }}>
+            <Sparkles size={14} /> SMART TOOLS
+          </span>
+          <h2 style={{ 
+            fontFamily: "'Space Grotesk', 'Sora', sans-serif", 
+            fontSize: "2.8rem", 
+            fontWeight: 800, 
+            color: "#1a1a2e", 
+            margin: "0 0 16px 0",
+            letterSpacing: "-1px"
+          }}>
+            Everything you need, <span style={{ color: "#FF693D" }}>in one<br/>toolkit.</span>
           </h2>
-          <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7 }}>
+          <p style={{ 
+            color: "#6b7280", 
+            fontSize: "1.1rem", 
+            maxWidth: 650, 
+            margin: "0 auto", 
+            lineHeight: 1.6 
+          }}>
             From rank prediction to branch deep-dives and personalised college lists — every tool, consistent and built for JEE 2026.
           </p>
         </div>
 
+        {/* Cards Grid */}
         <motion.div
           variants={containerV}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: 22 }}
+          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}
         >
           {TOOLS.map((t) => <ToolCard key={t.title} t={t} nav={nav} />)}
         </motion.div>
