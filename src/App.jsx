@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
-import TopBar from "./components/TopBar.jsx";
 import Footer from "./components/Footer.jsx";
 import SearchOverlay from "./components/SearchOverlay.jsx";
 import { ScrollProgress, BackToTop } from "./components/ScrollUtils.jsx";
@@ -146,7 +145,6 @@ export default function App() {
       <ScrollProgress />
       <ScrollManager />
       <AuthGate />
-      <TopBar />
       <Navbar onSearch={() => setSearchOpen(true)} />
 
       <main>
