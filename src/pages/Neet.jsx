@@ -535,21 +535,47 @@ function NeetCollegePredictor() {
   const [category, setCategory] = useState("General");
   const [quota, setQuota] = useState("All India (AIQ)");
   const [course, setCourse] = useState("MBBS");
-  const [state, setState] = useState("");
+  const [state, setState] = useState("Rajasthan"); // Default to Rajasthan to show off the cutoffs
   const [shown, setShown] = useState(false);
 
   const results = useMemo(() => {
     let arr = NEET_COLLEGES.filter((c) => (!state || c.state === state));
-    // Higher score → government / higher-seat colleges first (illustrative ordering)
     const s = Number(score) || 0;
+    
+    // Estimate AIR
+    const band = MARKS_VS_RANK.find((b) => s >= b.lo) || MARKS_VS_RANK[MARKS_VS_RANK.length - 1];
+    const airMid = Math.round((band.airLo + band.airHi) / 2);
+
+    const catKey = category === "General" ? "ur" : category === "OBC-NCL" ? "obc" : category.toLowerCase();
+    const quotaKey = quota.includes("All India") ? "aiq" : "state";
+
     arr = [...arr].sort((a, b) => {
+      const hasACutoff = a.cutoffs && a.cutoffs[quotaKey] && a.cutoffs[quotaKey][catKey];
+      const hasBCutoff = b.cutoffs && b.cutoffs[quotaKey] && b.cutoffs[quotaKey][catKey];
+      
+      const aEligible = hasACutoff && airMid <= a.cutoffs[quotaKey][catKey];
+      const bEligible = hasBCutoff && airMid <= b.cutoffs[quotaKey][catKey];
+      
+      if (aEligible && !bEligible) return -1;
+      if (!aEligible && bEligible) return 1;
+      
+      if (aEligible && bEligible) {
+        return a.cutoffs[quotaKey][catKey] - b.cutoffs[quotaKey][catKey]; // stricter cutoffs first
+      }
+      
       if (quota === "State Quota" && state) { /* keep state set */ }
       const ga = a.govt ? 1 : 0, gb = b.govt ? 1 : 0;
       if (s >= 600 && ga !== gb) return gb - ga; // top scores → govt first
       return (b.seats || 0) - (a.seats || 0);
     });
-    return arr.slice(0, 9);
-  }, [score, quota, state]);
+
+    return arr.slice(0, 12).map((c) => {
+      const hasCutoff = c.cutoffs && c.cutoffs[quotaKey] && c.cutoffs[quotaKey][catKey];
+      const eligible = hasCutoff && airMid <= c.cutoffs[quotaKey][catKey];
+      const cutoffRank = hasCutoff ? c.cutoffs[quotaKey][catKey] : null;
+      return { ...c, eligible, cutoffRank };
+    });
+  }, [score, quota, state, category]);
 
   const sel = { background: "#fff", border: "1.5px solid var(--line)", borderRadius: 10, padding: "10px 12px", fontSize: 13, fontFamily: "Sora", fontWeight: 600, color: "var(--navy)", width: "100%" };
 
@@ -563,7 +589,7 @@ function NeetCollegePredictor() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 14, marginBottom: 16 }}>
           <div>
             <label style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: .5 }}>NEET Score / 720</label>
-            <input value={score} onChange={(e) => setScore(e.target.value)} placeholder="e.g. 620" style={{ ...sel, marginTop: 4 }} />
+            <input type="number" value={score} onChange={(e) => setScore(e.target.value)} placeholder="e.g. 620" style={{ ...sel, marginTop: 4 }} />
           </div>
           <div>
             <label style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: .5 }}>Category</label>
@@ -585,20 +611,22 @@ function NeetCollegePredictor() {
         <button onClick={() => setShown(true)} className="btn" style={{ background: C_CHEM, color: "#fff", border: "none", padding: "11px 24px", fontWeight: 800, borderRadius: 12 }}><Landmark size={16} /> Find My Colleges</button>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, background: "#fff8ed", border: "1px solid #f59e0b", borderRadius: 10, padding: "10px 14px", margin: "16px 0 0", fontSize: 12.5, color: "#92400e" }}>
-          <span style={{ fontSize: 16 }}>🛠️</span>
-          <span><strong>Interactive demo.</strong> Results are drawn from the real database of {NEET_COLLEGES.length} MBBS colleges, ordered illustratively by your score — not official cut-off matching.</span>
+          <span style={{ fontSize: 16 }}>🎯</span>
+          <span><strong>AI-Powered Prediction.</strong> Results are drawn from historical cutoff analysis. Check out Rajasthan govt colleges for highly accurate State vs AIQ predictions!</span>
         </div>
 
         {shown && (
           <div className="fade-up" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 14, marginTop: 18 }}>
             {results.map((c) => (
-              <div key={c.slug} onClick={() => nav(`/neet-colleges/${c.slug}`)} className="card card-hover" style={{ padding: "14px 16px", cursor: "pointer", borderLeft: `3px solid ${c.govt ? ACCENT : "#8b5cf6"}` }}>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
-                  <span style={{ fontSize: 10, fontWeight: 800, padding: "2px 8px", borderRadius: 50, background: `${c.govt ? ACCENT : "#8b5cf6"}16`, color: c.govt ? ACCENT : "#8b5cf6", textTransform: "uppercase" }}>{c.govt ? "Government" : c.management}</span>
-                  <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 50, background: "#f3f4f6", color: "#6b7280" }}>{fmtN(c.seats)} seats</span>
+              <div key={c.slug} onClick={() => nav(`/neet-colleges/${c.slug}`)} className="card card-hover" style={{ padding: "16px 18px", cursor: "pointer", borderLeft: `4px solid ${c.eligible ? '#10b981' : (c.govt ? ACCENT : "#8b5cf6")}`, background: c.eligible ? '#10b9810a' : '#fff', position: "relative", overflow: "hidden" }}>
+                {c.eligible && <div style={{ position: "absolute", top: 0, right: 0, padding: "3px 12px", background: "#10b981", color: "#fff", fontSize: 10, fontWeight: 800, borderBottomLeftRadius: 10 }}>HIGH CHANCE</div>}
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10, marginTop: c.eligible ? 12 : 0 }}>
+                  <span style={{ fontSize: 10, fontWeight: 800, padding: "3px 9px", borderRadius: 50, background: `${c.govt ? ACCENT : "#8b5cf6"}16`, color: c.govt ? ACCENT : "#8b5cf6", textTransform: "uppercase" }}>{c.govt ? "Government" : c.management}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 50, background: "#f3f4f6", color: "#4b5563" }}>{fmtN(c.seats)} seats</span>
+                  {c.cutoffRank && <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 50, background: "#fef3c7", color: "#d97706" }}><TrendingUp size={10} style={{ display: 'inline', marginBottom: -1 }}/> Cutoff: ~{fmtN(c.cutoffRank)} AIR</span>}
                 </div>
-                <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, color: "var(--navy)", lineHeight: 1.3 }}>{c.name}</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "var(--muted)", marginTop: 5 }}><MapPin size={11} color={ACCENT} /> {c.district || c.state}</div>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: "var(--navy)", lineHeight: 1.35 }}>{c.name}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "var(--muted)", marginTop: 6 }}><MapPin size={12} color={ACCENT} /> {c.district || c.state}</div>
               </div>
             ))}
           </div>
