@@ -2,13 +2,18 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FileText, UploadCloud, Loader2, Trash2, CheckCircle2, AlertTriangle,
   RefreshCw, Wand2, ClipboardList, Clock, FileCheck2, X, Plus, Layers, Info,
-  ImagePlus, ChevronDown, ChevronUp,
+  ImagePlus, ChevronDown, ChevronUp, ZoomIn
 } from "lucide-react";
 import {
   apiAdminTestSignUpload, apiAdminTestParseStart, apiAdminTestParseStatus, apiAdminTestCreate,
   apiAdminTestList, apiAdminTestDelete,
 } from "../../auth/api.js";
 import { uploadPdf, validatePdf, uploadToCloudinary, validateFile, compressImage } from "../../utils/cloudinaryUpload.js";
+import MathText from "../mentorship/MathText.jsx";
+import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
+
+const Portal = ({ children }) => createPortal(children, document.body);
 
 const ORANGE = "#FF693D", NAVY = "#0d1b3e", GREEN = "#15a06e", MUTE = "#6b7280";
 
@@ -564,21 +569,41 @@ function QuestionCard({ q, onChange, onDelete, uploadImage, subjectOptions = [] 
     el.click();
   }
 
-  const ImgCtl = ({ slot, url, onSet }) =>
-    url ? (
-      <div style={{ position: "relative", display: "inline-block" }}>
-        <img src={url} alt="" style={{ maxHeight: 64, maxWidth: 140, borderRadius: 8, border: "1px solid #e5e7eb", display: "block" }} />
-        <button type="button" onClick={() => onSet("")} title="Remove image"
-          style={{ position: "absolute", top: -8, right: -8, width: 22, height: 22, borderRadius: "50%", border: "none", background: "#ef4444", color: "#fff", cursor: "pointer", display: "grid", placeItems: "center" }}>
-          <X size={12} />
-        </button>
-      </div>
+  const ImgCtl = ({ slot, url, onSet }) => {
+    const [zoom, setZoom] = useState(false);
+    return url ? (
+      <>
+        <div style={{ position: "relative", display: "inline-block" }}>
+          <img src={url} alt="" onClick={() => setZoom(true)} style={{ maxHeight: 64, maxWidth: 140, borderRadius: 8, border: "1px solid #e5e7eb", display: "block", cursor: "zoom-in" }} />
+          <button type="button" onClick={(e) => { e.stopPropagation(); onSet(""); }} title="Remove image"
+            style={{ position: "absolute", top: -8, right: -8, width: 22, height: 22, borderRadius: "50%", border: "none", background: "#ef4444", color: "#fff", cursor: "pointer", display: "grid", placeItems: "center", zIndex: 10 }}>
+            <X size={12} />
+          </button>
+        </div>
+        <AnimatePresence>
+          {zoom && (
+            <Portal>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                onClick={() => setZoom(false)}
+                style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,.85)", display: "grid", placeItems: "center", padding: 20, cursor: "zoom-out" }}>
+                <motion.img src={url} alt="" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
+                  style={{ maxWidth: "95vw", maxHeight: "90vh", borderRadius: 12, boxShadow: "0 20px 60px rgba(0,0,0,.5)", background: "#fff" }} />
+                <button onClick={(e) => { e.stopPropagation(); setZoom(false); }}
+                  style={{ position: "fixed", top: 16, right: 16, background: "rgba(255,255,255,.25)", border: "none", borderRadius: "50%", width: 40, height: 40, display: "grid", placeItems: "center", cursor: "pointer", color: "#fff", backdropFilter: "blur(8px)" }}>
+                  <X size={20} />
+                </button>
+              </motion.div>
+            </Portal>
+          )}
+        </AnimatePresence>
+      </>
     ) : (
       <button type="button" onClick={() => pickImage(slot, onSet)} disabled={busySlot === slot}
         style={{ display: "inline-flex", alignItems: "center", gap: 6, border: "1.5px dashed #d6cdc0", background: "#fafafa", color: MUTE, borderRadius: 8, padding: "7px 11px", fontSize: 12, fontWeight: 600, cursor: busySlot === slot ? "wait" : "pointer" }}>
         {busySlot === slot ? <Loader2 size={13} className="adm-spin" /> : <ImagePlus size={13} />} Image
       </button>
     );
+  };
 
   return (
     <div style={{ border: `1.5px solid ${correctOk ? "#f0e9e0" : "#fca5a5"}`, borderRadius: 12, background: "#fff", overflow: "hidden" }}>
@@ -586,7 +611,7 @@ function QuestionCard({ q, onChange, onDelete, uploadImage, subjectOptions = [] 
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "#faf8f4", borderBottom: open ? "1px solid #f0e9e0" : "none" }}>
         <span style={{ width: 28, height: 28, borderRadius: 8, background: `${ORANGE}15`, color: ORANGE, fontWeight: 800, fontSize: 13, display: "grid", placeItems: "center", flexShrink: 0 }}>{q.qno}</span>
         <div style={{ flex: 1, minWidth: 0, fontSize: 13, color: NAVY, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {q.text || <span style={{ color: "#bbb", fontStyle: "italic" }}>Question {q.qno} — read from the paper</span>}
+          {q.text ? <MathText text={q.text} /> : <span style={{ color: "#bbb", fontStyle: "italic" }}>Question {q.qno} — read from the paper</span>}
         </div>
         {!correctOk && <span style={{ fontSize: 10.5, fontWeight: 800, color: "#b45309", background: "#fef3c7", borderRadius: 20, padding: "2px 8px", flexShrink: 0 }}>no answer</span>}
         {subjectOptions.length > 0 && (
