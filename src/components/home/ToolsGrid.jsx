@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Gauge, Crosshair, BarChart3, BookOpen, Map, ListChecks,
-  GitCompareArrows, Layers, Check, Sparkles, Ticket,
+  GitCompareArrows, Layers, Sparkles, Ticket,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
@@ -158,7 +158,7 @@ function ToolCard({ t, nav }) {
       }}>
         {t.bullets.map((b) => (
           <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "0.9rem", color: "#4b5563" }}>
-            <Check size={16} color={iconColor} style={{ marginTop: 2, flexShrink: 0 }} />
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#1a1a2e", marginTop: 7, flexShrink: 0 }} />
             <span style={{ lineHeight: 1.4 }}>{b}</span>
           </li>
         ))}
