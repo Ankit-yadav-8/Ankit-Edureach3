@@ -285,7 +285,7 @@ export default function Navbar({ onSearch }) {
           {navItems.map((item) => (
             <li
               key={item.label}
-              style={{ position: item.mega ? "static" : "relative" }}
+              style={{ position: item.mega && item.label === "Tools" ? "static" : "relative" }}
               onMouseEnter={() => (item.drop || item.mega) && setOpen(item.label)}
               onMouseLeave={() => setOpen(null)}
             >
@@ -302,18 +302,18 @@ export default function Navbar({ onSearch }) {
                   <AnimatePresence>
                     {open === item.label && (
                       <motion.div
-                        initial={{ opacity: 0, y: -8, x: "-50%" }}
-                        animate={{ opacity: 1, y: 0, x: "-50%" }}
-                        exit={{ opacity: 0, y: -8, x: "-50%" }}
+                        initial={{ opacity: 0, y: -8, ...(item.label === "Tools" ? { x: "-50%" } : {}) }}
+                        animate={{ opacity: 1, y: 0, ...(item.label === "Tools" ? { x: "-50%" } : {}) }}
+                        exit={{ opacity: 0, y: -8, ...(item.label === "Tools" ? { x: "-50%" } : {}) }}
                         transition={{ duration: 0.18 }}
                         style={{
                           position: "absolute", top: "calc(100% + 8px)",
-                          left: "50%",
+                          left: item.label === "Tools" ? "50%" : 0,
                           background: "#fff", borderRadius: 18,
                           boxShadow: "0 24px 60px -18px rgba(13,27,62,.32)",
                           padding: 12, border: "1px solid var(--border)",
-                          display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center",
-                          maxWidth: "96vw", overflow: "hidden"
+                          display: "flex", gap: 6,
+                          maxWidth: "96vw", overflowX: "auto"
                         }}
                       >
                         {item.mega.map((col) => {
