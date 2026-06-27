@@ -20,6 +20,8 @@ function FestCard({ t }) {
       variants={itemV}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      animate={{ y: isHovered && !isExpanded ? -4 : 0 }}
+      transition={{ duration: 0.2 }}
       style={{
         background: "#ffffff",
         border: `1px solid ${isHovered || isExpanded ? iconColor : `${iconColor}15`}`,
@@ -28,9 +30,8 @@ function FestCard({ t }) {
         boxShadow: isHovered || isExpanded ? `0 12px 30px ${iconColor}15` : "0 4px 20px rgba(0,0,0,0.02)",
         display: "flex",
         flexDirection: "column",
-        transition: "all 0.3s ease",
+        transition: "border 0.3s ease, box-shadow 0.3s ease",
         textAlign: "left",
-        transform: isHovered && !isExpanded ? "translateY(-4px)" : "translateY(0)",
         overflow: "hidden" // crucial for layout animations
       }}
     >
@@ -157,16 +158,41 @@ export default function CampusFests() {
   return (
     <div style={{ background: "#FDFDFD", minHeight: "100vh", paddingBottom: 100 }}>
       {/* ── HERO SECTION ── */}
-      <div style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #2d2b55 100%)", padding: "120px 24px 80px", textAlign: "center", color: "#fff", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, opacity: 0.1, backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
+      <div style={{ background: "#FDFDFD", padding: "120px 24px 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        
+        {/* Animated Background Blobs */}
+        <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
+          {/* Subtle Grid Pattern */}
+          <div style={{ position: "absolute", inset: 0, opacity: 0.5, backgroundImage: "radial-gradient(circle at 2px 2px, rgba(0,0,0,0.05) 1px, transparent 0)", backgroundSize: "32px 32px" }} />
+          
+          <motion.div 
+            animate={{ 
+              y: [0, -30, 0],
+              x: [0, 20, 0],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            style={{ position: "absolute", top: "-10%", left: "10%", width: 500, height: 500, background: "radial-gradient(circle, rgba(255, 105, 61, 0.08) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(40px)" }} 
+          />
+          <motion.div 
+            animate={{ 
+              y: [0, 40, 0],
+              x: [0, -30, 0],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            style={{ position: "absolute", bottom: "-20%", right: "5%", width: 600, height: 600, background: "radial-gradient(circle, rgba(255, 160, 122, 0.08) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(50px)" }} 
+          />
+        </div>
+
         <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 800 }}>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", padding: "8px 16px", borderRadius: 999, fontSize: "0.85rem", fontWeight: 700, color: "#fff", marginBottom: 24 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#FFF0EB", padding: "8px 16px", borderRadius: 999, fontSize: "0.85rem", fontWeight: 800, color: "#FF693D", marginBottom: 24, letterSpacing: "0.02em" }}>
             <Sparkles size={14} color="#FF693D" /> India's largest college fest network
           </motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)", fontWeight: 900, lineHeight: 1.1, marginBottom: 24, letterSpacing: "-0.03em" }}>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)", fontWeight: 900, lineHeight: 1.1, marginBottom: 24, letterSpacing: "-0.03em", color: "#111827" }}>
             Campus Fests & Events
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} style={{ fontSize: "1.1rem", color: "rgba(255,255,255,0.7)", maxWidth: 600, margin: "0 auto", lineHeight: 1.6 }}>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} style={{ fontSize: "1.1rem", color: "#4B5563", maxWidth: 600, margin: "0 auto", lineHeight: 1.6 }}>
             Discover and book tickets for the biggest cultural nights, flagship hackathons, and technical symposiums across IITs, NITs, and IIITs.
           </motion.p>
         </div>
