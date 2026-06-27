@@ -35,7 +35,7 @@ function FestCard({ t }) {
       }}
     >
       <motion.div layout style={{ height: 200, borderRadius: 14, overflow: "hidden", marginBottom: 20, position: "relative" }}>
-        <img src={t.img} style={{ width: "100%", height: "100%", objectFit: "cover" }} alt={t.college} />
+        <img src={t.img} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: t.college === "IIT Roorkee" ? "top" : "center" }} alt={t.college} />
         {/* Badges on image */}
         <div style={{ position: "absolute", top: 12, right: 12, display: "flex", gap: 6 }}>
            {t.cultFest && <span style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(4px)", padding: "4px 10px", borderRadius: 8, fontSize: "0.75rem", fontWeight: 700, color: "#e5484d" }}>Cultural</span>}
