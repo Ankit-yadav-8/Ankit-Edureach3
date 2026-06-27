@@ -1,19 +1,156 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, MapPin, Sparkles, Filter, Ticket, CheckCircle2 } from "lucide-react";
 import { FESTS_DB } from "../data/fests";
 
+const containerV = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
+const itemV = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+};
+
+function FestCard({ t }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const iconColor = "#FF693D";
+
+  return (
+    <motion.div
+      layout
+      variants={itemV}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        background: "#ffffff",
+        border: `1px solid ${isHovered || isExpanded ? iconColor : `${iconColor}15`}`,
+        borderRadius: 20,
+        padding: 24,
+        boxShadow: isHovered || isExpanded ? `0 12px 30px ${iconColor}15` : "0 4px 20px rgba(0,0,0,0.02)",
+        display: "flex",
+        flexDirection: "column",
+        transition: "all 0.3s ease",
+        textAlign: "left",
+        transform: isHovered && !isExpanded ? "translateY(-4px)" : "translateY(0)",
+        overflow: "hidden" // crucial for layout animations
+      }}
+    >
+      <motion.div layout style={{ height: 200, borderRadius: 14, overflow: "hidden", marginBottom: 20, position: "relative" }}>
+        <img src={t.img} style={{ width: "100%", height: "100%", objectFit: "cover" }} alt={t.college} />
+        {/* Badges on image */}
+        <div style={{ position: "absolute", top: 12, right: 12, display: "flex", gap: 6 }}>
+           {t.cultFest && <span style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(4px)", padding: "4px 10px", borderRadius: 8, fontSize: "0.75rem", fontWeight: 700, color: "#e5484d" }}>Cultural</span>}
+           {t.techFest && <span style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(4px)", padding: "4px 10px", borderRadius: 8, fontSize: "0.75rem", fontWeight: 700, color: "#6366f1" }}>Technical</span>}
+        </div>
+      </motion.div>
+
+      <motion.h3 layout style={{ 
+        fontFamily: "'Space Grotesk', 'Sora', sans-serif", 
+        fontSize: "1.3rem", 
+        fontWeight: 800, 
+        color: "#1a1a2e", 
+        margin: "0 0 12px 0",
+        letterSpacing: "-0.5px"
+      }}>
+        {t.college} Fests
+      </motion.h3>
+
+      <motion.p layout style={{ color: "#6b7280", fontSize: "0.95rem", lineHeight: 1.6, margin: "0 0 24px 0", flexGrow: !isExpanded ? 1 : 0 }}>
+        Home to <strong style={{color:"#444"}}>{t.cultFest?.name || "its Cultural Fest"}</strong> & <strong style={{color:"#444"}}>{t.techFest?.name || "its Technical Fest"}</strong>. Discover flagship events, concerts, and hackathons.
+      </motion.p>
+      
+      <AnimatePresence mode="wait">
+        {!isExpanded ? (
+           <motion.div key="collapsed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+             <button onClick={() => setIsExpanded(true)} style={{ width: "100%", padding: "12px", borderRadius: 12, background: isHovered ? iconColor : "#1a1a2e", color: "#fff", fontWeight: 700, border: "none", cursor: "pointer", fontSize: "0.95rem", transition: "background 0.3s" }}>
+                Explore Fests
+             </button>
+           </motion.div>
+        ) : (
+          <motion.div 
+            key="expanded"
+            initial={{ opacity: 0, height: 0 }} 
+            animate={{ opacity: 1, height: "auto" }} 
+            exit={{ opacity: 0, height: 0 }}
+            style={{ overflow: "hidden" }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: 20, borderTop: "1px solid #eee", paddingTop: 16 }}>
+              
+              {t.cultFest && (
+                <div>
+                  <h4 style={{ margin: "0 0 8px 0", color: "#e5484d", fontWeight: 700, fontSize: "1rem" }}>🎵 Cultural: {t.cultFest.name}</h4>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                    {(t.cultFest.details?.highlights || ["Flagship pro-shows", "Dance and music events", "Celebrity nights"]).slice(0,3).map(b => (
+                      <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "0.9rem", color: "#4b5563" }}>
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#e5484d", marginTop: 7, flexShrink: 0, opacity: 0.8 }} />
+                        <span style={{ lineHeight: 1.4 }}>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {t.techFest && (
+                <div>
+                  <h4 style={{ margin: "0 0 8px 0", color: "#6366f1", fontWeight: 700, fontSize: "1rem" }}>💻 Technical: {t.techFest.name}</h4>
+                   <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                    {(t.techFest.details?.highlights || ["Robotics & hackathons", "Technical workshops", "Guest lectures"]).slice(0,3).map(b => (
+                      <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "0.9rem", color: "#4b5563" }}>
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#6366f1", marginTop: 7, flexShrink: 0, opacity: 0.8 }} />
+                        <span style={{ lineHeight: 1.4 }}>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              <div style={{ display: "flex", gap: 12, marginTop: 10 }}>
+                  <button onClick={() => setIsExpanded(false)} style={{ flex: 1, padding: "12px", borderRadius: 12, background: "#f1f5f9", color: "#334155", fontWeight: 700, border: "none", cursor: "pointer", fontSize: "0.95rem" }}>
+                    Show Less
+                  </button>
+                  <button onClick={() => alert("Redirecting to portal...")} style={{ flex: 1, padding: "12px", borderRadius: 12, background: iconColor, color: "#fff", fontWeight: 700, border: "none", cursor: "pointer", fontSize: "0.95rem" }}>
+                    Register
+                  </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 export default function CampusFests() {
   const [searchQ, setSearchQ] = useState("");
-  const [filterType, setFilterType] = useState("All");
-  const [filterInstitute, setFilterInstitute] = useState("All");
-  const [booking, setBooking] = useState(null);
 
-  // Filter fests
-  const filtered = FESTS_DB.filter((f) => {
-    if (filterType !== "All" && f.type !== filterType) return false;
-    if (filterInstitute !== "All" && !f.college.includes(filterInstitute)) return false;
-    if (searchQ && !f.name.toLowerCase().includes(searchQ.toLowerCase()) && !f.college.toLowerCase().includes(searchQ.toLowerCase())) return false;
+  const groupedFests = useMemo(() => {
+    const groups = FESTS_DB.reduce((acc, fest) => {
+      if (!acc[fest.college]) {
+        acc[fest.college] = {
+          id: fest.college,
+          college: fest.college,
+          cultFest: null,
+          techFest: null,
+          img: fest.img // fallback
+        };
+      }
+      if (fest.type === "Cultural") acc[fest.college].cultFest = fest;
+      else if (fest.type === "Technical") acc[fest.college].techFest = fest;
+      
+      // Override img for the 5 colleges we have custom images for
+      if (fest.college === "IIT Bombay") acc[fest.college].img = "/images/fests/iit-bombay.jpg";
+      if (fest.college === "IIT Delhi") acc[fest.college].img = "/images/fests/iit-delhi.jpg";
+      if (fest.college === "IIT Kanpur") acc[fest.college].img = "/images/fests/iit-kanpur.jpg";
+      if (fest.college === "IIT Madras") acc[fest.college].img = "/images/fests/iit-madras.jpg";
+      if (fest.college === "IIT Roorkee") acc[fest.college].img = "/images/fests/iit-roorkee.jpg";
+      return acc;
+    }, {});
+    return Object.values(groups);
+  }, []);
+
+  const filtered = groupedFests.filter((f) => {
+    if (searchQ && !f.college.toLowerCase().includes(searchQ.toLowerCase()) && 
+        !(f.cultFest?.name || "").toLowerCase().includes(searchQ.toLowerCase()) && 
+        !(f.techFest?.name || "").toLowerCase().includes(searchQ.toLowerCase())) return false;
     return true;
   });
 
@@ -35,10 +172,9 @@ export default function CampusFests() {
         </div>
       </div>
 
-      {/* ── SEARCH & FILTERS ── */}
+      {/* ── SEARCH ── */}
       <div className="container" style={{ marginTop: "-32px", position: "relative", zIndex: 10, display: "flex", justifyContent: "center" }}>
-        <div style={{ width: "100%", maxWidth: 800, display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* Main Search Pill */}
+        <div style={{ width: "100%", maxWidth: 600, display: "flex", flexDirection: "column", gap: 16 }}>
           <div style={{
             display: "flex",
             gap: 6,
@@ -52,7 +188,7 @@ export default function CampusFests() {
               <Search size={18} color="#9ca3af" style={{ flexShrink: 0 }} />
               <input 
                 value={searchQ} onChange={(e) => setSearchQ(e.target.value)}
-                placeholder="Search by fest name or college..." 
+                placeholder="Search by college or fest name..." 
                 style={{
                   border: "none",
                   outline: "none",
@@ -82,22 +218,6 @@ export default function CampusFests() {
               Search
             </button>
           </div>
-          
-          {/* Filters */}
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-            <select value={filterType} onChange={(e) => setFilterType(e.target.value)} style={{ padding: "10px 20px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "#fff", fontSize: "0.9rem", fontWeight: 600, color: "#1a1a2e", cursor: "pointer", outline: "none", fontFamily: "inherit", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-              <option value="All">All Types</option>
-              <option value="Cultural">Cultural Fests</option>
-              <option value="Technical">Technical Fests</option>
-            </select>
-            <select value={filterInstitute} onChange={(e) => setFilterInstitute(e.target.value)} style={{ padding: "10px 20px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "#fff", fontSize: "0.9rem", fontWeight: 600, color: "#1a1a2e", cursor: "pointer", outline: "none", fontFamily: "inherit", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-              <option value="All">All Institutes</option>
-              <option value="IIT">IITs</option>
-              <option value="NIT">NITs</option>
-              <option value="IIIT">IIITs</option>
-              <option value="BITS">BITS</option>
-            </select>
-          </div>
         </div>
       </div>
 
@@ -107,121 +227,22 @@ export default function CampusFests() {
           <div style={{ textAlign: "center", padding: "80px 20px" }}>
             <Filter size={48} color="#ccc" style={{ marginBottom: 16, display: "block", margin: "0 auto 16px auto" }} />
             <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "#1a1a2e", marginBottom: 8 }}>No fests found</h3>
-            <p style={{ color: "#64748b" }}>Try adjusting your search or filters.</p>
+            <p style={{ color: "#64748b" }}>Try adjusting your search.</p>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 24 }}>
-            {filtered.map((fest, i) => (
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(i * 0.05, 0.5) }}
-                key={fest.id} 
-                style={{ background: "#fff", borderRadius: 24, overflow: "hidden", border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 12px 32px -12px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", position: "relative" }}
-              >
-                {/* Image */}
-                <div style={{ height: 200, position: "relative", overflow: "hidden" }}>
-                  <img src={fest.img} alt={fest.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  <div style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.9)", backdropFilter: "blur(10px)", padding: "6px 12px", borderRadius: 10, fontSize: "0.75rem", fontWeight: 800, color: fest.type === "Cultural" ? "#e5484d" : "#6366f1" }}>
-                    {fest.type}
-                  </div>
-                </div>
-                
-                {/* Content */}
-                <div style={{ padding: 24, flex: 1, display: "flex", flexDirection: "column" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#64748b", fontSize: "0.85rem", fontWeight: 600, marginBottom: 8 }}>
-                    <MapPin size={14} /> {fest.college}
-                  </div>
-                  <h3 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1a1a2e", marginBottom: 16, lineHeight: 1.2 }}>{fest.name}</h3>
-                  
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
-                    {fest.tags.map(t => (
-                      <span key={t} style={{ background: "#F8F9FA", color: "#475569", padding: "4px 10px", borderRadius: 6, fontSize: "0.75rem", fontWeight: 700 }}>{t}</span>
-                    ))}
-                  </div>
-
-                  <div style={{ marginTop: "auto" }}>
-                    <button onClick={() => setBooking(fest)} style={{ width: "100%", padding: "14px", borderRadius: 12, background: "#1a1a2e", color: "#fff", fontWeight: 700, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontSize: "0.95rem" }}>
-                      <Ticket size={18} /> Book Tickets / Register
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
+          <motion.div 
+            layout
+            variants={containerV}
+            initial="hidden"
+            animate="show"
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 24, alignItems: "start" }}
+          >
+            {filtered.map((fest) => (
+              <FestCard key={fest.id} t={fest} />
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
-
-      {/* ── DETAILS / BOOKING MODAL ── */}
-      <AnimatePresence>
-        {booking && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setBooking(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)", zIndex: 2000 }} />
-            <div style={{ position: "fixed", inset: 0, zIndex: 2001, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, pointerEvents: "none" }}>
-              <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} style={{ width: "min(600px, 100%)", maxHeight: "90vh", overflowY: "auto", background: "#fff", borderRadius: 24, padding: 32, textAlign: "left", pointerEvents: "auto", boxShadow: "0 32px 64px -16px rgba(0,0,0,0.3)" }}>
-                
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #eee", paddingBottom: 16, marginBottom: 20 }}>
-                  <div>
-                    <h3 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#1a1a2e", margin: 0 }}>{booking.name}</h3>
-                    <p style={{ color: "#FF693D", fontSize: "1rem", fontWeight: 700, margin: "4px 0 0" }}>{booking.college} • {booking.type} Fest</p>
-                  </div>
-                  <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#E0F2FE", color: "#0ea5e9", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <CheckCircle2 size={24} />
-                  </div>
-                </div>
-                
-                <div style={{ color: "#475569", fontSize: "0.95rem", lineHeight: 1.6, marginBottom: 24 }}>
-                  {booking.details ? (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                      {booking.details.month && <div><strong style={{ color: "#1e293b" }}>Month:</strong> {booking.details.month}</div>}
-                      {booking.details.founded && <div><strong style={{ color: "#1e293b" }}>Founded:</strong> {booking.details.founded}</div>}
-                      {booking.details.scale && <div><strong style={{ color: "#1e293b" }}>Scale:</strong> {booking.details.scale}</div>}
-                      {booking.details.footfall && <div><strong style={{ color: "#1e293b" }}>Footfall:</strong> {booking.details.footfall}</div>}
-                      {booking.details.participation && <div><strong style={{ color: "#1e293b" }}>Participation:</strong> {booking.details.participation}</div>}
-                      {booking.details.flagshipEvents && <div><strong style={{ color: "#1e293b" }}>Flagship Events:</strong> {booking.details.flagshipEvents}</div>}
-                      
-                      {booking.details.highlights && booking.details.highlights.length > 0 && (
-                        <div>
-                          <strong style={{ color: "#1e293b" }}>Highlights:</strong>
-                          <ul style={{ margin: "8px 0 0", paddingLeft: 20, color: "#475569" }}>
-                            {booking.details.highlights.map((h, i) => <li key={i}>{h}</li>)}
-                          </ul>
-                        </div>
-                      )}
-                      {booking.details.whyFamous && booking.details.whyFamous.length > 0 && (
-                        <div>
-                          <strong style={{ color: "#1e293b" }}>Why Famous:</strong>
-                          <ul style={{ margin: "8px 0 0", paddingLeft: 20, color: "#475569" }}>
-                            {booking.details.whyFamous.map((h, i) => <li key={i}>{h}</li>)}
-                          </ul>
-                        </div>
-                      )}
-                      {booking.details.specialFeatures && booking.details.specialFeatures.length > 0 && (
-                        <div>
-                          <strong style={{ color: "#1e293b" }}>Special Features:</strong>
-                          <ul style={{ margin: "8px 0 0", paddingLeft: 20, color: "#475569" }}>
-                            {booking.details.specialFeatures.map((h, i) => <li key={i}>{h}</li>)}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <p>Details and schedule for this fest are currently being finalized. Please check back later or visit the official {booking.college} portal.</p>
-                  )}
-                </div>
-
-                <div style={{ display: "flex", gap: 12 }}>
-                  <button onClick={() => setBooking(null)} style={{ flex: 1, padding: "14px", borderRadius: 12, background: "#F1F5F9", color: "#334155", fontWeight: 700, border: "none", cursor: "pointer", fontSize: "0.95rem" }}>
-                    Close
-                  </button>
-                  <button onClick={() => alert(`Redirecting to ${booking.college} portal...`)} style={{ flex: 1, padding: "14px", borderRadius: 12, background: "linear-gradient(135deg, #FF693D, #FF4500)", color: "#fff", fontWeight: 700, border: "none", cursor: "pointer", fontSize: "0.95rem" }}>
-                    Register on Portal
-                  </button>
-                </div>
-
-              </motion.div>
-            </div>
-          </>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
