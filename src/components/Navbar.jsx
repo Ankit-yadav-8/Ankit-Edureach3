@@ -285,7 +285,7 @@ export default function Navbar({ onSearch }) {
           {navItems.map((item) => (
             <li
               key={item.label}
-              style={{ position: "relative" }}
+              style={{ position: item.mega ? "static" : "relative" }}
               onMouseEnter={() => (item.drop || item.mega) && setOpen(item.label)}
               onMouseLeave={() => setOpen(null)}
             >
@@ -302,17 +302,18 @@ export default function Navbar({ onSearch }) {
                   <AnimatePresence>
                     {open === item.label && (
                       <motion.div
-                        initial={{ opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
+                        initial={{ opacity: 0, y: -8, x: "-50%" }}
+                        animate={{ opacity: 1, y: 0, x: "-50%" }}
+                        exit={{ opacity: 0, y: -8, x: "-50%" }}
                         transition={{ duration: 0.18 }}
                         style={{
                           position: "absolute", top: "calc(100% + 8px)",
-                          ...(item.align === "right" ? { right: 0 } : { left: 0 }),
+                          left: "50%",
                           background: "#fff", borderRadius: 18,
                           boxShadow: "0 24px 60px -18px rgba(13,27,62,.32)",
                           padding: 12, border: "1px solid var(--border)",
-                          display: "flex", gap: 6,
+                          display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center",
+                          maxWidth: "96vw", overflow: "hidden"
                         }}
                       >
                         {item.mega.map((col) => {
