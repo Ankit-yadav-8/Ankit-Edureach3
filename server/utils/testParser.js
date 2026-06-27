@@ -449,13 +449,24 @@ async function parseWithLLM(qText, kText) {
 
 // True when the rules parse is too thin to use as-is: no questions, or most
 // MCQs came out with no option text (math PDFs whose options don't survive text
-// extraction). Such papers need the vision model to read the actual content.
+// extraction) or with bogus options matched inside math equations.
 function isLowQuality(questions) {
   if (!questions.length) return true;
   const singles = questions.filter((q) => q.type === "single");
   if (!singles.length) return false; // all-integer papers extract fine as text
-  const emptyOpts = singles.filter((q) => !q.options.some((o) => String(o.text).trim())).length;
-  return emptyOpts / singles.length > 0.4;
+  
+  let badCount = 0;
+  for (const q of singles) {
+    const emptyOpts = !q.options.some((o) => String(o.text).trim());
+    // A clean parse should have options starting with "1". If the first option is not "1",
+    // it's highly likely the regex matched "(2)" or "(x+2)" inside a math equation mid-stem.
+    const bogusOpts = q.options.length > 0 && q.options[0].key !== "1";
+    const shortStem = (q.text || "").length < 15;
+    
+    if (emptyOpts || bogusOpts || shortStem) badCount++;
+  }
+  
+  return badCount / singles.length > 0.3;
 }
 
 // Math-heavy PDFs store equations as vector glyphs that the text layer extracts
@@ -547,7 +558,8 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl, examType = "") {
   // Force it when the text layer is GARBLED too (math glyphs that extract as junk
   // but still produced "options"), else the rules parser publishes gibberish.
   const garbled = looksGarbled(qText);
-  if (visionEnabled() && groqReady() && (isLowQuality(questions) || garbled)) {
+  const isMathHeavy = ["mains", "advanced", "neet"].includes(examType);
+  if (visionEnabled() && groqReady() && (isLowQuality(questions) || garbled || isMathHeavy)) {
     try {
       const { extractWithVision } = await import("./visionParser.js");
       const v = await extractWithVision(qBuf, { answerKey: textKey });
