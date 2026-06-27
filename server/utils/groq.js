@@ -65,7 +65,6 @@ export async function callGroq({
     model,
     temperature,
     max_tokens: mt,
-    response_format: { type: "json_object" },
     messages: [
       ...(system ? [{ role: "system", content: system }] : []),
       { role: "user", content },
