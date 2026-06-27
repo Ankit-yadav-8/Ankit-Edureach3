@@ -458,7 +458,6 @@ export default function Navbar({ onSearch }) {
                 {(user?.name || user?.phone || "U").charAt(0).toUpperCase()}
               </span>
               {user?.name?.split(" ")[0] || "Account"}
-              <ChevronDown size={14} style={{ color: "#9ca3af", marginLeft: 2 }} />
             </button>
           ) : (
             <button
