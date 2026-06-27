@@ -1615,6 +1615,15 @@ export default function Hero({ onSearch }) {
                 borderRadius: 9999,
                 boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
                 border: "1px solid rgba(0,0,0,.04)",
+                transition: "border 0.3s ease, box-shadow 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.border = "1px solid #FF5A36";
+                e.currentTarget.style.boxShadow = "0 12px 30px rgba(255, 90, 54, 0.15)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.border = "1px solid rgba(0,0,0,.04)";
+                e.currentTarget.style.boxShadow = "0 10px 40px rgba(0,0,0,0.06)";
               }}>
                 <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 10, paddingLeft: isXs ? 16 : 24, minWidth: 0 }}>
                   <Search size={18} color="#9ca3af" style={{ flexShrink: 0 }} />
