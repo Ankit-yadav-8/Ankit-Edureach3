@@ -19,9 +19,93 @@ import Testimonials from "../components/home/Testimonials.jsx";
 import FaqSection from "../components/home/FaqSection.jsx";
 
 export default function Home({ onSearch }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://collegeparichay.in/#website",
+        "url": "https://collegeparichay.in/",
+        "name": "CollegeParichay",
+        "description": "JEE Rank Predictor & IIT NIT IIIT College Reviews",
+        "potentialAction": [
+          {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://collegeparichay.in/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        ]
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://collegeparichay.in/#organization",
+        "name": "CollegeParichay",
+        "url": "https://collegeparichay.in/",
+        "logo": "https://collegeparichay.in/cplogo3.jpeg"
+      },
+      {
+        "@type": "ItemList",
+        "name": "Key Tools and Sections",
+        "itemListElement": [
+          {
+            "@type": "SiteNavigationElement",
+            "position": 1,
+            "name": "JEE Main Rank Predictor",
+            "url": "https://collegeparichay.in/jee-main"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 2,
+            "name": "JEE Advanced Rank Predictor",
+            "url": "https://collegeparichay.in/jee-advanced"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 3,
+            "name": "College Explorer",
+            "url": "https://collegeparichay.in/colleges"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 4,
+            "name": "JoSAA Cutoffs",
+            "url": "https://collegeparichay.in/cutoffs"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 5,
+            "name": "Branch vs College",
+            "url": "https://collegeparichay.in/branch-vs-college"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 6,
+            "name": "NEET Rank Predictor",
+            "url": "https://collegeparichay.in/neet"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 7,
+            "name": "Campus Fests",
+            "url": "https://collegeparichay.in/campus-fests"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 8,
+            "name": "Mentorship",
+            "url": "https://collegeparichay.in/mentorship"
+          }
+        ]
+      }
+    ]
+  };
+
   return (
     <>
-      <Seo path="/" />
+      <Seo path="/" jsonLd={jsonLd} />
 
       {/* ── Hero ── */}
       <Hero onSearch={onSearch} />
