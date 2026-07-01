@@ -82,9 +82,9 @@ export default function BranchCatalog() {
         <motion.div
           initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
           style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 40,
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 36,
             maxWidth: 1040, margin: "0 auto 40px", background: CL.card, borderRadius: 24,
-            border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: 32, alignItems: "center"
+            border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: 28, alignItems: "center"
           }}>
 
           {/* Left: Copy & CTA */}
@@ -95,15 +95,15 @@ export default function BranchCatalog() {
             }}>
               <Sparkles size={13} /> Branch Explorer
             </span>
-            <h3 style={{ fontFamily: CL.display, fontWeight: 900, fontSize: "clamp(2rem, 3.5vw, 2.6rem)", color: CL.ink, lineHeight: 1.1, marginBottom: 18 }}>
+            <h3 style={{ fontFamily: CL.display, fontWeight: 900, fontSize: "clamp(1.9rem, 3.4vw, 2.4rem)", color: CL.ink, lineHeight: 1.1, marginBottom: 12 }}>
               {TOTAL_BRANCHES}+ branches.<br />
               <span style={{ color: CL.coral }}>{BRANCHES.length} clear paths.</span>
             </h3>
-            <p style={{ color: CL.body, fontSize: 16, lineHeight: 1.6, marginBottom: 28, maxWidth: 440 }}>
+            <p style={{ color: CL.body, fontSize: 15, lineHeight: 1.55, marginBottom: 20, maxWidth: 440 }}>
               Bucketed into {BRANCHES.length} domains with deep insights on placements, salaries, AI outlook and more — so nothing slips through the cracks.
             </p>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 22 }}>
               {["10 domain paths, deep insights", "5-year salary arcs & charts", "AI disruption risk scores", "Placement stats & top recruiters"].map(bullet => (
                 <div key={bullet} style={{ display: "flex", gap: 10, alignItems: "center" }}>
                   <span style={{ width: 22, height: 22, borderRadius: "50%", background: CL.greenSoft, display: "grid", placeItems: "center", flexShrink: 0 }}>
@@ -116,7 +116,7 @@ export default function BranchCatalog() {
 
             <Link to="/branches" style={{
               display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff",
-              padding: "16px 28px", borderRadius: 14, fontFamily: CL.display, fontWeight: 800, fontSize: 16,
+              padding: "13px 24px", borderRadius: 14, fontFamily: CL.display, fontWeight: 800, fontSize: 15,
               textDecoration: "none", boxShadow: "0 10px 24px -8px rgba(255, 105, 61,.6)"
             }}>
               Explore Branches <ArrowRight size={18} />
@@ -124,8 +124,8 @@ export default function BranchCatalog() {
           </div>
 
           {/* Right: AI Image */}
-          <div style={{ borderRadius: 18, overflow: "hidden", border: `1px solid ${CL.line}`, boxShadow: "0 18px 44px -24px rgba(26,26,46,.2)" }}>
-            <img src="/images/branch_explorer_ai.png" alt="Branch Explorer" style={{ width: "100%", display: "block" }} />
+          <div style={{ borderRadius: 18, overflow: "hidden", border: `1px solid ${CL.line}`, boxShadow: "0 18px 44px -24px rgba(26,26,46,.2)", background: "#000", aspectRatio: "1 / 1" }}>
+            <img src="/images/branch_explorer_staircase.jpg" alt="Career path: idea to success" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
           </div>
         </motion.div>
 
