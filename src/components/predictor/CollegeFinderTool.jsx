@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
   Search, MapPin, ChevronDown, RotateCcw, SlidersHorizontal,
@@ -336,11 +337,17 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
 
       {/* ── Empty state ── */}
       {!results && !loading && !error && (
-        <div className="cf-empty">
+        <motion.div
+          className="cf-empty"
+          initial={{ opacity: 0, scale: 1.12 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ type: "spring", stiffness: 150, damping: 18 }}
+        >
           <div className="cf-empty-icon"><Crosshair size={26} /></div>
           <h4>Find your perfect institute</h4>
           <p>Enter your rank above to see every {allowedTypes.join(" / ")} you can get, with branch-change, dual-degree and minor-program flexibility — filter it all from the sidebar.</p>
-        </div>
+        </motion.div>
       )}
 
       {loading && (

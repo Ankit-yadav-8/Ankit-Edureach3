@@ -1,5 +1,5 @@
 /* AdvancedPredictorHome — the JoSAA · JEE Advanced engine embedded on the home
-   page. A violet pill toggle switches between the two tools the dedicated
+   page. A coral pill toggle switches between the two tools the dedicated
    /jee-advanced page offers, without leaving home:
      • Rank Predictor   — marks (Paper 1 + Paper 2) → All-India CRL + branches
      • College Predictor — enter a rank → every IIT branch within reach
@@ -11,7 +11,7 @@ import RankPredictorTool from "../predictor/RankPredictorTool.jsx";
 import CollegeFinderTool from "../predictor/CollegeFinderTool.jsx";
 import { CL, clEyebrow } from "./clTheme.js";
 
-const ADV = "#7C3AED"; // JEE Advanced violet — matches the /jee-advanced page
+const ADV = CL.coral; // coral accent — matches the site theme
 
 const TABS = [
   {
@@ -35,7 +35,7 @@ export default function AdvancedPredictorHome() {
       <div style={{ position: "absolute", inset: 0, backgroundImage: `radial-gradient(${CL.cream3} 1.2px, transparent 1.2px)`, backgroundSize: "26px 26px", opacity: 0.55, pointerEvents: "none" }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 28px" }}>
-          <span style={{ ...clEyebrow, color: "#5b21b6", background: "rgba(124,58,237,.10)", border: "1px solid rgba(124,58,237,.28)" }}>
+          <span style={{ ...clEyebrow }}>
             <Building2 size={13} /> JoSAA Engine · JEE Advanced
           </span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.4vw,2.9rem)", color: CL.ink, letterSpacing: "-1.3px", margin: "16px 0 12px", lineHeight: 1.08 }}>
@@ -48,7 +48,7 @@ export default function AdvancedPredictorHome() {
 
         {/* ── Tool toggle ── */}
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 32 }}>
-          <div style={{ display: "inline-flex", gap: 6, background: "#fff", border: "1px solid rgba(124,58,237,.2)", borderRadius: 50, padding: 6, boxShadow: "0 4px 16px rgba(124,58,237,.08)" }}>
+          <div style={{ display: "inline-flex", gap: 6, background: "#fff", border: `1px solid ${CL.coral}33`, borderRadius: 50, padding: 6, boxShadow: `0 4px 16px ${CL.coral}14` }}>
             {TABS.map((tb) => {
               const on = tb.key === tab;
               const Ic = tb.icon;
@@ -58,9 +58,9 @@ export default function AdvancedPredictorHome() {
                     display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px",
                     border: "none", cursor: "pointer", borderRadius: 50, fontFamily: CL.display,
                     fontWeight: 700, fontSize: 14.5, transition: "all .18s",
-                    color: on ? "#fff" : "#5b21b6",
-                    background: on ? "linear-gradient(135deg,#7C3AED,#a855f7)" : "transparent",
-                    boxShadow: on ? "0 6px 16px rgba(124,58,237,.32)" : "none",
+                    color: on ? "#fff" : CL.coralDk,
+                    background: on ? `linear-gradient(135deg, ${CL.coral}, ${CL.coralDk})` : "transparent",
+                    boxShadow: on ? `0 6px 16px ${CL.coral}52` : "none",
                   }}>
                   <Ic size={16} /> {tb.label}
                 </button>

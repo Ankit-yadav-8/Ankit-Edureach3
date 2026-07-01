@@ -284,7 +284,13 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
       </div>
 
       {/* ── RESULT PANEL ───────────────────────────────────── */}
-      <div className="card" style={{ minHeight: 320, display: "flex", flexDirection: "column" }}>
+      <motion.div
+        className="card"
+        initial={{ opacity: 0, scale: 1.12 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ type: "spring", stiffness: 150, damping: 18 }}
+        style={{ minHeight: 320, display: "flex", flexDirection: "column" }}>
         {!res ? (
           <div style={{ display: "grid", placeItems: "center", flex: 1, minHeight: 320, color: "var(--muted)", textAlign: "center" }}>
             <div>
@@ -313,7 +319,7 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
           <MainResult res={res} scorePct={scorePct} totalMax={totalMax} accent={accent} nav={nav}
             colleges={colleges} collegesLoading={collegesLoading} />
         )}
-        </div>
+        </motion.div>
       </div>
 
       {/* ── How the Rank Predictor works ── */}

@@ -84,7 +84,7 @@ export default function BranchCatalog() {
           style={{
             display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 36,
             maxWidth: 1040, margin: "0 auto 40px", background: CL.card, borderRadius: 24,
-            border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: 28, alignItems: "center"
+            border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: 28, alignItems: "stretch"
           }}>
 
           {/* Left: Copy & CTA */}
@@ -124,8 +124,8 @@ export default function BranchCatalog() {
           </div>
 
           {/* Right: AI Image */}
-          <div style={{ borderRadius: 18, overflow: "hidden", border: `1px solid ${CL.line}`, boxShadow: "0 18px 44px -24px rgba(26,26,46,.2)", background: "#000", aspectRatio: "1 / 1" }}>
-            <img src="/images/branch_explorer_staircase.jpg" alt="Career path: idea to success" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
+          <div style={{ borderRadius: 18, overflow: "hidden", border: `1px solid ${CL.line}`, boxShadow: "0 18px 44px -24px rgba(26,26,46,.2)", height: "100%", minHeight: 340 }}>
+            <img src="/images/branch_explorer_career.png" alt="Career path: idea to success" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
           </div>
         </motion.div>
 
