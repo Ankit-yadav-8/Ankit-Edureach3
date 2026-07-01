@@ -77,7 +77,6 @@ function SelectMenu({ value, onChange, options, placeholder, ariaLabel }) {
         onClick={() => setOpen((o) => !o)}
       >
         <span className={current ? "" : "cf-dd-ph"}>{current ? current.label : placeholder}</span>
-        <ChevronDown size={15} className="cf-dd-chev" />
       </button>
       {open && (
         <div className="cf-ddmenu" role="listbox">
@@ -523,8 +522,6 @@ const CF_STYLES = `
 .cf-ddbtn.open { border-color:var(--cf-coral); box-shadow:0 0 0 3px rgba(255, 105, 61,.12); }
 .cf-ddbtn > span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .cf-dd-ph { color:#9a9189; }
-.cf-dd-chev { color:#9a9189; flex-shrink:0; transition:transform .2s; }
-.cf-ddbtn.open .cf-dd-chev { transform:rotate(180deg); }
 .cf-ddmenu { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:40; background:#fff;
   border:1px solid var(--cf-line); border-radius:12px; box-shadow:0 14px 36px rgba(0,0,0,.14);
   padding:6px; max-height:288px; overflow-y:auto; animation:cfDD .14s ease;
