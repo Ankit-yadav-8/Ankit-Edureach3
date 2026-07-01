@@ -14,7 +14,7 @@ import { BLOG_POSTS } from "../data/blog.js";
 const ICONS = { BookOpen, GitCompareArrows, Gauge, Building2, Brain, ListChecks, TrendingUp, ShieldCheck, Layers };
 const ACCENTS = { coral: CL.coral, green: CL.green, blue: CL.blue, violet: CL.violet, amber: CL.amber };
 
-const CATEGORIES = ["All", "Counselling", "Strategy", "Exams", "Careers", "Colleges"];
+const CATEGORIES = ["All", "NEET", "Counselling", "Strategy", "Exams", "Careers", "Colleges"];
 
 function PostCard({ p }) {
   const Ic = ICONS[p.iconName] || BookOpen;

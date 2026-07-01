@@ -1,7 +1,11 @@
 /* blog.js — College Parichay blog posts. Each post has display metadata for the
-   card grid plus a `body` (array of { h?, p } blocks) rendered on /blog/:slug. */
+   card grid plus a `body` rendered on /blog/:slug. Legacy posts use simple
+   { h?, p } blocks; the NEET cluster (generated in neetBlogs.js) uses rich
+   { type, ... } blocks. Both are rendered by BlogPost.jsx. */
 
-export const BLOG_POSTS = [
+import { NEET_BLOG_POSTS } from "./neetBlogs.js";
+
+const LEGACY_POSTS = [
   {
     slug: "fill-josaa-choices-without-losing-dream-branch",
     iconName: "ListChecks", accent: "coral", category: "Counselling", badge: "GUIDE", read: "8 min read",
@@ -120,5 +124,8 @@ export const BLOG_POSTS = [
     ],
   },
 ];
+
+/* NEET cluster first (freshest / highest-intent), then the legacy JEE posts. */
+export const BLOG_POSTS = [...NEET_BLOG_POSTS, ...LEGACY_POSTS];
 
 export const getBlogPost = (slug) => BLOG_POSTS.find((p) => p.slug === slug);

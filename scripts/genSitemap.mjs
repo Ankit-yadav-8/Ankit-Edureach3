@@ -17,6 +17,7 @@ import { NEET_COLLEGES } from "../src/data/neetColleges.js";
 import { BRANCHES } from "../src/data/branches.js";
 import { EXAMS } from "../src/data/exams.js";
 import { NEWS } from "../src/data/news.js";
+import { BLOG_POSTS } from "../src/data/blog.js";
 
 const SITE = "https://collegeparichay.in";
 const today = new Date().toISOString().slice(0, 10);
@@ -42,6 +43,7 @@ const STATIC_ROUTES = [
   ["/exam-buzz", "0.7", "daily"],
   ["/neet", "0.7", "weekly"],
   ["/neet-colleges", "0.8", "weekly"],
+  ["/blog", "0.7", "weekly"],
   ["/mentorship", "0.7", "weekly"],
   ["/private-universities", "0.7", "weekly"],
   ["/how-to-use", "0.4", "monthly"],
@@ -81,6 +83,11 @@ for (const e of EXAMS) {
 // News / updates pages
 for (const n of NEWS) {
   if (n?.slug) add(`/news/${n.slug}`, "0.6", "weekly");
+}
+
+// Blog posts — the NEET cluster + JEE guides ("<topic> guide" long-tail)
+for (const b of BLOG_POSTS) {
+  if (b?.slug) add(`/blog/${b.slug}`, "0.7", "weekly");
 }
 
 const xml =

@@ -15,6 +15,50 @@ import { BLOG_POSTS, getBlogPost } from "../data/blog.js";
 const ICONS = { BookOpen, GitCompareArrows, Gauge, Building2, Brain, ListChecks, TrendingUp, ShieldCheck, Layers };
 const ACCENTS = { coral: CL.coral, green: CL.green, blue: CL.blue, violet: CL.violet, amber: CL.amber };
 
+/* Inline spans: {t} text · {b} bold · {i} italic · {l,h} link (internal = SPA nav) */
+function Spans({ spans, accent }) {
+  return spans.map((s, i) => {
+    if (s.b) return <strong key={i} style={{ color: CL.ink, fontWeight: 700 }}>{s.b}</strong>;
+    if (s.i) return <em key={i}>{s.i}</em>;
+    if (s.l) {
+      const linkStyle = { color: accent, fontWeight: 600, textDecoration: "none", borderBottom: `1px solid ${accent}55` };
+      return s.h.startsWith("/")
+        ? <Link key={i} to={s.h} style={linkStyle}>{s.l}</Link>
+        : <a key={i} href={s.h} target="_blank" rel="noopener noreferrer" style={linkStyle}>{s.l}</a>;
+    }
+    return <span key={i}>{s.t}</span>;
+  });
+}
+
+/* Renders one body block — supports rich ({type}) and legacy ({h?,p}) shapes. */
+function Block({ block, accent }) {
+  const pStyle = { fontSize: "1.04rem", lineHeight: 1.85, color: CL.body, margin: "0 0 20px" };
+  if (block.type === "h2")
+    return <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.42rem", color: CL.ink, letterSpacing: "-0.5px", margin: "34px 0 14px", lineHeight: 1.25 }}>{block.t}</h2>;
+  if (block.type === "h3")
+    return <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.14rem", color: CL.ink2, margin: "24px 0 10px", lineHeight: 1.3 }}>{block.t}</h3>;
+  if (block.type === "ul")
+    return (
+      <ul style={{ margin: "0 0 20px", paddingLeft: 4, listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
+        {block.items.map((it, i) => (
+          <li key={i} style={{ position: "relative", paddingLeft: 22, fontSize: "1.04rem", lineHeight: 1.7, color: CL.body }}>
+            <span style={{ position: "absolute", left: 2, top: 9, width: 7, height: 7, borderRadius: "50%", background: accent }} />
+            <Spans spans={it} accent={accent} />
+          </li>
+        ))}
+      </ul>
+    );
+  if (block.type === "p")
+    return <p style={pStyle}><Spans spans={block.s} accent={accent} /></p>;
+  // legacy { h?, p }
+  return (
+    <div style={{ marginBottom: 2 }}>
+      {block.h && <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.3rem", color: CL.ink, letterSpacing: "-0.4px", margin: "22px 0 10px" }}>{block.h}</h2>}
+      <p style={pStyle}>{block.p}</p>
+    </div>
+  );
+}
+
 export default function BlogPost() {
   const { slug } = useParams();
   const post = getBlogPost(slug);
@@ -36,11 +80,37 @@ export default function BlogPost() {
 
   const Ic = ICONS[post.iconName] || BookOpen;
   const accent = ACCENTS[post.accent] || CL.coral;
-  const more = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const isNeet = post.category === "NEET";
+
+  // "Read next" — prefer siblings in the same category, then fill from the rest
+  const rest = BLOG_POSTS.filter((p) => p.slug !== post.slug);
+  const more = [
+    ...rest.filter((p) => p.category === post.category),
+    ...rest.filter((p) => p.category !== post.category),
+  ].slice(0, 3);
+
+  const desc = post.metaDescription || post.snippet;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: desc,
+    author: { "@type": "Organization", name: post.author || "College Parichay" },
+    publisher: {
+      "@type": "Organization",
+      name: "CollegeParichay",
+      logo: { "@type": "ImageObject", url: "https://collegeparichay.in/cplogo3.jpeg" },
+    },
+    mainEntityOfPage: `https://collegeparichay.in/blog/${post.slug}`,
+    ...(post.date ? { datePublished: post.date, dateModified: post.date } : {}),
+    ...(post.focusKeyword
+      ? { keywords: [post.focusKeyword, ...(post.secondaryKeywords || [])].join(", ") }
+      : {}),
+  };
 
   return (
     <div style={{ background: CL.cream, minHeight: "100vh" }}>
-      <Seo title={`${post.title} · College Parichay Blog`} description={post.snippet} path={`/blog/${post.slug}`} />
+      <Seo title={post.title} description={desc} path={`/blog/${post.slug}`} type="article" jsonLd={jsonLd} />
 
       <article style={{ paddingTop: 110, paddingBottom: 70 }}>
         <div className="container" style={{ maxWidth: 820 }}>
@@ -68,19 +138,12 @@ export default function BlogPost() {
             {post.snippet}
           </p>
 
-          {post.body.map((block, i) => (
-            <div key={i} style={{ marginBottom: 22 }}>
-              {block.h && (
-                <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.3rem", color: CL.ink, letterSpacing: "-0.4px", margin: "10px 0 10px" }}>
-                  {block.h}
-                </h2>
-              )}
-              <p style={{ fontSize: "1.04rem", lineHeight: 1.85, color: CL.body }}>{block.p}</p>
-            </div>
-          ))}
+          {post.body.map((block, i) => <Block key={i} block={block} accent={accent} />)}
 
           <div style={{ marginTop: 30, padding: "18px 20px", borderRadius: 14, background: CL.coralSoft + "66", border: `1px solid ${CL.coral}33`, fontSize: 13.5, color: CL.ink2, lineHeight: 1.6 }}>
-            These guides are indicative and student-written — always verify the latest rules on josaa.nic.in / csab.nic.in / nta.ac.in before locking decisions.
+            {isNeet
+              ? "These guides are indicative and student-written — cutoffs and fees vary every year, so always verify the latest figures on mcc.nic.in, your state counselling site and nta.ac.in before locking decisions."
+              : "These guides are indicative and student-written — always verify the latest rules on josaa.nic.in / csab.nic.in / nta.ac.in before locking decisions."}
           </div>
 
           {/* read next */}
