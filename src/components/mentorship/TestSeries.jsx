@@ -1014,9 +1014,20 @@ function ResultView({ token, plan, testId, result, onClose }) {
   const pct = r.percent ?? (r.maxMarks ? Math.round((r.score / r.maxMarks) * 100) : 0);
   const rank = useMemo(() => (examType ? predictForExam(examType, subjects, r) : null), [examType, subjects, r]);
 
-  const ranked = [...subjects].filter((s) => s.total).sort((a, b) => b.accuracy - a.accuracy);
-  const strong = ranked.slice(0, 2);
-  const weakSet = ranked.slice(-2).reverse().filter((s) => !strong.includes(s));
+  // Classify sections by *absolute* accuracy so the labels stay honest: a
+  // section is a "strength" only if it's genuinely high, and "needs work" only
+  // if it's genuinely low. (Previously the top-2 by rank were always shown as
+  // strong — so a lone 38% section wrongly appeared as a strength while
+  // "Needs Work" claimed there was no weak section.)
+  const graded = [...subjects].filter((s) => s.total > 0);
+  const strong = graded
+    .filter((s) => s.accuracy >= 60 && s.total >= 3)
+    .sort((a, b) => b.accuracy - a.accuracy)
+    .slice(0, 3);
+  const weakSet = graded
+    .filter((s) => s.accuracy < 50)
+    .sort((a, b) => a.accuracy - b.accuracy)
+    .slice(0, 3);
 
   // Derived analytics
   const answers = review?.answers || [];
@@ -1232,7 +1243,7 @@ function ResultView({ token, plan, testId, result, onClose }) {
               {head(<Flame size={16} color={GREEN} />, "Strong Areas")}
               {strong.length ? strong.map((s) => (
                 <div key={s.name} style={{ fontSize: 13, color: NAVY, marginBottom: 6 }}><b>{s.name}</b> — {s.accuracy}% accuracy ({s.correct}/{s.total})</div>
-              )) : <div style={{ fontSize: 12.5, color: MUTE }}>Attempt more to see strengths.</div>}
+              )) : <div style={{ fontSize: 12.5, color: MUTE }}>No standout strength yet — keep practising to build one.</div>}
             </div>
             <div style={{ ...card, borderLeft: `3px solid ${AMBER}` }}>
               {head(<TrendingDown size={16} color={AMBER} />, "Needs Work")}
