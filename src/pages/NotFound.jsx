@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { Compass } from "lucide-react";
+import Seo from "../components/Seo.jsx";
 
 export default function NotFound() {
   return (
     <div className="page container" style={{ minHeight: "60vh", display: "grid", placeItems: "center", textAlign: "center" }}>
+      <Seo title="Page Not Found (404)" description="The page you're looking for doesn't exist or has moved." robots="noindex, follow" />
       <div>
         <Compass size={56} color="var(--coral)" />
         <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "2.4rem", margin: "16px 0 6px" }}>404 — Page not found</h1>

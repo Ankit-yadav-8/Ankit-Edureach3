@@ -20,6 +20,11 @@ export default function ExamDetail() {
         title={`${exam.name} ${seoYear} — Dates, Pattern, Eligibility & Cutoffs`}
         description={`${exam.name}: ${(exam.about || "").slice(0, 150)} Check exam dates, pattern, eligibility, previous papers and cutoff trends on CollegeParichay.`}
         path={`/exams/${slug}`}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Exams", path: "/exams" },
+          { name: exam.name, path: `/exams/${slug}` },
+        ]}
       />
       <section className="warm-page-header">
         <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: `radial-gradient(ellipse 60% 70% at 100% 20%, ${exam.color}30 0%, transparent 60%)` }} />

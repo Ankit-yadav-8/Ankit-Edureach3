@@ -110,7 +110,14 @@ export default function BlogPost() {
 
   return (
     <div style={{ background: CL.cream, minHeight: "100vh" }}>
-      <Seo title={post.title} description={desc} path={`/blog/${post.slug}`} type="article" jsonLd={jsonLd} />
+      <Seo title={post.title} description={desc} path={`/blog/${post.slug}`} type="article" jsonLd={jsonLd}
+        keywords={post.focusKeyword ? [post.focusKeyword, ...(post.secondaryKeywords || [])] : undefined}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Blog", path: "/blog" },
+          { name: post.title, path: `/blog/${post.slug}` },
+        ]}
+      />
 
       <article style={{ paddingTop: 110, paddingBottom: 70 }}>
         <div className="container" style={{ maxWidth: 820 }}>

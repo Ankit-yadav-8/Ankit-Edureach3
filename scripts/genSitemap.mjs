@@ -1,113 +1,71 @@
 /* ============================================================
-   genSitemap.mjs — builds public/sitemap.xml from site data.
+   genSitemap.mjs — builds a sitemap index + per-type child
+   sitemaps in public/ from the shared route list.
 
    Run:  npm run sitemap     (also runs automatically on build)
 
-   Add new static routes to STATIC_ROUTES below. College / exam /
-   news pages are generated automatically from the data files, so
-   new colleges show up in the sitemap with no extra work.
+   Output:
+     public/sitemap.xml          ← sitemap index (points to the rest)
+     public/sitemap-static.xml
+     public/sitemap-colleges.xml
+     public/sitemap-neet.xml
+     public/sitemap-branches.xml
+     public/sitemap-exams.xml
+     public/sitemap-news.xml
+     public/sitemap-blog.xml
+
+   Add static routes / data-driven routes in scripts/routes.mjs —
+   both the sitemap and the prerenderer read from there.
    ============================================================ */
 
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import { SITE, routeGroups } from "./routes.mjs";
 
-import { COLLEGES } from "../src/data/colleges.js";
-import { NEET_COLLEGES } from "../src/data/neetColleges.js";
-import { BRANCHES } from "../src/data/branches.js";
-import { EXAMS } from "../src/data/exams.js";
-import { NEWS } from "../src/data/news.js";
-import { BLOG_POSTS } from "../src/data/blog.js";
-
-const SITE = "https://collegeparichay.in";
 const today = new Date().toISOString().slice(0, 10);
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pub = (f) => resolve(__dirname, "../public", f);
 
-// [path, priority, changefreq]
-const STATIC_ROUTES = [
-  ["/", "1.0", "daily"],
-  ["/colleges", "0.9", "daily"],
-  ["/jee-main", "0.9", "weekly"],
-  ["/jee-advanced", "0.9", "weekly"],
-  ["/for-you", "0.9", "weekly"],
-  ["/compare", "0.7", "weekly"],
-  ["/cutoffs", "0.8", "weekly"],
-  ["/exams", "0.8", "weekly"],
-  ["/compare-exams", "0.6", "monthly"],
-  ["/josaa-2026", "0.8", "daily"],
-  ["/planner", "0.6", "weekly"],
-  ["/map", "0.6", "monthly"],
-  ["/scholarships", "0.6", "monthly"],
-  ["/jee-resources", "0.6", "weekly"],
-  ["/branches", "0.8", "weekly"],
-  ["/branch-vs-college", "0.7", "weekly"],
-  ["/exam-buzz", "0.7", "daily"],
-  ["/neet", "0.7", "weekly"],
-  ["/neet-colleges", "0.8", "weekly"],
-  ["/blog", "0.7", "weekly"],
-  ["/mentorship", "0.7", "weekly"],
-  ["/private-universities", "0.7", "weekly"],
-  ["/how-to-use", "0.4", "monthly"],
-  ["/about", "0.5", "monthly"],
-];
+const urlXml = ([loc, priority, changefreq]) =>
+  `  <url>\n` +
+  `    <loc>${SITE}${loc}</loc>\n` +
+  `    <lastmod>${today}</lastmod>\n` +
+  `    <changefreq>${changefreq}</changefreq>\n` +
+  `    <priority>${priority}</priority>\n` +
+  `  </url>`;
 
-const urls = [];
-
-const add = (loc, priority, changefreq, lastmod = today) =>
-  urls.push({ loc: SITE + loc, priority, changefreq, lastmod });
-
-// Static pages
-for (const [path, priority, changefreq] of STATIC_ROUTES) {
-  add(path, priority, changefreq);
-}
-
-// College detail pages — the long-tail that ranks for "<college> cutoff/review"
-for (const c of COLLEGES) {
-  if (c?.slug) add(`/colleges/${c.slug}`, "0.8", "weekly");
-}
-
-// NEET / MBBS medical-college detail pages — long-tail "<college> MBBS seats/cutoff"
-for (const c of NEET_COLLEGES) {
-  if (c?.slug) add(`/neet-colleges/${c.slug}`, "0.7", "weekly");
-}
-
-// Branch detail pages — long-tail "<branch> scope/salary/colleges"
-for (const b of BRANCHES) {
-  if (b?.slug) add(`/branches/${b.slug}`, "0.7", "weekly");
-}
-
-// Exam pages
-for (const e of EXAMS) {
-  if (e?.slug) add(`/exams/${e.slug}`, "0.7", "weekly");
-}
-
-// News / updates pages
-for (const n of NEWS) {
-  if (n?.slug) add(`/news/${n.slug}`, "0.6", "weekly");
-}
-
-// Blog posts — the NEET cluster + JEE guides ("<topic> guide" long-tail)
-for (const b of BLOG_POSTS) {
-  if (b?.slug) add(`/blog/${b.slug}`, "0.7", "weekly");
-}
-
-const xml =
+const urlsetXml = (urls) =>
   `<?xml version="1.0" encoding="UTF-8"?>\n` +
   `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-  urls
-    .map(
-      (u) =>
-        `  <url>\n` +
-        `    <loc>${u.loc}</loc>\n` +
-        `    <lastmod>${u.lastmod}</lastmod>\n` +
-        `    <changefreq>${u.changefreq}</changefreq>\n` +
-        `    <priority>${u.priority}</priority>\n` +
-        `  </url>`
-    )
-    .join("\n") +
+  urls.map(urlXml).join("\n") +
   `\n</urlset>\n`;
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const out = resolve(__dirname, "../public/sitemap.xml");
-writeFileSync(out, xml, "utf8");
+const groups = routeGroups().filter((g) => g.urls.length);
+let total = 0;
 
-console.log(`sitemap.xml written with ${urls.length} URLs -> ${out}`);
+// child sitemaps
+for (const g of groups) {
+  writeFileSync(pub(`sitemap-${g.name}.xml`), urlsetXml(g.urls), "utf8");
+  total += g.urls.length;
+}
+
+// sitemap index
+const index =
+  `<?xml version="1.0" encoding="UTF-8"?>\n` +
+  `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+  groups
+    .map(
+      (g) =>
+        `  <sitemap>\n` +
+        `    <loc>${SITE}/sitemap-${g.name}.xml</loc>\n` +
+        `    <lastmod>${today}</lastmod>\n` +
+        `  </sitemap>`
+    )
+    .join("\n") +
+  `\n</sitemapindex>\n`;
+writeFileSync(pub("sitemap.xml"), index, "utf8");
+
+console.log(
+  `sitemap index + ${groups.length} child sitemaps written (${total} URLs) -> public/`
+);

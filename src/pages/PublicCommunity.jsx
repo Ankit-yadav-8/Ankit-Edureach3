@@ -5,6 +5,7 @@ import {
   RefreshCw, Search, Inbox, X, GraduationCap, ChevronDown, Check, Plus, Send,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
+import Seo from "../components/Seo.jsx";
 import {
   API_BASE,
   apiPublicMe, apiPublicFeed, apiPublicCreatePost, apiPublicDeletePost,
@@ -135,6 +136,12 @@ export default function PublicCommunity() {
   if (!isLoggedIn) {
     return (
       <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "130px 16px 60px", background: "#f8f7f5" }}>
+        <Seo
+          title="Student Community — Ask Doubts & Discuss with JEE / NEET Aspirants"
+          description="Join the CollegeParichay student community — a public forum where JEE & NEET aspirants, students and mentors discuss doubts, colleges, branches and campus life."
+          path="/community"
+          breadcrumbs={[{ name: "Home", path: "/" }, { name: "Community", path: "/community" }]}
+        />
         <div style={{ textAlign: "center", maxWidth: 420 }}>
           <div style={{ width: 64, height: 64, borderRadius: 20, background: `${CYAN}15`, display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
             <Globe2 size={30} color={CYAN} />
