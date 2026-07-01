@@ -20,6 +20,13 @@ const TYPE_SETS = {
 
 const TYPE_PILLS = ["IIT", "NIT", "IIIT", "GFTI"];
 
+// Staggered fade-up for the empty-state placeholder (icon → heading → text)
+const CF_EMPTY_WRAP = { hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.06 } } };
+const CF_EMPTY_ITEM = {
+  hidden: { opacity: 0, y: 16 },
+  show:   { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 20 } },
+};
+
 /* Tier → "probability" bucket used by campusloom-style chance filter */
 const TIER_TO_PROB = { Safe: "high", Moderate: "medium", Ambitious: "low" };
 const PROB_META = {
@@ -338,14 +345,19 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
       {!results && !loading && !error && (
         <motion.div
           className="cf-empty"
-          initial={{ opacity: 0, scale: 1.12 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ type: "spring", stiffness: 150, damping: 18 }}
+          variants={CF_EMPTY_WRAP} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }}
         >
-          <div className="cf-empty-icon"><Crosshair size={26} /></div>
-          <h4>Find your perfect institute</h4>
-          <p>Enter your rank above to see every {allowedTypes.join(" / ")} you can get, with branch-change, dual-degree and minor-program flexibility — filter it all from the sidebar.</p>
+          <motion.div className="cf-empty-icon" variants={CF_EMPTY_ITEM}>
+            <motion.span
+              style={{ display: "grid", placeItems: "center" }}
+              animate={{ scale: [1, 1.12, 1] }}
+              transition={{ duration: 2.6, ease: "easeInOut", repeat: Infinity }}
+            >
+              <Crosshair size={26} />
+            </motion.span>
+          </motion.div>
+          <motion.h4 variants={CF_EMPTY_ITEM}>Find your perfect institute</motion.h4>
+          <motion.p variants={CF_EMPTY_ITEM}>Enter your rank above to see every {allowedTypes.join(" / ")} you can get, with branch-change, dual-degree and minor-program flexibility — filter it all from the sidebar.</motion.p>
         </motion.div>
       )}
 
