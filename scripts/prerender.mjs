@@ -21,7 +21,6 @@ import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { resolve, dirname, join, extname } from "node:path";
 import { fileURLToPath } from "node:url";
-import puppeteer from "puppeteer";
 import { allPaths, SITE } from "./routes.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -29,6 +28,38 @@ const DIST = resolve(__dirname, "../dist");
 const PORT = Number(process.env.PRERENDER_PORT || 4599);
 const CONCURRENCY = Number(process.env.PRERENDER_CONCURRENCY || 6);
 const LIMIT = process.env.PRERENDER_LIMIT ? Number(process.env.PRERENDER_LIMIT) : Infinity;
+
+/* Launch Chrome. On Vercel/AWS Lambda the build container lacks the system
+   shared libraries the bundled Chrome needs (libnspr4.so, …), so there we use
+   @sparticuz/chromium's self-contained binary via puppeteer-core. Locally we
+   use the bundled `puppeteer` so `node scripts/prerender.mjs` needs no setup. */
+async function launchBrowser() {
+  const baseArgs = [
+    "--no-sandbox", "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage", "--disable-gpu",
+  ];
+  const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+
+  if (isServerless && !process.env.PUPPETEER_EXECUTABLE_PATH) {
+    const [{ default: chromium }, { default: puppeteer }] = await Promise.all([
+      import("@sparticuz/chromium"),
+      import("puppeteer-core"),
+    ]);
+    return puppeteer.launch({
+      headless: true,
+      executablePath: await chromium.executablePath(),
+      args: [...chromium.args, ...baseArgs],
+      defaultViewport: chromium.defaultViewport,
+    });
+  }
+
+  const { default: puppeteer } = await import("puppeteer");
+  return puppeteer.launch({
+    headless: true,
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+    args: baseArgs,
+  });
+}
 
 const MIME = {
   ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript",
@@ -148,11 +179,7 @@ async function main() {
     .slice(0, LIMIT);
 
   const server = await startServer();
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
-    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
-  });
+  const browser = await launchBrowser();
 
   console.log(`Prerendering ${routes.length} routes @ concurrency ${CONCURRENCY}…`);
   let done = 0, failed = 0;
