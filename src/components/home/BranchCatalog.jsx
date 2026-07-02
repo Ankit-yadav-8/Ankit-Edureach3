@@ -82,9 +82,9 @@ export default function BranchCatalog() {
         <motion.div
           initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
           style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 36,
-            maxWidth: 1040, margin: "0 auto 40px", background: CL.card, borderRadius: 24,
-            border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: 28, alignItems: "stretch"
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 28,
+            margin: "0 0 16px", background: CL.card, borderRadius: 20,
+            border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: "20px 22px", alignItems: "stretch"
           }}>
 
           {/* Left: Copy & CTA */}
@@ -124,7 +124,7 @@ export default function BranchCatalog() {
           </div>
 
           {/* Right: AI Image */}
-          <div style={{ borderRadius: 18, overflow: "hidden", border: `1px solid ${CL.line}`, boxShadow: "0 18px 44px -24px rgba(26,26,46,.2)", height: "100%", minHeight: 340 }}>
+          <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${CL.line}`, boxShadow: "0 18px 44px -24px rgba(26,26,46,.2)", height: "100%", minHeight: 260 }}>
             <img src="/images/branch_explorer_career.png" alt="Career path: idea to success" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
           </div>
         </motion.div>
