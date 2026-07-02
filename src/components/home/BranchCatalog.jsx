@@ -76,55 +76,54 @@ function BranchRow({ b, nav }) {
 export default function BranchCatalog() {
   const nav = useNavigate();
   return (
-    <section id="branches" style={{ background: CL.cream2, padding: "84px 0", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
+    <section id="branches" style={{ background: CL.cream, padding: "84px 0", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         {/* ── Compact card hero matching the Mentorship section style ── */}
         <motion.div
           initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
           style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 28,
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 22,
             margin: "0 0 16px", background: CL.card, borderRadius: 20,
-            border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: "20px 22px", alignItems: "stretch"
+            border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: "18px 20px", alignItems: "stretch"
           }}>
 
           {/* Left: Copy & CTA */}
           <div style={{ textAlign: "left" }}>
             <span style={{
-              display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, letterSpacing: "1px",
-              background: CL.coralSoft, color: CL.coralDk, padding: "6px 14px", borderRadius: 50, marginBottom: 16, textTransform: "uppercase"
+              display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, letterSpacing: "1px",
+              background: CL.coralSoft, color: CL.coralDk, padding: "4px 11px", borderRadius: 50, marginBottom: 10, textTransform: "uppercase"
             }}>
-              <Sparkles size={13} /> Branch Explorer
+              <Sparkles size={12} /> Branch Explorer
             </span>
-            <h3 style={{ fontFamily: CL.display, fontWeight: 900, fontSize: "clamp(1.9rem, 3.4vw, 2.4rem)", color: CL.ink, lineHeight: 1.1, marginBottom: 12 }}>
-              {TOTAL_BRANCHES}+ branches.<br />
-              <span style={{ color: CL.coral }}>{BRANCHES.length} clear paths.</span>
+            <h3 style={{ fontFamily: CL.display, fontWeight: 900, fontSize: "clamp(1.35rem, 2.4vw, 1.8rem)", color: CL.ink, lineHeight: 1.15, marginBottom: 7 }}>
+              {TOTAL_BRANCHES}+ branches. <span style={{ color: CL.coral }}>{BRANCHES.length} clear paths.</span>
             </h3>
-            <p style={{ color: CL.body, fontSize: 15, lineHeight: 1.55, marginBottom: 20, maxWidth: 440 }}>
-              Bucketed into {BRANCHES.length} domains with deep insights on placements, salaries, AI outlook and more — so nothing slips through the cracks.
+            <p style={{ color: CL.body, fontSize: 13.5, lineHeight: 1.5, marginBottom: 12, maxWidth: 520 }}>
+              Bucketed into {BRANCHES.length} domains with deep insights on placements, salaries &amp; AI outlook.
             </p>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 22 }}>
-              {["10 domain paths, deep insights", "5-year salary arcs & charts", "AI disruption risk scores", "Placement stats & top recruiters"].map(bullet => (
-                <div key={bullet} style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <span style={{ width: 22, height: 22, borderRadius: "50%", background: CL.greenSoft, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                    <Check size={13} color="#0a8f5b" strokeWidth={3} />
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "7px 18px", marginBottom: 14 }}>
+              {["10 domain paths", "5-year salary arcs", "AI risk scores", "Placement stats"].map(bullet => (
+                <div key={bullet} style={{ display: "flex", gap: 7, alignItems: "center" }}>
+                  <span style={{ width: 18, height: 18, borderRadius: "50%", background: CL.greenSoft, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <Check size={11} color="#0a8f5b" strokeWidth={3} />
                   </span>
-                  <span style={{ fontSize: 14.5, color: CL.ink2, fontWeight: 600 }}>{bullet}</span>
+                  <span style={{ fontSize: 13, color: CL.ink2, fontWeight: 600 }}>{bullet}</span>
                 </div>
               ))}
             </div>
 
             <Link to="/branches" style={{
-              display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff",
-              padding: "13px 24px", borderRadius: 14, fontFamily: CL.display, fontWeight: 800, fontSize: 15,
+              display: "inline-flex", alignItems: "center", gap: 7, background: CL.coral, color: "#fff",
+              padding: "9px 18px", borderRadius: 12, fontFamily: CL.display, fontWeight: 800, fontSize: 13.5,
               textDecoration: "none", boxShadow: "0 10px 24px -8px rgba(255, 105, 61,.6)"
             }}>
-              Explore Branches <ArrowRight size={18} />
+              Explore Branches <ArrowRight size={16} />
             </Link>
           </div>
 
           {/* Right: AI Image */}
-          <div style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${CL.line}`, boxShadow: "0 18px 44px -24px rgba(26,26,46,.2)", height: "100%", minHeight: 260 }}>
+          <div style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${CL.line}`, boxShadow: "0 18px 44px -24px rgba(26,26,46,.2)", height: "100%", minHeight: 150 }}>
             <img src="/images/branch_explorer_career.png" alt="Career path: idea to success" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
           </div>
         </motion.div>

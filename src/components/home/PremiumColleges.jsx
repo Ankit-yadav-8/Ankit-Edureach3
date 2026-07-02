@@ -39,7 +39,7 @@ function TypeBadge({ type }) {
 
 export default function PremiumColleges() {
   return (
-    <section style={{ background: CL.cream2, padding: "84px 0", position: "relative", overflow: "hidden" }}>
+    <section style={{ background: CL.cream, padding: "84px 0", position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: 760, marginBottom: 34 }}>
           <span style={clEyebrow}><span style={{ width: 7, height: 7, borderRadius: "50%", background: CL.coral }} /> JEE score accepted here</span>
