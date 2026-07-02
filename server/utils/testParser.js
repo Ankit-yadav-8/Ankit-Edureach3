@@ -14,6 +14,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import { callGroq, groqReady, groqModel } from "./groq.js";
+import { geminiReady } from "./gemini.js";
 import { recoverSubjects, normalizeSubject } from "./subjects.js";
 
 // Normalise an answer token to the canonical form used for grading.
@@ -559,7 +560,9 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl, examType = "") {
   // but still produced "options"), else the rules parser publishes gibberish.
   const garbled = looksGarbled(qText);
   const isMathHeavy = ["mains", "advanced", "neet"].includes(examType);
-  if (visionEnabled() && groqReady() && (isLowQuality(questions) || garbled || isMathHeavy)) {
+  // Vision runs on whichever provider is configured (Gemini by default, or Groq) —
+  // gate on either key so a math paper still gets the vision pass.
+  if (visionEnabled() && (groqReady() || geminiReady()) && (isLowQuality(questions) || garbled || isMathHeavy)) {
     try {
       const { extractWithVision } = await import("./visionParser.js");
       const v = await extractWithVision(qBuf, { answerKey: textKey });

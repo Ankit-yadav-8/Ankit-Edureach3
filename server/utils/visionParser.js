@@ -23,8 +23,26 @@ import { pathToFileURL } from "node:url";
 import { normalizeAnswer, stripNoise, repairLatexBackslashes } from "./testParser.js";
 import { uploadImageBuffer, cloudinaryReady } from "./cloudinary.js";
 import { callGroq, groqReady } from "./groq.js";
+import { callGemini, geminiReady, geminiModel } from "./gemini.js";
 
 const clamp01 = (n) => Math.max(0, Math.min(1, Number(n) || 0));
+
+// Vision provider. Gemini (2.5-flash) is markedly better than Groq's llama-4-scout
+// at LOCATING figures — flagging hasDiagram + a tight bbox for question figures AND
+// picture-style options — which is what the diagram crops depend on. Default to
+// Gemini; TEST_VISION_PROVIDER=groq switches back. Both clients take the same
+// `parts` shape (text + {inline_data}) and throw a tagged DAILY_LIMIT on quota.
+const visionProvider = () => (process.env.TEST_VISION_PROVIDER || "gemini").toLowerCase();
+const visionReady = () => (visionProvider() === "groq" ? groqReady() : geminiReady());
+const visionModel = () =>
+  visionProvider() === "groq"
+    ? process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct"
+    : process.env.GEMINI_VISION_MODEL || geminiModel("gemini-2.5-flash");
+function callVisionProvider({ system, parts, maxTokens, model, retries }) {
+  if (visionProvider() === "groq") return callGroq({ system, parts, maxTokens, model, retries });
+  // thinkingBudget 0 keeps 2.5's output budget for the JSON (not chain-of-thought).
+  return callGemini({ system, parts, maxTokens, model, retries, json: true, thinkingBudget: 0 });
+}
 
 // Recover whole question objects from a response that didn't parse as JSON —
 // usually because the model overran max_tokens and the array was cut off
@@ -63,7 +81,14 @@ function salvageQuestions(text) {
 // prebuilt @napi-rs/canvas that ships with pdf-to-img — no extra dependency.
 async function cropDiagram(pngBuffer, bbox, pad = Number(process.env.TEST_VISION_DIAGRAM_PAD) || 0.04) {
   if (!Array.isArray(bbox) || bbox.length < 4) return null;
-  let [x0, y0, x1, y1] = bbox.map(clamp01);
+  // Coordinates should be 0..1 fractions, but a vision model may emit 0..1000
+  // (Gemini's native detection scale) or 0..100 percentages. Detect by the max
+  // magnitude and rescale to fractions first, so a valid box isn't clamped to a
+  // zero-area (all-1) crop and silently dropped.
+  let coords = bbox.slice(0, 4).map(Number);
+  const mx = Math.max(...coords.map((n) => Math.abs(Number(n) || 0)));
+  if (mx > 1.5) coords = coords.map((n) => n / (mx > 100 ? 1000 : 100));
+  let [x0, y0, x1, y1] = coords.map(clamp01);
   // Vision models often emit the corners swapped (x1<x0) or as [x,y,w,h]; sort so
   // a valid figure isn't silently dropped as a zero/negative-area box.
   if (x1 < x0) [x0, x1] = [x1, x0];
@@ -182,7 +207,7 @@ async function callVision(model, images, maxTokens) {
   // Be patient with sustained per-minute rate limits: a big paper fires many
   // batches, and giving up too early is how later questions get silently dropped.
   const retries = Math.min(20, Math.max(4, Number(process.env.TEST_VISION_RETRIES) || 12));
-  const text = await callGroq({ system: VISION_SYS, parts, maxTokens, model, retries });
+  const text = await callVisionProvider({ system: VISION_SYS, parts, maxTokens, model, retries });
   // Repair under-escaped LaTeX backslashes before parsing, else \frac/\sqrt get
   // mangled into control chars (or rejected) by JSON.parse.
   const c = repairLatexBackslashes(text || "");
@@ -213,9 +238,12 @@ const richness = (q) =>
 // answerKey (qno -> answer, parsed from the text layer) fills any answer the
 // model misses. Returns { questions, error } — questions [] on failure.
 export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
-  if (!groqReady()) return { questions: [], error: "AI vision is off (GROQ_API_KEY not set on the server)" };
+  if (!visionReady()) {
+    const key = visionProvider() === "groq" ? "GROQ_API_KEY" : "GEMINI_API_KEY";
+    return { questions: [], error: `AI vision is off (${key} not set on the server)` };
+  }
 
-  const model = process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
+  const model = visionModel();
   // Defaults kept conservative for rate-limited tiers: 2 pages per request at
   // scale 1.5, 2 in flight, overlapping work — ~2x faster than one-at-a-time.
   // Bump TEST_VISION_PAGES / _CONCURRENCY / _SCALE on a paid tier (higher RPM)
