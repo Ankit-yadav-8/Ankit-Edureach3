@@ -21,7 +21,7 @@ const JEE_MEGA = [
     title: "JEE Prep Resources", to: "/jee-resources", color: "#6366f1", icon: BookOpen,
     items: [
       { label: "Study Resources", to: "/jee-resources", icon: Edit3, desc: "Handwritten notes for Physics, Chemistry, Maths", iconBg: "#FFF3E0", iconColor: "#8B5E34" },
-      { label: "JEE Advanced Analysis", to: "/jee-analysis?exam=advanced", icon: Activity, desc: "Chapter weightage, trends, difficulty patterns", iconBg: "#E0F2F1", iconColor: "#00695C" },
+      { label: "JEE Advanced Analysis", to: "/jee-analysis?exam=advanced", icon: Activity, desc: "Chapter weightage, trends, difficulty patterns", badge: "SOON", iconBg: "#E0F2F1", iconColor: "#00695C" },
       { label: "JEE Mains Analysis", to: "/jee-analysis?exam=main", icon: Clock, desc: "Year-on-year breakdowns and heatmaps", badge: "SOON", iconBg: "#F3F0F5", iconColor: "#7E57C2" },
       { label: "Other Entrance Exams", to: "/exams", icon: ClipboardCheck, desc: "BITSAT, VITEEE, MET and more", iconBg: "#FCE4EC", iconColor: "#AD1457" },
     ],
