@@ -214,8 +214,7 @@ export default function Navbar({ onSearch }) {
       <nav
         style={{
           position: "fixed", top: 34, left: 0, right: 0, zIndex: 1000,
-          height: 64, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
-          padding: "0 max(24px, calc((100vw - 1280px) / 2))",
+          height: 64,
           width: "100%",
           background: "#ffffff",
           borderBottom: "1px solid rgba(0,0,0,0.06)",
@@ -223,6 +222,9 @@ export default function Navbar({ onSearch }) {
           transition: "box-shadow .3s ease",
         }}
       >
+        {/* Inner wrapper shares the site `.container` width so the bar lines up
+            with the page sections (branches, etc.) and the links stay centred. */}
+        <div className="container" style={{ height: "100%", display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center" }}>
         {/* ── LOGO ── */}
         <Link
           to="/"
@@ -463,6 +465,7 @@ export default function Navbar({ onSearch }) {
           <button className="hamburger" onClick={() => { setExpandedSection(null); setMobileOpen(true); }} aria-label="Menu" style={{ display: "none" }}>
             <Menu size={22} color="var(--navy)" />
           </button>
+        </div>
         </div>
       </nav>
 
