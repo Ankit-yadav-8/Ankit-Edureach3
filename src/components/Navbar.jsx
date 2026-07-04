@@ -219,16 +219,14 @@ export default function Navbar({ onSearch }) {
     <>
       <nav
         style={{
-          position: "fixed", top: 34, left: "50%", transform: "translateX(-50%)", zIndex: 1000,
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
           height: 64, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
-          padding: "0 14px 0 24px",
-          width: "min(1280px, calc(100% - 3rem))",
-          background: scrolled ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.9)",
-          borderRadius: 999,
-          backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-          border: "1px solid rgba(0,0,0,0.06)",
-          boxShadow: scrolled ? "0 10px 40px -10px rgba(0,0,0,0.08)" : "0 4px 20px -8px rgba(0,0,0,0.06)",
-          transition: "all .3s ease",
+          padding: "0 max(24px, calc((100vw - 1280px) / 2))",
+          width: "100%",
+          background: "#ffffff",
+          borderBottom: "1px solid rgba(0,0,0,0.06)",
+          boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.03)" : "none",
+          transition: "box-shadow .3s ease",
         }}
       >
         {/* ── LOGO ── */}
