@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
-  BookOpen, FlaskConical, Sigma, Zap, CalendarClock, Trophy, LogOut, Sparkles,
+  BookOpen, FlaskConical, Sigma, Zap, Trophy, LogOut, Sparkles,
   HelpCircle, Newspaper, Flame, Medal, Megaphone, Globe2, Edit3, Activity, Clock, ClipboardCheck
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
@@ -45,15 +45,6 @@ const JEE_MEGA = [
 
 // ── NEET mega-menu: mirrors the JEE tab's style with dummy NEET data ──────────
 const NEET_MEGA = [
-  {
-    title: "NEET Prep Resources", to: "/neet", color: "#0ea5a4", icon: BookOpen,
-    items: [
-      { label: "Biology (38 chapters)",   to: "/neet#biology",   icon: BookOpen,      desc: "Botany + Zoology · 360 marks" },
-      { label: "Physics (29 chapters)",    to: "/neet#physics",   icon: Zap,           desc: "Mechanics to modern physics" },
-      { label: "Chemistry (30 chapters)",  to: "/neet#chemistry", icon: FlaskConical,  desc: "Physical · Organic · Inorganic" },
-      { label: "NEET Exam Cycle 2026",     to: "/neet#cycle",     icon: CalendarClock, desc: "Every key date for the year" },
-    ],
-  },
   {
     title: "NEET UG 2026", to: "/neet", color: "#FF693D", icon: FileText,
     items: [
