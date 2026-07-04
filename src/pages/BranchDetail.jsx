@@ -599,7 +599,7 @@ export default function BranchDetail() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
           style={{ background: CL.card, borderRadius: 20, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "28px", marginBottom: 28 }}>
-          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 24 }}>
+          <div className="branch-hero-row" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 24 }}>
             <div style={{ width: 60, height: 60, borderRadius: 16, background: `${b.color}14`, border: `1px solid ${b.color}28`, display: "grid", placeItems: "center", flexShrink: 0 }}>
               <Icon size={30} color={b.color} />
             </div>
@@ -610,7 +610,7 @@ export default function BranchDetail() {
                 {b.tags.map(t => <span key={t} style={{ fontSize: F.xs, fontWeight: 700, color: CL.ink2, background: CL.cream2, border: `1px solid ${CL.cream3}`, padding: "3px 10px", borderRadius: 6 }}>{t}</span>)}
               </div>
             </div>
-            <div style={{ display: "flex", flexWrap: "nowrap", alignItems: "center", background: "#fff", border: `1px solid ${CL.line}`, borderRadius: 16, padding: "12px 20px", gap: 18, marginLeft: "auto" }}>
+            <div className="branch-hero-stats" style={{ display: "flex", flexWrap: "nowrap", alignItems: "center", background: "#fff", border: `1px solid ${CL.line}`, borderRadius: 16, padding: "12px 20px", gap: 18, marginLeft: "auto" }}>
               {/* Job Growth */}
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
                 <div style={{ fontSize: 10, fontWeight: 800, color: CL.muted, letterSpacing: 0.5, textTransform: "uppercase" }}>Job Growth</div>

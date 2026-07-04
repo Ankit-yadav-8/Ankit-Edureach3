@@ -18,15 +18,6 @@ const GATE_TABS = false;
 // heading with three colour-coded columns keeps everything one hover away.
 const JEE_MEGA = [
   {
-    title: "Resources", to: "/resources", color: "#6366f1", icon: BookOpen,
-    items: [
-      { label: "Class 11", to: "/class-11", icon: BookOpen, desc: "Complete syllabus & notes", iconBg: "#FFF3E0", iconColor: "#8B5E34" },
-      { label: "Class 12", to: "/class-12", icon: Edit3, desc: "Boards + competitive prep", iconBg: "#E0F2F1", iconColor: "#00695C" },
-      { label: "Exam Strategies for JEE", to: "/jee-strategy", icon: Zap, desc: "Tips, tricks & toppers' advice", iconBg: "#F3F0F5", iconColor: "#7E57C2" },
-      { label: "Exam Strategies for NEET", to: "/neet-strategy", icon: FlaskConical, desc: "Time management hacks", iconBg: "#FCE4EC", iconColor: "#AD1457" },
-    ],
-  },
-  {
     title: "JEE Main", to: "/jee-main", color: "#FF693D", icon: FileText,
     items: [
       { label: "Eligibility Criteria",     to: "/jee-main#eligibility",   icon: BadgeCheck },
@@ -81,6 +72,17 @@ const NEET_MEGA = [
       { label: "MBBS Cutoff Trends",      to: "/neet#cutoffs",     icon: BarChart3, desc: "Category-wise closing ranks" },
     ],
   },
+];
+
+// ── Resources dropdown: learning hub — syllabus, strategies & the AI tutor ────
+// Pulled out of the JEE mega-menu into its own top-level tab so study material
+// isn't buried under an exam-specific menu.
+const RESOURCES_NAV = [
+  { label: "College Parichay AI", to: "/ai", icon: Sparkles, tag: "Solve doubts, get notes & quizzes" },
+  { label: "Class 11 Syllabus & Mind Maps", to: "/class-11", icon: BookOpen, tag: "Chapter-wise notes + mind maps" },
+  { label: "Class 12 Syllabus & Mind Maps", to: "/class-12", icon: Edit3, tag: "Boards + competitive prep" },
+  { label: "Exam Strategy — JEE", to: "/jee-strategy", icon: Zap, tag: "Toppers' roadmap, tips & tricks" },
+  { label: "Exam Strategy — NEET", to: "/neet-strategy", icon: FlaskConical, tag: "Time-management & accuracy hacks" },
 ];
 
 // ── Mentorship dropdown: 1-on-1 JEE & NEET mentorship pages ───────────────────
@@ -205,8 +207,9 @@ export default function Navbar({ onSearch }) {
   // state — gives every one of the six parts a consistent highlight so users
   // always know where they are.
   const navItems = [
-    { label: "JEE", icon: BookOpen, mega: JEE_MEGA, base: "/jee-resources", match: (p) => p.startsWith("/jee") },
+    { label: "JEE", icon: BookOpen, mega: JEE_MEGA, base: "/jee-main", match: (p) => p.startsWith("/jee") },
     { label: "NEET", icon: FlaskConical, mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
+    { label: "Resources", icon: BookOpen, drop: RESOURCES_NAV, base: "/class-11", match: (p) => ["/class-1", "/jee-strategy", "/neet-strategy", "/ai"].some((x) => p.startsWith(x)) },
     { label: "Colleges", icon: Landmark, drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Mentorship", icon: Heart, drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
     { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa", "/campus-notes", "/community"].some((x) => p.startsWith(x)) },

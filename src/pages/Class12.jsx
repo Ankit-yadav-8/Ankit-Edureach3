@@ -29,9 +29,10 @@ export default function Class12() {
   };
 
   return (
-    <SyllabusToolkit 
+    <SyllabusToolkit
       data={PREMIUM_CLASS_12}
       heroProps={heroProps}
+      classLevel="12"
       seoTitle="Class 12 Chapter-wise Syllabus, Mind Maps & Quizzes"
       seoDesc="Master Class 12 Physics, Chemistry, Maths & Biology with our comprehensive chapter-wise toolkit. Get mind maps and generated quizzes for JEE/NEET."
       seoPath="/class-12"

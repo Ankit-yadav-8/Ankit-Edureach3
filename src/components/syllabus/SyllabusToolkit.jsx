@@ -2,6 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Map, Zap, Atom, FlaskConical, Calculator, Dna, Sparkles } from "lucide-react";
 import Seo from "../Seo.jsx";
+import MindMapViewer from "../MindMapViewer.jsx";
+import { getChapterMindmap } from "../../data/chapterMindmaps.js";
 
 const SUBJECT_ICONS = {
   Physics: Atom,
@@ -17,9 +19,11 @@ const SUBJECT_COLORS = {
   Biology: "#15A06E"
 };
 
-function PremiumChapterCard({ chapter, idx, subjectColor, subjectIcon: Icon }) {
+function PremiumChapterCard({ chapter, idx, subjectColor, subjectIcon: Icon, subjectName, classLevel, onOpenMindMap }) {
   const [isHovered, setIsHovered] = useState(false);
   const isString = typeof chapter === 'string';
+  const title = isString ? chapter : chapter.title;
+  const mindmap = getChapterMindmap(classLevel, subjectName, title);
 
   return (
     <motion.div
@@ -118,12 +122,18 @@ function PremiumChapterCard({ chapter, idx, subjectColor, subjectIcon: Icon }) {
       )}
 
       <div style={{ marginTop: "auto", display: "flex", flexWrap: "wrap", gap: 10 }}>
-        <button style={{
-          flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
-          background: `${subjectColor}12`, color: subjectColor, border: "none", padding: "8px 12px",
-          borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "background 0.2s"
-        }}>
-          <Map size={14} /> Mind Map
+        <button
+          onClick={mindmap ? () => onOpenMindMap({ subjectId: mindmap.subjectId, chapter: { name: mindmap.name, pages: mindmap.pages } }) : undefined}
+          disabled={!mindmap}
+          title={mindmap ? `Open mind map — ${mindmap.pages.length} sheet${mindmap.pages.length > 1 ? "s" : ""}` : "Mind map coming soon"}
+          style={{
+            flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
+            background: mindmap ? `${subjectColor}12` : "#f4f4f5",
+            color: mindmap ? subjectColor : "#a1a1aa", border: "none", padding: "8px 12px",
+            borderRadius: 10, fontSize: 12, fontWeight: 700,
+            cursor: mindmap ? "pointer" : "not-allowed", transition: "background 0.2s"
+          }}>
+          <Map size={14} /> {mindmap ? "Mind Map" : "Mind Map (Soon)"}
         </button>
         <button style={{
           flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
@@ -139,14 +149,15 @@ function PremiumChapterCard({ chapter, idx, subjectColor, subjectIcon: Icon }) {
 
 import PremiumHero from "../PremiumHero.jsx";
 
-export default function SyllabusToolkit({ data, heroProps, seoTitle, seoDesc, seoPath }) {
+export default function SyllabusToolkit({ data, heroProps, seoTitle, seoDesc, seoPath, classLevel }) {
   const subjects = Object.keys(data);
   const [activeTab, setActiveTab] = useState(subjects[0]);
+  const [viewer, setViewer] = useState(null); // { subjectId, chapter }
 
   return (
     <div className="page" style={{ background: "#fdfdfd", minHeight: "100vh" }}>
       <Seo title={seoTitle} description={seoDesc} path={seoPath} />
-      
+
       {heroProps && <PremiumHero {...heroProps} />}
       
       <section style={{ padding: "40px 0" }}>
@@ -197,19 +208,29 @@ export default function SyllabusToolkit({ data, heroProps, seoTitle, seoDesc, se
               }}
             >
               {data[activeTab].map((chapter, idx) => (
-                <PremiumChapterCard 
-                  key={chapter.title || chapter} 
-                  chapter={chapter} 
-                  idx={idx} 
-                  subjectColor={SUBJECT_COLORS[activeTab]} 
-                  subjectIcon={SUBJECT_ICONS[activeTab]} 
+                <PremiumChapterCard
+                  key={chapter.title || chapter}
+                  chapter={chapter}
+                  idx={idx}
+                  subjectColor={SUBJECT_COLORS[activeTab]}
+                  subjectIcon={SUBJECT_ICONS[activeTab]}
+                  subjectName={activeTab}
+                  classLevel={classLevel}
+                  onOpenMindMap={setViewer}
                 />
               ))}
             </motion.div>
           </AnimatePresence>
-          
+
         </div>
       </section>
+
+      <MindMapViewer
+        open={!!viewer}
+        subjectId={viewer?.subjectId}
+        chapter={viewer?.chapter}
+        onClose={() => setViewer(null)}
+      />
     </div>
   );
 }

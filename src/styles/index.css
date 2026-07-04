@@ -3576,6 +3576,25 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   }
 }
 
+/* ── Branch detail page header: stack on tablets & phones ── */
+@media (max-width: 760px) {
+  .branch-hero-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 18px !important;
+  }
+  .branch-hero-stats {
+    margin-left: 0 !important;
+    width: 100%;
+    flex-wrap: wrap !important;
+    justify-content: space-between;
+    gap: 14px 12px !important;
+  }
+  .branch-hero-stats > button {
+    margin-left: auto !important;
+  }
+}
+
 /* ── FAQ two-column grid: collapse to one column on small screens ── */
 @media (max-width: 700px) {
   .faq-grid { grid-template-columns: 1fr !important; }

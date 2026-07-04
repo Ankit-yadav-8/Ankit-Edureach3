@@ -370,7 +370,8 @@ export default function Dashboard() {
               <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.email}</div>
             </div>
 
-            {/* nav */}
+            {/* nav — vertical on desktop, horizontal scroll strip on mobile */}
+            <div className="dash-nav">
             {navItems.map(({ label, icon: Icon, to, active, badge }) => (
               <button key={label} onClick={() => goTo(to)}
                 style={{
@@ -389,6 +390,7 @@ export default function Dashboard() {
                 {badge && <span style={{ fontSize: 10, fontWeight: 800, color: "#fff", background: ORANGE, borderRadius: 50, minWidth: 17, height: 17, display: "grid", placeItems: "center", padding: "0 5px" }}>{badge}</span>}
               </button>
             ))}
+            </div>
 
             {/* footer actions */}
             <div style={{ borderTop: `1px solid ${CARD_LINE}`, marginTop: 10, paddingTop: 10, display: "flex", flexDirection: "column", gap: 2 }}>
@@ -673,6 +675,7 @@ export default function Dashboard() {
         .dash-spin{display:inline-block;animation:dashspin .8s linear infinite;vertical-align:middle;margin-right:6px}
         .dash-shell{display:flex;gap:20px;align-items:flex-start}
         .dash-side{width:228px;flex-shrink:0;position:sticky;top:92px}
+        .dash-nav{display:flex;flex-direction:column;gap:2px}
         .dash-info{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 22px}
         .dash-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
         .dash-two{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:stretch}
@@ -687,18 +690,24 @@ export default function Dashboard() {
         }
         @media (max-width:900px){
           .dash-shell{flex-direction:column}
-          .dash-side{width:100%;position:static;top:auto}
+          .dash-side{width:100%;position:static;top:auto;order:2}
+          .dash-main{order:1}
           .dash-two{grid-template-columns:1fr}
+          /* nav becomes a horizontal, swipeable strip so it doesn't tower over content */
+          .dash-nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+          .dash-nav::-webkit-scrollbar{display:none}
+          .dash-nav>button{width:auto !important;flex-shrink:0;white-space:nowrap;border:1px solid rgba(33,29,46,.08) !important}
+          .dash-nav>button>span{flex:0 0 auto !important}
         }
         @media (max-width:640px){
           .dash-info{grid-template-columns:1fr 1fr}
-          .dash-stats{grid-template-columns:1fr 1fr}
+          .dash-stats{grid-template-columns:repeat(2,1fr)}
           .dash-quick{grid-template-columns:repeat(3,1fr)}
           .dash-badges{grid-template-columns:repeat(2,1fr)}
         }
         @media (max-width:400px){
           .dash-info{grid-template-columns:1fr}
-          .dash-stats{grid-template-columns:1fr 1fr}
+          .dash-quick{grid-template-columns:repeat(2,1fr)}
         }
       `}</style>
     </section>

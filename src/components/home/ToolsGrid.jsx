@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Gauge, Crosshair, BarChart3, BookOpen, Map, ListChecks,
+  Gauge, Crosshair, BarChart3, Map, ListChecks,
   GitCompareArrows, Layers, Sparkles, Ticket,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
@@ -43,12 +43,6 @@ const TOOLS = [
     desc: "Stuck between a top-tier college or your preferred branch? Take our quick assessment to find your ideal path forward.",
     bullets: ["Personalized priority quiz", "Data-backed trade-off analysis", "Clear actionable recommendations"],
     to: "/branch-vs-college", live: true, hot: true,
-  },
-  {
-    icon: BookOpen, title: "Study Resources", accent: "#FF693D",
-    desc: "Chapter-wise notes, revision guides and cheat sheets across Maths, Physics and Chemistry.",
-    bullets: ["73 chapters mapped", "Main vs Advanced coverage", "Difficulty-rated topics"],
-    to: "/jee-resources", live: true,
   },
   {
     icon: Map, title: "Campus Map Explorer", accent: "#FF693D",
