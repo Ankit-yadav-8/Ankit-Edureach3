@@ -6,6 +6,7 @@ import { ShortlistProvider } from "./context/Shortlist.jsx";
 import { AuthProvider } from "./auth/AuthContext.jsx";
 import { EnrolProvider } from "./components/EnrolModal.jsx";
 import "./styles/index.css";
+import "./styles/strategy.css";
 
 // Base path: "/" in dev, "/Ankit-Edureach" on GitHub Pages (from vite base).
 const basename = import.meta.env.BASE_URL.replace(/\/+$/, "");
