@@ -3,7 +3,7 @@ import { motion, useScroll } from "framer-motion";
 import Seo from "../components/Seo.jsx";
 import PremiumHero from "../components/PremiumHero.jsx";
 import { StrategyReveal, AnimatedWidth, AnimatedHeight } from "../components/StrategyReveal.jsx";
-import { Zap, Stethoscope, Microscope } from "lucide-react";
+import { Zap, Stethoscope, Microscope, Target } from "lucide-react";
 
 export default function NeetStrategy() {
   const heroProps = {
@@ -24,9 +24,10 @@ export default function NeetStrategy() {
     chartPercentage: 99,
     chartLabel: "percentile\ngoal",
     floatingCards: [
-      { title: "Biology", subtitle: "NCERT Mastery", icon: Stethoscope, color: "#10b981", progress: 95, pos: { top: "5%", left: "5%" } },
-      { title: "Chemistry", subtitle: "Physical + Org", icon: Microscope, color: "#ef4444", progress: 85, pos: { top: "15%", right: "5%" } },
-      { title: "Physics", subtitle: "Formulas", icon: Zap, color: "#f59e0b", progress: 75, pos: { bottom: "10%", left: "15%" } }
+      { title: "Biology", subtitle: "NCERT Mastery", icon: Stethoscope, color: "#10b981", progress: 95 },
+      { title: "Chemistry", subtitle: "Physical + Org", icon: Microscope, color: "#ef4444", progress: 85 },
+      { title: "Physics", subtitle: "Formulas", icon: Zap, color: "#f59e0b", progress: 75 },
+      { title: "Mock Tests", subtitle: "300+ hours", icon: Target, color: "#6366f1", progress: 55 }
     ]
   };
 
@@ -67,9 +68,9 @@ export default function NeetStrategy() {
         </div>
       </nav>
 
-      <section className="hero" id="overview" style={{ padding: "40px 6vw", maxWidth: 1180, margin: "0 auto", paddingBottom: "100px" }}>
+      <div id="overview">
         <PremiumHero {...heroProps} />
-      </section>
+      </div>
 
       <section id="overview-detail">
         <StrategyReveal>

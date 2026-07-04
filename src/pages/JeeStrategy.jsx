@@ -3,7 +3,7 @@ import { motion, useScroll } from "framer-motion";
 import Seo from "../components/Seo.jsx";
 import PremiumHero from "../components/PremiumHero.jsx";
 import { StrategyReveal, AnimatedWidth, AnimatedHeight } from "../components/StrategyReveal.jsx";
-import { Atom, FlaskConical, Sigma } from "lucide-react";
+import { Atom, FlaskConical, Sigma, Target } from "lucide-react";
 
 export default function JeeStrategy() {
   const heroProps = {
@@ -24,8 +24,10 @@ export default function JeeStrategy() {
     chartPercentage: 99,
     chartLabel: "percentile\ngoal",
     floatingCards: [
-      { title: "Chemistry", subtitle: "Reactions", icon: FlaskConical, color: "#ef4444", progress: 85, pos: { top: "15%", right: "5%" } },
-      { title: "Mathematics", subtitle: "15-20 Qs/day", icon: Sigma, color: "#f59e0b", progress: 65, pos: { bottom: "10%", left: "20%" } }
+      { title: "Physics", subtitle: "Mechanics + E&M", icon: Atom, color: "#6366f1", progress: 78 },
+      { title: "Chemistry", subtitle: "Reactions", icon: FlaskConical, color: "#ef4444", progress: 85 },
+      { title: "Mathematics", subtitle: "15-20 Qs/day", icon: Sigma, color: "#f59e0b", progress: 65 },
+      { title: "Mock Tests", subtitle: "300+ hours", icon: Target, color: "#10b981", progress: 55 }
     ]
   };
 
@@ -66,9 +68,9 @@ export default function JeeStrategy() {
         </div>
       </nav>
 
-      <section className="hero" id="overview" style={{ padding: "40px 6vw", maxWidth: 1180, margin: "0 auto", paddingBottom: "100px" }}>
+      <div id="overview">
         <PremiumHero {...heroProps} />
-      </section>
+      </div>
 
       <section id="overview-detail">
         <StrategyReveal>

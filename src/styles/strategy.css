@@ -42,6 +42,10 @@
 .strategy-wrapper section { padding: 88px 6vw; max-width: 1180px; margin: 0 auto; position: relative; }
 .strategy-wrapper section.tight { padding-top: 48px; padding-bottom: 48px; }
 
+/* Shared PremiumHero renders full-bleed (identical to Class 11/12 pages) —
+   opt it out of the boxed section constraint above. */
+.strategy-wrapper .premium-hero-section { max-width: none; margin: 0; padding: 100px 0 120px; }
+
 .strategy-wrapper .eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
   font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: .14em; font-weight: 600;

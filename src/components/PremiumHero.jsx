@@ -1,4 +1,15 @@
-﻿import { motion } from "framer-motion";
+import { motion } from "framer-motion";
+
+// Edge-peeking orbit positions — each card sits partly outside the visual
+// box so only ~75% shows (≈25% clipped by the container's overflow:hidden),
+// giving the premium "bleed" look. Assigned by index so every hero — Class 11,
+// Class 12, JEE and NEET strategy — shares the exact same layout.
+const ORBIT_POSITIONS = [
+  { top: -22, left: "4%" },        // peeks from the top edge
+  { top: "24%", right: -46 },      // peeks from the right edge
+  { bottom: -22, right: "8%" },    // peeks from the bottom edge
+  { top: "22%", left: -46 },       // peeks from the left edge
+];
 
 export default function PremiumHero({
   badgeText = "SYLLABUS HUB",
@@ -19,63 +30,75 @@ export default function PremiumHero({
   chartLabel = "syllabus\nrevised",
   floatingCards = []
 }) {
+  const hasVisual = floatingCards && floatingCards.length > 0;
+
   const staggerContainer = {
     hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.15, delayChildren: 0.1 }
-    }
+    show: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.1 } }
   };
 
   const fadeUp = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 0.84, 0.32, 1] } }
+    hidden: { opacity: 0, y: 24 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 0.84, 0.32, 1] } }
   };
 
   return (
-    <section style={{ 
-      position: "relative", 
-      background: "#ffffff", 
-      padding: "100px 0 120px", 
+    <section className="premium-hero-section" style={{
+      position: "relative",
+      background: "#ffffff",
+      padding: "100px 0 120px",
       overflow: "hidden",
       borderBottom: "1px solid #f1f5f9"
     }}>
-      {/* Light Dotted Background Pattern */}
+      {/* Responsive rules (component is style-in-JS, so scope via a class) */}
+      <style>{`
+        .ph-grid { display: grid; gap: 80px; align-items: center; }
+        .ph-grid.has-visual { grid-template-columns: 1.15fr 0.85fr; }
+        @media (max-width: 900px) {
+          .ph-grid.has-visual { grid-template-columns: 1fr; gap: 40px; }
+          .ph-visual { height: 340px !important; margin-top: 10px; }
+        }
+        @media (max-width: 560px) {
+          .ph-stats { gap: 28px !important; }
+          .ph-visual { height: 300px !important; }
+        }
+      `}</style>
+
+      {/* Soft dotted background */}
       <div style={{
         position: "absolute", inset: 0,
         backgroundImage: "radial-gradient(#fcd34d 1px, transparent 1px)",
         backgroundSize: "40px 40px",
-        opacity: 0.3,
+        opacity: 0.28,
         zIndex: 0
       }} />
 
-      <div className="container" style={{ 
-        maxWidth: 1250, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1,
-        display: "grid", gridTemplateColumns: floatingCards && floatingCards.length > 0 ? "1.2fr 0.8fr" : "1fr", gap: "80px", alignItems: "center"
+      <div className={`container ph-grid ${hasVisual ? "has-visual" : ""}`} style={{
+        maxWidth: 1250, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1
       }}>
-        
-        {/* Left Content */}
-        <motion.div 
-          variants={staggerContainer}
-          initial="hidden"
-          animate="show"
-        >
+
+        {/* Left content */}
+        <motion.div variants={staggerContainer} initial="hidden" animate="show">
           {/* Badge */}
-          <motion.div variants={fadeUp} style={{ 
-            display: "inline-block", background: "#fffbeb", color: "#b45309", 
-            padding: "8px 20px", borderRadius: 50, fontSize: "0.8rem", 
-            fontWeight: 800, letterSpacing: "0.15em", marginBottom: 32, border: "1px solid #fde68a",
-            textTransform: "uppercase"
+          <motion.div variants={fadeUp} style={{
+            display: "inline-flex", alignItems: "center", gap: 10,
+            background: "#fffbeb", color: "#b45309",
+            padding: "8px 20px", borderRadius: 50, fontSize: "0.8rem",
+            fontWeight: 800, letterSpacing: "0.14em", marginBottom: 30,
+            border: "1px solid #fde68a", textTransform: "uppercase"
           }}>
-            <span style={{ display: "inline-block", width: 8, height: 8, background: "#f59e0b", borderRadius: "50%", marginRight: 10, verticalAlign: "middle" }} />
+            <motion.span
+              animate={{ scale: [1, 1.35, 1], opacity: [1, 0.6, 1] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              style={{ display: "inline-block", width: 8, height: 8, background: "#f59e0b", borderRadius: "50%" }}
+            />
             {badgeText}
           </motion.div>
 
-          {/* Heading */}
-          <motion.h1 variants={fadeUp} style={{ 
-            fontFamily: "'Inter', sans-serif",
-            fontSize: "clamp(2.8rem, 4.5vw, 4rem)", fontWeight: 800, 
-            lineHeight: 1.1, color: "#0f172a", marginBottom: 28, letterSpacing: "-1px"
+          {/* Heading — inherits the site heading font (Space Grotesk / Sora) */}
+          <motion.h1 variants={fadeUp} style={{
+            fontSize: "clamp(2.6rem, 4.4vw, 3.9rem)", fontWeight: 800,
+            lineHeight: 1.12, color: "#0f172a", marginBottom: 26, letterSpacing: "-0.5px"
           }}>
             {titlePart1}<br />
             {titlePart2}
@@ -84,22 +107,21 @@ export default function PremiumHero({
             <span style={{ color: "#f59e0b" }}>{highlight2}</span>
           </motion.h1>
 
-          {/* Description */}
-          <motion.p variants={fadeUp} style={{ 
-            color: "#475569", fontSize: "1.15rem", lineHeight: 1.7, maxWidth: 540, marginBottom: 48,
-            fontFamily: "'Inter', sans-serif"
+          {/* Description — inherits the site body font (DM Sans) */}
+          <motion.p variants={fadeUp} style={{
+            color: "#475569", fontSize: "1.14rem", lineHeight: 1.7, maxWidth: 540, marginBottom: 44
           }}>
             {description}
           </motion.p>
 
-          {/* Stats Row */}
-          <motion.div variants={fadeUp} style={{ display: "flex", gap: "48px", marginBottom: 48 }}>
+          {/* Stats */}
+          <motion.div variants={fadeUp} className="ph-stats" style={{ display: "flex", flexWrap: "wrap", gap: "48px", marginBottom: 44 }}>
             {stats.map((stat, i) => (
               <div key={i}>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "2.4rem", fontWeight: 800, color: stat.color, lineHeight: 1, letterSpacing: "-1px" }}>
+                <div style={{ fontSize: "2.3rem", fontWeight: 800, color: stat.color, lineHeight: 1, letterSpacing: "-1px" }}>
                   {stat.value}
                 </div>
-                <div style={{ color: "#64748b", fontSize: "0.85rem", fontWeight: 700, marginTop: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <div style={{ color: "#64748b", fontSize: "0.82rem", fontWeight: 700, marginTop: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   {stat.label}
                 </div>
               </div>
@@ -107,10 +129,11 @@ export default function PremiumHero({
           </motion.div>
 
           {/* Buttons */}
-          <motion.div variants={fadeUp} style={{ display: "flex", gap: 20, alignItems: "center" }}>
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+          <motion.div variants={fadeUp} style={{ display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap" }}>
+            <motion.button
+              whileHover={{ y: -3, boxShadow: "0 16px 34px rgba(245, 158, 11, 0.42)" }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 22 }}
               onClick={primaryButton.onClick}
               style={{
                 background: "#f59e0b", color: "#fff", border: "none",
@@ -118,81 +141,117 @@ export default function PremiumHero({
                 fontWeight: 700, cursor: "pointer",
                 boxShadow: "0 10px 30px rgba(245, 158, 11, 0.3)"
               }}
-              onMouseOver={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 15px 30px rgba(245, 158, 11, 0.4)"; }}
-              onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 10px 25px rgba(245, 158, 11, 0.3)"; }}
             >
               {primaryButton.text}
             </motion.button>
-            <motion.button 
-              whileHover={{ x: 5 }}
+            <motion.button
+              whileHover={{ x: 5, color: "#d97706", background: "#fffbeb" }}
               onClick={secondaryButton.onClick}
               style={{
                 background: "transparent", color: "#f59e0b", border: "none",
                 fontSize: "1rem", fontWeight: 700, cursor: "pointer",
                 display: "flex", alignItems: "center", gap: 8, padding: "8px 16px", borderRadius: 8
               }}
-              onMouseOver={(e) => { e.currentTarget.style.color = "#d97706"; e.currentTarget.style.background = "#fffbeb"; }}
-              onMouseOut={(e) => { e.currentTarget.style.color = "#f59e0b"; e.currentTarget.style.background = "transparent"; }}
             >
               {secondaryButton.text}
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
             </motion.button>
           </motion.div>
         </motion.div>
 
-        {/* Right Content - Visuals (Only rendered if floatingCards exist) */}
-        {floatingCards && floatingCards.length > 0 && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            transition={{ duration: 0.7, delay: 0.3 }}
-            style={{ position: "relative", height: "450px" }}
+        {/* Right visual — orbiting cards that peek ~25% past the edges */}
+        {hasVisual && (
+          <motion.div
+            className="ph-visual"
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 0.84, 0.32, 1] }}
+            style={{ position: "relative", height: 450, overflow: "hidden" }}
           >
-            {/* Background elements */}
-            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 280, height: 280, borderRadius: "50%", border: "2px dashed #fcd34d", opacity: 0.5 }} />
-            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 380, height: 380, borderRadius: "50%", border: "1px dashed #fef3c7", opacity: 0.5 }} />
-            
-            {/* Center Node */}
-            <motion.div 
-              animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+            {/* Slowly rotating dashed orbit rings */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 60, ease: "linear" }}
+              style={{ position: "absolute", top: "50%", left: "50%", x: "-50%", y: "-50%", width: 300, height: 300, borderRadius: "50%", border: "2px dashed #fcd34d", opacity: 0.5 }}
+            />
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ repeat: Infinity, duration: 90, ease: "linear" }}
+              style={{ position: "absolute", top: "50%", left: "50%", x: "-50%", y: "-50%", width: 400, height: 400, borderRadius: "50%", border: "1px dashed #fde68a", opacity: 0.55 }}
+            />
+
+            {/* Center node with animated progress ring */}
+            <motion.div
+              initial={{ scale: 0.6, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.4, type: "spring", stiffness: 180, damping: 16 }}
               style={{
                 position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-                width: 140, height: 140, background: "#ffffff", borderRadius: "50%",
-                boxShadow: "0 20px 40px rgba(245, 158, 11, 0.15)", border: "1px solid #fef3c7",
-                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 10
+                width: 152, height: 152, zIndex: 10
               }}
             >
-              <div style={{ fontSize: "2rem", fontWeight: 800, color: "#f59e0b", lineHeight: 1 }}>{chartPercentage}%</div>
-              <div style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 600, marginTop: 4, whiteSpace: "pre-line", textAlign: "center", textTransform: "uppercase" }}>{chartLabel}</div>
+              <svg width="152" height="152" viewBox="0 0 152 152" style={{ position: "absolute", inset: 0 }}>
+                <circle cx="76" cy="76" r="70" fill="none" stroke="#fef3c7" strokeWidth="6" />
+                <motion.circle
+                  cx="76" cy="76" r="70" fill="none" stroke="#f59e0b" strokeWidth="6" strokeLinecap="round"
+                  transform="rotate(-90 76 76)"
+                  strokeDasharray={2 * Math.PI * 70}
+                  initial={{ strokeDashoffset: 2 * Math.PI * 70 }}
+                  animate={{ strokeDashoffset: 2 * Math.PI * 70 * (1 - chartPercentage / 100) }}
+                  transition={{ duration: 1.4, delay: 0.7, ease: "easeInOut" }}
+                />
+              </svg>
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                style={{
+                  position: "absolute", inset: 12, background: "#ffffff", borderRadius: "50%",
+                  boxShadow: "0 20px 40px rgba(245, 158, 11, 0.16)",
+                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"
+                }}
+              >
+                <div style={{ fontSize: "1.9rem", fontWeight: 800, color: "#f59e0b", lineHeight: 1 }}>{chartPercentage}%</div>
+                <div style={{ fontSize: "0.7rem", color: "#64748b", fontWeight: 700, marginTop: 5, whiteSpace: "pre-line", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.03em" }}>{chartLabel}</div>
+              </motion.div>
             </motion.div>
 
-            {/* Orbiting Cards */}
+            {/* Orbiting cards — positioned by index so they peek in from the edges */}
             {floatingCards.map((card, idx) => {
               const Icon = card.icon;
+              const pos = ORBIT_POSITIONS[idx % ORBIT_POSITIONS.length];
               return (
-                <motion.div 
+                <motion.div
                   key={idx}
-                  animate={{ y: [0, -12, 0] }}
-                  transition={{ repeat: Infinity, duration: 3 + idx, ease: "easeInOut", delay: idx * 0.5 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1, y: [0, -12, 0] }}
+                  transition={{
+                    opacity: { duration: 0.5, delay: 0.5 + idx * 0.15 },
+                    scale: { duration: 0.5, delay: 0.5 + idx * 0.15 },
+                    y: { repeat: Infinity, duration: 3.2 + idx * 0.6, ease: "easeInOut", delay: idx * 0.4 }
+                  }}
                   style={{
-                    position: "absolute", ...card.pos,
-                    background: "#ffffff", padding: "16px", borderRadius: 16,
-                    boxShadow: "0 15px 35px rgba(0,0,0,0.06)", border: "1px solid #f1f5f9",
-                    display: "flex", gap: 12, alignItems: "center", minWidth: 160, zIndex: 10 + idx
+                    position: "absolute", ...pos,
+                    background: "#ffffff", padding: "14px 16px", borderRadius: 16,
+                    boxShadow: "0 15px 35px rgba(0,0,0,0.08)", border: "1px solid #f1f5f9",
+                    display: "flex", gap: 12, alignItems: "center", width: 178, zIndex: 12 + idx
                   }}
                 >
-                  <div style={{ 
+                  <div style={{
                     width: 42, height: 42, borderRadius: 12, background: card.color + "15",
-                    display: "flex", alignItems: "center", justifyContent: "center", color: card.color
+                    display: "flex", alignItems: "center", justifyContent: "center", color: card.color, flexShrink: 0
                   }}>
                     <Icon size={20} strokeWidth={2.5} />
                   </div>
-                  <div>
-                    <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0f172a" }}>{card.title}</div>
-                    <div style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 600 }}>{card.subtitle}</div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{card.title}</div>
+                    <div style={{ fontSize: "0.74rem", color: "#64748b", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{card.subtitle}</div>
                     <div style={{ width: "100%", height: 4, background: "#f1f5f9", borderRadius: 2, marginTop: 8, overflow: "hidden" }}>
-                      <div style={{ width: `${card.progress}%`, height: "100%", background: card.color, borderRadius: 2 }} />
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${card.progress}%` }}
+                        transition={{ duration: 1, delay: 0.8 + idx * 0.15, ease: "easeOut" }}
+                        style={{ height: "100%", background: card.color, borderRadius: 2 }}
+                      />
                     </div>
                   </div>
                 </motion.div>
