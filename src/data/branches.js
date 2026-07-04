@@ -127,7 +127,7 @@ export const BRANCHES = [
   },
   {
     slug: "mechanical-robotics",
-    name: "Mechanical & Robotics",
+    name: "Mechanical Engineering",
     icon: "Cog",
     color: "#E29A2E",
     desc: "Thermodynamics, design, manufacturing, and intelligent automation.",
@@ -138,15 +138,15 @@ export const BRANCHES = [
     academics: {
       summary:
         "The broadest engineering branch — thermodynamics, mechanics, manufacturing and design. Modern Mech increasingly overlaps with robotics, mechatronics and EV systems.",
-      coreSubjects: ["Thermodynamics", "Strength of Materials", "Fluid Mechanics", "Machine Design", "Manufacturing", "Robotics & Control"],
-      outcomes: ["Design Engineer", "Robotics Engineer", "Manufacturing / Production", "Automotive / EV Engineer", "Higher studies (MS)"],
+      coreSubjects: ["Thermodynamics", "Strength of Materials", "Fluid Mechanics", "Machine Design", "Manufacturing", "Robotics & Control", "Kinematics", "Finite Element Analysis", "Heat Transfer"],
+      outcomes: ["Design Engineer", "Robotics Engineer", "Manufacturing / Production", "Automotive / EV Engineer", "Higher studies (MS)", "Aerospace Engineer", "Systems Engineer", "HVAC Engineer"],
     },
     insights: {
       skills: { coursework: 60, selfLearning: 40 },
       tierMatters: 48,
       research: [{ label: "Academic Pubs", value: 78 }, { label: "Industry R&D", value: 72 }, { label: "Lab Funding", value: 68 }],
       researchNote:
-        "EV manufacturing and automation (PLI schemes) are reshaping demand. Robotics and mechatronics labs are growing across IITs and NITs.",
+        "EV manufacturing, thermal systems, and automation (PLI schemes) are reshaping demand. Robotics and mechatronics labs are rapidly growing across IITs and NITs.",
       salaryArc: {
         median: { entry: 12, y3: 18, y5: 26 },
         top:    { entry: 26, y3: 40, y5: 55 },
@@ -158,11 +158,17 @@ export const BRANCHES = [
       { name: "IIT Bombay", tag: "NIRF #3", chance: "high" },
       { name: "NIT Trichy", tag: "NIRF #9", chance: "high" },
       { name: "IIT BHU", tag: "Strong core", chance: "medium" },
+      { name: "IIT Delhi", tag: "NIRF #2", chance: "high" },
+      { name: "IIT Kanpur", tag: "NIRF #5", chance: "high" },
+      { name: "IIT Kharagpur", tag: "NIRF #6", chance: "medium" },
     ],
     myths: [
       { myth: "Mechanical has no future.", reality: "EVs, robotics and automation have created entirely new high-growth Mech roles." },
       { myth: "You can't switch to software from Mech.", reality: "Many Mech grads transition with strong DSA prep and projects." },
       { myth: "It's only factory jobs.", reality: "Design, simulation, R&D and product roles dominate top-college placements." },
+      { myth: "It only involves greasy machinery.", reality: "Modern mechanical engineering is highly reliant on software like CAD, CAM, and simulation tools." },
+      { myth: "There is no scope for higher studies.", reality: "There is huge demand for advanced research in materials, aerodynamics, and robotics." },
+      { myth: "Mechanical engineers cannot work in IT.", reality: "Many mechanical engineers transition to IT, especially in roles requiring strong analytical skills." },
     ],
   },
   {
@@ -662,8 +668,9 @@ export const BRANCH_DEEP = {
       { role: "Production Engineer", direct: true }, { role: "Quality Engineer", direct: true },
       { role: "Robotics Engineer", direct: false }, { role: "Mechatronics Engineer", direct: false },
       { role: "R&D Engineer", direct: false }, { role: "Project Engineer", direct: true },
+      { role: "Automation Engineer", direct: true }, { role: "Thermal Engineer", direct: false }, { role: "Systems Analyst", direct: false },
     ],
-    recruiters: ["Tata Motors", "Mahindra", "L&T", "Bosch", "Ola Electric"],
+    recruiters: ["Tata Motors", "Mahindra", "L&T", "Bosch", "Ola Electric", "Reliance Industries", "Maruti Suzuki", "Honda"],
   },
   "civil-architecture": {
     studyMeters: [{ label: "Coding", level: "MINIMAL" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
