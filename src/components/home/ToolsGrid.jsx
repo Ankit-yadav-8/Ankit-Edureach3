@@ -34,7 +34,7 @@ const TOOLS = [
   },
   {
     icon: Layers, title: "Branch Insights Hub", accent: "#FF693D",
-    desc: "Deep dive into 200+ engineering disciplines, exploring future career prospects, salaries, and real-world applications.",
+    desc: "Deep dive into 15+ clear engineering domains, exploring future career prospects, salaries, and real-world applications.",
     bullets: ["Future-proof career analysis", "In-depth curriculum breakdown", "Salary trends & hiring insights"],
     to: "/branches", live: true, hot: false,
   },
