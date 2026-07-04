@@ -10,12 +10,12 @@ import { CL, clEyebrow } from "./clTheme.js";
 
 /* exam-family palette — each pill carries the colour of its family */
 const FAM = {
-  jee:    { fg: "#C2540A", bg: "#FDEBDC", dot: CL.coral,  label: "JEE" },
-  adv:    { fg: "#5B21B6", bg: "#EDE6F7", dot: "#7C3AED", label: "JEE Advanced" },
-  neet:   { fg: "#0A7A4E", bg: "#D8F3E6", dot: CL.green,  label: "NEET" },
-  council:{ fg: "#1D4ED8", bg: "#E2ECFF", dot: CL.blue,   label: "Counselling" },
-  state:  { fg: "#9A6610", bg: "#FBEBCF", dot: CL.amber,  label: "State exams" },
-  other:  { fg: "#0E7490", bg: "#D6F1F0", dot: "#0EA5A4", label: "Boards & other" },
+  jee:    { fg: CL.ink, bg: CL.card, dot: CL.coral,  label: "JEE" },
+  adv:    { fg: CL.ink, bg: CL.card, dot: CL.blue, label: "JEE Advanced" },
+  neet:   { fg: CL.ink, bg: CL.card, dot: CL.green,  label: "NEET" },
+  council:{ fg: CL.ink, bg: CL.card, dot: CL.violet,   label: "Counselling" },
+  state:  { fg: CL.ink, bg: CL.card, dot: CL.amber,  label: "State exams" },
+  other:  { fg: CL.ink, bg: CL.card, dot: CL.muted, label: "Boards & other" },
 };
 
 /* 2026–27 cycle — current month (per the live date) is June 2026.
@@ -82,7 +82,7 @@ function EventPill({ e }) {
   return (
     <div style={{
       background: f.bg, borderRadius: 12, padding: "9px 11px",
-      borderLeft: `3px solid ${f.dot}`, position: "relative",
+      border: `1px solid ${CL.line}`, borderLeft: `3px solid ${f.dot}`, position: "relative",
       boxShadow: "0 1px 3px rgba(33,29,46,.05)",
     }}>
       <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 12.5, color: f.fg, lineHeight: 1.25 }}>

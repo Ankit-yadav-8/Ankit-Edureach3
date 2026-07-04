@@ -6,49 +6,6 @@
 
 export const BRANCHES = [
   {
-    slug: "cs-it",
-    name: "Computer Science & Information Technology",
-    icon: "Monitor",
-    color: "#3A86FF",
-    desc: "From algorithms and operating systems to full-stack development and cloud infrastructure — CSE graduates build the software that powers the digital world. One of the highest-demand engineering branches with global career mobility.",
-    tags: ["Coding-dominated", "Math-heavy", "Full Tech Access"],
-    branchCount: 32,
-    stats: { jobGrowth: "Most Placements", medianSalary: "₹28 LPA", aiRisk: 63 },
-    aiRiskLabel: "MODERATE RISK",
-    academics: {
-      summary:
-        "A CSE degree is roughly 25% coding — the rest is computer theory, discrete mathematics, operating systems, networks and algorithms. You learn how machines think, not just how to write apps.",
-      coreSubjects: ["Data Structures & Algorithms", "Operating Systems", "DBMS", "Computer Networks", "Theory of Computation", "Discrete Mathematics"],
-      outcomes: ["Software Engineer", "Backend / Full-stack Dev", "Data Engineer", "Product Engineer", "Research / Higher studies (MS)"],
-    },
-    insights: {
-      skills: { coursework: 25, selfLearning: 75 },
-      tierMatters: 45,
-      research: [{ label: "Academic Pubs", value: 95 }, { label: "Industry R&D", value: 80 }, { label: "Lab Funding", value: 70 }],
-      researchNote:
-        "Active ecosystem with top industrial labs like Microsoft Research India and Google Research India. Government funding is driven by MeitY initiatives (IndiaAI Mission) and DST-SERB grants.",
-      salaryArc: {
-        median: { entry: 19, y3: 27, y5: 37 },
-        top:    { entry: 44, y3: 62, y5: 82 },
-      },
-    },
-    branchesList: ["Computer Science & Engineering", "Information Technology", "CSE (Cyber Security)", "CSE (AI/ML)", "Software Engineering"],
-    colleges: [
-      { name: "IIT Bombay", tag: "NIRF #3", chance: "high" },
-      { name: "IIT Delhi", tag: "NIRF #2", chance: "high" },
-      { name: "IIIT Hyderabad", tag: "Top IIIT", chance: "medium" },
-      { name: "NIT Trichy", tag: "NIRF #9", chance: "high" },
-    ],
-    myths: [
-      { myth: "CS is all about writing code.", reality: "Coding is only ~25% of the degree; the rest is computer theory, discrete mathematics, and algorithms." },
-      { myth: "You need to be a coding genius beforehand.", reality: "Most IITians start coding from scratch in their first year; the curriculum assumes no prior programming knowledge." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skill and projects matter more than brand for software roles — strong portfolios win across tiers." },,
-      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
-      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
-    ],
-  },
-  {
     slug: "ai-data-science",
     name: "Artificial Intelligence & Data Science",
     icon: "Brain",
@@ -56,7 +13,7 @@ export const BRANCHES = [
     desc: "Learn to build intelligent systems that learn from data — covering neural networks, NLP, computer vision, and large-scale analytics. The fastest-growing engineering discipline with roles across every industry vertical.",
     tags: ["Math-heavy", "High Tech Access", "New-age pivot"],
     branchCount: 18,
-    stats: { jobGrowth: "High Job Growth", medianSalary: "₹26 LPA", aiRisk: 43 },
+    stats: { jobGrowth: "Very High", medianSalary: "₹28 LPA", aiRisk: 45 },
     aiRiskLabel: "LOW–MODERATE RISK",
     academics: {
       summary:
@@ -90,7 +47,96 @@ export const BRANCHES = [
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },
+  },,
+
+  {
+    slug: "cs-it",
+    name: "Computer Science & Information Technology",
+    icon: "Monitor",
+    color: "#3A86FF",
+    desc: "From algorithms and operating systems to full-stack development and cloud infrastructure — CSE graduates build the software that powers the digital world. One of the highest-demand engineering branches with global career mobility.",
+    tags: ["Coding-dominated", "Math-heavy", "Full Tech Access"],
+    branchCount: 32,
+    stats: { jobGrowth: "Very High", medianSalary: "₹30 LPA", aiRisk: 40 },
+    aiRiskLabel: "MODERATE RISK",
+    academics: {
+      summary:
+        "A CSE degree is roughly 25% coding — the rest is computer theory, discrete mathematics, operating systems, networks and algorithms. You learn how machines think, not just how to write apps.",
+      coreSubjects: ["Data Structures & Algorithms", "Operating Systems", "DBMS", "Computer Networks", "Theory of Computation", "Discrete Mathematics"],
+      outcomes: ["Software Engineer", "Backend / Full-stack Dev", "Data Engineer", "Product Engineer", "Research / Higher studies (MS)"],
+    },
+    insights: {
+      skills: { coursework: 25, selfLearning: 75 },
+      tierMatters: 45,
+      research: [{ label: "Academic Pubs", value: 95 }, { label: "Industry R&D", value: 80 }, { label: "Lab Funding", value: 70 }],
+      researchNote:
+        "Active ecosystem with top industrial labs like Microsoft Research India and Google Research India. Government funding is driven by MeitY initiatives (IndiaAI Mission) and DST-SERB grants.",
+      salaryArc: {
+        median: { entry: 19, y3: 27, y5: 37 },
+        top:    { entry: 44, y3: 62, y5: 82 },
+      },
+    },
+    branchesList: ["Computer Science & Engineering", "Information Technology", "CSE (Cyber Security)", "CSE (AI/ML)", "Software Engineering"],
+    colleges: [
+      { name: "IIT Bombay", tag: "NIRF #3", chance: "high" },
+      { name: "IIT Delhi", tag: "NIRF #2", chance: "high" },
+      { name: "IIIT Hyderabad", tag: "Top IIIT", chance: "medium" },
+      { name: "NIT Trichy", tag: "NIRF #9", chance: "high" },
+    ],
+    myths: [
+      { myth: "CS is all about writing code.", reality: "Coding is only ~25% of the degree; the rest is computer theory, discrete mathematics, and algorithms." },
+      { myth: "You need to be a coding genius beforehand.", reality: "Most IITians start coding from scratch in their first year; the curriculum assumes no prior programming knowledge." },
+      { myth: "Only top-tier colleges get placements.", reality: "Skill and projects matter more than brand for software roles — strong portfolios win across tiers." },,
+      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
+      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
+      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
+    ],
+  },,
+
+  {
+    slug: "mathematics-computing",
+    name: "Mathematics & Scientific Computing",
+    icon: "Sigma",
+    color: "#7B5EA7",
+    desc: "Rigorous training in pure and applied mathematics — probability, optimization, numerical methods, and algorithm design. Graduates dominate quant finance, data science, and research roles with some of the highest starting salaries in India.",
+    tags: ["Math-heavy", "Quant / Fintech", "Full Tech Access"],
+    branchCount: 11,
+    stats: { jobGrowth: "Very High", medianSalary: "₹27 LPA", aiRisk: 42 },
+    aiRiskLabel: "LOW–MODERATE RISK",
+    academics: {
+      summary:
+        "M&C combines deep mathematics with computer science — the standard gateway into quant finance, research and high-end software. Among the highest-paying branches at top IITs.",
+      coreSubjects: ["Real & Complex Analysis", "Probability & Stochastics", "Numerical Methods", "Algorithms", "Optimization", "Mathematical Finance"],
+      outcomes: ["Quant Analyst / Trader", "Software / ML Engineer", "Data Scientist", "Actuary", "Research / Academia"],
+    },
+    insights: {
+      skills: { coursework: 40, selfLearning: 60 },
+      tierMatters: 58,
+      research: [{ label: "Academic Pubs", value: 90 }, { label: "Industry R&D", value: 78 }, { label: "Lab Funding", value: 72 }],
+      researchNote:
+        "Quant trading firms and global tech recruit heavily from top M&C cohorts. Among the highest median packages of any engineering branch.",
+      salaryArc: {
+        median: { entry: 23, y3: 35, y5: 49 },
+        top:    { entry: 57, y3: 82, y5: 112 },
+      },
+    },
+    branchesList: ["Mathematics & Computing", "Computational Mathematics", "Statistics & Data Science", "Mathematics & Scientific Computing", "Applied Mathematics"],
+    colleges: [
+      { name: "IIT Delhi", tag: "M&C top", chance: "high" },
+      { name: "IIT Kanpur", tag: "NIRF #5", chance: "medium" },
+      { name: "IIT Kharagpur", tag: "M&C", chance: "medium" },
+      { name: "IIT Guwahati", tag: "M&C", chance: "high" },
+    ],
+    myths: [
+      { myth: "Math branches have weak placements.", reality: "Quant and tech roles make M&C one of the highest-paid branches at top IITs." },
+      { myth: "You become a teacher only.", reality: "Trading, ML, actuarial and software are the dominant outcomes." },
+      { myth: "It's harder than CSE for no reason.", reality: "The extra math directly unlocks quant and research roles CSE doesn't." },,
+      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
+      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
+      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
+    ],
+  },,
+
   {
     slug: "electronics-electrical",
     name: "Electrical & Electronics Engineering",
@@ -99,7 +145,7 @@ export const BRANCHES = [
     desc: "The backbone of modern electronics — from chip design (VLSI) and embedded systems to power grids and renewable energy. EE graduates drive hardware innovation at Intel, Qualcomm, ISRO, and the EV revolution.",
     tags: ["Math-heavy", "Core & Tech options", "Hardware focus"],
     branchCount: 26,
-    stats: { jobGrowth: "Strong Demand", medianSalary: "₹15 LPA", aiRisk: 41 },
+    stats: { jobGrowth: "Very High", medianSalary: "₹24 LPA", aiRisk: 40 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -133,7 +179,96 @@ export const BRANCHES = [
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },
+  },,
+
+  {
+    slug: "sciences-applied",
+    name: "Applied Sciences & Engineering Physics",
+    icon: "Atom",
+    color: "#FF693D",
+    desc: "A deep-science degree combining quantum mechanics, spectroscopy, or advanced chemistry with engineering applications. Ideal for students targeting top research labs, semiconductor R&D, or a pivot into any engineering specialization via higher studies.",
+    tags: ["Research-led", "Flexible exits", "Higher-studies"],
+    branchCount: 15,
+    stats: { jobGrowth: "High", medianSalary: "₹21 LPA", aiRisk: 35 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Applied-science branches (Engineering Physics, Engineering Chemistry, Earth Sciences) build deep fundamentals with engineering exposure — ideal launchpads for research, quantum/semiconductor work and tech pivots.",
+      coreSubjects: ["Quantum Mechanics", "Electromagnetism", "Solid State Physics", "Applied Chemistry", "Computational Methods", "Photonics / Optics"],
+      outcomes: ["Research Scientist", "Semiconductor / Photonics", "Software / Data pivot", "Higher studies (MS/PhD)", "Deep-tech startups"],
+    },
+    insights: {
+      skills: { coursework: 55, selfLearning: 45 },
+      tierMatters: 56,
+      research: [{ label: "Academic Pubs", value: 93 }, { label: "Industry R&D", value: 70 }, { label: "Lab Funding", value: 80 }],
+      researchNote:
+        "Quantum tech, photonics and semiconductors are national priorities (National Quantum Mission). Strongest fit for research-minded students who keep a tech option open.",
+      salaryArc: {
+        median: { entry: 14, y3: 21, y5: 29 },
+        top:    { entry: 32, y3: 48, y5: 66 },
+      },
+    },
+    branchesList: ["Engineering Physics", "Engineering Chemistry", "Earth Sciences", "Applied Geology", "Exploration Geophysics"],
+    colleges: [
+      { name: "IIT Delhi", tag: "Eng Physics", chance: "high" },
+      { name: "IIT Bombay", tag: "Eng Physics", chance: "medium" },
+      { name: "IIT Kanpur", tag: "NIRF #5", chance: "high" },
+      { name: "IIT Roorkee", tag: "Geo strong", chance: "high" },
+    ],
+    myths: [
+      { myth: "Applied science = no placements.", reality: "Engineering Physics cohorts place strongly in software, deep-tech and core R&D." },
+      { myth: "Only useful for academics.", reality: "Semiconductor and quantum-tech industries actively recruit these grads." },
+      { myth: "You can't switch to CS.", reality: "Strong math/physics base makes a software/ML pivot very achievable." },,
+      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
+      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
+      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
+    ],
+  },,
+
+  {
+    slug: "chemical",
+    name: "Chemical Engineering",
+    icon: "FlaskConical",
+    color: "#3A86FF",
+    desc: "Convert raw materials into fuels, pharmaceuticals, polymers, and specialty chemicals at industrial scale. Chemical engineers master reaction kinetics, process simulation, and plant design — essential to energy, pharma, and semiconductor manufacturing.",
+    tags: ["Math + Chem", "Core-heavy", "Energy / Pharma"],
+    branchCount: 12,
+    stats: { jobGrowth: "Stable", medianSalary: "₹17 LPA", aiRisk: 33 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Chemical engineers turn raw materials into useful products at scale — fuels, polymers, pharma and food. Strong process, transport and thermodynamics fundamentals open energy and analytics careers too.",
+      coreSubjects: ["Transport Phenomena", "Thermodynamics", "Reaction Engineering", "Process Control", "Mass Transfer", "Plant Design"],
+      outcomes: ["Process Engineer", "Energy / Oil & Gas", "Pharma / FMCG", "Data / Analytics pivot", "Higher studies (MS)"],
+    },
+    insights: {
+      skills: { coursework: 67, selfLearning: 33 },
+      tierMatters: 46,
+      research: [{ label: "Academic Pubs", value: 76 }, { label: "Industry R&D", value: 70 }, { label: "Lab Funding", value: 66 }],
+      researchNote:
+        "Energy transition, green hydrogen and specialty chemicals are reshaping demand. Strong analytics crossover keeps options open beyond core.",
+      salaryArc: {
+        median: { entry: 13, y3: 19, y5: 26 },
+        top:    { entry: 28, y3: 40, y5: 54 },
+      },
+    },
+    branchesList: ["Chemical Engineering", "Petroleum Engineering", "Polymer Science", "Process Engineering", "Energy Engineering"],
+    colleges: [
+      { name: "IIT Bombay", tag: "Chem #1", chance: "high" },
+      { name: "IIT Madras", tag: "NIRF #1", chance: "medium" },
+      { name: "ICT Mumbai", tag: "Specialist", chance: "medium" },
+      { name: "NIT Trichy", tag: "NIRF #9", chance: "high" },
+    ],
+    myths: [
+      { myth: "Chemical = only oil refineries.", reality: "Pharma, FMCG, specialty chemicals and analytics absorb large numbers of grads." },
+      { myth: "No software pivot possible.", reality: "Process-analytics and data roles are a common, well-paid transition." },
+      { myth: "It's the same as a chemistry degree.", reality: "It's design and scale engineering — very different from lab chemistry." },,
+      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
+      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
+      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
+    ],
+  },,
+
   {
     slug: "mechanical-robotics",
     name: "Mechanical Engineering",
@@ -142,7 +277,7 @@ export const BRANCHES = [
     desc: "The most versatile engineering degree — covering thermal systems, robotics, CAD/CAM, and manufacturing. Mechanical engineers work everywhere from automotive plants and aerospace labs to consulting firms and tech startups.",
     tags: ["Core-heavy", "Design-focused", "Robotics pivot"],
     branchCount: 22,
-    stats: { jobGrowth: "Stable Demand", medianSalary: "₹12 LPA", aiRisk: 33 },
+    stats: { jobGrowth: "Stable", medianSalary: "₹18 LPA", aiRisk: 32 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -182,265 +317,8 @@ export const BRANCHES = [
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },
-  {
-    slug: "civil-architecture",
-    name: "Civil Engineering & Architecture",
-    icon: "Building2",
-    color: "#0FAE6E",
-    desc: "Design bridges, skyscrapers, highways, and water systems that shape cities. Civil engineering combines structural analysis, geotechnical science, and urban planning — with massive growth in India's ₹111-lakh-crore infrastructure push.",
-    tags: ["Core-heavy", "Design-focused", "Infra growth"],
-    branchCount: 16,
-    stats: { jobGrowth: "Infra Boom", medianSalary: "₹15 LPA", aiRisk: 31 },
-    aiRiskLabel: "LOW RISK",
-    academics: {
-      summary:
-        "Civil shapes the physical world — structures, transportation, water and the environment. India's infrastructure spend keeps demand steady, with growth in smart-city and green-building work.",
-      coreSubjects: ["Structural Analysis", "Geotechnical Engg", "Transportation Engg", "Fluid Mechanics", "Environmental Engg", "Construction Management"],
-      outcomes: ["Structural Engineer", "Site / Project Engineer", "Urban Planner", "Construction Manager", "Govt / PSU roles"],
-    },
-    insights: {
-      skills: { coursework: 60, selfLearning: 40 },
-      tierMatters: 42,
-      research: [{ label: "Academic Pubs", value: 70 }, { label: "Industry R&D", value: 60 }, { label: "Lab Funding", value: 64 }],
-      researchNote:
-        "Government infrastructure outlays (NIP, smart cities) sustain hiring. PSU and government routes via GATE add strong stability for civil graduates.",
-      salaryArc: {
-        median: { entry: 11, y3: 16, y5: 23 },
-        top:    { entry: 24, y3: 36, y5: 48 },
-      },
-    },
-    branchesList: ["Civil Engineering", "Architecture (B.Arch)", "Planning", "Construction Technology", "Environmental Engineering"],
-    colleges: [
-      { name: "IIT Roorkee", tag: "Civil #1", chance: "high" },
-      { name: "IIT Madras", tag: "NIRF #1", chance: "medium" },
-      { name: "NIT Trichy", tag: "NIRF #9", chance: "high" },
-      { name: "SPA Delhi", tag: "Arch leader", chance: "medium" },
-    ],
-    myths: [
-      { myth: "Civil pays the least, always.", reality: "Top-college structural and PMC roles are well-paid; PSU stability is a strong upside." },
-      { myth: "It's a dying branch.", reality: "Infrastructure and green-building demand keep it steady and government-backed." },
-      { myth: "No tech scope.", reality: "BIM, GIS and structural simulation make modern civil increasingly software-driven." },,
-      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
-      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
-    ],
-  },
-  {
-    slug: "chemical",
-    name: "Chemical Engineering",
-    icon: "FlaskConical",
-    color: "#3A86FF",
-    desc: "Convert raw materials into fuels, pharmaceuticals, polymers, and specialty chemicals at industrial scale. Chemical engineers master reaction kinetics, process simulation, and plant design — essential to energy, pharma, and semiconductor manufacturing.",
-    tags: ["Math + Chem", "Core-heavy", "Energy / Pharma"],
-    branchCount: 12,
-    stats: { jobGrowth: "Steady", medianSalary: "₹16 LPA", aiRisk: 33 },
-    aiRiskLabel: "LOW RISK",
-    academics: {
-      summary:
-        "Chemical engineers turn raw materials into useful products at scale — fuels, polymers, pharma and food. Strong process, transport and thermodynamics fundamentals open energy and analytics careers too.",
-      coreSubjects: ["Transport Phenomena", "Thermodynamics", "Reaction Engineering", "Process Control", "Mass Transfer", "Plant Design"],
-      outcomes: ["Process Engineer", "Energy / Oil & Gas", "Pharma / FMCG", "Data / Analytics pivot", "Higher studies (MS)"],
-    },
-    insights: {
-      skills: { coursework: 67, selfLearning: 33 },
-      tierMatters: 46,
-      research: [{ label: "Academic Pubs", value: 76 }, { label: "Industry R&D", value: 70 }, { label: "Lab Funding", value: 66 }],
-      researchNote:
-        "Energy transition, green hydrogen and specialty chemicals are reshaping demand. Strong analytics crossover keeps options open beyond core.",
-      salaryArc: {
-        median: { entry: 13, y3: 19, y5: 26 },
-        top:    { entry: 28, y3: 40, y5: 54 },
-      },
-    },
-    branchesList: ["Chemical Engineering", "Petroleum Engineering", "Polymer Science", "Process Engineering", "Energy Engineering"],
-    colleges: [
-      { name: "IIT Bombay", tag: "Chem #1", chance: "high" },
-      { name: "IIT Madras", tag: "NIRF #1", chance: "medium" },
-      { name: "ICT Mumbai", tag: "Specialist", chance: "medium" },
-      { name: "NIT Trichy", tag: "NIRF #9", chance: "high" },
-    ],
-    myths: [
-      { myth: "Chemical = only oil refineries.", reality: "Pharma, FMCG, specialty chemicals and analytics absorb large numbers of grads." },
-      { myth: "No software pivot possible.", reality: "Process-analytics and data roles are a common, well-paid transition." },
-      { myth: "It's the same as a chemistry degree.", reality: "It's design and scale engineering — very different from lab chemistry." },,
-      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
-      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
-    ],
-  },
-  {
-    slug: "materials-mining",
-    name: "Materials Science & Metallurgical Engineering",
-    icon: "Layers",
-    color: "#E29A2E",
-    desc: "Engineer advanced alloys, nanomaterials, and composites that make aircraft lighter and phones tougher. Materials scientists work at the intersection of physics and chemistry — powering breakthroughs in semiconductors, batteries, and biomaterials.",
-    tags: ["Core-heavy", "PSU-friendly", "Research depth"],
-    branchCount: 14,
-    stats: { jobGrowth: "Niche", medianSalary: "₹11 LPA", aiRisk: 29 },
-    aiRiskLabel: "LOW RISK",
-    academics: {
-      summary:
-        "Materials & mining engineers design and extract the substances everything else is built from — alloys, semiconductors, batteries and minerals. Deep research scope with strong PSU routes.",
-      coreSubjects: ["Physical Metallurgy", "Materials Characterization", "Mineral Processing", "Mining Methods", "Nanomaterials", "Phase Transformations"],
-      outcomes: ["Metallurgist", "Mining Engineer", "Materials Researcher", "PSU (SAIL, Coal India)", "Battery / Semiconductor R&D"],
-    },
-    insights: {
-      skills: { coursework: 69, selfLearning: 31 },
-      tierMatters: 44,
-      research: [{ label: "Academic Pubs", value: 82 }, { label: "Industry R&D", value: 66 }, { label: "Lab Funding", value: 72 }],
-      researchNote:
-        "Battery materials and semiconductor substrates are reviving interest. Strong route into PSUs and research labs (DRDO, BARC) for high performers.",
-      salaryArc: {
-        median: { entry: 12, y3: 17, y5: 24 },
-        top:    { entry: 26, y3: 36, y5: 48 },
-      },
-    },
-    branchesList: ["Metallurgical Engineering", "Materials Science", "Mining Engineering", "Mineral Engineering", "Nanotechnology"],
-    colleges: [
-      { name: "IIT BHU", tag: "Metallurgy", chance: "high" },
-      { name: "IIT Kharagpur", tag: "Mining strong", chance: "medium" },
-      { name: "ISM Dhanbad", tag: "Mining #1", chance: "high" },
-      { name: "NIT Trichy", tag: "Metallurgy", chance: "high" },
-    ],
-    myths: [
-      { myth: "No jobs outside steel plants.", reality: "Batteries, semiconductors and aerospace materials are growing employers." },
-      { myth: "It's purely theoretical.", reality: "Characterization, processing and quality engineering are very hands-on." },
-      { myth: "PSU is the only path.", reality: "Strong R&D, higher-studies and materials-tech startup paths exist." },,
-      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
-      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
-    ],
-  },
-  {
-    slug: "biotech-biosciences",
-    name: "Biotechnology & Bio-Sciences",
-    icon: "Dna",
-    color: "#0FAE6E",
-    desc: "Where biology meets engineering — from genetic engineering and drug discovery to biomedical devices and bioinformatics. A rapidly expanding field driven by the global biotech, pharma, and personalized-medicine revolution.",
-    tags: ["Bio + Math", "Research-led", "Health-tech"],
-    branchCount: 13,
-    stats: { jobGrowth: "Emerging", medianSalary: "₹10 LPA", aiRisk: 35 },
-    aiRiskLabel: "LOW RISK",
-    academics: {
-      summary:
-        "Biotech engineering applies engineering rigor to biology — bioprocessing, genomics and bioinformatics. The computational/bioinformatics crossover opens strong analytics careers.",
-      coreSubjects: ["Biochemistry", "Bioprocess Engineering", "Genetic Engineering", "Bioinformatics", "Cell Biology", "Immunology"],
-      outcomes: ["Bioprocess Engineer", "Bioinformatics Analyst", "Pharma / R&D", "Health-tech Engineer", "Higher studies (MS/PhD)"],
-    },
-    insights: {
-      skills: { coursework: 63, selfLearning: 37 },
-      tierMatters: 52,
-      research: [{ label: "Academic Pubs", value: 88 }, { label: "Industry R&D", value: 64 }, { label: "Lab Funding", value: 70 }],
-      researchNote:
-        "Strong research funding (DBT, BIRAC) and a booming bioinformatics/health-tech sector. Best outcomes pair biology depth with computational skills.",
-      salaryArc: {
-        median: { entry: 11, y3: 16, y5: 23 },
-        top:    { entry: 24, y3: 35, y5: 47 },
-      },
-    },
-    branchesList: ["Biotechnology", "Biomedical Engineering", "Bioinformatics", "Bioengineering", "Biological Sciences"],
-    colleges: [
-      { name: "IIT Madras", tag: "Bio-Engg", chance: "high" },
-      { name: "IIT Kharagpur", tag: "Biotech", chance: "medium" },
-      { name: "IIIT Hyderabad", tag: "CompBio", chance: "medium" },
-      { name: "NIT Warangal", tag: "Biotech", chance: "high" },
-    ],
-    myths: [
-      { myth: "Biotech has no jobs in India.", reality: "Bioinformatics, pharma R&D and health-tech are creating new roles steadily." },
-      { myth: "You must go abroad.", reality: "Domestic research funding and biotech startups are expanding rapidly." },
-      { myth: "It's just biology.", reality: "Engineering, data and process skills make it a hybrid, high-leverage field." },,
-      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
-      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
-    ],
-  },
-  {
-    slug: "mathematics-computing",
-    name: "Mathematics & Scientific Computing",
-    icon: "Sigma",
-    color: "#7B5EA7",
-    desc: "Rigorous training in pure and applied mathematics — probability, optimization, numerical methods, and algorithm design. Graduates dominate quant finance, data science, and research roles with some of the highest starting salaries in India.",
-    tags: ["Math-heavy", "Quant / Fintech", "Full Tech Access"],
-    branchCount: 11,
-    stats: { jobGrowth: "High-paying", medianSalary: "₹22 LPA", aiRisk: 43 },
-    aiRiskLabel: "LOW–MODERATE RISK",
-    academics: {
-      summary:
-        "M&C combines deep mathematics with computer science — the standard gateway into quant finance, research and high-end software. Among the highest-paying branches at top IITs.",
-      coreSubjects: ["Real & Complex Analysis", "Probability & Stochastics", "Numerical Methods", "Algorithms", "Optimization", "Mathematical Finance"],
-      outcomes: ["Quant Analyst / Trader", "Software / ML Engineer", "Data Scientist", "Actuary", "Research / Academia"],
-    },
-    insights: {
-      skills: { coursework: 40, selfLearning: 60 },
-      tierMatters: 58,
-      research: [{ label: "Academic Pubs", value: 90 }, { label: "Industry R&D", value: 78 }, { label: "Lab Funding", value: 72 }],
-      researchNote:
-        "Quant trading firms and global tech recruit heavily from top M&C cohorts. Among the highest median packages of any engineering branch.",
-      salaryArc: {
-        median: { entry: 23, y3: 35, y5: 49 },
-        top:    { entry: 57, y3: 82, y5: 112 },
-      },
-    },
-    branchesList: ["Mathematics & Computing", "Computational Mathematics", "Statistics & Data Science", "Mathematics & Scientific Computing", "Applied Mathematics"],
-    colleges: [
-      { name: "IIT Delhi", tag: "M&C top", chance: "high" },
-      { name: "IIT Kanpur", tag: "NIRF #5", chance: "medium" },
-      { name: "IIT Kharagpur", tag: "M&C", chance: "medium" },
-      { name: "IIT Guwahati", tag: "M&C", chance: "high" },
-    ],
-    myths: [
-      { myth: "Math branches have weak placements.", reality: "Quant and tech roles make M&C one of the highest-paid branches at top IITs." },
-      { myth: "You become a teacher only.", reality: "Trading, ML, actuarial and software are the dominant outcomes." },
-      { myth: "It's harder than CSE for no reason.", reality: "The extra math directly unlocks quant and research roles CSE doesn't." },,
-      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
-      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
-    ],
-  },
-  {
-    slug: "sciences-applied",
-    name: "Applied Sciences & Engineering Physics",
-    icon: "Atom",
-    color: "#FF693D",
-    desc: "A deep-science degree combining quantum mechanics, spectroscopy, or advanced chemistry with engineering applications. Ideal for students targeting top research labs, semiconductor R&D, or a pivot into any engineering specialization via higher studies.",
-    tags: ["Research-led", "Flexible exits", "Higher-studies"],
-    branchCount: 15,
-    stats: { jobGrowth: "Research", medianSalary: "₹13 LPA", aiRisk: 37 },
-    aiRiskLabel: "LOW RISK",
-    academics: {
-      summary:
-        "Applied-science branches (Engineering Physics, Engineering Chemistry, Earth Sciences) build deep fundamentals with engineering exposure — ideal launchpads for research, quantum/semiconductor work and tech pivots.",
-      coreSubjects: ["Quantum Mechanics", "Electromagnetism", "Solid State Physics", "Applied Chemistry", "Computational Methods", "Photonics / Optics"],
-      outcomes: ["Research Scientist", "Semiconductor / Photonics", "Software / Data pivot", "Higher studies (MS/PhD)", "Deep-tech startups"],
-    },
-    insights: {
-      skills: { coursework: 55, selfLearning: 45 },
-      tierMatters: 56,
-      research: [{ label: "Academic Pubs", value: 93 }, { label: "Industry R&D", value: 70 }, { label: "Lab Funding", value: 80 }],
-      researchNote:
-        "Quantum tech, photonics and semiconductors are national priorities (National Quantum Mission). Strongest fit for research-minded students who keep a tech option open.",
-      salaryArc: {
-        median: { entry: 14, y3: 21, y5: 29 },
-        top:    { entry: 32, y3: 48, y5: 66 },
-      },
-    },
-    branchesList: ["Engineering Physics", "Engineering Chemistry", "Earth Sciences", "Applied Geology", "Exploration Geophysics"],
-    colleges: [
-      { name: "IIT Delhi", tag: "Eng Physics", chance: "high" },
-      { name: "IIT Bombay", tag: "Eng Physics", chance: "medium" },
-      { name: "IIT Kanpur", tag: "NIRF #5", chance: "high" },
-      { name: "IIT Roorkee", tag: "Geo strong", chance: "high" },
-    ],
-    myths: [
-      { myth: "Applied science = no placements.", reality: "Engineering Physics cohorts place strongly in software, deep-tech and core R&D." },
-      { myth: "Only useful for academics.", reality: "Semiconductor and quantum-tech industries actively recruit these grads." },
-      { myth: "You can't switch to CS.", reality: "Strong math/physics base makes a software/ML pivot very achievable." },,
-      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
-      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
-    ],
-  },
+  },,
+
   {
     slug: "aerospace-avionics",
     name: "Aerospace Engineering & Avionics",
@@ -449,7 +327,7 @@ export const BRANCHES = [
     desc: "Design aircraft, rockets, drones, and satellites — covering aerodynamics, propulsion, orbital mechanics, and composite structures. With India's booming space-tech and defence sectors, aerospace offers some of the most exciting career trajectories.",
     tags: ["Math-heavy", "Core-heavy", "Defence / Space"],
     branchCount: 9,
-    stats: { jobGrowth: "Space Boom", medianSalary: "₹13 LPA", aiRisk: 33 },
+    stats: { jobGrowth: "Growing", medianSalary: "₹19 LPA", aiRisk: 34 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -483,93 +361,96 @@ export const BRANCHES = [
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },
+  },,
+
   {
-    slug: "mining-earth",
-    name: "Mining Machinery & Engineering",
-    icon: "Mountain",
-    color: "#E29A2E",
-    desc: "Plan, operate, and optimize mining operations for coal, metals, and minerals using GIS, automation, and environmental engineering. A niche but stable career path with strong PSU hiring and emerging demand in critical-mineral supply chains.",
-    tags: ["Core-heavy", "PSU-friendly", "Field work"],
-    branchCount: 7,
-    stats: { jobGrowth: "PSU Demand", medianSalary: "₹12 LPA", aiRisk: 27 },
+    slug: "civil-architecture",
+    name: "Civil Engineering & Architecture",
+    icon: "Building2",
+    color: "#0FAE6E",
+    desc: "Design bridges, skyscrapers, highways, and water systems that shape cities. Civil engineering combines structural analysis, geotechnical science, and urban planning — with massive growth in India's ₹111-lakh-crore infrastructure push.",
+    tags: ["Core-heavy", "Design-focused", "Infra growth"],
+    branchCount: 16,
+    stats: { jobGrowth: "Growing", medianSalary: "₹15 LPA", aiRisk: 31 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
-        "Mining engineers plan and run safe, efficient extraction of coal, metals and minerals. The field offers strong PSU pay (Coal India, NMDC), early site responsibility and a growing automation/safety-tech angle.",
-      coreSubjects: ["Mine Planning & Design", "Rock Mechanics", "Mine Ventilation", "Surveying", "Mineral Economics", "Mine Safety Engg"],
-      outcomes: ["Mining Engineer", "Mine Planner", "PSU (Coal India, NMDC)", "Mining-tech / Drones", "Higher studies / Civil services"],
+        "Civil shapes the physical world — structures, transportation, water and the environment. India's infrastructure spend keeps demand steady, with growth in smart-city and green-building work.",
+      coreSubjects: ["Structural Analysis", "Geotechnical Engg", "Transportation Engg", "Fluid Mechanics", "Environmental Engg", "Construction Management"],
+      outcomes: ["Structural Engineer", "Site / Project Engineer", "Urban Planner", "Construction Manager", "Govt / PSU roles"],
     },
     insights: {
-      skills: { coursework: 71, selfLearning: 29 },
-      tierMatters: 40,
+      skills: { coursework: 60, selfLearning: 40 },
+      tierMatters: 42,
       research: [{ label: "Academic Pubs", value: 70 }, { label: "Industry R&D", value: 60 }, { label: "Lab Funding", value: 64 }],
       researchNote:
-        "Among the highest PSU starting pay of all branches. Automation, drone-survey and mine-safety analytics are adding modern tech roles to a traditional field.",
+        "Government infrastructure outlays (NIP, smart cities) sustain hiring. PSU and government routes via GATE add strong stability for civil graduates.",
       salaryArc: {
-        median: { entry: 13, y3: 18, y5: 25 },
+        median: { entry: 11, y3: 16, y5: 23 },
+        top:    { entry: 24, y3: 36, y5: 48 },
+      },
+    },
+    branchesList: ["Civil Engineering", "Architecture (B.Arch)", "Planning", "Construction Technology", "Environmental Engineering"],
+    colleges: [
+      { name: "IIT Roorkee", tag: "Civil #1", chance: "high" },
+      { name: "IIT Madras", tag: "NIRF #1", chance: "medium" },
+      { name: "NIT Trichy", tag: "NIRF #9", chance: "high" },
+      { name: "SPA Delhi", tag: "Arch leader", chance: "medium" },
+    ],
+    myths: [
+      { myth: "Civil pays the least, always.", reality: "Top-college structural and PMC roles are well-paid; PSU stability is a strong upside." },
+      { myth: "It's a dying branch.", reality: "Infrastructure and green-building demand keep it steady and government-backed." },
+      { myth: "No tech scope.", reality: "BIM, GIS and structural simulation make modern civil increasingly software-driven." },,
+      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
+      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
+      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
+    ],
+  },,
+
+  {
+    slug: "materials-mining",
+    name: "Materials Science & Metallurgical Engineering",
+    icon: "Layers",
+    color: "#E29A2E",
+    desc: "Engineer advanced alloys, nanomaterials, and composites that make aircraft lighter and phones tougher. Materials scientists work at the intersection of physics and chemistry — powering breakthroughs in semiconductors, batteries, and biomaterials.",
+    tags: ["Core-heavy", "PSU-friendly", "Research depth"],
+    branchCount: 14,
+    stats: { jobGrowth: "Growing", medianSalary: "₹16 LPA", aiRisk: 29 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Materials & mining engineers design and extract the substances everything else is built from — alloys, semiconductors, batteries and minerals. Deep research scope with strong PSU routes.",
+      coreSubjects: ["Physical Metallurgy", "Materials Characterization", "Mineral Processing", "Mining Methods", "Nanomaterials", "Phase Transformations"],
+      outcomes: ["Metallurgist", "Mining Engineer", "Materials Researcher", "PSU (SAIL, Coal India)", "Battery / Semiconductor R&D"],
+    },
+    insights: {
+      skills: { coursework: 69, selfLearning: 31 },
+      tierMatters: 44,
+      research: [{ label: "Academic Pubs", value: 82 }, { label: "Industry R&D", value: 66 }, { label: "Lab Funding", value: 72 }],
+      researchNote:
+        "Battery materials and semiconductor substrates are reviving interest. Strong route into PSUs and research labs (DRDO, BARC) for high performers.",
+      salaryArc: {
+        median: { entry: 12, y3: 17, y5: 24 },
         top:    { entry: 26, y3: 36, y5: 48 },
       },
     },
-    branchesList: ["Mining Engineering", "Mining Machinery", "Mineral Engineering", "Petroleum & Mining", "Geological Technology"],
+    branchesList: ["Metallurgical Engineering", "Materials Science", "Mining Engineering", "Mineral Engineering", "Nanotechnology"],
     colleges: [
+      { name: "IIT BHU", tag: "Metallurgy", chance: "high" },
+      { name: "IIT Kharagpur", tag: "Mining strong", chance: "medium" },
       { name: "ISM Dhanbad", tag: "Mining #1", chance: "high" },
-      { name: "IIT Kharagpur", tag: "Mining", chance: "medium" },
-      { name: "IIT BHU", tag: "Mining", chance: "high" },
-      { name: "NIT Rourkela", tag: "Mining", chance: "high" },
+      { name: "NIT Trichy", tag: "Metallurgy", chance: "high" },
     ],
     myths: [
-      { myth: "Mining means a dangerous life underground.", reality: "Modern mining is heavily mechanised and safety-regulated; many roles are planning and supervisory." },
-      { myth: "Lowest-paying branch.", reality: "PSU mining pay is among the highest starting packages of any core branch." },
-      { myth: "No tech future.", reality: "Drone surveys, automation and mine-safety analytics are reshaping the field." },,
+      { myth: "No jobs outside steel plants.", reality: "Batteries, semiconductors and aerospace materials are growing employers." },
+      { myth: "It's purely theoretical.", reality: "Characterization, processing and quality engineering are very hands-on." },
+      { myth: "PSU is the only path.", reality: "Strong R&D, higher-studies and materials-tech startup paths exist." },,
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },
-  {
-    slug: "petroleum-energy",
-    name: "Petroleum & Energy Studies",
-    icon: "Fuel",
-    color: "#0FAE6E",
-    desc: "Master subsurface fluid mechanics, drilling technologies, and reservoir simulation for oil, gas, and geothermal energy. Petroleum engineers are pivoting into hydrogen, carbon capture, and clean-energy storage — making this a transition-era powerhouse.",
-    tags: ["Core-heavy", "Energy sector", "High pay"],
-    branchCount: 8,
-    stats: { jobGrowth: "Energy Shift", medianSalary: "₹14 LPA", aiRisk: 35 },
-    aiRiskLabel: "LOW RISK",
-    academics: {
-      summary:
-        "Petroleum & energy engineers handle exploration, drilling and reservoir management — and increasingly the transition to clean energy (hydrogen, CCUS, geothermal). Strong pay in oil & gas, with a widening green-energy door.",
-      coreSubjects: ["Reservoir Engineering", "Drilling Technology", "Petroleum Geology", "Production Engineering", "Energy Systems", "Process Safety"],
-      outcomes: ["Reservoir / Drilling Engineer", "Energy Analyst", "Oil & Gas (ONGC, Shell)", "Renewables / Hydrogen", "Higher studies (MS)"],
-    },
-    insights: {
-      skills: { coursework: 67, selfLearning: 33 },
-      tierMatters: 50,
-      research: [{ label: "Academic Pubs", value: 74 }, { label: "Industry R&D", value: 78 }, { label: "Lab Funding", value: 70 }],
-      researchNote:
-        "Oil & gas still pays among the highest core packages, while the clean-energy transition (green hydrogen, CCUS, geothermal) is opening a fast-growing second career track.",
-      salaryArc: {
-        median: { entry: 15, y3: 22, y5: 31 },
-        top:    { entry: 32, y3: 48, y5: 66 },
-      },
-    },
-    branchesList: ["Petroleum Engineering", "Energy Engineering", "Petroleum & Gas", "Renewable Energy", "Energy Science & Engg"],
-    colleges: [
-      { name: "IIT Madras", tag: "Energy", chance: "high" },
-      { name: "ISM Dhanbad", tag: "Petroleum #1", chance: "high" },
-      { name: "IIT Bombay", tag: "Energy Sci", chance: "medium" },
-      { name: "PDEU Gandhinagar", tag: "Petroleum", chance: "high" },
-    ],
-    myths: [
-      { myth: "Petroleum is a dying field.", reality: "Oil & gas demand persists for decades and clean-energy skills extend the career further." },
-      { myth: "Only Gulf jobs pay well.", reality: "Indian PSUs and global energy majors offer strong packages domestically too." },
-      { myth: "No link to renewables.", reality: "Reservoir and process skills transfer directly to hydrogen, CCUS and geothermal." },,
-      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
-      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
-    ],
-  },
+  },,
+
   {
     slug: "production-industrial",
     name: "Production & Industrial Engineering",
@@ -578,7 +459,7 @@ export const BRANCHES = [
     desc: "Optimize factories, supply chains, and business operations using data-driven decision-making, operations research, and lean manufacturing. Industrial engineers are the bridge between engineering and management — highly valued in consulting, logistics, and tech.",
     tags: ["Core + Ops", "Management pivot", "Analytics"],
     branchCount: 9,
-    stats: { jobGrowth: "Ops Demand", medianSalary: "₹13 LPA", aiRisk: 39 },
+    stats: { jobGrowth: "High", medianSalary: "₹18 LPA", aiRisk: 30 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -612,7 +493,140 @@ export const BRANCHES = [
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },
+  },,
+
+  {
+    slug: "biotech-biosciences",
+    name: "Biotechnology & Bio-Sciences",
+    icon: "Dna",
+    color: "#0FAE6E",
+    desc: "Where biology meets engineering — from genetic engineering and drug discovery to biomedical devices and bioinformatics. A rapidly expanding field driven by the global biotech, pharma, and personalized-medicine revolution.",
+    tags: ["Bio + Math", "Research-led", "Health-tech"],
+    branchCount: 13,
+    stats: { jobGrowth: "Emerging", medianSalary: "₹15 LPA", aiRisk: 35 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Biotech engineering applies engineering rigor to biology — bioprocessing, genomics and bioinformatics. The computational/bioinformatics crossover opens strong analytics careers.",
+      coreSubjects: ["Biochemistry", "Bioprocess Engineering", "Genetic Engineering", "Bioinformatics", "Cell Biology", "Immunology"],
+      outcomes: ["Bioprocess Engineer", "Bioinformatics Analyst", "Pharma / R&D", "Health-tech Engineer", "Higher studies (MS/PhD)"],
+    },
+    insights: {
+      skills: { coursework: 63, selfLearning: 37 },
+      tierMatters: 52,
+      research: [{ label: "Academic Pubs", value: 88 }, { label: "Industry R&D", value: 64 }, { label: "Lab Funding", value: 70 }],
+      researchNote:
+        "Strong research funding (DBT, BIRAC) and a booming bioinformatics/health-tech sector. Best outcomes pair biology depth with computational skills.",
+      salaryArc: {
+        median: { entry: 11, y3: 16, y5: 23 },
+        top:    { entry: 24, y3: 35, y5: 47 },
+      },
+    },
+    branchesList: ["Biotechnology", "Biomedical Engineering", "Bioinformatics", "Bioengineering", "Biological Sciences"],
+    colleges: [
+      { name: "IIT Madras", tag: "Bio-Engg", chance: "high" },
+      { name: "IIT Kharagpur", tag: "Biotech", chance: "medium" },
+      { name: "IIIT Hyderabad", tag: "CompBio", chance: "medium" },
+      { name: "NIT Warangal", tag: "Biotech", chance: "high" },
+    ],
+    myths: [
+      { myth: "Biotech has no jobs in India.", reality: "Bioinformatics, pharma R&D and health-tech are creating new roles steadily." },
+      { myth: "You must go abroad.", reality: "Domestic research funding and biotech startups are expanding rapidly." },
+      { myth: "It's just biology.", reality: "Engineering, data and process skills make it a hybrid, high-leverage field." },,
+      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
+      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
+      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
+    ],
+  },,
+
+  {
+    slug: "mining-earth",
+    name: "Mining Machinery & Engineering",
+    icon: "Mountain",
+    color: "#E29A2E",
+    desc: "Plan, operate, and optimize mining operations for coal, metals, and minerals using GIS, automation, and environmental engineering. A niche but stable career path with strong PSU hiring and emerging demand in critical-mineral supply chains.",
+    tags: ["Core-heavy", "PSU-friendly", "Field work"],
+    branchCount: 7,
+    stats: { jobGrowth: "Stable", medianSalary: "₹16 LPA", aiRisk: 27 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Mining engineers plan and run safe, efficient extraction of coal, metals and minerals. The field offers strong PSU pay (Coal India, NMDC), early site responsibility and a growing automation/safety-tech angle.",
+      coreSubjects: ["Mine Planning & Design", "Rock Mechanics", "Mine Ventilation", "Surveying", "Mineral Economics", "Mine Safety Engg"],
+      outcomes: ["Mining Engineer", "Mine Planner", "PSU (Coal India, NMDC)", "Mining-tech / Drones", "Higher studies / Civil services"],
+    },
+    insights: {
+      skills: { coursework: 71, selfLearning: 29 },
+      tierMatters: 40,
+      research: [{ label: "Academic Pubs", value: 70 }, { label: "Industry R&D", value: 60 }, { label: "Lab Funding", value: 64 }],
+      researchNote:
+        "Among the highest PSU starting pay of all branches. Automation, drone-survey and mine-safety analytics are adding modern tech roles to a traditional field.",
+      salaryArc: {
+        median: { entry: 13, y3: 18, y5: 25 },
+        top:    { entry: 26, y3: 36, y5: 48 },
+      },
+    },
+    branchesList: ["Mining Engineering", "Mining Machinery", "Mineral Engineering", "Petroleum & Mining", "Geological Technology"],
+    colleges: [
+      { name: "ISM Dhanbad", tag: "Mining #1", chance: "high" },
+      { name: "IIT Kharagpur", tag: "Mining", chance: "medium" },
+      { name: "IIT BHU", tag: "Mining", chance: "high" },
+      { name: "NIT Rourkela", tag: "Mining", chance: "high" },
+    ],
+    myths: [
+      { myth: "Mining means a dangerous life underground.", reality: "Modern mining is heavily mechanised and safety-regulated; many roles are planning and supervisory." },
+      { myth: "Lowest-paying branch.", reality: "PSU mining pay is among the highest starting packages of any core branch." },
+      { myth: "No tech future.", reality: "Drone surveys, automation and mine-safety analytics are reshaping the field." },,
+      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
+      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
+      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
+    ],
+  },,
+
+  {
+    slug: "petroleum-energy",
+    name: "Petroleum & Energy Studies",
+    icon: "Fuel",
+    color: "#0FAE6E",
+    desc: "Master subsurface fluid mechanics, drilling technologies, and reservoir simulation for oil, gas, and geothermal energy. Petroleum engineers are pivoting into hydrogen, carbon capture, and clean-energy storage — making this a transition-era powerhouse.",
+    tags: ["Core-heavy", "Energy sector", "High pay"],
+    branchCount: 8,
+    stats: { jobGrowth: "Cyclical", medianSalary: "₹18 LPA", aiRisk: 35 },
+    aiRiskLabel: "LOW RISK",
+    academics: {
+      summary:
+        "Petroleum & energy engineers handle exploration, drilling and reservoir management — and increasingly the transition to clean energy (hydrogen, CCUS, geothermal). Strong pay in oil & gas, with a widening green-energy door.",
+      coreSubjects: ["Reservoir Engineering", "Drilling Technology", "Petroleum Geology", "Production Engineering", "Energy Systems", "Process Safety"],
+      outcomes: ["Reservoir / Drilling Engineer", "Energy Analyst", "Oil & Gas (ONGC, Shell)", "Renewables / Hydrogen", "Higher studies (MS)"],
+    },
+    insights: {
+      skills: { coursework: 67, selfLearning: 33 },
+      tierMatters: 50,
+      research: [{ label: "Academic Pubs", value: 74 }, { label: "Industry R&D", value: 78 }, { label: "Lab Funding", value: 70 }],
+      researchNote:
+        "Oil & gas still pays among the highest core packages, while the clean-energy transition (green hydrogen, CCUS, geothermal) is opening a fast-growing second career track.",
+      salaryArc: {
+        median: { entry: 15, y3: 22, y5: 31 },
+        top:    { entry: 32, y3: 48, y5: 66 },
+      },
+    },
+    branchesList: ["Petroleum Engineering", "Energy Engineering", "Petroleum & Gas", "Renewable Energy", "Energy Science & Engg"],
+    colleges: [
+      { name: "IIT Madras", tag: "Energy", chance: "high" },
+      { name: "ISM Dhanbad", tag: "Petroleum #1", chance: "high" },
+      { name: "IIT Bombay", tag: "Energy Sci", chance: "medium" },
+      { name: "PDEU Gandhinagar", tag: "Petroleum", chance: "high" },
+    ],
+    myths: [
+      { myth: "Petroleum is a dying field.", reality: "Oil & gas demand persists for decades and clean-energy skills extend the career further." },
+      { myth: "Only Gulf jobs pay well.", reality: "Indian PSUs and global energy majors offer strong packages domestically too." },
+      { myth: "No link to renewables.", reality: "Reservoir and process skills transfer directly to hydrogen, CCUS and geothermal." },,
+      { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
+      { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
+      { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
+    ],
+  },,
+
   {
     slug: "naval-ocean",
     name: "Naval Architecture & Ocean Engineering",
@@ -621,7 +635,7 @@ export const BRANCHES = [
     desc: "Design ships, submarines, offshore platforms, and ocean energy systems. Naval architecture combines fluid dynamics, structural engineering, and marine technology — with career paths spanning defence shipyards, shipping corporations, and offshore energy.",
     tags: ["Core-heavy", "Niche", "Defence / Marine"],
     branchCount: 6,
-    stats: { jobGrowth: "Niche", medianSalary: "₹12 LPA", aiRisk: 31 },
+    stats: { jobGrowth: "Niche", medianSalary: "₹17 LPA", aiRisk: 31 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
