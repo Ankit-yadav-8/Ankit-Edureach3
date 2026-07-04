@@ -56,7 +56,7 @@ function Item({ item, open, onToggle }) {
 export default function FaqSection() {
   const [open, setOpen] = useState(0);
   return (
-    <section id="faq" style={{ background: CL.cream2, padding: "84px 0", position: "relative", overflow: "hidden" }}>
+    <section id="faq" style={{ background: CL.cream, padding: "84px 0", position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 1040 }}>
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <span style={clEyebrow}><HelpCircle size={13} /> FAQ</span>

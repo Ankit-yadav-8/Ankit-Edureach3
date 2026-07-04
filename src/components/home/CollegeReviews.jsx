@@ -364,7 +364,7 @@ export default function CollegeReviews() {
   const afterSubmit = (name) => { refreshSummary(); setPreset(name); setView("see"); };
 
   return (
-    <section id="college-reviews" style={{ background: CL.cream2, padding: "84px 0" }}>
+    <section id="college-reviews" style={{ background: CL.cream, padding: "84px 0" }}>
       <div className="container">
         <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 36px" }}>
           <span style={clEyebrow}><MessageSquareQuote size={13} /> Campus Reviews</span>

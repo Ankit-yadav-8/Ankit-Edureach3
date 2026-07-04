@@ -145,16 +145,18 @@ export default function TestUpload({ token }) {
       // poll until it's done. If a previous attempt timed out the client but the
       // job is still running on the server, resume that same jobId instead of
       // kicking off a fresh (expensive) conversion.
+      // examType lets the server apply the fixed-pattern section safety net
+      // (JEE Mains/NEET) when a full paper is auto-converted. A specific-section
+      // upload is force-tagged below, so the net is a no-op there.
+      const startArgs = { testPdfUrl, keyPdfUrl, examType: uploadSubject ? "" : examType };
       let jobId = jobRef.current;
       if (!jobId) {
-        // examType lets the server apply the fixed-pattern section safety net
-        // (JEE Mains/NEET) when a full paper is auto-converted. A specific-section
-        // upload is force-tagged below, so the net is a no-op there.
-        ({ jobId } = await apiAdminTestParseStart(token, { testPdfUrl, keyPdfUrl, examType: uploadSubject ? "" : examType }));
+        ({ jobId } = await apiAdminTestParseStart(token, startArgs));
         jobRef.current = jobId;
       }
       const started = Date.now();
       let d = null;
+      let restarts = 0; // silent restarts if the server loses the job (restart / other instance)
       // Server keeps jobs for 20 min; poll a little under that so a slow paper
       // finishes rather than erroring out.
       while (Date.now() - started < 18 * 60 * 1000) {
@@ -164,8 +166,22 @@ export default function TestUpload({ token }) {
         let s;
         try { s = await apiAdminTestParseStatus(token, jobId); }
         catch (pollErr) {
-          // 404 = the job expired/was lost; drop it so a retry starts cleanly.
-          if (/expired|not found|404/i.test(pollErr?.message || "")) { jobRef.current = null; throw pollErr; }
+          // 404 = the job was lost (server restart / a different instance handled
+          // the poll). Rather than erroring out, silently kick off a fresh
+          // conversion a couple of times before giving up.
+          if (/expired|not found|404/i.test(pollErr?.message || "")) {
+            jobRef.current = null;
+            if (restarts < 2) {
+              restarts++;
+              setParseMsg("Reconnecting to the converter…");
+              try {
+                ({ jobId } = await apiAdminTestParseStart(token, startArgs));
+                jobRef.current = jobId;
+                continue;
+              } catch { /* fall through to error below */ }
+            }
+            throw pollErr;
+          }
           continue; // transient network blip — keep polling
         }
         if (s.status === "done") { d = s; break; }

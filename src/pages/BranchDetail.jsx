@@ -14,6 +14,7 @@ import {
 import { getBranch, BRANCHES } from "../data/branches.js";
 import { BRANCH_ICONS } from "../components/home/branchIcons.js";
 import { CL } from "../components/home/clTheme.js";
+import Seo from "../components/Seo.jsx";
 import { Trend } from "../components/Charts.jsx";
 import { chanceTone } from "../components/home/clTheme.js";
 
@@ -518,8 +519,20 @@ export default function BranchDetail() {
   const idx = BRANCHES.findIndex((x) => x.slug === slug);
   const next = BRANCHES[(idx + 1) % BRANCHES.length];
 
+  const seoDesc = `${b.name}: ${(b.desc || "").slice(0, 150)} Explore scope, salaries, AI-disruption risk, top recruiters, placements and the best colleges for ${b.name} on CollegeParichay.`;
+
   return (
     <div style={{ background: CL.cream, minHeight: "100vh", paddingTop: 92, paddingBottom: 72 }}>
+      <Seo
+        title={`${b.name} — Scope, Salary, Colleges & AI Risk (Branch Guide)`}
+        description={seoDesc}
+        path={`/branches/${slug}`}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Branches", path: "/branches" },
+          { name: b.name, path: `/branches/${slug}` },
+        ]}
+      />
       <div className="container" style={{ maxWidth: 1060 }}>
         <Link to="/branches" className="cp-back-btn" style={{ marginBottom: 20 }}>
           <ArrowLeft size={16} /> Back to Branch Explorer

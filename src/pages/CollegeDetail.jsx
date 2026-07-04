@@ -152,6 +152,11 @@ export default function CollegeDetail() {
         path={`/colleges/${college.slug}`}
         image={seoImage}
         jsonLd={seoJsonLd}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Colleges", path: "/colleges" },
+          { name: college.short || college.name, path: `/colleges/${college.slug}` },
+        ]}
       />
 
       {/* ── Hero — clean: image + one readability gradient + a subtle accent ──── */}

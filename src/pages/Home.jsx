@@ -128,7 +128,7 @@ export default function Home({ onSearch }) {
       {/* ── Branch vs College — 6-question assessment ── */}
       <BranchVsCollege />
 
-      {/* ── Counselling + Mentorship plans (merged) ── */}
+      {/* ── 1-on-1 Mentorship plans ── */}
       <PlansSection />
 
       {/* ── Explore Colleges — flagship IITs (tool-style cards) ── */}

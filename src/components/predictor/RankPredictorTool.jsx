@@ -31,6 +31,13 @@ const SUBJECTS = [
   { key: "maths",     label: "Maths",     icon: Calculator,   color: "#7C3AED" },
 ];
 
+// Staggered fade-up used by the empty-state placeholder (icon → text)
+const EMPTY_WRAP = { hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.06 } } };
+const EMPTY_ITEM = {
+  hidden: { opacity: 0, y: 16 },
+  show:   { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 20 } },
+};
+
 export default function RankPredictorTool({ accent = "#FF693D", advanced = false }) {
   const cap      = maxPerSubject(advanced);
   const totalMax = maxTotal(advanced);
@@ -284,28 +291,46 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
       </div>
 
       {/* ── RESULT PANEL ───────────────────────────────────── */}
-      <div className="card" style={{ minHeight: 320, display: "flex", flexDirection: "column" }}>
+      <motion.div
+        className="card"
+        initial={{ opacity: 0, y: 22 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        style={{ minHeight: 320, display: "flex", flexDirection: "column" }}>
         {!res ? (
-          <div style={{ display: "grid", placeItems: "center", flex: 1, minHeight: 320, color: "var(--muted)", textAlign: "center" }}>
+          <motion.div
+            style={{ display: "grid", placeItems: "center", flex: 1, minHeight: 320, color: "var(--muted)", textAlign: "center" }}
+            variants={EMPTY_WRAP} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }}
+          >
             <div>
-              <div style={{
-                display: "grid", placeItems: "center", width: 76, height: 76, borderRadius: "50%",
-                margin: "0 auto", background: `${accent}10`, border: `2px dashed ${accent}40`,
-              }}>
-                <GaugeIcon size={36} color={accent} style={{ opacity: 0.7 }} />
-              </div>
-              <p style={{ marginTop: 16, fontWeight: 600, color: "var(--navy)" }}>
+              {/* animated gauge badge — slowly rotating dashed ring + gently pulsing icon */}
+              <motion.div variants={EMPTY_ITEM} style={{ position: "relative", width: 76, height: 76, margin: "0 auto" }}>
+                <motion.span aria-hidden
+                  style={{ position: "absolute", inset: 0, borderRadius: "50%", border: `2px dashed ${accent}40` }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 16, ease: "linear", repeat: Infinity }}
+                />
+                <motion.span
+                  style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", borderRadius: "50%", background: `${accent}10` }}
+                  animate={{ scale: [1, 1.08, 1] }}
+                  transition={{ duration: 2.6, ease: "easeInOut", repeat: Infinity }}
+                >
+                  <GaugeIcon size={36} color={accent} style={{ opacity: 0.75 }} />
+                </motion.span>
+              </motion.div>
+              <motion.p variants={EMPTY_ITEM} style={{ marginTop: 16, fontWeight: 600, color: "var(--navy)" }}>
                 Your predicted rank &amp; colleges will appear here
-              </p>
-              <p style={{ marginTop: 4, fontSize: 13 }}>
+              </motion.p>
+              <motion.p variants={EMPTY_ITEM} style={{ marginTop: 4, fontSize: 13 }}>
                 Enter your marks and hit <strong style={{ color: accent }}>Predict my rank</strong>.
-              </p>
-              <p style={{ marginTop: 10, fontSize: 12, display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 50, background: "var(--sky)", border: "1px solid var(--line)" }}>
+              </motion.p>
+              <motion.p variants={EMPTY_ITEM} style={{ marginTop: 10, fontSize: 12, display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 50, background: "var(--sky)", border: "1px solid var(--line)" }}>
                 <Target size={12} color={accent} />
                 {advanced ? "JEE Advanced scale: 0–360 (P1 + P2 combined)" : "JEE Main scale: 0–300"}
-              </p>
+              </motion.p>
             </div>
-          </div>
+          </motion.div>
         ) : advanced ? (
           <AdvancedResult res={res} scorePct={scorePct} accent={accent} nav={nav}
             colleges={colleges} collegesLoading={collegesLoading} />
@@ -313,7 +338,7 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
           <MainResult res={res} scorePct={scorePct} totalMax={totalMax} accent={accent} nav={nav}
             colleges={colleges} collegesLoading={collegesLoading} />
         )}
-        </div>
+        </motion.div>
       </div>
 
       {/* ── How the Rank Predictor works ── */}

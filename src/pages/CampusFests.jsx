@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, MapPin, Sparkles, Filter, Ticket, CheckCircle2 } from "lucide-react";
 import { FESTS_DB } from "../data/fests";
+import Seo from "../components/Seo.jsx";
 
 const containerV = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const itemV = {
@@ -157,6 +158,12 @@ export default function CampusFests() {
 
   return (
     <div style={{ background: "#FDFDFD", minHeight: "100vh", paddingBottom: 100 }}>
+      <Seo
+        title="Campus Fests 2026 — Tech, Cultural & Management Fests of IITs, NITs & More"
+        description="Discover 2026 college fests across India — tech, cultural and management festivals at IITs, NITs, IIITs and top universities. Dates, events, locations and how to participate."
+        path="/campus-fests"
+        breadcrumbs={[{ name: "Home", path: "/" }, { name: "Campus Fests", path: "/campus-fests" }]}
+      />
       {/* ── HERO SECTION ── */}
       <div style={{ background: "#FDFDFD", padding: "120px 24px 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
         

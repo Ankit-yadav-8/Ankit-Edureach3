@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
   Search, MapPin, ChevronDown, RotateCcw, SlidersHorizontal,
@@ -18,6 +19,13 @@ const TYPE_SETS = {
 };
 
 const TYPE_PILLS = ["IIT", "NIT", "IIIT", "GFTI"];
+
+// Staggered fade-up for the empty-state placeholder (icon → heading → text)
+const CF_EMPTY_WRAP = { hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.06 } } };
+const CF_EMPTY_ITEM = {
+  hidden: { opacity: 0, y: 16 },
+  show:   { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 20 } },
+};
 
 /* Tier → "probability" bucket used by campusloom-style chance filter */
 const TIER_TO_PROB = { Safe: "high", Moderate: "medium", Ambitious: "low" };
@@ -76,7 +84,6 @@ function SelectMenu({ value, onChange, options, placeholder, ariaLabel }) {
         onClick={() => setOpen((o) => !o)}
       >
         <span className={current ? "" : "cf-dd-ph"}>{current ? current.label : placeholder}</span>
-        <ChevronDown size={15} className="cf-dd-chev" />
       </button>
       {open && (
         <div className="cf-ddmenu" role="listbox">
@@ -336,11 +343,22 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
 
       {/* ── Empty state ── */}
       {!results && !loading && !error && (
-        <div className="cf-empty">
-          <div className="cf-empty-icon"><Crosshair size={26} /></div>
-          <h4>Find your perfect institute</h4>
-          <p>Enter your rank above to see every {allowedTypes.join(" / ")} you can get, with branch-change, dual-degree and minor-program flexibility — filter it all from the sidebar.</p>
-        </div>
+        <motion.div
+          className="cf-empty"
+          variants={CF_EMPTY_WRAP} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }}
+        >
+          <motion.div className="cf-empty-icon" variants={CF_EMPTY_ITEM}>
+            <motion.span
+              style={{ display: "grid", placeItems: "center" }}
+              animate={{ scale: [1, 1.12, 1] }}
+              transition={{ duration: 2.6, ease: "easeInOut", repeat: Infinity }}
+            >
+              <Crosshair size={26} />
+            </motion.span>
+          </motion.div>
+          <motion.h4 variants={CF_EMPTY_ITEM}>Find your perfect institute</motion.h4>
+          <motion.p variants={CF_EMPTY_ITEM}>Enter your rank above to see every {allowedTypes.join(" / ")} you can get, with branch-change, dual-degree and minor-program flexibility — filter it all from the sidebar.</motion.p>
+        </motion.div>
       )}
 
       {loading && (
@@ -516,8 +534,6 @@ const CF_STYLES = `
 .cf-ddbtn.open { border-color:var(--cf-coral); box-shadow:0 0 0 3px rgba(255, 105, 61,.12); }
 .cf-ddbtn > span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .cf-dd-ph { color:#9a9189; }
-.cf-dd-chev { color:#9a9189; flex-shrink:0; transition:transform .2s; }
-.cf-ddbtn.open .cf-dd-chev { transform:rotate(180deg); }
 .cf-ddmenu { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:40; background:#fff;
   border:1px solid var(--cf-line); border-radius:12px; box-shadow:0 14px 36px rgba(0,0,0,.14);
   padding:6px; max-height:288px; overflow-y:auto; animation:cfDD .14s ease;

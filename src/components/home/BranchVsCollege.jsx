@@ -1,134 +1,143 @@
-/* BranchVsCollege — campusloom-style 6-question assessment that decides
-   whether the institute (college-first) or the subject (branch-first)
-   should win when the two conflict in JoSAA choice filling. Renders an
-   animated result card with a confidence match, the reasoning, and what
-   to do next. Used both as a home section and on /branch-vs-college. */
+/* BranchVsCollege — original "which side do you protect" priority check,
+   written and designed in-house for College Parichay. Seven scenario
+   questions score toward branch (negative) or college (positive); a
+   compass strip slides live under the quiz and the final verdict renders
+   as a semicircular dial with pointers and next steps. Used both as a
+   home section and on /branch-vs-college. */
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  GitCompareArrows, ArrowRight, RotateCcw, Sparkles, ShieldCheck,
-  Layers, Crosshair, Compass, CheckCircle2,
+  GitCompareArrows, ArrowRight, RotateCcw, Sparkles,
+  Layers, Crosshair, Compass, CheckCircle2, Scale,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
-/* each option leans "college" or "branch" with a weight */
+/* Every option carries a score: negative leans branch, positive leans
+   college, magnitude = how strongly. All questions are original
+   College Parichay scenarios. */
 const QUESTIONS = [
   {
-    q: "When you picture life after the degree, what excites you more?",
+    q: "Two admission offers land on the same day. Which one do you accept?",
     options: [
-      { label: "The brand, network and alumni of a top institute", lean: "college", w: 2 },
-      { label: "Working deeply in a subject I genuinely love", lean: "branch", w: 2 },
-      { label: "The placement pipeline and recruiter footfall", lean: "college", w: 2 },
-      { label: "Mastering an in-demand, future-proof skill", lean: "branch", w: 2 },
-      { label: "A vibrant campus, fests and peer group", lean: "college", w: 1 },
-      { label: "A bit of both — I'm still figuring it out", lean: "college", w: 1 },
+      { label: "The famous campus, even if the subject isn't my favourite", score: 2 },
+      { label: "The subject I want, even if few people know the college", score: -2 },
+      { label: "The one where seniors report better internships", score: 1 },
+      { label: "The one whose curriculum genuinely interests me", score: -1 },
     ],
   },
   {
-    q: "Forced to choose at the JoSAA screen, you'd pick…",
+    q: "Picture your third year of B.Tech. What would make it feel worth it?",
     options: [
-      { label: "A top IIT/NIT with an average branch", lean: "college", w: 2 },
-      { label: "A mid-tier college with my dream branch", lean: "branch", w: 2 },
-      { label: "A top IIT/NIT with a decent (not dream) branch", lean: "college", w: 2 },
-      { label: "A great branch even at a lesser-known college", lean: "branch", w: 2 },
-      { label: "Whichever has better placements overall", lean: "college", w: 1 },
-      { label: "The one my dream branch is in, location aside", lean: "branch", w: 1 },
+      { label: "Leading clubs and fests on a buzzing campus", score: 2 },
+      { label: "Building real projects in the exact field I chose", score: -2 },
+      { label: "Sitting for the biggest recruiters at placement season", score: 1 },
+      { label: "An internship or paper in my core domain", score: -1 },
     ],
   },
   {
-    q: "How clear are you about what you want to study?",
+    q: "How fixed is your idea of what you want to study?",
     options: [
-      { label: "Crystal clear — I know my exact branch", lean: "branch", w: 2 },
-      { label: "Broadly know the field, not the exact branch", lean: "branch", w: 1 },
-      { label: "Still exploring — I want options open", lean: "college", w: 2 },
-      { label: "Two or three branches in mind, not decided", lean: "branch", w: 1 },
-      { label: "No idea yet — the college matters more", lean: "college", w: 2 },
-      { label: "I'll figure it out once I'm on campus", lean: "college", w: 1 },
+      { label: "Locked in — I've known my field for years", score: -2 },
+      { label: "I have a favourite, but I could be convinced", score: -1 },
+      { label: "Honestly, I keep changing my mind", score: 2 },
+      { label: "I care more about outcomes than the subject itself", score: 1 },
     ],
   },
   {
-    q: "For your first job, what matters most?",
+    q: "A senior says: “Your branch stops mattering after the first job.” You think…",
     options: [
-      { label: "Brand recognition on my resume", lean: "college", w: 2 },
-      { label: "Specific, in-demand domain skills", lean: "branch", w: 2 },
-      { label: "Strong on-campus placement pipeline", lean: "college", w: 1 },
-      { label: "Doing work I'm genuinely interested in", lean: "branch", w: 2 },
-      { label: "The salary and the company name", lean: "college", w: 2 },
-      { label: "Flexibility to switch roles later", lean: "branch", w: 1 },
+      { label: "True — the college name opens the first door", score: 2 },
+      { label: "Wrong — deep skills compound for decades", score: -2 },
+      { label: "Partly true — but I'd still start in the right field", score: -1 },
+      { label: "Neither matters as much as the network you build", score: 1 },
     ],
   },
   {
-    q: "How much do peers and campus environment matter to you?",
+    q: "Your dream branch closes just above your rank. Plan B is…",
     options: [
-      { label: "A lot — I grow with ambitious people around me", lean: "college", w: 2 },
-      { label: "Somewhat — but I can self-drive anywhere", lean: "branch", w: 1 },
-      { label: "Not much — the subject is what I care about", lean: "branch", w: 2 },
-      { label: "The network and seniors are a big draw", lean: "college", w: 2 },
-      { label: "I value labs and faculty over peers", lean: "branch", w: 1 },
-      { label: "Fests, clubs and campus life matter to me", lean: "college", w: 1 },
+      { label: "Take the best college available and explore inside it", score: 2 },
+      { label: "Drop a college tier to protect the branch", score: -2 },
+      { label: "Join any branch there and attempt a branch change", score: 1 },
+      { label: "Pick a related branch that keeps my field alive", score: -1 },
     ],
   },
   {
-    q: "Your long-term plan after graduation?",
+    q: "Ten years from now, you'd rather be known as…",
     options: [
-      { label: "Keep options open — MS, startup, or pivot", lean: "college", w: 2 },
-      { label: "Build deep expertise and stay in my domain", lean: "branch", w: 2 },
-      { label: "Crack a great first job, then decide", lean: "college", w: 1 },
-      { label: "Research / higher studies in my subject", lean: "branch", w: 2 },
-      { label: "Civil services / management / non-core", lean: "college", w: 2 },
-      { label: "Start up around something I'm passionate about", lean: "branch", w: 1 },
+      { label: "An alum of a legendary institute", score: 2 },
+      { label: "The specialist people call for one hard problem", score: -2 },
+      { label: "A generalist who moves across roles easily", score: 1 },
+      { label: "Someone who built a career on one strong skill", score: -1 },
+    ],
+  },
+  {
+    q: "Which outcome would bother you more?",
+    options: [
+      { label: "Missing the alumni network of a top campus", score: 2 },
+      { label: "Spending four years on a subject I don't enjoy", score: -2 },
+      { label: "Graduating without a strong placement season", score: 1 },
+      { label: "Being average at something I never chose", score: -1 },
     ],
   },
 ];
 
-const FACTORS = ["Passion", "Learning Fit", "Holistic Growth", "Alternatives", "Career Outcomes"];
+const MAX_SCORE = QUESTIONS.reduce(
+  (s, q) => s + Math.max(...q.options.map((o) => Math.abs(o.score))), 0,
+);
 
-function computeResult(answers) {
-  let college = 0, branch = 0;
-  answers.forEach((a) => {
-    if (!a) return;
-    if (a.lean === "college") college += a.w; else branch += a.w;
-  });
-  const total = college + branch || 1;
-  const collegePct = Math.round((college / total) * 100);
-  const isCollege = college >= branch;
-  const match = Math.max(collegePct, 100 - collegePct);
+/* sum of answered scores → norm in [-1, 1] (negative = branch) */
+function scoreState(answers) {
+  const sum = answers.reduce((s, a) => s + (a ? a.score : 0), 0);
+  return { sum, norm: Math.max(-1, Math.min(1, sum / MAX_SCORE)) };
+}
+
+function computeVerdict(answers) {
+  const { norm } = scoreState(answers);
+  const strength = Math.round(Math.abs(norm) * 100);
+  if (norm >= 0.15) {
+    return {
+      side: "college", norm, strength,
+      eyebrow: "PROTECT THE COLLEGE",
+      title: "Put the college first in your list.",
+      blurb:
+        "Your answers say the campus — its people, brand and placement floor — is what you'd regret losing. When a choice forces a trade-off, keep the stronger institute and stay open about the branch.",
+      pointers: [
+        "Order your JoSAA list by institute tier before branch preference.",
+        "Inside each college, still rank branches you'd genuinely accept.",
+        "Check branch-change rules — many institutes allow a switch after year one.",
+      ],
+    };
+  }
+  if (norm <= -0.15) {
+    return {
+      side: "branch", norm, strength,
+      eyebrow: "PROTECT THE BRANCH",
+      title: "Put the branch first in your list.",
+      blurb:
+        "Your answers point to the subject, not the signboard. You already know what you want to spend four years on — so protect that field even if it means a less famous campus.",
+      pointers: [
+        "Order your JoSAA list by branch first, then by college within it.",
+        "Include your branch at colleges a tier below your rank as safety.",
+        "Skip “better” colleges offering branches you'd resent studying.",
+      ],
+    };
+  }
   return {
-    isCollege,
-    match,
-    title: isCollege ? "You're college-first." : "You're branch-first.",
-    eyebrow: isCollege ? "COLLEGE FIRST" : "BRANCH FIRST",
-    blurb: isCollege
-      ? "The institute's brand, network and environment matter more to you right now — and that's a completely valid call. Use the framework below to find which college fits your life best."
-      : "The subject you study matters more to you than the campus badge — a clear, focused signal. Use the catalog below to pin down the exact branch worth fighting for.",
-    reasons: isCollege
-      ? [
-          "You value flexibility and exploration over locking into one branch.",
-          "Your career bet leans on brand, peer group and placement pipelines.",
-          "You're comfortable shaping your specialisation once you're inside.",
-        ]
-      : [
-          "You already know the subject you want to go deep in.",
-          "Domain skills and fit matter to you more than the campus name.",
-          "You're self-driven enough to thrive regardless of college tier.",
-        ],
+    side: "balanced", norm, strength,
+    eyebrow: "GENUINELY BALANCED",
+    title: "You can trade either way — use rank math.",
+    blurb:
+      "Neither side dominates for you, and that's an advantage: you won't regret a smart compromise. Decide each choice on its own numbers — cutoffs, placements and how much you'd enjoy the subject.",
+    pointers: [
+      "Interleave your list: dream branch at good colleges, good branches at dream colleges.",
+      "Use last year's closing ranks to see which trade-offs are realistic for you.",
+      "Revisit this check after exploring branches — clarity usually picks a side.",
+    ],
   };
 }
 
-function StepDots({ total, current }) {
-  return (
-    <div style={{ display: "flex", gap: 7, justifyContent: "center", marginBottom: 22 }}>
-      {Array.from({ length: total }).map((_, i) => (
-        <span key={i} style={{ width: i === current ? 26 : 8, height: 8, borderRadius: 50, background: i <= current ? CL.coral : "#e7ddd2", transition: "all .3s" }} />
-      ))}
-    </div>
-  );
-}
-
-const FACTOR_COLORS = [CL.coral, CL.green, CL.amber, CL.blue, CL.violet];
-
-/* Eased count-up for the live numbers — animates smoothly between values. */
+/* Eased count-up for live numbers. */
 function useCountUp(target, dur = 650) {
   const [n, setN] = useState(target);
   const prev = useRef(target);
@@ -149,231 +158,162 @@ function useCountUp(target, dur = 650) {
   return n;
 }
 
-/* A small head-to-head tower whose height grows with that side's points,
-   with a glossy fill, a repeating shine sweep and a soft glow. */
-function Tower({ pct, color, soft, label, points, big }) {
-  const shown = useCountUp(pct);
+/* ── DirectionDial — semicircular gauge whose needle swings between
+   Branch (left) and College (right). Original SVG, exported for the
+   /branch-vs-college hero too. ── */
+export function DirectionDial({ norm = 0, size = 240, label = true }) {
+  const W = 220, H = 132, cx = 110, cy = 116, R = 90;
+  const ang = norm * 72 * (Math.PI / 180); // cap swing at ±72°
+  const nx = cx + Math.sin(ang) * (R - 20);
+  const ny = cy - Math.cos(ang) * (R - 20);
+  const arc = (a0, a1, color) => {
+    const p = (a) => [cx + Math.sin(a) * R, cy - Math.cos(a) * R];
+    const [x0, y0] = p(a0), [x1, y1] = p(a1);
+    return <path d={`M ${x0} ${y0} A ${R} ${R} 0 0 1 ${x1} ${y1}`} fill="none" stroke={color} strokeWidth="13" strokeLinecap="round" />;
+  };
+  const D = Math.PI / 180;
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, flex: 1 }}>
-      <div style={{ position: "relative", width: "100%", maxWidth: big ? 92 : 78, height: big ? 150 : 124, borderRadius: 16, background: soft, overflow: "hidden", display: "flex", alignItems: "flex-end", border: `1px solid ${color}33` }}>
-        <motion.div
-          animate={{ height: `${Math.max(8, pct)}%` }}
-          transition={{ type: "spring", stiffness: 90, damping: 14 }}
-          style={{ position: "relative", width: "100%", background: `linear-gradient(180deg, ${color}, ${color}cc)`, display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 8, borderTopLeftRadius: 11, borderTopRightRadius: 11, boxShadow: `0 -3px 22px ${color}66` }}
-        >
-          <span style={{ color: "#fff", fontFamily: CL.display, fontWeight: 800, fontSize: big ? 16 : 14, position: "relative", zIndex: 1 }}>{shown}%</span>
-          {/* glossy shine sweeping up the bar */}
-          <motion.span aria-hidden
-            initial={{ y: "130%" }} animate={{ y: ["130%", "-130%"] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", repeatDelay: 1.1 }}
-            style={{ position: "absolute", left: 0, right: 0, height: "45%", background: "linear-gradient(180deg, transparent, rgba(255,255,255,.42), transparent)", pointerEvents: "none" }} />
-        </motion.div>
+    <svg viewBox={`0 0 ${W} ${H + (label ? 16 : 0)}`} width={size} style={{ maxWidth: "100%", height: "auto", display: "block" }} role="img" aria-label="Branch vs college direction dial">
+      {arc(-84 * D, -30 * D, CL.coral)}
+      {arc(-24 * D, 24 * D, CL.amber)}
+      {arc(30 * D, 84 * D, CL.green)}
+      {/* tick marks */}
+      {[-60, -30, 0, 30, 60].map((deg) => {
+        const a = deg * D;
+        return (
+          <line key={deg}
+            x1={cx + Math.sin(a) * (R - 14)} y1={cy - Math.cos(a) * (R - 14)}
+            x2={cx + Math.sin(a) * (R - 22)} y2={cy - Math.cos(a) * (R - 22)}
+            stroke={CL.cream3} strokeWidth="2" strokeLinecap="round" />
+        );
+      })}
+      {/* needle */}
+      <motion.line
+        x1={cx} y1={cy} animate={{ x2: nx, y2: ny }}
+        transition={{ type: "spring", stiffness: 70, damping: 13 }}
+        stroke={CL.ink} strokeWidth="4.5" strokeLinecap="round" />
+      <circle cx={cx} cy={cy} r="10" fill={CL.ink} />
+      <circle cx={cx} cy={cy} r="4" fill="#fff" />
+      {label && (
+        <>
+          <text x="20" y={H + 10} fontSize="10.5" fontWeight="800" letterSpacing="1" fill={CL.coralDk} fontFamily={CL.display}>BRANCH</text>
+          <text x={W - 20} y={H + 10} fontSize="10.5" fontWeight="800" letterSpacing="1" fill="#0a8f5b" fontFamily={CL.display} textAnchor="end">COLLEGE</text>
+        </>
+      )}
+    </svg>
+  );
+}
+
+/* ── CompassStrip — slim live meter under the question card. A dot slides
+   along a branch→college track as answers come in. ── */
+function CompassStrip({ answers }) {
+  const { sum, norm } = scoreState(answers);
+  const answered = answers.some(Boolean);
+  const pos = ((norm + 1) / 2) * 100;
+  const tone = !answered || Math.abs(norm) < 0.1 ? CL.amber : norm > 0 ? CL.green : CL.coral;
+  const caption = !answered
+    ? "Answer to see your needle move"
+    : Math.abs(norm) < 0.1 ? "Sitting near the middle so far"
+    : norm > 0 ? "Drifting toward college" : "Drifting toward branch";
+  return (
+    <div style={{ marginTop: 22, background: CL.cream2, border: `1px solid ${CL.cream3}`, borderRadius: 14, padding: "14px 18px 12px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10.5, fontWeight: 800, letterSpacing: "1px", marginBottom: 9 }}>
+        <span style={{ color: CL.coralDk }}>BRANCH</span>
+        <motion.span key={caption} initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: tone, letterSpacing: ".3px", textTransform: "none", fontWeight: 700 }}>{caption}</motion.span>
+        <span style={{ color: "#0a8f5b" }}>COLLEGE</span>
       </div>
-      <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 15 : 13.5, color }}>{label}</div>
-      <motion.span key={points} initial={{ scale: 0.78, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 320, damping: 18 }}
-        style={{ fontSize: 11, fontWeight: 700, color, background: soft, border: `1px solid ${color}33`, padding: "3px 11px", borderRadius: 50 }}>{points} pts</motion.span>
+      <div style={{ position: "relative", height: 6, borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber}, ${CL.green})`, opacity: answered ? 1 : 0.45 }}>
+        {/* centre tick */}
+        <span style={{ position: "absolute", left: "50%", top: -3, width: 2, height: 12, background: CL.line, transform: "translateX(-50%)" }} />
+        <motion.span
+          animate={{ left: `${pos}%` }} transition={{ type: "spring", stiffness: 80, damping: 13 }}
+          style={{ position: "absolute", top: "50%", transform: "translate(-50%,-50%)", width: 18, height: 18, borderRadius: "50%", background: "#fff", border: `3px solid ${tone}`, boxShadow: CL.shadow }} />
+      </div>
     </div>
   );
 }
 
-/* Animated "balance meter" — an original head-to-head design (twin towers +
-   a sliding centre marker) that reacts live as answers come in.
-   `tilt` is -1 (branch) … +1 (college). */
-export function BalanceScale({ tilt = 0, tally = { c: 0, b: 0 }, step = 0, total = 6, big = false, showMeta = true }) {
-  const sum = tally.c + tally.b;
-  const collegePct = sum ? Math.round((tally.c / sum) * 100) : 50;
-  const branchPct = 100 - collegePct;
-  const even = tally.c === tally.b;
-  const leadCollege = tally.c > tally.b;
-  const leadColor = !sum || even ? CL.muted : leadCollege ? CL.green : CL.coral;
-  const leadPct = Math.max(collegePct, branchPct);
-  const spring = { type: "spring", stiffness: 90, damping: 14 };
-  const shownLead = useCountUp(leadPct);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      style={{
-        position: "relative", overflow: "hidden",
-        background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`,
-        boxShadow: CL.shadow, padding: big ? "30px 28px 26px" : "26px 24px 22px",
-        display: "flex", flexDirection: "column", height: "100%",
-      }}>
-      {/* soft animated glow that tints toward the leading side */}
-      <motion.div aria-hidden
-        animate={{ opacity: [0.5, 0.85, 0.5] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        style={{ position: "absolute", top: -60, right: -40, width: 180, height: 180, borderRadius: "50%", background: `radial-gradient(circle, ${leadColor}1f, transparent 70%)`, pointerEvents: "none" }} />
-
-      {showMeta && (
-        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".12em", color: CL.muted, textTransform: "uppercase", textAlign: "center", position: "relative" }}>
-          Your leaning so far
-        </div>
-      )}
-
-      {/* live readout */}
-      <div style={{ textAlign: "center", margin: big ? "12px 0 16px" : "8px 0 14px", position: "relative" }}>
-        <motion.div key={sum} initial={{ scale: 1.25, color: leadColor }} animate={{ scale: 1, color: leadColor }} transition={{ type: "spring", stiffness: 400, damping: 14 }}
-          style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 44 : 38, color: leadColor, lineHeight: 1, display: "inline-block" }}>
-          {sum ? `${shownLead}%` : "50 / 50"}
-        </motion.div>
-        <motion.div key={`${even}-${leadCollege}-${!!sum}`} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-          style={{ fontSize: 12.5, fontWeight: 700, color: leadColor, marginTop: 6 }}>
-          {!sum ? "Answer to see it tilt live" : even ? "Evenly balanced — keep going" : leadCollege ? "Leaning College" : "Leaning Branch"}
-        </motion.div>
-      </div>
-
-      {/* Tilt Wrapper for the physical seesaw effect */}
-      <motion.div
-        animate={{ rotate: sum ? (leadCollege ? 4 : even ? 0 : -4) : 0, y: sum ? (leadCollege ? 2 : even ? 0 : 2) : 0 }}
-        transition={{ type: "spring", stiffness: 100, damping: 12 }}
-        style={{ transformOrigin: "bottom center", position: "relative", zIndex: 1 }}
-      >
-        {/* twin towers */}
-        <div style={{ display: "flex", alignItems: "flex-end", gap: big ? 22 : 16, justifyContent: "center", position: "relative" }}>
-          <Tower pct={branchPct} color={CL.coral} soft={CL.coralSoft} label="Branch" points={tally.b} big={big} />
-          <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: big ? 14 : 12, color: CL.muted, paddingBottom: big ? 64 : 52 }}>vs</span>
-          <Tower pct={collegePct} color={CL.green} soft={CL.greenSoft} label="College" points={tally.c} big={big} />
-        </div>
-
-        {/* sliding balance track with a moving sheen */}
-        <div style={{ position: "relative", height: 8, borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber}, ${CL.green})`, margin: big ? "22px 4px 4px" : "18px 4px 4px", overflow: "visible" }}>
-          {/* pulsing halo behind the marker */}
-          <motion.span
-            animate={{ left: `${branchPct}%` }} transition={spring}
-            style={{ position: "absolute", top: "50%", transform: "translate(-50%,-50%)", width: big ? 24 : 20, height: big ? 24 : 20 }}
-          >
-            <motion.span aria-hidden
-              animate={{ scale: [1, 2.1, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
-              style={{ position: "absolute", inset: 0, borderRadius: "50%", background: leadColor, pointerEvents: "none" }} />
-            <span style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "#fff", boxShadow: CL.shadow, border: `2.5px solid ${leadColor}`, display: "grid", placeItems: "center" }}>
-              <GitCompareArrows size={big ? 12 : 10} color={leadColor} />
-            </span>
-          </motion.span>
-        </div>
-      </motion.div>
-
-      {showMeta && (
-        <>
-          <div style={{ height: 1, background: CL.line, margin: "16px 0 14px" }} />
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 9, justifyContent: "center" }}>
-            {FACTORS.map((f, i) => (
-              <span key={f} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, color: CL.body, fontWeight: 600 }}>
-                <motion.span
-                  animate={{ scale: [1, 1.45, 1], opacity: [0.7, 1, 0.7] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.35 }}
-                  style={{ width: 8, height: 8, borderRadius: "50%", background: FACTOR_COLORS[i % FACTOR_COLORS.length] }} /> {f}
-              </span>
-            ))}
-          </div>
-          <div style={{ marginTop: 14, fontSize: 11.5, color: CL.muted, textAlign: "center" }}>
-            Question {Math.min(step + 1, total)} of {total} · live, private
-          </div>
-        </>
-      )}
-    </motion.div>
-  );
-}
-
-function ResultCard({ result, onReset }) {
+function VerdictCard({ verdict, onReset }) {
+  const shown = useCountUp(verdict.strength);
+  const toneFg = verdict.side === "college" ? "#0a8f5b" : verdict.side === "branch" ? CL.coralDk : "#b9781a";
+  const toneBg = verdict.side === "college" ? CL.greenSoft : verdict.side === "branch" ? CL.coralSoft : CL.amberSoft;
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-      style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "32px 30px", maxWidth: 940, margin: "0 auto" }}
+      style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "34px 32px", maxWidth: 900, margin: "0 auto" }}
     >
-      {/* top: verdict + orbit */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 28, alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ flex: "1 1 340px" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, fontWeight: 800, letterSpacing: "1.2px", color: CL.violet, background: "#efeafc", padding: "5px 12px", borderRadius: 50, marginBottom: 14 }}>
-            <ShieldCheck size={13} /> {result.eyebrow}
-          </span>
-          <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "2.1rem", color: CL.ink, letterSpacing: "-1px", marginBottom: 14, lineHeight: 1.08 }}>{result.title}</h3>
-          <p style={{ color: CL.body, fontSize: 14.5, lineHeight: 1.7, marginBottom: 16, maxWidth: 460 }}>{result.blurb}</p>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 800, color: "#0a8f5b", background: CL.greenSoft, padding: "8px 16px", borderRadius: 50 }}>
-            <Sparkles size={14} /> High confidence · {result.match}% match
-          </span>
+      <div className="bvc2-verdict-grid" style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 34, alignItems: "center" }}>
+        {/* dial */}
+        <div style={{ textAlign: "center" }}>
+          <DirectionDial norm={verdict.norm} size={280} />
+          <div style={{ marginTop: 14, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 800, color: toneFg, background: toneBg, padding: "7px 15px", borderRadius: 50 }}>
+            <Scale size={14} />
+            {verdict.side === "balanced" ? "Almost an even split" : `${shown}% pull to one side`}
+          </div>
         </div>
-
-        {/* orbit visual */}
-        <div style={{ position: "relative", width: 210, height: 210, flexShrink: 0, margin: "0 auto" }}>
-          {[170, 120, 72].map((d, i) => (
-            <span key={d} style={{ position: "absolute", top: "50%", left: "50%", width: d, height: d, transform: "translate(-50%,-50%)", borderRadius: "50%", border: `1px dashed ${CL.cream3}` }} />
-          ))}
-          <span style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 60, height: 60, borderRadius: 16, background: CL.coral, display: "grid", placeItems: "center", boxShadow: "0 10px 30px rgba(255, 105, 61,.4)" }}>
-            <GitCompareArrows size={26} color="#fff" />
+        {/* verdict copy */}
+        <div>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, fontWeight: 800, letterSpacing: "1.2px", color: toneFg, background: toneBg, padding: "5px 12px", borderRadius: 50, marginBottom: 13 }}>
+            <Sparkles size={13} /> {verdict.eyebrow}
           </span>
-          {FACTORS.map((f, i) => {
-            const ang = (i / FACTORS.length) * Math.PI * 2 - Math.PI / 2;
-            const r = 85;
-            const cols = [CL.coral, CL.green, CL.amber, CL.violet, CL.blue];
-            return (
-              <span key={f} style={{ position: "absolute", top: `calc(50% + ${Math.sin(ang) * r}px)`, left: `calc(50% + ${Math.cos(ang) * r}px)`, transform: "translate(-50%,-50%)", width: 12, height: 12, borderRadius: "50%", background: cols[i % cols.length], boxShadow: `0 0 0 4px ${cols[i % cols.length]}22` }} />
-            );
-          })}
+          <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.9rem", color: CL.ink, letterSpacing: "-0.8px", lineHeight: 1.12, marginBottom: 12 }}>{verdict.title}</h3>
+          <p style={{ color: CL.body, fontSize: 14.5, lineHeight: 1.7 }}>{verdict.blurb}</p>
         </div>
       </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8 }}>
-        {FACTORS.map((f, i) => {
-          const cols = [CL.coral, CL.green, CL.amber, CL.violet, CL.blue];
-          return (
-            <span key={f} style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, color: CL.body, fontWeight: 600 }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: cols[i % cols.length] }} /> {f}
-            </span>
-          );
-        })}
+      <div style={{ height: 1, background: CL.line, margin: "28px 0 24px" }} />
+
+      <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".08em", color: CL.muted, marginBottom: 14 }}>HOW TO FILL YOUR LIST</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 26 }}>
+        {verdict.pointers.map((p) => (
+          <div key={p} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+            <CheckCircle2 size={17} color={CL.green} style={{ flexShrink: 0, marginTop: 1 }} />
+            <span style={{ fontSize: 13.5, color: CL.ink2, lineHeight: 1.55 }}>{p}</span>
+          </div>
+        ))}
       </div>
 
-      <div style={{ height: 1, background: CL.line, margin: "26px 0" }} />
-
-      {/* why + next */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 26 }}>
-        <div>
-          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".08em", color: CL.coralDk, marginBottom: 14 }}>WHY YOU GOT THIS RESULT</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {result.reasons.map((r) => (
-              <div key={r} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                <CheckCircle2 size={17} color={CL.green} style={{ flexShrink: 0, marginTop: 1 }} />
-                <span style={{ fontSize: 13.5, color: CL.ink2, lineHeight: 1.55 }}>{r}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div>
-          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".08em", color: CL.coralDk, marginBottom: 14 }}>WHAT'S NEXT</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <NextCard to="/branches" icon={Layers} title="Open the Branch Explorer" sub="See what each branch really gives you." primary />
-            <NextCard to="/jee-main#college" icon={Crosshair} title="Try the College Predictor" sub="See which colleges your rank can get." />
-            <NextCard to="/for-you" icon={Compass} title="Get a personalised shortlist" sub="Answer a few more and get your list." />
-          </div>
-        </div>
+      <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".08em", color: CL.muted, marginBottom: 14 }}>KEEP GOING</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12 }}>
+        <NextTile to="/branches" icon={Layers} title="Branch Explorer" sub="What each branch actually leads to." primary />
+        <NextTile to="/jee-main#college" icon={Crosshair} title="College Predictor" sub="Which campuses your rank can reach." />
+        <NextTile to="/for-you" icon={Compass} title="Personal shortlist" sub="A ready-to-file list built for you." />
       </div>
 
       <div style={{ display: "flex", justifyContent: "center", marginTop: 26 }}>
         <button onClick={onReset} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", border: `1.5px solid ${CL.line}`, borderRadius: 50, padding: "11px 22px", fontFamily: CL.display, fontWeight: 700, fontSize: 13.5, color: CL.ink, cursor: "pointer" }}>
-          <RotateCcw size={15} /> Start over · your answers are private
+          <RotateCcw size={15} /> Retake — nothing is saved
         </button>
       </div>
+
+      <style>{`
+        @media (max-width: 760px) {
+          .bvc2-verdict-grid { grid-template-columns: 1fr !important; gap: 22px !important; text-align: left; }
+        }
+      `}</style>
     </motion.div>
   );
 }
 
-function NextCard({ to, icon: Icon, title, sub, primary }) {
+function NextTile({ to, icon: Icon, title, sub, primary }) {
   return (
     <Link to={to} style={{
-      display: "flex", alignItems: "center", gap: 13, padding: "13px 16px", borderRadius: 14,
+      display: "flex", flexDirection: "column", gap: 9, padding: "16px 17px", borderRadius: 16,
       background: primary ? CL.coral : CL.cream2, border: `1px solid ${primary ? CL.coral : CL.cream3}`,
       color: primary ? "#fff" : CL.ink,
     }}>
-      <Icon size={20} color={primary ? "#fff" : CL.coral} style={{ flexShrink: 0 }} />
-      <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 14 }}>{title}</div>
-        <div style={{ fontSize: 11.5, color: primary ? "rgba(255,255,255,.85)" : CL.muted }}>{sub}</div>
+      <Icon size={20} color={primary ? "#fff" : CL.coral} />
+      <div>
+        <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}>
+          {title} <ArrowRight size={14} color={primary ? "#fff" : CL.muted} />
+        </div>
+        <div style={{ fontSize: 11.5, color: primary ? "rgba(255,255,255,.85)" : CL.muted, marginTop: 3 }}>{sub}</div>
       </div>
-      <ArrowRight size={16} color={primary ? "#fff" : CL.muted} />
     </Link>
   );
 }
+
+const LETTERS = ["A", "B", "C", "D"];
 
 export default function BranchVsCollege({ asPage = false }) {
   const [step, setStep] = useState(0);
@@ -387,78 +327,86 @@ export default function BranchVsCollege({ asPage = false }) {
     setTimeout(() => {
       if (step + 1 < QUESTIONS.length) setStep(step + 1);
       else setDone(true);
-    }, 180);
+    }, 220);
   };
 
   const reset = () => { setAnswers(Array(QUESTIONS.length).fill(null)); setStep(0); setDone(false); };
   const q = QUESTIONS[step];
-  const result = done ? computeResult(answers) : null;
-
-  /* running lean for the balance scale: +1 college … -1 branch */
-  const tally = answers.reduce((acc, a) => {
-    if (a) { if (a.lean === "college") acc.c += a.w; else acc.b += a.w; }
-    return acc;
-  }, { c: 0, b: 0 });
-  const tilt = (tally.c + tally.b) ? (tally.c - tally.b) / (tally.c + tally.b) : 0;
+  const verdict = done ? computeVerdict(answers) : null;
+  const progress = ((answers.filter(Boolean).length) / QUESTIONS.length) * 100;
 
   return (
-    <section id="branch-vs-college" style={{ background: asPage ? CL.cream : CL.cream, padding: asPage ? "104px 0 80px" : "84px 0", scrollMarginTop: 80 }}>
+    <section id="branch-vs-college" style={{ background: CL.cream, padding: asPage ? "104px 0 80px" : "84px 0", scrollMarginTop: 80 }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 40px" }}>
+        <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 38px" }}>
           <span style={clEyebrow}><GitCompareArrows size={13} /> Branch vs College</span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.2vw,2.8rem)", color: CL.ink, letterSpacing: "-1.2px", margin: "16px 0 12px", lineHeight: 1.1 }}>
-            Should the <span style={{ color: CL.coral }}>college</span> or the <span style={{ color: CL.green }}>branch</span> win?
+            Your rank will force a trade-off.<br />
+            <span style={{ color: CL.coral }}>Know your side</span> before you fill a single choice.
           </h2>
           <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7 }}>
-            Six quick questions decide what should top your choice list when the two collide. No login, no data stored.
+            Seven quick scenarios reveal whether the branch or the college deserves protection in your list. Free, private, no login.
           </p>
         </div>
 
         {!done ? (
-          <div className="bvc-quiz-grid">
-            <div className="bvc-scale-col">
-              <BalanceScale tilt={tilt} tally={tally} step={step} total={QUESTIONS.length} />
-            </div>
-            <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait">
             <motion.div key={`q-${step}`}
-              initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.28 }}
-              style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "30px 28px" }}
+              initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -18 }} transition={{ duration: 0.26 }}
+              style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "28px 28px 24px", maxWidth: 640, margin: "0 auto" }}
             >
-              <StepDots total={QUESTIONS.length} current={step} />
-              <div style={{ fontSize: 12, fontWeight: 700, color: CL.muted, textAlign: "center", marginBottom: 8 }}>Question {step + 1} of {QUESTIONS.length}</div>
-              <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.4rem", color: CL.ink, textAlign: "center", letterSpacing: "-0.4px", marginBottom: 24, lineHeight: 1.25 }}>{q.q}</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {q.options.map((opt) => {
+              {/* progress */}
+              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
+                <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 13, color: CL.ink, whiteSpace: "nowrap" }}>
+                  {step + 1} <span style={{ color: CL.muted, fontWeight: 700 }}>/ {QUESTIONS.length}</span>
+                </span>
+                <div style={{ flex: 1, height: 6, borderRadius: 50, background: CL.cream2, overflow: "hidden" }}>
+                  <motion.div animate={{ width: `${progress}%` }} transition={{ type: "spring", stiffness: 90, damping: 16 }}
+                    style={{ height: "100%", borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber})` }} />
+                </div>
+              </div>
+
+              <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.32rem", color: CL.ink, letterSpacing: "-0.4px", marginBottom: 20, lineHeight: 1.3 }}>{q.q}</h3>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                {q.options.map((opt, i) => {
                   const active = answers[step]?.label === opt.label;
                   return (
                     <button key={opt.label} onClick={() => choose(opt)} style={{
-                      textAlign: "left", padding: "16px 18px", borderRadius: 14, cursor: "pointer",
-                      background: active ? CL.coralSoft : CL.cream2,
+                      textAlign: "left", padding: "14px 16px", borderRadius: 14, cursor: "pointer",
+                      background: active ? CL.coralSoft : "#fff",
                       border: `1.5px solid ${active ? CL.coral : CL.cream3}`,
                       color: CL.ink, fontSize: 14.5, fontWeight: 600,
-                      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
+                      display: "flex", alignItems: "center", gap: 13,
                       transition: "all .15s",
                     }}
-                      onMouseEnter={(e) => { if (!active) e.currentTarget.style.borderColor = CL.coral + "66"; }}
-                      onMouseLeave={(e) => { if (!active) e.currentTarget.style.borderColor = CL.cream3; }}
+                      onMouseEnter={(e) => { if (!active) { e.currentTarget.style.borderColor = CL.coral + "77"; e.currentTarget.style.background = CL.cream2; } }}
+                      onMouseLeave={(e) => { if (!active) { e.currentTarget.style.borderColor = CL.cream3; e.currentTarget.style.background = "#fff"; } }}
                     >
+                      <span style={{
+                        width: 28, height: 28, borderRadius: 9, flexShrink: 0, display: "grid", placeItems: "center",
+                        fontFamily: CL.display, fontWeight: 800, fontSize: 12.5,
+                        background: active ? CL.coral : CL.cream2, color: active ? "#fff" : CL.muted,
+                        border: `1px solid ${active ? CL.coral : CL.cream3}`, transition: "all .15s",
+                      }}>{LETTERS[i]}</span>
                       {opt.label}
-                      <ArrowRight size={16} color={CL.coral} style={{ flexShrink: 0 }} />
                     </button>
                   );
                 })}
               </div>
+
+              <CompassStrip answers={answers} />
+
               {step > 0 && (
-                <div style={{ textAlign: "center", marginTop: 18 }}>
-                  <button onClick={() => setStep(step - 1)} style={{ fontSize: 13, color: CL.muted, fontWeight: 600, cursor: "pointer" }}>← Back</button>
+                <div style={{ textAlign: "center", marginTop: 16 }}>
+                  <button onClick={() => setStep(step - 1)} style={{ fontSize: 13, color: CL.muted, fontWeight: 600, cursor: "pointer", background: "none", border: "none" }}>← Previous question</button>
                 </div>
               )}
             </motion.div>
-            </AnimatePresence>
-          </div>
-          ) : (
-            <ResultCard result={result} onReset={reset} />
-          )}
+          </AnimatePresence>
+        ) : (
+          <VerdictCard verdict={verdict} onReset={reset} />
+        )}
       </div>
     </section>
   );

@@ -53,6 +53,21 @@ function setLink(rel, href) {
   el.setAttribute("href", href);
 }
 
+/** Turn [{name, path}] into a schema.org BreadcrumbList graph. */
+function breadcrumbGraph(crumbs) {
+  if (!crumbs || !crumbs.length) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.name,
+      ...(c.path ? { item: SITE_URL + (c.path === "/" ? "/" : c.path.replace(/\/+$/, "")) } : {}),
+    })),
+  };
+}
+
 export default function Seo({
   title,
   rawTitle,
@@ -62,10 +77,13 @@ export default function Seo({
   type = "website",
   robots = "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
   jsonLd,
+  keywords,
+  breadcrumbs,
 }) {
   const fullTitle = rawTitle || (title ? `${title} | ${BRAND}` : DEFAULT_TITLE);
   const desc = description || DEFAULT_DESC;
   const img = image || DEFAULT_IMAGE;
+  const kw = Array.isArray(keywords) ? keywords.filter(Boolean).join(", ") : keywords || null;
 
   // canonical / og:url — strip query + hash, normalise trailing slash
   const cleanPath =
@@ -73,15 +91,22 @@ export default function Seo({
     (typeof window !== "undefined" ? window.location.pathname : "/");
   const url = SITE_URL + (cleanPath === "/" ? "/" : cleanPath.replace(/\/+$/, ""));
 
+  // Combine page graph(s) + breadcrumb graph into one array of JSON-LD blocks.
+  const graphs = [
+    ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : []),
+    breadcrumbGraph(breadcrumbs),
+  ].filter(Boolean);
+
   // Serialise once so an inline object prop doesn't re-trigger the effect
   // on every parent re-render (only a real content change does).
-  const jsonLdStr = jsonLd ? JSON.stringify(jsonLd) : null;
+  const graphsStr = graphs.length ? JSON.stringify(graphs) : null;
 
   useEffect(() => {
     document.title = fullTitle;
 
     setMeta("name", "description", desc);
     setMeta("name", "robots", robots);
+    if (kw) setMeta("name", "keywords", kw);
     setLink("canonical", url);
 
     setMeta("property", "og:title", fullTitle);
@@ -96,14 +121,17 @@ export default function Seo({
     setMeta("name", "twitter:description", desc);
     setMeta("name", "twitter:image", img);
 
-    // Per-page JSON-LD (added with a marker so we can remove it on unmount)
-    let script;
-    if (jsonLdStr) {
-      script = document.createElement("script");
-      script.type = "application/ld+json";
-      script.dataset.seoPage = "true";
-      script.textContent = jsonLdStr;
-      document.head.appendChild(script);
+    // Per-page JSON-LD — one <script> per graph, marked for cleanup on unmount.
+    const scripts = [];
+    if (graphsStr) {
+      for (const g of JSON.parse(graphsStr)) {
+        const s = document.createElement("script");
+        s.type = "application/ld+json";
+        s.dataset.seoPage = "true";
+        s.textContent = JSON.stringify(g);
+        document.head.appendChild(s);
+        scripts.push(s);
+      }
     }
 
     return () => {
@@ -112,9 +140,9 @@ export default function Seo({
       document.title = DEFAULT_TITLE;
       setMeta("name", "description", DEFAULT_DESC);
       setLink("canonical", `${SITE_URL}/`);
-      if (script && script.parentNode) script.parentNode.removeChild(script);
+      scripts.forEach((s) => s.parentNode && s.parentNode.removeChild(s));
     };
-  }, [fullTitle, desc, url, img, type, robots, jsonLdStr]);
+  }, [fullTitle, desc, url, img, type, robots, kw, graphsStr]);
 
   return null;
 }
