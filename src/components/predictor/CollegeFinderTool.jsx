@@ -182,12 +182,8 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
 
   const [form, setForm] = useState({ rank: "", category: "OPEN", homeState: "", branch: "" });
   const [types, setTypes]         = useState(new Set(allowedTypes));
-  const [degree, setDegree]       = useState("");
-  const [buckets, setBuckets]     = useState(new Set());
-  const [flex, setFlex]           = useState({ branchChange: false, dualDegree: false, minorDegree: false, openElectives: false });
   const [probs, setProbs]         = useState(new Set());   // empty = all
   const [query, setQuery]         = useState("");
-  const [showFilters, setShowFilters] = useState(false);
 
   const { predict, reset, results, loading, error } = useCollegePredictor();
   const ranOnce = useRef(false);
@@ -213,34 +209,17 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
     });
   }
 
-  function resetFilters() {
-    setTypes(new Set(allowedTypes));
-    setDegree("");
-    setBuckets(new Set());
-    setFlex({ branchChange: false, dualDegree: false, minorDegree: false, openElectives: false });
-    setProbs(new Set());
-    setQuery("");
-    setForm((f) => ({ ...f, homeState: "", branch: "" }));
-  }
-
   /* Build college groups from flat branch rows, applying every filter */
   const groups = useMemo(() => {
     if (!results?.length) return [];
-    const activeFlex = Object.entries(flex).filter(([, on]) => on).map(([k]) => k);
     const byCollege = new Map();
 
     for (const r of results) {
       if (!types.has(r.type)) continue;
       if (form.homeState && r.state !== form.homeState) continue;
       if (form.branch && CODE_TO_BUCKET[r.branchCode] !== form.branch) continue;
-      if (degree && degreeOf(r.fullProgramName) !== degree) continue;
-      if (buckets.size && !buckets.has(CODE_TO_BUCKET[r.branchCode])) continue;
       const prob = TIER_TO_PROB[r.tier] || "low";
       if (probs.size && !probs.has(prob)) continue;
-
-      // flexibility flags are college-level
-      const passesFlex = activeFlex.every((f) => FLEX_FLAGS[f]?.has(r.slug));
-      if (!passesFlex) continue;
 
       if (query) {
         const q = query.toLowerCase();
@@ -279,7 +258,7 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
 
     out.sort((a, b) => (a.nirf || 999) - (b.nirf || 999));
     return out;
-  }, [results, types, degree, buckets, flex, probs, query, form.homeState, form.branch]);
+  }, [results, types, probs, query, form.homeState, form.branch]);
 
   const totalBranches = groups.reduce((s, g) => s + g.branchCount, 0);
 
@@ -332,11 +311,6 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
               : <><Crosshair size={16} /> Find Colleges</>}
           </button>
         </div>
-        {results && (
-          <button className="cf-mobile-filter" onClick={() => setShowFilters(true)}>
-            <SlidersHorizontal size={15} /> Filters
-          </button>
-        )}
       </div>
 
       {error && <div className="cf-error">⚠️ {error} — please try again.</div>}
@@ -368,18 +342,14 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
         </div>
       )}
 
-      {/* ── Two-column layout ── */}
+      {/* ── Single-column layout ── */}
       {results && !loading && (
         <div className="cf-layout">
-          {/* ===== Sidebar ===== */}
-          <aside className={`cf-sidebar ${showFilters ? "cf-sidebar-open" : ""}`}>
-            <div className="cf-sidebar-head">
-              <span>Filters</span>
-              <button className="cf-sidebar-close" onClick={() => setShowFilters(false)}><X size={18} /></button>
-            </div>
-
-            <div className="cf-filter-group">
-              <div className="cf-filter-label">College Type</div>
+          {/* ===== Results column ===== */}
+          <div className="cf-results" style={{ width: "100%" }}>
+            
+            <div className="cf-filter-group" style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20, paddingBottom: 16, borderBottom: "1px solid var(--cf-line)", flexWrap: "wrap" }}>
+              <div className="cf-filter-label" style={{ marginBottom: 0 }}>College Type:</div>
               <div className="cf-typepills">
                 {TYPE_PILLS.filter((t) => allowedTypes.includes(t)).map((t) => (
                   <button
@@ -391,61 +361,6 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
               </div>
             </div>
 
-            <div className="cf-filter-group">
-              <div className="cf-filter-label">Degree</div>
-              <div className="cf-selectwrap">
-                <select className="cf-select cf-select-full" value={degree} onChange={(e) => setDegree(e.target.value)}>
-                  {DEGREE_OPTIONS.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
-                </select>
-                <ChevronDown size={15} className="cf-selectchev" />
-              </div>
-            </div>
-
-            <div className="cf-filter-group">
-              <div className="cf-filter-label">Branch Bucket</div>
-              <div className="cf-checks">
-                {BRANCH_BUCKETS.map((b) => (
-                  <label key={b.id} className="cf-check">
-                    <input
-                      type="checkbox"
-                      checked={buckets.has(b.id)}
-                      onChange={() => toggleSet(setBuckets, b.id)}
-                    />
-                    <span>{b.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="cf-filter-group">
-              <div className="cf-filter-label">Flexibility</div>
-              {[
-                ["branchChange",  "Branch change allowed"],
-                ["dualDegree",    "Dual degree offered"],
-                ["minorDegree",   "Minor degree offered"],
-                ["openElectives", "Open electives"],
-              ].map(([key, lbl]) => (
-                <div key={key} className="cf-toggle-row">
-                  <span>{lbl}</span>
-                  <button
-                    className={`cf-toggle ${flex[key] ? "on" : ""}`}
-                    onClick={() => setFlex((f) => ({ ...f, [key]: !f[key] }))}
-                    aria-pressed={flex[key]}
-                  >
-                    <span className="cf-toggle-knob" />
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            <button className="cf-reset" onClick={resetFilters}>
-              <RotateCcw size={14} /> Reset Filters
-            </button>
-          </aside>
-          {showFilters && <div className="cf-backdrop" onClick={() => setShowFilters(false)} />}
-
-          {/* ===== Results column ===== */}
-          <div className="cf-results">
             <div className="cf-results-top">
               <div className="cf-count">
                 <strong>{groups.length}</strong> college{groups.length !== 1 ? "s" : ""}
@@ -560,37 +475,14 @@ const CF_STYLES = `
 .cf-loading p { color:#6b6258; font-size:14px; }
 
 /* layout */
-.cf-layout { display:grid; grid-template-columns:248px 1fr; gap:22px; align-items:start; }
+.cf-layout { display:block; width:100%; }
 
-/* sidebar */
-.cf-sidebar { background:#fff; border:1px solid var(--cf-line); border-radius:16px; padding:18px 16px;
-  position:sticky; top:84px; }
-.cf-sidebar-head { display:none; }
-.cf-filter-group { padding-bottom:16px; margin-bottom:16px; border-bottom:1px solid var(--cf-line); }
-.cf-filter-group:last-of-type { border-bottom:none; }
-.cf-filter-label { font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#9a9189; margin-bottom:11px; }
+/* inline filters */
+.cf-filter-label { font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:#9a9189; }
 .cf-typepills { display:flex; flex-wrap:wrap; gap:8px; }
 .cf-typepill { border:1.5px solid var(--cf-line); background:#fff; color:#8a8178; border-radius:50px;
   padding:7px 16px; font-size:13px; font-weight:700; cursor:pointer; transition:all .15s; }
 .cf-typepill.active { background:var(--cf-coral); border-color:var(--cf-coral); color:#fff; box-shadow:0 3px 10px rgba(255, 105, 61,.25); }
-.cf-selectwrap { position:relative; }
-.cf-select-full { width:100%; appearance:none; padding-right:32px; }
-.cf-selectchev { position:absolute; right:11px; top:50%; transform:translateY(-50%); color:#9a9189; pointer-events:none; }
-.cf-checks { display:flex; flex-direction:column; gap:10px; }
-.cf-check { display:flex; align-items:center; gap:9px; font-size:13.5px; color:#3a3a4a; cursor:pointer; }
-.cf-check input { width:16px; height:16px; accent-color:var(--cf-coral); cursor:pointer; }
-.cf-toggle-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:13px; font-size:13.5px; color:#3a3a4a; }
-.cf-toggle-row:last-child { margin-bottom:0; }
-.cf-toggle { width:38px; height:21px; border-radius:50px; border:none; background:#dcd6cf; position:relative;
-  cursor:pointer; transition:background .18s; flex-shrink:0; }
-.cf-toggle.on { background:var(--cf-coral); }
-.cf-toggle-knob { position:absolute; top:2px; left:2px; width:17px; height:17px; border-radius:50%; background:#fff;
-  transition:transform .18s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
-.cf-toggle.on .cf-toggle-knob { transform:translateX(17px); }
-.cf-reset { width:100%; display:inline-flex; align-items:center; justify-content:center; gap:7px;
-  border:1px solid var(--cf-line); background:#faf7f3; color:#6b6258; border-radius:10px; padding:10px;
-  font-size:13px; font-weight:700; cursor:pointer; transition:all .15s; }
-.cf-reset:hover { border-color:var(--cf-coral); color:var(--cf-coral); }
 
 /* results */
 .cf-results-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px; }
@@ -667,23 +559,10 @@ const CF_STYLES = `
 .cf-note { font-size:11.5px; color:#9a9189; margin-top:16px; line-height:1.6; }
 
 @media (max-width:860px){
-  .cf-layout { grid-template-columns:1fr; }
   .cf-rankbar-fields { grid-template-columns:1fr 1fr; }
   .cf-rankbar-fields .cf-field:first-child, .cf-runbtn { grid-column:1 / -1; }
-  .cf-mobile-filter { display:inline-flex; align-items:center; gap:6px; background:#fff; border:1px solid var(--cf-line);
-    border-radius:10px; padding:10px 16px; font-size:13px; font-weight:700; color:#3a3a4a; cursor:pointer; }
-  .cf-sidebar { position:fixed; top:0; left:0; bottom:0; width:300px; max-width:86vw; z-index:60; border-radius:0;
-    transform:translateX(-105%); transition:transform .25s; overflow-y:auto; padding-top:0; }
-  .cf-sidebar-open { transform:translateX(0); }
-  .cf-sidebar-head { display:flex; justify-content:space-between; align-items:center; padding:16px;
-    border-bottom:1px solid var(--cf-line); font-family:Sora,sans-serif; font-weight:800; position:sticky; top:0; background:#fff; }
-  .cf-sidebar-close { border:none; background:none; cursor:pointer; color:#6b6258; }
-  .cf-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:55; }
   .cf-card-main { flex-wrap:wrap; }
   .cf-card-actions { flex-direction:row; width:100%; justify-content:flex-end; }
-}
-@media (min-width:861px){
-  .cf-sidebar-close { display:none; }
 }
 @media (max-width:520px){
   .cf-rankbar-fields { grid-template-columns:1fr; }
