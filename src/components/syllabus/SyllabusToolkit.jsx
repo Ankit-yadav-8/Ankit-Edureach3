@@ -112,7 +112,7 @@ function ChapterCard({ chapter, idx, subjectColor, subjectIcon: Icon }) {
   );
 }
 
-export default function SyllabusToolkit({ title, subtitle, data, seoTitle, seoDesc, seoPath }) {
+export default function SyllabusToolkit({ title, subtitle, data, seoTitle, seoDesc, seoPath, imageSrc }) {
   const subjects = Object.keys(data);
   const [activeTab, setActiveTab] = useState(subjects[0]);
 
@@ -123,26 +123,65 @@ export default function SyllabusToolkit({ title, subtitle, data, seoTitle, seoDe
       <section style={{ padding: "80px 0 40px" }}>
         <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
           
-          <div style={{ textAlign: "center", marginBottom: 50 }}>
-            <span style={{ 
-              display: "inline-flex", alignItems: "center", gap: 6, 
-              background: "#fff0eb", color: "#FF693D", 
-              padding: "6px 14px", borderRadius: 50, 
-              fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", marginBottom: 20
-            }}>
-              <Sparkles size={14} /> SYLLABUS HUB
-            </span>
-            <h1 style={{ 
-              fontFamily: "'Space Grotesk', 'Sora', sans-serif", 
-              fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 800, 
-              color: "#1a1a2e", margin: "0 0 16px 0", letterSpacing: "-1px"
-            }}>
-              {title}
-            </h1>
-            <p style={{ color: "#6b7280", fontSize: "1.1rem", maxWidth: 650, margin: "0 auto", lineHeight: 1.6 }}>
-              {subtitle}
-            </p>
+          {/* Hero Section */}
+          <div className="syllabus-hero">
+            <div>
+              <span style={{ 
+                display: "inline-flex", alignItems: "center", gap: 6, 
+                background: "#fff0eb", color: "#FF693D", 
+                padding: "6px 14px", borderRadius: 50, 
+                fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", marginBottom: 20
+              }}>
+                <Sparkles size={14} /> SYLLABUS HUB
+              </span>
+              <h1 style={{ 
+                fontFamily: "'Space Grotesk', 'Sora', sans-serif", 
+                fontSize: "clamp(2rem, 5vw, 3.2rem)", fontWeight: 800, 
+                color: "#1a1a2e", margin: "0 0 16px 0", lineHeight: 1.15, letterSpacing: "-1px"
+              }}>
+                {title}
+              </h1>
+              <p style={{ color: "#6b7280", fontSize: "1.1rem", maxWidth: imageSrc ? 600 : 650, margin: imageSrc ? "0" : "0 auto", lineHeight: 1.6 }}>
+                {subtitle}
+              </p>
+            </div>
+            
+            {imageSrc && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "center" }}
+              >
+                <div style={{
+                  position: "absolute", inset: -20, background: "radial-gradient(circle, rgba(255,105,61,0.1) 0%, transparent 70%)",
+                  zIndex: -1, borderRadius: "50%"
+                }} />
+                <img src={imageSrc} alt={title} style={{ width: "100%", height: "auto", maxWidth: 400, display: "block", filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.1))" }} />
+              </motion.div>
+            )}
           </div>
+
+          <style>{`
+            .syllabus-hero {
+              display: grid;
+              grid-template-columns: ${imageSrc ? "1.2fr 0.8fr" : "1fr"};
+              gap: 40px;
+              align-items: center;
+              margin-bottom: 60px;
+              text-align: ${imageSrc ? "left" : "center"};
+            }
+            @media (max-width: 768px) {
+              .syllabus-hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 30px;
+              }
+              .syllabus-hero p {
+                margin: 0 auto !important;
+              }
+            }
+          `}</style>
 
           {/* Subject Tabs */}
           <div style={{

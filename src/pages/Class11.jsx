@@ -10,6 +10,7 @@ export default function Class11() {
       seoTitle="Class 11 Chapter-wise Syllabus, Mind Maps & Quizzes"
       seoDesc="Master Class 11 Physics, Chemistry, Maths & Biology with our comprehensive chapter-wise toolkit. Get mind maps and generated quizzes for JEE/NEET."
       seoPath="/class-11"
+      imageSrc="/images/ai/class_11_hero.png"
     />
   );
 }

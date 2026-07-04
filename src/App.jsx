@@ -62,6 +62,8 @@ import CollegeParichayAI from "./pages/CollegeParichayAI.jsx";
 import CampusFests from "./pages/CampusFests.jsx";
 import Class11 from "./pages/Class11.jsx";
 import Class12 from "./pages/Class12.jsx";
+import JeeStrategy from "./pages/JeeStrategy.jsx";
+import NeetStrategy from "./pages/NeetStrategy.jsx";
 import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
@@ -200,6 +202,8 @@ export default function App() {
           <Route path="/campus-fests" element={<CampusFests />} />
           <Route path="/class-11" element={<Class11 />} />
           <Route path="/class-12" element={<Class12 />} />
+          <Route path="/jee-strategy" element={<JeeStrategy />} />
+          <Route path="/neet-strategy" element={<NeetStrategy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
