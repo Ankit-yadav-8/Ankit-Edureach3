@@ -7,13 +7,13 @@
 export const BRANCHES = [
   {
     slug: "cs-it",
-    name: "CS & IT",
+    name: "Computer Science & Information Technology",
     icon: "Monitor",
     color: "#3A86FF",
     desc: "The study of computational systems, discrete mathematics, and software design.",
     tags: ["Coding-dominated", "Math-heavy", "Full Tech Access"],
     branchCount: 32,
-    stats: { jobGrowth: "Most Placements", medianSalary: "₹18 LPA", aiRisk: 65 },
+    stats: { jobGrowth: "Most Placements", medianSalary: "₹18 LPA", aiRisk: 63 },
     aiRiskLabel: "MODERATE RISK",
     academics: {
       summary:
@@ -22,14 +22,14 @@ export const BRANCHES = [
       outcomes: ["Software Engineer", "Backend / Full-stack Dev", "Data Engineer", "Product Engineer", "Research / Higher studies (MS)"],
     },
     insights: {
-      skills: { coursework: 20, selfLearning: 80 },
+      skills: { coursework: 25, selfLearning: 75 },
       tierMatters: 45,
       research: [{ label: "Academic Pubs", value: 95 }, { label: "Industry R&D", value: 80 }, { label: "Lab Funding", value: 70 }],
       researchNote:
         "Active ecosystem with top industrial labs like Microsoft Research India and Google Research India. Government funding is driven by MeitY initiatives (IndiaAI Mission) and DST-SERB grants.",
       salaryArc: {
-        median: { entry: 18, y3: 26, y5: 36 },
-        top:    { entry: 42, y3: 60, y5: 80 },
+        median: { entry: 19, y3: 27, y5: 37 },
+        top:    { entry: 44, y3: 62, y5: 82 },
       },
     },
     branchesList: ["Computer Science & Engineering", "Information Technology", "CSE (Cyber Security)", "CSE (AI/ML)", "Software Engineering"],
@@ -47,13 +47,13 @@ export const BRANCHES = [
   },
   {
     slug: "ai-data-science",
-    name: "AI & Data Science",
+    name: "Artificial Intelligence & Data Science",
     icon: "Brain",
     color: "#7B5EA7",
     desc: "Statistical modelling, big-data architectures, and machine-learning systems.",
     tags: ["Math-heavy", "High Tech Access", "New-age pivot"],
     branchCount: 18,
-    stats: { jobGrowth: "High Job Growth", medianSalary: "₹19 LPA", aiRisk: 45 },
+    stats: { jobGrowth: "High Job Growth", medianSalary: "₹19 LPA", aiRisk: 43 },
     aiRiskLabel: "LOW–MODERATE RISK",
     academics: {
       summary:
@@ -62,14 +62,14 @@ export const BRANCHES = [
       outcomes: ["ML Engineer", "Data Scientist", "AI Researcher", "MLOps Engineer", "Quant / Applied Scientist"],
     },
     insights: {
-      skills: { coursework: 35, selfLearning: 65 },
+      skills: { coursework: 30, selfLearning: 70 },
       tierMatters: 55,
       research: [{ label: "Academic Pubs", value: 92 }, { label: "Industry R&D", value: 88 }, { label: "Lab Funding", value: 78 }],
       researchNote:
         "One of the fastest-funded areas in India — IndiaAI Mission, corporate AI labs and global remote roles make this a high-mobility field for strong builders.",
       salaryArc: {
-        median: { entry: 19, y3: 30, y5: 42 },
-        top:    { entry: 44, y3: 65, y5: 90 },
+        median: { entry: 20, y3: 31, y5: 43 },
+        top:    { entry: 46, y3: 67, y5: 92 },
       },
     },
     branchesList: ["Artificial Intelligence", "Data Science & Engineering", "AI & ML", "Computer Science (Data Science)", "Mathematics & Computing"],
@@ -87,13 +87,13 @@ export const BRANCHES = [
   },
   {
     slug: "electronics-electrical",
-    name: "Electronics & Electrical",
+    name: "Electrical & Electronics Engineering",
     icon: "CircuitBoard",
     color: "#FF693D",
     desc: "Power systems, microelectronics, VLSI design, and signal processing.",
     tags: ["Math-heavy", "Core & Tech options", "Hardware focus"],
     branchCount: 26,
-    stats: { jobGrowth: "Strong Demand", medianSalary: "₹15 LPA", aiRisk: 38 },
+    stats: { jobGrowth: "Strong Demand", medianSalary: "₹15 LPA", aiRisk: 41 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -102,14 +102,14 @@ export const BRANCHES = [
       outcomes: ["VLSI / Chip Design Engineer", "Embedded Systems Engineer", "Power Engineer", "Hardware Engineer", "Software (tech pivot)"],
     },
     insights: {
-      skills: { coursework: 55, selfLearning: 45 },
+      skills: { coursework: 50, selfLearning: 50 },
       tierMatters: 50,
       research: [{ label: "Academic Pubs", value: 80 }, { label: "Industry R&D", value: 85 }, { label: "Lab Funding", value: 82 }],
       researchNote:
         "India's semiconductor push (ISM, design-linked incentives) is reviving VLSI hiring. Strong core ecosystems exist around Bengaluru and Hyderabad.",
       salaryArc: {
-        median: { entry: 15, y3: 22, y5: 30 },
-        top:    { entry: 30, y3: 46, y5: 62 },
+        median: { entry: 16, y3: 23, y5: 31 },
+        top:    { entry: 32, y3: 48, y5: 64 },
       },
     },
     branchesList: ["Electronics & Communication", "Electrical Engineering", "Electronics & VLSI", "Instrumentation & Control", "Electrical & Electronics"],
@@ -133,7 +133,7 @@ export const BRANCHES = [
     desc: "Thermodynamics, design, manufacturing, and intelligent automation.",
     tags: ["Core-heavy", "Design-focused", "Robotics pivot"],
     branchCount: 22,
-    stats: { jobGrowth: "Stable Demand", medianSalary: "₹12 LPA", aiRisk: 35 },
+    stats: { jobGrowth: "Stable Demand", medianSalary: "₹12 LPA", aiRisk: 33 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -142,14 +142,14 @@ export const BRANCHES = [
       outcomes: ["Design Engineer", "Robotics Engineer", "Manufacturing / Production", "Automotive / EV Engineer", "Higher studies (MS)", "Aerospace Engineer", "Systems Engineer", "HVAC Engineer"],
     },
     insights: {
-      skills: { coursework: 60, selfLearning: 40 },
+      skills: { coursework: 65, selfLearning: 35 },
       tierMatters: 48,
       research: [{ label: "Academic Pubs", value: 78 }, { label: "Industry R&D", value: 72 }, { label: "Lab Funding", value: 68 }],
       researchNote:
         "EV manufacturing, thermal systems, and automation (PLI schemes) are reshaping demand. Robotics and mechatronics labs are rapidly growing across IITs and NITs.",
       salaryArc: {
-        median: { entry: 12, y3: 18, y5: 26 },
-        top:    { entry: 26, y3: 40, y5: 55 },
+        median: { entry: 13, y3: 19, y5: 27 },
+        top:    { entry: 28, y3: 42, y5: 57 },
       },
     },
     branchesList: ["Mechanical Engineering", "Robotics & Automation", "Mechatronics", "Production & Industrial", "Automobile Engineering"],
@@ -173,13 +173,13 @@ export const BRANCHES = [
   },
   {
     slug: "civil-architecture",
-    name: "Civil & Architecture",
+    name: "Civil Engineering & Architecture",
     icon: "Building2",
     color: "#0FAE6E",
     desc: "Structures, geotechnics, urban design, and sustainable infrastructure.",
     tags: ["Core-heavy", "Design-focused", "Infra growth"],
     branchCount: 16,
-    stats: { jobGrowth: "Infra Boom", medianSalary: "₹10 LPA", aiRisk: 28 },
+    stats: { jobGrowth: "Infra Boom", medianSalary: "₹10 LPA", aiRisk: 31 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -188,14 +188,14 @@ export const BRANCHES = [
       outcomes: ["Structural Engineer", "Site / Project Engineer", "Urban Planner", "Construction Manager", "Govt / PSU roles"],
     },
     insights: {
-      skills: { coursework: 65, selfLearning: 35 },
+      skills: { coursework: 60, selfLearning: 40 },
       tierMatters: 42,
       research: [{ label: "Academic Pubs", value: 70 }, { label: "Industry R&D", value: 60 }, { label: "Lab Funding", value: 64 }],
       researchNote:
         "Government infrastructure outlays (NIP, smart cities) sustain hiring. PSU and government routes via GATE add strong stability for civil graduates.",
       salaryArc: {
-        median: { entry: 10, y3: 15, y5: 22 },
-        top:    { entry: 22, y3: 34, y5: 46 },
+        median: { entry: 11, y3: 16, y5: 23 },
+        top:    { entry: 24, y3: 36, y5: 48 },
       },
     },
     branchesList: ["Civil Engineering", "Architecture (B.Arch)", "Planning", "Construction Technology", "Environmental Engineering"],
@@ -219,7 +219,7 @@ export const BRANCHES = [
     desc: "Process design, reaction engineering, and energy & materials transformation.",
     tags: ["Math + Chem", "Core-heavy", "Energy / Pharma"],
     branchCount: 12,
-    stats: { jobGrowth: "Steady", medianSalary: "₹12 LPA", aiRisk: 30 },
+    stats: { jobGrowth: "Steady", medianSalary: "₹12 LPA", aiRisk: 33 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -228,14 +228,14 @@ export const BRANCHES = [
       outcomes: ["Process Engineer", "Energy / Oil & Gas", "Pharma / FMCG", "Data / Analytics pivot", "Higher studies (MS)"],
     },
     insights: {
-      skills: { coursework: 62, selfLearning: 38 },
+      skills: { coursework: 67, selfLearning: 33 },
       tierMatters: 46,
       research: [{ label: "Academic Pubs", value: 76 }, { label: "Industry R&D", value: 70 }, { label: "Lab Funding", value: 66 }],
       researchNote:
         "Energy transition, green hydrogen and specialty chemicals are reshaping demand. Strong analytics crossover keeps options open beyond core.",
       salaryArc: {
-        median: { entry: 12, y3: 18, y5: 25 },
-        top:    { entry: 26, y3: 38, y5: 52 },
+        median: { entry: 13, y3: 19, y5: 26 },
+        top:    { entry: 28, y3: 40, y5: 54 },
       },
     },
     branchesList: ["Chemical Engineering", "Petroleum Engineering", "Polymer Science", "Process Engineering", "Energy Engineering"],
@@ -253,13 +253,13 @@ export const BRANCHES = [
   },
   {
     slug: "materials-mining",
-    name: "Materials & Mining",
+    name: "Materials Science & Metallurgical Engineering",
     icon: "Layers",
     color: "#E29A2E",
     desc: "Metallurgy, nanomaterials, mining systems, and earth-resource engineering.",
     tags: ["Core-heavy", "PSU-friendly", "Research depth"],
     branchCount: 14,
-    stats: { jobGrowth: "Niche", medianSalary: "₹11 LPA", aiRisk: 26 },
+    stats: { jobGrowth: "Niche", medianSalary: "₹11 LPA", aiRisk: 29 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -268,14 +268,14 @@ export const BRANCHES = [
       outcomes: ["Metallurgist", "Mining Engineer", "Materials Researcher", "PSU (SAIL, Coal India)", "Battery / Semiconductor R&D"],
     },
     insights: {
-      skills: { coursework: 64, selfLearning: 36 },
+      skills: { coursework: 69, selfLearning: 31 },
       tierMatters: 44,
       research: [{ label: "Academic Pubs", value: 82 }, { label: "Industry R&D", value: 66 }, { label: "Lab Funding", value: 72 }],
       researchNote:
         "Battery materials and semiconductor substrates are reviving interest. Strong route into PSUs and research labs (DRDO, BARC) for high performers.",
       salaryArc: {
-        median: { entry: 11, y3: 16, y5: 23 },
-        top:    { entry: 24, y3: 34, y5: 46 },
+        median: { entry: 12, y3: 17, y5: 24 },
+        top:    { entry: 26, y3: 36, y5: 48 },
       },
     },
     branchesList: ["Metallurgical Engineering", "Materials Science", "Mining Engineering", "Mineral Engineering", "Nanotechnology"],
@@ -293,13 +293,13 @@ export const BRANCHES = [
   },
   {
     slug: "biotech-biosciences",
-    name: "Bio-Tech & Bio-Sciences",
+    name: "Biotechnology & Bio-Sciences",
     icon: "Dna",
     color: "#0FAE6E",
     desc: "Bioprocessing, genomics, bioinformatics, and health-tech engineering.",
     tags: ["Bio + Math", "Research-led", "Health-tech"],
     branchCount: 13,
-    stats: { jobGrowth: "Emerging", medianSalary: "₹10 LPA", aiRisk: 32 },
+    stats: { jobGrowth: "Emerging", medianSalary: "₹10 LPA", aiRisk: 35 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -308,14 +308,14 @@ export const BRANCHES = [
       outcomes: ["Bioprocess Engineer", "Bioinformatics Analyst", "Pharma / R&D", "Health-tech Engineer", "Higher studies (MS/PhD)"],
     },
     insights: {
-      skills: { coursework: 58, selfLearning: 42 },
+      skills: { coursework: 63, selfLearning: 37 },
       tierMatters: 52,
       research: [{ label: "Academic Pubs", value: 88 }, { label: "Industry R&D", value: 64 }, { label: "Lab Funding", value: 70 }],
       researchNote:
         "Strong research funding (DBT, BIRAC) and a booming bioinformatics/health-tech sector. Best outcomes pair biology depth with computational skills.",
       salaryArc: {
-        median: { entry: 10, y3: 15, y5: 22 },
-        top:    { entry: 22, y3: 33, y5: 45 },
+        median: { entry: 11, y3: 16, y5: 23 },
+        top:    { entry: 24, y3: 35, y5: 47 },
       },
     },
     branchesList: ["Biotechnology", "Biomedical Engineering", "Bioinformatics", "Bioengineering", "Biological Sciences"],
@@ -333,13 +333,13 @@ export const BRANCHES = [
   },
   {
     slug: "mathematics-computing",
-    name: "Mathematics & Computing",
+    name: "Mathematics & Scientific Computing",
     icon: "Sigma",
     color: "#7B5EA7",
     desc: "Pure & applied math, quantitative finance, and computational modelling.",
     tags: ["Math-heavy", "Quant / Fintech", "Full Tech Access"],
     branchCount: 11,
-    stats: { jobGrowth: "High-paying", medianSalary: "₹22 LPA", aiRisk: 40 },
+    stats: { jobGrowth: "High-paying", medianSalary: "₹22 LPA", aiRisk: 43 },
     aiRiskLabel: "LOW–MODERATE RISK",
     academics: {
       summary:
@@ -348,14 +348,14 @@ export const BRANCHES = [
       outcomes: ["Quant Analyst / Trader", "Software / ML Engineer", "Data Scientist", "Actuary", "Research / Academia"],
     },
     insights: {
-      skills: { coursework: 45, selfLearning: 55 },
+      skills: { coursework: 40, selfLearning: 60 },
       tierMatters: 58,
       research: [{ label: "Academic Pubs", value: 90 }, { label: "Industry R&D", value: 78 }, { label: "Lab Funding", value: 72 }],
       researchNote:
         "Quant trading firms and global tech recruit heavily from top M&C cohorts. Among the highest median packages of any engineering branch.",
       salaryArc: {
-        median: { entry: 22, y3: 34, y5: 48 },
-        top:    { entry: 55, y3: 80, y5: 110 },
+        median: { entry: 23, y3: 35, y5: 49 },
+        top:    { entry: 57, y3: 82, y5: 112 },
       },
     },
     branchesList: ["Mathematics & Computing", "Computational Mathematics", "Statistics & Data Science", "Mathematics & Scientific Computing", "Applied Mathematics"],
@@ -373,13 +373,13 @@ export const BRANCHES = [
   },
   {
     slug: "sciences-applied",
-    name: "Sciences & Applied",
+    name: "Applied Sciences & Engineering Physics",
     icon: "Atom",
     color: "#FF693D",
     desc: "Engineering physics, chemistry, and interdisciplinary applied sciences.",
     tags: ["Research-led", "Flexible exits", "Higher-studies"],
     branchCount: 15,
-    stats: { jobGrowth: "Research", medianSalary: "₹13 LPA", aiRisk: 34 },
+    stats: { jobGrowth: "Research", medianSalary: "₹13 LPA", aiRisk: 37 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -388,14 +388,14 @@ export const BRANCHES = [
       outcomes: ["Research Scientist", "Semiconductor / Photonics", "Software / Data pivot", "Higher studies (MS/PhD)", "Deep-tech startups"],
     },
     insights: {
-      skills: { coursework: 50, selfLearning: 50 },
+      skills: { coursework: 55, selfLearning: 45 },
       tierMatters: 56,
       research: [{ label: "Academic Pubs", value: 93 }, { label: "Industry R&D", value: 70 }, { label: "Lab Funding", value: 80 }],
       researchNote:
         "Quantum tech, photonics and semiconductors are national priorities (National Quantum Mission). Strongest fit for research-minded students who keep a tech option open.",
       salaryArc: {
-        median: { entry: 13, y3: 20, y5: 28 },
-        top:    { entry: 30, y3: 46, y5: 64 },
+        median: { entry: 14, y3: 21, y5: 29 },
+        top:    { entry: 32, y3: 48, y5: 66 },
       },
     },
     branchesList: ["Engineering Physics", "Engineering Chemistry", "Earth Sciences", "Applied Geology", "Exploration Geophysics"],
@@ -413,13 +413,13 @@ export const BRANCHES = [
   },
   {
     slug: "aerospace-avionics",
-    name: "Aerospace & Avionics",
+    name: "Aerospace Engineering & Avionics",
     icon: "Rocket",
     color: "#3A86FF",
     desc: "Aerodynamics, propulsion, flight mechanics, and spacecraft systems.",
     tags: ["Math-heavy", "Core-heavy", "Defence / Space"],
     branchCount: 9,
-    stats: { jobGrowth: "Space Boom", medianSalary: "₹13 LPA", aiRisk: 30 },
+    stats: { jobGrowth: "Space Boom", medianSalary: "₹13 LPA", aiRisk: 33 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -428,14 +428,14 @@ export const BRANCHES = [
       outcomes: ["Aerospace / Avionics Engineer", "Propulsion Engineer", "ISRO / DRDO / HAL", "Space-tech Startups", "Higher studies (MS)"],
     },
     insights: {
-      skills: { coursework: 60, selfLearning: 40 },
+      skills: { coursework: 65, selfLearning: 35 },
       tierMatters: 54,
       research: [{ label: "Academic Pubs", value: 84 }, { label: "Industry R&D", value: 76 }, { label: "Lab Funding", value: 80 }],
       researchNote:
         "ISRO's commercialisation and NewSpace startups (Skyroot, Agnikul) plus DRDO/HAL programmes are expanding aerospace hiring well beyond the public sector.",
       salaryArc: {
-        median: { entry: 13, y3: 19, y5: 27 },
-        top:    { entry: 28, y3: 42, y5: 58 },
+        median: { entry: 14, y3: 20, y5: 28 },
+        top:    { entry: 30, y3: 44, y5: 60 },
       },
     },
     branchesList: ["Aerospace Engineering", "Aeronautical Engineering", "Avionics", "Space Technology", "Aerospace & Mechanical"],
@@ -453,13 +453,13 @@ export const BRANCHES = [
   },
   {
     slug: "mining-earth",
-    name: "Mining Engineering",
+    name: "Mining Machinery & Engineering",
     icon: "Mountain",
     color: "#E29A2E",
     desc: "Mine planning, rock mechanics, and safe, sustainable resource extraction.",
     tags: ["Core-heavy", "PSU-friendly", "Field work"],
     branchCount: 7,
-    stats: { jobGrowth: "PSU Demand", medianSalary: "₹12 LPA", aiRisk: 24 },
+    stats: { jobGrowth: "PSU Demand", medianSalary: "₹12 LPA", aiRisk: 27 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -468,14 +468,14 @@ export const BRANCHES = [
       outcomes: ["Mining Engineer", "Mine Planner", "PSU (Coal India, NMDC)", "Mining-tech / Drones", "Higher studies / Civil services"],
     },
     insights: {
-      skills: { coursework: 66, selfLearning: 34 },
+      skills: { coursework: 71, selfLearning: 29 },
       tierMatters: 40,
       research: [{ label: "Academic Pubs", value: 70 }, { label: "Industry R&D", value: 60 }, { label: "Lab Funding", value: 64 }],
       researchNote:
         "Among the highest PSU starting pay of all branches. Automation, drone-survey and mine-safety analytics are adding modern tech roles to a traditional field.",
       salaryArc: {
-        median: { entry: 12, y3: 17, y5: 24 },
-        top:    { entry: 24, y3: 34, y5: 46 },
+        median: { entry: 13, y3: 18, y5: 25 },
+        top:    { entry: 26, y3: 36, y5: 48 },
       },
     },
     branchesList: ["Mining Engineering", "Mining Machinery", "Mineral Engineering", "Petroleum & Mining", "Geological Technology"],
@@ -493,13 +493,13 @@ export const BRANCHES = [
   },
   {
     slug: "petroleum-energy",
-    name: "Petroleum & Energy",
+    name: "Petroleum & Energy Studies",
     icon: "Fuel",
     color: "#0FAE6E",
     desc: "Reservoir engineering, drilling, and the clean-energy transition.",
     tags: ["Core-heavy", "Energy sector", "High pay"],
     branchCount: 8,
-    stats: { jobGrowth: "Energy Shift", medianSalary: "₹14 LPA", aiRisk: 32 },
+    stats: { jobGrowth: "Energy Shift", medianSalary: "₹14 LPA", aiRisk: 35 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -508,14 +508,14 @@ export const BRANCHES = [
       outcomes: ["Reservoir / Drilling Engineer", "Energy Analyst", "Oil & Gas (ONGC, Shell)", "Renewables / Hydrogen", "Higher studies (MS)"],
     },
     insights: {
-      skills: { coursework: 62, selfLearning: 38 },
+      skills: { coursework: 67, selfLearning: 33 },
       tierMatters: 50,
       research: [{ label: "Academic Pubs", value: 74 }, { label: "Industry R&D", value: 78 }, { label: "Lab Funding", value: 70 }],
       researchNote:
         "Oil & gas still pays among the highest core packages, while the clean-energy transition (green hydrogen, CCUS, geothermal) is opening a fast-growing second career track.",
       salaryArc: {
-        median: { entry: 14, y3: 21, y5: 30 },
-        top:    { entry: 30, y3: 46, y5: 64 },
+        median: { entry: 15, y3: 22, y5: 31 },
+        top:    { entry: 32, y3: 48, y5: 66 },
       },
     },
     branchesList: ["Petroleum Engineering", "Energy Engineering", "Petroleum & Gas", "Renewable Energy", "Energy Science & Engg"],
@@ -533,13 +533,13 @@ export const BRANCHES = [
   },
   {
     slug: "production-industrial",
-    name: "Production & Industrial",
+    name: "Production & Industrial Engineering",
     icon: "Factory",
     color: "#7B5EA7",
     desc: "Manufacturing systems, operations research, and supply-chain optimisation.",
     tags: ["Core + Ops", "Management pivot", "Analytics"],
     branchCount: 9,
-    stats: { jobGrowth: "Ops Demand", medianSalary: "₹13 LPA", aiRisk: 36 },
+    stats: { jobGrowth: "Ops Demand", medianSalary: "₹13 LPA", aiRisk: 39 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -548,14 +548,14 @@ export const BRANCHES = [
       outcomes: ["Operations / Supply-chain Engineer", "Industrial Engineer", "Consulting / Analytics", "Manufacturing (PLI sector)", "MBA pivot"],
     },
     insights: {
-      skills: { coursework: 56, selfLearning: 44 },
+      skills: { coursework: 61, selfLearning: 39 },
       tierMatters: 50,
       research: [{ label: "Academic Pubs", value: 72 }, { label: "Industry R&D", value: 70 }, { label: "Lab Funding", value: 62 }],
       researchNote:
         "India's manufacturing push (PLI, 'Make in India') plus e-commerce supply chains have made operations and industrial-engineering skills highly employable across sectors.",
       salaryArc: {
-        median: { entry: 13, y3: 20, y5: 28 },
-        top:    { entry: 27, y3: 41, y5: 56 },
+        median: { entry: 14, y3: 21, y5: 29 },
+        top:    { entry: 29, y3: 43, y5: 58 },
       },
     },
     branchesList: ["Production Engineering", "Industrial Engineering", "Manufacturing Engineering", "Industrial & Production", "Smart Manufacturing"],
@@ -573,13 +573,13 @@ export const BRANCHES = [
   },
   {
     slug: "naval-ocean",
-    name: "Naval & Ocean",
+    name: "Naval Architecture & Ocean Engineering",
     icon: "Anchor",
     color: "#FF693D",
     desc: "Ship design, marine structures, and ocean & offshore engineering.",
     tags: ["Core-heavy", "Niche", "Defence / Marine"],
     branchCount: 6,
-    stats: { jobGrowth: "Niche", medianSalary: "₹12 LPA", aiRisk: 28 },
+    stats: { jobGrowth: "Niche", medianSalary: "₹12 LPA", aiRisk: 31 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
@@ -588,14 +588,14 @@ export const BRANCHES = [
       outcomes: ["Naval Architect", "Marine / Offshore Engineer", "Shipyards (Cochin, MDL)", "Classification societies", "Higher studies (MS)"],
     },
     insights: {
-      skills: { coursework: 64, selfLearning: 36 },
+      skills: { coursework: 69, selfLearning: 31 },
       tierMatters: 52,
       research: [{ label: "Academic Pubs", value: 76 }, { label: "Industry R&D", value: 64 }, { label: "Lab Funding", value: 70 }],
       researchNote:
         "India's shipbuilding and naval-modernisation push, plus offshore wind and oil platforms, sustains demand for a small but well-paid pool of specialists.",
       salaryArc: {
-        median: { entry: 12, y3: 18, y5: 25 },
-        top:    { entry: 26, y3: 38, y5: 52 },
+        median: { entry: 13, y3: 19, y5: 26 },
+        top:    { entry: 28, y3: 40, y5: 54 },
       },
     },
     branchesList: ["Naval Architecture & Ocean Engg", "Ocean Engineering", "Marine Engineering", "Ship Technology", "Offshore Engineering"],
@@ -621,7 +621,7 @@ export const BRANCHES = [
 export const BRANCH_DEEP = {
   "cs-it": {
     studyMeters: [{ label: "Coding", level: "HEAVY" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "MINIMAL" }],
-    outcomeSplit: [{ label: "IT / Software", pct: 70 }, { label: "Core roles", pct: 15 }, { label: "Higher studies", pct: 10 }, { label: "Other paths", pct: 5 }],
+    outcomeSplit: [{ label: "IT / Software", pct: 72 }, { label: "Core roles", pct: 14 }, { label: "Higher studies", pct: 9 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Most tech roles open", note: "Standard tech recruitment targets CS/IT batches first. Zero barriers to entry." },
     careerRoles: [
       { role: "Software Development Engineer (SDE)", direct: true }, { role: "Frontend Engineer", direct: true },
@@ -634,7 +634,7 @@ export const BRANCH_DEEP = {
   },
   "ai-data-science": {
     studyMeters: [{ label: "Coding", level: "HEAVY" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "LIGHT" }],
-    outcomeSplit: [{ label: "AI / ML roles", pct: 60 }, { label: "Software", pct: 20 }, { label: "Higher studies", pct: 15 }, { label: "Other paths", pct: 5 }],
+    outcomeSplit: [{ label: "AI / ML roles", pct: 62 }, { label: "Software", pct: 19 }, { label: "Higher studies", pct: 14 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Strong AI/ML demand", note: "Top labs and product teams recruit data-science cohorts early — strong project portfolios win." },
     careerRoles: [
       { role: "AI Engineer", direct: true }, { role: "ML Engineer", direct: true },
@@ -647,7 +647,7 @@ export const BRANCH_DEEP = {
   },
   "electronics-electrical": {
     studyMeters: [{ label: "Coding", level: "MODERATE" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "Core electronics", pct: 45 }, { label: "Software", pct: 30 }, { label: "Higher studies", pct: 15 }, { label: "Other paths", pct: 10 }],
+    outcomeSplit: [{ label: "Core electronics", pct: 47 }, { label: "Software", pct: 29 }, { label: "Higher studies", pct: 14 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Core + tech both open", note: "VLSI / embedded core roles plus a strong software pivot keep both doors open." },
     careerRoles: [
       { role: "VLSI Engineer", direct: true }, { role: "Embedded Engineer", direct: true },
@@ -660,7 +660,7 @@ export const BRANCH_DEEP = {
   },
   "mechanical-robotics": {
     studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "Core / Manufacturing", pct: 50 }, { label: "Software / Analytics", pct: 20 }, { label: "Higher studies", pct: 20 }, { label: "Other paths", pct: 10 }],
+    outcomeSplit: [{ label: "Core / Manufacturing", pct: 52 }, { label: "Software / Analytics", pct: 19 }, { label: "Higher studies", pct: 19 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Broad core hiring", note: "Auto, EV, robotics and PSU recruiters hire widely; an analytics pivot is common." },
     careerRoles: [
       { role: "Design Engineer", direct: true }, { role: "Manufacturing Engineer", direct: true },
@@ -674,7 +674,7 @@ export const BRANCH_DEEP = {
   },
   "civil-architecture": {
     studyMeters: [{ label: "Coding", level: "MINIMAL" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "Core / Construction", pct: 55 }, { label: "Govt / PSU", pct: 20 }, { label: "Higher studies", pct: 15 }, { label: "Other paths", pct: 10 }],
+    outcomeSplit: [{ label: "Core / Construction", pct: 57 }, { label: "Govt / PSU", pct: 19 }, { label: "Higher studies", pct: 14 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Infra + PSU stability", note: "Construction majors, design consultancies and PSUs (via GATE) hire steadily." },
     careerRoles: [
       { role: "Structural Engineer", direct: true }, { role: "Site Engineer", direct: true },
@@ -687,7 +687,7 @@ export const BRANCH_DEEP = {
   },
   "chemical": {
     studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "Process / Core", pct: 50 }, { label: "Analytics / Software", pct: 20 }, { label: "Higher studies", pct: 20 }, { label: "Other paths", pct: 10 }],
+    outcomeSplit: [{ label: "Process / Core", pct: 52 }, { label: "Analytics / Software", pct: 19 }, { label: "Higher studies", pct: 19 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Energy + pharma hiring", note: "Refineries, FMCG and pharma recruit core; analytics roles add a strong pivot." },
     careerRoles: [
       { role: "Process Engineer", direct: true }, { role: "Production Engineer", direct: true },
@@ -700,7 +700,7 @@ export const BRANCH_DEEP = {
   },
   "materials-mining": {
     studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "Core / Metallurgy", pct: 45 }, { label: "PSU", pct: 25 }, { label: "Higher studies", pct: 20 }, { label: "Other paths", pct: 10 }],
+    outcomeSplit: [{ label: "Core / Metallurgy", pct: 47 }, { label: "PSU", pct: 24 }, { label: "Higher studies", pct: 19 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "PSU + R&D routes", note: "Steel, battery and semiconductor-materials firms plus PSUs absorb most graduates." },
     careerRoles: [
       { role: "Metallurgist", direct: true }, { role: "Materials Engineer", direct: true },
@@ -713,7 +713,7 @@ export const BRANCH_DEEP = {
   },
   "biotech-biosciences": {
     studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "LIGHT" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "Pharma / R&D", pct: 40 }, { label: "Bioinformatics / SW", pct: 25 }, { label: "Higher studies", pct: 25 }, { label: "Other paths", pct: 10 }],
+    outcomeSplit: [{ label: "Pharma / R&D", pct: 42 }, { label: "Bioinformatics / SW", pct: 24 }, { label: "Higher studies", pct: 24 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Research-led + health-tech", note: "Pharma R&D, bioinformatics and health-tech roles; best outcomes pair biology with coding." },
     careerRoles: [
       { role: "Bioinformatics Engineer", direct: true }, { role: "Biomedical Engineer", direct: true },
@@ -726,7 +726,7 @@ export const BRANCH_DEEP = {
   },
   "mathematics-computing": {
     studyMeters: [{ label: "Coding", level: "HEAVY" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "MINIMAL" }],
-    outcomeSplit: [{ label: "Software / ML", pct: 40 }, { label: "Quant / Finance", pct: 35 }, { label: "Higher studies", pct: 20 }, { label: "Other paths", pct: 5 }],
+    outcomeSplit: [{ label: "Software / ML", pct: 42 }, { label: "Quant / Finance", pct: 34 }, { label: "Higher studies", pct: 19 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Highest-paying roles", note: "Quant firms and global tech recruit top M&C cohorts at premium packages." },
     careerRoles: [
       { role: "Quant Developer", direct: true }, { role: "Software Engineer", direct: true },
@@ -739,7 +739,7 @@ export const BRANCH_DEEP = {
   },
   "sciences-applied": {
     studyMeters: [{ label: "Coding", level: "MODERATE" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "Research / Core", pct: 40 }, { label: "Software / Data", pct: 30 }, { label: "Higher studies", pct: 25 }, { label: "Other paths", pct: 5 }],
+    outcomeSplit: [{ label: "Research / Core", pct: 42 }, { label: "Software / Data", pct: 29 }, { label: "Higher studies", pct: 24 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Deep-tech + software", note: "Engineering-physics cohorts place strongly in software, deep-tech and core R&D." },
     careerRoles: [
       { role: "Data Analyst", direct: true }, { role: "Software Engineer", direct: true },
@@ -752,7 +752,7 @@ export const BRANCH_DEEP = {
   },
   "aerospace-avionics": {
     studyMeters: [{ label: "Coding", level: "MODERATE" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "Aerospace / Core", pct: 45 }, { label: "Software / CFD", pct: 25 }, { label: "Higher studies", pct: 25 }, { label: "Other paths", pct: 5 }],
+    outcomeSplit: [{ label: "Aerospace / Core", pct: 47 }, { label: "Software / CFD", pct: 24 }, { label: "Higher studies", pct: 24 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Space-sector growth", note: "ISRO, DRDO/HAL, NewSpace startups and CFD / auto-aero roles recruit widely." },
     careerRoles: [
       { role: "Aerospace Engineer", direct: true }, { role: "CFD Engineer", direct: true },
@@ -765,7 +765,7 @@ export const BRANCH_DEEP = {
   },
   "mining-earth": {
     studyMeters: [{ label: "Coding", level: "MINIMAL" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "PSU / Mining", pct: 55 }, { label: "Mining-tech", pct: 15 }, { label: "Higher studies", pct: 20 }, { label: "Other paths", pct: 10 }],
+    outcomeSplit: [{ label: "PSU / Mining", pct: 57 }, { label: "Mining-tech", pct: 14 }, { label: "Higher studies", pct: 19 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Top PSU packages", note: "Coal India, NMDC and metals majors offer among the highest core PSU pay." },
     careerRoles: [
       { role: "Mining Engineer", direct: true }, { role: "Mine Planner", direct: true },
@@ -778,7 +778,7 @@ export const BRANCH_DEEP = {
   },
   "petroleum-energy": {
     studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "Oil & Gas", pct: 50 }, { label: "Renewables", pct: 15 }, { label: "Higher studies", pct: 25 }, { label: "Other paths", pct: 10 }],
+    outcomeSplit: [{ label: "Oil & Gas", pct: 52 }, { label: "Renewables", pct: 14 }, { label: "Higher studies", pct: 24 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "High-paying core", note: "Oil & gas majors pay top core packages; clean-energy adds a fast-growing track." },
     careerRoles: [
       { role: "Drilling Engineer", direct: true }, { role: "Production Engineer", direct: true },
@@ -791,7 +791,7 @@ export const BRANCH_DEEP = {
   },
   "production-industrial": {
     studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "MODERATE" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "MODERATE" }],
-    outcomeSplit: [{ label: "Operations / Core", pct: 45 }, { label: "Analytics / Consulting", pct: 25 }, { label: "Higher studies / MBA", pct: 20 }, { label: "Other paths", pct: 10 }],
+    outcomeSplit: [{ label: "Operations / Core", pct: 47 }, { label: "Analytics / Consulting", pct: 24 }, { label: "Higher studies / MBA", pct: 19 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Ops + analytics demand", note: "Manufacturing, e-commerce ops and consulting hire industrial engineers widely." },
     careerRoles: [
       { role: "Operations Engineer", direct: true }, { role: "Supply-chain Engineer", direct: true },
@@ -804,7 +804,7 @@ export const BRANCH_DEEP = {
   },
   "naval-ocean": {
     studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
-    outcomeSplit: [{ label: "Shipbuilding / Core", pct: 50 }, { label: "Offshore / Energy", pct: 20 }, { label: "Higher studies", pct: 25 }, { label: "Other paths", pct: 5 }],
+    outcomeSplit: [{ label: "Shipbuilding / Core", pct: 52 }, { label: "Offshore / Energy", pct: 19 }, { label: "Higher studies", pct: 24 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Shipbuilding + offshore", note: "Shipyards, classification societies and offshore energy hire a small, well-paid pool." },
     careerRoles: [
       { role: "Naval Architect", direct: true }, { role: "Marine Engineer", direct: true },
