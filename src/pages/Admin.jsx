@@ -233,7 +233,7 @@ export default function Admin() {
   if (!authed) {
     const onKey = step === "key";
     return (
-      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: "60px 16px", background: "#f8f7f5" }}>
+      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: "60px 16px", background: "#ffffff" }}>
         <div style={{ maxWidth: 440, width: "100%", background: "#fff", borderRadius: 20, padding: "40px 36px", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", border: "1px solid #eee" }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 22 }}>
             <div style={{ width: 64, height: 64, borderRadius: 20, background: `${ORANGE}15`, display: "grid", placeItems: "center", marginBottom: 16 }}>

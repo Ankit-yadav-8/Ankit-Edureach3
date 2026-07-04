@@ -155,7 +155,7 @@ export default function SyllabusToolkit({ data, heroProps, seoTitle, seoDesc, se
   const [viewer, setViewer] = useState(null); // { subjectId, chapter }
 
   return (
-    <div className="page" style={{ background: "#fdfdfd", minHeight: "100vh" }}>
+    <div className="page" style={{ background: "#ffffff", minHeight: "100vh" }}>
       <Seo title={seoTitle} description={seoDesc} path={seoPath} />
 
       {heroProps && <PremiumHero {...heroProps} />}

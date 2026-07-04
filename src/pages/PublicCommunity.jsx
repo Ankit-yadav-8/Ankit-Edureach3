@@ -137,7 +137,7 @@ export default function PublicCommunity() {
   /* ── not-logged-in gate (site is auth-gated, but be graceful) ── */
   if (!isLoggedIn) {
     return (
-      <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "130px 16px 60px", background: "#f8f7f5" }}>
+      <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "130px 16px 60px", background: "#ffffff" }}>
         <Seo
           title="Student Community — Ask Doubts & Discuss with JEE / NEET Aspirants"
           description="Join the CollegeParichay student community — a public forum where JEE & NEET aspirants, students and mentors discuss doubts, colleges, branches and campus life."
@@ -165,7 +165,7 @@ export default function PublicCommunity() {
   const subjects = SUBJECTS.Public;
 
   return (
-    <section style={{ background: "#f8f7f5", minHeight: "100vh", padding: "110px 0 70px" }}>
+    <section style={{ background: "#ffffff", minHeight: "100vh", padding: "110px 0 70px" }}>
       <div style={{ maxWidth: 880, margin: "0 auto", padding: "0 18px" }}>
 
         {/* hero */}

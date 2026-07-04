@@ -653,7 +653,7 @@ export default function BranchDetail() {
   const seoDesc = `${b.name}: ${(b.desc || "").slice(0, 150)} Explore scope, salaries, AI-disruption risk, top recruiters, placements and the best colleges.`;
 
   return (
-    <div style={{ background: "#FAFAFA", minHeight: "100vh", paddingTop: 92, paddingBottom: 72 }}>
+    <div style={{ background: "#ffffff", minHeight: "100vh", paddingTop: 92, paddingBottom: 72 }}>
       <Seo title={`${b.name} — Scope, Salary, Colleges & AI Risk`} description={seoDesc} path={`/branches/${slug}`}
         breadcrumbs={[{ name: "Home", path: "/" }, { name: "Branches", path: "/branches" }, { name: b.name, path: `/branches/${slug}` }]} />
       <div className="container" style={{ maxWidth: 1040 }}>

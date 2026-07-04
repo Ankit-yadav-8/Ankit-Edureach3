@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import Seo from "../components/Seo.jsx";
 import BranchCatalog from "../components/home/BranchCatalog.jsx";
-import { CL } from "../components/home/clTheme.js";
 
 export default function Branches() {
   const nav = useNavigate();
@@ -14,7 +13,7 @@ export default function Branches() {
   const goHome = () => nav("/");
 
   return (
-    <div style={{ background: CL.cream2, paddingTop: 110, minHeight: "100vh" }}>
+    <div style={{ background: "#ffffff", paddingTop: 110, minHeight: "100vh" }}>
       <Seo path="/branches" />
       <div className="container" style={{ marginBottom: 8 }}>
         <button onClick={goHome} aria-label="Back to home" className="cp-back-btn">

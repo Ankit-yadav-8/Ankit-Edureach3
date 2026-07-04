@@ -355,7 +355,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <section id="top" style={{ background: "#f4f5f9", padding: "112px 0 24px" }}>
+    <section id="top" style={{ background: "#ffffff", padding: "112px 0 24px" }}>
       <div className="dash-shell" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 18px" }}>
 
         {/* ── Left sidebar ── */}

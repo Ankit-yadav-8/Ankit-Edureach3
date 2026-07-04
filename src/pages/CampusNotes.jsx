@@ -228,7 +228,7 @@ export default function CampusNotes() {
      RENDER
      ═══════════════════════════════════════════════════════════════════════════ */
   return (
-    <div style={{ minHeight: "100vh", background: "#FAFAFA", fontFamily: "'Inter', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#ffffff", fontFamily: "'Inter', sans-serif" }}>
       <Seo
         title="Campus Notes — Free Branch-wise Study Notes & Resources for College Students"
         description="Download free semester-wise, branch-wise study notes and resources shared by students. Find notes by branch, subject and semester on CollegeParichay Campus Notes."

@@ -259,7 +259,7 @@ function OtpGate({ email, name, onVerified }) {
   };
 
   return (
-    <section style={{ background: "#f8f7f5", minHeight: "100vh", display: "grid", placeItems: "center", padding: "120px 16px 60px" }}>
+    <section style={{ background: "#ffffff", minHeight: "100vh", display: "grid", placeItems: "center", padding: "120px 16px 60px" }}>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
         style={{ width: "100%", maxWidth: 440, background: "#fff", borderRadius: 24, border: "1px solid rgba(255, 105, 61,.18)", padding: "34px 30px", boxShadow: "0 30px 70px -40px rgba(13,27,62,.5)", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${ORANGE},${GREEN})` }} />
@@ -920,7 +920,7 @@ function DashboardBody({ urlPlan = "" }) {
   ];
 
   return (
-    <section style={{ background: "#f8f7f5", minHeight: "100vh", paddingBottom: 70 }}>
+    <section style={{ background: "#ffffff", minHeight: "100vh", paddingBottom: 70 }}>
       {/* ── Title strip ── */}
       <div style={{ paddingTop: 104, textAlign: "center" }}>
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
