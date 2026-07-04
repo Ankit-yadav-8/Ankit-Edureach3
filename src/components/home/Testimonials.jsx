@@ -1,6 +1,8 @@
-/* Testimonials — what students & parents say. Campusloom-styled cards. */
-import { Quote, Star, BadgeCheck } from "lucide-react";
-import Reveal from "../Reveal.jsx";
+/* Testimonials — a staggered "story wall" of student & parent quotes.
+   Masonry columns let cards keep their natural height; each carries its
+   own tint, a verified author and an entrance/hover animation. */
+import { motion } from "framer-motion";
+import { Quote, Star, BadgeCheck, Sparkles } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
 const TESTIMONIALS = [
@@ -18,7 +20,7 @@ const TESTIMONIALS = [
   },
   {
     name: "Rohit M.", detail: "Branch vs College user", initials: "RM", color: CL.violet,
-    text: "I was torn between a top NIT's core branch and CSE at a mid-tier college. The 6-question assessment finally gave me clarity — it said branch-first, and it was spot on for me.",
+    text: "I was torn between a top NIT's core branch and CSE at a mid-tier college. The quiz finally gave me clarity — it said branch-first, and it was spot on for me.",
   },
   {
     name: "Fatima S.", detail: "JoSAA ₹499 plan · 2025", initials: "FS", color: CL.blue,
@@ -33,46 +35,89 @@ const TESTIMONIALS = [
 export default function Testimonials() {
   return (
     <section style={{ background: CL.cream, padding: "84px 0", position: "relative", overflow: "hidden" }}>
+      <style>{CSS}</style>
+      {/* soft ambient glows */}
+      <div style={{ position: "absolute", top: -60, right: "8%", width: 320, height: 320, borderRadius: "50%", background: `radial-gradient(circle, ${CL.coral}14, transparent 70%)`, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: -80, left: "4%", width: 320, height: 320, borderRadius: "50%", background: `radial-gradient(circle, ${CL.violet}12, transparent 70%)`, pointerEvents: "none" }} />
+
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 40px" }}>
-          <span style={clEyebrow}><Star size={13} /> Loved by students & parents</span>
-          <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.2vw,2.7rem)", color: CL.ink, letterSpacing: "-1.1px", margin: "16px 0 12px", lineHeight: 1.1 }}>
-            What students & parents <span style={{ color: CL.coral }}>say.</span>
+          <span style={clEyebrow}><Sparkles size={13} /> Student &amp; Parent Stories</span>
+          <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.2vw,2.7rem)", color: CL.ink, letterSpacing: "-1.1px", margin: "16px 0 14px", lineHeight: 1.1 }}>
+            Real results, in their <span style={{ color: CL.coral }}>own words.</span>
           </h2>
-          <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7 }}>
-            Real outcomes from people who used College Parichay to navigate JEE admissions.
-          </p>
+          {/* aggregate rating chip */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: CL.card, border: `1px solid ${CL.line}`, borderRadius: 50, padding: "8px 16px", boxShadow: CL.shadow }}>
+            <span style={{ display: "flex", gap: 2 }}>
+              {[1, 2, 3, 4, 5].map((n) => <Star key={n} size={15} fill={CL.amber} color={CL.amber} />)}
+            </span>
+            <span style={{ fontFamily: CL.display, fontWeight: 800, color: CL.ink, fontSize: 14 }}>4.9<span style={{ color: CL.muted, fontWeight: 600 }}>/5</span></span>
+            <span style={{ width: 1, height: 16, background: CL.line }} />
+            <span style={{ fontSize: 13, color: CL.body }}>from <strong style={{ color: CL.ink }}>3,200+</strong> families</span>
+          </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 22 }}>
+        <div className="tw-wall">
           {TESTIMONIALS.map((t, i) => (
-            <Reveal key={t.name} delay={(i % 3) * 0.07}>
-              <div style={{
-                height: "100%", background: CL.card, borderRadius: 20, border: `1px solid ${CL.line}`,
-                boxShadow: CL.shadow, padding: "26px 24px", display: "flex", flexDirection: "column", gap: 14,
-                borderTop: `3px solid ${t.color}`,
-              }}>
-                <Quote size={26} color={t.color} />
-                <p style={{ color: CL.ink2, lineHeight: 1.7, fontSize: 14.5, flex: 1 }}>"{t.text}"</p>
-                <div style={{ display: "flex", gap: 2 }}>
-                  {[1, 2, 3, 4, 5].map((n) => <Star key={n} size={15} fill={CL.amber} color={CL.amber} />)}
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <span style={{ width: 42, height: 42, borderRadius: "50%", background: `${t.color}1a`, color: t.color, display: "grid", placeItems: "center", fontFamily: CL.display, fontWeight: 800, fontSize: 14, flexShrink: 0 }}>
-                    {t.initials}
-                  </span>
-                  <div>
-                    <div style={{ fontWeight: 800, color: CL.ink, fontFamily: CL.display, fontSize: 14.5, display: "flex", alignItems: "center", gap: 5 }}>
-                      {t.name} <BadgeCheck size={14} color={CL.green} />
-                    </div>
-                    <div style={{ fontSize: 12.5, color: CL.muted }}>{t.detail}</div>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
+            <motion.figure
+              key={t.name}
+              className="tw-card"
+              style={{ "--accent": t.color }}
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: (i % 3) * 0.09, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <span className="tw-quote"><Quote size={30} /></span>
+              <blockquote className="tw-text">{t.text}</blockquote>
+              <span className="tw-stars">
+                {[1, 2, 3, 4, 5].map((n) => <Star key={n} size={14} fill={CL.amber} color={CL.amber} />)}
+              </span>
+              <figcaption className="tw-author">
+                <span className="tw-avatar">{t.initials}</span>
+                <span>
+                  <span className="tw-name">{t.name} <BadgeCheck size={14} color={CL.green} /></span>
+                  <span className="tw-detail">{t.detail}</span>
+                </span>
+              </figcaption>
+            </motion.figure>
           ))}
         </div>
       </div>
     </section>
   );
 }
+
+const CSS = `
+.tw-wall { column-count: 3; column-gap: 22px; }
+.tw-card {
+  break-inside: avoid; margin: 0 0 22px; position: relative;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, ${CL.card}), ${CL.card});
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, ${CL.line});
+  border-radius: 20px; padding: 24px 22px 20px; box-shadow: ${CL.shadow};
+  transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s;
+  overflow: hidden;
+}
+.tw-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(var(--accent), color-mix(in srgb, var(--accent) 55%, transparent));
+}
+.tw-card:hover { transform: translateY(-6px); box-shadow: 0 22px 50px rgba(33,29,46,.14); }
+.tw-quote {
+  display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); margin-bottom: 14px;
+}
+.tw-text { margin: 0 0 14px; color: ${CL.ink2}; font-size: 14.5px; line-height: 1.72; font-style: normal; }
+.tw-stars { display: flex; gap: 2px; margin-bottom: 16px; }
+.tw-author { display: flex; align-items: center; gap: 12px; padding-top: 15px; border-top: 1px dashed ${CL.cream3}; }
+.tw-avatar {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+  font: 800 14px/1 ${CL.display}; color: #fff; background: var(--accent);
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.tw-name { display: flex; align-items: center; gap: 5px; font: 800 14.5px/1.2 ${CL.display}; color: ${CL.ink}; }
+.tw-detail { display: block; font-size: 12.5px; color: ${CL.muted}; margin-top: 3px; }
+
+@media (max-width: 980px) { .tw-wall { column-count: 2; } }
+@media (max-width: 640px) { .tw-wall { column-count: 1; } }
+`;

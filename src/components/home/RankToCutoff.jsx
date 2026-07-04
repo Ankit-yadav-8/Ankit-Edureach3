@@ -1,4 +1,4 @@
-/* RankToCutoff — campusloom "Map your rank to cutoffs" JoSAA-engine section.
+/* RankToCutoff — "Map your rank to cutoffs" JoSAA-engine section.
    Left: pitch + feature bullets. Right: a browser-framed mini predictor —
    type a JEE Advanced CRL and instantly see IIT + branch matches tagged
    High / Medium chance against indicative closing ranks. Each result shows

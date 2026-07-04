@@ -1,4 +1,4 @@
-/* ChapterAnalysis — campusloom-style "Weightage & Difficulty Lab" for JEE Main
+/* ChapterAnalysis — "Weightage & Difficulty Lab" for JEE Main
    and JEE Advanced. Left rail with summary metrics + a chapter-chip snapshot,
    then per-subject cards each with a weightage donut, difficulty and trend.
    Chapter weightage / difficulty figures are indicative dummy data. */

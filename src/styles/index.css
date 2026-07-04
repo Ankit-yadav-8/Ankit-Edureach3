@@ -3492,7 +3492,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .cp-empty-steps { grid-template-columns: 1fr; }
 }
 /* ════════════════════════════════════════════════
-   Campusloom Branch Catalog row — responsive
+   Branch Catalog row — responsive
 ════════════════════════════════════════════════ */
 .cl-branch-row {
   position: relative;

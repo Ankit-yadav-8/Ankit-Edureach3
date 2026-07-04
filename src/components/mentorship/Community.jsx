@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Users, Sparkles, Loader2, ShieldCheck, Lock, MessagesSquare,
-  RefreshCw, Search, Inbox, ArrowLeftRight, X, Globe2,
+  RefreshCw, Search, Inbox, ArrowLeftRight, X, Globe2, Bot,
 } from "lucide-react";
+import AiDoubtSolver from "./AiDoubtSolver.jsx";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext.jsx";
 import {
@@ -84,7 +85,7 @@ export default function Community({ plan, onSwitchBatch }) {
   }, [token, plan]);
 
   const loadFeed = useCallback((which = tab, silent = false) => {
-    if (which === "members") return;
+    if (which === "members" || which === "ai") return;
     if (!silent) setRefreshing(true);
     apiCommunityFeed(token, which, plan, subject)
       .then((d) => { if (mounted.current) setPosts(d.posts || []); })
@@ -94,7 +95,7 @@ export default function Community({ plan, onSwitchBatch }) {
 
   // load + poll the feed (skip while on the members tab)
   useEffect(() => {
-    if (!me || tab === "members") return;
+    if (!me || tab === "members" || tab === "ai") return;
     loadFeed(tab);
     const iv = setInterval(() => {
       if (document.visibilityState === "visible") loadFeed(tab, true);
@@ -162,6 +163,7 @@ export default function Community({ plan, onSwitchBatch }) {
 
   const TABS = [
     { id: "all", label: "Feed", icon: MessagesSquare },
+    { id: "ai", label: "AI Solver", icon: Bot },
     { id: "highlights", label: "Highlights", icon: Sparkles },
     { id: "unanswered", label: "Unanswered", icon: Inbox },
     { id: "members", label: "Batchmates", icon: Users },
@@ -239,7 +241,7 @@ export default function Community({ plan, onSwitchBatch }) {
       </div>
 
       {/* subject filter + search (feed tabs only) */}
-      {tab !== "members" && (
+      {tab !== "members" && tab !== "ai" && (
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
           <button onClick={() => setSubject("")}
             style={{ padding: "6px 13px", borderRadius: 50, cursor: "pointer", fontSize: 12.5, fontWeight: 700, border: `1.5px solid ${subject === "" ? ORANGE : "#e5e7eb"}`, background: subject === "" ? `${ORANGE}14` : "#fff", color: subject === "" ? ORANGE : MUTE }}>
@@ -266,6 +268,8 @@ export default function Community({ plan, onSwitchBatch }) {
       {/* content */}
       {tab === "members" ? (
         <MemberGrid token={token} plan={plan} batchLabel={me.batchLabel} />
+      ) : tab === "ai" ? (
+        <AiDoubtSolver token={token} exam={me.exam} subjects={subjects} />
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {shown.length === 0 ? (

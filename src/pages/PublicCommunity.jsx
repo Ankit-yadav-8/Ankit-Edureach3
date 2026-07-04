@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Globe2, Sparkles, Loader2, ShieldCheck, MessagesSquare, Users,
-  RefreshCw, Search, Inbox, X, GraduationCap, ChevronDown, Check, Plus, Send,
+  RefreshCw, Search, Inbox, X, GraduationCap, ChevronDown, Check, Plus, Send, Bot,
 } from "lucide-react";
+import AiDoubtSolver from "../components/mentorship/AiDoubtSolver.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
 import Seo from "../components/Seo.jsx";
 import {
@@ -89,6 +90,7 @@ export default function PublicCommunity() {
   }, [token]);
 
   const loadFeed = useCallback((which = tab, silent = false) => {
+    if (which === "ai") return;
     if (!silent) setRefreshing(true);
     apiPublicFeed(token, which, subject, category)
       .then((d) => { if (mounted.current) setPosts(d.posts || []); })
@@ -97,7 +99,7 @@ export default function PublicCommunity() {
   }, [token, tab, subject, category]);
 
   useEffect(() => {
-    if (!me) return;
+    if (!me || tab === "ai") return;
     loadFeed(tab);
     const iv = setInterval(() => {
       if (document.visibilityState === "visible") loadFeed(tab, true);
@@ -156,6 +158,7 @@ export default function PublicCommunity() {
 
   const TABS = [
     { id: "all", label: "Feed", icon: MessagesSquare },
+    { id: "ai", label: "AI Solver", icon: Bot },
     { id: "highlights", label: "Highlights", icon: Sparkles },
     { id: "unanswered", label: "Unanswered", icon: Inbox },
   ];
@@ -242,7 +245,11 @@ export default function PublicCommunity() {
               </button>
             </div>
 
+            {/* AI Doubt Solver */}
+            {tab === "ai" && <AiDoubtSolver token={token} exam="Public" subjects={subjects} />}
+
             {/* subject filter + search */}
+            {tab !== "ai" && (
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
               <button onClick={() => setSubject("")}
                 style={{ padding: "6px 13px", borderRadius: 50, cursor: "pointer", fontSize: 12.5, fontWeight: 700, border: `1.5px solid ${subject === "" ? ORANGE : "#e5e7eb"}`, background: subject === "" ? `${ORANGE}14` : "#fff", color: subject === "" ? ORANGE : MUTE }}>
@@ -264,8 +271,10 @@ export default function PublicCommunity() {
                 {query && <button onClick={() => setQuery("")} style={{ border: "none", background: "transparent", cursor: "pointer", color: MUTE, display: "grid", placeItems: "center" }}><X size={14} /></button>}
               </div>
             </div>
+            )}
 
             {/* feed */}
+            {tab !== "ai" && (
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               {shown.length === 0 ? (
                 <div style={{ textAlign: "center", padding: "34px 20px", background: "#fff", border: "1px dashed #e5e7eb", borderRadius: 18, color: MUTE }}>
@@ -288,6 +297,7 @@ export default function PublicCommunity() {
                   canUpload={me?.cloudinaryReady} onLike={likePost} onDelete={deletePost} onReplied={onReplied} />
               ))}
             </div>
+            )}
           </>
         )}
       </div>

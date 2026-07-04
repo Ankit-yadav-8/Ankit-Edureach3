@@ -679,7 +679,7 @@ export const BRANCHES = [
    Levels: HEAVY · MODERATE · LIGHT · MINIMAL. Numbers are indicative. ── */
 export const BRANCH_DEEP = {
   "cs-it": {
-    studyMeters: [{ label: "Coding", level: "HEAVY" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "MINIMAL" }],
+    studyMeters: [{ label: "Programming", level: "HEAVY" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "HEAVY" }, { label: "Hands-on", level: "MINIMAL" }],
     outcomeSplit: [{ label: "IT / Software", pct: 72 }, { label: "Core roles", pct: 14 }, { label: "Higher studies", pct: 9 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Most tech roles open", note: "Standard tech recruitment targets CS/IT batches first. Zero barriers to entry." },
     careerRoles: [
@@ -692,7 +692,7 @@ export const BRANCH_DEEP = {
     recruiters: ["Google", "Microsoft", "Amazon", "Adobe", "Flipkart"],
   },
   "ai-data-science": {
-    studyMeters: [{ label: "Coding", level: "HEAVY" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "LIGHT" }],
+    studyMeters: [{ label: "Programming", level: "HEAVY" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "HEAVY" }, { label: "Hands-on", level: "LIGHT" }],
     outcomeSplit: [{ label: "AI / ML roles", pct: 62 }, { label: "Software", pct: 19 }, { label: "Higher studies", pct: 14 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Strong AI/ML demand", note: "Top labs and product teams recruit data-science cohorts early — strong project portfolios win." },
     careerRoles: [
@@ -705,7 +705,7 @@ export const BRANCH_DEEP = {
     recruiters: ["Google", "Microsoft", "NVIDIA", "OpenAI", "Amazon"],
   },
   "electronics-electrical": {
-    studyMeters: [{ label: "Coding", level: "MODERATE" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "MODERATE" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "HEAVY" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "Core electronics", pct: 47 }, { label: "Software", pct: 29 }, { label: "Higher studies", pct: 14 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Core + tech both open", note: "VLSI / embedded core roles plus a strong software pivot keep both doors open." },
     careerRoles: [
@@ -718,7 +718,7 @@ export const BRANCH_DEEP = {
     recruiters: ["Intel", "Qualcomm", "Texas Instruments", "Samsung", "NVIDIA"],
   },
   "mechanical-robotics": {
-    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "LIGHT" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "MODERATE" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "Core / Manufacturing", pct: 52 }, { label: "Software / Analytics", pct: 19 }, { label: "Higher studies", pct: 19 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Broad core hiring", note: "Auto, EV, robotics and PSU recruiters hire widely; an analytics pivot is common." },
     careerRoles: [
@@ -732,7 +732,7 @@ export const BRANCH_DEEP = {
     recruiters: ["Tata Motors", "Mahindra", "L&T", "Bosch", "Ola Electric", "Reliance Industries", "Maruti Suzuki", "Honda"],
   },
   "civil-architecture": {
-    studyMeters: [{ label: "Coding", level: "MINIMAL" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "MINIMAL" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "MODERATE" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "Core / Construction", pct: 57 }, { label: "Govt / PSU", pct: 19 }, { label: "Higher studies", pct: 14 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Infra + PSU stability", note: "Construction majors, design consultancies and PSUs (via GATE) hire steadily." },
     careerRoles: [
@@ -745,7 +745,7 @@ export const BRANCH_DEEP = {
     recruiters: ["L&T", "AECOM", "Tata Projects", "Jacobs", "Afcons"],
   },
   "chemical": {
-    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "LIGHT" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "MODERATE" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "Process / Core", pct: 52 }, { label: "Analytics / Software", pct: 19 }, { label: "Higher studies", pct: 19 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Energy + pharma hiring", note: "Refineries, FMCG and pharma recruit core; analytics roles add a strong pivot." },
     careerRoles: [
@@ -758,7 +758,7 @@ export const BRANCH_DEEP = {
     recruiters: ["Reliance", "IOCL", "Pfizer", "Asian Paints", "Unilever"],
   },
   "materials-mining": {
-    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "LIGHT" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "MODERATE" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "Core / Metallurgy", pct: 47 }, { label: "PSU", pct: 24 }, { label: "Higher studies", pct: 19 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "PSU + R&D routes", note: "Steel, battery and semiconductor-materials firms plus PSUs absorb most graduates." },
     careerRoles: [
@@ -771,7 +771,7 @@ export const BRANCH_DEEP = {
     recruiters: ["Tata Steel", "JSW", "SAIL", "Vedanta", "Hindalco"],
   },
   "biotech-biosciences": {
-    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "LIGHT" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "LIGHT" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "LIGHT" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "Pharma / R&D", pct: 42 }, { label: "Bioinformatics / SW", pct: 24 }, { label: "Higher studies", pct: 24 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Research-led + health-tech", note: "Pharma R&D, bioinformatics and health-tech roles; best outcomes pair biology with coding." },
     careerRoles: [
@@ -784,7 +784,7 @@ export const BRANCH_DEEP = {
     recruiters: ["Biocon", "Dr. Reddy's", "Syngene", "Novartis", "GE Healthcare"],
   },
   "mathematics-computing": {
-    studyMeters: [{ label: "Coding", level: "HEAVY" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "MINIMAL" }],
+    studyMeters: [{ label: "Programming", level: "HEAVY" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "HEAVY" }, { label: "Hands-on", level: "MINIMAL" }],
     outcomeSplit: [{ label: "Software / ML", pct: 42 }, { label: "Quant / Finance", pct: 34 }, { label: "Higher studies", pct: 19 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Highest-paying roles", note: "Quant firms and global tech recruit top M&C cohorts at premium packages." },
     careerRoles: [
@@ -797,7 +797,7 @@ export const BRANCH_DEEP = {
     recruiters: ["Tower Research", "Jane Street", "Goldman Sachs", "Optiver", "Google"],
   },
   "sciences-applied": {
-    studyMeters: [{ label: "Coding", level: "MODERATE" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "MODERATE" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "HEAVY" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "Research / Core", pct: 42 }, { label: "Software / Data", pct: 29 }, { label: "Higher studies", pct: 24 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Deep-tech + software", note: "Engineering-physics cohorts place strongly in software, deep-tech and core R&D." },
     careerRoles: [
@@ -810,7 +810,7 @@ export const BRANCH_DEEP = {
     recruiters: ["ISRO", "BARC", "Intel", "Applied Materials", "TCS Research"],
   },
   "aerospace-avionics": {
-    studyMeters: [{ label: "Coding", level: "MODERATE" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "MODERATE" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "HEAVY" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "Aerospace / Core", pct: 47 }, { label: "Software / CFD", pct: 24 }, { label: "Higher studies", pct: 24 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Space-sector growth", note: "ISRO, DRDO/HAL, NewSpace startups and CFD / auto-aero roles recruit widely." },
     careerRoles: [
@@ -823,7 +823,7 @@ export const BRANCH_DEEP = {
     recruiters: ["ISRO", "HAL", "DRDO", "Boeing", "Airbus"],
   },
   "mining-earth": {
-    studyMeters: [{ label: "Coding", level: "MINIMAL" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "MINIMAL" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "MODERATE" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "PSU / Mining", pct: 57 }, { label: "Mining-tech", pct: 14 }, { label: "Higher studies", pct: 19 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Top PSU packages", note: "Coal India, NMDC and metals majors offer among the highest core PSU pay." },
     careerRoles: [
@@ -836,7 +836,7 @@ export const BRANCH_DEEP = {
     recruiters: ["Coal India", "NMDC", "Vedanta", "Tata Steel", "Hindustan Zinc"],
   },
   "petroleum-energy": {
-    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "LIGHT" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "MODERATE" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "Oil & Gas", pct: 52 }, { label: "Renewables", pct: 14 }, { label: "Higher studies", pct: 24 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "High-paying core", note: "Oil & gas majors pay top core packages; clean-energy adds a fast-growing track." },
     careerRoles: [
@@ -849,7 +849,7 @@ export const BRANCH_DEEP = {
     recruiters: ["ONGC", "Shell", "Schlumberger", "Reliance", "IOCL"],
   },
   "production-industrial": {
-    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "MODERATE" }, { label: "Math", level: "MODERATE" }, { label: "Lab Work", level: "MODERATE" }],
+    studyMeters: [{ label: "Programming", level: "LIGHT" }, { label: "Concepts", level: "MODERATE" }, { label: "Quant", level: "MODERATE" }, { label: "Hands-on", level: "MODERATE" }],
     outcomeSplit: [{ label: "Operations / Core", pct: 47 }, { label: "Analytics / Consulting", pct: 24 }, { label: "Higher studies / MBA", pct: 19 }, { label: "Other paths", pct: 10 }],
     placement: { headline: "Ops + analytics demand", note: "Manufacturing, e-commerce ops and consulting hire industrial engineers widely." },
     careerRoles: [
@@ -862,7 +862,7 @@ export const BRANCH_DEEP = {
     recruiters: ["Amazon", "Flipkart", "Tata Steel", "Maruti Suzuki", "Delhivery"],
   },
   "naval-ocean": {
-    studyMeters: [{ label: "Coding", level: "LIGHT" }, { label: "Theory", level: "HEAVY" }, { label: "Math", level: "HEAVY" }, { label: "Lab Work", level: "HEAVY" }],
+    studyMeters: [{ label: "Programming", level: "LIGHT" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "HEAVY" }, { label: "Hands-on", level: "HEAVY" }],
     outcomeSplit: [{ label: "Shipbuilding / Core", pct: 52 }, { label: "Offshore / Energy", pct: 19 }, { label: "Higher studies", pct: 24 }, { label: "Other paths", pct: 5 }],
     placement: { headline: "Shipbuilding + offshore", note: "Shipyards, classification societies and offshore energy hire a small, well-paid pool." },
     careerRoles: [

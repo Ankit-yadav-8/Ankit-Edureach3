@@ -1,4 +1,4 @@
-/* clTheme — Campusloom-inspired palette + shared style tokens.
+/* clTheme — College Parichay palette + shared style tokens.
    Warm cream surfaces, coral-red accent, green = high / amber = medium.
    Imported by the new home sections and branch pages so every surface
    stays visually consistent. */

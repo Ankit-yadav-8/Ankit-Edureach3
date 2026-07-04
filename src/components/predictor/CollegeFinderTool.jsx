@@ -27,7 +27,7 @@ const CF_EMPTY_ITEM = {
   show:   { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 20 } },
 };
 
-/* Tier → "probability" bucket used by campusloom-style chance filter */
+/* Tier → "probability" bucket used by chance filter */
 const TIER_TO_PROB = { Safe: "high", Moderate: "medium", Ambitious: "low" };
 const PROB_META = {
   high:   { label: "High",   color: "#0e9c90", bg: "rgba(46,196,182,.14)" },
@@ -36,7 +36,7 @@ const PROB_META = {
 };
 
 /* Circular institute mark — the college's own site icon (its logo), with a
-   coral monogram fallback. Mirrors the campusloom card avatar. */
+   coral monogram fallback. Card avatar with a coral monogram. */
 function InstituteLogo({ slug, name, size = 44 }) {
   const [err, setErr] = useState(false);
   const initials = name.split(/\s+/).filter((w) => /^[A-Za-z]/.test(w))

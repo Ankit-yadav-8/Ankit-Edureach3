@@ -1,4 +1,4 @@
-/* Home — rebuilt as a short, campusloom-styled hub.
+/* Home — rebuilt as a short, focused hub.
    Hero → tools → branch catalog → rank-to-cutoff → branch vs college →
    plans → exam buzz teaser → success stories → FAQ. News, the application
    radar and top-colleges blocks now live on dedicated pages. */
@@ -113,7 +113,7 @@ export default function Home({ onSearch }) {
       {/* ── College logo ticker ── */}
       <CollegeTicker />
 
-      {/* ── Smart tools (campusloom LIVE-card grid) ── */}
+      {/* ── Smart tools (LIVE-card grid) ── */}
       <ToolsGrid />
 
       {/* ── Branch Explorer — 220+ branches, 10 paths ── */}

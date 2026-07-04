@@ -1,4 +1,4 @@
-/* FaqSection — campusloom-style accordion of frequently asked questions. */
+/* FaqSection — accordion of frequently asked questions. */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus, HelpCircle } from "lucide-react";
