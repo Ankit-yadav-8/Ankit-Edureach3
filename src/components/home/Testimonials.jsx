@@ -68,7 +68,7 @@ export default function Testimonials() {
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.5, delay: (i % 3) * 0.09, ease: [0.22, 1, 0.36, 1] }}
             >
-              <span className="tw-quote"><Quote size={30} /></span>
+              <span className="tw-quote"><Quote size={20} /></span>
               <blockquote className="tw-text">{t.text}</blockquote>
               <span className="tw-stars">
                 {[1, 2, 3, 4, 5].map((n) => <Star key={n} size={14} fill={CL.amber} color={CL.amber} />)}
@@ -89,12 +89,12 @@ export default function Testimonials() {
 }
 
 const CSS = `
-.tw-wall { column-count: 3; column-gap: 22px; }
+.tw-wall { column-count: 3; column-gap: 20px; }
 .tw-card {
-  break-inside: avoid; margin: 0 0 22px; position: relative;
+  break-inside: avoid; margin: 0 0 20px; position: relative;
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, ${CL.card}), ${CL.card});
   border: 1px solid color-mix(in srgb, var(--accent) 22%, ${CL.line});
-  border-radius: 20px; padding: 24px 22px 20px; box-shadow: ${CL.shadow};
+  border-radius: 16px; padding: 18px 18px 16px; box-shadow: ${CL.shadow};
   transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s;
   overflow: hidden;
 }
@@ -102,21 +102,21 @@ const CSS = `
   content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
   background: linear-gradient(var(--accent), color-mix(in srgb, var(--accent) 55%, transparent));
 }
-.tw-card:hover { transform: translateY(-6px); box-shadow: 0 22px 50px rgba(33,29,46,.14); }
+.tw-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(33,29,46,.12); }
 .tw-quote {
-  display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 12px;
-  background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); margin-bottom: 14px;
+  display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); margin-bottom: 12px;
 }
-.tw-text { margin: 0 0 14px; color: ${CL.ink2}; font-size: 14.5px; line-height: 1.72; font-style: normal; }
-.tw-stars { display: flex; gap: 2px; margin-bottom: 16px; }
-.tw-author { display: flex; align-items: center; gap: 12px; padding-top: 15px; border-top: 1px dashed ${CL.cream3}; }
+.tw-text { margin: 0 0 12px; color: ${CL.ink2}; font-size: 13.5px; line-height: 1.6; font-style: normal; }
+.tw-stars { display: flex; gap: 2px; margin-bottom: 12px; }
+.tw-author { display: flex; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px dashed ${CL.cream3}; }
 .tw-avatar {
-  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
-  font: 800 14px/1 ${CL.display}; color: #fff; background: var(--accent);
-  box-shadow: 0 5px 14px color-mix(in srgb, var(--accent) 45%, transparent);
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+  font: 800 13px/1 ${CL.display}; color: #fff; background: var(--accent);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--accent) 45%, transparent);
 }
-.tw-name { display: flex; align-items: center; gap: 5px; font: 800 14.5px/1.2 ${CL.display}; color: ${CL.ink}; }
-.tw-detail { display: block; font-size: 12.5px; color: ${CL.muted}; margin-top: 3px; }
+.tw-name { display: flex; align-items: center; gap: 5px; font: 800 13.5px/1.2 ${CL.display}; color: ${CL.ink}; }
+.tw-detail { display: block; font-size: 11.5px; color: ${CL.muted}; margin-top: 3px; }
 
 @media (max-width: 980px) { .tw-wall { column-count: 2; } }
 @media (max-width: 640px) { .tw-wall { column-count: 1; } }

@@ -18,12 +18,12 @@ const GATE_TABS = false;
 // heading with three colour-coded columns keeps everything one hover away.
 const JEE_MEGA = [
   {
-    title: "JEE Prep Resources", to: "/jee-resources", color: "#6366f1", icon: BookOpen,
+    title: "Resources", to: "/resources", color: "#6366f1", icon: BookOpen,
     items: [
-      { label: "Study Resources", to: "/jee-resources", icon: Edit3, desc: "Handwritten notes for Physics, Chemistry, Maths", iconBg: "#FFF3E0", iconColor: "#8B5E34" },
-      { label: "JEE Advanced Analysis", to: "#", icon: Activity, desc: "Chapter weightage, trends, difficulty patterns", badge: "SOON", iconBg: "#E0F2F1", iconColor: "#00695C", onClick: (e) => e.preventDefault() },
-      { label: "JEE Mains Analysis", to: "#", icon: Clock, desc: "Year-on-year breakdowns and heatmaps", badge: "SOON", iconBg: "#F3F0F5", iconColor: "#7E57C2", onClick: (e) => e.preventDefault() },
-      { label: "Other Entrance Exams", to: "/exams", icon: ClipboardCheck, desc: "BITSAT, VITEEE, MET and more", iconBg: "#FCE4EC", iconColor: "#AD1457" },
+      { label: "Class 11", to: "/class-11", icon: BookOpen, desc: "Complete syllabus & notes", iconBg: "#FFF3E0", iconColor: "#8B5E34" },
+      { label: "Class 12", to: "/class-12", icon: Edit3, desc: "Boards + competitive prep", iconBg: "#E0F2F1", iconColor: "#00695C" },
+      { label: "Exam Strategies for JEE", to: "/jee-strategy", icon: Zap, desc: "Tips, tricks & toppers' advice", iconBg: "#F3F0F5", iconColor: "#7E57C2" },
+      { label: "Exam Strategies for NEET", to: "/neet-strategy", icon: FlaskConical, desc: "Time management hacks", iconBg: "#FCE4EC", iconColor: "#AD1457" },
     ],
   },
   {
