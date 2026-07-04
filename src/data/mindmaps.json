@@ -1,80 +1,1206 @@
 {
   "physics": {
-    "1": 1,
-    "2": 25,
-    "3": 0,
-    "4": 0,
-    "5": 0,
-    "6": 61,
-    "7": 75,
-    "8": 51,
-    "9": 0,
-    "10": 0,
-    "11": 0,
-    "12": 155,
-    "13": 1,
-    "14": 110,
-    "15": 0,
-    "16": 0,
-    "17": 155,
-    "18": 1,
-    "19": 119,
-    "20": 155,
-    "21": 1,
-    "22": 155,
-    "23": 1,
-    "24": 0,
-    "25": 155
+    "name": "Physics",
+    "chapters": [
+      {
+        "n": 1,
+        "name": "Unit & Dimension",
+        "pages": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "n": 2,
+        "name": "Basic Maths & Vectors",
+        "pages": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ]
+      },
+      {
+        "n": 3,
+        "name": "Kinematics",
+        "pages": [
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ]
+      },
+      {
+        "n": 4,
+        "name": "Newton's Laws & Friction",
+        "pages": [
+          25,
+          26,
+          27,
+          28
+        ]
+      },
+      {
+        "n": 5,
+        "name": "Circular Motion",
+        "pages": [
+          29,
+          30,
+          31
+        ]
+      },
+      {
+        "n": 6,
+        "name": "Work, Energy & Power",
+        "pages": [
+          32,
+          33,
+          34,
+          35
+        ]
+      },
+      {
+        "n": 7,
+        "name": "Centre of Mass, Collision & Momentum",
+        "pages": [
+          36,
+          37,
+          38,
+          39
+        ]
+      },
+      {
+        "n": 8,
+        "name": "Rotational Motion",
+        "pages": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51
+        ]
+      },
+      {
+        "n": 9,
+        "name": "SHM & Oscillations",
+        "pages": [
+          52,
+          53,
+          54,
+          55
+        ]
+      },
+      {
+        "n": 10,
+        "name": "Wave Motion & Doppler Effect",
+        "pages": [
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ]
+      },
+      {
+        "n": 11,
+        "name": "Elasticity",
+        "pages": [
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68
+        ]
+      },
+      {
+        "n": 12,
+        "name": "Thermal Physics",
+        "pages": [
+          69,
+          70,
+          71,
+          72,
+          73
+        ]
+      },
+      {
+        "n": 13,
+        "name": "Kinetic Theory of Gases",
+        "pages": [
+          74,
+          75,
+          76,
+          77,
+          78
+        ]
+      },
+      {
+        "n": 14,
+        "name": "Electrostatics",
+        "pages": [
+          79,
+          80,
+          81,
+          82,
+          83
+        ]
+      },
+      {
+        "n": 15,
+        "name": "Gravitation",
+        "pages": [
+          84,
+          85,
+          86
+        ]
+      },
+      {
+        "n": 16,
+        "name": "Current Electricity",
+        "pages": [
+          87,
+          88,
+          89,
+          90,
+          91,
+          92
+        ]
+      },
+      {
+        "n": 17,
+        "name": "Capacitance",
+        "pages": [
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100
+        ]
+      },
+      {
+        "n": 18,
+        "name": "Magnetic Effect of Current & Magnetism",
+        "pages": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106
+        ]
+      },
+      {
+        "n": 19,
+        "name": "Electromagnetic Induction",
+        "pages": [
+          107,
+          108,
+          109,
+          110
+        ]
+      },
+      {
+        "n": 20,
+        "name": "Alternating Current & EM Waves",
+        "pages": [
+          111,
+          112,
+          113,
+          114
+        ]
+      },
+      {
+        "n": 21,
+        "name": "Modern Physics",
+        "pages": [
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124
+        ]
+      },
+      {
+        "n": 22,
+        "name": "Ray Optics & Optical Instruments",
+        "pages": [
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132
+        ]
+      },
+      {
+        "n": 23,
+        "name": "Wave Optics",
+        "pages": [
+          133,
+          134,
+          135,
+          136,
+          137
+        ]
+      },
+      {
+        "n": 24,
+        "name": "Error & Measurements",
+        "pages": [
+          138,
+          139,
+          140
+        ]
+      },
+      {
+        "n": 25,
+        "name": "Semiconductors & Electronics",
+        "pages": [
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155
+        ]
+      }
+    ]
   },
   "chemistry": {
-    "1": 1,
-    "2": 0,
-    "3": 8,
-    "4": 0,
-    "5": 0,
-    "6": 0,
-    "7": 0,
-    "8": 6,
-    "9": 0,
-    "10": 0,
-    "11": 184,
-    "12": 1,
-    "13": 184,
-    "14": 1,
-    "15": 1,
-    "16": 1,
-    "17": 184,
-    "18": 1,
-    "19": 1,
-    "20": 1,
-    "21": 1,
-    "22": 184,
-    "23": 1,
-    "24": 184,
-    "25": 1,
-    "26": 184,
-    "27": 1,
-    "28": 1
+    "name": "Chemistry",
+    "chapters": [
+      {
+        "n": 1,
+        "name": "Mole Concept",
+        "pages": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 2,
+        "name": "Thermodynamics",
+        "pages": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 3,
+        "name": "Thermochemistry",
+        "pages": [
+          20,
+          21
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 4,
+        "name": "Chemical Equilibrium",
+        "pages": [
+          22,
+          23,
+          24
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 5,
+        "name": "Ionic Equilibrium",
+        "pages": [
+          25,
+          26,
+          27,
+          28,
+          29
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 6,
+        "name": "Redox Reactions",
+        "pages": [
+          30,
+          31,
+          32,
+          33
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 7,
+        "name": "Electrochemistry",
+        "pages": [
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 8,
+        "name": "Chemical Kinetics",
+        "pages": [
+          41,
+          42,
+          43,
+          44
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 9,
+        "name": "Radioactivity",
+        "pages": [
+          45,
+          46
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 10,
+        "name": "Liquid Solutions",
+        "pages": [
+          47,
+          48,
+          49,
+          50
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 11,
+        "name": "Solid State",
+        "pages": [
+          51,
+          52,
+          53,
+          54
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 12,
+        "name": "Gaseous State",
+        "pages": [
+          55,
+          56
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 13,
+        "name": "Atomic Structure",
+        "pages": [
+          57,
+          58,
+          59
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 14,
+        "name": "Surface Chemistry",
+        "pages": [
+          60,
+          61,
+          62
+        ],
+        "section": "Physical"
+      },
+      {
+        "n": 15,
+        "name": "Periodic Properties",
+        "pages": [
+          63,
+          64,
+          65,
+          66
+        ],
+        "section": "Inorganic"
+      },
+      {
+        "n": 16,
+        "name": "Chemical Bonding",
+        "pages": [
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82
+        ],
+        "section": "Inorganic"
+      },
+      {
+        "n": 17,
+        "name": "s-Block Elements",
+        "pages": [
+          83,
+          84,
+          85,
+          86,
+          87
+        ],
+        "section": "Inorganic"
+      },
+      {
+        "n": 18,
+        "name": "p-Block Elements",
+        "pages": [
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105
+        ],
+        "section": "Inorganic"
+      },
+      {
+        "n": 19,
+        "name": "Coordination Chemistry",
+        "pages": [
+          106,
+          107,
+          108,
+          109,
+          110,
+          111
+        ],
+        "section": "Inorganic"
+      },
+      {
+        "n": 20,
+        "name": "d-Block (Transition Elements)",
+        "pages": [
+          112,
+          113,
+          114,
+          115
+        ],
+        "section": "Inorganic"
+      },
+      {
+        "n": 21,
+        "name": "Metallurgy",
+        "pages": [
+          116,
+          117,
+          118,
+          119
+        ],
+        "section": "Inorganic"
+      },
+      {
+        "n": 22,
+        "name": "Salt Analysis",
+        "pages": [
+          120,
+          121,
+          122,
+          123,
+          124,
+          125
+        ],
+        "section": "Inorganic"
+      },
+      {
+        "n": 23,
+        "name": "Environmental Pollution",
+        "pages": [
+          126,
+          127,
+          128
+        ],
+        "section": "Inorganic"
+      },
+      {
+        "n": 24,
+        "name": "IUPAC Nomenclature",
+        "pages": [
+          129,
+          130
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 25,
+        "name": "Isomerism",
+        "pages": [
+          131,
+          132,
+          133,
+          134
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 26,
+        "name": "Reaction Mechanism",
+        "pages": [
+          135,
+          136
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 27,
+        "name": "Practical Organic Chemistry",
+        "pages": [
+          137,
+          138
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 28,
+        "name": "Distinction Between Compounds",
+        "pages": [
+          139,
+          140,
+          141,
+          142,
+          143
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 29,
+        "name": "Hydrocarbons",
+        "pages": [
+          144,
+          145,
+          146,
+          147,
+          148
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 30,
+        "name": "Haloalkanes & Grignard Reagents",
+        "pages": [
+          149,
+          150,
+          151,
+          152
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 31,
+        "name": "Alcohol, Ether & Phenol",
+        "pages": [
+          153,
+          154,
+          155,
+          156,
+          157,
+          158,
+          159,
+          160
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 32,
+        "name": "Carboxylic Acids",
+        "pages": [
+          161,
+          162,
+          163,
+          164,
+          165,
+          166
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 33,
+        "name": "Amines",
+        "pages": [
+          167,
+          168
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 34,
+        "name": "Benzene Diazonium Chloride",
+        "pages": [
+          169,
+          170
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 35,
+        "name": "Organic Reagents",
+        "pages": [
+          171,
+          172,
+          173,
+          174,
+          175
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 36,
+        "name": "Organic Name Reactions",
+        "pages": [
+          176,
+          177,
+          178,
+          179
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 37,
+        "name": "Polymers",
+        "pages": [
+          180,
+          181
+        ],
+        "section": "Organic"
+      },
+      {
+        "n": 38,
+        "name": "Carbohydrates",
+        "pages": [
+          182,
+          183,
+          184
+        ],
+        "section": "Organic"
+      }
+    ]
   },
   "maths": {
-    "1": 1,
-    "2": 0,
-    "3": 224,
-    "4": 1,
-    "5": 1,
-    "6": 224,
-    "7": 1,
-    "8": 1,
-    "9": 0,
-    "10": 172,
-    "11": 224,
-    "12": 1,
-    "13": 179,
-    "14": 224,
-    "15": 1,
-    "16": 224,
-    "17": 1,
-    "18": 0,
-    "19": 224
+    "name": "Mathematics",
+    "chapters": [
+      {
+        "n": 1,
+        "name": "Logarithm",
+        "pages": [
+          3
+        ]
+      },
+      {
+        "n": 2,
+        "name": "Trigonometric Ratios & Identities",
+        "pages": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      {
+        "n": 3,
+        "name": "Trigonometric Equations",
+        "pages": [
+          12,
+          13,
+          14
+        ]
+      },
+      {
+        "n": 4,
+        "name": "Quadratic Equations",
+        "pages": [
+          15,
+          16,
+          17,
+          18
+        ]
+      },
+      {
+        "n": 5,
+        "name": "Sequences & Series",
+        "pages": [
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ]
+      },
+      {
+        "n": 6,
+        "name": "Permutation & Combination",
+        "pages": [
+          25,
+          26,
+          27,
+          28,
+          29
+        ]
+      },
+      {
+        "n": 7,
+        "name": "Binomial Theorem",
+        "pages": [
+          30,
+          31,
+          32
+        ]
+      },
+      {
+        "n": 8,
+        "name": "Complex Numbers",
+        "pages": [
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40
+        ]
+      },
+      {
+        "n": 9,
+        "name": "Determinants",
+        "pages": [
+          41,
+          42,
+          43,
+          44,
+          45
+        ]
+      },
+      {
+        "n": 10,
+        "name": "Matrices",
+        "pages": [
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53
+        ]
+      },
+      {
+        "n": 11,
+        "name": "Properties & Solution of Triangles",
+        "pages": [
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ]
+      },
+      {
+        "n": 12,
+        "name": "Straight Line",
+        "pages": [
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74
+        ]
+      },
+      {
+        "n": 13,
+        "name": "Circle",
+        "pages": [
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84
+        ]
+      },
+      {
+        "n": 14,
+        "name": "Parabola",
+        "pages": [
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92
+        ]
+      },
+      {
+        "n": 15,
+        "name": "Ellipse",
+        "pages": [
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99
+        ]
+      },
+      {
+        "n": 16,
+        "name": "Hyperbola",
+        "pages": [
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106
+        ]
+      },
+      {
+        "n": 17,
+        "name": "Functions",
+        "pages": [
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125
+        ]
+      },
+      {
+        "n": 18,
+        "name": "Inverse Trigonometric Functions",
+        "pages": [
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133
+        ]
+      },
+      {
+        "n": 19,
+        "name": "Limits",
+        "pages": [
+          134,
+          135,
+          136,
+          137,
+          138
+        ]
+      },
+      {
+        "n": 20,
+        "name": "Continuity",
+        "pages": [
+          139,
+          140
+        ]
+      },
+      {
+        "n": 21,
+        "name": "Differentiability",
+        "pages": [
+          141,
+          142,
+          143,
+          144
+        ]
+      },
+      {
+        "n": 22,
+        "name": "Methods of Differentiation",
+        "pages": [
+          145,
+          146,
+          147,
+          148
+        ]
+      },
+      {
+        "n": 23,
+        "name": "Monotonicity",
+        "pages": [
+          149,
+          150,
+          151,
+          152,
+          153
+        ]
+      },
+      {
+        "n": 24,
+        "name": "Maxima & Minima",
+        "pages": [
+          154,
+          155,
+          156,
+          157,
+          158
+        ]
+      },
+      {
+        "n": 25,
+        "name": "Tangent & Normal",
+        "pages": [
+          159,
+          160,
+          161
+        ]
+      },
+      {
+        "n": 26,
+        "name": "Indefinite Integration",
+        "pages": [
+          162,
+          163,
+          164,
+          165,
+          166,
+          167
+        ]
+      },
+      {
+        "n": 27,
+        "name": "Definite Integration",
+        "pages": [
+          168,
+          169,
+          170,
+          171
+        ]
+      },
+      {
+        "n": 28,
+        "name": "Differential Equations",
+        "pages": [
+          172,
+          173,
+          174,
+          175,
+          176,
+          177
+        ]
+      },
+      {
+        "n": 29,
+        "name": "Area Under the Curve",
+        "pages": [
+          178,
+          179
+        ]
+      },
+      {
+        "n": 30,
+        "name": "Vectors",
+        "pages": [
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189
+        ]
+      },
+      {
+        "n": 31,
+        "name": "3D Coordinate Geometry",
+        "pages": [
+          190,
+          191,
+          192,
+          193,
+          194,
+          195,
+          196,
+          197
+        ]
+      },
+      {
+        "n": 32,
+        "name": "Probability",
+        "pages": [
+          198,
+          199,
+          200,
+          201,
+          202,
+          203,
+          204
+        ]
+      },
+      {
+        "n": 33,
+        "name": "Statistics",
+        "pages": [
+          205,
+          206,
+          207,
+          208,
+          209,
+          210,
+          211
+        ]
+      },
+      {
+        "n": 34,
+        "name": "Mathematical Reasoning",
+        "pages": [
+          212,
+          213,
+          214,
+          215,
+          216
+        ]
+      },
+      {
+        "n": 35,
+        "name": "Sets",
+        "pages": [
+          217,
+          218,
+          219,
+          220,
+          221
+        ]
+      },
+      {
+        "n": 36,
+        "name": "Relations",
+        "pages": [
+          222,
+          223,
+          224
+        ]
+      }
+    ]
   }
 }

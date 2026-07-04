@@ -1,621 +1,501 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  BookOpen, FlaskConical, Sigma, ChevronRight, ChevronDown,
-  Flame, Zap, Star, Clock, Target, ArrowRight,
-  CheckCircle2, TrendingUp, ListChecks, Sparkles, X, Image as ImageIcon
+  BookOpen, FlaskConical, Sigma, Atom, Search, X, Sparkles,
+  ChevronLeft, ChevronRight, Download, ZoomIn, ZoomOut, RotateCcw,
+  Layers, GraduationCap, ArrowRight, Images, Eye, Grid2x2, Keyboard,
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Seo from "../components/Seo.jsx";
-import mindmapData from "../data/mindmaps.json";
+import { CL } from "../components/home/clTheme.js";
+import mindmaps from "../data/mindmaps.json";
 
-/* ── Subject Data ─────────────────────────────────────────── */
+/* ── Subject accents — all drawn from the site's CL palette ── */
 const SUBJECTS = [
-  {
-    id: "math",
-    name: "Mathematics",
-    short: "Math",
-    icon: Sigma,
-    color: "#6366f1",
-    light: "#eef2ff",
-    chapters: 19,
-    desc: "Calculus, Algebra, Coordinate Geometry, Vectors & 3D",
-    gradient: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-    chapters_list: [
-      { n: 1,  name: "Sets, Relations & Functions",    diff: "medium", jee: "Main",     topics: ["Roster & Set-builder", "Venn Diagrams", "Domain/Range"] },
-      { n: 2,  name: "Complex Numbers",                diff: "hard",   jee: "Advanced", topics: ["Argand Plane", "De Moivre's", "Modulus/Argument"] },
-      { n: 3,  name: "Quadratic Equations",            diff: "medium", jee: "Main",     topics: ["Discriminant", "Nature of roots", "Sum/Product"] },
-      { n: 4,  name: "Sequences & Series",             diff: "medium", jee: "Main",     topics: ["AP/GP/HP", "AGP", "Sum formulas"] },
-      { n: 5,  name: "Permutations & Combinations",   diff: "hard",   jee: "Main",     topics: ["Factorial", "nPr/nCr", "Circular Permutation"] },
-      { n: 6,  name: "Binomial Theorem",               diff: "medium", jee: "Main",     topics: ["General Term", "Middle Term", "Properties"] },
-      { n: 7,  name: "Matrices & Determinants",        diff: "medium", jee: "Main",     topics: ["Types of Matrices", "Cofactors", "Adjoint/Inverse"] },
-      { n: 8,  name: "Limits, Continuity & Differentiability", diff: "hard", jee: "Advanced", topics: ["L'Hôpital's Rule", "Sandwich Theorem", "LHL/RHL"] },
-      { n: 9,  name: "Differentiation & Applications",diff: "hard",   jee: "Advanced", topics: ["Chain Rule", "Implicit Diff.", "Maxima/Minima"] },
-      { n: 10, name: "Integration",                    diff: "hard",   jee: "Advanced", topics: ["Definite Integrals", "By Parts", "Area under curve"] },
-      { n: 11, name: "Differential Equations",         diff: "medium", jee: "Main",     topics: ["Variable Separable", "Homogeneous", "Linear DE"] },
-      { n: 12, name: "Straight Lines & Circles",       diff: "medium", jee: "Main",     topics: ["Slope Form", "Intercept Form", "Tangent/Normal"] },
-      { n: 13, name: "Conic Sections",                 diff: "hard",   jee: "Advanced", topics: ["Parabola", "Ellipse", "Hyperbola"] },
-      { n: 14, name: "Vectors",                        diff: "medium", jee: "Main",     topics: ["Dot Product", "Cross Product", "Triple Product"] },
-      { n: 15, name: "3D Geometry",                    diff: "medium", jee: "Main",     topics: ["Direction Cosines", "Planes", "Lines in Space"] },
-      { n: 16, name: "Probability",                    diff: "medium", jee: "Main",     topics: ["Bayes' Theorem", "Conditional Prob.", "Distributions"] },
-      { n: 17, name: "Trigonometry",                   diff: "medium", jee: "Main",     topics: ["Identities", "Equations", "Heights & Distances"] },
-      { n: 18, name: "Inverse Trigonometric Functions",diff: "medium", jee: "Main",     topics: ["Domains", "Properties", "Equations"] },
-      { n: 19, name: "Mathematical Reasoning",          diff: "easy",   jee: "Main",     topics: ["Statements", "Logical Connectives", "Quantifiers"] },
-    ],
-  },
-  {
-    id: "physics",
-    name: "Physics",
-    short: "Phy",
-    icon: Zap,
-    color: "#FF693D",
-    light: "#ffffff",
-    chapters: 25,
-    desc: "Mechanics, Electrodynamics, Optics, Modern Physics",
-    gradient: "linear-gradient(135deg, #E0421F 0%, #dc2626 100%)",
-    chapters_list: [
-      { n: 1,  name: "Units & Dimensions",             diff: "easy",   jee: "Main",     topics: ["SI Units", "Dimensional Analysis", "Error"] },
-      { n: 2,  name: "Kinematics",                     diff: "easy",   jee: "Main",     topics: ["Equations of motion", "Projectile", "Relative motion"] },
-      { n: 3,  name: "Newton's Laws of Motion",        diff: "medium", jee: "Main",     topics: ["Free Body Diagrams", "Friction", "Pulley systems"] },
-      { n: 4,  name: "Work, Energy & Power",           diff: "medium", jee: "Main",     topics: ["Work-Energy theorem", "Conservative forces", "Potential energy"] },
-      { n: 5,  name: "Rotational Motion",              diff: "hard",   jee: "Advanced", topics: ["Moment of Inertia", "Torque", "Angular Momentum"] },
-      { n: 6,  name: "Gravitation",                    diff: "medium", jee: "Main",     topics: ["Kepler's Laws", "Satellites", "Gravitational Potential"] },
-      { n: 7,  name: "Properties of Matter",           diff: "medium", jee: "Main",     topics: ["Elasticity", "Surface Tension", "Viscosity"] },
-      { n: 8,  name: "Thermodynamics",                 diff: "hard",   jee: "Advanced", topics: ["Laws of Thermodynamics", "Carnot Engine", "Entropy"] },
-      { n: 9,  name: "Oscillations (SHM)",             diff: "medium", jee: "Main",     topics: ["Simple Pendulum", "Spring System", "Resonance"] },
-      { n: 10, name: "Waves",                          diff: "medium", jee: "Main",     topics: ["Superposition", "Beats", "Doppler Effect"] },
-      { n: 11, name: "Electrostatics",                 diff: "hard",   jee: "Advanced", topics: ["Coulomb's Law", "Gauss's Law", "Capacitors"] },
-      { n: 12, name: "Current Electricity",            diff: "medium", jee: "Main",     topics: ["Ohm's Law", "Kirchhoff's Laws", "Wheatstone Bridge"] },
-      { n: 13, name: "Magnetic Effects of Current",    diff: "medium", jee: "Main",     topics: ["Biot-Savart Law", "Ampere's Law", "Moving charges"] },
-      { n: 14, name: "Electromagnetic Induction",      diff: "hard",   jee: "Advanced", topics: ["Faraday's Laws", "Lenz's Law", "Self/Mutual Induction"] },
-      { n: 15, name: "Alternating Current",            diff: "medium", jee: "Main",     topics: ["RMS values", "LC Circuit", "Transformers"] },
-      { n: 16, name: "Ray Optics",                     diff: "medium", jee: "Main",     topics: ["Snell's Law", "Prism", "Lens formula"] },
-      { n: 17, name: "Wave Optics",                    diff: "hard",   jee: "Advanced", topics: ["Young's Double Slit", "Diffraction", "Polarisation"] },
-      { n: 18, name: "Dual Nature of Matter",          diff: "medium", jee: "Main",     topics: ["Photoelectric Effect", "de Broglie", "Matter waves"] },
-      { n: 19, name: "Atomic Structure (Modern)",      diff: "medium", jee: "Main",     topics: ["Bohr Model", "Hydrogen Spectrum", "Quantum numbers"] },
-      { n: 20, name: "Nuclei",                         diff: "medium", jee: "Main",     topics: ["Binding Energy", "Radioactivity", "Fission/Fusion"] },
-      { n: 21, name: "Semiconductor Devices",          diff: "easy",   jee: "Main",     topics: ["p-n Junction", "Transistors", "Logic Gates"] },
-      { n: 22, name: "Communication Systems",          diff: "easy",   jee: "Main",     topics: ["Modulation", "AM/FM", "Bandwidth"] },
-      { n: 23, name: "Experimental Physics",           diff: "medium", jee: "Advanced", topics: ["Vernier Caliper", "Screw Gauge", "Potentiometer"] },
-      { n: 24, name: "Kinetic Theory of Gases",        diff: "medium", jee: "Main",     topics: ["Mean free path", "RMS Speed", "Degrees of Freedom"] },
-      { n: 25, name: "EM Waves",                       diff: "easy",   jee: "Main",     topics: ["EM Spectrum", "Properties", "Energy density"] },
-    ],
-  },
-  {
-    id: "chemistry",
-    name: "Chemistry",
-    short: "Chem",
-    icon: FlaskConical,
-    color: "#10b981",
-    light: "#ecfdf5",
-    chapters: 29,
-    desc: "Physical, Inorganic & Organic Chemistry for JEE",
-    gradient: "linear-gradient(135deg, #059669 0%, #0891b2 100%)",
-    chapters_list: [
-      { n: 1,  name: "Basic Concepts of Chemistry",   diff: "easy",   jee: "Main",     topics: ["Mole concept", "Stoichiometry", "Limiting reagent"] },
-      { n: 2,  name: "Atomic Structure",              diff: "medium", jee: "Main",     topics: ["Quantum numbers", "Orbitals", "Electronic config."] },
-      { n: 3,  name: "Chemical Bonding",              diff: "medium", jee: "Main",     topics: ["VSEPR", "MO theory", "Hybridisation"] },
-      { n: 4,  name: "Thermodynamics (Chem)",         diff: "hard",   jee: "Advanced", topics: ["Hess's Law", "Bond Enthalpy", "Entropy/Gibbs"] },
-      { n: 5,  name: "Chemical Equilibrium",          diff: "hard",   jee: "Advanced", topics: ["Kp/Kc", "Le Chatelier's Principle", "Degree of dissociation"] },
-      { n: 6,  name: "Ionic Equilibrium",             diff: "hard",   jee: "Advanced", topics: ["pH calculations", "Buffer solutions", "Solubility product"] },
-      { n: 7,  name: "Electrochemistry",              diff: "hard",   jee: "Advanced", topics: ["Nernst equation", "Electrolysis", "Galvanic cells"] },
-      { n: 8,  name: "Chemical Kinetics",             diff: "medium", jee: "Main",     topics: ["Rate law", "Arrhenius equation", "Order of reaction"] },
-      { n: 9,  name: "Solutions",                     diff: "medium", jee: "Main",     topics: ["Molarity/Molality", "Colligative properties", "Van't Hoff"] },
-      { n: 10, name: "Solid State",                   diff: "medium", jee: "Main",     topics: ["Crystal systems", "Packing efficiency", "Defects"] },
-      { n: 11, name: "Surface Chemistry",             diff: "easy",   jee: "Main",     topics: ["Adsorption", "Colloids", "Catalysis"] },
-      { n: 12, name: "Hydrogen & s-Block",            diff: "easy",   jee: "Main",     topics: ["Alkali metals", "Alkaline earth", "Water chemistry"] },
-      { n: 13, name: "p-Block Elements (Group 13–14)", diff: "medium", jee: "Main",    topics: ["Boron family", "Carbon family", "Silicates"] },
-      { n: 14, name: "p-Block Elements (Group 15–18)", diff: "medium", jee: "Main",    topics: ["Nitrogen oxides", "Sulphur compounds", "Noble gases"] },
-      { n: 15, name: "d & f-Block Elements",          diff: "medium", jee: "Main",     topics: ["Transition metals", "Lanthanides", "Actinides"] },
-      { n: 16, name: "Coordination Compounds",        diff: "hard",   jee: "Advanced", topics: ["IUPAC nomenclature", "Isomerism", "Crystal Field theory"] },
-      { n: 17, name: "Basic Organic Chemistry",       diff: "medium", jee: "Main",     topics: ["IUPAC naming", "Reaction mechanisms", "Isomerism"] },
-      { n: 18, name: "Hydrocarbons",                  diff: "medium", jee: "Main",     topics: ["Alkanes", "Alkenes/Alkynes", "Aromatic Hydrocarbons"] },
-      { n: 19, name: "Haloalkanes & Haloarenes",      diff: "medium", jee: "Main",     topics: ["SN1/SN2", "Elimination", "Nucleophilicity"] },
-      { n: 20, name: "Alcohols, Phenols & Ethers",    diff: "medium", jee: "Main",     topics: ["Lucas test", "Esterification", "Clemmensen reduction"] },
-      { n: 21, name: "Aldehydes & Ketones",           diff: "hard",   jee: "Advanced", topics: ["Aldol condensation", "Cannizzaro", "Nucleophilic addition"] },
-      { n: 22, name: "Carboxylic Acids & Derivatives",diff: "medium", jee: "Main",    topics: ["Acidity", "Fischer Esterification", "Hell-Volhard-Zelinsky"] },
-      { n: 23, name: "Amines",                        diff: "medium", jee: "Main",     topics: ["Basicity", "Diazonium salts", "Gabriel Synthesis"] },
-      { n: 24, name: "Biomolecules",                  diff: "easy",   jee: "Main",     topics: ["Carbohydrates", "Proteins", "Nucleic Acids"] },
-      { n: 25, name: "Polymers",                      diff: "easy",   jee: "Main",     topics: ["Addition/Condensation", "Rubber", "Synthetic fibres"] },
-      { n: 26, name: "Chemistry in Everyday Life",    diff: "easy",   jee: "Main",     topics: ["Drugs", "Soaps & Detergents", "Food preservatives"] },
-      { n: 27, name: "Redox Reactions",               diff: "medium", jee: "Main",     topics: ["Oxidation numbers", "Balancing equations", "Half-cell"] },
-      { n: 28, name: "Environmental Chemistry",       diff: "easy",   jee: "Main",     topics: ["Air pollution", "Water pollution", "Ozone layer"] },
-      { n: 29, name: "States of Matter",              diff: "medium", jee: "Main",     topics: ["Gas laws", "Kinetic theory", "Ideal vs Real"] },
-    ],
-  },
+  { id: "physics",   Icon: Atom,         accent: CL.coral,  soft: CL.coralSoft, dk: CL.coralDk, tint: "#FFF4F0" },
+  { id: "chemistry", Icon: FlaskConical, accent: CL.green,  soft: CL.greenSoft, dk: "#0A8F5B",  tint: "#F0FBF6" },
+  { id: "maths",     Icon: Sigma,        accent: CL.violet, soft: "#EFEAF7",    dk: "#5B4088",  tint: "#F6F3FB" },
 ];
+const SUBJECT_MAP = Object.fromEntries(SUBJECTS.map((s) => [s.id, s]));
+const SECTION_ORDER = ["Physical", "Inorganic", "Organic"];
 
-const DIFF_STYLE = {
-  easy:   { bg: "rgba(21,160,110,.12)", color: "#15a06e", label: "Easy" },
-  medium: { bg: "rgba(245,158,11,.12)", color: "#d97706", label: "Medium" },
-  hard:   { bg: "rgba(239,68,68,.12)",  color: "#dc2626", label: "Hard" },
+const imgSrc = (subj, p) => `/mindmaps_raw/${subj}/${subj}_page_${String(p).padStart(3, "0")}.png`;
+const download = (href, name) => {
+  const a = document.createElement("a");
+  a.href = href; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
 };
 
-const JEE_STYLE = {
-  Main:     { bg: "rgba(255, 105, 61,.12)", color: "#FF693D" },
-  Advanced: { bg: "rgba(99,102,241,.12)", color: "#6366f1" },
-};
+/* ════════════════════════════════════════════════════════════════
+   MIND-MAP VIEWER — full-screen gallery for one chapter's pages
+   ════════════════════════════════════════════════════════════════ */
+function MindMapViewer({ open, subjectId, chapter, onClose }) {
+  const meta = SUBJECT_MAP[subjectId] || SUBJECTS[0];
+  const pages = chapter?.pages || [];
+  const [idx, setIdx] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const scrollRef = useRef(null);
 
-/* ── Chapter Card ───────────────────────────────────────────── */
-function ChapterCard({ ch, color, index, subId, onOpenMindMap }) {
-  const diff = DIFF_STYLE[ch.diff];
-  const jee  = JEE_STYLE[ch.jee];
-  const [open, setOpen] = useState(false);
+  useEffect(() => { setIdx(0); setZoom(1); }, [chapter]);
+  useEffect(() => { setZoom(1); if (scrollRef.current) scrollRef.current.scrollTo(0, 0); }, [idx]);
+
+  const go = useCallback((d) => {
+    setIdx((i) => Math.min(pages.length - 1, Math.max(0, i + d)));
+  }, [pages.length]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowRight") go(1);
+      else if (e.key === "ArrowLeft") go(-1);
+      else if (e.key === "+" || e.key === "=") setZoom((z) => Math.min(3, z + 0.4));
+      else if (e.key === "-") setZoom((z) => Math.max(1, z - 0.4));
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+  }, [open, go, onClose]);
+
+  if (!open || !chapter) return null;
+  const src = imgSrc(subjectId, pages[idx]);
+  const fileName = `${subjectId}-${chapter.name.replace(/[^\w]+/g, "-").toLowerCase()}-${idx + 1}.png`;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.38, delay: (index % 6) * 0.05, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={open ? undefined : { y: -4, transition: { duration: 0.2 } }}
-      style={{
-        background: "#fff",
-        borderRadius: 14,
-        border: open ? `1px solid ${color}55` : "1px solid rgba(0,0,0,.08)",
-        boxShadow: open ? `0 10px 32px ${color}22` : "0 2px 12px rgba(28,28,40,.05)",
-        padding: "16px 16px 14px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-        cursor: "pointer",
-        transition: "box-shadow .2s, border-color .2s",
-      }}
-      onClick={() => setOpen((o) => !o)}
-      onMouseEnter={(e) => { if (!open) e.currentTarget.style.boxShadow = `0 10px 32px ${color}22`; }}
-      onMouseLeave={(e) => { if (!open) e.currentTarget.style.boxShadow = "0 2px 12px rgba(28,28,40,.05)"; }}
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        onClick={onClose}
+        style={{
+          position: "fixed", inset: 0, zIndex: 12000,
+          background: "rgba(24,20,33,.86)", backdropFilter: "blur(6px)",
+          display: "flex", flexDirection: "column",
+        }}
+      >
+        {/* top bar */}
+        <div onClick={(e) => e.stopPropagation()} style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14,
+          padding: "14px 20px", color: "#fff", flexShrink: 0,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+            <span style={{ width: 38, height: 38, borderRadius: 11, background: meta.accent, display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <meta.Icon size={20} color="#fff" />
+            </span>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 16, lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {chapter.name}
+              </div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,.6)" }}>
+                Mind map · page {idx + 1} of {pages.length}
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <ToolBtn title="Zoom out" onClick={() => setZoom((z) => Math.max(1, z - 0.4))} disabled={zoom <= 1}><ZoomOut size={18} /></ToolBtn>
+            <span style={{ fontSize: 12.5, fontWeight: 700, minWidth: 46, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
+            <ToolBtn title="Zoom in" onClick={() => setZoom((z) => Math.min(3, z + 0.4))} disabled={zoom >= 3}><ZoomIn size={18} /></ToolBtn>
+            <ToolBtn title="Reset zoom" onClick={() => setZoom(1)}><RotateCcw size={16} /></ToolBtn>
+            <ToolBtn title="Download this page" onClick={() => download(src, fileName)}><Download size={18} /></ToolBtn>
+            <ToolBtn title="Close (Esc)" onClick={onClose} strong><X size={20} /></ToolBtn>
+          </div>
+        </div>
+
+        {/* image stage */}
+        <div ref={scrollRef} onClick={(e) => e.stopPropagation()} style={{
+          flex: 1, overflow: zoom > 1 ? "auto" : "hidden",
+          display: "flex", alignItems: zoom > 1 ? "flex-start" : "center", justifyContent: "center",
+          padding: "6px 16px", position: "relative",
+        }}>
+          {/* prev / next */}
+          {idx > 0 && (
+            <NavArrow side="left" onClick={() => go(-1)} />
+          )}
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.img
+              key={pages[idx]}
+              src={src}
+              alt={`${chapter.name} mind map ${idx + 1}`}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22 }}
+              onClick={() => setZoom((z) => (z >= 3 ? 1 : z + 0.6))}
+              style={{
+                width: zoom > 1 ? `${zoom * 62}%` : "auto",
+                maxWidth: zoom > 1 ? "none" : "min(920px, 96%)",
+                maxHeight: zoom > 1 ? "none" : "100%",
+                objectFit: "contain",
+                borderRadius: 10,
+                background: "#fff",
+                boxShadow: "0 24px 60px rgba(0,0,0,.5)",
+                cursor: zoom >= 3 ? "zoom-out" : "zoom-in",
+                userSelect: "none",
+              }}
+            />
+          </AnimatePresence>
+          {idx < pages.length - 1 && (
+            <NavArrow side="right" onClick={() => go(1)} />
+          )}
+        </div>
+
+        {/* thumbnail strip */}
+        {pages.length > 1 && (
+          <div onClick={(e) => e.stopPropagation()} style={{
+            flexShrink: 0, display: "flex", gap: 8, padding: "12px 18px 18px",
+            overflowX: "auto", justifyContent: pages.length < 8 ? "center" : "flex-start",
+          }}>
+            {pages.map((p, i) => (
+              <button key={p} onClick={() => setIdx(i)} style={{
+                flexShrink: 0, width: 54, height: 72, borderRadius: 8, overflow: "hidden",
+                border: i === idx ? `2.5px solid ${meta.accent}` : "2.5px solid rgba(255,255,255,.15)",
+                background: "#fff", cursor: "pointer", padding: 0,
+                boxShadow: i === idx ? `0 4px 14px ${meta.accent}88` : "none",
+                opacity: i === idx ? 1 : 0.7, transition: "opacity .15s, border-color .15s",
+              }}>
+                <img src={imgSrc(subjectId, p)} alt="" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }} />
+              </button>
+            ))}
+          </div>
+        )}
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+function ToolBtn({ children, onClick, title, disabled, strong }) {
+  return (
+    <button title={title} onClick={onClick} disabled={disabled} style={{
+      width: 38, height: 38, borderRadius: 10, display: "grid", placeItems: "center",
+      background: strong ? "rgba(255,255,255,.16)" : "rgba(255,255,255,.08)",
+      color: "#fff", border: "1px solid rgba(255,255,255,.14)",
+      cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.35 : 1,
+      transition: "background .15s",
+    }}
+      onMouseEnter={(e) => { if (!disabled) e.currentTarget.style.background = "rgba(255,255,255,.22)"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.background = strong ? "rgba(255,255,255,.16)" : "rgba(255,255,255,.08)"; }}
+    >{children}</button>
+  );
+}
+
+function NavArrow({ side, onClick }) {
+  return (
+    <button onClick={onClick} style={{
+      position: "absolute", top: "50%", transform: "translateY(-50%)",
+      [side]: 14, zIndex: 5,
+      width: 48, height: 48, borderRadius: "50%", display: "grid", placeItems: "center",
+      background: "rgba(255,255,255,.14)", color: "#fff", border: "1px solid rgba(255,255,255,.2)",
+      backdropFilter: "blur(4px)", cursor: "pointer",
+    }}
+      onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,.28)"}
+      onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,.14)"}
     >
-      {/* Chapter number + badges */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      {side === "left" ? <ChevronLeft size={26} /> : <ChevronRight size={26} />}
+    </button>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CHAPTER CARD
+   ════════════════════════════════════════════════════════════════ */
+function ChapterCard({ ch, subject, index, onOpen }) {
+  const [hover, setHover] = useState(false);
+  const first = ch.pages[0];
+  return (
+    <motion.button
+      layout
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ duration: 0.34, delay: (index % 8) * 0.035, ease: [0.22, 1, 0.36, 1] }}
+      onClick={() => onOpen(ch)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        textAlign: "left", cursor: "pointer", padding: 0, overflow: "hidden",
+        background: CL.card, borderRadius: 18,
+        border: `1px solid ${hover ? subject.accent + "66" : CL.line}`,
+        boxShadow: hover ? `0 16px 38px ${subject.accent}22` : CL.shadow,
+        transform: hover ? "translateY(-4px)" : "none",
+        transition: "box-shadow .22s, border-color .22s, transform .22s",
+        display: "flex", flexDirection: "column",
+      }}
+    >
+      {/* thumbnail preview */}
+      <div style={{ position: "relative", height: 150, background: subject.tint, overflow: "hidden", borderBottom: `1px solid ${CL.line}` }}>
+        <img
+          src={imgSrc(subject.id, first)} alt="" loading="lazy"
+          style={{
+            width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center",
+            transform: hover ? "scale(1.05)" : "scale(1)", transition: "transform .35s ease",
+          }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 45%, rgba(255,255,255,.92) 100%)" }} />
+        {/* page-count pill */}
         <span style={{
-          width: 28, height: 28, borderRadius: 8,
-          background: `${color}18`,
-          border: `1px solid ${color}30`,
-          display: "grid", placeItems: "center",
-          fontFamily: "Sora", fontWeight: 800,
-          fontSize: 11, color,
+          position: "absolute", top: 10, right: 10, display: "inline-flex", alignItems: "center", gap: 5,
+          background: "rgba(24,20,33,.72)", color: "#fff", fontSize: 11, fontWeight: 700,
+          padding: "4px 10px", borderRadius: 50, backdropFilter: "blur(4px)",
+        }}>
+          <Images size={12} /> {ch.pages.length} {ch.pages.length > 1 ? "maps" : "map"}
+        </span>
+        {/* number badge */}
+        <span style={{
+          position: "absolute", bottom: 10, left: 12, width: 32, height: 32, borderRadius: 9,
+          background: subject.accent, color: "#fff", display: "grid", placeItems: "center",
+          fontFamily: CL.display, fontWeight: 800, fontSize: 13, boxShadow: `0 4px 12px ${subject.accent}66`,
         }}>
           {String(ch.n).padStart(2, "0")}
         </span>
-        <div style={{ display: "flex", gap: 5 }}>
-          <span style={{ padding: "2px 8px", borderRadius: 50, fontSize: 10, fontWeight: 700, background: diff.bg, color: diff.color }}>
-            {diff.label}
-          </span>
-          <span style={{ padding: "2px 8px", borderRadius: 50, fontSize: 10, fontWeight: 700, background: jee.bg, color: jee.color }}>
-            {ch.jee}
+      </div>
+
+      {/* body */}
+      <div style={{ padding: "13px 15px 15px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, flex: 1 }}>
+          <h4 style={{ fontFamily: CL.display, fontWeight: 700, fontSize: "0.95rem", color: CL.ink, lineHeight: 1.32, margin: 0 }}>
+            {ch.name}
+          </h4>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+          {ch.section ? (
+            <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: ".05em", textTransform: "uppercase", color: subject.dk, background: subject.soft, padding: "3px 9px", borderRadius: 6 }}>
+              {ch.section}
+            </span>
+          ) : <span />}
+          <span style={{
+            display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700,
+            color: subject.dk, opacity: hover ? 1 : 0.85,
+          }}>
+            <Eye size={14} /> View {hover ? <ArrowRight size={13} /> : null}
           </span>
         </div>
       </div>
-
-      {/* Chapter name + expand chevron */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
-        <h4 style={{
-          fontFamily: "Sora", fontWeight: 700,
-          fontSize: "0.88rem", color: "#1c1c28",
-          lineHeight: 1.35,
-        }}>
-          {ch.name}
-        </h4>
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.25 }}
-          style={{ flexShrink: 0, color, marginTop: 2 }}
-        >
-          <ChevronDown size={18} />
-        </motion.span>
-      </div>
-
-      {/* Topics */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-        {ch.topics.map((t) => (
-          <span key={t} style={{
-            padding: "3px 9px", borderRadius: 50,
-            background: "#f3f4f6",
-            border: "1px solid #e5e7eb",
-            fontSize: 11, color: "#6b7280",
-            fontFamily: "DM Sans",
-          }}>
-            {t}
-          </span>
-        ))}
-      </div>
-
-      {/* Expandable: full topic list + quiz section */}
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            key="details"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            style={{ overflow: "hidden" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div style={{ paddingTop: 6, borderTop: "1px dashed rgba(0,0,0,.1)", marginTop: 4 }}>
-              {/* Topics list */}
-              <div style={{ display: "flex", alignItems: "center", gap: 6, margin: "12px 0 8px" }}>
-                <ListChecks size={14} color={color} />
-                <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12, color: "#1c1c28" }}>
-                  Topics in this chapter
-                </span>
-              </div>
-              <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 6 }}>
-                {ch.topics.map((t) => (
-                  <li key={t} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, color: "#4b5563", fontFamily: "DM Sans" }}>
-                    <CheckCircle2 size={14} color={color} style={{ flexShrink: 0 }} />
-                    {t}
-                  </li>
-                ))}
-              </ul>
-
-              {/* Quiz section — Coming Soon */}
-              <div style={{
-                marginTop: 14,
-                background: `${color}0d`,
-                border: `1px dashed ${color}40`,
-                borderRadius: 12,
-                padding: "14px 14px",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-              }}>
-                <div style={{
-                  width: 36, height: 36, borderRadius: 10,
-                  background: `${color}1a`,
-                  display: "grid", placeItems: "center", flexShrink: 0,
-                }}>
-                  <Target size={18} color={color} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: "#1c1c28" }}>
-                      Chapter Quiz
-                    </span>
-                    <span style={{
-                      display: "inline-flex", alignItems: "center", gap: 3,
-                      padding: "2px 8px", borderRadius: 50,
-                      background: `${color}18`, color,
-                      fontSize: 10, fontWeight: 700,
-                    }}>
-                      <Sparkles size={10} /> Coming Soon
-                    </span>
-                  </div>
-                  <p style={{ margin: "3px 0 0", fontSize: 11.5, color: "#6b7280", fontFamily: "DM Sans" }}>
-                    Practice questions for this chapter will be available here soon.
-                  </p>
-                </div>
-              </div>
-
-              {/* Mind Map Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const pageNum = mindmapData[subId]?.[ch.n] || 1;
-                  const padded = String(pageNum).padStart(3, "0");
-                  onOpenMindMap(`/mindmaps_raw/${subId}/${subId}_page_${padded}.png`);
-                }}
-                style={{
-                  marginTop: 10,
-                  width: "100%",
-                  background: `${color}15`,
-                  color: color,
-                  border: `1px solid ${color}33`,
-                  borderRadius: 10,
-                  padding: "10px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  fontFamily: "Sora",
-                  fontWeight: 700,
-                  fontSize: 12,
-                  cursor: "pointer",
-                  transition: "background 0.2s"
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = `${color}25`}
-                onMouseLeave={(e) => e.currentTarget.style.background = `${color}15`}
-              >
-                <ImageIcon size={16} /> View Chapter Mind Map
-              </button>
-
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+    </motion.button>
   );
 }
 
-/* ── Subject Hero Banner ────────────────────────────────────── */
-function SubjectBanner({ subject, stats }) {
-  const Icon = subject.icon;
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      style={{
-        background: subject.gradient,
-        borderRadius: 20,
-        padding: "28px 32px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-        gap: 24,
-        marginBottom: 32,
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {/* Decorative circles */}
-      <div style={{ position: "absolute", top: -40, right: 80, width: 160, height: 160, borderRadius: "50%", background: "rgba(255,255,255,.07)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: -30, right: -20, width: 100, height: 100, borderRadius: "50%", background: "rgba(255,255,255,.05)", pointerEvents: "none" }} />
-
-      <div style={{ display: "flex", alignItems: "center", gap: 18, position: "relative", zIndex: 1 }}>
-        <div style={{
-          width: 64, height: 64, borderRadius: 16,
-          background: "rgba(255,255,255,.18)",
-          display: "grid", placeItems: "center",
-          backdropFilter: "blur(6px)",
-        }}>
-          <Icon size={32} color="#fff" />
-        </div>
-        <div>
-          <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.6rem", color: "#fff", margin: 0 }}>
-            {subject.name}
-          </h2>
-          <p style={{ color: "rgba(255,255,255,.75)", fontSize: ".88rem", margin: "4px 0 0" }}>
-            {subject.desc}
-          </p>
-        </div>
-      </div>
-
-      <div style={{ display: "flex", gap: 16, position: "relative", zIndex: 1, flexWrap: "wrap" }}>
-        {[
-          { label: "Chapters", value: subject.chapters },
-          { label: "Hard",     value: stats.hard },
-          { label: "For Main", value: stats.main },
-          { label: "For Adv.", value: stats.adv },
-        ].map(({ label, value }) => (
-          <div key={label} style={{
-            textAlign: "center",
-            background: "rgba(255,255,255,.14)",
-            borderRadius: 12,
-            padding: "10px 18px",
-            backdropFilter: "blur(8px)",
-            border: "1px solid rgba(255,255,255,.2)",
-          }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.4rem", color: "#fff" }}>{value}</div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,.7)", marginTop: 2 }}>{label}</div>
-          </div>
-        ))}
-      </div>
-    </motion.div>
-  );
-}
-
-/* ── Main Page ──────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════════
+   PAGE
+   ════════════════════════════════════════════════════════════════ */
 export default function JeeResources() {
-  const [sp] = useSearchParams();
-  const [activeSubject, setActiveSubject] = useState(sp.get("subject") || "math");
-  const [filter, setFilter] = useState("all");
-  const [lightboxImg, setLightboxImg] = useState(null);
+  const [sp, setSp] = useSearchParams();
+  const [active, setActive] = useState(SUBJECT_MAP[sp.get("subject")] ? sp.get("subject") : "physics");
+  const [query, setQuery] = useState("");
+  const [section, setSection] = useState("all");
+  const [viewer, setViewer] = useState(null); // { chapter }
   const nav = useNavigate();
 
   useEffect(() => {
     const s = sp.get("subject");
-    if (s && SUBJECTS.find((x) => x.id === s)) {
-      setActiveSubject(s);
-      setFilter("all");
-    }
+    if (s && SUBJECT_MAP[s]) { setActive(s); setQuery(""); setSection("all"); }
   }, [sp]);
 
-  const subject = SUBJECTS.find((s) => s.id === activeSubject);
+  const subject = SUBJECT_MAP[active];
+  const blob = mindmaps[active];
+  const hasSections = blob.chapters.some((c) => c.section);
 
-  const stats = {
-    hard: subject.chapters_list.filter((c) => c.diff === "hard").length,
-    main: subject.chapters_list.filter((c) => c.jee === "Main").length,
-    adv:  subject.chapters_list.filter((c) => c.jee === "Advanced").length,
+  const totals = useMemo(() => {
+    let ch = 0, pg = 0;
+    Object.values(mindmaps).forEach((b) => {
+      ch += b.chapters.length;
+      b.chapters.forEach((c) => { pg += c.pages.length; });
+    });
+    return { ch, pg };
+  }, []);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return blob.chapters.filter((c) => {
+      if (section !== "all" && c.section !== section) return false;
+      if (q && !c.name.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [blob, query, section]);
+
+  const grouped = useMemo(() => {
+    if (!hasSections || section !== "all") return [{ key: null, items: filtered }];
+    return SECTION_ORDER.map((s) => ({ key: s, items: filtered.filter((c) => c.section === s) }))
+      .filter((g) => g.items.length);
+  }, [filtered, hasSections, section]);
+
+  const switchSubject = (id) => {
+    setActive(id); setQuery(""); setSection("all");
+    setSp((prev) => { const n = new URLSearchParams(prev); n.set("subject", id); return n; }, { replace: true });
   };
 
-  const filtered = subject.chapters_list.filter((c) => {
-    if (filter === "hard") return c.diff === "hard";
-    if (filter === "main") return c.jee === "Main";
-    if (filter === "adv")  return c.jee === "Advanced";
-    return true;
-  });
-
   return (
-    <div className="page" style={{ minHeight: "100vh" }}>
+    <div className="page" style={{ minHeight: "100vh", background: CL.cream }}>
       <Seo
-        title="JEE Preparation Resources — Free Notes, PYQs & Study Plan"
-        description="Free JEE Main & Advanced preparation resources — subject-wise notes, previous-year papers, best books and a study plan curated by IIT Roorkee alumni on CollegeParichay."
+        title="JEE Mind Maps — Chapter-wise Revision Sheets for Physics, Chemistry & Maths"
+        description={`${totals.ch} chapter-wise JEE Main & Advanced mind maps across Physics, Chemistry and Mathematics — ${totals.pg} high-yield revision sheets to memorise every formula fast, free on College Parichay.`}
         path="/jee-resources"
       />
 
-      {/* ── Page Header ── */}
-      <section className="warm-page-header" style={{ padding: "60px 0 48px" }}>
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 100% 20%, rgba(249,115,22,.22) 0%, transparent 60%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 45% 55% at 0% 80%, rgba(244,162,97,.20) 0%, transparent 60%)" }} />
-        <div style={{ position: "absolute", top: 20, right: -40, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(255, 105, 61,.15) 0%, transparent 70%)", pointerEvents: "none" }} />
-
+      {/* ── HERO ── */}
+      <section className="warm-page-header" style={{ padding: "48px 0 40px" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 55% 65% at 100% 10%, rgba(255,105,61,.16) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 40% 50% at 0% 90%, rgba(123,94,167,.12) 0%, transparent 60%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55 }}
-          >
-            <span className="eyebrow" style={{ marginBottom: 18 }}>
-              <BookOpen size={11} /> JEE Study Material
-            </span>
-
-            <h1 style={{
-              fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800,
-              fontSize: "clamp(1.9rem,4.5vw,3rem)",
-              color: "#1c1c28", letterSpacing: "-0.5px",
-              lineHeight: 1.12, margin: "0 0 16px",
-            }}>
-              Master JEE with{" "}
-              <span style={{ background: "linear-gradient(90deg, #FF693D, #E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                Subject-wise Chapters
+          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <span className="eyebrow"><Sparkles size={12} /> JEE Revision Mind Maps</span>
+            <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.5vw,3rem)", color: CL.ink, letterSpacing: "-0.6px", lineHeight: 1.12, margin: "0 0 14px" }}>
+              Every JEE chapter,{" "}
+              <span style={{ background: `linear-gradient(90deg, ${CL.coral}, ${CL.coralDk})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                one mind map away
               </span>
             </h1>
-
-            <p style={{ color: "rgba(28,28,40,.62)", fontSize: "1rem", maxWidth: 520, lineHeight: 1.7, margin: "0 0 32px" }}>
-              73 chapters across Mathematics, Physics &amp; Chemistry — with difficulty ratings, JEE Main vs Advanced coverage, and topic-level breakdown.
+            <p style={{ color: CL.body, fontSize: "1.02rem", maxWidth: 560, lineHeight: 1.7, margin: "0 0 26px" }}>
+              High-yield, chapter-wise revision sheets for Physics, Chemistry &amp; Mathematics — every
+              formula, reaction and result condensed into visual mind maps you can revise in minutes.
             </p>
-
-            {/* Quick stats */}
-            <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
-              {[
-                { icon: BookOpen, label: "19 Math chapters",     color: "#FF693D" },
-                { icon: Zap,      label: "25 Physics chapters",  color: "#E0421F" },
-                { icon: FlaskConical, label: "29 Chem chapters", color: "#FF693D" },
-              ].map(({ icon: Icon, label, color }) => (
-                <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(28,28,40,.75)", fontSize: 13.5, fontWeight: 600 }}>
-                  <Icon size={15} color={color} /> {label}
-                </div>
-              ))}
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <HeroStat icon={GraduationCap} value={totals.ch} label="Chapters" color={CL.coral} />
+              <HeroStat icon={Images} value={totals.pg} label="Mind-map pages" color={CL.violet} />
+              <HeroStat icon={Layers} value="3" label="Subjects" color={CL.green} />
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ── Subject selector tabs ── */}
-      <div style={{ background: "#fff", borderBottom: "1px solid rgba(0,0,0,.08)", position: "sticky", top: 68, zIndex: 10 }}>
-        <div className="container">
-          <div style={{ display: "flex", gap: 0, overflowX: "auto" }}>
-            {SUBJECTS.map((s) => {
-              const Icon = s.icon;
-              const isActive = s.id === activeSubject;
-              return (
-                <button
-                  key={s.id}
-                  onClick={() => { setActiveSubject(s.id); setFilter("all"); }}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 8,
-                    padding: "16px 24px",
-                    borderBottom: `3px solid ${isActive ? s.color : "transparent"}`,
-                    background: "none", border: "none", borderBottom: `3px solid ${isActive ? s.color : "transparent"}`,
-                    color: isActive ? s.color : "#6b7280",
-                    fontSize: 14, fontWeight: 700,
-                    fontFamily: "Sora", cursor: "pointer",
-                    transition: "all .2s",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <Icon size={16} />
-                  {s.name}
-                  <span style={{
-                    padding: "1px 8px", borderRadius: 50,
-                    background: isActive ? `${s.color}18` : "#f3f4f6",
-                    color: isActive ? s.color : "#9ca3af",
-                    fontSize: 11, fontWeight: 700,
-                  }}>
-                    {s.chapters}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+      {/* ── STICKY SUBJECT SWITCHER ── */}
+      <div style={{ background: "rgba(255,255,255,.92)", backdropFilter: "blur(10px)", borderBottom: `1px solid ${CL.line}`, position: "sticky", top: 98, zIndex: 50 }}>
+        <div className="container" style={{ display: "flex", gap: 8, overflowX: "auto", padding: "12px 1.5rem" }}>
+          {SUBJECTS.map((s) => {
+            const on = s.id === active;
+            const count = mindmaps[s.id].chapters.length;
+            return (
+              <button key={s.id} onClick={() => switchSubject(s.id)} style={{
+                display: "inline-flex", alignItems: "center", gap: 9, whiteSpace: "nowrap",
+                padding: "9px 18px", borderRadius: 50, cursor: "pointer",
+                fontFamily: CL.display, fontWeight: 700, fontSize: 14,
+                background: on ? s.accent : CL.cream2,
+                color: on ? "#fff" : CL.ink2,
+                border: `1px solid ${on ? s.accent : CL.line}`,
+                boxShadow: on ? `0 8px 20px ${s.accent}44` : "none",
+                transition: "all .2s",
+              }}>
+                <s.Icon size={17} /> {mindmaps[s.id].name}
+                <span style={{ fontSize: 11.5, fontWeight: 800, padding: "1px 8px", borderRadius: 50, background: on ? "rgba(255,255,255,.25)" : "#fff", color: on ? "#fff" : CL.muted, border: on ? "none" : `1px solid ${CL.line}` }}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* ── Content ── */}
-      <div className="container" style={{ padding: "36px 1.5rem 64px" }}>
+      {/* ── TOOLBAR + CONTENT ── */}
+      <div className="container" style={{ padding: "26px 1.5rem 64px" }}>
+        {/* toolbar */}
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", flex: "1 1 auto" }}>
+            {/* search */}
+            <div style={{ position: "relative", flex: "0 1 300px", minWidth: 220 }}>
+              <Search size={16} color={CL.muted} style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)" }} />
+              <input
+                value={query} onChange={(e) => setQuery(e.target.value)}
+                placeholder={`Search ${blob.name} chapters…`}
+                style={{
+                  width: "100%", padding: "10px 34px 10px 38px", borderRadius: 50,
+                  border: `1px solid ${CL.line}`, background: CL.card, color: CL.ink,
+                  fontSize: 13.5, fontFamily: CL.display, outline: "none",
+                }}
+                onFocus={(e) => e.currentTarget.style.borderColor = subject.accent}
+                onBlur={(e) => e.currentTarget.style.borderColor = CL.line}
+              />
+              {query && (
+                <button onClick={() => setQuery("")} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: CL.muted }}>
+                  <X size={15} />
+                </button>
+              )}
+            </div>
+            {/* section filter (chemistry) */}
+            {hasSections && (
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {["all", ...SECTION_ORDER].map((s) => {
+                  const on = section === s;
+                  return (
+                    <button key={s} onClick={() => setSection(s)} style={{
+                      padding: "7px 14px", borderRadius: 50, fontSize: 12.5, fontWeight: 700, cursor: "pointer",
+                      fontFamily: CL.display, textTransform: s === "all" ? "none" : "capitalize",
+                      border: `1px solid ${on ? subject.accent : CL.line}`,
+                      background: on ? subject.soft : CL.card,
+                      color: on ? subject.dk : CL.body,
+                      transition: "all .18s",
+                    }}>
+                      {s === "all" ? "All sections" : s}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <span style={{ fontSize: 12.5, color: CL.muted, display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <Grid2x2 size={14} /> {filtered.length} chapter{filtered.length !== 1 ? "s" : ""}
+          </span>
+        </div>
 
+        {/* content */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={activeSubject}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.28 }}
+            key={active}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
           >
-            {/* Subject banner */}
-            <SubjectBanner subject={subject} stats={stats} />
-
-            {/* Filter row */}
-            <div style={{ display: "flex", gap: 8, marginBottom: 28, flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", gap: 6 }}>
-                {[
-                  { id: "all",  label: `All ${subject.chapters}` },
-                  { id: "hard", label: `Hard (${stats.hard})` },
-                  { id: "main", label: "JEE Main" },
-                  { id: "adv",  label: "Advanced" },
-                ].map((f) => (
-                  <button
-                    key={f.id}
-                    onClick={() => setFilter(f.id)}
-                    style={{
-                      padding: "7px 16px", borderRadius: 50,
-                      fontSize: 13, fontWeight: 600,
-                      fontFamily: "DM Sans",
-                      cursor: "pointer", transition: "all .2s",
-                      border: filter === f.id ? `2px solid ${subject.color}` : "2px solid #e5e7eb",
-                      background: filter === f.id ? subject.color : "#fff",
-                      color: filter === f.id ? "#fff" : "#6b7280",
-                    }}
-                  >
-                    {f.label}
-                  </button>
-                ))}
+            {filtered.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "70px 20px", color: CL.muted }}>
+                <Search size={34} style={{ opacity: 0.4 }} />
+                <p style={{ marginTop: 12, fontSize: 15, fontFamily: CL.display, fontWeight: 700, color: CL.ink2 }}>No chapters match “{query}”.</p>
+                <button onClick={() => { setQuery(""); setSection("all"); }} style={{ marginTop: 6, color: subject.dk, fontWeight: 700, background: "none", border: "none", cursor: "pointer", fontSize: 13.5 }}>Clear filters</button>
               </div>
-              <span style={{ fontSize: 13, color: "#9ca3af" }}>
-                Showing {filtered.length} chapters
-              </span>
+            ) : (
+              grouped.map((g) => (
+                <div key={g.key || "all"} style={{ marginBottom: 30 }}>
+                  {g.key && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "6px 0 18px" }}>
+                      <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 13, letterSpacing: ".08em", textTransform: "uppercase", color: subject.dk }}>
+                        {g.key} Chemistry
+                      </span>
+                      <span style={{ fontSize: 11.5, color: CL.muted, fontWeight: 700, background: subject.soft, padding: "2px 9px", borderRadius: 50 }}>{g.items.length}</span>
+                      <span style={{ flex: 1, height: 1, background: CL.line }} />
+                    </div>
+                  )}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 18 }}>
+                    {g.items.map((ch, i) => (
+                      <ChapterCard key={`${active}-${ch.section || ""}-${ch.n}`} ch={ch} subject={subject} index={i} onOpen={(c) => setViewer({ chapter: c })} />
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
+
+            {/* hint + CTA */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, margin: "10px 0 34px", fontSize: 12.5, color: CL.muted }}>
+              <Keyboard size={15} /> Tip: open any chapter, then use ← / → to flip pages and +/− to zoom.
             </div>
 
-            {/* Chapter grid */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-              gap: 16,
-            }}>
-              {filtered.map((ch, i) => (
-                <ChapterCard key={ch.n} ch={ch} color={subject.color} index={i} subId={activeSubject} onOpenMindMap={setLightboxImg} />
-              ))}
-            </div>
-
-            {/* Bottom CTA */}
             <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
               style={{
-                marginTop: 48,
-                background: subject.gradient,
-                borderRadius: 20,
-                padding: "28px 32px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-                gap: 20,
+                background: `linear-gradient(120deg, ${subject.accent}, ${subject.dk})`,
+                borderRadius: 22, padding: "30px 34px", display: "flex", alignItems: "center",
+                justifyContent: "space-between", flexWrap: "wrap", gap: 20,
+                boxShadow: `0 18px 44px ${subject.accent}33`,
               }}
             >
               <div>
-                <h3 style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: "1.3rem", marginBottom: 6 }}>
-                  Ready to test your {subject.name}?
+                <h3 style={{ fontFamily: CL.display, fontWeight: 800, color: "#fff", fontSize: "1.35rem", margin: "0 0 6px" }}>
+                  Revised the theory? See where your rank can take you.
                 </h3>
-                <p style={{ color: "rgba(255,255,255,.75)", fontSize: 14, margin: 0 }}>
-                  Use the College Predictor to see which institutes you can get into based on your JEE performance.
+                <p style={{ color: "rgba(255,255,255,.82)", fontSize: 14, margin: 0, maxWidth: 460, lineHeight: 1.6 }}>
+                  Use the free College Predictor to find the institutes and branches your JEE score can unlock.
                 </p>
               </div>
-              <button
-                className="btn"
-                onClick={() => nav("/jee-main#rank")}
-                style={{
-                  background: "#fff",
-                  color: subject.color,
-                  fontWeight: 700,
-                  padding: "12px 24px",
-                  gap: 8,
-                  boxShadow: "0 4px 20px rgba(0,0,0,.2)",
-                }}
-              >
+              <button onClick={() => nav("/jee-main#rank")} style={{
+                display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: subject.dk,
+                fontFamily: CL.display, fontWeight: 800, fontSize: 14, padding: "13px 24px", borderRadius: 50,
+                border: "none", cursor: "pointer", boxShadow: "0 6px 20px rgba(0,0,0,.22)", whiteSpace: "nowrap",
+              }}>
                 Predict My Rank <ArrowRight size={16} />
               </button>
             </motion.div>
@@ -623,34 +503,26 @@ export default function JeeResources() {
         </AnimatePresence>
       </div>
 
-      {/* Lightbox Modal */}
-      <AnimatePresence>
-        {lightboxImg && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              position: "fixed", inset: 0, zIndex: 9999,
-              background: "rgba(0,0,0,0.85)", backdropFilter: "blur(4px)",
-              display: "grid", placeItems: "center", padding: 20
-            }}
-            onClick={() => setLightboxImg(null)}
-          >
-            <button onClick={() => setLightboxImg(null)} style={{ position: "absolute", top: 20, right: 20, background: "none", border: "none", color: "#fff", cursor: "pointer" }}>
-              <X size={32} />
-            </button>
-            <motion.img
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              src={lightboxImg}
-              style={{ maxWidth: "100%", maxHeight: "90vh", borderRadius: 8, boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <MindMapViewer
+        open={!!viewer}
+        subjectId={active}
+        chapter={viewer?.chapter}
+        onClose={() => setViewer(null)}
+      />
+    </div>
+  );
+}
+
+function HeroStat({ icon: Icon, value, label, color }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 11, background: CL.card, border: `1px solid ${CL.line}`, borderRadius: 14, padding: "11px 16px", boxShadow: CL.shadow }}>
+      <span style={{ width: 38, height: 38, borderRadius: 10, background: `${color}18`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+        <Icon size={19} color={color} />
+      </span>
+      <div>
+        <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.25rem", color: CL.ink, lineHeight: 1 }}>{value}</div>
+        <div style={{ fontSize: 11.5, color: CL.muted, marginTop: 3 }}>{label}</div>
+      </div>
     </div>
   );
 }
