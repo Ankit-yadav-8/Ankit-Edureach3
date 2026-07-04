@@ -1,0 +1,2642 @@
+export const BRANCH_EXTRA = {
+  "cs-it": {
+    "toolsAndTech": [
+      "Verilog",
+      "TensorFlow",
+      "Figma",
+      "C++",
+      "Tableau",
+      "AWS"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Defense",
+        "demand": 75
+      },
+      {
+        "industry": "Automotive",
+        "demand": 89
+      },
+      {
+        "industry": "Cloud Tech",
+        "demand": 54
+      },
+      {
+        "industry": "Robotics",
+        "demand": 57
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 78,
+      "global": 38
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 12,
+        "peak": 39
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 6,
+        "peak": 26
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 12,
+        "peak": 54
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 18,
+        "peak": 53
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 1556
+      },
+      {
+        "year": 2021,
+        "rank": 1356
+      },
+      {
+        "year": 2022,
+        "rank": 1156
+      },
+      {
+        "year": 2023,
+        "rank": 956
+      },
+      {
+        "year": 2024,
+        "rank": 806
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 27
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 17
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 11
+      }
+    ],
+    "satisfaction": 81,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "ai-data-science": {
+    "toolsAndTech": [
+      "SolidWorks",
+      "AutoCAD",
+      "Kubernetes",
+      "AWS",
+      "Excel",
+      "Git"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Aerospace",
+        "demand": 89
+      },
+      {
+        "industry": "Cloud Tech",
+        "demand": 60
+      },
+      {
+        "industry": "Healthcare",
+        "demand": 84
+      },
+      {
+        "industry": "Energy",
+        "demand": 62
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 65,
+      "global": 37
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 12,
+        "peak": 36
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 6,
+        "peak": 21
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 14,
+        "peak": 52
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 16,
+        "peak": 99
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 1999
+      },
+      {
+        "year": 2021,
+        "rank": 1799
+      },
+      {
+        "year": 2022,
+        "rank": 1599
+      },
+      {
+        "year": 2023,
+        "rank": 1399
+      },
+      {
+        "year": 2024,
+        "rank": 1249
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 30
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 21
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 11
+      }
+    ],
+    "satisfaction": 66,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "electronics-electrical": {
+    "toolsAndTech": [
+      "Git",
+      "SPICE",
+      "React",
+      "Python",
+      "Figma",
+      "SolidWorks"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Robotics",
+        "demand": 55
+      },
+      {
+        "industry": "Pharma",
+        "demand": 91
+      },
+      {
+        "industry": "Pharma",
+        "demand": 70
+      },
+      {
+        "industry": "Robotics",
+        "demand": 67
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 57,
+      "global": 48
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 13,
+        "peak": 36
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 9,
+        "peak": 30
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 11,
+        "peak": 59
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 18,
+        "peak": 94
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 4296
+      },
+      {
+        "year": 2021,
+        "rank": 4096
+      },
+      {
+        "year": 2022,
+        "rank": 3896
+      },
+      {
+        "year": 2023,
+        "rank": 3696
+      },
+      {
+        "year": 2024,
+        "rank": 3546
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 30
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 19
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 9
+      }
+    ],
+    "satisfaction": 85,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "mechanical-robotics": {
+    "toolsAndTech": [
+      "AutoCAD",
+      "Excel",
+      "AWS",
+      "Figma",
+      "Revit",
+      "TensorFlow"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "EdTech",
+        "demand": 60
+      },
+      {
+        "industry": "Aerospace",
+        "demand": 76
+      },
+      {
+        "industry": "Energy",
+        "demand": 93
+      },
+      {
+        "industry": "Fintech",
+        "demand": 57
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 77,
+      "global": 26
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 9,
+        "peak": 32
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 9,
+        "peak": 21
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 10,
+        "peak": 51
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 22,
+        "peak": 90
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 3993
+      },
+      {
+        "year": 2021,
+        "rank": 3793
+      },
+      {
+        "year": 2022,
+        "rank": 3593
+      },
+      {
+        "year": 2023,
+        "rank": 3393
+      },
+      {
+        "year": 2024,
+        "rank": 3243
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 25
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 17
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 10
+      }
+    ],
+    "satisfaction": 70,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "civil-architecture": {
+    "toolsAndTech": [
+      "QGIS",
+      "Excel",
+      "Tableau",
+      "ROS",
+      "SolidWorks",
+      "Docker"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Consulting",
+        "demand": 90
+      },
+      {
+        "industry": "Energy",
+        "demand": 70
+      },
+      {
+        "industry": "Defense",
+        "demand": 99
+      },
+      {
+        "industry": "Cloud Tech",
+        "demand": 70
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 63,
+      "global": 30
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 10,
+        "peak": 38
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 10,
+        "peak": 32
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 13,
+        "peak": 32
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 16,
+        "peak": 51
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 2615
+      },
+      {
+        "year": 2021,
+        "rank": 2415
+      },
+      {
+        "year": 2022,
+        "rank": 2215
+      },
+      {
+        "year": 2023,
+        "rank": 2015
+      },
+      {
+        "year": 2024,
+        "rank": 1865
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 28
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 17
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 8
+      }
+    ],
+    "satisfaction": 66,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "chemical": {
+    "toolsAndTech": [
+      "AutoCAD",
+      "SolidWorks",
+      "TensorFlow",
+      "Python",
+      "Git",
+      "Kubernetes"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Pharma",
+        "demand": 59
+      },
+      {
+        "industry": "Defense",
+        "demand": 60
+      },
+      {
+        "industry": "Energy",
+        "demand": 72
+      },
+      {
+        "industry": "Aerospace",
+        "demand": 85
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 79,
+      "global": 36
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 9,
+        "peak": 42
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 9,
+        "peak": 30
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 10,
+        "peak": 43
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 16,
+        "peak": 80
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 5530
+      },
+      {
+        "year": 2021,
+        "rank": 5330
+      },
+      {
+        "year": 2022,
+        "rank": 5130
+      },
+      {
+        "year": 2023,
+        "rank": 4930
+      },
+      {
+        "year": 2024,
+        "rank": 4780
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 31
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 17
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 10
+      }
+    ],
+    "satisfaction": 86,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "materials-mining": {
+    "toolsAndTech": [
+      "MATLAB",
+      "Simulink",
+      "Python",
+      "Linux",
+      "Git",
+      "QGIS"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Consulting",
+        "demand": 94
+      },
+      {
+        "industry": "Manufacturing",
+        "demand": 63
+      },
+      {
+        "industry": "Aerospace",
+        "demand": 92
+      },
+      {
+        "industry": "Energy",
+        "demand": 52
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 70,
+      "global": 27
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 11,
+        "peak": 37
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 7,
+        "peak": 30
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 13,
+        "peak": 55
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 17,
+        "peak": 62
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 732
+      },
+      {
+        "year": 2021,
+        "rank": 532
+      },
+      {
+        "year": 2022,
+        "rank": 332
+      },
+      {
+        "year": 2023,
+        "rank": 132
+      },
+      {
+        "year": 2024,
+        "rank": 10
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 23
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 16
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 10
+      }
+    ],
+    "satisfaction": 93,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "biotech-biosciences": {
+    "toolsAndTech": [
+      "Linux",
+      "SolidWorks",
+      "PyTorch",
+      "Git",
+      "TensorFlow",
+      "Figma"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Energy",
+        "demand": 68
+      },
+      {
+        "industry": "E-Commerce",
+        "demand": 71
+      },
+      {
+        "industry": "Defense",
+        "demand": 59
+      },
+      {
+        "industry": "E-Commerce",
+        "demand": 87
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 74,
+      "global": 23
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 12,
+        "peak": 43
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 8,
+        "peak": 19
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 10,
+        "peak": 50
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 21,
+        "peak": 52
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 1940
+      },
+      {
+        "year": 2021,
+        "rank": 1740
+      },
+      {
+        "year": 2022,
+        "rank": 1540
+      },
+      {
+        "year": 2023,
+        "rank": 1340
+      },
+      {
+        "year": 2024,
+        "rank": 1190
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 31
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 17
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 11
+      }
+    ],
+    "satisfaction": 65,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "mathematics-computing": {
+    "toolsAndTech": [
+      "Kubernetes",
+      "SPICE",
+      "AWS",
+      "Revit",
+      "ROS",
+      "Python"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Cloud Tech",
+        "demand": 58
+      },
+      {
+        "industry": "Manufacturing",
+        "demand": 95
+      },
+      {
+        "industry": "Manufacturing",
+        "demand": 96
+      },
+      {
+        "industry": "Consulting",
+        "demand": 87
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 57,
+      "global": 33
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 11,
+        "peak": 27
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 6,
+        "peak": 19
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 10,
+        "peak": 57
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 17,
+        "peak": 84
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 2213
+      },
+      {
+        "year": 2021,
+        "rank": 2013
+      },
+      {
+        "year": 2022,
+        "rank": 1813
+      },
+      {
+        "year": 2023,
+        "rank": 1613
+      },
+      {
+        "year": 2024,
+        "rank": 1463
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 29
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 15
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 12
+      }
+    ],
+    "satisfaction": 64,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "sciences-applied": {
+    "toolsAndTech": [
+      "Python",
+      "React",
+      "Tableau",
+      "Simulink",
+      "Kubernetes",
+      "TensorFlow"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Healthcare",
+        "demand": 79
+      },
+      {
+        "industry": "Healthcare",
+        "demand": 79
+      },
+      {
+        "industry": "Manufacturing",
+        "demand": 63
+      },
+      {
+        "industry": "Manufacturing",
+        "demand": 57
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 69,
+      "global": 41
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 13,
+        "peak": 40
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 8,
+        "peak": 27
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 12,
+        "peak": 41
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 17,
+        "peak": 59
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 2924
+      },
+      {
+        "year": 2021,
+        "rank": 2724
+      },
+      {
+        "year": 2022,
+        "rank": 2524
+      },
+      {
+        "year": 2023,
+        "rank": 2324
+      },
+      {
+        "year": 2024,
+        "rank": 2174
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 26
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 16
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 9
+      }
+    ],
+    "satisfaction": 81,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "aerospace-avionics": {
+    "toolsAndTech": [
+      "Linux",
+      "Simulink",
+      "TensorFlow",
+      "C++",
+      "SolidWorks",
+      "Python"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Fintech",
+        "demand": 52
+      },
+      {
+        "industry": "Energy",
+        "demand": 97
+      },
+      {
+        "industry": "Consulting",
+        "demand": 86
+      },
+      {
+        "industry": "Defense",
+        "demand": 70
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 61,
+      "global": 32
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 11,
+        "peak": 30
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 9,
+        "peak": 32
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 11,
+        "peak": 41
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 22,
+        "peak": 60
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 1879
+      },
+      {
+        "year": 2021,
+        "rank": 1679
+      },
+      {
+        "year": 2022,
+        "rank": 1479
+      },
+      {
+        "year": 2023,
+        "rank": 1279
+      },
+      {
+        "year": 2024,
+        "rank": 1129
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 27
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 15
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 10
+      }
+    ],
+    "satisfaction": 87,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "mining-earth": {
+    "toolsAndTech": [
+      "SPICE",
+      "Revit",
+      "AWS",
+      "Tableau",
+      "React",
+      "QGIS"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Manufacturing",
+        "demand": 68
+      },
+      {
+        "industry": "Robotics",
+        "demand": 95
+      },
+      {
+        "industry": "Automotive",
+        "demand": 57
+      },
+      {
+        "industry": "Defense",
+        "demand": 72
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 63,
+      "global": 20
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 12,
+        "peak": 27
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 10,
+        "peak": 22
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 13,
+        "peak": 40
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 22,
+        "peak": 85
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 3873
+      },
+      {
+        "year": 2021,
+        "rank": 3673
+      },
+      {
+        "year": 2022,
+        "rank": 3473
+      },
+      {
+        "year": 2023,
+        "rank": 3273
+      },
+      {
+        "year": 2024,
+        "rank": 3123
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 25
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 21
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 8
+      }
+    ],
+    "satisfaction": 87,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "petroleum-energy": {
+    "toolsAndTech": [
+      "SPICE",
+      "SolidWorks",
+      "Docker",
+      "MATLAB",
+      "Kubernetes",
+      "Figma"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "E-Commerce",
+        "demand": 54
+      },
+      {
+        "industry": "Pharma",
+        "demand": 57
+      },
+      {
+        "industry": "Cloud Tech",
+        "demand": 59
+      },
+      {
+        "industry": "Fintech",
+        "demand": 54
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 54,
+      "global": 49
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 8,
+        "peak": 43
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 7,
+        "peak": 30
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 11,
+        "peak": 44
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 16,
+        "peak": 67
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 1350
+      },
+      {
+        "year": 2021,
+        "rank": 1150
+      },
+      {
+        "year": 2022,
+        "rank": 950
+      },
+      {
+        "year": 2023,
+        "rank": 750
+      },
+      {
+        "year": 2024,
+        "rank": 600
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 28
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 18
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 9
+      }
+    ],
+    "satisfaction": 93,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "production-industrial": {
+    "toolsAndTech": [
+      "Simulink",
+      "QGIS",
+      "Aspen",
+      "Linux",
+      "TensorFlow",
+      "Docker"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "Pharma",
+        "demand": 99
+      },
+      {
+        "industry": "Energy",
+        "demand": 58
+      },
+      {
+        "industry": "Manufacturing",
+        "demand": 74
+      },
+      {
+        "industry": "Consulting",
+        "demand": 57
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 58,
+      "global": 42
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 12,
+        "peak": 44
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 7,
+        "peak": 28
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 10,
+        "peak": 53
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 18,
+        "peak": 62
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 1837
+      },
+      {
+        "year": 2021,
+        "rank": 1637
+      },
+      {
+        "year": 2022,
+        "rank": 1437
+      },
+      {
+        "year": 2023,
+        "rank": 1237
+      },
+      {
+        "year": 2024,
+        "rank": 1087
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 30
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 17
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 11
+      }
+    ],
+    "satisfaction": 74,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  },
+  "naval-ocean": {
+    "toolsAndTech": [
+      "React",
+      "ANSYS",
+      "SolidWorks",
+      "C++",
+      "Aspen",
+      "PyTorch"
+    ],
+    "semesters": [
+      {
+        "term": "Semester 1",
+        "desc": "Core Sciences & Math",
+        "courses": [
+          "Math I",
+          "Physics",
+          "Engineering Graphics"
+        ]
+      },
+      {
+        "term": "Semester 2",
+        "desc": "Introduction to Branch",
+        "courses": [
+          "Math II",
+          "Basic Electrical",
+          "Intro Programming"
+        ]
+      },
+      {
+        "term": "Semester 3",
+        "desc": "Core Subjects Begin",
+        "courses": [
+          "Core 1",
+          "Core 2",
+          "Data Analysis"
+        ]
+      },
+      {
+        "term": "Semester 4",
+        "desc": "Deep Dive & Labs",
+        "courses": [
+          "Core 3",
+          "Core 4",
+          "Intensive Lab"
+        ]
+      },
+      {
+        "term": "Semester 5",
+        "desc": "Specialization Starts",
+        "courses": [
+          "Elective 1",
+          "Core 5",
+          "Mini Project"
+        ]
+      },
+      {
+        "term": "Semester 6",
+        "desc": "Industry Readiness",
+        "courses": [
+          "Elective 2",
+          "Core 6",
+          "Internship Prep"
+        ]
+      },
+      {
+        "term": "Semester 7",
+        "desc": "Advanced Topics",
+        "courses": [
+          "Elective 3",
+          "Major Project Phase 1"
+        ]
+      },
+      {
+        "term": "Semester 8",
+        "desc": "Thesis / Internship",
+        "courses": [
+          "Major Project Phase 2",
+          "Industry Internship"
+        ]
+      }
+    ],
+    "industryDemand": [
+      {
+        "industry": "EdTech",
+        "demand": 60
+      },
+      {
+        "industry": "Defense",
+        "demand": 76
+      },
+      {
+        "industry": "E-Commerce",
+        "demand": 84
+      },
+      {
+        "industry": "Cloud Tech",
+        "demand": 53
+      }
+    ],
+    "globalVsDomestic": {
+      "domestic": 51,
+      "global": 21
+    },
+    "roleSalaries": [
+      {
+        "role": "Entry Specialist",
+        "entry": 9,
+        "peak": 39
+      },
+      {
+        "role": "Core Engineer",
+        "entry": 6,
+        "peak": 21
+      },
+      {
+        "role": "Analyst / Pivot",
+        "entry": 13,
+        "peak": 52
+      },
+      {
+        "role": "Lead / Architect",
+        "entry": 17,
+        "peak": 69
+      }
+    ],
+    "cutoffTrends": [
+      {
+        "year": 2020,
+        "rank": 3255
+      },
+      {
+        "year": 2021,
+        "rank": 3055
+      },
+      {
+        "year": 2022,
+        "rank": 2855
+      },
+      {
+        "year": 2023,
+        "rank": 2655
+      },
+      {
+        "year": 2024,
+        "rank": 2505
+      }
+    ],
+    "roiMetrics": [
+      {
+        "tier": "Top IITs",
+        "fees": 12,
+        "placement": 26
+      },
+      {
+        "tier": "Top NITs",
+        "fees": 8,
+        "placement": 19
+      },
+      {
+        "tier": "Private",
+        "fees": 20,
+        "placement": 8
+      }
+    ],
+    "satisfaction": 71,
+    "hiddenChallenges": [
+      {
+        "title": "Steep Learning Curve",
+        "reality": "The math and theoretical rigor in the first two years is significantly harder than high school."
+      },
+      {
+        "title": "Peer Pressure",
+        "reality": "Constantly competing with highly driven peers can lead to burnout if you don't pace yourself."
+      }
+    ]
+  }
+};
