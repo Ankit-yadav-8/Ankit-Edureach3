@@ -42,12 +42,12 @@ export const BRANCHES = [
     myths: [
       { myth: "You must do a PhD to work in AI.", reality: "Most applied ML roles need strong projects and math intuition, not a doctorate." },
       { myth: "AI will replace AI engineers.", reality: "Tooling automates the boring parts; framing, data and judgement remain human-led." },
-      { myth: "It's just CS with a fancy name.", reality: "The statistics, optimisation and experimentation discipline make it a distinct skill set." },,
+      { myth: "It's just CS with a fancy name.", reality: "The statistics, optimisation and experimentation discipline make it a distinct skill set." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "cs-it",
@@ -86,12 +86,12 @@ export const BRANCHES = [
     myths: [
       { myth: "CS is all about writing code.", reality: "Coding is only ~25% of the degree; the rest is computer theory, discrete mathematics, and algorithms." },
       { myth: "You need to be a coding genius beforehand.", reality: "Most IITians start coding from scratch in their first year; the curriculum assumes no prior programming knowledge." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skill and projects matter more than brand for software roles — strong portfolios win across tiers." },,
+      { myth: "Only top-tier colleges get placements.", reality: "Skill and projects matter more than brand for software roles — strong portfolios win across tiers." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "mathematics-computing",
@@ -130,12 +130,12 @@ export const BRANCHES = [
     myths: [
       { myth: "Math branches have weak placements.", reality: "Quant and tech roles make M&C one of the highest-paid branches at top IITs." },
       { myth: "You become a teacher only.", reality: "Trading, ML, actuarial and software are the dominant outcomes." },
-      { myth: "It's harder than CSE for no reason.", reality: "The extra math directly unlocks quant and research roles CSE doesn't." },,
+      { myth: "It's harder than CSE for no reason.", reality: "The extra math directly unlocks quant and research roles CSE doesn't." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "electronics-electrical",
@@ -174,12 +174,12 @@ export const BRANCHES = [
     myths: [
       { myth: "ECE means no software jobs.", reality: "A large share of ECE grads move into software and embedded roles with strong fundamentals." },
       { myth: "Core electronics has no scope in India.", reality: "The semiconductor mission is actively expanding VLSI and chip-design hiring." },
-      { myth: "EE is only about power and wiring.", reality: "Modern EE spans control, robotics, signal processing and renewable systems." },,
+      { myth: "EE is only about power and wiring.", reality: "Modern EE spans control, robotics, signal processing and renewable systems." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "sciences-applied",
@@ -218,12 +218,12 @@ export const BRANCHES = [
     myths: [
       { myth: "Applied science = no placements.", reality: "Engineering Physics cohorts place strongly in software, deep-tech and core R&D." },
       { myth: "Only useful for academics.", reality: "Semiconductor and quantum-tech industries actively recruit these grads." },
-      { myth: "You can't switch to CS.", reality: "Strong math/physics base makes a software/ML pivot very achievable." },,
+      { myth: "You can't switch to CS.", reality: "Strong math/physics base makes a software/ML pivot very achievable." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "chemical",
@@ -262,12 +262,12 @@ export const BRANCHES = [
     myths: [
       { myth: "Chemical = only oil refineries.", reality: "Pharma, FMCG, specialty chemicals and analytics absorb large numbers of grads." },
       { myth: "No software pivot possible.", reality: "Process-analytics and data roles are a common, well-paid transition." },
-      { myth: "It's the same as a chemistry degree.", reality: "It's design and scale engineering — very different from lab chemistry." },,
+      { myth: "It's the same as a chemistry degree.", reality: "It's design and scale engineering — very different from lab chemistry." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "mechanical-robotics",
@@ -312,12 +312,12 @@ export const BRANCHES = [
       { myth: "It's only factory jobs.", reality: "Design, simulation, R&D and product roles dominate top-college placements." },
       { myth: "It only involves greasy machinery.", reality: "Modern mechanical engineering is highly reliant on software like CAD, CAM, and simulation tools." },
       { myth: "There is no scope for higher studies.", reality: "There is huge demand for advanced research in materials, aerodynamics, and robotics." },
-      { myth: "Mechanical engineers cannot work in IT.", reality: "Many mechanical engineers transition to IT, especially in roles requiring strong analytical skills." },,
+      { myth: "Mechanical engineers cannot work in IT.", reality: "Many mechanical engineers transition to IT, especially in roles requiring strong analytical skills." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "aerospace-avionics",
@@ -356,12 +356,12 @@ export const BRANCHES = [
     myths: [
       { myth: "Only ISRO hires aerospace grads.", reality: "Private space, drones, defence and even auto-aero CFD roles now recruit widely." },
       { myth: "You must clear NDA / be a pilot.", reality: "Aerospace is design and analysis engineering — entirely separate from flying." },
-      { myth: "No scope in India.", reality: "NewSpace startups and ISRO commercialisation have made it one of the fastest-rising core fields." },,
+      { myth: "No scope in India.", reality: "NewSpace startups and ISRO commercialisation have made it one of the fastest-rising core fields." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "civil-architecture",
@@ -400,12 +400,12 @@ export const BRANCHES = [
     myths: [
       { myth: "Civil pays the least, always.", reality: "Top-college structural and PMC roles are well-paid; PSU stability is a strong upside." },
       { myth: "It's a dying branch.", reality: "Infrastructure and green-building demand keep it steady and government-backed." },
-      { myth: "No tech scope.", reality: "BIM, GIS and structural simulation make modern civil increasingly software-driven." },,
+      { myth: "No tech scope.", reality: "BIM, GIS and structural simulation make modern civil increasingly software-driven." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "materials-mining",
@@ -444,12 +444,12 @@ export const BRANCHES = [
     myths: [
       { myth: "No jobs outside steel plants.", reality: "Batteries, semiconductors and aerospace materials are growing employers." },
       { myth: "It's purely theoretical.", reality: "Characterization, processing and quality engineering are very hands-on." },
-      { myth: "PSU is the only path.", reality: "Strong R&D, higher-studies and materials-tech startup paths exist." },,
+      { myth: "PSU is the only path.", reality: "Strong R&D, higher-studies and materials-tech startup paths exist." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "production-industrial",
@@ -488,12 +488,12 @@ export const BRANCHES = [
     myths: [
       { myth: "It's just shop-floor work.", reality: "Operations research, analytics and consulting are common, well-paid exits." },
       { myth: "Weaker than Mechanical.", reality: "The ops + analytics edge often opens management and consulting roles faster." },
-      { myth: "No software relevance.", reality: "Supply-chain analytics and process optimisation are increasingly data-driven." },,
+      { myth: "No software relevance.", reality: "Supply-chain analytics and process optimisation are increasingly data-driven." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "biotech-biosciences",
@@ -532,12 +532,12 @@ export const BRANCHES = [
     myths: [
       { myth: "Biotech has no jobs in India.", reality: "Bioinformatics, pharma R&D and health-tech are creating new roles steadily." },
       { myth: "You must go abroad.", reality: "Domestic research funding and biotech startups are expanding rapidly." },
-      { myth: "It's just biology.", reality: "Engineering, data and process skills make it a hybrid, high-leverage field." },,
+      { myth: "It's just biology.", reality: "Engineering, data and process skills make it a hybrid, high-leverage field." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "mining-earth",
@@ -576,12 +576,12 @@ export const BRANCHES = [
     myths: [
       { myth: "Mining means a dangerous life underground.", reality: "Modern mining is heavily mechanised and safety-regulated; many roles are planning and supervisory." },
       { myth: "Lowest-paying branch.", reality: "PSU mining pay is among the highest starting packages of any core branch." },
-      { myth: "No tech future.", reality: "Drone surveys, automation and mine-safety analytics are reshaping the field." },,
+      { myth: "No tech future.", reality: "Drone surveys, automation and mine-safety analytics are reshaping the field." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "petroleum-energy",
@@ -620,12 +620,12 @@ export const BRANCHES = [
     myths: [
       { myth: "Petroleum is a dying field.", reality: "Oil & gas demand persists for decades and clean-energy skills extend the career further." },
       { myth: "Only Gulf jobs pay well.", reality: "Indian PSUs and global energy majors offer strong packages domestically too." },
-      { myth: "No link to renewables.", reality: "Reservoir and process skills transfer directly to hydrogen, CCUS and geothermal." },,
+      { myth: "No link to renewables.", reality: "Reservoir and process skills transfer directly to hydrogen, CCUS and geothermal." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
     ],
-  },,
+  },
 
   {
     slug: "naval-ocean",
@@ -664,7 +664,7 @@ export const BRANCHES = [
     myths: [
       { myth: "Only useful for the Navy.", reality: "Shipyards, offshore energy and classification societies hire naval architects widely." },
       { myth: "No jobs in India.", reality: "Indigenous shipbuilding and offshore projects keep this niche field employed." },
-      { myth: "Same as a sailor's career.", reality: "Naval architecture is design engineering on land, distinct from sailing roles." },,
+      { myth: "Same as a sailor's career.", reality: "Naval architecture is design engineering on land, distinct from sailing roles." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }

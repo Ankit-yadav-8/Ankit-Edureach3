@@ -112,10 +112,10 @@ export default function BranchCatalog() {
             <Sparkles size={13} /> Branch Explorer
           </span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.4vw,2.9rem)", color: CL.ink, letterSpacing: "-1.3px", margin: "16px 0 12px", lineHeight: 1.08 }}>
-            {TOTAL_BRANCHES}+ branches. <span style={{ color: CL.coral, fontStyle: "italic" }}>{BRANCHES.length} clear paths.</span>
+            {TOTAL_BRANCHES}+ engineering branches.<br/> <span style={{ color: CL.coral, fontStyle: "italic" }}>Distilled into {BRANCHES.length} clear domains.</span>
           </h2>
-          <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7, fontStyle: "italic" }}>
-            Bucketed into {BRANCHES.length} domains with deep insights on placements, salaries, AI outlook and more — so nothing slips through the cracks.
+          <p style={{ color: CL.body, fontSize: "1.08rem", lineHeight: 1.7, fontStyle: "italic", maxWidth: 640, margin: "0 auto" }}>
+            We've carefully bucketed every engineering specialization into {BRANCHES.length} primary domains. Dive deep into exclusive data on <strong style={{ color: CL.ink }}>placements, 5-year salary arcs, real-world AI disruption risk</strong>, and the top recruiters hiring right now — ensuring absolutely nothing slips through the cracks as you plan your future.
           </p>
           <div style={{ marginTop: 24 }}>
             <Link to="/branches" style={{
