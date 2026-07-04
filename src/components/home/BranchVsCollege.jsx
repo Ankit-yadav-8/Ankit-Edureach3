@@ -1,15 +1,15 @@
-/* BranchVsCollege — original "which side do you protect" priority check,
-   written and designed in-house for College Parichay. Seven scenario
-   questions score toward branch (negative) or college (positive); a
-   compass strip slides live under the quiz and the final verdict renders
-   as a semicircular dial with pointers and next steps. Used both as a
-   home section and on /branch-vs-college. */
+/* BranchVsCollege — original College Parichay "AI Trade-off Analyzer".
+   Ten in-house scenario questions score toward branch (negative) or college
+   (positive); a live compass strip tracks the lean, an animated AI analysis
+   interstitial reads the answers, and the verdict renders as a semicircular
+   dial with pointers and next steps. Used both as a home section and on
+   /branch-vs-college. Design & copy are original to College Parichay. */
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   GitCompareArrows, ArrowRight, RotateCcw, Sparkles,
-  Layers, Crosshair, Compass, CheckCircle2, Scale,
+  Layers, Crosshair, Compass, CheckCircle2, Scale, Check, Cpu,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
@@ -78,6 +78,33 @@ const QUESTIONS = [
       { label: "Spending four years on a subject I don't enjoy", score: -2 },
       { label: "Graduating without a strong placement season", score: 1 },
       { label: "Being average at something I never chose", score: -1 },
+    ],
+  },
+  {
+    q: "It's midnight and you're scrolling placement reports. What are you really checking?",
+    options: [
+      { label: "The highest package the campus posted this year", score: 2 },
+      { label: "Whether my specific branch actually places well there", score: -2 },
+      { label: "How many companies visited overall", score: 1 },
+      { label: "Which roles match the field I care about", score: -1 },
+    ],
+  },
+  {
+    q: "A relative asks what you study. The answer you'd be proud to give is…",
+    options: [
+      { label: "The name of a college everyone recognises", score: 2 },
+      { label: "A field I can explain with genuine excitement", score: -2 },
+      { label: "A course with obvious job security", score: 1 },
+      { label: "The exact specialisation I always wanted", score: -1 },
+    ],
+  },
+  {
+    q: "If you could lock in just ONE thing before counselling, it would be…",
+    options: [
+      { label: "A seat at the highest-ranked institute I can reach", score: 2 },
+      { label: "My chosen branch, wherever it takes me", score: -2 },
+      { label: "The strongest placement cell available", score: 1 },
+      { label: "A curriculum built around my interests", score: -1 },
     ],
   },
 ];
@@ -313,47 +340,156 @@ function NextTile({ to, icon: Icon, title, sub, primary }) {
   );
 }
 
+/* ── AiAnalyzing — animated "AI is reading your answers" interstitial.
+   Pulsing orb + rotating conic ring + a checklist of analysis steps that
+   tick off in sequence, then hands over to the verdict. ── */
+const AI_STEPS = [
+  "Reading all 10 of your answers",
+  "Weighing campus pull against subject pull",
+  "Scoring your risk tolerance & flexibility",
+  "Modelling your JoSAA choice priorities",
+  "Locking in the side you should protect",
+];
+
+function AiAnalyzing({ onDone }) {
+  const [i, setI] = useState(0);
+  const per = 460;
+  useEffect(() => {
+    const iv = setInterval(() => setI((x) => (x < AI_STEPS.length - 1 ? x + 1 : x)), per);
+    const end = setTimeout(onDone, per * AI_STEPS.length + 500);
+    return () => { clearInterval(iv); clearTimeout(end); };
+  }, [onDone]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.4 }}
+      style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "40px 30px 34px", maxWidth: 560, margin: "0 auto", textAlign: "center", overflow: "hidden", position: "relative" }}
+    >
+      {/* AI orb */}
+      <div style={{ position: "relative", width: 108, height: 108, margin: "0 auto 24px" }}>
+        {[0, 1].map((k) => (
+          <motion.span key={k}
+            animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+            transition={{ repeat: Infinity, duration: 1.8, delay: k * 0.9, ease: "easeOut" }}
+            style={{ position: "absolute", inset: 0, borderRadius: "50%", border: `2px solid ${CL.coral}` }} />
+        ))}
+        <motion.div
+          animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 3.2, ease: "linear" }}
+          style={{ position: "absolute", inset: 0, borderRadius: "50%", background: `conic-gradient(${CL.coral}, ${CL.amber}, ${CL.green}, ${CL.coral})`, padding: 4 }}>
+          <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: CL.card, display: "grid", placeItems: "center" }}>
+            <motion.div animate={{ scale: [1, 1.12, 1] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}>
+              <Cpu size={34} color={CL.coral} />
+            </motion.div>
+          </div>
+        </motion.div>
+      </div>
+
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 11, fontWeight: 800, letterSpacing: "1.2px", color: CL.coralDk, background: CL.coralSoft, padding: "5px 13px", borderRadius: 50, marginBottom: 8 }}>
+        <Sparkles size={12} /> AI PRIORITY ANALYSIS
+      </div>
+      <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.4rem", color: CL.ink, letterSpacing: "-0.5px", margin: "0 0 22px" }}>
+        Reading between your answers…
+      </h3>
+
+      {/* analysis checklist */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 380, margin: "0 auto 22px", textAlign: "left" }}>
+        {AI_STEPS.map((s, idx) => {
+          const doneStep = idx < i, activeStep = idx === i;
+          return (
+            <motion.div key={s}
+              initial={{ opacity: 0, x: 12 }} animate={{ opacity: doneStep || activeStep ? 1 : 0.35, x: 0 }}
+              transition={{ delay: idx * 0.05 }}
+              style={{ display: "flex", alignItems: "center", gap: 11, fontSize: 13.5, fontWeight: 600, color: doneStep ? CL.ink2 : activeStep ? CL.ink : CL.muted }}>
+              <span style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, display: "grid", placeItems: "center", background: doneStep ? CL.green : activeStep ? CL.coralSoft : CL.cream2, border: `1px solid ${doneStep ? CL.green : activeStep ? CL.coral : CL.cream3}`, transition: "all .3s" }}>
+                {doneStep
+                  ? <Check size={13} color="#fff" strokeWidth={3} />
+                  : activeStep
+                    ? <motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.9, ease: "linear" }} style={{ width: 10, height: 10, borderRadius: "50%", border: `2px solid ${CL.coral}`, borderTopColor: "transparent" }} />
+                    : <span style={{ width: 5, height: 5, borderRadius: "50%", background: CL.muted }} />}
+              </span>
+              {s}
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* sweep bar */}
+      <div style={{ height: 6, borderRadius: 50, background: CL.cream2, overflow: "hidden", maxWidth: 380, margin: "0 auto" }}>
+        <motion.div
+          initial={{ width: "0%" }} animate={{ width: "100%" }}
+          transition={{ duration: (per * AI_STEPS.length + 300) / 1000, ease: "easeInOut" }}
+          style={{ height: "100%", borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber}, ${CL.green})` }} />
+      </div>
+    </motion.div>
+  );
+}
+
 const LETTERS = ["A", "B", "C", "D"];
+
+/* question slide transition (direction-aware) */
+const qVariants = {
+  enter: (dir) => ({ opacity: 0, x: dir >= 0 ? 70 : -70, scale: 0.98 }),
+  center: { opacity: 1, x: 0, scale: 1 },
+  exit: (dir) => ({ opacity: 0, x: dir >= 0 ? -70 : 70, scale: 0.98 }),
+};
+const optContainer = { hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: 0.12 } } };
+const optItem = {
+  hidden: { opacity: 0, x: 18 },
+  show: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 280, damping: 24 } },
+};
 
 export default function BranchVsCollege({ asPage = false }) {
   const [step, setStep] = useState(0);
+  const [dir, setDir] = useState(1);
   const [answers, setAnswers] = useState(Array(QUESTIONS.length).fill(null));
-  const [done, setDone] = useState(false);
+  const [phase, setPhase] = useState("quiz"); // quiz | analyzing | result
 
   const choose = (opt) => {
     const next = [...answers];
     next[step] = opt;
     setAnswers(next);
     setTimeout(() => {
-      if (step + 1 < QUESTIONS.length) setStep(step + 1);
-      else setDone(true);
-    }, 220);
+      if (step + 1 < QUESTIONS.length) { setDir(1); setStep(step + 1); }
+      else setPhase("analyzing");
+    }, 240);
   };
 
-  const reset = () => { setAnswers(Array(QUESTIONS.length).fill(null)); setStep(0); setDone(false); };
+  const goPrev = () => { if (step > 0) { setDir(-1); setStep(step - 1); } };
+  const reset = () => { setAnswers(Array(QUESTIONS.length).fill(null)); setStep(0); setDir(1); setPhase("quiz"); };
   const q = QUESTIONS[step];
-  const verdict = done ? computeVerdict(answers) : null;
-  const progress = ((answers.filter(Boolean).length) / QUESTIONS.length) * 100;
+  const verdict = phase === "result" ? computeVerdict(answers) : null;
+  const progress = (answers.filter(Boolean).length / QUESTIONS.length) * 100;
 
   return (
     <section id="branch-vs-college" style={{ background: CL.cream, padding: asPage ? "104px 0 80px" : "84px 0", scrollMarginTop: 80 }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 38px" }}>
-          <span style={clEyebrow}><GitCompareArrows size={13} /> Branch vs College</span>
+          <span style={clEyebrow}><GitCompareArrows size={13} /> AI Trade-off Analyzer</span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.2vw,2.8rem)", color: CL.ink, letterSpacing: "-1.2px", margin: "16px 0 12px", lineHeight: 1.1 }}>
             Your rank will force a trade-off.<br />
             <span style={{ color: CL.coral }}>Know your side</span> before you fill a single choice.
           </h2>
         </div>
 
-        {!done ? (
-          <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" custom={dir}>
+          {phase === "analyzing" ? (
+            <AiAnalyzing key="analyzing" onDone={() => setPhase("result")} />
+          ) : phase === "result" ? (
+            <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <VerdictCard verdict={verdict} onReset={reset} />
+            </motion.div>
+          ) : (
             <motion.div key={`q-${step}`}
-              initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -18 }} transition={{ duration: 0.26 }}
-              style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "28px 28px 24px", maxWidth: 640, margin: "0 auto" }}
+              custom={dir} variants={qVariants} initial="enter" animate="center" exit="exit"
+              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+              style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "24px 28px 24px", maxWidth: 640, margin: "0 auto", position: "relative", overflow: "hidden" }}
             >
-              {/* progress */}
-              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
+              {/* AI badge + progress */}
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10, fontWeight: 800, letterSpacing: ".08em", color: CL.coralDk, background: CL.coralSoft, padding: "4px 10px", borderRadius: 50, flexShrink: 0 }}>
+                  <Sparkles size={11} /> AI ANALYZING
+                </span>
                 <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 13, color: CL.ink, whiteSpace: "nowrap" }}>
                   {step + 1} <span style={{ color: CL.muted, fontWeight: 700 }}>/ {QUESTIONS.length}</span>
                 </span>
@@ -365,18 +501,21 @@ export default function BranchVsCollege({ asPage = false }) {
 
               <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.32rem", color: CL.ink, letterSpacing: "-0.4px", marginBottom: 20, lineHeight: 1.3 }}>{q.q}</h3>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+              <motion.div variants={optContainer} initial="hidden" animate="show" style={{ display: "flex", flexDirection: "column", gap: 11 }}>
                 {q.options.map((opt, i) => {
                   const active = answers[step]?.label === opt.label;
                   return (
-                    <button key={opt.label} onClick={() => choose(opt)} style={{
-                      textAlign: "left", padding: "14px 16px", borderRadius: 14, cursor: "pointer",
-                      background: active ? CL.coralSoft : "#fff",
-                      border: `1.5px solid ${active ? CL.coral : CL.cream3}`,
-                      color: CL.ink, fontSize: 14.5, fontWeight: 600,
-                      display: "flex", alignItems: "center", gap: 13,
-                      transition: "all .15s",
-                    }}
+                    <motion.button key={opt.label} variants={optItem} onClick={() => choose(opt)}
+                      whileHover={{ scale: active ? 1 : 1.015 }} whileTap={{ scale: 0.985 }}
+                      style={{
+                        textAlign: "left", padding: "14px 16px", borderRadius: 14, cursor: "pointer",
+                        background: active ? CL.coralSoft : "#fff",
+                        border: `1.5px solid ${active ? CL.coral : CL.cream3}`,
+                        color: CL.ink, fontSize: 14.5, fontWeight: 600,
+                        display: "flex", alignItems: "center", gap: 13,
+                        boxShadow: active ? `0 6px 20px ${CL.coral}22` : "none",
+                        transition: "background .15s, border-color .15s, box-shadow .2s",
+                      }}
                       onMouseEnter={(e) => { if (!active) { e.currentTarget.style.borderColor = CL.coral + "77"; e.currentTarget.style.background = CL.cream2; } }}
                       onMouseLeave={(e) => { if (!active) { e.currentTarget.style.borderColor = CL.cream3; e.currentTarget.style.background = "#fff"; } }}
                     >
@@ -385,25 +524,25 @@ export default function BranchVsCollege({ asPage = false }) {
                         fontFamily: CL.display, fontWeight: 800, fontSize: 12.5,
                         background: active ? CL.coral : CL.cream2, color: active ? "#fff" : CL.muted,
                         border: `1px solid ${active ? CL.coral : CL.cream3}`, transition: "all .15s",
-                      }}>{LETTERS[i]}</span>
-                      {opt.label}
-                    </button>
+                      }}>
+                        {active ? <Check size={15} strokeWidth={3} /> : LETTERS[i]}
+                      </span>
+                      <span style={{ flex: 1 }}>{opt.label}</span>
+                    </motion.button>
                   );
                 })}
-              </div>
+              </motion.div>
 
               <CompassStrip answers={answers} />
 
               {step > 0 && (
                 <div style={{ textAlign: "center", marginTop: 16 }}>
-                  <button onClick={() => setStep(step - 1)} style={{ fontSize: 13, color: CL.muted, fontWeight: 600, cursor: "pointer", background: "none", border: "none" }}>← Previous question</button>
+                  <button onClick={goPrev} style={{ fontSize: 13, color: CL.muted, fontWeight: 600, cursor: "pointer", background: "none", border: "none" }}>← Previous question</button>
                 </div>
               )}
             </motion.div>
-          </AnimatePresence>
-        ) : (
-          <VerdictCard verdict={verdict} onReset={reset} />
-        )}
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
