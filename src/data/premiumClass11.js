@@ -325,359 +325,235 @@ export const PREMIUM_CLASS_11 = {
   Mathematics: [
     {
       title: "Sets",
-      description: "The fundamental language of mathematics defining collections of objects and operations on them.",
-      outcomes: ["Subsets", "Power Sets", "Venn Diagrams", "Union & Intersection", "De Morgan's Laws"],
-      difficulty: 1,
-      jeeMain: 2,
-      jeeAdv: 1,
-      priority: "Tier 4",
-      studyTime: "3-4 Hours",
-      prerequisites: "None"
+      description: "Learn the fundamental language of Mathematics by understanding sets, subsets, operations on sets, Venn diagrams, intervals, and real-life applications. This chapter forms the basis of higher mathematical reasoning and logic.",
+      outcomes: ["Types of Sets", "Set Operations", "Venn Diagrams", "Intervals", "Universal Set"],
+      difficulty: 2, jeeMain: 3, jeeAdv: 3,
+      priority: "Tier 3", studyTime: "3-5 Hours", prerequisites: "None"
     },
     {
       title: "Relations and Functions",
-      description: "Establishes mappings between sets, leading into the vast topic of calculus.",
-      outcomes: ["Cartesian Product", "Types of Relations", "Domain & Range", "Functions & Graphs", "Algebra of Functions"],
-      difficulty: 3,
-      jeeMain: 4,
-      jeeAdv: 4,
-      priority: "Tier 2",
-      studyTime: "6-8 Hours",
-      prerequisites: "Sets"
+      description: "Understand relations, functions, domain, range, composition, and inverse functions. This chapter introduces one of the most important concepts used throughout higher mathematics.",
+      outcomes: ["Relations", "Functions", "Domain & Range", "Composite Functions", "Inverse Functions"],
+      difficulty: 3, jeeMain: 4, jeeAdv: 4,
+      priority: "Tier 2", studyTime: "6-8 Hours", prerequisites: "Sets"
     },
     {
       title: "Trigonometric Functions",
-      description: "Core topic linking geometry with algebra, heavily utilized across Physics and all math chapters.",
-      outcomes: ["Radian Measure", "Trig Identities", "Graphs", "Equations", "Multiple Angles"],
-      difficulty: 4,
-      jeeMain: 3,
-      jeeAdv: 4,
-      priority: "Tier 2",
-      studyTime: "10-12 Hours",
-      prerequisites: "Basic Geometry"
+      description: "Master trigonometric ratios, identities, graphs, transformations, and equations. This chapter is essential for Calculus, Coordinate Geometry, and Physics.",
+      outcomes: ["Trigonometric Ratios", "Identities", "Graphs", "Equations", "Transformations"],
+      difficulty: 4, jeeMain: 5, jeeAdv: 5,
+      priority: "Tier 1", studyTime: "10-12 Hours", prerequisites: "Basic Geometry"
+    },
+    {
+      title: "Principle of Mathematical Induction",
+      description: "Learn mathematical proof techniques using induction to establish the validity of statements involving natural numbers.",
+      outcomes: ["Induction Principle", "Proof Techniques", "Recursive Logic", "Mathematical Statements"],
+      difficulty: 2, jeeMain: 2, jeeAdv: 3,
+      priority: "Tier 3", studyTime: "3-4 Hours", prerequisites: "None"
     },
     {
       title: "Complex Numbers and Quadratic Equations",
-      description: "Expands the number system to solve equations with no real roots, essential for advanced algebra.",
-      outcomes: ["Argand Plane", "Polar Representation", "Euler's Formula", "Cube Roots of Unity", "Quadratic Roots"],
-      difficulty: 4,
-      jeeMain: 4,
-      jeeAdv: 5,
-      priority: "Tier 1",
-      studyTime: "8-10 Hours",
-      prerequisites: "Algebra Basics"
+      description: "Study imaginary numbers, complex plane, algebra of complex numbers, modulus, argument, and methods for solving quadratic equations.",
+      outcomes: ["Complex Numbers", "Argand Plane", "Modulus & Argument", "Quadratic Equations", "Roots of Equations"],
+      difficulty: 4, jeeMain: 5, jeeAdv: 5,
+      priority: "Tier 1", studyTime: "8-10 Hours", prerequisites: "Algebra Basics"
     },
     {
       title: "Linear Inequalities",
-      description: "Teaches analytical reasoning for ranges of solutions, a foundational tool for calculus domains.",
-      outcomes: ["Interval Notation", "Graphical Solution", "System of Inequalities", "Modulus Inequalities", "Wavy Curve Method"],
-      difficulty: 2,
-      jeeMain: 2,
-      jeeAdv: 2,
-      priority: "Tier 3",
-      studyTime: "4-5 Hours",
-      prerequisites: "Algebra Basics"
+      description: "Learn to solve linear inequalities in one and two variables and represent solution regions graphically.",
+      outcomes: ["Linear Inequalities", "Graphical Solutions", "Solution Regions", "Interval Notation"],
+      difficulty: 2, jeeMain: 2, jeeAdv: 3,
+      priority: "Tier 3", studyTime: "4-5 Hours", prerequisites: "Algebra Basics"
     },
     {
       title: "Permutations and Combinations",
-      description: "The mathematics of counting without actually counting, crucial for probability.",
-      outcomes: ["Fundamental Principle", "Factorials", "Permutations", "Combinations", "Circular Permutations"],
-      difficulty: 4,
-      jeeMain: 4,
-      jeeAdv: 5,
-      priority: "Tier 1",
-      studyTime: "8-10 Hours",
-      prerequisites: "Basic Arithmetic"
+      description: "Understand counting techniques, arrangements, selections, and combinatorial reasoning for solving probability and discrete mathematics problems.",
+      outcomes: ["Factorial", "Permutations", "Combinations", "Counting Principle", "Circular Permutations"],
+      difficulty: 4, jeeMain: 5, jeeAdv: 5,
+      priority: "Tier 1", studyTime: "8-10 Hours", prerequisites: "Basic Arithmetic"
     },
     {
       title: "Binomial Theorem",
-      description: "Expands algebraic expressions to any power, an essential toolkit for series and approximations.",
-      outcomes: ["Pascal's Triangle", "General Term", "Middle Term", "Properties of Coefficients", "Applications"],
-      difficulty: 3,
-      jeeMain: 4,
-      jeeAdv: 4,
-      priority: "Tier 2",
-      studyTime: "6-8 Hours",
-      prerequisites: "Permutations & Combinations"
+      description: "Study binomial expansion, coefficients, middle terms, general term, and applications in algebra and calculus.",
+      outcomes: ["Binomial Expansion", "General Term", "Binomial Coefficients", "Pascal's Triangle"],
+      difficulty: 3, jeeMain: 4, jeeAdv: 5,
+      priority: "Tier 2", studyTime: "6-8 Hours", prerequisites: "Permutations and Combinations"
     },
     {
       title: "Sequences and Series",
-      description: "Analyzes patterns of numbers, including arithmetic and geometric progressions used everywhere.",
-      outcomes: ["Arithmetic Progression", "Geometric Progression", "AM & GM", "Sum of Special Series", "Arithmetico-Geometric Series"],
-      difficulty: 3,
-      jeeMain: 4,
-      jeeAdv: 4,
-      priority: "Tier 2",
-      studyTime: "7-9 Hours",
-      prerequisites: "Algebra Basics"
+      description: "Learn arithmetic progression, geometric progression, harmonic progression, and summation formulas used throughout higher mathematics.",
+      outcomes: ["AP", "GP", "HP", "Sum of Series", "Special Series"],
+      difficulty: 4, jeeMain: 5, jeeAdv: 5,
+      priority: "Tier 1", studyTime: "7-9 Hours", prerequisites: "Algebra Basics"
     },
     {
       title: "Straight Lines",
-      description: "The gateway to coordinate geometry, mapping algebraic equations to geometric lines.",
-      outcomes: ["Slope & Angles", "Equations of Lines", "Distance Formula", "Family of Lines", "Centroid & Orthocenter"],
-      difficulty: 3,
-      jeeMain: 4,
-      jeeAdv: 4,
-      priority: "Tier 2",
-      studyTime: "8-10 Hours",
-      prerequisites: "Basic Geometry"
+      description: "Master coordinate geometry by studying equations of lines, slopes, angles, distance formulas, and intersections.",
+      outcomes: ["Slope", "Line Equation", "Distance Formula", "Angle Between Lines", "Intercepts"],
+      difficulty: 3, jeeMain: 4, jeeAdv: 4,
+      priority: "Tier 2", studyTime: "8-10 Hours", prerequisites: "Basic Geometry"
     },
     {
       title: "Conic Sections",
-      description: "Detailed study of curves like circles, parabolas, and ellipses. Extremely high weightage in JEE.",
-      outcomes: ["Circles", "Parabola", "Ellipse", "Hyperbola", "Tangents & Normals"],
-      difficulty: 5,
-      jeeMain: 5,
-      jeeAdv: 5,
-      priority: "Tier 1",
-      studyTime: "12-15 Hours",
-      prerequisites: "Straight Lines"
+      description: "Explore circles, parabola, ellipse, and hyperbola while understanding their equations, properties, and applications.",
+      outcomes: ["Circle", "Parabola", "Ellipse", "Hyperbola", "Coordinate Geometry"],
+      difficulty: 5, jeeMain: 5, jeeAdv: 5,
+      priority: "Tier 1", studyTime: "12-15 Hours", prerequisites: "Straight Lines"
     },
     {
-      title: "Introduction to 3D Geometry",
-      description: "Extends 2D coordinate geometry into the third dimension, leading into vector algebra.",
-      outcomes: ["Coordinates in 3D", "Distance Formula", "Section Formula", "Direction Cosines", "Planes Basics"],
-      difficulty: 2,
-      jeeMain: 2,
-      jeeAdv: 2,
-      priority: "Tier 3",
-      studyTime: "4-6 Hours",
-      prerequisites: "Straight Lines"
+      title: "Introduction to Three-Dimensional Geometry",
+      description: "Learn the basics of 3D coordinate systems, distance formula, section formula, and geometric representation in space.",
+      outcomes: ["3D Coordinates", "Distance Formula", "Section Formula", "Direction Cosines"],
+      difficulty: 2, jeeMain: 3, jeeAdv: 3,
+      priority: "Tier 3", studyTime: "4-6 Hours", prerequisites: "Straight Lines"
     },
     {
       title: "Limits and Derivatives",
-      description: "The foundation of Calculus. Explores the behavior of functions as they approach specific points.",
-      outcomes: ["Concept of Limit", "Algebra of Limits", "Standard Limits", "First Principle", "Rules of Differentiation"],
-      difficulty: 4,
-      jeeMain: 5,
-      jeeAdv: 5,
-      priority: "Tier 1",
-      studyTime: "10-12 Hours",
-      prerequisites: "Functions, Trigonometry"
+      description: "Begin Calculus by understanding limits, continuity, derivatives, and basic differentiation techniques that form the backbone of Class 12 Mathematics.",
+      outcomes: ["Limits", "Derivatives", "Continuity", "Differentiation", "Applications"],
+      difficulty: 4, jeeMain: 5, jeeAdv: 5,
+      priority: "Tier 1", studyTime: "10-12 Hours", prerequisites: "Functions, Trigonometry"
     },
     {
-      title: "Statistics",
-      description: "Measures of dispersion and variance. A highly predictable scoring chapter in JEE Main.",
-      outcomes: ["Mean Deviation", "Variance", "Standard Deviation", "Coefficient of Variation", "Analysis of Frequency"],
-      difficulty: 2,
-      jeeMain: 4,
-      jeeAdv: 1,
-      priority: "Tier 2",
-      studyTime: "5-6 Hours",
-      prerequisites: "Basic Arithmetic"
-    },
-    {
-      title: "Probability",
-      description: "Calculates the likelihood of events. A conceptual chapter that blends with Permutations.",
-      outcomes: ["Random Experiments", "Sample Space", "Axiomatic Probability", "Addition Rule", "Conditional Probability Intro"],
-      difficulty: 3,
-      jeeMain: 3,
-      jeeAdv: 4,
-      priority: "Tier 2",
-      studyTime: "6-8 Hours",
-      prerequisites: "Sets, Permutations"
+      title: "Statistics & Probability",
+      description: "Study data analysis, measures of dispersion, probability concepts, and statistical interpretation used in Mathematics and Data Science.",
+      outcomes: ["Mean", "Variance", "Standard Deviation", "Probability", "Random Experiments"],
+      difficulty: 3, jeeMain: 3, jeeAdv: 3,
+      priority: "Tier 3", studyTime: "6-8 Hours", prerequisites: "Sets, Permutations"
     }
   ],
   Biology: [
     {
       title: "The Living World",
-      description: "Introduces the diversity of life, taxonomy, and rules for classifying organisms.",
-      outcomes: ["What is Living?", "Taxonomic Categories", "Binomial Nomenclature", "Taxonomical Aids", "Herbarium"],
-      difficulty: 1,
-      neet: 3,
-      priority: "Tier 3",
-      studyTime: "3-4 Hours",
-      prerequisites: "None"
+      description: "Understand the characteristics of living organisms, biodiversity, taxonomy, and the scientific naming system that forms the foundation of Biology.",
+      outcomes: ["Characteristics of Life", "Taxonomy", "Binomial Nomenclature", "Biodiversity"],
+      difficulty: 2, neet: 3, priority: "Tier 3", studyTime: "3-4 Hours", prerequisites: "None"
     },
     {
       title: "Biological Classification",
-      description: "Explores the five-kingdom system of classification proposed by R.H. Whittaker.",
-      outcomes: ["Monera", "Protista", "Fungi", "Plantae", "Animalia & Viruses"],
-      difficulty: 2,
-      neet: 4,
-      priority: "Tier 2",
-      studyTime: "5-7 Hours",
-      prerequisites: "The Living World"
+      description: "Learn the five-kingdom classification, viruses, viroids, bacteria, fungi, protists, and evolutionary relationships among organisms.",
+      outcomes: ["Five Kingdoms", "Bacteria", "Fungi", "Protists", "Viruses"],
+      difficulty: 3, neet: 4, priority: "Tier 2", studyTime: "5-7 Hours", prerequisites: "The Living World"
     },
     {
       title: "Plant Kingdom",
-      description: "Detailed classification of plants from algae to angiosperms and their life cycles.",
-      outcomes: ["Algae", "Bryophytes", "Pteridophytes", "Gymnosperms", "Alternation of Generation"],
-      difficulty: 3,
-      neet: 4,
-      priority: "Tier 2",
-      studyTime: "6-8 Hours",
-      prerequisites: "Biological Classification"
+      description: "Study algae, bryophytes, pteridophytes, gymnosperms, and angiosperms along with their characteristics and life cycles.",
+      outcomes: ["Plant Classification", "Life Cycles", "Reproduction", "Economic Importance"],
+      difficulty: 3, neet: 4, priority: "Tier 2", studyTime: "6-8 Hours", prerequisites: "Biological Classification"
     },
     {
       title: "Animal Kingdom",
-      description: "Classifies the animal world based on fundamental features like symmetry and coelom.",
-      outcomes: ["Basis of Classification", "Porifera to Echinodermata", "Hemichordata", "Chordata Classes", "Key Characteristics"],
-      difficulty: 4,
-      neet: 5,
-      priority: "Tier 1",
-      studyTime: "8-10 Hours",
-      prerequisites: "Biological Classification"
+      description: "Explore the classification of animals based on body organization, symmetry, coelom, and evolutionary relationships.",
+      outcomes: ["Animal Phyla", "Classification", "Symmetry", "Body Plans"],
+      difficulty: 4, neet: 5, priority: "Tier 1", studyTime: "8-10 Hours", prerequisites: "Biological Classification"
     },
     {
       title: "Morphology of Flowering Plants",
-      description: "Examines the external structure of roots, stems, leaves, flowers, and fruits.",
-      outcomes: ["Root & Stem", "Leaf & Inflorescence", "Flower Anatomy", "Fruit & Seed", "Floral Formula"],
-      difficulty: 4,
-      neet: 5,
-      priority: "Tier 1",
-      studyTime: "8-10 Hours",
-      prerequisites: "Plant Kingdom"
+      description: "Understand the external structure of roots, stems, leaves, flowers, fruits, and seeds in flowering plants.",
+      outcomes: ["Root", "Stem", "Leaf", "Flower", "Fruit"],
+      difficulty: 2, neet: 4, priority: "Tier 2", studyTime: "8-10 Hours", prerequisites: "Plant Kingdom"
     },
     {
       title: "Anatomy of Flowering Plants",
-      description: "Looks inside plants to study tissues, anatomy of dicots and monocots, and secondary growth.",
-      outcomes: ["Meristematic Tissues", "Permanent Tissues", "Dicot vs Monocot Root", "Dicot vs Monocot Stem", "Secondary Growth"],
-      difficulty: 4,
-      neet: 4,
-      priority: "Tier 2",
-      studyTime: "7-9 Hours",
-      prerequisites: "Morphology"
+      description: "Study plant tissues, internal anatomy, vascular bundles, secondary growth, and tissue systems.",
+      outcomes: ["Plant Tissues", "Xylem", "Phloem", "Secondary Growth"],
+      difficulty: 3, neet: 4, priority: "Tier 2", studyTime: "7-9 Hours", prerequisites: "Morphology"
     },
     {
       title: "Structural Organisation in Animals",
-      description: "Focuses on animal tissues and the detailed anatomy of earthworm, cockroach, and frog.",
-      outcomes: ["Epithelial Tissue", "Connective Tissue", "Muscle & Neural Tissue", "Cockroach Anatomy", "Frog Anatomy"],
-      difficulty: 3,
-      neet: 4,
-      priority: "Tier 2",
-      studyTime: "6-8 Hours",
-      prerequisites: "Animal Kingdom"
+      description: "Learn about animal tissues and the morphology and anatomy of the cockroach as a model organism.",
+      outcomes: ["Animal Tissues", "Cockroach Anatomy", "Organ Systems"],
+      difficulty: 3, neet: 3, priority: "Tier 3", studyTime: "6-8 Hours", prerequisites: "Animal Kingdom"
     },
     {
       title: "Cell: The Unit of Life",
-      description: "The foundation of biology exploring the structure and functions of cell organelles.",
-      outcomes: ["Prokaryotic Cells", "Eukaryotic Cells", "Cell Membrane", "Mitochondria & Chloroplast", "Nucleus"],
-      difficulty: 2,
-      neet: 5,
-      priority: "Tier 1",
-      studyTime: "8-10 Hours",
-      prerequisites: "None"
+      description: "Understand cell structure, organelles, membranes, and the organization of prokaryotic and eukaryotic cells.",
+      outcomes: ["Cell Organelles", "Plasma Membrane", "Cell Theory", "Cell Structure"],
+      difficulty: 4, neet: 5, priority: "Tier 1", studyTime: "8-10 Hours", prerequisites: "None"
     },
     {
       title: "Biomolecules",
-      description: "Chemical composition of living tissues, focusing on proteins, carbohydrates, lipids, and enzymes.",
-      outcomes: ["Amino Acids & Proteins", "Lipids & Polysaccharides", "Nucleic Acids", "Enzyme Action", "Factors affecting Enzymes"],
-      difficulty: 4,
-      neet: 4,
-      priority: "Tier 2",
-      studyTime: "7-9 Hours",
-      prerequisites: "Cell"
+      description: "Study carbohydrates, proteins, lipids, nucleic acids, enzymes, and their biological functions.",
+      outcomes: ["Proteins", "DNA & RNA", "Enzymes", "Biomolecules"],
+      difficulty: 4, neet: 5, priority: "Tier 1", studyTime: "7-9 Hours", prerequisites: "Cell"
     },
     {
-      title: "Cell Cycle and Cell Division",
-      description: "Explains how cells divide through mitosis and meiosis, crucial for genetics and reproduction.",
-      outcomes: ["Cell Cycle Phases", "Mitosis", "Significance of Mitosis", "Meiosis I & II", "Significance of Meiosis"],
-      difficulty: 3,
-      neet: 5,
-      priority: "Tier 1",
-      studyTime: "5-7 Hours",
-      prerequisites: "Cell"
+      title: "Cell Cycle & Cell Division",
+      description: "Learn mitosis, meiosis, cell cycle regulation, and chromosome behavior during cell division.",
+      outcomes: ["Mitosis", "Meiosis", "Cell Cycle", "Chromosomes"],
+      difficulty: 4, neet: 5, priority: "Tier 1", studyTime: "5-7 Hours", prerequisites: "Cell"
+    },
+    {
+      title: "Transport in Plants",
+      description: "Understand how water, nutrients, and food are transported throughout the plant body.",
+      outcomes: ["Xylem", "Phloem", "Water Transport", "Transpiration"],
+      difficulty: 3, neet: 4, priority: "Tier 2", studyTime: "6-8 Hours", prerequisites: "Plant Anatomy"
+    },
+    {
+      title: "Mineral Nutrition",
+      description: "Study the essential elements required by plants, nitrogen cycle, and deficiency symptoms.",
+      outcomes: ["Essential Elements", "Nitrogen Cycle", "Deficiency Symptoms"],
+      difficulty: 3, neet: 3, priority: "Tier 3", studyTime: "5-6 Hours", prerequisites: "Plant Physiology Basics"
     },
     {
       title: "Photosynthesis in Higher Plants",
       description: "How plants convert light energy into chemical energy, the basis of the food chain.",
-      outcomes: ["Chloroplast Structure", "Light Reaction", "Calvin Cycle (C3)", "C4 Pathway", "Factors affecting Photosynthesis"],
-      difficulty: 4,
-      neet: 4,
-      priority: "Tier 2",
-      studyTime: "8-10 Hours",
-      prerequisites: "Cell, Plant Kingdom"
+      outcomes: ["Light Reaction", "Calvin Cycle", "C3 & C4 Plants"],
+      difficulty: 4, neet: 5, priority: "Tier 1", studyTime: "8-10 Hours", prerequisites: "Cell"
     },
     {
       title: "Respiration in Plants",
-      description: "Cellular respiration mechanisms to break down food and release energy (ATP).",
-      outcomes: ["Glycolysis", "Fermentation", "Krebs Cycle", "Electron Transport System", "Amphibolic Pathway"],
-      difficulty: 4,
-      neet: 4,
-      priority: "Tier 2",
-      studyTime: "7-9 Hours",
-      prerequisites: "Biomolecules"
+      description: "Cellular respiration mechanisms to break down food and release energy.",
+      outcomes: ["Glycolysis", "Krebs Cycle", "ETC", "ATP Production"],
+      difficulty: 4, neet: 5, priority: "Tier 1", studyTime: "7-9 Hours", prerequisites: "Biomolecules"
     },
     {
-      title: "Plant Growth and Development",
+      title: "Plant Growth & Development",
       description: "Covers plant hormones, photoperiodism, and seed dormancy.",
-      outcomes: ["Growth Rates", "Differentiation", "Auxins & Gibberellins", "Cytokinins & Ethylene", "Photoperiodism"],
-      difficulty: 2,
-      neet: 3,
-      priority: "Tier 3",
-      studyTime: "5-6 Hours",
-      prerequisites: "Plant Anatomy"
+      outcomes: ["Plant Hormones", "Growth", "Photoperiodism"],
+      difficulty: 3, neet: 4, priority: "Tier 2", studyTime: "5-6 Hours", prerequisites: "Plant Anatomy"
     },
     {
-      title: "Digestion and Absorption",
+      title: "Digestion & Absorption",
       description: "Human digestive system anatomy and the physiology of breaking down food.",
-      outcomes: ["Alimentary Canal", "Digestive Glands", "Digestion of Food", "Absorption of Nutrients", "Digestive Disorders"],
-      difficulty: 2,
-      neet: 3,
-      priority: "Tier 3",
-      studyTime: "5-6 Hours",
-      prerequisites: "Structural Organisation"
+      outcomes: ["Digestive System", "Enzymes", "Absorption"],
+      difficulty: 3, neet: 4, priority: "Tier 2", studyTime: "5-6 Hours", prerequisites: "Structural Organisation"
     },
     {
-      title: "Breathing and Exchange of Gases",
-      description: "Respiratory organs, breathing mechanisms, and the transport of oxygen and carbon dioxide.",
-      outcomes: ["Human Respiratory System", "Mechanism of Breathing", "Exchange of Gases", "Transport of Gases", "Respiratory Volumes"],
-      difficulty: 3,
-      neet: 3,
-      priority: "Tier 3",
-      studyTime: "5-7 Hours",
-      prerequisites: "Structural Organisation"
+      title: "Breathing & Exchange of Gases",
+      description: "Respiratory organs, breathing mechanisms, and the transport of gases.",
+      outcomes: ["Respiratory System", "Gas Exchange", "Lung Function"],
+      difficulty: 3, neet: 4, priority: "Tier 2", studyTime: "5-7 Hours", prerequisites: "Structural Organisation"
     },
     {
-      title: "Body Fluids and Circulation",
+      title: "Body Fluids & Circulation",
       description: "Blood composition, heart structure, cardiac cycle, and ECG.",
-      outcomes: ["Blood Groups & Coagulation", "Lymph", "Human Circulatory System", "Cardiac Cycle", "ECG & Disorders"],
-      difficulty: 3,
-      neet: 4,
-      priority: "Tier 2",
-      studyTime: "7-8 Hours",
-      prerequisites: "Structural Organisation"
+      outcomes: ["Blood", "Heart", "Circulation", "Cardiac Cycle"],
+      difficulty: 4, neet: 5, priority: "Tier 1", studyTime: "7-8 Hours", prerequisites: "Structural Organisation"
     },
     {
-      title: "Excretory Products and their Elimination",
+      title: "Excretory Products & Their Elimination",
       description: "Kidney structure, urine formation, and osmoregulation in humans.",
-      outcomes: ["Modes of Excretion", "Human Excretory System", "Urine Formation", "Role of Other Organs", "Kidney Disorders"],
-      difficulty: 3,
-      neet: 3,
-      priority: "Tier 3",
-      studyTime: "6-8 Hours",
-      prerequisites: "Structural Organisation"
+      outcomes: ["Kidney", "Nephron", "Urine Formation"],
+      difficulty: 3, neet: 4, priority: "Tier 2", studyTime: "6-8 Hours", prerequisites: "Structural Organisation"
     },
     {
-      title: "Locomotion and Movement",
+      title: "Locomotion & Movement",
       description: "Skeletal system, muscle contraction mechanisms, and joints.",
-      outcomes: ["Types of Movement", "Muscle Structure", "Mechanism of Contraction", "Skeletal System", "Joints & Disorders"],
-      difficulty: 3,
-      neet: 3,
-      priority: "Tier 3",
-      studyTime: "6-7 Hours",
-      prerequisites: "Structural Organisation"
+      outcomes: ["Muscles", "Bones", "Joints", "Muscle Contraction"],
+      difficulty: 3, neet: 3, priority: "Tier 3", studyTime: "6-7 Hours", prerequisites: "Structural Organisation"
     },
     {
-      title: "Neural Control and Coordination",
+      title: "Neural Control & Coordination",
       description: "Nervous system, neuron structure, nerve impulse generation, and reflex action.",
-      outcomes: ["Human Neural System", "Neuron Structure", "Nerve Impulse Transmission", "Central Nervous System", "Reflex Action"],
-      difficulty: 4,
-      neet: 4,
-      priority: "Tier 2",
-      studyTime: "7-9 Hours",
-      prerequisites: "Structural Organisation"
+      outcomes: ["Neurons", "Brain", "Reflex Action", "Nervous System"],
+      difficulty: 4, neet: 5, priority: "Tier 1", studyTime: "7-9 Hours", prerequisites: "Structural Organisation"
     },
     {
-      title: "Chemical Coordination and Integration",
+      title: "Chemical Coordination & Integration",
       description: "Endocrine glands, hormones, and their physiological effects and disorders.",
-      outcomes: ["Endocrine Glands", "Hypothalamus & Pituitary", "Thyroid & Adrenal Gland", "Pancreas & Gonads", "Mechanism of Hormone Action"],
-      difficulty: 3,
-      neet: 4,
-      priority: "Tier 2",
-      studyTime: "6-8 Hours",
-      prerequisites: "Neural Control"
+      outcomes: ["Endocrine Glands", "Hormones", "Hormonal Disorders"],
+      difficulty: 4, neet: 5, priority: "Tier 1", studyTime: "6-8 Hours", prerequisites: "Neural Control"
     }
   ]
 };
