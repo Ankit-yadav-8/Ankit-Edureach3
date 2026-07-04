@@ -25,6 +25,8 @@ const TABS = [
   { key: "academics", label: "Inside the Degree",    icon: GraduationCap },
   { key: "insights",  label: "Career & Pay Reality", icon: TrendingUp },
   { key: "colleges",  label: "Where to Study",       icon: Building2 },
+  { key: "syllabus",  label: "Syllabus Map",         icon: BookOpen },
+  { key: "recruiters",label: "Top Recruiters",       icon: Briefcase },
   { key: "myths",     label: "Myth Busters",         icon: AlertCircle },
 ];
 
@@ -59,19 +61,23 @@ function Card({ children, title, style }) {
 /* ─── Intensity Bars (segmented blocks) ─── */
 const LEVEL_BLOCKS = { HEAVY: 5, MODERATE: 3, LIGHT: 2, MINIMAL: 1 };
 const LEVEL_COLOR = { HEAVY: CL.coral, MODERATE: CL.amber, LIGHT: CL.blue, MINIMAL: CL.muted };
-function IntensityBars({ meters }) {
+function IntensityBars({ meters, bColor }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      {meters.map(m => {
+      {meters.map((m, idx) => {
         const count = LEVEL_BLOCKS[m.level] || 2;
-        const color = LEVEL_COLOR[m.level] || CL.muted;
+        const color = (m.level === "MINIMAL" || m.level === "LIGHT") ? CL.muted : (bColor || CL.coral);
         return (
           <div key={m.label} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontSize: F.base, fontWeight: 700, color: CL.ink, minWidth: 80 }}>{m.label}</span>
             <div style={{ display: "flex", gap: 4, flex: 1, marginLeft: 16, marginRight: 12 }}>
               {Array.from({ length: 5 }).map((_, i) => (
-                <motion.div key={i} initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: i * 0.06, duration: 0.3 }}
-                  style={{ height: 7, flex: 1, borderRadius: 3, background: i < count ? color : CL.cream3 }} />
+                <motion.div key={i} initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: i * 0.06 + idx * 0.1, duration: 0.3 }}
+                  style={{ 
+                    height: 8, flex: 1, borderRadius: 4, 
+                    background: i < count ? color : CL.cream3,
+                    boxShadow: i < count && color !== CL.muted ? `0 0 8px ${color}40` : "none"
+                  }} />
               ))}
             </div>
             <span style={{ fontSize: F.xs, fontWeight: 800, color: color, minWidth: 70, textAlign: "right" }}>{m.level}</span>
@@ -194,7 +200,7 @@ function Academics({ b, extra }) {
           <p style={{ fontSize: F.lg, fontWeight: 700, color: CL.ink, lineHeight: 1.55, margin: 0 }}>{b.academics.summary}</p>
         </Card>
         <Card title="Study Intensity Distribution">
-          {meters.length > 0 ? <IntensityBars meters={meters} /> : <p style={{ color: CL.muted, fontSize: F.sm }}>No intensity data.</p>}
+          {meters.length > 0 ? <IntensityBars meters={meters} bColor={b.color} /> : <p style={{ color: CL.muted, fontSize: F.sm }}>No intensity data.</p>}
         </Card>
       </div>
 
@@ -354,19 +360,12 @@ function Insights({ b, extra }) {
         </Card>
       </div>
 
-      {/* Row 4: Career Roles + Recruiters */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+      {/* Row 4: Career Roles */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 20 }}>
         {roles.length > 0 && (
           <Card title="Career Roles">
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {roles.map(r => <span key={r.role} style={{ fontSize: F.sm, fontWeight: 700, padding: "4px 10px", borderRadius: 7, background: r.direct ? CL.cream2 : CL.card, color: r.direct ? CL.ink : CL.muted, border: `1px solid ${r.direct ? CL.cream3 : CL.line}` }}>{r.role}</span>)}
-            </div>
-          </Card>
-        )}
-        {recruiters.length > 0 && (
-          <Card title="Top Recruiters">
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(90px, 1fr))", gap: 8 }}>
-              {recruiters.map(r => <div key={r} style={{ background: CL.cream2, border: `1px solid ${CL.cream3}`, borderRadius: 8, padding: "8px 6px", textAlign: "center", fontSize: F.sm, fontWeight: 800, color: CL.ink2 }}>{r}</div>)}
             </div>
           </Card>
         )}
@@ -396,22 +395,22 @@ function Insights({ b, extra }) {
 function Colleges({ b, extra }) {
   return (
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
-      <Card title="5-Year Cutoff Rank Trends">
-        <div style={{ fontSize: F.xs, color: CL.muted, marginTop: -10, marginBottom: 12 }}>Lower rank = higher competition</div>
-        <div style={{ height: 240 }}>
-          <ResponsiveContainer>
-            <LineChart data={extra.cutoffTrends} margin={{ top: 10, right: 20, left: 10, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={CL.cream3} />
-              <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: CL.muted, fontWeight: 700, fontSize: 11 }} />
-              <YAxis reversed axisLine={false} tickLine={false} tick={{ fill: CL.muted, fontWeight: 700, fontSize: 11 }} />
-              <RechartsTooltip contentStyle={{ borderRadius: 10, border: "none", boxShadow: CL.shadow, fontSize: 11 }} />
-              <Line type="monotone" dataKey="rank" stroke={CL.blue} strokeWidth={2.5} dot={{ r: 5, fill: CL.blue, stroke: "#fff", strokeWidth: 2 }} activeDot={{ r: 7 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
-
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+        <Card title="5-Year Cutoff Rank Trends">
+          <div style={{ fontSize: F.xs, color: CL.muted, marginTop: -10, marginBottom: 12 }}>Lower rank = higher competition</div>
+          <div style={{ height: 240 }}>
+            <ResponsiveContainer>
+              <LineChart data={extra.cutoffTrends} margin={{ top: 10, right: 20, left: 10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={CL.cream3} />
+                <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: CL.muted, fontWeight: 700, fontSize: 11 }} />
+                <YAxis reversed axisLine={false} tickLine={false} tick={{ fill: CL.muted, fontWeight: 700, fontSize: 11 }} />
+                <RechartsTooltip contentStyle={{ borderRadius: 10, border: "none", boxShadow: CL.shadow, fontSize: 11 }} />
+                <Line type="monotone" dataKey="rank" stroke={CL.blue} strokeWidth={2.5} dot={{ r: 5, fill: CL.blue, stroke: "#fff", strokeWidth: 2 }} activeDot={{ r: 7 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
         <Card title="ROI: Fees vs Placement (₹ LPA)">
           <div style={{ height: 210 }}>
             <ResponsiveContainer>
@@ -427,8 +426,9 @@ function Colleges({ b, extra }) {
             </ResponsiveContainer>
           </div>
         </Card>
+      </div>
 
-        <Card title="Recommended Colleges">
+      <Card title="Recommended Colleges">
           <div style={{ display: "grid", gap: 8 }}>
             {b.colleges.map(c => {
               const tone = chanceTone(c.chance);
@@ -441,7 +441,6 @@ function Colleges({ b, extra }) {
             })}
           </div>
         </Card>
-      </div>
 
       {b.branchesList && (
         <Card title="Related Branch Names">
@@ -508,6 +507,60 @@ function Myths({ b, extra }) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   TAB: SYLLABUS MAP
+   ═══════════════════════════════════════════════════════════════ */
+function Syllabus({ b, extra }) {
+  const semesters = extra.semesters || [];
+  return (
+    <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
+      <Card title="Semester-by-Semester Roadmap">
+        {semesters.length > 0 ? (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
+            {semesters.map((s, i) => (
+              <motion.div key={i} variants={iV} style={{ background: CL.cream2, border: `1px solid ${CL.cream3}`, borderRadius: 12, padding: "16px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                  <div style={{ fontSize: F.sm, fontWeight: 800, color: b.color }}>{s.term}</div>
+                </div>
+                <div style={{ fontSize: F.base, fontWeight: 700, color: CL.ink, marginBottom: 12 }}>{s.desc}</div>
+                <ul style={{ margin: 0, paddingLeft: 16, color: CL.body, fontSize: F.sm, display: "flex", flexDirection: "column", gap: 6 }}>
+                  {s.courses.map((c, j) => <li key={j}>{c}</li>)}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ color: CL.muted, fontSize: F.sm }}>Detailed syllabus map is not available yet.</p>
+        )}
+      </Card>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TAB: TOP RECRUITERS
+   ═══════════════════════════════════════════════════════════════ */
+function Recruiters({ b, extra }) {
+  const recruiters = extra.recruiters || [];
+  return (
+    <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
+      <Card title="Companies Hiring in this Branch">
+        {recruiters.length > 0 ? (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 12 }}>
+            {recruiters.map((r, i) => (
+              <motion.div key={r} variants={iV} style={{ background: CL.card, border: `1px solid ${CL.line}`, borderRadius: 10, padding: "14px 10px", textAlign: "center", fontSize: F.sm, fontWeight: 800, color: CL.ink, boxShadow: CL.shadow }}>
+                {r}
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ color: CL.muted, fontSize: F.sm }}>Recruiter list is being updated.</p>
+        )}
+      </Card>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════ */
 export default function BranchDetail() {
@@ -539,7 +592,9 @@ export default function BranchDetail() {
       <Seo title={`${b.name} — Scope, Salary, Colleges & AI Risk`} description={seoDesc} path={`/branches/${slug}`}
         breadcrumbs={[{ name: "Home", path: "/" }, { name: "Branches", path: "/branches" }, { name: b.name, path: `/branches/${slug}` }]} />
       <div className="container" style={{ maxWidth: 1040 }}>
-        <Link to="/branches" className="cp-back-btn" style={{ marginBottom: 20, fontSize: F.sm }}><ArrowLeft size={14} /> Back to Catalog</Link>
+        <Link to="/branches" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: F.sm, fontWeight: 700, color: CL.ink2, textDecoration: "none", background: "#fff", padding: "8px 14px", borderRadius: 30, border: `1px solid ${CL.line}`, boxShadow: CL.shadow, marginBottom: 24, marginTop: 10 }}>
+          <ArrowLeft size={14} /> Back to Catalog
+        </Link>
 
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
@@ -598,6 +653,8 @@ export default function BranchDetail() {
               {tab === "academics" && <Academics b={b} extra={extra} />}
               {tab === "insights" && <Insights b={b} extra={extra} />}
               {tab === "colleges" && <Colleges b={b} extra={extra} />}
+              {tab === "syllabus" && <Syllabus b={b} extra={extra} />}
+              {tab === "recruiters" && <Recruiters b={b} extra={extra} />}
               {tab === "myths" && <Myths b={b} extra={extra} />}
             </motion.div>
           </AnimatePresence>

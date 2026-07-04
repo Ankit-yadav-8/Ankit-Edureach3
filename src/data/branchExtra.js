@@ -1,5 +1,25 @@
 export const BRANCH_EXTRA = {
   "cs-it": {
+    "recruiters": [
+      "Google",
+      "Microsoft",
+      "Amazon",
+      "Adobe",
+      "Flipkart",
+      "Apple",
+      "Meta",
+      "Netflix",
+      "Uber",
+      "Atlassian",
+      "Goldman Sachs",
+      "Tower Research",
+      "Rubrik",
+      "DE Shaw",
+      "NVIDIA",
+      "Intel",
+      "Cisco",
+      "IBM"
+    ],
     "toolsAndTech": [
       "Verilog",
       "TensorFlow",
@@ -176,6 +196,21 @@ export const BRANCH_EXTRA = {
     ]
   },
   "ai-data-science": {
+    "recruiters": [
+      "OpenAI",
+      "DeepMind",
+      "Google",
+      "Microsoft",
+      "Meta",
+      "Amazon",
+      "NVIDIA",
+      "Tesla",
+      "Palantir",
+      "Databricks",
+      "Snowflake",
+      "IBM",
+      "Scale AI"
+    ],
     "toolsAndTech": [
       "SolidWorks",
       "AutoCAD",
@@ -704,6 +739,19 @@ export const BRANCH_EXTRA = {
     ]
   },
   "civil-architecture": {
+    "recruiters": [
+      "L&T",
+      "Tata Projects",
+      "Shapoorji Pallonji",
+      "HCC",
+      "AFCONS",
+      "DLF",
+      "Godrej Properties",
+      "Bechtel",
+      "Jacobs",
+      "Ramboll",
+      "Arup"
+    ],
     "toolsAndTech": [
       "QGIS",
       "Excel",
@@ -880,6 +928,19 @@ export const BRANCH_EXTRA = {
     ]
   },
   "chemical": {
+    "recruiters": [
+      "Reliance",
+      "BPCL",
+      "HPCL",
+      "IOCL",
+      "ONGC",
+      "BASF",
+      "Dow Chemical",
+      "DuPont",
+      "Dr Reddy's",
+      "Sun Pharma",
+      "Cipla"
+    ],
     "toolsAndTech": [
       "AutoCAD",
       "SolidWorks",
@@ -1408,6 +1469,18 @@ export const BRANCH_EXTRA = {
     ]
   },
   "mathematics-computing": {
+    "recruiters": [
+      "Jane Street",
+      "Optiver",
+      "Tower Research",
+      "Goldman Sachs",
+      "Morgan Stanley",
+      "J.P. Morgan",
+      "Google",
+      "Microsoft",
+      "Amazon",
+      "WorldQuant"
+    ],
     "toolsAndTech": [
       "Kubernetes",
       "SPICE",
@@ -2112,6 +2185,19 @@ export const BRANCH_EXTRA = {
     ]
   },
   "petroleum-energy": {
+    "recruiters": [
+      "ONGC",
+      "OIL",
+      "Reliance",
+      "Cairn",
+      "Schlumberger",
+      "Halliburton",
+      "Baker Hughes",
+      "BP",
+      "Shell",
+      "ExxonMobil",
+      "Chevron"
+    ],
     "toolsAndTech": [
       "SPICE",
       "SolidWorks",
@@ -2288,6 +2374,18 @@ export const BRANCH_EXTRA = {
     ]
   },
   "production-industrial": {
+    "recruiters": [
+      "ITC",
+      "HUL",
+      "P&G",
+      "L&T",
+      "Tata Motors",
+      "Maruti Suzuki",
+      "Amazon Operations",
+      "Flipkart Supply Chain",
+      "TVS",
+      "Bosch"
+    ],
     "toolsAndTech": [
       "Simulink",
       "QGIS",
@@ -2464,6 +2562,16 @@ export const BRANCH_EXTRA = {
     ]
   },
   "naval-ocean": {
+    "recruiters": [
+      "Mazagon Dock",
+      "Cochin Shipyard",
+      "L&T Shipbuilding",
+      "Garden Reach",
+      "Indian Register of Shipping",
+      "Shell",
+      "BP",
+      "Maersk"
+    ],
     "toolsAndTech": [
       "React",
       "ANSYS",
