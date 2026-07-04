@@ -60,6 +60,8 @@ import ChapterAnalysis from "./pages/ChapterAnalysis.jsx";
 import CampusNotes from "./pages/CampusNotes.jsx";
 import CollegeParichayAI from "./pages/CollegeParichayAI.jsx";
 import CampusFests from "./pages/CampusFests.jsx";
+import Class11 from "./pages/Class11.jsx";
+import Class12 from "./pages/Class12.jsx";
 import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
@@ -196,6 +198,8 @@ export default function App() {
           <Route path="/jee-analysis" element={<ChapterAnalysis />} />
           <Route path="/campus-notes" element={<CampusNotes />} />
           <Route path="/campus-fests" element={<CampusFests />} />
+          <Route path="/class-11" element={<Class11 />} />
+          <Route path="/class-12" element={<Class12 />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

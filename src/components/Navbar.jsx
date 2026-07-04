@@ -290,7 +290,7 @@ export default function Navbar({ onSearch }) {
               {item.mega ? (
                 <>
                   <button
-                    onClick={() => (GATE_TABS && !isLoggedIn ? openLogin() : navigate(item.base))}
+                    onClick={(e) => { e.preventDefault(); if (GATE_TABS && !isLoggedIn) openLogin(); }}
                     className={item.highlight ? "nav-highlight-btn" : "nav-link-btn"}
                     style={item.highlight ? navHighlightStyle(open === item.label || isActive(item)) : navLinkStyle(open === item.label || isActive(item))}
                   >
@@ -373,7 +373,7 @@ export default function Navbar({ onSearch }) {
               ) : item.drop ? (
                 <>
                   <button
-                    onClick={() => (GATE_TABS && !isLoggedIn ? openLogin() : navigate(item.base))}
+                    onClick={(e) => { e.preventDefault(); if (GATE_TABS && !isLoggedIn) openLogin(); }}
                     className={item.highlight ? "nav-highlight-btn" : "nav-link-btn"}
                     style={item.highlight ? navHighlightStyle(open === item.label || isActive(item)) : navLinkStyle(open === item.label || isActive(item))}
                   >
