@@ -344,9 +344,6 @@ export default function BranchVsCollege({ asPage = false }) {
             Your rank will force a trade-off.<br />
             <span style={{ color: CL.coral }}>Know your side</span> before you fill a single choice.
           </h2>
-          <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7 }}>
-            Seven quick scenarios reveal whether the branch or the college deserves protection in your list. Free, private, no login.
-          </p>
         </div>
 
         {!done ? (

@@ -93,22 +93,32 @@ const DONUT_COLORS = ["#FF693D", "#0FAE6E", "#3A86FF", "#E29A2E", "#7B5EA7"];
 function MiniDonut({ data, size = 120 }) {
   const total = data.reduce((s, d) => s + d.pct, 0) || 1;
   const r = size / 2 - 8, cx = size / 2, cy = size / 2;
-  const circumference = 2 * Math.PI * r;
-  let offset = 0;
   const biggest = data.reduce((max, d) => d.pct > max.pct ? d : max, data[0]);
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
       <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-          {data.map((d, i) => {
-            const pct = d.pct / total;
-            const dashArray = `${pct * circumference} ${circumference}`;
-            const dashOffset = -offset * circumference;
-            offset += pct;
-            return <circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={DONUT_COLORS[i % DONUT_COLORS.length]}
-              strokeWidth={14} strokeDasharray={dashArray} strokeDashoffset={dashOffset}
-              transform={`rotate(-90 ${cx} ${cy})`} style={{ transition: "stroke-dasharray 0.6s" }} />;
-          })}
+          {/* track ring */}
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke={CL.cream3} strokeWidth={14} opacity={0.5} />
+          {/* animated segments — each arc draws itself on in sequence */}
+          {(() => {
+            let acc = 0;
+            return data.map((d, i) => {
+              const frac = d.pct / total;
+              const startAngle = -90 + acc * 360;
+              acc += frac;
+              return (
+                <motion.circle
+                  key={i} cx={cx} cy={cy} r={r} fill="none"
+                  stroke={DONUT_COLORS[i % DONUT_COLORS.length]} strokeWidth={14} strokeLinecap="butt"
+                  transform={`rotate(${startAngle} ${cx} ${cy})`}
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: frac, opacity: 1 }}
+                  transition={{ pathLength: { duration: 0.9, delay: 0.15 + i * 0.18, ease: [0.22, 1, 0.36, 1] }, opacity: { duration: 0.2, delay: 0.15 + i * 0.18 } }}
+                />
+              );
+            });
+          })()}
         </svg>
         <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
           <div style={{ textAlign: "center" }}>

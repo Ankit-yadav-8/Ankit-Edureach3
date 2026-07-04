@@ -1,14 +1,13 @@
 import { motion } from "framer-motion";
 
-// Edge-peeking orbit positions — each card sits partly outside the visual
-// box so only ~75% shows (≈25% clipped by the container's overflow:hidden),
-// giving the premium "bleed" look. Assigned by index so every hero — Class 11,
-// Class 12, JEE and NEET strategy — shares the exact same layout.
+// Orbit positions — four cards fully visible around the centre ring
+// (top-left, top-right, bottom-left, bottom-right). Assigned by index so every
+// hero — Class 11, Class 12, JEE and NEET strategy — shares the exact layout.
 const ORBIT_POSITIONS = [
-  { top: -22, left: "4%" },        // peeks from the top edge
-  { top: "24%", right: -46 },      // peeks from the right edge
-  { bottom: -22, right: "8%" },    // peeks from the bottom edge
-  { top: "22%", left: -46 },       // peeks from the left edge
+  { top: "1%", left: "0%" },       // top-left
+  { top: "13%", right: "0%" },     // top-right
+  { bottom: "13%", left: "0%" },   // bottom-left
+  { bottom: "1%", right: "0%" },   // bottom-right
 ];
 
 export default function PremiumHero({
@@ -56,11 +55,12 @@ export default function PremiumHero({
         .ph-grid.has-visual { grid-template-columns: 1.15fr 0.85fr; }
         @media (max-width: 900px) {
           .ph-grid.has-visual { grid-template-columns: 1fr; gap: 40px; }
-          .ph-visual { height: 340px !important; margin-top: 10px; }
+          .ph-visual { height: 430px !important; margin-top: 10px; }
         }
         @media (max-width: 560px) {
           .ph-stats { gap: 28px !important; }
-          .ph-visual { height: 300px !important; }
+          .ph-visual { height: 380px !important; }
+          .ph-card { width: 150px !important; padding: 12px !important; }
         }
       `}</style>
 
@@ -166,7 +166,7 @@ export default function PremiumHero({
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 0.84, 0.32, 1] }}
-            style={{ position: "relative", height: 450, overflow: "hidden" }}
+            style={{ position: "relative", height: 480 }}
           >
             {/* Slowly rotating dashed orbit rings */}
             <motion.div
@@ -222,6 +222,7 @@ export default function PremiumHero({
               return (
                 <motion.div
                   key={idx}
+                  className="ph-card"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1, y: [0, -12, 0] }}
                   transition={{

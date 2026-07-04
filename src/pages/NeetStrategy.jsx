@@ -55,19 +55,6 @@ export default function NeetStrategy() {
         style={{ scaleX: scrollYProgress, transformOrigin: "0% 50%" }} 
       />
 
-      <nav className="topnav">
-        <div className="brand"><span className="dot"></span>NEET Deep Dive</div>
-        <div className="navlinks">
-          <a href="#overview-detail">Overview</a>
-          <a href="#weightage">Weightage</a>
-          <a href="#playbook">Playbook</a>
-          <a href="#subjects">Subjects</a>
-          <a href="#time">Time</a>
-          <a href="#mistakes">Mistakes</a>
-          <a href="#timeline">Timeline</a>
-        </div>
-      </nav>
-
       <div id="overview">
         <PremiumHero {...heroProps} />
       </div>
