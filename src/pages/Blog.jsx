@@ -104,7 +104,7 @@ export default function Blog() {
             <div>
               <span style={clEyebrow}><Sparkles size={13} /> College Parichay Blog</span>
               <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2.1rem,5vw,3.3rem)", color: CL.ink, letterSpacing: "-1.4px", lineHeight: 1.07, margin: "18px 0 16px" }}>
-                Crack JEE with <span style={{ background: CL.amberSoft, padding: "0 10px", borderRadius: 10 }}>better insights.</span><br />
+                Crack JEE with <span style={{ color: CL.amber }}>better insights.</span><br />
                 <span style={{ color: CL.coral }}>Decisions, sorted.</span>
               </h1>
               <p style={{ color: CL.body, fontSize: "1.06rem", lineHeight: 1.7, maxWidth: 460 }}>

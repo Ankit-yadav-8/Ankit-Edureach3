@@ -43,7 +43,7 @@ function Hero() {
             <span style={clEyebrow}><Sparkles size={13} /> Decide before counselling does</span>
             <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2.1rem,5vw,3.4rem)", color: CL.ink, letterSpacing: "-1.4px", lineHeight: 1.06, margin: "18px 0 18px" }}>
               Better branch or bigger college?<br />
-              <span style={{ background: CL.amberSoft, color: CL.ink, padding: "0 12px", borderRadius: 12, boxDecorationBreak: "clone", WebkitBoxDecorationBreak: "clone" }}>Find your side.</span>
+              <span style={{ color: CL.amber }}>Find your side.</span>
             </h1>
             <p style={{ color: CL.body, fontSize: "1.08rem", lineHeight: 1.7, maxWidth: 470, marginBottom: 28 }}>
               Seven counselling-day scenarios, two minutes, one clear verdict — and a strategy for ordering your JoSAA list around it.

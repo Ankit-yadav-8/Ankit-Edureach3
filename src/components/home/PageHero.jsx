@@ -64,7 +64,7 @@ export default function PageHero({
             </span>
             <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2rem,4.8vw,3.2rem)", color: CL.ink, letterSpacing: "-1.4px", lineHeight: 1.07, margin: "18px 0 16px" }}>
               {titleLead}{" "}
-              <span style={{ background: `${accent}1f`, color: accent, padding: "0 10px", borderRadius: 10, boxDecorationBreak: "clone", WebkitBoxDecorationBreak: "clone" }}>{highlight}</span>
+              <span style={{ color: accent }}>{highlight}</span>
               {titleTail && <><br />{titleTail}{" "}</>}
               {highlightTail && <span style={{ color: accent }}>{highlightTail}</span>}
             </h1>

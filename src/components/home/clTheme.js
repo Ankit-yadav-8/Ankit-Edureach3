@@ -5,25 +5,25 @@
 
 export const CL = {
   cream:    "#FFFFFF",   // page / section background (white)
-  cream2:   "#F8FAFC",   // inset card / soft fill (Slate 50)
-  cream3:   "#E2E8F0",   // borders on cream (Slate 200)
+  cream2:   "#F7F7F8",   // inset card / soft fill (barely-there neutral)
+  cream3:   "#ECEAEF",   // borders on cream
   card:     "#FFFFFF",
-  ink:      "#0F172A",   // headings (Slate 900)
-  ink2:     "#334155",   // (Slate 700)
-  body:     "#475569",   // body copy (Slate 600)
-  muted:    "#94A3B8",   // (Slate 400)
-  coral:    "#4F46E5",   // primary accent (Indigo 500)
-  coralDk:  "#4338CA",   // (Indigo 600)
-  coralSoft:"#E0E7FF",   // (Indigo 100)
-  green:    "#059669",   // (Emerald 600)
-  greenSoft:"#D1FAE5",   // (Emerald 100)
-  amber:    "#D97706",   // (Amber 600)
-  amberSoft:"#FEF3C7",   // (Amber 100)
-  violet:   "#7C3AED",   // (Violet 600)
-  blue:     "#2563EB",   // (Blue 600)
-  line:     "rgba(15,23,42,.08)",
-  shadow:   "0 6px 28px rgba(15,23,42,.07)",
-  shadowLg: "0 18px 50px rgba(15,23,42,.10)",
+  ink:      "#211D2E",   // headings
+  ink2:     "#3B3743",
+  body:     "#6B6770",   // body copy
+  muted:    "#9A949F",
+  coral:    "#FF693D",   // primary accent
+  coralDk:  "#E0421F",
+  coralSoft:"#FCE7E0",
+  green:    "#0FAE6E",
+  greenSoft:"#D8F3E6",
+  amber:    "#E29A2E",
+  amberSoft:"#FBEBCF",
+  violet:   "#7B5EA7",
+  blue:     "#3A86FF",
+  line:     "rgba(33,29,46,.08)",
+  shadow:   "0 6px 28px rgba(33,29,46,.07)",
+  shadowLg: "0 18px 50px rgba(33,29,46,.10)",
   display:  "'Space Grotesk','Sora',sans-serif",
 };
 
