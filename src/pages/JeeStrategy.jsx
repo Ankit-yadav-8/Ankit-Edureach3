@@ -7,7 +7,7 @@ import { Atom, FlaskConical, Sigma } from "lucide-react";
 
 export default function JeeStrategy() {
   const heroProps = {
-    badgeText: "EXAM MASTERY · JEE",
+    badgeText: "EXAM MASTERY — JEE",
     titlePart1: "The ultimate strategy.",
     titlePart2: "Study ",
     highlight1: "smart",
@@ -15,16 +15,15 @@ export default function JeeStrategy() {
     highlight2: "higher.",
     description: "Master JEE Main & Advanced with Proven Roadmaps, Topper Frameworks, and AI Insights. Quality beats quantity.",
     stats: [
-      { value: "Top 1%", label: "target", color: "#EF4444" },
+      { value: "Top 1%", label: "target", color: "#f59e0b" },
       { value: "4", label: "prep phases", color: "#0f172a" },
-      { value: "5", label: "success pillars", color: "#0f172a" }
+      { value: "300+", label: "mock hours", color: "#0f172a" }
     ],
-    primaryButton: { text: "View Roadmap", onClick: () => { document.getElementById("timeline")?.scrollIntoView({behavior: 'smooth'}) } },
-    secondaryButton: { text: "See 5 Pillars", onClick: () => { document.getElementById("playbook")?.scrollIntoView({behavior: 'smooth'}) } },
+    primaryButton: { text: "Read Playbook", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
+    secondaryButton: { text: "View Timeline", onClick: () => { window.scrollTo({top: 1500, behavior: 'smooth'}) } },
     chartPercentage: 99,
     chartLabel: "percentile\ngoal",
     floatingCards: [
-      { title: "Physics", subtitle: "25-40 Qs/day", icon: Atom, color: "#6366f1", progress: 75, pos: { top: "5%", left: "5%" } },
       { title: "Chemistry", subtitle: "Reactions", icon: FlaskConical, color: "#ef4444", progress: 85, pos: { top: "15%", right: "5%" } },
       { title: "Mathematics", subtitle: "15-20 Qs/day", icon: Sigma, color: "#f59e0b", progress: 65, pos: { bottom: "10%", left: "20%" } }
     ]

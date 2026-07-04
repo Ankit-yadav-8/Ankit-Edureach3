@@ -7,7 +7,7 @@ import { Zap, Stethoscope, Microscope } from "lucide-react";
 
 export default function NeetStrategy() {
   const heroProps = {
-    badgeText: "EXAM MASTERY · NEET",
+    badgeText: "EXAM MASTERY — NEET",
     titlePart1: "The ultimate strategy.",
     titlePart2: "Study ",
     highlight1: "smart",
@@ -15,18 +15,18 @@ export default function NeetStrategy() {
     highlight2: "higher.",
     description: "Master Biology, Maximize Accuracy & Build a Medical Rank with Smart Preparation. Every mark shifts your rank.",
     stats: [
-      { value: "720", label: "target score", color: "#EF4444" },
+      { value: "720", label: "target score", color: "#f59e0b" },
       { value: "38", label: "bio chapters", color: "#0f172a" },
-      { value: "5", label: "success pillars", color: "#0f172a" }
+      { value: "300+", label: "mock hours", color: "#0f172a" }
     ],
-    primaryButton: { text: "View Roadmap", onClick: () => { document.getElementById("timeline")?.scrollIntoView({behavior: 'smooth'}) } },
-    secondaryButton: { text: "See 5 Pillars", onClick: () => { document.getElementById("playbook")?.scrollIntoView({behavior: 'smooth'}) } },
+    primaryButton: { text: "Read Playbook", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
+    secondaryButton: { text: "View Timeline", onClick: () => { window.scrollTo({top: 1500, behavior: 'smooth'}) } },
     chartPercentage: 99,
     chartLabel: "percentile\ngoal",
     floatingCards: [
-      { title: "Physics", subtitle: "Formulas & Numericals", icon: Zap, color: "#f59e0b", progress: 65, pos: { top: "5%", left: "5%" } },
-      { title: "Chemistry", subtitle: "Reactions & Blocks", icon: Microscope, color: "#8b5cf6", progress: 75, pos: { top: "15%", right: "5%" } },
-      { title: "Biology", subtitle: "340-360 Target", icon: Stethoscope, color: "#10b981", progress: 95, pos: { bottom: "10%", left: "20%" } }
+      { title: "Biology", subtitle: "NCERT Mastery", icon: Stethoscope, color: "#10b981", progress: 95, pos: { top: "5%", left: "5%" } },
+      { title: "Chemistry", subtitle: "Physical + Org", icon: Microscope, color: "#ef4444", progress: 85, pos: { top: "15%", right: "5%" } },
+      { title: "Physics", subtitle: "Formulas", icon: Zap, color: "#f59e0b", progress: 75, pos: { bottom: "10%", left: "15%" } }
     ]
   };
 
