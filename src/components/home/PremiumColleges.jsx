@@ -42,12 +42,12 @@ export default function PremiumColleges() {
     <section style={{ background: CL.cream, padding: "84px 0", position: "relative", overflow: "hidden" }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: 760, marginBottom: 34 }}>
-          <span style={clEyebrow}><span style={{ width: 7, height: 7, borderRadius: "50%", background: CL.coral }} /> JEE score accepted here</span>
+          <span style={clEyebrow}><span style={{ width: 7, height: 7, borderRadius: "50%", background: CL.coral }} /> JEE Scores Valid Here</span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", color: CL.ink, letterSpacing: "-1px", margin: "16px 0 10px", lineHeight: 1.12 }}>
-            Premium colleges that take your <span style={{ color: CL.coral }}>JEE rank</span>
+            Top-Tier Institutions Accepting Your <span style={{ color: CL.coral }}>JEE Rank</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.02rem", lineHeight: 1.6 }}>
-            Outside JoSAA — apply directly to their portals with your JEE score.
+            Independent of JoSAA — use your JEE score to apply directly on their official websites.
           </p>
         </div>
 
