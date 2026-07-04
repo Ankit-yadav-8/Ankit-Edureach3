@@ -7,40 +7,34 @@ import { ArrowRight } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
 function Preview({ cards, accent }) {
-  const offsets = [
-    { top: 0, right: 84, rotate: -4, z: 2 },
-    { top: 40, right: 0, rotate: 5, z: 3 },
-    { top: 168, right: 132, rotate: -2, z: 1 },
-  ];
   return (
-    <div className="ph-preview" style={{ position: "relative", height: 372 }}>
+    <div className="ph-preview" style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 360, margin: "0 auto" }}>
       {cards.slice(0, 3).map((c, i) => {
-        const o = offsets[i] || offsets[0];
-        /* Single consistent accent across the whole hero (the page's colour). */
-        const ac = accent;
+        const ac = c.accent || accent;
         const Ic = c.icon;
         return (
           <motion.div
             key={c.title}
-            initial={{ opacity: 0, y: 24, rotate: o.rotate }}
-            animate={{ opacity: 1, y: 0, rotate: o.rotate }}
-            transition={{ duration: 0.5, delay: 0.15 + i * 0.12 }}
-            whileHover={{ y: -5, rotate: 0, zIndex: 5 }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 + i * 0.1 }}
             style={{
-              position: "absolute", top: o.top, right: o.right, zIndex: o.z, width: 264,
-              background: CL.card, borderRadius: 18, border: `1px solid ${CL.line}`,
-              boxShadow: CL.shadowLg, padding: "20px 20px",
+              display: "flex", alignItems: "center", gap: 16,
+              background: CL.card, borderRadius: 16, border: `1px solid ${CL.line}`,
+              boxShadow: CL.shadow, padding: "16px 20px", marginLeft: i * 20,
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-              <span style={{ width: 40, height: 40, borderRadius: 11, background: `${ac}18`, display: "grid", placeItems: "center" }}>
-                {Ic && <Ic size={20} color={ac} />}
-              </span>
-              {c.badge && <span style={{ fontSize: 9.5, fontWeight: 800, color: CL.muted, background: CL.cream2, padding: "4px 10px", borderRadius: 50 }}>{c.badge}</span>}
+            <span style={{ width: 44, height: 44, borderRadius: 12, background: `${ac}18`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+              {Ic && <Ic size={22} color={ac} />}
+            </span>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
+                <div style={{ fontSize: 10, fontWeight: 800, color: ac, textTransform: "uppercase", letterSpacing: ".04em" }}>{c.category}</div>
+                {c.badge && <span style={{ fontSize: 9, fontWeight: 800, color: CL.muted, background: CL.cream2, padding: "2px 8px", borderRadius: 50 }}>{c.badge}</span>}
+              </div>
+              <div style={{ fontFamily: CL.display, fontWeight: 700, fontSize: 14.5, color: CL.ink, lineHeight: 1.2 }}>{c.title}</div>
+              {c.meta && <div style={{ fontSize: 11.5, color: CL.muted, marginTop: 4 }}>{c.meta}</div>}
             </div>
-            <div style={{ fontSize: 10.5, fontWeight: 800, color: ac, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6 }}>{c.category}</div>
-            <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 15.5, color: CL.ink, lineHeight: 1.3, marginBottom: 8 }}>{c.title}</div>
-            {c.meta && <div style={{ fontSize: 12, color: CL.muted, lineHeight: 1.5 }}>{c.meta}</div>}
           </motion.div>
         );
       })}
