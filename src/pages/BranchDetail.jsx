@@ -1,6 +1,6 @@
 import { useState, useEffect, Component } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, animate } from "framer-motion";
 import {
   GraduationCap, TrendingUp, Building2, AlertCircle, ArrowLeft,
   Briefcase, IndianRupee, CheckCircle2, XCircle, ChevronDown,
@@ -88,52 +88,107 @@ function IntensityBars({ meters, bColor }) {
   );
 }
 
-/* ─── Donut (pure SVG) ─── */
+/* ─── Animated count-up used in the donut centre ─── */
+function useCountUp(to, { duration = 1.1, delay = 0.25 } = {}) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    const controls = animate(0, to, {
+      duration, delay, ease: [0.22, 1, 0.36, 1],
+      onUpdate: (v) => setVal(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [to, duration, delay]);
+  return val;
+}
+
+/* ─── Segmented gauge ring — original animated split visual ───
+   Gapped pill segments draw on in sequence, a faint accent ring rotates
+   slowly, the centre value counts up, and the legend fills animated bars. */
 const DONUT_COLORS = ["#FF693D", "#0FAE6E", "#3A86FF", "#E29A2E", "#7B5EA7"];
-function MiniDonut({ data, size = 120 }) {
+function MiniDonut({ data, size = 124 }) {
   const total = data.reduce((s, d) => s + d.pct, 0) || 1;
-  const r = size / 2 - 8, cx = size / 2, cy = size / 2;
-  const biggest = data.reduce((max, d) => d.pct > max.pct ? d : max, data[0]);
+  const stroke = 12, r = size / 2 - stroke / 2 - 2, cx = size / 2, cy = size / 2;
+  const biggest = data.reduce((max, d) => (d.pct > max.pct ? d : max), data[0]);
+  const maxPct = biggest.pct || 1;
+  const gap = 0.045; // slice separation as a fraction of the full ring
+  const bigVal = useCountUp(biggest.pct);
+
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 22, flexWrap: "wrap" }}>
       <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-          {/* track ring */}
-          <circle cx={cx} cy={cy} r={r} fill="none" stroke={CL.cream3} strokeWidth={14} opacity={0.5} />
-          {/* animated segments — each arc draws itself on in sequence */}
+        {/* slow-rotating dashed accent ring for subtle life */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 26, ease: "linear" }}
+          style={{ position: "absolute", inset: 3, borderRadius: "50%", border: `1.5px dashed ${CL.cream3}` }}
+        />
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: "relative", overflow: "visible" }}>
+          {/* faint track */}
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke={CL.cream2} strokeWidth={stroke} />
+          {/* animated gapped segments */}
           {(() => {
             let acc = 0;
             return data.map((d, i) => {
               const frac = d.pct / total;
-              const startAngle = -90 + acc * 360;
+              const visible = Math.max(frac - gap, 0.006);
+              const startAngle = -90 + (acc + gap / 2) * 360;
               acc += frac;
               return (
                 <motion.circle
                   key={i} cx={cx} cy={cy} r={r} fill="none"
-                  stroke={DONUT_COLORS[i % DONUT_COLORS.length]} strokeWidth={14} strokeLinecap="butt"
+                  stroke={DONUT_COLORS[i % DONUT_COLORS.length]} strokeWidth={stroke} strokeLinecap="round"
                   transform={`rotate(${startAngle} ${cx} ${cy})`}
                   initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: frac, opacity: 1 }}
-                  transition={{ pathLength: { duration: 0.9, delay: 0.15 + i * 0.18, ease: [0.22, 1, 0.36, 1] }, opacity: { duration: 0.2, delay: 0.15 + i * 0.18 } }}
+                  whileInView={{ pathLength: visible, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    pathLength: { duration: 0.85, delay: 0.2 + i * 0.16, ease: [0.22, 1, 0.36, 1] },
+                    opacity: { duration: 0.2, delay: 0.2 + i * 0.16 },
+                  }}
                 />
               );
             });
           })()}
         </svg>
-        <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
+        {/* centre value (counts up) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.7 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.15, type: "spring", stiffness: 220, damping: 18 }}
+          style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", pointerEvents: "none" }}
+        >
           <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: F.xxl, fontWeight: 800, color: CL.ink, lineHeight: 1 }}>{biggest.pct}%</div>
-            <div style={{ fontSize: F.xs, color: CL.muted, fontWeight: 600, marginTop: 2 }}>{biggest.label.split("/")[0].trim()}</div>
+            <div style={{ fontSize: F.xxl, fontWeight: 800, color: CL.ink, lineHeight: 1, fontFamily: CL.display }}>{bigVal}%</div>
+            <div style={{ fontSize: F.xs, color: CL.muted, fontWeight: 600, marginTop: 2, maxWidth: r * 1.4, marginInline: "auto" }}>
+              {biggest.label.split("/")[0].trim()}
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1, minWidth: 120 }}>
-        {data.map((d, i) => (
-          <div key={d.label} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: F.sm }}>
-            <span style={{ width: 9, height: 9, borderRadius: 2, background: DONUT_COLORS[i % DONUT_COLORS.length], flexShrink: 0 }} />
-            <span style={{ color: CL.body, fontWeight: 500 }}>{d.pct}% {d.label}</span>
-          </div>
-        ))}
+
+      {/* legend with animated bars */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1, minWidth: 150 }}>
+        {data.map((d, i) => {
+          const color = DONUT_COLORS[i % DONUT_COLORS.length];
+          return (
+            <motion.div
+              key={d.label}
+              initial={{ opacity: 0, x: 10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.25 + i * 0.1 }}
+              style={{ display: "flex", alignItems: "center", gap: 9, fontSize: F.sm }}
+            >
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, flexShrink: 0, boxShadow: `0 0 0 3px ${color}22` }} />
+              <span style={{ color: CL.ink2, fontWeight: 600, flex: 1, minWidth: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{d.label}</span>
+              <div style={{ width: 46, height: 5, borderRadius: 50, background: CL.cream2, overflow: "hidden", flexShrink: 0 }}>
+                <motion.div
+                  initial={{ width: 0 }} whileInView={{ width: `${(d.pct / maxPct) * 100}%` }} viewport={{ once: true }}
+                  transition={{ duration: 0.7, delay: 0.35 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ height: "100%", background: color, borderRadius: 50 }}
+                />
+              </div>
+              <span style={{ width: 32, textAlign: "right", fontWeight: 800, color: CL.ink, flexShrink: 0 }}>{d.pct}%</span>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );
