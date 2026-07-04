@@ -90,7 +90,34 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
 };
 
+import PremiumHero from "../components/PremiumHero.jsx";
+import { Atom, FlaskConical, Sigma } from "lucide-react";
+
 export default function JeeStrategy() {
+  const heroProps = {
+    badgeText: "EXAM MASTERY · JEE",
+    titlePart1: "The ultimate strategy.",
+    titlePart2: "Study ",
+    highlight1: "smart",
+    titlePart3: ", score ",
+    highlight2: "higher.",
+    description: "Master JEE Main & Advanced with Proven Roadmaps, Topper Frameworks, and AI Insights. Quality beats quantity.",
+    stats: [
+      { value: "Top 1%", label: "target", color: "#EF4444" },
+      { value: "4", label: "prep phases", color: "#0f172a" },
+      { value: "5", label: "success pillars", color: "#0f172a" }
+    ],
+    primaryButton: { text: "View Roadmap", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
+    secondaryButton: { text: "See 5 Pillars", onClick: () => { window.scrollTo({top: 1400, behavior: 'smooth'}) } },
+    chartPercentage: 99,
+    chartLabel: "percentile\ngoal",
+    floatingCards: [
+      { title: "Physics", subtitle: "25-40 Qs/day", icon: Atom, color: "#6366f1", progress: 75, pos: { top: "5%", left: "5%" } },
+      { title: "Chemistry", subtitle: "Reactions", icon: FlaskConical, color: "#ef4444", progress: 85, pos: { top: "15%", right: "5%" } },
+      { title: "Mathematics", subtitle: "15-20 Qs/day", icon: Sigma, color: "#f59e0b", progress: 65, pos: { bottom: "10%", left: "20%" } }
+    ]
+  };
+
   return (
     <div className="page" style={{ background: "#ffffff", minHeight: "100vh" }}>
       <Seo 
@@ -99,55 +126,7 @@ export default function JeeStrategy() {
         path="/jee-strategy" 
       />
       
-      {/* Hero Section */}
-      <section style={{ padding: "100px 0 60px", background: "#ffffff", overflow: "hidden" }}>
-        <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
-          <div className="strategy-hero">
-            <motion.div
-              initial="hidden"
-              animate="show"
-              variants={staggerContainer}
-            >
-              <motion.span variants={fadeUp} style={{ 
-                display: "inline-flex", alignItems: "center", gap: 6, 
-                background: "#f0fdf4", color: "#16a34a", 
-                padding: "8px 16px", borderRadius: 50, border: "1px solid #bbf7d0",
-                fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", marginBottom: 24
-              }}>
-                <ShieldCheck size={14} /> EXAM MASTERY
-              </motion.span>
-              <motion.h1 variants={fadeUp} style={{ 
-                fontFamily: "'Space Grotesk', 'Sora', sans-serif", 
-                fontSize: "clamp(2.5rem, 6vw, 4rem)", fontWeight: 800, 
-                color: "#0f172a", margin: "0 0 20px 0", lineHeight: 1.1, letterSpacing: "-1px"
-              }}>
-                Exam Strategies for <span style={{ color: "#3B82F6" }}>JEE</span>
-              </motion.h1>
-              <motion.p variants={fadeUp} style={{ color: "#475569", fontSize: "1.15rem", maxWidth: 600, margin: "0", lineHeight: 1.6 }}>
-                Master JEE Main & Advanced with Proven Roadmaps, Topper Frameworks, AI Insights & Smart Preparation. Quality beats quantity.
-              </motion.p>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "center" }}
-            >
-              <motion.div 
-                animate={{ y: [0, -15, 0] }}
-                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              >
-                <div style={{
-                  position: "absolute", inset: -30, background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)",
-                  zIndex: -1, borderRadius: "50%"
-                }} />
-                <img src="/images/ai/jee_strategy_hero.png" alt="JEE Strategy Roadmap" style={{ width: "100%", height: "auto", maxWidth: 450, display: "block", filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.12))" }} />
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      <PremiumHero {...heroProps} />
 
       {/* Timeline / Roadmap Section */}
       <section style={{ padding: "60px 0", background: "#ffffff", borderTop: "1px solid #f1f5f9" }}>
