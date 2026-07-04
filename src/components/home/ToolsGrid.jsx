@@ -33,15 +33,15 @@ const TOOLS = [
     to: "/cutoffs", live: true,
   },
   {
-    icon: Layers, title: "Branch Catalog", accent: "#FF693D",
-    desc: "220+ engineering branches categorized into 10 buckets disclosing curriculums and CTC ranges.",
-    bullets: ["AI automation exposure scores", "Myth debunking highlights", "Top recruiter profiles"],
+    icon: Layers, title: "Branch Insights Hub", accent: "#FF693D",
+    desc: "Deep dive into 200+ engineering disciplines, exploring future career prospects, salaries, and real-world applications.",
+    bullets: ["Future-proof career analysis", "In-depth curriculum breakdown", "Salary trends & hiring insights"],
     to: "/branches", live: true, hot: false,
   },
   {
-    icon: GitCompareArrows, title: "Branch vs College", accent: "#FF693D",
-    desc: "Answer six quick questions and find out whether the institute or the branch should win for you.",
-    bullets: ["6-question fit assessment", "College-first vs branch-first verdict", "Personalised next steps"],
+    icon: GitCompareArrows, title: "Trade-off Analyzer", accent: "#FF693D",
+    desc: "Stuck between a top-tier college or your preferred branch? Take our quick assessment to find your ideal path forward.",
+    bullets: ["Personalized priority quiz", "Data-backed trade-off analysis", "Clear actionable recommendations"],
     to: "/branch-vs-college", live: true, hot: true,
   },
   {

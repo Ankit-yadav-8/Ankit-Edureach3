@@ -196,19 +196,19 @@ function Academics({ b, extra }) {
       {/* Row 1: Summary + Intensity */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
         <Card style={{ background: `linear-gradient(135deg, ${b.color}12 0%, #fff 100%)`, borderLeft: `4px solid ${b.color}` }}>
-          <div style={{ ...eye, color: CL.muted, marginBottom: 10 }}>What the degree really covers</div>
+          <div style={{ ...eye, color: CL.muted, marginBottom: 10 }}>Core Degree Focus</div>
           <p style={{ fontSize: F.lg, fontWeight: 700, color: CL.ink, lineHeight: 1.55, margin: 0 }}>{b.academics.summary}</p>
         </Card>
-        <Card title="Where your hours go">
+        <Card title="Weekly Academic Workload">
           {meters.length > 0 ? <IntensityBars meters={meters} bColor={b.color} /> : <p style={{ color: CL.muted, fontSize: F.sm }}>No intensity data.</p>}
         </Card>
       </div>
 
       {/* Row 2: Donut + Placement */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-        {split.length > 0 && <Card title="First-job destinations"><MiniDonut data={split} /></Card>}
+        {split.length > 0 && <Card title="Initial Career Pathways"><MiniDonut data={split} /></Card>}
         {placement && (
-          <Card title="Reach into software roles" style={{ background: CL.cream2 }}>
+          <Card title="Software Industry Transition" style={{ background: CL.cream2 }}>
             <div style={{ background: b.color, color: "#fff", padding: "8px 14px", borderRadius: 8, display: "inline-block", fontWeight: 800, fontSize: F.base, marginBottom: 12 }}>{placement.headline}</div>
             <div style={{ display: "flex", gap: 4, marginBottom: 12 }}>
               {Array.from({ length: 8 }).map((_, i) => <div key={i} style={{ width: 22, height: 16, borderRadius: 3, background: i < 6 ? b.color : CL.cream3 }} />)}
@@ -220,15 +220,15 @@ function Academics({ b, extra }) {
 
       {/* Row 3: Journey */}
       {journey.length > 0 && (
-        <Card title={`The ${journey.length}-Year Journey`}>
-          <div style={{ fontSize: F.sm, color: CL.muted, marginTop: -10, marginBottom: 16 }}>Step-by-step evolution of a {b.name.split("&")[0].trim()} student</div>
+        <Card title={`The ${journey.length}-Year Academic Path`}>
+          <div style={{ fontSize: F.sm, color: CL.muted, marginTop: -10, marginBottom: 16 }}>Step-by-step academic evolution for a {b.name.split("&")[0].trim()} major</div>
           <JourneyCards years={journey} />
         </Card>
       )}
 
       {/* Row 4: Core Subjects + Roles + Tools */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-        <Card title="The core you'll build on">
+        <Card title="Foundational Subjects">
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
             {core.map(s => (
               <div key={s} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: F.sm }}>
@@ -239,12 +239,12 @@ function Academics({ b, extra }) {
           </div>
         </Card>
         <div style={{ display: "grid", gap: 20 }}>
-          <Card title="Roles this opens up">
+          <Card title="Expected Job Designations">
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {outcomes.map(o => <span key={o} style={{ fontSize: F.sm, fontWeight: 700, padding: "5px 11px", borderRadius: 8, background: CL.cream2, border: `1px solid ${CL.cream3}`, color: CL.ink2 }}>{o}</span>)}
             </div>
           </Card>
-          <Card title="Toolkit you'll pick up">
+          <Card title="Technical Skills & Tools">
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {extra.toolsAndTech.map((t, i) => (
                 <motion.span key={t} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}
@@ -280,7 +280,7 @@ function Insights({ b, extra }) {
       {/* Row 1: AI Risk + Skills + Opportunity */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
         <Card style={{ textAlign: "center" }}>
-          <div style={{ ...eye, marginBottom: 12 }}>How exposed to automation</div>
+          <div style={{ ...eye, marginBottom: 12 }}>AI & Automation Exposure</div>
           <div style={{ fontSize: 44, fontWeight: 800, color: CL.ink, fontFamily: CL.display, lineHeight: 1 }}>{b.stats.aiRisk}<span style={{ fontSize: 20, color: CL.muted }}>/100</span></div>
           <div style={{ display: "flex", height: 6, borderRadius: 3, background: CL.cream3, margin: "16px 0 12px", overflow: "hidden" }}>
             <motion.div initial={{ width: 0 }} animate={{ width: `${b.stats.aiRisk}%` }} transition={{ duration: 1 }} style={{ background: riskColor, borderRadius: 3 }} />
@@ -289,7 +289,7 @@ function Insights({ b, extra }) {
         </Card>
 
         <Card>
-          <div style={{ ...eye, marginBottom: 12 }}>Classroom vs self-taught</div>
+          <div style={{ ...eye, marginBottom: 12 }}>Curriculum vs. Self-Study</div>
           <div style={{ display: "flex", borderRadius: 10, overflow: "hidden", height: 56, border: `1px solid ${CL.line}` }}>
             <motion.div initial={{ flex: 0 }} animate={{ flex: ins.skills.coursework }} transition={{ duration: 0.7 }}
               style={{ background: CL.blue, padding: "6px 10px", color: "#fff", display: "flex", flexDirection: "column", justifyContent: "center" }}>
@@ -305,7 +305,7 @@ function Insights({ b, extra }) {
         </Card>
 
         <Card>
-          <div style={{ ...eye, marginBottom: 12 }}>How wide the door opens</div>
+          <div style={{ ...eye, marginBottom: 12 }}>Global vs. Domestic Opportunities</div>
           {[{ label: "Global", val: extra.globalVsDomestic.global, color: CL.blue, icon: Globe },
             { label: "Domestic", val: extra.globalVsDomestic.domestic, color: CL.green, icon: MapPin }].map(d => (
             <div key={d.label} style={{ marginBottom: 10 }}>
@@ -322,13 +322,13 @@ function Insights({ b, extra }) {
       </div>
 
       {/* Row 2: Salary */}
-      <Card title="Pay across the first five years">
+      <Card title="5-Year Salary Trajectory">
         <Trend data={salaryData} lines={[{ key: "Top 10%", label: "Top 10%", color: CL.coral }, { key: "Median", label: "Median", color: CL.blue }]} height={240} fmt={v => `₹${v}L`} />
       </Card>
 
       {/* Row 3: Industry + Role Salary */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
-        <Card title="Who hires, by sector">
+        <Card title="Top Hiring Sectors">
           <div style={{ height: 190 }}>
             <ResponsiveContainer>
               <BarChart data={extra.industryDemand} layout="vertical" margin={{ left: 10 }}>
@@ -342,7 +342,7 @@ function Insights({ b, extra }) {
           </div>
         </Card>
 
-        <Card title="Pay by role (₹ LPA)">
+        <Card title="Role-Based Salary Potential (₹ LPA)">
           <div style={{ display: "grid", gap: 10 }}>
             {extra.roleSalaries.map((r, i) => (
               <div key={r.role}>
@@ -363,7 +363,7 @@ function Insights({ b, extra }) {
       {/* Row 4: Career Roles */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 20 }}>
         {roles.length > 0 && (
-          <Card title="Roles you can target">
+          <Card title="Career Pathways & Designations">
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {roles.map(r => <span key={r.role} style={{ fontSize: F.sm, fontWeight: 700, padding: "4px 10px", borderRadius: 7, background: r.direct ? CL.cream2 : CL.card, color: r.direct ? CL.ink : CL.muted, border: `1px solid ${r.direct ? CL.cream3 : CL.line}` }}>{r.role}</span>)}
             </div>
@@ -373,7 +373,7 @@ function Insights({ b, extra }) {
 
       {/* Row 5: Research */}
       {ins.research && (
-        <Card title="Research & higher-study scope">
+        <Card title="Further Education & Research Scope">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 14, marginBottom: 14 }}>
             {ins.research.map(r => (
               <div key={r.label} style={{ textAlign: "center" }}>
@@ -396,8 +396,8 @@ function Colleges({ b, extra }) {
   return (
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
-        <Card title="How cutoffs moved, last 5 years">
-          <div style={{ fontSize: F.xs, color: CL.muted, marginTop: -10, marginBottom: 12 }}>Lower rank = higher competition</div>
+        <Card title="5-Year Historic Cutoff Trends">
+          <div style={{ fontSize: F.xs, color: CL.muted, marginTop: -10, marginBottom: 12 }}>Lower rank implies higher competition</div>
           <div style={{ height: 240 }}>
             <ResponsiveContainer>
               <LineChart data={extra.cutoffTrends} margin={{ top: 10, right: 20, left: 10, bottom: 5 }}>
@@ -411,7 +411,7 @@ function Colleges({ b, extra }) {
           </div>
         </Card>
 
-        <Card title="Fees against first pay (₹ LPA)">
+        <Card title="ROI Analysis: Fees vs. Starting Pay (₹ LPA)">
           <div style={{ height: 210 }}>
             <ResponsiveContainer>
               <BarChart data={extra.roiMetrics} margin={{ top: 10, right: 20, left: -15, bottom: 5 }}>
@@ -428,7 +428,7 @@ function Colleges({ b, extra }) {
         </Card>
       </div>
 
-      <Card title="Best places to study it">
+      <Card title="Top Institutions for this Branch">
           <div style={{ display: "grid", gap: 8 }}>
             {b.colleges.map(c => {
               const tone = chanceTone(c.chance);
@@ -443,7 +443,7 @@ function Colleges({ b, extra }) {
         </Card>
 
       {b.branchesList && (
-        <Card title="Also goes by these names">
+        <Card title="Alternative Branch Names">
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
             {b.branchesList.map(bl => <span key={bl} style={{ fontSize: F.sm, fontWeight: 700, padding: "4px 10px", borderRadius: 7, background: CL.cream2, border: `1px solid ${CL.cream3}`, color: CL.ink2 }}>{bl}</span>)}
           </div>
@@ -462,17 +462,17 @@ function Myths({ b, extra }) {
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 20 }}>
         <Card style={{ textAlign: "center" }}>
-          <div style={{ ...eye, marginBottom: 8 }}>How students rate it</div>
+          <div style={{ ...eye, marginBottom: 8 }}>Student Satisfaction Score</div>
           <Gauge value={extra.satisfaction} label="Overall Score" color={CL.green} height={170} />
           <p style={{ fontSize: F.xs, color: CL.muted, marginTop: -14 }}>Alumni career outcomes & stress surveys</p>
         </Card>
         <div style={{ display: "grid", gap: 12 }}>
-          <div style={{ ...eye }}>What nobody warns you about</div>
+          <div style={{ ...eye }}>Hidden Challenges & Realities</div>
           {extra.hiddenChallenges.map((m, i) => <motion.div variants={iV} key={i}><FlipCard myth={m} /></motion.div>)}
         </div>
       </div>
 
-      <Card title="Myths, busted">
+      <Card title="Common Misconceptions Debunked">
         <div style={{ display: "grid", gap: 10 }}>
           {b.myths.map((m, i) => {
             const isOpen = openIdx === i;
@@ -513,7 +513,7 @@ function Syllabus({ b, extra }) {
   const semesters = extra.semesters || [];
   return (
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
-      <Card title="How the semesters unfold">
+      <Card title="Semester-by-Semester Breakdown">
         {semesters.length > 0 ? (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
             {semesters.map((s, i) => (
@@ -543,7 +543,7 @@ function Recruiters({ b, extra }) {
   const recruiters = extra.recruiters || [];
   return (
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
-      <Card title="Recruiters who show up">
+      <Card title="Prominent Campus Recruiters">
         {recruiters.length > 0 ? (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 12 }}>
             {recruiters.map((r, i) => (

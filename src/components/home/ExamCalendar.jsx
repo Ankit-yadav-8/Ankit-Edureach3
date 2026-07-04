@@ -1,15 +1,12 @@
-/* ExamCalendar — College Parichay's own "season roadmap" for the 2026–27
-   admission cycle. A single vertical spine threads month by month from the
-   first exam to the next cycle; the spine fills up to the live month, each
-   month lists its exams/results/counselling as family-coloured chips, and
-   past months dim while the current one is spotlighted. Used on the home
-   page and /exam-buzz. */
+/* ExamCalendar — A simple, clean, grid-based admission season calendar.
+   Displays each month as a card with events. Past months are grayed out,
+   the current month is highlighted, and upcoming months are standard. */
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { CalendarRange, ArrowRight, MapPin } from "lucide-react";
+import { CalendarRange, ArrowRight } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
-/* exam-family palette — each chip carries the colour of its family */
+/* exam-family palette */
 const FAM = {
   jee:    { dot: CL.coral,  label: "JEE" },
   adv:    { dot: CL.blue,   label: "JEE Advanced" },
@@ -19,8 +16,7 @@ const FAM = {
   other:  { dot: CL.muted,  label: "Boards & other" },
 };
 
-/* 2026–27 cycle — the live month (per the current date) is June 2026.
-   Past months are "done", June is "live", everything after is "upcoming". */
+/* 2026–27 cycle */
 const MONTHS = [
   { mon: "Jan", yr: "2026", phase: "done", events: [
     { fam: "jee",   name: "JEE Main · Session 1", sub: "Jan 22 – 29" },
@@ -71,26 +67,10 @@ const MONTHS = [
 ];
 
 const PHASE = {
-  done:     { label: "Done", fg: CL.muted,   bg: "rgba(33,29,46,.06)", ring: CL.cream3 },
-  live:     { label: "Now",  fg: "#0a8f5b",  bg: CL.greenSoft,         ring: CL.green  },
-  upcoming: { label: "Soon", fg: CL.coralDk, bg: CL.coralSoft,         ring: CL.coral  },
+  done:     { label: "Done", fg: CL.muted, bg: "rgba(33,29,46,.06)", border: "transparent" },
+  live:     { label: "Now",  fg: "#0a8f5b", bg: CL.greenSoft, border: CL.green },
+  upcoming: { label: "Soon", fg: CL.coralDk, bg: CL.coralSoft, border: CL.coral },
 };
-
-const LIVE_INDEX = MONTHS.findIndex((m) => m.phase === "live");
-const FILL_PCT = ((LIVE_INDEX + 0.5) / MONTHS.length) * 100;
-
-function EventChip({ e }) {
-  const f = FAM[e.fam] || FAM.other;
-  return (
-    <div className="ec-chip" style={{ "--dot": f.dot }}>
-      <span className="ec-chip-dot" />
-      <span>
-        <span className="ec-chip-name">{e.name}</span>
-        {e.sub && <span className="ec-chip-sub">{e.sub}</span>}
-      </span>
-    </div>
-  );
-}
 
 export default function ExamCalendar({
   surface = CL.cream,
@@ -99,78 +79,75 @@ export default function ExamCalendar({
 }) {
   const nav = useNavigate();
   return (
-    <section id="exam-calendar" style={{ background: surface, padding: "84px 0", position: "relative", overflow: "hidden" }}>
+    <section id="exam-calendar" style={{ background: surface, padding: "84px 0", position: "relative" }}>
       <style>{CSS}</style>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         {heading && (
-          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 30 }}>
-            <div style={{ maxWidth: 660 }}>
+          <div style={{ marginBottom: 48, textAlign: "center", maxWidth: 700, margin: "0 auto 48px" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
               <span style={clEyebrow}><CalendarRange size={13} /> {eyebrow}</span>
-              <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.2vw,2.7rem)", color: CL.ink, letterSpacing: "-1px", margin: "16px 0 10px", lineHeight: 1.12 }}>
-                One road through the <span style={{ color: CL.coral }}>whole season.</span>
-              </h2>
-              <p style={{ color: CL.body, fontSize: "1.02rem", lineHeight: 1.7 }}>
-                Every exam, result and counselling window of the 2026–27 cycle, in order — walk it top to bottom and always know exactly where you stand.
-              </p>
             </div>
+            <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2rem,4.5vw,2.8rem)", color: CL.ink, letterSpacing: "-1px", lineHeight: 1.15 }}>
+              The complete <span style={{ color: CL.coral }}>admission season.</span>
+            </h2>
+            <p style={{ color: CL.body, fontSize: "1.1rem", lineHeight: 1.6, margin: "16px auto 28px" }}>
+              Every major exam, result, and counselling window organized by month so you never miss a deadline.
+            </p>
             {/* family legend */}
             <div className="ec-legend">
               {Object.values(FAM).map((f) => (
-                <span key={f.label} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: CL.body, fontWeight: 600 }}>
-                  <span style={{ width: 9, height: 9, borderRadius: 3, background: f.dot }} /> {f.label}
+                <span key={f.label} className="ec-legend-item">
+                  <span className="ec-legend-dot" style={{ background: f.dot }} /> {f.label}
                 </span>
               ))}
             </div>
           </div>
         )}
 
-        {/* ── Roadmap ── */}
-        <div className="ec-road">
-          <span className="ec-spine" aria-hidden />
-          <span className="ec-spine-fill" style={{ height: `${FILL_PCT}%` }} aria-hidden />
-
+        {/* ── Grid Layout ── */}
+        <div className="ec-grid">
           {MONTHS.map((m, i) => {
             const ph = PHASE[m.phase];
             const live = m.phase === "live";
             const done = m.phase === "done";
+            
             return (
               <motion.div
                 key={`${m.mon}-${m.yr}`}
-                className="ec-month"
-                data-phase={m.phase}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: done ? 0.72 : 1, y: 0 }}
+                className={`ec-card ${done ? "ec-card-done" : ""}`}
+                style={{
+                  borderColor: live ? ph.border : CL.line,
+                  boxShadow: live ? `0 12px 32px ${CL.green}25` : "0 4px 12px rgba(33,29,46,.03)",
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: done ? 0.65 : 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.4, delay: (i % 4) * 0.04 }}
+                transition={{ duration: 0.4, delay: (i % 3) * 0.1 }}
               >
-                {/* node */}
-                <div className="ec-node-cell">
-                  <span className="ec-node" style={{
-                    background: done ? ph.ring : CL.card,
-                    borderColor: ph.ring,
-                    boxShadow: live ? `0 0 0 5px ${CL.green}22` : "none",
-                  }}>
-                    {live && <span className="ec-node-pulse" />}
+                <div className="ec-card-header">
+                  <div className="ec-card-title">
+                    <span className="ec-mon">{m.mon}</span>
+                    <span className="ec-yr">{m.yr}</span>
+                  </div>
+                  <span className="ec-phase" style={{ color: ph.fg, background: ph.bg }}>
+                    {live && <span className="ec-live-dot" />}
+                    {ph.label}
                   </span>
                 </div>
-
-                {/* body: month tab + events */}
-                <div className="ec-body">
-                  <div className="ec-tab" style={{ borderColor: live ? CL.green : CL.line, outline: live ? `3px solid ${CL.green}1f` : "none" }}>
-                    <div>
-                      <span className="ec-mon">{m.mon}</span>
-                      <span className="ec-yr">{m.yr}</span>
-                    </div>
-                    <span className="ec-phase" style={{ color: ph.fg, background: ph.bg }}>
-                      {live ? "● Now" : ph.label}
-                    </span>
-                    {live && (
-                      <span className="ec-here"><MapPin size={11} /> You are here</span>
-                    )}
-                  </div>
-                  <div className="ec-events">
-                    {m.events.map((e) => <EventChip key={e.name} e={e} />)}
-                  </div>
+                
+                <div className="ec-events">
+                  {m.events.map((e, idx) => {
+                    const f = FAM[e.fam] || FAM.other;
+                    return (
+                      <div key={idx} className="ec-event">
+                        <div className="ec-event-dot" style={{ background: f.dot }} />
+                        <div className="ec-event-text">
+                          <span className="ec-event-name">{e.name}</span>
+                          {e.sub && <span className="ec-event-sub">{e.sub}</span>}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </motion.div>
             );
@@ -178,14 +155,9 @@ export default function ExamCalendar({
         </div>
 
         {/* CTA */}
-        <div style={{ textAlign: "center", marginTop: 40 }}>
-          <button onClick={() => nav("/exam-buzz")} style={{
-            display: "inline-flex", alignItems: "center", gap: 9,
-            background: CL.coral, color: "#fff", border: "none", borderRadius: 50,
-            padding: "13px 26px", fontFamily: CL.display, fontWeight: 800, fontSize: 14.5,
-            cursor: "pointer", boxShadow: "0 10px 26px rgba(255, 105, 61,.35)",
-          }}>
-            Open the live counselling radar <ArrowRight size={16} />
+        <div style={{ textAlign: "center", marginTop: 54 }}>
+          <button onClick={() => nav("/exam-buzz")} className="ec-cta">
+            Explore live counselling updates <ArrowRight size={18} />
           </button>
         </div>
       </div>
@@ -194,63 +166,114 @@ export default function ExamCalendar({
 }
 
 const CSS = `
-.ec-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
-.ec-road { position: relative; max-width: 860px; margin: 0 auto; padding-left: 8px; }
-.ec-spine {
-  position: absolute; left: 25px; top: 10px; bottom: 10px; width: 3px;
-  background: ${CL.cream3}; border-radius: 3px;
+.ec-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; align-items: center; }
+.ec-legend-item { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; color: ${CL.body}; font-weight: 600; }
+.ec-legend-dot { width: 10px; height: 10px; border-radius: 4px; }
+
+.ec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  max-width: 1150px;
+  margin: 0 auto;
 }
-.ec-spine-fill {
-  position: absolute; left: 25px; top: 10px; width: 3px; border-radius: 3px;
-  background: linear-gradient(${CL.coral}, ${CL.green});
+
+.ec-card {
+  background: ${CL.card};
+  border: 1px solid ${CL.line};
+  border-radius: 20px;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
 }
-.ec-month {
-  position: relative; display: grid; grid-template-columns: 52px minmax(0, 1fr);
-  align-items: start; margin-bottom: 22px;
+
+.ec-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(33,29,46,.08) !important;
 }
-.ec-node-cell { display: grid; place-items: center; padding-top: 10px; }
-.ec-node {
-  position: relative; width: 16px; height: 16px; border-radius: 50%;
-  border: 3px solid; z-index: 2;
+
+.ec-card-done {
+  filter: grayscale(0.8);
 }
-.ec-node-pulse {
-  position: absolute; inset: -3px; border-radius: 50%; background: ${CL.green};
-  opacity: .35; animation: ecPulse 1.8s ease-out infinite;
+
+.ec-card-done:hover {
+  filter: grayscale(0);
+  opacity: 1 !important;
 }
-@keyframes ecPulse { 0% { transform: scale(1); opacity: .5; } 70%,100% { transform: scale(2.4); opacity: 0; } }
-.ec-body { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 18px; align-items: start; }
-.ec-tab {
-  position: relative; background: ${CL.card}; border: 1px solid ${CL.line};
-  border-radius: 14px; box-shadow: ${CL.shadow}; padding: 12px 14px;
-  display: flex; flex-direction: column; gap: 8px;
+
+.ec-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid ${CL.line};
+  padding-bottom: 16px;
 }
-.ec-mon { font: 800 1.15rem/1 ${CL.display}; color: ${CL.ink}; letter-spacing: -.4px; }
-.ec-yr { font-size: 11px; color: ${CL.muted}; font-weight: 700; margin-left: 6px; }
+
+.ec-card-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.ec-mon { font: 800 1.8rem/1 ${CL.display}; color: ${CL.ink}; letter-spacing: -0.5px; }
+.ec-yr { font: 700 1rem/1 sans-serif; color: ${CL.muted}; }
+
 .ec-phase {
-  align-self: flex-start; font: 800 9.5px/1 ${CL.display}; letter-spacing: .06em;
-  text-transform: uppercase; padding: 4px 10px; border-radius: 50px;
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 800 10.5px/1 ${CL.display}; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 6px 14px; border-radius: 50px;
 }
-.ec-here {
-  display: inline-flex; align-items: center; gap: 4px; font: 800 10px/1 ${CL.display};
-  color: #0a8f5b; letter-spacing: .02em;
+
+.ec-live-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+  animation: pulseDot 1.5s ease-in-out infinite;
 }
-.ec-events { display: flex; flex-wrap: wrap; gap: 9px; padding-top: 2px; }
-.ec-chip {
-  display: inline-flex; align-items: flex-start; gap: 9px; background: ${CL.card};
-  border: 1px solid ${CL.line}; border-left: 3px solid var(--dot);
-  border-radius: 12px; padding: 9px 13px 9px 11px; box-shadow: 0 1px 3px rgba(33,29,46,.05);
-  max-width: 260px; transition: transform .18s, box-shadow .18s;
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.4; }
+  100% { transform: scale(0.9); opacity: 1; }
 }
-.ec-chip:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(33,29,46,.1); }
-.ec-chip-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--dot); margin-top: 4px; flex-shrink: 0; }
-.ec-chip-name { display: block; font: 800 12.5px/1.25 ${CL.display}; color: ${CL.ink}; }
-.ec-chip-sub { display: block; font-size: 11px; color: ${CL.body}; margin-top: 2px; line-height: 1.3; }
+
+.ec-events {
+  display: flex; flex-direction: column; gap: 18px;
+}
+
+.ec-event {
+  display: flex; align-items: flex-start; gap: 14px;
+}
+
+.ec-event-dot {
+  width: 14px; height: 14px; border-radius: 4px; margin-top: 3px; flex-shrink: 0;
+}
+
+.ec-event-text {
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+.ec-event-name {
+  font: 700 1.05rem/1.3 ${CL.display}; color: ${CL.ink};
+}
+
+.ec-event-sub {
+  font: 400 0.95rem/1.4 sans-serif; color: ${CL.body};
+}
+
+.ec-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: ${CL.coral}; color: #fff; border: none; border-radius: 50px;
+  padding: 16px 36px; font: 800 1.05rem/1 ${CL.display}; cursor: pointer;
+  box-shadow: 0 10px 26px rgba(255, 105, 61, 0.35); transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ec-cta:hover {
+  transform: translateY(-2px); box-shadow: 0 14px 32px rgba(255, 105, 61, 0.45);
+}
 
 @media (max-width: 680px) {
-  .ec-month { grid-template-columns: 40px minmax(0, 1fr); }
-  .ec-spine, .ec-spine-fill { left: 19px; }
-  .ec-body { grid-template-columns: minmax(0, 1fr); gap: 10px; }
-  .ec-tab { flex-direction: row; align-items: center; justify-content: flex-start; gap: 12px; flex-wrap: wrap; }
-  .ec-chip { max-width: none; }
+  .ec-grid { grid-template-columns: 1fr; }
+  .ec-card { padding: 20px; gap: 20px; }
 }
 `;
