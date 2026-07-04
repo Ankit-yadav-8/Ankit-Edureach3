@@ -27,26 +27,66 @@ const TABS = [
 ];
 
 export default function AdvancedPredictorHome() {
+  const [tab, setTab] = useState("rank");
+  const active = TABS.find((t) => t.key === tab);
+
   return (
     <section id="advanced-predictor" style={{ background: CL.cream, padding: "84px 0", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", inset: 0, backgroundImage: `radial-gradient(${CL.cream3} 1.2px, transparent 1.2px)`, backgroundSize: "26px 26px", opacity: 0.55, pointerEvents: "none" }} />
-      <div className="container" style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
-        <div style={{ maxWidth: 760, margin: "0 auto" }}>
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
+        <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 28px" }}>
           <span style={{ ...clEyebrow }}>
             <Building2 size={13} /> JoSAA Engine · JEE Advanced
           </span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.4vw,2.9rem)", color: CL.ink, letterSpacing: "-1.3px", margin: "16px 0 12px", lineHeight: 1.08 }}>
-            JEE Advanced Analysis & JoSAA Predictor
+            {active.title}
           </h2>
-          <div style={{ display: "inline-block", background: "#fff", border: `1px solid ${CL.coral}40`, padding: "24px 40px", borderRadius: 16, boxShadow: CL.shadow, marginTop: 24 }}>
-            <div style={{ fontSize: 20, fontWeight: 800, color: CL.coral, fontFamily: CL.display, marginBottom: 8 }}>
-              Coming Soon
-            </div>
-            <p style={{ color: CL.body, fontSize: 14 }}>
-              We're currently processing the latest IIT cutoffs and branch trends. <br/>Check back soon for the most accurate rank prediction.
-            </p>
+          <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7, fontStyle: "italic" }}>
+            {active.sub}
+          </p>
+        </div>
+
+        {/* ── Tool toggle ── */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 32 }}>
+          <div style={{ display: "inline-flex", gap: 6, background: "#fff", border: `1px solid ${CL.coral}33`, borderRadius: 50, padding: 6, boxShadow: `0 4px 16px ${CL.coral}14` }}>
+            {TABS.map((tb) => {
+              const on = tb.key === tab;
+              const Ic = tb.icon;
+              return (
+                <button key={tb.key} onClick={() => setTab(tb.key)}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px",
+                    border: "none", cursor: "pointer", borderRadius: 50, fontFamily: CL.display,
+                    fontWeight: 700, fontSize: 14.5, transition: "all .18s",
+                    color: on ? "#fff" : CL.coralDk,
+                    background: on ? `linear-gradient(135deg, ${CL.coral}, ${CL.coralDk})` : "transparent",
+                    boxShadow: on ? `0 6px 16px ${CL.coral}52` : "none",
+                  }}>
+                  <Ic size={16} /> {tb.label}
+                </button>
+              );
+            })}
           </div>
         </div>
+
+        {tab === "rank" ? (
+          <RankPredictorTool accent={ADV} advanced />
+        ) : (
+          <>
+            <div style={{
+              display: "flex", alignItems: "center", gap: 10, maxWidth: 760, margin: "0 auto 18px",
+              background: "#fff8ed", border: "1px solid #FF693D", borderRadius: 10, padding: "12px 16px",
+              fontSize: 13, color: "#92400e",
+            }}>
+              <span style={{ fontSize: 18 }}>⏳</span>
+              <span>
+                <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a
+                "Page Unresponsive" pop-up, click <strong>"Wait"</strong> — do <em>not</em> click "Exit Page".
+              </span>
+            </div>
+            <CollegeFinderTool basePath="/jee-advanced" />
+          </>
+        )}
       </div>
     </section>
   );
