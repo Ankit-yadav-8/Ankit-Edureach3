@@ -16,53 +16,35 @@ const FAM = {
   other:  { dot: CL.muted,  label: "Boards & other" },
 };
 
-/* 2026–27 cycle */
-const MONTHS = [
-  { mon: "Jan", yr: "2026", phase: "done", events: [
+const QUARTERS = [
+  { mon: "Jan – Mar", yr: "2026", phase: "done", iconColor: CL.coral, iconBg: CL.coralSoft, events: [
     { fam: "jee",   name: "JEE Main · Session 1", sub: "Jan 22 – 29" },
+    { fam: "other", name: "Board Practicals", sub: "Feb" },
+    { fam: "other", name: "Board Theory Exams", sub: "Mar" },
+    { fam: "jee",   name: "BITSAT Registration", sub: "Mar" },
   ]},
-  { mon: "Feb", yr: "2026", phase: "done", events: [
-    { fam: "other", name: "Board Practicals", sub: "CBSE / State" },
-  ]},
-  { mon: "Mar", yr: "2026", phase: "done", events: [
-    { fam: "other", name: "Board Theory Exams", sub: "Class 12" },
-    { fam: "jee",   name: "BITSAT Registration", sub: "Opens" },
-  ]},
-  { mon: "Apr", yr: "2026", phase: "done", events: [
+  { mon: "Apr – Jun", yr: "2026", phase: "live", iconColor: "#0a8f5b", iconBg: CL.greenSoft, events: [
     { fam: "jee",   name: "JEE Main · Session 2", sub: "Apr 1 – 8" },
-    { fam: "other", name: "CUET-UG Window", sub: "Central universities" },
-  ]},
-  { mon: "May", yr: "2026", phase: "done", events: [
+    { fam: "other", name: "CUET-UG Window", sub: "Apr" },
     { fam: "neet",  name: "NEET-UG 2026", sub: "May 3" },
-    { fam: "adv",   name: "JEE Advanced 2026", sub: "May 18 · P1 + P2" },
+    { fam: "adv",   name: "JEE Advanced 2026", sub: "May 18" },
     { fam: "jee",   name: "BITSAT · Session 1", sub: "Late May" },
+    { fam: "adv",     name: "JEE Advanced Results", sub: "Jun" },
+    { fam: "council", name: "JoSAA Counselling", sub: "Jun" },
+    { fam: "jee",     name: "BITSAT Counselling", sub: "Jun" },
+    { fam: "jee",     name: "COMEDK Counselling", sub: "Jun" },
   ]},
-  { mon: "Jun", yr: "2026", phase: "live", events: [
-    { fam: "adv",     name: "JEE Advanced Results", sub: "AIR declared" },
-    { fam: "council", name: "JoSAA Counselling", sub: "IITs · NITs · IIITs" },
-    { fam: "jee",     name: "BITSAT Counselling", sub: "Iterations begin" },
-    { fam: "jee",     name: "COMEDK Counselling", sub: "Karnataka private" },
+  { mon: "Jul – Sep", yr: "2026", phase: "upcoming", iconColor: "#3A86FF", iconBg: "rgba(58,134,255,.12)", events: [
+    { fam: "council", name: "CSAB Special Rounds", sub: "Jul" },
+    { fam: "state",   name: "State Counselling", sub: "Jul" },
+    { fam: "council", name: "College Seat Allotment", sub: "Jul" },
+    { fam: "council", name: "Final Reporting", sub: "Aug" },
+    { fam: "other",   name: "Classes Begin", sub: "Aug" },
+    { fam: "council", name: "Spot Round Vacancies", sub: "Sep" },
   ]},
-  { mon: "Jul", yr: "2026", phase: "upcoming", events: [
-    { fam: "council", name: "CSAB Special Rounds", sub: "Vacant NIT / IIIT / GFTI" },
-    { fam: "state",   name: "State Counselling", sub: "KCET · WBJEE · MHT CET · KEAM" },
-    { fam: "council", name: "College Seat Allotment", sub: "Final rounds" },
-  ]},
-  { mon: "Aug", yr: "2026", phase: "upcoming", events: [
-    { fam: "council", name: "Final Reporting", sub: "Fee + document upload" },
-    { fam: "other",   name: "Classes Begin", sub: "First-year onboarding" },
-  ]},
-  { mon: "Sep", yr: "2026", phase: "upcoming", events: [
-    { fam: "council", name: "Spot Round Vacancies", sub: "Institute level" },
-  ]},
-  { mon: "Oct", yr: "2026", phase: "upcoming", events: [
-    { fam: "other",   name: "Internal Branch Sliding", sub: "Where offered" },
-  ]},
-  { mon: "Nov", yr: "2026", phase: "upcoming", events: [
-    { fam: "jee",     name: "JEE Main 2027 Notification", sub: "NTA brochure" },
-  ]},
-  { mon: "Dec", yr: "2026", phase: "upcoming", events: [
-    { fam: "jee",     name: "JEE Main 2027 Registration", sub: "Cycle restarts" },
+  { mon: "Oct – Dec", yr: "2026", phase: "upcoming", iconColor: "#7E57C2", iconBg: "rgba(126,87,194,.12)", events: [
+    { fam: "other",   name: "Internal Branch Sliding", sub: "Oct" },
+    { fam: "jee",     name: "JEE Main 2027 Reg.", sub: "Nov - Dec" },
   ]},
 ];
 
@@ -106,37 +88,44 @@ export default function ExamCalendar({
 
         {/* ── Grid Layout ── */}
         <div className="ec-grid">
-          {MONTHS.map((m, i) => {
-            const ph = PHASE[m.phase];
-            const live = m.phase === "live";
-            const done = m.phase === "done";
+          {QUARTERS.map((q, i) => {
+            const ph = PHASE[q.phase];
+            const live = q.phase === "live";
+            const done = q.phase === "done";
             
             return (
               <motion.div
-                key={`${m.mon}-${m.yr}`}
+                key={`${q.mon}-${q.yr}`}
                 className={`ec-card ${done ? "ec-card-done" : ""}`}
                 style={{
                   borderColor: live ? ph.border : CL.line,
-                  boxShadow: live ? `0 12px 32px ${CL.green}25` : "0 4px 12px rgba(33,29,46,.03)",
+                  boxShadow: live ? `0 12px 32px ${CL.green}25` : "0 8px 24px rgba(33,29,46,.04)",
                 }}
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: done ? 0.65 : 1, y: 0 }}
+                whileInView={{ opacity: done ? 0.75 : 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.4, delay: (i % 3) * 0.1 }}
+                transition={{ duration: 0.4, delay: (i % 4) * 0.1 }}
               >
                 <div className="ec-card-header">
-                  <div className="ec-card-title">
-                    <span className="ec-mon">{m.mon}</span>
-                    <span className="ec-yr">{m.yr}</span>
+                  <div className="ec-card-icon-wrap" style={{ background: q.iconBg, color: q.iconColor }}>
+                    <CalendarRange size={22} />
                   </div>
-                  <span className="ec-phase" style={{ color: ph.fg, background: ph.bg }}>
-                    {live && <span className="ec-live-dot" />}
-                    {ph.label}
-                  </span>
+                  <div className="ec-card-title-group">
+                    <div className="ec-card-title">
+                      <span className="ec-mon">{q.mon}</span>
+                    </div>
+                    <div className="ec-yr-phase">
+                      <span className="ec-yr">{q.yr}</span>
+                      <span className="ec-phase" style={{ color: ph.fg, background: ph.bg }}>
+                        {live && <span className="ec-live-dot" />}
+                        {ph.label}
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 
                 <div className="ec-events">
-                  {m.events.map((e, idx) => {
+                  {q.events.map((e, idx) => {
                     const f = FAM[e.fam] || FAM.other;
                     return (
                       <div key={idx} className="ec-event">
@@ -172,30 +161,30 @@ const CSS = `
 
 .ec-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-  max-width: 1150px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .ec-card {
-  background: ${CL.card};
+  background: #fff;
   border: 1px solid ${CL.line};
-  border-radius: 20px;
-  padding: 26px;
+  border-radius: 24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
   transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
 }
 
 .ec-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 32px rgba(33,29,46,.08) !important;
+  box-shadow: 0 16px 36px rgba(33,29,46,.08) !important;
 }
 
 .ec-card-done {
-  filter: grayscale(0.8);
+  filter: grayscale(0.7);
 }
 
 .ec-card-done:hover {
@@ -205,10 +194,19 @@ const CSS = `
 
 .ec-card-header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid ${CL.line};
-  padding-bottom: 16px;
+  gap: 14px;
+  border-bottom: 1px dashed ${CL.line};
+  padding-bottom: 18px;
+}
+
+.ec-card-icon-wrap {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: grid; place-items: center; flex-shrink: 0;
+}
+
+.ec-card-title-group {
+  display: flex; flex-direction: column; gap: 4px;
 }
 
 .ec-card-title {
@@ -217,13 +215,18 @@ const CSS = `
   gap: 8px;
 }
 
-.ec-mon { font: 800 1.8rem/1 ${CL.display}; color: ${CL.ink}; letter-spacing: -0.5px; }
-.ec-yr { font: 700 1rem/1 sans-serif; color: ${CL.muted}; }
+.ec-mon { font: 800 1.25rem/1.2 ${CL.display}; color: ${CL.ink}; letter-spacing: -0.3px; }
+
+.ec-yr-phase {
+  display: flex; align-items: center; gap: 8px;
+}
+
+.ec-yr { font: 700 0.95rem/1 sans-serif; color: ${CL.muted}; }
 
 .ec-phase {
   display: inline-flex; align-items: center; gap: 6px;
   font: 800 10.5px/1 ${CL.display}; letter-spacing: 0.08em;
-  text-transform: uppercase; padding: 6px 14px; border-radius: 50px;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 50px;
 }
 
 .ec-live-dot {
@@ -238,27 +241,27 @@ const CSS = `
 }
 
 .ec-events {
-  display: flex; flex-direction: column; gap: 18px;
+  display: flex; flex-direction: column; gap: 14px;
 }
 
 .ec-event {
-  display: flex; align-items: flex-start; gap: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
 }
 
 .ec-event-dot {
-  width: 14px; height: 14px; border-radius: 4px; margin-top: 3px; flex-shrink: 0;
+  width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0;
 }
 
 .ec-event-text {
-  display: flex; flex-direction: column; gap: 4px;
+  display: flex; flex-direction: column; gap: 2px;
 }
 
 .ec-event-name {
-  font: 700 1.05rem/1.3 ${CL.display}; color: ${CL.ink};
+  font: 700 0.95rem/1.3 ${CL.display}; color: ${CL.ink};
 }
 
 .ec-event-sub {
-  font: 400 0.95rem/1.4 sans-serif; color: ${CL.body};
+  font: 400 0.85rem/1.4 sans-serif; color: ${CL.body};
 }
 
 .ec-cta {
