@@ -610,18 +610,37 @@ export default function BranchDetail() {
                 {b.tags.map(t => <span key={t} style={{ fontSize: F.xs, fontWeight: 700, color: CL.ink2, background: CL.cream2, border: `1px solid ${CL.cream3}`, padding: "3px 10px", borderRadius: 6 }}>{t}</span>)}
               </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, background: CL.cream2, padding: "16px 18px", borderRadius: 14, minWidth: 180 }}>
-              <div style={{ ...eye }}>Quick Stats</div>
-              {[
-                { icon: IndianRupee, color: CL.coral, val: b.stats.medianSalary, lbl: "Median Salary" },
-                { icon: Briefcase, color: CL.blue, val: b.stats.jobGrowth, lbl: "Market Demand" },
-                { icon: Zap, color: riskColorFn(b.stats.aiRisk), val: `${b.stats.aiRisk}/100`, lbl: "AI Risk" },
-              ].map(s => (
-                <div key={s.lbl} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <s.icon size={14} color={s.color} />
-                  <div><div style={{ fontSize: F.base, fontWeight: 800, color: CL.ink }}>{s.val}</div><div style={{ fontSize: 9, color: CL.muted }}>{s.lbl}</div></div>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", background: "#fff", border: `1px solid ${CL.line}`, borderRadius: 16, padding: "14px 24px", gap: 24, boxShadow: CL.shadow }}>
+              {/* Job Growth */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <div style={{ fontSize: 10, fontWeight: 800, color: CL.muted, letterSpacing: 0.5, textTransform: "uppercase" }}>Job Growth</div>
+                <div style={{ fontSize: F.base, fontWeight: 800, color: CL.coral }}>{b.stats.jobGrowth}</div>
+              </div>
+              
+              <div style={{ width: 1, height: 36, background: CL.line }} />
+
+              {/* Median Salary */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <div style={{ fontSize: 10, fontWeight: 800, color: CL.muted, letterSpacing: 0.5, textTransform: "uppercase" }}>Median Salary</div>
+                <div style={{ fontSize: F.lg, fontWeight: 800, color: CL.ink }}>{b.stats.medianSalary}</div>
+              </div>
+
+              <div style={{ width: 1, height: 36, background: CL.line }} />
+
+              {/* AI Risk */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <div style={{ fontSize: 10, fontWeight: 800, color: CL.muted, letterSpacing: 0.5, textTransform: "uppercase" }}>AI Risk</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, background: `${riskColorFn(b.stats.aiRisk)}14`, padding: "4px 10px", borderRadius: 20 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: riskColorFn(b.stats.aiRisk) }} />
+                  <span style={{ fontSize: F.sm, fontWeight: 800, color: CL.ink }}>{b.stats.aiRisk} / 100</span>
                 </div>
-              ))}
+                <div style={{ fontSize: 10, color: CL.muted }}>{b.stats.aiRisk >= 60 ? "High exposure" : b.stats.aiRisk >= 40 ? "Moderate exposure" : "Low exposure"}</div>
+              </div>
+
+              {/* Orange Arrow Button */}
+              <button onClick={() => setTab("insights")} style={{ width: 44, height: 44, borderRadius: "50%", background: CL.coral, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: "none", marginLeft: 8, boxShadow: `0 4px 12px ${CL.coral}40`, flexShrink: 0, transition: "transform .2s" }} onMouseOver={e => e.currentTarget.style.transform = "scale(1.05)"} onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}>
+                <ArrowRight size={18} color="#fff" />
+              </button>
             </div>
           </div>
         </motion.div>

@@ -29,76 +29,91 @@ export const BRANCH_EXTRA = {
       "AWS"
     ],
     "semesters": [
-      {
-        "term": "Semester 1",
-        "desc": "Core Sciences & Math",
-        "courses": [
-          "Math I",
-          "Physics",
-          "Engineering Graphics"
-        ]
-      },
-      {
-        "term": "Semester 2",
-        "desc": "Introduction to Branch",
-        "courses": [
-          "Math II",
-          "Basic Electrical",
-          "Intro Programming"
-        ]
-      },
-      {
-        "term": "Semester 3",
-        "desc": "Core Subjects Begin",
-        "courses": [
-          "Core 1",
-          "Core 2",
-          "Data Analysis"
-        ]
-      },
-      {
-        "term": "Semester 4",
-        "desc": "Deep Dive & Labs",
-        "courses": [
-          "Core 3",
-          "Core 4",
-          "Intensive Lab"
-        ]
-      },
-      {
-        "term": "Semester 5",
-        "desc": "Specialization Starts",
-        "courses": [
-          "Elective 1",
-          "Core 5",
-          "Mini Project"
-        ]
-      },
-      {
-        "term": "Semester 6",
-        "desc": "Industry Readiness",
-        "courses": [
-          "Elective 2",
-          "Core 6",
-          "Internship Prep"
-        ]
-      },
-      {
-        "term": "Semester 7",
-        "desc": "Advanced Topics",
-        "courses": [
-          "Elective 3",
-          "Major Project Phase 1"
-        ]
-      },
-      {
-        "term": "Semester 8",
-        "desc": "Thesis / Internship",
-        "courses": [
-          "Major Project Phase 2",
-          "Industry Internship"
-        ]
-      }
+          {
+                "term": "Semester 1",
+                "desc": "Foundation & Programming",
+                "courses": [
+                      "Mathematics I (Calculus)",
+                      "Physics for Computing",
+                      "Engineering Graphics",
+                      "Intro to C Programming",
+                      "Communication Skills"
+                ]
+          },
+          {
+                "term": "Semester 2",
+                "desc": "Advanced Math & Data Structures",
+                "courses": [
+                      "Mathematics II (Discrete)",
+                      "Data Structures & Algorithms",
+                      "Basic Electrical Engineering",
+                      "Object-Oriented Programming (C++)",
+                      "Digital Logic Design"
+                ]
+          },
+          {
+                "term": "Semester 3",
+                "desc": "Core CS Systems",
+                "courses": [
+                      "Design & Analysis of Algorithms",
+                      "Computer Organization & Architecture",
+                      "Database Management Systems",
+                      "Software Engineering",
+                      "Mathematics III (Prob & Stat)"
+                ]
+          },
+          {
+                "term": "Semester 4",
+                "desc": "OS & Networks",
+                "courses": [
+                      "Operating Systems",
+                      "Computer Networks",
+                      "Theory of Computation",
+                      "Web Technologies (Frontend)",
+                      "Microprocessors & Microcontrollers"
+                ]
+          },
+          {
+                "term": "Semester 5",
+                "desc": "Advanced Systems & AI",
+                "courses": [
+                      "Artificial Intelligence",
+                      "Compiler Design",
+                      "Backend Development",
+                      "Elective I (e.g. Machine Learning)",
+                      "Elective II (e.g. Cryptography)"
+                ]
+          },
+          {
+                "term": "Semester 6",
+                "desc": "Industry Readiness",
+                "courses": [
+                      "Cloud Computing",
+                      "Information Security",
+                      "Elective III (e.g. BlockChain)",
+                      "Mini Project",
+                      "Internship Preparation"
+                ]
+          },
+          {
+                "term": "Semester 7",
+                "desc": "Specialization & Major Project",
+                "courses": [
+                      "Elective IV (e.g. Big Data)",
+                      "Elective V (e.g. Computer Vision)",
+                      "Major Project Phase I",
+                      "Open Elective"
+                ]
+          },
+          {
+                "term": "Semester 8",
+                "desc": "Industry Internship / Thesis",
+                "courses": [
+                      "Major Project Phase II",
+                      "Industry Internship (6 Months)",
+                      "Ethics in IT"
+                ]
+          }
     ],
     "industryDemand": [
       {
@@ -220,76 +235,91 @@ export const BRANCH_EXTRA = {
       "Git"
     ],
     "semesters": [
-      {
-        "term": "Semester 1",
-        "desc": "Core Sciences & Math",
-        "courses": [
-          "Math I",
-          "Physics",
-          "Engineering Graphics"
-        ]
-      },
-      {
-        "term": "Semester 2",
-        "desc": "Introduction to Branch",
-        "courses": [
-          "Math II",
-          "Basic Electrical",
-          "Intro Programming"
-        ]
-      },
-      {
-        "term": "Semester 3",
-        "desc": "Core Subjects Begin",
-        "courses": [
-          "Core 1",
-          "Core 2",
-          "Data Analysis"
-        ]
-      },
-      {
-        "term": "Semester 4",
-        "desc": "Deep Dive & Labs",
-        "courses": [
-          "Core 3",
-          "Core 4",
-          "Intensive Lab"
-        ]
-      },
-      {
-        "term": "Semester 5",
-        "desc": "Specialization Starts",
-        "courses": [
-          "Elective 1",
-          "Core 5",
-          "Mini Project"
-        ]
-      },
-      {
-        "term": "Semester 6",
-        "desc": "Industry Readiness",
-        "courses": [
-          "Elective 2",
-          "Core 6",
-          "Internship Prep"
-        ]
-      },
-      {
-        "term": "Semester 7",
-        "desc": "Advanced Topics",
-        "courses": [
-          "Elective 3",
-          "Major Project Phase 1"
-        ]
-      },
-      {
-        "term": "Semester 8",
-        "desc": "Thesis / Internship",
-        "courses": [
-          "Major Project Phase 2",
-          "Industry Internship"
-        ]
-      }
+          {
+                "term": "Semester 1",
+                "desc": "Foundation & Programming",
+                "courses": [
+                      "Mathematics I (Linear Algebra)",
+                      "Intro to Python Programming",
+                      "Engineering Graphics",
+                      "Physics for Computing",
+                      "Communication Skills"
+                ]
+          },
+          {
+                "term": "Semester 2",
+                "desc": "Math & Data Structures",
+                "courses": [
+                      "Mathematics II (Prob & Stat)",
+                      "Data Structures",
+                      "Object-Oriented Programming",
+                      "Digital Logic",
+                      "Basic Electrical"
+                ]
+          },
+          {
+                "term": "Semester 3",
+                "desc": "Core CS & Data",
+                "courses": [
+                      "Design & Analysis of Algorithms",
+                      "Database Management Systems",
+                      "Intro to Data Science",
+                      "Computer Organization",
+                      "Discrete Math"
+                ]
+          },
+          {
+                "term": "Semester 4",
+                "desc": "Machine Learning Foundations",
+                "courses": [
+                      "Machine Learning I",
+                      "Operating Systems",
+                      "Data Mining & Warehousing",
+                      "Optimization Techniques",
+                      "Web Technologies"
+                ]
+          },
+          {
+                "term": "Semester 5",
+                "desc": "Deep Learning & AI",
+                "courses": [
+                      "Deep Learning",
+                      "Artificial Intelligence",
+                      "Big Data Analytics",
+                      "Elective I (e.g. NLP)",
+                      "Cloud Computing"
+                ]
+          },
+          {
+                "term": "Semester 6",
+                "desc": "Advanced AI Applications",
+                "courses": [
+                      "Computer Vision",
+                      "Reinforcement Learning",
+                      "Elective II (e.g. MLOps)",
+                      "Mini Project",
+                      "Internship Prep"
+                ]
+          },
+          {
+                "term": "Semester 7",
+                "desc": "Specialization",
+                "courses": [
+                      "Elective III (e.g. GenAI)",
+                      "Elective IV (e.g. Robotics)",
+                      "Major Project Phase I",
+                      "Open Elective"
+                ]
+          },
+          {
+                "term": "Semester 8",
+                "desc": "Industry/Thesis",
+                "courses": [
+                      "Major Project Phase II",
+                      "Industry Internship (6 Months)",
+                      "AI Ethics & Policy"
+                ]
+          }
     ],
     "industryDemand": [
       {
@@ -761,76 +791,91 @@ export const BRANCH_EXTRA = {
       "Docker"
     ],
     "semesters": [
-      {
-        "term": "Semester 1",
-        "desc": "Core Sciences & Math",
-        "courses": [
-          "Math I",
-          "Physics",
-          "Engineering Graphics"
-        ]
-      },
-      {
-        "term": "Semester 2",
-        "desc": "Introduction to Branch",
-        "courses": [
-          "Math II",
-          "Basic Electrical",
-          "Intro Programming"
-        ]
-      },
-      {
-        "term": "Semester 3",
-        "desc": "Core Subjects Begin",
-        "courses": [
-          "Core 1",
-          "Core 2",
-          "Data Analysis"
-        ]
-      },
-      {
-        "term": "Semester 4",
-        "desc": "Deep Dive & Labs",
-        "courses": [
-          "Core 3",
-          "Core 4",
-          "Intensive Lab"
-        ]
-      },
-      {
-        "term": "Semester 5",
-        "desc": "Specialization Starts",
-        "courses": [
-          "Elective 1",
-          "Core 5",
-          "Mini Project"
-        ]
-      },
-      {
-        "term": "Semester 6",
-        "desc": "Industry Readiness",
-        "courses": [
-          "Elective 2",
-          "Core 6",
-          "Internship Prep"
-        ]
-      },
-      {
-        "term": "Semester 7",
-        "desc": "Advanced Topics",
-        "courses": [
-          "Elective 3",
-          "Major Project Phase 1"
-        ]
-      },
-      {
-        "term": "Semester 8",
-        "desc": "Thesis / Internship",
-        "courses": [
-          "Major Project Phase 2",
-          "Industry Internship"
-        ]
-      }
+          {
+                "term": "Semester 1",
+                "desc": "Foundation & Sciences",
+                "courses": [
+                      "Mathematics I",
+                      "Physics",
+                      "Engineering Mechanics",
+                      "Engineering Graphics",
+                      "Communication Skills"
+                ]
+          },
+          {
+                "term": "Semester 2",
+                "desc": "Basic Engineering",
+                "courses": [
+                      "Mathematics II",
+                      "Chemistry",
+                      "Basic Electrical",
+                      "Intro to Programming",
+                      "Building Materials"
+                ]
+          },
+          {
+                "term": "Semester 3",
+                "desc": "Core Civil I",
+                "courses": [
+                      "Solid Mechanics",
+                      "Fluid Mechanics I",
+                      "Surveying",
+                      "Building Construction",
+                      "Engineering Geology"
+                ]
+          },
+          {
+                "term": "Semester 4",
+                "desc": "Core Civil II",
+                "courses": [
+                      "Structural Analysis I",
+                      "Fluid Mechanics II",
+                      "Concrete Technology",
+                      "Transportation Engineering I",
+                      "Soil Mechanics"
+                ]
+          },
+          {
+                "term": "Semester 5",
+                "desc": "Design & Analysis",
+                "courses": [
+                      "Structural Analysis II",
+                      "Design of RC Structures",
+                      "Environmental Engineering I",
+                      "Foundation Engineering",
+                      "Elective I"
+                ]
+          },
+          {
+                "term": "Semester 6",
+                "desc": "Advanced Civil",
+                "courses": [
+                      "Design of Steel Structures",
+                      "Transportation Engineering II",
+                      "Environmental Engineering II",
+                      "Mini Project",
+                      "Elective II"
+                ]
+          },
+          {
+                "term": "Semester 7",
+                "desc": "Specialization & Project",
+                "courses": [
+                      "Construction Management",
+                      "Estimation & Costing",
+                      "Major Project Phase I",
+                      "Elective III"
+                ]
+          },
+          {
+                "term": "Semester 8",
+                "desc": "Industry/Research",
+                "courses": [
+                      "Major Project Phase II",
+                      "Industry Internship",
+                      "Professional Ethics"
+                ]
+          }
     ],
     "industryDemand": [
       {
@@ -950,76 +995,91 @@ export const BRANCH_EXTRA = {
       "Kubernetes"
     ],
     "semesters": [
-      {
-        "term": "Semester 1",
-        "desc": "Core Sciences & Math",
-        "courses": [
-          "Math I",
-          "Physics",
-          "Engineering Graphics"
-        ]
-      },
-      {
-        "term": "Semester 2",
-        "desc": "Introduction to Branch",
-        "courses": [
-          "Math II",
-          "Basic Electrical",
-          "Intro Programming"
-        ]
-      },
-      {
-        "term": "Semester 3",
-        "desc": "Core Subjects Begin",
-        "courses": [
-          "Core 1",
-          "Core 2",
-          "Data Analysis"
-        ]
-      },
-      {
-        "term": "Semester 4",
-        "desc": "Deep Dive & Labs",
-        "courses": [
-          "Core 3",
-          "Core 4",
-          "Intensive Lab"
-        ]
-      },
-      {
-        "term": "Semester 5",
-        "desc": "Specialization Starts",
-        "courses": [
-          "Elective 1",
-          "Core 5",
-          "Mini Project"
-        ]
-      },
-      {
-        "term": "Semester 6",
-        "desc": "Industry Readiness",
-        "courses": [
-          "Elective 2",
-          "Core 6",
-          "Internship Prep"
-        ]
-      },
-      {
-        "term": "Semester 7",
-        "desc": "Advanced Topics",
-        "courses": [
-          "Elective 3",
-          "Major Project Phase 1"
-        ]
-      },
-      {
-        "term": "Semester 8",
-        "desc": "Thesis / Internship",
-        "courses": [
-          "Major Project Phase 2",
-          "Industry Internship"
-        ]
-      }
+          {
+                "term": "Semester 1",
+                "desc": "Foundation & Sciences",
+                "courses": [
+                      "Mathematics I",
+                      "Physics",
+                      "Chemistry I",
+                      "Intro to Programming",
+                      "Engineering Graphics"
+                ]
+          },
+          {
+                "term": "Semester 2",
+                "desc": "Basic Engineering",
+                "courses": [
+                      "Mathematics II",
+                      "Chemistry II",
+                      "Basic Electrical",
+                      "Engineering Mechanics",
+                      "Process Calculations"
+                ]
+          },
+          {
+                "term": "Semester 3",
+                "desc": "Core Chemical I",
+                "courses": [
+                      "Fluid Mechanics",
+                      "Chemical Engineering Thermodynamics I",
+                      "Material Science",
+                      "Mechanical Operations",
+                      "Organic Chemistry"
+                ]
+          },
+          {
+                "term": "Semester 4",
+                "desc": "Core Chemical II",
+                "courses": [
+                      "Heat Transfer",
+                      "Mass Transfer I",
+                      "Chemical Engineering Thermodynamics II",
+                      "Numerical Methods",
+                      "Physical Chemistry"
+                ]
+          },
+          {
+                "term": "Semester 5",
+                "desc": "Reactor Design & Control",
+                "courses": [
+                      "Chemical Reaction Engineering I",
+                      "Mass Transfer II",
+                      "Process Dynamics & Control",
+                      "Elective I (e.g. Polymer Tech)",
+                      "Industrial Chemistry"
+                ]
+          },
+          {
+                "term": "Semester 6",
+                "desc": "Advanced Chemical",
+                "courses": [
+                      "Chemical Reaction Engineering II",
+                      "Process Equipment Design",
+                      "Transport Phenomena",
+                      "Mini Project",
+                      "Elective II"
+                ]
+          },
+          {
+                "term": "Semester 7",
+                "desc": "Plant Design",
+                "courses": [
+                      "Plant Design & Economics",
+                      "Elective III (e.g. Petroleum Tech)",
+                      "Major Project Phase I",
+                      "Open Elective"
+                ]
+          },
+          {
+                "term": "Semester 8",
+                "desc": "Industry/Research",
+                "courses": [
+                      "Major Project Phase II",
+                      "Industry Internship",
+                      "Safety & Ethics"
+                ]
+          }
     ],
     "industryDemand": [
       {
