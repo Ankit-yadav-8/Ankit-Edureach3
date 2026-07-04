@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Map Curator</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #f9f9f9; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .controls { background: white; padding: 15px 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 10px; z-index: 100; display: flex; gap: 16px; align-items: center; margin-bottom: 20px; }
+        button, input { padding: 8px 16px; font-size: 14px; border-radius: 6px; border: 1px solid #ccc; cursor: pointer; }
+        button { background: #6366f1; color: white; border: none; font-weight: 600; }
+        button:hover { background: #4f46e5; }
+        #image-container { max-width: 900px; width: 100%; text-align: center; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        img { max-width: 100%; height: auto; border: 1px solid #eee; }
+        .status { font-weight: 500; font-variant-numeric: tabular-nums; }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <button onclick="prev()">&larr; Prev</button>
+    <span class="status">Page <span id="pageNum">1</span> / 155</span>
+    <button onclick="next()">Next &rarr;</button>
+    
+    <div style="width: 1px; height: 30px; background: #ddd; margin: 0 8px;"></div>
+    
+    <input type="text" id="chapterName" placeholder="Chapter Name (e.g. Kinematics)" style="width: 250px;">
+    <button onclick="tagPage()" style="background: #10b981;">Tag as Mind Map</button>
+    
+    <div style="width: 1px; height: 30px; background: #ddd; margin: 0 8px;"></div>
+    
+    <button onclick="exportJson()" style="background: #f59e0b;">Export JSON</button>
+</div>
+
+<div id="image-container">
+    <img id="currentImage" src="" alt="PDF Page">
+</div>
+
+<script>
+    const TOTAL_PAGES = 155;
+    let currentPage = 1;
+    let taggedData = {};
+
+    function updateView() {
+        document.getElementById('pageNum').textContent = currentPage;
+        // The script exports images as physics_page_001.png etc.
+        const paddedNum = String(currentPage).padStart(3, '0');
+        document.getElementById('currentImage').src = `/mindmaps_raw/physics/physics_page_${paddedNum}.png`;
+        
+        // Show tagged chapter if exists
+        document.getElementById('chapterName').value = taggedData[currentPage] || "";
+    }
+
+    function prev() {
+        if (currentPage > 1) {
+            currentPage--;
+            updateView();
+        }
+    }
+
+    function next() {
+        if (currentPage < TOTAL_PAGES) {
+            currentPage++;
+            updateView();
+        }
+    }
+
+    function tagPage() {
+        const chapter = document.getElementById('chapterName').value.trim();
+        if (chapter) {
+            taggedData[currentPage] = chapter;
+            alert(`Tagged page ${currentPage} as: ${chapter}`);
+            next(); // automatically go to next page
+        } else {
+            alert("Please enter a chapter name");
+        }
+    }
+
+    function exportJson() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(taggedData, null, 2));
+        const dlAnchorElem = document.createElement('a');
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download", "physics_mindmaps.json");
+        dlAnchorElem.click();
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT') return;
+        if (e.key === 'ArrowLeft') prev();
+        if (e.key === 'ArrowRight') next();
+    });
+
+    // Initial load
+    updateView();
+</script>
+
+</body>
+</html>

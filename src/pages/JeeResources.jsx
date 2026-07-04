@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen, FlaskConical, Sigma, ChevronRight, ChevronDown,
   Flame, Zap, Star, Clock, Target, ArrowRight,
-  CheckCircle2, TrendingUp, ListChecks, Sparkles,
+  CheckCircle2, TrendingUp, ListChecks, Sparkles, X, Image as ImageIcon
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Seo from "../components/Seo.jsx";
+import mindmapData from "../data/mindmaps.json";
 
 /* ── Subject Data ─────────────────────────────────────────── */
 const SUBJECTS = [
@@ -136,7 +137,7 @@ const JEE_STYLE = {
 };
 
 /* ── Chapter Card ───────────────────────────────────────────── */
-function ChapterCard({ ch, color, index }) {
+function ChapterCard({ ch, color, index, subId, onOpenMindMap }) {
   const diff = DIFF_STYLE[ch.diff];
   const jee  = JEE_STYLE[ch.jee];
   const [open, setOpen] = useState(false);
@@ -285,6 +286,39 @@ function ChapterCard({ ch, color, index }) {
                   </p>
                 </div>
               </div>
+
+              {/* Mind Map Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const pageNum = mindmapData[subId]?.[ch.n] || 1;
+                  const padded = String(pageNum).padStart(3, "0");
+                  onOpenMindMap(`/mindmaps_raw/${subId}/${subId}_page_${padded}.png`);
+                }}
+                style={{
+                  marginTop: 10,
+                  width: "100%",
+                  background: `${color}15`,
+                  color: color,
+                  border: `1px solid ${color}33`,
+                  borderRadius: 10,
+                  padding: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  fontFamily: "Sora",
+                  fontWeight: 700,
+                  fontSize: 12,
+                  cursor: "pointer",
+                  transition: "background 0.2s"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = `${color}25`}
+                onMouseLeave={(e) => e.currentTarget.style.background = `${color}15`}
+              >
+                <ImageIcon size={16} /> View Chapter Mind Map
+              </button>
+
             </div>
           </motion.div>
         )}
@@ -367,6 +401,7 @@ export default function JeeResources() {
   const [sp] = useSearchParams();
   const [activeSubject, setActiveSubject] = useState(sp.get("subject") || "math");
   const [filter, setFilter] = useState("all");
+  const [lightboxImg, setLightboxImg] = useState(null);
   const nav = useNavigate();
 
   useEffect(() => {
@@ -540,7 +575,7 @@ export default function JeeResources() {
               gap: 16,
             }}>
               {filtered.map((ch, i) => (
-                <ChapterCard key={ch.n} ch={ch} color={subject.color} index={i} />
+                <ChapterCard key={ch.n} ch={ch} color={subject.color} index={i} subId={activeSubject} onOpenMindMap={setLightboxImg} />
               ))}
             </div>
 
@@ -587,6 +622,35 @@ export default function JeeResources() {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {lightboxImg && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "fixed", inset: 0, zIndex: 9999,
+              background: "rgba(0,0,0,0.85)", backdropFilter: "blur(4px)",
+              display: "grid", placeItems: "center", padding: 20
+            }}
+            onClick={() => setLightboxImg(null)}
+          >
+            <button onClick={() => setLightboxImg(null)} style={{ position: "absolute", top: 20, right: 20, background: "none", border: "none", color: "#fff", cursor: "pointer" }}>
+              <X size={32} />
+            </button>
+            <motion.img
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              src={lightboxImg}
+              style={{ maxWidth: "100%", maxHeight: "90vh", borderRadius: 8, boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
