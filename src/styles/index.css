@@ -3499,7 +3499,12 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 22px;
+  gap: 18px;
+  transition: box-shadow .25s ease, border-color .25s ease;
+}
+.cl-branch-row:hover {
+  box-shadow: 0 18px 50px rgba(33, 29, 46, .13);
+  border-color: rgba(33, 29, 46, .14);
 }
 .cl-branch-row__arrow {
   position: absolute;
@@ -3507,12 +3512,36 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   right: 22px;
   transform: translateY(-50%);
   flex-shrink: 0;
+  transition: transform .2s ease;
+}
+.cl-branch-row:hover .cl-branch-row__arrow {
+  transform: translateY(-50%) scale(1.1);
 }
 .cl-branch-row__stats {
   display: flex;
-  gap: 24px;
+  align-items: stretch;
+  padding-right: 64px; /* clear the floating arrow */
+}
+.cl-branch-row__stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding-right: 58px; /* clear the floating arrow */
+  text-align: center;
+  min-width: 118px;
+  padding: 0 18px;
+}
+.cl-branch-row__stat + .cl-branch-row__stat {
+  border-left: 1px solid rgba(33, 29, 46, .09);
+}
+.cl-branch-row__stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: #9A949F;
+  margin-bottom: 6px;
+  white-space: nowrap;
 }
 @media (max-width: 860px) {
   .cl-branch-row {
@@ -3524,28 +3553,27 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
     right: 16px;
     transform: none;
   }
+  .cl-branch-row:hover .cl-branch-row__arrow {
+    transform: scale(1.1);
+  }
   .cl-branch-row__main { padding-right: 48px; } /* keep title clear of arrow */
   .cl-branch-row__stats {
     padding-right: 0;
     flex-wrap: wrap;
-    gap: 14px 22px;
+    gap: 12px 0;
     border-top: 1px solid rgba(33, 29, 46, .07);
     padding-top: 14px;
   }
-}
-
-/* ── Branch vs College quiz — scale + question two-column layout ── */
-.bvc-quiz-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
-  gap: 22px;
-  align-items: stretch;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-@media (max-width: 860px) {
-  .bvc-quiz-grid { grid-template-columns: 1fr; max-width: 680px; }
-  .bvc-scale-col { display: none; }
+  .cl-branch-row__stat {
+    align-items: flex-start;
+    text-align: left;
+    min-width: 0;
+    flex: 1 1 auto;
+    padding: 0 14px 0 0;
+  }
+  .cl-branch-row__stat + .cl-branch-row__stat {
+    padding-left: 14px;
+  }
 }
 
 /* ── FAQ two-column grid: collapse to one column on small screens ── */
