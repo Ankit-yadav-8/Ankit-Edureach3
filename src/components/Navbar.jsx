@@ -105,8 +105,8 @@ const TOOLS_MEGA = [
   {
     title: "Plan & Apply", to: "/planner", color: "#FF693D", icon: CalendarDays,
     items: [
-      { label: "Branch Explorer",         to: "/branches",   icon: Landmark,     desc: "220+ branches across 10 clear paths" },
-      { label: "Branch vs College",       to: "/branch-vs-college", icon: GitCompare, desc: "6 questions → what should win for you" },
+      { label: "Branch Insights Hub",     to: "/branches",   icon: Landmark,     desc: "Deep dive into 15+ clear engineering domains, exploring future career prospects, salaries, and real-world applications." },
+      { label: "Trade-off Analyzer",      to: "/branch-vs-college", icon: GitCompare, desc: "Stuck between a top-tier college or your preferred branch? Take our quick assessment to find your ideal path forward." },
       { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays, desc: "Track every JoSAA & CSAB round date" },
       { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert ₹299 choice-filling plan" },
       { label: "Colleges For You",        to: "/for-you",    icon: Sparkles,     desc: "Personalised picks for your rank" },

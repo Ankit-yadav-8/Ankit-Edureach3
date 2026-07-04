@@ -48,14 +48,6 @@ function Hero() {
             <p style={{ color: CL.body, fontSize: "1.08rem", lineHeight: 1.7, maxWidth: 470, marginBottom: 28 }}>
               Seven counselling-day scenarios, two minutes, one clear verdict — and a strategy for ordering your JoSAA list around it.
             </p>
-            <button onClick={scrollToQuiz} style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              background: CL.coral, color: "#fff", border: "none", borderRadius: 50,
-              padding: "15px 30px", fontFamily: CL.display, fontWeight: 800, fontSize: 16,
-              cursor: "pointer", boxShadow: "0 12px 30px rgba(255, 105, 61,.38)",
-            }}>
-              <Gauge size={18} /> Start the 2-minute check <ArrowRight size={18} />
-            </button>
           </div>
 
           {/* right — live dial preview + trust line */}
