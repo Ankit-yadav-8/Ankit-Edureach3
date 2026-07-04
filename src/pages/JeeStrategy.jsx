@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Seo from "../components/Seo.jsx";
-import { BookOpen, Zap, Target, BookMarked, Activity, CalendarDays, Brain, ShieldCheck } from "lucide-react";
+import { BookOpen, Zap, Target, Activity, Brain, ShieldCheck, Map, ArrowRight } from "lucide-react";
 
 const FIVE_PILLARS = [
   { title: "Concept Mastery", icon: BookOpen, desc: "Derivations over memorization. Connect concepts.", color: "#3B82F6" },
@@ -34,9 +34,65 @@ const SUBJECTS = [
   }
 ];
 
+const TIMELINE = [
+  {
+    phase: "Months 1-3",
+    title: "Foundation & Concepts",
+    details: [
+      "Focus purely on NCERT and basic concepts.",
+      "Clear backlogs if any.",
+      "Solve chapter-wise basic level questions."
+    ],
+    color: "#3B82F6"
+  },
+  {
+    phase: "Months 4-6",
+    title: "Advanced Problem Solving",
+    details: [
+      "Move to standard reference books (HC Verma, Cengage).",
+      "Focus on multi-concept questions.",
+      "Start giving part-syllabus mock tests."
+    ],
+    color: "#8B5CF6"
+  },
+  {
+    phase: "Months 7-9",
+    title: "Intense Practice & PYQs",
+    details: [
+      "Solve at least last 10 years of PYQs.",
+      "Identify weak areas and revise specific topics.",
+      "Increase test frequency to weekly."
+    ],
+    color: "#F59E0B"
+  },
+  {
+    phase: "Months 10-12",
+    title: "Mock Tests & Revision",
+    details: [
+      "Full syllabus mock tests twice a week.",
+      "Analyze mistakes deeply after every test.",
+      "Focus on exam temperament and time management."
+    ],
+    color: "#10B981"
+  }
+];
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
+
 export default function JeeStrategy() {
   return (
-    <div className="page" style={{ background: "#fdfdfd", minHeight: "100vh" }}>
+    <div className="page" style={{ background: "#ffffff", minHeight: "100vh" }}>
       <Seo 
         title="JEE Exam Strategy & Roadmap" 
         description="Master JEE Main & Advanced with Proven Roadmaps, Topper Frameworks, AI Insights & Smart Preparation" 
@@ -44,185 +100,202 @@ export default function JeeStrategy() {
       />
       
       {/* Hero Section */}
-      <section style={{ padding: "80px 0 40px" }}>
+      <section style={{ padding: "100px 0 60px", background: "#ffffff", overflow: "hidden" }}>
         <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
           <div className="strategy-hero">
-            <div>
-              <span style={{ 
+            <motion.div
+              initial="hidden"
+              animate="show"
+              variants={staggerContainer}
+            >
+              <motion.span variants={fadeUp} style={{ 
                 display: "inline-flex", alignItems: "center", gap: 6, 
                 background: "#f0fdf4", color: "#16a34a", 
-                padding: "6px 14px", borderRadius: 50, 
-                fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", marginBottom: 20
+                padding: "8px 16px", borderRadius: 50, border: "1px solid #bbf7d0",
+                fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", marginBottom: 24
               }}>
                 <ShieldCheck size={14} /> EXAM MASTERY
-              </span>
-              <h1 style={{ 
+              </motion.span>
+              <motion.h1 variants={fadeUp} style={{ 
                 fontFamily: "'Space Grotesk', 'Sora', sans-serif", 
-                fontSize: "clamp(2rem, 5vw, 3.2rem)", fontWeight: 800, 
-                color: "#1a1a2e", margin: "0 0 16px 0", lineHeight: 1.15, letterSpacing: "-1px"
+                fontSize: "clamp(2.5rem, 6vw, 4rem)", fontWeight: 800, 
+                color: "#0f172a", margin: "0 0 20px 0", lineHeight: 1.1, letterSpacing: "-1px"
               }}>
-                Exam Strategies for JEE
-              </h1>
-              <p style={{ color: "#6b7280", fontSize: "1.1rem", maxWidth: 600, margin: "0", lineHeight: 1.6 }}>
+                Exam Strategies for <span style={{ color: "#3B82F6" }}>JEE</span>
+              </motion.h1>
+              <motion.p variants={fadeUp} style={{ color: "#475569", fontSize: "1.15rem", maxWidth: 600, margin: "0", lineHeight: 1.6 }}>
                 Master JEE Main & Advanced with Proven Roadmaps, Topper Frameworks, AI Insights & Smart Preparation. Quality beats quantity.
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
             
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
               style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "center" }}
             >
-              <div style={{
-                position: "absolute", inset: -20, background: "radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)",
-                zIndex: -1, borderRadius: "50%"
-              }} />
-              <img src="/images/ai/jee_strategy_hero.png" alt="JEE Strategy Roadmap" style={{ width: "100%", height: "auto", maxWidth: 400, display: "block", filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.1))" }} />
+              <motion.div 
+                animate={{ y: [0, -15, 0] }}
+                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              >
+                <div style={{
+                  position: "absolute", inset: -30, background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)",
+                  zIndex: -1, borderRadius: "50%"
+                }} />
+                <img src="/images/ai/jee_strategy_hero.png" alt="JEE Strategy Roadmap" style={{ width: "100%", height: "auto", maxWidth: 450, display: "block", filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.12))" }} />
+              </motion.div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* The Five Pillars */}
-      <section style={{ padding: "40px 0", background: "#f8fafc" }}>
+      {/* Timeline / Roadmap Section */}
+      <section style={{ padding: "60px 0", background: "#ffffff", borderTop: "1px solid #f1f5f9" }}>
         <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
-          <div style={{ textAlign: "center", marginBottom: 40 }}>
-            <h2 style={{ fontSize: "2.2rem", fontWeight: 800, color: "#1a1a2e" }}>The Five Pillars of JEE Success</h2>
-            <p style={{ color: "#64748b", maxWidth: 600, margin: "10px auto 0" }}>Every successful JEE aspirant masters these core principles.</p>
-          </div>
+          <motion.div 
+            initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp}
+            style={{ textAlign: "center", marginBottom: 50 }}
+          >
+            <span style={{ display: "inline-block", color: "#6366f1", fontWeight: 700, fontSize: 13, letterSpacing: 1, marginBottom: 8, textTransform: "uppercase" }}>Roadmap</span>
+            <h2 style={{ fontSize: "2.5rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>The 1-Year Master Plan</h2>
+            <p style={{ color: "#64748b", maxWidth: 600, margin: "12px auto 0", fontSize: "1.05rem" }}>A structured 4-phase approach to completely master the JEE syllabus.</p>
+          </motion.div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
+          <motion.div 
+            initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer}
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 24 }}
+          >
+            {TIMELINE.map((item, i) => (
+              <motion.div 
+                key={i} variants={fadeUp}
+                whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.06)" }}
+                style={{
+                  background: "#ffffff", borderRadius: 24, padding: 32, border: "1px solid #f1f5f9",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.03)", transition: "all 0.3s ease", position: "relative", overflow: "hidden"
+                }}
+              >
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: item.color }} />
+                <span style={{ display: "inline-block", background: `${item.color}15`, color: item.color, padding: "6px 14px", borderRadius: 50, fontSize: 12, fontWeight: 700, marginBottom: 16 }}>
+                  {item.phase}
+                </span>
+                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#0f172a", marginBottom: 16, lineHeight: 1.3 }}>{item.title}</h3>
+                <ul style={{ margin: 0, paddingLeft: 20, color: "#475569", fontSize: "0.95rem", lineHeight: 1.6 }}>
+                  {item.details.map((detail, idx) => (
+                    <li key={idx} style={{ marginBottom: 8 }}>{detail}</li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* The Five Pillars */}
+      <section style={{ padding: "80px 0", background: "#ffffff", borderTop: "1px solid #f1f5f9" }}>
+        <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+          <motion.div 
+            initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp}
+            style={{ textAlign: "center", marginBottom: 50 }}
+          >
+            <h2 style={{ fontSize: "2.5rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>The Five Pillars of Success</h2>
+            <p style={{ color: "#64748b", maxWidth: 600, margin: "12px auto 0", fontSize: "1.05rem" }}>Every successful JEE aspirant masters these core principles.</p>
+          </motion.div>
+
+          <motion.div 
+            initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer}
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}
+          >
             {FIVE_PILLARS.map((pillar, i) => (
               <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                key={i} variants={fadeUp}
+                whileHover={{ y: -5, boxShadow: "0 15px 35px rgba(0,0,0,0.05)" }}
                 style={{ 
-                  background: "#fff", padding: 30, borderRadius: 20, 
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.03)", border: "1px solid #f1f5f9"
+                  background: "#ffffff", padding: 32, borderRadius: 24, border: "1px solid #f1f5f9",
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.02)", display: "flex", gap: 20, alignItems: "flex-start", transition: "all 0.3s ease"
                 }}
               >
                 <div style={{ 
-                  width: 50, height: 50, borderRadius: 16, background: `${pillar.color}15`, 
-                  color: pillar.color, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20
+                  width: 54, height: 54, borderRadius: 16, background: `${pillar.color}15`, 
+                  display: "flex", alignItems: "center", justifyContent: "center", color: pillar.color, flexShrink: 0 
                 }}>
-                  <pillar.icon size={24} />
-                </div>
-                <h3 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: 10, color: "#1e293b" }}>{pillar.title}</h3>
-                <p style={{ color: "#64748b", lineHeight: 1.6, fontSize: "0.95rem", margin: 0 }}>{pillar.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Year-Wise Roadmap */}
-      <section style={{ padding: "60px 0" }}>
-        <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
-          <div style={{ textAlign: "center", marginBottom: 50 }}>
-            <h2 style={{ fontSize: "2.2rem", fontWeight: 800, color: "#1a1a2e" }}>Year-Wise Roadmap</h2>
-          </div>
-          
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 30 }}>
-            <div style={{ background: "#f0f9ff", padding: 30, borderRadius: 24, border: "1px solid #bae6fd" }}>
-              <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#0369a1", marginBottom: 15 }}>Class 11</h3>
-              <p style={{ color: "#0c4a6e", opacity: 0.8, fontSize: "0.95rem" }}>Build concepts slowly and correctly. Finish NCERT thoroughly, solve standard coaching sheets, make concise notes. Avoid collecting too many books. Revise weekly and never ignore backlogs.</p>
-            </div>
-            <div style={{ background: "#fef2f2", padding: 30, borderRadius: 24, border: "1px solid #fecaca" }}>
-              <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#b91c1c", marginBottom: 15 }}>Class 12</h3>
-              <p style={{ color: "#7f1d1d", opacity: 0.8, fontSize: "0.95rem" }}>Balance Board Exams + JEE. Maintain a daily routine: Class 12 concepts, Class 11 revision, PYQs, and weekly mocks. Don't postpone Class 11 revision until the end.</p>
-            </div>
-            <div style={{ background: "#fbf6ff", padding: 30, borderRadius: 24, border: "1px solid #e9d5ff" }}>
-              <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#7e22ce", marginBottom: 15 }}>Droppers</h3>
-              <p style={{ color: "#581c87", opacity: 0.8, fontSize: "0.95rem" }}>Treat preparation like a full-time job. Concept Revision → PYQs → Chapter Tests → Mock Analysis → Weak Chapter Revision → Daily Formula Revision. Consistency matters more than intensity.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Subject-Wise Strategy */}
-      <section style={{ padding: "60px 0", background: "#1a1a2e", color: "#fff" }}>
-        <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
-          <div style={{ textAlign: "center", marginBottom: 50 }}>
-            <h2 style={{ fontSize: "2.2rem", fontWeight: 800 }}>Subject-Wise Master Strategy</h2>
-          </div>
-          
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 30 }}>
-            {SUBJECTS.map((subj, i) => (
-              <div key={i} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 24, padding: 30 }}>
-                <h3 style={{ fontSize: "1.5rem", fontWeight: 800, color: subj.color, marginBottom: 20 }}>{subj.name}</h3>
-                <div style={{ marginBottom: 15 }}>
-                  <strong style={{ display: "block", color: "rgba(255,255,255,0.6)", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: 1, marginBottom: 5 }}>Key Focus Areas</strong>
-                  <ul style={{ margin: 0, paddingLeft: 20, color: "#e2e8f0", fontSize: "0.95rem", lineHeight: 1.6 }}>
-                    {subj.focus.map((f, idx) => <li key={idx}>{f}</li>)}
-                  </ul>
-                </div>
-                <div style={{ marginBottom: 15 }}>
-                  <strong style={{ display: "block", color: "rgba(255,255,255,0.6)", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: 1, marginBottom: 5 }}>Resources</strong>
-                  <p style={{ margin: 0, color: "#e2e8f0", fontSize: "0.95rem" }}>{subj.resources}</p>
+                  <pillar.icon size={26} />
                 </div>
                 <div>
-                  <strong style={{ display: "block", color: "rgba(255,255,255,0.6)", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: 1, marginBottom: 5 }}>Daily Target</strong>
-                  <p style={{ margin: 0, color: "#e2e8f0", fontSize: "0.95rem" }}>{subj.target}</p>
+                  <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#0f172a", margin: "0 0 10px 0" }}>{pillar.title}</h3>
+                  <p style={{ color: "#64748b", fontSize: "1rem", lineHeight: 1.6, margin: 0 }}>{pillar.desc}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* AI Strategy & Mistakes */}
-      <section style={{ padding: "60px 0" }}>
+      {/* Subject-wise Strategy */}
+      <section style={{ padding: "80px 0 100px", background: "#ffffff", borderTop: "1px solid #f1f5f9" }}>
         <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", gap: 40 }}>
-            
-            <div style={{ background: "#fff", border: "2px solid #e2e8f0", borderRadius: 24, padding: 40 }}>
-              <h3 style={{ fontSize: "1.8rem", fontWeight: 800, color: "#1a1a2e", marginBottom: 20 }}>AI Study Strategy</h3>
-              <p style={{ color: "#64748b", lineHeight: 1.6, marginBottom: 20 }}>Leverage tools like <strong>College Parichay AI</strong> for maximum efficiency:</p>
-              <ul style={{ margin: 0, paddingLeft: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 12 }}>
-                {["Doubt solving & Concept explanations", "Formula revision & Quiz generation", "Personalized study plans", "Error analysis & Mock discussion"].map((item, i) => (
-                  <li key={i} style={{ display: "flex", alignItems: "center", gap: 10, color: "#334155", fontWeight: 600 }}>
-                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#3B82F6" }} /> {item}
-                  </li>
-                ))}
-              </ul>
-              <div style={{ marginTop: 24, padding: 15, background: "#fef2f2", borderRadius: 12, color: "#991b1b", fontSize: "0.9rem", fontWeight: 600 }}>
-                ⚠️ Avoid using AI to copy answers without understanding the core concept.
-              </div>
-            </div>
+          <motion.div 
+            initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} variants={fadeUp}
+            style={{ textAlign: "center", marginBottom: 50 }}
+          >
+            <h2 style={{ fontSize: "2.5rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>Subject-wise Strategy</h2>
+            <p style={{ color: "#64748b", maxWidth: 600, margin: "12px auto 0", fontSize: "1.05rem" }}>Tailor your approach to the specific demands of each subject.</p>
+          </motion.div>
 
-            <div style={{ background: "#fff", border: "2px solid #e2e8f0", borderRadius: 24, padding: 40 }}>
-              <h3 style={{ fontSize: "1.8rem", fontWeight: 800, color: "#1a1a2e", marginBottom: 20 }}>Biggest Mistakes to Avoid</h3>
-              <ul style={{ margin: 0, paddingLeft: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 14 }}>
-                {["Collecting too many books", "Watching endless lectures", "Ignoring NCERT", "No revision schedule", "Solving questions without analysis", "Chasing difficult problems too early", "Comparing with friends"].map((item, i) => (
-                  <li key={i} style={{ display: "flex", alignItems: "center", gap: 12, color: "#475569", fontWeight: 600 }}>
-                    <span style={{ color: "#ef4444", fontWeight: 800 }}>✕</span> {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-          </div>
+          <motion.div 
+            initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer}
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 30 }}
+          >
+            {SUBJECTS.map((subj, i) => (
+              <motion.div 
+                key={i} variants={fadeUp}
+                whileHover={{ y: -8, boxShadow: `0 20px 40px ${subj.color}15`, borderColor: `${subj.color}40` }}
+                style={{ 
+                  background: "#ffffff", padding: 32, borderRadius: 24, border: "1px solid #f1f5f9",
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.03)", transition: "all 0.3s ease", display: "flex", flexDirection: "column"
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+                  <div style={{ width: 12, height: 12, borderRadius: "50%", background: subj.color }} />
+                  <h3 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>{subj.name}</h3>
+                </div>
+                
+                <div style={{ marginBottom: 24, flexGrow: 1 }}>
+                  <strong style={{ display: "block", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8", marginBottom: 12 }}>Key Focus Areas</strong>
+                  <ul style={{ margin: 0, paddingLeft: 20, color: "#475569", fontSize: "0.95rem", lineHeight: 1.6 }}>
+                    {subj.focus.map((item, idx) => (
+                      <li key={idx} style={{ marginBottom: 6 }}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div style={{ background: "#f8fafc", padding: 20, borderRadius: 16, marginTop: "auto" }}>
+                  <div style={{ marginBottom: 12 }}>
+                    <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8", fontWeight: 700, display: "block", marginBottom: 4 }}>📚 Resources</span>
+                    <span style={{ fontSize: "0.9rem", color: "#334155", fontWeight: 600 }}>{subj.resources}</span>
+                  </div>
+                  <div>
+                    <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8", fontWeight: 700, display: "block", marginBottom: 4 }}>🎯 Target</span>
+                    <span style={{ fontSize: "0.9rem", color: subj.color, fontWeight: 700 }}>{subj.target}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
       <style>{`
         .strategy-hero {
           display: grid;
-          grid-template-columns: 1.2fr 0.8fr;
-          gap: 40px;
+          grid-template-columns: 1fr 1fr;
+          gap: 60px;
           align-items: center;
-          margin-bottom: 20px;
-          text-align: left;
         }
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
           .strategy-hero {
             grid-template-columns: 1fr;
             text-align: center;
-            gap: 30px;
+            gap: 40px;
           }
           .strategy-hero p {
             margin: 0 auto !important;
