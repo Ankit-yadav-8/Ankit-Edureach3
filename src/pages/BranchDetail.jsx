@@ -199,16 +199,16 @@ function Academics({ b, extra }) {
           <div style={{ ...eye, color: CL.muted, marginBottom: 10 }}>What you actually study</div>
           <p style={{ fontSize: F.lg, fontWeight: 700, color: CL.ink, lineHeight: 1.55, margin: 0 }}>{b.academics.summary}</p>
         </Card>
-        <Card title="Study Intensity Distribution">
+        <Card title="STUDY INTENSITY DISTRIBUTION">
           {meters.length > 0 ? <IntensityBars meters={meters} bColor={b.color} /> : <p style={{ color: CL.muted, fontSize: F.sm }}>No intensity data.</p>}
         </Card>
       </div>
 
       {/* Row 2: Donut + Placement */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-        {split.length > 0 && <Card title="Where graduates land"><MiniDonut data={split} /></Card>}
+        {split.length > 0 && <Card title="WHERE GRADUATES LAND"><MiniDonut data={split} /></Card>}
         {placement && (
-          <Card title="Tech placement access" style={{ background: CL.cream2 }}>
+          <Card title="TECH PLACEMENT ACCESS" style={{ background: CL.cream2 }}>
             <div style={{ background: b.color, color: "#fff", padding: "8px 14px", borderRadius: 8, display: "inline-block", fontWeight: 800, fontSize: F.base, marginBottom: 12 }}>{placement.headline}</div>
             <div style={{ display: "flex", gap: 4, marginBottom: 12 }}>
               {Array.from({ length: 8 }).map((_, i) => <div key={i} style={{ width: 22, height: 16, borderRadius: 3, background: i < 6 ? b.color : CL.cream3 }} />)}
@@ -599,7 +599,7 @@ export default function BranchDetail() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
           style={{ background: CL.card, borderRadius: 20, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "28px", marginBottom: 28 }}>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", gap: 24 }}>
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 24 }}>
             <div style={{ width: 60, height: 60, borderRadius: 16, background: `${b.color}14`, border: `1px solid ${b.color}28`, display: "grid", placeItems: "center", flexShrink: 0 }}>
               <Icon size={30} color={b.color} />
             </div>
@@ -610,7 +610,7 @@ export default function BranchDetail() {
                 {b.tags.map(t => <span key={t} style={{ fontSize: F.xs, fontWeight: 700, color: CL.ink2, background: CL.cream2, border: `1px solid ${CL.cream3}`, padding: "3px 10px", borderRadius: 6 }}>{t}</span>)}
               </div>
             </div>
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", background: "#fff", border: `1px solid ${CL.line}`, borderRadius: 16, padding: "14px 24px", gap: 24, boxShadow: CL.shadow }}>
+            <div style={{ display: "flex", flexWrap: "nowrap", alignItems: "center", background: "#fff", border: `1px solid ${CL.line}`, borderRadius: 16, padding: "12px 20px", gap: 18, marginLeft: "auto" }}>
               {/* Job Growth */}
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
                 <div style={{ fontSize: 10, fontWeight: 800, color: CL.muted, letterSpacing: 0.5, textTransform: "uppercase" }}>Job Growth</div>
