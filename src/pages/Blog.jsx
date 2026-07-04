@@ -61,26 +61,39 @@ function PostCard({ p }) {
 
 function HeroPreview() {
   const cards = BLOG_POSTS.slice(0, 3);
-  const offsets = [{ top: 0, right: 60, rotate: -4, z: 2 }, { top: 30, right: 0, rotate: 5, z: 3 }, { top: 120, right: 110, rotate: -2, z: 1 }];
   return (
-    <div className="blog-hero-preview" style={{ position: "relative", height: 300 }}>
+    <div className="blog-hero-preview" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {cards.map((p, i) => {
-        const o = offsets[i];
         const Ic = ICONS[p.iconName] || BookOpen;
         const accent = ACCENTS[p.accent] || CL.coral;
         return (
-          <motion.div key={p.slug}
-            initial={{ opacity: 0, y: 24, rotate: o.rotate }} animate={{ opacity: 1, y: 0, rotate: o.rotate }}
-            transition={{ duration: 0.5, delay: 0.15 + i * 0.12 }}
-            style={{ position: "absolute", top: o.top, right: o.right, zIndex: o.z, width: 210, background: CL.card, borderRadius: 16, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "14px 15px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-              <span style={{ width: 30, height: 30, borderRadius: 9, background: `${accent}18`, display: "grid", placeItems: "center" }}><Ic size={15} color={accent} /></span>
-              <span style={{ fontSize: 8.5, fontWeight: 800, color: CL.muted, background: CL.cream2, padding: "3px 8px", borderRadius: 50 }}>{p.badge}</span>
-            </div>
-            <div style={{ fontSize: 9.5, fontWeight: 800, color: accent, textTransform: "uppercase", marginBottom: 4 }}>{p.category}</div>
-            <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 12.5, color: CL.ink, lineHeight: 1.3, marginBottom: 6 }}>{p.title}</div>
-            <div style={{ fontSize: 10, color: CL.muted }}>{p.read} · {p.tag}</div>
-          </motion.div>
+          <Link to={`/blog/${p.slug}`} key={p.slug} style={{ textDecoration: "none" }}>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
+              whileHover={{ scale: 1.02, x: -4 }}
+              transition={{ duration: 0.4, delay: 0.15 + i * 0.12 }}
+              style={{ 
+                display: "flex", alignItems: "center", gap: 16, 
+                background: CL.card, borderRadius: 18, border: `1px solid ${CL.line}`, 
+                boxShadow: CL.shadow, padding: "16px 20px",
+                marginLeft: i * 24, // visual staggering step effect
+                marginRight: (2 - i) * 24 // keeps overall width consistent
+              }}>
+              <span style={{ width: 44, height: 44, borderRadius: 12, background: `${accent}14`, border: `1px solid ${accent}28`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <Ic size={20} color={accent} />
+              </span>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: accent, textTransform: "uppercase", letterSpacing: 0.5 }}>{p.category}</span>
+                  <span style={{ fontSize: 10, color: CL.muted }}>· {p.read}</span>
+                </div>
+                <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 13.5, color: CL.ink, lineHeight: 1.35, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{p.title}</div>
+              </div>
+              <span style={{ width: 32, height: 32, borderRadius: "50%", background: CL.cream2, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <ArrowRight size={14} color={CL.ink2} />
+              </span>
+            </motion.div>
+          </Link>
         );
       })}
     </div>
