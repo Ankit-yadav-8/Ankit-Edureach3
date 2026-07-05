@@ -2,61 +2,57 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  User, Mail, Phone, MapPin, GraduationCap, Hash, Calendar, LogOut,
-  ArrowRight, Loader2, Check, Compass, Pencil, X, ShieldCheck,
-  Share2, Bell, Award, Building2, BarChart3, GitCompare, TrendingUp,
-  Zap, ChevronDown,
+  User, Mail, Phone, MapPin, GraduationCap, Calendar, LogOut,
+  ArrowUpRight, Loader2, Check, Compass, Pencil, X, ShieldCheck,
+  Bot, Sparkles, Send, Award, Hash, Stethoscope, CreditCard,
+  Gauge, Crosshair, GitCompare, Users,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments, apiUpdateProfile } from "../auth/api.js";
 
-/* ── Premium navy / slate palette (matches dashboard mock) ─────────── */
-const INK    = "#1d2a48";   // serif headings — deep navy
-const NAVY    = "#1f2f52";  // dark tiles / primary buttons
-const STEEL   = "#42648f";  // accent steel blue
-const SLATE   = "#61708c";  // body muted text
-const LABEL    = "#97a1b4"; // tiny uppercase labels
-const TILE     = "#edf0f6"; // light blue-gray tiles
-const LINE     = "#e7e9f1"; // hairline borders
-const PAGE     = "var(--page-bg)"; // page canvas — site-wide flat token
-const GREEN_BG = "#e6f5ec", GREEN_TX = "#1f9060";
-const BLUE_BG  = "#e9eef8", BLUE_TX  = "#3a568c";
+/* ── Warm coral palette (matches dashboard mock) ──────────────────── */
+const CORAL    = "#FF693D";
+const CORAL_DK = "#E0421F";
+const CORAL_SOFT = "#FFF1E9";
+const INK      = "#1a1a2e";   // near-black headings
+const BODY     = "#4b5563";   // body text
+const MUTED    = "#8b93a5";   // muted text
+const LABEL    = "#9aa3b2";   // tiny uppercase labels
+const LINE     = "rgba(26,26,46,.09)";
+const GREEN    = "#15a06e";
+const GREEN_BG = "#e7f6ee";
 
-/* keep old constant names alive for the modals below */
-const ORANGE = STEEL, GOLD = NAVY;
+const DISPLAY = '"Space Grotesk", "Sora", sans-serif';
 
 const tint = (hex, a) => {
   const n = parseInt(hex.slice(1), 16);
   return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
 };
 
-const CARD_SHADOW = "0 6px 22px rgba(29,42,72,.06)";
-const CARD_LINE = LINE;
+const CARD = {
+  background: "#fff", border: `1px solid ${LINE}`, borderRadius: 22,
+  boxShadow: "0 8px 30px -18px rgba(26,26,46,.18)",
+};
 
 const isMentorshipPlan = (key) => String(key || "").startsWith("mentor-");
-
 const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
-
-const serifHead = {
-  fontFamily: '"Playfair Display", Georgia, serif', fontWeight: 800,
-  color: INK, margin: 0, letterSpacing: "-0.2px",
-};
+const fmtRank = (r) => (r != null && r !== "" ? Number(r).toLocaleString("en-IN") : "—");
 
 /* ── A labelled input used inside the Edit-info modal ─────────────── */
 function LabeledInput({ label, value, onChange, type = "text", placeholder, inputMode, disabled }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
-      <span style={{ fontSize: 12, fontWeight: 700, color: SLATE }}>{label}</span>
+      <span style={{ fontSize: 12, fontWeight: 700, color: "#6b7280" }}>{label}</span>
       <input type={type} value={value} onChange={onChange} placeholder={placeholder} inputMode={inputMode} disabled={disabled}
-        style={{ width: "100%", padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box", background: disabled ? "#f9fafb" : "#fff" }}
-        onFocus={(e) => { e.target.style.borderColor = STEEL; }}
+        style={{ width: "100%", padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 14, color: INK, outline: "none", boxSizing: "border-box", background: disabled ? "#f9fafb" : "#fff" }}
+        onFocus={(e) => { e.target.style.borderColor = CORAL; }}
         onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
     </label>
   );
 }
 
-/* ── Edit profile modal — name / email / phone (+ more) ───────────── */
+/* ── Edit profile modal — name / email / phone / ranks ────────────── */
 function EditInfoModal({ user, token, onClose, onSaved }) {
   const [f, setF] = useState({
     name: user?.name || "",
@@ -66,6 +62,7 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
     homeState: user?.homeState || "",
     jeeMainsRank: user?.jeeMainsRank ?? "",
     jeeAdvancedRank: user?.jeeAdvancedRank ?? "",
+    neetRank: user?.neetRank ?? "",
   });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
@@ -86,6 +83,7 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
         homeState: f.homeState.trim(),
         jeeMainsRank: f.jeeMainsRank === "" ? null : Number(f.jeeMainsRank),
         jeeAdvancedRank: f.jeeAdvancedRank === "" ? null : Number(f.jeeAdvancedRank),
+        neetRank: f.neetRank === "" ? null : Number(f.neetRank),
       });
       onSaved(updated);
       onClose();
@@ -97,25 +95,25 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .18 }}
       onMouseDown={(e) => { if (e.target === e.currentTarget && !busy) onClose(); }}
-      style={{ position: "fixed", inset: 0, zIndex: 4000, background: "rgba(29,42,72,.55)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", display: "grid", placeItems: "center", padding: 16, overflowY: "auto" }}>
+      style={{ position: "fixed", inset: 0, zIndex: 4000, background: "rgba(26,26,46,.5)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", display: "grid", placeItems: "center", padding: 16, overflowY: "auto" }}>
       <motion.div initial={{ opacity: 0, scale: .94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: .95, y: 12 }}
         transition={{ type: "spring", stiffness: 360, damping: 28 }} onMouseDown={(e) => e.stopPropagation()}
-        style={{ width: "min(560px,100%)", background: "#fff", borderRadius: 22, boxShadow: "0 30px 80px rgba(29,42,72,.4)", overflow: "hidden", margin: "auto" }}>
+        style={{ width: "min(560px,100%)", background: "#fff", borderRadius: 22, boxShadow: "0 30px 80px rgba(26,26,46,.4)", overflow: "hidden", margin: "auto" }}>
 
         {/* header */}
-        <div style={{ background: `linear-gradient(135deg, ${NAVY}, #14264f)`, color: "#fff", padding: "22px 24px", position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", top: -30, right: -10, width: 160, height: 160, borderRadius: "50%", background: `radial-gradient(circle, ${tint(STEEL, .5)}, transparent 70%)` }} />
+        <div style={{ background: `linear-gradient(135deg, ${CORAL}, ${CORAL_DK})`, color: "#fff", padding: "22px 24px", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: -30, right: -10, width: 160, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,255,255,.25), transparent 70%)" }} />
           <button onClick={onClose} disabled={busy} aria-label="Close"
-            style={{ position: "absolute", top: 14, right: 14, width: 34, height: 34, borderRadius: "50%", border: "none", background: "rgba(255,255,255,.16)", color: "#fff", cursor: busy ? "not-allowed" : "pointer", display: "grid", placeItems: "center" }}>
+            style={{ position: "absolute", top: 14, right: 14, width: 34, height: 34, borderRadius: "50%", border: "none", background: "rgba(255,255,255,.2)", color: "#fff", cursor: busy ? "not-allowed" : "pointer", display: "grid", placeItems: "center" }}>
             <X size={17} />
           </button>
           <div style={{ display: "flex", alignItems: "center", gap: 11, position: "relative" }}>
-            <div style={{ width: 44, height: 44, borderRadius: 13, background: "rgba(255,255,255,.14)", display: "grid", placeItems: "center" }}>
+            <div style={{ width: 44, height: 44, borderRadius: 13, background: "rgba(255,255,255,.18)", display: "grid", placeItems: "center" }}>
               <Pencil size={20} color="#fff" />
             </div>
             <div>
-              <h3 style={{ fontFamily: '"Playfair Display", Georgia, serif', fontWeight: 800, fontSize: "1.25rem", margin: 0 }}>Edit your information</h3>
-              <div style={{ fontSize: 12.5, opacity: .8, marginTop: 2 }}>Used to auto-fill your details at checkout.</div>
+              <h3 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "1.25rem", margin: 0 }}>Edit your information</h3>
+              <div style={{ fontSize: 12.5, opacity: .85, marginTop: 2 }}>Used across your dashboard and at checkout.</div>
             </div>
           </div>
         </div>
@@ -136,37 +134,23 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
               <LabeledInput label="Coaching" value={f.coaching} onChange={set("coaching")} placeholder="Your coaching" />
               <LabeledInput label="Home state" value={f.homeState} onChange={set("homeState")} placeholder="Home state" />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <LabeledInput label="JEE Main rank" inputMode="numeric" value={f.jeeMainsRank} onChange={set("jeeMainsRank")} placeholder="Optional" />
-              <LabeledInput label="JEE Advanced rank" inputMode="numeric" value={f.jeeAdvancedRank} onChange={set("jeeAdvancedRank")} placeholder="Optional" />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+              <LabeledInput label="JEE Main rank" inputMode="numeric" value={f.jeeMainsRank} onChange={set("jeeMainsRank")} placeholder="—" />
+              <LabeledInput label="JEE Advanced rank" inputMode="numeric" value={f.jeeAdvancedRank} onChange={set("jeeAdvancedRank")} placeholder="—" />
+              <LabeledInput label="NEET rank" inputMode="numeric" value={f.neetRank} onChange={set("neetRank")} placeholder="—" />
             </div>
           </div>
 
           <div style={{ display: "flex", gap: 10, marginTop: 22 }}>
-            <button onClick={onClose} disabled={busy} style={{ flex: 1, padding: "13px 0", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, fontWeight: 700, fontFamily: "Sora", cursor: busy ? "not-allowed" : "pointer" }}>Cancel</button>
+            <button onClick={onClose} disabled={busy} style={{ flex: 1, padding: "13px 0", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "#fff", color: INK, fontWeight: 700, fontFamily: DISPLAY, cursor: busy ? "not-allowed" : "pointer" }}>Cancel</button>
             <button onClick={save} disabled={busy}
-              style={{ flex: 1.4, padding: "13px 0", borderRadius: 12, border: "none", background: busy ? "#7e91b3" : `linear-gradient(135deg, ${STEEL}, ${NAVY})`, color: "#fff", fontWeight: 800, fontFamily: "Sora", cursor: busy ? "wait" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: `0 10px 24px -10px ${STEEL}` }}>
+              style={{ flex: 1.4, padding: "13px 0", borderRadius: 12, border: "none", background: busy ? "#f9a25e" : `linear-gradient(135deg, ${CORAL}, ${CORAL_DK})`, color: "#fff", fontWeight: 800, fontFamily: DISPLAY, cursor: busy ? "wait" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: `0 10px 24px -10px ${CORAL}` }}>
               {busy ? <><Loader2 size={17} className="dash-spin" /> Saving…</> : <><Check size={17} strokeWidth={3} /> Save changes</>}
             </button>
           </div>
         </div>
       </motion.div>
     </motion.div>
-  );
-}
-
-/* ── A reusable card panel — white, hairline border, serif title ──── */
-function Card({ title, action, children, style, bodyStyle }) {
-  return (
-    <section style={{ background: "#fff", border: `1px solid ${LINE}`, borderRadius: 16, boxShadow: CARD_SHADOW, padding: "18px 20px", ...style }}>
-      {title && (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 16 }}>
-          <h2 style={{ ...serifHead, fontSize: "1.12rem" }}>{title}</h2>
-          {action}
-        </div>
-      )}
-      <div style={bodyStyle}>{children}</div>
-    </section>
   );
 }
 
@@ -185,34 +169,18 @@ function Reveal({ children, delay = 0, style }) {
   );
 }
 
-/* ── A single profile-highlight cell ── */
-function Highlight({ icon: Ic, label, value }) {
+/* ── One field inside "Your details" ── */
+function Detail({ icon: Ic, label, value, color, bg, span }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 11, minWidth: 0, flex: "1 1 180px", padding: "2px 6px" }}>
-      <span style={{ width: 38, height: 38, borderRadius: 10, background: TILE, display: "grid", placeItems: "center", flexShrink: 0 }}>
-        <Ic size={17} color={STEEL} />
+    <div style={{ display: "flex", alignItems: "center", gap: 11, minWidth: 0, gridColumn: span ? "1 / -1" : "auto" }}>
+      <span style={{ width: 34, height: 34, borderRadius: 10, background: bg, display: "grid", placeItems: "center", flexShrink: 0 }}>
+        <Ic size={16} color={color} />
       </span>
       <div style={{ minWidth: 0 }}>
         <div style={{ fontSize: 10.5, color: LABEL, fontWeight: 700, letterSpacing: ".6px", textTransform: "uppercase" }}>{label}</div>
-        <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 14, color: INK, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginTop: 2 }}>{value}</div>
+        <div style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 14, color: INK, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginTop: 1 }}>{value}</div>
       </div>
     </div>
-  );
-}
-
-/* ── Faux select used in Comparison Intelligence (visual) ── */
-function FauxSelect({ label, value, options }) {
-  return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0, flex: 1 }}>
-      <span style={{ fontSize: 11.5, fontWeight: 700, color: SLATE }}>{label}</span>
-      <div style={{ position: "relative" }}>
-        <select defaultValue={value}
-          style={{ width: "100%", appearance: "none", WebkitAppearance: "none", padding: "11px 34px 11px 13px", borderRadius: 11, border: `1.5px solid ${LINE}`, fontSize: 13.5, fontFamily: "Sora", fontWeight: 700, color: INK, background: "#fbfcfe", outline: "none", cursor: "pointer" }}>
-          {options.map((o) => <option key={o}>{o}</option>)}
-        </select>
-        <ChevronDown size={16} color={SLATE} style={{ position: "absolute", right: 11, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
-      </div>
-    </label>
   );
 }
 
@@ -223,7 +191,6 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [cmpTab, setCmpTab] = useState("branch");
 
   useEffect(() => {
     const prev = document.title;
@@ -241,17 +208,16 @@ export default function Dashboard() {
     return () => { alive = false; };
   }, [token]);
 
-  // Guest fallback (AuthGate normally opens the login modal before this shows).
   if (!isLoggedIn) {
     return (
-      <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "120px 16px 60px", background: PAGE }}>
+      <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "120px 16px 60px", background: "var(--page-bg)" }}>
         <div style={{ textAlign: "center", maxWidth: 380 }}>
-          <div style={{ width: 64, height: 64, borderRadius: 20, background: TILE, display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
-            <ShieldCheck size={30} color={STEEL} />
+          <div style={{ width: 64, height: 64, borderRadius: 20, background: CORAL_SOFT, display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
+            <ShieldCheck size={30} color={CORAL} />
           </div>
-          <h2 style={{ ...serifHead, fontSize: "1.6rem", margin: "0 0 8px" }}>Please log in</h2>
-          <p style={{ color: SLATE, marginBottom: 18 }}>Log in to view your dashboard, profile and enrolled programs.</p>
-          <button onClick={openLogin} style={{ background: NAVY, color: "#fff", border: "none", padding: "12px 22px", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontFamily: "Sora" }}>
+          <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, color: INK, fontSize: "1.6rem", margin: "0 0 8px" }}>Please log in</h2>
+          <p style={{ color: BODY, marginBottom: 18 }}>Log in to view your dashboard, profile and enrolled programs.</p>
+          <button onClick={openLogin} style={{ background: CORAL, color: "#fff", border: "none", padding: "12px 22px", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontFamily: DISPLAY }}>
             Log in
           </button>
         </div>
@@ -260,235 +226,219 @@ export default function Dashboard() {
   }
 
   const firstName = (user?.name || "").trim().split(" ")[0] || "Student";
-  const avatarChar = (user?.name || user?.email || "U").charAt(0).toUpperCase();
+  const mentorPlan = plans.find((p) => isMentorshipPlan(p.plan));
+  const planYear = plans.map((p) => String(p.planLabel || p.plan || "").match(/20\d{2}/)?.[0]).find(Boolean);
+  const aspirantTag = `${planYear ? `JEE ${planYear}` : "JEE / NEET"} · Aspirant`;
 
-  // profile completeness → shown in the header subtitle
-  const fields = ["name", "email", "phone", "coaching", "homeState", "jeeMainsRank", "jeeAdvancedRank"];
-  const filled = fields.filter((k) => user?.[k] !== undefined && user?.[k] !== null && user?.[k] !== "").length;
-  const pct = Math.round((filled / fields.length) * 100);
+  const rankPhrase = user?.jeeMainsRank
+    ? `your JEE Main rank of ${fmtRank(user.jeeMainsRank)}`
+    : "your profile";
+  const statePhrase = user?.homeState ? ` and ${user.homeState} home state` : "";
+  const suggestion = `${firstName}, based on ${rankPhrase}${statePhrase}, here are 5 colleges worth targeting…`;
 
-  const rankVal = user?.jeeMainsRank != null && user?.jeeMainsRank !== ""
-    ? `AIR ${Number(user.jeeMainsRank).toLocaleString("en-IN")}` : "—";
+  const chips = [
+    user?.jeeMainsRank ? `Colleges for rank ${fmtRank(user.jeeMainsRank)}?` : "Colleges for my rank?",
+    "JEE Advanced strategy",
+    "Compare NITs vs IIITs",
+    user?.homeState ? `${user.homeState} state quota` : "Home-state quota",
+  ];
 
-  const highlights = [
-    { icon: User,       label: "Full Name",      value: user?.name || "Student" },
-    { icon: Award,      label: "JEE Rank (Main)", value: rankVal },
-    { icon: MapPin,     label: "Home State",     value: user?.homeState || "—" },
-    { icon: Building2,  label: "Coaching",       value: user?.coaching || "—" },
+  const details = [
+    { icon: User,          label: "Name",              value: user?.name || "Student",       color: CORAL,     bg: CORAL_SOFT },
+    { icon: GraduationCap, label: "Coaching",          value: user?.coaching || "—",         color: "#7C3AED", bg: "#EDE7FE" },
+    { icon: Mail,          label: "Email",             value: user?.email || "—",            color: "#2563EB", bg: "#DCEBFE", span: true },
+    { icon: Phone,         label: "Phone",             value: user?.phone || "—",            color: "#0EA371", bg: "#D6F3E5" },
+    { icon: MapPin,        label: "State",             value: user?.homeState || "—",        color: "#DB2777", bg: "#FCE1EA" },
+    { icon: Calendar,      label: "Member Since",      value: fmtDate(user?.createdAt),      color: "#E08600", bg: "#FEEBCF" },
+    { icon: Hash,          label: "JEE Main Rank",     value: fmtRank(user?.jeeMainsRank),   color: CORAL,     bg: CORAL_SOFT },
+    { icon: Award,         label: "JEE Advanced Rank", value: fmtRank(user?.jeeAdvancedRank),color: "#7C3AED", bg: "#EDE7FE" },
+    { icon: Stethoscope,   label: "NEET Rank",         value: fmtRank(user?.neetRank),       color: "#0EA371", bg: "#D6F3E5" },
   ];
 
   const QUICK = [
-    { label: "Rank Predictor",    icon: BarChart3,     to: "/jee-main#rank",       badge: "RECOMMENDED" },
-    { label: "College Predictor", icon: GraduationCap, to: "/jee-advanced#college" },
-    { label: "Compare Colleges",  icon: GitCompare,    to: "/compare" },
-    { label: "Explore Programs",  icon: Compass,       to: "/colleges",            dark: true },
+    { label: "Rank Predictor",      icon: Gauge,     to: "/jee-main#rank",        color: CORAL,     bg: CORAL_SOFT },
+    { label: "College Predictor",   icon: Crosshair, to: "/jee-advanced#college", color: "#7C3AED", bg: "#EDE7FE" },
+    { label: "Compare Colleges",    icon: GitCompare,to: "/compare",              color: "#0EA371", bg: "#D6F3E5" },
+    { label: "Counselling Planner", icon: Calendar,  to: "/planner",              color: "#E08600", bg: "#FEEBCF" },
+    { label: "Explore Colleges",    icon: Compass,   to: "/colleges",             color: "#DB2777", bg: "#FCE1EA" },
+    { label: "Community",           icon: Users,     to: "/community",            color: "#2563EB", bg: "#DCEBFE" },
   ];
 
-  // illustrative demand-trend chart (2024-2029)
-  const bars = [
-    { yr: "2024", h: 42, kind: "growth" },
-    { yr: "2025", h: 55, kind: "growth" },
-    { yr: "2026", h: 63, kind: "growth" },
-    { yr: "2027", h: 72, kind: "proj" },
-    { yr: "2028", h: 86, kind: "proj" },
-    { yr: "2029", h: 98, kind: "proj" },
-  ];
-
-  const activeMentor = plans.filter((p) => isMentorshipPlan(p.plan)).length;
-  const subtitle = `Your academic profile is ${pct}% complete.` +
-    (activeMentor ? ` You have ${activeMentor} active mentorship ${activeMentor === 1 ? "program" : "programs"}.` : " Complete your profile to unlock tailored guidance.");
+  const goMentorship = () => navigate(mentorPlan ? `/mentorship-dashboard?plan=${encodeURIComponent(mentorPlan.plan)}` : "/mentorship");
 
   return (
-    <section id="top" style={{ background: PAGE, padding: "104px 0 60px", minHeight: "100vh" }}>
-      <div className="dash-wrap" style={{ maxWidth: 1040, margin: "0 auto", padding: "0 18px", display: "flex", flexDirection: "column", gap: 18 }}>
+    <section id="top" style={{ background: "var(--page-bg)", padding: "104px 0 40px", minHeight: "100vh" }}>
+      <div className="container" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
 
-        {/* ── Welcome header ─────────────────────────────────────── */}
+        {/* ── Header ─────────────────────────────────────────────── */}
         <Reveal>
-          <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-            <div style={{ flex: 1, minWidth: 220 }}>
-              <h1 style={{ ...serifHead, fontSize: "clamp(1.7rem, 4vw, 2.15rem)" }}>Welcome back, {firstName}</h1>
-              <p style={{ fontSize: 13.5, color: SLATE, margin: "6px 0 0", lineHeight: 1.55 }}>{subtitle}</p>
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+            <div>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 800, letterSpacing: ".4px", color: CORAL_DK, background: CORAL_SOFT, padding: "5px 12px", borderRadius: 50, marginBottom: 12 }}>
+                <Sparkles size={13} /> {aspirantTag}
+              </span>
+              <h1 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(1.9rem, 4.6vw, 2.6rem)", color: INK, letterSpacing: "-1px", margin: 0, lineHeight: 1.05 }}>
+                Welcome back, {firstName}.
+              </h1>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <button onClick={() => navigate("/community")} aria-label="Community" title="Community"
-                style={{ width: 42, height: 42, borderRadius: 12, border: `1px solid ${LINE}`, background: "#fff", color: NAVY, display: "grid", placeItems: "center", cursor: "pointer" }}>
-                <Share2 size={17} />
-              </button>
-              <button onClick={() => navigate("/mentorship")} aria-label="Updates" title="Mentorship updates"
-                style={{ position: "relative", width: 42, height: 42, borderRadius: 12, border: `1px solid ${LINE}`, background: "#fff", color: NAVY, display: "grid", placeItems: "center", cursor: "pointer" }}>
-                <Bell size={17} />
-                {activeMentor > 0 && <span style={{ position: "absolute", top: 9, right: 10, width: 8, height: 8, borderRadius: "50%", background: "#e5484d", border: "2px solid #fff" }} />}
-              </button>
-              <div style={{ width: 46, height: 46, borderRadius: "50%", background: `linear-gradient(135deg, ${NAVY}, ${STEEL})`, color: "#fff", display: "grid", placeItems: "center", fontSize: 19, fontWeight: 800, fontFamily: "Sora", flexShrink: 0, boxShadow: `0 10px 22px -10px ${NAVY}` }}>
-                {avatarChar}
-              </div>
-            </div>
+            <button onClick={goMentorship}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 20px", borderRadius: 50, border: "none", background: `linear-gradient(135deg, ${CORAL}, ${CORAL_DK})`, color: "#fff", fontFamily: DISPLAY, fontWeight: 800, fontSize: 14, cursor: "pointer", boxShadow: `0 12px 26px -12px ${CORAL}` }}>
+              Continue mentorship <ArrowUpRight size={16} />
+            </button>
           </div>
         </Reveal>
 
-        {/* ── Your Profile Highlights ────────────────────────────── */}
-        <Reveal delay={0.05}>
-          <Card title="Your Profile Highlights"
-            action={<button onClick={() => setEditOpen(true)} style={{ background: "transparent", border: "none", color: STEEL, fontFamily: "Sora", fontWeight: 700, fontSize: 12.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 5 }}>Edit Profile <ArrowRight size={13} /></button>}
-            bodyStyle={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 6 }}>
-            {highlights.map((h, i) => (
-              <div key={h.label} style={{ display: "flex", alignItems: "center", flex: "1 1 200px", minWidth: 0 }}>
-                <Highlight {...h} />
-                {i < highlights.length - 1 && <span className="hl-divider" style={{ width: 1, alignSelf: "stretch", background: LINE, margin: "4px 0" }} />}
-              </div>
-            ))}
-          </Card>
-        </Reveal>
-
-        {/* ── Row 1: Comparison Intelligence + Quick Actions ─────── */}
+        {/* ── Row 1: Parichay AI + Your details ──────────────────── */}
         <div className="dash-2col">
-          {/* Comparison Intelligence */}
-          <Reveal delay={0.1} style={{ display: "flex" }}>
-            <Card style={{ flex: 1 }} bodyStyle={{}}
-              title="Comparison Intelligence"
-              action={
-                <div style={{ display: "flex", gap: 6, background: "#f2f4f8", padding: 3, borderRadius: 10 }}>
-                  {[["branch", "Branch vs. College"], ["placement", "Placement Trends"]].map(([k, lbl]) => (
-                    <button key={k} onClick={() => setCmpTab(k)}
-                      style={{ border: "none", cursor: "pointer", padding: "6px 11px", borderRadius: 8, fontFamily: "Sora", fontWeight: 700, fontSize: 11.5, color: cmpTab === k ? "#fff" : SLATE, background: cmpTab === k ? NAVY : "transparent", transition: "background .15s" }}>
-                      {lbl}
+          {/* Parichay AI */}
+          <Reveal delay={0.05} style={{ display: "flex" }}>
+            <div style={{ ...CARD, flex: 1, padding: "20px 22px", position: "relative", overflow: "hidden" }}>
+              <div aria-hidden style={{ position: "absolute", top: -40, right: -30, width: 220, height: 220, borderRadius: "50%", background: `radial-gradient(circle, ${tint(CORAL, .1)}, transparent 70%)`, pointerEvents: "none" }} />
+              <div style={{ position: "relative" }}>
+                {/* header */}
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  <div style={{ position: "relative", flexShrink: 0 }}>
+                    <div style={{ width: 46, height: 46, borderRadius: 14, background: INK, display: "grid", placeItems: "center" }}>
+                      <Bot size={24} color="#fff" />
+                    </div>
+                    <span style={{ position: "absolute", bottom: -2, right: -2, width: 14, height: 14, borderRadius: "50%", background: CORAL, border: "2.5px solid #fff" }} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 160 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 17, color: INK }}>Parichay AI</span>
+                      <span style={{ fontSize: 9.5, fontWeight: 800, letterSpacing: ".5px", color: CORAL_DK, background: CORAL_SOFT, padding: "3px 7px", borderRadius: 50 }}>BETA</span>
+                    </div>
+                    <div style={{ fontSize: 12.5, color: MUTED, marginTop: 1 }}>Your personal counselling assistant</div>
+                  </div>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: MUTED, fontWeight: 600 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: GREEN }} /> Online
+                  </span>
+                </div>
+
+                {/* suggestion */}
+                <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: ".08em", color: LABEL, margin: "18px 0 8px" }}>SUGGESTED FOR YOU</div>
+                <div style={{ background: CORAL_SOFT, border: `1px solid ${tint(CORAL, .16)}`, borderRadius: 14, padding: "14px 16px", fontSize: 14.5, color: INK, fontWeight: 600, lineHeight: 1.55 }}>
+                  “{suggestion}”
+                </div>
+
+                {/* chips */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14 }}>
+                  {chips.map((c) => (
+                    <button key={c} onClick={() => navigate("/ai")}
+                      style={{ padding: "8px 14px", borderRadius: 50, border: `1px solid ${LINE}`, background: "#fff", color: BODY, fontSize: 12.5, fontWeight: 600, cursor: "pointer", transition: "border-color .15s, color .15s" }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = tint(CORAL, .5); e.currentTarget.style.color = CORAL_DK; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = LINE; e.currentTarget.style.color = BODY; }}>
+                      {c}
                     </button>
                   ))}
                 </div>
-              }>
-              <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-                <FauxSelect label="Primary Selection" value="IIT Bombay — Computer Science"
-                  options={["IIT Bombay — Computer Science", "IIT Delhi — Computer Science", "IIT Madras — Electrical"]} />
-                <FauxSelect label="Comparison Baseline" value="IIT Madras — Data Science"
-                  options={["IIT Madras — Data Science", "IIT Kanpur — Mechanical", "IIT Roorkee — Civil"]} />
-              </div>
 
-              <div style={{ marginTop: 20, background: "#f8f9fc", border: `1px solid ${LINE}`, borderRadius: 13, padding: "16px 16px 18px" }}>
-                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10 }}>
-                  <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12.5, color: SLATE }}>Predictive Match Score</span>
-                  <span style={{ fontFamily: '"Playfair Display", Georgia, serif', fontWeight: 900, fontSize: "1.5rem", color: INK }}>94%</span>
-                </div>
-                <div style={{ height: 12, borderRadius: 8, background: "#e6e9f1", overflow: "hidden" }}>
-                  <motion.div initial={{ width: 0 }} whileInView={{ width: "94%" }} viewport={{ once: true }} transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
-                    style={{ height: "100%", borderRadius: 8, background: `linear-gradient(90deg, ${NAVY}, ${STEEL})` }} />
-                </div>
+                {/* input */}
+                <button onClick={() => navigate("/ai")}
+                  style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", marginTop: 16, padding: "10px 10px 10px 16px", borderRadius: 50, border: `1px solid ${LINE}`, background: "#fff", cursor: "pointer", textAlign: "left" }}>
+                  <Sparkles size={16} color={CORAL} style={{ flexShrink: 0 }} />
+                  <span style={{ flex: 1, fontSize: 13.5, color: MUTED, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Ask Parichay AI anything about colleges, ranks, counselling…</span>
+                  <span style={{ width: 38, height: 38, borderRadius: "50%", background: `linear-gradient(135deg, ${CORAL}, ${CORAL_DK})`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <Send size={16} color="#fff" />
+                  </span>
+                </button>
               </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 16 }}>
-                {[["JEE Grade", "8.4"], ["Faculty Ratio", "1:12"], ["Alumni Score", "A-"]].map(([l, v]) => (
-                  <div key={l} style={{ textAlign: "center", padding: "12px 6px", background: "#fbfcfe", border: `1px solid ${LINE}`, borderRadius: 11 }}>
-                    <div style={{ fontFamily: '"Playfair Display", Georgia, serif', fontWeight: 800, fontSize: "1.25rem", color: INK }}>{v}</div>
-                    <div style={{ fontSize: 10.5, color: LABEL, fontWeight: 700, letterSpacing: ".5px", textTransform: "uppercase", marginTop: 3 }}>{l}</div>
-                  </div>
-                ))}
-              </div>
-            </Card>
+            </div>
           </Reveal>
 
-          {/* Quick Actions */}
-          <Reveal delay={0.15} style={{ display: "flex" }}>
-            <Card style={{ flex: 1 }} title="Quick Actions"
-              bodyStyle={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              {QUICK.map(({ label, icon: Ic, to, badge, dark }) => (
-                <button key={label} onClick={() => navigate(to)}
-                  style={{ position: "relative", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 18, minHeight: 118, padding: "14px 14px 13px", borderRadius: 14, border: dark ? "none" : `1px solid ${LINE}`, background: dark ? `linear-gradient(150deg, ${NAVY}, #16233f)` : TILE, cursor: "pointer", textAlign: "left", transition: "transform .15s, box-shadow .15s" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 12px 26px -14px rgba(29,42,72,.4)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
-                  {badge && <span style={{ position: "absolute", top: 11, right: 11, fontSize: 8.5, fontWeight: 800, letterSpacing: ".6px", color: STEEL, background: "#fff", padding: "3px 7px", borderRadius: 50, border: `1px solid ${LINE}` }}>{badge}</span>}
-                  <span style={{ width: 40, height: 40, borderRadius: 11, background: dark ? "rgba(255,255,255,.14)" : "#fff", display: "grid", placeItems: "center", border: dark ? "none" : `1px solid ${LINE}` }}>
-                    <Ic size={19} color={dark ? "#fff" : NAVY} />
-                  </span>
-                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: dark ? "#fff" : INK, lineHeight: 1.25 }}>{label}</span>
+          {/* Your details */}
+          <Reveal delay={0.1} style={{ display: "flex" }}>
+            <div style={{ ...CARD, flex: 1, padding: "20px 22px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ width: 34, height: 34, borderRadius: 10, background: CORAL_SOFT, display: "grid", placeItems: "center" }}><User size={17} color={CORAL} /></span>
+                  <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 17, color: INK }}>Your details</span>
+                </div>
+                <button onClick={() => setEditOpen(true)} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "transparent", border: "none", color: CORAL, fontFamily: DISPLAY, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                  <Pencil size={13} /> Edit
                 </button>
-              ))}
-            </Card>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 18px" }}>
+                {details.map((d) => <Detail key={d.label} {...d} />)}
+              </div>
+            </div>
           </Reveal>
         </div>
 
-        {/* ── Row 2: Enrolled Programs + Future Trends ───────────── */}
+        {/* ── Row 2: My plans + Quick links ──────────────────────── */}
         <div className="dash-2col">
-          {/* Enrolled Programs */}
-          <Reveal delay={0.1} style={{ display: "flex" }}>
-            <Card style={{ flex: 1 }} title="Your Enrolled Programs">
+          {/* My plans */}
+          <Reveal delay={0.05} style={{ display: "flex" }}>
+            <div style={{ ...CARD, flex: 1, padding: "20px 22px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ width: 34, height: 34, borderRadius: 10, background: CORAL_SOFT, display: "grid", placeItems: "center" }}><CreditCard size={17} color={CORAL} /></span>
+                  <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 17, color: INK }}>My plans</span>
+                </div>
+                {!loading && plans.length > 0 && <span style={{ fontSize: 12.5, color: MUTED, fontWeight: 600 }}>{plans.length} active</span>}
+              </div>
+
               {loading ? (
-                <div style={{ display: "flex", alignItems: "center", gap: 8, color: SLATE, padding: "22px 0", justifyContent: "center", fontSize: 13.5 }}>
-                  <Loader2 size={16} className="dash-spin" /> Loading your programs…
+                <div style={{ display: "flex", alignItems: "center", gap: 8, color: MUTED, padding: "22px 0", justifyContent: "center", fontSize: 13.5 }}>
+                  <Loader2 size={16} className="dash-spin" /> Loading your plans…
                 </div>
               ) : plans.length > 0 ? (
-                <>
-                  {plans.map((p, i) => {
-                    const mentor = isMentorshipPlan(p.plan);
-                    return (
-                      <div key={p._id} style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", padding: "13px 0", borderTop: i ? `1px solid ${LINE}` : "none" }}>
-                        <span style={{ width: 42, height: 42, borderRadius: 12, background: mentor ? `linear-gradient(150deg, ${NAVY}, ${STEEL})` : TILE, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                          {mentor ? <GraduationCap size={20} color="#fff" /> : <Compass size={20} color={NAVY} />}
-                        </span>
-                        <div style={{ flex: 1, minWidth: 150 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                            <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: INK }}>{p.planLabel || p.plan}</span>
-                            <span style={{ fontSize: 9.5, fontWeight: 800, letterSpacing: ".5px", padding: "3px 8px", borderRadius: 50, background: mentor ? GREEN_BG : BLUE_BG, color: mentor ? GREEN_TX : BLUE_TX }}>
-                              {mentor ? "ACTIVE" : "ENROLLED"}
-                            </span>
-                          </div>
-                          <div style={{ fontSize: 11.5, color: LABEL, marginTop: 3 }}>Purchased {fmtDate(p.createdAt)}</div>
-                        </div>
-                        {mentor && (
-                          <button onClick={() => navigate(`/mentorship-dashboard?plan=${encodeURIComponent(p.plan)}`)}
-                            style={{ width: 34, height: 34, borderRadius: 10, border: `1px solid ${LINE}`, background: "#fff", color: NAVY, display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                            <ArrowRight size={15} />
-                          </button>
-                        )}
+                plans.map((p, i) => (
+                  <div key={p._id} style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", padding: "13px 0", borderTop: i ? `1px solid ${LINE}` : "none" }}>
+                    <span style={{ width: 40, height: 40, borderRadius: 11, background: CORAL_SOFT, display: "grid", placeItems: "center", flexShrink: 0 }}><GraduationCap size={19} color={CORAL} /></span>
+                    <div style={{ flex: 1, minWidth: 150 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                        <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 14, color: INK }}>{p.planLabel || p.plan}</span>
+                        <span style={{ fontSize: 9.5, fontWeight: 800, letterSpacing: ".5px", padding: "3px 8px", borderRadius: 50, background: GREEN_BG, color: GREEN }}>ACTIVE</span>
                       </div>
-                    );
-                  })}
-                  <button onClick={() => navigate("/mentorship")}
-                    style={{ width: "100%", marginTop: 14, padding: "12px 0", borderRadius: 12, border: `1.5px solid ${LINE}`, background: "#fff", color: NAVY, fontFamily: "Sora", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
-                    Browse All Programs
-                  </button>
-                </>
+                      <div style={{ fontSize: 11.5, color: LABEL, marginTop: 3 }}>{fmtDate(p.createdAt)}{p.razorpayPaymentId ? ` · ${p.razorpayPaymentId}` : ""}</div>
+                    </div>
+                    {isMentorshipPlan(p.plan) && (
+                      <button onClick={() => navigate(`/mentorship-dashboard?plan=${encodeURIComponent(p.plan)}`)}
+                        style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 10, border: "none", background: `linear-gradient(135deg, ${CORAL}, ${CORAL_DK})`, color: "#fff", fontFamily: DISPLAY, fontWeight: 700, fontSize: 12.5, cursor: "pointer", flexShrink: 0 }}>
+                        Open <ArrowUpRight size={13} />
+                      </button>
+                    )}
+                  </div>
+                ))
               ) : (
                 <div style={{ textAlign: "center", padding: "20px 12px" }}>
-                  <div style={{ fontSize: 13.5, color: SLATE, marginBottom: 14 }}>You haven't enrolled in any program yet.</div>
+                  <div style={{ fontSize: 13.5, color: BODY, marginBottom: 14 }}>You haven't enrolled in any plan yet.</div>
                   <button onClick={() => navigate("/mentorship")}
-                    style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "11px 18px", borderRadius: 12, border: "none", background: `linear-gradient(135deg, ${NAVY}, ${STEEL})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13, cursor: "pointer", boxShadow: `0 10px 24px -12px ${NAVY}` }}>
-                    Explore mentorship plans <ArrowRight size={14} />
+                    style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "11px 18px", borderRadius: 12, border: "none", background: `linear-gradient(135deg, ${CORAL}, ${CORAL_DK})`, color: "#fff", fontFamily: DISPLAY, fontWeight: 800, fontSize: 13, cursor: "pointer", boxShadow: `0 10px 24px -12px ${CORAL}` }}>
+                    Explore mentorship plans <ArrowUpRight size={14} />
                   </button>
                 </div>
               )}
-            </Card>
+            </div>
           </Reveal>
 
-          {/* Future Trends */}
-          <Reveal delay={0.15} style={{ display: "flex" }}>
-            <Card style={{ flex: 1 }} title="Future Trends"
-              action={
-                <div style={{ display: "flex", gap: 12, fontSize: 11, fontWeight: 700, color: SLATE }}>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}><span style={{ width: 9, height: 9, borderRadius: 3, background: NAVY }} /> Growth</span>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}><span style={{ width: 9, height: 9, borderRadius: 3, background: "#a9b7d0" }} /> Projection</span>
-                </div>
-              }>
-              <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 8, height: 150, padding: "0 2px" }}>
-                {bars.map((b) => (
-                  <div key={b.yr} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 7, height: "100%", justifyContent: "flex-end" }}>
-                    <motion.div initial={{ height: 0 }} whileInView={{ height: `${b.h}%` }} viewport={{ once: true }} transition={{ duration: .7, ease: [0.4, 0, 0.2, 1] }}
-                      style={{ width: "100%", maxWidth: 30, borderRadius: "6px 6px 3px 3px", background: b.kind === "growth" ? `linear-gradient(180deg, ${STEEL}, ${NAVY})` : "#a9b7d0" }} />
-                    <span style={{ fontSize: 10.5, color: LABEL, fontWeight: 700 }}>{b.yr}</span>
-                  </div>
+          {/* Quick links */}
+          <Reveal delay={0.1} style={{ display: "flex" }}>
+            <div style={{ ...CARD, flex: 1, padding: "20px 22px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                <span style={{ width: 34, height: 34, borderRadius: 10, background: CORAL_SOFT, display: "grid", placeItems: "center" }}><Compass size={17} color={CORAL} /></span>
+                <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 17, color: INK }}>Quick links</span>
+              </div>
+              <div className="dash-quick">
+                {QUICK.map(({ label, icon: Ic, to, color, bg }) => (
+                  <button key={label} onClick={() => navigate(to)}
+                    style={{ display: "flex", flexDirection: "column", gap: 10, padding: "14px 14px", borderRadius: 14, border: `1px solid ${LINE}`, background: "#fff", cursor: "pointer", textAlign: "left", transition: "transform .15s, box-shadow .15s, border-color .15s" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 12px 26px -14px rgba(26,26,46,.35)"; e.currentTarget.style.borderColor = tint(color, .4); }}
+                    onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = LINE; }}>
+                    <span style={{ width: 40, height: 40, borderRadius: "50%", background: bg, display: "grid", placeItems: "center" }}><Ic size={19} color={color} /></span>
+                    <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 13.5, color: INK }}>{label}</span>
+                  </button>
                 ))}
               </div>
-
-              <div style={{ marginTop: 16, display: "flex", gap: 11, background: TILE, borderRadius: 12, padding: "13px 14px" }}>
-                <span style={{ width: 30, height: 30, borderRadius: 9, background: "#fff", display: "grid", placeItems: "center", flexShrink: 0, border: `1px solid ${LINE}` }}>
-                  <Zap size={15} color={STEEL} />
-                </span>
-                <div style={{ fontSize: 12.5, color: SLATE, lineHeight: 1.55 }}>
-                  <strong style={{ color: INK, fontFamily: "Sora", fontWeight: 800 }}>AI Insight:</strong> Based on current rank trends, Computer Science demand is expected to peak in 2028. Consider specialization in AI/ML for long-term growth.
-                </div>
-              </div>
-            </Card>
+            </div>
           </Reveal>
         </div>
 
+        {/* footer line */}
+        <div style={{ textAlign: "center", fontSize: 12.5, color: MUTED, marginTop: 8 }}>
+          College Parichay · Built for JEE aspirants who play the long game.
+        </div>
       </div>
 
       {/* Edit info modal */}
@@ -503,17 +453,17 @@ export default function Dashboard() {
         {confirmLogout && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .18 }}
             onClick={() => setConfirmLogout(false)}
-            style={{ position: "fixed", inset: 0, zIndex: 4000, background: "rgba(29,42,72,.55)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", display: "grid", placeItems: "center", padding: 20 }}>
+            style={{ position: "fixed", inset: 0, zIndex: 4000, background: "rgba(26,26,46,.5)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", display: "grid", placeItems: "center", padding: 20 }}>
             <motion.div initial={{ opacity: 0, scale: .92, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: .94, y: 12 }}
               transition={{ type: "spring", stiffness: 420, damping: 30 }} onClick={(e) => e.stopPropagation()}
-              style={{ width: "min(380px,100%)", background: "#fff", borderRadius: 20, padding: "26px 24px 22px", boxShadow: "0 30px 80px rgba(29,42,72,.4)", textAlign: "center" }}>
-              <div style={{ width: 56, height: 56, borderRadius: "50%", margin: "0 auto 14px", background: TILE, display: "grid", placeItems: "center" }}>
-                <LogOut size={26} color={STEEL} />
+              style={{ width: "min(380px,100%)", background: "#fff", borderRadius: 20, padding: "26px 24px 22px", boxShadow: "0 30px 80px rgba(26,26,46,.4)", textAlign: "center" }}>
+              <div style={{ width: 56, height: 56, borderRadius: "50%", margin: "0 auto 14px", background: CORAL_SOFT, display: "grid", placeItems: "center" }}>
+                <LogOut size={26} color={CORAL} />
               </div>
-              <h3 style={{ ...serifHead, fontSize: "1.3rem", margin: "0 0 6px" }}>Log out?</h3>
-              <p style={{ fontSize: ".95rem", color: SLATE, margin: "0 0 20px", lineHeight: 1.5 }}>Are you sure you want to log out of your account?</p>
+              <h3 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "1.3rem", color: INK, margin: "0 0 6px" }}>Log out?</h3>
+              <p style={{ fontSize: ".95rem", color: BODY, margin: "0 0 20px", lineHeight: 1.5 }}>Are you sure you want to log out of your account?</p>
               <div style={{ display: "flex", gap: 10 }}>
-                <button onClick={() => setConfirmLogout(false)} style={{ flex: 1, padding: "12px 0", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, fontWeight: 700, cursor: "pointer" }}>No</button>
+                <button onClick={() => setConfirmLogout(false)} style={{ flex: 1, padding: "12px 0", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "#fff", color: INK, fontWeight: 700, cursor: "pointer" }}>No</button>
                 <button onClick={() => { logout(); setConfirmLogout(false); navigate("/"); }} style={{ flex: 1, padding: "12px 0", borderRadius: 12, border: "none", background: "#e5484d", color: "#fff", fontWeight: 700, cursor: "pointer", boxShadow: "0 6px 18px -6px #e5484d" }}>Yes, log out</button>
               </div>
             </motion.div>
@@ -521,16 +471,18 @@ export default function Dashboard() {
         )}
       </AnimatePresence>
 
-      {/* logout trigger lives in the header menu on smaller builds; expose via keyboard-free path */}
+      {/* discreet logout */}
       <button onClick={() => setConfirmLogout(true)} aria-label="Log out"
-        style={{ position: "fixed", bottom: 22, right: 22, zIndex: 30, display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 16px", borderRadius: 50, border: `1px solid ${LINE}`, background: "#fff", color: "#e5484d", fontFamily: "Sora", fontWeight: 700, fontSize: 12.5, cursor: "pointer", boxShadow: "0 10px 28px -12px rgba(29,42,72,.5)" }}>
+        style={{ position: "fixed", bottom: 22, right: 22, zIndex: 30, display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 16px", borderRadius: 50, border: `1px solid ${LINE}`, background: "#fff", color: "#e5484d", fontFamily: DISPLAY, fontWeight: 700, fontSize: 12.5, cursor: "pointer", boxShadow: "0 10px 28px -12px rgba(26,26,46,.4)" }}>
         <LogOut size={14} /> Logout
       </button>
 
       <style>{`@keyframes dashspin{to{transform:rotate(360deg)}}
         .dash-spin{display:inline-block;animation:dashspin .8s linear infinite;vertical-align:middle;margin-right:6px}
-        .dash-2col{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:stretch}
-        @media (max-width:780px){.dash-2col{grid-template-columns:1fr}.hl-divider{display:none}}`}</style>
+        .dash-2col{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:stretch}
+        .dash-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+        @media (max-width:860px){.dash-2col{grid-template-columns:1fr}}
+        @media (max-width:520px){.dash-quick{grid-template-columns:repeat(2,1fr)}}`}</style>
     </section>
   );
 }

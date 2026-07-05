@@ -4,7 +4,7 @@ import {
   X, Mail, ArrowLeft, Lock, User, KeyRound,
   Phone, GraduationCap, CheckCircle2, AlertCircle, MapPin,
   Loader2, Eye, EyeOff, Sparkles, ChevronDown,
-  Shield, Zap, BookOpen, Award, Trophy,
+  Shield, Zap, BookOpen, Award, Trophy, Stethoscope,
 } from "lucide-react";
 import { useAuth } from "./AuthContext.jsx";
 import { apiForgot, apiReset, apiSendOtp, apiVerifyOtp } from "./api.js";
@@ -52,6 +52,7 @@ function validate(mode, f) {
     else if (!isRank(f.jeeMainsRank)) e.jeeMainsRank = "Enter a valid rank number";
     if (!f.jeeAdvancedRank)               e.jeeAdvancedRank = "JEE Advanced rank is required";
     else if (!isRank(f.jeeAdvancedRank))  e.jeeAdvancedRank = "Enter a valid rank number";
+    if (f.neetRank && !isRank(f.neetRank)) e.neetRank = "Enter a valid rank number";
     if (!f.password)             e.password = "Password is required";
     else if (f.password.length < 6) e.password = "Minimum 6 characters";
   }
@@ -424,7 +425,7 @@ export default function AuthModal() {
   // so it is always dismissible (close X + "browse as guest" skip link).
   const mandatory = false;
   const [mode,    setMode]   = useState("login");
-  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", jeeMainsRank: "", jeeAdvancedRank: "" });
+  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", jeeMainsRank: "", jeeAdvancedRank: "", neetRank: "" });
   const [fe,      setFe]     = useState({});
   const [banner,  setBanner] = useState({ type: "", text: "" });
   const [busy,    setBusy]   = useState(false);
@@ -455,7 +456,7 @@ export default function AuthModal() {
 
   const close = () => {
     setMode("login");
-    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", jeeMainsRank: "", jeeAdvancedRank: "" });
+    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", jeeMainsRank: "", jeeAdvancedRank: "", neetRank: "" });
     setBanner({ type: "", text: "" });
     setFe({});
     setBusy(false);
@@ -495,7 +496,7 @@ export default function AuthModal() {
   };
 
   const doLogin   = run(async () => { await login(f.email.trim(), f.password); close(); }, "login");
-  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, jeeMainsRank: f.jeeMainsRank ? Number(f.jeeMainsRank) : undefined, jeeAdvancedRank: f.jeeAdvancedRank ? Number(f.jeeAdvancedRank) : undefined }); close(); }, "signup");
+  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, jeeMainsRank: f.jeeMainsRank ? Number(f.jeeMainsRank) : undefined, jeeAdvancedRank: f.jeeAdvancedRank ? Number(f.jeeAdvancedRank) : undefined, neetRank: f.neetRank ? Number(f.neetRank) : undefined }); close(); }, "signup");
   const doSendOtp = run(async () => {
     setNotReg(false);
     try {
@@ -755,6 +756,11 @@ export default function AuthModal() {
                     <Field icon={Trophy} type="tel" inputMode="numeric"
                       placeholder="JEE Advanced rank *" value={f.jeeAdvancedRank}
                       error={fe.jeeAdvancedRank} onChange={e => set("jeeAdvancedRank", e.target.value.replace(/\D/g, ""))} />
+                    <div style={{ gridColumn: "1/-1" }}>
+                      <Field icon={Stethoscope} type="tel" inputMode="numeric"
+                        placeholder="NEET rank (optional)" value={f.neetRank}
+                        error={fe.neetRank} onChange={e => set("neetRank", e.target.value.replace(/\D/g, ""))} />
+                    </div>
                     <div style={{ gridColumn: "1/-1" }}>
                       <Field icon={Lock} type="password" placeholder="Password (min 6 chars) *" value={f.password}
                         error={fe.password} onChange={e => set("password", e.target.value)}
