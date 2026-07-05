@@ -278,9 +278,12 @@ export default function Dashboard() {
                 Welcome back, {firstName}.
               </h1>
             </div>
-            <button onClick={goMentorship}
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 20px", borderRadius: 50, border: "none", background: `linear-gradient(135deg, ${CORAL}, ${CORAL_DK})`, color: "#fff", fontFamily: DISPLAY, fontWeight: 800, fontSize: 14, cursor: "pointer", boxShadow: `0 12px 26px -12px ${CORAL}` }}>
-              Continue mentorship <ArrowUpRight size={16} />
+            <button onClick={() => setConfirmLogout(true)} aria-label="Log out"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", borderRadius: 50, border: `1px solid ${LINE}`, background: "#fff", color: "#e5484d", fontFamily: DISPLAY, fontWeight: 700, fontSize: 13, cursor: "pointer", transition: "all 0.2s", boxShadow: "0 4px 12px -6px rgba(229,72,77,.2)" }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "#fff1f1"; e.currentTarget.style.borderColor = "#e5484d"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = LINE; }}
+            >
+              <LogOut size={15} /> Logout
             </button>
           </div>
         </Reveal>
@@ -471,11 +474,7 @@ export default function Dashboard() {
         )}
       </AnimatePresence>
 
-      {/* discreet logout */}
-      <button onClick={() => setConfirmLogout(true)} aria-label="Log out"
-        style={{ position: "fixed", bottom: 22, right: 22, zIndex: 30, display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 16px", borderRadius: 50, border: `1px solid ${LINE}`, background: "#fff", color: "#e5484d", fontFamily: DISPLAY, fontWeight: 700, fontSize: 12.5, cursor: "pointer", boxShadow: "0 10px 28px -12px rgba(26,26,46,.4)" }}>
-        <LogOut size={14} /> Logout
-      </button>
+
 
       <style>{`@keyframes dashspin{to{transform:rotate(360deg)}}
         .dash-spin{display:inline-block;animation:dashspin .8s linear infinite;vertical-align:middle;margin-right:6px}
