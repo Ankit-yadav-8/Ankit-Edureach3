@@ -56,7 +56,6 @@ import BranchVsCollegePage from "./pages/BranchVsCollegePage.jsx";
 import ExamBuzz from "./pages/ExamBuzz.jsx";
 import Blog from "./pages/Blog.jsx";
 import BlogPost from "./pages/BlogPost.jsx";
-import ChapterAnalysis from "./pages/ChapterAnalysis.jsx";
 import CampusNotes from "./pages/CampusNotes.jsx";
 import CollegeParichayAI from "./pages/CollegeParichayAI.jsx";
 import CampusFests from "./pages/CampusFests.jsx";
@@ -179,7 +178,6 @@ export default function App() {
           <Route path="/exam-buzz" element={<ExamBuzz />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/jee-analysis" element={<ChapterAnalysis />} />
           <Route path="/campus-notes" element={<CampusNotes />} />
           <Route path="/campus-fests" element={<CampusFests />} />
           <Route path="/class-11" element={<Class11 />} />

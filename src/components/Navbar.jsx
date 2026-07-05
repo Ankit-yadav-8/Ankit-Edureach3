@@ -22,8 +22,6 @@ const JEE_MEGA = [
     items: [
       { label: "Eligibility Criteria",     to: "/jee-main#eligibility",   icon: BadgeCheck },
       { label: "Exam Pattern & Schedule",  to: "/exams/jee-main",         icon: CalendarDays },
-      { label: "Shift-wise Papers & Keys", to: "/jee-main#papers",        icon: FileText },
-      { label: "Result & Rank Analysis",   to: "/jee-main#analysis",      icon: BarChart3 },
       { label: "NIT Rankings (NIRF)",      to: "/jee-main#nit-rankings",  icon: Landmark },
       { label: "College Predictor",        to: "/jee-main#college",       icon: Crosshair },
       { label: "Rank Predictor",           to: "/jee-main#rank",          icon: Gauge },
@@ -35,7 +33,6 @@ const JEE_MEGA = [
       { label: "🔥 Result & Rank List 2026", to: "/jee-advanced-result-2026",   icon: Trophy },
       { label: "Eligibility Criteria",       to: "/jee-advanced#eligibility",   icon: BadgeCheck },
       { label: "Exam Pattern & Schedule",    to: "/exams/jee-advanced",         icon: CalendarDays },
-      { label: "Paper 1 & 2 Analysis",       to: "/jee-advanced#analysis",      icon: BarChart3 },
       { label: "IIT Rankings (NIRF)",        to: "/jee-advanced#iit-rankings",  icon: Landmark },
       { label: "College Predictor",          to: "/jee-advanced#college",       icon: Crosshair },
       { label: "Rank Predictor",             to: "/jee-advanced#rank",          icon: Gauge },
