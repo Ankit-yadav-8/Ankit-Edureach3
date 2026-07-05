@@ -38,8 +38,8 @@ function inline(text, theme) {
     else if (m[4] !== undefined) nodes.push(mathNode(m[4], true, key++));    // \[display\]
     else if (m[6] !== undefined) nodes.push(mathNode(m[6], false, key++));   // $inline$
     else if (m[8] !== undefined) nodes.push(mathNode(m[8], false, key++));   // \(inline\)
-    else if (m[10] !== undefined) nodes.push(<strong key={key++}>{m[10]}</strong>);
-    else if (m[12] !== undefined) nodes.push(<em key={key++}>{m[12]}</em>);
+    else if (m[10] !== undefined) nodes.push(<strong key={key++}>{inline(m[10], theme)}</strong>);
+    else if (m[12] !== undefined) nodes.push(<em key={key++}>{inline(m[12], theme)}</em>);
     else if (m[14] !== undefined) nodes.push(
       <code key={key++} style={{
         background: theme.inlineCodeBg, color: theme.inlineCodeFg,
@@ -49,7 +49,7 @@ function inline(text, theme) {
     );
     else if (m[16] !== undefined) nodes.push(
       <a key={key++} href={m[17]} target="_blank" rel="noreferrer"
-        style={{ color: theme.link, textDecoration: "underline" }}>{m[16]}</a>
+        style={{ color: theme.link, textDecoration: "underline" }}>{inline(m[16], theme)}</a>
     );
     last = re.lastIndex;
   }

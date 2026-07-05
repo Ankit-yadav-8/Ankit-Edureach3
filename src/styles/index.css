@@ -2084,7 +2084,7 @@ textarea.input { width:100%; }
 ════════════════════════════════════════════════ */
 
 @media (max-width:768px) {
-  html,body,#root { overflow-x:hidden !important; width:100% !important; max-width:100vw !important; }
+  html,body,#root { overflow-x:hidden !important; width:100% !important; max-width:100% !important; }
 
   .container { padding-inline:1rem; }
 

@@ -274,9 +274,6 @@ export default function Dashboard() {
         <Reveal>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
             <div>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 800, letterSpacing: ".4px", color: CORAL_DK, background: CORAL_SOFT, padding: "5px 12px", borderRadius: 50, marginBottom: 12 }}>
-                <Sparkles size={13} /> {aspirantTag}
-              </span>
               <h1 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(1.9rem, 4.6vw, 2.6rem)", color: INK, letterSpacing: "-1px", margin: 0, lineHeight: 1.05 }}>
                 Welcome back, {firstName}.
               </h1>
@@ -375,7 +372,10 @@ export default function Dashboard() {
                   <span style={{ width: 34, height: 34, borderRadius: 10, background: CORAL_SOFT, display: "grid", placeItems: "center" }}><CreditCard size={17} color={CORAL} /></span>
                   <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 17, color: INK }}>My plans</span>
                 </div>
-                {!loading && plans.length > 0 && <span style={{ fontSize: 12.5, color: MUTED, fontWeight: 600 }}>{plans.length} active</span>}
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  {!loading && plans.length > 0 && <span style={{ fontSize: 12.5, color: MUTED, fontWeight: 600 }}>{plans.length} active</span>}
+                  <button onClick={() => navigate("/mentorship")} style={{ background: "transparent", border: "none", color: CORAL, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: DISPLAY, padding: 0 }}>Explore all plans</button>
+                </div>
               </div>
 
               {loading ? (

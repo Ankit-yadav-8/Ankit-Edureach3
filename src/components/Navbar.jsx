@@ -20,22 +20,21 @@ const JEE_MEGA = [
   {
     title: "JEE Main", to: "/jee-main", color: "#FF693D", icon: FileText,
     items: [
-      { label: "Eligibility Criteria",     to: "/jee-main#eligibility",   icon: BadgeCheck },
-      { label: "Exam Pattern & Schedule",  to: "/exams/jee-main",         icon: CalendarDays },
-      { label: "NIT Rankings (NIRF)",      to: "/jee-main#nit-rankings",  icon: Landmark },
-      { label: "College Predictor",        to: "/jee-main#college",       icon: Crosshair },
-      { label: "Rank Predictor",           to: "/jee-main#rank",          icon: Gauge },
+      { label: "Eligibility Criteria",     to: "/jee-main#eligibility",   icon: BadgeCheck, desc: "Age & qualification rules" },
+      { label: "Exam Pattern & Schedule",  to: "/exams/jee-main",         icon: CalendarDays, desc: "Dates, marking & syllabus" },
+      { label: "NIT Rankings (NIRF)",      to: "/jee-main#nit-rankings",  icon: Landmark, desc: "Official 2026 rankings" },
+      { label: "College Predictor",        to: "/jee-main#college",       icon: Crosshair, desc: "Rank → eligible colleges" },
+      { label: "Rank Predictor",           to: "/jee-main#rank",          icon: Gauge, desc: "Marks → expected rank" },
     ],
   },
   {
     title: "JEE Advanced", to: "/jee-advanced", color: "#e5484d", icon: Trophy,
     items: [
-      { label: "🔥 Result & Rank List 2026", to: "/jee-advanced-result-2026",   icon: Trophy },
-      { label: "Eligibility Criteria",       to: "/jee-advanced#eligibility",   icon: BadgeCheck },
-      { label: "Exam Pattern & Schedule",    to: "/exams/jee-advanced",         icon: CalendarDays },
-      { label: "IIT Rankings (NIRF)",        to: "/jee-advanced#iit-rankings",  icon: Landmark },
-      { label: "College Predictor",          to: "/jee-advanced#college",       icon: Crosshair },
-      { label: "Rank Predictor",             to: "/jee-advanced#rank",          icon: Gauge },
+      { label: "Result & Rank List 2026",    to: "/jee-advanced-result-2026", icon: Award, desc: "Toppers & cutoffs" },
+      { label: "Eligibility Criteria",       to: "/jee-advanced#eligibility",   icon: BadgeCheck, desc: "Top 2.5 lakh cutoff rule" },
+      { label: "Exam Pattern & Schedule",    to: "/exams/jee-advanced",         icon: CalendarDays, desc: "Paper 1 & 2 details" },
+      { label: "IIT Rankings (NIRF)",        to: "/jee-advanced#iit-rankings",  icon: Landmark, desc: "Official 2026 rankings" },
+      { label: "College Predictor",          to: "/jee-advanced#college",       icon: Crosshair, desc: "Rank → eligible IITs" },
     ],
   },
 ];
@@ -95,11 +94,10 @@ const TOOLS_MEGA = [
   {
     title: "Plan & Apply", to: "/planner", color: "#FF693D", icon: CalendarDays,
     items: [
-      { label: "Branch Insights Hub",     to: "/branches",   icon: Landmark,     desc: "Deep dive into 15+ clear engineering domains, exploring future career prospects, salaries, and real-world applications." },
-      { label: "Trade-off Analyzer",      to: "/branch-vs-college", icon: GitCompare, desc: "Stuck between a top-tier college or your preferred branch? Take our quick assessment to find your ideal path forward." },
-      { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays, desc: "Track every JoSAA & CSAB round date" },
-      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert ₹299 choice-filling plan" },
-      { label: "Colleges For You",        to: "/for-you",    icon: Sparkles,     desc: "Personalised picks for your rank" },
+      { label: "Branch Insights Hub",     to: "/branches",   icon: Landmark,     desc: "15+ engineering domains" },
+      { label: "Trade-off Analyzer",      to: "/branch-vs-college", icon: GitCompare, desc: "College vs branch quiz" },
+      { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays, desc: "Track every round date" },
+      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert ₹299 plan" },
     ],
   },
   {
@@ -494,20 +492,7 @@ export default function Navbar({ onSearch }) {
                 <button onClick={() => setMobileOpen(false)}><X size={22} /></button>
               </div>
 
-              {/* College Parichay AI — prominent in the mobile drawer */}
-              <button
-                onClick={() => { setMobileOpen(false); navigate("/ai"); }}
-                style={{
-                  display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
-                  background: "#FF693D", borderRadius: 10, padding: "11px 12px",
-                  marginBottom: "0.8rem", border: "none", cursor: "pointer", color: "#fff",
-                }}>
-                <Sparkles size={18} />
-                <span style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-                  <span style={{ fontWeight: 800, fontSize: "0.92rem" }}>College Parichay AI</span>
-                  <span style={{ fontSize: "0.72rem", opacity: .9 }}>Solve doubts, notes & quizzes →</span>
-                </span>
-              </button>
+
 
               {isLoggedIn && (
                 <button
@@ -534,23 +519,7 @@ export default function Navbar({ onSearch }) {
                 </button>
               )}
 
-              {/* Public community — kept in the mobile drawer (the hamburger is
-                  how phones navigate); on desktop it lives in the hero instead. */}
-              <button
-                onClick={() => { setMobileOpen(false); navigate("/community"); }}
-                style={{
-                  display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
-                  background: "rgba(14,165,233,.08)", borderRadius: 10, padding: "11px 12px",
-                  marginBottom: "0.8rem", border: "1px solid rgba(14,165,233,.3)", cursor: "pointer",
-                }}>
-                <span style={{ width: 32, height: 32, borderRadius: "50%", background: "#0ea5e9", color: "#fff", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <Globe2 size={17} />
-                </span>
-                <span style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
-                  <span style={{ fontWeight: 700, color: "var(--navy)", fontSize: "0.9rem" }}>Public Community</span>
-                  <span style={{ fontSize: "0.72rem", color: "#0284c7", fontWeight: 600 }}>Share tricks, strategies & notes →</span>
-                </span>
-              </button>
+
 
               {navItems.map((item) => {
                 if (item.feature) {

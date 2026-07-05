@@ -492,9 +492,6 @@ export default function CollegeParichayAI() {
                   <div style={{ fontSize: 11, color: t.textMute, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>View profile</div>
                 </span>
               </button>
-              <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} style={iconBtn(t)} aria-label="Toggle theme">
-                {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
-              </button>
             </div>
           </aside>
         )}
@@ -510,15 +507,7 @@ export default function CollegeParichayAI() {
             <Sparkles size={15} color={t.accent} style={{ flexShrink: 0 }} />
             <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{active?.title || "New chat"}</span>
           </div>
-          {(() => {
-            const md = MODES[active?.mode] || MODES.general;
-            const MdIcon = md.icon;
-            return (
-              <span className="cpai-hide-sm" title={`Auto-routed engine · Groq`} style={{ marginLeft: "auto", fontSize: 11.5, color: t.textDim, display: "inline-flex", alignItems: "center", gap: 6, border: `1px solid ${t.border}`, padding: "4px 10px", borderRadius: 50, whiteSpace: "nowrap", flexShrink: 0 }}>
-                <MdIcon size={13} color={md.color} /> {md.label} · Groq
-              </span>
-            );
-          })()}
+
           <AnimatePresence>
             {memSaved && (
               <motion.span initial={{ opacity: 0, scale: .8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .8 }}
