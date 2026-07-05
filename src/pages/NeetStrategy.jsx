@@ -272,22 +272,6 @@ export default function NeetStrategy() {
         </div>
       </section>
 
-      <section id="timeline">
-        <StrategyReveal>
-          <span className="section-kicker">Part 08</span>
-          <h2 className="section-title">A realistic month-by-month timeline</h2>
-        </StrategyReveal>
-        <div className="timeline">
-          <AnimatedHeight height="100%" className="tl-progress" />
-          <StrategyReveal delay={0.1} className="tl-item"><div className="tl-dot"></div><h4>8–6 months out</h4><p>First reading of NCERT. Focus on conceptual clarity in Physics and Physical Chemistry. Begin building your error log.</p></StrategyReveal>
-          <StrategyReveal delay={0.2} className="tl-item"><div className="tl-dot"></div><h4>6–4 months out</h4><p>Second pass of NCERT Biology (start highlighting). Begin solving 15 years of chapter-wise PYQs. Start part-syllabus mock tests.</p></StrategyReveal>
-          <StrategyReveal delay={0.3} className="tl-item"><div className="tl-dot"></div><h4>4–2 months out</h4><p>Third pass of NCERT. Transition from chapter-wise tests to weekly full-length 3hr 20min mocks. Strictly attempt mocks between 2 PM and 5:20 PM.</p></StrategyReveal>
-          <StrategyReveal delay={0.4} className="tl-item"><div className="tl-dot"></div><h4>2–1 months out</h4><p>Full mocks twice weekly; condensed-notes revision begins in earnest. Focus heavily on Botany and Zoology diagrams and examples.</p></StrategyReveal>
-          <StrategyReveal delay={0.5} className="tl-item"><div className="tl-dot"></div><h4>Final month</h4><p>No new topics. Pure revision of highlighted NCERT lines, Physics formula sheets, and the error log. Taper mock frequency in the final week to avoid exhaustion.</p></StrategyReveal>
-          <StrategyReveal delay={0.6} className="tl-item"><div className="tl-dot"></div><h4>Final week</h4><p>Light revision only — short notes, formula sheets, previously-wrong questions. Protect your sleep schedule and mental steadiness.</p></StrategyReveal>
-        </div>
-      </section>
-
       <div id="roadmap">
         <StudyRoadmap data={NEET_ROADMAP} />
       </div>

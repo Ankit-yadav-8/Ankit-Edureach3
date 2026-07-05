@@ -2,15 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  LineChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, Legend,
-} from "recharts";
-import {
-  User, Mail, Phone, MapPin, GraduationCap, Hash, Calendar, LogOut, Bell,
-  CheckCircle2, ArrowRight, Sparkles, ShieldCheck, BookOpen, Loader2,
-  Check, Compass, Pencil, X, LayoutDashboard, Users, HelpCircle, Settings, Rocket,
-  Clock, Video, ClipboardList, FileText, BarChart3, UserCheck, Award, Wallet,
-  MessageCircle, NotebookPen, TrendingUp, Zap, Target, Flame, Medal, Trophy,
-  Star, Lock, CreditCard,
+  User, Mail, Phone, MapPin, GraduationCap, Hash, Calendar, LogOut,
+  ArrowRight, Sparkles, ShieldCheck, Loader2, Check, Compass, Pencil, X,
+  CreditCard, Bot, Crosshair, Gauge, GitCompare, Users,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments, apiUpdateProfile } from "../auth/api.js";
@@ -21,8 +15,9 @@ const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
 const INDIGO = "#6366f1";
 const TEAL = "#0ea5a4";
+const CYAN = "#0ea5e9";
 
-/* hex → rgba helper for translucent accent washes (matches home bento cards) */
+/* hex → rgba helper for translucent accent washes */
 const tint = (hex, a) => {
   const n = parseInt(hex.slice(1), 16);
   return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
@@ -32,8 +27,6 @@ const CARD_SHADOW = "0 5px 22px rgba(33,29,46,.06)";
 const CARD_LINE = "rgba(33,29,46,.08)";
 
 const isMentorshipPlan = (key) => String(key || "").startsWith("mentor-");
-
-// Look up the accent palette for an owned plan key.
 const groupForPlan = (key) =>
   isMentorshipPlan(key)
     ? { accent: ORANGE, soft: "#fff6ee", icon: GraduationCap }
@@ -41,48 +34,6 @@ const groupForPlan = (key) =>
 
 const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
-
-// Deterministic 30–90% "progress" from a stable string (UI scaffold until a
-// real progress endpoint exists) — keeps each plan's bar consistent per render.
-const pseudoProgress = (seed) => {
-  const s = String(seed || "x");
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-  return 30 + (h % 61);
-};
-
-/* ── Demo learning data — UI scaffold for the activity widgets. Mirrors the
-      design mockup; wire to real progress endpoints when the backend exists. ── */
-const PERF_DATA = [
-  { d: "1 May",  score: 55, acc: 60 },
-  { d: "6 May",  score: 62, acc: 68 },
-  { d: "11 May", score: 58, acc: 72 },
-  { d: "16 May", score: 70, acc: 75 },
-  { d: "22 May", score: 74, acc: 80 },
-  { d: "26 May", score: 80, acc: 84 },
-  { d: "31 May", score: 85, acc: 88 },
-];
-
-const LIVE_SESSIONS = [
-  { day: "19", mon: "MAY", subject: "Physics",     topic: "Current Electricity", time: "07:00 PM – 08:30 PM", tutor: "Rahul Sir",  color: INDIGO,  status: "Live in 2h", live: true },
-  { day: "20", mon: "MAY", subject: "Mathematics", topic: "Quadratic Equations", time: "06:00 PM – 07:30 PM", tutor: "Aman Sir",   color: ORANGE,  status: "Upcoming",   live: false },
-  { day: "22", mon: "MAY", subject: "Chemistry",   topic: "Chemical Bonding",    time: "07:00 PM – 08:30 PM", tutor: "Neha Ma'am", color: TEAL,    status: "Upcoming",   live: false },
-];
-
-const QUICK_ACTIONS = [
-  { label: "Take a Test",    icon: FileText,      color: INDIGO,    to: "/jee-resources" },
-  { label: "View Notes",     icon: NotebookPen,   color: GREEN,     to: "/jee-resources" },
-  { label: "Ask Doubt",      icon: MessageCircle, color: "#8b5cf6", to: "/ai" },
-  { label: "Study Material", icon: BookOpen,      color: ORANGE,    to: "/jee-resources" },
-  { label: "My Schedule",    icon: Calendar,      color: "#ef4444", to: "/planner" },
-];
-
-const ACHIEVEMENTS = [
-  { label: "Consistency Master", desc: "Study 10 days in a row",   icon: Flame,  color: "#f59e0b", unlocked: true },
-  { label: "Test Champion",      desc: "Attempt 15 tests a month", icon: Medal,  color: INDIGO,    unlocked: true },
-  { label: "Accuracy Star",      desc: "Score 80%+ in 5 tests",    icon: Star,   color: GREEN,     unlocked: true },
-  { label: "Rank Booster",       desc: "Improve rank by 1000+",    icon: TrendingUp, color: "#8b5cf6", unlocked: false },
-];
 
 const sectionTitle = {
   fontFamily: "Sora", fontWeight: 800, fontSize: "0.98rem", color: NAVY,
@@ -202,11 +153,11 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
 }
 
 /* ── A reusable section panel — white card with title + optional action ── */
-function Panel({ id, title, icon: Icon, iconColor = ORANGE, action, children, style }) {
+function Panel({ title, icon: Icon, iconColor = ORANGE, action, children, style }) {
   return (
-    <section id={id} style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, boxShadow: CARD_SHADOW, padding: "14px 16px", ...style }}>
+    <section style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, boxShadow: CARD_SHADOW, padding: "16px 18px", ...style }}>
       {title && (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 14 }}>
           <h2 style={sectionTitle}>{Icon && <Icon size={16} color={iconColor} />} {title}</h2>
           {action}
         </div>
@@ -216,57 +167,20 @@ function Panel({ id, title, icon: Icon, iconColor = ORANGE, action, children, st
   );
 }
 
-/* ── Compact top stat card — small icon, value, label ── */
-function StatCard({ icon: Icon, value, unit, label, color }) {
-  return (
-    <div style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 14, boxShadow: CARD_SHADOW, padding: "12px 13px", display: "flex", flexDirection: "column", gap: 7, minWidth: 0 }}>
-      <span style={{ width: 32, height: 32, borderRadius: 9, background: tint(color, 0.12), display: "grid", placeItems: "center", flexShrink: 0 }}>
-        <Icon size={16} color={color} />
-      </span>
-      <div>
-        <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 19, color: NAVY, lineHeight: 1.05 }}>
-          {value}{unit && <span style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", marginLeft: 3 }}>{unit}</span>}
-        </div>
-        <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600, marginTop: 3 }}>{label}</div>
-      </div>
-    </div>
-  );
-}
-
-/* ── Mini sparkline (inline SVG) for the performance side-stats ── */
-function Sparkline({ points, color }) {
-  const w = 120, h = 30, max = Math.max(...points), min = Math.min(...points);
-  const span = max - min || 1;
-  const step = w / (points.length - 1);
-  const d = points.map((p, i) => `${i ? "L" : "M"}${(i * step).toFixed(1)},${(h - ((p - min) / span) * h).toFixed(1)}`).join(" ");
-  return (
-    <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ display: "block" }}>
-      <path d={d} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-/* ── Scroll-reveal wrapper — sections fade + rise in as they enter view ── */
+/* ── Scroll-reveal wrapper ── */
 function Reveal({ children, delay = 0, style }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 18 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1], delay }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.42, ease: [0.4, 0, 0.2, 1], delay }}
       style={style}
     >
       {children}
     </motion.div>
   );
 }
-
-/* ── Right-aligned "View all" link used in section headers ── */
-const ViewAll = ({ onClick }) => (
-  <button onClick={onClick} style={{ background: "transparent", border: "none", color: ORANGE, fontFamily: "Sora", fontWeight: 700, fontSize: 12, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 3 }}>
-    View all <ArrowRight size={13} />
-  </button>
-);
 
 export default function Dashboard() {
   const { user, token, isLoggedIn, logout, openLogin, updateUser } = useAuth();
@@ -312,332 +226,151 @@ export default function Dashboard() {
 
   const firstName = (user?.name || "").trim().split(" ")[0] || "Student";
 
-  // Profile detail rows — one compact card, 3-col grid (matches mockup).
   const details = [
-    { label: "Full Name",         value: user?.name || "Student",        icon: User },
-    { label: "Email",             value: user?.email || "—",             icon: Mail },
-    { label: "Phone",             value: user?.phone || "—",             icon: Phone },
-    { label: "Coaching",          value: user?.coaching || "—",          icon: GraduationCap },
-    { label: "Home State",        value: user?.homeState || "—",         icon: MapPin },
-    { label: "JEE Main Rank",     value: user?.jeeMainsRank ?? "—",      icon: Hash },
-    { label: "JEE Advanced Rank", value: user?.jeeAdvancedRank ?? "—",   icon: Hash },
-    { label: "Member Since",      value: fmtDate(user?.createdAt),       icon: Calendar },
+    { label: "Full Name",         value: user?.name || "Student",      icon: User },
+    { label: "Email",             value: user?.email || "—",           icon: Mail },
+    { label: "Phone",             value: user?.phone || "—",           icon: Phone },
+    { label: "Coaching",          value: user?.coaching || "—",        icon: GraduationCap },
+    { label: "Home State",        value: user?.homeState || "—",       icon: MapPin },
+    { label: "JEE Main Rank",     value: user?.jeeMainsRank ?? "—",    icon: Hash },
+    { label: "JEE Advanced Rank", value: user?.jeeAdvancedRank ?? "—", icon: Hash },
+    { label: "Member Since",      value: fmtDate(user?.createdAt),     icon: Calendar },
   ];
 
   const hasAnyPlan = plans.length > 0;
 
-  // Top metrics — "Courses" maps to real enrollments; the rest are UI scaffold.
-  const stats = [
-    { icon: Flame,    value: "12",   unit: "days",  label: "Learning Streak", color: ORANGE },
-    { icon: Clock,    value: "48.5", unit: "hrs",   label: "Study Hours",     color: INDIGO },
-    { icon: FileText, value: "18",   unit: "tests", label: "Tests Attempted", color: TEAL },
-    { icon: Target,   value: "82",   unit: "%",     label: "Accuracy",        color: GREEN },
-    { icon: Zap,      value: "+620", unit: "",      label: "Reward Points",   color: "#f59e0b" },
-  ];
-
-  const goTo = (to) => {
-    if (!to) return;
-    if (to.startsWith("#")) document.getElementById(to.slice(1))?.scrollIntoView({ behavior: "smooth", block: "start" });
-    else navigate(to);
-  };
-
-  const navItems = [
-    { label: "Dashboard",      icon: LayoutDashboard, to: "#top", active: true },
-    { label: "My Plans",       icon: CreditCard,      to: "#enrolled-plans" },
-    { label: "Live Sessions",  icon: Video,           to: "#live-sessions", badge: 3 },
-    { label: "Assignments",    icon: ClipboardList,   to: "/mentorship-dashboard", badge: 2 },
-    { label: "Test Series",    icon: FileText,        to: "/jee-resources" },
-    { label: "Performance",    icon: BarChart3,       to: "#performance" },
-    { label: "Mentor Connect", icon: UserCheck,       to: "/mentorship-dashboard" },
-    { label: "Resource Center",icon: BookOpen,        to: "/jee-resources" },
-    { label: "Community",      icon: Users,           to: "/community" },
-    { label: "Certificates",   icon: Award,           to: "#achievements" },
+  const QUICK_LINKS = [
+    { label: "Rank Predictor",      icon: Gauge,     color: ORANGE,    to: "/jee-main#rank" },
+    { label: "College Predictor",   icon: Crosshair, color: INDIGO,    to: "/jee-advanced#college" },
+    { label: "Compare Colleges",    icon: GitCompare, color: TEAL,     to: "/compare" },
+    { label: "Counselling Planner", icon: Calendar,  color: "#8b5cf6", to: "/planner" },
+    { label: "Explore Colleges",    icon: Compass,   color: GREEN,     to: "/colleges" },
+    { label: "Community",           icon: Users,     color: CYAN,      to: "/community" },
   ];
 
   return (
-    <section id="top" style={{ background: "#ffffff", padding: "112px 0 24px" }}>
-      <div className="dash-shell" style={{ maxWidth: 1240, margin: "0 auto", padding: "0 18px" }}>
+    <section id="top" style={{ background: "#ffffff", padding: "112px 0 60px", minHeight: "100vh" }}>
+      <div style={{ maxWidth: 920, margin: "0 auto", padding: "0 18px", display: "flex", flexDirection: "column", gap: 16 }}>
 
-        {/* ── Left sidebar ── */}
-        <aside className="dash-side">
-          <div style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 18, boxShadow: CARD_SHADOW, padding: "20px 12px 14px", display: "flex", flexDirection: "column", gap: 2 }}>
-            {/* identity */}
-            <div style={{ textAlign: "center", padding: "0 6px 14px", borderBottom: `1px solid ${CARD_LINE}`, marginBottom: 10 }}>
-              <div style={{ width: 56, height: 56, borderRadius: "50%", background: `linear-gradient(135deg, ${ORANGE}, ${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontSize: 23, fontWeight: 800, fontFamily: "Sora", margin: "0 auto 10px", boxShadow: `0 10px 24px -10px ${ORANGE}` }}>
-                {(user?.name || user?.email || "U").charAt(0).toUpperCase()}
+        {/* Welcome header */}
+        <Reveal>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 18, boxShadow: CARD_SHADOW, padding: "18px 20px" }}>
+            <div style={{ width: 56, height: 56, borderRadius: "50%", background: `linear-gradient(135deg, ${ORANGE}, ${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontSize: 23, fontWeight: 800, fontFamily: "Sora", flexShrink: 0, boxShadow: `0 10px 24px -10px ${ORANGE}` }}>
+              {(user?.name || user?.email || "U").charAt(0).toUpperCase()}
+            </div>
+            <div style={{ flex: 1, minWidth: 180 }}>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.35rem", color: NAVY, letterSpacing: "-0.4px" }}>Welcome back, {firstName} 👋</div>
+              <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>Your College Parichay space — profile, plans and tools in one place.</div>
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => setEditOpen(true)} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 14px", borderRadius: 11, border: `1.5px solid ${CARD_LINE}`, background: "#fff", color: NAVY, fontFamily: "Sora", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                <Pencil size={14} /> Edit
+              </button>
+              <button onClick={() => setConfirmLogout(true)} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 14px", borderRadius: 11, border: "1.5px solid #fde0da", background: "#fff", color: "#e5484d", fontFamily: "Sora", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                <LogOut size={14} /> Logout
+              </button>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* AI assistant card */}
+        <Reveal delay={0.05}>
+          <div style={{ position: "relative", overflow: "hidden", borderRadius: 20, padding: "24px", background: `linear-gradient(135deg, ${NAVY} 0%, #14264f 55%, ${tint(ORANGE, .5)} 145%)`, color: "#fff", boxShadow: "0 18px 44px -22px rgba(13,27,62,.6)" }}>
+            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 24, ease: "linear" }}
+              style={{ position: "absolute", top: -70, right: -60, width: 200, height: 200, borderRadius: "50%", background: `conic-gradient(${tint(ORANGE, .5)}, transparent 60%)`, filter: "blur(6px)", pointerEvents: "none" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", position: "relative" }}>
+              <div style={{ width: 52, height: 52, borderRadius: 15, background: "rgba(255,255,255,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <Bot size={26} color="#fff" />
               </div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, color: NAVY }}>{user?.name || "Student"}</div>
-              <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.email}</div>
-            </div>
-
-            {/* nav — vertical on desktop, horizontal scroll strip on mobile */}
-            <div className="dash-nav">
-            {navItems.map(({ label, icon: Icon, to, active, badge }) => (
-              <button key={label} onClick={() => goTo(to)}
-                style={{
-                  display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
-                  padding: "8.5px 11px", borderRadius: 10, cursor: "pointer", fontFamily: "Sora",
-                  fontWeight: active ? 800 : 600, fontSize: 13,
-                  border: "1px solid transparent",
-                  background: active ? tint(ORANGE, 0.1) : "transparent",
-                  color: active ? ORANGE : "#475067",
-                  transition: "background .15s, color .15s",
-                }}
-                onMouseEnter={(e) => { if (!active) e.currentTarget.style.background = "#f4f5f9"; }}
-                onMouseLeave={(e) => { if (!active) e.currentTarget.style.background = "transparent"; }}>
-                <Icon size={16} color={active ? ORANGE : "#94a3b8"} />
-                <span style={{ flex: 1 }}>{label}</span>
-                {badge && <span style={{ fontSize: 10, fontWeight: 800, color: "#fff", background: ORANGE, borderRadius: 50, minWidth: 17, height: 17, display: "grid", placeItems: "center", padding: "0 5px" }}>{badge}</span>}
-              </button>
-            ))}
-            </div>
-
-            {/* footer actions */}
-            <div style={{ borderTop: `1px solid ${CARD_LINE}`, marginTop: 10, paddingTop: 10, display: "flex", flexDirection: "column", gap: 2 }}>
-              <button onClick={() => navigate("/mentorship")}
-                style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", padding: "8.5px 11px", borderRadius: 10, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 13, border: "1px solid transparent", background: "transparent", color: "#475067" }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "#f4f5f9"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-                <Wallet size={16} color="#94a3b8" /> <span style={{ flex: 1 }}>Wallet</span>
-                <span style={{ fontSize: 10, fontWeight: 800, color: GREEN, background: tint(GREEN, 0.12), borderRadius: 50, padding: "2px 7px" }}>₹1</span>
-              </button>
-              <button onClick={() => setEditOpen(true)}
-                style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", padding: "8.5px 11px", borderRadius: 10, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 13, border: "1px solid transparent", background: "transparent", color: "#475067" }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "#f4f5f9"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-                <Settings size={16} color="#94a3b8" /> Settings
-              </button>
-              <button onClick={() => navigate("/how-to-use")}
-                style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", padding: "8.5px 11px", borderRadius: 10, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 13, border: "1px solid transparent", background: "transparent", color: "#475067" }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "#f4f5f9"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-                <HelpCircle size={16} color="#94a3b8" /> Help Center
-              </button>
-              <button onClick={() => setConfirmLogout(true)}
-                style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", padding: "8.5px 11px", borderRadius: 10, cursor: "pointer", fontFamily: "Sora", fontWeight: 600, fontSize: 13, border: "1px solid transparent", background: "transparent", color: "#e5484d" }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "#fef2f2"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-                <LogOut size={16} color="#e5484d" /> Sign Out
+              <div style={{ flex: 1, minWidth: 210 }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, fontWeight: 800, letterSpacing: "1px", background: "rgba(255,255,255,.14)", padding: "4px 11px", borderRadius: 50, marginBottom: 8 }}><Sparkles size={12} /> AI ASSISTANT</span>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.3rem", letterSpacing: "-0.4px", lineHeight: 1.2 }}>College Parichay AI — your 24×7 doubt solver</div>
+                <div style={{ fontSize: 13.5, color: "rgba(255,255,255,.82)", marginTop: 5, lineHeight: 1.55, maxWidth: 560 }}>Ask any JEE / NEET doubt and get clear step-by-step solutions, notes and quizzes — instantly.</div>
+              </div>
+              <button onClick={() => navigate("/ai")} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 20px", borderRadius: 12, border: "none", background: "#fff", color: NAVY, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", flexShrink: 0 }}>
+                Ask a doubt <ArrowRight size={16} />
               </button>
             </div>
           </div>
-        </aside>
+        </Reveal>
 
-        {/* ── Main content ── */}
-        <main className="dash-main" style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 16 }}>
-
-          {/* Welcome header */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-            <div>
-              <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.2rem,3vw,1.55rem)", color: NAVY, margin: 0, fontStyle: "normal" }}>
-                Welcome back, {firstName}! 👋
-              </h1>
-              <p style={{ color: "#6b7280", margin: "4px 0 0", fontSize: 13 }}>Keep learning, keep growing</p>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <button aria-label="Notifications"
-                style={{ position: "relative", width: 38, height: 38, borderRadius: 11, border: `1px solid ${CARD_LINE}`, background: "#fff", cursor: "pointer", display: "grid", placeItems: "center" }}>
-                <Bell size={17} color="#475067" />
-                <span style={{ position: "absolute", top: 9, right: 9, width: 7, height: 7, borderRadius: "50%", background: ORANGE, border: "1.5px solid #fff" }} />
-              </button>
-              <button onClick={() => setEditOpen(true)}
-                style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", border: `1.5px solid ${ORANGE}`, color: ORANGE, padding: "9px 16px", borderRadius: 11, fontWeight: 800, fontFamily: "Sora", fontSize: 13, cursor: "pointer" }}>
-                <Pencil size={14} /> Edit Profile
-              </button>
-            </div>
-          </div>
-
-          {/* Profile details — ONE compact card, 3-col grid */}
-          <Reveal style={{ background: "#fff", border: `1px solid ${CARD_LINE}`, borderRadius: 16, boxShadow: CARD_SHADOW, padding: "16px 18px" }}>
-            <div className="dash-info">
-              {details.map(({ label, value, icon: Icon }) => (
+        {/* Your details */}
+        <Reveal delay={0.1}>
+          <Panel title="Your details" icon={User}
+            action={<button onClick={() => setEditOpen(true)} style={{ background: "transparent", border: "none", color: ORANGE, fontFamily: "Sora", fontWeight: 700, fontSize: 12, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4 }}><Pencil size={12} /> Edit</button>}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "14px 20px" }}>
+              {details.map(({ label, value, icon: Ic }) => (
                 <div key={label} style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-                  <span style={{ width: 32, height: 32, borderRadius: 9, background: tint(ORANGE, 0.1), display: "grid", placeItems: "center", flexShrink: 0 }}>
-                    <Icon size={15} color={ORANGE} />
-                  </span>
+                  <span style={{ width: 34, height: 34, borderRadius: 10, background: tint(ORANGE, 0.09), display: "grid", placeItems: "center", flexShrink: 0 }}><Ic size={15} color={ORANGE} /></span>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: 10.5, color: "#9ca3af", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".04em" }}>{label}</div>
-                    <div style={{ fontSize: 13, color: NAVY, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</div>
+                    <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>{label}</div>
+                    <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</div>
                   </div>
                 </div>
               ))}
             </div>
-          </Reveal>
+          </Panel>
+        </Reveal>
 
-          {/* Stats row */}
-          <Reveal>
-            <div className="dash-stats">
-              {stats.map((s) => <StatCard key={s.label} {...s} />)}
-            </div>
-          </Reveal>
-
-          {/* Enrolled plans + Upcoming live sessions */}
-          <div className="dash-two">
-            <Reveal style={{ height: "100%" }}>
-            <Panel id="enrolled-plans" title="Your enrolled plans" icon={CheckCircle2} iconColor={GREEN} style={{ height: "100%" }}
-              action={<ViewAll onClick={() => navigate("/mentorship")} />}>
-              {loading ? (
-                <div style={{ padding: "24px", textAlign: "center", color: "#9ca3af" }}><Loader2 size={20} className="dash-spin" /> Loading…</div>
-              ) : !hasAnyPlan ? (
-                <div style={{ border: "1px dashed #e5b894", borderRadius: 13, padding: "24px 18px", textAlign: "center" }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 13, background: `${ORANGE}12`, display: "grid", placeItems: "center", margin: "0 auto 10px" }}>
-                    <Sparkles size={20} color={ORANGE} />
-                  </div>
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 14, marginBottom: 4 }}>No active plans yet</div>
-                  <div style={{ fontSize: 12.5, color: "#6b7280", marginBottom: 12 }}>Pick a mentorship or counselling plan to get started.</div>
-                  <button onClick={() => navigate("/mentorship")} style={{ background: `linear-gradient(135deg, ${ORANGE}, ${GOLD})`, color: "#fff", border: "none", padding: "9px 16px", borderRadius: 10, fontWeight: 800, fontFamily: "Sora", fontSize: 13, cursor: "pointer" }}>Explore plans</button>
-                </div>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  {plans.map((p, i) => {
-                    const g = groupForPlan(p.plan);
-                    const Icon = g.icon;
-                    const mentor = isMentorshipPlan(p.plan);
-                    const prog = pseudoProgress(p._id || p.plan);
-                    return (
-                      <div key={p._id} style={{ padding: "13px 0", borderTop: i ? `1px solid ${CARD_LINE}` : "none" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 11, flexWrap: "wrap" }}>
-                          <div style={{ width: 38, height: 38, borderRadius: 11, background: tint(g.accent, 0.1), display: "grid", placeItems: "center", flexShrink: 0 }}>
-                            <Icon size={18} color={g.accent} />
-                          </div>
-                          <div style={{ flex: 1, minWidth: 140 }}>
-                            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: NAVY }}>{p.planLabel || p.plan}</div>
-                            <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 1 }}>Purchased {fmtDate(p.createdAt)}{p.razorpayPaymentId ? ` · ${p.razorpayPaymentId}` : ""}</div>
-                          </div>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 800, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "4px 9px" }}>
-                            <CheckCircle2 size={12} /> Active
-                          </span>
-                          {mentor && (
-                            <button onClick={() => navigate(`/mentorship-dashboard?plan=${encodeURIComponent(p.plan)}`)}
-                              style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "7px 12px", borderRadius: 10, border: `1.5px solid ${g.accent}55`, background: "#fff", color: g.accent, fontFamily: "Sora", fontWeight: 800, fontSize: 12, cursor: "pointer" }}>
-                              Open dashboard <ArrowRight size={13} />
-                            </button>
-                          )}
-                        </div>
-                        {/* progress */}
-                        <div style={{ display: "flex", alignItems: "center", gap: 9, marginTop: 9 }}>
-                          <span style={{ fontSize: 10.5, color: "#9ca3af", fontWeight: 700 }}>Progress</span>
-                          <div style={{ flex: 1, height: 6, borderRadius: 50, background: "#eef0f5", overflow: "hidden" }}>
-                            <div style={{ width: `${prog}%`, height: "100%", borderRadius: 50, background: `linear-gradient(90deg, ${g.accent}, ${tint(g.accent, 0.7)})` }} />
-                          </div>
-                          <span style={{ fontSize: 11.5, color: NAVY, fontWeight: 800 }}>{prog}%</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </Panel>
-            </Reveal>
-
-            <Reveal delay={0.1} style={{ height: "100%" }}>
-            <Panel id="live-sessions" title="Upcoming live sessions" icon={Video} iconColor={INDIGO} style={{ height: "100%" }}
-              action={<ViewAll onClick={() => navigate("/mentorship-dashboard")} />}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                {LIVE_SESSIONS.map((s) => (
-                  <div key={s.subject + s.topic} style={{ display: "flex", alignItems: "center", gap: 11, border: `1px solid ${CARD_LINE}`, borderRadius: 12, padding: "9px 11px" }}>
-                    <div style={{ width: 40, textAlign: "center", flexShrink: 0 }}>
-                      <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: s.color, lineHeight: 1 }}>{s.day}</div>
-                      <div style={{ fontSize: 9, color: "#9ca3af", fontWeight: 700, letterSpacing: ".05em" }}>{s.mon}</div>
-                    </div>
-                    <div style={{ width: 1, alignSelf: "stretch", background: CARD_LINE }} />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12.5, color: NAVY }}>{s.subject}: {s.topic}</div>
-                      <div style={{ fontSize: 10.5, color: "#9ca3af", marginTop: 2, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}><Clock size={10} /> {s.time}</span>
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}><User size={10} /> {s.tutor}</span>
-                      </div>
-                    </div>
-                    <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".03em", flexShrink: 0, color: s.live ? "#fff" : s.color, background: s.live ? "#ef4444" : tint(s.color, 0.13), borderRadius: 50, padding: "4px 9px" }}>{s.status}</span>
-                  </div>
-                ))}
+        {/* My plans */}
+        <Reveal delay={0.15}>
+          <Panel title="My Plans" icon={CreditCard}>
+            {loading ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#9ca3af", padding: "16px 0", justifyContent: "center", fontSize: 13.5 }}>
+                <Loader2 size={16} className="dash-spin" /> Loading your plans…
               </div>
-            </Panel>
-            </Reveal>
-          </div>
-
-          {/* Performance overview + Quick actions / Achievements */}
-          <div className="dash-perf">
-            <Reveal style={{ height: "100%" }}>
-            <Panel id="performance" title="Performance overview" icon={BarChart3} iconColor={ORANGE} style={{ height: "100%" }}
-              action={<span style={{ fontSize: 11.5, fontWeight: 700, color: "#475067", border: `1px solid ${CARD_LINE}`, borderRadius: 8, padding: "4px 10px" }}>This Month</span>}>
-              <div className="dash-perf-inner">
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ width: "100%", height: 196 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={PERF_DATA} margin={{ top: 6, right: 6, left: -18, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(33,29,46,.06)" vertical={false} />
-                        <XAxis dataKey="d" tick={{ fontSize: 10, fill: "#9ca3af" }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tickFormatter={(v) => `${v}%`} tick={{ fontSize: 10, fill: "#9ca3af" }} axisLine={false} tickLine={false} />
-                        <Tooltip contentStyle={{ borderRadius: 12, border: `1px solid ${CARD_LINE}`, boxShadow: CARD_SHADOW, fontFamily: "Sora", fontSize: 12 }} formatter={(v, n) => [`${v}%`, n === "score" ? "Score" : "Accuracy"]} />
-                        <Legend iconType="circle" wrapperStyle={{ fontSize: 11, fontFamily: "Sora", fontWeight: 700 }} formatter={(v) => v === "score" ? "Score" : "Accuracy"} />
-                        <Line type="monotone" dataKey="score" stroke={INDIGO} strokeWidth={2.5} dot={false} activeDot={{ r: 4 }} />
-                        <Line type="monotone" dataKey="acc" stroke={GREEN} strokeWidth={2.5} dot={false} activeDot={{ r: 4 }} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {[
-                    { label: "Average Score",    value: "72%", color: INDIGO, pts: [55, 62, 58, 70, 74, 80, 85] },
-                    { label: "Average Accuracy", value: "82%", color: GREEN,  pts: [60, 68, 72, 75, 80, 84, 88] },
-                    { label: "Total Tests",      value: "18",  color: ORANGE, pts: [4, 6, 5, 9, 12, 15, 18] },
-                  ].map((b) => (
-                    <div key={b.label} style={{ border: `1px solid ${CARD_LINE}`, borderRadius: 12, padding: "10px 12px" }}>
-                      <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700 }}>{b.label}</div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 20, color: NAVY, margin: "1px 0 4px" }}>{b.value}</div>
-                      <Sparkline points={b.pts} color={b.color} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Panel>
-            </Reveal>
-
-            <Reveal delay={0.1} style={{ height: "100%" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16, minWidth: 0, height: "100%" }}>
-              <Panel title="Quick actions" icon={Zap} iconColor="#f59e0b">
-                <div className="dash-quick">
-                  {QUICK_ACTIONS.map(({ label, icon: Icon, color, to }) => (
-                    <button key={label} onClick={() => goTo(to)}
-                      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7, padding: "11px 6px", borderRadius: 12, border: `1px solid ${CARD_LINE}`, background: "#fff", cursor: "pointer", transition: "transform .15s, box-shadow .15s" }}
-                      onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = CARD_SHADOW; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
-                      <span style={{ width: 38, height: 38, borderRadius: 11, background: tint(color, 0.12), display: "grid", placeItems: "center" }}>
-                        <Icon size={18} color={color} />
-                      </span>
-                      <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 11, color: NAVY, textAlign: "center", lineHeight: 1.2 }}>{label}</span>
-                    </button>
-                  ))}
-                </div>
-              </Panel>
-
-              <Panel id="achievements" title="Achievements" icon={Trophy} iconColor="#f59e0b"
-                action={<ViewAll onClick={() => goTo("#achievements")} />}>
-                <div className="dash-badges">
-                  {ACHIEVEMENTS.map(({ label, desc, icon: Icon, color, unlocked }) => (
-                    <div key={label} title={desc}
-                      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, padding: "11px 6px", borderRadius: 12, border: `1px solid ${unlocked ? tint(color, 0.3) : CARD_LINE}`, background: unlocked ? tint(color, 0.06) : "#f8f8fb", textAlign: "center", opacity: unlocked ? 1 : 0.7 }}>
-                      <span style={{ width: 38, height: 38, borderRadius: "50%", background: unlocked ? tint(color, 0.16) : "#eceef3", display: "grid", placeItems: "center", position: "relative" }}>
-                        <Icon size={18} color={unlocked ? color : "#9ca3af"} />
-                        {!unlocked && (
-                          <span style={{ position: "absolute", bottom: -2, right: -2, width: 16, height: 16, borderRadius: "50%", background: "#fff", border: `1px solid ${CARD_LINE}`, display: "grid", placeItems: "center" }}>
-                            <Lock size={9} color="#9ca3af" />
-                          </span>
-                        )}
-                      </span>
-                      <div>
-                        <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 11, color: NAVY, lineHeight: 1.15 }}>{label}</div>
-                        <div style={{ fontSize: 9.5, color: "#9ca3af", marginTop: 2, lineHeight: 1.25 }}>{desc}</div>
+            ) : hasAnyPlan ? (
+              <div>
+                {plans.map((p, i) => {
+                  const g = groupForPlan(p.plan);
+                  const GIcon = g.icon;
+                  const mentor = isMentorshipPlan(p.plan);
+                  return (
+                    <div key={p._id} style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", padding: "13px 0", borderTop: i ? `1px solid ${CARD_LINE}` : "none" }}>
+                      <span style={{ width: 40, height: 40, borderRadius: 11, background: g.soft, display: "grid", placeItems: "center", flexShrink: 0 }}><GIcon size={19} color={g.accent} /></span>
+                      <div style={{ flex: 1, minWidth: 160 }}>
+                        <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: NAVY }}>{p.planLabel || p.plan}</div>
+                        <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 1 }}>Purchased {fmtDate(p.createdAt)}{p.razorpayPaymentId ? ` · ${p.razorpayPaymentId}` : ""}</div>
                       </div>
+                      {mentor && (
+                        <button onClick={() => navigate(`/mentorship-dashboard?plan=${encodeURIComponent(p.plan)}`)}
+                          style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 13px", borderRadius: 10, border: "none", background: g.accent, color: "#fff", fontFamily: "Sora", fontWeight: 700, fontSize: 12.5, cursor: "pointer" }}>
+                          Open <ArrowRight size={13} />
+                        </button>
+                      )}
                     </div>
-                  ))}
-                </div>
-              </Panel>
+                  );
+                })}
+              </div>
+            ) : (
+              <div style={{ textAlign: "center", padding: "22px 16px" }}>
+                <div style={{ fontSize: 13.5, color: "#6b7280", marginBottom: 12 }}>You haven't enrolled in any plan yet.</div>
+                <button onClick={() => navigate("/mentorship")}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 18px", borderRadius: 11, border: "none", background: `linear-gradient(135deg, ${ORANGE}, ${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13, cursor: "pointer", boxShadow: `0 10px 24px -10px ${ORANGE}` }}>
+                  Explore mentorship plans <ArrowRight size={14} />
+                </button>
+              </div>
+            )}
+          </Panel>
+        </Reveal>
+
+        {/* Quick links */}
+        <Reveal delay={0.2}>
+          <Panel title="Quick links" icon={Compass}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10 }}>
+              {QUICK_LINKS.map(({ label, icon: Ic, color, to }) => (
+                <button key={label} onClick={() => navigate(to)}
+                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 13px", borderRadius: 12, border: `1px solid ${CARD_LINE}`, background: "#fff", cursor: "pointer", textAlign: "left", transition: "border-color .15s, transform .15s" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = tint(color, .5); e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = CARD_LINE; e.currentTarget.style.transform = "none"; }}>
+                  <span style={{ width: 34, height: 34, borderRadius: 10, background: tint(color, 0.12), display: "grid", placeItems: "center", flexShrink: 0 }}><Ic size={16} color={color} /></span>
+                  <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, color: NAVY }}>{label}</span>
+                </button>
+              ))}
             </div>
-            </Reveal>
-          </div>
-        </main>
+          </Panel>
+        </Reveal>
+
       </div>
 
       {/* Edit info modal */}
@@ -670,46 +403,8 @@ export default function Dashboard() {
         )}
       </AnimatePresence>
 
-      <style>{`
-        @keyframes dashspin{to{transform:rotate(360deg)}}
-        .dash-spin{display:inline-block;animation:dashspin .8s linear infinite;vertical-align:middle;margin-right:6px}
-        .dash-shell{display:flex;gap:20px;align-items:flex-start}
-        .dash-side{width:228px;flex-shrink:0;position:sticky;top:92px}
-        .dash-nav{display:flex;flex-direction:column;gap:2px}
-        .dash-info{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 22px}
-        .dash-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-        .dash-two{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:stretch}
-        .dash-perf{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;align-items:stretch}
-        .dash-perf-inner{display:grid;grid-template-columns:1fr 150px;gap:14px;align-items:start}
-        .dash-quick{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-        .dash-badges{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-        @media (max-width:1100px){
-          .dash-stats{grid-template-columns:repeat(3,1fr)}
-          .dash-perf{grid-template-columns:1fr}
-          .dash-perf-inner{grid-template-columns:1fr}
-        }
-        @media (max-width:900px){
-          .dash-shell{flex-direction:column}
-          .dash-side{width:100%;position:static;top:auto;order:2}
-          .dash-main{order:1}
-          .dash-two{grid-template-columns:1fr}
-          /* nav becomes a horizontal, swipeable strip so it doesn't tower over content */
-          .dash-nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-          .dash-nav::-webkit-scrollbar{display:none}
-          .dash-nav>button{width:auto !important;flex-shrink:0;white-space:nowrap;border:1px solid rgba(33,29,46,.08) !important}
-          .dash-nav>button>span{flex:0 0 auto !important}
-        }
-        @media (max-width:640px){
-          .dash-info{grid-template-columns:1fr 1fr}
-          .dash-stats{grid-template-columns:repeat(2,1fr)}
-          .dash-quick{grid-template-columns:repeat(3,1fr)}
-          .dash-badges{grid-template-columns:repeat(2,1fr)}
-        }
-        @media (max-width:400px){
-          .dash-info{grid-template-columns:1fr}
-          .dash-quick{grid-template-columns:repeat(2,1fr)}
-        }
-      `}</style>
+      <style>{`@keyframes dashspin{to{transform:rotate(360deg)}}
+        .dash-spin{display:inline-block;animation:dashspin .8s linear infinite;vertical-align:middle;margin-right:6px}`}</style>
     </section>
   );
 }

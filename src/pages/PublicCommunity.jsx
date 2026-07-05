@@ -158,7 +158,6 @@ export default function PublicCommunity() {
 
   const TABS = [
     { id: "all", label: "Feed", icon: MessagesSquare },
-    { id: "ai", label: "AI Solver", icon: Bot },
     { id: "highlights", label: "Highlights", icon: Sparkles },
     { id: "unanswered", label: "Unanswered", icon: Inbox },
   ];
@@ -166,36 +165,36 @@ export default function PublicCommunity() {
 
   return (
     <section style={{ background: "#ffffff", minHeight: "100vh", padding: "110px 0 70px" }}>
-      <div style={{ maxWidth: 880, margin: "0 auto", padding: "0 18px" }}>
+      <div style={{ maxWidth: 1140, margin: "0 auto", padding: "0 18px" }}>
 
-        {/* hero */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", background: `linear-gradient(135deg,${NAVY},#13325c)`, color: "#fff", borderRadius: 22, padding: "22px 24px", marginBottom: 18, position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", top: -40, right: -20, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(14,165,233,.4), transparent 70%)" }} />
-          <div style={{ width: 54, height: 54, borderRadius: 16, background: "rgba(255,255,255,.12)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-            <Globe2 size={26} color="#fff" />
+        {/* hero — light */}
+        <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", background: "#ffffff", color: NAVY, borderRadius: 22, padding: "22px 24px", marginBottom: 18, position: "relative", overflow: "hidden", border: "1px solid #eef1f6", boxShadow: "0 8px 30px -18px rgba(13,27,62,.18)" }}>
+          <div style={{ position: "absolute", top: -50, right: -30, width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, ${CYAN}18, transparent 70%)` }} />
+          <div style={{ width: 54, height: 54, borderRadius: 16, background: `${CYAN}14`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+            <Globe2 size={26} color={CYAN} />
           </div>
           <div style={{ flex: 1, minWidth: 200, position: "relative" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.4rem", letterSpacing: "-0.4px" }}>Public Community</div>
-            <div style={{ fontSize: 13.5, color: "rgba(255,255,255,.78)", marginTop: 2 }}>
-              Open to <strong>everyone</strong> — free members, mentorship students & aspirants. Ask anything, help anyone.
+            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.4rem", letterSpacing: "-0.4px", color: NAVY }}>Public Community</div>
+            <div style={{ fontSize: 13.5, color: MUTE, marginTop: 2 }}>
+              Open to <strong style={{ color: NAVY }}>everyone</strong> — free members, mentorship students & aspirants. Ask anything, help anyone.
             </div>
             {me && (
               <div style={{ display: "flex", gap: 14, marginTop: 10, flexWrap: "wrap" }}>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 700, color: "#bae6fd" }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 700, color: CYAN }}>
                   <Users size={14} /> {me.memberCount} member{me.memberCount === 1 ? "" : "s"}
                 </span>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 700, color: "#bae6fd" }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 700, color: CYAN }}>
                   <MessagesSquare size={14} /> {me.postCount} post{me.postCount === 1 ? "" : "s"}
                 </span>
                 {me.role === "student" && (
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 800, color: "#86efac", background: "rgba(34,197,94,.16)", border: "1px solid rgba(134,239,172,.4)", padding: "3px 11px", borderRadius: 50 }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 800, color: "#0a8f5b", background: `${GREEN}14`, border: `1px solid ${GREEN}33`, padding: "3px 11px", borderRadius: 50 }}>
                     <GraduationCap size={13} /> Mentorship student
                   </span>
                 )}
               </div>
             )}
           </div>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#86efac", background: "rgba(34,197,94,.16)", border: "1px solid rgba(134,239,172,.4)", padding: "6px 13px", borderRadius: 50, position: "relative" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#0a8f5b", background: `${GREEN}14`, border: `1px solid ${GREEN}33`, padding: "6px 13px", borderRadius: 50, position: "relative" }}>
             <motion.span animate={{ opacity: [1, .3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", display: "block" }} />
             LIVE
           </span>
@@ -206,7 +205,8 @@ export default function PublicCommunity() {
             <Loader2 size={18} style={{ animation: "spin 1s linear infinite" }} /> Loading the public community…
           </div>
         ) : (
-          <>
+          <div className="community-grid" style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) 320px", gap: 22, alignItems: "start" }}>
+            <div style={{ minWidth: 0 }}>
             {/* composer */}
             <div ref={composerRef} style={{ marginBottom: 16 }}>
               {category && (
@@ -248,22 +248,28 @@ export default function PublicCommunity() {
             {/* AI Doubt Solver */}
             {tab === "ai" && <AiDoubtSolver token={token} exam="Public" subjects={subjects} />}
 
-            {/* subject filter + search */}
+            {/* subject dropdown + search */}
             {tab !== "ai" && (
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-              <button onClick={() => setSubject("")}
-                style={{ padding: "6px 13px", borderRadius: 50, cursor: "pointer", fontSize: 12.5, fontWeight: 700, border: `1.5px solid ${subject === "" ? ORANGE : "#e5e7eb"}`, background: subject === "" ? `${ORANGE}14` : "#fff", color: subject === "" ? ORANGE : MUTE }}>
-                All subjects
-              </button>
-              {subjects.map((s) => {
-                const on = subject === s;
-                return (
-                  <button key={s} onClick={() => setSubject(on ? "" : s)}
-                    style={{ padding: "6px 13px", borderRadius: 50, cursor: "pointer", fontSize: 12.5, fontWeight: 700, border: `1.5px solid ${on ? ORANGE : "#e5e7eb"}`, background: on ? `${ORANGE}14` : "#fff", color: on ? ORANGE : MUTE }}>
-                    {s}
-                  </button>
-                );
-              })}
+              <div style={{ position: "relative" }}>
+                <button onClick={() => setSubjectMenuOpen((o) => !o)}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 14px", borderRadius: 50, cursor: "pointer", fontSize: 13, fontWeight: 700, border: `1.5px solid ${subject ? ORANGE : "#e5e7eb"}`, background: subject ? `${ORANGE}14` : "#fff", color: subject ? ORANGE : NAVY }}>
+                  {subject || "All subjects"} <ChevronDown size={15} style={{ transform: subjectMenuOpen ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
+                </button>
+                {subjectMenuOpen && (
+                  <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 20, background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, boxShadow: "0 16px 40px -16px rgba(13,27,62,.3)", padding: 6, minWidth: 172 }}>
+                    {["", ...subjects].map((s) => {
+                      const on = subject === s;
+                      return (
+                        <button key={s || "all"} onClick={() => { setSubject(s); setSubjectMenuOpen(false); }}
+                          style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, width: "100%", textAlign: "left", padding: "9px 12px", borderRadius: 9, border: "none", cursor: "pointer", background: on ? `${ORANGE}12` : "transparent", color: on ? ORANGE : NAVY, fontWeight: on ? 800 : 600, fontSize: 13 }}>
+                          {s || "All subjects"} {on && <Check size={14} />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
               <div style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", border: "1.5px solid #e5e7eb", borderRadius: 50, padding: "6px 12px", minWidth: 180 }}>
                 <Search size={15} color={MUTE} />
                 <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search the community…"
@@ -298,10 +304,32 @@ export default function PublicCommunity() {
               ))}
             </div>
             )}
-          </>
+            </div>
+
+            {/* AI Doubt Solver — right sidebar card */}
+            <aside className="community-aside" style={{ position: "sticky", top: 96 }}>
+              <div style={{ background: `linear-gradient(150deg, ${CYAN}0f, #fff 60%)`, border: `1px solid ${CYAN}22`, borderRadius: 20, padding: "20px 18px", boxShadow: "0 10px 34px -20px rgba(13,27,62,.25)" }}>
+                <div style={{ width: 46, height: 46, borderRadius: 14, background: `linear-gradient(135deg, ${CYAN}, #6d28d9)`, display: "grid", placeItems: "center", marginBottom: 12, boxShadow: `0 8px 20px -8px ${CYAN}` }}>
+                  <Bot size={24} color="#fff" />
+                </div>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: NAVY, letterSpacing: "-0.3px" }}>College Parichay AI</div>
+                <div style={{ fontSize: 12.5, color: MUTE, lineHeight: 1.55, margin: "6px 0 14px" }}>
+                  Stuck on a question? Get a clear, step-by-step solution instantly — Physics, Chemistry, Maths or Biology.
+                </div>
+                <button onClick={() => setTab(tab === "ai" ? "all" : "ai")}
+                  style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", padding: "11px 14px", borderRadius: 12, border: "none", cursor: "pointer", background: tab === "ai" ? NAVY : CYAN, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, boxShadow: `0 10px 22px -10px ${CYAN}` }}>
+                  <Sparkles size={15} /> {tab === "ai" ? "Back to the feed" : "Solve a doubt with AI"}
+                </button>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: 12, fontSize: 11.5, color: MUTE, fontWeight: 600 }}>
+                  <ShieldCheck size={13} color={GREEN} /> Free · instant · exam-focused
+                </div>
+              </div>
+            </aside>
+          </div>
         )}
       </div>
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}
+        @media (max-width: 900px){ .community-grid{ grid-template-columns: 1fr !important; } .community-aside{ position: static !important; order: -1; } }`}</style>
     </section>
   );
 }

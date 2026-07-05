@@ -278,22 +278,6 @@ export default function JeeStrategy() {
         </div>
       </section>
 
-      <section id="timeline">
-        <StrategyReveal>
-          <span className="section-kicker">Part 08</span>
-          <h2 className="section-title">A realistic month-by-month timeline</h2>
-        </StrategyReveal>
-        <div className="timeline">
-          <AnimatedHeight height="100%" className="tl-progress" />
-          <StrategyReveal delay={0.1} className="tl-item"><div className="tl-dot"></div><h4>8–6 months out</h4><p>Complete the first full pass of the syllabus chapter by chapter; start chapter-wise tests immediately after each chapter rather than waiting for the whole syllabus.</p></StrategyReveal>
-          <StrategyReveal delay={0.2} className="tl-item"><div className="tl-dot"></div><h4>6–4 months out</h4><p>Begin 2–3 subject mixed tests; start and rigorously maintain the error log from this point onward.</p></StrategyReveal>
-          <StrategyReveal delay={0.3} className="tl-item"><div className="tl-dot"></div><h4>4–2 months out</h4><p>Weekly full-length 3-hour Main-pattern mocks; if targeting Advanced, shift a portion of Physics/Math practice to Advanced-level previous year papers.</p></StrategyReveal>
-          <StrategyReveal delay={0.4} className="tl-item"><div className="tl-dot"></div><h4>2–1 months out</h4><p>Full mocks twice weekly; condensed-notes revision begins in earnest; target your 3–5 weakest chapters using error-log data.</p></StrategyReveal>
-          <StrategyReveal delay={0.5} className="tl-item"><div className="tl-dot"></div><h4>Final month</h4><p>No new topics, under any circumstance. Pure revision, timed mocks, sleep discipline, tapering mock frequency in the final week to avoid exhaustion.</p></StrategyReveal>
-          <StrategyReveal delay={0.6} className="tl-item"><div className="tl-dot"></div><h4>Final week</h4><p>Light revision only — short notes, formula sheets, previously-wrong questions. No new full mock in the last 2 days; protect rest and mental steadiness.</p></StrategyReveal>
-        </div>
-      </section>
-
       <div id="roadmap">
         <StudyRoadmap data={JEE_MAIN_ROADMAP} />
         <StudyRoadmap data={JEE_ADV_ROADMAP} />
