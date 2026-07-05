@@ -11,6 +11,7 @@ import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion";
 import { MapPin, Globe, Trophy, ArrowLeft, ExternalLink, Crosshair, Building2 } from "lucide-react";
 import { COLLEGE_BY_SLUG, CATEGORIES, BRANCHES } from "../data/colleges.js";
+import { getCollegeStats } from "../data/collegeStats.js";
 import { collegeBranches, seatMatrix } from "../utils/cutoffEngine.js";
 import { loadCutoffDB } from "../utils/realCutoffEngine.js";
 import { Bars, PieWithLegend, CenterDonut, Trend } from "../components/Charts.jsx";
@@ -34,7 +35,18 @@ export default function CollegeDetail() {
   const { slug } = useParams();
   const [sp, setSp] = useSearchParams();
   const nav = useNavigate();
-  const college = COLLEGE_BY_SLUG[slug];
+  const baseCollege = COLLEGE_BY_SLUG[slug];
+  // Overlay real, verified fees/placements from collegeStats.js when present.
+  // Any field not supplied there falls back to the base (illustrative) value,
+  // so a half-filled entry is safe. Colleges with no entry are unchanged.
+  const stats = baseCollege ? getCollegeStats(baseCollege.slug) : null;
+  const college = baseCollege && stats
+    ? {
+        ...baseCollege,
+        fees: { ...baseCollege.fees, ...(stats.fees || {}) },
+        placements: { ...baseCollege.placements, ...(stats.placements || {}) },
+      }
+    : baseCollege;
 
   const initial = TABS.find((t) => tabKey(t) === sp.get("tab")) || "Overview";
   const [tab, setTab] = useState(initial);
