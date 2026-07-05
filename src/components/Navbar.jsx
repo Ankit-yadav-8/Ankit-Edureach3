@@ -81,11 +81,11 @@ const MENTORSHIP_NAV = [
 ];
 
 const COLLEGES = [
-  { label: "Explore IITs", to: "/colleges?type=IIT", icon: Landmark },
-  { label: "Explore NITs", to: "/colleges?type=NIT", icon: Landmark },
-  { label: "Explore IIITs", to: "/colleges?type=IIIT", icon: Landmark },
-  { label: "Private Universities", to: "/private-universities", icon: BadgeCheck },
-  { label: "State-wise Colleges", to: "/colleges", icon: BadgeCheck },
+  { label: "Explore IITs", to: "/colleges?type=IIT", icon: Landmark, tag: "All 23 IITs, branch-wise" },
+  { label: "Explore NITs", to: "/colleges?type=NIT", icon: Landmark, tag: "31 NITs across India" },
+  { label: "Explore IIITs", to: "/colleges?type=IIIT", icon: Landmark, tag: "Govt-funded IIITs" },
+  { label: "Private Universities", to: "/private-universities", icon: Clock, tag: "Top-ranked private options" },
+  { label: "State-wise Colleges", to: "/colleges", icon: Crosshair, tag: "Browse by state quota" },
 ];
 
 // ── Tools mega-menu: every utility grouped under a common, colour-coded name ──
@@ -300,30 +300,30 @@ export default function Navbar({ onSearch }) {
                         style={{
                           position: "absolute", top: "calc(100% + 8px)",
                           left: item.label === "Tools" ? "50%" : 0,
-                          background: "var(--page-bg)", borderRadius: 18,
+                          background: "var(--page-bg)", borderRadius: 20,
                           boxShadow: "0 24px 60px -18px rgba(13,27,62,.32)",
-                          padding: 12, border: "1px solid var(--border)",
-                          display: "flex", gap: 6,
+                          padding: "18px 18px 20px", border: "1px solid var(--border)",
+                          display: "flex", flexDirection: "column",
                           maxWidth: "96vw", overflowX: "auto"
                         }}
                       >
+                        <div style={eyebrowStyle}>Explore {item.label}</div>
+                        <div style={{ display: "flex", gap: 26 }}>
                         {item.mega.map((col) => {
                           const ColIc = col.icon;
                           return (
-                            <div key={col.title} style={{ minWidth: 230 }}>
+                            <div key={col.title} style={{ minWidth: 232 }}>
                               <button
                                 onClick={() => goHash(col.to)}
                                 className="mega-col-head"
                                 style={{
-                                  display: "flex", alignItems: "center", gap: 8, width: "100%",
-                                  padding: "8px 10px", marginBottom: 4, borderRadius: 10,
-                                  background: `${col.color}14`, cursor: "pointer", border: "none",
+                                  display: "flex", alignItems: "center", gap: 7, width: "100%",
+                                  padding: "4px 6px", marginBottom: 6, borderRadius: 8,
+                                  background: "transparent", cursor: "pointer", border: "none",
                                 }}
                               >
-                                <span style={{ width: 24, height: 24, borderRadius: 7, background: col.color, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                                  <ColIc size={14} color="#fff" />
-                                </span>
-                                <span style={{ fontWeight: 800, fontSize: "0.82rem", color: col.color, letterSpacing: "-0.01em" }}>{col.title}</span>
+                                <ColIc size={16} color={col.color} style={{ strokeWidth: 2 }} />
+                                <span style={{ fontWeight: 800, fontSize: "0.9rem", color: col.color, letterSpacing: "-0.01em" }}>{col.title}</span>
                               </button>
                               {col.items.map((d, i) => {
                                 const Ic = d.icon;
@@ -343,12 +343,12 @@ export default function Navbar({ onSearch }) {
                                     className="mega-item"
                                     style={{ ...megaItemStyle, alignItems: d.desc ? "flex-start" : "center", "--mega-accent": col.color }}
                                   >
-                                    <span style={{ width: 40, height: 40, borderRadius: 12, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: d.desc ? 2 : 0 }}>
-                                      <Ic size={18} color={d.iconColor || theme.color} style={{ strokeWidth: 1.8 }} />
+                                    <span style={{ width: 44, height: 44, borderRadius: 13, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: d.desc ? 2 : 0 }}>
+                                      <Ic size={19} color={d.iconColor || theme.color} style={{ strokeWidth: 1.8 }} />
                                     </span>
                                     <span style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
                                       <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--navy)" }}>{d.label}</span>
+                                        <span style={{ fontWeight: 700, fontSize: "0.92rem", color: "var(--navy)" }}>{d.label}</span>
                                         {d.badge && <span style={{ background: "#FFF0F0", color: "#FF8A8A", fontSize: "0.6rem", fontWeight: 800, padding: "2px 6px", borderRadius: 4, letterSpacing: "0.05em" }}>{d.badge}</span>}
                                       </span>
                                       {d.desc && <span style={{ fontSize: "0.78rem", color: "#888", lineHeight: 1.3 }}>{d.desc}</span>}
@@ -359,6 +359,7 @@ export default function Navbar({ onSearch }) {
                             </div>
                           );
                         })}
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -382,10 +383,11 @@ export default function Navbar({ onSearch }) {
                         transition={{ duration: 0.18 }}
                         style={{
                           position: "absolute", top: "calc(100% + 6px)", left: 0,
-                          background: "var(--page-bg)", borderRadius: 14, boxShadow: "var(--shadow-lg)",
-                          minWidth: 252, padding: 8, border: "1px solid var(--border)",
+                          background: "var(--page-bg)", borderRadius: 20, boxShadow: "0 24px 60px -18px rgba(13,27,62,.32)",
+                          minWidth: 300, padding: "18px 16px 16px", border: "1px solid var(--border)",
                         }}
                       >
+                        <div style={eyebrowStyle}>Explore {item.label}</div>
                         {item.drop.map((d, i) => {
                           const Ic = d.icon;
                           const defaultColors = [
@@ -399,12 +401,12 @@ export default function Navbar({ onSearch }) {
                           const theme = defaultColors[i % defaultColors.length];
                           return (
                             <button key={d.label} onClick={() => goHash(d.to)} className="mega-item" style={{ ...megaItemStyle, alignItems: "flex-start", "--mega-accent": "#FF693D" }}>
-                              <span style={{ width: 40, height: 40, borderRadius: 12, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
-                                <Ic size={18} color={d.iconColor || theme.color} style={{ strokeWidth: 1.8 }} />
+                              <span style={{ width: 44, height: 44, borderRadius: 13, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                                <Ic size={19} color={d.iconColor || theme.color} style={{ strokeWidth: 1.8 }} />
                               </span>
                               <span style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
                                 <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                  <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--navy)" }}>{d.label}</span>
+                                  <span style={{ fontWeight: 700, fontSize: "0.92rem", color: "var(--navy)" }}>{d.label}</span>
                                   {d.badge && <span style={{ background: "#FFF0F0", color: "#FF8A8A", fontSize: "0.6rem", fontWeight: 800, padding: "2px 6px", borderRadius: 4, letterSpacing: "0.05em" }}>{d.badge}</span>}
                                 </span>
                                 {d.tag && <span style={{ fontSize: "0.78rem", color: "#888", lineHeight: 1.3 }}>{d.tag}</span>}
@@ -878,7 +880,15 @@ const dropItemStyle = {
 };
 
 const megaItemStyle = {
-  display: "flex", alignItems: "center", gap: 9, width: "100%", textAlign: "left",
-  padding: "0.5rem 0.7rem 0.5rem 0.85rem", borderRadius: 9,
+  display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left",
+  padding: "0.55rem 0.7rem 0.55rem 0.7rem", borderRadius: 12,
   fontSize: "0.82rem", color: "var(--navy)", cursor: "pointer", border: "none", background: "transparent",
+};
+
+// Shared "EXPLORE X" eyebrow shown at the top of every dropdown / mega-menu.
+const eyebrowStyle = {
+  fontFamily: "Sora, sans-serif",
+  fontSize: "0.68rem", fontWeight: 800,
+  letterSpacing: "0.16em", textTransform: "uppercase",
+  color: "#9aa3b2", padding: "0 6px 12px",
 };
