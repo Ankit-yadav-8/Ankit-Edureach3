@@ -22,21 +22,6 @@ import Markdown from "../components/ai/Markdown.jsx";
 
 /* ── theme tokens (page + markdown) ── */
 const THEMES = {
-  dark: {
-    bg: "#1f1d1a", bgGrid: "rgba(255,255,255,.03)",
-    glow1: "rgba(255, 105, 61,.16)", glow2: "rgba(123,94,167,.14)",
-    sidebar: "#181613", panel: "#26231f", panelHi: "#2f2b26",
-    border: "rgba(255,255,255,.09)", borderHi: "rgba(255,255,255,.16)",
-    text: "#ece7df", textDim: "#a39b8f", textMute: "#7d756b",
-    accent: "#FF693D", accentSoft: "rgba(255, 105, 61,.15)",
-    userBubble: "rgba(255, 105, 61,.14)", userBorder: "rgba(255, 105, 61,.3)",
-    display: "'Space Grotesk','Sora',sans-serif",
-    heading: "#f5f1ea", body: "#d9d2c7", bodyDim: "#a39b8f", link: "#f0a868",
-    inlineCodeBg: "rgba(255,255,255,.08)", inlineCodeFg: "#f0a868",
-    codeBg: "#141210", codeHeadBg: "#0f0d0b", codeHeadFg: "#b8b0a4",
-    codeBorder: "rgba(255,255,255,.1)", codeFg: "#e7e0d4",
-    hr: "rgba(255,255,255,.1)", tableHead: "rgba(255,255,255,.04)",
-  },
   light: {
     bg: "#F7F4EE", bgGrid: "rgba(33,29,46,.035)",
     glow1: "rgba(255, 105, 61,.12)", glow2: "rgba(123,94,167,.1)",
@@ -111,8 +96,7 @@ const QUICK = [
 
 export default function CollegeParichayAI() {
   const { user, token } = useAuth();
-  const [theme, setTheme] = useState(() => localStorage.getItem("cpai:theme") || "dark");
-  const t = THEMES[theme];
+  const t = THEMES.light;
 
   const [chats, setChats] = useState(() => {
     try { const s = JSON.parse(localStorage.getItem(STORE)); if (Array.isArray(s) && s.length) return s; } catch { /* ignore */ }
@@ -149,7 +133,7 @@ export default function CollegeParichayAI() {
   useEffect(() => { if (!activeId && chats[0]) setActiveId(chats[0].id); }, [activeId, chats]);
   /* persist + theme */
   useEffect(() => { localStorage.setItem(STORE, JSON.stringify(chats.slice(0, 50))); }, [chats]);
-  useEffect(() => { localStorage.setItem("cpai:theme", theme); }, [theme]);
+
   /* autoscroll on new content */
   useEffect(() => { scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" }); }, [active?.messages, streaming]);
   /* page title */
@@ -677,7 +661,7 @@ export default function CollegeParichayAI() {
         .cpai-ta { scrollbar-width: thin; }
         .cpai-caret { display: inline-block; width: 7px; height: 15px; margin-left: 3px; border-radius: 2px; vertical-align: text-bottom; animation: cpaiBlink 1s steps(2,start) infinite; }
         @keyframes cpaiBlink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
-        .cpai-shimmer { background: linear-gradient(100deg, transparent 25%, ${theme === "dark" ? "rgba(255,255,255,.06)" : "rgba(0,0,0,.05)"} 45%, transparent 65%); background-size: 220% 100%; animation: cpaiSh 1.5s linear infinite; }
+        .cpai-shimmer { background: linear-gradient(100deg, transparent 25%, rgba(0,0,0,.05) 45%, transparent 65%); background-size: 220% 100%; animation: cpaiSh 1.5s linear infinite; }
         @keyframes cpaiSh { to { background-position: -220% 0; } }
       `}</style>
     </div>
