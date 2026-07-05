@@ -34,6 +34,7 @@ export const STATIC_ROUTES = [
   ["/scholarships", "0.6", "monthly"],
   ["/jee-resources", "0.6", "weekly"],
   ["/jee-analysis", "0.6", "weekly"],
+  ["/ai", "0.6", "weekly"],
   ["/jee-strategy", "0.7", "weekly"],
   ["/class-11", "0.6", "weekly"],
   ["/class-12", "0.6", "weekly"],
