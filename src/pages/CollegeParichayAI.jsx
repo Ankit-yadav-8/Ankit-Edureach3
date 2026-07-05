@@ -411,7 +411,7 @@ export default function CollegeParichayAI() {
   const empty = messages.length === 0;
 
   return (
-    <div style={{ position: "fixed", inset: 0, top: 0, display: "flex", background: t.bg, color: t.text, fontFamily: "'DM Sans',system-ui,sans-serif", zIndex: 1, overflow: "hidden" }}>
+    <div style={{ position: "fixed", inset: 0, top: 0, display: "flex", background: t.bg, color: t.text, fontFamily: "'DM Sans',system-ui,sans-serif", zIndex: 1, overflow: "hidden", colorScheme: "light" }}>
       <Seo path="/ai" title="College Parichay AI — your free study & admissions assistant" description="A Claude-style AI tutor for JEE, NEET & counselling. Solve doubts, generate notes, quizzes and code — free." />
       {/* ambient background */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `radial-gradient(${t.bgGrid} 1px, transparent 1px)`, backgroundSize: "30px 30px", opacity: .8 }} />
