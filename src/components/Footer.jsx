@@ -24,12 +24,14 @@ const EXAM_LINKS = [
   ["VITEEE 2026", "/exams/viteee"],
 ];
 const TOOL_LINKS = [
+  ["All Smart Tools", "/tools"],
   ["JoSAA 2026 Counselling ₹499", "/josaa-2026"],
   ["JEE Main Rank Predictor", "/jee-main#rank"],
   ["College Predictor", "/jee-main#college"],
   ["Counselling Planner", "/planner"],
   ["Compare Colleges", "/compare"],
   ["Compare Exams", "/compare-exams"],
+  ["Hostel & Mess Reviews", "/reviews"],
   ["College Map", "/map"],
   ["Scholarships & Loans", "/scholarships"],
   ["My Shortlist", "/shortlist"],

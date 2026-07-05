@@ -29,6 +29,8 @@ import JosaaRound1Result from "./pages/JosaaRound1Result.jsx";
 import CounsellingPlanner from "./pages/CounsellingPlanner.jsx";
 import CollegeMap from "./pages/CollegeMap.jsx";
 import CompareExams from "./pages/CompareExams.jsx";
+import Tools from "./pages/Tools.jsx";
+import Reviews from "./pages/Reviews.jsx";
 import Scholarships from "./pages/Scholarships.jsx";
 import OfficialCutoffs from "./pages/OfficialCutoffs.jsx";
 import CompareTray from "./components/CompareTray.jsx";
@@ -150,6 +152,8 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/team/:id" element={<Developer />} />
           <Route path="/compare" element={<Compare />} />
+          <Route path="/tools" element={<Tools />} />
+          <Route path="/reviews" element={<Reviews />} />
           <Route path="/shortlist" element={<Shortlist />} />
           <Route path="/for-you" element={<ForYou />} />
           <Route path="/josaa-2026" element={<Josaa2026 />} />

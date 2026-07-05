@@ -24,6 +24,8 @@ export const STATIC_ROUTES = [
   ["/jee-advanced-result-2026", "0.7", "weekly"],
   ["/for-you", "0.9", "weekly"],
   ["/compare", "0.7", "weekly"],
+  ["/tools", "0.8", "weekly"],
+  ["/reviews", "0.7", "weekly"],
   ["/cutoffs", "0.8", "weekly"],
   ["/exams", "0.8", "weekly"],
   ["/compare-exams", "0.6", "monthly"],

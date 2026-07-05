@@ -223,11 +223,6 @@ function IntelCard({ exam, idx, recommended, removable, onRemove }) {
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + idx * 0.08 }}
       style={{ position: "relative", background: CL.card, border: `1px solid ${recommended ? exam.color : CL.line}`, boxShadow: recommended ? `0 10px 34px ${rgba(exam.color, 0.22)}` : CL.shadow, borderRadius: 18, padding: "16px 16px 18px", overflow: "hidden" }}>
       <span style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: exam.color }} />
-      {recommended && (
-        <span style={{ position: "absolute", top: 12, right: 12, display: "inline-flex", alignItems: "center", gap: 4, fontSize: 9.5, fontWeight: 800, letterSpacing: "0.5px", color: "#fff", background: exam.color, padding: "3px 8px", borderRadius: 50 }}>
-          <Crown size={10} /> START HERE
-        </span>
-      )}
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
         <Link to={`/exams/${exam.slug}`} style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 17, color: CL.ink }}>{exam.name}</Link>
         {removable && (
