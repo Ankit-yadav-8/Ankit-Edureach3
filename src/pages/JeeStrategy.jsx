@@ -2,6 +2,8 @@ import { motion, useScroll } from "framer-motion";
 import Seo from "../components/Seo.jsx";
 import PremiumHero from "../components/PremiumHero.jsx";
 import { StrategyReveal, AnimatedWidth, AnimatedHeight } from "../components/StrategyReveal.jsx";
+import StudyRoadmap from "../components/StudyRoadmap.jsx";
+import { JEE_MAIN_ROADMAP, JEE_ADV_ROADMAP } from "../data/roadmaps.js";
 import { Atom, FlaskConical, Sigma, Target } from "lucide-react";
 
 export default function JeeStrategy() {
@@ -291,6 +293,11 @@ export default function JeeStrategy() {
           <StrategyReveal delay={0.6} className="tl-item"><div className="tl-dot"></div><h4>Final week</h4><p>Light revision only — short notes, formula sheets, previously-wrong questions. No new full mock in the last 2 days; protect rest and mental steadiness.</p></StrategyReveal>
         </div>
       </section>
+
+      <div id="roadmap">
+        <StudyRoadmap data={JEE_MAIN_ROADMAP} />
+        <StudyRoadmap data={JEE_ADV_ROADMAP} />
+      </div>
 
       <section id="closing">
         <StrategyReveal className="closing">

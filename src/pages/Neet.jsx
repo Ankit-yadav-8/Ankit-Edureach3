@@ -193,45 +193,6 @@ const EXAM_CYCLE = [
   { phase: "MCC / State Counselling", when: "Jul – Oct 2026", color: C_CHEM, icon: "🏥" },
 ];
 
-const ROADMAP = [
-  {
-    month: "Jun–Aug", label: "NCERT Foundation (Biology First)", color: C_BIO, icon: "🌿",
-    tip: "NEET is won on NCERT — especially Biology. Read NCERT Biology line by line and start Class 11 Physics & Chemistry fundamentals.",
-    tasks: ["NCERT Biology Class 11 — every line, twice", "NCERT Chemistry 11 — mole concept, bonding, GOC", "NCERT Physics 11 — mechanics fundamentals", "Build a Biology one-liner / diagram notebook"],
-    resources: ["NCERT Biology 11", "NCERT Physics & Chemistry 11", "Truemans Biology"],
-  },
-  {
-    month: "Sep–Nov", label: "Concept Building & Problem Solving", color: C_CHEM, icon: "🔬",
-    tip: "Layer problem-solving onto NCERT. Practice Physics numericals daily, master Organic mechanisms, revise Biology weekly.",
-    tasks: ["Physics: HC Verma + DC Pandey (NEET-level)", "Organic Chemistry — reaction mechanisms", "NCERT Biology 12 — Genetics & Reproduction", "Weekly Biology + assertion-reason practice"],
-    resources: ["HC Verma", "MS Chouhan Organic", "NCERT Biology 12"],
-  },
-  {
-    month: "Dec–Feb", label: "Class 12 Depth & PYQs", color: C_PHY, icon: "📐",
-    tip: "Finish Class 12 Physics & Chemistry, complete Human Physiology & Ecology, and solve 10 years of NEET PYQs subject-wise.",
-    tasks: ["Electrostatics → Modern Physics (full)", "Inorganic & Coordination Chemistry", "Human Physiology, Ecology & Biotech", "NEET PYQs (2015–2024) chapter-wise"],
-    resources: ["NCERT 12 (all)", "MTG 33 Years NEET PYQ", "Allen modules"],
-  },
-  {
-    month: "Mar–Apr", label: "Full Mocks & Weak-Area Fix", color: "#EC4899", icon: "📝",
-    tip: "Attempt full 720-mark mocks (3h 20m) twice a week. Prioritise Biology accuracy — it carries half the paper.",
-    tasks: ["2 full mocks/week (200 Q · attempt 180)", "Subject-wise error log with NCERT refs", "Re-revise Biology weekly", "Speed + accuracy drills for Physics"],
-    resources: ["Allen / Aakash test series", "NEET PYQ 2020–2025", "MTG NCERT Fingertips"],
-  },
-  {
-    month: "May", label: "Revision Sprint & NCERT Lock", color: "#EAB308", icon: "⚡",
-    tip: "No new topics. Revise NCERT Biology & Inorganic cover to cover, lock formulas, and solve one full mock daily.",
-    tasks: ["NCERT Biology + Inorganic full revision", "Formula sheets — Physics & Physical Chem", "1 full mock daily, exam-day timing", "Revise NCERT diagrams & exceptions"],
-    resources: ["NCERT (Biology + Chemistry)", "Self-made formula sheets"],
-  },
-  {
-    month: "Exam Day", label: "NEET UG — 3h 20m, 720 marks", color: C_BIO, icon: "🎯",
-    tip: "Start with Biology to bank marks fast, then Chemistry, then Physics. Fill the OMR carefully — no negative for unattempted.",
-    tasks: ["Reach centre early; carry admit card + ID", "Attempt Biology first (scoring, fast)", "Then Chemistry, then Physics numericals", "Mark OMR in batches; double-check bubbling"],
-    resources: ["Admit card", "Valid photo ID", "Stationery per NTA guidelines"],
-  },
-];
-
 const COACHING = [
   { name: "Aakash (BYJU'S)", city: "Pan-India (300+ centres)", color: "#0EA5A4", badge: "🏆 #1 for NEET", highlights: ["India's most NEET-focused coaching brand", "Largest medical-selection numbers each year", "ANTHE scholarship exam for fee waiver", "Classroom + hybrid + online (iTutor)"], website: "https://www.aakash.ac.in", fee: "₹1.2L – ₹2.6L/year", mode: "Offline / Online" },
   { name: "Allen Career Institute", city: "Kota, Rajasthan", color: "#FF693D", badge: "⭐ Top Results", highlights: ["Legendary Kota ecosystem for NEET", "Strong Biology & Physical Chemistry faculty", "Dropper & 2-year integrated batches", "All-India test series for self-studiers"], website: "https://www.allen.ac.in", fee: "₹1.4L – ₹2.6L/year", mode: "Offline / Online" },
@@ -1037,54 +998,6 @@ export default function Neet() {
         </div>
       </section>
 
-      {/* ════════ ROADMAP ════════ */}
-      <section id="roadmap" className="section" style={{ background: "var(--sky)", scrollMarginTop: 90 }}>
-        <div className="container">
-          <div className="title-bar">
-            <span className="eyebrow">Study Roadmap</span>
-            <h2 className="section-title">12-Month NEET Preparation Roadmap</h2>
-            <p className="section-sub">An NCERT-first, Biology-heavy plan with tasks, books and daily targets — from foundation through exam day.</p>
-          </div>
-          <div style={{ position: "relative", maxWidth: 960, margin: "0 auto" }}>
-            <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 3, background: `linear-gradient(180deg,${C_BIO},${C_CHEM},${C_PHY},#EC4899,#EAB308,${C_BIO})`, transform: "translateX(-50%)", borderRadius: 4 }} />
-            {ROADMAP.map((step, i) => (
-              <div key={step.month} style={{ display: "flex", justifyContent: i % 2 === 0 ? "flex-start" : "flex-end", marginBottom: 36, position: "relative" }}>
-                <div style={{ position: "absolute", left: "50%", top: 28, transform: "translateX(-50%)", width: 22, height: 22, borderRadius: "50%", background: step.color, border: "3px solid #fff", boxShadow: `0 0 0 4px ${step.color}44`, zIndex: 1 }} />
-                <div className="card card-hover" style={{ width: "44%", borderTop: `4px solid ${step.color}`, padding: "20px 22px", marginLeft: i % 2 === 0 ? 0 : "auto", marginRight: i % 2 === 0 ? "auto" : 0 }}>
-                  <div style={{ fontSize: 26, marginBottom: 6 }}>{step.icon}</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: step.color, letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>{step.month}</div>
-                  <h4 style={{ fontFamily: "Sora", fontWeight: 800, marginBottom: 8, fontSize: 15 }}>{step.label}</h4>
-                  <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.65, marginBottom: 12 }}>{step.tip}</p>
-                  <div style={{ borderTop: `1px solid ${step.color}22`, paddingTop: 10, marginBottom: 10 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: step.color, marginBottom: 6, textTransform: "uppercase", letterSpacing: .5 }}><Target size={11} style={{ display: "inline", marginRight: 4 }} />Key Tasks</div>
-                    {step.tasks.map((task) => (
-                      <div key={task} style={{ display: "flex", gap: 7, alignItems: "flex-start", fontSize: 12, marginBottom: 5 }}><CheckCircle2 size={13} color={step.color} style={{ flexShrink: 0, marginTop: 1 }} /><span style={{ color: "var(--navy)", lineHeight: 1.5 }}>{task}</span></div>
-                    ))}
-                  </div>
-                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                    {step.resources.map((r) => <span key={r} style={{ fontSize: 11, padding: "3px 9px", borderRadius: 50, background: `${step.color}14`, color: step.color, fontWeight: 600, border: `1px solid ${step.color}33` }}>{r}</span>)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="card" style={{ marginTop: 16, background: "linear-gradient(135deg,#ecfdf5,#d1fae5)", border: `1px solid ${ACCENT}33` }}>
-            <h4 style={{ fontFamily: "Sora", fontWeight: 800, marginBottom: 16, color: "#1a1a2e" }}>📚 Complete Book List — NEET UG</h4>
-            <div className="grid-3" style={{ gap: 14 }}>
-              {[
-                { subj: "Physics", books: ["NCERT 11 & 12 (base)", "HC Verma Vol 1 & 2", "DC Pandey NEET series", "Errorless / MTG PYQ"], color: C_PHY },
-                { subj: "Chemistry", books: ["NCERT 11 & 12 (esp. Inorganic)", "MS Chouhan Organic", "N. Awasthi Physical", "MTG NCERT Fingertips"], color: C_CHEM },
-                { subj: "Biology", books: ["NCERT 11 & 12 (the bible)", "Trueman's Biology Vol 1 & 2", "MTG NCERT Fingertips", "33 Years NEET PYQ"], color: C_BIO },
-              ].map(({ subj, books, color }) => (
-                <div key={subj} style={{ background: "#fff", borderRadius: 12, padding: "14px 16px", borderLeft: `3px solid ${color}`, boxShadow: "0 1px 8px rgba(0,0,0,.05)" }}>
-                  <div style={{ fontWeight: 800, color, marginBottom: 8, fontSize: 14 }}>{subj}</div>
-                  {books.map((b) => <div key={b} style={{ fontSize: 12, color: "#374151", marginBottom: 5 }}>• {b}</div>)}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ════════ COACHING ════════ */}
       <section id="coaching" className="section" style={{ scrollMarginTop: 90 }}>

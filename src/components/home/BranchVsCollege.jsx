@@ -470,6 +470,12 @@ export default function BranchVsCollege({ asPage = false }) {
             Your rank will force a trade-off.<br />
             <span style={{ color: CL.coral }}>Know your side</span> before you fill a single choice.
           </h2>
+          {phase === "quiz" && (
+            <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+              style={{ color: CL.body, fontSize: "1.02rem", lineHeight: 1.65, maxWidth: 560, margin: "0 auto" }}>
+              10 quick scenarios · no wrong answers — our engine reads your instincts and tells you which side to protect in your JoSAA list.
+            </motion.p>
+          )}
         </div>
 
         <AnimatePresence mode="wait" custom={dir}>
@@ -483,30 +489,47 @@ export default function BranchVsCollege({ asPage = false }) {
             <motion.div key={`q-${step}`}
               custom={dir} variants={qVariants} initial="enter" animate="center" exit="exit"
               transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-              style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "24px 28px 24px", maxWidth: 640, margin: "0 auto", position: "relative", overflow: "hidden" }}
+              style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "26px 28px 24px", maxWidth: 640, margin: "0 auto", position: "relative", overflow: "hidden" }}
             >
-              {/* AI badge + progress */}
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+              {/* animated gradient accent */}
+              <motion.span aria-hidden
+                animate={{ backgroundPosition: ["0% 0%", "200% 0%"] }}
+                transition={{ repeat: Infinity, duration: 3.4, ease: "linear" }}
+                style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber}, ${CL.green}, ${CL.coral})`, backgroundSize: "200% 100%" }} />
+
+              {/* AI badge + step pips */}
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18, flexWrap: "wrap" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10, fontWeight: 800, letterSpacing: ".08em", color: CL.coralDk, background: CL.coralSoft, padding: "4px 10px", borderRadius: 50, flexShrink: 0 }}>
-                  <Sparkles size={11} /> AI ANALYZING
+                  <motion.span animate={{ scale: [1, 1.35, 1], opacity: [1, 0.5, 1] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
+                    style={{ width: 6, height: 6, borderRadius: "50%", background: CL.coral, display: "inline-block" }} />
+                  AI ANALYZING
                 </span>
                 <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 13, color: CL.ink, whiteSpace: "nowrap" }}>
                   {step + 1} <span style={{ color: CL.muted, fontWeight: 700 }}>/ {QUESTIONS.length}</span>
                 </span>
-                <div style={{ flex: 1, height: 6, borderRadius: 50, background: CL.cream2, overflow: "hidden" }}>
-                  <motion.div animate={{ width: `${progress}%` }} transition={{ type: "spring", stiffness: 90, damping: 16 }}
-                    style={{ height: "100%", borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber})` }} />
+                {/* per-question pips */}
+                <div style={{ flex: 1, display: "flex", gap: 4, minWidth: 120 }}>
+                  {QUESTIONS.map((_, i) => {
+                    const done = !!answers[i], current = i === step;
+                    return (
+                      <div key={i} style={{ flex: 1, height: 6, borderRadius: 50, background: CL.cream2, overflow: "hidden" }}>
+                        <motion.div initial={false} animate={{ width: done || current ? "100%" : "0%" }} transition={{ duration: 0.4, ease: "easeOut" }}
+                          style={{ height: "100%", borderRadius: 50, background: done ? `linear-gradient(90deg, ${CL.coral}, ${CL.amber})` : CL.coralSoft }} />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.32rem", color: CL.ink, letterSpacing: "-0.4px", marginBottom: 20, lineHeight: 1.3 }}>{q.q}</h3>
+              <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.32rem", color: CL.ink, letterSpacing: "-0.4px", marginBottom: 6, lineHeight: 1.3 }}>{q.q}</h3>
+              <p style={{ fontSize: 12.5, color: CL.muted, marginBottom: 18 }}>Pick whatever feels most true — there's no wrong answer.</p>
 
               <motion.div variants={optContainer} initial="hidden" animate="show" style={{ display: "flex", flexDirection: "column", gap: 11 }}>
                 {q.options.map((opt, i) => {
                   const active = answers[step]?.label === opt.label;
                   return (
                     <motion.button key={opt.label} variants={optItem} onClick={() => choose(opt)}
-                      whileHover={{ scale: active ? 1 : 1.015 }} whileTap={{ scale: 0.985 }}
+                      whileHover={{ scale: active ? 1 : 1.015, x: active ? 0 : 3 }} whileTap={{ scale: 0.985 }}
                       style={{
                         textAlign: "left", padding: "14px 16px", borderRadius: 14, cursor: "pointer",
                         background: active ? CL.coralSoft : "#fff",
@@ -528,6 +551,7 @@ export default function BranchVsCollege({ asPage = false }) {
                         {active ? <Check size={15} strokeWidth={3} /> : LETTERS[i]}
                       </span>
                       <span style={{ flex: 1 }}>{opt.label}</span>
+                      <ArrowRight size={16} color={active ? CL.coral : CL.muted} style={{ flexShrink: 0, opacity: active ? 1 : 0.28, transition: "opacity .2s" }} />
                     </motion.button>
                   );
                 })}
