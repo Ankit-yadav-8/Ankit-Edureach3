@@ -1,5 +1,8 @@
 {
   "buildCommand": "npm run build:prod",
+  "redirects": [
+    { "source": "/jee-analysis", "destination": "/jee-strategy", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ],

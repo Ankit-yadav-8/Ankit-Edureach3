@@ -161,31 +161,44 @@ export default function Compare() {
                   <table className="cmp-table" style={{ width: "100%", minWidth: 520, borderCollapse: "collapse" }}>
                     <thead>
                       <tr>
-                        <th style={{ minWidth: 140, textAlign: "left", padding: "16px 14px" }}></th>
+                        <th style={{ minWidth: 150, textAlign: "left", padding: "16px 14px", verticalAlign: "middle" }}>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, fontWeight: 800, letterSpacing: ".8px", textTransform: "uppercase", color: CL.coralDk }}>
+                              <GitCompare size={13} /> Head-to-head
+                            </span>
+                            <span style={{ fontSize: 12, color: CL.body, lineHeight: 1.5 }}>
+                              Scored <b style={{ color: CL.ink }}>/100</b> by AI on placements, ranking, selectivity &amp; value.
+                            </span>
+                          </div>
+                        </th>
                         {cols.map((c, ci) => {
                           const win = analysis && analysis.winnerIdx === ci;
+                          const accent = c.accent || CL.coral;
                           return (
-                            <th key={c.slug} style={{ minWidth: 176, padding: 12, verticalAlign: "top", background: win ? rgba(CL.coral, 0.05) : "transparent", borderBottom: `2px solid ${win ? CL.coral : CL.line}` }}>
-                              {/* College image banner */}
-                              <div style={{ position: "relative", height: 82, borderRadius: 13, overflow: "hidden", background: `linear-gradient(135deg, ${CL.cream2}, ${CL.cream3})`, marginBottom: 11 }}>
-                                <img src={c.heroImage} alt={c.name} loading="lazy"
-                                  onError={(e) => { e.currentTarget.style.display = "none"; }}
-                                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                                <span aria-hidden style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.5) 100%)" }} />
-                                <span style={{ position: "absolute", left: 9, bottom: 8, fontFamily: CL.display, fontWeight: 800, fontSize: 13.5, color: "#fff", textShadow: "0 1px 4px rgba(0,0,0,.5)" }}>{c.short}</span>
+                            <th key={c.slug} style={{ minWidth: 200, padding: 12, verticalAlign: "top", background: win ? rgba(CL.coral, 0.05) : "transparent", borderBottom: `2px solid ${win ? CL.coral : CL.line}` }}>
+                              {/* Branded, content-rich college card */}
+                              <div style={{ position: "relative", borderRadius: 16, padding: "16px 14px 14px", background: `linear-gradient(155deg, ${rgba(accent, 0.16)}, ${rgba(accent, 0.03)})`, border: `1px solid ${rgba(accent, 0.22)}` }}>
                                 <button onClick={() => toggleCompare(c.slug)} aria-label="Remove"
-                                  style={{ position: "absolute", top: 7, right: 7, display: "grid", placeItems: "center", width: 24, height: 24, borderRadius: "50%", background: "rgba(255,255,255,.92)", border: "none", cursor: "pointer", boxShadow: "0 2px 6px rgba(0,0,0,.18)" }}>
+                                  style={{ position: "absolute", top: 8, right: 8, display: "grid", placeItems: "center", width: 24, height: 24, borderRadius: "50%", background: "rgba(255,255,255,.9)", border: `1px solid ${CL.line}`, cursor: "pointer" }}>
                                   <X size={13} color={CL.ink} />
                                 </button>
-                              </div>
-                              <Link to={`/colleges/${c.slug}`} style={{ display: "block", fontFamily: CL.display, fontWeight: 800, fontSize: 14.5, color: CL.ink, lineHeight: 1.25 }}>{c.name}</Link>
-                              {analysis && (
-                                <div style={{ marginTop: 8, display: "inline-flex", alignItems: "center", gap: 5 }}>
-                                  {win && <Crown size={16} color={CL.coral} />}
-                                  <b style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 21, color: win ? CL.coral : CL.ink }}>{analysis.score[ci]}</b>
-                                  <span style={{ fontSize: 10.5, color: CL.muted }}>/100 match</span>
+                                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 11 }}>
+                                  <span style={{ width: 46, height: 46, borderRadius: 13, background: accent, color: "#fff", display: "grid", placeItems: "center", fontFamily: CL.display, fontWeight: 800, fontSize: 14, letterSpacing: "-.5px", boxShadow: `0 8px 18px ${rgba(accent, 0.35)}`, flexShrink: 0 }}>{c.short}</span>
+                                  <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".5px", color: accent, background: rgba(accent, 0.13), padding: "3px 9px", borderRadius: 50 }}>{c.type}</span>
                                 </div>
-                              )}
+                                <Link to={`/colleges/${c.slug}`} style={{ display: "block", fontFamily: CL.display, fontWeight: 800, fontSize: 15.5, color: CL.ink, lineHeight: 1.2 }}>{c.name}</Link>
+                                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 7 }}>
+                                  <span style={{ fontSize: 10.5, fontWeight: 700, color: CL.ink2, background: "rgba(255,255,255,.7)", border: `1px solid ${CL.line}`, padding: "2px 8px", borderRadius: 50 }}>NIRF #{c.nirf}</span>
+                                  <span style={{ fontSize: 10.5, fontWeight: 700, color: CL.ink2, background: "rgba(255,255,255,.7)", border: `1px solid ${CL.line}`, padding: "2px 8px", borderRadius: 50 }}>Est. {c.estd}</span>
+                                </div>
+                                {analysis && (
+                                  <div style={{ marginTop: 12, paddingTop: 11, borderTop: `1px solid ${rgba(accent, 0.18)}`, display: "flex", alignItems: "center", gap: 6 }}>
+                                    {win && <Crown size={16} color={CL.coral} />}
+                                    <b style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 23, color: win ? CL.coral : CL.ink, lineHeight: 1 }}>{analysis.score[ci]}</b>
+                                    <span style={{ fontSize: 10.5, color: CL.muted }}>/100 match</span>
+                                  </div>
+                                )}
+                              </div>
                             </th>
                           );
                         })}

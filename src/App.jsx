@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
 import TopBar from "./components/TopBar.jsx";
@@ -154,6 +154,8 @@ export default function App() {
           <Route path="/compare" element={<Compare />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/reviews" element={<Reviews />} />
+          {/* /jee-analysis retired — its weightage/difficulty content moved into the JEE strategy page */}
+          <Route path="/jee-analysis" element={<Navigate to="/jee-strategy" replace />} />
           <Route path="/shortlist" element={<Shortlist />} />
           <Route path="/for-you" element={<ForYou />} />
           <Route path="/josaa-2026" element={<Josaa2026 />} />

@@ -5,6 +5,8 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
+Disallow: /mentorship-dashboard
+Disallow: /shortlist
 Disallow: /search
 
 # Allow major AI / answer-engine crawlers so CollegeParichay can be
