@@ -98,6 +98,15 @@ body {
   background: var(--page-bg);
 }
 main { background: var(--page-bg); }
+
+/* Branch-vs-College mode selector — two option-style cards on desktop,
+   a compact two-button toggle on phones (tap one or the other). */
+.bvc-mode-cards  { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.bvc-mode-toggle { display:none; gap:8px; }
+@media (max-width:600px){
+  .bvc-mode-cards  { display:none; }
+  .bvc-mode-toggle { display:flex; }
+}
 h1,h2,h3,h4,h5,h6 { font-family:"Space Grotesk","Sora",sans-serif; line-height:1.18; color:inherit; }
 a   { text-decoration:none; color:inherit; }
 img { max-width:100%; display:block; }

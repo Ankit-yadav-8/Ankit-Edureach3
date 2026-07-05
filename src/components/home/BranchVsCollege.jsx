@@ -541,8 +541,8 @@ function AiAnalyzing({ onDone }) {
 const LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
 const MODES = [
-  { id: "bvc",    label: "Branch vs College", icon: GitCompareArrows },
-  { id: "branch", label: "Which Branch?",     icon: Compass },
+  { id: "bvc",    label: "Branch vs College", icon: GitCompareArrows, sub: "Institute or branch — pick your side" },
+  { id: "branch", label: "Which Branch?",     icon: Compass,          sub: "Find your best-fit engineering branch" },
 ];
 
 /* ── Which-branch result card ── */
@@ -668,17 +668,52 @@ export default function BranchVsCollege({ asPage = false }) {
           )}
         </div>
 
-        {/* mode tabs */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 30, flexWrap: "wrap" }}>
-          {MODES.map((m) => {
-            const on = mode === m.id;
-            return (
-              <button key={m.id} onClick={() => switchMode(m.id)}
-                style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 20px", borderRadius: 50, cursor: "pointer", fontFamily: CL.display, fontWeight: 800, fontSize: 13.5, border: `1.5px solid ${on ? CL.coral : CL.cream3}`, background: on ? CL.coral : CL.card, color: on ? "#fff" : CL.ink2, boxShadow: on ? `0 10px 24px -10px ${CL.coral}` : "none", transition: "all .18s" }}>
-                <m.icon size={15} color={on ? "#fff" : CL.coral} /> {m.label}
-              </button>
-            );
-          })}
+        {/* mode selector — two option-style cards on desktop, a compact toggle on phones */}
+        <div className="bvc-mode-select" style={{ maxWidth: 640, margin: "0 auto 30px" }}>
+          {/* desktop / tablet: two side-by-side cards, styled like the quiz options */}
+          <div className="bvc-mode-cards">
+            {MODES.map((m) => {
+              const on = mode === m.id;
+              return (
+                <button key={m.id} onClick={() => switchMode(m.id)}
+                  style={{
+                    textAlign: "left", padding: "15px 16px", borderRadius: 16, cursor: "pointer",
+                    background: on ? CL.coralSoft : "#fff",
+                    border: `1.5px solid ${on ? CL.coral : CL.cream3}`,
+                    display: "flex", alignItems: "center", gap: 13, width: "100%",
+                    boxShadow: on ? `0 6px 20px ${CL.coral}22` : "none",
+                    transition: "background .15s, border-color .15s, box-shadow .2s",
+                  }}
+                  onMouseEnter={(e) => { if (!on) { e.currentTarget.style.borderColor = CL.coral + "77"; e.currentTarget.style.background = CL.cream2; } }}
+                  onMouseLeave={(e) => { if (!on) { e.currentTarget.style.borderColor = CL.cream3; e.currentTarget.style.background = "#fff"; } }}
+                >
+                  <span style={{ width: 46, height: 46, borderRadius: 13, flexShrink: 0, display: "grid", placeItems: "center", background: on ? CL.coral : CL.cream2, border: `1px solid ${on ? CL.coral : CL.cream3}`, transition: "all .15s" }}>
+                    <m.icon size={21} color={on ? "#fff" : CL.coral} />
+                  </span>
+                  <span style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
+                    <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 15, color: CL.ink, letterSpacing: "-0.2px" }}>{m.label}</span>
+                    <span style={{ fontSize: 12.5, color: CL.muted, fontWeight: 500, lineHeight: 1.3 }}>{m.sub}</span>
+                  </span>
+                  {on
+                    ? <CheckCircle2 size={20} color={CL.coral} style={{ flexShrink: 0 }} />
+                    : <ArrowRight size={18} color={CL.muted} style={{ flexShrink: 0, opacity: 0.35 }} />}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* phones: compact two-button toggle — tap one or the other */}
+          <div className="bvc-mode-toggle">
+            {MODES.map((m) => {
+              const on = mode === m.id;
+              return (
+                <button key={m.id} onClick={() => switchMode(m.id)}
+                  style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "11px 12px", borderRadius: 50, cursor: "pointer", fontFamily: CL.display, fontWeight: 800, fontSize: 13, border: `1.5px solid ${on ? CL.coral : CL.cream3}`, background: on ? CL.coral : CL.card, color: on ? "#fff" : CL.ink2, boxShadow: on ? `0 8px 20px -10px ${CL.coral}` : "none", transition: "all .18s" }}>
+                  <m.icon size={15} color={on ? "#fff" : CL.coral} /> {m.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <AnimatePresence mode="wait" custom={dir}>
