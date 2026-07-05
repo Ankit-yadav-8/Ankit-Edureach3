@@ -64,7 +64,6 @@ import Class11 from "./pages/Class11.jsx";
 import Class12 from "./pages/Class12.jsx";
 import JeeStrategy from "./pages/JeeStrategy.jsx";
 import NeetStrategy from "./pages/NeetStrategy.jsx";
-import { useAuth } from "./auth/AuthContext.jsx";
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
 function ScrollManager() {
@@ -80,21 +79,6 @@ function ScrollManager() {
       window.scrollTo({ top: 0 });
     }
   }, [pathname, hash]);
-  return null;
-}
-
-/* Mandatory auth gate — keep the login modal open for every guest and
-   re-open it if they dismiss it. Auth is required to use the site
-   (admin page is exempt and handles its own access). */
-function AuthGate() {
-  const { isLoggedIn, loginOpen, openLogin } = useAuth();
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    if (pathname.startsWith("/admin")) return;
-    if (!isLoggedIn && !loginOpen) openLogin();
-  }, [isLoggedIn, loginOpen, pathname, openLogin]);
-
   return null;
 }
 
@@ -128,13 +112,12 @@ export default function App() {
   }
 
   // College Parichay AI is a full-screen Claude-style app — render it on its own
-  // (no public navbar / footer / floating widgets), but keep the auth gate so a
-  // guest is still asked to log in before chatting.
+  // (no public navbar / footer / floating widgets). Open to guests; the login
+  // modal is still available on demand via the account button.
   if (pathname === "/ai") {
     return (
       <>
         <ScrollManager />
-        <AuthGate />
         <Routes>
           <Route path="/ai" element={<CollegeParichayAI />} />
         </Routes>
@@ -149,7 +132,6 @@ export default function App() {
       <div id="progress-bar" />
       <ScrollProgress />
       <ScrollManager />
-      <AuthGate />
       <TopBar />
       <Navbar onSearch={() => setSearchOpen(true)} />
 

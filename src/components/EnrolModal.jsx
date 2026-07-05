@@ -71,7 +71,13 @@ export const useEnrol = () => useContext(EnrolCtx);
 
 export function EnrolProvider({ children }) {
   const [plan, setPlan] = useState(null);
-  const open = useCallback((planKey) => setPlan(planKey), []);
+  const { isLoggedIn, openLogin } = useAuth() || {};
+  // Purchasing requires an account (the enrolment is tied to the logged-in
+  // user). Guests who tap "Enrol" are sent to log in first, then can retry.
+  const open = useCallback((planKey) => {
+    if (!isLoggedIn) { openLogin?.(); return; }
+    setPlan(planKey);
+  }, [isLoggedIn, openLogin]);
   const close = useCallback(() => setPlan(null), []);
   return (
     <EnrolCtx.Provider value={{ open }}>

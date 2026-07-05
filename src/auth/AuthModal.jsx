@@ -419,9 +419,10 @@ const HEADS = {
 };
 
 export default function AuthModal() {
-  const { loginOpen, closeLogin, login, signup, saveSession, loginMode, isLoggedIn } = useAuth();
-  // Auth is mandatory: guests cannot dismiss the modal (no close X / no skip).
-  const mandatory = !isLoggedIn;
+  const { loginOpen, closeLogin, login, signup, saveSession, loginMode } = useAuth();
+  // Login is optional — guests browse freely and open this modal on demand,
+  // so it is always dismissible (close X + "browse as guest" skip link).
+  const mandatory = false;
   const [mode,    setMode]   = useState("login");
   const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", jeeMainsRank: "", jeeAdvancedRank: "" });
   const [fe,      setFe]     = useState({});
