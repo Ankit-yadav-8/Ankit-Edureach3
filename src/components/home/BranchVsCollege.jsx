@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   GitCompareArrows, ArrowRight, RotateCcw, Sparkles,
-  Layers, Crosshair, Compass, CheckCircle2, Scale, Check, Cpu,
+  Layers, Crosshair, Compass, CheckCircle2, Check, Cpu,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
@@ -24,6 +24,7 @@ const QUESTIONS = [
       { label: "The subject I want, even if few people know the college", score: -2 },
       { label: "The one where seniors report better internships", score: 1 },
       { label: "The one whose curriculum genuinely interests me", score: -1 },
+      { label: "Honestly, I'd agonise — both pull me equally", score: 0 },
     ],
   },
   {
@@ -33,6 +34,7 @@ const QUESTIONS = [
       { label: "Building real projects in the exact field I chose", score: -2 },
       { label: "Sitting for the biggest recruiters at placement season", score: 1 },
       { label: "An internship or paper in my core domain", score: -1 },
+      { label: "A blend — some campus buzz, some real building", score: 0 },
     ],
   },
   {
@@ -40,8 +42,9 @@ const QUESTIONS = [
     options: [
       { label: "Locked in — I've known my field for years", score: -2 },
       { label: "I have a favourite, but I could be convinced", score: -1 },
-      { label: "Honestly, I keep changing my mind", score: 2 },
-      { label: "I care more about outcomes than the subject itself", score: 1 },
+      { label: "Honestly, I keep changing my mind", score: 1 },
+      { label: "I care more about outcomes than the subject itself", score: 2 },
+      { label: "In between — a lean, but nothing locked", score: 0 },
     ],
   },
   {
@@ -51,6 +54,7 @@ const QUESTIONS = [
       { label: "Wrong — deep skills compound for decades", score: -2 },
       { label: "Partly true — but I'd still start in the right field", score: -1 },
       { label: "Neither matters as much as the network you build", score: 1 },
+      { label: "Too situational to call — it depends", score: 0 },
     ],
   },
   {
@@ -60,6 +64,7 @@ const QUESTIONS = [
       { label: "Drop a college tier to protect the branch", score: -2 },
       { label: "Join any branch there and attempt a branch change", score: 1 },
       { label: "Pick a related branch that keeps my field alive", score: -1 },
+      { label: "I'd genuinely weigh it seat by seat", score: 0 },
     ],
   },
   {
@@ -69,6 +74,7 @@ const QUESTIONS = [
       { label: "The specialist people call for one hard problem", score: -2 },
       { label: "A generalist who moves across roles easily", score: 1 },
       { label: "Someone who built a career on one strong skill", score: -1 },
+      { label: "Honestly, a bit of both", score: 0 },
     ],
   },
   {
@@ -78,6 +84,7 @@ const QUESTIONS = [
       { label: "Spending four years on a subject I don't enjoy", score: -2 },
       { label: "Graduating without a strong placement season", score: 1 },
       { label: "Being average at something I never chose", score: -1 },
+      { label: "Both would bother me about equally", score: 0 },
     ],
   },
   {
@@ -87,6 +94,7 @@ const QUESTIONS = [
       { label: "Whether my specific branch actually places well there", score: -2 },
       { label: "How many companies visited overall", score: 1 },
       { label: "Which roles match the field I care about", score: -1 },
+      { label: "A little of everything, if I'm honest", score: 0 },
     ],
   },
   {
@@ -96,6 +104,7 @@ const QUESTIONS = [
       { label: "A field I can explain with genuine excitement", score: -2 },
       { label: "A course with obvious job security", score: 1 },
       { label: "The exact specialisation I always wanted", score: -1 },
+      { label: "Either answer would make me proud", score: 0 },
     ],
   },
   {
@@ -105,6 +114,7 @@ const QUESTIONS = [
       { label: "My chosen branch, wherever it takes me", score: -2 },
       { label: "The strongest placement cell available", score: 1 },
       { label: "A curriculum built around my interests", score: -1 },
+      { label: "I'd rather balance both than lock one", score: 0 },
     ],
   },
 ];
@@ -121,7 +131,13 @@ function scoreState(answers) {
 
 function computeVerdict(answers) {
   const { norm } = scoreState(answers);
-  const strength = Math.round(Math.abs(norm) * 100);
+  // Strength = how *consistently* the answers point one way. Neutral (0) picks
+  // don't count for or against, so someone who leaned every non-neutral answer
+  // to one side reads as a strong, realistic pull rather than a diluted score.
+  const chosen = answers.filter(Boolean);
+  const leanSum = chosen.reduce((s, a) => s + a.score, 0);
+  const absTotal = chosen.reduce((s, a) => s + Math.abs(a.score), 0) || 1;
+  const strength = Math.round((Math.abs(leanSum) / absTotal) * 100);
   if (norm >= 0.15) {
     return {
       side: "college", norm, strength,
@@ -274,7 +290,6 @@ function VerdictCard({ verdict, onReset }) {
         <div style={{ textAlign: "center" }}>
           <DirectionDial norm={verdict.norm} size={280} />
           <div style={{ marginTop: 14, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 800, color: toneFg, background: toneBg, padding: "7px 15px", borderRadius: 50 }}>
-            <Scale size={14} />
             {verdict.side === "balanced" ? "Almost an even split" : `${shown}% pull to one side`}
           </div>
         </div>
@@ -425,7 +440,7 @@ function AiAnalyzing({ onDone }) {
   );
 }
 
-const LETTERS = ["A", "B", "C", "D"];
+const LETTERS = ["A", "B", "C", "D", "E"];
 
 /* question slide transition (direction-aware) */
 const qVariants = {
@@ -462,7 +477,9 @@ export default function BranchVsCollege({ asPage = false }) {
   const progress = (answers.filter(Boolean).length / QUESTIONS.length) * 100;
 
   return (
-    <section id="branch-vs-college" style={{ background: CL.cream, padding: asPage ? "104px 0 80px" : "84px 0", scrollMarginTop: 80 }}>
+    <section id="branch-vs-college" style={{ background: CL.cream, padding: asPage ? "104px 0 80px" : "84px 0", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
+      {/* soft decorative glow */}
+      <div aria-hidden style={{ position: "absolute", top: "6%", left: "50%", width: 640, height: 640, transform: "translateX(-50%)", background: `radial-gradient(circle, ${CL.coralSoft} 0%, transparent 62%)`, opacity: 0.55, pointerEvents: "none", zIndex: 0 }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 38px" }}>
           <span style={clEyebrow}><GitCompareArrows size={13} /> AI Trade-off Analyzer</span>

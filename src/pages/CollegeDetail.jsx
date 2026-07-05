@@ -145,12 +145,8 @@ export default function CollegeDetail() {
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
           { "@type": "ListItem", position: 2, name: "Colleges", item: `${SITE_URL}/colleges` },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: college.name,
-            item: `${SITE_URL}/colleges/${college.slug}`,
-          },
+          { "@type": "ListItem", position: 3, name: `${college.type} Colleges`, item: `${SITE_URL}/colleges?type=${college.type}` },
+          { "@type": "ListItem", position: 4, name: college.name, item: `${SITE_URL}/colleges/${college.slug}` },
         ],
       },
     ],
@@ -164,11 +160,6 @@ export default function CollegeDetail() {
         path={`/colleges/${college.slug}`}
         image={seoImage}
         jsonLd={seoJsonLd}
-        breadcrumbs={[
-          { name: "Home", path: "/" },
-          { name: "Colleges", path: "/colleges" },
-          { name: college.short || college.name, path: `/colleges/${college.slug}` },
-        ]}
       />
 
       {/* ── Hero — clean: image + one readability gradient + a subtle accent ──── */}
