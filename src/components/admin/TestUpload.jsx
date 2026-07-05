@@ -40,7 +40,7 @@ const SUBJECTS_BY_EXAM = {
 
 const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "—");
 
-const card = { background: "#fff", borderRadius: 16, border: "1px solid #f0e9e0", boxShadow: "0 8px 30px rgba(13,27,62,.06)", minWidth: 0, maxWidth: "100%", boxSizing: "border-box" };
+const card = { background: "var(--page-bg)", borderRadius: 16, border: "1px solid #f0e9e0", boxShadow: "0 8px 30px rgba(13,27,62,.06)", minWidth: 0, maxWidth: "100%", boxSizing: "border-box" };
 const lbl = { fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 6, display: "block" };
 const inp = { width: "100%", height: 40, padding: "0 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: NAVY };
 
@@ -446,12 +446,12 @@ export default function TestUpload({ token }) {
           </button>
           {!questions && (
             <button onClick={startManual} disabled={busy}
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: NAVY, border: "1.5px solid #e5e7eb", height: 42, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13.5, cursor: "pointer" }}>
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--page-bg)", color: NAVY, border: "1.5px solid #e5e7eb", height: 42, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13.5, cursor: "pointer" }}>
               <Plus size={15} /> Add questions manually
             </button>
           )}
           {questions && !parsing && (
-            <button onClick={resetForm} style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", color: MUTE, border: "1.5px solid #e5e7eb", height: 42, padding: "0 16px", borderRadius: 10, fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
+            <button onClick={resetForm} style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "var(--page-bg)", color: MUTE, border: "1.5px solid #e5e7eb", height: 42, padding: "0 16px", borderRadius: 10, fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
               <X size={15} /> Clear
             </button>
           )}
@@ -540,7 +540,7 @@ export default function TestUpload({ token }) {
                     <span>{fmtDate(t.createdAt)}</span>
                   </div>
                 </div>
-                <button onClick={() => remove(t.id)} title="Delete" style={{ background: "#fff", border: "1.5px solid #fee2e2", color: "#ef4444", borderRadius: 9, width: 34, height: 34, display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                <button onClick={() => remove(t.id)} title="Delete" style={{ background: "var(--page-bg)", border: "1.5px solid #fee2e2", color: "#ef4444", borderRadius: 9, width: 34, height: 34, display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
                   <Trash2 size={15} />
                 </button>
               </div>
@@ -603,7 +603,7 @@ function QuestionCard({ q, onChange, onDelete, uploadImage, subjectOptions = [] 
                 onClick={() => setZoom(false)}
                 style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,.85)", display: "grid", placeItems: "center", padding: 20, cursor: "zoom-out" }}>
                 <motion.img src={url} alt="" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
-                  style={{ maxWidth: "95vw", maxHeight: "90vh", borderRadius: 12, boxShadow: "0 20px 60px rgba(0,0,0,.5)", background: "#fff" }} />
+                  style={{ maxWidth: "95vw", maxHeight: "90vh", borderRadius: 12, boxShadow: "0 20px 60px rgba(0,0,0,.5)", background: "var(--page-bg)" }} />
                 <button onClick={(e) => { e.stopPropagation(); setZoom(false); }}
                   style={{ position: "fixed", top: 16, right: 16, background: "rgba(255,255,255,.25)", border: "none", borderRadius: "50%", width: 40, height: 40, display: "grid", placeItems: "center", cursor: "pointer", color: "#fff", backdropFilter: "blur(8px)" }}>
                   <X size={20} />
@@ -622,7 +622,7 @@ function QuestionCard({ q, onChange, onDelete, uploadImage, subjectOptions = [] 
   };
 
   return (
-    <div style={{ border: `1.5px solid ${correctOk ? "#f0e9e0" : "#fca5a5"}`, borderRadius: 12, background: "#fff", overflow: "hidden" }}>
+    <div style={{ border: `1.5px solid ${correctOk ? "#f0e9e0" : "#fca5a5"}`, borderRadius: 12, background: "var(--page-bg)", overflow: "hidden" }}>
       {/* header / summary row */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "#faf8f4", borderBottom: open ? "1px solid #f0e9e0" : "none" }}>
         <span style={{ width: 28, height: 28, borderRadius: 8, background: `${ORANGE}15`, color: ORANGE, fontWeight: 800, fontSize: 13, display: "grid", placeItems: "center", flexShrink: 0 }}>{q.qno}</span>

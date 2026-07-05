@@ -538,7 +538,7 @@ function NeetCollegePredictor() {
     });
   }, [score, quota, state, category]);
 
-  const sel = { background: "#fff", border: "1.5px solid var(--line)", borderRadius: 10, padding: "10px 12px", fontSize: 13, fontFamily: "Sora", fontWeight: 600, color: "var(--navy)", width: "100%" };
+  const sel = { background: "var(--page-bg)", border: "1.5px solid var(--line)", borderRadius: 10, padding: "10px 12px", fontSize: 13, fontFamily: "Sora", fontWeight: 600, color: "var(--navy)", width: "100%" };
 
   return (
     <>

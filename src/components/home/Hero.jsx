@@ -260,7 +260,7 @@ function AboutUsCard() {
       transition={{ duration: 0.7, delay: 0.3 }}
       className="hero-about-col"
       style={{
-        background: "#ffffff",
+        background: "var(--page-bg)",
         border: "1px solid rgba(255, 105, 61,.20)",
         borderRadius: 20,
         padding: "1.1rem 1.2rem",
@@ -622,7 +622,7 @@ function MentorshipHeroCard({ isTablet }) {
       transition={{ duration: 0.7, delay: 0.3 }}
       className="hero-about-col"
       style={{
-        background: "#ffffff",
+        background: "var(--page-bg)",
         border: "1px solid rgba(255, 105, 61,.20)",
         borderRadius: 20,
         padding: isTablet ? "0.95rem 1rem" : "1.1rem 1.2rem",
@@ -783,7 +783,7 @@ function RotatingHeroCard({ isMobile }) {
             exit={{ opacity: 0, x: -36 }}
             transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
             style={{
-              background: "#ffffff",
+              background: "var(--page-bg)",
               border: "1px solid rgba(0,0,0,.07)",
               borderRadius: 18,
               padding: "1.2rem 1.25rem",
@@ -938,7 +938,7 @@ function HeroFeatureCards({ isMobile, isXs }) {
           key={c.key}
           style={{
             display: "flex", flexDirection: "column", gap: 12,
-            background: "#ffffff", border: "1px solid rgba(0,0,0,.07)", borderRadius: 18,
+            background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.07)", borderRadius: 18,
             padding: "1.15rem 1.2rem", textAlign: "left", minHeight: 240,
             boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 20px 25px -5px rgba(0,0,0,.06), 0 10px 10px -5px rgba(0,0,0,.04)",
           }}
@@ -1050,7 +1050,7 @@ function HeroRadarCard({ isMobile }) {
             transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
             style={{
               position: "absolute", inset: 0,
-              background: "#ffffff", border: "1px solid rgba(0,0,0,.08)", borderRadius: 20, overflow: "hidden",
+              background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.08)", borderRadius: 20, overflow: "hidden",
               boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 24px 30px -8px rgba(0,0,0,.10), 0 12px 14px -8px rgba(0,0,0,.05)",
               display: "flex", flexDirection: "column",
             }}
@@ -1058,7 +1058,7 @@ function HeroRadarCard({ isMobile }) {
             {/* coloured header */}
             <div style={{ background: `linear-gradient(135deg, ${c.accent}, ${c.accent}cc)`, color: "#fff", padding: "15px 18px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 10, fontWeight: 800, letterSpacing: "1.2px", opacity: 0.95 }}>
-                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#fff", display: "inline-block" }} /> {c.eyebrow}
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--page-bg)", display: "inline-block" }} /> {c.eyebrow}
               </div>
               <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", marginTop: 6, lineHeight: 1.25 }}>{c.title}</div>
             </div>
@@ -1196,7 +1196,7 @@ function HeroRotatingCard({ slides, isMobile, interval = 4600, minHeight = 492 }
             whileHover={{ y: -4 }}
             style={{
               position: "absolute", inset: 0,
-              background: "#ffffff", border: `1px solid ${c.accent}22`, borderRadius: 22, overflow: "hidden",
+              background: "var(--page-bg)", border: `1px solid ${c.accent}22`, borderRadius: 22, overflow: "hidden",
               boxShadow: `0 1px 3px rgba(0,0,0,.05), 0 30px 50px -18px ${c.accent}44, 0 12px 18px -10px rgba(0,0,0,.10)`,
               display: "flex", flexDirection: "column",
             }}
@@ -1220,7 +1220,7 @@ function HeroRotatingCard({ slides, isMobile, interval = 4600, minHeight = 492 }
                 </motion.span>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 9.5, fontWeight: 800, letterSpacing: "1.3px", opacity: 0.95 }}>
-                    <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.6, repeat: Infinity }} style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff", display: "inline-block" }} />
+                    <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.6, repeat: Infinity }} style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--page-bg)", display: "inline-block" }} />
                     {c.eyebrow}
                   </div>
                   <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.04rem", marginTop: 4, lineHeight: 1.2 }}>{c.title}</div>
@@ -1346,7 +1346,7 @@ function SixFeatureCards({ isMobile, isXs }) {
           style={{
             cursor: "pointer", display: "flex", flexDirection: "column", gap: 8,
             minHeight: c.radar ? 232 : 200, textAlign: "left",
-            background: "#fff",
+            background: "var(--page-bg)",
             border: c.radar ? "1.5px solid #FF693D" : "1px solid rgba(0,0,0,.08)",
             borderRadius: 16, padding: "16px 14px", position: "relative",
             boxShadow: "0 1px 3px rgba(0,0,0,.05)",
@@ -1610,7 +1610,7 @@ export default function Hero({ onSearch }) {
               <div style={{
                 display: "flex",
                 gap: 6,
-                background: "#ffffff",
+                background: "var(--page-bg)",
                 padding: isXs ? 6 : 8,
                 borderRadius: 9999,
                 boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
@@ -1702,7 +1702,7 @@ export default function Hero({ onSearch }) {
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
                   padding: isXs ? "12px 24px" : "14px 32px", borderRadius: 9999, cursor: "pointer",
-                  background: "#fff", border: "1px solid rgba(0,0,0,.1)", color: "#111",
+                  background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.1)", color: "#111",
                   fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
                   boxShadow: "0 4px 12px rgba(0,0,0,.03)",
                   transition: "all .2s", whiteSpace: "nowrap",

@@ -137,7 +137,7 @@ export default function PublicCommunity() {
   /* ── not-logged-in gate (site is auth-gated, but be graceful) ── */
   if (!isLoggedIn) {
     return (
-      <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "130px 16px 60px", background: "#ffffff" }}>
+      <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "130px 16px 60px", background: "var(--page-bg)" }}>
         <Seo
           title="Student Community — Ask Doubts & Discuss with JEE / NEET Aspirants"
           description="Join the CollegeParichay student community — a public forum where JEE & NEET aspirants, students and mentors discuss doubts, colleges, branches and campus life."
@@ -164,11 +164,11 @@ export default function PublicCommunity() {
   const subjects = SUBJECTS.Public;
 
   return (
-    <section style={{ background: "#ffffff", minHeight: "100vh", padding: "110px 0 70px" }}>
+    <section style={{ background: "var(--page-bg)", minHeight: "100vh", padding: "110px 0 70px" }}>
       <div style={{ maxWidth: 1140, margin: "0 auto", padding: "0 18px" }}>
 
         {/* hero — light */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", background: "#ffffff", color: NAVY, borderRadius: 22, padding: "22px 24px", marginBottom: 18, position: "relative", overflow: "hidden", border: "1px solid #eef1f6", boxShadow: "0 8px 30px -18px rgba(13,27,62,.18)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", background: "var(--page-bg)", color: NAVY, borderRadius: 22, padding: "22px 24px", marginBottom: 18, position: "relative", overflow: "hidden", border: "1px solid #eef1f6", boxShadow: "0 8px 30px -18px rgba(13,27,62,.18)" }}>
           <div style={{ position: "absolute", top: -50, right: -30, width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, ${CYAN}18, transparent 70%)` }} />
           <div style={{ width: 54, height: 54, borderRadius: 16, background: `${CYAN}14`, display: "grid", placeItems: "center", flexShrink: 0 }}>
             <Globe2 size={26} color={CYAN} />
@@ -240,7 +240,7 @@ export default function PublicCommunity() {
                 );
               })}
               <button onClick={() => loadFeed(tab)} title="Refresh"
-                style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 13px", borderRadius: 50, border: "1.5px solid #e5e7eb", background: "#fff", color: MUTE, cursor: "pointer", fontWeight: 700, fontSize: 12.5 }}>
+                style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 13px", borderRadius: 50, border: "1.5px solid #e5e7eb", background: "var(--page-bg)", color: MUTE, cursor: "pointer", fontWeight: 700, fontSize: 12.5 }}>
                 <RefreshCw size={14} style={refreshing ? { animation: "spin 1s linear infinite" } : undefined} /> Refresh
               </button>
             </div>
@@ -257,7 +257,7 @@ export default function PublicCommunity() {
                   {subject || "All subjects"} <ChevronDown size={15} style={{ transform: subjectMenuOpen ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
                 </button>
                 {subjectMenuOpen && (
-                  <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 20, background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, boxShadow: "0 16px 40px -16px rgba(13,27,62,.3)", padding: 6, minWidth: 172 }}>
+                  <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 20, background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 14, boxShadow: "0 16px 40px -16px rgba(13,27,62,.3)", padding: 6, minWidth: 172 }}>
                     {["", ...subjects].map((s) => {
                       const on = subject === s;
                       return (
@@ -270,7 +270,7 @@ export default function PublicCommunity() {
                   </div>
                 )}
               </div>
-              <div style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", border: "1.5px solid #e5e7eb", borderRadius: 50, padding: "6px 12px", minWidth: 180 }}>
+              <div style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 7, background: "var(--page-bg)", border: "1.5px solid #e5e7eb", borderRadius: 50, padding: "6px 12px", minWidth: 180 }}>
                 <Search size={15} color={MUTE} />
                 <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search the community…"
                   style={{ border: "none", outline: "none", fontSize: 13, color: NAVY, background: "transparent", width: "100%" }} />
@@ -283,7 +283,7 @@ export default function PublicCommunity() {
             {tab !== "ai" && (
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               {shown.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "34px 20px", background: "#fff", border: "1px dashed #e5e7eb", borderRadius: 18, color: MUTE }}>
+                <div style={{ textAlign: "center", padding: "34px 20px", background: "var(--page-bg)", border: "1px dashed #e5e7eb", borderRadius: 18, color: MUTE }}>
                   <ShieldCheck size={28} color="#cbd5e1" style={{ marginBottom: 8 }} />
                   <div style={{ fontWeight: 700, color: NAVY, marginBottom: 4 }}>
                     {query ? "No matches"

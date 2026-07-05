@@ -24,7 +24,7 @@ function FestCard({ t }) {
       animate={{ y: isHovered && !isExpanded ? -4 : 0 }}
       transition={{ duration: 0.2 }}
       style={{
-        background: "#ffffff",
+        background: "var(--page-bg)",
         border: `1px solid ${isHovered || isExpanded ? iconColor : `${iconColor}15`}`,
         borderRadius: 20,
         padding: 24,
@@ -157,7 +157,7 @@ export default function CampusFests() {
   });
 
   return (
-    <div style={{ background: "#ffffff", minHeight: "100vh", paddingBottom: 100 }}>
+    <div style={{ background: "var(--page-bg)", minHeight: "100vh", paddingBottom: 100 }}>
       <Seo
         title="Campus Fests 2026 — Tech, Cultural & Management Fests of IITs, NITs & More"
         description="Discover 2026 college fests across India — tech, cultural and management festivals at IITs, NITs, IIITs and top universities. Dates, events, locations and how to participate."
@@ -165,7 +165,7 @@ export default function CampusFests() {
         breadcrumbs={[{ name: "Home", path: "/" }, { name: "Campus Fests", path: "/campus-fests" }]}
       />
       {/* ── HERO SECTION ── */}
-      <div style={{ background: "#ffffff", padding: "120px 24px 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div style={{ background: "var(--page-bg)", padding: "120px 24px 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
         
         {/* Animated Background Blobs */}
         <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
@@ -211,7 +211,7 @@ export default function CampusFests() {
           <div style={{
             display: "flex",
             gap: 6,
-            background: "#ffffff",
+            background: "var(--page-bg)",
             padding: "8px",
             borderRadius: 9999,
             boxShadow: "0 10px 40px rgba(0,0,0,0.06)",

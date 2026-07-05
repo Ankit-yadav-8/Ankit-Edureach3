@@ -213,7 +213,7 @@ export default function Navbar({ onSearch }) {
           position: "fixed", top: 34, left: 0, right: 0, zIndex: 1000,
           height: 64,
           width: "100%",
-          background: "#ffffff",
+          background: "var(--page-bg)",
           borderBottom: "1px solid rgba(0,0,0,0.06)",
           boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.03)" : "none",
           transition: "box-shadow .3s ease",
@@ -300,7 +300,7 @@ export default function Navbar({ onSearch }) {
                         style={{
                           position: "absolute", top: "calc(100% + 8px)",
                           left: item.label === "Tools" ? "50%" : 0,
-                          background: "#fff", borderRadius: 18,
+                          background: "var(--page-bg)", borderRadius: 18,
                           boxShadow: "0 24px 60px -18px rgba(13,27,62,.32)",
                           padding: 12, border: "1px solid var(--border)",
                           display: "flex", gap: 6,
@@ -382,7 +382,7 @@ export default function Navbar({ onSearch }) {
                         transition={{ duration: 0.18 }}
                         style={{
                           position: "absolute", top: "calc(100% + 6px)", left: 0,
-                          background: "#fff", borderRadius: 14, boxShadow: "var(--shadow-lg)",
+                          background: "var(--page-bg)", borderRadius: 14, boxShadow: "var(--shadow-lg)",
                           minWidth: 252, padding: 8, border: "1px solid var(--border)",
                         }}
                       >
@@ -441,7 +441,7 @@ export default function Navbar({ onSearch }) {
               onClick={() => navigate("/dashboard")}
               className="cta-desktop"
               title="My Dashboard"
-              style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 12px 5px 5px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "#fff", color: "var(--navy)", fontWeight: 600, cursor: "pointer", fontSize: "0.9rem", transition: "all 0.2s" }}
+              style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 12px 5px 5px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "var(--page-bg)", color: "var(--navy)", fontWeight: 600, cursor: "pointer", fontSize: "0.9rem", transition: "all 0.2s" }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.08)"; }}
             >
@@ -454,7 +454,7 @@ export default function Navbar({ onSearch }) {
             <button
               onClick={openLogin}
               className="cta-desktop nav-ghost-cta"
-              style={{ padding: "8px 16px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)", background: "#fff", color: "var(--navy)", fontWeight: 700, cursor: "pointer", fontSize: "0.85rem" }}
+              style={{ padding: "8px 16px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)", background: "var(--page-bg)", color: "var(--navy)", fontWeight: 700, cursor: "pointer", fontSize: "0.85rem" }}
             >
               Login
             </button>
@@ -480,7 +480,7 @@ export default function Navbar({ onSearch }) {
               transition={{ type: "spring", stiffness: 320, damping: 32 }}
               style={{
                 position: "fixed", top: 0, right: 0, bottom: 0,
-                width: "min(320px,86vw)", background: "#fff", zIndex: 1200,
+                width: "min(320px,86vw)", background: "var(--page-bg)", zIndex: 1200,
                 padding: "1.2rem", overflowY: "auto", boxShadow: "var(--shadow-lg)",
               }}
             >
@@ -699,7 +699,7 @@ export default function Navbar({ onSearch }) {
                     display: "flex", alignItems: "center", gap: 10,
                     width: "100%", marginTop: 12, padding: "12px 16px",
                     borderRadius: 10, border: "1.5px solid #FFD9BA",
-                    background: "#fff", color: "var(--navy)",
+                    background: "var(--page-bg)", color: "var(--navy)",
                     fontWeight: 700, cursor: "pointer", fontSize: "0.95rem",
                   }}
                 >
@@ -725,7 +725,7 @@ export default function Navbar({ onSearch }) {
                     style={{
                       width: "100%", marginTop: 12, padding: "13px 16px",
                       borderRadius: 10, border: "1.5px solid var(--line)",
-                      background: "#fff", color: "var(--navy)",
+                      background: "var(--page-bg)", color: "var(--navy)",
                       fontWeight: 700, cursor: "pointer", fontSize: "0.95rem",
                     }}
                   >
@@ -770,7 +770,7 @@ export default function Navbar({ onSearch }) {
               transition={{ type: "spring", stiffness: 420, damping: 30 }}
               onClick={(e) => e.stopPropagation()}
               style={{
-                width: "min(380px, 100%)", background: "#fff",
+                width: "min(380px, 100%)", background: "var(--page-bg)",
                 borderRadius: 20, padding: "26px 24px 22px",
                 boxShadow: "0 30px 80px rgba(13,27,62,.4)",
                 textAlign: "center",
@@ -793,7 +793,7 @@ export default function Navbar({ onSearch }) {
                   onClick={() => setConfirmLogout(false)}
                   style={{
                     flex: 1, padding: "12px 0", borderRadius: 12,
-                    border: "1.5px solid var(--line)", background: "#fff",
+                    border: "1.5px solid var(--line)", background: "var(--page-bg)",
                     color: "var(--navy)", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer",
                   }}
                 >

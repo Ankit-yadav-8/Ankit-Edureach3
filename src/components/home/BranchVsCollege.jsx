@@ -368,7 +368,7 @@ function CompassStrip({ answers }) {
         <span style={{ position: "absolute", left: "50%", top: -3, width: 2, height: 12, background: CL.line, transform: "translateX(-50%)" }} />
         <motion.span
           animate={{ left: `${pos}%` }} transition={{ type: "spring", stiffness: 80, damping: 13 }}
-          style={{ position: "absolute", top: "50%", transform: "translate(-50%,-50%)", width: 18, height: 18, borderRadius: "50%", background: "#fff", border: `3px solid ${tone}`, boxShadow: CL.shadow }} />
+          style={{ position: "absolute", top: "50%", transform: "translate(-50%,-50%)", width: 18, height: 18, borderRadius: "50%", background: "var(--page-bg)", border: `3px solid ${tone}`, boxShadow: CL.shadow }} />
       </div>
     </div>
   );

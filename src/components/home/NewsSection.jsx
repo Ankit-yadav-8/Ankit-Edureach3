@@ -46,7 +46,7 @@ export default function NewsSection() {
   const shown = NEWS.slice(0, count);
 
   return (
-    <section className="section" id="news" style={{ background: "#ffffff", paddingTop: 0, position: "relative", overflow: "hidden" }}>
+    <section className="section" id="news" style={{ background: "var(--page-bg)", paddingTop: 0, position: "relative", overflow: "hidden" }}>
       {/* Breaking news ticker */}
       <NewsTicker />
 
@@ -65,7 +65,7 @@ export default function NewsSection() {
                 style={{
                   textAlign: "left", width: "100%", cursor: "pointer",
                   padding: 0, overflow: "hidden", display: "flex", flexDirection: "column",
-                  height: "100%", background: "#fff", borderRadius: 16,
+                  height: "100%", background: "var(--page-bg)", borderRadius: 16,
                   border: n.featured ? "1.5px solid rgba(255, 105, 61,.55)" : "1px solid rgba(0,0,0,.08)",
                   boxShadow: n.featured ? "0 8px 30px rgba(255, 105, 61,.18)" : "0 2px 16px rgba(0,0,0,.07)",
                   transition: "box-shadow .25s, transform .25s",

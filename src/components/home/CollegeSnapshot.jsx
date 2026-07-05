@@ -60,7 +60,7 @@ function CollegeRow({ c, index, accentColor }) {
       style={{
         display: "flex", alignItems: "center", gap: 14,
         padding: "11px 14px", borderRadius: 12,
-        background: "#fff",
+        background: "var(--page-bg)",
         border: "1px solid rgba(0,0,0,.07)",
         boxShadow: "0 2px 10px rgba(28,28,40,.04)",
         cursor: "pointer", transition: "all .2s",
@@ -156,7 +156,7 @@ export default function CollegeSnapshot() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           style={{
-            background: "#fff",
+            background: "var(--page-bg)",
             borderRadius: 24,
             padding: "28px 28px 24px",
             marginBottom: 28,
@@ -267,7 +267,7 @@ export default function CollegeSnapshot() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
           style={{
-            background: "#fff",
+            background: "var(--page-bg)",
             borderRadius: 24,
             padding: "28px 28px 24px",
             marginBottom: 28,

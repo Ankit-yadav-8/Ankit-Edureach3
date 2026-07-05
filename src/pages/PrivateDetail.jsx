@@ -80,7 +80,7 @@ export default function PrivateDetail() {
               rel="noreferrer"
               className="btn"
               style={{
-                background: "#fff",
+                background: "var(--page-bg)",
                 color: "#E0421F",
                 border: "1.5px solid rgba(255, 105, 61,.4)",
                 fontWeight: 700,

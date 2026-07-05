@@ -95,7 +95,7 @@ export default function MentorshipHome() {
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
                     position: "relative", height: "100%", display: "flex", flexDirection: "column",
-                    background: "#fff", borderRadius: 20, overflow: "hidden",
+                    background: "var(--page-bg)", borderRadius: 20, overflow: "hidden",
                     border: `1px solid ${p.color}33`,
                     boxShadow: p.featured
                       ? `0 28px 60px -28px ${p.color}88, 0 0 0 2px ${p.color}44`
@@ -165,7 +165,7 @@ export default function MentorshipHome() {
         <Reveal delay={0.1}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", marginTop: 34 }}>
             {TRUST.map(({ icon: Icon, label }) => (
-              <span key={label} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "9px 16px", borderRadius: 50, background: "#fff", border: "1px solid rgba(255, 105, 61,.22)", boxShadow: "0 2px 10px rgba(255, 105, 61,.08)", fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>
+              <span key={label} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "9px 16px", borderRadius: 50, background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.22)", boxShadow: "0 2px 10px rgba(255, 105, 61,.08)", fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>
                 <Icon size={15} color="#FF693D" /> {label}
               </span>
             ))}

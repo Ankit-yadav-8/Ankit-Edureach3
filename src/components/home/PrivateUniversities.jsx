@@ -51,7 +51,7 @@ function UniCard({ u, index }) {
       transition={{ duration: 0.45, delay: (index % 4) * 0.07, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -5, transition: { duration: 0.22 } }}
       style={{
-        background: "#fff",
+        background: "var(--page-bg)",
         borderRadius: 16,
         border: "1px solid rgba(0,0,0,.08)",
         overflow: "hidden",

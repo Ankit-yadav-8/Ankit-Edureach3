@@ -190,7 +190,7 @@ export function Composer({ token, exam, compact, onSubmit, placeholder, autoFocu
   };
 
   return (
-    <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 16, padding: compact ? 12 : 16, boxShadow: compact ? "none" : "0 14px 36px -28px rgba(13,27,62,.4)" }}>
+    <div style={{ background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 16, padding: compact ? 12 : 16, boxShadow: compact ? "none" : "0 14px 36px -28px rgba(13,27,62,.4)" }}>
       <textarea
         value={text} onChange={(e) => setText(e.target.value)} autoFocus={autoFocus}
         placeholder={placeholder || "Ask a doubt, share a resource, or start a discussion…"}
@@ -250,7 +250,7 @@ export function Composer({ token, exam, compact, onSubmit, placeholder, autoFocu
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: 6 }}>
         <button onClick={() => fileRef.current?.click()} disabled={!canUpload}
           title={canUpload ? "Attach photo or video" : "Media uploads aren't configured on the server yet"}
-          style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, cursor: canUpload ? "pointer" : "not-allowed", opacity: canUpload ? 1 : .5, fontWeight: 700, fontSize: 13 }}>
+          style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", background: "var(--page-bg)", color: NAVY, cursor: canUpload ? "pointer" : "not-allowed", opacity: canUpload ? 1 : .5, fontWeight: 700, fontSize: 13 }}>
           <ImagePlus size={16} color={ORANGE} /> Photo / Video
         </button>
         <input ref={fileRef} type="file" accept="image/*,video/*" multiple hidden onChange={pickFiles} />
@@ -329,7 +329,7 @@ export function PostCard({ api, token, post, exam, onLike, onDelete, onReplied, 
   const tag = TAG_META[post.tag] || TAG_META.doubt;
   return (
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .3 }}
-      style={{ background: "#fff", border: `1px solid ${post.pinned ? `${ORANGE}55` : "#eef2f7"}`, borderRadius: 18,
+      style={{ background: "var(--page-bg)", border: `1px solid ${post.pinned ? `${ORANGE}55` : "#eef2f7"}`, borderRadius: 18,
         padding: 18, boxShadow: "0 14px 38px -30px rgba(13,27,62,.5)", position: "relative", overflow: "hidden" }}>
       {post.pinned && (
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg,${ORANGE},${GOLD})` }} />

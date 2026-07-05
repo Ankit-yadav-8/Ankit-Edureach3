@@ -309,7 +309,7 @@ export default function ForYou() {
         {loading && (
           <div style={{
             textAlign: "center", padding: "60px 24px",
-            background: "#fff", borderRadius: 16,
+            background: "var(--page-bg)", borderRadius: 16,
             border: "1px solid var(--line)", marginBottom: 28,
           }}>
             <div style={{

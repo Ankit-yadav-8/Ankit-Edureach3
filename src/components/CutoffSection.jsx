@@ -95,7 +95,7 @@ function TrendArrow({ delta }) {
 function StatCard({ label, value, color = T.navy, sub }) {
   return (
     <div style={{
-      background: "#fff",
+      background: "var(--page-bg)",
       border: `1px solid ${T.line}`,
       borderRadius: 14,
       padding: "16px 14px",
@@ -118,7 +118,7 @@ function CTip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
     <div style={{
-      background: "#fff",
+      background: "var(--page-bg)",
       border: `1px solid ${T.line}`,
       borderRadius: 10,
       padding: "10px 14px",
@@ -161,7 +161,7 @@ const selectStyle = {
   borderRadius: 10,
   fontSize: 13,
   color: T.navy,
-  background: "#fff",
+  background: "var(--page-bg)",
   cursor: "pointer",
   outline: "none",
   appearance: "none",
@@ -292,7 +292,7 @@ export default function CutoffSection({ college, initialProgram }) {
   // ── Controls card ─────────────────────────────────────────────────────────
   const ControlsCard = () => (
     <div style={{
-      background: "#fff",
+      background: "var(--page-bg)",
       border: `1px solid ${T.line}`,
       borderRadius: 16,
       padding: "20px 22px",
@@ -748,7 +748,7 @@ export default function CutoffSection({ college, initialProgram }) {
   // ── Card wrapper ──────────────────────────────────────────────────────────
   const Card = ({ children, style }) => (
     <div style={{
-      background: "#fff",
+      background: "var(--page-bg)",
       border: `1px solid ${T.line}`,
       borderRadius: 16,
       padding: "20px 22px",

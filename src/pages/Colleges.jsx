@@ -118,7 +118,7 @@ export default function Colleges() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
           style={{
-            background: "#fff",
+            background: "var(--page-bg)",
             borderRadius: 16,
             border: "1px solid rgba(0,0,0,.08)",
             boxShadow: "0 2px 20px rgba(28,28,40,.07)",
@@ -270,7 +270,7 @@ export default function Colleges() {
             <Reveal key={c.slug} delay={(i % 3) * 0.04} className="cv-card">
               <div
                 style={{
-                  background: "#fff",
+                  background: "var(--page-bg)",
                   borderRadius: 16,
                   border: "1px solid rgba(0,0,0,.08)",
                   overflow: "hidden",

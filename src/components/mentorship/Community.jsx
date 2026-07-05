@@ -32,7 +32,7 @@ function MemberGrid({ token, plan, batchLabel }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(190px,1fr))", gap: 12 }}>
         {data.members.map((m, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 11, background: "#fff", border: "1px solid #eef2f7", borderRadius: 14, padding: "12px 14px" }}>
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 11, background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 14, padding: "12px 14px" }}>
             <Avatar name={m.name} size={40} />
             <div style={{ minWidth: 0 }}>
               <div style={{ fontWeight: 700, fontSize: 13.5, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.name}</div>
@@ -140,7 +140,7 @@ export default function Community({ plan, onSwitchBatch }) {
 
   if (locked || !me) {
     return (
-      <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 20, padding: "34px 24px", textAlign: "center", boxShadow: "0 18px 44px -30px rgba(13,27,62,.4)" }}>
+      <div style={{ background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 20, padding: "34px 24px", textAlign: "center", boxShadow: "0 18px 44px -30px rgba(13,27,62,.4)" }}>
         <div style={{ width: 58, height: 58, borderRadius: 18, background: `${ORANGE}14`, display: "grid", placeItems: "center", margin: "0 auto 14px" }}>
           <Lock size={26} color={ORANGE} />
         </div>
@@ -153,7 +153,7 @@ export default function Community({ plan, onSwitchBatch }) {
           <a href="/mentorship" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", textDecoration: "none", padding: "11px 22px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14 }}>
             Explore mentorship plans
           </a>
-          <Link to="/community" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", border: `1.5px solid ${CYAN}`, color: CYAN, textDecoration: "none", padding: "11px 22px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14 }}>
+          <Link to="/community" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--page-bg)", border: `1.5px solid ${CYAN}`, color: CYAN, textDecoration: "none", padding: "11px 22px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14 }}>
             <Globe2 size={16} /> Public community
           </Link>
         </div>
@@ -192,7 +192,7 @@ export default function Community({ plan, onSwitchBatch }) {
 
       {/* batch switcher — only when the student belongs to more than one batch */}
       {otherBatches.length > 0 && (
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 14, background: "#fff", border: "1px solid #eef2f7", borderRadius: 14, padding: "10px 14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 14, background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 14, padding: "10px 14px" }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 800, color: NAVY }}>
             <ArrowLeftRight size={15} color={ORANGE} /> Your batches
           </span>
@@ -201,7 +201,7 @@ export default function Community({ plan, onSwitchBatch }) {
           </span>
           {otherBatches.map((b) => (
             <button key={b.plan} onClick={() => onSwitchBatch?.(b.plan)}
-              style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12.5, fontWeight: 700, color: NAVY, background: "#fff", border: "1.5px solid #e5e7eb", padding: "5px 12px", borderRadius: 50, cursor: onSwitchBatch ? "pointer" : "default" }}>
+              style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12.5, fontWeight: 700, color: NAVY, background: "var(--page-bg)", border: "1.5px solid #e5e7eb", padding: "5px 12px", borderRadius: 50, cursor: onSwitchBatch ? "pointer" : "default" }}>
               {b.batchLabel}
             </button>
           ))}
@@ -234,7 +234,7 @@ export default function Community({ plan, onSwitchBatch }) {
         })}
         {tab !== "members" && (
           <button onClick={() => loadFeed(tab)} title="Refresh"
-            style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 13px", borderRadius: 50, border: "1.5px solid #e5e7eb", background: "#fff", color: MUTE, cursor: "pointer", fontWeight: 700, fontSize: 12.5 }}>
+            style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 13px", borderRadius: 50, border: "1.5px solid #e5e7eb", background: "var(--page-bg)", color: MUTE, cursor: "pointer", fontWeight: 700, fontSize: 12.5 }}>
             <RefreshCw size={14} style={refreshing ? { animation: "spin 1s linear infinite" } : undefined} /> Refresh
           </button>
         )}
@@ -256,7 +256,7 @@ export default function Community({ plan, onSwitchBatch }) {
               </button>
             );
           })}
-          <div style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", border: "1.5px solid #e5e7eb", borderRadius: 50, padding: "6px 12px", minWidth: 180 }}>
+          <div style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 7, background: "var(--page-bg)", border: "1.5px solid #e5e7eb", borderRadius: 50, padding: "6px 12px", minWidth: 180 }}>
             <Search size={15} color={MUTE} />
             <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search doubts…"
               style={{ border: "none", outline: "none", fontSize: 13, color: NAVY, background: "transparent", width: "100%" }} />
@@ -273,7 +273,7 @@ export default function Community({ plan, onSwitchBatch }) {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {shown.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "34px 20px", background: "#fff", border: "1px dashed #e5e7eb", borderRadius: 18, color: MUTE }}>
+            <div style={{ textAlign: "center", padding: "34px 20px", background: "var(--page-bg)", border: "1px dashed #e5e7eb", borderRadius: 18, color: MUTE }}>
               <ShieldCheck size={28} color="#cbd5e1" style={{ marginBottom: 8 }} />
               <div style={{ fontWeight: 700, color: NAVY, marginBottom: 4 }}>
                 {query ? "No matches" : tab === "highlights" ? "No highlights yet" : tab === "unanswered" ? "No open doubts" : "No posts yet"}

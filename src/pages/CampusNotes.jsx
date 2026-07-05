@@ -228,7 +228,7 @@ export default function CampusNotes() {
      RENDER
      ═══════════════════════════════════════════════════════════════════════════ */
   return (
-    <div style={{ minHeight: "100vh", background: "#ffffff", fontFamily: "'Inter', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "var(--page-bg)", fontFamily: "'Inter', sans-serif" }}>
       <Seo
         title="Campus Notes — Free Branch-wise Study Notes & Resources for College Students"
         description="Download free semester-wise, branch-wise study notes and resources shared by students. Find notes by branch, subject and semester on CollegeParichay Campus Notes."
@@ -257,7 +257,7 @@ export default function CampusNotes() {
           </p>
 
           {step === "browse" && (
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", borderRadius: 999, padding: "8px 20px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.06)" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "var(--page-bg)", borderRadius: 999, padding: "8px 20px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.06)" }}>
               <Building2 size={16} color="#FF693D" />
               <span style={{ fontWeight: 700, color: "#1a1a2e" }}>{college}</span>
               <span style={{ color: "#ccc" }}>·</span>
@@ -298,7 +298,7 @@ export default function CampusNotes() {
                       onClick={() => pickType(t.id)}
                       style={{
                         display: "flex", flexDirection: "column", alignItems: "center", gap: 14,
-                        padding: "36px 48px", borderRadius: 20, background: "#fff", cursor: "pointer",
+                        padding: "36px 48px", borderRadius: 20, background: "var(--page-bg)", cursor: "pointer",
                         border: "1.5px solid rgba(0,0,0,0.06)", boxShadow: "0 4px 20px -8px rgba(0,0,0,0.06)",
                         transition: "all .2s",
                       }}
@@ -333,7 +333,7 @@ export default function CampusNotes() {
                   onChange={(e) => setCollegeSearch(e.target.value)}
                   style={{
                     width: "100%", padding: "12px 14px 12px 40px", borderRadius: 12,
-                    border: "1.5px solid rgba(0,0,0,0.08)", background: "#fff", fontSize: "0.95rem",
+                    border: "1.5px solid rgba(0,0,0,0.08)", background: "var(--page-bg)", fontSize: "0.95rem",
                     outline: "none", fontFamily: "inherit",
                   }}
                 />
@@ -350,7 +350,7 @@ export default function CampusNotes() {
                       onClick={() => pickCollege(c)}
                       style={{
                         display: "flex", alignItems: "center", gap: 12, padding: "14px 16px",
-                        borderRadius: 14, background: "#fff", cursor: "pointer",
+                        borderRadius: 14, background: "var(--page-bg)", cursor: "pointer",
                         border: "1.5px solid rgba(0,0,0,0.06)", textAlign: "left", fontFamily: "inherit",
                         boxShadow: "0 2px 8px -4px rgba(0,0,0,0.04)",
                       }}
@@ -413,7 +413,7 @@ export default function CampusNotes() {
                         onClick={() => setSelectedBranch(b)}
                         style={{
                           display: "flex", alignItems: "center", gap: 14, padding: "18px 20px",
-                          borderRadius: 16, background: "#fff", cursor: "pointer",
+                          borderRadius: 16, background: "var(--page-bg)", cursor: "pointer",
                           border: "1.5px solid rgba(0,0,0,0.05)", textAlign: "left", fontFamily: "inherit",
                           boxShadow: "0 2px 12px -6px rgba(0,0,0,0.04)",
                         }}
@@ -447,7 +447,7 @@ export default function CampusNotes() {
                         onClick={() => setSelectedSem(sem)}
                         style={{
                           display: "flex", alignItems: "center", gap: 12, padding: "16px 18px",
-                          borderRadius: 14, background: "#fff", cursor: "pointer",
+                          borderRadius: 14, background: "var(--page-bg)", cursor: "pointer",
                           border: "1.5px solid rgba(0,0,0,0.05)", fontFamily: "inherit",
                           boxShadow: "0 2px 8px -4px rgba(0,0,0,0.04)",
                         }}
@@ -487,7 +487,7 @@ export default function CampusNotes() {
                                 onClick={() => setSelectedSubject(sub)}
                                 style={{
                                   display: "flex", alignItems: "center", gap: 12, padding: "16px 18px",
-                                  borderRadius: 14, background: "#fff", cursor: "pointer",
+                                  borderRadius: 14, background: "var(--page-bg)", cursor: "pointer",
                                   border: "1.5px solid rgba(0,0,0,0.05)", fontFamily: "inherit", textAlign: "left",
                                   boxShadow: "0 2px 8px -4px rgba(0,0,0,0.04)",
                                 }}
@@ -544,10 +544,10 @@ export default function CampusNotes() {
                           placeholder="Search notes..."
                           value={searchQ}
                           onChange={(e) => setSearchQ(e.target.value)}
-                          style={{ padding: "8px 12px 8px 32px", borderRadius: 10, border: "1px solid rgba(0,0,0,0.08)", fontSize: "0.85rem", outline: "none", fontFamily: "inherit", background: "#fff" }}
+                          style={{ padding: "8px 12px 8px 32px", borderRadius: 10, border: "1px solid rgba(0,0,0,0.08)", fontSize: "0.85rem", outline: "none", fontFamily: "inherit", background: "var(--page-bg)" }}
                         />
                       </div>
-                      <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={{ padding: "8px 12px", borderRadius: 10, border: "1px solid rgba(0,0,0,0.08)", fontSize: "0.85rem", fontFamily: "inherit", background: "#fff", cursor: "pointer" }}>
+                      <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={{ padding: "8px 12px", borderRadius: 10, border: "1px solid rgba(0,0,0,0.08)", fontSize: "0.85rem", fontFamily: "inherit", background: "var(--page-bg)", cursor: "pointer" }}>
                         <option value="newest">Newest</option>
                         <option value="popular">Most Liked</option>
                         <option value="downloads">Most Downloaded</option>
@@ -568,7 +568,7 @@ export default function CampusNotes() {
                   </div>
 
                   {filteredNotes.length === 0 ? (
-                    <div style={{ textAlign: "center", padding: "60px 20px", background: "#fff", borderRadius: 16, border: "1.5px dashed rgba(0,0,0,0.08)" }}>
+                    <div style={{ textAlign: "center", padding: "60px 20px", background: "var(--page-bg)", borderRadius: 16, border: "1.5px dashed rgba(0,0,0,0.08)" }}>
                       <FolderOpen size={48} color="#ddd" style={{ marginBottom: 12 }} />
                       <p style={{ fontWeight: 700, color: "#64748b", marginBottom: 6 }}>No notes yet</p>
                       <p style={{ color: "#94a3b8", fontSize: "0.88rem", marginBottom: 16 }}>Be the first to upload notes for {selectedSubject}!</p>
@@ -588,7 +588,7 @@ export default function CampusNotes() {
                           key={note.id}
                           whileHover={{ y: -3, boxShadow: "0 12px 32px -10px rgba(0,0,0,0.1)" }}
                           style={{
-                            background: "#fff", borderRadius: 16, padding: "20px",
+                            background: "var(--page-bg)", borderRadius: 16, padding: "20px",
                             border: "1px solid rgba(0,0,0,0.05)", boxShadow: "0 2px 8px -4px rgba(0,0,0,0.04)",
                           }}
                         >
@@ -726,7 +726,7 @@ function UploadModal({ onClose, onUpload, subject, branch, semester, branches })
             margin: "0 auto",
             width: "min(480px, 100%)",
             display: "flex", flexDirection: "column",
-            background: "#fff", borderRadius: 20,
+            background: "var(--page-bg)", borderRadius: 20,
             boxShadow: "0 32px 64px -16px rgba(0,0,0,0.25)",
             overflow: "hidden"
           }}

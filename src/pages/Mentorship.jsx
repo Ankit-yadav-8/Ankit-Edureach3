@@ -192,7 +192,7 @@ function Hero({ cfg, scrollToEnrol }) {
   return (
     <section style={{
       position: "relative", overflow: "hidden",
-      background: "#ffffff",
+      background: "var(--page-bg)",
       paddingTop: 140, paddingBottom: 80,
     }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
@@ -249,7 +249,7 @@ function Hero({ cfg, scrollToEnrol }) {
                 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }}
                 style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 {cfg.stats.map((s) => (
-                  <div key={s.lbl} style={{ flex: 1, minWidth: 120, background: "#ffffff", border: "1px solid rgba(0, 0, 0, 0.08)", borderRadius: 14, padding: "14px 12px", boxShadow: "0 4px 14px rgba(0,0,0,0.04)" }}>
+                  <div key={s.lbl} style={{ flex: 1, minWidth: 120, background: "var(--page-bg)", border: "1px solid rgba(0, 0, 0, 0.08)", borderRadius: 14, padding: "14px 12px", boxShadow: "0 4px 14px rgba(0,0,0,0.04)" }}>
                     <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK }}>{s.val}</div>
                     <div style={{ fontSize: 11.5, color: MUTE, marginTop: 3 }}>{s.lbl}</div>
                   </div>
@@ -283,7 +283,7 @@ function Hero({ cfg, scrollToEnrol }) {
 ════════════════════════════════════════════════ */
 function ForYou({ cfg }) {
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "var(--page-bg)" }}>
       <SectionTitle kicker="Sound familiar?">This Plan Is <Accent>For You</Accent> If…</SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16, maxWidth: 940, margin: "0 auto" }}>
         {cfg.forYou.map((t, i) => (
@@ -305,7 +305,7 @@ function ForYou({ cfg }) {
 function WhyFoundation({ cfg }) {
   if (!cfg.whyFoundation) return null;
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "var(--page-bg)" }}>
       <SectionTitle kicker="Why it matters">Why <Accent>Foundation</Accent> Matters</SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18 }}>
         {cfg.whyFoundation.map((t, i) => (
@@ -327,7 +327,7 @@ function WhyFoundation({ cfg }) {
 const GUIDE_ICONS = [Rocket, Users, Target, Trophy, Flame, Star];
 function HowWeGuide({ cfg }) {
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "var(--page-bg)" }}>
       <SectionTitle kicker="The system" sub="A 1-on-1 mentorship engine built to fix the exact reasons most aspirants fail.">
         How We <Accent>Guide</Accent> You
       </SectionTitle>
@@ -357,7 +357,7 @@ function HowWeGuide({ cfg }) {
               }}>
                 
                 {/* Center dot for desktop */}
-                <div className="timeline-dot" style={{ position: "absolute", [isEven ? "left" : "right"]: -54, top: "50%", transform: "translateY(-50%)", width: 16, height: 16, borderRadius: "50%", background: "#fff", border: `3px solid ${c}`, zIndex: 2 }} />
+                <div className="timeline-dot" style={{ position: "absolute", [isEven ? "left" : "right"]: -54, top: "50%", transform: "translateY(-50%)", width: 16, height: 16, borderRadius: "50%", background: "var(--page-bg)", border: `3px solid ${c}`, zIndex: 2 }} />
 
                 <motion.div whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{ 
@@ -365,7 +365,7 @@ function HowWeGuide({ cfg }) {
                     flexDirection: "column", alignItems: "flex-start", gap: 16, 
                     position: "relative", zIndex: 1, padding: "28px 32px",
                     borderTop: `4px solid ${c}`, width: "100%",
-                    background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 4px 20px rgba(0,0,0,0.04)"
+                    background: "var(--page-bg)", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 4px 20px rgba(0,0,0,0.04)"
                   }}>
                   <div style={{ width: 48, height: 48, borderRadius: 12, background: `${c}16`, border: `1px solid ${c}33`, display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0 }}>
                     <Icon size={24} color={c} />
@@ -390,7 +390,7 @@ function TestAnalysis({ cfg }) {
   const m = cfg.metrics;
   const trend = m.test.trend.map((v, i) => ({ t: `T${i + 1}`, v }));
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "var(--page-bg)" }}>
       <SectionTitle kicker="Every test counts" sub="No test is just a score. Every week your mentor turns it into a one-page action plan.">
         Weekly <Accent>Test Analysis</Accent>
       </SectionTitle>
@@ -434,7 +434,7 @@ function TestAnalysis({ cfg }) {
               <img src={cfg.analyticsImage || "/images/analytics_mentorship.png"} alt="Analytics Dashboard" style={{ width: "100%", maxHeight: 380, objectFit: "contain", display: "block" }} />
             </div>
             
-            <div style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 18, padding: "28px 24px", flex: 1, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
+            <div style={{ background: "var(--page-bg)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 18, padding: "28px 24px", flex: 1, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#8b5cf6)" }} />
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
               <div>
@@ -495,7 +495,7 @@ function TestAnalysis({ cfg }) {
 ════════════════════════════════════════════════ */
 function ChartCard({ title, hint, children }) {
   return (
-    <div style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 18, padding: "22px 22px 18px", height: "100%", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
+    <div style={{ background: "var(--page-bg)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 18, padding: "22px 22px 18px", height: "100%", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#FF693D)" }} />
       <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: "1.05rem", color: INK, margin: "0 0 4px" }}>{title}</h3>
       {hint && <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 14px" }}>{hint}</p>}
@@ -506,7 +506,7 @@ function ChartCard({ title, hint, children }) {
 function ImprovementCharts({ m }) {
   const growth = m.growth.you.map((you, i) => ({ year: `Wk ${i + 1}`, you, batch: m.growth.batch[i] }));
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "var(--page-bg)" }}>
       <SectionTitle kicker="Proof, not promises" sub="Real, visible improvement — tracked every week and shared with you and your parents.">
         Improvement <Accent>Charts</Accent>
       </SectionTitle>
@@ -548,14 +548,14 @@ function LiveTracking({ m }) {
   const maxH = Math.max(...m.weekHours);
   const maxIdx = m.weekHours.indexOf(maxH);
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "var(--page-bg)" }}>
       <SectionTitle kicker="Always on" sub="Your mentor sees your effort live — so nothing ever slips through the cracks.">
         Live Student <Accent>Tracking</Accent>
       </SectionTitle>
 
       <div style={{ maxWidth: 1040, margin: "0 auto" }}>
         <Reveal>
-          <div style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 20, padding: "24px 26px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
+          <div style={{ background: "var(--page-bg)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 20, padding: "24px 26px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#22c55e,#FF693D)" }} />
 
             {/* header */}
@@ -620,7 +620,7 @@ function LiveTracking({ m }) {
 ════════════════════════════════════════════════ */
 function ParentBooklet({ m }) {
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "var(--page-bg)" }}>
       <SectionTitle kicker="Parents stay in the loop" sub="Every Sunday, parents get a simple weekly booklet — exactly what their child did and how they're improving.">
         Parent <Accent>Weekly Booklet</Accent>
       </SectionTitle>
@@ -647,7 +647,7 @@ function ParentBooklet({ m }) {
 
         {/* inside page */}
         <Reveal delay={0.08}>
-          <div style={{ background: "#fff", padding: "30px 30px", height: "100%" }}>
+          <div style={{ background: "var(--page-bg)", padding: "30px 30px", height: "100%" }}>
             {m.parent.rows.map(({ icon, c, l, v, note }) => {
               const Icon = ICONS[icon];
               return (
@@ -664,7 +664,7 @@ function ParentBooklet({ m }) {
               );
             })}
 
-            <div style={{ background: "#ffffff", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 12, padding: "12px 14px", marginTop: 16 }}>
+            <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 12, padding: "12px 14px", marginTop: 16 }}>
               <div style={{ fontSize: 11.5, fontWeight: 800, color: "#9a3412", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
                 <Star size={13} /> Mentor's remark
               </div>
@@ -762,7 +762,7 @@ function Enrol({ cfg }) {
               <Reveal key={tr.plan} delay={i * 0.08}>
                 <motion.div whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
-                    background: "#ffffff", borderRadius: 20, border: `1px solid ${tr.accent}33`, padding: "30px 26px",
+                    background: "var(--page-bg)", borderRadius: 20, border: `1px solid ${tr.accent}33`, padding: "30px 26px",
                     height: "100%", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden",
                     boxShadow: `0 24px 50px -26px ${tr.accent}66`,
                   }}>
@@ -854,7 +854,7 @@ function Faqs({ cfg }) {
         {cfg.faqs.map((q, i) => {
           const isOpen = open === i;
           return (
-            <div key={q.q} style={{ background: "#ffffff", border: `1px solid ${isOpen ? "rgba(255, 105, 61,.45)" : "rgba(0,0,0,.08)"}`, borderRadius: 14, marginBottom: 12, overflow: "hidden", boxShadow: isOpen ? "0 6px 20px rgba(255, 105, 61,.12)" : "0 1px 6px rgba(0,0,0,.04)" }}>
+            <div key={q.q} style={{ background: "var(--page-bg)", border: `1px solid ${isOpen ? "rgba(255, 105, 61,.45)" : "rgba(0,0,0,.08)"}`, borderRadius: 14, marginBottom: 12, overflow: "hidden", boxShadow: isOpen ? "0 6px 20px rgba(255, 105, 61,.12)" : "0 1px 6px rgba(0,0,0,.04)" }}>
               <button onClick={() => setOpen(isOpen ? -1 : i)} style={{
                 width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14,
                 padding: "18px 20px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left",
@@ -885,7 +885,7 @@ function PhoneFrame({ contact, messages, accent = "#25D366" }) {
   return (
     <div style={{
       width: "100%", maxWidth: 230, margin: "0 auto", aspectRatio: "9 / 18",
-      background: "#ffffff", borderRadius: 28, border: "1px solid rgba(0,0,0,.2)",
+      background: "var(--page-bg)", borderRadius: 28, border: "1px solid rgba(0,0,0,.2)",
       boxShadow: "0 18px 40px -16px rgba(0,0,0,.5), inset 0 0 0 5px #1c1c1c",
       padding: 6, position: "relative", overflow: "hidden",
     }}>
@@ -963,7 +963,7 @@ const PROOF_CARDS = [
 
 function WhatsAppProof() {
   return (
-    <Section style={{ background: "#ffffff" }}>
+    <Section style={{ background: "var(--page-bg)" }}>
       <SectionTitle kicker="From the inside" sub="This is what mentorship looks like from the inside.">
         Real Mentorship. <Accent>Real Results.</Accent>
       </SectionTitle>
@@ -971,7 +971,7 @@ function WhatsAppProof() {
         {PROOF_CARDS.map((c, i) => (
           <Reveal key={i} delay={(i % 3) * 0.06}>
             <motion.div whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,.08)", borderRadius: 12, padding: "24px 22px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", height: "100%", display: "flex", flexDirection: "column", gap: 18 }}>
+              style={{ background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.08)", borderRadius: 12, padding: "24px 22px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", height: "100%", display: "flex", flexDirection: "column", gap: 18 }}>
               <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.12rem", lineHeight: 1.3, color: INK, margin: 0 }}>
                 {c.head[0]}<span style={{ color: ACCENT }}>{c.head[1]}</span>{c.head[2] || ""}
               </h3>
@@ -1017,7 +1017,7 @@ function JourneyBrand({ cfg }) {
               <Reveal key={s.title} delay={(i % 3) * 0.07}>
                 <motion.div whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
-                    background: "#ffffff", borderRadius: 18, padding: "34px 28px", height: "100%",
+                    background: "var(--page-bg)", borderRadius: 18, padding: "34px 28px", height: "100%",
                     boxShadow: "0 22px 48px -24px rgba(26,26,46,.42), 0 2px 10px rgba(0,0,0,.05)",
                     border: "1px solid rgba(255, 105, 61,.12)", textAlign: "center",
                     display: "flex", flexDirection: "column", alignItems: "center", gap: 12, position: "relative", overflow: "hidden",
@@ -1037,7 +1037,7 @@ function JourneyBrand({ cfg }) {
                       }}>
                       <Icon size={32} color="#fff" strokeWidth={2} />
                     </motion.div>
-                    <span style={{ position: "absolute", bottom: -4, right: -4, width: 26, height: 26, borderRadius: "50%", background: "#fff", border: `2px solid ${s.c}`, display: "grid", placeItems: "center", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 12, color: s.c }}>{i + 1}</span>
+                    <span style={{ position: "absolute", bottom: -4, right: -4, width: 26, height: 26, borderRadius: "50%", background: "var(--page-bg)", border: `2px solid ${s.c}`, display: "grid", placeItems: "center", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 12, color: s.c }}>{i + 1}</span>
                   </div>
                   <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "6px 0 0", lineHeight: 1.3 }}>{s.title}</h3>
                   <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.55, margin: 0 }}>{s.desc}</p>
@@ -1057,7 +1057,7 @@ function JourneyBrand({ cfg }) {
 function MentorTabs({ variant }) {
   const label = (slug) => slug === "neet" ? "NEET" : slug === "jee-2027" ? "JEE 2027" : "JEE 2028";
   return (
-    <div style={{ position: "relative", zIndex: 2, background: "#ffffff", borderBottom: "1px solid rgba(255, 105, 61,.14)", paddingTop: 114 }}>
+    <div style={{ position: "relative", zIndex: 2, background: "var(--page-bg)", borderBottom: "1px solid rgba(255, 105, 61,.14)", paddingTop: 114 }}>
       <div className="container" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", padding: "12px 0" }}>
         {Object.values(MENTORSHIP).map((m) => {
           const active = m.slug === variant;
@@ -1087,7 +1087,7 @@ export default function Mentorship() {
   const scrollToEnrol = () => document.getElementById("enrol")?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <div style={{ background: "#ffffff", color: INK, minHeight: "100vh", position: "relative" }}>
+    <div style={{ background: "var(--page-bg)", color: INK, minHeight: "100vh", position: "relative" }}>
       <div style={{ position: "relative", zIndex: 1 }}>
         <Seo
         title={`${(variant || "jee-2027").replace(/-/g, " ").toUpperCase()} Mentorship by IITians — 1-on-1 Guidance`}
@@ -1127,11 +1127,11 @@ const ctaSolid = {
 };
 const ctaGhost = {
   display: "inline-flex", alignItems: "center", gap: 9, padding: "14px 26px", borderRadius: 12,
-  background: "#fff", color: ACCENT, fontFamily: "'Space Grotesk',sans-serif",
+  background: "var(--page-bg)", color: ACCENT, fontFamily: "'Space Grotesk',sans-serif",
   fontWeight: 700, fontSize: 15, border: `1.5px solid ${ACCENT}`, cursor: "pointer", textDecoration: "none",
 };
 const card = {
-  display: "flex", alignItems: "center", gap: 14, background: "#fff",
+  display: "flex", alignItems: "center", gap: 14, background: "var(--page-bg)",
   border: "1px solid rgba(0,0,0,0.08)", borderRadius: 16, padding: "20px 22px",
   boxShadow: "0 4px 20px 0 rgba(0,0,0,0.04)",
 };

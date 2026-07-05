@@ -127,7 +127,7 @@ function MindMapViewer({ open, subjectId, chapter, onClose }) {
                 maxHeight: zoom > 1 ? "none" : "100%",
                 objectFit: "contain",
                 borderRadius: 10,
-                background: "#fff",
+                background: "var(--page-bg)",
                 boxShadow: "0 24px 60px rgba(0,0,0,.5)",
                 cursor: zoom >= 3 ? "zoom-out" : "zoom-in",
                 userSelect: "none",
@@ -149,7 +149,7 @@ function MindMapViewer({ open, subjectId, chapter, onClose }) {
               <button key={p} onClick={() => setIdx(i)} style={{
                 flexShrink: 0, width: 54, height: 72, borderRadius: 8, overflow: "hidden",
                 border: i === idx ? `2.5px solid ${meta.accent}` : "2.5px solid rgba(255,255,255,.15)",
-                background: "#fff", cursor: "pointer", padding: 0,
+                background: "var(--page-bg)", cursor: "pointer", padding: 0,
                 boxShadow: i === idx ? `0 4px 14px ${meta.accent}88` : "none",
                 opacity: i === idx ? 1 : 0.7, transition: "opacity .15s, border-color .15s",
               }}>
@@ -492,7 +492,7 @@ export default function JeeResources() {
                 </p>
               </div>
               <button onClick={() => nav("/jee-main#rank")} style={{
-                display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: subject.dk,
+                display: "inline-flex", alignItems: "center", gap: 8, background: "var(--page-bg)", color: subject.dk,
                 fontFamily: CL.display, fontWeight: 800, fontSize: 14, padding: "13px 24px", borderRadius: 50,
                 border: "none", cursor: "pointer", boxShadow: "0 6px 20px rgba(0,0,0,.22)", whiteSpace: "nowrap",
               }}>

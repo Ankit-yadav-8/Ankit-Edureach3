@@ -84,7 +84,7 @@ function QuestionImage({ src, alt = "Diagram", maxH = 280, style: extraStyle }) 
       <div style={{ position: "relative", display: "inline-block", cursor: "zoom-in", marginBottom: 16, width: "100%", ...extraStyle }}
         onClick={() => setZoom(true)}>
         <img src={src} alt={alt} onError={() => setBroken(true)}
-          style={{ maxWidth: "100%", maxHeight: "500px", objectFit: "contain", borderRadius: 12, border: "1.5px solid #e2e8f0", display: "block", boxShadow: "0 4px 16px rgba(13,27,62,.08)", background: "#fff" }} />
+          style={{ maxWidth: "100%", maxHeight: "500px", objectFit: "contain", borderRadius: 12, border: "1.5px solid #e2e8f0", display: "block", boxShadow: "0 4px 16px rgba(13,27,62,.08)", background: "var(--page-bg)" }} />
         <span style={{ position: "absolute", bottom: 8, right: 8, background: "rgba(13,27,62,.7)", color: "#fff", borderRadius: 8, padding: "4px 8px", fontSize: 11, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 4, backdropFilter: "blur(4px)" }}>
           <ZoomIn size={12} /> Zoom
         </span>
@@ -122,7 +122,7 @@ function OptionImage({ src, alt = "Option", maxH = 170 }) {
   return (
     <>
       <img src={src} alt={alt} onClick={() => setZoom(true)} onError={() => setBroken(true)}
-        style={{ maxHeight: maxH, maxWidth: "100%", objectFit: "contain", borderRadius: 8, cursor: "zoom-in", border: "1px solid #e5e7eb", background: "#fff", display: "block", marginBottom: 6 }} />
+        style={{ maxHeight: maxH, maxWidth: "100%", objectFit: "contain", borderRadius: 8, cursor: "zoom-in", border: "1px solid #e5e7eb", background: "var(--page-bg)", display: "block", marginBottom: 6 }} />
       <AnimatePresence>
         {zoom && (
           <Portal>
@@ -218,7 +218,7 @@ export default function TestSeries({ plan }) {
       {loading ? (
         <div style={{ display: "flex", alignItems: "center", gap: 8, color: MUTE, padding: 20 }}><Loader2 size={16} className="ts-spin" /> Loading tests…</div>
       ) : shown.length === 0 ? (
-        <div style={{ background: "#fff", border: "1px dashed #e5d3c4", borderRadius: 16, padding: "40px 20px", textAlign: "center" }}>
+        <div style={{ background: "var(--page-bg)", border: "1px dashed #e5d3c4", borderRadius: 16, padding: "40px 20px", textAlign: "center" }}>
           <div style={{ width: 48, height: 48, borderRadius: 14, background: `${ORANGE}12`, display: "grid", placeItems: "center", margin: "0 auto 12px" }}><FileText size={22} color={ORANGE} /></div>
           <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 15 }}>No tests yet</div>
           <div style={{ fontSize: 13, color: MUTE, marginTop: 4 }}>Your mentor will upload daily, weekly and full tests here.</div>
@@ -253,7 +253,7 @@ function PerfStrip({ perf }) {
     { label: "Best score", value: `${perf.bestPercent}%`, color: "#8b5cf6", icon: <Trophy size={15} color="#8b5cf6" /> },
   ];
   return (
-    <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 18, padding: 16, marginBottom: 16, boxShadow: "0 14px 36px -30px rgba(13,27,62,.5)" }}>
+    <div style={{ background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 18, padding: 16, marginBottom: 16, boxShadow: "0 14px 36px -30px rgba(13,27,62,.5)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
         <span style={{ width: 30, height: 30, borderRadius: 9, background: "#ecfeff", display: "grid", placeItems: "center" }}><Target size={15} color="#0ea5a4" /></span>
         <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 14.5 }}>Your CBT performance</div>
@@ -283,7 +283,7 @@ function TestCard({ t, onStart }) {
   const color = CAT_COLOR[t.category] || ORANGE;
   const done = t.attempted;
   return (
-    <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", gap: 12, boxShadow: "0 10px 30px -24px rgba(13,27,62,.5)", transition: "box-shadow .2s, transform .2s" }}
+    <div style={{ background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", gap: 12, boxShadow: "0 10px 30px -24px rgba(13,27,62,.5)", transition: "box-shadow .2s, transform .2s" }}
       onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 16px 40px -20px rgba(13,27,62,.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
       onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 10px 30px -24px rgba(13,27,62,.5)"; e.currentTarget.style.transform = "translateY(0)"; }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -312,7 +312,7 @@ function TestCard({ t, onStart }) {
             <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 18, color: NAVY }}>{t.result.score}<span style={{ fontSize: 12, color: MUTE, fontWeight: 700 }}> / {t.result.maxMarks}</span></div>
             <div style={{ fontSize: 11, color: MUTE }}>{t.result.percent}% · {t.result.accuracy}% accuracy</div>
           </div>
-          <button onClick={onStart} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: `1.5px solid ${color}`, color, borderRadius: 10, padding: "8px 12px", fontWeight: 700, fontSize: 12.5, cursor: "pointer", fontFamily: "Sora", transition: "all .15s" }}>
+          <button onClick={onStart} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--page-bg)", border: `1.5px solid ${color}`, color, borderRadius: 10, padding: "8px 12px", fontWeight: 700, fontSize: 12.5, cursor: "pointer", fontFamily: "Sora", transition: "all .15s" }}>
             <RotateCcw size={13} /> Reattempt
           </button>
         </div>
@@ -574,7 +574,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
 
       {/* section tabs */}
       {sections.length > 1 && (
-        <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "8px 16px", display: "flex", gap: 8, flexShrink: 0, overflowX: "auto" }}>
+        <div style={{ background: "var(--page-bg)", borderBottom: "1px solid #e5e7eb", padding: "8px 16px", display: "flex", gap: 8, flexShrink: 0, overflowX: "auto" }}>
           {sections.map((s, i) => {
             const on = i === curSecIdx;
             const col = SUBJECT_COLOR[s.name] || INDIGO;
@@ -591,7 +591,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
 
       {/* Even for single-section tests, show a subject badge */}
       {sections.length === 1 && sections[0].name && (
-        <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "6px 16px", display: "flex", gap: 8, flexShrink: 0 }}>
+        <div style={{ background: "var(--page-bg)", borderBottom: "1px solid #e5e7eb", padding: "6px 16px", display: "flex", gap: 8, flexShrink: 0 }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 800, color: SUBJECT_COLOR[sections[0].name] || INDIGO, background: `${SUBJECT_COLOR[sections[0].name] || INDIGO}14`, borderRadius: 50, padding: "5px 14px" }}>
             {sections[0].name} · {sections[0].items.length} Questions
           </span>
@@ -600,7 +600,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
 
       <div className="cbt-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 320px", minHeight: 0 }}>
         {/* question pane */}
-        <div style={{ background: "#fff", display: "flex", flexDirection: "column", minHeight: 0 }}>
+        <div style={{ background: "var(--page-bg)", display: "flex", flexDirection: "column", minHeight: 0 }}>
           {/* question header */}
           <div style={{ padding: "14px 20px", borderBottom: "1px solid #eef2f7", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
@@ -718,7 +718,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
           </div>
 
           {/* bottom nav */}
-          <div style={{ borderTop: "1px solid #eef2f7", padding: "16px 20px", display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", background: "#fff", boxShadow: "0 -4px 20px rgba(13,27,62,0.04)" }}>
+          <div style={{ borderTop: "1px solid #eef2f7", padding: "16px 20px", display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", background: "var(--page-bg)", boxShadow: "0 -4px 20px rgba(13,27,62,0.04)" }}>
             <button onClick={() => goto(idx - 1)} disabled={idx === 0}
               style={{ ...ctlBtn("#fff", NAVY), opacity: idx === 0 ? 0.4 : 1 }}>
               <ChevronLeft size={15} /> Previous
@@ -741,7 +741,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
         </div>
 
         {/* palette pane */}
-        <div className="cbt-palette" style={{ background: "#fff", borderLeft: "1px solid #e5e7eb", display: "flex", flexDirection: "column", minHeight: 0 }}>
+        <div className="cbt-palette" style={{ background: "var(--page-bg)", borderLeft: "1px solid #e5e7eb", display: "flex", flexDirection: "column", minHeight: 0 }}>
           {/* palette header */}
           <div style={{ padding: "12px 14px", borderBottom: "1px solid #eef2f7", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 13.5, display: "flex", alignItems: "center", gap: 7 }}>
@@ -778,7 +778,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
             {sections.map((sec, si) => (
               <div key={sec.name || si} style={{ marginBottom: sections.length > 1 ? 16 : 0 }}>
                 {sections.length > 1 && (
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, position: "sticky", top: 0, background: "#fff", paddingTop: 2, paddingBottom: 2, zIndex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, position: "sticky", top: 0, background: "var(--page-bg)", paddingTop: 2, paddingBottom: 2, zIndex: 1 }}>
                     <div style={{ width: 4, height: 14, borderRadius: 3, background: SUBJECT_COLOR[sec.name] || INDIGO }} />
                     <span style={{ fontSize: 12, fontWeight: 800, color: SUBJECT_COLOR[sec.name] || NAVY }}>{sec.name || "Section"}</span>
                     <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 600 }}>
@@ -818,7 +818,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
             onClick={() => setConfirm(false)}
             style={{ position: "fixed", inset: 0, zIndex: 5100, background: "rgba(13,27,62,.55)", display: "grid", placeItems: "center", padding: 20 }}>
             <motion.div initial={{ scale: .94, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: .95 }} onClick={(e) => e.stopPropagation()}
-              style={{ width: "min(440px,100%)", background: "#fff", borderRadius: 20, padding: "28px 24px", textAlign: "center", boxShadow: "0 30px 60px -20px rgba(13,27,62,.3)" }}>
+              style={{ width: "min(440px,100%)", background: "var(--page-bg)", borderRadius: 20, padding: "28px 24px", textAlign: "center", boxShadow: "0 30px 60px -20px rgba(13,27,62,.3)" }}>
               <div style={{ width: 56, height: 56, borderRadius: "50%", background: "#FFF1E9", display: "grid", placeItems: "center", margin: "0 auto 14px" }}><ListChecks size={26} color={ORANGE} /></div>
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, margin: "0 0 8px", fontSize: 18 }}>Submit the test?</h3>
               <p style={{ color: MUTE, fontSize: 13.5, margin: "0 0 14px", lineHeight: 1.5 }}>Answered <b style={{ color: GREEN }}>{counts.answered}</b> of {counts.total}. Unanswered questions score 0.</p>
@@ -829,7 +829,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
               </div>
               {err && <div style={{ color: RED, fontSize: 12.5, marginBottom: 8 }}>{err}</div>}
               <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
-                <button onClick={() => setConfirm(false)} style={{ flex: 1, padding: "12px 0", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, fontWeight: 700, cursor: "pointer", fontSize: 14 }}>Keep going</button>
+                <button onClick={() => setConfirm(false)} style={{ flex: 1, padding: "12px 0", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "var(--page-bg)", color: NAVY, fontWeight: 700, cursor: "pointer", fontSize: 14 }}>Keep going</button>
                 <button onClick={doSubmit} disabled={submitting} style={{ flex: 1.3, padding: "12px 0", borderRadius: 12, border: "none", background: `linear-gradient(135deg, ${ORANGE}, #E0421F)`, color: "#fff", fontWeight: 800, fontFamily: "Sora", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, fontSize: 14, boxShadow: `0 8px 20px -8px ${ORANGE}` }}>
                   {submitting ? <Loader2 size={16} className="ts-spin" /> : <CheckCircle2 size={16} />} Submit
                 </button>
@@ -848,7 +848,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
             style={{ position: "fixed", inset: 0, zIndex: 5050, background: "rgba(13,27,62,.4)", display: "none" }}>
             <motion.div initial={{ x: 320 }} animate={{ x: 0 }} exit={{ x: 320 }}
               onClick={(e) => e.stopPropagation()}
-              style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "min(320px,85vw)", background: "#fff", boxShadow: "-10px 0 40px rgba(13,27,62,.2)" }}>
+              style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "min(320px,85vw)", background: "var(--page-bg)", boxShadow: "-10px 0 40px rgba(13,27,62,.2)" }}>
               {/* Re-render palette content inside the drawer */}
             </motion.div>
           </motion.div>
@@ -893,7 +893,7 @@ function InstructionsScreen({ test, sections, candidate, left, onProceed, onClos
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#f4f6fb", display: "flex", flexDirection: "column" }}>
       {/* header */}
-      <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "12px 18px", display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
+      <div style={{ background: "var(--page-bg)", borderBottom: "1px solid #e5e7eb", padding: "12px 18px", display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
         <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 16, flex: 1 }}>{test?.title}</div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: 10.5, color: MUTE, fontWeight: 700, letterSpacing: ".05em" }}>TIME REMAINING</div>
@@ -908,7 +908,7 @@ function InstructionsScreen({ test, sections, candidate, left, onProceed, onClos
       <div style={{ flex: 1, overflowY: "auto", padding: "18px" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", display: "grid", gridTemplateColumns: "1.7fr 1fr", gap: 16 }} className="instr-grid">
           {/* instructions */}
-          <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 16, padding: "18px 20px" }}>
+          <div style={{ background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 16, padding: "18px 20px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 16, margin: 0, display: "flex", alignItems: "center", gap: 8 }}><FileText size={17} color={ORANGE} /> General Instructions</h3>
               <span style={{ fontSize: 12, fontWeight: 700, color: NAVY, background: "#eef2ff", borderRadius: 50, padding: "4px 12px" }}>Duration: {test?.durationMin} Mins</span>
@@ -935,7 +935,7 @@ function InstructionsScreen({ test, sections, candidate, left, onProceed, onClos
 
           {/* candidate panel */}
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 16, overflow: "hidden" }}>
+            <div style={{ background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 16, overflow: "hidden" }}>
               <div style={{ background: NAVY, color: "#fff", padding: "10px 16px", fontFamily: "Sora", fontWeight: 700, fontSize: 13.5 }}>Candidate</div>
               <div style={{ padding: "18px 16px", textAlign: "center" }}>
                 <div style={{ width: 64, height: 64, borderRadius: "50%", background: `${ORANGE}1a`, color: ORANGE, display: "grid", placeItems: "center", margin: "0 auto 10px", fontFamily: "Sora", fontWeight: 900, fontSize: 26 }}>{candidate[0]?.toUpperCase()}</div>
@@ -966,12 +966,12 @@ function InstructionsScreen({ test, sections, candidate, left, onProceed, onClos
       </div>
 
       {/* footer */}
-      <div style={{ background: "#fff", borderTop: "1px solid #e5e7eb", padding: "12px 18px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+      <div style={{ background: "var(--page-bg)", borderTop: "1px solid #e5e7eb", padding: "12px 18px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
         <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: NAVY, cursor: "pointer", flex: 1, minWidth: 240 }}>
           <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} style={{ width: 18, height: 18, accentColor: ORANGE }} />
           I have read and understood all the instructions.
         </label>
-        <button onClick={onClose} style={{ background: "#fff", color: MUTE, border: "1.5px solid #e5e7eb", borderRadius: 11, padding: "10px 18px", fontWeight: 700, cursor: "pointer" }}>Cancel</button>
+        <button onClick={onClose} style={{ background: "var(--page-bg)", color: MUTE, border: "1.5px solid #e5e7eb", borderRadius: 11, padding: "10px 18px", fontWeight: 700, cursor: "pointer" }}>Cancel</button>
         <button onClick={onProceed} disabled={!agree}
           style={{ display: "inline-flex", alignItems: "center", gap: 8, background: agree ? "linear-gradient(135deg,#FF693D,#E0421F)" : "#cbd5e1", color: "#fff", border: "none", borderRadius: 11, padding: "11px 24px", fontWeight: 800, fontFamily: "Sora", fontSize: 14, cursor: agree ? "pointer" : "not-allowed", boxShadow: agree ? "0 10px 22px -10px #FF693D" : "none", transition: "all .2s" }}>
           Proceed to Test <ChevronRight size={16} />
@@ -1060,7 +1060,7 @@ function ResultView({ token, plan, testId, result, onClose }) {
     return out.slice(0, 5);
   }, [r, topics, weakSet, strong, marksLost, marksGained, attemptRate]);
 
-  const card = { background: "#fff", border: "1px solid #eef2f7", borderRadius: 16, padding: "16px 18px", boxShadow: "0 10px 30px -26px rgba(13,27,62,.5)" };
+  const card = { background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 16, padding: "16px 18px", boxShadow: "0 10px 30px -26px rgba(13,27,62,.5)" };
   const head = (icon, txt) => (
     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
       {icon}<span style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 14.5 }}>{txt}</span>
@@ -1274,7 +1274,7 @@ function ResultView({ token, plan, testId, result, onClose }) {
 
         {/* Actions */}
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 14 }}>
-          <button onClick={() => setShowAnswers((v) => !v)} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", border: `1.5px solid ${NAVY}`, color: NAVY, borderRadius: 12, padding: "11px 18px", fontWeight: 800, fontFamily: "Sora", cursor: "pointer", transition: "all .15s" }}>
+          <button onClick={() => setShowAnswers((v) => !v)} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--page-bg)", border: `1.5px solid ${NAVY}`, color: NAVY, borderRadius: 12, padding: "11px 18px", fontWeight: 800, fontFamily: "Sora", cursor: "pointer", transition: "all .15s" }}>
             {showAnswers ? <EyeOff size={16} /> : <BookOpenCheck size={16} />} {showAnswers ? "Hide" : "Review"} answers & solutions
           </button>
           <button onClick={onClose} style={{ background: `linear-gradient(135deg, ${ORANGE}, #E0421F)`, color: "#fff", border: "none", borderRadius: 12, padding: "11px 22px", fontWeight: 800, fontFamily: "Sora", cursor: "pointer", boxShadow: `0 8px 20px -8px ${ORANGE}` }}>Done</button>
@@ -1322,7 +1322,7 @@ function SolutionCard({ a }) {
   const options = a.options || [];
 
   return (
-    <div style={{ border: "1px solid #eef2f7", borderLeft: `3px solid ${c}`, borderRadius: 12, padding: "14px 16px", background: "#fff" }}>
+    <div style={{ border: "1px solid #eef2f7", borderLeft: `3px solid ${c}`, borderRadius: 12, padding: "14px 16px", background: "var(--page-bg)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: a.text || a.image ? 10 : 6 }}>
         <span style={{ fontSize: 12, fontWeight: 800, color: MUTE }}>Q{a.qno}</span>
         {a.subject && (

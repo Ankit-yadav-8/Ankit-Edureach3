@@ -149,7 +149,7 @@ export default function RankCounselling() {
                 style={{ fontSize: "1rem", padding: "14px 30px", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700 }}>
                 Start Free Counselling <ArrowRight size={18} />
               </a>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", borderRadius: 50, background: "#fff", border: "1.5px dashed rgba(255, 105, 61,.5)", fontSize: 14, fontWeight: 700, color: "#1a1a2e" }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", borderRadius: 50, background: "var(--page-bg)", border: "1.5px dashed rgba(255, 105, 61,.5)", fontSize: 14, fontWeight: 700, color: "#1a1a2e" }}>
                 <span style={{ color: "#9ca3af", textDecoration: "line-through", fontWeight: 600 }}>₹1999</span>
                 Full plan <span style={{ background: "linear-gradient(90deg,#FF693D,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontSize: 16 }}>₹{PRICE}</span>
               </div>
@@ -158,7 +158,7 @@ export default function RankCounselling() {
             {/* trust badges */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", marginTop: 26 }}>
               {TRUST.map(({ icon: Icon, label }) => (
-                <span key={label} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 16px", borderRadius: 50, background: "#fff", border: "1px solid rgba(255, 105, 61,.25)", boxShadow: "0 2px 10px rgba(255, 105, 61,.08)", fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>
+                <span key={label} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 16px", borderRadius: 50, background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.25)", boxShadow: "0 2px 10px rgba(255, 105, 61,.08)", fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>
                   <Icon size={15} color="#FF693D" /> {label}
                 </span>
               ))}
@@ -188,7 +188,7 @@ export default function RankCounselling() {
                     transition={{ type: "spring", stiffness: 300, damping: 22 }}
                     style={{
                       position: "relative", height: "100%", display: "flex", flexDirection: "column",
-                      background: "#fff", borderRadius: 20, overflow: "hidden",
+                      background: "var(--page-bg)", borderRadius: 20, overflow: "hidden",
                       border: `1px solid ${color}33`,
                       boxShadow: featured ? `0 28px 60px -28px ${color}88, 0 0 0 2px ${color}44` : `0 18px 44px -26px ${color}77`,
                     }}
@@ -329,7 +329,7 @@ export default function RankCounselling() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -40 }}
                       transition={{ duration: 0.4 }}
-                      style={{ background: "#fff", borderRadius: 20, border: "1px solid rgba(255, 105, 61,.2)", boxShadow: "0 10px 40px rgba(255, 105, 61,.12)", padding: "30px 32px", position: "relative", overflow: "hidden" }}
+                      style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid rgba(255, 105, 61,.2)", boxShadow: "0 10px 40px rgba(255, 105, 61,.12)", padding: "30px 32px", position: "relative", overflow: "hidden" }}
                     >
                       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg,#FF693D,#fbbf24,#FF693D)" }} />
                       <Quote size={48} color="rgba(255, 105, 61,.14)" style={{ position: "absolute", top: 20, right: 24 }} />
@@ -368,7 +368,7 @@ export default function RankCounselling() {
             {/* controls */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 20 }}>
               <button onClick={() => gotoStory(story - 1)} aria-label="Previous story"
-                style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(255, 105, 61,.3)", background: "#fff", color: "#FF693D", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>
+                style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(255, 105, 61,.3)", background: "var(--page-bg)", color: "#FF693D", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>
                 <ChevronLeft size={20} />
               </button>
               <div style={{ display: "flex", gap: 8 }}>
@@ -378,7 +378,7 @@ export default function RankCounselling() {
                 ))}
               </div>
               <button onClick={() => gotoStory(story + 1)} aria-label="Next story"
-                style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(255, 105, 61,.3)", background: "#fff", color: "#FF693D", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>
+                style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(255, 105, 61,.3)", background: "var(--page-bg)", color: "#FF693D", display: "grid", placeItems: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>
                 <ChevronRight size={20} />
               </button>
             </div>
@@ -395,7 +395,7 @@ export default function RankCounselling() {
             {FAQS.map((f, i) => {
               const open = openFaq === i;
               return (
-                <div key={f.q} style={{ background: "#fff", borderRadius: 14, border: `1px solid ${open ? "rgba(255, 105, 61,.4)" : "rgba(0,0,0,.08)"}`, boxShadow: open ? "0 4px 18px rgba(255, 105, 61,.12)" : "0 1px 8px rgba(0,0,0,.04)", marginBottom: 12, overflow: "hidden", transition: "all .2s" }}>
+                <div key={f.q} style={{ background: "var(--page-bg)", borderRadius: 14, border: `1px solid ${open ? "rgba(255, 105, 61,.4)" : "rgba(0,0,0,.08)"}`, boxShadow: open ? "0 4px 18px rgba(255, 105, 61,.12)" : "0 1px 8px rgba(0,0,0,.04)", marginBottom: 12, overflow: "hidden", transition: "all .2s" }}>
                   <button onClick={() => setOpenFaq(open ? -1 : i)}
                     style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, padding: "16px 20px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: ".95rem", color: "#1a1a2e" }}>
                     {f.q}
@@ -449,7 +449,7 @@ export default function RankCounselling() {
                 </a>
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <a href={`tel:${PHONE_TEL}`}
-                    style={{ flex: 1, minWidth: 150, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, background: "#fff", border: "1.5px solid rgba(255, 105, 61,.35)", color: "#c2410c", padding: "13px 18px", borderRadius: 12, fontSize: 14.5, fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif", textDecoration: "none" }}>
+                    style={{ flex: 1, minWidth: 150, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, background: "var(--page-bg)", border: "1.5px solid rgba(255, 105, 61,.35)", color: "#c2410c", padding: "13px 18px", borderRadius: 12, fontSize: 14.5, fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif", textDecoration: "none" }}>
                     <Phone size={17} /> {PHONE_DISPLAY}
                   </a>
                   <button type="button" onClick={() => openEnrol("all-colleges")}

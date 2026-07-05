@@ -486,7 +486,7 @@ export default function Josaa2026() {
           <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,3.5vw,2.3rem)", marginBottom: 10 }}>Counselling opens soon. Be ready.</h2>
           <p style={{ color: "rgba(255,255,255,.9)", maxWidth: 560, margin: "0 auto 22px" }}>Lock your ₹299 plan now and get your personalised choice list before the rush.</p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <button type="button" onClick={() => openEnrol("josaa")} className="btn btn-light" style={{ fontSize: 16, padding: "14px 28px", background: "#fff", color: "var(--coral)", border: "none", cursor: "pointer" }}>Enrol now — ₹299</button>
+            <button type="button" onClick={() => openEnrol("josaa")} className="btn btn-light" style={{ fontSize: 16, padding: "14px 28px", background: "var(--page-bg)", color: "var(--coral)", border: "none", cursor: "pointer" }}>Enrol now — ₹299</button>
             <a href={WA} target="_blank" rel="noreferrer" className="btn" style={{ fontSize: 15, padding: "14px 22px", background: "rgba(255,255,255,.15)", color: "#fff", border: "1px solid rgba(255,255,255,.5)" }}><MessageCircle size={17} /> Ask on WhatsApp</a>
           </div>
         </div>

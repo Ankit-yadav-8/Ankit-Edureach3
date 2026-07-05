@@ -653,11 +653,11 @@ export default function BranchDetail() {
   const seoDesc = `${b.name}: ${(b.desc || "").slice(0, 150)} Explore scope, salaries, AI-disruption risk, top recruiters, placements and the best colleges.`;
 
   return (
-    <div style={{ background: "#ffffff", minHeight: "100vh", paddingTop: 92, paddingBottom: 72 }}>
+    <div style={{ background: "var(--page-bg)", minHeight: "100vh", paddingTop: 92, paddingBottom: 72 }}>
       <Seo title={`${b.name} — Scope, Salary, Colleges & AI Risk`} description={seoDesc} path={`/branches/${slug}`}
         breadcrumbs={[{ name: "Home", path: "/" }, { name: "Branches", path: "/branches" }, { name: b.name, path: `/branches/${slug}` }]} />
       <div className="container" style={{ maxWidth: 1040 }}>
-        <Link to="/branches" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: F.sm, fontWeight: 700, color: CL.ink2, textDecoration: "none", background: "#fff", padding: "8px 14px", borderRadius: 30, border: `1px solid ${CL.line}`, boxShadow: CL.shadow, marginBottom: 24, marginTop: 10 }}>
+        <Link to="/branches" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: F.sm, fontWeight: 700, color: CL.ink2, textDecoration: "none", background: "var(--page-bg)", padding: "8px 14px", borderRadius: 30, border: `1px solid ${CL.line}`, boxShadow: CL.shadow, marginBottom: 24, marginTop: 10 }}>
           <ArrowLeft size={14} /> Back to Catalog
         </Link>
 
@@ -675,7 +675,7 @@ export default function BranchDetail() {
                 {b.tags.map(t => <span key={t} style={{ fontSize: F.xs, fontWeight: 700, color: CL.ink2, background: CL.cream2, border: `1px solid ${CL.cream3}`, padding: "3px 10px", borderRadius: 6 }}>{t}</span>)}
               </div>
             </div>
-            <div className="branch-hero-stats" style={{ display: "flex", flexWrap: "nowrap", alignItems: "center", background: "#fff", border: `1px solid ${CL.line}`, borderRadius: 16, padding: "12px 20px", gap: 18, marginLeft: "auto" }}>
+            <div className="branch-hero-stats" style={{ display: "flex", flexWrap: "nowrap", alignItems: "center", background: "var(--page-bg)", border: `1px solid ${CL.line}`, borderRadius: 16, padding: "12px 20px", gap: 18, marginLeft: "auto" }}>
               {/* Job Growth */}
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
                 <div style={{ fontSize: 10, fontWeight: 800, color: CL.muted, letterSpacing: 0.5, textTransform: "uppercase" }}>Job Growth</div>

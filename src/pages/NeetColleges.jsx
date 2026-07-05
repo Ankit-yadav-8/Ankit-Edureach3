@@ -105,7 +105,7 @@ export default function NeetColleges() {
                 { icon: MapPin, label: `${NEET_STATES.length} states & UTs` },
               ].map(({ icon: Icon, label }) => (
                 <span key={label} style={{
-                  display: "inline-flex", alignItems: "center", gap: 7, background: "#fff",
+                  display: "inline-flex", alignItems: "center", gap: 7, background: "var(--page-bg)",
                   border: "1px solid rgba(0,0,0,.08)", borderRadius: 50, padding: "7px 14px",
                   fontSize: 13, fontWeight: 700, color: "#1c1c28", boxShadow: "0 2px 12px rgba(28,28,40,.06)",
                 }}>
@@ -120,7 +120,7 @@ export default function NeetColleges() {
       <div className="container" style={{ marginTop: 28 }}>
         {/* Filter bar */}
         <div style={{
-          background: "#fff", borderRadius: 16, border: "1px solid rgba(0,0,0,.08)",
+          background: "var(--page-bg)", borderRadius: 16, border: "1px solid rgba(0,0,0,.08)",
           boxShadow: "0 2px 20px rgba(28,28,40,.07)", padding: "16px 20px", marginBottom: 24,
         }}>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
@@ -178,7 +178,7 @@ export default function NeetColleges() {
             <Reveal key={c.slug} delay={(i % 3) * 0.03} className="cv-card">
               <div onClick={() => nav(`/neet-colleges/${c.slug}`)}
                 style={{
-                  background: "#fff", borderRadius: 16, border: "1px solid rgba(0,0,0,.08)",
+                  background: "var(--page-bg)", borderRadius: 16, border: "1px solid rgba(0,0,0,.08)",
                   overflow: "hidden", display: "flex", flexDirection: "column",
                   boxShadow: "0 2px 16px rgba(28,28,40,.06)", height: "100%", cursor: "pointer",
                   transition: "box-shadow .25s ease, transform .25s ease",

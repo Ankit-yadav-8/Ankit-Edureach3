@@ -13,7 +13,7 @@ export default function Branches() {
   const goHome = () => nav("/");
 
   return (
-    <div style={{ background: "#ffffff", paddingTop: 110, minHeight: "100vh" }}>
+    <div style={{ background: "var(--page-bg)", paddingTop: 110, minHeight: "100vh" }}>
       <Seo path="/branches" />
       <div className="container" style={{ marginBottom: 8 }}>
         <button onClick={goHome} aria-label="Back to home" className="cp-back-btn">

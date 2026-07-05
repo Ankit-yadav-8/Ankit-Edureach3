@@ -10,7 +10,7 @@ import { Target, CheckCircle2 } from "lucide-react";
 /* inline replicas of the global .container / .eyebrow / .section-title
    / .section-sub / .card styles so strategy.css can't restyle them */
 const container = { width: "100%", maxWidth: "var(--maxw, 1200px)", marginInline: "auto", paddingInline: "1.5rem", boxSizing: "border-box" };
-const cardBase = { background: "#fff", borderRadius: "var(--radius, 18px)", boxShadow: "0 2px 16px rgba(0,0,0,.07), inset 0 1px 0 rgba(255,255,255,.9)", border: "1px solid rgba(0,0,0,.08)", color: "#1a1a2e" };
+const cardBase = { background: "var(--page-bg)", borderRadius: "var(--radius, 18px)", boxShadow: "0 2px 16px rgba(0,0,0,.07), inset 0 1px 0 rgba(255,255,255,.9)", border: "1px solid rgba(0,0,0,.08)", color: "#1a1a2e" };
 const eyebrowStyle = { display: "inline-flex", alignItems: "center", gap: ".4rem", background: "rgba(255, 105, 61,.10)", color: "var(--coral, #FF693D)", fontWeight: 700, fontSize: "0.70rem", letterSpacing: "3px", textTransform: "uppercase", padding: "0.42rem 1.1rem", borderRadius: 999, border: "1px solid rgba(255, 105, 61,.22)", marginBottom: "1.1rem", fontFamily: "'Space Grotesk','Sora',sans-serif" };
 const titleStyle = { fontSize: "clamp(1.95rem,3.8vw,3.1rem)", fontWeight: 800, letterSpacing: "-1.2px", lineHeight: 1.12, fontFamily: "'Space Grotesk','Sora',sans-serif", color: "#1a1a2e", margin: 0 };
 const subStyle = { color: "#4b5563", maxWidth: 580, margin: ".9rem auto 0", fontSize: "1.06rem", lineHeight: 1.7 };
@@ -105,7 +105,7 @@ export default function StudyRoadmap({ data, background }) {
               <motion.div key={subj}
                 initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: 0.08 + bi * 0.08 }}
-                style={{ background: "#fff", borderRadius: 12, padding: "14px 16px", borderLeft: `3px solid ${color}`, boxShadow: "0 1px 8px rgba(0,0,0,.05)" }}>
+                style={{ background: "var(--page-bg)", borderRadius: 12, padding: "14px 16px", borderLeft: `3px solid ${color}`, boxShadow: "0 1px 8px rgba(0,0,0,.05)" }}>
                 <div style={{ fontWeight: 800, color, marginBottom: 8, fontSize: 14 }}>{subj}</div>
                 {list.map((b) => (
                   <div key={b} style={{ fontSize: 12, color: "#374151", marginBottom: 5 }}>• {b}</div>

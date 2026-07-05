@@ -102,7 +102,7 @@ const rgba = (hex, a) => {
 
 // ─── Shared tooltip styles ────────────────────────────────────
 const TT_STYLE = {
-  background: "#ffffff",
+  background: "var(--page-bg)",
   border: "1px solid #f0f2f8",
   borderRadius: 14,
   fontSize: 13,
@@ -131,7 +131,7 @@ function PieTooltip({ active, payload, fmt, colors }) {
 
   return (
     <div style={{
-      background: "#fff",
+      background: "var(--page-bg)",
       border: `1px solid ${rgba(color, 0.2)}`,
       borderRadius: 12,
       padding: "9px 14px",

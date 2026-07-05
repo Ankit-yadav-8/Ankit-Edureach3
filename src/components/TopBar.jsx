@@ -28,7 +28,7 @@ export default function TopBar() {
       <span className="cp-topbar__glow">
         <span
           style={{
-            width: 17, height: 17, borderRadius: "50%", background: "#fff",
+            width: 17, height: 17, borderRadius: "50%", background: "var(--page-bg)",
             display: "grid", placeItems: "center", flexShrink: 0,
           }}
         >

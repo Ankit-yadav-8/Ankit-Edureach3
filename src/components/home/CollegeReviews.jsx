@@ -200,7 +200,7 @@ function ReviewCard({ r, i }) {
   const initials = (r.name || "A").trim().charAt(0).toUpperCase();
   return (
     <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: i * 0.04 }}
-      style={{ background: "#fff", border: `1px solid ${CL.line}`, borderRadius: 16, padding: "16px 18px", boxShadow: CL.shadow }}>
+      style={{ background: "var(--page-bg)", border: `1px solid ${CL.line}`, borderRadius: 16, padding: "16px 18px", boxShadow: CL.shadow }}>
       <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 10 }}>
         <span style={{ width: 38, height: 38, borderRadius: "50%", background: `linear-gradient(135deg, ${CL.coral}, ${CL.coralDk})`, color: "#fff", display: "grid", placeItems: "center", fontFamily: CL.display, fontWeight: 800, flexShrink: 0 }}>{initials}</span>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -227,7 +227,7 @@ function ReviewCard({ r, i }) {
               </div>
               {(d.tags || []).length > 0 && (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: d.text ? 6 : 0 }}>
-                  {d.tags.map((t) => <span key={t} style={{ fontSize: 10.5, fontWeight: 600, color: accent, background: "#fff", border: `1px solid ${accent}33`, borderRadius: 50, padding: "2px 8px" }}>{t}</span>)}
+                  {d.tags.map((t) => <span key={t} style={{ fontSize: 10.5, fontWeight: 600, color: accent, background: "var(--page-bg)", border: `1px solid ${accent}33`, borderRadius: 50, padding: "2px 8px" }}>{t}</span>)}
                 </div>
               )}
               {d.text && <div style={{ fontSize: 12.5, color: CL.ink2, lineHeight: 1.5 }}>{d.text}</div>}
@@ -306,7 +306,7 @@ function Browse({ colleges, summary, initialCollege, onBack, onGiveFor }) {
       <p style={{ color: CL.body, fontSize: 14, margin: "0 0 16px" }}>{q ? "Pick a college to read its reviews." : summary.length ? "Most-reviewed colleges — or search any college below." : "No reviews yet. Search a college and be the first to review it."}</p>
 
       {/* search bar */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, background: "#fff", border: `1.5px solid ${CL.cream3}`, borderRadius: 14, padding: "11px 16px", marginBottom: 14, boxShadow: CL.shadow }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, background: "var(--page-bg)", border: `1.5px solid ${CL.cream3}`, borderRadius: 14, padding: "11px 16px", marginBottom: 14, boxShadow: CL.shadow }}>
         <Search size={18} color={CL.muted} />
         <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search any college…"
           style={{ flex: 1, border: "none", outline: "none", fontSize: 15, color: CL.ink, background: "transparent", fontFamily: "DM Sans" }} />
@@ -400,7 +400,7 @@ export default function CollegeReviews() {
 function OptionCard({ icon: Icon, accent, soft, title, desc, cta, onClick }) {
   return (
     <motion.button onClick={onClick} whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
-      style={{ textAlign: "left", cursor: "pointer", background: "#fff", border: `1px solid ${CL.line}`, borderRadius: 20, padding: "26px 24px", boxShadow: CL.shadow, display: "flex", flexDirection: "column", gap: 12, position: "relative", overflow: "hidden" }}>
+      style={{ textAlign: "left", cursor: "pointer", background: "var(--page-bg)", border: `1px solid ${CL.line}`, borderRadius: 20, padding: "26px 24px", boxShadow: CL.shadow, display: "flex", flexDirection: "column", gap: 12, position: "relative", overflow: "hidden" }}>
       <span aria-hidden style={{ position: "absolute", top: 0, right: 0, width: 120, height: 120, background: soft, borderBottomLeftRadius: 100, opacity: 0.6, pointerEvents: "none" }} />
       <span style={{ width: 54, height: 54, borderRadius: 16, background: soft, display: "grid", placeItems: "center", position: "relative" }}><Icon size={26} color={accent} /></span>
       <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.25rem", color: CL.ink, position: "relative" }}>{title}</div>
@@ -410,7 +410,7 @@ function OptionCard({ icon: Icon, accent, soft, title, desc, cta, onClick }) {
   );
 }
 
-const panel = { background: "#fff", border: `1px solid ${CL.line}`, borderRadius: 22, boxShadow: CL.shadowLg, padding: "26px 26px 28px" };
+const panel = { background: "var(--page-bg)", border: `1px solid ${CL.line}`, borderRadius: 22, boxShadow: CL.shadowLg, padding: "26px 26px 28px" };
 const labelCol = { display: "flex", flexDirection: "column", gap: 5, minWidth: 0 };
 const labelTxt = { fontSize: 12, fontWeight: 700, color: CL.body };
 const inputStyle = { width: "100%", padding: "11px 13px", borderRadius: 11, border: `1.5px solid ${CL.cream3}`, fontSize: 14, color: CL.ink, outline: "none", boxSizing: "border-box", fontFamily: "DM Sans" };

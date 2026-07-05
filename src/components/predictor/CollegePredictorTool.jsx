@@ -42,7 +42,7 @@ function CollegeLogo({ slug, name }) {
       <img
         src={src}
         alt="" width={30} height={30} loading="lazy" onError={() => setErr(true)}
-        style={{ borderRadius: 8, flexShrink: 0, background: "#fff", border: "1px solid var(--line)", objectFit: "contain", padding: 2 }}
+        style={{ borderRadius: 8, flexShrink: 0, background: "var(--page-bg)", border: "1px solid var(--line)", objectFit: "contain", padding: 2 }}
       />
     );
   }
@@ -79,7 +79,7 @@ function RoundDetail({ row }) {
       {/* ── Cutoff snapshot stat cards ── */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 10, marginBottom: 16 }}>
         {statCards.map((s) => (
-          <div key={s.label} style={{ background: "#fff", border: "1px solid var(--line)", borderRadius: 12, padding: "12px 14px", borderTop: `3px solid ${s.color}` }}>
+          <div key={s.label} style={{ background: "var(--page-bg)", border: "1px solid var(--line)", borderRadius: 12, padding: "12px 14px", borderTop: `3px solid ${s.color}` }}>
             <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: ".04em", color: "var(--muted)", textTransform: "uppercase", marginBottom: 4 }}>{s.label}</div>
             <div style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 18, color: s.color }}>{s.value}</div>
           </div>
@@ -398,7 +398,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
       {loading && (
         <div style={{
           textAlign: "center", padding: "52px 24px", marginTop: 22,
-          background: "#fff", borderRadius: 16, border: "1px solid var(--line)",
+          background: "var(--page-bg)", borderRadius: 16, border: "1px solid var(--line)",
         }}>
           <div style={{
             width: 48, height: 48, borderRadius: "50%",

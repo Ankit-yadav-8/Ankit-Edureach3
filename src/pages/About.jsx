@@ -185,7 +185,7 @@ function SocialBtn({ href, icon: Icon, label }) {
       style={{
         display: "inline-flex", alignItems: "center", gap: 6,
         padding: "7px 14px", borderRadius: 50,
-        background: "#fff", border: "1px solid rgba(0,0,0,.14)",
+        background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.14)",
         color: "#374151", fontSize: 12, fontWeight: 600,
         textDecoration: "none", transition: "background .2s, border-color .2s",
       }}
@@ -234,7 +234,7 @@ function TeamCard({ f, idx, badgeIcon: BadgeIcon, badgeLabel }) {
       <div
         className="founder-card-wrap"
         style={{
-          background: "#fff",
+          background: "var(--page-bg)",
           border: "1px solid rgba(0,0,0,.08)",
           borderTop: `4px solid ${f.accent}`,
           borderRadius: 22, overflow: "hidden",
@@ -327,7 +327,7 @@ export default function About() {
       `}</style>
 
       {/* ── HERO ── */}
-      <section style={{ position: "relative", overflow: "hidden", background: "#ffffff", padding: "84px 0 72px", borderBottom: "1px solid rgba(255, 105, 61,.12)" }}>
+      <section style={{ position: "relative", overflow: "hidden", background: "var(--page-bg)", padding: "84px 0 72px", borderBottom: "1px solid rgba(255, 105, 61,.12)" }}>
         {/* animated IIT Roorkee backdrop */}
         <motion.div
           aria-hidden="true"
@@ -382,7 +382,7 @@ export default function About() {
       </section>
 
       {/* ── FOUNDERS ── */}
-      <section style={{ background: "#ffffff", padding: "76px 0" }}>
+      <section style={{ background: "var(--page-bg)", padding: "76px 0" }}>
         <div className="container">
           <SectionHead icon={Trophy} eyebrow="The Founders" title="Who's behind College Parichay" sub="Two engineers from IIT Roorkee, building the tool every JEE aspirant deserves" />
           <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
@@ -394,7 +394,7 @@ export default function About() {
       </section>
 
       {/* ── OPERATIONS ── */}
-      <section style={{ background: "#ffffff", padding: "0 0 76px" }}>
+      <section style={{ background: "var(--page-bg)", padding: "0 0 76px" }}>
         <div className="container">
           <SectionHead icon={Users} eyebrow="The Operations Team" title="Keeping everything running smoothly" sub="The people behind the scenes making sure students always come first" />
           <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
@@ -406,7 +406,7 @@ export default function About() {
       </section>
 
       {/* ── OUR STORY ── */}
-      <section style={{ background: "#ffffff", padding: "96px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
+      <section style={{ background: "var(--page-bg)", padding: "96px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
         <div className="container" style={{ maxWidth: 1160 }}>
           <div className="title-bar" style={{ textAlign: "left", alignItems: "flex-start", marginBottom: 44 }}>
             <span className="eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
@@ -463,7 +463,7 @@ export default function About() {
               ].map(([name, role]) => (
                 <div key={name} style={{
                   display: "flex", flexDirection: "column", gap: 3,
-                  padding: "16px 24px", borderRadius: 16, background: "#fff",
+                  padding: "16px 24px", borderRadius: 16, background: "var(--page-bg)",
                   border: "1px solid rgba(255, 105, 61,.28)", boxShadow: "0 4px 18px rgba(13,27,62,.06)",
                   minWidth: 200, flex: "1 1 220px",
                 }}>
@@ -493,7 +493,7 @@ export default function About() {
                   }}>
                     {item.icon}
                   </div>
-                  <div style={{ flex: 1, borderRadius: 16, background: "#fff", border: "1px solid rgba(0,0,0,.08)", borderLeft: `3px solid ${item.color}`, padding: "18px 22px", boxShadow: "0 2px 14px rgba(13,27,62,.05)" }}>
+                  <div style={{ flex: 1, borderRadius: 16, background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.08)", borderLeft: `3px solid ${item.color}`, padding: "18px 22px", boxShadow: "0 2px 14px rgba(13,27,62,.05)" }}>
                     <div style={{ fontSize: 11, fontWeight: 700, color: item.color, letterSpacing: 1, textTransform: "uppercase", marginBottom: 6 }}>{item.year}</div>
                     <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8, color: "var(--navy)", fontSize: 15 }}>{item.title}</h4>
                     <p style={{ fontSize: 13.5, color: "var(--muted)", lineHeight: 1.72, margin: 0 }}>{item.content}</p>
@@ -506,7 +506,7 @@ export default function About() {
       </section>
 
       {/* ── STATS ── */}
-      <section style={{ background: "#ffffff", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
+      <section style={{ background: "var(--page-bg)", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
         <div className="container">
           <SectionHead eyebrow="By the numbers" title="What we've built so far" />
 
@@ -523,7 +523,7 @@ export default function About() {
             ].map(({ icon: Icon, val, lbl, bg, color }) => (
               <div key={lbl} style={{
                 display: "flex", alignItems: "center", gap: 12,
-                background: "#fff", border: "1px solid rgba(0,0,0,.08)",
+                background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.08)",
                 borderRadius: 16, padding: "16px 18px", boxShadow: "0 2px 14px rgba(13,27,62,.05)",
               }}>
                 <span style={{ width: 44, height: 44, borderRadius: 12, background: bg, color, display: "grid", placeItems: "center", flexShrink: 0 }}>
@@ -552,7 +552,7 @@ export default function About() {
             ].map(({ icon, title, sub, color }, i) => (
               <Reveal key={title} delay={i * 0.08}>
                 <div style={{
-                  background: "#fff", border: "1px solid rgba(0,0,0,.08)",
+                  background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.08)",
                   borderTop: `3px solid ${color}`, borderRadius: 16,
                   padding: "20px 22px", textAlign: "center", height: "100%",
                   boxShadow: "0 2px 14px rgba(13,27,62,.05)",
@@ -568,7 +568,7 @@ export default function About() {
       </section>
 
       {/* ── VALUES ── */}
-      <section style={{ background: "#ffffff", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
+      <section style={{ background: "var(--page-bg)", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
         <div className="container">
           <div className="title-bar">
             <span className="eyebrow">What we stand for</span>
@@ -592,11 +592,11 @@ export default function About() {
       </section>
 
       {/* ── CONTACT ── */}
-      <section id="contact" style={{ background: "#ffffff", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
+      <section id="contact" style={{ background: "var(--page-bg)", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
         <div className="container">
           <div style={{
             maxWidth: 720, margin: "0 auto", textAlign: "center",
-            background: "#fff", border: "1px solid rgba(255, 105, 61,.2)",
+            background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.2)",
             borderRadius: 28, padding: "48px 40px",
             boxShadow: "0 10px 36px rgba(13,27,62,.08)",
           }}>
@@ -622,7 +622,7 @@ export default function About() {
                 <a key={label} href={href} target="_blank" rel="noreferrer" style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
                   padding: "8px 16px", borderRadius: 50, fontSize: 13, fontWeight: 600,
-                  background: "#fff", border: "1px solid rgba(0,0,0,.12)",
+                  background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.12)",
                   color: "var(--navy)", textDecoration: "none", transition: "all .2s",
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(255, 105, 61,.5)"; e.currentTarget.style.color = "#c2410c"; }}

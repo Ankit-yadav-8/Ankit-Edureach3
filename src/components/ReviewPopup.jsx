@@ -151,7 +151,7 @@ export default function ReviewPopup() {
           <motion.div
             initial={{ opacity: 0, y: 40, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 40, scale: 0.96 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }} onMouseDown={(e) => e.stopPropagation()}
-            style={{ width: "min(520px,100%)", background: "#fff", borderRadius: 22, boxShadow: "0 30px 80px rgba(13,27,62,.4)", overflow: "hidden", margin: "auto 0 8px" }}>
+            style={{ width: "min(520px,100%)", background: "var(--page-bg)", borderRadius: 22, boxShadow: "0 30px 80px rgba(13,27,62,.4)", overflow: "hidden", margin: "auto 0 8px" }}>
 
             {done ? (
               <div style={{ padding: "40px 28px", textAlign: "center" }}>

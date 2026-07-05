@@ -1,5 +1,5 @@
 .strategy-wrapper {
-  --bg: #FFFFFF; --bg-warm: #F5F1E8; --paper: #FFFFFF;
+  --bg: oklch(99% .005 60); --bg-warm: oklch(99% .005 60); --paper: #FFFFFF;
   --ink: #17140F; --ink-soft: #635C4E; --ink-faint: #9B937E; --line: #E7E1D2;
   --violet: #6C4FE0; --violet-ink: #2E1F72; --violet-tint: #EFEAFC;
   --coral: #E1543A; --coral-ink: #6E2113; --coral-tint: #FCEAE5;

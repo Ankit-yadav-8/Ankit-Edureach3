@@ -214,7 +214,7 @@ function StepCard({ item, last }) {
         <div
           className="htu-step-card"
           style={{
-            background: "#fff",
+            background: "var(--page-bg)",
             border: "1px solid rgba(0,0,0,.08)",
             borderRadius: 22,
             boxShadow: "0 2px 16px rgba(0,0,0,.07)",
@@ -390,7 +390,7 @@ export default function HowToUse() {
                     transition={{ delay: 0.15 + i * 0.12, type: "spring", bounce: 0.4 }}
                     className="htu-journey-card"
                     style={{
-                      background: "#fff", borderRadius: 16,
+                      background: "var(--page-bg)", borderRadius: 16,
                       border: "1px solid rgba(255, 105, 61,.2)",
                       boxShadow: "0 6px 20px -8px rgba(255, 105, 61,.4)",
                       padding: "16px 18px", width: 132, textAlign: "center",
@@ -465,7 +465,7 @@ export default function HowToUse() {
                 <Reveal key={q.title}>
                   <div
                     style={{
-                      background: "#fff", borderRadius: 18, padding: "24px 22px",
+                      background: "var(--page-bg)", borderRadius: 18, padding: "24px 22px",
                       border: "1px solid rgba(0,0,0,.08)", boxShadow: "0 2px 14px rgba(0,0,0,.06)",
                       height: "100%",
                     }}
@@ -513,7 +513,7 @@ export default function HowToUse() {
                   to="/jee-main#college"
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 8,
-                    background: "#fff", color: OR, fontWeight: 800, fontSize: "1rem",
+                    background: "var(--page-bg)", color: OR, fontWeight: 800, fontSize: "1rem",
                     padding: "13px 26px", borderRadius: 12, textDecoration: "none",
                   }}
                 >

@@ -90,7 +90,7 @@ export default function SearchOverlay({ open, onClose }) {
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
             onClick={(e) => e.stopPropagation()}
             style={{
-              width: "min(680px,92vw)", background: "#fff",
+              width: "min(680px,92vw)", background: "var(--page-bg)",
               borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 30px 60px -20px rgba(13,27,62,.32)",
               border: "1px solid rgba(0,0,0,.05)", overflow: "hidden",
             }}

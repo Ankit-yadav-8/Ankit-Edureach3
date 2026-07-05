@@ -63,7 +63,7 @@ export default function PredictorCards() {
             >
             <motion.div
               style={{
-                background: "#fff",
+                background: "var(--page-bg)",
                 borderRadius: 18,
                 border: "1px solid rgba(0,0,0,.08)",
                 overflow: "hidden",

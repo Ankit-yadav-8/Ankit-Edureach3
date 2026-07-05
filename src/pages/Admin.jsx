@@ -233,8 +233,8 @@ export default function Admin() {
   if (!authed) {
     const onKey = step === "key";
     return (
-      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: "60px 16px", background: "#ffffff" }}>
-        <div style={{ maxWidth: 440, width: "100%", background: "#fff", borderRadius: 20, padding: "40px 36px", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", border: "1px solid #eee" }}>
+      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: "60px 16px", background: "var(--page-bg)" }}>
+        <div style={{ maxWidth: 440, width: "100%", background: "var(--page-bg)", borderRadius: 20, padding: "40px 36px", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", border: "1px solid #eee" }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 22 }}>
             <div style={{ width: 64, height: 64, borderRadius: 20, background: `${ORANGE}15`, display: "grid", placeItems: "center", marginBottom: 16 }}>
               {onKey ? <ShieldCheck size={30} color={ORANGE} /> : <Mail size={30} color={ORANGE} />}
@@ -373,7 +373,7 @@ export default function Admin() {
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button onClick={refreshActive} disabled={busy}
-              style={{ background: "#fff", color: ORANGE, border: `1.5px solid ${ORANGE}`, height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+              style={{ background: "var(--page-bg)", color: ORANGE, border: `1.5px solid ${ORANGE}`, height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <RefreshCw size={14} style={{ animation: busy ? "spin 1s linear infinite" : "none" }} />
               {busy ? "Refreshing…" : "Refresh"}
             </button>
@@ -384,14 +384,14 @@ export default function Admin() {
               </button>
             )}
             <button onClick={logout}
-              style={{ background: "#fff", color: "#888", border: "1.5px solid #e5e7eb", height: 40, padding: "0 14px", borderRadius: 10, fontWeight: 600, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+              style={{ background: "var(--page-bg)", color: "#888", border: "1.5px solid #e5e7eb", height: 40, padding: "0 14px", borderRadius: 10, fontWeight: 600, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <LogOut size={14} /> Logout
             </button>
           </div>
         </div>
 
         {/* Tabs */}
-        <div style={{ display: "inline-flex", gap: 6, marginBottom: 24, background: "#fff", border: "1px solid #f0e9e0", borderRadius: 50, padding: 6, boxShadow: "0 4px 16px rgba(13,27,62,.05)", flexWrap: "wrap" }}>
+        <div style={{ display: "inline-flex", gap: 6, marginBottom: 24, background: "var(--page-bg)", border: "1px solid #f0e9e0", borderRadius: 50, padding: 6, boxShadow: "0 4px 16px rgba(13,27,62,.05)", flexWrap: "wrap" }}>
           {[
             { k: "users", label: "Users", icon: Users, count: total },
             { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
@@ -511,7 +511,7 @@ export default function Admin() {
         ) : tab === "tests" ? (
           <TestUpload token={token} />
         ) : tab === "users" ? (
-        <div className="adm-card" style={{ background: "#fff", borderRadius: 20, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 8px 30px rgba(13,27,62,.06)" }}>
+        <div className="adm-card" style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 8px 30px rgba(13,27,62,.06)" }}>
 
           {/* Search bar */}
           <div style={{ padding: "16px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
@@ -658,7 +658,7 @@ export default function Admin() {
 /* ── Payments tab: successful enrolments only ─────────────────────── */
 function PaymentsTable({ payments, search, setSearch, expanded, toggleRow }) {
   return (
-    <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+    <div style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #eee", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
 
       {/* Search bar */}
       <div style={{ padding: "16px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>

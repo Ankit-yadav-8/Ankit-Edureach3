@@ -102,7 +102,7 @@ export default function AiDoubtSolver({ token, exam = "JEE", subjects = [] }) {
   };
 
   return (
-    <div style={{ background: "#fff", border: "1px solid #eef2f7", borderRadius: 20, overflow: "hidden", boxShadow: "0 18px 44px -34px rgba(13,27,62,.4)", display: "flex", flexDirection: "column", height: "min(72vh, 720px)" }}>
+    <div style={{ background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 20, overflow: "hidden", boxShadow: "0 18px 44px -34px rgba(13,27,62,.4)", display: "flex", flexDirection: "column", height: "min(72vh, 720px)" }}>
       {/* header */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 18px", background: `linear-gradient(135deg,${NAVY},#16224a)`, color: "#fff" }}>
         <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(255,255,255,.12)", display: "grid", placeItems: "center", flexShrink: 0 }}>
@@ -156,7 +156,7 @@ export default function AiDoubtSolver({ token, exam = "JEE", subjects = [] }) {
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {STARTERS.map((s) => (
                 <button key={s} onClick={() => send(s)}
-                  style={{ textAlign: "left", background: "#fff", border: "1px solid #eef2f7", borderRadius: 12, padding: "11px 14px", cursor: "pointer", fontSize: 13.5, color: NAVY, fontWeight: 600, transition: "border-color .15s, background .15s" }}
+                  style={{ textAlign: "left", background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 12, padding: "11px 14px", cursor: "pointer", fontSize: 13.5, color: NAVY, fontWeight: 600, transition: "border-color .15s, background .15s" }}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = ORANGE; e.currentTarget.style.background = `${ORANGE}08`; }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#eef2f7"; e.currentTarget.style.background = "#fff"; }}>
                   <Sparkles size={13} color={ORANGE} style={{ marginRight: 8, verticalAlign: "-1px" }} />{s}
@@ -187,14 +187,14 @@ export default function AiDoubtSolver({ token, exam = "JEE", subjects = [] }) {
       </div>
 
       {/* composer */}
-      <div style={{ borderTop: "1px solid #eef2f7", padding: "12px 14px", background: "#fff" }}>
+      <div style={{ borderTop: "1px solid #eef2f7", padding: "12px 14px", background: "var(--page-bg)" }}>
         <div style={{ display: "flex", alignItems: "flex-end", gap: 10, background: "#F7F9FC", border: "1.5px solid #e5e7eb", borderRadius: 16, padding: "8px 8px 8px 14px" }}>
           <textarea
             ref={taRef} value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKey}
             rows={1} placeholder="Type your doubt…  (Enter to send · Shift+Enter for a new line)"
             style={{ flex: 1, resize: "none", border: "none", outline: "none", background: "transparent", fontSize: 14, color: NAVY, lineHeight: 1.5, maxHeight: 120, fontFamily: "inherit", padding: "6px 0" }} />
           {streaming ? (
-            <button onClick={stop} title="Stop" style={{ width: 40, height: 40, borderRadius: 12, background: "#fff", border: "1.5px solid #e5e7eb", cursor: "pointer", display: "grid", placeItems: "center", color: NAVY, flexShrink: 0 }}>
+            <button onClick={stop} title="Stop" style={{ width: 40, height: 40, borderRadius: 12, background: "var(--page-bg)", border: "1.5px solid #e5e7eb", cursor: "pointer", display: "grid", placeItems: "center", color: NAVY, flexShrink: 0 }}>
               <Square size={16} fill={NAVY} />
             </button>
           ) : (

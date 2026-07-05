@@ -118,7 +118,7 @@ export default function MindMapViewer({ open, subjectId, chapter, onClose }) {
                 width: zoom > 1 ? `${zoom * 62}%` : "auto",
                 maxWidth: zoom > 1 ? "none" : "min(920px, 96%)",
                 maxHeight: zoom > 1 ? "none" : "100%",
-                objectFit: "contain", borderRadius: 10, background: "#fff",
+                objectFit: "contain", borderRadius: 10, background: "var(--page-bg)",
                 boxShadow: "0 24px 60px rgba(0,0,0,.5)",
                 cursor: zoom >= 3 ? "zoom-out" : "zoom-in", userSelect: "none",
               }}
@@ -137,7 +137,7 @@ export default function MindMapViewer({ open, subjectId, chapter, onClose }) {
               <button key={`${p}-${i}`} onClick={() => setIdx(i)} style={{
                 flexShrink: 0, width: 48, height: 64, borderRadius: 8, overflow: "hidden",
                 border: i === idx ? `2.5px solid ${meta.accent}` : "2.5px solid rgba(255,255,255,.15)",
-                background: "#fff", cursor: "pointer", padding: 0,
+                background: "var(--page-bg)", cursor: "pointer", padding: 0,
                 boxShadow: i === idx ? `0 4px 14px ${meta.accent}88` : "none",
                 opacity: i === idx ? 1 : 0.7, transition: "opacity .15s, border-color .15s",
               }}>

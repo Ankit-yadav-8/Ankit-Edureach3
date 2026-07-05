@@ -169,7 +169,7 @@ function EnrolModal({ plan, onClose }) {
         exit={{ y: 20, scale: 0.97, opacity: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 26 }}
         style={{
-          width: "100%", maxWidth: 560, background: "#fff", borderRadius: 22,
+          width: "100%", maxWidth: 560, background: "var(--page-bg)", borderRadius: 22,
           boxShadow: "0 30px 80px rgba(20,12,4,.45)", overflow: "hidden", position: "relative",
           margin: "auto",
         }}
@@ -246,7 +246,7 @@ function EnrolModal({ plan, onClose }) {
                   <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: -6, marginBottom: 4, fontSize: 12, color: "#15803d", fontWeight: 600 }}>
                     <Mail size={13} color="#16a34a" /> We email a weekly progress report here.
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#ffffff", border: "1px solid #fed7aa", borderRadius: 10, padding: "10px 12px", fontSize: 12.5, color: "#9a3412", fontWeight: 600 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--page-bg)", border: "1px solid #fed7aa", borderRadius: 10, padding: "10px 12px", fontSize: 12.5, color: "#9a3412", fontWeight: 600 }}>
                     <BadgeCheck size={15} color="#FF693D" /> Target: {meta.targetExam}
                   </div>
                 </>
@@ -324,7 +324,7 @@ function SuccessView({ meta, plan, paymentId, onClose }) {
           Message us on WhatsApp <ArrowRight size={17} />
         </a>
         <button onClick={onClose}
-          style={{ padding: "12px", border: "1.5px solid rgba(0,0,0,.12)", borderRadius: 12, background: "#fff", color: "#1a1a2e", fontWeight: 700, cursor: "pointer", fontFamily: "'Space Grotesk',sans-serif" }}>
+          style={{ padding: "12px", border: "1.5px solid rgba(0,0,0,.12)", borderRadius: 12, background: "var(--page-bg)", color: "#1a1a2e", fontWeight: 700, cursor: "pointer", fontFamily: "'Space Grotesk',sans-serif" }}>
           Done
         </button>
       </div>
@@ -364,7 +364,7 @@ function SelectField({ label, icon: Icon, error, options, placeholder, ...rest }
           style={{
             width: "100%", padding: "11px 12px 11px 36px", fontSize: 14.5, borderRadius: 10,
             border: `1.5px solid ${error ? "#fca5a5" : "rgba(0,0,0,.13)"}`, outline: "none",
-            background: "#fff", color: rest.value ? "#1a1a2e" : "#9ca3af", appearance: "none", cursor: "pointer",
+            background: "var(--page-bg)", color: rest.value ? "#1a1a2e" : "#9ca3af", appearance: "none", cursor: "pointer",
           }}>
           <option value="">{placeholder || "Select your state…"}</option>
           {options.map((o) => <option key={o} value={o} style={{ color: "#1a1a2e" }}>{o}</option>)}

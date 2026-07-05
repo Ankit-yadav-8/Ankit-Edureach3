@@ -161,7 +161,7 @@ export default function ApplicationRadar() {
                   key={`${r.name}-${idx}`}
                   style={{
                     minWidth: 276, maxWidth: 276, flexShrink: 0,
-                    background: "#fff",
+                    background: "var(--page-bg)",
                     border: `1px solid ${t.border}`,
                     borderRadius: 18,
                     padding: "20px 20px 18px",

@@ -123,7 +123,7 @@ function CollegeCard({ c, typeAccent, typeBg, index }) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.45, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       style={{
-        background: "#fff",
+        background: "var(--page-bg)",
         borderRadius: 16,
         overflow: "hidden",
         border: "1px solid rgba(0,0,0,.08)",

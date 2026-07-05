@@ -259,9 +259,9 @@ function OtpGate({ email, name, onVerified }) {
   };
 
   return (
-    <section style={{ background: "#ffffff", minHeight: "100vh", display: "grid", placeItems: "center", padding: "120px 16px 60px" }}>
+    <section style={{ background: "var(--page-bg)", minHeight: "100vh", display: "grid", placeItems: "center", padding: "120px 16px 60px" }}>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-        style={{ width: "100%", maxWidth: 440, background: "#fff", borderRadius: 24, border: "1px solid rgba(255, 105, 61,.18)", padding: "34px 30px", boxShadow: "0 30px 70px -40px rgba(13,27,62,.5)", position: "relative", overflow: "hidden" }}>
+        style={{ width: "100%", maxWidth: 440, background: "var(--page-bg)", borderRadius: 24, border: "1px solid rgba(255, 105, 61,.18)", padding: "34px 30px", boxShadow: "0 30px 70px -40px rgba(13,27,62,.5)", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${ORANGE},${GREEN})` }} />
 
         <div style={{ width: 62, height: 62, borderRadius: 18, background: `linear-gradient(135deg,${ORANGE}1a,${GREEN}1a)`, border: `1px solid ${ORANGE}33`, display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
@@ -920,7 +920,7 @@ function DashboardBody({ urlPlan = "" }) {
   ];
 
   return (
-    <section style={{ background: "#ffffff", minHeight: "100vh", paddingBottom: 70 }}>
+    <section style={{ background: "var(--page-bg)", minHeight: "100vh", paddingBottom: 70 }}>
       {/* ── Title strip ── */}
       <div style={{ paddingTop: 104, textAlign: "center" }}>
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
@@ -936,7 +936,7 @@ function DashboardBody({ urlPlan = "" }) {
             opening "Foundation" never lands them on the JEE 2027 dashboard. */}
         {myBatches.length > 1 && (
           <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 }}
-            style={{ display: "inline-flex", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", marginTop: 16, background: "#fff", border: "1px solid rgba(255, 105, 61,.2)", borderRadius: 50, padding: "6px 8px", boxShadow: "0 14px 30px -24px rgba(13,27,62,.5)" }}>
+            style={{ display: "inline-flex", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", marginTop: 16, background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.2)", borderRadius: 50, padding: "6px 8px", boxShadow: "0 14px 30px -24px rgba(13,27,62,.5)" }}>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: MUTE, padding: "0 6px 0 10px" }}>
               <GraduationCap size={14} color={ORANGE} /> Your batches
             </span>
@@ -972,7 +972,7 @@ function DashboardBody({ urlPlan = "" }) {
 
             {/* LEFT — user / plan card */}
             <motion.div initial={{ opacity: 0, x: -22 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5 }}
-              style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", padding: "26px 24px", display: "flex", flexDirection: "column", boxShadow: "0 18px 40px -28px rgba(13,27,62,.4)" }}>
+              style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #eee", padding: "26px 24px", display: "flex", flexDirection: "column", boxShadow: "0 18px 40px -28px rgba(13,27,62,.4)" }}>
               <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 16 }}>
                 <div style={{ width: 60, height: 60, borderRadius: "50%", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontSize: 26, fontWeight: 800, fontFamily: "Sora", flexShrink: 0 }}>{initial}</div>
                 <div style={{ minWidth: 0, flex: 1 }}>
@@ -1033,7 +1033,7 @@ function DashboardBody({ urlPlan = "" }) {
               </button>
 
               <button onClick={() => navigate("/")}
-                style={{ width: "100%", padding: "13px", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "#fff", color: NAVY, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                style={{ width: "100%", padding: "13px", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "var(--page-bg)", color: NAVY, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                 <Home size={16} /> Home
               </button>
             </motion.div>
@@ -1057,7 +1057,7 @@ function DashboardBody({ urlPlan = "" }) {
                 <button onClick={() => scrollTo("live-tracking")} style={{ background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", border: "none", padding: "12px 20px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, boxShadow: `0 12px 26px -10px ${ORANGE}` }}>
                   Log today <ArrowRight size={16} />
                 </button>
-                <button onClick={() => scrollTo("test-analysis")} style={{ background: "#fff", color: NAVY, border: "1.5px solid #e5e7eb", padding: "12px 20px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer" }}>
+                <button onClick={() => scrollTo("test-analysis")} style={{ background: "var(--page-bg)", color: NAVY, border: "1.5px solid #e5e7eb", padding: "12px 20px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer" }}>
                   Add a test
                 </button>
               </div>
@@ -1065,12 +1065,12 @@ function DashboardBody({ urlPlan = "" }) {
 
             {/* RIGHT — jump links */}
             <motion.div initial={{ opacity: 0, x: 22 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5, delay: .12 }}
-              style={{ background: "#fff", borderRadius: 20, border: "1px solid #eee", padding: "20px", boxShadow: "0 18px 40px -28px rgba(13,27,62,.4)" }}>
+              style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #eee", padding: "20px", boxShadow: "0 18px 40px -28px rgba(13,27,62,.4)" }}>
               <div style={{ fontSize: 11.5, fontWeight: 800, color: "#9ca3af", textTransform: "uppercase", letterSpacing: ".06em", margin: "2px 4px 12px" }}>Jump to</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
                 {NAV_LINKS.map(({ id, label, desc, icon: Icon, color }) => (
                   <button key={id} onClick={() => scrollTo(id)}
-                    style={{ textAlign: "left", background: "#fff", border: "1px solid #eee", borderRadius: 14, padding: "11px 13px", cursor: "pointer", display: "flex", gap: 12, alignItems: "center", transition: "box-shadow .15s, transform .15s" }}
+                    style={{ textAlign: "left", background: "var(--page-bg)", border: "1px solid #eee", borderRadius: 14, padding: "11px 13px", cursor: "pointer", display: "flex", gap: 12, alignItems: "center", transition: "box-shadow .15s, transform .15s" }}
                     onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 12px 26px -14px ${color}99`; e.currentTarget.style.transform = "translateY(-2px)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
                     <span style={{ width: 38, height: 38, borderRadius: 11, background: `${color}14`, border: `1px solid ${color}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
@@ -1120,7 +1120,7 @@ function DashboardBody({ urlPlan = "" }) {
               { v: `${backlogDone}/${backlog.length}`, l: "Backlog cleared", c: "#7c3aed" },
             ].map((s) => (
               <motion.div key={s.l} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                style={{ background: "#fff", border: "1px solid #eee", borderRadius: 16, padding: "18px", borderTop: `3px solid ${s.c}`, boxShadow: "0 14px 36px -28px rgba(13,27,62,.4)" }}>
+                style={{ background: "var(--page-bg)", border: "1px solid #eee", borderRadius: 16, padding: "18px", borderTop: `3px solid ${s.c}`, boxShadow: "0 14px 36px -28px rgba(13,27,62,.4)" }}>
                 <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 24, color: s.c }}>{s.v}</div>
                 <div style={{ fontSize: 12.5, color: MUTE, fontWeight: 600, marginTop: 2 }}>{s.l}</div>
               </motion.div>
@@ -1131,7 +1131,7 @@ function DashboardBody({ urlPlan = "" }) {
         {/* ── LIVE STUDENT TRACKING ── */}
         <Section id="live-tracking" kicker={`Always on · up to ${MAX_LOGS_PER_DAY}× a day`} title="Live Student Tracking" tColor="#ef4444"
           sub={`Log each subject's study hours and tasks — and update them up to ${MAX_LOGS_PER_DAY} times a day. The charts refresh instantly so nothing slips through the cracks.`}>
-          <div style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+          <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},${ORANGE})` }} />
 
             {/* header */}
@@ -1156,7 +1156,7 @@ function DashboardBody({ urlPlan = "" }) {
                 { icon: CheckCircle2, c: "#22c55e", v: tasksLabel, l: "Tasks done" },
                 { icon: Target, c: "#8b5cf6", v: `${routinePct}%`, l: "Routine kept" },
               ].map(({ icon: Icon, c, v, l }) => (
-                <div key={l} style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
+                <div key={l} style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
                   <Icon size={18} color={c} style={{ marginBottom: 6 }} />
                   <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, color: INK }}>{v}</div>
                   <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{l}</div>
@@ -1184,19 +1184,19 @@ function DashboardBody({ urlPlan = "" }) {
                       <Pencil size={13} /> Edit / update hours · {editsLeft} left
                     </button>
                   ) : (
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #cbd5e1", borderRadius: 9, padding: "7px 12px", fontSize: 12, fontWeight: 700, color: MUTE }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--page-bg)", border: "1px solid #cbd5e1", borderRadius: 9, padding: "7px 12px", fontSize: 12, fontWeight: 700, color: MUTE }}>
                       <Lock size={13} /> All {MAX_LOGS_PER_DAY} updates used · locked till tomorrow
                     </span>
                   )}
                 </div>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   {subjects.map((s) => (
-                    <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: `1px solid ${subColor(s)}33`, borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: NAVY }}>
+                    <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--page-bg)", border: `1px solid ${subColor(s)}33`, borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: NAVY }}>
                       <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(s) }} /> {shortName(s)}: {subVal(todayEntry, s).h}h · {subVal(todayEntry, s).t}✓
                     </span>
                   ))}
-                  <span style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: NAVY }}>Tasks: {todayEntry.tasksDone}/{todayEntry.tasksTotal}</span>
-                  <span style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: todayEntry.routine ? "#15803d" : "#b91c1c" }}>Routine: {todayEntry.routine ? "Followed ✓" : "Missed"}</span>
+                  <span style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: NAVY }}>Tasks: {todayEntry.tasksDone}/{todayEntry.tasksTotal}</span>
+                  <span style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: todayEntry.routine ? "#15803d" : "#b91c1c" }}>Routine: {todayEntry.routine ? "Followed ✓" : "Missed"}</span>
                 </div>
               </div>
             ) : (
@@ -1230,7 +1230,7 @@ function DashboardBody({ urlPlan = "" }) {
                   </button>
                   {editingLog && (
                     <button type="button" onClick={() => { setEditingLog(false); setLogForm({ subjects: {}, tasksTotal: "", routine: true }); }}
-                      style={{ padding: "11px 18px", borderRadius: 11, border: "1.5px solid #e5e7eb", background: "#fff", color: MUTE, fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, cursor: "pointer" }}>
+                      style={{ padding: "11px 18px", borderRadius: 11, border: "1.5px solid #e5e7eb", background: "var(--page-bg)", color: MUTE, fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, cursor: "pointer" }}>
                       Cancel
                     </button>
                   )}
@@ -1244,7 +1244,7 @@ function DashboardBody({ urlPlan = "" }) {
             {/* weekly hours bars + goal gauge */}
             <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 22, alignItems: "center" }} className="md-track-grid">
               {/* weekly-hours bar chart — premium card with gridlines */}
-              <div style={{ background: "#fff", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 16, padding: "16px 16px 14px", boxShadow: "0 16px 40px -30px rgba(255, 105, 61,.8)" }}>
+              <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 16, padding: "16px 16px 14px", boxShadow: "0 16px 40px -30px rgba(255, 105, 61,.8)" }}>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 14 }}>
                   <span style={{ fontSize: 12.5, fontWeight: 800, color: NAVY }}>Total study hours · last 7 days</span>
                   <span style={{ fontSize: 11, fontWeight: 800, color: ORANGE, background: `${ORANGE}12`, borderRadius: 50, padding: "3px 9px" }}>{round1(weekHours)}h total</span>
@@ -1302,7 +1302,7 @@ function DashboardBody({ urlPlan = "" }) {
                   ))}
                 </div>
               </div>
-              <div style={{ background: "#fff", border: "1px solid rgba(34,197,94,.22)", borderRadius: 16, padding: "16px 14px 12px", boxShadow: "0 16px 40px -30px rgba(34,197,94,.9)", textAlign: "center" }}>
+              <div style={{ background: "var(--page-bg)", border: "1px solid rgba(34,197,94,.22)", borderRadius: 16, padding: "16px 14px 12px", boxShadow: "0 16px 40px -30px rgba(34,197,94,.9)", textAlign: "center" }}>
                 <div style={{ fontSize: 12.5, fontWeight: 800, color: NAVY, marginBottom: 2 }}>Weekly goal ({WEEK_TARGET_HRS}h)</div>
                 <Gauge value={goalPct} label="of target" color="#22c55e" height={170} />
                 <div style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, marginTop: -2 }}>
@@ -1339,7 +1339,7 @@ function DashboardBody({ urlPlan = "" }) {
                 const c = subColor(s);
                 const tasks = Math.round(thisWkT[s]);
                 return (
-                  <div key={s} style={{ background: "#fff", border: `1px solid ${c}2e`, borderRadius: 16, overflow: "hidden", boxShadow: `0 16px 38px -28px ${c}cc`, display: "flex", flexDirection: "column" }}>
+                  <div key={s} style={{ background: "var(--page-bg)", border: `1px solid ${c}2e`, borderRadius: 16, overflow: "hidden", boxShadow: `0 16px 38px -28px ${c}cc`, display: "flex", flexDirection: "column" }}>
                     {/* subject header strip (premium, like the plan cards) */}
                     <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", background: `linear-gradient(135deg, ${c}16, ${c}05)`, borderBottom: `1px solid ${c}1f` }}>
                       <span style={{ width: 10, height: 10, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}22`, flexShrink: 0 }} />
@@ -1375,7 +1375,7 @@ function DashboardBody({ urlPlan = "" }) {
             : "Enter your marks, silly mistakes and weak chapters — we analyse accuracy, score and week-on-week change automatically."}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(330px,1fr))", gap: 18 }}>
             {/* left — input + reports + strategies */}
-            <div style={{ background: "#fff", border: "1px solid rgba(139,92,246,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+            <div style={{ background: "var(--page-bg)", border: "1px solid rgba(139,92,246,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#8b5cf6,#22c55e)" }} />
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "0 0 14px" }}>Add a test result</h3>
 
@@ -1555,7 +1555,7 @@ function DashboardBody({ urlPlan = "" }) {
             </div>
             <div style={{ display: "grid", gap: 8 }}>
               {insights.length ? insights.map((ins, i) => (
-                <div key={i} style={{ display: "flex", gap: 9, alignItems: "flex-start", background: "#fff", border: "1px solid #f1f5f9", borderRadius: 12, padding: "10px 13px" }}>
+                <div key={i} style={{ display: "flex", gap: 9, alignItems: "flex-start", background: "var(--page-bg)", border: "1px solid #f1f5f9", borderRadius: 12, padding: "10px 13px" }}>
                   {ins.tone === "up" ? <TrendingUp size={16} color="#16a34a" style={{ flexShrink: 0, marginTop: 1 }} />
                     : ins.tone === "down" ? <TrendingDown size={16} color="#dc2626" style={{ flexShrink: 0, marginTop: 1 }} />
                     : <Minus size={16} color="#64748b" style={{ flexShrink: 0, marginTop: 1 }} />}
@@ -1695,7 +1695,7 @@ function DashboardBody({ urlPlan = "" }) {
         {/* ── BACKLOG ── */}
         <Section id="backlog" kicker="Catch up without burning out" title="Backlog Clearing Sprints" tColor="#7c3aed"
           sub="A structured catch-up system that clears months of pending chapters — list them, rate your strength, and set a plan date.">
-          <div style={{ background: "#fff", border: "1px solid rgba(124,58,237,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+          <div style={{ background: "var(--page-bg)", border: "1px solid rgba(124,58,237,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#7c3aed,#a855f7)" }} />
 
             <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginBottom: 18 }}>
@@ -1742,7 +1742,7 @@ function DashboardBody({ urlPlan = "" }) {
                           <CalendarDays size={13} /> {overdue ? "Overdue · " : "Target "}{fmtDay(date)}
                         </span>
                       )}
-                      <button onClick={() => removeBacklog(b.id)} title="Remove" style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "#fff", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                      <button onClick={() => removeBacklog(b.id)} title="Remove" style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "var(--page-bg)", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
                         <Trash2 size={14} />
                       </button>
                     </div>
@@ -1774,7 +1774,7 @@ function DashboardBody({ urlPlan = "" }) {
           sub="A weekly report is auto-emailed to your parent every Sunday, and a daily report each day if you enable it — and you can send either one any time.">
 
           {/* ── WEEKLY send strip ── */}
-          <div style={{ background: "#fff", border: `1px solid ${GREEN}33`, borderRadius: 20, padding: "22px 24px", boxShadow: `0 20px 46px -30px ${GREEN}99`, position: "relative", overflow: "hidden", marginBottom: 18 }}>
+          <div style={{ background: "var(--page-bg)", border: `1px solid ${GREEN}33`, borderRadius: 20, padding: "22px 24px", boxShadow: `0 20px 46px -30px ${GREEN}99`, position: "relative", overflow: "hidden", marginBottom: 18 }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},#22c55e)` }} />
             <div style={{ display: "flex", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
               <span style={{ width: 46, height: 46, borderRadius: 13, background: "#dcfce7", display: "grid", placeItems: "center", flexShrink: 0 }}><Mail size={22} color={GREEN} /></span>
@@ -1816,7 +1816,7 @@ function DashboardBody({ urlPlan = "" }) {
           {/* ── two-card row: DAILY REPORT (auto-generated) + this-week summary ── */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 18, marginBottom: 18 }}>
             {/* daily report */}
-            <div style={{ background: "#fff", border: "1px solid rgba(8,145,178,.22)", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+            <div style={{ background: "var(--page-bg)", border: "1px solid rgba(8,145,178,.22)", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#0891b2,#22d3ee)" }} />
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
                 <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK, margin: 0, display: "inline-flex", alignItems: "center", gap: 8 }}>
@@ -1842,7 +1842,7 @@ function DashboardBody({ urlPlan = "" }) {
                   </div>
                   <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: todayTest ? 10 : 0 }}>
                     {subjects.map((s) => (
-                      <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#fff", border: `1px solid ${subColor(s)}33`, borderRadius: 9, padding: "5px 10px", fontSize: 12, fontWeight: 700, color: NAVY }}>
+                      <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--page-bg)", border: `1px solid ${subColor(s)}33`, borderRadius: 9, padding: "5px 10px", fontSize: 12, fontWeight: 700, color: NAVY }}>
                         <span style={{ width: 7, height: 7, borderRadius: "50%", background: subColor(s) }} /> {shortName(s)}: {subVal(todayEntry, s).h}h · {subVal(todayEntry, s).t}✓
                       </span>
                     ))}
@@ -1904,7 +1904,7 @@ function DashboardBody({ urlPlan = "" }) {
                 ))}
               </div>
 
-              <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 16, padding: "18px 20px" }}>
+              <div style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 16, padding: "18px 20px" }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 12 }}>Chapter-strength report (in weekly email)</div>
                 {["weak", "medium", "strong"].map((k) => {
                   const st = STRENGTHS[k];
@@ -1930,7 +1930,7 @@ function DashboardBody({ urlPlan = "" }) {
           </div>
 
           {/* ── WEEKLY TASK LIST — full width (covers daily goals too) ── */}
-          <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 20, padding: "22px 24px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)" }}>
+          <div style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 20, padding: "22px 24px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, flexWrap: "wrap", gap: 8 }}>
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK, margin: 0, display: "inline-flex", alignItems: "center", gap: 8 }}>
                 <ListChecks size={18} color={GREEN} /> Weekly task list
@@ -1967,7 +1967,7 @@ function DashboardBody({ urlPlan = "" }) {
                       <>
                         <span style={{ flex: 1, fontSize: 13.5, color: t.done ? "#15803d" : "#374151", lineHeight: 1.4, textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
                         {!t.done && (
-                          <button onClick={() => setWtEdit({ id: t.id, text: t.text })} title="Edit" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #e5e7eb", background: "#fff", color: "#6b7280", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                          <button onClick={() => setWtEdit({ id: t.id, text: t.text })} title="Edit" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #e5e7eb", background: "var(--page-bg)", color: "#6b7280", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
                             <Pencil size={13} />
                           </button>
                         )}
@@ -2015,7 +2015,7 @@ function Section({ id, kicker, title, sub, tColor = ORANGE, children }) {
 
 function ChartCard({ title, hint, accent = ORANGE, children }) {
   return (
-    <div style={{ background: "#fff", border: `1px solid ${accent}28`, borderRadius: 18, padding: "20px 20px 16px", boxShadow: "0 16px 40px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+    <div style={{ background: "var(--page-bg)", border: `1px solid ${accent}28`, borderRadius: 18, padding: "20px 20px 16px", boxShadow: "0 16px 40px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${accent},${GOLD})` }} />
       <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1rem", color: INK, margin: "0 0 2px" }}>{title}</h3>
       {hint && <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 12px" }}>{hint}</p>}
@@ -2026,7 +2026,7 @@ function ChartCard({ title, hint, accent = ORANGE, children }) {
 
 function ToolCard({ icon: Icon, color, title, desc, children }) {
   return (
-    <div style={{ background: "#fff", border: `1px solid ${color}28`, borderRadius: 18, padding: "20px", boxShadow: "0 16px 40px -28px rgba(26,26,46,.4)", display: "flex", flexDirection: "column" }}>
+    <div style={{ background: "var(--page-bg)", border: `1px solid ${color}28`, borderRadius: 18, padding: "20px", boxShadow: "0 16px 40px -28px rgba(26,26,46,.4)", display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 4 }}>
         <span style={{ width: 38, height: 38, borderRadius: 11, background: `${color}14`, border: `1px solid ${color}30`, display: "grid", placeItems: "center", flexShrink: 0 }}><Icon size={18} color={color} /></span>
         <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1rem", color: INK, margin: 0 }}>{title}</h3>
@@ -2075,24 +2075,24 @@ function RankCard({ r, name }) {
         </div>
       )}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 10, marginBottom: 10 }}>
-        <div style={{ background: "#fff", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
+        <div style={{ background: "var(--page-bg)", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
           <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{r.advanced ? rng(r.crlLo ?? r.low, r.crlHi ?? r.high) : inr(r.crl)}</div>
           <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{r.advanced ? "CRL range" : "All-India CRL"}</div>
         </div>
         {!r.isGeneral && r.categoryRank && (
-          <div style={{ background: "#fff", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
+          <div style={{ background: "var(--page-bg)", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
             <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{inr(r.categoryRank)}</div>
             <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{r.category} rank</div>
           </div>
         )}
         {r.percentile != null && !r.advanced && (
-          <div style={{ background: "#fff", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
+          <div style={{ background: "var(--page-bg)", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
             <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{r.percentile}</div>
             <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>percentile</div>
           </div>
         )}
         {!r.advanced && (
-          <div style={{ background: "#fff", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
+          <div style={{ background: "var(--page-bg)", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
             <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{rng(r.low, r.high)}</div>
             <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>likely band</div>
           </div>
@@ -2117,7 +2117,7 @@ function ToggleSwitch({ on, onClick, color = GREEN }) {
   return (
     <button type="button" role="switch" aria-checked={on} onClick={onClick}
       style={{ width: 40, height: 22, borderRadius: 50, border: "none", cursor: "pointer", background: on ? color : "#cbd5e1", position: "relative", transition: "background .2s", flexShrink: 0, padding: 0 }}>
-      <span style={{ position: "absolute", top: 2, left: on ? 20 : 2, width: 18, height: 18, borderRadius: "50%", background: "#fff", transition: "left .2s", boxShadow: "0 1px 3px rgba(0,0,0,.3)" }} />
+      <span style={{ position: "absolute", top: 2, left: on ? 20 : 2, width: 18, height: 18, borderRadius: "50%", background: "var(--page-bg)", transition: "left .2s", boxShadow: "0 1px 3px rgba(0,0,0,.3)" }} />
     </button>
   );
 }
@@ -2173,7 +2173,7 @@ function SubjectDualField({ subject, hours, tasks, onHours, onTasks }) {
     fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box",
   };
   return (
-    <div style={{ border: `1px solid ${c}26`, borderRadius: 12, padding: "11px 12px", background: "#fff" }}>
+    <div style={{ border: `1px solid ${c}26`, borderRadius: 12, padding: "11px 12px", background: "var(--page-bg)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, fontSize: 12, fontWeight: 800, color: NAVY }}>
         <span style={{ width: 8, height: 8, borderRadius: "50%", background: c }} /> {subject}
       </div>
@@ -2220,7 +2220,7 @@ function SelectField({ label, value, onChange, options, labels, placeholders }) 
     <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
       <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>{label}</span>
       <select value={value} onChange={(e) => onChange(e.target.value)}
-        style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff", cursor: "pointer" }}
+        style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box", background: "var(--page-bg)", cursor: "pointer" }}
         onFocus={(e) => { e.target.style.borderColor = ORANGE; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }}>
         {options.map((o) => (
           <option key={o} value={o}>{(placeholders && placeholders[o]) || (labels && labels[o]) || o}</option>

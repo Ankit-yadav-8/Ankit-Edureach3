@@ -76,7 +76,7 @@ function ToolCard({ t, nav }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        background: "#ffffff",
+        background: "var(--page-bg)",
         border: `1px solid ${isHovered ? iconColor : `${iconColor}15`}`,
         borderRadius: 20,
         padding: 24,
@@ -163,7 +163,7 @@ function ToolCard({ t, nav }) {
 export default function ToolsGrid() {
   const nav = useNavigate();
   return (
-    <section id="tools" style={{ background: "#ffffff", padding: "80px 0" }}>
+    <section id="tools" style={{ background: "var(--page-bg)", padding: "80px 0" }}>
       <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}

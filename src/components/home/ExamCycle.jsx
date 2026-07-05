@@ -290,7 +290,7 @@ function ExamCard({ exam, index }) {
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
       style={{
-        background: "#fff",
+        background: "var(--page-bg)",
         backdropFilter: "blur(10px)",
         borderRadius: 14,
         border: "1px solid rgba(0,0,0,.08)",

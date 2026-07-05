@@ -48,7 +48,7 @@ export default function AdvancedPredictorHome() {
 
         {/* ── Tool toggle ── */}
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 32 }}>
-          <div style={{ display: "inline-flex", gap: 6, background: "#fff", border: `1px solid ${CL.coral}33`, borderRadius: 50, padding: 6, boxShadow: `0 4px 16px ${CL.coral}14` }}>
+          <div style={{ display: "inline-flex", gap: 6, background: "var(--page-bg)", border: `1px solid ${CL.coral}33`, borderRadius: 50, padding: 6, boxShadow: `0 4px 16px ${CL.coral}14` }}>
             {TABS.map((tb) => {
               const on = tb.key === tab;
               const Ic = tb.icon;

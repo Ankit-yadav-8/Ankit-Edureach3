@@ -33,7 +33,7 @@ export default function Chatbot() {
       </button>
 
       {open && (
-        <div style={{ position: "fixed", right: 20, bottom: 152, zIndex: 69, width: "min(360px, calc(100% - 40px))", height: 480, background: "#fff", borderRadius: 18, boxShadow: "0 24px 60px rgba(13,27,62,.3)", border: "1px solid var(--line)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ position: "fixed", right: 20, bottom: 152, zIndex: 69, width: "min(360px, calc(100% - 40px))", height: 480, background: "var(--page-bg)", borderRadius: 18, boxShadow: "0 24px 60px rgba(13,27,62,.3)", border: "1px solid var(--line)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
           <div style={{ background: "linear-gradient(135deg,#1c1c28,#2a2a3c)", color: "#fff", padding: "14px 16px", display: "flex", alignItems: "center", gap: 9 }}>
             <Sparkles size={18} color="var(--gold)" />
             <div>
@@ -52,7 +52,7 @@ export default function Chatbot() {
                   <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: 6 }}>
                     {m.results.slice(0, 4).map((r, j) => (
                       <button key={j} onClick={() => { nav(r.to); setOpen(false); }}
-                        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, background: "#fff", border: "1px solid var(--line)", borderRadius: 9, padding: "7px 10px", fontSize: 12.5, textAlign: "left" }}>
+                        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, background: "var(--page-bg)", border: "1px solid var(--line)", borderRadius: 9, padding: "7px 10px", fontSize: 12.5, textAlign: "left" }}>
                         <span style={{ fontWeight: 600, color: "var(--navy)" }}>{r.title}</span>
                         <ArrowRight size={13} color="var(--coral)" />
                       </button>
@@ -64,7 +64,7 @@ export default function Chatbot() {
             {msgs.length <= 1 && (
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
                 {SUGGESTIONS.map((s) => (
-                  <button key={s} onClick={() => ask(s)} className="pill" style={{ fontSize: 11.5, cursor: "pointer", background: "#fff", border: "1px solid var(--line)", color: "var(--navy)" }}>{s}</button>
+                  <button key={s} onClick={() => ask(s)} className="pill" style={{ fontSize: 11.5, cursor: "pointer", background: "var(--page-bg)", border: "1px solid var(--line)", color: "var(--navy)" }}>{s}</button>
                 ))}
               </div>
             )}

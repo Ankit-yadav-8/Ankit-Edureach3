@@ -44,7 +44,7 @@ export default function PremiumHero({
   return (
     <section className="premium-hero-section" style={{
       position: "relative",
-      background: "#ffffff",
+      background: "var(--page-bg)",
       padding: "100px 0 120px",
       overflow: "hidden",
       borderBottom: "1px solid #f1f5f9"
@@ -205,7 +205,7 @@ export default function PremiumHero({
                 animate={{ y: [0, -8, 0] }}
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                 style={{
-                  position: "absolute", inset: 12, background: "#ffffff", borderRadius: "50%",
+                  position: "absolute", inset: 12, background: "var(--page-bg)", borderRadius: "50%",
                   boxShadow: "0 20px 40px rgba(245, 158, 11, 0.16)",
                   display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"
                 }}
@@ -232,7 +232,7 @@ export default function PremiumHero({
                   }}
                   style={{
                     position: "absolute", ...pos,
-                    background: "#ffffff", padding: "14px 16px", borderRadius: 16,
+                    background: "var(--page-bg)", padding: "14px 16px", borderRadius: 16,
                     boxShadow: "0 15px 35px rgba(0,0,0,0.08)", border: "1px solid #f1f5f9",
                     display: "flex", gap: 12, alignItems: "center", width: 178, zIndex: 12 + idx
                   }}

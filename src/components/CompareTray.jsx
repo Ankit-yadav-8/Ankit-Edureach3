@@ -15,7 +15,7 @@ export default function CompareTray() {
         initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }}
         style={{ position: "fixed", left: "50%", transform: "translateX(-50%)", bottom: 20, zIndex: 60, width: "min(680px, calc(100% - 32px))" }}
       >
-        <div style={{ background: "#fff", borderRadius: 16, boxShadow: "0 16px 48px rgba(13,27,62,.25)", border: "1px solid var(--line)", padding: "12px 14px", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <div style={{ background: "var(--page-bg)", borderRadius: 16, boxShadow: "0 16px 48px rgba(13,27,62,.25)", border: "1px solid var(--line)", padding: "12px 14px", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <span style={{ display: "flex", alignItems: "center", gap: 7, fontWeight: 700, color: "var(--navy)", fontFamily: "Sora" }}>
             <GitCompare size={18} color="var(--teal)" /> Compare
           </span>

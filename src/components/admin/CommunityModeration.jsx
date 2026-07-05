@@ -98,7 +98,7 @@ export default function CommunityModeration({ token }) {
   return (
     <div>
       {/* Announcement composer */}
-      <div style={{ background: "#fff", border: `1px solid ${ORANGE}33`, borderRadius: 16, padding: "18px 20px", marginBottom: 18 }}>
+      <div style={{ background: "var(--page-bg)", border: `1px solid ${ORANGE}33`, borderRadius: 16, padding: "18px 20px", marginBottom: 18 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 12 }}>
           <span style={{ width: 36, height: 36, borderRadius: 10, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}><Megaphone size={18} color={ORANGE} /></span>
           <div>
@@ -143,7 +143,7 @@ export default function CommunityModeration({ token }) {
           <Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} /> Loading posts…
         </div>
       ) : posts.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "50px 20px", color: "#aaa", fontSize: 14, background: "#fff", border: "1px solid #eee", borderRadius: 16 }}>
+        <div style={{ textAlign: "center", padding: "50px 20px", color: "#aaa", fontSize: 14, background: "var(--page-bg)", border: "1px solid #eee", borderRadius: 16 }}>
           <ShieldAlert size={26} style={{ marginBottom: 8, opacity: .5 }} /><br />No community posts {plan ? "in this batch" : "yet"}.
         </div>
       ) : (
@@ -151,7 +151,7 @@ export default function CommunityModeration({ token }) {
           {posts.map((p) => {
             const tc = TAG_COLOR[p.tag] || MUTE;
             return (
-              <div key={p.id} style={{ background: "#fff", border: `1px solid ${p.pinned ? `${ORANGE}55` : "#eee"}`, borderRadius: 14, padding: "14px 16px" }}>
+              <div key={p.id} style={{ background: "var(--page-bg)", border: `1px solid ${p.pinned ? `${ORANGE}55` : "#eee"}`, borderRadius: 14, padding: "14px 16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 6 }}>
                   <span style={{ fontWeight: 800, color: NAVY, fontSize: 14 }}>{p.authorName}</span>
                   {p.studentId && <span style={{ fontFamily: "monospace", fontSize: 11, color: "#64748b", background: "#f1f5f9", padding: "1px 7px", borderRadius: 20 }}>{p.studentId}</span>}

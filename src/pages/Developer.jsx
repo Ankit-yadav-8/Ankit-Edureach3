@@ -222,7 +222,7 @@ export default function Developer() {
 
               {/* All connect links in one simple card — uniform clickable buttons */}
               <div style={{
-                background: "#fff", border: "1px solid #ececec", borderRadius: 16,
+                background: "var(--page-bg)", border: "1px solid #ececec", borderRadius: 16,
                 padding: "16px 18px", boxShadow: "0 6px 20px rgba(13,27,62,.06)", maxWidth: 560,
               }}>
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "#9ca3af", marginBottom: 12 }}>
