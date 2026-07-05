@@ -148,7 +148,7 @@ export default function ChapterAnalysis() {
     <div style={{ background: CL.cream, minHeight: "100vh" }}>
       <Seo title={`${examLabel} Chapter Weightage & Difficulty Analysis · College Parichay`}
         description={`Chapter-wise weightage, difficulty and trend analysis for ${examLabel} across Physics, Chemistry and Mathematics — indicative data to plan your prep.`}
-        path={`/jee-analysis?exam=${exam}`} />
+        path="/jee-analysis" />
 
       <div className="container" style={{ paddingTop: 104, paddingBottom: 60 }}>
         <BackButton style={{ marginBottom: 16 }} />

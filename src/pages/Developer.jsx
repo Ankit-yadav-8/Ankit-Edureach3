@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { TEAM_BY_ID } from "../data/team.js";
 import Reveal from "../components/Reveal.jsx";
+import Seo, { SITE_URL } from "../components/Seo.jsx";
 
 const ICON = { github: Github, linkedin: Linkedin, dribbble: Dribbble, website: Globe, instagram: Instagram, whatsapp: MessageCircle, email: Mail };
 const SOCIAL_LABEL = { website: "Website", email: "Email" };
@@ -90,6 +91,7 @@ export default function Developer() {
         className="page container"
         style={{ padding: "80px 0", textAlign: "center" }}
       >
+        <Seo title="Profile not found" robots="noindex, follow" path={`/team/${id}`} />
         <h2>Profile not found</h2>
         <Link
           to="/"
@@ -102,8 +104,40 @@ export default function Developer() {
     );
   }
 
+  const cleanBio = (dev.bio || dev.tagline || "").replace(/\s+/g, " ").trim();
+  const seoDesc =
+    cleanBio.length > 155 ? `${cleanBio.slice(0, 152).trimEnd()}…` : cleanBio;
+  const socialUrls = Object.values(dev.socials || {}).filter(Boolean);
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: dev.name,
+    jobTitle: dev.role,
+    description: cleanBio || undefined,
+    url: `${SITE_URL}/team/${dev.id}`,
+    ...(dev.photo ? { image: `${SITE_URL}${dev.photo}` } : {}),
+    worksFor: { "@type": "Organization", "@id": `${SITE_URL}/#organization` },
+    ...(dev.college
+      ? { alumniOf: { "@type": "CollegeOrUniversity", name: dev.college } }
+      : {}),
+    ...(socialUrls.length ? { sameAs: socialUrls } : {}),
+  };
+
   return (
     <div className="page">
+      <Seo
+        title={`${dev.name} — ${dev.role} at CollegeParichay`}
+        description={seoDesc}
+        path={`/team/${dev.id}`}
+        type="profile"
+        image={dev.photo ? `${SITE_URL}${dev.photo}` : undefined}
+        jsonLd={personSchema}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "About", path: "/about" },
+          { name: dev.name, path: `/team/${dev.id}` },
+        ]}
+      />
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="warm-page-header" style={{ padding: "52px 0 60px" }}>
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
