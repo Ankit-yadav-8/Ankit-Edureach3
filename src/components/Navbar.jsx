@@ -5,7 +5,7 @@ import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, Trophy, LogOut, Sparkles,
-  HelpCircle, Newspaper, Flame, Medal, Megaphone, Globe2, Edit3, Activity, Clock, ClipboardCheck
+  HelpCircle, Newspaper, Flame, Medal, Megaphone, Globe2, Edit3, Activity, Clock, ClipboardCheck, Compass
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -85,7 +85,7 @@ const COLLEGES = [
   { label: "Explore NITs", to: "/colleges?type=NIT", icon: Landmark, tag: "31 NITs across India" },
   { label: "Explore IIITs", to: "/colleges?type=IIIT", icon: Landmark, tag: "Govt-funded IIITs" },
   { label: "Private Universities", to: "/private-universities", icon: Clock, tag: "Top-ranked private options" },
-  { label: "State-wise Colleges", to: "/colleges", icon: Crosshair, tag: "Browse by state quota" },
+  { label: "State-wise Colleges", to: "/colleges", icon: Compass, tag: "Browse by state quota" },
 ];
 
 // ── Tools mega-menu: every utility grouped under a common, colour-coded name ──
@@ -300,30 +300,30 @@ export default function Navbar({ onSearch }) {
                         style={{
                           position: "absolute", top: "calc(100% + 8px)",
                           left: item.label === "Tools" ? "50%" : 0,
-                          background: "var(--page-bg)", borderRadius: 20,
+                          background: "var(--page-bg)", borderRadius: 18,
                           boxShadow: "0 24px 60px -18px rgba(13,27,62,.32)",
-                          padding: "18px 18px 20px", border: "1px solid var(--border)",
+                          padding: "16px 16px 14px", border: "1px solid var(--border)",
                           display: "flex", flexDirection: "column",
                           maxWidth: "96vw", overflowX: "auto"
                         }}
                       >
                         <div style={eyebrowStyle}>Explore {item.label}</div>
-                        <div style={{ display: "flex", gap: 40 }}>
+                        <div style={{ display: "flex", gap: 26 }}>
                         {item.mega.map((col) => {
                           const ColIc = col.icon;
                           return (
-                            <div key={col.title} style={{ minWidth: 262 }}>
+                            <div key={col.title} style={{ minWidth: 232 }}>
                               <button
                                 onClick={() => goHash(col.to)}
                                 className="mega-col-head"
                                 style={{
-                                  display: "flex", alignItems: "center", gap: 8, width: "100%",
-                                  padding: "4px 8px", marginBottom: 8, borderRadius: 8,
+                                  display: "flex", alignItems: "center", gap: 7, width: "100%",
+                                  padding: "4px 6px", marginBottom: 6, borderRadius: 8,
                                   background: "transparent", cursor: "pointer", border: "none",
                                 }}
                               >
-                                <ColIc size={18} color={col.color} style={{ strokeWidth: 2 }} />
-                                <span style={{ fontWeight: 800, fontSize: 15, color: col.color, letterSpacing: "-0.01em" }}>{col.title}</span>
+                                <ColIc size={16} color={col.color} style={{ strokeWidth: 2 }} />
+                                <span style={{ fontWeight: 800, fontSize: "0.9rem", color: col.color, letterSpacing: "-0.01em" }}>{col.title}</span>
                               </button>
                               {col.items.map((d, i) => {
                                 const Ic = d.icon;
@@ -335,15 +335,15 @@ export default function Navbar({ onSearch }) {
                                     className="mega-item"
                                     style={{ ...megaItemStyle, alignItems: d.desc ? "flex-start" : "center", "--mega-accent": col.color }}
                                   >
-                                    <span style={{ width: 48, height: 48, borderRadius: 14, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: d.desc ? 2 : 0 }}>
-                                      <Ic size={22} color={d.iconColor || theme.color} style={{ strokeWidth: 1.9 }} />
+                                    <span style={{ width: 40, height: 40, borderRadius: 12, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: d.desc ? 2 : 0 }}>
+                                      <Ic size={18} color={d.iconColor || theme.color} style={{ strokeWidth: 1.85 }} />
                                     </span>
-                                    <span style={{ display: "flex", flexDirection: "column", gap: 3, flex: 1 }}>
+                                    <span style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
                                       <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <span style={{ fontWeight: 700, fontSize: 15, color: "#1a1a2e", letterSpacing: "-0.01em" }}>{d.label}</span>
-                                        {d.badge && <span style={{ background: "#FFF0F0", color: "#FF8A8A", fontSize: 10, fontWeight: 800, padding: "2px 6px", borderRadius: 4, letterSpacing: "0.05em" }}>{d.badge}</span>}
+                                        <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "#1a1a2e" }}>{d.label}</span>
+                                        {d.badge && <span style={{ background: "#FFF0F0", color: "#FF8A8A", fontSize: "0.6rem", fontWeight: 800, padding: "2px 6px", borderRadius: 4, letterSpacing: "0.05em" }}>{d.badge}</span>}
                                       </span>
-                                      {d.desc && <span style={{ fontSize: 13, color: "#8b93a5", lineHeight: 1.35 }}>{d.desc}</span>}
+                                      {d.desc && <span style={{ fontSize: "0.78rem", color: "#888", lineHeight: 1.3 }}>{d.desc}</span>}
                                     </span>
                                   </button>
                                 );
@@ -375,8 +375,8 @@ export default function Navbar({ onSearch }) {
                         transition={{ duration: 0.18 }}
                         style={{
                           position: "absolute", top: "calc(100% + 6px)", left: 0,
-                          background: "var(--page-bg)", borderRadius: 20, boxShadow: "0 24px 60px -18px rgba(13,27,62,.32)",
-                          minWidth: 340, padding: "20px 18px 16px", border: "1px solid var(--border)",
+                          background: "var(--page-bg)", borderRadius: 18, boxShadow: "0 24px 60px -18px rgba(13,27,62,.32)",
+                          minWidth: 300, padding: "16px 14px 12px", border: "1px solid var(--border)",
                         }}
                       >
                         <div style={eyebrowStyle}>Explore {item.label}</div>
@@ -385,15 +385,15 @@ export default function Navbar({ onSearch }) {
                           const theme = TILE_COLORS[i % TILE_COLORS.length];
                           return (
                             <button key={d.label} onClick={() => goHash(d.to)} className="mega-item" style={{ ...megaItemStyle, alignItems: "flex-start", "--mega-accent": "#FF693D" }}>
-                              <span style={{ width: 48, height: 48, borderRadius: 14, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
-                                <Ic size={22} color={d.iconColor || theme.color} style={{ strokeWidth: 1.9 }} />
+                              <span style={{ width: 40, height: 40, borderRadius: 12, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                                <Ic size={18} color={d.iconColor || theme.color} style={{ strokeWidth: 1.85 }} />
                               </span>
-                              <span style={{ display: "flex", flexDirection: "column", gap: 3, flex: 1 }}>
+                              <span style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
                                 <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                  <span style={{ fontWeight: 700, fontSize: 15, color: "#1a1a2e", letterSpacing: "-0.01em" }}>{d.label}</span>
-                                  {d.badge && <span style={{ background: "#FFF0F0", color: "#FF8A8A", fontSize: 10, fontWeight: 800, padding: "2px 6px", borderRadius: 4, letterSpacing: "0.05em" }}>{d.badge}</span>}
+                                  <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "#1a1a2e" }}>{d.label}</span>
+                                  {d.badge && <span style={{ background: "#FFF0F0", color: "#FF8A8A", fontSize: "0.6rem", fontWeight: 800, padding: "2px 6px", borderRadius: 4, letterSpacing: "0.05em" }}>{d.badge}</span>}
                                 </span>
-                                {d.tag && <span style={{ fontSize: 13, color: "#8b93a5", lineHeight: 1.35 }}>{d.tag}</span>}
+                                {d.tag && <span style={{ fontSize: "0.78rem", color: "#888", lineHeight: 1.3 }}>{d.tag}</span>}
                               </span>
                             </button>
                           );
@@ -864,18 +864,17 @@ const dropItemStyle = {
 };
 
 const megaItemStyle = {
-  display: "flex", alignItems: "center", gap: 14, width: "100%", textAlign: "left",
-  padding: "9px 10px", borderRadius: 12,
-  color: "var(--navy)", cursor: "pointer", border: "none", background: "transparent",
+  display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left",
+  padding: "0.5rem 0.7rem", borderRadius: 11,
+  fontSize: "0.82rem", color: "var(--navy)", cursor: "pointer", border: "none", background: "transparent",
 };
 
 // Shared "EXPLORE X" eyebrow shown at the top of every dropdown / mega-menu.
-// Fixed px so the 13.5px root font-size doesn't shrink the label.
 const eyebrowStyle = {
   fontFamily: "Sora, sans-serif",
-  fontSize: 12, fontWeight: 800,
-  letterSpacing: "1.7px", textTransform: "uppercase",
-  color: "#8b93a5", padding: "0 8px 14px",
+  fontSize: "0.68rem", fontWeight: 800,
+  letterSpacing: "0.16em", textTransform: "uppercase",
+  color: "#9aa3b2", padding: "0 6px 12px",
 };
 
 // Bright pastel tiles used by every dropdown item — matches the reference cards.
