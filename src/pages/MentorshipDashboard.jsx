@@ -767,8 +767,20 @@ function DashboardBody({ urlPlan = "" }) {
     setEditingLog(true);
   }
 
+  // Every field is required — a test is only analysed once all details are in.
+  const testFormComplete = () => {
+    const has = (v) => String(v ?? "").trim() !== "";
+    if (!has(testForm.name)) return false;
+    if (!has(testForm.correct) || !has(testForm.wrong) || !has(testForm.skipped)) return false;
+    if (!has(testForm.silly) || !has(testForm.sillyTopic) || !has(testForm.overspent)) return false;
+    if (rankEnabled && isAdv(testForm.type)) return ["mp", "mc", "mm", "mp2", "mc2", "mm2", "advTotal", "advQuestions"].every((k) => has(testForm[k]));
+    if (rankEnabled && testForm.type === "main") return ["mp", "mc", "mm"].every((k) => has(testForm[k]));
+    return has(testForm.total) && has(testForm.scored);
+  };
+
   function addTest(e) {
     e.preventDefault();
+    if (!testFormComplete()) return; // block until every field is filled
     const advPaper = isAdv(testForm.type);
     const isRankTest = rankEnabled && (testForm.type === "main" || advPaper);
     let total, scored, rank = null;
@@ -1530,31 +1542,16 @@ function DashboardBody({ urlPlan = "" }) {
                   <TextField label="Silly mistake topic" value={testForm.sillyTopic} onChange={(v) => setTestForm((s) => ({ ...s, sillyTopic: v }))} placeholder="e.g. Sign errors" />
                 </div>
 
-                {/* time spent per section — powers the time-management plan */}
-                <div style={{ background: "#ecfeff", border: "1px solid #a5f3fc", borderRadius: 12, padding: "12px 13px" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 9 }}>
-                    <span style={{ fontSize: 11.5, fontWeight: 800, color: "#0e7490", display: "inline-flex", alignItems: "center", gap: 6 }}>
-                      <Timer size={14} /> Time spent per section (min)
-                    </span>
-                    <span style={{ fontSize: 10.5, fontWeight: 700, color: "#0891b2", background: "#cffafe", borderRadius: 50, padding: "2px 8px" }}>Paper · {examTotalMin} min</span>
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: `repeat(${examSections.length}, 1fr)`, gap: 10 }}>
-                    {examSections.map((sec) => (
-                      <NumField key={sec} label={`${shortName(sec)} · ${idealPace[sec]}m`} value={testForm.times?.[sec] ?? ""}
-                        onChange={(v) => setTestForm((s) => ({ ...s, times: { ...s.times, [sec]: v } }))}
-                        placeholder={String(idealPace[sec])} full />
-                    ))}
-                  </div>
-                  <div style={{ fontSize: 10.5, color: "#0e7490", marginTop: 7, lineHeight: 1.45 }}>
-                    Optional — logging this builds your personalised pacing plan below.
-                  </div>
-                </div>
-
                 <SelectField label="Over-spent time on (quick pick)" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
-                <TextField label="Weak chapters (comma separated)" value={testForm.weak} onChange={(v) => setTestForm((s) => ({ ...s, weak: v }))} placeholder="e.g. Rotational Motion, p-Block" />
-                <button type="submit" style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                <button type="submit" disabled={!testFormComplete()}
+                  style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: testFormComplete() ? "linear-gradient(135deg,#8b5cf6,#6d28d9)" : "#c4b5fd", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: testFormComplete() ? "pointer" : "not-allowed", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <Plus size={16} /> {rankEnabled && (testForm.type === "main" || isAdv(testForm.type)) ? "Analyse & predict rank" : "Analyse this test"}
                 </button>
+                {!testFormComplete() && (
+                  <div style={{ fontSize: 12, color: "#9a3412", background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", gap: 7, lineHeight: 1.45 }}>
+                    <AlertCircle size={14} color="#ea580c" style={{ flexShrink: 0 }} /> Fill in every field above — a test is only analysed once all details are entered.
+                  </div>
+                )}
               </form>
 
               {/* improvement / decline report */}
@@ -1589,19 +1586,20 @@ function DashboardBody({ urlPlan = "" }) {
               <ChartCard title="Accuracy trend" hint="Correct ÷ attempted, test over test" accent="#22c55e">
                 <Trend data={accTrend} lines={[{ key: "accuracy", label: "Accuracy %", color: "#22c55e" }]} height={180} fmt={(v) => `${v}%`} />
               </ChartCard>
-              {/* strategies — moved here from the left so both columns stay balanced */}
-              <div style={{ background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 18, padding: "18px 20px", boxShadow: "0 16px 40px -30px rgba(245,166,35,.8)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              {/* strategies — grows to fill the column so the left (form + rank
+                  card) and right side finish at the same height */}
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 18, padding: "18px 20px", boxShadow: "0 16px 40px -30px rgba(245,166,35,.8)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
                   <Lightbulb size={18} color={GOLD} />
                   <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: INK }}>Strategies to do better</span>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-around", gap: 12 }}>
                   {strategies.map((st, i) => (
-                    <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                      <span style={{ width: 28, height: 28, borderRadius: 8, background: `${st.color}14`, border: `1px solid ${st.color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                        <st.icon size={15} color={st.color} />
+                    <div key={i} style={{ display: "flex", gap: 11, alignItems: "flex-start" }}>
+                      <span style={{ width: 30, height: 30, borderRadius: 9, background: `${st.color}14`, border: `1px solid ${st.color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                        <st.icon size={16} color={st.color} />
                       </span>
-                      <span style={{ fontSize: 13, color: "#374151", lineHeight: 1.55, paddingTop: 3 }}>{st.text}</span>
+                      <span style={{ fontSize: 13, color: "#374151", lineHeight: 1.55, paddingTop: 4 }}>{st.text}</span>
                     </div>
                   ))}
                 </div>
