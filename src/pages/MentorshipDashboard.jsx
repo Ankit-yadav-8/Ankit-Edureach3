@@ -457,8 +457,28 @@ function DashboardBody({ urlPlan = "" }) {
 
   /* ── derived tracking metrics ── */
   const sorted = useMemo(() => [...entries].sort((a, b) => a.date.localeCompare(b.date)), [entries]);
-  const last7 = sorted.slice(-7);
-  const prevWeek = sorted.slice(-14, -7);
+
+  // Build a CONTINUOUS run of the last N calendar days rather than the last N
+  // *records*. If a day was never logged (student missed an update), it surfaces
+  // as a real 0-hour slot instead of being skipped — so the graph never drops a
+  // day, and week totals count the miss as 0h (not "6 days only"). These
+  // placeholders are display-only; we never write them back to `entries`, so a
+  // missed day still correctly breaks the streak in streakOf().
+  const zeroDay = (iso) => ({ date: iso, hours: 0, subjects: {}, tasksDone: 0, tasksTotal: 0, routine: false, missed: true });
+  const lastNDays = (n, offsetDays = 0) => {
+    const byDate = new Map(entries.map((e) => [e.date, e]));
+    const base = new Date();
+    const out = [];
+    for (let i = n - 1; i >= 0; i--) {
+      const d = new Date(base);
+      d.setDate(base.getDate() - i - offsetDays);
+      const iso = isoDay(d);
+      out.push(byDate.get(iso) || zeroDay(iso));
+    }
+    return out;
+  };
+  const last7 = useMemo(() => lastNDays(7), [entries]);        // today-6 … today
+  const prevWeek = useMemo(() => lastNDays(7, 7), [entries]);  // today-13 … today-7
   const weekHours = last7.reduce((s, e) => s + Number(e.hours || 0), 0);
   const prevWeekHours = prevWeek.reduce((s, e) => s + Number(e.hours || 0), 0);
   const latestTrack = sorted[sorted.length - 1];
@@ -1268,25 +1288,25 @@ function DashboardBody({ urlPlan = "" }) {
                     {last7.map((e, i) => {
                       const h = Number(e.hours) || 0;
                       const isToday = i === last7.length - 1;
+                      // A past calendar day with no log → a genuine 0h (NOT a
+                      // fabricated average). Today with no log yet is just pending.
                       const isMissing = h === 0 && !isToday;
-                      const nonZeroDays = last7.filter(d => Number(d.hours) > 0);
-                      const avgH = Math.round(nonZeroDays.reduce((sum, d) => sum + Number(d.hours), 0) / (nonZeroDays.length || 1));
-                      const displayH = isMissing ? (avgH || 5) : h;
-                      const barPx = Math.max(5, Math.round((displayH / maxH) * 132)); // up to 132px tall
-                      
+                      const dow = DOW[new Date(e.date).getDay()];
+                      // 0h days still get a tiny 3px stub so the day reads as
+                      // "present but empty" rather than a blank gap.
+                      const barPx = h > 0 ? Math.max(5, Math.round((h / maxH) * 132)) : 3;
+
                       return (
-                        <div key={e.date} title={isMissing ? `AI Predicted: ${displayH}h (Forgot to log)` : `${h}h on ${DOW[new Date(e.date).getDay()]}`}
+                        <div key={e.date} title={isMissing ? `No study log for ${dow} — recorded as 0h` : `${h}h on ${dow}`}
                           style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
-                          
-                          <span style={{ fontSize: 11, fontWeight: 800, color: isMissing ? "#8b5cf6" : (isToday ? ORANGE : INK), display: "flex", alignItems: "center", gap: 2 }}>
-                            {isMissing && <Sparkles size={10} color="#8b5cf6" />}
-                            {displayH}h
+
+                          <span style={{ fontSize: 11, fontWeight: 800, color: isMissing ? "#9aa0aa" : (isToday ? ORANGE : INK) }}>
+                            {h}h
                           </span>
-                          
+
                           <motion.div initial={{ height: 0 }} animate={{ height: barPx }} transition={{ type: "spring", stiffness: 120, damping: 18, delay: i * 0.06 }}
                             style={{ width: "100%", maxWidth: 30, borderRadius: "8px 8px 2px 2px",
-                              background: isMissing ? "repeating-linear-gradient(45deg, rgba(139,92,246,0.08), rgba(139,92,246,0.08) 4px, rgba(139,92,246,0.18) 4px, rgba(139,92,246,0.18) 8px)" : (isToday ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "linear-gradient(180deg,rgba(255, 105, 61,.6),rgba(255, 105, 61,.26))"),
-                              border: isMissing ? "1px dashed rgba(139,92,246,0.6)" : "none",
+                              background: isMissing ? "#e7ebf0" : (isToday ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "linear-gradient(180deg,rgba(255, 105, 61,.6),rgba(255, 105, 61,.26))"),
                               boxShadow: isToday ? `0 8px 18px -8px ${ORANGE}` : "none" }} />
                         </div>
                       );
@@ -1301,6 +1321,13 @@ function DashboardBody({ urlPlan = "" }) {
                     </span>
                   ))}
                 </div>
+                {/* subtle note so a 0h bar reads as "missed update", not a bug */}
+                {last7.some((e, i) => Number(e.hours) === 0 && i !== last7.length - 1) && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, fontSize: 10.5, fontWeight: 600, color: "#9aa0aa" }}>
+                    <span style={{ width: 9, height: 9, borderRadius: 3, background: "#e7ebf0", flexShrink: 0 }} />
+                    Days with no log are counted as 0h.
+                  </div>
+                )}
               </div>
               <div style={{ background: "var(--page-bg)", border: "1px solid rgba(34,197,94,.22)", borderRadius: 16, padding: "16px 14px 12px", boxShadow: "0 16px 40px -30px rgba(34,197,94,.9)", textAlign: "center" }}>
                 <div style={{ fontSize: 12.5, fontWeight: 800, color: NAVY, marginBottom: 2 }}>Weekly goal ({WEEK_TARGET_HRS}h)</div>
