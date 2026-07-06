@@ -329,6 +329,7 @@ function DashboardBody({ urlPlan = "" }) {
   const WTASK_KEY = `mdash:weeklytasks:${emailKey}:${planNs}`;
   const PREFS_KEY = `mdash:reportprefs:${emailKey}:${planNs}`;
   const AUTO_KEY = `mdash:autosent:${emailKey}:${planNs}`;
+  const TREM_KEY = `mdash:testremind:${emailKey}:${planNs}`; // day the test nudge was dismissed
 
   // One-time migration: older single-plan students stored data without the batch
   // suffix. Inherit it into this batch's slot the first time it's opened so no
@@ -382,6 +383,9 @@ function DashboardBody({ urlPlan = "" }) {
   const [alertState, setAlertState] = useState({ sending: false, msg: { type: "", text: "" } });
   const [reportPrefs, setReportPrefs] = useState(() => loadScoped(PREFS_KEY, L_PREFS, { autoWeekly: true, autoDaily: false, autoBacklogAlert: true }));
   const [lastAuto, setLastAuto] = useState(() => loadScoped(AUTO_KEY, L_AUTO, { weekly: "", daily: "", backlog: "" }));
+  // "Did you take a test?" nudge: which day it was snoozed, and the Yes/No stage.
+  const [testRemindSnooze, setTestRemindSnooze] = useState(() => load(TREM_KEY, ""));
+  const [testAskStage, setTestAskStage] = useState("ask"); // "ask" → "confirm"
 
   // Resolve the real plan for THIS dashboard. A student can own several
   // mentorship batches — pick the one named in ?plan= (if they own it),
@@ -428,6 +432,7 @@ function DashboardBody({ urlPlan = "" }) {
   useEffect(() => { save(WTASK_KEY, weeklyTasks); }, [WTASK_KEY, weeklyTasks]);
   useEffect(() => { save(PREFS_KEY, reportPrefs); }, [PREFS_KEY, reportPrefs]);
   useEffect(() => { save(AUTO_KEY, lastAuto); }, [AUTO_KEY, lastAuto]);
+  useEffect(() => { save(TREM_KEY, testRemindSnooze); }, [TREM_KEY, testRemindSnooze]);
 
   /* ── derived tracking metrics ── */
   const sorted = useMemo(() => [...entries].sort((a, b) => a.date.localeCompare(b.date)), [entries]);
@@ -494,6 +499,14 @@ function DashboardBody({ urlPlan = "" }) {
   const testsSorted = useMemo(() => [...tests].sort((a, b) => a.date.localeCompare(b.date)), [tests]);
   const latest = testsSorted[testsSorted.length - 1];
   const prev = testsSorted[testsSorted.length - 2];
+
+  // "Have you taken a test lately?" nudge — shows when no test has been logged
+  // in a week (or ever), unless it was already dismissed today.
+  const daysSinceLastTest = latest ? Math.round((new Date(todayIso) - new Date(latest.date)) / 86400000) : Infinity;
+  const showTestReminder = daysSinceLastTest >= 7 && testRemindSnooze !== todayIso;
+  // Reset the Yes/No stage once the nudge is gone (e.g. a test was logged) so a
+  // future reminder always starts from the question, not the follow-up.
+  useEffect(() => { if (!showTestReminder) setTestAskStage("ask"); }, [showTestReminder]);
   const acc = (t) => {
     const att = Number(t.correct) + Number(t.wrong);
     return att ? Math.round((Number(t.correct) / att) * 100) : 0;
@@ -1356,9 +1369,44 @@ function DashboardBody({ urlPlan = "" }) {
           sub={rankEnabled
             ? "Enter your marks, silly mistakes and weak chapters. Pick JEE Mains/Advanced to get a predicted rank — everything else is analysed automatically."
             : "Enter your marks, silly mistakes and weak chapters — we analyse accuracy, score and week-on-week change automatically."}>
+          {/* Nudge: no test logged in a week → ask if one was taken, then guide
+              them to log it. "No" simply snoozes it for the day. */}
+          {showTestReminder && (
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: "linear-gradient(135deg,#f5f3ff,#fdf2ff)", border: "1px solid rgba(139,92,246,.28)", borderRadius: 14, padding: "13px 16px", marginBottom: 16 }}>
+              {testAskStage === "ask" ? (
+                <>
+                  <AlertCircle size={18} color="#8b5cf6" style={{ flexShrink: 0 }} />
+                  <span style={{ flex: 1, minWidth: 180, fontSize: 13.5, fontWeight: 700, color: NAVY }}>
+                    Have you taken a test since your last update? Keep your analysis up to date.
+                  </span>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button type="button" onClick={() => setTestAskStage("confirm")}
+                      style={{ background: "#8b5cf6", color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontFamily: "Sora", fontWeight: 800, fontSize: 12.5, cursor: "pointer", boxShadow: "0 8px 18px -10px #8b5cf6" }}>
+                      Yes, I did
+                    </button>
+                    <button type="button" onClick={() => { setTestRemindSnooze(todayIso); setTestAskStage("ask"); }}
+                      style={{ background: "var(--page-bg)", color: MUTE, border: "1.5px solid #e5e7eb", borderRadius: 10, padding: "8px 16px", fontFamily: "Sora", fontWeight: 700, fontSize: 12.5, cursor: "pointer" }}>
+                      No, not yet
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Sparkles size={18} color="#8b5cf6" style={{ flexShrink: 0 }} />
+                  <span style={{ flex: 1, minWidth: 180, fontSize: 13.5, fontWeight: 700, color: NAVY }}>
+                    Great — add its marks below and we'll refresh your score, accuracy{rankEnabled ? " and rank" : ""} instantly.
+                  </span>
+                  <button type="button" onClick={() => scrollTo("add-test-form")}
+                    style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#8b5cf6", color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontFamily: "Sora", fontWeight: 800, fontSize: 12.5, cursor: "pointer", boxShadow: "0 8px 18px -10px #8b5cf6" }}>
+                    <Plus size={14} /> Update the test
+                  </button>
+                </>
+              )}
+            </div>
+          )}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(330px, 100%), 1fr))", gap: 18 }}>
             {/* left — input + reports + strategies */}
-            <div style={{ background: "var(--page-bg)", border: "1px solid rgba(139,92,246,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+            <div id="add-test-form" style={{ background: "var(--page-bg)", border: "1px solid rgba(139,92,246,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#8b5cf6,#22c55e)" }} />
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "0 0 14px" }}>Add a test result</h3>
 
@@ -1653,24 +1701,76 @@ function DashboardBody({ urlPlan = "" }) {
               </div>
             </ToolCard>
 
-            {/* Weekly fix-list */}
-            <ToolCard icon={ListChecks} color={GREEN} title="Your weekly fix-list" desc="3–5 concrete actions before your next test.">
-              {fixList.length ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {fixList.map((label) => {
-                    const done = fixDoneSet.includes(label);
-                    return (
-                      <button key={label} onClick={() => toggleFix(label)}
-                        style={{ display: "flex", gap: 10, alignItems: "flex-start", textAlign: "left", background: done ? "#f0faf4" : "#fff", border: `1px solid ${done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px", cursor: "pointer" }}>
-                        <span style={{ width: 19, height: 19, borderRadius: 6, border: `1.5px solid ${done ? GREEN : "#cbd5e1"}`, background: done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
-                          {done && <CheckCircle2 size={14} color="#fff" />}
-                        </span>
-                        <span style={{ fontSize: 13, color: done ? "#15803d" : "#374151", lineHeight: 1.45, textDecoration: done ? "line-through" : "none" }}>{label}</span>
-                      </button>
-                    );
-                  })}
+            {/* Weekly fix-list — auto suggestions + the student's own weekly tasks
+                (both roll up into the weekly parent report). */}
+            <ToolCard icon={ListChecks} color={GREEN} title="Your weekly fix-list" desc="Suggested actions plus your own tasks — all summarised in the weekly parent report.">
+              {/* auto suggestions from tests + backlog */}
+              {fixList.length > 0 && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 8 }}>Suggested this week</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {fixList.map((label) => {
+                      const done = fixDoneSet.includes(label);
+                      return (
+                        <button key={label} onClick={() => toggleFix(label)}
+                          style={{ display: "flex", gap: 10, alignItems: "flex-start", textAlign: "left", background: done ? "#f0faf4" : "#fff", border: `1px solid ${done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px", cursor: "pointer" }}>
+                          <span style={{ width: 19, height: 19, borderRadius: 6, border: `1.5px solid ${done ? GREEN : "#cbd5e1"}`, background: done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                            {done && <CheckCircle2 size={14} color="#fff" />}
+                          </span>
+                          <span style={{ fontSize: 13, color: done ? "#15803d" : "#374151", lineHeight: 1.45, textDecoration: done ? "line-through" : "none" }}>{label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              ) : <ChartHint text="Log a test & backlog to generate your fix-list." />}
+              )}
+
+              {/* the student's own weekly tasks — add + edit + complete (no delete) */}
+              <div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".05em" }}>Your tasks</div>
+                  <span style={{ fontSize: 11.5, fontWeight: 800, color: GREEN, background: "#dcfce7", borderRadius: 50, padding: "3px 10px" }}>{weeklyDone}/{weeklyTasks.length} done</span>
+                </div>
+                <form onSubmit={addWeeklyTask} style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+                  <input value={wtInput} onChange={(e) => setWtInput(e.target.value)} placeholder="Add your own task — e.g. Finish Rotational Motion DPP"
+                    style={{ flex: 1, minWidth: 0, padding: "10px 12px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 13.5, color: NAVY, outline: "none", boxSizing: "border-box" }}
+                    onFocus={(e) => { e.target.style.borderColor = GREEN; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+                  <button type="submit" style={{ flexShrink: 0, padding: "10px 15px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${GREEN},#22c55e)`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    <Plus size={15} /> Add
+                  </button>
+                </form>
+                {weeklyTasks.length ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {weeklyTasks.map((t) => (
+                      <div key={t.id} style={{ display: "flex", gap: 10, alignItems: "center", background: t.done ? "#f0faf4" : "#fff", border: `1px solid ${t.done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px" }}>
+                        <button onClick={() => toggleWeeklyTask(t.id)} title={t.done ? "Mark incomplete" : "Mark complete"}
+                          style={{ width: 21, height: 21, borderRadius: 6, border: `1.5px solid ${t.done ? GREEN : "#cbd5e1"}`, background: t.done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, cursor: "pointer" }}>
+                          {t.done && <CheckCircle2 size={14} color="#fff" />}
+                        </button>
+                        {wtEdit.id === t.id ? (
+                          <>
+                            <input value={wtEdit.text} autoFocus onChange={(e) => setWtEdit((s) => ({ ...s, text: e.target.value }))}
+                              onKeyDown={(e) => e.key === "Enter" && saveWeeklyEdit()}
+                              style={{ flex: 1, padding: "7px 10px", borderRadius: 8, border: `1.5px solid ${GREEN}`, fontSize: 13, color: NAVY, outline: "none", minWidth: 0 }} />
+                            <button onClick={saveWeeklyEdit} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 8, padding: "7px 11px", fontSize: 12.5, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}>Save</button>
+                          </>
+                        ) : (
+                          <>
+                            <span style={{ flex: 1, fontSize: 13, color: t.done ? "#15803d" : "#374151", lineHeight: 1.4, textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
+                            {!t.done && (
+                              <button onClick={() => setWtEdit({ id: t.id, text: t.text })} title="Edit" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #e5e7eb", background: "var(--page-bg)", color: "#6b7280", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                                <Pencil size={13} />
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ fontSize: 12.5, color: "#9ca3af", lineHeight: 1.5 }}>No tasks yet — add your first one above. Tasks stay for accountability and can't be deleted.</div>
+                )}
+              </div>
             </ToolCard>
           </div>
         </Section>
@@ -1912,57 +2012,6 @@ function DashboardBody({ urlPlan = "" }) {
             </div>
           </div>
 
-          {/* ── WEEKLY TASK LIST — full width (covers daily goals too) ── */}
-          <div style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 20, padding: "22px 24px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, flexWrap: "wrap", gap: 8 }}>
-              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK, margin: 0, display: "inline-flex", alignItems: "center", gap: 8 }}>
-                <ListChecks size={18} color={GREEN} /> Weekly task list
-              </h3>
-              <span style={{ fontSize: 12, fontWeight: 800, color: GREEN, background: "#dcfce7", borderRadius: 50, padding: "4px 11px" }}>{weeklyDone}/{weeklyTasks.length} done</span>
-            </div>
-            <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 14px", lineHeight: 1.5 }}>Plan everything for the week here (it covers your daily goals too). Once added a task stays for accountability — you can edit the text or tick it complete, but it can't be deleted.</p>
-
-            <form onSubmit={addWeeklyTask} style={{ display: "flex", gap: 8, marginBottom: 14, maxWidth: 620 }}>
-              <input value={wtInput} onChange={(e) => setWtInput(e.target.value)} placeholder="e.g. Finish Rotational Motion DPP"
-                style={{ flex: 1, padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
-                onFocus={(e) => { e.target.style.borderColor = GREEN; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
-              <button type="submit" style={{ padding: "11px 18px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${GREEN},#22c55e)`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <Plus size={15} /> Add
-              </button>
-            </form>
-
-            {weeklyTasks.length ? (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(280px, 100%), 1fr))", gap: 10 }}>
-                {weeklyTasks.map((t) => (
-                  <div key={t.id} style={{ display: "flex", gap: 10, alignItems: "center", background: t.done ? "#f0faf4" : "#fff", border: `1px solid ${t.done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px" }}>
-                    <button onClick={() => toggleWeeklyTask(t.id)} title={t.done ? "Mark incomplete" : "Mark complete"}
-                      style={{ width: 21, height: 21, borderRadius: 6, border: `1.5px solid ${t.done ? GREEN : "#cbd5e1"}`, background: t.done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, cursor: "pointer" }}>
-                      {t.done && <CheckCircle2 size={14} color="#fff" />}
-                    </button>
-                    {wtEdit.id === t.id ? (
-                      <>
-                        <input value={wtEdit.text} autoFocus onChange={(e) => setWtEdit((s) => ({ ...s, text: e.target.value }))}
-                          onKeyDown={(e) => e.key === "Enter" && saveWeeklyEdit()}
-                          style={{ flex: 1, padding: "7px 10px", borderRadius: 8, border: `1.5px solid ${GREEN}`, fontSize: 13.5, color: NAVY, outline: "none", minWidth: 0 }} />
-                        <button onClick={saveWeeklyEdit} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 8, padding: "7px 11px", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>Save</button>
-                      </>
-                    ) : (
-                      <>
-                        <span style={{ flex: 1, fontSize: 13.5, color: t.done ? "#15803d" : "#374151", lineHeight: 1.4, textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
-                        {!t.done && (
-                          <button onClick={() => setWtEdit({ id: t.id, text: t.text })} title="Edit" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #e5e7eb", background: "var(--page-bg)", color: "#6b7280", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                            <Pencil size={13} />
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div style={{ textAlign: "center", padding: "20px 0", color: "#9ca3af", fontSize: 13 }}>No tasks yet — add your first weekly task above.</div>
-            )}
-          </div>
         </Section>
       </div>
 
