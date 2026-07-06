@@ -460,7 +460,7 @@ export default function JeeResources() {
                       <span style={{ flex: 1, height: 1, background: CL.line }} />
                     </div>
                   )}
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 18 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(230px, 100%), 1fr))", gap: 18 }}>
                     {g.items.map((ch, i) => (
                       <ChapterCard key={`${active}-${ch.section || ""}-${ch.n}`} ch={ch} subject={subject} index={i} onOpen={(c) => setViewer({ chapter: c })} />
                     ))}

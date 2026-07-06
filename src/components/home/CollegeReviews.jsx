@@ -216,7 +216,7 @@ function ReviewCard({ r, i }) {
         </div>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(200px, 100%), 1fr))", gap: 10 }}>
         {[{ k: "hostel", label: "Hostel", icon: HomeIcon, accent: CL.coral, soft: CL.coralSoft }, { k: "mess", label: "Mess", icon: Utensils, accent: CL.green, soft: CL.greenSoft }].map(({ k, label, icon: Icon, accent, soft }) => {
           const d = r[k]; if (!d || (!d.rating && !d.text && !(d.tags || []).length)) return null;
           return (
@@ -380,7 +380,7 @@ export default function CollegeReviews() {
           <AnimatePresence mode="wait">
             {view === "home" && (
               <motion.div key="home" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}
-                style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18 }}>
+                style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(260px, 100%), 1fr))", gap: 18 }}>
                 <OptionCard icon={PenSquare} accent={CL.coral} soft={CL.coralSoft} title="Give a college review"
                   desc="Rate the hostel & mess, add quick tags and a comment. Takes a minute." cta="Write a review" onClick={() => { setPreset(""); setView("give"); }} />
                 <OptionCard icon={Star} accent={CL.green} soft={CL.greenSoft} title="See all college reviews"

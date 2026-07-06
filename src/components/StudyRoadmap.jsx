@@ -100,7 +100,7 @@ export default function StudyRoadmap({ data, background }) {
           style={{ ...cardBase, padding: "1.3rem 1.4rem", marginTop: 16, ...bookWrap }}
         >
           <h4 style={{ fontFamily: "Sora", fontWeight: 800, marginBottom: 16, color: "#1a1a2e" }}>{bookTitle}</h4>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(210px, 100%), 1fr))", gap: 14 }}>
             {books.map(({ subj, books: list, color }, bi) => (
               <motion.div key={subj}
                 initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}

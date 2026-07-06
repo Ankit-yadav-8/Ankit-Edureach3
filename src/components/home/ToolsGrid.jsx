@@ -210,7 +210,7 @@ export default function ToolsGrid() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}
+          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))", gap: 24 }}
         >
           {TOOLS.map((t) => <ToolCard key={t.title} t={t} nav={nav} />)}
         </motion.div>

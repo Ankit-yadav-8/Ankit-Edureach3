@@ -146,7 +146,7 @@ export default function Blog() {
             })}
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: 22 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(290px, 100%), 1fr))", gap: 22 }}>
             {shown.map((p) => <PostCard key={p.slug} p={p} />)}
           </div>
         </div>

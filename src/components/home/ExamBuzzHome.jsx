@@ -26,7 +26,7 @@ export default function ExamBuzzHome() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(290px,1fr))", gap: 20, maxWidth: 980, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(290px, 100%), 1fr))", gap: 20, maxWidth: 980, margin: "0 auto" }}>
           {/* news preview */}
           <motion.div whileHover={{ y: -5 }} style={{ background: CL.card, borderRadius: 20, border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: "24px 24px", display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 16 }}>

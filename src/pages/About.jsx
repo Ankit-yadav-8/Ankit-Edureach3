@@ -512,7 +512,7 @@ export default function About() {
 
           {/* Headline impact metrics (moved here from the home hero) */}
           <div style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(190px, 100%), 1fr))",
             gap: 16, maxWidth: 880, margin: "0 auto 44px",
           }}>
             {[
@@ -544,7 +544,7 @@ export default function About() {
             <Stat target={5}              suffix="-yr" label="Cutoff history"       color="#EC4899" />
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 44 }} className="about-highlight-grid">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 16, marginTop: 44 }} className="about-highlight-grid">
             {[
               { icon: "🏆", title: "AIR 3846", sub: "Co-Founder's JEE Advanced rank — built this from lived experience", color: "#FF693D" },
               { icon: "📊", title: "7 Years of Data", sub: "JoSAA cutoffs from 2019–2025 across 800+ colleges structured & verified", color: "#a855f7" },

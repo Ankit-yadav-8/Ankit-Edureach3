@@ -142,7 +142,7 @@ export default function Compare() {
 
                 {/* ── Best-in-class chips ── */}
                 {analysis && (
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 12, margin: "18px 0 26px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 12, margin: "18px 0 26px" }}>
                     {analysis.chips.map((ch, i) => (
                       <motion.div key={ch.head} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.06 }}
                         style={{ background: CL.card, border: `1px solid ${CL.line}`, borderRadius: 16, padding: "13px 15px", boxShadow: CL.shadow }}>

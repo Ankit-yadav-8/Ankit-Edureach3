@@ -196,7 +196,7 @@ function Hero({ cfg, scrollToEnrol }) {
       paddingTop: 140, paddingBottom: 80,
     }}>
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 60, alignItems: "center", maxWidth: 1040, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 60, alignItems: "center", maxWidth: 1040, margin: "0 auto" }}>
           
           {/* Left: Text & CTA */}
           <div style={{ textAlign: "left" }}>
@@ -285,7 +285,7 @@ function ForYou({ cfg }) {
   return (
     <Section style={{ background: "var(--page-bg)" }}>
       <SectionTitle kicker="Sound familiar?">This Plan Is <Accent>For You</Accent> If…</SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16, maxWidth: 940, margin: "0 auto" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(280px, 100%), 1fr))", gap: 16, maxWidth: 940, margin: "0 auto" }}>
         {cfg.forYou.map((t, i) => (
           <Reveal key={t} delay={i * 0.05}>
             <div style={card}>
@@ -307,7 +307,7 @@ function WhyFoundation({ cfg }) {
   return (
     <Section style={{ background: "var(--page-bg)" }}>
       <SectionTitle kicker="Why it matters">Why <Accent>Foundation</Accent> Matters</SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(260px, 100%), 1fr))", gap: 18 }}>
         {cfg.whyFoundation.map((t, i) => (
           <Reveal key={t} delay={i * 0.08}>
             <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 14, minHeight: 150, borderTop: `3px solid ${ACCENT}` }}>
@@ -395,7 +395,7 @@ function TestAnalysis({ cfg }) {
         Weekly <Accent>Test Analysis</Accent>
       </SectionTitle>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 26, alignItems: "stretch", maxWidth: 1040, margin: "0 auto" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 26, alignItems: "stretch", maxWidth: 1040, margin: "0 auto" }}>
         {/* Left — what we analyse */}
         <Reveal>
           <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 20, height: "100%", padding: "32px 36px" }}>
@@ -511,7 +511,7 @@ function ImprovementCharts({ m }) {
         Improvement <Accent>Charts</Accent>
       </SectionTitle>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: 22, maxWidth: 1040, margin: "0 auto" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(320px, 100%), 1fr))", gap: 22, maxWidth: 1040, margin: "0 auto" }}>
         <Reveal>
           <ChartCard title={m.growth.label} hint={m.growth.hint}>
             <Trend data={growth} lines={[{ key: "you", label: "You", color: "#FF693D" }, { key: "batch", label: "Batch avg", color: "#6366f1" }]} height={250} />
@@ -525,7 +525,7 @@ function ImprovementCharts({ m }) {
       </div>
 
       {/* outcome stat tiles */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 16, maxWidth: 1040, margin: "20px auto 0" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(180px, 100%), 1fr))", gap: 16, maxWidth: 1040, margin: "20px auto 0" }}>
         {m.outcomes.map((s, i) => (
           <Reveal key={s.l} delay={i * 0.05}>
             <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 4, borderTop: `3px solid ${s.c}` }}>
@@ -572,7 +572,7 @@ function LiveTracking({ m }) {
             </div>
 
             {/* stat tiles */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 12, marginBottom: 22 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(130px, 100%), 1fr))", gap: 12, marginBottom: 22 }}>
               {m.liveTiles.map(({ icon, c, v, l }) => {
                 const Icon = ICONS[icon];
                 return (
@@ -625,7 +625,7 @@ function ParentBooklet({ m }) {
         Parent <Accent>Weekly Booklet</Accent>
       </SectionTitle>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 0, maxWidth: 960, margin: "0 auto", boxShadow: "0 26px 60px -30px rgba(26,26,46,.5)", borderRadius: 20, overflow: "hidden" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 0, maxWidth: 960, margin: "0 auto", boxShadow: "0 26px 60px -30px rgba(26,26,46,.5)", borderRadius: 20, overflow: "hidden" }}>
         {/* cover */}
         <Reveal>
           <div style={{ background: "linear-gradient(150deg,#FF693D,#E0421F 60%,#c2410c)", color: "#fff", padding: "34px 30px", height: "100%", position: "relative", overflow: "hidden", minHeight: 360 }}>
@@ -696,7 +696,7 @@ function TwoYearPlan({ cfg }) {
   return (
     <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
       <SectionTitle kicker="The roadmap">The <Accent>2-Year</Accent> Plan</SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(240px, 100%), 1fr))", gap: 18 }}>
         {cfg.twoYearPlan.map((p, i) => (
           <Reveal key={p.phase} delay={i * 0.07}>
             <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 10, height: "100%", borderTop: `3px solid ${ACCENT}` }}>
@@ -719,7 +719,7 @@ function Testimonials({ cfg }) {
   return (
     <Section style={{ background: "transparent" }}>
       <SectionTitle kicker="Real results">Students From The <Accent>2025 Batch</Accent></SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(280px, 100%), 1fr))", gap: 18 }}>
         {cfg.testimonials.map((t, i) => (
           <Reveal key={t.name} delay={i * 0.05}>
             <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 14, height: "100%" }}>
@@ -755,7 +755,7 @@ function Enrol({ cfg }) {
           Join the <Accent>Mentorship</Accent> Program
         </SectionTitle>
 
-        <div style={{ display: "grid", gridTemplateColumns: cfg.tracks.length > 1 ? "repeat(auto-fit,minmax(300px,1fr))" : "minmax(300px,440px)", gap: 22, maxWidth: 920, margin: "0 auto", justifyContent: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: cfg.tracks.length > 1 ? "repeat(auto-fit,minmax(min(300px, 100%), 1fr))" : "minmax(300px,440px)", gap: 22, maxWidth: 920, margin: "0 auto", justifyContent: "center" }}>
           {cfg.tracks.map((tr, i) => {
             const meta = MENTOR_PLANS[tr.plan];
             return (
@@ -967,7 +967,7 @@ function WhatsAppProof() {
       <SectionTitle kicker="From the inside" sub="This is what mentorship looks like from the inside.">
         Real Mentorship. <Accent>Real Results.</Accent>
       </SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 20, maxWidth: 1040, margin: "0 auto" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 20, maxWidth: 1040, margin: "0 auto" }}>
         {PROOF_CARDS.map((c, i) => (
           <Reveal key={i} delay={(i % 3) * 0.06}>
             <motion.div whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
@@ -1010,7 +1010,7 @@ function JourneyBrand({ cfg }) {
           </div>
         </Reveal>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 22, maxWidth: 1040, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(280px, 100%), 1fr))", gap: 22, maxWidth: 1040, margin: "0 auto" }}>
           {JOURNEY_STEPS.map((s, i) => {
             const Icon = s.Icon;
             return (

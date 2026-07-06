@@ -173,7 +173,7 @@ export default function RankToCutoff() {
 }
 
 const CSS = `
-.rc-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 44px; align-items: center; }
+.rc-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 44px; align-items: center; }
 .rc-console { background: ${CL.card}; border-radius: 20px; border: 1px solid ${CL.line}; box-shadow: ${CL.shadowLg}; overflow: hidden; }
 .rc-head { display: flex; align-items: center; gap: 12px; padding: 15px 18px; background: linear-gradient(120deg, ${CL.coralSoft}, ${CL.cream2}); border-bottom: 1px solid ${CL.line}; }
 .rc-head-icon { width: 34px; height: 34px; border-radius: 10px; background: ${CL.card}; display: grid; place-items: center; box-shadow: ${CL.shadow}; flex-shrink: 0; }

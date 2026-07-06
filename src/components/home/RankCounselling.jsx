@@ -170,7 +170,7 @@ export default function RankCounselling() {
         <Reveal>
           <SectionHead eyebrow="Counselling Plans" title={<>One plan for <span className="accent">all colleges</span></>}
             sub="Pick the plan that fits your rank — expert, data-backed counselling that turns your rank into a confirmed seat." />
-          <div className="counsel-plans" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 22, maxWidth: 760, margin: "36px auto 0", alignItems: "stretch" }}>
+          <div className="counsel-plans" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 22, maxWidth: 760, margin: "36px auto 0", alignItems: "stretch" }}>
             {PLANS.map((p, i) => {
               const Icon = p.icon;
               const featured = p.featured;

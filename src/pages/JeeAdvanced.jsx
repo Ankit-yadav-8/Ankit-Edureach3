@@ -1052,7 +1052,7 @@ export default function JeeAdvanced() {
             />
 
             {/* Key insights */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12, marginTop: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(220px, 100%), 1fr))", gap: 12, marginTop: 20 }}>
               <div style={{ padding: "12px 16px", background: "#fef2f2", borderRadius: 10, border: "1px solid #fca5a5" }}>
                 <div style={{ fontWeight: 700, fontSize: 12, color: "#EF4444", marginBottom: 4 }}>📈 2024 peak cutoff</div>
                 <div style={{ fontSize: 12, color: "#7f1d1d", lineHeight: 1.5 }}>

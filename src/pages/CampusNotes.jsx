@@ -339,7 +339,7 @@ export default function CampusNotes() {
                 />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(220px, 100%), 1fr))", gap: 12 }}>
                 {(COLLEGES[studentType] || [])
                   .filter((c) => c.toLowerCase().includes(collegeSearch.toLowerCase()))
                   .map((c) => (
@@ -404,7 +404,7 @@ export default function CampusNotes() {
               {!selectedBranch && (
                 <>
                   <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1a1a2e", marginBottom: 20 }}>Choose your Branch</h2>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(240px, 100%), 1fr))", gap: 14 }}>
                     {(BRANCHES[studentType] || BRANCHES.ug).map((b) => (
                       <motion.button
                         key={b.id}
@@ -438,7 +438,7 @@ export default function CampusNotes() {
                   <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1a1a2e", marginBottom: 20 }}>
                     <span style={{ color: selectedBranch.color }}>{selectedBranch.short}</span> — Select Semester
                   </h2>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 12 }}>
                     {SEMESTERS.slice(0, studentType === "pg" ? 4 : 8).map((sem, i) => (
                       <motion.button
                         key={sem}
@@ -469,7 +469,7 @@ export default function CampusNotes() {
                   <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1a1a2e", marginBottom: 20 }}>
                     <span style={{ color: selectedBranch.color }}>{selectedBranch.short}</span> · {selectedSem} — Subjects
                   </h2>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(260px, 100%), 1fr))", gap: 12 }}>
                     {(() => {
                       const predefined = getSubjects(selectedBranch.id, selectedSem);
                       const custom = customSubjects[`${selectedBranch.id}-${selectedSem}`] || [];
@@ -582,7 +582,7 @@ export default function CampusNotes() {
                       </motion.button>
                     </div>
                   ) : (
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(300px, 100%), 1fr))", gap: 16 }}>
                       {filteredNotes.map((note) => (
                         <motion.div
                           key={note.id}

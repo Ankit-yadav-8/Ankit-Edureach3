@@ -261,7 +261,7 @@ export default function Colleges() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(min(290px, 100%), 1fr))",
             gap: 20,
             paddingBottom: 60,
           }}

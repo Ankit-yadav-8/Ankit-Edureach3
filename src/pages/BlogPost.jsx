@@ -156,7 +156,7 @@ export default function BlogPost() {
           {/* read next */}
           <div style={{ marginTop: 48 }}>
             <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.2rem", color: CL.ink, marginBottom: 18 }}>Read next</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 14 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(220px, 100%), 1fr))", gap: 14 }}>
               {more.map((p) => {
                 const PIc = ICONS[p.iconName] || BookOpen;
                 const pac = ACCENTS[p.accent] || CL.coral;

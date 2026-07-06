@@ -85,7 +85,7 @@ export default function MentorshipHome() {
         </Reveal>
 
         {/* ── Program cards ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 22, maxWidth: 1080, margin: "36px auto 0", alignItems: "stretch" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 22, maxWidth: 1080, margin: "36px auto 0", alignItems: "stretch" }}>
           {PROGRAMS.map((p, i) => {
             const Icon = p.icon;
             return (

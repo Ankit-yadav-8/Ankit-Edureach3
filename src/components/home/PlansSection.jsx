@@ -44,7 +44,7 @@ export default function PlansSection() {
           initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 36, alignItems: "center",
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: 36, alignItems: "center",
             maxWidth: 1040, margin: "0 auto 44px", background: CL.card, borderRadius: 24,
             border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: 30,
           }}>
@@ -76,7 +76,7 @@ export default function PlansSection() {
         </motion.div>
 
         {/* why-us small cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20, maxWidth: 1040, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))", gap: 20, maxWidth: 1040, margin: "0 auto" }}>
           {WHY.map(({ icon: Icon, title, desc }) => (
             <motion.div key={title}
               initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}

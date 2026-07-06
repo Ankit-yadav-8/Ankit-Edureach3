@@ -295,7 +295,7 @@ export default function PrivateUniversities() {
             transition={{ duration: 0.25 }}
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(min(260px, 100%), 1fr))",
               gap: 20,
             }}
           >

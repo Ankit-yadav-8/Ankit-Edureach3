@@ -65,7 +65,7 @@ export default function FaqSection() {
           </h2>
           <p style={{ color: CL.body, fontSize: "1.02rem" }}>Everything students and parents ask us before getting started.</p>
         </div>
-        <div className="faq-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(330px,1fr))", gap: 14, alignItems: "start" }}>
+        <div className="faq-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(330px, 100%), 1fr))", gap: 14, alignItems: "start" }}>
           {FAQS.map((f, i) => (
             <Item key={i} item={f} open={open === i} onToggle={() => setOpen(open === i ? -1 : i)} />
           ))}

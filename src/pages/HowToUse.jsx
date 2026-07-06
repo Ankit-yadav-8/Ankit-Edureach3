@@ -458,7 +458,7 @@ export default function HowToUse() {
               Little things that make College Parichay faster to use.
             </p>
           </Reveal>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(250px, 100%), 1fr))", gap: 18 }}>
             {QUICK.map((q) => {
               const Ic = q.icon;
               return (

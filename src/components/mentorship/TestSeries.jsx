@@ -224,7 +224,7 @@ export default function TestSeries({ plan }) {
           <div style={{ fontSize: 13, color: MUTE, marginTop: 4 }}>Your mentor will upload daily, weekly and full tests here.</div>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(290px,1fr))", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(290px, 100%), 1fr))", gap: 14 }}>
           {shown.map((t) => (
             <TestCard key={t.id} t={t} onStart={() => setActiveId(t.id)} />
           ))}
@@ -660,7 +660,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
                       style={{ width: "100%", maxWidth: 360, height: 52, padding: "0 16px", borderRadius: 14, border: `2px solid ${answers[q.qno] ? ORANGE : "#e5e7eb"}`, fontSize: 18, fontWeight: 700, color: NAVY, outline: "none", boxSizing: "border-box", background: answers[q.qno] ? `${ORANGE}08` : "#fff", transition: "all .15s", fontFamily: "inherit" }} />
                   </div>
                 ) : (
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 12, maxWidth: 860 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: 12, maxWidth: 860 }}>
                     {displayOptions.map((opt, i) => {
                       const on = answers[q?.qno] === opt.key;
                       const hasText = opt.text && opt.text.trim();
@@ -1094,7 +1094,7 @@ function ResultView({ token, plan, testId, result, onClose }) {
         )}
 
         {/* Performance summary */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 12, marginBottom: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 12, marginBottom: 14 }}>
           <div style={{ ...card, background: NAVY, border: "none", color: "#fff", textAlign: "center" }}>
             <div style={{ fontSize: 12, opacity: .7 }}>Score</div>
             <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 30, lineHeight: 1.1 }}>{r.score}<span style={{ fontSize: 15, opacity: .6 }}>/{r.maxMarks}</span></div>
@@ -1113,7 +1113,7 @@ function ResultView({ token, plan, testId, result, onClose }) {
           )}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 12, marginBottom: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(280px, 100%), 1fr))", gap: 12, marginBottom: 14 }}>
           {/* Subject proficiency */}
           {subjects.length > 0 && (
             <div style={card}>
@@ -1179,7 +1179,7 @@ function ResultView({ token, plan, testId, result, onClose }) {
         )}
 
         {/* Marks breakdown + pace */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 12, marginBottom: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(280px, 100%), 1fr))", gap: 12, marginBottom: 14 }}>
           <div style={card}>
             {head(<Award size={16} color={GREEN} />, "Marks Breakdown")}
             {(() => {
@@ -1238,7 +1238,7 @@ function ResultView({ token, plan, testId, result, onClose }) {
 
         {/* Strong / weak areas */}
         {(strong.length > 0 || weakSet.length > 0) && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 12, marginBottom: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(240px, 100%), 1fr))", gap: 12, marginBottom: 14 }}>
             <div style={{ ...card, borderLeft: `3px solid ${GREEN}` }}>
               {head(<Flame size={16} color={GREEN} />, "Strong Areas")}
               {strong.length ? strong.map((s) => (
@@ -1258,7 +1258,7 @@ function ResultView({ token, plan, testId, result, onClose }) {
         {topics.length > 0 && (
           <div style={{ ...card, marginBottom: 14 }}>
             {head(<Gauge size={16} color={ORANGE} />, "Chapter-wise Accuracy")}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(120px,1fr))", gap: 8 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(120px, 100%), 1fr))", gap: 8 }}>
               {topics.map((t, i) => {
                 const c = t.accuracy >= 70 ? GREEN : t.accuracy >= 40 ? AMBER : RED;
                 return (

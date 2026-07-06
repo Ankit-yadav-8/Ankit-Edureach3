@@ -77,7 +77,7 @@ function RoundDetail({ row }) {
       )}
 
       {/* ── Cutoff snapshot stat cards ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 10, marginBottom: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(120px, 100%), 1fr))", gap: 10, marginBottom: 16 }}>
         {statCards.map((s) => (
           <div key={s.label} style={{ background: "var(--page-bg)", border: "1px solid var(--line)", borderRadius: 12, padding: "12px 14px", borderTop: `3px solid ${s.color}` }}>
             <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: ".04em", color: "var(--muted)", textTransform: "uppercase", marginBottom: 4 }}>{s.label}</div>

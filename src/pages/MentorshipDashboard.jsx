@@ -1110,7 +1110,7 @@ function DashboardBody({ urlPlan = "" }) {
         {/* ── PERSONALISED OVERVIEW ── */}
         <Section id="personalised" kicker="Proof, not promises" title="Your snapshot" tColor={ORANGE}
           sub="A single overview your mentor and parents can see — built from your own data.">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 14 }}>
             {[
               { v: latest ? `${latest.scored}/${latest.total}` : "—", l: "Latest score", c: ORANGE },
               { v: latest ? `${acc(latest)}%` : "—", l: "Accuracy", c: "#22c55e" },
@@ -1148,7 +1148,7 @@ function DashboardBody({ urlPlan = "" }) {
             </div>
 
             {/* stat tiles */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 12, marginBottom: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(120px, 100%), 1fr))", gap: 12, marginBottom: 20 }}>
               {[
                 { icon: Clock, c: ORANGE, v: todayEntry ? `${todayEntry.hours}h` : "0h", l: "Today" },
                 { icon: Activity, c: "#6366f1", v: `${round1(weekHours)}h`, l: "This week" },
@@ -1204,7 +1204,7 @@ function DashboardBody({ urlPlan = "" }) {
                 <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412", marginBottom: 12 }}>
                   {editingLog ? "Update today" : "Log today"} ({fmtDay(todayIso)}) · hours & tasks completed per subject
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 10, marginBottom: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 10, marginBottom: 12 }}>
                   {subjects.map((s) => (
                     <SubjectDualField key={s} subject={s}
                       hours={logForm.subjects?.[s]?.h ?? ""} tasks={logForm.subjects?.[s]?.t ?? ""}
@@ -1316,7 +1316,7 @@ function DashboardBody({ urlPlan = "" }) {
         {/* ── SUBJECT-WISE ANALYSIS ── */}
         <Section id="subject-analysis" kicker="Every subject counts" title="Subject-wise Analysis" tColor="#6366f1"
           sub="See exactly where your hours and tasks go, compare day-by-day, and check this week against last week.">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 18, marginBottom: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 18, marginBottom: 18 }}>
             <ChartCard title="Study hours per subject · last 7 days" hint="Compare each subject day by day" accent="#6366f1">
               <Trend data={subjectHourTrend} lines={subjectLines} height={230} fmt={(v) => `${v}h`} />
             </ChartCard>
@@ -1332,7 +1332,7 @@ function DashboardBody({ urlPlan = "" }) {
                 : <ChartHint text="Log today's subject hours to see your split." />}
             </ChartCard>
 
-            <div className="md-subject-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 12 }}>
+            <div className="md-subject-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 12 }}>
               {subjects.map((s) => {
                 const now = round1(thisWkH[s]); const was = round1(lastWkH[s]);
                 const d = round1(now - was);
@@ -1373,7 +1373,7 @@ function DashboardBody({ urlPlan = "" }) {
           sub={rankEnabled
             ? "Enter your marks, silly mistakes and weak chapters. Pick JEE Mains/Advanced to get a predicted rank — everything else is analysed automatically."
             : "Enter your marks, silly mistakes and weak chapters — we analyse accuracy, score and week-on-week change automatically."}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(330px,1fr))", gap: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(330px, 100%), 1fr))", gap: 18 }}>
             {/* left — input + reports + strategies */}
             <div style={{ background: "var(--page-bg)", border: "1px solid rgba(139,92,246,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#8b5cf6,#22c55e)" }} />
@@ -1709,7 +1709,7 @@ function DashboardBody({ urlPlan = "" }) {
               <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 26, color: "#7c3aed" }}>{backlogPct}%</div>
             </div>
 
-            <form onSubmit={addBacklog} style={{ background: "#faf8ff", border: "1px solid #ede9fe", borderRadius: 14, padding: "16px 18px", marginBottom: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, alignItems: "flex-end" }}>
+            <form onSubmit={addBacklog} style={{ background: "#faf8ff", border: "1px solid #ede9fe", borderRadius: 14, padding: "16px 18px", marginBottom: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(140px, 100%), 1fr))", gap: 10, alignItems: "flex-end" }}>
               <SelectField label="Subject" value={blForm.subject} onChange={(v) => setBlForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, s]))} />
               <TextField label="Topic / chapter" value={blForm.topic} onChange={(v) => setBlForm((s) => ({ ...s, topic: v }))} placeholder="e.g. Rotational Motion" />
               <SelectField label="How strong are you?" value={blForm.strength} onChange={(v) => setBlForm((s) => ({ ...s, strength: v }))} options={["weak", "medium", "strong"]} labels={{ weak: "Weak", medium: "Medium", strong: "Strong" }} />
@@ -1814,7 +1814,7 @@ function DashboardBody({ urlPlan = "" }) {
           </div>
 
           {/* ── two-card row: DAILY REPORT (auto-generated) + this-week summary ── */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 18, marginBottom: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 18, marginBottom: 18 }}>
             {/* daily report */}
             <div style={{ background: "var(--page-bg)", border: "1px solid rgba(8,145,178,.22)", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#0891b2,#22d3ee)" }} />
@@ -1949,7 +1949,7 @@ function DashboardBody({ urlPlan = "" }) {
             </form>
 
             {weeklyTasks.length ? (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 10 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(280px, 100%), 1fr))", gap: 10 }}>
                 {weeklyTasks.map((t) => (
                   <div key={t.id} style={{ display: "flex", gap: 10, alignItems: "center", background: t.done ? "#f0faf4" : "#fff", border: `1px solid ${t.done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px" }}>
                     <button onClick={() => toggleWeeklyTask(t.id)} title={t.done ? "Mark incomplete" : "Mark complete"}
@@ -2074,7 +2074,7 @@ function RankCard({ r, name }) {
           Projected full-test rank from Paper {r.paper} ({r.paperMarks}/{ADV_PAPER_TOTAL}) — assumes a similar Paper {r.paper === 1 ? 2 : 1}. Log both papers for a sharper estimate.
         </div>
       )}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 10, marginBottom: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(110px, 100%), 1fr))", gap: 10, marginBottom: 10 }}>
         <div style={{ background: "var(--page-bg)", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
           <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{r.advanced ? rng(r.crlLo ?? r.low, r.crlHi ?? r.high) : inr(r.crl)}</div>
           <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{r.advanced ? "CRL range" : "All-India CRL"}</div>

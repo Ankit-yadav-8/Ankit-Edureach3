@@ -363,7 +363,7 @@ function ExamCard({ exam, index }) {
             <div style={{ padding: "18px 18px 20px" }}>
               {/* Info grid */}
               <div style={{
-                display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+                display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(180px, 100%), 1fr))",
                 gap: 10, marginBottom: 18,
               }}>
                 {[

@@ -103,7 +103,7 @@ export default function CompareExams() {
               {read && <ReadCard read={read} count={exams.length} />}
 
               {/* Intel cards */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, margin: "22px 0 26px" }} className="exam-intel">
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 16, margin: "22px 0 26px" }} className="exam-intel">
                 {exams.map((e, i) => (
                   <IntelCard key={e.slug} exam={e} idx={i} recommended={read && read.start.slug === e.slug}
                     removable={exams.length > 1} onRemove={() => remove(e.slug)} />

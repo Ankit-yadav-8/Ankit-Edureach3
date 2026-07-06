@@ -328,7 +328,7 @@ export default function CutoffSection({ college, initialProgram }) {
       {/* Filter row */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(180px,1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))",
         gap: 16,
         marginBottom: 20,
       }}>
@@ -416,7 +416,7 @@ export default function CutoffSection({ college, initialProgram }) {
     return (
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(130px, 100%), 1fr))",
         gap: 12,
         marginBottom: 22,
       }}>
@@ -762,7 +762,7 @@ export default function CutoffSection({ college, initialProgram }) {
   const Grid2 = ({ children, style }) => (
     <div style={{
       display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(340px,1fr))",
+      gridTemplateColumns: "repeat(auto-fit, minmax(min(340px, 100%), 1fr))",
       gap: 20,
       alignItems: "start",
       ...style,

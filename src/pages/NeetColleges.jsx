@@ -173,7 +173,7 @@ export default function NeetColleges() {
         </div>
 
         {/* Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 18, paddingBottom: 30 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(300px, 100%), 1fr))", gap: 18, paddingBottom: 30 }}>
           {shown.map((c, i) => (
             <Reveal key={c.slug} delay={(i % 3) * 0.03} className="cv-card">
               <div onClick={() => nav(`/neet-colleges/${c.slug}`)}

@@ -337,7 +337,7 @@ export default function Dashboard() {
                 <button onClick={() => navigate("/ai")}
                   style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", marginTop: 16, padding: "10px 10px 10px 16px", borderRadius: 50, border: `1px solid ${LINE}`, background: "#fff", cursor: "pointer", textAlign: "left" }}>
                   <Sparkles size={16} color={CORAL} style={{ flexShrink: 0 }} />
-                  <span style={{ flex: 1, fontSize: 13.5, color: MUTED, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Ask Parichay AI anything about colleges, ranks, counselling…</span>
+                  <span style={{ flex: 1, minWidth: 0, fontSize: 13.5, color: MUTED, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Ask Parichay AI anything about colleges, ranks, counselling…</span>
                   <span style={{ width: 38, height: 38, borderRadius: "50%", background: `linear-gradient(135deg, ${CORAL}, ${CORAL_DK})`, display: "grid", placeItems: "center", flexShrink: 0 }}>
                     <Send size={16} color="#fff" />
                   </span>
@@ -358,7 +358,7 @@ export default function Dashboard() {
                   <Pencil size={13} /> Edit
                 </button>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 18px" }}>
+              <div className="dash-details">
                 {details.map((d) => <Detail key={d.label} {...d} />)}
               </div>
             </div>
@@ -479,9 +479,14 @@ export default function Dashboard() {
       <style>{`@keyframes dashspin{to{transform:rotate(360deg)}}
         .dash-spin{display:inline-block;animation:dashspin .8s linear infinite;vertical-align:middle;margin-right:6px}
         .dash-2col{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:stretch}
+        .dash-2col>*{min-width:0}
         .dash-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+        .dash-quick>*{min-width:0}
+        .dash-details{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+        .dash-details>*{min-width:0}
         @media (max-width:860px){.dash-2col{grid-template-columns:1fr}}
-        @media (max-width:520px){.dash-quick{grid-template-columns:repeat(2,1fr)}}`}</style>
+        @media (max-width:520px){.dash-quick{grid-template-columns:repeat(2,1fr)}}
+        @media (max-width:400px){.dash-details{grid-template-columns:1fr}}`}</style>
     </section>
   );
 }

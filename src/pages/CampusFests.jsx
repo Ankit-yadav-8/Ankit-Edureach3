@@ -268,7 +268,7 @@ export default function CampusFests() {
             variants={containerV}
             initial="hidden"
             animate="show"
-            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 24, alignItems: "start" }}
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(320px, 100%), 1fr))", gap: 24, alignItems: "start" }}
           >
             {filtered.map((fest) => (
               <FestCard key={fest.id} t={fest} />

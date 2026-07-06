@@ -203,7 +203,7 @@ export default function SyllabusToolkit({ data, heroProps, seoTitle, seoDesc, se
               transition={{ duration: 0.2 }}
               style={{ 
                 display: "grid", 
-                gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", 
+                gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))", 
                 gap: 20 
               }}
             >

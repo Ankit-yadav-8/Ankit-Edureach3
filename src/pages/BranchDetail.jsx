@@ -198,7 +198,7 @@ function MiniDonut({ data, size = 124 }) {
 function JourneyCards({ years }) {
   const phaseColors = [CL.blue, CL.green, CL.coral, CL.violet];
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16 }}>
       {years.map((y, i) => (
         <motion.div key={i} variants={iV} style={{
           background: i === 2 ? CL.coral : CL.card,
@@ -259,7 +259,7 @@ function Academics({ b, extra }) {
   return (
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
       {/* Row 1: Summary + Intensity */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: 20 }}>
         <Card style={{ background: `linear-gradient(135deg, ${b.color}12 0%, #fff 100%)`, borderLeft: `4px solid ${b.color}` }}>
           <div style={{ ...eye, color: CL.muted, marginBottom: 10 }}>Core Degree Focus</div>
           <p style={{ fontSize: F.lg, fontWeight: 700, color: CL.ink, lineHeight: 1.55, margin: 0 }}>{b.academics.summary}</p>
@@ -270,7 +270,7 @@ function Academics({ b, extra }) {
       </div>
 
       {/* Row 2: Donut + Placement */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 20 }}>
         {split.length > 0 && <Card title="Initial Career Pathways"><MiniDonut data={split} /></Card>}
         {placement && (
           <Card title="Software Industry Transition" style={{ background: CL.cream2 }}>
@@ -292,7 +292,7 @@ function Academics({ b, extra }) {
       )}
 
       {/* Row 4: Core Subjects + Roles + Tools */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 20 }}>
         <Card title="Foundational Subjects">
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
             {core.map(s => (
@@ -343,7 +343,7 @@ function Insights({ b, extra }) {
   return (
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
       {/* Row 1: AI Risk + Skills + Opportunity */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 20 }}>
         <Card style={{ textAlign: "center" }}>
           <div style={{ ...eye, marginBottom: 12 }}>AI & Automation Exposure</div>
           <div style={{ fontSize: 44, fontWeight: 800, color: CL.ink, fontFamily: CL.display, lineHeight: 1 }}>{b.stats.aiRisk}<span style={{ fontSize: 20, color: CL.muted }}>/100</span></div>
@@ -392,7 +392,7 @@ function Insights({ b, extra }) {
       </Card>
 
       {/* Row 3: Industry + Role Salary */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: 20 }}>
         <Card title="Top Hiring Sectors">
           <div style={{ height: 190 }}>
             <ResponsiveContainer>
@@ -439,7 +439,7 @@ function Insights({ b, extra }) {
       {/* Row 5: Research */}
       {ins.research && (
         <Card title="Further Education & Research Scope">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 14, marginBottom: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(130px, 100%), 1fr))", gap: 14, marginBottom: 14 }}>
             {ins.research.map(r => (
               <div key={r.label} style={{ textAlign: "center" }}>
                 <div style={{ fontSize: F.xxl, fontWeight: 800, color: CL.ink }}>{r.value}<span style={{ fontSize: F.sm, color: CL.muted }}>/100</span></div>
@@ -460,7 +460,7 @@ function Insights({ b, extra }) {
 function Colleges({ b, extra }) {
   return (
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: 20 }}>
         <Card title="5-Year Historic Cutoff Trends">
           <div style={{ fontSize: F.xs, color: CL.muted, marginTop: -10, marginBottom: 12 }}>Lower rank implies higher competition</div>
           <div style={{ height: 240 }}>
@@ -525,7 +525,7 @@ function Myths({ b, extra }) {
   const [openIdx, setOpenIdx] = useState(0);
   return (
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))", gap: 20 }}>
         <Card style={{ textAlign: "center" }}>
           <div style={{ ...eye, marginBottom: 8 }}>Student Satisfaction Score</div>
           <Gauge value={extra.satisfaction} label="Overall Score" color={CL.green} height={170} />
@@ -580,7 +580,7 @@ function Syllabus({ b, extra }) {
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
       <Card title="Semester-by-Semester Breakdown">
         {semesters.length > 0 ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(250px, 100%), 1fr))", gap: 16 }}>
             {semesters.map((s, i) => (
               <motion.div key={i} variants={iV} style={{ background: CL.cream2, border: `1px solid ${CL.cream3}`, borderRadius: 12, padding: "16px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
@@ -610,7 +610,7 @@ function Recruiters({ b, extra }) {
     <motion.div variants={cV} initial="hidden" animate="show" style={{ display: "grid", gap: 20 }}>
       <Card title="Prominent Campus Recruiters">
         {recruiters.length > 0 ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(130px, 100%), 1fr))", gap: 12 }}>
             {recruiters.map((r, i) => (
               <motion.div key={r} variants={iV} style={{ background: CL.card, border: `1px solid ${CL.line}`, borderRadius: 10, padding: "14px 10px", textAlign: "center", fontSize: F.sm, fontWeight: 800, color: CL.ink, boxShadow: CL.shadow }}>
                 {r}

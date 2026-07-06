@@ -547,7 +547,7 @@ function NeetCollegePredictor() {
           <span style={{ display: "grid", placeItems: "center", width: 32, height: 32, borderRadius: 9, background: `${C_CHEM}18`, color: C_CHEM }}><Landmark size={18} /></span>
           Find your medical colleges
         </h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 14, marginBottom: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 14, marginBottom: 16 }}>
           <div>
             <label style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: .5 }}>NEET Score / 720</label>
             <input type="number" value={score} onChange={(e) => setScore(e.target.value)} placeholder="e.g. 620" style={{ ...sel, marginTop: 4 }} />
@@ -577,7 +577,7 @@ function NeetCollegePredictor() {
         </div>
 
         {shown && (
-          <div className="fade-up" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 14, marginTop: 18 }}>
+          <div className="fade-up" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(240px, 100%), 1fr))", gap: 14, marginTop: 18 }}>
             {results.map((c) => (
               <div key={c.slug} onClick={() => nav(`/neet-colleges/${c.slug}`)} className="card card-hover" style={{ padding: "16px 18px", cursor: "pointer", borderLeft: `4px solid ${c.eligible ? '#10b981' : (c.govt ? ACCENT : "#8b5cf6")}`, background: c.eligible ? '#10b9810a' : '#fff', position: "relative", overflow: "hidden" }}>
                 {c.eligible && <div style={{ position: "absolute", top: 0, right: 0, padding: "3px 12px", background: "#10b981", color: "#fff", fontSize: 10, fontWeight: 800, borderBottomLeftRadius: 10 }}>HIGH CHANCE</div>}
@@ -922,7 +922,7 @@ export default function Neet() {
             <h2 className="section-title">NEET UG Exam Pattern</h2>
             <p className="section-sub">One pen-and-paper paper of 720 marks across Physics, Chemistry, Botany &amp; Zoology.</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 14, marginBottom: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 14, marginBottom: 24 }}>
             {[
               { label: "Total Marks", value: "720", sub: "Phy 180 · Chem 180 · Bio 360", color: ACCENT },
               { label: "Questions", value: "200", sub: "attempt any 180", color: C_PHY },
@@ -936,7 +936,7 @@ export default function Neet() {
               </div>
             ))}
           </div>
-          <div className="card" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: "10px 28px" }}>
+          <div className="card" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(260px, 100%), 1fr))", gap: "10px 28px" }}>
             {PATTERN.map(([k, v]) => (
               <div key={k} style={{ display: "flex", justifyContent: "space-between", gap: 14, borderBottom: "1px solid rgba(0,0,0,.06)", paddingBottom: 9 }}>
                 <span style={{ color: "var(--muted)", fontSize: 13.5 }}>{k}</span>
@@ -982,7 +982,7 @@ export default function Neet() {
             <h2 className="section-title">NEET UG 2026 — Key Dates</h2>
             <p className="section-sub">Every milestone from notification to counselling. <em>Tentative — confirm on the official NTA portal.</em></p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(220px, 100%), 1fr))", gap: 14 }}>
             {EXAM_CYCLE.map((e, i) => (
               <Reveal key={e.phase} delay={(i % 4) * 0.04}>
                 <div className="card card-hover" style={{ borderLeft: `4px solid ${e.color}`, display: "flex", alignItems: "center", gap: 12, height: "100%" }}>
@@ -1049,7 +1049,7 @@ export default function Neet() {
             <h2 className="section-title">All {NEET_COLLEGES.length} MBBS Colleges — State by State</h2>
             <p className="section-sub">NEET fills 15% seats via All-India Quota (MCC) and 85% via state counselling. Browse every MBBS college across {NEET_STATES.length} states &amp; UTs ({NEET_TOTAL_SEATS.toLocaleString("en-IN")} seats).</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 14, marginBottom: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(220px, 100%), 1fr))", gap: 14, marginBottom: 24 }}>
             {stateStats.map((s, i) => (
               <Reveal key={s.state} delay={(i % 4) * 0.03}>
                 <Link to={`/neet-colleges?state=${encodeURIComponent(s.state)}`} className="card card-hover" style={{ display: "flex", alignItems: "center", gap: 12, height: "100%", textDecoration: "none", borderLeft: `3px solid ${ACCENT}` }}>

@@ -329,7 +329,7 @@ export default function TestUpload({ token }) {
           </h3>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 14, marginBottom: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(220px, 100%), 1fr))", gap: 14, marginBottom: 14 }}>
           <div style={{ gridColumn: "1 / -1" }}>
             <span style={lbl}>Test title</span>
             <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Daily Test 12 — Kinematics" style={inp} />

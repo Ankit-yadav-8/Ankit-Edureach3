@@ -30,7 +30,7 @@ function MemberGrid({ token, plan, batchLabel }) {
       <div style={{ fontSize: 13, color: MUTE, marginBottom: 12 }}>
         <strong style={{ color: NAVY }}>{data.count}</strong> student{data.count === 1 ? "" : "s"} in {batchLabel}.
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(190px,1fr))", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(190px, 100%), 1fr))", gap: 12 }}>
         {data.members.map((m, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: 11, background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 14, padding: "12px 14px" }}>
             <Avatar name={m.name} size={40} />

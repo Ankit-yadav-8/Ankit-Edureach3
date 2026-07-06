@@ -141,7 +141,7 @@ export default function ExploreColleges() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: 22 }}
+          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(290px, 100%), 1fr))", gap: 22 }}
         >
           {IITS.map((c, i) => <CollegeCard key={c.slug} c={c} nav={nav} extra={i >= 6} />)}
         </motion.div>

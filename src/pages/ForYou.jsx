@@ -563,7 +563,7 @@ export default function ForYou() {
 
         /* Two-column: predicted colleges + sticky my-list builder */
         .fy-layout { display: grid; grid-template-columns: minmax(0,1fr) 340px; gap: 26px; align-items: start; }
-        .fy-cards  { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 16px; }
+        .fy-cards  { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: 16px; }
         .fy-aside  { position: sticky; top: 88px; }
 
         .fy-mylist-card { padding: 16px; }

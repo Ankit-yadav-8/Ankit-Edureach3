@@ -93,7 +93,7 @@ export default function ExamDetail() {
           <div className="card">
             <h3 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}><CalendarDays size={18} color="var(--violet)" /> Important dates</h3>
             {/* Responsive date cards (no fixed-width table) so dates stay readable on every device */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(210px, 100%), 1fr))", gap: 12 }}>
               {exam.dates.map(([l, d]) => (
                 <div key={l} style={{ display: "flex", alignItems: "center", gap: 12, background: "var(--sky)", border: "1px solid rgba(0,0,0,.06)", borderRadius: 12, padding: "12px 14px" }}>
                   <span style={{ width: 38, height: 38, borderRadius: 10, background: `${exam.color}16`, border: `1px solid ${exam.color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>

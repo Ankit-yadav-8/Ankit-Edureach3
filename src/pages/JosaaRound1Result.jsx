@@ -408,7 +408,7 @@ const CSS = `
 .josr-lead strong{color:var(--navy)}
 
 /* snapshot */
-.josr-snap{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px}
+.josr-snap{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(280px, 100%), 1fr)); gap:12px}
 .josr-snap__row{display:flex; justify-content:space-between; align-items:center; gap:14px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; backdrop-filter:blur(6px)}
 .josr-snap__k{font-size:12.5px; color:var(--muted); font-weight:600; flex-shrink:0}
 .josr-snap__v{font-size:13.5px; font-weight:700; color:var(--navy); text-align:right}
@@ -466,7 +466,7 @@ const CSS = `
 .josr-tl__body p{font-size:13.6px; line-height:1.6; color:rgba(28,28,40,.72); margin:0}
 
 /* links */
-.josr-links{display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:12px}
+.josr-links{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(320px, 100%), 1fr)); gap:12px}
 .josr-link{display:flex; align-items:center; gap:13px; text-align:left; width:100%; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; cursor:pointer; text-decoration:none; backdrop-filter:blur(6px); transition:transform .2s, box-shadow .2s, border-color .2s}
 .josr-link:hover{transform:translateY(-3px); border-color:rgba(255, 105, 61,.4); box-shadow:0 14px 32px rgba(255, 105, 61,.16)}
 .josr-link__ic{width:40px; height:40px; border-radius:11px; display:grid; place-items:center; flex-shrink:0}

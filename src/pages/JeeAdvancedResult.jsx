@@ -618,7 +618,7 @@ const CSS = `
 .jadv-page .zone-label { font-size:12px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-family:'DM Mono',monospace; margin-bottom:8px; padding-left:4px; }
 
 /* ── category grid ── */
-.jadv-page .cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+.jadv-page .cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(300px, 100%), 1fr)); gap:14px; }
 .jadv-page .cat-card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; display:flex; align-items:center; gap:14px; backdrop-filter:blur(6px); transition:border-color .25s, box-shadow .25s, transform .25s; }
 .jadv-page .cat-card:hover { border-color:var(--border); box-shadow:0 10px 26px rgba(255, 105, 61,.14); }
 .jadv-page .cat-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; animation:jadvPulse 2.4s ease-in-out infinite; }
@@ -637,7 +637,7 @@ const CSS = `
 .jadv-page .badge-pwd { background:rgba(16,185,129,0.14); color:#10b981; }
 
 /* ── female grid ── */
-.jadv-page .female-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+.jadv-page .female-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(260px, 100%), 1fr)); gap:12px; }
 .jadv-page .female-card { background:var(--card); border:1px solid rgba(242,78,116,0.18); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:12px; backdrop-filter:blur(6px); box-shadow:0 4px 16px rgba(242,78,116,.08); transition:transform .25s, box-shadow .25s; }
 .jadv-page .female-card:hover { box-shadow:0 10px 26px rgba(242,78,116,.2); }
 .jadv-page .fc-rank { font-family:'DM Mono',monospace; font-size:18px; font-weight:600; color:var(--rose); min-width:44px; }
@@ -645,7 +645,7 @@ const CSS = `
 .jadv-page .fc-zone { font-size:11px; color:var(--muted); font-family:'DM Mono',monospace; margin-top:2px; }
 
 /* ── stats grid ── */
-.jadv-page .stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+.jadv-page .stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(200px, 100%), 1fr)); gap:14px; }
 .jadv-page .stat-card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 18px; text-align:center; backdrop-filter:blur(6px); box-shadow:0 4px 16px rgba(120,100,170,.08); transition:transform .25s, box-shadow .25s; }
 .jadv-page .stat-card:hover { box-shadow:0 12px 30px rgba(120,100,170,.16); }
 .jadv-page .stat-card .sv { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; line-height:1; margin-bottom:6px; }
