@@ -94,7 +94,6 @@ const ADV_PAPER_MINUTES = 180;   // each Advanced paper is 3 hours (6h total)
 
 /* sticky in-page navigation */
 const SECTIONS = [
-  { id: "personalised",    label: "Snapshot",        icon: Sparkles,  color: ORANGE },
   { id: "live-tracking",   label: "Daily log",       icon: Activity,  color: "#ef4444" },
   { id: "subject-analysis",label: "Subjects",        icon: BarChart3, color: "#6366f1" },
   { id: "test-analysis",   label: "Tests",           icon: LineIcon,  color: "#8b5cf6" },
@@ -395,7 +394,7 @@ function DashboardBody({ urlPlan = "" }) {
   const [alertState, setAlertState] = useState({ sending: false, msg: { type: "", text: "" } });
   const [reportPrefs, setReportPrefs] = useState(() => loadScoped(PREFS_KEY, L_PREFS, { autoWeekly: true, autoDaily: false, autoBacklogAlert: true }));
   const [lastAuto, setLastAuto] = useState(() => loadScoped(AUTO_KEY, L_AUTO, { weekly: "", daily: "", backlog: "" }));
-  const [activeSec, setActiveSec] = useState("personalised");
+  const [activeSec, setActiveSec] = useState("live-tracking");
 
   // Resolve the real plan for THIS dashboard. A student can own several
   // mentorship batches — pick the one named in ?plan= (if they own it),
@@ -1128,26 +1127,6 @@ function DashboardBody({ urlPlan = "" }) {
       <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px" }}>
 
         {/* ── PERSONALISED OVERVIEW ── */}
-        <Section id="personalised" kicker="Proof, not promises" title="Your snapshot" tColor={ORANGE}
-          sub="A single overview your mentor and parents can see — built from your own data.">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 14 }}>
-            {[
-              { v: latest ? `${latest.scored}/${latest.total}` : "—", l: "Latest score", c: ORANGE },
-              { v: latest ? `${acc(latest)}%` : "—", l: "Accuracy", c: "#22c55e" },
-              { v: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%`, l: "Since last test", c: improvement != null && improvement < 0 ? "#ef4444" : "#6366f1" },
-              { v: `${streak}`, l: "Day streak", c: "#ef4444" },
-              { v: `${routinePct}%`, l: "Routine kept", c: "#8b5cf6" },
-              { v: `${backlogDone}/${backlog.length}`, l: "Backlog cleared", c: "#7c3aed" },
-            ].map((s) => (
-              <motion.div key={s.l} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                style={{ background: "var(--page-bg)", border: "1px solid #eee", borderRadius: 16, padding: "18px", borderTop: `3px solid ${s.c}`, boxShadow: "0 14px 36px -28px rgba(13,27,62,.4)" }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 24, color: s.c }}>{s.v}</div>
-                <div style={{ fontSize: 12.5, color: MUTE, fontWeight: 600, marginTop: 2 }}>{s.l}</div>
-              </motion.div>
-            ))}
-          </div>
-        </Section>
-
         {/* ── LIVE STUDENT TRACKING ── */}
         <Section id="live-tracking" kicker={`Always on · up to ${MAX_LOGS_PER_DAY}× a day`} title="Live Student Tracking" tColor="#ef4444"
           sub={`Log each subject's study hours and tasks — and update them up to ${MAX_LOGS_PER_DAY} times a day. The charts refresh instantly so nothing slips through the cracks.`}>
