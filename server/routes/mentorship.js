@@ -14,6 +14,7 @@ import express from "express";
 import User from "../models/User.js";
 import Enrollment from "../models/Enrollment.js";
 import MentorTask from "../models/MentorTask.js";
+import MentorProgress from "../models/MentorProgress.js";
 import { requireAuth } from "../middleware/auth.js";
 import { requireAdmin } from "../middleware/admin.js";
 import { sendMail } from "../utils/mailer.js";
@@ -266,6 +267,46 @@ router.get("/my-tasks", requireAuth, async (req, res) => {
     res.json({ tasks: doc?.tasks || [] });
   } catch (e) {
     console.error("[mentorship/my-tasks]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Cross-device dashboard sync — the student's study data (daily logs, tests,
+// backlog, weekly tasks, prefs) is stored per account + plan so every device
+// they sign in from shows the same thing (localStorage alone is per-browser).
+// ─────────────────────────────────────────────────────────────────────────────
+
+router.get("/progress", requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("email").lean();
+    const email = (user?.email || "").toLowerCase();
+    const plan = String(req.query.plan || "default").trim();
+    if (!email) return res.json({ data: null });
+    const doc = await MentorProgress.findOne({ email, plan }).lean();
+    res.json({ data: doc?.data ?? null, updatedAt: doc?.updatedAt || null });
+  } catch (e) {
+    console.error("[mentorship/progress GET]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.put("/progress", requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("email").lean();
+    const email = (user?.email || "").toLowerCase();
+    const plan = String(req.query.plan || "default").trim();
+    if (!email) return res.status(400).json({ error: "No account email" });
+    const data = req.body?.data;
+    if (data == null || typeof data !== "object") return res.status(400).json({ error: "Invalid data" });
+    const doc = await MentorProgress.findOneAndUpdate(
+      { email, plan },
+      { email, plan, data },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ).lean();
+    res.json({ ok: true, updatedAt: doc.updatedAt });
+  } catch (e) {
+    console.error("[mentorship/progress PUT]", e.message);
     res.status(500).json({ error: "Server error" });
   }
 });

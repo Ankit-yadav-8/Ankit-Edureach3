@@ -48,6 +48,10 @@ app.use("/api/ai", express.json({ limit: "2mb" }));
 // strict 16kb parser below (which then no-ops for these requests).
 app.use("/api/tests", express.json({ limit: "2mb" }));
 
+// The mentorship dashboard sync stores a whole study-data blob (logs, tests,
+// backlog, tasks), which can exceed 16kb — parse it with a roomier limit first.
+app.use("/api/mentorship", express.json({ limit: "512kb" }));
+
 // Reject oversized payloads early — these endpoints only ever take small JSON.
 app.use(express.json({ limit: "16kb" }));
 

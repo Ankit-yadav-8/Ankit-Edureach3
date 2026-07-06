@@ -43,6 +43,11 @@ export const apiSendParentReport = (token, b) => req("/api/mentorship/parent-rep
 // Mentor-assigned weekly tasks — student fetches the ones set for their batch.
 export const apiMyMentorTasks = (token, studentId) =>
   req(`/api/mentorship/my-tasks${studentId ? `?studentId=${encodeURIComponent(studentId)}` : ""}`, { token });
+// Cross-device dashboard sync — load/save the study-data blob per account + plan.
+export const apiGetProgress = (token, plan) =>
+  req(`/api/mentorship/progress${plan ? `?plan=${encodeURIComponent(plan)}` : ""}`, { token });
+export const apiSaveProgress = (token, plan, data) =>
+  req(`/api/mentorship/progress${plan ? `?plan=${encodeURIComponent(plan)}` : ""}`, { method: "PUT", body: { data }, token });
 
 // ── Community (per-batch doubt forum) ───────────────────────────────────────
 // `plan` scopes the call to ONE of the student's batches (they may belong to

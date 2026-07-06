@@ -10,7 +10,7 @@ import {
   MessagesSquare, BadgeCheck,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
-import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiSendParentReport, apiMyMentorTasks } from "../auth/api.js";
+import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiSendParentReport, apiMyMentorTasks, apiGetProgress, apiSaveProgress } from "../auth/api.js";
 import Community from "../components/mentorship/Community.jsx";
 import TestSeries from "../components/mentorship/TestSeries.jsx";
 import { Trend, Gauge, CenterDonut, DonutLegend, Bars } from "../components/Charts.jsx";
@@ -388,6 +388,9 @@ function DashboardBody({ urlPlan = "" }) {
   const [testAskStage, setTestAskStage] = useState("ask"); // "ask" → "confirm"
   // Weekly tasks the mentor/admin assigned for this student (shown as suggested).
   const [mentorTasks, setMentorTasks] = useState([]);
+  // True once this batch's data has been pulled from the server, so the save
+  // effect won't overwrite the server with local seed data before it loads.
+  const [progressLoaded, setProgressLoaded] = useState(false);
 
   // Resolve the real plan for THIS dashboard. A student can own several
   // mentorship batches — pick the one named in ?plan= (if they own it),
@@ -429,6 +432,43 @@ function DashboardBody({ urlPlan = "" }) {
       .catch(() => { if (alive) setMentorTasks([]); });
     return () => { alive = false; };
   }, [token, identity.studentId]);
+
+  // Cross-device sync — LOAD this batch's saved study data from the server so
+  // every device shows the same logs/tests/backlog/tasks. The server copy wins
+  // over local when present; if the server has none yet, the save effect below
+  // seeds it from this device.
+  useEffect(() => {
+    if (!token || !selectedPlan) return;
+    let alive = true;
+    setProgressLoaded(false);
+    apiGetProgress(token, selectedPlan)
+      .then((r) => {
+        if (!alive) return;
+        const d = r?.data;
+        if (d && typeof d === "object") {
+          if (Array.isArray(d.entries)) setEntries(d.entries);
+          if (Array.isArray(d.tests)) setTests(d.tests);
+          if (Array.isArray(d.backlog)) setBacklog(d.backlog);
+          if (Array.isArray(d.weeklyTasks)) setWeeklyTasks(d.weeklyTasks);
+          if (d.fixDone && typeof d.fixDone === "object") setFixDone(d.fixDone);
+          if (d.reportPrefs && typeof d.reportPrefs === "object") setReportPrefs(d.reportPrefs);
+          if (d.lastAuto && typeof d.lastAuto === "object") setLastAuto(d.lastAuto);
+        }
+        setProgressLoaded(true);
+      })
+      .catch(() => { if (alive) setProgressLoaded(true); });
+    return () => { alive = false; };
+  }, [token, selectedPlan]);
+
+  // Cross-device sync — SAVE the study data back to the server (debounced) on
+  // any change, but only after the initial load so we never clobber the server
+  // copy with seed data. localStorage still acts as an offline cache.
+  useEffect(() => {
+    if (!token || !selectedPlan || !progressLoaded) return;
+    const data = { entries, tests, backlog, weeklyTasks, fixDone, reportPrefs, lastAuto };
+    const t = setTimeout(() => { apiSaveProgress(token, selectedPlan, data).catch(() => {}); }, 900);
+    return () => clearTimeout(t);
+  }, [token, selectedPlan, progressLoaded, entries, tests, backlog, weeklyTasks, fixDone, reportPrefs, lastAuto]);
 
   // Switch to another of the student's batches — re-points the URL, which
   // remounts the body against that batch's data + community.
@@ -985,11 +1025,6 @@ function DashboardBody({ urlPlan = "" }) {
           border: "1px solid rgba(255, 105, 61,.16)", padding: "10px",
           boxShadow: "0 30px 70px -40px rgba(13,27,62,.4)",
         }}>
-          <motion.div aria-hidden animate={{ opacity: [.5, .85, .5] }} transition={{ duration: 5, repeat: Infinity }}
-            style={{ position: "absolute", top: -60, left: "4%", width: 320, height: 260, borderRadius: "50%", background: "radial-gradient(circle,rgba(255, 105, 61,.18),transparent 65%)", pointerEvents: "none" }} />
-          <motion.div aria-hidden animate={{ opacity: [.4, .7, .4] }} transition={{ duration: 6, repeat: Infinity }}
-            style={{ position: "absolute", bottom: -50, right: "6%", width: 280, height: 220, borderRadius: "50%", background: "radial-gradient(circle,rgba(21,160,110,.16),transparent 65%)", pointerEvents: "none" }} />
-
           <div style={{ position: "relative", display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.05fr) minmax(0,1fr)", gap: 18, padding: "16px" }} className="md-hero-grid">
 
             {/* LEFT — user / plan card */}
