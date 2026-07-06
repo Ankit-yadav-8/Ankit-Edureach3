@@ -13,7 +13,7 @@ import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiSendParentReport } from "../auth/api.js";
 import Community from "../components/mentorship/Community.jsx";
 import TestSeries from "../components/mentorship/TestSeries.jsx";
-import { Trend, Gauge, PieWithLegend, Bars } from "../components/Charts.jsx";
+import { Trend, Gauge, PieWithLegend, CenterDonut, DonutLegend, Bars } from "../components/Charts.jsx";
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
 
 const ORANGE = "#FF693D";
@@ -497,6 +497,11 @@ function DashboardBody({ urlPlan = "" }) {
   const lastWkH = useMemo(() => subjAgg(prevWeek, "h"), [prevWeek, subjects]);
   const thisWkT = useMemo(() => subjAgg(last7, "t"), [last7, subjects]);
   const subjectPie = subjects.map((s) => ({ name: shortName(s), value: round1(thisWkH[s]) })).filter((x) => x.value > 0);
+  // Colours must follow the SAME filter as subjectPie (skip 0-hour subjects) so
+  // each donut slice / legend row keeps its subject colour once early-week
+  // subjects drop out.
+  const subjectPieColors = subjects.filter((s) => round1(thisWkH[s]) > 0).map(subColor);
+  const subjectPieTotal = subjectPie.reduce((sum, x) => sum + x.value, 0);
   const subjectLines = subjects.map((s) => ({ key: keyOf(s), label: shortName(s), color: subColor(s) }));
   const subjectHourTrend = last7.map((e) => {
     const row = { year: DOW[new Date(e.date).getDay()] };
@@ -1333,26 +1338,37 @@ function DashboardBody({ urlPlan = "" }) {
 
           <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.4fr)", gap: 18, alignItems: "start" }} className="md-track-grid">
             <ChartCard title="Time split this week" hint="Share of study hours per subject" accent="#8b5cf6">
-              {subjectPie.length
-                ? <PieWithLegend data={subjectPie} colors={subjects.map(subColor)} height={210} fmt={(v) => `${v}h`} />
-                : <ChartHint text="Log today's subject hours to see your split." />}
+              {subjectPie.length ? (
+                <div className="md-donut-row" style={{ display: "grid", gridTemplateColumns: "minmax(150px,auto) minmax(0,1fr)", gap: 16, alignItems: "center" }}>
+                  <CenterDonut
+                    data={subjectPie}
+                    colors={subjectPieColors}
+                    centerLabel={`${round1(subjectPieTotal)}h`}
+                    centerSub="total"
+                    height={200}
+                    fmt={(v) => `${v}h`}
+                  />
+                  <DonutLegend data={subjectPie} colors={subjectPieColors} fmt={(v) => `${v}h`} />
+                </div>
+              ) : <ChartHint text="Log today's subject hours to see your split." />}
             </ChartCard>
 
-            <div className="md-subject-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 12 }}>
-              {subjects.map((s) => {
-                const now = round1(thisWkH[s]); const was = round1(lastWkH[s]);
-                const d = round1(now - was);
-                const c = subColor(s);
-                const tasks = Math.round(thisWkT[s]);
-                return (
-                  <div key={s} style={{ background: "var(--page-bg)", border: `1px solid ${c}2e`, borderRadius: 16, overflow: "hidden", boxShadow: `0 16px 38px -28px ${c}cc`, display: "flex", flexDirection: "column" }}>
-                    {/* subject header strip (premium, like the plan cards) */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", background: `linear-gradient(135deg, ${c}16, ${c}05)`, borderBottom: `1px solid ${c}1f` }}>
-                      <span style={{ width: 10, height: 10, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}22`, flexShrink: 0 }} />
-                      <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: NAVY }}>{shortName(s)}</span>
-                      <span style={{ marginLeft: "auto", fontSize: 9.5, fontWeight: 800, color: c, background: `${c}16`, borderRadius: 50, padding: "2px 8px", textTransform: "uppercase", letterSpacing: ".03em" }}>this week</span>
-                    </div>
-                    <div style={{ padding: "13px 14px 14px" }}>
+            <ChartCard title="Subject breakdown" hint="Hours, tasks and weekly change per subject" accent="#6366f1">
+              <div className="md-subject-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 12 }}>
+                {subjects.map((s) => {
+                  const now = round1(thisWkH[s]); const was = round1(lastWkH[s]);
+                  const d = round1(now - was);
+                  const c = subColor(s);
+                  const tasks = Math.round(thisWkT[s]);
+                  return (
+                    // full-tint card — the whole card is washed in the subject colour
+                    <div key={s} style={{ background: `linear-gradient(155deg, ${c}14, ${c}04)`, border: `1px solid ${c}33`, borderRadius: 16, padding: "13px 14px 14px", boxShadow: `0 14px 34px -30px ${c}`, display: "flex", flexDirection: "column" }}>
+                      {/* header: dot + name + THIS WEEK pill */}
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 9 }}>
+                        <span style={{ width: 10, height: 10, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}22`, flexShrink: 0 }} />
+                        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: NAVY }}>{shortName(s)}</span>
+                        <span style={{ marginLeft: "auto", fontSize: 9, fontWeight: 800, color: c, background: `${c}1c`, borderRadius: 50, padding: "2px 8px", textTransform: "uppercase", letterSpacing: ".03em" }}>this week</span>
+                      </div>
                       <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
                         <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 27, color: c, lineHeight: 1 }}>{now}</span>
                         <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: c }}>hrs</span>
@@ -1367,10 +1383,10 @@ function DashboardBody({ urlPlan = "" }) {
                       </div>
                       <DeltaPill d={d} unit="h" subtext="vs last week" />
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            </ChartCard>
           </div>
         </Section>
 

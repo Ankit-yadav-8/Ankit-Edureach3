@@ -2953,6 +2953,11 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 @media (max-width: 720px) {
   .md-track-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
 }
+/* Time-split donut + its legend sit side by side on desktop; stack on phones
+   so neither the donut nor the legend rows get squeezed. */
+@media (max-width: 480px) {
+  .md-donut-row { grid-template-columns: 1fr !important; gap: 8px !important; }
+}
 /* Subject stat cards: 2-up on phones so the hours text stays large & legible. */
 @media (max-width: 560px) {
   .md-subject-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
