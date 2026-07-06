@@ -92,18 +92,6 @@ const ADV_FULL_TOTAL    = 360;   // both papers combined (indicative — varies 
 const ADV_FULL_QUESTIONS = 102;  // typical total questions across both papers (varies by year)
 const ADV_PAPER_MINUTES = 180;   // each Advanced paper is 3 hours (6h total)
 
-/* sticky in-page navigation */
-const SECTIONS = [
-  { id: "live-tracking",   label: "Daily log",       icon: Activity,  color: "#ef4444" },
-  { id: "subject-analysis",label: "Subjects",        icon: BarChart3, color: "#6366f1" },
-  { id: "test-analysis",   label: "Tests",           icon: LineIcon,  color: "#8b5cf6" },
-  { id: "mentor-tools",    label: "Mentor tools",    icon: Brain,     color: GOLD },
-  { id: "backlog",         label: "Backlog",         icon: Rocket,    color: "#7c3aed" },
-  { id: "test-series",     label: "CBT Tests",       icon: ListChecks, color: "#0ea5a4" },
-  { id: "community",       label: "Community",       icon: MessagesSquare, color: "#0ea5e9" },
-  { id: "parent-report",   label: "Reports",         icon: Mail,      color: GREEN },
-];
-
 /* ── demo seed (used until the student logs their own data) ───────── */
 function seedSubjects(total, subjects) {
   const perH = round1(total / subjects.length);
@@ -394,7 +382,6 @@ function DashboardBody({ urlPlan = "" }) {
   const [alertState, setAlertState] = useState({ sending: false, msg: { type: "", text: "" } });
   const [reportPrefs, setReportPrefs] = useState(() => loadScoped(PREFS_KEY, L_PREFS, { autoWeekly: true, autoDaily: false, autoBacklogAlert: true }));
   const [lastAuto, setLastAuto] = useState(() => loadScoped(AUTO_KEY, L_AUTO, { weekly: "", daily: "", backlog: "" }));
-  const [activeSec, setActiveSec] = useState("live-tracking");
 
   // Resolve the real plan for THIS dashboard. A student can own several
   // mentorship batches — pick the one named in ?plan= (if they own it),
@@ -441,18 +428,6 @@ function DashboardBody({ urlPlan = "" }) {
   useEffect(() => { save(WTASK_KEY, weeklyTasks); }, [WTASK_KEY, weeklyTasks]);
   useEffect(() => { save(PREFS_KEY, reportPrefs); }, [PREFS_KEY, reportPrefs]);
   useEffect(() => { save(AUTO_KEY, lastAuto); }, [AUTO_KEY, lastAuto]);
-
-  // Scroll-spy: highlight the section currently in view in the sticky nav.
-  useEffect(() => {
-    const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(Boolean);
-    if (!els.length || typeof IntersectionObserver === "undefined") return;
-    const obs = new IntersectionObserver(
-      (entries) => entries.forEach((e) => { if (e.isIntersecting) setActiveSec(e.target.id); }),
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
-    );
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
 
   /* ── derived tracking metrics ── */
   const sorted = useMemo(() => [...entries].sort((a, b) => a.date.localeCompare(b.date)), [entries]);
@@ -1114,20 +1089,6 @@ function DashboardBody({ urlPlan = "" }) {
       </div>
 
       {/* ══ STICKY SECTION NAV ══ */}
-      <div className="md-stickywrap" style={{ position: "sticky", top: "var(--nav-h, 64px)", zIndex: 20, marginTop: 26, background: "rgba(248,247,245,.86)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderTop: "1px solid #eee", borderBottom: "1px solid #eee" }}>
-        <div className="md-sticky-nav" style={{ maxWidth: 1180, margin: "0 auto", padding: "10px 24px", display: "flex", gap: 8, overflowX: "auto" }}>
-          {SECTIONS.map(({ id, label, icon: Icon, color }) => {
-            const on = activeSec === id;
-            return (
-              <button key={id} onClick={() => scrollTo(id)}
-                style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 50, cursor: "pointer", fontFamily: "Sora", fontWeight: 700, fontSize: 13, whiteSpace: "nowrap", transition: "all .15s", border: `1.5px solid ${on ? color : "#e5e7eb"}`, background: on ? color : "#fff", color: on ? "#fff" : NAVY, boxShadow: on ? `0 8px 18px -8px ${color}` : "none" }}>
-                <Icon size={15} color={on ? "#fff" : color} /> {label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       {/* ══ BODY ══ */}
       <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px" }}>
 
