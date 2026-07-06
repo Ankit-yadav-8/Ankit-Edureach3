@@ -381,7 +381,7 @@ function DashboardBody({ urlPlan = "" }) {
   const [weeklyState, setWeeklyState] = useState({ sending: false, msg: { type: "", text: "" } });
   const [dailyState, setDailyState] = useState({ sending: false, msg: { type: "", text: "" } });
   const [alertState, setAlertState] = useState({ sending: false, msg: { type: "", text: "" } });
-  const [reportPrefs, setReportPrefs] = useState(() => loadScoped(PREFS_KEY, L_PREFS, { autoWeekly: true, autoDaily: false, autoBacklogAlert: true }));
+  const [reportPrefs, setReportPrefs] = useState(() => loadScoped(PREFS_KEY, L_PREFS, { autoWeekly: true, autoDaily: true, autoBacklogAlert: true }));
   const [lastAuto, setLastAuto] = useState(() => loadScoped(AUTO_KEY, L_AUTO, { weekly: "", daily: "", backlog: "" }));
   // "Did you take a test?" nudge: which day it was snoozed, and the Yes/No stage.
   const [testRemindSnooze, setTestRemindSnooze] = useState(() => load(TREM_KEY, ""));
@@ -697,9 +697,10 @@ function DashboardBody({ urlPlan = "" }) {
     const out = [];
     if (latest && prev) {
       const dS = Number(latest.scored) - Number(prev.scored);
+      const pctTxt = improvement == null ? "" : ` (${improvement >= 0 ? "+" : ""}${improvement}%)`;
       out.push({ tone: dS >= 0 ? "up" : "down", text: dS >= 0
-        ? `Score up ${dS} marks (${improvement >= 0 ? "+" : ""}${improvement}%) — ${latest.name} beat ${prev.name}. Momentum is building.`
-        : `Score dropped ${Math.abs(dS)} marks (${improvement}%) vs ${prev.name}. Flag the weak chapters below with your mentor this week.` });
+        ? `Score up ${dS} marks${pctTxt} — ${latest.name} beat ${prev.name}. Momentum is building.`
+        : `Score dropped ${Math.abs(dS)} marks${pctTxt} vs ${prev.name}. Flag the weak chapters below with your mentor this week.` });
       const dA = acc(latest) - acc(prev);
       if (dA !== 0) out.push({ tone: dA > 0 ? "up" : "down", text: `${dA > 0 ? "Accuracy improved" : "Accuracy slipped"} ${Math.abs(dA)}% (${acc(prev)}% → ${acc(latest)}%).` });
       const dM = Number(prev.silly) - Number(latest.silly);
@@ -915,6 +916,7 @@ function DashboardBody({ urlPlan = "" }) {
       week: wk,
       stats: {
         hours: round1(weekHours), streak, routinePct, tasks: tasksLabel,
+        weeklyTasksDone: `${weeklyDone}/${weeklyTasks.length}`,
         latestTest: latest ? `${latest.name}: ${latest.scored}/${latest.total} (${pct(latest)}%)` : "—",
         improvement: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%`,
         backlog: `${backlogDone}/${backlog.length}`,
@@ -969,16 +971,18 @@ function DashboardBody({ urlPlan = "" }) {
     }
   }
 
-  // Auto-send: weekly every Sunday, daily each day (if enabled), and a backlog
-  // alert (≤ once/week) whenever chapters are overdue or study is irregular.
+  // Auto-send (always on, can't be turned off): weekly every Sunday, daily each
+  // day — the daily report fires whether or not the student logged anything (it
+  // just shows 0h). Plus a backlog alert (≤ once/week) when chapters are overdue
+  // or study is irregular. Each fires once per period, when the dashboard opens.
   useEffect(() => {
     if (!token) return;
     const isSunday = new Date().getDay() === 0;
-    if (reportPrefs.autoWeekly && isSunday && lastAuto.weekly !== wk) sendReport("weekly", true);
-    if (reportPrefs.autoDaily && todayEntry && lastAuto.daily !== todayIso) sendReport("daily", true);
+    if (isSunday && lastAuto.weekly !== wk) sendReport("weekly", true);
+    if (lastAuto.daily !== todayIso) sendReport("daily", true);
     if (reportPrefs.autoBacklogAlert && lastAuto.backlog !== wk && (overdueBacklog.length > 0 || (backlogPct < 100 && studyIrregular))) sendReport("backlog", true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, reportPrefs.autoWeekly, reportPrefs.autoDaily, reportPrefs.autoBacklogAlert, lastAuto.weekly, lastAuto.daily, lastAuto.backlog, todayEntry, overdueBacklog.length, backlogPct, studyIrregular]);
+  }, [token, reportPrefs.autoBacklogAlert, lastAuto.weekly, lastAuto.daily, lastAuto.backlog, overdueBacklog.length, backlogPct, studyIrregular]);
 
   const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
   const initial = (user?.name || user?.email || "U").charAt(0).toUpperCase();
@@ -1914,7 +1918,7 @@ function DashboardBody({ urlPlan = "" }) {
 
         {/* ── DAILY & WEEKLY REPORTS ── */}
         <Section id="parent-report" kicker="Parents stay in the loop" title="Daily & Weekly Reports" tColor={GREEN}
-          sub="A weekly report is auto-emailed to your parent every Sunday, and a daily report each day if you enable it — and you can send either one any time.">
+          sub="A weekly report is auto-emailed to your parent every Sunday and a daily report every day — automatically, whether or not you log anything. You can also send either one now if you want an update in between.">
 
           {/* ── WEEKLY PROGRESS BOOKLET ── */}
           <ProgressBooklet
@@ -1923,11 +1927,13 @@ function DashboardBody({ urlPlan = "" }) {
             studentName={user?.name || "Student"}
             studentSub={`${planExam} · CollegeParichay Mentorship`}
             rows={[
-              { icon: Clock, color: ORANGE, label: "Study hours this week", sub: `${round1(weekHours - prevWeekHours) >= 0 ? "+" : ""}${round1(weekHours - prevWeekHours)}h vs last week`, value: `${round1(weekHours)} hrs` },
-              { icon: LineIcon, color: "#6366f1", label: "Tests attempted", sub: tests.length ? "All fully analysed" : "None logged yet", value: `${tests.length} test${tests.length === 1 ? "" : "s"}` },
-              { icon: TrendingUp, color: improvement != null && improvement < 0 ? "#ef4444" : "#22c55e", label: "Score improvement", sub: latest && prev ? `${prev.scored} → ${latest.scored} / ${latest.total}` : latest ? `${latest.scored} / ${latest.total}` : "Add a test to track", value: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
-              { icon: CheckCircle2, color: "#14b8a6", label: "Tasks completed", sub: `${routinePct}% routine kept`, value: `${weeklyDone} / ${weeklyTasks.length}` },
-              { icon: Activity, color: "#ef4444", label: "Attendance", sub: `Active ${last7.filter((e) => Number(e.hours) > 0).length} of 7 days`, value: `${Math.round((last7.filter((e) => Number(e.hours) > 0).length / 7) * 100)}%` },
+              { icon: Clock, color: ORANGE, label: "Study hours", sub: `${round1(weekHours - prevWeekHours) >= 0 ? "+" : ""}${round1(weekHours - prevWeekHours)}h vs last week`, value: `${round1(weekHours)} h` },
+              { icon: Flame, color: "#ef4444", label: "Day streak", sub: `Active ${last7.filter((e) => Number(e.hours) > 0).length} of 7 days`, value: `${streak} day${streak === 1 ? "" : "s"}` },
+              { icon: Target, color: "#8b5cf6", label: "Routine kept", sub: "Followed the plan", value: `${routinePct}%` },
+              { icon: CheckCircle2, color: "#0891b2", label: "Tasks (latest day)", sub: "Done vs planned", value: tasksLabel },
+              { icon: ListChecks, color: "#14b8a6", label: "Weekly tasks done", sub: `${weeklyTasks.length ? Math.round((weeklyDone / weeklyTasks.length) * 100) : 0}% complete`, value: `${weeklyDone} / ${weeklyTasks.length}` },
+              { icon: LineIcon, color: "#6366f1", label: "Latest test", sub: latest ? "Most recent result" : "None logged yet", value: latest ? `${latest.scored}/${latest.total} (${pct(latest)}%)` : "—" },
+              { icon: improvement != null && improvement < 0 ? TrendingDown : TrendingUp, color: improvement != null && improvement < 0 ? "#ef4444" : "#22c55e", label: "Change vs last test", sub: latest && prev ? `${prev.name} → ${latest.name}` : "Add another test", value: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
               ...(rankEnabled && latestRankTest?.rank?.ranked ? [{
                 icon: Trophy, color: "#6d28d9", label: "Predicted rank",
                 sub: `${latestRankTest.name} · included in report`,
@@ -1935,12 +1941,12 @@ function DashboardBody({ urlPlan = "" }) {
                   ? `CRL ${inr(latestRankTest.rank.crlLo ?? latestRankTest.rank.low)}–${inr(latestRankTest.rank.crlHi ?? latestRankTest.rank.high)}`
                   : `CRL ${inr(latestRankTest.rank.crl)}`,
               }] : []),
+              { icon: Rocket, color: "#7c3aed", label: "Backlog cleared", sub: "Chapters done", value: `${backlogDone} / ${backlog.length}` },
             ]}
             remark={insights[0]?.text || "Log your daily hours and tests through the week — this booklet fills in automatically and is emailed to your parent every Sunday."}
             remarkTitle="This week's highlight"
             footer={<SendControls color={GREEN} state={weeklyState} onSend={() => sendReport("weekly")} sendLabel="Send weekly report now"
-              auto={reportPrefs.autoWeekly} onToggle={() => setReportPrefs((p) => ({ ...p, autoWeekly: !p.autoWeekly }))}
-              autoLabel="Auto-send every Sunday" parentEmail={parentEmail} />}
+              autoLocked autoLabel="Auto-emailed every Sunday" parentEmail={parentEmail} />}
           />
           <p style={{ fontSize: 12, color: MUTE, margin: "-6px 0 18px", textAlign: "center" }}>
             Includes your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> (shown below) — auto-emailed every <strong style={{ color: NAVY }}>Sunday</strong>.
@@ -1998,19 +2004,17 @@ function DashboardBody({ urlPlan = "" }) {
                   ))}
                 </div>
               }
-              footer={<SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report" disabled={!todayEntry}
-                auto={reportPrefs.autoDaily} onToggle={() => setReportPrefs((p) => ({ ...p, autoDaily: !p.autoDaily }))}
-                autoLabel="Auto-send daily" parentEmail={parentEmail} />}
+              footer={<SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report"
+                autoLocked autoLabel="Auto-emailed every day" parentEmail={parentEmail} />}
             />
           ) : (
             <div style={{ background: "var(--page-bg)", border: "1px solid rgba(8,145,178,.22)", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)", marginBottom: 18 }}>
               <div style={{ textAlign: "center", padding: "18px 0", color: "#9ca3af", fontSize: 13 }}>
-                <CalendarDays size={24} style={{ marginBottom: 6, opacity: .6 }} /><br />Not logged yet today — fill today's log above to generate your daily report.
+                <CalendarDays size={24} style={{ marginBottom: 6, opacity: .6 }} /><br />Nothing logged yet today — your parent still gets today's report (shown as 0h) automatically. Fill today's log to make it count.
               </div>
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>
-                <SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report" disabled
-                  auto={reportPrefs.autoDaily} onToggle={() => setReportPrefs((p) => ({ ...p, autoDaily: !p.autoDaily }))}
-                  autoLabel="Auto-send daily" parentEmail={parentEmail} />
+                <SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report"
+                  autoLocked autoLabel="Auto-emailed every day" parentEmail={parentEmail} />
               </div>
             </div>
           )}
@@ -2266,7 +2270,7 @@ function ToggleSwitch({ on, onClick, color = GREEN }) {
   );
 }
 
-function SendControls({ color, state, onSend, sendLabel, disabled, auto, onToggle, autoLabel, parentEmail }) {
+function SendControls({ color, state, onSend, sendLabel, disabled, auto, onToggle, autoLabel, autoLocked, parentEmail }) {
   const off = state.sending || disabled;
   return (
     <div>
@@ -2275,9 +2279,16 @@ function SendControls({ color, state, onSend, sendLabel, disabled, auto, onToggl
           style={{ padding: "11px 18px", borderRadius: 12, border: "none", background: off ? `${color}99` : color, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: off ? "not-allowed" : "pointer", display: "inline-flex", alignItems: "center", gap: 8, boxShadow: off ? "none" : `0 12px 26px -12px ${color}` }}>
           {state.sending ? <><Loader2 size={16} style={{ animation: "spin .8s linear infinite" }} /> Sending…</> : <><Send size={15} /> {sendLabel}</>}
         </button>
-        <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 700, color: NAVY, cursor: "pointer" }}>
-          <ToggleSwitch on={auto} onClick={onToggle} color={color} /> {autoLabel}
-        </label>
+        {autoLocked ? (
+          // Auto-send is always on and can't be turned off — just show the cadence.
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 700, color: "#16a34a", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 50, padding: "6px 13px" }}>
+            <CheckCircle2 size={14} /> {autoLabel}
+          </span>
+        ) : (
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 700, color: NAVY, cursor: "pointer" }}>
+            <ToggleSwitch on={auto} onClick={onToggle} color={color} /> {autoLabel}
+          </label>
+        )}
       </div>
       <div style={{ fontSize: 11.5, color: parentEmail ? "#94a3b8" : "#b45309", marginTop: 8 }}>
         {parentEmail

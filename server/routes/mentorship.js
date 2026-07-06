@@ -71,7 +71,8 @@ function buildWeeklyHtml(studentName, r, link) {
       ${row("Study hours this week", `${s.hours ?? "—"} h`)}
       ${row("Day streak", `${s.streak ?? "—"} days`)}
       ${row("Routine kept", `${s.routinePct ?? "—"}%`)}
-      ${row("Tasks", s.tasks ?? "—")}
+      ${row("Tasks (latest day)", s.tasks ?? "—")}
+      ${row("Weekly tasks done", s.weeklyTasksDone ?? "—")}
       ${row("Latest test", s.latestTest ?? "—")}
       ${row("Change vs last test", s.improvement ?? "—")}
       ${row("Backlog cleared", s.backlog ?? "—")}
