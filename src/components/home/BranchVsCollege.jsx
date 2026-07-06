@@ -761,7 +761,7 @@ export default function BranchVsCollege({ asPage = false }) {
               </div>
 
               {q.fact && (
-                <div style={{ display: "flex", gap: 9, background: CL.cream2, border: `1px solid ${CL.cream3}`, borderRadius: 12, padding: "10px 13px", marginBottom: 14 }}>
+                <div style={{ display: "flex", gap: 9, background: CL.amberSoft, border: `1px solid ${CL.amber}44`, borderRadius: 12, padding: "10px 13px", marginBottom: 14 }}>
                   <span style={{ fontSize: 13, flexShrink: 0 }}>💡</span>
                   <span style={{ fontSize: 12.5, color: CL.body, lineHeight: 1.5 }}><b style={{ color: CL.ink2 }}>Fact:</b> {q.fact}</span>
                 </div>
