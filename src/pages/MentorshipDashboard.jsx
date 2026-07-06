@@ -10,10 +10,10 @@ import {
   MessagesSquare, BadgeCheck,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
-import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiSendParentReport } from "../auth/api.js";
+import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiSendParentReport, apiMyMentorTasks } from "../auth/api.js";
 import Community from "../components/mentorship/Community.jsx";
 import TestSeries from "../components/mentorship/TestSeries.jsx";
-import { Trend, Gauge, PieWithLegend, CenterDonut, DonutLegend, Bars } from "../components/Charts.jsx";
+import { Trend, Gauge, CenterDonut, DonutLegend, Bars } from "../components/Charts.jsx";
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
 
 const ORANGE = "#FF693D";
@@ -386,6 +386,8 @@ function DashboardBody({ urlPlan = "" }) {
   // "Did you take a test?" nudge: which day it was snoozed, and the Yes/No stage.
   const [testRemindSnooze, setTestRemindSnooze] = useState(() => load(TREM_KEY, ""));
   const [testAskStage, setTestAskStage] = useState("ask"); // "ask" → "confirm"
+  // Weekly tasks the mentor/admin assigned for this student (shown as suggested).
+  const [mentorTasks, setMentorTasks] = useState([]);
 
   // Resolve the real plan for THIS dashboard. A student can own several
   // mentorship batches — pick the one named in ?plan= (if they own it),
@@ -417,6 +419,16 @@ function DashboardBody({ urlPlan = "" }) {
       .catch(() => {});
     return () => { alive = false; };
   }, [token, urlPlan]);
+
+  // Pull the mentor-assigned weekly tasks for this student ID (set by the admin).
+  useEffect(() => {
+    if (!token || !identity.studentId) { setMentorTasks([]); return; }
+    let alive = true;
+    apiMyMentorTasks(token, identity.studentId)
+      .then((d) => { if (alive) setMentorTasks(Array.isArray(d.tasks) ? d.tasks : []); })
+      .catch(() => { if (alive) setMentorTasks([]); });
+    return () => { alive = false; };
+  }, [token, identity.studentId]);
 
   // Switch to another of the student's batches — re-points the URL, which
   // remounts the body against that batch's data + community.
@@ -517,15 +529,13 @@ function DashboardBody({ urlPlan = "" }) {
     : null;
   const scoreTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, you: Number(t.scored), target: Math.round(Number(t.total) * 0.75) }));
   const accTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, accuracy: acc(t) }));
-  const sillyTrend = testsSorted.map((t, i) => ({ name: t.name || `T${i + 1}`, silly: Number(t.silly || 0) }));
+  // Keep x-labels short so the silly-mistake bars don't collide (long test
+  // names like "JEE Advanced Paper (P1+P2)" are truncated; angled on render).
+  const sillyTrend = testsSorted.map((t, i) => {
+    const nm = t.name || `T${i + 1}`;
+    return { name: nm.length > 9 ? `${nm.slice(0, 8)}…` : nm, silly: Number(t.silly || 0) };
+  });
   const avgSkipped = testsSorted.length ? Math.round(testsSorted.reduce((s, t) => s + Number(t.skipped || 0), 0) / testsSorted.length) : 0;
-  const latestBreakdown = latest
-    ? [
-        { name: "Correct", value: Number(latest.correct) },
-        { name: "Wrong", value: Number(latest.wrong) },
-        { name: "Skipped", value: Number(latest.skipped) },
-      ]
-    : [];
   const latestRankTest = [...testsSorted].reverse().find((t) => t.rank);
 
   /* ── weak-chapter heatmap (tests + open backlog + silly topics) ── */
@@ -1534,27 +1544,9 @@ function DashboardBody({ urlPlan = "" }) {
 
               {/* rank prediction (JEE only) */}
               {rankEnabled && latestRankTest?.rank && <RankCard r={latestRankTest.rank} name={latestRankTest.name} />}
-
-              {/* strategies — fills the white space */}
-              <div style={{ marginTop: 16, background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 14, padding: "16px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                  <Lightbulb size={17} color={GOLD} />
-                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: INK }}>Strategies to do better</span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                  {strategies.map((st, i) => (
-                    <div key={i} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
-                      <span style={{ width: 26, height: 26, borderRadius: 8, background: `${st.color}14`, border: `1px solid ${st.color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                        <st.icon size={14} color={st.color} />
-                      </span>
-                      <span style={{ fontSize: 12.5, color: "#374151", lineHeight: 1.5, paddingTop: 3 }}>{st.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
 
-            {/* right — charts */}
+            {/* right — charts + strategies */}
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <ChartCard title="Score trend" hint="Your marks across every test (vs 75% target)" accent="#8b5cf6">
                 <Trend data={scoreTrend} lines={[{ key: "you", label: "You", color: ORANGE }, { key: "target", label: "Target (75%)", color: "#8b5cf6" }]} height={200} />
@@ -1562,11 +1554,23 @@ function DashboardBody({ urlPlan = "" }) {
               <ChartCard title="Accuracy trend" hint="Correct ÷ attempted, test over test" accent="#22c55e">
                 <Trend data={accTrend} lines={[{ key: "accuracy", label: "Accuracy %", color: "#22c55e" }]} height={180} fmt={(v) => `${v}%`} />
               </ChartCard>
-              <ChartCard title={`Latest test split — ${latest ? latest.name : "—"}`} hint="Correct · Wrong · Skipped" accent="#6366f1">
-                {latestBreakdown.length
-                  ? <PieWithLegend data={latestBreakdown} colors={["#22c55e", "#ef4444", "#9ca3af"]} height={190} />
-                  : <ChartHint text="Add a test to see the breakdown." />}
-              </ChartCard>
+              {/* strategies — moved here from the left so both columns stay balanced */}
+              <div style={{ background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 18, padding: "18px 20px", boxShadow: "0 16px 40px -30px rgba(245,166,35,.8)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                  <Lightbulb size={18} color={GOLD} />
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: INK }}>Strategies to do better</span>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                  {strategies.map((st, i) => (
+                    <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                      <span style={{ width: 28, height: 28, borderRadius: 8, background: `${st.color}14`, border: `1px solid ${st.color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                        <st.icon size={15} color={st.color} />
+                      </span>
+                      <span style={{ fontSize: 13, color: "#374151", lineHeight: 1.55, paddingTop: 3 }}>{st.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </Section>
@@ -1601,7 +1605,7 @@ function DashboardBody({ urlPlan = "" }) {
             <ToolCard icon={Crosshair} color="#ef4444" title="Silly-mistake audit" desc="Marks lost to silly errors — tracked, by topic, and killed.">
               {sillyTrend.length ? (
                 <>
-                  <Bars data={sillyTrend} bars={[{ key: "silly", label: "Silly mistakes", color: "#ef4444" }]} height={140} />
+                  <Bars data={sillyTrend} bars={[{ key: "silly", label: "Silly mistakes", color: "#ef4444" }]} height={170} angle={-32} />
                   {latest && prev && (
                     <DeltaPill d={Number(latest.silly) - Number(prev.silly)} lowerIsBetter subtext={`${prev.silly} → ${latest.silly} this test`} />
                   )}
@@ -1704,6 +1708,29 @@ function DashboardBody({ urlPlan = "" }) {
             {/* Weekly fix-list — auto suggestions + the student's own weekly tasks
                 (both roll up into the weekly parent report). */}
             <ToolCard icon={ListChecks} color={GREEN} title="Your weekly fix-list" desc="Suggested actions plus your own tasks — all summarised in the weekly parent report.">
+              {/* tasks set by the mentor (admin) for this student */}
+              {mentorTasks.length > 0 && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, color: "#6d28d9", background: "#f5f3ff", border: "1px solid #ede9fe", borderRadius: 50, padding: "3px 10px", marginBottom: 8 }}>
+                    <Brain size={12} /> From your mentor
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {mentorTasks.map((t) => {
+                      const label = t.text;
+                      const done = fixDoneSet.includes(label);
+                      return (
+                        <button key={t.id || label} onClick={() => toggleFix(label)}
+                          style={{ display: "flex", gap: 10, alignItems: "flex-start", textAlign: "left", background: done ? "#f5f3ff" : "#fff", border: `1px solid ${done ? "#ddd6fe" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px", cursor: "pointer" }}>
+                          <span style={{ width: 19, height: 19, borderRadius: 6, border: `1.5px solid ${done ? "#8b5cf6" : "#cbd5e1"}`, background: done ? "#8b5cf6" : "#fff", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                            {done && <CheckCircle2 size={14} color="#fff" />}
+                          </span>
+                          <span style={{ fontSize: 13, color: done ? "#6d28d9" : "#374151", lineHeight: 1.45, textDecoration: done ? "line-through" : "none" }}>{label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
               {/* auto suggestions from tests + backlog */}
               {fixList.length > 0 && (
                 <div style={{ marginBottom: 16 }}>
@@ -1856,22 +1883,35 @@ function DashboardBody({ urlPlan = "" }) {
         <Section id="parent-report" kicker="Parents stay in the loop" title="Daily & Weekly Reports" tColor={GREEN}
           sub="A weekly report is auto-emailed to your parent every Sunday, and a daily report each day if you enable it — and you can send either one any time.">
 
-          {/* ── WEEKLY send strip ── */}
-          <div style={{ background: "var(--page-bg)", border: `1px solid ${GREEN}33`, borderRadius: 20, padding: "22px 24px", boxShadow: `0 20px 46px -30px ${GREEN}99`, position: "relative", overflow: "hidden", marginBottom: 18 }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},#22c55e)` }} />
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
-              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#dcfce7", display: "grid", placeItems: "center", flexShrink: 0 }}><Mail size={22} color={GREEN} /></span>
-              <div style={{ flex: 1, minWidth: 240 }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK }}>Weekly report to parent</div>
-                <p style={{ color: MUTE, fontSize: 13.5, lineHeight: 1.6, margin: "4px 0 14px" }}>
-                  Study hours, streak, tasks, latest test{rankEnabled ? <>, your <strong style={{ color: "#6d28d9" }}>predicted JEE rank</strong></> : ""} and your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> — auto-sent every <strong style={{ color: NAVY }}>Sunday</strong>, or send it now.
-                </p>
-                <SendControls color={GREEN} state={weeklyState} onSend={() => sendReport("weekly")} sendLabel="Send weekly report now"
-                  auto={reportPrefs.autoWeekly} onToggle={() => setReportPrefs((p) => ({ ...p, autoWeekly: !p.autoWeekly }))}
-                  autoLabel="Auto-send every Sunday" parentEmail={parentEmail} />
-              </div>
-            </div>
-          </div>
+          {/* ── WEEKLY PROGRESS BOOKLET ── */}
+          <ProgressBooklet
+            title="Weekly Progress Booklet"
+            subtitle="A clear, jargon-free summary of your child's week — effort, tests, improvement and what's next."
+            studentName={user?.name || "Student"}
+            studentSub={`${planExam} · CollegeParichay Mentorship`}
+            rows={[
+              { icon: Clock, color: ORANGE, label: "Study hours this week", sub: `${round1(weekHours - prevWeekHours) >= 0 ? "+" : ""}${round1(weekHours - prevWeekHours)}h vs last week`, value: `${round1(weekHours)} hrs` },
+              { icon: LineIcon, color: "#6366f1", label: "Tests attempted", sub: tests.length ? "All fully analysed" : "None logged yet", value: `${tests.length} test${tests.length === 1 ? "" : "s"}` },
+              { icon: TrendingUp, color: improvement != null && improvement < 0 ? "#ef4444" : "#22c55e", label: "Score improvement", sub: latest && prev ? `${prev.scored} → ${latest.scored} / ${latest.total}` : latest ? `${latest.scored} / ${latest.total}` : "Add a test to track", value: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
+              { icon: CheckCircle2, color: "#14b8a6", label: "Tasks completed", sub: `${routinePct}% routine kept`, value: `${weeklyDone} / ${weeklyTasks.length}` },
+              { icon: Activity, color: "#ef4444", label: "Attendance", sub: `Active ${last7.filter((e) => Number(e.hours) > 0).length} of 7 days`, value: `${Math.round((last7.filter((e) => Number(e.hours) > 0).length / 7) * 100)}%` },
+              ...(rankEnabled && latestRankTest?.rank?.ranked ? [{
+                icon: Trophy, color: "#6d28d9", label: "Predicted rank",
+                sub: `${latestRankTest.name} · included in report`,
+                value: latestRankTest.rank.advanced
+                  ? `CRL ${inr(latestRankTest.rank.crlLo ?? latestRankTest.rank.low)}–${inr(latestRankTest.rank.crlHi ?? latestRankTest.rank.high)}`
+                  : `CRL ${inr(latestRankTest.rank.crl)}`,
+              }] : []),
+            ]}
+            remark={insights[0]?.text || "Log your daily hours and tests through the week — this booklet fills in automatically and is emailed to your parent every Sunday."}
+            remarkTitle="This week's highlight"
+            footer={<SendControls color={GREEN} state={weeklyState} onSend={() => sendReport("weekly")} sendLabel="Send weekly report now"
+              auto={reportPrefs.autoWeekly} onToggle={() => setReportPrefs((p) => ({ ...p, autoWeekly: !p.autoWeekly }))}
+              autoLabel="Auto-send every Sunday" parentEmail={parentEmail} />}
+          />
+          <p style={{ fontSize: 12, color: MUTE, margin: "-6px 0 18px", textAlign: "center" }}>
+            Includes your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> (shown below) — auto-emailed every <strong style={{ color: NAVY }}>Sunday</strong>.
+          </p>
 
           {/* ── BACKLOG ALERT strip — auto-emails the parent when chapters fall behind ── */}
           <div style={{ background: overdueBacklog.length || studyIrregular ? "#fff7ed" : "#fff", border: `1px solid ${overdueBacklog.length || studyIrregular ? "#fdba74" : "#fde68a"}`, borderRadius: 20, padding: "22px 24px", boxShadow: "0 20px 46px -30px rgba(234,88,12,.6)", position: "relative", overflow: "hidden", marginBottom: 18 }}>
@@ -1896,69 +1936,54 @@ function DashboardBody({ urlPlan = "" }) {
             </div>
           </div>
 
-          {/* ── two-card row: DAILY REPORT (auto-generated) + this-week summary ── */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 18, marginBottom: 18 }}>
-            {/* daily report */}
-            <div style={{ background: "var(--page-bg)", border: "1px solid rgba(8,145,178,.22)", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#0891b2,#22d3ee)" }} />
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK, margin: 0, display: "inline-flex", alignItems: "center", gap: 8 }}>
-                  <CalendarDays size={18} color="#0891b2" /> Daily report
-                </h3>
-                <span style={{ fontSize: 11, fontWeight: 800, color: "#0891b2", background: "#cffafe", borderRadius: 50, padding: "4px 11px", display: "inline-flex", alignItems: "center", gap: 5 }}><Sparkles size={12} /> Auto-generated</span>
-              </div>
-              <p style={{ fontSize: 12.5, color: MUTE, margin: "4px 0 14px", lineHeight: 1.5 }}>Today's effort, auto-built from your daily log — only today's tasks{rankEnabled ? <>, plus your <strong style={{ color: "#6d28d9" }}>predicted JEE rank</strong></> : ""}. Send it any time or auto-send every day.</p>
-
-              {todayEntry ? (
-                <>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 12 }}>
-                    {[
-                      { l: "Hours today", v: `${todayEntry.hours}h`, c: "#0891b2" },
-                      { l: "Tasks", v: `${todayEntry.tasksDone}/${todayEntry.tasksTotal}`, c: "#22c55e" },
-                      { l: "Routine", v: todayEntry.routine ? "✓" : "✗", c: todayEntry.routine ? "#16a34a" : "#ef4444" },
-                    ].map((s) => (
-                      <div key={s.l} style={{ background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 12, padding: "12px 10px", textAlign: "center" }}>
-                        <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 18, color: s.c }}>{s.v}</div>
-                        <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{s.l}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: todayTest ? 10 : 0 }}>
-                    {subjects.map((s) => (
-                      <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--page-bg)", border: `1px solid ${subColor(s)}33`, borderRadius: 9, padding: "5px 10px", fontSize: 12, fontWeight: 700, color: NAVY }}>
-                        <span style={{ width: 7, height: 7, borderRadius: "50%", background: subColor(s) }} /> {shortName(s)}: {subVal(todayEntry, s).h}h · {subVal(todayEntry, s).t}✓
-                      </span>
-                    ))}
-                  </div>
-                  {todayTest && (
-                    <div style={{ fontSize: 12.5, color: "#374151", background: "#f5f3ff", border: "1px solid #ede9fe", borderRadius: 10, padding: "8px 12px" }}>
-                      <strong style={{ color: NAVY }}>Test today:</strong> {todayTest.name} · {todayTest.scored}/{todayTest.total}
-                    </div>
-                  )}
-                  {rankEnabled && latestRankTest?.rank?.ranked && (
-                    <div style={{ marginTop: 10, fontSize: 12.5, color: "#374151", background: "#f5f3ff", border: "1px solid #ede9fe", borderRadius: 10, padding: "8px 12px", display: "inline-flex", alignItems: "center", gap: 7 }}>
-                      <Trophy size={14} color="#6d28d9" />
-                      <span><strong style={{ color: "#6d28d9" }}>Predicted rank:</strong> {latestRankTest.rank.advanced
-                        ? `CRL ${inr(latestRankTest.rank.crlLo ?? latestRankTest.rank.low)}–${inr(latestRankTest.rank.crlHi ?? latestRankTest.rank.high)}`
-                        : `CRL ${inr(latestRankTest.rank.crl)}`} — included in this report</span>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div style={{ textAlign: "center", padding: "18px 0", color: "#9ca3af", fontSize: 13 }}>
-                  <CalendarDays size={24} style={{ marginBottom: 6, opacity: .6 }} /><br />Not logged yet today — fill today's log above to generate your daily report.
+          {/* ── DAILY PROGRESS BOOKLET ── */}
+          {todayEntry ? (
+            <ProgressBooklet
+              title="Daily Progress Booklet"
+              subtitle="Today's effort at a glance — hours, tasks, routine and any test, auto-built from the daily log."
+              studentName={user?.name || "Student"}
+              studentSub={`${fmtFull(new Date())} · CollegeParichay Mentorship`}
+              rows={[
+                { icon: Clock, color: ORANGE, label: "Study hours today", sub: `${subjects.length} subjects logged`, value: `${todayEntry.hours} h` },
+                { icon: CheckCircle2, color: "#14b8a6", label: "Tasks completed", sub: todayEntry.routine ? "Routine followed" : "Routine missed", value: `${todayEntry.tasksDone} / ${todayEntry.tasksTotal}` },
+                { icon: Target, color: todayEntry.routine ? "#22c55e" : "#ef4444", label: "Routine kept", sub: "Planned vs done", value: todayEntry.routine ? "Followed" : "Missed" },
+                ...(todayTest ? [{ icon: LineIcon, color: "#6366f1", label: "Test today", sub: todayTest.name, value: `${todayTest.scored}/${todayTest.total}` }] : []),
+                ...(rankEnabled && latestRankTest?.rank?.ranked ? [{
+                  icon: Trophy, color: "#6d28d9", label: "Predicted rank",
+                  sub: `${latestRankTest.name} · included in report`,
+                  value: latestRankTest.rank.advanced
+                    ? `CRL ${inr(latestRankTest.rank.crlLo ?? latestRankTest.rank.low)}–${inr(latestRankTest.rank.crlHi ?? latestRankTest.rank.high)}`
+                    : `CRL ${inr(latestRankTest.rank.crl)}`,
+                }] : []),
+              ]}
+              extra={
+                <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
+                  {subjects.map((s) => (
+                    <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--page-bg)", border: `1px solid ${subColor(s)}33`, borderRadius: 9, padding: "5px 10px", fontSize: 12, fontWeight: 700, color: NAVY }}>
+                      <span style={{ width: 7, height: 7, borderRadius: "50%", background: subColor(s) }} /> {shortName(s)}: {subVal(todayEntry, s).h}h · {subVal(todayEntry, s).t}✓
+                    </span>
+                  ))}
                 </div>
-              )}
-
+              }
+              footer={<SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report" disabled={!todayEntry}
+                auto={reportPrefs.autoDaily} onToggle={() => setReportPrefs((p) => ({ ...p, autoDaily: !p.autoDaily }))}
+                autoLabel="Auto-send daily" parentEmail={parentEmail} />}
+            />
+          ) : (
+            <div style={{ background: "var(--page-bg)", border: "1px solid rgba(8,145,178,.22)", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)", marginBottom: 18 }}>
+              <div style={{ textAlign: "center", padding: "18px 0", color: "#9ca3af", fontSize: 13 }}>
+                <CalendarDays size={24} style={{ marginBottom: 6, opacity: .6 }} /><br />Not logged yet today — fill today's log above to generate your daily report.
+              </div>
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>
-                <SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report" disabled={!todayEntry}
+                <SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report" disabled
                   auto={reportPrefs.autoDaily} onToggle={() => setReportPrefs((p) => ({ ...p, autoDaily: !p.autoDaily }))}
                   autoLabel="Auto-send daily" parentEmail={parentEmail} />
               </div>
             </div>
+          )}
 
-            {/* this-week summary + chapter strength */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          {/* ── this-week summary + chapter-strength (in the weekly email) ── */}
+          <div className="md-report-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 18 }}>
               <div style={{ background: "#f0faf4", border: `1px solid ${GREEN}33`, borderRadius: 16, padding: "18px 20px" }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 10 }}>This week's summary</div>
                 {[
@@ -2009,7 +2034,6 @@ function DashboardBody({ urlPlan = "" }) {
                   );
                 })}
               </div>
-            </div>
           </div>
 
         </Section>
@@ -2018,6 +2042,7 @@ function DashboardBody({ urlPlan = "" }) {
       <style>{`
         @media (max-width: 900px) {
           .md-hero-grid { grid-template-columns: 1fr !important; }
+          .md-booklet { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 760px) {
           .md-track-grid { grid-template-columns: 1fr !important; }
@@ -2042,6 +2067,60 @@ function Section({ id, kicker, title, sub, tColor = ORANGE, children }) {
       </div>
       {children}
     </section>
+  );
+}
+
+/* Parent-facing "Progress Booklet" — orange hero panel + a clean stat readout.
+   Used for both the weekly and daily reports (same look, different data). */
+function ProgressBooklet({ title, subtitle, studentName, studentSub, rows, extra, remark, remarkTitle = "Highlight", footer }) {
+  const dark = "#E0421F";
+  return (
+    <div className="md-booklet" style={{ display: "grid", gridTemplateColumns: "minmax(0,0.92fr) minmax(0,1.08fr)", borderRadius: 22, overflow: "hidden", border: "1px solid #f0e9e0", boxShadow: "0 24px 54px -34px rgba(26,26,46,.5)", background: "var(--page-bg)", marginBottom: 18 }}>
+      {/* LEFT — hero */}
+      <div style={{ position: "relative", padding: "28px 28px 26px", color: "#fff", background: `linear-gradient(155deg, ${ORANGE} 0%, ${dark} 100%)`, overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px)", backgroundSize: "26px 26px", opacity: .55, pointerEvents: "none" }} />
+        <div style={{ position: "relative" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, letterSpacing: ".08em", background: "rgba(255,255,255,.18)", border: "1px solid rgba(255,255,255,.3)", borderRadius: 50, padding: "5px 12px" }}>
+            <BookOpen size={12} /> PARENT REPORT
+          </span>
+          <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.7rem", lineHeight: 1.15, margin: "16px 0 10px", letterSpacing: "-.5px" }}>{title}</h3>
+          <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "rgba(255,255,255,.9)", margin: 0, maxWidth: 320 }}>{subtitle}</p>
+          <div style={{ marginTop: 22, paddingTop: 18, borderTop: "1px solid rgba(255,255,255,.25)" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.72)", textTransform: "uppercase", letterSpacing: ".06em" }}>Student</div>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", marginTop: 4 }}>{studentName}</div>
+            <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.82)", marginTop: 3 }}>{studentSub}</div>
+          </div>
+        </div>
+      </div>
+      {/* RIGHT — stats */}
+      <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column" }}>
+        {rows.map((r, i) => {
+          const Icon = r.icon;
+          return (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 13, padding: "12px 0", borderBottom: i < rows.length - 1 ? "1px solid #f1f5f9" : "none" }}>
+              <span style={{ width: 38, height: 38, borderRadius: 11, background: `${r.color}14`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <Icon size={18} color={r.color} />
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 14, color: INK }}>{r.label}</div>
+                {r.sub && <div style={{ fontSize: 12, color: MUTE, marginTop: 1 }}>{r.sub}</div>}
+              </div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: r.valueColor || r.color, flexShrink: 0, whiteSpace: "nowrap" }}>{r.value}</div>
+            </div>
+          );
+        })}
+        {extra && <div style={{ marginTop: 12 }}>{extra}</div>}
+        {remark && (
+          <div style={{ marginTop: 14, background: "#fff7f3", border: `1px solid ${ORANGE}26`, borderRadius: 14, padding: "13px 15px" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 800, color: dark, marginBottom: 5 }}>
+              <Sparkles size={13} /> {remarkTitle}
+            </div>
+            <div style={{ fontSize: 13, color: "#7c2d12", lineHeight: 1.55 }}>{remark}</div>
+          </div>
+        )}
+        {footer && <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>{footer}</div>}
+      </div>
+    </div>
   );
 }
 

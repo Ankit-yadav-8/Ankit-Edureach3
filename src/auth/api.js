@@ -40,6 +40,9 @@ export const apiSendOtp   = (b) => req("/api/otp/send",    { method: "POST", bod
 export const apiVerifyOtp = (b) => req("/api/otp/verify",  { method: "POST", body: b });
 export const apiMyEnrollments = (token) => req("/api/payment/my-enrollments", { token });
 export const apiSendParentReport = (token, b) => req("/api/mentorship/parent-report", { method: "POST", body: b, token });
+// Mentor-assigned weekly tasks — student fetches the ones set for their batch.
+export const apiMyMentorTasks = (token, studentId) =>
+  req(`/api/mentorship/my-tasks${studentId ? `?studentId=${encodeURIComponent(studentId)}` : ""}`, { token });
 
 // ── Community (per-batch doubt forum) ───────────────────────────────────────
 // `plan` scopes the call to ONE of the student's batches (they may belong to
@@ -100,6 +103,12 @@ export const apiAdminTestParseStatus = (adminToken, jobId) => adminReq(`/api/tes
 export const apiAdminTestCreate     = (adminToken, b) => adminReq("/api/tests/admin", adminToken, { method: "POST", body: b });
 export const apiAdminTestList       = (adminToken, plan, category) => adminReq(`/api/tests/admin${batchQ(plan, category ? `category=${category}` : "")}`, adminToken);
 export const apiAdminTestDelete     = (adminToken, id) => adminReq(`/api/tests/admin/${id}`, adminToken, { method: "DELETE" });
+
+// ── Mentor weekly tasks (admin sets per student ID) ──────────────────────────
+export const apiAdminGetMentorTasks = (adminToken, studentId) =>
+  adminReq(`/api/mentorship/admin/tasks/${encodeURIComponent(studentId)}`, adminToken);
+export const apiAdminSetMentorTasks = (adminToken, studentId, tasks) =>
+  adminReq(`/api/mentorship/admin/tasks/${encodeURIComponent(studentId)}`, adminToken, { method: "PUT", body: { tasks } });
 
 export const apiTestList        = (token, plan, category) => req(`/api/tests${batchQ(plan, category ? `category=${category}` : "")}`, { token });
 export const apiTestGet         = (token, id, plan) => req(`/api/tests/${id}${batchQ(plan)}`, { token });

@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback, Fragment } from "react";
 import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
-  ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText,
+  ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText, ListChecks,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
 import TestUpload from "../components/admin/TestUpload.jsx";
+import MentorTasks from "../components/admin/MentorTasks.jsx";
 
 const TOKEN_STORAGE = "edureach:adminToken";
 const ORANGE = "#FF693D";
@@ -377,7 +378,7 @@ export default function Admin() {
               <RefreshCw size={14} style={{ animation: busy ? "spin 1s linear infinite" : "none" }} />
               {busy ? "Refreshing…" : "Refresh"}
             </button>
-            {tab !== "community" && tab !== "tests" && (
+            {tab !== "community" && tab !== "tests" && tab !== "tasks" && (
               <button onClick={exportActive}
                 style={{ background: ORANGE, color: "#fff", border: "none", height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
                 <Download size={14} /> Export CSV
@@ -397,6 +398,7 @@ export default function Admin() {
             { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
             { k: "community", label: "Community", icon: MessagesSquare },
             { k: "tests", label: "Tests", icon: FileText },
+            { k: "tasks", label: "Weekly Tasks", icon: ListChecks },
           ].map(({ k, label, icon: Icon, count }) => {
             const active = tab === k;
             return (
@@ -421,7 +423,7 @@ export default function Admin() {
         </div>
 
         {/* Stat cards */}
-        {tab === "community" || tab === "tests" ? null : tab === "users" ? (
+        {tab === "community" || tab === "tests" || tab === "tasks" ? null : tab === "users" ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
           <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
@@ -510,6 +512,8 @@ export default function Admin() {
           <CommunityModeration token={token} />
         ) : tab === "tests" ? (
           <TestUpload token={token} />
+        ) : tab === "tasks" ? (
+          <MentorTasks token={token} />
         ) : tab === "users" ? (
         <div className="adm-card" style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 8px 30px rgba(13,27,62,.06)" }}>
 

@@ -13,7 +13,9 @@
 import express from "express";
 import User from "../models/User.js";
 import Enrollment from "../models/Enrollment.js";
+import MentorTask from "../models/MentorTask.js";
 import { requireAuth } from "../middleware/auth.js";
+import { requireAdmin } from "../middleware/admin.js";
 import { sendMail } from "../utils/mailer.js";
 
 const router = express.Router();
@@ -194,6 +196,77 @@ router.post("/parent-report", requireAuth, async (req, res) => {
   } catch (e) {
     console.error("[mentorship/parent-report]", e?.message || e);
     if (!res.headersSent) res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Mentor-assigned weekly tasks — the admin sets a short task list against a
+// student ID (CP-2026-00042); the student's dashboard shows them as suggested
+// fix-list items and rolls them into the weekly parent report.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Accept either plain strings or {text} objects; trim, drop blanks, cap at 20.
+const sanitizeTasks = (arr) =>
+  (Array.isArray(arr) ? arr : [])
+    .map((t) => (typeof t === "string" ? t : t?.text))
+    .map((s) => String(s || "").trim())
+    .filter(Boolean)
+    .slice(0, 20)
+    .map((text, i) => ({ id: `mt-${Date.now()}-${i}`, text }));
+
+// Admin — look up a student by ID and fetch their current mentor task list.
+router.get("/admin/tasks/:studentId", requireAdmin, async (req, res) => {
+  try {
+    const studentId = String(req.params.studentId || "").trim().toUpperCase();
+    if (!studentId) return res.status(400).json({ error: "Student ID required" });
+    const enr = await Enrollment.findOne({ studentId, plan: { $regex: /^mentor-/ } }).sort({ createdAt: -1 }).lean();
+    const doc = await MentorTask.findOne({ studentId }).lean();
+    res.json({
+      studentId,
+      found: !!enr,
+      student: enr ? { name: enr.name, plan: enr.plan, email: enr.email, targetExam: enr.targetExam } : null,
+      tasks: doc?.tasks || [],
+    });
+  } catch (e) {
+    console.error("[mentorship/admin/tasks GET]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Admin — replace a student's mentor task list (upsert).
+router.put("/admin/tasks/:studentId", requireAdmin, async (req, res) => {
+  try {
+    const studentId = String(req.params.studentId || "").trim().toUpperCase();
+    if (!studentId) return res.status(400).json({ error: "Student ID required" });
+    const tasks = sanitizeTasks(req.body?.tasks);
+    const doc = await MentorTask.findOneAndUpdate(
+      { studentId },
+      { studentId, tasks },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ).lean();
+    res.json({ ok: true, studentId, tasks: doc.tasks });
+  } catch (e) {
+    console.error("[mentorship/admin/tasks PUT]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Student — their mentor-assigned tasks for the batch they're viewing. Only
+// served for a student ID the caller actually owns (a paid enrolment on their
+// account), so tasks never leak across students.
+router.get("/my-tasks", requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("email").lean();
+    const email = (user?.email || "").toLowerCase();
+    const studentId = String(req.query.studentId || "").trim().toUpperCase();
+    if (!email || !studentId) return res.json({ tasks: [] });
+    const owns = await Enrollment.exists({ studentId, email, status: "paid" });
+    if (!owns) return res.json({ tasks: [] });
+    const doc = await MentorTask.findOne({ studentId }).lean();
+    res.json({ tasks: doc?.tasks || [] });
+  } catch (e) {
+    console.error("[mentorship/my-tasks]", e.message);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
