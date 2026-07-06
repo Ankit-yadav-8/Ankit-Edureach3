@@ -1686,8 +1686,7 @@ function DashboardBody({ urlPlan = "" }) {
             </ToolCard>
 
             {/* Chapter strength & weekly coverage — feeds the parent chapter report */}
-            <ToolCard icon={BookOpen} color="#8b5cf6" title="Chapter strength & coverage" desc="Tag each chapter weak / medium / strong and how much you covered this week — it feeds your parent's chapter report.">
-              {/* SECTION 1 — add a chapter */}
+            <ToolCard icon={BookOpen} color="#8b5cf6" title="Add a chapter" desc="Tag each chapter weak / medium / strong and how much you covered this week — it appears in your Chapter-strength report.">
               <form onSubmit={addChapter} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   <SelectField label="Subject" value={chapForm.subject || subjects[0]} onChange={(v) => setChapForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
@@ -1709,36 +1708,11 @@ function DashboardBody({ urlPlan = "" }) {
                   </div>
                 </div>
                 <button type="submit" style={{ padding: "11px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
-                  <Plus size={15} /> Add / update chapter
+                  <Plus size={15} /> Add chapter
                 </button>
               </form>
-
-              {/* SECTION 2 — the chapters, by strength + coverage */}
-              <div style={{ marginTop: 16, borderTop: "1px solid #f1f5f9", paddingTop: 14 }}>
-                {chapterLog.length ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {chapterLog.map((c) => {
-                      const st = STRENGTHS[c.strength] || STRENGTHS.weak;
-                      return (
-                        <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 10, background: `${st.color}0d`, border: `1px solid ${st.color}33`, borderRadius: 11, padding: "9px 11px" }}>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.topic} <span style={{ color: MUTE, fontWeight: 600 }}>· {shortName(c.subject)}</span></div>
-                            <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: 4 }}>
-                              <div style={{ flex: 1, height: 6, borderRadius: 4, background: "#eef2f7", overflow: "hidden" }}>
-                                <div style={{ width: `${c.coverage || 0}%`, height: "100%", background: st.color, borderRadius: 4 }} />
-                              </div>
-                              <span style={{ fontSize: 11, fontWeight: 800, color: st.color, width: 34, textAlign: "right" }}>{c.coverage || 0}%</span>
-                            </div>
-                          </div>
-                          <span style={{ fontSize: 9.5, fontWeight: 800, color: st.color, background: `${st.color}18`, borderRadius: 50, padding: "2px 8px", textTransform: "uppercase", flexShrink: 0 }}>{st.label}</span>
-                          <button onClick={() => removeChapter(c.id)} title="Remove" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #fee2e2", background: "#fff5f5", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                            <Trash2 size={13} />
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : <div style={{ fontSize: 12.5, color: "#9ca3af", textAlign: "center", padding: "10px 0" }}>No chapters yet — add one above. They appear in your parent's weekly chapter report.</div>}
+              <div style={{ marginTop: 12, fontSize: 12, color: MUTE, lineHeight: 1.5, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
+                Added chapters {chapterLog.length ? <><strong style={{ color: NAVY }}>({chapterLog.length})</strong> </> : ""}appear in your <strong style={{ color: "#6d28d9" }}>Chapter-strength report</strong> — where you can review and remove them.
               </div>
             </ToolCard>
 
@@ -1836,6 +1810,48 @@ function DashboardBody({ urlPlan = "" }) {
                   <div style={{ fontSize: 12.5, color: "#9ca3af", lineHeight: 1.5 }}>No tasks yet — add your first one above. Tasks stay for accountability and can't be deleted.</div>
                 )}
               </div>
+            </ToolCard>
+
+            {/* Chapter-strength report — the live chapter list (add via the card
+                above); this is exactly what goes into the weekly parent email. */}
+            <ToolCard icon={BarChart3} color="#f59e0b" title="Chapter-strength report" desc="Your weak / medium / strong chapters and weekly coverage — this list is included in the weekly parent email.">
+              {chapterLog.length ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  {["weak", "medium", "strong"].map((k) => {
+                    const st = STRENGTHS[k];
+                    const items = chapterLog.filter((c) => c.strength === k);
+                    return (
+                      <div key={k}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 8 }}>
+                          <span style={{ width: 9, height: 9, borderRadius: "50%", background: st.color }} />
+                          <span style={{ fontSize: 12.5, fontWeight: 800, color: st.color }}>{st.label}</span>
+                          <span style={{ fontSize: 10.5, fontWeight: 800, color: st.color, background: `${st.color}14`, borderRadius: 50, padding: "1px 8px" }}>{items.length}</span>
+                        </div>
+                        {items.length ? (
+                          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                            {items.map((c) => (
+                              <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 10, background: `${st.color}0d`, border: `1px solid ${st.color}2e`, borderRadius: 11, padding: "9px 11px" }}>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <div style={{ fontSize: 13, fontWeight: 700, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.topic} <span style={{ color: MUTE, fontWeight: 600 }}>· {shortName(c.subject)}</span></div>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: 5 }}>
+                                    <div style={{ flex: 1, height: 6, borderRadius: 4, background: "#eef2f7", overflow: "hidden" }}>
+                                      <div style={{ width: `${c.coverage || 0}%`, height: "100%", background: st.color, borderRadius: 4 }} />
+                                    </div>
+                                    <span style={{ fontSize: 11, fontWeight: 800, color: st.color, width: 34, textAlign: "right" }}>{c.coverage || 0}%</span>
+                                  </div>
+                                </div>
+                                <button onClick={() => removeChapter(c.id)} title="Remove chapter" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #fee2e2", background: "#fff5f5", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                                  <Trash2 size={13} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        ) : <div style={{ fontSize: 12, color: "#9ca3af", paddingLeft: 16 }}>None yet.</div>}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : <ChartHint text="Add a chapter on the left to build your strength report." />}
             </ToolCard>
           </div>
         </Section>
@@ -2023,86 +2039,6 @@ function DashboardBody({ urlPlan = "" }) {
               </div>
             </div>
           )}
-
-          {/* ── this-week summary + chapter-strength (in the weekly email) ── */}
-          <div className="md-report-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 18 }}>
-              {/* Time-management review — moved here from Mentor tools */}
-              <ToolCard icon={Timer} color="#06b6d4" title="Time-management review" desc="Your real time per section vs the target — plus how better pacing lifts your paper.">
-                {timeBars.length > 0 && <Bars data={timeBars} bars={timeBarSeries} height={140} fmt={avgTimePer ? (v) => `${v}m` : undefined} />}
-                <div style={{ marginTop: timeBars.length ? 14 : 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 9 }}>
-                    <span style={{ fontSize: 11.5, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".04em" }}>Suggested pacing · next paper</span>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: "#0891b2", background: "#cffafe", borderRadius: 50, padding: "3px 9px" }}>
-                      {avgTimePer ? "From your test timings" : timeRanked.length ? "From your tests" : "Balanced start"}
-                    </span>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                    {pacing.map(({ s, min, spent, over, cap }) => (
-                      <div key={s} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 6, width: 92, flexShrink: 0 }}>
-                          <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(s), flexShrink: 0 }} />
-                          <span style={{ fontSize: 12.5, color: NAVY, fontWeight: 700 }}>{shortName(s)}</span>
-                        </span>
-                        <div style={{ flex: 1, minWidth: 0, height: 10, borderRadius: 6, background: "#f1f5f9", overflow: "hidden", position: "relative" }}>
-                          <motion.div initial={{ width: 0 }} whileInView={{ width: `${(min / Math.max(examTotalMin / 2, ...pacing.map((p) => Math.max(p.min, p.spent || 0)))) * 100}%` }} viewport={{ once: true }} transition={{ duration: .6 }}
-                            style={{ height: "100%", borderRadius: 6, background: `linear-gradient(90deg,${subColor(s)},${subColor(s)}cc)` }} />
-                          {cap && spent != null && (
-                            <div title={`You averaged ${spent} min`} style={{ position: "absolute", top: -2, bottom: -2, left: `${Math.min(100, (spent / Math.max(examTotalMin / 2, ...pacing.map((p) => Math.max(p.min, p.spent || 0)))) * 100)}%`, width: 2, background: "#ef4444" }} />
-                          )}
-                        </div>
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, width: 96, justifyContent: "flex-end", flexShrink: 0 }}>
-                          {cap && <span title={`You averaged ${spent} min — ${over} over`} style={{ fontSize: 9.5, fontWeight: 800, color: "#b91c1c", background: "#fee2e2", borderRadius: 5, padding: "1px 5px" }}>+{over}m</span>}
-                          <span style={{ fontSize: 12, color: "#0891b2", fontWeight: 800 }}>{min} min</span>
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                  {timeInsight ? (
-                    <div style={{ marginTop: 12, background: "linear-gradient(135deg,#ecfeff,#f0fdf4)", border: "1px solid #a5f3fc", borderRadius: 12, padding: "12px 13px" }}>
-                      <div style={{ fontSize: 12, fontWeight: 800, color: "#0e7490", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                        <Rocket size={14} /> Better timings → better paper
-                      </div>
-                      {timeInsight.overrun > 0 ? (
-                        <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
-                          You run <strong style={{ color: "#b91c1c" }}>~{timeInsight.overrun} min over</strong>{timeInsight.worst ? <> (mostly on <strong style={{ color: NAVY }}>{shortName(timeInsight.worst)}</strong>)</> : ""}. Cap each section to its target and you reclaim that time — about <strong style={{ color: "#0e7490" }}>{timeInsight.extraQ} more question{timeInsight.extraQ === 1 ? "" : "s"}</strong> attempted, or enough to recheck and cut your ~{timeInsight.sillyAvg} silly mistake{timeInsight.sillyAvg === 1 ? "" : "s"}. Bank the last 10 min to revisit skipped questions.
-                        </div>
-                      ) : (
-                        <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
-                          Great pacing — you finish each section within target (~{timeInsight.totalSpent} min total). Keep the last 10 min to recheck flagged questions and shave your ~{timeInsight.sillyAvg} silly mistake{timeInsight.sillyAvg === 1 ? "" : "s"}.
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 11, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
-                      Log a few timed tests and your per-section pacing plan builds here — showing exactly where to speed up before the next paper. You skip ~{avgSkipped} questions/paper on average, so do one confident pass first, then circle back.
-                    </div>
-                  )}
-                </div>
-              </ToolCard>
-
-              <div style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 16, padding: "18px 20px" }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 12 }}>Chapter-strength report (in weekly email)</div>
-                {["weak", "medium", "strong"].map((k) => {
-                  const st = STRENGTHS[k];
-                  const items = chaptersByStrength[k];
-                  return (
-                    <div key={k} style={{ marginBottom: 12 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 6 }}>
-                        <span style={{ width: 9, height: 9, borderRadius: "50%", background: st.color }} />
-                        <span style={{ fontSize: 12.5, fontWeight: 800, color: st.color }}>{st.label} ({items.length})</span>
-                      </div>
-                      {items.length ? (
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                          {items.map((c) => (
-                            <span key={c} style={{ background: `${st.color}12`, border: `1px solid ${st.color}33`, color: st.color, borderRadius: 50, padding: "3px 10px", fontSize: 11.5, fontWeight: 700 }}>{c}</span>
-                          ))}
-                        </div>
-                      ) : <span style={{ fontSize: 12, color: "#9ca3af" }}>None yet — add chapters in your backlog.</span>}
-                    </div>
-                  );
-                })}
-              </div>
-          </div>
 
         </Section>
       </div>
