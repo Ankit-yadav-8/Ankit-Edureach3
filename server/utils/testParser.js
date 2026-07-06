@@ -632,7 +632,7 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl, examType = "") {
     // The math couldn't be read: rules-only on a math paper leaves blank options
     // and stripped equations. Warn loudly so a broken test isn't published as-is.
     const why = aiError ? `${aiError}. ` : "AI vision couldn't read this paper. ";
-    note = `⚠️ The questions below have blank options/maths — ${why}This is a scanned/math paper that needs AI to read it. Re-convert when the AI quota resets (or set a paid GROQ_API_KEY), or fill the questions in manually. Do not publish as-is.`;
+    note = `⚠️ The questions below have blank options/maths — ${why}This is a scanned/math paper that needs AI to read it. Re-convert when the AI quota resets (or add a paid AI key), or fill the questions in manually. Do not publish as-is.`;
   } else if (questions.length) {
     const src = keyPdfUrl ? "answer key" : "answers";
     const inline = !keyPdfUrl && method === "rules" ? " (detected inline in the paper)" : "";
@@ -646,7 +646,7 @@ export async function buildTestFromPdfs(testPdfUrl, keyPdfUrl, examType = "") {
     if (aiError && method === "vision+text") {
       note += ` Note: ${aiError} — some questions came from the text layer; re-convert later for full transcription.`;
     } else if (aiError && method.startsWith("vision")) {
-      note += ` ⚠️ Note: ${aiError} — the AI run stopped early, so questions/diagrams are likely MISSING. Re-convert when the quota resets (or use a paid GROQ_API_KEY) before publishing.`;
+      note += ` ⚠️ Note: ${aiError} — the AI run stopped early, so questions/diagrams are likely MISSING. Re-convert when the quota resets (or add a paid AI key) before publishing.`;
     }
   } else if (aiError) {
     note = `${aiError}. Add questions manually below, or try converting again.`;

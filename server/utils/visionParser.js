@@ -33,13 +33,28 @@ const clamp01 = (n) => Math.max(0, Math.min(1, Number(n) || 0));
 // Gemini; TEST_VISION_PROVIDER=groq switches back. Both clients take the same
 // `parts` shape (text + {inline_data}) and throw a tagged DAILY_LIMIT on quota.
 const visionProvider = () => (process.env.TEST_VISION_PROVIDER || "gemini").toLowerCase();
-const visionReady = () => (visionProvider() === "groq" ? groqReady() : geminiReady());
-const visionModel = () =>
-  visionProvider() === "groq"
+const OTHER_PROVIDER = { groq: "gemini", gemini: "groq" };
+const providerReady = (p) => (p === "groq" ? groqReady() : geminiReady());
+const providerKeyName = (p) => (p === "groq" ? "GROQ_API_KEY" : "GEMINI_API_KEY");
+const providerLabel = (p) => (p === "groq" ? "Groq" : "Gemini");
+const providerModel = (p) =>
+  p === "groq"
     ? process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct"
     : process.env.GEMINI_VISION_MODEL || geminiModel("gemini-2.5-flash");
-function callVisionProvider({ system, parts, maxTokens, model, retries }) {
-  if (visionProvider() === "groq") return callGroq({ system, parts, maxTokens, model, retries });
+// Provider order: the configured primary first (TEST_VISION_PROVIDER, default
+// gemini), the OTHER one as a FAILOVER — so when the primary's per-DAY quota runs
+// out mid-paper we finish the remaining pages on the second provider's separate
+// quota instead of dropping those questions to the garbled text layer. Only
+// providers whose key is actually set on the server are included.
+const visionOrder = () =>
+  [...new Set([visionProvider(), OTHER_PROVIDER[visionProvider()]])].filter(providerReady);
+const visionReady = () => visionOrder().length > 0;
+const quotaNote = (providers) =>
+  `Daily AI quota reached on all vision providers (${providers.map(providerLabel).join(" + ")}) — ` +
+  "try again tomorrow, or add a paid key for higher limits";
+function callVisionProvider(provider, { system, parts, maxTokens, retries }) {
+  const model = providerModel(provider);
+  if (provider === "groq") return callGroq({ system, parts, maxTokens, model, retries });
   // thinkingBudget 0 keeps 2.5's output budget for the JSON (not chain-of-thought).
   return callGemini({ system, parts, maxTokens, model, retries, json: true, thinkingBudget: 0 });
 }
@@ -199,7 +214,7 @@ async function downscalePng(pngBuffer, ratio) {
 // (honouring Retry-After), auto-halves an over-large token cap, and throws a
 // tagged DAILY_LIMIT when the per-day quota is gone, so the conversion fails fast
 // rather than hanging.
-async function callVision(model, images, maxTokens) {
+async function callVision(provider, images, maxTokens) {
   const parts = [{ text: "Transcribe every question shown in these page image(s)." }];
   for (const png of images) {
     parts.push({ inline_data: { mime_type: "image/png", data: png.toString("base64") } });
@@ -207,7 +222,7 @@ async function callVision(model, images, maxTokens) {
   // Be patient with sustained per-minute rate limits: a big paper fires many
   // batches, and giving up too early is how later questions get silently dropped.
   const retries = Math.min(20, Math.max(4, Number(process.env.TEST_VISION_RETRIES) || 12));
-  const text = await callVisionProvider({ system: VISION_SYS, parts, maxTokens, model, retries });
+  const text = await callVisionProvider(provider, { system: VISION_SYS, parts, maxTokens, retries });
   // Repair under-escaped LaTeX backslashes before parsing, else \frac/\sqrt get
   // mangled into control chars (or rejected) by JSON.parse.
   const c = repairLatexBackslashes(text || "");
@@ -238,12 +253,10 @@ const richness = (q) =>
 // answerKey (qno -> answer, parsed from the text layer) fills any answer the
 // model misses. Returns { questions, error } — questions [] on failure.
 export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
-  if (!visionReady()) {
-    const key = visionProvider() === "groq" ? "GROQ_API_KEY" : "GEMINI_API_KEY";
-    return { questions: [], error: `AI vision is off (${key} not set on the server)` };
+  const order = visionOrder();
+  if (!order.length) {
+    return { questions: [], error: `AI vision is off (${providerKeyName(visionProvider())} not set on the server)` };
   }
-
-  const model = visionModel();
   // Defaults kept conservative for rate-limited tiers: 2 pages per request at
   // scale 1.5, 2 in flight, overlapping work — ~2x faster than one-at-a-time.
   // Bump TEST_VISION_PAGES / _CONCURRENCY / _SCALE on a paid tier (higher RPM)
@@ -281,25 +294,31 @@ export async function extractWithVision(pdfBuffer, { answerKey = {} } = {}) {
   const wantDiagrams = String(process.env.TEST_VISION_DIAGRAMS || "").toLowerCase() !== "off" && cloudinaryReady();
 
   let firstErr = "";
-  let dailyLimit = false;
+  const exhausted = new Set();                          // providers whose per-DAY quota is gone
+  const nextProvider = () => order.find((p) => !exhausted.has(p));
+  const maxTokens = Number(process.env.TEST_VISION_MAXTOKENS) || 8000;
   const results = await mapPool(batches, concurrency, async (start) => {
-    if (dailyLimit) return []; // stop hammering once the daily quota is gone
+    if (!nextProvider()) return []; // every provider's daily quota is gone
     const batchStart = start; // absolute 0-based index of imgs[0]
     const imgs = pages.slice(start, start + perBatch);        // full-res, for crops
     const ocrImgs = ocrPages.slice(start, start + perBatch);  // downscaled, for OCR
     let arr;
-    // 6000 tokens (was 4000): dense 2-page batches overran 4000 and truncated;
-    // callVision auto-halves if even this is too high for the model/tier.
-    try { arr = await callVision(model, ocrImgs, Number(process.env.TEST_VISION_MAXTOKENS) || 8000); }
-    catch (e) {
-      if (e.code === "DAILY_LIMIT") {
-        dailyLimit = true;
-        firstErr = "Daily AI quota reached — try again tomorrow, or set a paid GROQ_API_KEY for higher limits";
-      } else if (!firstErr) {
-        firstErr = `AI vision error (${e.message}${e.detail ? `: ${e.detail}` : ""})`;
+    // Try the current provider; if it reports the per-day quota is gone, mark it
+    // exhausted and FAIL OVER to the next provider for this same batch. Only when
+    // EVERY provider is exhausted do we give up and surface the quota note — so a
+    // primary running dry no longer drops later questions to the text layer.
+    // 8000 tokens: dense 2-page batches overran less; callVision auto-halves if
+    // even this is too high for the model/tier.
+    while (true) {
+      const provider = nextProvider();
+      if (!provider) { firstErr = quotaNote(order); return []; }
+      try { arr = await callVision(provider, ocrImgs, maxTokens); break; }
+      catch (e) {
+        if (e.code === "DAILY_LIMIT") { exhausted.add(provider); continue; } // fail over to the next provider
+        if (!firstErr) firstErr = `AI vision error (${e.message}${e.detail ? `: ${e.detail}` : ""})`;
+        console.error("[visionParser]", e.message, e.detail || "");
+        return [];
       }
-      console.error("[visionParser]", e.message, e.detail || "");
-      return [];
     }
     // Crop & upload any diagram the model located — for the question stem AND for
     // figure-style options — so figure-based questions render natively in the CBT.
