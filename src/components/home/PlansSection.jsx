@@ -10,6 +10,7 @@ import {
   ShieldCheck, Star, Phone, CalendarCheck, LineChart, MessageCircle,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
+import MentorChatPhone from "./MentorChatPhone.jsx";
 
 const FEATURES = [
   { icon: CalendarCheck, title: "Daily targets & accountability", desc: "A customised day-by-day plan, checked so you never drift." },
@@ -70,9 +71,7 @@ export default function PlansSection() {
               Explore Mentorship <ArrowRight size={18} />
             </Link>
           </div>
-          <div style={{ borderRadius: 18, overflow: "hidden", border: `1px solid ${CL.line}`, boxShadow: "0 18px 44px -24px rgba(26,26,46,.2)" }}>
-            <img src="/images/home_mentorship_overview.png" alt="Mentorship overview" style={{ width: "100%", display: "block" }} />
-          </div>
+          <MentorChatPhone />
         </motion.div>
 
         {/* why-us small cards */}
