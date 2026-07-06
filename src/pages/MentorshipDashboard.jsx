@@ -330,6 +330,7 @@ function DashboardBody({ urlPlan = "" }) {
   const PREFS_KEY = `mdash:reportprefs:${emailKey}:${planNs}`;
   const AUTO_KEY = `mdash:autosent:${emailKey}:${planNs}`;
   const TREM_KEY = `mdash:testremind:${emailKey}:${planNs}`; // day the test nudge was dismissed
+  const CHAP_KEY = `mdash:chapters:${emailKey}:${planNs}`; // mentor chapter-strength + weekly coverage
 
   // One-time migration: older single-plan students stored data without the batch
   // suffix. Inherit it into this batch's slot the first time it's opened so no
@@ -367,6 +368,9 @@ function DashboardBody({ urlPlan = "" }) {
   const [backlog, setBacklog] = useState(() => loadScoped(BACKLOG_KEY, L_BACKLOG, null) || seedBacklog());
   const [fixDone, setFixDone] = useState(() => loadScoped(FIX_KEY, L_FIX, {}));
   const [weeklyTasks, setWeeklyTasks] = useState(() => loadScoped(WTASK_KEY, L_WTASK, []));
+  // Chapter strength + this-week coverage — [{ id, subject, topic, strength, coverage }]
+  const [chapterLog, setChapterLog] = useState(() => load(CHAP_KEY, []));
+  const [chapForm, setChapForm] = useState({ subject: "", topic: "", strength: "weak", coverage: "" });
 
   const todayIso = isoDay(new Date());
   const todayEntry = entries.find((e) => e.date === todayIso);
@@ -450,6 +454,7 @@ function DashboardBody({ urlPlan = "" }) {
           if (Array.isArray(d.tests)) setTests(d.tests);
           if (Array.isArray(d.backlog)) setBacklog(d.backlog);
           if (Array.isArray(d.weeklyTasks)) setWeeklyTasks(d.weeklyTasks);
+          if (Array.isArray(d.chapterLog)) setChapterLog(d.chapterLog);
           if (d.fixDone && typeof d.fixDone === "object") setFixDone(d.fixDone);
           if (d.reportPrefs && typeof d.reportPrefs === "object") setReportPrefs(d.reportPrefs);
           if (d.lastAuto && typeof d.lastAuto === "object") setLastAuto(d.lastAuto);
@@ -465,10 +470,10 @@ function DashboardBody({ urlPlan = "" }) {
   // copy with seed data. localStorage still acts as an offline cache.
   useEffect(() => {
     if (!token || !selectedPlan || !progressLoaded) return;
-    const data = { entries, tests, backlog, weeklyTasks, fixDone, reportPrefs, lastAuto };
+    const data = { entries, tests, backlog, weeklyTasks, chapterLog, fixDone, reportPrefs, lastAuto };
     const t = setTimeout(() => { apiSaveProgress(token, selectedPlan, data).catch(() => {}); }, 900);
     return () => clearTimeout(t);
-  }, [token, selectedPlan, progressLoaded, entries, tests, backlog, weeklyTasks, fixDone, reportPrefs, lastAuto]);
+  }, [token, selectedPlan, progressLoaded, entries, tests, backlog, weeklyTasks, chapterLog, fixDone, reportPrefs, lastAuto]);
 
   // Switch to another of the student's batches — re-points the URL, which
   // remounts the body against that batch's data + community.
@@ -485,6 +490,7 @@ function DashboardBody({ urlPlan = "" }) {
   useEffect(() => { save(PREFS_KEY, reportPrefs); }, [PREFS_KEY, reportPrefs]);
   useEffect(() => { save(AUTO_KEY, lastAuto); }, [AUTO_KEY, lastAuto]);
   useEffect(() => { save(TREM_KEY, testRemindSnooze); }, [TREM_KEY, testRemindSnooze]);
+  useEffect(() => { save(CHAP_KEY, chapterLog); }, [CHAP_KEY, chapterLog]);
 
   /* ── derived tracking metrics ── */
   const sorted = useMemo(() => [...entries].sort((a, b) => a.date.localeCompare(b.date)), [entries]);
@@ -685,12 +691,15 @@ function DashboardBody({ urlPlan = "" }) {
     return { ...prev, [wk]: [...cur] };
   });
 
-  /* ── chapters by strength (for parent report) ── */
-  const chaptersByStrength = useMemo(() => ({
-    weak: backlog.filter((b) => b.strength === "weak").map((b) => `${b.topic} (${shortName(b.subject)})`),
-    medium: backlog.filter((b) => b.strength === "medium").map((b) => `${b.topic} (${shortName(b.subject)})`),
-    strong: backlog.filter((b) => b.strength === "strong").map((b) => `${b.topic} (${shortName(b.subject)})`),
-  }), [backlog]);
+  /* ── chapters by strength + weekly coverage (for the parent report) ── */
+  const chaptersByStrength = useMemo(() => {
+    const fmt = (c) => `${c.topic} (${shortName(c.subject)})${c.coverage ? ` · ${c.coverage}% covered` : ""}`;
+    return {
+      weak: chapterLog.filter((c) => c.strength === "weak").map(fmt),
+      medium: chapterLog.filter((c) => c.strength === "medium").map(fmt),
+      strong: chapterLog.filter((c) => c.strength === "strong").map(fmt),
+    };
+  }, [chapterLog]);
 
   /* ── AI insights (rule-based) ── */
   const insights = useMemo(() => {
@@ -887,6 +896,22 @@ function DashboardBody({ urlPlan = "" }) {
     setWtInput("");
   }
   const toggleWeeklyTask = (id) => setWeeklyTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
+
+  /* ── chapter strength + weekly coverage (feeds the parent chapter report) ── */
+  function addChapter(e) {
+    e?.preventDefault();
+    const subject = chapForm.subject || subjects[0];
+    const topic = chapForm.topic.trim();
+    if (!subject || !topic) return;
+    const coverage = Math.max(0, Math.min(100, Number(chapForm.coverage) || 0));
+    setChapterLog((prev) => [
+      // replace an existing entry for the same subject+topic, else add
+      ...prev.filter((c) => !(c.subject === subject && c.topic.toLowerCase() === topic.toLowerCase())),
+      { id: `${Date.now()}`, subject, topic, strength: chapForm.strength, coverage },
+    ]);
+    setChapForm({ subject: "", topic: "", strength: "weak", coverage: "" });
+  }
+  const removeChapter = (id) => setChapterLog((prev) => prev.filter((c) => c.id !== id));
   const saveWeeklyEdit = () => {
     const text = wtEdit.text.trim();
     if (text) setWeeklyTasks((prev) => prev.map((t) => (t.id === wtEdit.id ? { ...t, text } : t)));
@@ -1660,87 +1685,63 @@ function DashboardBody({ urlPlan = "" }) {
               ) : <ChartHint text="Add tests with silly-mistake counts & topics." />}
             </ToolCard>
 
-            {/* Weak-chapter heatmap */}
-            <ToolCard icon={Zap} color="#8b5cf6" title="Weak-chapter heatmap" desc="The exact topics dragging your score, ranked.">
-              {weakRanked.length ? (
-                <>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 12 }}>
-                    {weakRanked.slice(0, 6).map(([c]) => (
-                      <span key={c} style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", borderRadius: 50, padding: "5px 12px", fontSize: 12, fontWeight: 700 }}>{c}</span>
-                    ))}
+            {/* Chapter strength & weekly coverage — feeds the parent chapter report */}
+            <ToolCard icon={BookOpen} color="#8b5cf6" title="Chapter strength & coverage" desc="Tag each chapter weak / medium / strong and how much you covered this week — it feeds your parent's chapter report.">
+              {/* SECTION 1 — add a chapter */}
+              <form onSubmit={addChapter} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  <SelectField label="Subject" value={chapForm.subject || subjects[0]} onChange={(v) => setChapForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
+                  <NumField label="Covered this week (%)" value={chapForm.coverage} onChange={(v) => setChapForm((s) => ({ ...s, coverage: v }))} placeholder="e.g. 60" full />
+                </div>
+                <TextField label="Chapter" value={chapForm.topic} onChange={(v) => setChapForm((s) => ({ ...s, topic: v }))} placeholder="e.g. Rotational Motion" />
+                <div>
+                  <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>Strength</span>
+                  <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
+                    {["weak", "medium", "strong"].map((k) => {
+                      const st = STRENGTHS[k]; const on = chapForm.strength === k;
+                      return (
+                        <button type="button" key={k} onClick={() => setChapForm((s) => ({ ...s, strength: k }))}
+                          style={{ flex: 1, padding: "9px", borderRadius: 10, border: `1.5px solid ${on ? st.color : "#e5e7eb"}`, background: on ? `${st.color}12` : "#fff", color: on ? st.color : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer" }}>
+                          {st.label}
+                        </button>
+                      );
+                    })}
                   </div>
+                </div>
+                <button type="submit" style={{ padding: "11px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
+                  <Plus size={15} /> Add / update chapter
+                </button>
+              </form>
+
+              {/* SECTION 2 — the chapters, by strength + coverage */}
+              <div style={{ marginTop: 16, borderTop: "1px solid #f1f5f9", paddingTop: 14 }}>
+                {chapterLog.length ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {weakRanked.slice(0, 5).map(([c, n]) => (
-                      <div key={c} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <span style={{ fontSize: 12.5, color: NAVY, fontWeight: 600, width: 130, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c}</span>
-                        <div style={{ flex: 1, height: 9, borderRadius: 6, background: "#f1f5f9", overflow: "hidden" }}>
-                          <div style={{ width: `${(n / maxWeak) * 100}%`, height: "100%", borderRadius: 6, background: "linear-gradient(90deg,#f59e0b,#ef4444)" }} />
+                    {chapterLog.map((c) => {
+                      const st = STRENGTHS[c.strength] || STRENGTHS.weak;
+                      return (
+                        <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 10, background: `${st.color}0d`, border: `1px solid ${st.color}33`, borderRadius: 11, padding: "9px 11px" }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.topic} <span style={{ color: MUTE, fontWeight: 600 }}>· {shortName(c.subject)}</span></div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: 4 }}>
+                              <div style={{ flex: 1, height: 6, borderRadius: 4, background: "#eef2f7", overflow: "hidden" }}>
+                                <div style={{ width: `${c.coverage || 0}%`, height: "100%", background: st.color, borderRadius: 4 }} />
+                              </div>
+                              <span style={{ fontSize: 11, fontWeight: 800, color: st.color, width: 34, textAlign: "right" }}>{c.coverage || 0}%</span>
+                            </div>
+                          </div>
+                          <span style={{ fontSize: 9.5, fontWeight: 800, color: st.color, background: `${st.color}18`, borderRadius: 50, padding: "2px 8px", textTransform: "uppercase", flexShrink: 0 }}>{st.label}</span>
+                          <button onClick={() => removeChapter(c.id)} title="Remove" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #fee2e2", background: "#fff5f5", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                            <Trash2 size={13} />
+                          </button>
                         </div>
-                        <span style={{ fontSize: 11.5, color: "#ef4444", fontWeight: 800, width: 24, textAlign: "right" }}>×{n}</span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
-                </>
-              ) : <ChartHint text="Tag weak chapters on tests or in your backlog." />}
-            </ToolCard>
-
-            {/* Time-management review — driven by per-section time logged on tests */}
-            <ToolCard icon={Timer} color="#06b6d4" title="Time-management review" desc="Your real time per section vs the target — plus how better pacing lifts your paper.">
-              {timeBars.length > 0 && <Bars data={timeBars} bars={timeBarSeries} height={140} fmt={avgTimePer ? (v) => `${v}m` : undefined} />}
-              <div style={{ marginTop: timeBars.length ? 14 : 0 }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 9 }}>
-                  <span style={{ fontSize: 11.5, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".04em" }}>Suggested pacing · next paper</span>
-                  <span style={{ fontSize: 11, fontWeight: 800, color: "#0891b2", background: "#cffafe", borderRadius: 50, padding: "3px 9px" }}>
-                    {avgTimePer ? "From your test timings" : timeRanked.length ? "From your tests" : "Balanced start"}
-                  </span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                  {pacing.map(({ s, min, spent, over, cap }) => (
-                    <div key={s} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 6, width: 92, flexShrink: 0 }}>
-                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(s), flexShrink: 0 }} />
-                        <span style={{ fontSize: 12.5, color: NAVY, fontWeight: 700 }}>{shortName(s)}</span>
-                      </span>
-                      <div style={{ flex: 1, minWidth: 0, height: 10, borderRadius: 6, background: "#f1f5f9", overflow: "hidden", position: "relative" }}>
-                        {/* target fill */}
-                        <motion.div initial={{ width: 0 }} whileInView={{ width: `${(min / Math.max(examTotalMin / 2, ...pacing.map((p) => Math.max(p.min, p.spent || 0)))) * 100}%` }} viewport={{ once: true }} transition={{ duration: .6 }}
-                          style={{ height: "100%", borderRadius: 6, background: `linear-gradient(90deg,${subColor(s)},${subColor(s)}cc)` }} />
-                        {/* over-run marker */}
-                        {cap && spent != null && (
-                          <div title={`You averaged ${spent} min`} style={{ position: "absolute", top: -2, bottom: -2, left: `${Math.min(100, (spent / Math.max(examTotalMin / 2, ...pacing.map((p) => Math.max(p.min, p.spent || 0)))) * 100)}%`, width: 2, background: "#ef4444" }} />
-                        )}
-                      </div>
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 5, width: 96, justifyContent: "flex-end", flexShrink: 0 }}>
-                        {cap && <span title={`You averaged ${spent} min — ${over} over`} style={{ fontSize: 9.5, fontWeight: 800, color: "#b91c1c", background: "#fee2e2", borderRadius: 5, padding: "1px 5px" }}>+{over}m</span>}
-                        <span style={{ fontSize: 12, color: "#0891b2", fontWeight: 800 }}>{min} min</span>
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* How better timings make a better paper */}
-                {timeInsight ? (
-                  <div style={{ marginTop: 12, background: "linear-gradient(135deg,#ecfeff,#f0fdf4)", border: "1px solid #a5f3fc", borderRadius: 12, padding: "12px 13px" }}>
-                    <div style={{ fontSize: 12, fontWeight: 800, color: "#0e7490", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                      <Rocket size={14} /> Better timings → better paper
-                    </div>
-                    {timeInsight.overrun > 0 ? (
-                      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
-                        You run <strong style={{ color: "#b91c1c" }}>~{timeInsight.overrun} min over</strong>{timeInsight.worst ? <> (mostly on <strong style={{ color: NAVY }}>{shortName(timeInsight.worst)}</strong>)</> : ""}. Cap each section to its target and you reclaim that time — about <strong style={{ color: "#0e7490" }}>{timeInsight.extraQ} more question{timeInsight.extraQ === 1 ? "" : "s"}</strong> attempted, or enough to recheck and cut your ~{timeInsight.sillyAvg} silly mistake{timeInsight.sillyAvg === 1 ? "" : "s"}. Bank the last 10 min to revisit skipped questions.
-                      </div>
-                    ) : (
-                      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
-                        Great pacing — you finish each section within target (~{timeInsight.totalSpent} min total). Keep the last 10 min to recheck flagged questions and shave your ~{timeInsight.sillyAvg} silly mistake{timeInsight.sillyAvg === 1 ? "" : "s"}.
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 11, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
-                    Add <strong style={{ color: NAVY }}>“Time spent per section”</strong> when you log a test to unlock a personalised pacing plan and see how much score better timing can unlock. You skip ~{avgSkipped} questions/paper on average — do one confident pass first, then circle back.
-                  </div>
-                )}
+                ) : <div style={{ fontSize: 12.5, color: "#9ca3af", textAlign: "center", padding: "10px 0" }}>No chapters yet — add one above. They appear in your parent's weekly chapter report.</div>}
               </div>
             </ToolCard>
+
 
             {/* Weekly fix-list — auto suggestions + the student's own weekly tasks
                 (both roll up into the weekly parent report). */}
@@ -1926,6 +1927,8 @@ function DashboardBody({ urlPlan = "" }) {
             subtitle="A clear, jargon-free summary of your child's week — effort, tests, improvement and what's next."
             studentName={user?.name || "Student"}
             studentSub={`${planExam} · CollegeParichay Mentorship`}
+            heroPoints={["Study hours, streak & routine", "Test scores & predicted rank", "Weak / medium / strong chapters", "Weekly task progress"]}
+            heroNote="Auto-emailed to your parent every Sunday — and any time you press send. No jargon, just this week's real progress."
             rows={[
               { icon: Clock, color: ORANGE, label: "Study hours", sub: `${round1(weekHours - prevWeekHours) >= 0 ? "+" : ""}${round1(weekHours - prevWeekHours)}h vs last week`, value: `${round1(weekHours)} h` },
               { icon: Flame, color: "#ef4444", label: "Day streak", sub: `Active ${last7.filter((e) => Number(e.hours) > 0).length} of 7 days`, value: `${streak} day${streak === 1 ? "" : "s"}` },
@@ -1982,6 +1985,8 @@ function DashboardBody({ urlPlan = "" }) {
               subtitle="Today's effort at a glance — hours, tasks, routine and any test, auto-built from the daily log."
               studentName={user?.name || "Student"}
               studentSub={`${fmtFull(new Date())} · CollegeParichay Mentorship`}
+              heroPoints={["Hours studied per subject", "Tasks completed & routine", "Any test taken today", "Predicted rank (if tested)"]}
+              heroNote="Auto-emailed to your parent every day — a quick daily snapshot so they always know how today went."
               rows={[
                 { icon: Clock, color: ORANGE, label: "Study hours today", sub: `${subjects.length} subjects logged`, value: `${todayEntry.hours} h` },
                 { icon: CheckCircle2, color: "#14b8a6", label: "Tasks completed", sub: todayEntry.routine ? "Routine followed" : "Routine missed", value: `${todayEntry.tasksDone} / ${todayEntry.tasksTotal}` },
@@ -2021,33 +2026,59 @@ function DashboardBody({ urlPlan = "" }) {
 
           {/* ── this-week summary + chapter-strength (in the weekly email) ── */}
           <div className="md-report-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 18 }}>
-              <div style={{ background: "#f0faf4", border: `1px solid ${GREEN}33`, borderRadius: 16, padding: "18px 20px" }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 10 }}>This week's summary</div>
-                {[
-                  { l: "Study hours", v: `${round1(weekHours)} h` },
-                  { l: "Day streak", v: `${streak} days` },
-                  { l: "Routine kept", v: `${routinePct}%` },
-                  { l: "Tasks (latest day)", v: tasksLabel },
-                  { l: "Weekly tasks done", v: `${weeklyDone}/${weeklyTasks.length}` },
-                  { l: "Latest test", v: latest ? `${latest.scored}/${latest.total} (${pct(latest)}%)` : "—" },
-                  { l: "Change vs last test", v: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
-                  ...(rankEnabled && latestRankTest?.rank?.ranked ? [{
-                    l: "Predicted rank",
-                    v: latestRankTest.rank.advanced
-                      ? `CRL ${inr(latestRankTest.rank.crlLo ?? latestRankTest.rank.low)}–${inr(latestRankTest.rank.crlHi ?? latestRankTest.rank.high)}`
-                      : `CRL ${inr(latestRankTest.rank.crl)}`,
-                    hi: true,
-                  }] : []),
-                  { l: "Backlog cleared", v: `${backlogDone}/${backlog.length}` },
-                ].map((r) => (
-                  <div key={r.l} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: "1px solid rgba(0,0,0,.06)" }}>
-                    <span style={{ fontSize: 13, color: r.hi ? "#6d28d9" : "#374151", fontWeight: r.hi ? 700 : 400, display: "inline-flex", alignItems: "center", gap: 5 }}>
-                      {r.hi && <Trophy size={13} color="#6d28d9" />}{r.l}
+              {/* Time-management review — moved here from Mentor tools */}
+              <ToolCard icon={Timer} color="#06b6d4" title="Time-management review" desc="Your real time per section vs the target — plus how better pacing lifts your paper.">
+                {timeBars.length > 0 && <Bars data={timeBars} bars={timeBarSeries} height={140} fmt={avgTimePer ? (v) => `${v}m` : undefined} />}
+                <div style={{ marginTop: timeBars.length ? 14 : 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 9 }}>
+                    <span style={{ fontSize: 11.5, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".04em" }}>Suggested pacing · next paper</span>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: "#0891b2", background: "#cffafe", borderRadius: 50, padding: "3px 9px" }}>
+                      {avgTimePer ? "From your test timings" : timeRanked.length ? "From your tests" : "Balanced start"}
                     </span>
-                    <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: r.hi ? "#6d28d9" : NAVY }}>{r.v}</span>
                   </div>
-                ))}
-              </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                    {pacing.map(({ s, min, spent, over, cap }) => (
+                      <div key={s} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 6, width: 92, flexShrink: 0 }}>
+                          <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(s), flexShrink: 0 }} />
+                          <span style={{ fontSize: 12.5, color: NAVY, fontWeight: 700 }}>{shortName(s)}</span>
+                        </span>
+                        <div style={{ flex: 1, minWidth: 0, height: 10, borderRadius: 6, background: "#f1f5f9", overflow: "hidden", position: "relative" }}>
+                          <motion.div initial={{ width: 0 }} whileInView={{ width: `${(min / Math.max(examTotalMin / 2, ...pacing.map((p) => Math.max(p.min, p.spent || 0)))) * 100}%` }} viewport={{ once: true }} transition={{ duration: .6 }}
+                            style={{ height: "100%", borderRadius: 6, background: `linear-gradient(90deg,${subColor(s)},${subColor(s)}cc)` }} />
+                          {cap && spent != null && (
+                            <div title={`You averaged ${spent} min`} style={{ position: "absolute", top: -2, bottom: -2, left: `${Math.min(100, (spent / Math.max(examTotalMin / 2, ...pacing.map((p) => Math.max(p.min, p.spent || 0)))) * 100)}%`, width: 2, background: "#ef4444" }} />
+                          )}
+                        </div>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, width: 96, justifyContent: "flex-end", flexShrink: 0 }}>
+                          {cap && <span title={`You averaged ${spent} min — ${over} over`} style={{ fontSize: 9.5, fontWeight: 800, color: "#b91c1c", background: "#fee2e2", borderRadius: 5, padding: "1px 5px" }}>+{over}m</span>}
+                          <span style={{ fontSize: 12, color: "#0891b2", fontWeight: 800 }}>{min} min</span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {timeInsight ? (
+                    <div style={{ marginTop: 12, background: "linear-gradient(135deg,#ecfeff,#f0fdf4)", border: "1px solid #a5f3fc", borderRadius: 12, padding: "12px 13px" }}>
+                      <div style={{ fontSize: 12, fontWeight: 800, color: "#0e7490", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                        <Rocket size={14} /> Better timings → better paper
+                      </div>
+                      {timeInsight.overrun > 0 ? (
+                        <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
+                          You run <strong style={{ color: "#b91c1c" }}>~{timeInsight.overrun} min over</strong>{timeInsight.worst ? <> (mostly on <strong style={{ color: NAVY }}>{shortName(timeInsight.worst)}</strong>)</> : ""}. Cap each section to its target and you reclaim that time — about <strong style={{ color: "#0e7490" }}>{timeInsight.extraQ} more question{timeInsight.extraQ === 1 ? "" : "s"}</strong> attempted, or enough to recheck and cut your ~{timeInsight.sillyAvg} silly mistake{timeInsight.sillyAvg === 1 ? "" : "s"}. Bank the last 10 min to revisit skipped questions.
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
+                          Great pacing — you finish each section within target (~{timeInsight.totalSpent} min total). Keep the last 10 min to recheck flagged questions and shave your ~{timeInsight.sillyAvg} silly mistake{timeInsight.sillyAvg === 1 ? "" : "s"}.
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 11, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
+                      Log a few timed tests and your per-section pacing plan builds here — showing exactly where to speed up before the next paper. You skip ~{avgSkipped} questions/paper on average, so do one confident pass first, then circle back.
+                    </div>
+                  )}
+                </div>
+              </ToolCard>
 
               <div style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 16, padding: "18px 20px" }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 12 }}>Chapter-strength report (in weekly email)</div>
@@ -2109,12 +2140,12 @@ function Section({ id, kicker, title, sub, tColor = ORANGE, children }) {
 
 /* Parent-facing "Progress Booklet" — orange hero panel + a clean stat readout.
    Used for both the weekly and daily reports (same look, different data). */
-function ProgressBooklet({ title, subtitle, studentName, studentSub, rows, extra, remark, remarkTitle = "Highlight", footer }) {
+function ProgressBooklet({ title, subtitle, studentName, studentSub, rows, extra, remark, remarkTitle = "Highlight", heroPoints, heroNote, footer }) {
   const dark = "#E0421F";
   return (
     <div className="md-booklet" style={{ display: "grid", gridTemplateColumns: "minmax(0,0.92fr) minmax(0,1.08fr)", borderRadius: 22, overflow: "hidden", border: "1px solid #f0e9e0", boxShadow: "0 24px 54px -34px rgba(26,26,46,.5)", background: "var(--page-bg)", marginBottom: 18 }}>
       {/* LEFT — hero */}
-      <div style={{ position: "relative", padding: "28px 28px 26px", color: "#fff", background: `linear-gradient(155deg, ${ORANGE} 0%, ${dark} 100%)`, overflow: "hidden" }}>
+      <div style={{ position: "relative", padding: "28px 28px 26px", color: "#fff", background: `linear-gradient(155deg, ${ORANGE} 0%, ${dark} 100%)`, overflow: "hidden", display: "flex", flexDirection: "column" }}>
         <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px)", backgroundSize: "26px 26px", opacity: .55, pointerEvents: "none" }} />
         <div style={{ position: "relative" }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, letterSpacing: ".08em", background: "rgba(255,255,255,.18)", border: "1px solid rgba(255,255,255,.3)", borderRadius: 50, padding: "5px 12px" }}>
@@ -2128,6 +2159,27 @@ function ProgressBooklet({ title, subtitle, studentName, studentSub, rows, extra
             <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.82)", marginTop: 3 }}>{studentSub}</div>
           </div>
         </div>
+        {/* fills the lower half of the hero so it doesn't read as empty */}
+        {heroPoints?.length > 0 && (
+          <div style={{ position: "relative", marginTop: 22 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.72)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 10 }}>What's inside</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+              {heroPoints.map((p) => (
+                <div key={p} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13, color: "rgba(255,255,255,.95)", fontWeight: 600 }}>
+                  <span style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(255,255,255,.22)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <CheckCircle2 size={12} color="#fff" />
+                  </span>
+                  {p}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {heroNote && (
+          <div style={{ position: "relative", marginTop: "auto", paddingTop: 20 }}>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: "rgba(255,255,255,.82)", margin: 0 }}>{heroNote}</p>
+          </div>
+        )}
       </div>
       {/* RIGHT — stats */}
       <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column" }}>
