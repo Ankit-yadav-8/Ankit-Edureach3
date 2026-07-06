@@ -27,7 +27,8 @@ const enrollmentSchema = new mongoose.Schema(
 
     // Parent contact — weekly progress report is emailed here (mentorship).
     parentEmail:        { type: String, lowercase: true, trim: true, default: "" },
-    lastParentReportAt: { type: Date, default: null },
+    lastParentReportAt: { type: Date, default: null }, // weekly / backlog cadence
+    lastDailyReportAt:  { type: Date, default: null }, // daily-report cadence (cron + client)
 
     // Mentorship context (optional)
     currentClass: { type: String, trim: true, default: "" },

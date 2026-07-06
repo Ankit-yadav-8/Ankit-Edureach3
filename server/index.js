@@ -16,6 +16,7 @@ import adminRoutes from "./routes/admin.js";
 import aiRoutes from "./routes/ai.js";
 import testRoutes from "./routes/tests.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
+import { startDailyReportJob } from "./jobs/dailyReport.js";
 
 dotenv.config();
 const app = express();
@@ -104,5 +105,6 @@ connectDB()
   .then(() => {
     app.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`));
     startWeeklyReportJob(); // weekly parent progress emails (best-effort, dev-safe)
+    startDailyReportJob();  // daily parent progress emails from synced data (dev-safe)
   })
   .catch((e) => { console.error("❌ DB error:", e.message); process.exit(1); });

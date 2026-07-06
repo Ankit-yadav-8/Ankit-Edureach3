@@ -89,7 +89,7 @@ function buildWeeklyHtml(studentName, r, link) {
     ${link ? `<a href="${esc(link)}" style="display:inline-block;margin:18px 0 4px;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:10px">Open the dashboard</a>` : ""}`);
 }
 
-function buildDailyHtml(studentName, r, link) {
+export function buildDailyHtml(studentName, r, link) {
   const d = r.daily || {};
   const subs = cap(d.subjects, 12);
   const subHtml = subs.length
@@ -189,9 +189,11 @@ router.post("/parent-report", requireAuth, async (req, res) => {
     sendMail({ to: enr.parentEmail, subject, html, text: `${subject}. Open the dashboard: ${link}` })
       .then((out) => {
         if (!out.ok) { console.error("[mentorship/parent-report] send failed:", out.error); return; }
-        // Weekly + backlog alerts advance the cron cadence stamp.
+        // Advance the matching cadence stamp so the cron doesn't double-send.
         if (kind === "weekly" || kind === "backlog") {
           Enrollment.updateOne({ _id: enr._id }, { $set: { lastParentReportAt: new Date() } }).catch(() => {});
+        } else if (kind === "daily") {
+          Enrollment.updateOne({ _id: enr._id }, { $set: { lastDailyReportAt: new Date() } }).catch(() => {});
         }
       })
       .catch((e) => console.error("[mentorship/parent-report] send error:", e?.message || e));
