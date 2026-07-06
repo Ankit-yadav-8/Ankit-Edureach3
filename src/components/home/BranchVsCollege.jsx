@@ -677,17 +677,17 @@ export default function BranchVsCollege({ asPage = false }) {
               return (
                 <button key={m.id} onClick={() => switchMode(m.id)}
                   style={{
-                    textAlign: "left", padding: "15px 16px", borderRadius: 16, cursor: "pointer",
-                    background: on ? CL.coralSoft : "#fff",
-                    border: `1.5px solid ${on ? CL.coral : CL.cream3}`,
-                    display: "flex", alignItems: "center", gap: 13, width: "100%",
-                    boxShadow: on ? `0 6px 20px ${CL.coral}22` : "none",
-                    transition: "background .15s, border-color .15s, box-shadow .2s",
+                    textAlign: "left", padding: "20px 22px", borderRadius: 20, cursor: "pointer",
+                    background: on ? CL.coralSoft : CL.card,
+                    border: `1.5px solid ${on ? CL.coral : CL.line}`,
+                    display: "flex", alignItems: "center", gap: 14, width: "100%",
+                    boxShadow: on ? `0 12px 30px -10px ${CL.coral}66` : CL.shadow,
+                    transition: "transform .18s, background .15s, border-color .15s, box-shadow .2s",
                   }}
-                  onMouseEnter={(e) => { if (!on) { e.currentTarget.style.borderColor = CL.coral + "77"; e.currentTarget.style.background = CL.cream2; } }}
-                  onMouseLeave={(e) => { if (!on) { e.currentTarget.style.borderColor = CL.cream3; e.currentTarget.style.background = "#fff"; } }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; if (!on) { e.currentTarget.style.borderColor = CL.coral + "77"; e.currentTarget.style.background = CL.cream2; e.currentTarget.style.boxShadow = CL.shadowLg; } }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; if (!on) { e.currentTarget.style.borderColor = CL.line; e.currentTarget.style.background = CL.card; e.currentTarget.style.boxShadow = CL.shadow; } }}
                 >
-                  <span style={{ width: 46, height: 46, borderRadius: 13, flexShrink: 0, display: "grid", placeItems: "center", background: on ? CL.coral : CL.cream2, border: `1px solid ${on ? CL.coral : CL.cream3}`, transition: "all .15s" }}>
+                  <span style={{ width: 48, height: 48, borderRadius: 14, flexShrink: 0, display: "grid", placeItems: "center", background: on ? CL.coral : CL.cream2, border: `1px solid ${on ? CL.coral : CL.cream3}`, transition: "all .15s" }}>
                     <m.icon size={21} color={on ? "#fff" : CL.coral} />
                   </span>
                   <span style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>

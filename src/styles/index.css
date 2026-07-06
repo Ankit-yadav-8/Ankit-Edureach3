@@ -101,7 +101,7 @@ main { background: var(--page-bg); }
 
 /* Branch-vs-College mode selector — two option-style cards on desktop,
    a compact two-button toggle on phones (tap one or the other). */
-.bvc-mode-cards  { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.bvc-mode-cards  { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .bvc-mode-toggle { display:none; gap:8px; }
 @media (max-width:600px){
   .bvc-mode-cards  { display:none; }
