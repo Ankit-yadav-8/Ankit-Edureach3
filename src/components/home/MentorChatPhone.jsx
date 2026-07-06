@@ -7,7 +7,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  GraduationCap, Video, Phone, Paperclip, Smile, Camera, Mic,
+  Video, Phone, Paperclip, Smile, Camera, Mic,
   Check, CheckCheck, Signal, Wifi, BatteryFull,
 } from "lucide-react";
 import { CL } from "./clTheme.js";
@@ -145,13 +145,13 @@ export default function MentorChatPhone() {
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ position: "relative", flexShrink: 0 }}>
                 <div style={{ width: 38, height: 38, borderRadius: "50%", background: "#fff", display: "grid", placeItems: "center" }}>
-                  <GraduationCap size={19} color={CL.coral} />
+                  <span style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 15, letterSpacing: "-0.5px", color: CL.coral, lineHeight: 1 }}>CP</span>
                 </div>
                 <span style={{ position: "absolute", right: 0, bottom: 0, width: 11, height: 11, borderRadius: "50%", background: "#22c55e", border: "2px solid #fff" }} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: "-.2px", display: "flex", alignItems: "center", gap: 4 }}>
-                  Mentor Arjun <span style={{ fontSize: 11 }}>🎓✨</span>
+                  Mentor Ankit <span style={{ fontSize: 11 }}>🎓✨</span>
                 </div>
                 <div style={{ fontSize: 10.5, opacity: 0.92 }}>online • replies in minutes</div>
               </div>

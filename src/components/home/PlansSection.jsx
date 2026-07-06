@@ -6,16 +6,25 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  GraduationCap, ArrowRight,
+  GraduationCap, ArrowRight, Target, Rocket, CheckCircle2,
   ShieldCheck, Star, Phone, CalendarCheck, LineChart, MessageCircle,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 import MentorChatPhone from "./MentorChatPhone.jsx";
 
 const FEATURES = [
-  { icon: CalendarCheck, title: "Daily targets & accountability", desc: "A customised day-by-day plan, checked so you never drift." },
-  { icon: LineChart,     title: "Weekly test analysis",           desc: "Spot weak chapters early and fix them before they cost marks." },
-  { icon: MessageCircle, title: "1-on-1 doubt solving",           desc: "Direct mentor access on WhatsApp whenever you're stuck." },
+  { icon: Target,        title: "A roadmap built around you",     desc: "Your syllabus, your weak areas, your target rank — turned into a phase-by-phase plan you actually follow." },
+  { icon: CalendarCheck, title: "Daily targets & accountability", desc: "A customised day-by-day plan, checked every single day so you never drift or lose a week." },
+  { icon: LineChart,     title: "Weekly test analysis",           desc: "Spot weak chapters early and fix them before they quietly cost you 20–30 marks in the real exam." },
+  { icon: MessageCircle, title: "1-on-1 doubt solving",           desc: "Direct mentor access on WhatsApp whenever you're stuck — no waiting days for one concept." },
+  { icon: Rocket,        title: "Strategy + motivation",          desc: "Exam tactics, revision cycles and a mentor who keeps you consistent when your own motivation dips." },
+];
+
+/* Short reassurance chips shown under the CTA. */
+const ASSURANCE = [
+  "IITian & doctor mentors",
+  "1000+ students mentored",
+  "Cancel anytime",
 ];
 
 const WHY = [
@@ -50,7 +59,13 @@ export default function PlansSection() {
             border: `1px solid ${CL.line}`, boxShadow: CL.shadow, padding: 30,
           }}>
           <div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 26 }}>
+            <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.32rem", color: CL.ink, letterSpacing: "-0.4px", lineHeight: 1.25, marginBottom: 8 }}>
+              A topper's mentor — mapped onto your prep.
+            </div>
+            <p style={{ color: CL.body, fontSize: 14, lineHeight: 1.65, marginBottom: 22 }}>
+              Coaching teaches the whole class the same thing. Your CollegeParichay mentor works only on <strong style={{ color: CL.ink }}>you</strong> — what to study today, what's slipping, and exactly how to fix it before the exam. Here's what that looks like week to week:
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24 }}>
               {FEATURES.map(({ icon: Icon, title, desc }) => (
                 <div key={title} style={{ display: "flex", gap: 13, alignItems: "flex-start" }}>
                   <span style={{ width: 40, height: 40, borderRadius: 11, flexShrink: 0, display: "grid", placeItems: "center", background: CL.coralSoft, color: CL.coralDk }}>
@@ -70,6 +85,13 @@ export default function PlansSection() {
             }}>
               Explore Mentorship <ArrowRight size={18} />
             </Link>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 16px", marginTop: 18 }}>
+              {ASSURANCE.map((a) => (
+                <span key={a} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 600, color: CL.body }}>
+                  <CheckCircle2 size={14} color={CL.coral} /> {a}
+                </span>
+              ))}
+            </div>
           </div>
           <MentorChatPhone />
         </motion.div>
