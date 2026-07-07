@@ -94,6 +94,7 @@ const TOOLS_MEGA = [
   {
     title: "Plan & Apply", to: "/planner", color: "#FF693D", icon: CalendarDays,
     items: [
+      { label: "Colleges For You",        to: "/for-you",    icon: Compass,      desc: "Personalised IIT, NIT & IIIT picks for your JEE rank" },
       { label: "Branch Insights Hub",     to: "/branches",   icon: Landmark,     desc: "Explore 15+ engineering domains, scope & career paths" },
       { label: "Trade-off Analyzer",      to: "/branch-vs-college", icon: GitCompare, desc: "A quick 6-question quiz to settle college vs branch" },
       { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays, desc: "Track every JoSAA & CSAB round date in one place" },
@@ -103,7 +104,6 @@ const TOOLS_MEGA = [
   {
     title: "Compare & Explore", to: "/compare", color: "#6366f1", icon: GitCompare,
     items: [
-      { label: "Colleges For You", to: "/for-you",       icon: Compass,    desc: "Personalised IIT, NIT & IIIT picks for your JEE rank" },
       { label: "Compare Colleges", to: "/compare",       icon: GitCompare, desc: "Place colleges side by side on fees, ranks & placements" },
       { label: "Compare Exams",    to: "/compare-exams", icon: BarChart3,  desc: "JEE vs BITSAT, VITEEE & other entrance exams" },
       { label: "College Map",      to: "/map",           icon: Landmark,   desc: "Find engineering institutes across India on a map" },
