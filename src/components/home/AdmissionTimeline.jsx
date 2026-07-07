@@ -3,11 +3,15 @@
    a wavy horizontal progress rail (DONE ✓ · NOW · upcoming) above four
    quarter cards. The current quarter is computed live from the date —
    floor(month / 3) — so the "NOW" marker auto-advances every month with
-   no manual edits. Card styling follows the soft "LIVE"-pill card look. */
+   no manual edits. Quarter cards expand to every event; the full exam
+   directory is tappable for per-exam detail; an Exam Buzz CTA links out
+   to the live news + counselling radar. */
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import { CalendarRange, Check, ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { CalendarRange, Check, ChevronDown, Radio, X, ArrowRight } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
+import { EXAM_DETAILS, EXAM_GROUPS, levelTone } from "../../data/examCalendar.js";
 
 /* exam-family palette (the coloured dots + legend) */
 const FAM = {
@@ -30,9 +34,11 @@ const QUARTERS = [
       { fam: "jee",   name: "JEE Main Session 2 Reg.",     sub: "Feb" },
       { fam: "state", name: "KCET · KEAM · MHT CET Reg.",  sub: "Jan" },
       { fam: "state", name: "COMEDK · EAMCET Reg.",        sub: "Feb" },
+      { fam: "private", name: "AEEE Phase 1 · AMUEEE Reg.", sub: "Jan – Feb" },
       { fam: "other", name: "Board Practicals & Theory",   sub: "Feb – Mar" },
       { fam: "state", name: "WBJEE · GUJCET Reg.",         sub: "Mar" },
-      { fam: "jee",   name: "BITSAT Session 1 Reg.",       sub: "Mar" },
+      { fam: "jee",   name: "BITSAT S1 Reg. Closes",       sub: "Mar" },
+      { fam: "private", name: "VITEEE · SRMJEEE Reg. Closes", sub: "Mar" },
     ],
   },
   {
@@ -44,7 +50,7 @@ const QUARTERS = [
       { fam: "neet",    name: "NEET-UG",                          sub: "May 3" },
       { fam: "state",   name: "COMEDK UGET",                      sub: "May 9" },
       { fam: "adv",     name: "JEE Advanced",                     sub: "May 17" },
-      { fam: "jee",     name: "BITSAT Session 1",                 sub: "Late May" },
+      { fam: "jee",     name: "BITSAT Session 1 & 2",             sub: "Late May" },
       { fam: "state",   name: "WBJEE · EAPCET · OJEE",            sub: "May" },
       { fam: "adv",     name: "JEE Advanced Results",             sub: "Jun" },
       { fam: "council", name: "JoSAA Counselling Begins",         sub: "Jun" },
@@ -54,10 +60,10 @@ const QUARTERS = [
   {
     mon: "Jul – Sep", accent: CL.blue, accentBg: "rgba(58,134,255,.12)", events: [
       { fam: "council", name: "JoSAA Rounds 1 – 6",         sub: "Jul" },
-      { fam: "council", name: "CSAB Special Rounds",        sub: "Jul" },
+      { fam: "council", name: "CSAB Special Rounds",        sub: "Jul – Aug" },
       { fam: "state",   name: "State Counselling (CAP)",    sub: "Jul" },
       { fam: "council", name: "College Seat Allotment",     sub: "Jul" },
-      { fam: "council", name: "Final Reporting",            sub: "Aug" },
+      { fam: "council", name: "Institute / Final Reporting", sub: "Aug" },
       { fam: "other",   name: "Classes Begin",              sub: "Aug" },
       { fam: "council", name: "Spot Round Vacancies",       sub: "Sep" },
       { fam: "council", name: "Admission Closure",          sub: "Sep" },
@@ -68,7 +74,7 @@ const QUARTERS = [
       { fam: "jee",     name: "JEE Main · S1 Notification",   sub: "Oct" },
       { fam: "other",   name: "Internal Branch Sliding",      sub: "Oct" },
       { fam: "jee",     name: "JEE Main Registration",        sub: "Nov" },
-      { fam: "private", name: "VITEEE · SRMJEEE Reg.",        sub: "Nov" },
+      { fam: "private", name: "VITEEE · SRMJEEE · KIITEE Reg.", sub: "Oct – Nov" },
       { fam: "jee",     name: "BITSAT · GUJCET Reg.",         sub: "Dec" },
       { fam: "jee",     name: "JEE Main Admit Card & Prep",   sub: "Dec" },
     ],
@@ -80,13 +86,6 @@ const PHASE = {
   live: { label: "Live", fg: "#0a8f5b", bg: CL.greenSoft },
   soon: { label: "Soon", fg: CL.coralDk, bg: CL.coralSoft },
 };
-
-/* full engineering-entrance list, grouped (from the admission handbook) */
-const EXAM_GROUPS = [
-  { title: "National-level", tone: CL.coral, list: ["JEE Main", "JEE Advanced", "BITSAT", "CUET UG", "AEEE", "AMUEEE", "KIITEE", "COMEDK UGET", "IMU CET", "CIPET JEE"] },
-  { title: "State-level", tone: CL.amber, list: ["MHT CET", "KCET", "KEAM", "WBJEE", "AP EAPCET", "TS EAMCET", "GUJCET", "OJEE", "HPCET", "CG PET", "BCECE", "REAP", "UPTAC", "JAC Delhi", "HSTES Haryana", "MP DTE", "TNEA"] },
-  { title: "Private universities", tone: "#14B8A6", list: ["VITEEE", "SRMJEEE", "MET (Manipal)", "BVP CET", "UPESAT", "SAAT", "LPU NEST", "GEEE", "JET", "SITEEE"] },
-];
 
 /* smooth cubic path through a list of points */
 function wavePath(pts) {
@@ -106,6 +105,8 @@ const MAX_ROWS = 5;                          // events shown before "+N more"
 
 export default function AdmissionTimeline() {
   const [showExams, setShowExams] = useState(false);
+  const [openCards, setOpenCards] = useState({});
+  const [activeExam, setActiveExam] = useState(null);
 
   const { liveIndex, cycleLabel } = useMemo(() => {
     const now = new Date();
@@ -115,10 +116,23 @@ export default function AdmissionTimeline() {
   }, []);
 
   const phaseOf = (i) => (i < liveIndex ? "done" : i === liveIndex ? "live" : "soon");
+  const toggleCard = (i) => setOpenCards((o) => ({ ...o, [i]: !o[i] }));
 
   const nodePts = NODES_X.map((x, i) => ({ x, y: NODES_Y[i] }));
   const grayPts = [{ x: 0, y: NODES_Y[0] }, ...nodePts, { x: 1200, y: NODES_Y[3] }];
   const coralPts = [{ x: 0, y: NODES_Y[0] }, ...nodePts.slice(0, liveIndex + 1)];
+
+  const detail = activeExam ? EXAM_DETAILS[activeExam] : null;
+  const detailRows = detail && [
+    ["Level", detail.level],
+    ["Conducted by", detail.body],
+    ["Mode", detail.mode],
+    ["Duration", detail.duration],
+    ["Eligibility", detail.eligibility],
+    ["Courses", detail.courses],
+    ["Accepted by", detail.acceptedBy],
+    ["Note", detail.note],
+  ].filter(([, v]) => v);
 
   return (
     <section id="admission-timeline" style={{ background: CL.cream, padding: "84px 0", position: "relative" }}>
@@ -175,8 +189,9 @@ export default function AdmissionTimeline() {
           {QUARTERS.map((q, i) => {
             const ph = phaseOf(i);
             const p = PHASE[ph];
-            const shown = q.events.slice(0, MAX_ROWS);
-            const extra = q.events.length - shown.length;
+            const open = !!openCards[i];
+            const shown = open ? q.events : q.events.slice(0, MAX_ROWS);
+            const extra = q.events.length - MAX_ROWS;
             return (
               <motion.div
                 key={q.mon}
@@ -211,14 +226,25 @@ export default function AdmissionTimeline() {
                       </div>
                     );
                   })}
-                  {extra > 0 && <span className="at-more">+{extra} more</span>}
+                  {extra > 0 && (
+                    <button className="at-more" onClick={() => toggleCard(i)}>
+                      {open ? "Show less" : `+${extra} more`}
+                    </button>
+                  )}
                 </div>
               </motion.div>
             );
           })}
         </div>
 
-        {/* complete exam list (collapsible) */}
+        {/* Exam Buzz CTA — explore live news, results & the radar */}
+        <div className="at-cta-wrap">
+          <Link to="/exam-buzz" className="at-cta">
+            <Radio size={17} /> Explore live updates on Exam Buzz <ArrowRight size={16} />
+          </Link>
+        </div>
+
+        {/* complete exam directory (collapsible · tap any exam for details) */}
         <div className="at-exams">
           <button className="at-exams-toggle" onClick={() => setShowExams((s) => !s)} aria-expanded={showExams}>
             Complete list of engineering entrance exams
@@ -233,8 +259,13 @@ export default function AdmissionTimeline() {
                 <div key={g.title} className="at-exam-group">
                   <h4 className="at-exam-group-title" style={{ color: g.tone }}>{g.title}</h4>
                   <div className="at-chips">
-                    {g.list.map((x) => (
-                      <span key={x} className="at-chip" style={{ borderColor: `${g.tone}44` }}>{x}</span>
+                    {g.exams.map((name) => (
+                      <button
+                        key={name} className="at-chip" style={{ borderColor: `${g.tone}44` }}
+                        onClick={() => setActiveExam(name)}
+                      >
+                        {name}
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -243,6 +274,42 @@ export default function AdmissionTimeline() {
           )}
         </div>
       </div>
+
+      {/* per-exam detail modal */}
+      <AnimatePresence>
+        {detail && (
+          <motion.div
+            className="at-modal-overlay"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setActiveExam(null)}
+          >
+            <motion.div
+              className="at-modal"
+              initial={{ opacity: 0, scale: 0.94, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96, y: 8 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
+              onClick={(e) => e.stopPropagation()}
+              role="dialog" aria-label={`${activeExam} details`}
+            >
+              <button className="at-modal-x" onClick={() => setActiveExam(null)} aria-label="Close"><X size={16} /></button>
+              <span className="at-modal-level" style={{ color: levelTone(detail.level), background: `${levelTone(detail.level)}18` }}>
+                {detail.level}
+              </span>
+              <h3 className="at-modal-title">{activeExam}</h3>
+              <dl className="at-modal-rows">
+                {detailRows.map(([k, v]) => (
+                  <div key={k} className="at-modal-row">
+                    <dt>{k}</dt>
+                    <dd>{v}</dd>
+                  </div>
+                ))}
+              </dl>
+              <Link to="/exam-buzz" className="at-modal-link" onClick={() => setActiveExam(null)}>
+                See live dates on Exam Buzz <ArrowRight size={14} />
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
@@ -279,7 +346,7 @@ const CSS = `
 }
 
 /* ── quarter cards ── */
-.at-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; max-width:1120px; margin:0 auto; }
+.at-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; max-width:1120px; margin:0 auto; align-items:start; }
 .at-card {
   background:#FBF7F4; border:1px solid ${CL.line}; border-radius:22px; padding:22px;
   display:flex; flex-direction:column; gap:16px;
@@ -309,15 +376,30 @@ const CSS = `
 .at-card-yr { font:700 .9rem/1 sans-serif; color:${CL.muted}; }
 
 .at-events { display:flex; flex-direction:column; gap:11px; }
-.at-event { display:flex; align-items:flex-start; gap:10px; cursor:default; }
+.at-event { display:flex; align-items:flex-start; gap:10px; }
 .at-event-dot { width:9px; height:9px; border-radius:50%; margin-top:4px; flex-shrink:0; }
 .at-event-text { display:flex; flex-direction:column; gap:1px; min-width:0; }
 .at-event-name { font:700 .86rem/1.3 ${CL.display}; color:${CL.ink}; }
 .at-event-sub { font:500 .74rem/1.35 sans-serif; color:${CL.muted}; }
-.at-more { font:700 .78rem/1 ${CL.display}; color:${CL.coralDk}; margin-top:4px; padding-left:19px; }
+.at-more {
+  align-self:flex-start; margin-top:4px; margin-left:19px; cursor:pointer;
+  font:700 .78rem/1 ${CL.display}; color:${CL.coralDk};
+  background:none; border:none; padding:2px 0;
+}
+.at-more:hover { text-decoration:underline; }
 
-/* ── complete exam list ── */
-.at-exams { max-width:1120px; margin:44px auto 0; text-align:center; }
+/* ── Exam Buzz CTA ── */
+.at-cta-wrap { text-align:center; margin:44px 0 4px; }
+.at-cta {
+  display:inline-flex; align-items:center; gap:10px; text-decoration:none;
+  background:${CL.coral}; color:#fff; border-radius:50px; padding:14px 28px;
+  font:800 1rem/1 ${CL.display}; box-shadow:0 10px 26px rgba(255,105,61,.32);
+  transition:transform .2s, box-shadow .2s;
+}
+.at-cta:hover { transform:translateY(-2px); box-shadow:0 14px 32px rgba(255,105,61,.42); }
+
+/* ── complete exam directory ── */
+.at-exams { max-width:1120px; margin:26px auto 0; text-align:center; }
 .at-exams-toggle {
   display:inline-flex; align-items:center; gap:9px; cursor:pointer;
   background:#fff; border:1px solid ${CL.cream3}; border-radius:50px;
@@ -332,9 +414,42 @@ const CSS = `
 .at-exam-group-title { font:800 .78rem/1 ${CL.display}; letter-spacing:.1em; text-transform:uppercase; margin-bottom:12px; }
 .at-chips { display:flex; flex-wrap:wrap; gap:8px; }
 .at-chip {
-  font:600 .8rem/1 sans-serif; color:${CL.ink2}; background:#fff;
+  font:600 .8rem/1 sans-serif; color:${CL.ink2}; background:#fff; cursor:pointer;
   border:1px solid ${CL.cream3}; border-radius:8px; padding:7px 11px;
+  transition:transform .15s, box-shadow .15s, background .15s;
 }
+.at-chip:hover { transform:translateY(-2px); background:#FBF7F4; box-shadow:0 6px 16px rgba(33,29,46,.08); }
+
+/* ── per-exam detail modal ── */
+.at-modal-overlay {
+  position:fixed; inset:0; z-index:120; background:rgba(20,16,26,.55);
+  backdrop-filter:blur(3px); display:grid; place-items:center; padding:20px;
+}
+.at-modal {
+  position:relative; width:min(440px,100%); max-height:88vh; overflow-y:auto;
+  background:#fff; border-radius:22px; padding:26px 24px 22px;
+  box-shadow:0 30px 70px rgba(13,27,62,.35);
+}
+.at-modal-x {
+  position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%;
+  display:grid; place-items:center; cursor:pointer; color:${CL.body};
+  background:${CL.cream2}; border:1px solid ${CL.cream3};
+}
+.at-modal-x:hover { background:${CL.cream3}; }
+.at-modal-level {
+  display:inline-flex; font:800 10.5px/1 ${CL.display}; letter-spacing:.09em; text-transform:uppercase;
+  padding:6px 12px; border-radius:50px;
+}
+.at-modal-title { font:800 1.5rem/1.15 ${CL.display}; color:${CL.ink}; letter-spacing:-.5px; margin:12px 0 18px; }
+.at-modal-rows { display:flex; flex-direction:column; gap:0; }
+.at-modal-row { display:grid; grid-template-columns:110px 1fr; gap:14px; padding:11px 0; border-top:1px solid ${CL.line}; }
+.at-modal-row dt { font:700 .78rem/1.4 ${CL.display}; color:${CL.muted}; text-transform:uppercase; letter-spacing:.04em; }
+.at-modal-row dd { font:500 .9rem/1.5 sans-serif; color:${CL.ink2}; }
+.at-modal-link {
+  display:inline-flex; align-items:center; gap:7px; margin-top:18px; text-decoration:none;
+  color:${CL.coralDk}; font:800 .88rem/1 ${CL.display};
+}
+.at-modal-link:hover { gap:10px; }
 
 @media (max-width:920px) {
   .at-rail { display:none; }
@@ -343,5 +458,6 @@ const CSS = `
 @media (max-width:560px) {
   .at-cards { grid-template-columns:1fr; }
   .at-card { padding:20px; }
+  .at-modal-row { grid-template-columns:96px 1fr; gap:10px; }
 }
 `;

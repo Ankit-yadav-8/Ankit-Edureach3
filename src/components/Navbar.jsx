@@ -94,34 +94,36 @@ const TOOLS_MEGA = [
   {
     title: "Plan & Apply", to: "/planner", color: "#FF693D", icon: CalendarDays,
     items: [
-      { label: "Branch Insights Hub",     to: "/branches",   icon: Landmark,     desc: "15+ engineering domains" },
-      { label: "Trade-off Analyzer",      to: "/branch-vs-college", icon: GitCompare, desc: "College vs branch quiz" },
-      { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays, desc: "Track every round date" },
-      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert ₹299 plan" },
+      { label: "Branch Insights Hub",     to: "/branches",   icon: Landmark,     desc: "Explore 15+ engineering domains, scope & career paths" },
+      { label: "Trade-off Analyzer",      to: "/branch-vs-college", icon: GitCompare, desc: "A quick 6-question quiz to settle college vs branch" },
+      { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays, desc: "Track every JoSAA & CSAB round date in one place" },
+      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert-guided choice filling — the ₹299 plan" },
     ],
   },
   {
     title: "Compare & Explore", to: "/compare", color: "#6366f1", icon: GitCompare,
     items: [
-      { label: "Compare Colleges", to: "/compare",       icon: GitCompare, desc: "Place colleges side by side" },
-      { label: "Compare Exams",    to: "/compare-exams", icon: BarChart3,  desc: "JEE vs other entrance exams" },
-      { label: "College Map",      to: "/map",           icon: Landmark,   desc: "Find institutes across India" },
+      { label: "Colleges For You", to: "/for-you",       icon: Compass,    desc: "Personalised IIT, NIT & IIIT picks for your JEE rank" },
+      { label: "Compare Colleges", to: "/compare",       icon: GitCompare, desc: "Place colleges side by side on fees, ranks & placements" },
+      { label: "Compare Exams",    to: "/compare-exams", icon: BarChart3,  desc: "JEE vs BITSAT, VITEEE & other entrance exams" },
+      { label: "College Map",      to: "/map",           icon: Landmark,   desc: "Find engineering institutes across India on a map" },
     ],
   },
   {
     title: "Cutoffs & More", to: "/cutoffs", color: "#2ec4b6", icon: FileText,
     items: [
-      { label: "Official Cutoffs",      to: "/cutoffs",      icon: FileText,    desc: "Real opening & closing ranks" },
-      { label: "Scholarships & Loans",  to: "/scholarships", icon: BadgeCheck,  desc: "Funding options for your seat" },
-      { label: "Admin Data",            to: "/admin",        icon: ShieldCheck, desc: "Manage portal data" },
+      { label: "Exam Buzz",             to: "/exam-buzz",    icon: Megaphone,   desc: "Live results, admit cards & counselling deadlines" },
+      { label: "Official Cutoffs",      to: "/cutoffs",      icon: FileText,    desc: "Real JoSAA opening & closing ranks, round by round" },
+      { label: "Scholarships & Loans",  to: "/scholarships", icon: BadgeCheck,  desc: "Funding, scholarships & education loans for your seat" },
+      { label: "Admin Data",            to: "/admin",        icon: ShieldCheck, desc: "Manage listings & portal data (admins only)" },
     ],
   },
   {
     title: "Community", to: "/campus-notes", color: "#e5484d", icon: Heart,
     items: [
-      { label: "Campus Notes",       to: "/campus-notes", icon: BookOpen,   desc: "Upload & share study notes", iconBg: "#FFF3E0", iconColor: "#8B5E34" },
-      { label: "Public Community",   to: "/community",    icon: Globe2,     desc: "Peer discussions & Q&A", iconBg: "#E0F2F1", iconColor: "#00695C" },
-      { label: "Events & Fests",     to: "/campus-fests", icon: Sparkles,   desc: "Discover cultural & tech fests", iconBg: "#FCE4EC", iconColor: "#C2185B" },
+      { label: "Campus Notes",       to: "/campus-notes", icon: BookOpen,   desc: "Upload & share study notes with your batch", iconBg: "#FFF3E0", iconColor: "#8B5E34" },
+      { label: "Public Community",   to: "/community",    icon: Globe2,     desc: "Peer discussions, doubts & Q&A with students", iconBg: "#E0F2F1", iconColor: "#00695C" },
+      { label: "Events & Fests",     to: "/campus-fests", icon: Sparkles,   desc: "Discover cultural & tech fests across campuses", iconBg: "#FCE4EC", iconColor: "#C2185B" },
     ],
   },
 ];
