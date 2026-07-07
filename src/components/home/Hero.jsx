@@ -997,7 +997,7 @@ function HeroFeatureCards({ isMobile, isXs }) {
 const HERO_RADAR = [
   { key: "jee-main", accent: "#FF693D", eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College Predictor",
     desc: "Turn your NTA percentile into a rank and see every IIT, NIT & IIIT you can get.",
-    links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"], ["Exam dates & pattern", "/exams"]],
+    links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"], ["Exam dates & pattern", "/jee-main"]],
     cta: "Open JEE Main", to: "/jee-main" },
   { key: "jee-adv", accent: "#8b5cf6", eyebrow: "JEE ADVANCED 2026", title: "JEE Advanced — IIT Predictor",
     desc: "Marks to AIR, then the exact IITs and branches you qualify for, category-wise.",
@@ -1154,7 +1154,7 @@ const HERO_RIGHT = [
   { key: "jee-main", accent: "#FF693D", Icon: Crosshair, eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College",
     desc: "Turn your NTA percentile into a rank, then discover every IIT, NIT, IIIT and GFTI seat you can realistically get this year.",
     highlights: ["%ile → Rank", "NIT · IIIT", "2026 data"],
-    links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"], ["Exam dates & pattern", "/exams"]],
+    links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"], ["Exam dates & pattern", "/jee-main"]],
     cta: "Open JEE Main", to: "/jee-main" },
   { key: "neet", accent: "#22c55e", Icon: Stethoscope, eyebrow: "NEET 2026", title: "NEET — Rank & College Finder",
     desc: "Predict your NEET rank and explore MBBS, BDS and other medical colleges with both All-India-quota and state-quota cutoffs.",

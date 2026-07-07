@@ -7,8 +7,6 @@
 import { COLLEGES } from "../src/data/colleges.js";
 import { NEET_COLLEGES } from "../src/data/neetColleges.js";
 import { BRANCHES } from "../src/data/branches.js";
-import { EXAMS } from "../src/data/exams.js";
-import { NEWS } from "../src/data/news.js";
 import { BLOG_POSTS } from "../src/data/blog.js";
 import { PRIVATE_UNIS } from "../src/data/counselling.js";
 import { TEAM } from "../src/data/team.js";
@@ -27,10 +25,11 @@ export const STATIC_ROUTES = [
   ["/tools", "0.8", "weekly"],
   ["/reviews", "0.7", "weekly"],
   ["/cutoffs", "0.8", "weekly"],
-  ["/exams", "0.8", "weekly"],
   ["/compare-exams", "0.6", "monthly"],
   ["/josaa-2026", "0.8", "daily"],
   ["/josaa-round-1-result-2026", "0.7", "weekly"],
+  ["/josaa-round-2-result-2026", "0.7", "weekly"],
+  ["/josaa-round-3-result-2026", "0.7", "weekly"],
   ["/planner", "0.6", "weekly"],
   ["/map", "0.6", "monthly"],
   ["/scholarships", "0.6", "monthly"],
@@ -70,9 +69,7 @@ export function routeGroups() {
     { name: "private",  urls: slugList(PRIVATE_UNIS, "/private", "0.7", "weekly") },
     { name: "neet",     urls: slugList(NEET_COLLEGES, "/neet-colleges", "0.7", "weekly") },
     { name: "branches", urls: slugList(BRANCHES, "/branches", "0.7", "weekly") },
-    { name: "exams",    urls: slugList(EXAMS, "/exams", "0.7", "weekly") },
-    { name: "news",     urls: slugList(NEWS, "/news", "0.6", "weekly") },
-    { name: "blog",     urls: slugList(BLOG_POSTS, "/blog", "0.7", "weekly") },
+    { name: "blog",     urls: slugList(BLOG_POSTS.filter((p) => !p.link), "/blog", "0.7", "weekly") },
     { name: "team",     urls: TEAM.filter((t) => t?.id).map((t) => [`/team/${t.id}`, "0.4", "monthly"]) },
   ];
 }

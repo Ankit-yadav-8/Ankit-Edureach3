@@ -48,7 +48,7 @@ const COMPANY_LINKS = [
 const ICON = { github: Github, linkedin: Linkedin, dribbble: Dribbble };
 
 /* ── Footer column ──────────────────────────────────────────────── */
-function Col({ title, links }) {
+function Col({ title, links, unclickable }) {
   return (
     <div>
       <h4
@@ -74,22 +74,34 @@ function Col({ title, links }) {
       <ul style={{ display: "flex", flexDirection: "column", gap: ".65rem" }}>
         {links.map(([label, to]) => (
           <li key={label}>
-            <Link
-              to={to}
-              style={{
-                color: "rgba(255,255,255,.7)",
-                fontSize: ".88rem",
-                transition: ".2s",
-              }}
-              onMouseEnter={(e) =>
-                (e.target.style.color = "var(--coral-light)")
-              }
-              onMouseLeave={(e) =>
-                (e.target.style.color = "rgba(255,255,255,.7)")
-              }
-            >
-              {label}
-            </Link>
+            {unclickable ? (
+              <span
+                style={{
+                  color: "rgba(255,255,255,.7)",
+                  fontSize: ".88rem",
+                  cursor: "default",
+                }}
+              >
+                {label}
+              </span>
+            ) : (
+              <Link
+                to={to}
+                style={{
+                  color: "rgba(255,255,255,.7)",
+                  fontSize: ".88rem",
+                  transition: ".2s",
+                }}
+                onMouseEnter={(e) =>
+                  (e.target.style.color = "var(--coral-light)")
+                }
+                onMouseLeave={(e) =>
+                  (e.target.style.color = "rgba(255,255,255,.7)")
+                }
+              >
+                {label}
+              </Link>
+            )}
           </li>
         ))}
       </ul>
@@ -277,7 +289,7 @@ export default function Footer() {
             </p>
             <Col title="College Parichay" links={COLLEGE_LINKS} />
           </div>
-          <Col title="Exam" links={EXAM_LINKS} />
+          <Col title="Exam" links={EXAM_LINKS} unclickable />
           <Col title="Tools" links={TOOL_LINKS} />
           <Col title="Company" links={COMPANY_LINKS} />
         </div>

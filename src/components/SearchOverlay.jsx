@@ -111,7 +111,7 @@ export default function SearchOverlay({ open, onClose }) {
                 ref={inputRef}
                 value={q}
                 onChange={(e) => { setQ(e.target.value); setActive(0); }}
-                placeholder="Search colleges, exams, tools, news…"
+                placeholder="Search colleges, tools, reviews…"
                 style={{ flex: 1, border: "none", outline: "none", fontSize: "1.05rem", color: "var(--navy)", background: "transparent" }}
               />
               <button onClick={onClose} aria-label="Close search" style={{ color: "var(--gray)" }}>

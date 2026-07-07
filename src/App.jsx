@@ -14,9 +14,6 @@ import JeeAdvanced from "./pages/JeeAdvanced.jsx";
 import JeeAdvancedResult from "./pages/JeeAdvancedResult.jsx";
 import Colleges from "./pages/Colleges.jsx";
 import CollegeDetail from "./pages/CollegeDetail.jsx";
-import Exams from "./pages/Exams.jsx";
-import ExamDetail from "./pages/ExamDetail.jsx";
-import NewsDetail from "./pages/NewsDetail.jsx";
 import PrivateDetail from "./pages/PrivateDetail.jsx";
 import PrivateUnis from "./pages/PrivateUnis.jsx";
 import About from "./pages/About.jsx";
@@ -26,6 +23,8 @@ import Shortlist from "./pages/Shortlist.jsx";
 import ForYou from "./pages/ForYou.jsx";
 import Josaa2026 from "./pages/Josaa2026.jsx";
 import JosaaRound1Result from "./pages/JosaaRound1Result.jsx";
+import JosaaRound2Result from "./pages/JosaaRound2Result.jsx";
+import JosaaRound3Result from "./pages/JosaaRound3Result.jsx";
 import CounsellingPlanner from "./pages/CounsellingPlanner.jsx";
 import CollegeMap from "./pages/CollegeMap.jsx";
 import CompareExams from "./pages/CompareExams.jsx";
@@ -143,9 +142,6 @@ export default function App() {
           <Route path="/jee-advanced-result-2026" element={<JeeAdvancedResult />} />
           <Route path="/colleges" element={<Colleges />} />
           <Route path="/colleges/:slug" element={<CollegeDetail />} />
-          <Route path="/exams" element={<Exams />} />
-          <Route path="/exams/:slug" element={<ExamDetail />} />
-          <Route path="/news/:slug" element={<NewsDetail />} />
           <Route path="/private-universities" element={<PrivateUnis />} />
           <Route path="/private/:slug" element={<PrivateDetail />} />
           <Route path="/about" element={<About />} />
@@ -159,6 +155,8 @@ export default function App() {
           <Route path="/for-you" element={<ForYou />} />
           <Route path="/josaa-2026" element={<Josaa2026 />} />
           <Route path="/josaa-round-1-result-2026" element={<JosaaRound1Result />} />
+          <Route path="/josaa-round-2-result-2026" element={<JosaaRound2Result />} />
+          <Route path="/josaa-round-3-result-2026" element={<JosaaRound3Result />} />
           <Route path="/planner" element={<CounsellingPlanner />} />
           <Route path="/map" element={<CollegeMap />} />
           <Route path="/compare-exams" element={<CompareExams />} />

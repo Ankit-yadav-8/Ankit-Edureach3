@@ -124,7 +124,7 @@ export default function CompareExams() {
                       <th style={{ minWidth: 130, padding: "14px", textAlign: "left" }}></th>
                       {exams.map((e) => (
                         <th key={e.slug} style={{ minWidth: 160, padding: "14px", textAlign: "left", borderBottom: `2px solid ${e.color}` }}>
-                          <Link to={`/exams/${e.slug}`} style={{ fontFamily: CL.display, fontWeight: 800, color: CL.ink }}>{e.name}</Link>
+                          <span style={{ fontFamily: CL.display, fontWeight: 800, color: CL.ink }}>{e.name}</span>
                         </th>
                       ))}
                     </tr>
@@ -137,14 +137,6 @@ export default function CompareExams() {
                         {exams.map((e) => <td key={e.slug} style={{ padding: "12px 14px", fontSize: 13.5, color: CL.body }}>{fn(e)}</td>)}
                       </motion.tr>
                     ))}
-                    <tr>
-                      <td style={{ padding: "12px 14px", fontWeight: 700, color: CL.ink2, fontSize: 13 }}>Details</td>
-                      {exams.map((e) => (
-                        <td key={e.slug} style={{ padding: "12px 14px" }}>
-                          <Link to={`/exams/${e.slug}`} className="btn btn-ghost" style={{ fontSize: 12.5, padding: "6px 12px" }}>Open <ArrowRight size={13} /></Link>
-                        </td>
-                      ))}
-                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -224,7 +216,7 @@ function IntelCard({ exam, idx, recommended, removable, onRemove }) {
       style={{ position: "relative", background: CL.card, border: `1px solid ${recommended ? exam.color : CL.line}`, boxShadow: recommended ? `0 10px 34px ${rgba(exam.color, 0.22)}` : CL.shadow, borderRadius: 18, padding: "16px 16px 18px", overflow: "hidden" }}>
       <span style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: exam.color }} />
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
-        <Link to={`/exams/${exam.slug}`} style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 17, color: CL.ink }}>{exam.name}</Link>
+        <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 17, color: CL.ink }}>{exam.name}</span>
         {removable && (
           <button onClick={onRemove} aria-label="Remove" style={{ marginLeft: "auto", display: "grid", placeItems: "center", width: 22, height: 22, borderRadius: "50%", background: CL.cream2, border: `1px solid ${CL.line}` }}>
             <X size={12} />

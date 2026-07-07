@@ -6,12 +6,13 @@ import { motion } from "framer-motion";
 import {
   BookOpen, Sparkles, GitCompareArrows, Gauge, Building2,
   Brain, ListChecks, TrendingUp, ShieldCheck, Layers, Clock, ArrowRight,
+  Trophy, Medal, Award,
 } from "lucide-react";
 import Seo from "../components/Seo.jsx";
 import { CL, clEyebrow } from "../components/home/clTheme.js";
 import { BLOG_POSTS } from "../data/blog.js";
 
-const ICONS = { BookOpen, GitCompareArrows, Gauge, Building2, Brain, ListChecks, TrendingUp, ShieldCheck, Layers };
+const ICONS = { BookOpen, GitCompareArrows, Gauge, Building2, Brain, ListChecks, TrendingUp, ShieldCheck, Layers, Trophy, Medal, Award };
 const ACCENTS = { coral: CL.coral, green: CL.green, blue: CL.blue, violet: CL.violet, amber: CL.amber };
 
 const CATEGORIES = ["All", "NEET", "Counselling", "Strategy", "Exams", "Careers", "Colleges"];
@@ -28,7 +29,7 @@ function PostCard({ p }) {
       whileHover={{ y: -5 }}
       style={{ height: "100%" }}
     >
-      <Link to={`/blog/${p.slug}`} style={{ textDecoration: "none", display: "block", height: "100%" }}>
+      <Link to={p.link || `/blog/${p.slug}`} style={{ textDecoration: "none", display: "block", height: "100%" }}>
         <article style={{
           background: CL.card, borderRadius: 20, border: `1px solid ${CL.line}`,
           boxShadow: CL.shadow, padding: "22px 22px 20px", height: "100%",
@@ -67,7 +68,7 @@ function HeroPreview() {
         const Ic = ICONS[p.iconName] || BookOpen;
         const accent = ACCENTS[p.accent] || CL.coral;
         return (
-          <Link to={`/blog/${p.slug}`} key={p.slug} style={{ textDecoration: "none" }}>
+          <Link to={p.link || `/blog/${p.slug}`} key={p.slug} style={{ textDecoration: "none" }}>
             <motion.div
               initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.02, x: -4 }}

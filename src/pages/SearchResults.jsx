@@ -6,7 +6,7 @@ import { fmtINR } from "../utils/format.js";
 import Seo from "../components/Seo.jsx";
 
 const KIND_COLOR = { College: "#0EA5A4", Private: "#0EA5A4", Exam: "#FF693D", News: "#F4A261", Tool: "#2EC4B6" };
-const FILTERS = ["All", "College", "Exam", "Private", "News", "Tool"];
+const FILTERS = ["All", "College", "Private", "Tool"];
 const SUGGESTIONS = ["Top IITs with package above 20 lakh", "CSE colleges in Tamil Nadu", "Best NITs for placements", "Affordable IIITs"];
 
 export default function SearchResults() {
@@ -30,7 +30,7 @@ export default function SearchResults() {
           <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,4vw,2.2rem)", margin: "8px 0 4px" }}>
             {q ? <>Results for &ldquo;{q}&rdquo;</> : "Search College Parichay"}
           </h1>
-          <p style={{ color: "var(--muted)" }}>{results.length} matches across colleges, exams, tools and news.</p>
+          <p style={{ color: "var(--muted)" }}>{results.length} matches across colleges, tools and reviews.</p>
         </div>
       </section>
 

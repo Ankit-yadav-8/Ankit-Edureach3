@@ -10,8 +10,6 @@
      public/sitemap-colleges.xml
      public/sitemap-neet.xml
      public/sitemap-branches.xml
-     public/sitemap-exams.xml
-     public/sitemap-news.xml
      public/sitemap-blog.xml
 
    Add static routes / data-driven routes in scripts/routes.mjs —

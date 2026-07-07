@@ -1,7 +1,7 @@
 /* BlogPost — full article page at /blog/:slug. Renders the post body, a back
    control, and a few "read next" cards. */
 import { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   BookOpen, GitCompareArrows, Gauge, Building2, Brain, ListChecks,
@@ -67,7 +67,11 @@ export default function BlogPost() {
     document.title = post ? `${post.title} · College Parichay Blog` : "Blog · College Parichay";
   }, [slug, post]);
 
-  if (!post) {
+  // Result cards (Round 1/2/3) live on dedicated pages via `link` and have no
+  // article body — redirect if someone lands on their /blog/:slug directly.
+  if (post?.link) return <Navigate to={post.link} replace />;
+
+  if (!post || !post.body) {
     return (
       <div style={{ background: CL.cream, minHeight: "100vh", paddingTop: 128 }}>
         <div className="container" style={{ textAlign: "center", paddingBottom: 80 }}>

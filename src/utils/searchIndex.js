@@ -19,8 +19,6 @@
 
 import { COLLEGES, BRANCHES } from "../data/colleges.js";
 import { NEET_COLLEGES } from "../data/neetColleges.js";
-import { EXAMS } from "../data/exams.js";
-import { NEWS } from "../data/news.js";
 import { PRIVATE_UNIS } from "../data/counselling.js";
 import { collegeBranches } from "./cutoffEngine.js";
 import { fmtINR } from "./format.js";
@@ -148,27 +146,6 @@ function buildIndex() {
     });
   });
 
-  EXAMS.forEach((e) =>
-    idx.push({
-      kind: "Exam", type: null,
-      title: e.name,
-      sub: `${e.level} exam · ${e.body}`,
-      to: `/exams/${e.slug}`,
-      keywords: norm(`${e.name} ${e.full} ${e.body} ${e.level} entrance exam ${e.accepts || ""}`),
-      meta: {},
-    })
-  );
-
-  NEWS.forEach((n) =>
-    idx.push({
-      kind: "News", type: null,
-      title: n.title,
-      sub: `${n.date} · ${(n.tags || []).join(", ")}`,
-      to: `/news/${n.slug}`,
-      keywords: norm(`${n.title} ${(n.tags || []).join(" ")} ${n.excerpt}`),
-      meta: {},
-    })
-  );
 
   [
     { title: "JEE Main Rank Predictor", sub: "Marks → predicted rank", to: "/jee-main#rank" },

@@ -21,7 +21,7 @@ const JEE_MEGA = [
     title: "JEE Main", to: "/jee-main", color: "#FF693D", icon: FileText,
     items: [
       { label: "Eligibility Criteria",     to: "/jee-main#eligibility",   icon: BadgeCheck, desc: "Age & qualification rules" },
-      { label: "Exam Pattern & Schedule",  to: "/exams/jee-main",         icon: CalendarDays, desc: "Dates, marking & syllabus" },
+      { label: "Exam Pattern & Schedule",  to: "/jee-main",               icon: CalendarDays, desc: "Dates, marking & syllabus" },
       { label: "NIT Rankings (NIRF)",      to: "/jee-main#nit-rankings",  icon: Landmark, desc: "Official 2026 rankings" },
       { label: "College Predictor",        to: "/jee-main#college",       icon: Crosshair, desc: "Rank → eligible colleges" },
       { label: "Rank Predictor",           to: "/jee-main#rank",          icon: Gauge, desc: "Marks → expected rank" },
@@ -32,7 +32,7 @@ const JEE_MEGA = [
     items: [
       { label: "Result & Rank List 2026",    to: "/jee-advanced-result-2026", icon: Award, desc: "Toppers & cutoffs" },
       { label: "Eligibility Criteria",       to: "/jee-advanced#eligibility",   icon: BadgeCheck, desc: "Top 2.5 lakh cutoff rule" },
-      { label: "Exam Pattern & Schedule",    to: "/exams/jee-advanced",         icon: CalendarDays, desc: "Paper 1 & 2 details" },
+      { label: "Exam Pattern & Schedule",    to: "/jee-advanced",               icon: CalendarDays, desc: "Paper 1 & 2 details" },
       { label: "IIT Rankings (NIRF)",        to: "/jee-advanced#iit-rankings",  icon: Landmark, desc: "Official 2026 rankings" },
       { label: "College Predictor",          to: "/jee-advanced#college",       icon: Crosshair, desc: "Rank → eligible IITs" },
     ],

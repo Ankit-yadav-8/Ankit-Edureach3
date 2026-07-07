@@ -125,7 +125,33 @@ const LEGACY_POSTS = [
   },
 ];
 
-/* NEET cluster first (freshest / highest-intent), then the legacy JEE posts. */
-export const BLOG_POSTS = [...NEET_BLOG_POSTS, ...LEGACY_POSTS];
+/* JoSAA seat-allotment result cards. These `link` out to dedicated result
+   pages (not /blog/:slug) — Round 1 is live, Rounds 2 & 3 are awaited. */
+const RESULT_POSTS = [
+  {
+    slug: "josaa-2026-round-1-result", iconName: "Trophy", accent: "coral", category: "Counselling",
+    badge: "RESULT OUT", read: "Result live", link: "/josaa-round-1-result-2026",
+    title: "JoSAA 2026 Round 1 Seat Allotment Result",
+    snippet: "Round 1 seat allotment for all IITs, NITs, IIITs & GFTIs is out. See closing ranks and decide Freeze, Float or Slide before reporting.",
+    tag: "JoSAA 2026",
+  },
+  {
+    slug: "josaa-2026-round-2-result", iconName: "Medal", accent: "blue", category: "Counselling",
+    badge: "AWAITED", read: "Coming soon", link: "/josaa-round-2-result-2026",
+    title: "JoSAA 2026 Round 2 Seat Allotment",
+    snippet: "Round 2 re-considers Float & Slide candidates with fresh allotments. Get the expected date, reporting steps and Freeze/Float/Slide guidance.",
+    tag: "JoSAA 2026",
+  },
+  {
+    slug: "josaa-2026-round-3-result", iconName: "Award", accent: "violet", category: "Counselling",
+    badge: "AWAITED", read: "Coming soon", link: "/josaa-round-3-result-2026",
+    title: "JoSAA 2026 Round 3 Seat Allotment",
+    snippet: "Round 3 opens fresh vacancies across IITs, NITs, IIITs & GFTIs as candidates report or withdraw. Here's when it drops and how to lock your seat.",
+    tag: "JoSAA 2026",
+  },
+];
+
+/* Result cards first (highest intent), then the NEET cluster, then legacy posts. */
+export const BLOG_POSTS = [...RESULT_POSTS, ...NEET_BLOG_POSTS, ...LEGACY_POSTS];
 
 export const getBlogPost = (slug) => BLOG_POSTS.find((p) => p.slug === slug);
