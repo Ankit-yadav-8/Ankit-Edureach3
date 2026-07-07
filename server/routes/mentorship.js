@@ -23,20 +23,100 @@ const router = express.Router();
 
 const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
 const cap = (arr, n = 40) => (Array.isArray(arr) ? arr.slice(0, n) : []);
+const clampPct = (n) => Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
 
-const shell = (inner) => `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#1c1c28">
-  <h2 style="color:#F47B20;margin:0 0 6px">CollegeParichay Mentorship</h2>${inner}
-  <p style="color:#9aa0aa;font-size:12px;margin-top:18px">You're receiving this because of a mentorship enrolment on CollegeParichay.</p>
+// ── Shared email design system ──────────────────────────────────────────────
+// Every mentorship email is built from these primitives so parents get one
+// consistent, strongly-branded look. Rules kept email-client-safe: table
+// layouts (no flexbox), all styling inline, a 600px card on a tinted backdrop,
+// and a hidden preheader that controls the inbox preview line.
+const BRAND = { orange: "#F47B20", navy: "#0d1b3e", ink: "#1c1c28", sub: "#5b6472", line: "#eceff5", faint: "#9aa0aa" };
+
+// Bulletproof CTA button (renders in Outlook via padded anchor + line-height).
+const button = (label, link) =>
+  !link ? "" : `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:22px 0 4px"><tr><td style="border-radius:12px;background:${BRAND.orange};box-shadow:0 6px 18px rgba(244,123,32,.32)">
+    <a href="${esc(link)}" style="display:inline-block;padding:13px 26px;font-family:Arial,sans-serif;font-size:15px;font-weight:800;color:#ffffff;text-decoration:none;border-radius:12px">${esc(label)} &nbsp;→</a>
+  </td></tr></table>`;
+
+// Full email document — branded header band, body card, footer. `preheader`
+// is the (hidden) inbox preview text; `accent`/`eyebrow` tune the header strip.
+const shell = (inner, { preheader = "", eyebrow = "Mentorship report", accent = BRAND.orange } = {}) => `<div style="margin:0;padding:0;background:#eef1f7">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#eef1f7;font-size:1px;line-height:1px">${esc(preheader)}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f7;padding:24px 12px">
+    <tr><td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 10px 40px rgba(13,27,62,.10);font-family:Arial,Helvetica,sans-serif">
+        <tr><td style="background:${BRAND.navy};background-image:linear-gradient(135deg,#0d1b3e 0%,#1a2f63 100%);padding:22px 28px">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+            <td style="font-size:19px;font-weight:800;color:#ffffff;letter-spacing:.2px">College<span style="color:${BRAND.orange}">Parichay</span></td>
+            <td align="right" style="font-size:11px;font-weight:700;color:#c8d0e4;text-transform:uppercase;letter-spacing:1.2px">${esc(eyebrow)}</td>
+          </tr></table>
+          <div style="height:3px;width:54px;background:${accent};border-radius:3px;margin-top:12px"></div>
+        </td></tr>
+        <tr><td style="padding:26px 28px 8px">${inner}</td></tr>
+        <tr><td style="padding:18px 28px 26px">
+          <div style="border-top:1px solid ${BRAND.line};padding-top:16px;color:${BRAND.faint};font-size:11.5px;line-height:1.6">
+            You're receiving this because of a mentorship enrolment on CollegeParichay.<br>
+            <span style="color:#b6bcc8">CollegeParichay · Personalised JEE &amp; NEET mentorship · collegeparichay.in</span>
+          </div>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
 </div>`;
 
-const row = (l, v) => `<tr><td style="padding:7px 0;color:#374151;font-size:14px">${esc(l)}</td><td style="padding:7px 0;text-align:right;font-weight:700;color:#0d1b3e;font-size:14px">${esc(v)}</td></tr>`;
+// Friendly greeting/intro line under the header.
+const intro = (html) => `<p style="margin:0 0 4px;font-size:15px;color:${BRAND.sub};line-height:1.65">${html}</p>`;
+
+// Section heading with a small colored tick bar.
+const heading = (title, color = BRAND.navy) =>
+  `<div style="margin:22px 0 10px"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${color};vertical-align:middle;margin-right:8px"></span><span style="font-size:15px;font-weight:800;color:${BRAND.ink};vertical-align:middle">${esc(title)}</span></div>`;
+
+// A single big highlighted hero number (the headline metric of the email).
+const hero = (label, value, unit, sub, color = BRAND.navy) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 4px">
+  <tr><td style="background:${color};background-image:linear-gradient(135deg,${color} 0%,rgba(0,0,0,.14) 220%);border-radius:14px;padding:20px 22px" align="center">
+    <div style="font-size:11px;font-weight:700;color:#ffffff;opacity:.72;text-transform:uppercase;letter-spacing:1.4px">${esc(label)}</div>
+    <div style="font-size:40px;font-weight:800;color:#ffffff;line-height:1.1;margin-top:4px">${esc(value)}${unit ? `<span style="font-size:17px;font-weight:700;opacity:.6"> ${esc(unit)}</span>` : ""}</div>
+    ${sub ? `<div style="font-size:13px;color:#ffffff;opacity:.9;margin-top:4px">${esc(sub)}</div>` : ""}
+  </td></tr>
+</table>`;
+
+// A responsive row of highlighted stat tiles (2 or 3 across).
+const tiles = (items) => {
+  const cells = items.filter(Boolean).map((t) => `<td width="${Math.floor(100 / items.length)}%" valign="top" style="padding:4px">
+      <div style="background:${t.color}12;border:1px solid ${t.color}2e;border-radius:12px;padding:12px 10px;text-align:center">
+        <div style="font-size:22px;font-weight:800;color:${t.color};line-height:1.15">${esc(t.value)}</div>
+        <div style="font-size:11px;font-weight:600;color:${BRAND.sub};margin-top:3px">${esc(t.label)}</div>
+      </div></td>`).join("");
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0"><tr>${cells}</tr></table>`;
+};
+
+// A labelled progress bar (table-based so it renders everywhere).
+const bar = (label, pct, color = BRAND.orange, valueText) => {
+  const p = clampPct(pct);
+  return `<div style="margin:11px 0">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="font-size:13px;font-weight:600;color:${BRAND.sub}">${esc(label)}</td>
+      <td align="right" style="font-size:13px;font-weight:800;color:${BRAND.ink}">${esc(valueText ?? `${p}%`)}</td>
+    </tr></table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:5px;background:#eef1f7;border-radius:8px"><tr>
+      <td style="height:9px;background:${color};border-radius:8px;width:${p}%;font-size:0;line-height:0">&nbsp;</td>
+      ${p < 100 ? `<td style="height:9px;font-size:0;line-height:0">&nbsp;</td>` : ""}
+    </tr></table>
+  </div>`;
+};
+
+// Definition-style key/value row for detail tables.
+const row = (l, v, color = BRAND.navy) => `<tr>
+  <td style="padding:9px 0;border-bottom:1px solid ${BRAND.line};color:${BRAND.sub};font-size:14px">${esc(l)}</td>
+  <td style="padding:9px 0;border-bottom:1px solid ${BRAND.line};text-align:right;font-weight:800;color:${color};font-size:14px">${esc(v)}</td>
+</tr>`;
 
 const chapterBlock = (title, color, items) => {
   const list = cap(items);
   if (!list.length) return "";
-  return `<div style="margin:10px 0">
-    <div style="font-size:13px;font-weight:700;color:${color};margin-bottom:6px">${esc(title)} (${list.length})</div>
-    <div>${list.map((c) => `<span style="display:inline-block;background:${color}14;border:1px solid ${color}40;color:${color};border-radius:20px;padding:3px 10px;font-size:12px;margin:0 6px 6px 0">${esc(c)}</span>`).join("")}</div>
+  return `<div style="margin:12px 0">
+    <div style="font-size:13px;font-weight:700;color:${color};margin-bottom:7px">${esc(title)} <span style="background:${color}1c;border-radius:20px;padding:1px 8px;font-size:11px">${list.length}</span></div>
+    <div>${list.map((c) => `<span style="display:inline-block;background:${color}12;border:1px solid ${color}3a;color:${color};border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600;margin:0 6px 6px 0">${esc(c)}</span>`).join("")}</div>
   </div>`;
 };
 
@@ -51,64 +131,76 @@ const rankBlock = (rank) => {
     rank.percentile != null ? ["Percentile", rank.percentile] : null,
     rank.categoryRank ? ["Category rank", rank.categoryRank] : null,
   ].filter(Boolean);
-  return `<div style="margin-top:14px;border-top:1px solid #eee;padding-top:10px">
-    <div style="font-size:14px;font-weight:800;color:#6d28d9;margin-bottom:4px">🏆 Predicted ${esc(rank.exam)} 2026 rank${rank.testName ? ` · ${esc(rank.testName)}` : ""}</div>
-    <table style="width:100%;border-collapse:collapse">${rows.map(([l, v]) => row(l, v)).join("")}</table>
-    <div style="font-size:11px;color:#9aa0aa;margin-top:4px">Estimate only — actual rank depends on official normalisation & shift difficulty.</div>
-  </div>`;
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 4px">
+    <tr><td style="background:#faf5ff;border:1px solid #e6d8fb;border-radius:14px;padding:16px 18px">
+      <div style="font-size:14px;font-weight:800;color:#6d28d9;margin-bottom:6px">🏆 Predicted ${esc(rank.exam)} 2026 rank${rank.testName ? ` · ${esc(rank.testName)}` : ""}</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows.map(([l, v]) => row(l, v, "#6d28d9")).join("")}</table>
+      <div style="font-size:11px;color:#a78bce;margin-top:8px">Estimate only — actual rank depends on official normalisation &amp; shift difficulty.</div>
+    </td></tr>
+  </table>`;
 };
 
 function buildWeeklyHtml(studentName, r, link) {
   const s = r.stats || {};
   const ch = r.chapters || {};
   const tasks = cap(r.weeklyTasks, 30);
+  const doneTasks = tasks.filter((t) => t.done).length;
   const taskHtml = tasks.length
-    ? `<div style="margin-top:14px"><div style="font-size:13px;font-weight:700;color:#1c1c28;margin-bottom:6px">This week's task list</div>${tasks.map((t) => `<div style="font-size:13px;color:#374151;padding:3px 0">${t.done ? "✅" : "⬜"} ${esc(t.text)}</div>`).join("")}</div>`
+    ? `${heading("This week's task list", BRAND.orange)}${bar("Tasks completed", (doneTasks / tasks.length) * 100, BRAND.orange, `${doneTasks} / ${tasks.length}`)}
+       <div style="margin-top:6px">${tasks.map((t) => `<div style="font-size:13.5px;color:${t.done ? "#94a3b8" : BRAND.ink};padding:5px 0;border-bottom:1px solid ${BRAND.line};${t.done ? "text-decoration:line-through" : ""}">${t.done ? "✅" : "⬜"} ${esc(t.text)}</div>`).join("")}</div>`
     : "";
+  const hasChapters = cap(ch.weak).length || cap(ch.medium).length || cap(ch.strong).length;
   return shell(`
-    <p style="font-size:15px;color:#374151;line-height:1.6">Namaste, here is this week's progress report for <b>${esc(studentName)}</b>.</p>
-    <table style="width:100%;border-collapse:collapse;margin:8px 0 4px">
+    ${intro(`Namaste — here is this week's complete progress report for <b style="color:${BRAND.ink}">${esc(studentName)}</b>.`)}
+    ${hero("Study hours this week", s.hours ?? "—", "h", s.streak != null ? `🔥 ${esc(s.streak)}-day streak` : null, BRAND.navy)}
+    ${tiles([
+      { label: "Routine kept", value: `${s.routinePct ?? "—"}%`, color: "#16a34a" },
+      { label: "Weekly tasks", value: s.weeklyTasksDone ?? "—", color: BRAND.orange },
+      { label: "Backlog cleared", value: s.backlog ?? "—", color: "#0ea5e9" },
+    ])}
+    ${heading("Performance summary")}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
       ${row("Study hours this week", `${s.hours ?? "—"} h`)}
       ${row("Day streak", `${s.streak ?? "—"} days`)}
       ${row("Routine kept", `${s.routinePct ?? "—"}%`)}
       ${row("Tasks (latest day)", s.tasks ?? "—")}
-      ${row("Weekly tasks done", s.weeklyTasksDone ?? "—")}
       ${row("Latest test", s.latestTest ?? "—")}
-      ${row("Change vs last test", s.improvement ?? "—")}
-      ${row("Backlog cleared", s.backlog ?? "—")}
+      ${row("Change vs last test", s.improvement ?? "—", /^-|down|drop/i.test(String(s.improvement)) ? "#dc2626" : "#16a34a")}
     </table>
-    <div style="margin-top:14px;border-top:1px solid #eee;padding-top:10px">
-      <div style="font-size:14px;font-weight:800;color:#1c1c28;margin-bottom:4px">Chapter strength report</div>
-      ${chapterBlock("Weak chapters", "#dc2626", ch.weak)}
-      ${chapterBlock("Medium chapters", "#d97706", ch.medium)}
-      ${chapterBlock("Strong chapters", "#16a34a", ch.strong)}
-      ${(!cap(ch.weak).length && !cap(ch.medium).length && !cap(ch.strong).length) ? `<div style="font-size:13px;color:#6b7280">No chapters logged yet.</div>` : ""}
-    </div>
+    ${heading("Chapter strength report")}
+    ${chapterBlock("Needs work", "#dc2626", ch.weak)}
+    ${chapterBlock("Getting there", "#d97706", ch.medium)}
+    ${chapterBlock("Strong", "#16a34a", ch.strong)}
+    ${hasChapters ? "" : `<div style="font-size:13px;color:${BRAND.sub}">No chapters logged yet.</div>`}
     ${rankBlock(r.rank)}
     ${taskHtml}
-    ${link ? `<a href="${esc(link)}" style="display:inline-block;margin:18px 0 4px;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:10px">Open the dashboard</a>` : ""}`);
+    ${button("Open the dashboard", link)}`,
+    { preheader: `${studentName}: ${s.hours ?? "—"}h studied this week, ${s.routinePct ?? "—"}% routine kept`, eyebrow: "Weekly report" });
 }
 
 export function buildDailyHtml(studentName, r, link) {
   const d = r.daily || {};
   const subs = cap(d.subjects, 12);
+  const maxH = Math.max(1, ...subs.map((x) => Number(x.h) || 0));
   const subHtml = subs.length
-    ? `<div style="margin-top:6px">${subs.map((x) => `<div style="display:flex;justify-content:space-between;font-size:13px;color:#374151;padding:4px 0;border-bottom:1px solid #f1f1f1"><span>${esc(x.name)}</span><span style="font-weight:700;color:#0d1b3e">${esc(x.h)}h · ${esc(x.t)} tasks</span></div>`).join("")}</div>`
-    : `<div style="font-size:13px;color:#6b7280">No subjects logged today.</div>`;
+    ? subs.map((x) => bar(`${esc(x.name)}`, (Number(x.h) || 0) / maxH * 100, BRAND.navy, `${esc(x.h)}h · ${esc(x.t)} tasks`)).join("")
+    : `<div style="font-size:13px;color:${BRAND.sub}">No subjects logged today.</div>`;
+  const taskPct = d.tasksTotal ? (Number(d.tasksDone) || 0) / Number(d.tasksTotal) * 100 : 0;
   return shell(`
-    <p style="font-size:15px;color:#374151;line-height:1.6">Namaste, here is today's report (${esc(r.date || "")}) for <b>${esc(studentName)}</b>.</p>
-    <table style="width:100%;border-collapse:collapse;margin:8px 0 4px">
-      ${row("Total hours today", `${d.hours ?? 0} h`)}
-      ${row("Tasks completed", `${d.tasksDone ?? 0} / ${d.tasksTotal ?? 0}`)}
-      ${row("Routine", d.routine ? "Followed ✓" : "Missed")}
-      ${d.todayTest ? row("Test today", d.todayTest) : ""}
-    </table>
-    <div style="margin-top:12px;border-top:1px solid #eee;padding-top:10px">
-      <div style="font-size:14px;font-weight:800;color:#1c1c28;margin-bottom:2px">Subject-wise study today</div>
-      ${subHtml}
-    </div>
+    ${intro(`Namaste — here is today's report (${esc(r.date || "")}) for <b style="color:${BRAND.ink}">${esc(studentName)}</b>.`)}
+    ${hero("Total hours studied today", d.hours ?? 0, "h", d.routine ? "Daily routine followed ✓" : "Routine missed today", BRAND.navy)}
+    ${tiles([
+      { label: "Tasks done", value: `${d.tasksDone ?? 0}/${d.tasksTotal ?? 0}`, color: BRAND.orange },
+      { label: "Routine", value: d.routine ? "✓" : "✗", color: d.routine ? "#16a34a" : "#dc2626" },
+      d.todayTest ? { label: "Test today", value: "Yes", color: "#6d28d9" } : { label: "Subjects", value: subs.length, color: "#0ea5e9" },
+    ])}
+    ${d.tasksTotal ? bar("Task completion", taskPct, BRAND.orange, `${d.tasksDone ?? 0} / ${d.tasksTotal}`) : ""}
+    ${d.todayTest ? `${heading("Test taken today", "#6d28d9")}<div style="background:#faf5ff;border:1px solid #e6d8fb;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:700;color:#6d28d9">${esc(d.todayTest)}</div>` : ""}
+    ${heading("Subject-wise study today")}
+    ${subHtml}
     ${rankBlock(r.rank)}
-    ${link ? `<a href="${esc(link)}" style="display:inline-block;margin:18px 0 4px;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:10px">Open the dashboard</a>` : ""}`);
+    ${button("Open the dashboard", link)}`,
+    { preheader: `${studentName} studied ${d.hours ?? 0}h today · ${d.tasksDone ?? 0}/${d.tasksTotal ?? 0} tasks done`, eyebrow: "Daily update" });
 }
 
 // Backlog alert — sent when chapters pass their target date unfinished or study
@@ -117,27 +209,37 @@ function buildBacklogHtml(studentName, r, link) {
   const b = r.backlog || {};
   const overdue = cap(b.overdue, 20);
   const overdueHtml = overdue.length
-    ? `<div style="margin-top:8px">${overdue.map((x) => `<div style="font-size:13px;color:#374151;padding:5px 0;border-bottom:1px solid #f1f1f1"><span style="color:#dc2626;font-weight:700">⏰ ${esc(x.topic)}</span> <span style="color:#9aa0aa">(${esc(x.subject)}${x.date ? ` · target ${esc(x.date)}` : ""})</span></div>`).join("")}</div>`
+    ? `<div style="margin-top:8px">${overdue.map((x) => `<div style="font-size:13px;color:${BRAND.sub};padding:7px 0;border-bottom:1px solid ${BRAND.line}"><span style="color:#dc2626;font-weight:700">⏰ ${esc(x.topic)}</span> <span style="color:${BRAND.faint}">(${esc(x.subject)}${x.date ? ` · target ${esc(x.date)}` : ""})</span></div>`).join("")}</div>`
     : "";
   const reasons = [];
   if (overdue.length) reasons.push(`${overdue.length} chapter${overdue.length === 1 ? "" : "s"} past the planned target date`);
   if (b.irregular) reasons.push(`irregular study (current streak ${b.streak ?? 0} day${b.streak === 1 ? "" : "s"}, routine kept ${b.routinePct ?? 0}%)`);
   const reasonLine = reasons.length ? reasons.join(" and ") : "the backlog is not being cleared on schedule";
   return shell(`
-    <p style="font-size:15px;color:#374151;line-height:1.6">Namaste, this is a heads-up about <b>${esc(studentName)}</b>'s preparation.</p>
-    <div style="background:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:12px 14px;margin:10px 0">
-      <div style="font-size:14px;font-weight:800;color:#c2410c;margin-bottom:4px">⚠️ Falling behind on the backlog</div>
-      <div style="font-size:13.5px;color:#7c2d12;line-height:1.6">${esc(studentName)} could not complete the planned backlog and is not keeping a regular study routine — ${esc(reasonLine)}. A little nudge from you will help them get back on track.</div>
-    </div>
-    <table style="width:100%;border-collapse:collapse;margin:8px 0 4px">
+    ${intro(`Namaste — this is a heads-up about <b style="color:${BRAND.ink}">${esc(studentName)}</b>'s preparation.`)}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0">
+      <tr><td style="background:#fff7ed;border:1px solid #fdba74;border-radius:14px;padding:15px 16px">
+        <div style="font-size:15px;font-weight:800;color:#c2410c;margin-bottom:4px">⚠️ Falling behind on the backlog</div>
+        <div style="font-size:13.5px;color:#7c2d12;line-height:1.65">${esc(studentName)} could not complete the planned backlog and is not keeping a regular study routine — ${esc(reasonLine)}. A little nudge from you will help them get back on track.</div>
+      </td></tr>
+    </table>
+    ${tiles([
+      { label: "Backlog cleared", value: `${b.pct ?? 0}%`, color: "#0ea5e9" },
+      { label: "Overdue", value: overdue.length, color: "#dc2626" },
+      { label: "Routine kept", value: `${b.routinePct ?? 0}%`, color: b.routinePct >= 70 ? "#16a34a" : "#d97706" },
+    ])}
+    ${bar("Backlog cleared", b.pct ?? 0, "#0ea5e9", `${b.cleared ?? 0} / ${b.total ?? 0}`)}
+    ${heading("The numbers")}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
       ${row("Backlog cleared", `${b.cleared ?? 0} / ${b.total ?? 0} (${b.pct ?? 0}%)`)}
-      ${row("Overdue chapters", overdue.length)}
+      ${row("Overdue chapters", overdue.length, overdue.length ? "#dc2626" : BRAND.navy)}
       ${row("Day streak", `${b.streak ?? 0} days`)}
       ${row("Routine kept", `${b.routinePct ?? 0}%`)}
       ${row("Study hours this week", `${b.hoursThisWeek ?? 0} h`)}
     </table>
-    ${overdue.length ? `<div style="margin-top:12px"><div style="font-size:14px;font-weight:800;color:#1c1c28;margin-bottom:2px">Overdue chapters</div>${overdueHtml}</div>` : ""}
-    ${link ? `<a href="${esc(link)}" style="display:inline-block;margin:18px 0 4px;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:10px">See full progress</a>` : ""}`);
+    ${overdue.length ? `${heading("Overdue chapters", "#dc2626")}${overdueHtml}` : ""}
+    ${button("See full progress", link)}`,
+    { preheader: `Action needed — ${studentName} is behind on their backlog`, eyebrow: "Action needed", accent: "#dc2626" });
 }
 
 const siteOrigin = () =>

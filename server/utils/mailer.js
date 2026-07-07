@@ -87,6 +87,38 @@ export async function sendMail({ to, subject, html, text }) {
   }
 }
 
+// ── Shared branded email shell ──────────────────────────────────────────────
+// Same look as the mentorship reports: 600px card on a tinted backdrop, navy
+// gradient header with wordmark, hidden preheader for the inbox preview, and a
+// consistent footer. Email-client-safe: table layouts + inline styles only.
+const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+
+function emailShell(inner, { preheader = "", eyebrow = "", accent = "#F47B20", footer = "" } = {}) {
+  return `<div style="margin:0;padding:0;background:#eef1f7">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#eef1f7;font-size:1px;line-height:1px">${esc(preheader)}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f7;padding:24px 12px">
+    <tr><td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 10px 40px rgba(13,27,62,.10);font-family:Arial,Helvetica,sans-serif">
+        <tr><td style="background:#0d1b3e;background-image:linear-gradient(135deg,#0d1b3e 0%,#1a2f63 100%);padding:22px 28px">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+            <td style="font-size:19px;font-weight:800;color:#ffffff;letter-spacing:.2px">College<span style="color:#F47B20">Parichay</span></td>
+            ${eyebrow ? `<td align="right" style="font-size:11px;font-weight:700;color:#c8d0e4;text-transform:uppercase;letter-spacing:1.2px">${esc(eyebrow)}</td>` : ""}
+          </tr></table>
+          <div style="height:3px;width:54px;background:${accent};border-radius:3px;margin-top:12px"></div>
+        </td></tr>
+        <tr><td style="padding:26px 28px 8px">${inner}</td></tr>
+        <tr><td style="padding:18px 28px 26px">
+          <div style="border-top:1px solid #eceff5;padding-top:16px;color:#9aa0aa;font-size:11.5px;line-height:1.6">
+            ${footer || "You're receiving this from CollegeParichay."}<br>
+            <span style="color:#b6bcc8">CollegeParichay · Personalised JEE &amp; NEET mentorship · collegeparichay.in</span>
+          </div>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</div>`;
+}
+
 // ── Parent test-report email ────────────────────────────────────────────────
 // Sent to a student's parent when they submit a daily/weekly test, so parents
 // get a plain-language progress snapshot without logging in.
@@ -94,44 +126,60 @@ export async function sendParentTestReport({ to, studentName, testTitle, examLab
   const { score, maxMarks, percent, accuracy, correctCount, wrongCount, skippedCount, totalQuestions, rank } = result;
   const grade = percent >= 75 ? "Excellent" : percent >= 50 ? "Good" : percent >= 30 ? "Needs improvement" : "Needs serious attention";
   const gradeColor = percent >= 75 ? "#15a06e" : percent >= 50 ? "#6366f1" : percent >= 30 ? "#f59e0b" : "#ef4444";
+  const pct = Math.max(0, Math.min(100, Math.round(Number(percent) || 0)));
 
   const subjRows = subjects
     .filter((s) => s.total)
     .map(
       (s) => `<tr>
-        <td style="padding:7px 10px;border-bottom:1px solid #eef0f5;color:#0d1b3e;font-weight:600">${s.name}</td>
-        <td style="padding:7px 10px;border-bottom:1px solid #eef0f5;text-align:center;color:#374151">${s.score}/${s.maxMarks}</td>
-        <td style="padding:7px 10px;border-bottom:1px solid #eef0f5;text-align:center;color:#374151">${s.accuracy}%</td>
-        <td style="padding:7px 10px;border-bottom:1px solid #eef0f5;text-align:center;color:#374151">${s.correct}/${s.total}</td>
+        <td style="padding:9px 10px;border-bottom:1px solid #eef0f5;color:#0d1b3e;font-weight:700;font-size:13px">${esc(s.name)}</td>
+        <td style="padding:9px 10px;border-bottom:1px solid #eef0f5;text-align:center;color:#374151;font-size:13px;font-weight:600">${esc(s.score)}/${esc(s.maxMarks)}</td>
+        <td style="padding:9px 10px;border-bottom:1px solid #eef0f5;text-align:center;color:#374151;font-size:13px">${esc(s.accuracy)}%</td>
+        <td style="padding:9px 10px;border-bottom:1px solid #eef0f5;text-align:center;color:#374151;font-size:13px">${esc(s.correct)}/${esc(s.total)}</td>
       </tr>`
     )
     .join("");
 
-  const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;color:#0d1b3e">
-    <h2 style="color:#F47B20;margin:0 0 4px">CollegeParichay</h2>
-    <p style="color:#6b7280;font-size:13px;margin:0 0 16px">Test report for your ward${examLabel ? ` · ${examLabel}` : ""}</p>
-    <p style="font-size:15px;margin:0 0 14px"><b>${studentName}</b> just completed <b>${testTitle}</b>. Here's how they did:</p>
-    <div style="background:#0d1b3e;border-radius:14px;padding:18px;text-align:center;color:#fff;margin-bottom:14px">
-      <div style="font-size:12px;opacity:.7">Score</div>
-      <div style="font-size:34px;font-weight:800;line-height:1.1">${score}<span style="font-size:16px;opacity:.6">/${maxMarks}</span></div>
-      <div style="font-size:13px;opacity:.9">${percent}% · ${accuracy}% accuracy</div>
-      <div style="display:inline-block;margin-top:10px;background:${gradeColor};color:#fff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:50px">${grade}</div>
-      ${rank ? `<div style="font-size:12px;opacity:.85;margin-top:10px">Estimated All-India Rank: <b>~${rank}</b></div>` : ""}
-    </div>
-    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px">
-      <tr style="background:#f4f6fb">
-        <td style="padding:8px 10px;text-align:center;border-radius:8px 0 0 8px"><div style="font-size:20px;font-weight:800;color:#15a06e">${correctCount}</div><div style="font-size:11px;color:#6b7280">Correct</div></td>
-        <td style="padding:8px 10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#ef4444">${wrongCount}</div><div style="font-size:11px;color:#6b7280">Wrong</div></td>
-        <td style="padding:8px 10px;text-align:center;border-radius:0 8px 8px 0"><div style="font-size:20px;font-weight:800;color:#94a3b8">${skippedCount}</div><div style="font-size:11px;color:#6b7280">Unattempted</div></td>
-      </tr>
+  const inner = `
+    <p style="margin:0 0 6px;font-size:13px;color:#8a93a6;font-weight:700;text-transform:uppercase;letter-spacing:.6px">Test report${examLabel ? ` · ${esc(examLabel)}` : ""}</p>
+    <p style="font-size:15px;color:#5b6472;line-height:1.6;margin:0 0 12px"><b style="color:#1c1c28">${esc(studentName)}</b> just completed <b style="color:#1c1c28">${esc(testTitle)}</b>. Here's the full breakdown:</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0">
+      <tr><td style="background:#0d1b3e;background-image:linear-gradient(135deg,#0d1b3e 0%,#1a2f63 200%);border-radius:16px;padding:22px" align="center">
+        <div style="font-size:11px;color:#fff;opacity:.7;text-transform:uppercase;letter-spacing:1.4px">Total score</div>
+        <div style="font-size:44px;font-weight:800;color:#fff;line-height:1.05;margin-top:4px">${esc(score)}<span style="font-size:18px;opacity:.55">/${esc(maxMarks)}</span></div>
+        <div style="font-size:13px;color:#fff;opacity:.9;margin-top:4px">${esc(percent)}% score · ${esc(accuracy)}% accuracy</div>
+        <div style="display:inline-block;margin-top:12px;background:${gradeColor};color:#fff;font-size:12px;font-weight:800;padding:5px 14px;border-radius:50px">${esc(grade)}</div>
+        ${rank ? `<div style="font-size:12.5px;color:#fff;opacity:.9;margin-top:12px">🏆 Estimated All-India Rank: <b>~${esc(rank)}</b></div>` : ""}
+      </td></tr>
     </table>
-    ${subjRows ? `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px">
-      <thead><tr style="text-align:left;color:#6b7280;font-size:11px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:14px 0 4px"><tr>
+      <td width="33%" style="padding:4px"><div style="background:#15a06e12;border:1px solid #15a06e2e;border-radius:12px;padding:12px 8px;text-align:center"><div style="font-size:22px;font-weight:800;color:#15a06e">${esc(correctCount)}</div><div style="font-size:11px;color:#5b6472;font-weight:600">Correct</div></div></td>
+      <td width="33%" style="padding:4px"><div style="background:#ef444412;border:1px solid #ef44442e;border-radius:12px;padding:12px 8px;text-align:center"><div style="font-size:22px;font-weight:800;color:#ef4444">${esc(wrongCount)}</div><div style="font-size:11px;color:#5b6472;font-weight:600">Wrong</div></div></td>
+      <td width="33%" style="padding:4px"><div style="background:#94a3b812;border:1px solid #94a3b82e;border-radius:12px;padding:12px 8px;text-align:center"><div style="font-size:22px;font-weight:800;color:#94a3b8">${esc(skippedCount)}</div><div style="font-size:11px;color:#5b6472;font-weight:600">Unattempted</div></div></td>
+    </tr></table>
+    <div style="margin:14px 0 4px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td style="font-size:13px;font-weight:600;color:#5b6472">Overall score</td>
+        <td align="right" style="font-size:13px;font-weight:800;color:#1c1c28">${pct}%</td>
+      </tr></table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:5px;background:#eef1f7;border-radius:8px"><tr>
+        <td style="height:9px;background:${gradeColor};border-radius:8px;width:${pct}%;font-size:0;line-height:0">&nbsp;</td>
+        ${pct < 100 ? `<td style="height:9px;font-size:0;line-height:0">&nbsp;</td>` : ""}
+      </tr></table>
+    </div>
+    ${subjRows ? `<div style="margin:20px 0 8px"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#0d1b3e;vertical-align:middle;margin-right:8px"></span><span style="font-size:15px;font-weight:800;color:#1c1c28;vertical-align:middle">Subject-wise breakdown</span></div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+      <thead><tr style="text-align:left;color:#8a93a6;font-size:11px;text-transform:uppercase;letter-spacing:.4px">
         <th style="padding:6px 10px">Subject</th><th style="padding:6px 10px;text-align:center">Marks</th><th style="padding:6px 10px;text-align:center">Accuracy</th><th style="padding:6px 10px;text-align:center">Correct</th>
       </tr></thead><tbody>${subjRows}</tbody></table>` : ""}
-    <p style="font-size:12.5px;color:#6b7280;line-height:1.6;margin:0 0 6px">Out of ${totalQuestions} questions, your ward attempted ${correctCount + wrongCount}. Encouraging consistent daily practice helps the most.</p>
-    <p style="font-size:11.5px;color:#9ca3af;margin-top:16px">You're receiving this because your email was given as the parent contact for ${studentName}'s mentorship enrolment.</p>
-  </div>`;
+    <p style="font-size:12.5px;color:#5b6472;line-height:1.65;margin:16px 0 0">Out of <b>${esc(totalQuestions)}</b> questions, ${esc(studentName)} attempted <b>${correctCount + wrongCount}</b>. Encouraging consistent daily practice helps the most.</p>`;
+
+  const html = emailShell(inner, {
+    preheader: `${studentName} scored ${score}/${maxMarks} (${percent}%) on ${testTitle}`,
+    eyebrow: "Test report",
+    accent: gradeColor,
+    footer: `You're receiving this because your email is the parent contact for ${esc(studentName)}'s mentorship enrolment.`,
+  });
 
   const text = `${studentName} completed ${testTitle}. Score: ${score}/${maxMarks} (${percent}%), accuracy ${accuracy}%. Correct ${correctCount}, wrong ${wrongCount}, unattempted ${skippedCount} of ${totalQuestions}.${rank ? ` Estimated AIR ~${rank}.` : ""}`;
 
@@ -176,12 +224,16 @@ export async function sendOtpEmail(email, code) {
       to: [{ email }],
       subject: "Your CollegeParichay verification code",
       textContent: `Your CollegeParichay verification code is ${code}. Valid for 5 minutes.`,
-      htmlContent: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto">
-        <h2 style="color:#F47B20;margin:0 0 8px">CollegeParichay</h2>
-        <p style="color:#333;font-size:15px">Your verification code is:</p>
-        <div style="font-size:32px;font-weight:800;letter-spacing:8px;color:#1c1c28;margin:12px 0">${code}</div>
-        <p style="color:#888;font-size:13px">Valid for 5 minutes. If you didn't request this, ignore this email.</p>
-      </div>`,
+      htmlContent: emailShell(`
+        <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">Use this code to verify your email and sign in to CollegeParichay:</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0"><tr>
+          <td align="center" style="background:#f4f6fb;border:1px dashed #cbd3e4;border-radius:14px;padding:22px">
+            <div style="font-size:11px;color:#8a93a6;font-weight:700;text-transform:uppercase;letter-spacing:1.4px">Verification code</div>
+            <div style="font-size:38px;font-weight:800;letter-spacing:10px;color:#0d1b3e;margin-top:6px">${esc(code)}</div>
+          </td>
+        </tr></table>
+        <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ Valid for <b>5 minutes</b>. If you didn't request this, you can safely ignore this email.</p>`,
+        { preheader: `Your CollegeParichay code is ${code} — valid for 5 minutes`, eyebrow: "Verify email", footer: "You're receiving this because someone requested a sign-in code for this email." }),
     });
   } catch (e) {
     console.error("Email send failed:", e.message);

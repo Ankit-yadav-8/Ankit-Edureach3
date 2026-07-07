@@ -20,23 +20,50 @@ const WEEK_MS = 7 * DAY_MS;
 const siteOrigin = () =>
   (process.env.CLIENT_ORIGIN || "").split(",")[0].trim() || "https://collegeparichay.in";
 
-const shell = (inner) => `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;color:#1c1c28">
-  <h2 style="color:#F47B20;margin:0 0 12px">CollegeParichay Mentorship</h2>${inner}
-  <p style="color:#9aa0aa;font-size:12px;margin-top:22px">You're receiving this because of a mentorship enrolment on CollegeParichay.</p>
+const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+
+// Shared branded shell (mirrors the report emails) — 600px card on a tinted
+// backdrop, navy gradient header, hidden preheader, consistent footer.
+const shell = (inner, { preheader = "", eyebrow = "Weekly check-in" } = {}) => `<div style="margin:0;padding:0;background:#eef1f7">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#eef1f7;font-size:1px;line-height:1px">${esc(preheader)}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f7;padding:24px 12px">
+    <tr><td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 10px 40px rgba(13,27,62,.10);font-family:Arial,Helvetica,sans-serif">
+        <tr><td style="background:#0d1b3e;background-image:linear-gradient(135deg,#0d1b3e 0%,#1a2f63 100%);padding:22px 28px">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+            <td style="font-size:19px;font-weight:800;color:#ffffff;letter-spacing:.2px">College<span style="color:#F47B20">Parichay</span></td>
+            <td align="right" style="font-size:11px;font-weight:700;color:#c8d0e4;text-transform:uppercase;letter-spacing:1.2px">${esc(eyebrow)}</td>
+          </tr></table>
+          <div style="height:3px;width:54px;background:#F47B20;border-radius:3px;margin-top:12px"></div>
+        </td></tr>
+        <tr><td style="padding:26px 28px 8px">${inner}</td></tr>
+        <tr><td style="padding:18px 28px 26px">
+          <div style="border-top:1px solid #eceff5;padding-top:16px;color:#9aa0aa;font-size:11.5px;line-height:1.6">
+            You're receiving this because of a mentorship enrolment on CollegeParichay.<br>
+            <span style="color:#b6bcc8">CollegeParichay · Personalised JEE &amp; NEET mentorship · collegeparichay.in</span>
+          </div>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
 </div>`;
 
+const button = (label, link) => `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px 0 4px"><tr><td style="border-radius:12px;background:#F47B20;box-shadow:0 6px 18px rgba(244,123,32,.32)">
+  <a href="${esc(link)}" style="display:inline-block;padding:13px 26px;font-family:Arial,sans-serif;font-size:15px;font-weight:800;color:#ffffff;text-decoration:none;border-radius:12px">${esc(label)} &nbsp;→</a>
+</td></tr></table>`;
+
 const parentHtml = (name, link) => shell(`
-  <p style="font-size:15px">Namaste,</p>
-  <p style="font-size:15px;color:#374151;line-height:1.6">Here's your weekly check-in for <b>${name}</b>'s mentorship.
-  Open the dashboard to see this week's study hours, streak, tasks completed and latest test analysis.</p>
-  <a href="${link}" style="display:inline-block;margin:14px 0;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:10px">View weekly progress</a>
-  <p style="font-size:13px;color:#6b7280">Your child's mentor reviews this every week too.</p>`);
+  <p style="margin:0 0 4px;font-size:15px;color:#5b6472;line-height:1.65">Namaste — here's your weekly check-in for <b style="color:#1c1c28">${esc(name)}</b>'s mentorship.</p>
+  <p style="font-size:14px;color:#5b6472;line-height:1.65;margin:8px 0 0">Open the dashboard to see this week's <b>study hours</b>, <b>day streak</b>, <b>tasks completed</b> and the <b>latest test analysis</b> — all in one place.</p>
+  ${button("View weekly progress", link)}
+  <p style="font-size:13px;color:#8a93a6;margin:10px 0 0">👨‍🏫 Your child's mentor reviews this same report every week.</p>`,
+  { preheader: `Your weekly mentorship check-in for ${name}`, eyebrow: "Weekly check-in" });
 
 const studentHtml = (name, link) => shell(`
-  <p style="font-size:15px">Hi ${name || "there"},</p>
-  <p style="font-size:15px;color:#374151;line-height:1.6">It's your weekly update time. Log this week's study hours,
-  tasks and any test results so your dashboard — and your parents' report — stays accurate.</p>
-  <a href="${link}" style="display:inline-block;margin:14px 0;background:#F47B20;color:#fff;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:10px">Update my dashboard</a>`);
+  <p style="margin:0 0 4px;font-size:15px;color:#5b6472;line-height:1.65">Hi <b style="color:#1c1c28">${esc(name || "there")}</b> — it's your weekly update time.</p>
+  <p style="font-size:14px;color:#5b6472;line-height:1.65;margin:8px 0 0">Log this week's <b>study hours</b>, <b>tasks</b> and any <b>test results</b> so your dashboard — and your parents' report — stays accurate and up to date.</p>
+  ${button("Update my dashboard", link)}`,
+  { preheader: "Log this week's hours, tasks and test results", eyebrow: "Action needed" });
 
 async function runOnce() {
   // Weekly cadence is anchored to Sunday: the job is checked daily but only
