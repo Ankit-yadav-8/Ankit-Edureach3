@@ -2746,6 +2746,19 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .mfe-bar-seats { display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#fbbf24; }
 }
 
+/* ── Lift floating action buttons above bottom bars/trays so nothing overlaps ── */
+/* Mentorship sticky enrol bar (mobile/tablet) */
+@media (max-width:1024px) {
+  body.mentor-enrol-bar .fab-chat     { bottom:92px  !important; }
+  body.mentor-enrol-bar .fab-whatsapp { bottom:156px !important; }
+  body.mentor-enrol-bar .back-to-top  { bottom:calc(1.8rem + 72px); }
+}
+
+/* Compare tray floats above the WhatsApp/chat button stack so its chips never hide behind them */
+@media (max-width:900px) {
+  .compare-tray { bottom:152px !important; }
+}
+
 /* ── Section vertical padding — smooth scale across breakpoints ── */
 @media (max-width:430px)  { .section { padding:2.5rem 0; } }
 @media (min-width:431px) and (max-width:767px)  { .section { padding:3rem 0; } }

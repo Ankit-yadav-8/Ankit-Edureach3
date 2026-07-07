@@ -14,6 +14,7 @@ export default function WhatsAppButton() {
       href={href} target="_blank" rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"
       title="Chat with us on WhatsApp"
+      className="fab-whatsapp"
       style={{
         position: "fixed", right: 20, bottom: 84, zIndex: 71,
         width: 56, height: 56, borderRadius: "50%",

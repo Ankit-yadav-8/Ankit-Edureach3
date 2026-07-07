@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -126,6 +126,15 @@ function FloatingEnrol({ cfg, scrollToEnrol }) {
   const { open: openEnrol } = useEnrol();
   const [closed, setClosed] = useState(false);
   const [idx, setIdx] = useState(0);
+
+  // On phones/tablets the enrol bar is a sticky bottom bar; flag the body so the
+  // floating action buttons (chat / WhatsApp / back-to-top) can lift above it.
+  useEffect(() => {
+    if (closed) return;
+    document.body.classList.add("mentor-enrol-bar");
+    return () => document.body.classList.remove("mentor-enrol-bar");
+  }, [closed]);
+
   if (closed) return null;
 
   const multi = cfg.tracks.length > 1;

@@ -1,10 +1,9 @@
 /* Home — rebuilt as a short, focused hub.
    Hero → tools → branch catalog → rank-to-cutoff → branch vs college →
-   plans → exam buzz teaser → success stories → FAQ. News, the application
-   radar and top-colleges blocks now live on dedicated pages. */
+   plans → explore/premium colleges → admission timeline → FAQ. News, the
+   application radar and top-colleges blocks now live on dedicated pages. */
 import Seo from "../components/Seo.jsx";
 import Hero from "../components/home/Hero.jsx";
-import CollegeTicker from "../components/home/CollegeTicker.jsx";
 import ToolsGrid from "../components/home/ToolsGrid.jsx";
 import BranchCatalog from "../components/home/BranchCatalog.jsx";
 import AdvancedPredictorHome from "../components/home/AdvancedPredictorHome.jsx";
@@ -13,9 +12,7 @@ import BranchVsCollege from "../components/home/BranchVsCollege.jsx";
 import PlansSection from "../components/home/PlansSection.jsx";
 import ExploreColleges from "../components/home/ExploreColleges.jsx";
 import PremiumColleges from "../components/home/PremiumColleges.jsx";
-import ExamCalendar from "../components/home/ExamCalendar.jsx";
-import ExamBuzzHome from "../components/home/ExamBuzzHome.jsx";
-import Testimonials from "../components/home/Testimonials.jsx";
+import AdmissionTimeline from "../components/home/AdmissionTimeline.jsx";
 import FaqSection from "../components/home/FaqSection.jsx";
 
 export default function Home({ onSearch }) {
@@ -110,9 +107,6 @@ export default function Home({ onSearch }) {
       {/* ── Hero ── */}
       <Hero onSearch={onSearch} />
 
-      {/* ── College logo ticker ── */}
-      <CollegeTicker />
-
       {/* ── Smart tools (LIVE-card grid) ── */}
       <ToolsGrid />
 
@@ -137,14 +131,8 @@ export default function Home({ onSearch }) {
       {/* ── Premium colleges that take your JEE rank (outside JoSAA) ── */}
       <PremiumColleges />
 
-      {/* ── Exam Calendar 2026–27 — auto-scrolling month rail ── */}
-      <ExamCalendar />
-
-      {/* ── Exam Buzz teaser (news + radar live on /exam-buzz) ── */}
-      <ExamBuzzHome />
-
-      {/* ── Success stories ── */}
-      <Testimonials />
+      {/* ── Admission timeline — wavy quarter rail, auto-advancing "NOW" ── */}
+      <AdmissionTimeline />
 
       {/* ── FAQ ── */}
       <FaqSection />

@@ -28,6 +28,7 @@ export default function Chatbot() {
   return (
     <>
       <button onClick={() => setOpen((o) => !o)} aria-label="Open assistant"
+        className="fab-chat"
         style={{ position: "fixed", right: 20, bottom: 20, zIndex: 70, width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg,var(--coral),var(--coral-light))", color: "#fff", display: "grid", placeItems: "center", boxShadow: "0 10px 28px rgba(230,57,70,.45)" }}>
         {open ? <X size={24} /> : <MessageCircle size={24} />}
       </button>
