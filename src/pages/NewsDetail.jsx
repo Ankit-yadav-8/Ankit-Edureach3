@@ -8,7 +8,7 @@ export default function NewsDetail() {
   const { slug } = useParams();
   const nav = useNavigate();
   const n = NEWS_BY_SLUG[slug];
-  if (!n) return <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}><Seo title="Article not found" robots="noindex, follow" path={`/news/${slug}`} /><h2>Article not found</h2><Link to="/exam-buzz" className="btn btn-coral" style={{ marginTop: 16 }}>All news</Link></div>;
+  if (!n) return <div className="page container" style={{ padding: "80px 0", textAlign: "center" }}><Seo title="Article not found" robots="noindex, follow" path={`/news/${slug}`} /><h2>Article not found</h2><Link to="/" className="btn btn-coral" style={{ marginTop: 16 }}>Back to home</Link></div>;
 
   const related = NEWS.filter((x) => x.slug !== slug).slice(0, 3);
 

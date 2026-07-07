@@ -41,7 +41,6 @@ export const STATIC_ROUTES = [
   ["/class-12", "0.6", "weekly"],
   ["/branches", "0.8", "weekly"],
   ["/branch-vs-college", "0.7", "weekly"],
-  ["/exam-buzz", "0.7", "daily"],
   ["/neet", "0.7", "weekly"],
   ["/neet-strategy", "0.7", "weekly"],
   ["/neet-colleges", "0.8", "weekly"],

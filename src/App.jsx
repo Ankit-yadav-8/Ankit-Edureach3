@@ -55,7 +55,6 @@ import PublicCommunity from "./pages/PublicCommunity.jsx";
 import Branches from "./pages/Branches.jsx";
 import BranchDetail from "./pages/BranchDetail.jsx";
 import BranchVsCollegePage from "./pages/BranchVsCollegePage.jsx";
-import ExamBuzz from "./pages/ExamBuzz.jsx";
 import Blog from "./pages/Blog.jsx";
 import BlogPost from "./pages/BlogPost.jsx";
 import CampusNotes from "./pages/CampusNotes.jsx";
@@ -181,7 +180,6 @@ export default function App() {
           <Route path="/branches" element={<Branches />} />
           <Route path="/branches/:slug" element={<BranchDetail />} />
           <Route path="/branch-vs-college" element={<BranchVsCollegePage />} />
-          <Route path="/exam-buzz" element={<ExamBuzz />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/campus-notes" element={<CampusNotes />} />

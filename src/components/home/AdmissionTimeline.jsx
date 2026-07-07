@@ -4,11 +4,10 @@
    computed live from the date — (year-2026)*4 + floor(month/3) — so the
    "NOW" marker auto-advances every month across cycles with no manual
    edits. Cards expand to every event; the full exam directory is tappable
-   for per-exam detail; an Exam Buzz CTA links to the counselling hub. */
+   for per-exam detail. */
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { CalendarRange, Check, ChevronDown, Radio, X, ArrowRight } from "lucide-react";
+import { CalendarRange, Check, ChevronDown, X } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 import { EXAM_DETAILS, EXAM_GROUPS, levelTone } from "../../data/examCalendar.js";
 
@@ -312,13 +311,6 @@ export default function AdmissionTimeline() {
           })}
         </div>
 
-        {/* Exam Buzz CTA */}
-        <div className="at-cta-wrap">
-          <Link to="/exam-buzz" className="at-cta">
-            <Radio size={17} /> Explore the full counselling timeline on Exam Buzz <ArrowRight size={16} />
-          </Link>
-        </div>
-
         {/* complete exam directory (collapsible · tap any exam for details) */}
         <div className="at-exams">
           <button className="at-exams-toggle" onClick={() => setShowExams((s) => !s)} aria-expanded={showExams}>
@@ -362,9 +354,6 @@ export default function AdmissionTimeline() {
                   <div key={k} className="at-modal-row"><dt>{k}</dt><dd>{v}</dd></div>
                 ))}
               </dl>
-              <Link to="/exam-buzz" className="at-modal-link" onClick={() => setActiveExam(null)}>
-                See live counselling dates on Exam Buzz <ArrowRight size={14} />
-              </Link>
             </motion.div>
           </motion.div>
         )}
@@ -449,18 +438,8 @@ const CSS = `
 }
 .at-more:hover { text-decoration:underline; }
 
-/* ── Exam Buzz CTA ── */
-.at-cta-wrap { text-align:center; margin:46px 0 4px; }
-.at-cta {
-  display:inline-flex; align-items:center; gap:10px; text-decoration:none;
-  background:${CL.coral}; color:#fff; border-radius:50px; padding:14px 28px;
-  font:800 1rem/1 ${CL.display}; box-shadow:0 10px 26px rgba(255,105,61,.32);
-  transition:transform .2s, box-shadow .2s;
-}
-.at-cta:hover { transform:translateY(-2px); box-shadow:0 14px 32px rgba(255,105,61,.42); }
-
 /* ── complete exam directory ── */
-.at-exams { max-width:1120px; margin:26px auto 0; text-align:center; }
+.at-exams { max-width:1120px; margin:46px auto 0; text-align:center; }
 .at-exams-toggle {
   display:inline-flex; align-items:center; gap:9px; cursor:pointer;
   background:#fff; border:1px solid ${CL.cream3}; border-radius:50px;
@@ -492,8 +471,6 @@ const CSS = `
 .at-modal-row { display:grid; grid-template-columns:110px 1fr; gap:14px; padding:11px 0; border-top:1px solid ${CL.line}; }
 .at-modal-row dt { font:700 .78rem/1.4 ${CL.display}; color:${CL.muted}; text-transform:uppercase; letter-spacing:.04em; }
 .at-modal-row dd { font:500 .9rem/1.5 sans-serif; color:${CL.ink2}; }
-.at-modal-link { display:inline-flex; align-items:center; gap:7px; margin-top:18px; text-decoration:none; color:${CL.coralDk}; font:800 .88rem/1 ${CL.display}; }
-.at-modal-link:hover { gap:10px; }
 
 @media (max-width:1099px) {
   .at-rail { display:none; }

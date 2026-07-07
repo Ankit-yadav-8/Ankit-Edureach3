@@ -104,8 +104,8 @@ export default function JosaaRound1Result() {
 
       {/* floating action bar */}
       <div className="josr-actionbar">
-        <button className="josr-back" onClick={() => nav("/exam-buzz")}>
-          <ArrowLeft size={16} /> All news
+        <button className="josr-back" onClick={() => nav("/")}>
+          <ArrowLeft size={16} /> Back to home
         </button>
         <button
           className="josr-share"

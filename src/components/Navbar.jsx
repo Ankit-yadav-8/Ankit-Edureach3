@@ -5,7 +5,7 @@ import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, Trophy, LogOut, Sparkles,
-  HelpCircle, Newspaper, Flame, Medal, Megaphone, Globe2, Edit3, Activity, Clock, ClipboardCheck, Compass
+  HelpCircle, Flame, Globe2, Edit3, Activity, Clock, ClipboardCheck, Compass
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -112,7 +112,6 @@ const TOOLS_MEGA = [
   {
     title: "Cutoffs & More", to: "/cutoffs", color: "#2ec4b6", icon: FileText,
     items: [
-      { label: "Exam Buzz",             to: "/exam-buzz",    icon: Megaphone,   desc: "Live results, admit cards & counselling deadlines" },
       { label: "Official Cutoffs",      to: "/cutoffs",      icon: FileText,    desc: "Real JoSAA opening & closing ranks, round by round" },
       { label: "Scholarships & Loans",  to: "/scholarships", icon: BadgeCheck,  desc: "Funding, scholarships & education loans for your seat" },
       { label: "Admin Data",            to: "/admin",        icon: ShieldCheck, desc: "Manage listings & portal data (admins only)" },
@@ -124,31 +123,6 @@ const TOOLS_MEGA = [
       { label: "Campus Notes",       to: "/campus-notes", icon: BookOpen,   desc: "Upload & share study notes with your batch", iconBg: "#FFF3E0", iconColor: "#8B5E34" },
       { label: "Public Community",   to: "/community",    icon: Globe2,     desc: "Peer discussions, doubts & Q&A with students", iconBg: "#E0F2F1", iconColor: "#00695C" },
       { label: "Events & Fests",     to: "/campus-fests", icon: Sparkles,   desc: "Discover cultural & tech fests across campuses", iconBg: "#FCE4EC", iconColor: "#C2185B" },
-    ],
-  },
-];
-
-// ── "Exam Buzz" mega-menu: the old Exams tab merged with News into one ────────
-// Previously exam pages and the news section lived in two different places. They
-// are now one uniquely-named tab — "Exam Buzz" — with a Latest News column
-// (results & counselling updates) beside an Entrance Exams column.
-const EXAM_NEWS_MEGA = [
-  {
-    title: "Latest News & Results", to: "/exam-buzz", color: "#15a06e", icon: Newspaper,
-    items: [
-      { label: "🔥 JoSAA 2026 Round 1 Result", to: "/josaa-round-1-result-2026", icon: Trophy,    desc: "Seat allotment is out — Freeze/Float/Slide" },
-      { label: "JEE Advanced 2026 Result",      to: "/jee-advanced-result-2026",  icon: Medal,     desc: "Toppers, cutoffs & rank list" },
-      { label: "Application & Counselling Radar", to: "/exam-buzz",               icon: CalendarDays, desc: "Every live deadline in one timeline" },
-      { label: "All News & Admission Updates",  to: "/exam-buzz",                 icon: Megaphone,  desc: "Results, admit cards & notices" },
-    ],
-  },
-  {
-    title: "Entrance Exams", to: "/exams", color: "#FF693D", icon: FileText,
-    items: [
-      { label: "All Entrance Exams", to: "/exams",            icon: FileText,  desc: "Eligibility, pattern & dates" },
-      { label: "JEE Main",           to: "/exams/jee-main",   icon: Zap,       desc: "NTA · twice a year" },
-      { label: "JEE Advanced",       to: "/exams/jee-advanced", icon: Flame,   desc: "Gateway to the IITs" },
-      { label: "Compare Exams",      to: "/compare-exams",    icon: BarChart3, desc: "JEE vs other entrances" },
     ],
   },
 ];
