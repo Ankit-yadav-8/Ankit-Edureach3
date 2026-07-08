@@ -62,14 +62,20 @@ export default function Compare() {
   const cols = compare.map((s) => COLLEGE_BY_SLUG[s]).filter(Boolean);
   const colsKey = cols.map((c) => c.slug).join("|");
 
+  /* The analyze animation plays once — when a comparison first becomes valid
+     (2+ colleges). Adding or removing colleges after that just re-renders the
+     results instantly (no replay), saving the user's time. It only re-arms if
+     the selection drops back below 2. */
   const [phase, setPhase] = useState("result"); // analyzing | result
-  const seenKey = useRef("");
+  const animatedRef = useRef(false);
   useEffect(() => {
-    if (cols.length >= 2 && colsKey !== seenKey.current) {
-      seenKey.current = colsKey;
-      setPhase("analyzing");
+    if (cols.length >= 2) {
+      if (!animatedRef.current) { animatedRef.current = true; setPhase("analyzing"); }
+    } else {
+      animatedRef.current = false;
+      setPhase("result");
     }
-  }, [colsKey, cols.length]);
+  }, [cols.length]);
 
   /* AI scoring */
   const analysis = useMemo(() => {
@@ -121,7 +127,7 @@ export default function Compare() {
             Compare colleges, get an <span style={{ color: CL.coral }}>AI verdict</span>
           </h1>
           <p style={{ color: CL.body, maxWidth: 620 }}>
-            Add up to {MAX_COMPARE} colleges. Our engine scores each on placements, ranking, selectivity and value — then tells you which one to protect in your JoSAA list.
+            Add as many colleges as you like. Our engine scores each on placements, ranking, selectivity and value — then tells you which one to protect in your JoSAA list.
           </p>
         </div>
       </section>

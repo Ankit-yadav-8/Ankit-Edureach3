@@ -7,7 +7,10 @@ import { createContext, useContext, useEffect, useState, useCallback } from "rea
 
 const KEY_SAVED = "edureach:saved";
 const KEY_COMPARE = "edureach:compare";
-const MAX_COMPARE = 3;
+/* No hard cap — users can compare as many colleges as they like.
+   Kept as a named constant (Infinity) so every `< MAX_COMPARE` guard and the
+   toggle cap simply become no-ops rather than removing them everywhere. */
+const MAX_COMPARE = Infinity;
 
 const read = (k) => { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } };
 

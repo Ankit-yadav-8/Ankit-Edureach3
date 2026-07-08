@@ -6,9 +6,9 @@
                       filters over one rich card per exam (ExamCard).
    The hero copy and its badge-wall animation are original to College Parichay. */
 import { useMemo, useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, Compass, Sparkles, X, ChevronDown, Check, SlidersHorizontal, Layers } from "lucide-react";
+import { Search, Compass, Sparkles, X, Check, SlidersHorizontal, Layers, GitCompare } from "lucide-react";
 import Seo from "../components/Seo.jsx";
 import BackButton from "../components/BackButton.jsx";
 import AdmissionTimeline from "../components/home/AdmissionTimeline.jsx";
@@ -39,7 +39,6 @@ function FilterDropdown({ icon: Icon, label, value, options, counts, onSelect })
         <Icon size={15} className="oe-dd-lead" />
         <span className="oe-dd-label">{label}</span>
         <span className="oe-dd-value">{current.label}</span>
-        <ChevronDown size={15} style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
       </button>
       <AnimatePresence>
         {open && (
@@ -75,22 +74,31 @@ function FilterDropdown({ icon: Icon, label, value, options, counts, onSelect })
    State · Private) branch off a shared JEE interchange to a handful of exam
    "stations". Original composition + our own palette; label placement differs
    per line so text never sits on the rails. */
-const HUB = { x: 74, y: 235 };
+const HUB = { x: 80, y: 280 };
 const MAP_LINES = [
   {
     key: "national", label: "National", color: CL.coral, lbl: { anchor: "middle", dx: 0, dy: -13 },
-    pts: [[74, 235], [178, 235], [258, 158], [356, 126], [456, 102]],
-    stations: [{ x: 258, y: 158, name: "BITSAT" }, { x: 356, y: 126, name: "CUET UG" }, { x: 456, y: 102, name: "AMUEEE" }],
+    pts: [[80, 280], [180, 280], [250, 210], [335, 178], [425, 152], [515, 134], [600, 120]],
+    stations: [
+      { x: 250, y: 210, name: "BITSAT" }, { x: 335, y: 178, name: "CUET UG" }, { x: 425, y: 152, name: "AMUEEE" },
+      { x: 515, y: 134, name: "KIITEE" }, { x: 600, y: 120, name: "CIPET JEE" },
+    ],
   },
   {
-    key: "state", label: "State", color: CL.violet, lbl: { anchor: "start", dx: 11, dy: -9 },
-    pts: [[74, 235], [178, 235], [288, 262], [388, 280], [500, 292]],
-    stations: [{ x: 288, y: 262, name: "MHT CET" }, { x: 388, y: 280, name: "KCET" }, { x: 500, y: 292, name: "WBJEE" }],
+    key: "state", label: "State", color: CL.violet, lbl: { anchor: "middle", dx: 0, dy: -12 },
+    pts: [[80, 280], [180, 280], [275, 292], [365, 300], [455, 308], [545, 314], [625, 318]],
+    stations: [
+      { x: 275, y: 292, name: "MHT CET" }, { x: 365, y: 300, name: "KCET" }, { x: 455, y: 308, name: "KEAM" },
+      { x: 545, y: 314, name: "WBJEE" }, { x: 625, y: 318, name: "OJEE" },
+    ],
   },
   {
     key: "private", label: "Private", color: CL.green, lbl: { anchor: "middle", dx: 0, dy: 22 },
-    pts: [[74, 235], [178, 235], [268, 326], [366, 382], [466, 412]],
-    stations: [{ x: 268, y: 326, name: "VITEEE" }, { x: 366, y: 382, name: "SRMJEEE" }, { x: 466, y: 412, name: "KIITEE" }],
+    pts: [[80, 280], [180, 280], [265, 360], [350, 412], [440, 452], [530, 482], [615, 502]],
+    stations: [
+      { x: 265, y: 360, name: "VITEEE" }, { x: 350, y: 412, name: "SRMJEEE" }, { x: 440, y: 452, name: "MET" },
+      { x: 530, y: 482, name: "LPU NEST" }, { x: 615, y: 502, name: "JET" },
+    ],
   },
 ];
 const pathD = (pts) => pts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
@@ -98,8 +106,8 @@ const pathD = (pts) => pts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join
 function RouteMap() {
   return (
     <div className="oe-map" aria-hidden="true">
-      <svg viewBox="0 0 620 470" className="oe-map-svg">
-        {/* rails */}
+      <svg viewBox="0 0 700 560" className="oe-map-svg">
+        {/* rails draw in on view */}
         {MAP_LINES.map((ln, i) => (
           <motion.path
             key={ln.key}
@@ -108,15 +116,21 @@ function RouteMap() {
             initial={{ pathLength: 0, opacity: 0.35 }}
             whileInView={{ pathLength: 1, opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.1, delay: 0.15 + i * 0.16, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 1.3, delay: 0.15 + i * 0.16, ease: [0.4, 0, 0.2, 1] }}
           />
         ))}
-        {/* stations */}
-        {MAP_LINES.map((ln) => ln.stations.map((s, si) => (
-          <g key={`${ln.key}-${si}`}>
+        {/* stations pop in after the rails, staggered along each line */}
+        {MAP_LINES.map((ln, li) => ln.stations.map((s, si) => (
+          <motion.g
+            key={`${ln.key}-${si}`}
+            initial={{ opacity: 0, y: 6 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.55 + li * 0.14 + si * 0.11, duration: 0.35, ease: "easeOut" }}
+          >
             <circle cx={s.x} cy={s.y} r="6.5" fill="#fff" stroke={ln.color} strokeWidth="3" />
             <text x={s.x + ln.lbl.dx} y={s.y + ln.lbl.dy} className="oe-map-lbl" textAnchor={ln.lbl.anchor} fill={CL.ink2}>{s.name}</text>
-          </g>
+          </motion.g>
         )))}
         {/* JEE interchange (you-are-here) */}
         <circle cx={HUB.x} cy={HUB.y} r="15" fill="none" stroke={CL.coral} strokeWidth="2" opacity="0.3" />
@@ -188,8 +202,10 @@ export default function OtherExams() {
       <section className="oe-hero">
         <div className="container oe-hero-grid">
           <div className="oe-hero-copy">
-            <BackButton style={{ margin: "0 0 16px" }} />
-            <span className="oe-eyebrow"><span className="oe-eyebrow-sq" /> The entrance map · 2026 intake</span>
+            <div className="oe-hero-top">
+              <BackButton />
+              <span className="oe-eyebrow"><span className="oe-eyebrow-sq" /> The entrance map · 2026 intake</span>
+            </div>
             <h1 className="oe-hero-title">
               Every way in, on <span className="oe-circle">one map</span>.
             </h1>
@@ -202,6 +218,7 @@ export default function OtherExams() {
               <a href="#directory" className="oe-btn-primary">
                 <Sparkles size={16} /> Explore all {counts.all} exams
               </a>
+              <Link to="/compare-exams" className="oe-btn-ghost"><GitCompare size={16} /> Compare exams</Link>
               <a href="#admission-timeline" className="oe-btn-ghost">See the calendar</a>
             </div>
 
@@ -299,6 +316,7 @@ const CSS = `
 /* ── hero (flat background — matches the home page, no glow) ── */
 .oe-hero { background:#fff; padding:30px 0 52px; }
 .oe-hero-grid { display:grid; grid-template-columns:1.02fr .98fr; gap:44px; align-items:center; }
+.oe-hero-top { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
 .oe-eyebrow { display:inline-flex; align-items:center; gap:9px; font:700 .68rem/1 ui-monospace,'Space Grotesk',monospace; letter-spacing:.16em; text-transform:uppercase; color:${CL.coralDk}; background:${CL.coralSoft}; border:1px solid ${CL.coral}33; padding:7px 13px; border-radius:8px; }
 .oe-eyebrow-sq { width:8px; height:8px; border-radius:2px; background:${CL.coral}; }
 .oe-hero-title { font:800 clamp(2.2rem,5.2vw,3.5rem)/1.06 ${CL.display}; color:${CL.ink}; letter-spacing:-1.6px; margin:18px 0 0; }
@@ -314,7 +332,7 @@ const CSS = `
 }
 .oe-btn-primary:hover { transform:translateY(-2px); box-shadow:0 16px 32px -10px ${CL.coral}; }
 .oe-btn-ghost {
-  display:inline-flex; align-items:center; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px; text-decoration:none;
   padding:13px 22px; border-radius:50px; font:800 .95rem/1 ${CL.display}; color:${CL.ink};
   background:#fff; border:1px solid ${CL.cream3}; transition:border-color .2s, transform .2s;
 }
@@ -330,7 +348,7 @@ const CSS = `
 
 /* ── hero route map ── */
 .oe-map { display:flex; flex-direction:column; align-items:center; gap:14px; }
-.oe-map-svg { width:100%; max-width:560px; height:auto; overflow:visible; }
+.oe-map-svg { width:100%; max-width:600px; height:auto; overflow:visible; }
 .oe-map-lbl { font:700 11px/1 ui-monospace,'Space Grotesk',monospace; letter-spacing:.5px; }
 .oe-map-hub { font:800 12px/1 ${CL.display}; letter-spacing:.2px; }
 .oe-map-legend { display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:center; }
@@ -338,7 +356,7 @@ const CSS = `
 .oe-map-swatch { width:18px; height:5px; border-radius:3px; }
 
 /* ── directory ── */
-.oe-directory { background:${CL.cream2}; padding:70px 0 90px; }
+.oe-directory { background:#fff; padding:70px 0 90px; }
 .oe-dir-title { font:800 clamp(1.7rem,4vw,2.5rem)/1.15 ${CL.display}; color:${CL.ink}; letter-spacing:-1px; margin:14px 0 0; }
 .oe-dir-sub { font:500 1.05rem/1.6 sans-serif; color:${CL.body}; margin:12px 0 0; }
 
@@ -411,7 +429,6 @@ const CSS = `
   .oe-filters { flex-direction:column; align-items:stretch; gap:10px; }
   .oe-dd { width:100%; }
   .oe-dd-btn { width:100%; }
-  .oe-dd-btn > svg:last-of-type { margin-left:auto; }
   .oe-dd-menu { min-width:100%; }
   .oe-search { width:100%; }
 }
