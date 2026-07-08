@@ -290,7 +290,7 @@ export default function Footer() {
             </p>
             <Col title="College Parichay" links={COLLEGE_LINKS} />
           </div>
-          <Col title="Exam" links={EXAM_LINKS} />
+          <Col title="Other Exams" links={EXAM_LINKS} />
           <Col title="Tools" links={TOOL_LINKS} />
           <Col title="Company" links={COMPANY_LINKS} />
         </div>

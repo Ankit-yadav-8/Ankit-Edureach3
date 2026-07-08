@@ -6,10 +6,16 @@
    edits. Cards expand to every event; the full exam directory is tappable
    for per-exam detail. */
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { CalendarRange, Check, ChevronDown, X } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 import { EXAM_DETAILS, EXAM_GROUPS, levelTone } from "../../data/examCalendar.js";
+import { ALL_EXAMS, examSlug } from "../../data/otherExams.js";
+
+/* Which timeline chips have a full card on /other-exams — used to deep-link a
+   chip straight to its exam card instead of opening the inline modal. */
+const CARD_SLUGS = new Set(ALL_EXAMS.map((e) => e.slug));
 
 /* exam-family palette (the coloured dots + legend) */
 const FAM = {
@@ -153,6 +159,15 @@ export default function AdmissionTimeline() {
   const [showExams, setShowExams] = useState(false);
   const [openCards, setOpenCards] = useState({});
   const [activeExam, setActiveExam] = useState(null);
+  const navigate = useNavigate();
+
+  /* Chip tap → jump to that exam's full card on /other-exams; fall back to the
+     inline detail modal for any chip without a card. */
+  const goExam = (name) => {
+    const slug = examSlug(name);
+    if (CARD_SLUGS.has(slug)) navigate(`/other-exams#exam-${slug}`);
+    else setActiveExam(name);
+  };
 
   const liveIndex = useMemo(() => {
     const now = new Date();
@@ -324,7 +339,7 @@ export default function AdmissionTimeline() {
                   <h4 className="at-exam-group-title" style={{ color: g.tone }}>{g.title}</h4>
                   <div className="at-chips">
                     {g.exams.map((name) => (
-                      <button key={name} className="at-chip" style={{ borderColor: `${g.tone}44` }} onClick={() => setActiveExam(name)}>
+                      <button key={name} className="at-chip" style={{ borderColor: `${g.tone}44` }} onClick={() => goExam(name)}>
                         {name}
                       </button>
                     ))}
