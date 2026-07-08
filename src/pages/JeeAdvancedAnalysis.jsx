@@ -41,9 +41,11 @@ const DIFF_STYLE = {
   "High":        { fg: "#B91C1C", bg: T.errorSoft },
 };
 
+const SUBJECT_FILTERS = ["All", "Physics", "Chemistry", "Maths"];
 const CLASS_FILTERS = ["All", "11", "12"];
 const DIFF_FILTERS  = ["All", "Low", "Low-Medium", "Medium", "Medium-High", "High"];
 const TREND_FILTERS = ["All", "Rising", "Stable", "Falling"];
+const SUBJECT_DOTS = { Physics: SUBJECTS.Physics.color, Chemistry: SUBJECTS.Chemistry.color, Maths: SUBJECTS.Maths.color };
 
 /* ── weightage ring ── */
 function Ring({ pct, color, label }) {
@@ -162,6 +164,26 @@ function Dropdown({ label, options, value, onChange, fmt }) {
   );
 }
 
+/* ── segmented pill toggle (subject / class) ── */
+function Segmented({ label, options, value, onChange, dots, fmt }) {
+  return (
+    <div className="jaa-seg-wrap">
+      <span className="jaa-dd-lbl">{label}</span>
+      <div className="jaa-seg" role="tablist" aria-label={label}>
+        {options.map((o) => (
+          <button key={o} role="tab" aria-selected={value === o}
+            className={value === o ? "jaa-seg-btn on" : "jaa-seg-btn"}
+            style={value === o && dots && dots[o] ? { "--on": dots[o] } : undefined}
+            onClick={() => onChange(o)}>
+            {dots && dots[o] && <span className="jaa-seg-dot" style={{ background: dots[o] }} />}
+            {fmt ? fmt(o) : o}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── hero visual ── */
 const ORBIT = [{ top: "0%", left: "-4%" }, { top: "8%", right: "-6%" }, { bottom: "12%", left: "-6%" }, { bottom: "-2%", right: "-2%" }];
 function HeroVisual({ subjectCounts, mustDo }) {
@@ -244,6 +266,7 @@ function SubjectSummary() {
 
 /* ── page ── */
 export default function JeeAdvancedAnalysis() {
+  const [subject, setSubject] = useState("All");
   const [cls, setCls] = useState("All");
   const [diff, setDiff] = useState("All");
   const [trend, setTrend] = useState("All");
@@ -256,12 +279,13 @@ export default function JeeAdvancedAnalysis() {
   const mustDo = useMemo(() => JEE_ADV_CHAPTERS.filter((x) => x.priority === "Must-Do").length, []);
   const maxWt = useMemo(() => Math.max(...JEE_ADV_CHAPTERS.map((x) => x.wtMid), 1), []);
 
-  const filtersOn = cls !== "All" || diff !== "All" || trend !== "All" || q.trim() !== "";
+  const filtersOn = subject !== "All" || cls !== "All" || diff !== "All" || trend !== "All" || q.trim() !== "";
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return JEE_ADV_CHAPTERS
       .filter((ch) => {
+        if (subject !== "All" && ch.subject !== subject) return false;
         if (cls !== "All" && ch.cls !== cls) return false;
         if (diff !== "All" && ch.difficulty !== diff) return false;
         if (trend !== "All" && ch.trend !== trend) return false;
@@ -270,9 +294,9 @@ export default function JeeAdvancedAnalysis() {
       })
       .map((ch) => ({ ...ch, ringPct: Math.min(ch.wtMid / maxWt, 1) }))
       .sort((a, b) => b.wtMid - a.wtMid || a.rank - b.rank);
-  }, [cls, diff, trend, q, maxWt]);
+  }, [subject, cls, diff, trend, q, maxWt]);
 
-  const reset = () => { setCls("All"); setDiff("All"); setTrend("All"); setQ(""); };
+  const reset = () => { setSubject("All"); setCls("All"); setDiff("All"); setTrend("All"); setQ(""); };
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
@@ -321,8 +345,9 @@ export default function JeeAdvancedAnalysis() {
           </div>
 
           <div className="jaa-console-body">
+            <Segmented label="Subject" options={SUBJECT_FILTERS} value={subject} onChange={setSubject} dots={SUBJECT_DOTS} />
             <div className="jaa-ddrow">
-              <Dropdown label="Class" options={CLASS_FILTERS} value={cls} onChange={setCls} fmt={(o) => `Class ${o}`} />
+              <Segmented label="Class" options={CLASS_FILTERS} value={cls} onChange={setCls} fmt={(o) => (o === "All" ? "All" : `Class ${o}`)} />
               <Dropdown label="Difficulty" options={DIFF_FILTERS} value={diff} onChange={setDiff} />
               <Dropdown label="Trend" options={TREND_FILTERS} value={trend} onChange={setTrend} />
               <div className="jaa-search">
@@ -427,7 +452,15 @@ const CSS = `
 .jaa-console { background:${T.surface}; border:1px solid ${T.border}; border-radius:22px; padding:26px 26px 22px; box-shadow:0 18px 48px -30px rgba(26,26,46,.4); }
 .jaa-console-head { text-align:center; margin-bottom:22px; }
 .jaa-console-head .jaa-h2 { font-size:clamp(1.4rem,2.6vw,1.8rem); margin-top:12px; }
-.jaa-console-body { display:flex; flex-direction:column; gap:14px; }
+.jaa-console-body { display:flex; flex-direction:column; gap:16px; }
+
+/* ── segmented pill toggle (subject / class) ── */
+.jaa-seg-wrap { display:flex; flex-direction:column; gap:7px; }
+.jaa-seg { display:inline-flex; align-self:flex-start; max-width:100%; gap:4px; padding:4px; background:${T.surface2}; border:1px solid ${T.border}; border-radius:13px; overflow-x:auto; }
+.jaa-seg-btn { display:inline-flex; align-items:center; gap:7px; white-space:nowrap; cursor:pointer; border:none; background:transparent; color:${T.body}; padding:9px 16px; border-radius:9px; font:700 .84rem/1 'Space Grotesk',sans-serif; transition:background .16s, color .16s, box-shadow .16s; }
+.jaa-seg-btn:hover { color:${T.amberDk}; }
+.jaa-seg-btn.on { background:${T.surface}; color:${T.ink}; box-shadow:0 2px 9px -3px rgba(26,26,46,.28), inset 0 -2px 0 var(--on, ${T.amber}); }
+.jaa-seg-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 
 /* ── dropdown filters ── */
 .jaa-ddrow { display:flex; flex-wrap:wrap; align-items:flex-end; gap:14px; }
