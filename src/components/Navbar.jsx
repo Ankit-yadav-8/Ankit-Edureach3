@@ -70,6 +70,7 @@ const RESOURCES_NAV = [
   { label: "Class 12 Syllabus & Mind Maps", to: "/class-12", icon: Edit3, tag: "Boards + competitive prep" },
   { label: "Exam Strategy — JEE", to: "/jee-strategy", icon: Zap, tag: "Toppers' roadmap, tips & tricks" },
   { label: "Exam Strategy — NEET", to: "/neet-strategy", icon: FlaskConical, tag: "Time-management & accuracy hacks" },
+  { label: "Other Entrance Exams", to: "/other-exams", icon: Compass, tag: "BITSAT, VITEEE, state CETs & 30+ more" },
 ];
 
 // ── Mentorship dropdown: 1-on-1 JEE & NEET mentorship pages ───────────────────
@@ -171,7 +172,7 @@ export default function Navbar({ onSearch }) {
   const navItems = [
     { label: "JEE", icon: BookOpen, mega: JEE_MEGA, base: "/jee-main", match: (p) => p.startsWith("/jee") },
     { label: "NEET", icon: FlaskConical, mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
-    { label: "Resources", icon: BookOpen, drop: RESOURCES_NAV, base: "/class-11", match: (p) => ["/class-1", "/jee-strategy", "/neet-strategy", "/ai"].some((x) => p.startsWith(x)) },
+    { label: "Resources", icon: BookOpen, drop: RESOURCES_NAV, base: "/class-11", match: (p) => ["/class-1", "/jee-strategy", "/neet-strategy", "/ai", "/other-exams"].some((x) => p.startsWith(x)) },
     { label: "Colleges", icon: Landmark, drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Mentorship", icon: Heart, drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
     { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa", "/campus-notes", "/community"].some((x) => p.startsWith(x)) },

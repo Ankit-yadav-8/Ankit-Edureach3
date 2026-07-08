@@ -28,6 +28,7 @@ import JosaaRound3Result from "./pages/JosaaRound3Result.jsx";
 import CounsellingPlanner from "./pages/CounsellingPlanner.jsx";
 import CollegeMap from "./pages/CollegeMap.jsx";
 import CompareExams from "./pages/CompareExams.jsx";
+import OtherExams from "./pages/OtherExams.jsx";
 import Tools from "./pages/Tools.jsx";
 import Reviews from "./pages/Reviews.jsx";
 import Scholarships from "./pages/Scholarships.jsx";
@@ -160,6 +161,7 @@ export default function App() {
           <Route path="/planner" element={<CounsellingPlanner />} />
           <Route path="/map" element={<CollegeMap />} />
           <Route path="/compare-exams" element={<CompareExams />} />
+          <Route path="/other-exams" element={<OtherExams />} />
           <Route path="/scholarships" element={<Scholarships />} />
           <Route path="/cutoffs" element={<OfficialCutoffs />} />
           <Route path="/search" element={<SearchResults />} />

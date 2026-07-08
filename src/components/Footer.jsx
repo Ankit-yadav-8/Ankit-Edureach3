@@ -15,13 +15,14 @@ const COLLEGE_LINKS = [
   ["Private Universities", "/private-universities"],
 ];
 const EXAM_LINKS = [
-  ["JEE Main 2026", "/exams/jee-main"],
-  ["JEE Advanced 2026", "/exams/jee-advanced"],
-  ["BITSAT 2026", "/exams/bitsat"],
-  ["MHT-CET 2026", "/exams/mht-cet"],
-  ["WBJEE 2026", "/exams/wbjee"],
-  ["KCET 2026", "/exams/kcet"],
-  ["VITEEE 2026", "/exams/viteee"],
+  ["BITSAT 2026", "/other-exams#exam-bitsat"],
+  ["VITEEE 2026", "/other-exams#exam-viteee"],
+  ["MHT CET 2026", "/other-exams#exam-mht-cet"],
+  ["KCET 2026", "/other-exams#exam-kcet"],
+  ["WBJEE 2026", "/other-exams#exam-wbjee"],
+  ["COMEDK UGET 2026", "/other-exams#exam-comedk-uget"],
+  ["SRMJEEE 2026", "/other-exams#exam-srmjeee"],
+  ["KEAM 2026", "/other-exams#exam-keam"],
 ];
 const TOOL_LINKS = [
   ["All Smart Tools", "/tools"],
@@ -289,7 +290,7 @@ export default function Footer() {
             </p>
             <Col title="College Parichay" links={COLLEGE_LINKS} />
           </div>
-          <Col title="Exam" links={EXAM_LINKS} unclickable />
+          <Col title="Exam" links={EXAM_LINKS} />
           <Col title="Tools" links={TOOL_LINKS} />
           <Col title="Company" links={COMPANY_LINKS} />
         </div>

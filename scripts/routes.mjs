@@ -26,6 +26,7 @@ export const STATIC_ROUTES = [
   ["/reviews", "0.7", "weekly"],
   ["/cutoffs", "0.8", "weekly"],
   ["/compare-exams", "0.6", "monthly"],
+  ["/other-exams", "0.8", "weekly"],
   ["/josaa-2026", "0.8", "daily"],
   ["/josaa-round-1-result-2026", "0.7", "weekly"],
   ["/josaa-round-2-result-2026", "0.7", "weekly"],
