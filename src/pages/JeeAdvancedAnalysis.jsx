@@ -28,7 +28,7 @@ const T = {
 const SUBJECTS = {
   Physics:   { color: "#2563EB", soft: "#E7EDFB", icon: Atom },
   Chemistry: { color: "#7C3AED", soft: "#EEE9FC", icon: FlaskConical },
-  Maths:     { color: "#0891B2", soft: "#DEF3F8", icon: Sigma },
+  Maths:     { color: "#0E9F6E", soft: "#E1F5EC", icon: Sigma },
 };
 const PRIORITY = {
   "Must-Do": { fg: T.ink,     label: "MUST-DO" },
@@ -111,8 +111,6 @@ function ClusterCard({ c, index, forceOpen }) {
       <div className="jaa-meta">
         <div className="jaa-metric"><span className="jaa-metric-cap">Avg. Qs</span><span className="jaa-metric-val">{c.qsLabel}</span></div>
         <div className="jaa-metric"><span className="jaa-metric-cap">Difficulty</span><span className="jaa-diff" style={{ color: diff.fg, background: diff.bg }}>{c.difficulty}</span></div>
-        <div className="jaa-metric"><span className="jaa-metric-cap">Marks@stake</span><span className="jaa-metric-val">≈{c.marksTotal}</span></div>
-        <div className="jaa-metric"><span className="jaa-metric-cap">ROI</span><span className="jaa-metric-val" style={{ color: T.success }}>{c.roi}×</span></div>
       </div>
 
       <p className="jaa-focus">{c.blurb}</p>
@@ -128,26 +126,15 @@ function ClusterCard({ c, index, forceOpen }) {
             initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.28 }}>
             <div className="jaa-break-inner">
-              {c.chapters.map((ch) => {
-                const Tr = (TRENDS[ch.trend] || TRENDS.Stable);
-                const TrIcon = Tr.icon;
-                const d = DIFF_STYLE[ch.difficulty] || DIFF_STYLE.Medium;
-                return (
-                  <div key={ch.id} className="jaa-brk-row">
-                    <div className="jaa-brk-head">
-                      <span className="jaa-brk-name">{ch.chapter}<span className="jaa-brk-cls">Class {ch.cls}</span></span>
-                      <span className="jaa-brk-wt">~{Math.round(ch.wtMid)}%</span>
-                    </div>
-                    <p className="jaa-brk-desc">{ch.focus}</p>
-                    <div className="jaa-brk-tags">
-                      <span className="jaa-tag" style={{ color: d.fg, background: d.bg }}>{ch.difficulty}</span>
-                      <span className="jaa-tag jaa-tag-plain">{ch.avgQs} Qs</span>
-                      <span className="jaa-tag jaa-tag-plain" style={{ color: Tr.fg }}><TrIcon size={11} strokeWidth={2.5} /> {ch.trend}</span>
-                      <span className="jaa-tag jaa-tag-quad">{ch.quadrant}</span>
-                    </div>
+              {c.chapters.map((ch) => (
+                <div key={ch.id} className="jaa-brk-row">
+                  <div className="jaa-brk-head">
+                    <span className="jaa-brk-name">{ch.chapter}<span className="jaa-brk-cls">Class {ch.cls}</span></span>
+                    <span className="jaa-brk-wt">~{Math.round(ch.wtMid)}%</span>
                   </div>
-                );
-              })}
+                  <p className="jaa-brk-desc">{ch.focus}</p>
+                </div>
+              ))}
             </div>
           </motion.div>
         )}
@@ -534,37 +521,33 @@ const CSS = `
 
 .jaa-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; align-items:start; margin-top:30px; }
 
-/* ── cluster card ── */
-.jaa-card { background:${T.surface}; border:1px solid ${T.border}; border-left:4px solid var(--accent); border-radius:16px; padding:20px; transition:transform .18s, box-shadow .18s; }
+/* ── cluster card (compact — matches the Other Exams card scale) ── */
+.jaa-card { background:${T.surface}; border:1px solid ${T.border}; border-left:4px solid var(--accent); border-radius:15px; padding:17px 17px 15px; transition:transform .18s, box-shadow .18s; }
 .jaa-card:hover { transform:translateY(-3px); box-shadow:0 18px 38px -20px rgba(26,26,46,.3); }
-.jaa-card-top { display:flex; align-items:flex-start; gap:14px; }
+.jaa-card-top { display:flex; align-items:flex-start; gap:12px; }
 .jaa-ring { position:relative; display:grid; place-items:center; flex-shrink:0; }
-.jaa-ring-lbl { position:absolute; font:800 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:-.3px; color:${T.ink}; }
+.jaa-ring-lbl { position:absolute; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:-.3px; color:${T.ink}; }
 .jaa-card-head { flex:1; min-width:0; }
-.jaa-cat { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:50px; background:${T.surface2}; border:1px solid ${T.borderLight}; color:${T.body}; font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; text-transform:uppercase; }
-.jaa-chap { font:800 1.24rem/1.24 'Space Grotesk',sans-serif; color:${T.ink}; letter-spacing:-.4px; margin:9px 0 0; }
-.jaa-prio { flex-shrink:0; padding:4px 10px; border:1.4px dashed currentColor; border-radius:8px; font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; }
-.jaa-meta { display:flex; flex-wrap:wrap; gap:16px 20px; margin:16px 0 0; }
+.jaa-cat { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:50px; background:${T.surface2}; border:1px solid ${T.borderLight}; color:${T.body}; font:800 9.5px/1 'Space Grotesk',sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+.jaa-chap { font:800 1.08rem/1.2 'Space Grotesk',sans-serif; color:${T.ink}; letter-spacing:-.3px; margin:8px 0 0; }
+.jaa-prio { flex-shrink:0; padding:4px 9px; border:1.3px dashed currentColor; border-radius:7px; font:800 9px/1 'Space Grotesk',sans-serif; letter-spacing:.06em; }
+.jaa-meta { display:flex; flex-wrap:wrap; gap:14px 22px; margin:14px 0 0; }
 .jaa-metric { display:flex; flex-direction:column; gap:5px; }
-.jaa-metric-cap { font:800 .62rem/1 'Space Grotesk',sans-serif; text-transform:uppercase; letter-spacing:.06em; color:${T.muted}; }
-.jaa-metric-val { font:800 1.02rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
-.jaa-diff { align-self:flex-start; padding:3px 9px; border-radius:6px; font:800 .72rem/1.3 inherit; }
-.jaa-focus { font:400 .92rem/1.55 inherit; color:${T.body}; margin:16px 0 0; }
-.jaa-toggle { display:inline-flex; align-items:center; gap:7px; margin-top:16px; cursor:pointer; padding:6px 12px; border:1.3px solid ${T.ink}; border-radius:8px; background:transparent; color:${T.ink}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.jaa-metric-cap { font:800 .6rem/1 'Space Grotesk',sans-serif; text-transform:uppercase; letter-spacing:.06em; color:${T.muted}; }
+.jaa-metric-val { font:800 .9rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
+.jaa-diff { align-self:flex-start; padding:3px 8px; border-radius:6px; font:800 .68rem/1.3 inherit; }
+.jaa-focus { font:500 .78rem/1.5 sans-serif; color:${T.body}; margin:13px 0 0; }
+.jaa-toggle { display:inline-flex; align-items:center; gap:6px; margin-top:14px; cursor:pointer; padding:5px 11px; border:1.2px solid ${T.ink}; border-radius:7px; background:transparent; color:${T.ink}; font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.07em; text-transform:uppercase; }
 .jaa-chev { transition:transform .2s; } .jaa-chev.open { transform:rotate(180deg); }
 .jaa-break { overflow:hidden; }
 .jaa-break-inner { margin-top:6px; border-top:1px dashed ${T.border}; }
-.jaa-brk-row { padding:13px 0; border-bottom:1px solid ${T.borderLight}; }
+.jaa-brk-row { padding:11px 0; border-bottom:1px solid ${T.borderLight}; }
 .jaa-brk-row:last-child { border-bottom:none; padding-bottom:2px; }
-.jaa-brk-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
-.jaa-brk-name { font:700 .92rem/1.3 'Space Grotesk',sans-serif; color:${T.ink}; }
-.jaa-brk-cls { font:700 .66rem/1 'Space Grotesk',sans-serif; color:${T.muted}; margin-left:8px; text-transform:uppercase; letter-spacing:.04em; }
-.jaa-brk-wt { font:800 .82rem/1 'Space Grotesk',sans-serif; color:${T.amberDk}; white-space:nowrap; }
-.jaa-brk-desc { font:400 .84rem/1.5 inherit; color:${T.body}; margin:5px 0 0; }
-.jaa-brk-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
-.jaa-tag { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:6px; font:700 .68rem/1.2 'Space Grotesk',sans-serif; }
-.jaa-tag-plain { background:${T.surface2}; color:${T.body}; border:1px solid ${T.borderLight}; }
-.jaa-tag-quad { background:transparent; color:${T.muted}; border:1px dashed ${T.border}; }
+.jaa-brk-head { display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+.jaa-brk-name { font:800 .8rem/1.3 'Space Grotesk',sans-serif; color:${T.ink}; }
+.jaa-brk-cls { font:700 .6rem/1 'Space Grotesk',sans-serif; color:${T.muted}; margin-left:7px; text-transform:uppercase; letter-spacing:.04em; }
+.jaa-brk-wt { font:800 .74rem/1 'Space Grotesk',sans-serif; color:${T.amberDk}; white-space:nowrap; }
+.jaa-brk-desc { font:500 .74rem/1.45 sans-serif; color:${T.body}; margin:4px 0 0; }
 
 .jaa-empty { text-align:center; padding:60px 0; }
 .jaa-empty p { font:700 1.05rem/1 'Space Grotesk',sans-serif; color:${T.body}; margin-bottom:16px; }
@@ -605,24 +588,23 @@ const CSS = `
 /* ── responsive ── */
 @media (max-width:1000px) {
   .jaa-hero { padding:64px 0 72px; }
-  .jaa-hero-grid { grid-template-columns:1fr; gap:24px; }
+  .jaa-hero-grid { grid-template-columns:1fr; gap:24px; text-align:center; }
+  .jaa-badge, .jaa-title, .jaa-sub { margin-left:auto; margin-right:auto; }
+  .jaa-cta { justify-content:center; }
   .jaa-visual { height:400px; order:2; }
   .jaa-grid, .jaa-sum-grid { grid-template-columns:repeat(2,1fr); }
   .jaa-mark-grid { grid-template-columns:repeat(2,1fr); }
+  /* stats become a tidy 3-column card with dividers (phones + tablets) */
+  .jaa-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin:34px auto 0; width:100%; max-width:460px;
+    background:${T.surface}; border:1px solid ${T.border}; border-radius:18px; padding:18px 8px; box-shadow:0 10px 30px -20px rgba(26,26,46,.4); }
+  .jaa-stat { align-items:center; text-align:center; gap:6px; padding:2px 4px; }
+  .jaa-stat + .jaa-stat { border-left:1px solid ${T.borderLight}; }
+  .jaa-stat-num { font-size:1.8rem; }
+  .jaa-stat-cap { font-size:.6rem; line-height:1.3; }
 }
 @media (max-width:760px) {
   .jaa-hero { padding:48px 0 56px; }
-  .jaa-hero-grid { text-align:center; }
-  .jaa-badge, .jaa-title, .jaa-sub { margin-left:auto; margin-right:auto; }
-  .jaa-cta { justify-content:center; }
   .jaa-visual { display:none; }
-  /* mobile stats become a tidy 3-column card with dividers */
-  .jaa-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:32px; width:100%;
-    background:${T.surface}; border:1px solid ${T.border}; border-radius:16px; padding:16px 6px; box-shadow:0 6px 22px -16px rgba(26,26,46,.3); }
-  .jaa-stat { align-items:center; text-align:center; gap:6px; }
-  .jaa-stat + .jaa-stat { border-left:1px solid ${T.borderLight}; }
-  .jaa-stat-num { font-size:1.7rem; }
-  .jaa-stat-cap { font-size:.62rem; }
   .jaa-console { padding:20px 16px; border-radius:18px; }
   .jaa-lens-btn { flex-basis:calc(50% - 5px); min-width:0; }
   .jaa-grid, .jaa-sum-grid, .jaa-mark-grid { grid-template-columns:1fr; }

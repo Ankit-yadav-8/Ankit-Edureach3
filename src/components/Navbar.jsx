@@ -231,8 +231,8 @@ export default function Navbar({ onSearch }) {
           </span>
 
           {/* Brand text — clamps down on narrow phones so the bar never overflows */}
-          <span id="cp-wordmark" style={{ fontFamily: "'Tangerine', serif", fontWeight: 700, fontSize: "clamp(1.6rem, 6vw, 2.35rem)", letterSpacing: "0.01em", whiteSpace: "nowrap", color: "#1a1a2e", lineHeight: 1 }}>
-            College <span style={{ color: "#FF693D" }}>Parichay</span>
+          <span id="cp-wordmark" style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1rem, 4.4vw, 1.3rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap", color: "#1a1a2e" }}>
+            College <span style={{ color: "#1a1a2e" }}>Parichay</span>
           </span>
         </Link>
 
@@ -339,7 +339,6 @@ export default function Navbar({ onSearch }) {
                     className={item.highlight ? "nav-highlight-btn" : "nav-link-btn"}
                     style={item.highlight ? navHighlightStyle(open === item.label || isActive(item)) : navLinkStyle(open === item.label || isActive(item))}
                   >
-                    {item.icon && <item.icon size={15} style={{ color: "rgba(0,0,0,0.35)", marginRight: 2 }} />}
                     {item.label}
                   </button>
                   <AnimatePresence>
@@ -389,7 +388,6 @@ export default function Navbar({ onSearch }) {
                 </button>
               ) : (
                 <button onClick={() => goHash(item.to)} className="nav-link-btn" style={navLinkStyle(isActive(item))}>
-                  {item.icon && <item.icon size={15} style={{ color: "rgba(0,0,0,0.35)", marginRight: 2 }} />}
                   {item.label}
                 </button>
               )}
@@ -463,8 +461,8 @@ export default function Navbar({ onSearch }) {
                       CP
                     </span>
                   </span>
-                  <span style={{ fontFamily: "'Tangerine', serif", fontWeight: 700, fontSize: "1.75rem", whiteSpace: "nowrap", color: "#1a1a2e", lineHeight: 1 }}>
-                    College <span style={{ color: "#FF693D" }}>Parichay</span>
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", whiteSpace: "nowrap", color: "#1a1a2e" }}>
+                    College <span style={{ color: "#1a1a2e" }}>Parichay</span>
                   </span>
                 </div>
                 <button onClick={() => setMobileOpen(false)}><X size={22} /></button>
@@ -754,10 +752,10 @@ export default function Navbar({ onSearch }) {
 
 const navLinkStyle = (active) => ({
   display: "flex", alignItems: "center", gap: 5,
-  padding: "0.46rem 0.8rem", fontSize: "0.93rem", fontWeight: active ? 700 : 600,
+  padding: "0.46rem 0.8rem", fontSize: "0.9rem", fontWeight: active ? 700 : 600,
   color: active ? "#111" : "#444",
   borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
-  fontFamily: "inherit", fontStyle: "normal",
+  fontFamily: "'Space Grotesk', 'Sora', sans-serif", fontStyle: "normal", letterSpacing: "-0.01em",
   background: active ? "rgba(0,0,0,.04)" : "transparent",
   border: "none",
   boxShadow: "none",
