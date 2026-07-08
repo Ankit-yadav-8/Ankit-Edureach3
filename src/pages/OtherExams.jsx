@@ -6,9 +6,9 @@
                       filters over one rich card per exam (ExamCard).
    The hero copy and its badge-wall animation are original to College Parichay. */
 import { useMemo, useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, Compass, Sparkles, X, Check, SlidersHorizontal, Layers } from "lucide-react";
+import { Search, Compass, Sparkles, X, Check, SlidersHorizontal, Layers, GitCompare } from "lucide-react";
 import Seo from "../components/Seo.jsx";
 import BackButton from "../components/BackButton.jsx";
 import AdmissionTimeline from "../components/home/AdmissionTimeline.jsx";
@@ -218,6 +218,7 @@ export default function OtherExams() {
               <a href="#directory" className="oe-btn-primary">
                 <Sparkles size={16} /> Explore all {counts.all} exams
               </a>
+              <Link to="/compare-exams" className="oe-btn-ghost"><GitCompare size={16} /> Compare exams</Link>
               <a href="#admission-timeline" className="oe-btn-ghost">See the calendar</a>
             </div>
 
@@ -331,7 +332,7 @@ const CSS = `
 }
 .oe-btn-primary:hover { transform:translateY(-2px); box-shadow:0 16px 32px -10px ${CL.coral}; }
 .oe-btn-ghost {
-  display:inline-flex; align-items:center; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px; text-decoration:none;
   padding:13px 22px; border-radius:50px; font:800 .95rem/1 ${CL.display}; color:${CL.ink};
   background:#fff; border:1px solid ${CL.cream3}; transition:border-color .2s, transform .2s;
 }

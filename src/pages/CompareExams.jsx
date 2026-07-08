@@ -47,18 +47,26 @@ const STEPS = [
 ];
 
 export default function CompareExams() {
-  const [picked, setPicked] = useState(["jee-main", "jee-advanced"]);
+  const [picked, setPicked] = useState([]); // start empty — user picks what to compare
   const [showPicker, setShowPicker] = useState(false);
   const exams = picked.map((s) => EXAM_BY_SLUG[s]).filter(Boolean);
   const key = picked.join("|");
 
+  /* Animate once, when a comparison first becomes valid (2+ exams). Adding or
+     removing exams afterward re-renders instantly with no replay; it only
+     re-arms if the picks drop back below 2. Matches the college compare page. */
   const [phase, setPhase] = useState("result");
-  const seen = useRef("");
+  const animatedRef = useRef(false);
   useEffect(() => {
-    if (exams.length >= 2 && key !== seen.current) { seen.current = key; setPhase("analyzing"); }
-  }, [key, exams.length]);
+    if (exams.length >= 2) {
+      if (!animatedRef.current) { animatedRef.current = true; setPhase("analyzing"); }
+    } else {
+      animatedRef.current = false;
+      setPhase("result");
+    }
+  }, [exams.length]);
 
-  const add = (slug) => { if (picked.length < 3 && !picked.includes(slug)) setPicked((p) => [...p, slug]); setShowPicker(false); };
+  const add = (slug) => { if (!picked.includes(slug)) setPicked((p) => [...p, slug]); };
   const remove = (slug) => setPicked((p) => p.filter((s) => s !== slug));
 
   const read = useMemo(() => {
@@ -88,12 +96,15 @@ export default function CompareExams() {
             Compare entrance exams, get an <span style={{ color: CL.coral }}>AI read</span>
           </h1>
           <p style={{ color: CL.body, maxWidth: 620 }}>
-            Pick up to 3 exams to see difficulty, college reach, competition and 5-year cutoff trends side by side — then a plain-English take on where to start.
+            Pick as many exams as you like to see difficulty, college reach, competition and 5-year cutoff trends side by side — then a plain-English take on where to start.
           </p>
         </div>
       </section>
 
       <div className="container section" style={{ paddingTop: 20 }}>
+        {exams.length < 2 ? (
+          <ExamEmptyState onAdd={() => setShowPicker(true)} count={exams.length} />
+        ) : (
         <AnimatePresence mode="wait">
           {phase === "analyzing" ? (
             <AiAnalyzing key="ai" steps={STEPS} title="Reading these exams…" eyebrow="AI EXAM ENGINE" onDone={() => setPhase("result")} />
@@ -108,7 +119,7 @@ export default function CompareExams() {
                   <IntelCard key={e.slug} exam={e} idx={i} recommended={read && read.start.slug === e.slug}
                     removable={exams.length > 1} onRemove={() => remove(e.slug)} />
                 ))}
-                {exams.length < 3 && (
+                {EXAMS.some((e) => !picked.includes(e.slug)) && (
                   <button onClick={() => setShowPicker(true)}
                     style={{ minHeight: 180, border: `1.5px dashed ${CL.cream3}`, borderRadius: 18, background: CL.card, color: CL.coral, fontWeight: 700, fontFamily: CL.display, display: "grid", placeItems: "center", cursor: "pointer" }}>
                     <span style={{ display: "grid", justifyItems: "center", gap: 8 }}><Plus size={26} /> Add exam</span>
@@ -143,6 +154,7 @@ export default function CompareExams() {
             </motion.div>
           )}
         </AnimatePresence>
+        )}
       </div>
 
       {showPicker && (
@@ -165,6 +177,24 @@ export default function CompareExams() {
           </motion.div>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ── Empty state — shown until 2+ exams are picked (mirrors college compare) ── */
+function ExamEmptyState({ onAdd, count }) {
+  return (
+    <div style={{ textAlign: "center", padding: "48px 24px", background: CL.card, border: `1px dashed ${CL.cream3}`, borderRadius: 20 }}>
+      <div style={{ width: 64, height: 64, borderRadius: "50%", background: CL.coralSoft, display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
+        <GitCompare size={30} color={CL.coral} />
+      </div>
+      <h3 style={{ fontFamily: CL.display, fontWeight: 800, color: CL.ink, marginBottom: 6 }}>
+        {count === 0 ? "Pick at least 2 exams" : "Add one more exam"}
+      </h3>
+      <p style={{ color: CL.body, maxWidth: 440, margin: "0 auto 18px" }}>
+        Choose the entrance exams you want to weigh up — difficulty, reach, competition and cutoff trends, side by side with an AI read.
+      </p>
+      <button className="btn btn-coral" onClick={onAdd}><Plus size={16} /> Add exams</button>
     </div>
   );
 }
