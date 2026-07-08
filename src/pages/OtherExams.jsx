@@ -204,7 +204,6 @@ export default function OtherExams() {
           <div className="oe-hero-copy">
             <div className="oe-hero-top">
               <BackButton />
-              <span className="oe-eyebrow"><span className="oe-eyebrow-sq" /> The entrance map · 2026 intake</span>
             </div>
             <h1 className="oe-hero-title">
               Every way in, on <span className="oe-circle">one map</span>.
@@ -313,17 +312,21 @@ export default function OtherExams() {
 }
 
 const CSS = `
-/* ── hero (flat background — matches the home page, no glow) ── */
-.oe-hero { background:#fff; padding:30px 0 52px; }
-.oe-hero-grid { display:grid; grid-template-columns:1.02fr .98fr; gap:44px; align-items:center; }
-.oe-hero-top { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
-.oe-eyebrow { display:inline-flex; align-items:center; gap:9px; font:700 .68rem/1 ui-monospace,'Space Grotesk',monospace; letter-spacing:.16em; text-transform:uppercase; color:${CL.coralDk}; background:${CL.coralSoft}; border:1px solid ${CL.coral}33; padding:7px 13px; border-radius:8px; }
-.oe-eyebrow-sq { width:8px; height:8px; border-radius:2px; background:${CL.coral}; }
-.oe-hero-title { font:800 clamp(2.2rem,5.2vw,3.5rem)/1.06 ${CL.display}; color:${CL.ink}; letter-spacing:-1.6px; margin:18px 0 0; }
+/* ── hero (soft dotted surface — matches the branch-page reference) ── */
+.oe-hero {
+  position:relative; padding:44px 0 64px; background:#fff;
+  background-image:radial-gradient(${CL.coral}22 1px, transparent 1px);
+  background-size:38px 38px; background-position:-8px -8px;
+  border-bottom:1px solid ${CL.cream3};
+}
+.oe-hero-grid { position:relative; z-index:1; display:grid; grid-template-columns:1.06fr .94fr; gap:52px; align-items:center; }
+.oe-hero-top { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:22px; }
+.oe-hero-title { font:800 clamp(2.6rem,5.6vw,4.2rem)/1.04 ${CL.display}; color:${CL.ink}; letter-spacing:-2px; margin:0; }
 .oe-circle { position:relative; color:${CL.coral}; white-space:nowrap; }
 .oe-circle::after { content:""; position:absolute; left:-9px; right:-9px; top:-5px; bottom:-3px; border:2.5px solid ${CL.coral}; border-radius:47% 53% 50% 50%/62% 55% 45% 38%; transform:rotate(-2.5deg); pointer-events:none; }
-.oe-hero-sub { font:500 clamp(1rem,1.6vw,1.12rem)/1.6 sans-serif; color:${CL.body}; max-width:520px; margin:16px 0 0; }
-.oe-hero-cta { display:flex; flex-wrap:wrap; gap:12px; margin-top:26px; }
+.oe-hero-sub { font:500 clamp(1.12rem,1.7vw,1.3rem)/1.65 sans-serif; color:${CL.body}; max-width:540px; margin:22px 0 0; }
+.oe-hero-sub strong { color:${CL.ink}; font-weight:700; }
+.oe-hero-cta { display:flex; flex-wrap:wrap; gap:12px; margin-top:32px; }
 .oe-btn-primary {
   display:inline-flex; align-items:center; gap:8px; text-decoration:none;
   padding:13px 22px; border-radius:50px; font:800 .95rem/1 ${CL.display}; color:#fff;
@@ -338,10 +341,10 @@ const CSS = `
 }
 .oe-btn-ghost:hover { border-color:${CL.coral}66; transform:translateY(-2px); }
 
-.oe-statcard { display:inline-flex; align-items:stretch; gap:22px; margin-top:30px; padding:16px 24px; border:1px solid ${CL.cream3}; border-radius:16px; background:#fff; box-shadow:${CL.shadow}; }
-.oe-stat { display:flex; flex-direction:column; gap:5px; justify-content:center; }
-.oe-stat-cap { font:800 .62rem/1.1 ${CL.display}; letter-spacing:.1em; text-transform:uppercase; color:${CL.muted}; }
-.oe-stat-num { font:800 1.95rem/1 ${CL.display}; color:${CL.ink}; letter-spacing:-1px; }
+.oe-statcard { display:inline-flex; align-items:stretch; gap:26px; margin-top:36px; padding:18px 28px; border:1px solid ${CL.cream3}; border-radius:18px; background:#fff; box-shadow:${CL.shadow}; }
+.oe-stat { display:flex; flex-direction:column; gap:6px; justify-content:center; }
+.oe-stat-cap { font:800 .64rem/1.1 ${CL.display}; letter-spacing:.1em; text-transform:uppercase; color:${CL.muted}; }
+.oe-stat-num { font:800 2.2rem/1 ${CL.display}; color:${CL.ink}; letter-spacing:-1px; }
 .oe-stat-num .oe-stat-unit { font-size:.9rem; color:${CL.muted}; font-weight:700; letter-spacing:0; }
 .oe-stat-foot { font:600 .62rem/1.2 sans-serif; color:${CL.muted}; }
 .oe-stat-div { width:1px; background:${CL.cream3}; }
@@ -349,8 +352,8 @@ const CSS = `
 /* ── hero route map ── */
 .oe-map { display:flex; flex-direction:column; align-items:center; gap:14px; }
 .oe-map-svg { width:100%; max-width:600px; height:auto; overflow:visible; }
-.oe-map-lbl { font:700 11px/1 ui-monospace,'Space Grotesk',monospace; letter-spacing:.5px; }
-.oe-map-hub { font:800 12px/1 ${CL.display}; letter-spacing:.2px; }
+.oe-map-lbl { font:700 13px/1 ui-monospace,'Space Grotesk',monospace; letter-spacing:.3px; }
+.oe-map-hub { font:800 14px/1 ${CL.display}; letter-spacing:.2px; }
 .oe-map-legend { display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:center; }
 .oe-map-leg { display:inline-flex; align-items:center; gap:8px; font:700 .78rem/1 ${CL.display}; color:${CL.ink2}; }
 .oe-map-swatch { width:18px; height:5px; border-radius:3px; }
@@ -417,7 +420,8 @@ const CSS = `
 /* phones / small tablets: centre the whole hero, stats included */
 @media (max-width:760px) {
   .oe-hero-copy { text-align:center; }
-  .oe-hero-top { justify-content:center; }
+  /* drop the back-button row on mobile — global nav covers it */
+  .oe-hero-top { display:none; }
   .oe-hero-sub { margin-left:auto; margin-right:auto; }
   .oe-hero-cta { justify-content:center; }
   .oe-statcard { margin-left:auto; margin-right:auto; }
@@ -443,11 +447,12 @@ const CSS = `
   .oe-dd-menu { min-width:100%; }
   .oe-search { width:100%; }
 }
-/* on small phones the in-map station text turns illegible when scaled down —
-   drop it and let the rails + legend carry the visual (map is decorative). */
+/* on small phones the many station names crowd together — drop those, but keep
+   the "JEE · start here" hub label and the legend so the map still reads. */
 @media (max-width:560px) {
-  .oe-map-lbl, .oe-map-hub { display:none; }
-  .oe-map-svg { max-width:420px; }
+  .oe-map-lbl { display:none; }
+  .oe-map-hub { font-size:16px; }
+  .oe-map-svg { max-width:440px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ex-card--target { animation:none; }
