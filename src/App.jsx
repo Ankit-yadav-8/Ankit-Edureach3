@@ -11,6 +11,7 @@ import { ScrollProgressBar } from "./components/Animations.jsx";
 import Home from "./pages/Home.jsx";
 import JeeMain from "./pages/JeeMain.jsx";
 import JeeAdvanced from "./pages/JeeAdvanced.jsx";
+import JeeAdvancedAnalysis from "./pages/JeeAdvancedAnalysis.jsx";
 import JeeAdvancedResult from "./pages/JeeAdvancedResult.jsx";
 import Colleges from "./pages/Colleges.jsx";
 import CollegeDetail from "./pages/CollegeDetail.jsx";
@@ -140,6 +141,7 @@ export default function App() {
           <Route path="/" element={<Home onSearch={() => setSearchOpen(true)} />} />
           <Route path="/jee-main" element={<JeeMain />} />
           <Route path="/jee-advanced" element={<JeeAdvanced />} />
+          <Route path="/jee-advanced-analysis" element={<JeeAdvancedAnalysis />} />
           <Route path="/jee-advanced-result-2026" element={<JeeAdvancedResult />} />
           <Route path="/colleges" element={<Colleges />} />
           <Route path="/colleges/:slug" element={<CollegeDetail />} />

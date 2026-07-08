@@ -48,7 +48,7 @@ export default function ExamCard({ exam, index = 0, defaultOpen = false }) {
     { icon: Trophy, label: "Total marks", value: exam.totalMarks },
     { icon: MinusCircle, label: "Negative marking", value: exam.negMarking },
     { icon: Monitor, label: "Mode", value: exam.mode },
-    { icon: BadgeCheck, label: "UGC / recognition", value: exam.ugc },
+    { icon: BadgeCheck, label: "UGC Verified", value: exam.ugc },
   ].filter((d) => d.value);
 
   return (

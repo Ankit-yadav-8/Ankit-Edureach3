@@ -69,6 +69,7 @@ const RESOURCES_NAV = [
   { label: "Class 11 Syllabus & Mind Maps", to: "/class-11", icon: BookOpen, tag: "Chapter-wise notes + mind maps" },
   { label: "Class 12 Syllabus & Mind Maps", to: "/class-12", icon: Edit3, tag: "Boards + competitive prep" },
   { label: "Exam Strategy — JEE", to: "/jee-strategy", icon: Zap, tag: "Toppers' roadmap, tips & tricks" },
+  { label: "JEE Advanced Chapter Analysis", to: "/jee-advanced-analysis", icon: BarChart3, tag: "80 chapters ranked by weightage & priority" },
   { label: "Exam Strategy — NEET", to: "/neet-strategy", icon: FlaskConical, tag: "Time-management & accuracy hacks" },
   { label: "Other Entrance Exams", to: "/other-exams", icon: Compass, tag: "BITSAT, VITEEE, state CETs & 30+ more" },
 ];
@@ -172,7 +173,7 @@ export default function Navbar({ onSearch }) {
   const navItems = [
     { label: "JEE", icon: BookOpen, mega: JEE_MEGA, base: "/jee-main", match: (p) => p.startsWith("/jee") },
     { label: "NEET", icon: FlaskConical, mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
-    { label: "Resources", icon: BookOpen, drop: RESOURCES_NAV, base: "/class-11", match: (p) => ["/class-1", "/jee-strategy", "/neet-strategy", "/ai", "/other-exams"].some((x) => p.startsWith(x)) },
+    { label: "Resources", icon: BookOpen, drop: RESOURCES_NAV, base: "/class-11", match: (p) => ["/class-1", "/jee-strategy", "/jee-advanced-analysis", "/neet-strategy", "/ai", "/other-exams"].some((x) => p.startsWith(x)) },
     { label: "Colleges", icon: Landmark, drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Mentorship", icon: Heart, drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
     { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa", "/campus-notes", "/community"].some((x) => p.startsWith(x)) },
@@ -338,7 +339,6 @@ export default function Navbar({ onSearch }) {
                     className={item.highlight ? "nav-highlight-btn" : "nav-link-btn"}
                     style={item.highlight ? navHighlightStyle(open === item.label || isActive(item)) : navLinkStyle(open === item.label || isActive(item))}
                   >
-                    {item.icon && <item.icon size={15} style={{ color: "rgba(0,0,0,0.35)", marginRight: 2 }} />}
                     {item.label}
                   </button>
                   <AnimatePresence>
@@ -388,7 +388,6 @@ export default function Navbar({ onSearch }) {
                 </button>
               ) : (
                 <button onClick={() => goHash(item.to)} className="nav-link-btn" style={navLinkStyle(isActive(item))}>
-                  {item.icon && <item.icon size={15} style={{ color: "rgba(0,0,0,0.35)", marginRight: 2 }} />}
                   {item.label}
                 </button>
               )}
@@ -753,10 +752,10 @@ export default function Navbar({ onSearch }) {
 
 const navLinkStyle = (active) => ({
   display: "flex", alignItems: "center", gap: 5,
-  padding: "0.46rem 0.8rem", fontSize: "0.93rem", fontWeight: active ? 700 : 600,
+  padding: "0.46rem 0.8rem", fontSize: "0.9rem", fontWeight: active ? 700 : 600,
   color: active ? "#111" : "#444",
   borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
-  fontFamily: "inherit", fontStyle: "normal",
+  fontFamily: "'Space Grotesk', 'Sora', sans-serif", fontStyle: "normal", letterSpacing: "-0.01em",
   background: active ? "rgba(0,0,0,.04)" : "transparent",
   border: "none",
   boxShadow: "none",

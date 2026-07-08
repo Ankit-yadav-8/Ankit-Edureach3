@@ -1,4 +1,5 @@
 import { motion, useScroll } from "framer-motion";
+import { Link } from "react-router-dom";
 import Seo from "../components/Seo.jsx";
 import PremiumHero from "../components/PremiumHero.jsx";
 import { StrategyReveal, AnimatedWidth, AnimatedHeight } from "../components/StrategyReveal.jsx";
@@ -129,6 +130,16 @@ export default function JeeStrategy() {
             <span className="pnode">Organic Chem</span><span className="parrow">→</span>
             <span className="pnode">Calculus depth</span>
           </div>
+        </StrategyReveal>
+
+        <StrategyReveal delay={0.5}>
+          <Link to="/jee-advanced-analysis" className="deep-cta">
+            <span className="deep-cta-txt">
+              <strong>Explore the full 80-chapter analysis</strong>
+              <span>Every chapter ranked by weightage, marks at stake, difficulty and priority — filter Physics, Chemistry &amp; Maths.</span>
+            </span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </Link>
         </StrategyReveal>
       </section>
 
