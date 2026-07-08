@@ -312,10 +312,6 @@ export default function JeeAdvancedAnalysis() {
         <div className="jaa-hero-card">
         <div className="jaa-hero-grid">
           <motion.div initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}>
-            <motion.span className="jaa-badge" variants={fade}>
-              <motion.span className="jaa-badge-dot" animate={{ scale: [1, 1.35, 1], opacity: [1, 0.6, 1] }} transition={{ repeat: Infinity, duration: 2 }} />
-              JEE ADVANCED · PAPER ANALYSIS 2021–2025
-            </motion.span>
             <motion.h1 className="jaa-title" variants={fade}>Every chapter,<br />ranked by <span className="jaa-hl">what it's worth.</span></motion.h1>
             <motion.p className="jaa-sub" variants={fade}>
               All 80 NCERT chapters, one card each — tagged with weightage, marks at stake,
@@ -408,13 +404,11 @@ const CSS = `
 .jaa { background:${T.bg}; color:${T.ink}; font-family:'DM Sans','Inter',system-ui,sans-serif; }
 .jaa * { box-sizing:border-box; }
 
-/* ── hero (contained in a card) ── */
-.jaa-hero { padding:100px 24px 120px; }
-.jaa-hero-card { max-width:1210px; margin:0 auto; background:${T.surface}; border:1px solid ${T.border}; border-radius:28px; padding:60px 60px; box-shadow:0 30px 70px -40px rgba(26,26,46,.32); }
-.jaa-hero-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:64px; align-items:center; }
-.jaa-badge { display:inline-flex; align-items:center; gap:10px; padding:8px 20px; border-radius:50px; background:${T.amberSoft}; color:${T.amberDk}; border:1px solid #FDE68A; font:800 .76rem/1 'Space Grotesk',sans-serif; letter-spacing:.11em; text-transform:uppercase; }
-.jaa-badge-dot { width:8px; height:8px; border-radius:50%; background:${T.amber}; display:inline-block; }
-.jaa-title { font:800 clamp(2.6rem,4.4vw,3.9rem)/1.12 'Space Grotesk','Sora',sans-serif; letter-spacing:-.5px; color:${T.ink}; margin:28px 0 0; }
+/* ── hero (plain full-width on desktop, becomes a card on mobile) ── */
+.jaa-hero { padding:100px 0 120px; }
+.jaa-hero-card { max-width:1250px; margin:0 auto; padding:0 24px; }
+.jaa-hero-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:80px; align-items:center; }
+.jaa-title { font:800 clamp(2.6rem,4.4vw,3.9rem)/1.12 'Space Grotesk','Sora',sans-serif; letter-spacing:-.5px; color:${T.ink}; margin:0; }
 .jaa-hl { color:${T.amber}; }
 .jaa-sub { font:400 1.14rem/1.7 inherit; color:${T.body}; max-width:540px; margin:24px 0 0; }
 .jaa-stats { display:flex; flex-wrap:wrap; gap:48px; margin:40px 0 0; }
@@ -552,10 +546,11 @@ const CSS = `
 
 /* ── responsive ── */
 @media (max-width:1000px) {
-  .jaa-hero { padding:80px 16px 64px; }
-  .jaa-hero-card { padding:40px 28px; border-radius:24px; }
+  /* mobile / tablet: hero becomes a contained card */
+  .jaa-hero { padding:56px 16px 64px; }
+  .jaa-hero-card { max-width:600px; padding:36px 30px; background:${T.surface}; border:1px solid ${T.border}; border-radius:24px; box-shadow:0 24px 60px -34px rgba(26,26,46,.3); }
   .jaa-hero-grid { grid-template-columns:1fr; gap:24px; text-align:center; }
-  .jaa-badge, .jaa-title, .jaa-sub { margin-left:auto; margin-right:auto; }
+  .jaa-title, .jaa-sub { margin-left:auto; margin-right:auto; }
   .jaa-cta { justify-content:center; }
   .jaa-visual { height:400px; order:2; }
   .jaa-grid, .jaa-sum-grid { grid-template-columns:repeat(2,1fr); }
@@ -570,8 +565,8 @@ const CSS = `
   .jaa-stat-cap { font-size:.6rem; line-height:1.3; }
 }
 @media (max-width:760px) {
-  .jaa-hero { padding:68px 12px 52px; }
-  .jaa-hero-card { padding:32px 20px; border-radius:20px; }
+  .jaa-hero { padding:48px 12px 52px; }
+  .jaa-hero-card { padding:30px 20px; border-radius:20px; }
   .jaa-visual { display:none; }
   .jaa-console { padding:20px 16px; border-radius:18px; }
   .jaa-ddrow { flex-direction:column; align-items:stretch; }
