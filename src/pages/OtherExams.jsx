@@ -407,20 +407,31 @@ const CSS = `
 .oe-empty button { padding:11px 22px; border-radius:50px; background:${CL.coral}; color:#fff; font:800 .85rem/1 ${CL.display}; cursor:pointer; border:none; }
 
 @media (max-width:960px) {
-  .oe-hero-grid { grid-template-columns:1fr; gap:24px; }
-  .oe-map { order:-1; width:100%; }
+  /* single column: copy first, route map flows below it (like the reference) */
+  .oe-hero-grid { grid-template-columns:1fr; gap:28px; }
+  .oe-map { width:100%; }
   .oe-map-svg { max-width:520px; }
   .oe-hero-title { letter-spacing:-1px; }
   .oe-grid { grid-template-columns:repeat(2,1fr); }
+}
+/* phones / small tablets: centre the whole hero, stats included */
+@media (max-width:760px) {
+  .oe-hero-copy { text-align:center; }
+  .oe-hero-top { justify-content:center; }
+  .oe-hero-sub { margin-left:auto; margin-right:auto; }
+  .oe-hero-cta { justify-content:center; }
+  .oe-statcard { margin-left:auto; margin-right:auto; }
 }
 @media (max-width:640px) {
   .oe-hero { padding:20px 0 40px; }
   .oe-hero-sub { max-width:none; }
   .oe-hero-cta { width:100%; }
   .oe-btn-primary, .oe-btn-ghost { flex:1 1 auto; justify-content:center; }
-  .oe-statcard { display:flex; flex-wrap:wrap; width:100%; gap:14px 20px; padding:16px 18px; justify-content:space-between; }
-  .oe-stat-div { display:none; }
-  .oe-stat-num { font-size:1.55rem; }
+  /* three centred stat columns with dividers, matching the reference */
+  .oe-statcard { display:flex; width:100%; gap:12px; padding:16px 12px; justify-content:space-between; }
+  .oe-stat { flex:1; align-items:center; text-align:center; min-width:0; }
+  .oe-stat-foot { line-height:1.35; }
+  .oe-stat-num { font-size:1.5rem; }
 
   .oe-directory { padding:52px 0 72px; }
   .oe-grid { grid-template-columns:1fr; }
