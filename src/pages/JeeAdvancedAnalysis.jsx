@@ -3,7 +3,7 @@
    (all 80), each with weightage ring / avg-Qs / difficulty / priority and a
    sub-topic breakdown, plus three dropdown filters (class, difficulty, trend)
    and a search. Below the grid: a 200-hour study-time split by subject and the
-   marking scheme. Coral theme. */
+   marking scheme. Warm neutral / amber theme. */
 import { useMemo, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,12 +15,12 @@ import Seo from "../components/Seo.jsx";
 import { JEE_ADV_CHAPTERS } from "../data/jeeAdvancedChapters.js";
 import { SUBJECT_SUMMARY, MARKING_SCHEME } from "../data/jeeAdvancedMeta.js";
 
-/* ── coral theme ── */
+/* ── warm neutral / amber theme ── */
 const T = {
-  bg: "#FCF2EF", surface: "#FFFFFF", surface2: "#FDF7F5",
-  border: "#EBD9D3", borderLight: "#F3E7E2",
-  ink: "#2A1A17", body: "#6B5651", muted: "#A48D86",
-  coral: "#F76F5A", coralDk: "#C0392B", coralSoft: "#FDE3DD",
+  bg: "#F5F3EE", surface: "#FFFFFF", surface2: "#FAF9F4",
+  border: "#D8D8D2", borderLight: "#E8E6DF",
+  ink: "#1A1A2E", body: "#57535C", muted: "#9A958E",
+  amber: "#F59E0B", amberDk: "#B45309", amberSoft: "#FEF3C7",
   error: "#DC2626", errorSoft: "#FCE9E9", success: "#16A34A", successSoft: "#E4F5EA",
 };
 const SUBJECTS = {
@@ -30,13 +30,13 @@ const SUBJECTS = {
 };
 const PRIORITY = {
   "Must-Do": { fg: T.ink,     label: "MUST-DO" },
-  High:      { fg: T.coralDk, label: "HIGH" },
+  High:      { fg: T.amberDk, label: "HIGH" },
   Standard:  { fg: T.muted,   label: "STANDARD" },
 };
 const DIFF_STYLE = {
   "Low":         { fg: "#15803D", bg: T.successSoft },
   "Low-Medium":  { fg: "#15803D", bg: T.successSoft },
-  "Medium":      { fg: T.coralDk, bg: T.coralSoft },
+  "Medium":      { fg: T.amberDk, bg: T.amberSoft },
   "Medium-High": { fg: "#C2410C", bg: "#FFEAD6" },
   "High":        { fg: "#B91C1C", bg: T.errorSoft },
 };
@@ -169,7 +169,7 @@ function HeroVisual({ subjectCounts, mustDo }) {
     { title: "Physics", subtitle: `${subjectCounts.Physics} chapters`, ...SUBJECTS.Physics },
     { title: "Chemistry", subtitle: `${subjectCounts.Chemistry} chapters`, ...SUBJECTS.Chemistry },
     { title: "Maths", subtitle: `${subjectCounts.Maths} chapters`, ...SUBJECTS.Maths },
-    { title: "Must-Do", subtitle: `${mustDo} high-yield`, color: T.coral, soft: T.coralSoft, icon: Target },
+    { title: "Must-Do", subtitle: `${mustDo} high-yield`, color: T.amber, soft: T.amberSoft, icon: Target },
   ];
   const r = 70, C = 2 * Math.PI * r;
   return (
@@ -178,8 +178,8 @@ function HeroVisual({ subjectCounts, mustDo }) {
       <motion.div className="jaa-orbit jaa-orbit-2" animate={{ rotate: -360 }} transition={{ repeat: Infinity, duration: 100, ease: "linear" }} />
       <motion.div className="jaa-core" initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6, delay: 0.3, type: "spring", stiffness: 170, damping: 16 }}>
         <svg width="164" height="164" viewBox="0 0 164 164" className="jaa-core-svg">
-          <circle cx="82" cy="82" r={r} fill="none" stroke={T.coralSoft} strokeWidth="6" />
-          <motion.circle cx="82" cy="82" r={r} fill="none" stroke={T.coral} strokeWidth="6" strokeLinecap="round"
+          <circle cx="82" cy="82" r={r} fill="none" stroke={T.amberSoft} strokeWidth="6" />
+          <motion.circle cx="82" cy="82" r={r} fill="none" stroke={T.amber} strokeWidth="6" strokeLinecap="round"
             transform="rotate(-90 82 82)" strokeDasharray={C} initial={{ strokeDashoffset: C }} animate={{ strokeDashoffset: C * 0.26 }}
             transition={{ duration: 1.4, delay: 0.6, ease: "easeInOut" }} />
         </svg>
@@ -215,7 +215,7 @@ function SubjectSummary() {
         {SUBJECT_SUMMARY.map((s) => {
           const sub = SUBJECTS[s.subject]; const Icon = sub.icon;
           const total = s.tiers.reduce((a, t) => a + t.hours, 0);
-          const barColors = { "Must-Do": sub.color, High: T.coral, Standard: T.border };
+          const barColors = { "Must-Do": sub.color, High: T.amber, Standard: T.border };
           return (
             <div key={s.subject} className="jaa-sum-card" style={{ "--accent": sub.color }}>
               <div className="jaa-sum-top">
@@ -285,6 +285,7 @@ export default function JeeAdvancedAnalysis() {
 
       {/* ── HERO ── */}
       <section className="jaa-hero">
+        <div className="jaa-hero-card">
         <div className="jaa-hero-grid">
           <motion.div initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}>
             <motion.span className="jaa-badge" variants={fade}>
@@ -307,6 +308,7 @@ export default function JeeAdvancedAnalysis() {
             </motion.div>
           </motion.div>
           <HeroVisual subjectCounts={subjectCounts} mustDo={mustDo} />
+        </div>
         </div>
       </section>
 
@@ -381,35 +383,36 @@ const CSS = `
 .jaa { background:${T.bg}; color:${T.ink}; font-family:'DM Sans','Inter',system-ui,sans-serif; }
 .jaa * { box-sizing:border-box; }
 
-/* ── hero ── */
-.jaa-hero { padding:128px 0 120px; border-bottom:1px solid ${T.border}; }
-.jaa-hero-grid { max-width:1250px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:1.15fr .85fr; gap:80px; align-items:center; }
-.jaa-badge { display:inline-flex; align-items:center; gap:10px; padding:8px 20px; border-radius:50px; background:${T.coralSoft}; color:${T.coralDk}; border:1px solid #F8C6BC; font:800 .76rem/1 'Space Grotesk',sans-serif; letter-spacing:.11em; text-transform:uppercase; }
-.jaa-badge-dot { width:8px; height:8px; border-radius:50%; background:${T.coral}; display:inline-block; }
+/* ── hero (contained in a card) ── */
+.jaa-hero { padding:100px 24px 120px; }
+.jaa-hero-card { max-width:1210px; margin:0 auto; background:${T.surface}; border:1px solid ${T.border}; border-radius:28px; padding:60px 60px; box-shadow:0 30px 70px -40px rgba(26,26,46,.32); }
+.jaa-hero-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:64px; align-items:center; }
+.jaa-badge { display:inline-flex; align-items:center; gap:10px; padding:8px 20px; border-radius:50px; background:${T.amberSoft}; color:${T.amberDk}; border:1px solid #FDE68A; font:800 .76rem/1 'Space Grotesk',sans-serif; letter-spacing:.11em; text-transform:uppercase; }
+.jaa-badge-dot { width:8px; height:8px; border-radius:50%; background:${T.amber}; display:inline-block; }
 .jaa-title { font:800 clamp(2.6rem,4.4vw,3.9rem)/1.12 'Space Grotesk','Sora',sans-serif; letter-spacing:-.5px; color:${T.ink}; margin:28px 0 0; }
-.jaa-hl { color:${T.coral}; }
+.jaa-hl { color:${T.amber}; }
 .jaa-sub { font:400 1.14rem/1.7 inherit; color:${T.body}; max-width:540px; margin:24px 0 0; }
 .jaa-stats { display:flex; flex-wrap:wrap; gap:48px; margin:40px 0 0; }
 .jaa-stat { display:flex; flex-direction:column; gap:8px; }
 .jaa-stat-num { font:800 2.3rem/1 'Space Grotesk',sans-serif; color:${T.ink}; letter-spacing:-1px; }
-.jaa-stat:first-child .jaa-stat-num { color:${T.coral}; }
+.jaa-stat:first-child .jaa-stat-num { color:${T.amber}; }
 .jaa-stat-cap { font:700 .82rem/1.1 inherit; text-transform:uppercase; letter-spacing:.05em; color:${T.muted}; }
 .jaa-cta { display:flex; flex-wrap:wrap; gap:20px; align-items:center; margin:44px 0 0; }
-.jaa-btn-primary { display:inline-flex; align-items:center; gap:9px; cursor:pointer; border:none; padding:18px 32px; border-radius:14px; font:700 1.05rem/1 'Space Grotesk',sans-serif; color:#fff; background:${T.coral}; box-shadow:0 10px 30px rgba(247,111,90,.32); transition:transform .18s, box-shadow .18s, background .18s; }
-.jaa-btn-primary:hover { background:#e85941; transform:translateY(-3px); box-shadow:0 16px 34px rgba(247,111,90,.44); }
-.jaa-btn-ghost { display:inline-flex; align-items:center; gap:8px; cursor:pointer; background:transparent; border:none; color:${T.coral}; font:700 1rem/1 'Space Grotesk',sans-serif; padding:8px 6px; transition:gap .18s, color .18s; }
-.jaa-btn-ghost:hover { color:${T.coralDk}; gap:12px; }
+.jaa-btn-primary { display:inline-flex; align-items:center; gap:9px; cursor:pointer; border:none; padding:18px 32px; border-radius:14px; font:700 1.05rem/1 'Space Grotesk',sans-serif; color:#fff; background:${T.amber}; box-shadow:0 10px 30px rgba(245,158,11,.32); transition:transform .18s, box-shadow .18s, background .18s; }
+.jaa-btn-primary:hover { background:#e08e08; transform:translateY(-3px); box-shadow:0 16px 34px rgba(245,158,11,.44); }
+.jaa-btn-ghost { display:inline-flex; align-items:center; gap:8px; cursor:pointer; background:transparent; border:none; color:${T.amber}; font:700 1rem/1 'Space Grotesk',sans-serif; padding:8px 6px; transition:gap .18s, color .18s; }
+.jaa-btn-ghost:hover { color:${T.amberDk}; gap:12px; }
 
 .jaa-visual { position:relative; height:480px; }
 .jaa-orbit { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); border-radius:50%; }
-.jaa-orbit-1 { width:300px; height:300px; border:2px dashed ${T.coral}66; }
-.jaa-orbit-2 { width:410px; height:410px; border:1px dashed #F8C6BC; }
+.jaa-orbit-1 { width:300px; height:300px; border:2px dashed ${T.amber}66; }
+.jaa-orbit-2 { width:410px; height:410px; border:1px dashed #FDE68A; }
 .jaa-core { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:164px; height:164px; z-index:10; }
 .jaa-core-svg { position:absolute; inset:0; }
-.jaa-core-face { position:absolute; inset:14px; border-radius:50%; background:${T.surface}; box-shadow:0 22px 44px -12px rgba(247,111,90,.4); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
-.jaa-core-num { font:800 2.5rem/1 'Space Grotesk',sans-serif; color:${T.coral}; letter-spacing:-1px; }
+.jaa-core-face { position:absolute; inset:14px; border-radius:50%; background:${T.surface}; box-shadow:0 22px 44px -12px rgba(245,158,11,.4); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
+.jaa-core-num { font:800 2.5rem/1 'Space Grotesk',sans-serif; color:${T.amber}; letter-spacing:-1px; }
 .jaa-core-cap { font:700 .72rem/1.25 inherit; text-transform:uppercase; letter-spacing:.04em; color:${T.muted}; text-align:center; }
-.jaa-fcard { position:absolute; z-index:12; display:flex; flex-direction:column; gap:2px; background:${T.surface}; padding:13px 15px; border-radius:15px; border:1px solid ${T.border}; box-shadow:0 16px 34px -16px rgba(42,26,23,.26); width:150px; }
+.jaa-fcard { position:absolute; z-index:12; display:flex; flex-direction:column; gap:2px; background:${T.surface}; padding:13px 15px; border-radius:15px; border:1px solid ${T.border}; box-shadow:0 16px 34px -16px rgba(26,26,46,.26); width:150px; }
 .jaa-fcard-ic { width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; margin-bottom:6px; }
 .jaa-fcard-t { font:700 .96rem/1.1 'Space Grotesk',sans-serif; color:${T.ink}; }
 .jaa-fcard-s { font:600 .78rem/1.2 inherit; color:${T.muted}; }
@@ -417,11 +420,11 @@ const CSS = `
 /* ── directory / console ── */
 .jaa-dir { max-width:1250px; margin:0 auto; padding:96px 24px 40px; }
 .jaa-dir-head { text-align:center; max-width:680px; margin:0 auto 34px; }
-.jaa-kicker { display:inline-flex; align-items:center; gap:7px; padding:6px 14px; border-radius:50px; background:${T.coralSoft}; color:${T.coralDk}; font:800 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.jaa-kicker { display:inline-flex; align-items:center; gap:7px; padding:6px 14px; border-radius:50px; background:${T.amberSoft}; color:${T.amberDk}; font:800 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; text-transform:uppercase; }
 .jaa-h2 { font:800 clamp(1.7rem,3.4vw,2.4rem)/1.15 'Space Grotesk',sans-serif; letter-spacing:-.8px; color:${T.ink}; margin:16px 0 0; }
 .jaa-dir-sub { font:400 1.02rem/1.6 inherit; color:${T.body}; margin:12px 0 0; }
 
-.jaa-console { background:${T.surface}; border:1px solid ${T.border}; border-radius:22px; padding:26px 26px 22px; box-shadow:0 18px 48px -30px rgba(42,26,23,.4); }
+.jaa-console { background:${T.surface}; border:1px solid ${T.border}; border-radius:22px; padding:26px 26px 22px; box-shadow:0 18px 48px -30px rgba(26,26,46,.4); }
 .jaa-console-head { text-align:center; margin-bottom:22px; }
 .jaa-console-head .jaa-h2 { font-size:clamp(1.4rem,2.6vw,1.8rem); margin-top:12px; }
 .jaa-console-body { display:flex; flex-direction:column; gap:14px; }
@@ -431,23 +434,23 @@ const CSS = `
 .jaa-dd { position:relative; display:flex; flex-direction:column; gap:7px; min-width:150px; }
 .jaa-dd-lbl { font:800 .66rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:${T.muted}; }
 .jaa-dd-btn { display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; width:100%; border:1px solid ${T.border}; background:${T.surface2}; border-radius:11px; padding:11px 14px; font:600 .88rem/1 inherit; color:${T.ink}; transition:border-color .15s, box-shadow .15s; }
-.jaa-dd-btn:hover { border-color:${T.coral}; }
-.jaa-dd-btn.open { border-color:${T.coral}; box-shadow:0 0 0 3px ${T.coralSoft}; }
+.jaa-dd-btn:hover { border-color:${T.amber}; }
+.jaa-dd-btn.open { border-color:${T.amber}; box-shadow:0 0 0 3px ${T.amberSoft}; }
 .jaa-dd-val { font-weight:700; } .jaa-dd-val.all { font-weight:600; color:${T.muted}; }
-.jaa-dd-btn .jaa-chev { color:${T.muted}; transition:transform .2s; } .jaa-dd-btn .jaa-chev.open { transform:rotate(180deg); color:${T.coral}; }
-.jaa-dd-menu { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:30; background:${T.surface}; border:1px solid ${T.border}; border-radius:12px; padding:5px; box-shadow:0 20px 44px -18px rgba(42,26,23,.42); max-height:280px; overflow:auto; }
+.jaa-dd-btn .jaa-chev { color:${T.muted}; transition:transform .2s; } .jaa-dd-btn .jaa-chev.open { transform:rotate(180deg); color:${T.amber}; }
+.jaa-dd-menu { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:30; background:${T.surface}; border:1px solid ${T.border}; border-radius:12px; padding:5px; box-shadow:0 20px 44px -18px rgba(26,26,46,.42); max-height:280px; overflow:auto; }
 .jaa-dd-opt { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; cursor:pointer; border:none; background:none; text-align:left; padding:9px 11px; border-radius:8px; font:600 .86rem/1 inherit; color:${T.body}; transition:background .12s, color .12s; }
 .jaa-dd-opt:hover { background:${T.surface2}; color:${T.ink}; }
-.jaa-dd-opt.on { background:${T.coralSoft}; color:${T.coralDk}; font-weight:700; }
-.jaa-dd-opt.on svg { color:${T.coral}; }
+.jaa-dd-opt.on { background:${T.amberSoft}; color:${T.amberDk}; font-weight:700; }
+.jaa-dd-opt.on svg { color:${T.amber}; }
 
 .jaa-search { display:flex; align-items:center; gap:9px; flex:1 1 240px; min-width:220px; background:${T.surface}; border:1px solid ${T.border}; border-radius:11px; padding:11px 15px; align-self:stretch; }
-.jaa-search:focus-within { border-color:${T.coral}; box-shadow:0 0 0 3px ${T.coralSoft}; }
+.jaa-search:focus-within { border-color:${T.amber}; box-shadow:0 0 0 3px ${T.amberSoft}; }
 .jaa-search input { flex:1; border:none; outline:none; background:none; font:500 .92rem/1 inherit; color:${T.ink}; }
 .jaa-search button { display:grid; place-items:center; color:${T.muted}; background:none; border:none; cursor:pointer; }
 .jaa-searchrow { display:flex; flex-wrap:wrap; align-items:center; gap:14px; }
 .jaa-count { font:500 .88rem/1 inherit; color:${T.muted}; margin:0; }
-.jaa-count strong { color:${T.coralDk}; }
+.jaa-count strong { color:${T.amberDk}; }
 .jaa-reset { cursor:pointer; border:1px solid ${T.border}; background:${T.surface}; color:${T.body}; padding:9px 15px; border-radius:50px; font:700 .8rem/1 'Space Grotesk',sans-serif; }
 .jaa-reset:hover { border-color:${T.error}; color:${T.error}; }
 
@@ -455,7 +458,7 @@ const CSS = `
 
 /* ── chapter card (compact · small type) ── */
 .jaa-card { background:${T.surface}; border:1px solid ${T.border}; border-left:4px solid var(--accent); border-radius:15px; padding:16px 16px 14px; transition:transform .18s, box-shadow .18s; }
-.jaa-card:hover { transform:translateY(-3px); box-shadow:0 18px 38px -20px rgba(42,26,23,.3); }
+.jaa-card:hover { transform:translateY(-3px); box-shadow:0 18px 38px -20px rgba(26,26,46,.3); }
 .jaa-card-top { display:flex; align-items:flex-start; gap:11px; }
 .jaa-ring { position:relative; display:grid; place-items:center; flex-shrink:0; }
 .jaa-ring-lbl { position:absolute; font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:-.3px; color:${T.ink}; }
@@ -479,22 +482,23 @@ const CSS = `
 
 .jaa-empty { text-align:center; padding:60px 0; }
 .jaa-empty p { font:700 1.05rem/1 'Space Grotesk',sans-serif; color:${T.body}; margin-bottom:16px; }
-.jaa-empty button { cursor:pointer; border:none; padding:11px 22px; border-radius:10px; background:${T.coral}; color:#fff; font:700 .88rem/1 'Space Grotesk',sans-serif; }
+.jaa-empty button { cursor:pointer; border:none; padding:11px 22px; border-radius:10px; background:${T.amber}; color:#fff; font:700 .88rem/1 'Space Grotesk',sans-serif; }
 
 /* ── subject summary / budget ── */
 .jaa-summary { max-width:1250px; margin:0 auto; padding:40px 24px 20px; }
-.jaa-sum-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
-.jaa-sum-card { background:${T.surface}; border:1px solid ${T.border}; border-top:4px solid var(--accent); border-radius:16px; padding:20px; }
-.jaa-sum-top { display:flex; align-items:center; gap:12px; }
-.jaa-sum-ic { width:44px; height:44px; border-radius:12px; display:grid; place-items:center; flex-shrink:0; }
-.jaa-sum-name { font:800 1.15rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
-.jaa-sum-sub { font:600 .78rem/1.3 inherit; color:${T.muted}; margin-top:4px; }
-.jaa-sum-hrs { margin-left:auto; font:800 1.6rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
-.jaa-sum-hrs span { font-size:.7rem; color:${T.muted}; margin-left:3px; }
-.jaa-sum-bar { display:flex; height:9px; border-radius:50px; overflow:hidden; margin:18px 0 14px; background:${T.surface2}; }
+.jaa-sum-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.jaa-sum-card { background:${T.surface}; border:1px solid ${T.border}; border-top:4px solid var(--accent); border-radius:16px; padding:17px; }
+.jaa-sum-top { display:flex; align-items:center; gap:11px; }
+.jaa-sum-ic { width:36px; height:36px; border-radius:10px; display:grid; place-items:center; flex-shrink:0; }
+.jaa-sum-ic svg { width:17px; height:17px; }
+.jaa-sum-name { font:800 .96rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
+.jaa-sum-sub { font:600 .68rem/1.3 inherit; color:${T.muted}; margin-top:4px; }
+.jaa-sum-hrs { margin-left:auto; font:800 1.25rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
+.jaa-sum-hrs span { font-size:.6rem; color:${T.muted}; margin-left:3px; }
+.jaa-sum-bar { display:flex; height:7px; border-radius:50px; overflow:hidden; margin:15px 0 12px; background:${T.surface2}; }
 .jaa-sum-bar span { height:100%; }
-.jaa-sum-row { display:flex; align-items:center; gap:9px; padding:6px 0; font:600 .82rem/1 inherit; }
-.jaa-sum-dot { width:9px; height:9px; border-radius:3px; flex-shrink:0; }
+.jaa-sum-row { display:flex; align-items:center; gap:8px; padding:5px 0; font:600 .72rem/1 inherit; }
+.jaa-sum-dot { width:8px; height:8px; border-radius:3px; flex-shrink:0; }
 .jaa-sum-tier { font-weight:800; font-family:'Space Grotesk',sans-serif; color:${T.ink}; }
 .jaa-sum-meta { color:${T.muted}; }
 .jaa-sum-th { margin-left:auto; font-weight:800; font-family:'Space Grotesk',sans-serif; color:${T.body}; }
@@ -510,34 +514,43 @@ const CSS = `
 .jaa-mark-rows strong { font:800 .84rem/1.2 'Space Grotesk',sans-serif; color:${T.ink}; text-align:right; }
 
 .jaa-back { text-align:center; margin-top:44px; }
-.jaa-back a { color:${T.coralDk}; font:700 .95rem/1 'Space Grotesk',sans-serif; text-decoration:none; }
+.jaa-back a { color:${T.amberDk}; font:700 .95rem/1 'Space Grotesk',sans-serif; text-decoration:none; }
 .jaa-back a:hover { text-decoration:underline; }
 
 /* ── responsive ── */
 @media (max-width:1000px) {
-  .jaa-hero { padding:92px 0 72px; }
+  .jaa-hero { padding:80px 16px 64px; }
+  .jaa-hero-card { padding:40px 28px; border-radius:24px; }
   .jaa-hero-grid { grid-template-columns:1fr; gap:24px; text-align:center; }
   .jaa-badge, .jaa-title, .jaa-sub { margin-left:auto; margin-right:auto; }
   .jaa-cta { justify-content:center; }
   .jaa-visual { height:400px; order:2; }
   .jaa-grid, .jaa-sum-grid { grid-template-columns:repeat(2,1fr); }
   .jaa-mark-grid { grid-template-columns:repeat(2,1fr); }
-  .jaa-dir { padding-top:72px; }
+  .jaa-dir { padding-top:64px; }
   /* stats become a tidy 3-column card with dividers (phones + tablets) */
   .jaa-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin:34px auto 0; width:100%; max-width:460px;
-    background:${T.surface}; border:1px solid ${T.border}; border-radius:18px; padding:18px 8px; box-shadow:0 10px 30px -20px rgba(42,26,23,.4); }
+    background:${T.surface}; border:1px solid ${T.border}; border-radius:18px; padding:18px 8px; box-shadow:0 10px 30px -20px rgba(26,26,46,.4); }
   .jaa-stat { align-items:center; text-align:center; gap:6px; padding:2px 4px; }
   .jaa-stat + .jaa-stat { border-left:1px solid ${T.borderLight}; }
   .jaa-stat-num { font-size:1.8rem; }
   .jaa-stat-cap { font-size:.6rem; line-height:1.3; }
 }
 @media (max-width:760px) {
-  .jaa-hero { padding:76px 0 56px; }
+  .jaa-hero { padding:68px 12px 52px; }
+  .jaa-hero-card { padding:32px 20px; border-radius:20px; }
   .jaa-visual { display:none; }
   .jaa-console { padding:20px 16px; border-radius:18px; }
   .jaa-ddrow { flex-direction:column; align-items:stretch; }
   .jaa-dd { min-width:0; }
   .jaa-grid, .jaa-sum-grid, .jaa-mark-grid { grid-template-columns:1fr; }
+}
+@media (max-width:420px) {
+  .jaa-hero-card { padding:26px 16px; }
+  .jaa-stats { grid-template-columns:repeat(3,1fr); }
+  .jaa-stat-num { font-size:1.5rem; }
+  .jaa-btn-primary, .jaa-btn-ghost { width:100%; justify-content:center; }
+  .jaa-cta { width:100%; }
 }
 @media (prefers-reduced-motion: reduce) { .jaa-orbit { animation:none !important; } }
 `;
