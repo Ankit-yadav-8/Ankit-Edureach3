@@ -657,10 +657,16 @@ export const CATEGORIES = [
   { key: "private",  label: "Private",  tint: "#0FAE6E", tintSoft: "#D8F3E6", exams: PRIVATE },
 ];
 
-/* Flattened list — every exam tagged with its category key/label so a single
-   grid can render and filter across all three groups. */
+/* Stable URL slug from a code — e.g. "MHT CET" → "mht-cet",
+   "COMEDK UGET" → "comedk-uget", "REAP (Rajasthan)" → "reap-rajasthan".
+   Used for deep-linking to a card: /other-exams#exam-<slug>. */
+export const examSlug = (code) =>
+  code.toLowerCase().replace(/[()']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/* Flattened list — every exam tagged with its category key/label + slug so a
+   single grid can render, filter and deep-link across all three groups. */
 export const ALL_EXAMS = CATEGORIES.flatMap((c) =>
-  c.exams.map((e) => ({ ...e, category: c.key, categoryLabel: c.label, tint: c.tint, tintSoft: c.tintSoft }))
+  c.exams.map((e) => ({ ...e, slug: examSlug(e.code), category: c.key, categoryLabel: c.label, tint: c.tint, tintSoft: c.tintSoft }))
 );
 
 /* Status metadata for the Current / Past / Upcoming filter chips + card badges. */

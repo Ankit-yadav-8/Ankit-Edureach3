@@ -6,7 +6,7 @@
    The visual layout is our own — it is not lifted from any third-party card.
    Each exam gets a monogram logo (code initials on a category-tinted badge);
    if a real logo file exists at `logo`, it is shown instead. */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   IndianRupee, CalendarDays, GraduationCap, ChevronDown,
@@ -26,14 +26,19 @@ function monogram(code) {
   return clean.slice(0, 3).toUpperCase();
 }
 
-export default function ExamCard({ exam, index = 0 }) {
-  const [open, setOpen] = useState(false);
+export default function ExamCard({ exam, index = 0, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen);
   const s = STATUS_META[exam.status] || STATUS_META.past;
 
+  /* Deep-link target (e.g. from the footer): open + gently highlight. */
+  useEffect(() => { if (defaultOpen) setOpen(true); }, [defaultOpen]);
+
+  /* A few soft, natural accent tints — used sparingly, only on the three
+     key-fact icons, so the card gains warmth without turning loud. */
   const facts = [
-    { icon: IndianRupee, label: "Fee", value: exam.fee },
-    { icon: CalendarDays, label: "Exam window", value: exam.examDate },
-    { icon: GraduationCap, label: "Profile", value: exam.profile },
+    { icon: IndianRupee, label: "Fee", value: exam.fee, fg: "#2E9E6B", bg: "#E8F5EE" },
+    { icon: CalendarDays, label: "Exam window", value: exam.examDate, fg: "#3A72C4", bg: "#E7F0FD" },
+    { icon: GraduationCap, label: "Profile", value: exam.profile, fg: "#7B5EA7", bg: "#F1EBFA" },
   ];
 
   const details = [
@@ -48,12 +53,13 @@ export default function ExamCard({ exam, index = 0 }) {
 
   return (
     <motion.article
-      className="ex-card"
+      id={`exam-${exam.slug}`}
+      className={`ex-card${defaultOpen ? " ex-card--target" : ""}`}
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4, delay: (index % 3) * 0.06 }}
-      style={{ "--tint": exam.tint, "--tint-soft": exam.tintSoft }}
+      style={{ scrollMarginTop: 120, "--tint": exam.tint, "--tint-soft": exam.tintSoft }}
     >
       {/* accent hairline */}
       <span className="ex-accent" />
@@ -85,7 +91,7 @@ export default function ExamCard({ exam, index = 0 }) {
       <div className="ex-facts">
         {facts.map((f) => (
           <div key={f.label} className="ex-fact">
-            <span className="ex-fact-ic"><f.icon size={15} /></span>
+            <span className="ex-fact-ic" style={{ background: f.bg, color: f.fg }}><f.icon size={15} /></span>
             <div style={{ minWidth: 0 }}>
               <span className="ex-fact-label">{f.label}</span>
               <span className="ex-fact-value">{f.value || "—"}</span>
@@ -140,6 +146,8 @@ const CSS = `
   box-shadow:${CL.shadow}; transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
 }
 .ex-card:hover { transform:translateY(-5px); box-shadow:0 20px 46px rgba(33,29,46,.12); border-color:var(--tint); }
+.ex-card--target { border-color:var(--tint); box-shadow:0 0 0 3px color-mix(in srgb, var(--tint) 30%, transparent), 0 20px 46px rgba(33,29,46,.12); animation:exTarget 2.4s ease 1; }
+@keyframes exTarget { 0%,70% { box-shadow:0 0 0 4px color-mix(in srgb, var(--tint) 42%, transparent), 0 20px 46px rgba(33,29,46,.12); } 100% { box-shadow:0 0 0 3px color-mix(in srgb, var(--tint) 30%, transparent), 0 20px 46px rgba(33,29,46,.12); } }
 .ex-accent { position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, var(--tint), color-mix(in srgb, var(--tint) 55%, #fff)); }
 
 .ex-head { display:flex; gap:14px; align-items:flex-start; }
