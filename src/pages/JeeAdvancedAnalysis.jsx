@@ -296,40 +296,60 @@ export default function JeeAdvancedAnalysis() {
         </div>
       </section>
 
-      {/* ── CONSOLE + GRID ── */}
+      {/* ── CONSOLE (sticky sidebar) + CARD GRID ── */}
       <section id="chapters" className="jaa-dir">
-        <div className="jaa-console">
-          <div className="jaa-console-head">
-            <span className="jaa-kicker"><Target size={13} /> Analysis console</span>
-            <h2 className="jaa-h2">Filter down to your next 10 hours</h2>
-          </div>
+        <div className="jaa-workspace">
+          {/* left: filters + how-to */}
+          <aside className="jaa-sidebar">
+            <div className="jaa-side-card">
+              <div className="jaa-side-head">
+                <span className="jaa-kicker"><Target size={13} /> Analysis console</span>
+                <h2 className="jaa-side-title">Filter your 80 chapters</h2>
+              </div>
+              <div className="jaa-search">
+                <Search size={16} color={T.muted} />
+                <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search a chapter or sub-topic…" />
+                {q && <button onClick={() => setQ("")} aria-label="Clear"><X size={15} /></button>}
+              </div>
+              <div className="jaa-filters">
+                <Segmented label="Subject" options={SUBJECT_FILTERS} value={subject} onChange={setSubject} dots={SUBJECT_DOTS} />
+                <Segmented label="Class" options={CLASS_FILTERS} value={cls} onChange={setCls} fmt={(o) => (o === "All" ? "All" : `Class ${o}`)} />
+                <Segmented label="Difficulty" options={DIFF_FILTERS} value={diff} onChange={setDiff} />
+                <Segmented label="Trend" options={TREND_FILTERS} value={trend} onChange={setTrend} />
+              </div>
+              <div className="jaa-searchrow">
+                <p className="jaa-count"><strong>{filtered.length}</strong> of 80 chapters shown</p>
+                {filtersOn && <button className="jaa-reset" onClick={reset}>Clear all</button>}
+              </div>
+            </div>
 
-          <div className="jaa-console-body">
-            <div className="jaa-filters">
-              <Segmented label="Subject" options={SUBJECT_FILTERS} value={subject} onChange={setSubject} dots={SUBJECT_DOTS} />
-              <Segmented label="Class" options={CLASS_FILTERS} value={cls} onChange={setCls} fmt={(o) => (o === "All" ? "All" : `Class ${o}`)} />
-              <Segmented label="Difficulty" options={DIFF_FILTERS} value={diff} onChange={setDiff} />
-              <Segmented label="Trend" options={TREND_FILTERS} value={trend} onChange={setTrend} />
+            <div className="jaa-howto">
+              <div className="jaa-howto-head">
+                <span className="jaa-howto-ic"><Sparkles size={15} /></span>
+                <h3>How to use this tool</h3>
+              </div>
+              <ol className="jaa-howto-steps">
+                <li><strong>Pick a subject</strong> to focus on Physics, Chemistry or Maths — or leave it on All.</li>
+                <li><strong>Narrow by class, difficulty or trend</strong> to match where you are in prep.</li>
+                <li><strong>Search</strong> any chapter or sub-topic by name.</li>
+                <li><strong>Open a card</strong> for its sub-topic breakdown; the ring shows exam weightage.</li>
+                <li>Cards are <strong>sorted high-weightage first</strong> — start at the top.</li>
+              </ol>
+              <div className="jaa-howto-tip"><Target size={13} /> <span>Tip: clear <strong>Must-Do</strong> chapters first for the fastest marks.</span></div>
             </div>
-            <div className="jaa-search">
-              <Search size={16} color={T.muted} />
-              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search a chapter or sub-topic…" />
-              {q && <button onClick={() => setQ("")} aria-label="Clear"><X size={15} /></button>}
-            </div>
-            <div className="jaa-searchrow">
-              <p className="jaa-count"><strong>{filtered.length}</strong> of 80 chapters shown</p>
-              {filtersOn && <button className="jaa-reset" onClick={reset}>Clear all</button>}
-            </div>
+          </aside>
+
+          {/* right: cards */}
+          <div className="jaa-main">
+            {filtered.length > 0 ? (
+              <div className="jaa-grid">
+                {filtered.map((c, i) => <ChapterCard key={c.id} c={c} index={i} forceOpen={false} />)}
+              </div>
+            ) : (
+              <div className="jaa-empty"><p>No chapters match those filters.</p><button onClick={reset}>Reset filters</button></div>
+            )}
           </div>
         </div>
-
-        {filtered.length > 0 ? (
-          <div className="jaa-grid">
-            {filtered.map((c, i) => <ChapterCard key={c.id} c={c} index={i} forceOpen={false} />)}
-          </div>
-        ) : (
-          <div className="jaa-empty"><p>No chapters match those filters.</p><button onClick={reset}>Reset filters</button></div>
-        )}
       </section>
 
       {/* ── STUDY BUDGET ── */}
@@ -407,10 +427,27 @@ const CSS = `
 .jaa-h2 { font:800 clamp(1.7rem,3.4vw,2.4rem)/1.15 'Space Grotesk',sans-serif; letter-spacing:-.8px; color:${T.ink}; margin:16px 0 0; }
 .jaa-dir-sub { font:400 1.02rem/1.6 inherit; color:${T.body}; margin:12px 0 0; }
 
-.jaa-console { background:${T.surface}; border:1px solid ${T.border}; border-radius:22px; padding:26px 26px 22px; box-shadow:0 18px 48px -30px rgba(26,26,46,.4); }
-.jaa-console-head { text-align:center; margin-bottom:22px; }
-.jaa-console-head .jaa-h2 { font-size:clamp(1.4rem,2.6vw,1.8rem); margin-top:12px; }
-.jaa-console-body { display:flex; flex-direction:column; gap:16px; }
+/* ── workspace: sticky filter sidebar + card grid ── */
+.jaa-workspace { display:grid; grid-template-columns:300px 1fr; gap:24px; align-items:start; }
+.jaa-sidebar { position:sticky; top:114px; display:flex; flex-direction:column; gap:16px; }
+.jaa-main { min-width:0; }
+
+.jaa-side-card { background:${T.surface}; border:1px solid ${T.border}; border-radius:20px; padding:20px; box-shadow:0 18px 48px -32px rgba(26,26,46,.4); display:flex; flex-direction:column; gap:16px; }
+.jaa-side-head { display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
+.jaa-side-title { font:800 1.12rem/1.2 'Space Grotesk',sans-serif; letter-spacing:-.4px; color:${T.ink}; margin:0; }
+
+/* ── how-to info card ── */
+.jaa-howto { background:${T.surface2}; border:1px solid ${T.borderLight}; border-radius:20px; padding:20px; }
+.jaa-howto-head { display:flex; align-items:center; gap:10px; margin-bottom:15px; }
+.jaa-howto-ic { width:30px; height:30px; border-radius:9px; display:grid; place-items:center; background:${T.amberSoft}; color:${T.amberDk}; flex-shrink:0; }
+.jaa-howto-head h3 { font:800 .98rem/1.2 'Space Grotesk',sans-serif; color:${T.ink}; margin:0; }
+.jaa-howto-steps { margin:0; padding:0; list-style:none; counter-reset:step; display:flex; flex-direction:column; gap:12px; }
+.jaa-howto-steps li { position:relative; padding-left:30px; font:400 .82rem/1.5 sans-serif; color:${T.body}; counter-increment:step; }
+.jaa-howto-steps li::before { content:counter(step); position:absolute; left:0; top:1px; width:20px; height:20px; border-radius:50%; background:${T.amber}; color:#fff; font:800 .68rem/20px 'Space Grotesk',sans-serif; text-align:center; }
+.jaa-howto-steps strong { color:${T.ink}; font-weight:700; }
+.jaa-howto-tip { display:flex; align-items:flex-start; gap:7px; margin-top:16px; padding:10px 12px; border-radius:11px; background:${T.amberSoft}; color:${T.amberDk}; font:600 .76rem/1.4 sans-serif; }
+.jaa-howto-tip svg { flex-shrink:0; margin-top:2px; }
+.jaa-howto-tip strong { font-weight:800; }
 
 /* ── segmented pill filters (subject / class / difficulty / trend) ── */
 .jaa-filters { display:flex; flex-direction:column; gap:15px; }
@@ -432,7 +469,7 @@ const CSS = `
 .jaa-reset { cursor:pointer; border:1px solid ${T.border}; background:${T.surface}; color:${T.body}; padding:9px 15px; border-radius:50px; font:700 .8rem/1 'Space Grotesk',sans-serif; }
 .jaa-reset:hover { border-color:${T.error}; color:${T.error}; }
 
-.jaa-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; align-items:start; margin-top:30px; }
+.jaa-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(255px, 1fr)); gap:18px; align-items:start; }
 
 /* ── chapter card (compact · small type) ── */
 .jaa-card { background:${T.surface}; border:1px solid ${T.border}; border-left:4px solid var(--accent); border-radius:15px; padding:16px 16px 14px; transition:transform .18s, box-shadow .18s; }
@@ -505,7 +542,10 @@ const CSS = `
   .jaa-title, .jaa-sub { margin-left:auto; margin-right:auto; }
   .jaa-cta { justify-content:center; }
   .jaa-visual { height:400px; order:2; }
-  .jaa-grid, .jaa-sum-grid { grid-template-columns:repeat(2,1fr); }
+  /* workspace collapses: filters/how-to stack above the cards */
+  .jaa-workspace { grid-template-columns:1fr; gap:20px; }
+  .jaa-sidebar { position:static; }
+  .jaa-sum-grid { grid-template-columns:repeat(2,1fr); }
   .jaa-mark-grid { grid-template-columns:repeat(2,1fr); }
   .jaa-dir { padding-top:64px; }
   /* stats become a tidy 3-column card with dividers (phones + tablets) */
@@ -520,8 +560,8 @@ const CSS = `
   .jaa-hero { padding:116px 12px 52px; }
   .jaa-hero-card { padding:30px 20px; border-radius:20px; }
   .jaa-visual { display:none; }
-  .jaa-console { padding:20px 16px; border-radius:18px; }
-  .jaa-grid, .jaa-sum-grid, .jaa-mark-grid { grid-template-columns:1fr; }
+  .jaa-side-card, .jaa-howto { padding:18px; border-radius:16px; }
+  .jaa-sum-grid, .jaa-mark-grid { grid-template-columns:1fr; }
 }
 @media (max-width:420px) {
   .jaa-hero-card { padding:26px 16px; }
