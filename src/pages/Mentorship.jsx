@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Plus, Check, Star, Send, Radio,
   Video, Phone, Paperclip, Camera, Mic, Smile, GraduationCap, Sparkles,
+  BookOpen, CircleDot,
 } from "lucide-react";
 import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT, MENTOR_LINKS } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
@@ -406,16 +407,37 @@ function LiveTracking({ cfg }) {
 }
 
 /* ═══════════════ § 06 · FOR PARENTS ═══════════════ */
+const BOOKLET_INSIDE = [
+  "Study hours, streak & routine",
+  "Test scores & predicted rank",
+  "Weak / medium / strong chapters",
+  "Weekly task progress",
+  "Mentor's note & next-week plan",
+];
 function ForParents({ cfg }) {
   const p = cfg.metrics?.parent || {};
+  const st = cfg.metrics?.student || {};
+  const exam = cfg.tracks?.[0]?.exam || "JEE 2027";
+  const focus = (cfg.metrics?.test?.fix || []).slice(0, 3);
   return (
     <section className="mj-section">
       <div className="mj-wrap mj-parent-grid">
-        <Reveal>          <h2 className="mj-display mj-display-lg">A window into <em>the week.</em></h2>
-          <p className="mj-body">Every Sunday, a printable one-pager lands in your inbox. Not marketing.
-            The exact hours, tests, ranks and mentor notes your child heard that week.</p>
-          <button className="mj-btn-outline" onClick={() => window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! Can I see a sample parent weekly report?")}`, "_blank")}>
-            See sample <ArrowUpRight size={15} />
+        <Reveal className="mj-booklet">
+          <span className="mj-booklet-pill"><BookOpen size={13} /> PARENT REPORT</span>
+          <h2 className="mj-booklet-h">Weekly Progress<br />Booklet</h2>
+          <p className="mj-booklet-sub">A clear, jargon-free summary of your child&rsquo;s week — effort, tests, improvement and what&rsquo;s next.</p>
+          <div className="mj-booklet-div" />
+          <span className="mj-booklet-lbl">STUDENT</span>
+          <strong className="mj-booklet-name">{st.name || "Your child"}</strong>
+          <span className="mj-booklet-meta">{exam} · CollegeParichay Mentorship</span>
+          <span className="mj-booklet-lbl mj-booklet-lbl2">WHAT&rsquo;S INSIDE</span>
+          <ul className="mj-booklet-list">
+            {BOOKLET_INSIDE.map((it, i) => (
+              <li key={i}><CircleDot size={15} /> {it}</li>
+            ))}
+          </ul>
+          <button className="mj-booklet-btn" onClick={() => window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! Can I see a sample parent weekly report?")}`, "_blank")}>
+            See a sample booklet <ArrowUpRight size={16} />
           </button>
         </Reveal>
 
@@ -442,6 +464,14 @@ function ForParents({ cfg }) {
                   <span>{r.l}</span><strong>{r.v}</strong>
                 </div>
               ))}
+              {focus.length > 0 && (
+                <div className="mj-weekly-next">
+                  <span className="mj-glance-lbl">FOCUS NEXT WEEK</span>
+                  <ul className="mj-weekly-nextlist">
+                    {focus.map((f, i) => <li key={i}><Check size={13} strokeWidth={3} /> {f}</li>)}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
           <div className="mj-weekly-foot"><span>PARICHAY · PARENT REPORT</span><span>PAGE 01 / 04</span></div>
@@ -901,7 +931,9 @@ const CSS = `
 /* method — light vertical timeline */
 .mj-method { position:relative; overflow:hidden; }
 .mj-method::before { content:""; position:absolute; top:-14%; right:-8%; width:520px; height:520px; border-radius:50%; background:radial-gradient(circle, ${T.coralSoft}, transparent 68%); opacity:.55; pointer-events:none; }
-.mj-dark-head { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:56px; position:relative; }
+.mj-dark-head { display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px; margin-bottom:56px; position:relative; }
+.mj-dark-head > div { text-align:center; }
+.mj-dark-head .mj-display { position:relative; padding-bottom:22px; }
 .mj-scrollhint { font:800 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; white-space:nowrap; }
 .mj-vsteps { position:relative; max-width:860px; margin:0 auto; padding-left:8px; }
 .mj-vsteps-rail { position:absolute; left:31px; top:14px; bottom:34px; width:2px; transform-origin:top; background:linear-gradient(180deg, ${T.coral}, ${T.lineDk}); }
@@ -919,8 +951,12 @@ const CSS = `
 .mj-vstep-d { font:400 .94rem/1.6 'DM Sans',sans-serif; color:${T.body}; margin:8px 0 0; }
 
 /* section head shared */
-.mj-sec-head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:48px; flex-wrap:wrap; }
-.mj-sec-sub { font:400 1rem/1.6 'DM Sans',sans-serif; color:${T.body}; max-width:320px; }
+.mj-sec-head { display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px; margin-bottom:52px; }
+.mj-sec-head > div { text-align:center; }
+.mj-sec-head .mj-display { position:relative; padding-bottom:22px; }
+.mj-sec-head .mj-display::after, .mj-dark-head .mj-display::after { content:""; position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:64px; height:3px; border-radius:3px; background:linear-gradient(90deg, ${T.coral}, ${T.coralDk}); }
+.mj-sec-head .mj-display::before, .mj-dark-head .mj-display::before { content:""; position:absolute; left:50%; bottom:1px; transform:translateX(-50%); width:150px; height:1px; background:${T.lineDk}; }
+.mj-sec-sub { font:400 1rem/1.6 'DM Sans',sans-serif; color:${T.body}; max-width:420px; margin:0 auto; }
 .mj-live-chip { display:inline-flex; align-items:center; gap:8px; padding:8px 15px; border:1px solid #bbe6c8; border-radius:50px; background:#e9f8ee; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:#15803d; }
 
 /* progress */
@@ -1001,7 +1037,31 @@ const CSS = `
 .mj-dash-next-s { font:500 .78rem/1.3 'DM Sans',sans-serif; color:rgba(255,255,255,.72); }
 
 /* for parents */
-.mj-parent-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:center; }
+.mj-parent-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:stretch; }
+.mj-booklet { display:flex; flex-direction:column; padding:36px 34px; border-radius:18px; color:#fff;
+  background:linear-gradient(160deg, #FF7A3C 0%, #F1531F 60%, #E0481B 100%);
+  box-shadow:0 34px 70px -40px rgba(241,83,31,.8), inset 0 0 0 1px rgba(255,255,255,.08); position:relative; overflow:hidden; }
+.mj-booklet::before { content:""; position:absolute; inset:0; background:
+  repeating-linear-gradient(0deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px),
+  repeating-linear-gradient(90deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px); pointer-events:none; }
+.mj-booklet > * { position:relative; }
+.mj-booklet-pill { align-self:flex-start; display:inline-flex; align-items:center; gap:7px; padding:7px 14px; border-radius:50px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.25); font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; }
+.mj-booklet-h { font:800 2.1rem/1.08 'Playfair Display',serif; letter-spacing:-.5px; margin:20px 0 0; color:#fff; }
+.mj-booklet-sub { font:400 .98rem/1.55 'DM Sans',sans-serif; color:rgba(255,255,255,.9); margin:14px 0 0; max-width:400px; }
+.mj-booklet-div { height:1px; background:rgba(255,255,255,.22); margin:24px 0 22px; }
+.mj-booklet-lbl { font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:rgba(255,255,255,.7); }
+.mj-booklet-lbl2 { margin-top:22px; }
+.mj-booklet-name { display:block; font:800 1.35rem/1.1 'Playfair Display',serif; color:#fff; margin:8px 0 4px; }
+.mj-booklet-meta { font:600 .8rem/1.3 'DM Sans',sans-serif; color:rgba(255,255,255,.82); }
+.mj-booklet-list { list-style:none; margin:14px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
+.mj-booklet-list li { display:flex; align-items:center; gap:11px; font:600 .96rem/1.3 'DM Sans',sans-serif; color:#fff; }
+.mj-booklet-list svg { flex-shrink:0; opacity:.9; }
+.mj-booklet-btn { margin-top:auto; align-self:flex-start; display:inline-flex; align-items:center; gap:9px; margin-top:28px; padding:13px 22px; border:none; border-radius:12px; background:#fff; color:${T.coralDk}; font:800 .92rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:transform .16s, box-shadow .16s; box-shadow:0 12px 26px -14px rgba(0,0,0,.4); }
+.mj-booklet-btn:hover { transform:translateY(-2px); box-shadow:0 18px 34px -16px rgba(0,0,0,.5); }
+.mj-weekly-next { margin-top:22px; padding-top:18px; border-top:1px solid ${T.line}; }
+.mj-weekly-nextlist { list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
+.mj-weekly-nextlist li { display:flex; align-items:flex-start; gap:9px; font:500 .84rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
+.mj-weekly-nextlist svg { flex-shrink:0; margin-top:2px; color:${T.coral}; }
 .mj-weekly { position:relative; background:#FBF8F2; border:1px solid ${T.lineDk}; border-radius:10px; padding:34px 36px; box-shadow:20px 22px 0 -1px ${T.ink}, 0 34px 60px -34px rgba(0,0,0,.5); transition:transform .3s, box-shadow .3s; }
 .mj-weekly:hover { transform:translate(-3px,-3px); box-shadow:24px 26px 0 -1px ${T.ink}, 0 40px 70px -38px rgba(0,0,0,.55); }
 .mj-weekly-top { display:flex; align-items:baseline; justify-content:space-between; gap:14px; border-bottom:1.5px solid ${T.ink}; padding-bottom:14px; }
@@ -1143,7 +1203,7 @@ const CSS = `
 @media (max-width:940px) {
   .mj-hero-grid, .mj-parent-grid, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body { grid-template-columns:1fr; }
   .mj-hero-visual { order:-1; }
-  .mj-sec-head, .mj-dark-head { flex-direction:column; align-items:flex-start; }
+  .mj-sec-head, .mj-dark-head { flex-direction:column; align-items:center; }
   .mj-prog-grid { grid-template-columns:1fr 1fr; } .mj-navy-card { grid-row:auto; grid-column:span 2; }
   .mj-phones { justify-content:flex-start; }
   .mj-proof-wall { grid-template-columns:repeat(2,1fr); height:560px; } .mj-wall-col-2 { display:none; } .mj-proof-head { position:static; }
