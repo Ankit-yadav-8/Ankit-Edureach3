@@ -1,1151 +1,765 @@
-import { useState, useEffect } from "react";
+/* Mentorship — the "CollegeParichay Mentorship Journal".
+   An editorial, magazine-style landing page for 1-on-1 IITian mentorship:
+   cream paper, Playfair display serif with coral-italic emphasis, dark navy
+   feature sections, §0X·LABEL micro-headers. Config-driven per variant
+   (jee-2027 / jee-2028 / neet) from data/mentorship.js. Image slots are filled
+   with the existing /images mentorship assets. */
+import { useState } from "react";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowRight, Check, ChevronDown, Play, ShieldCheck, X,
-  Target, Flame, Trophy, Users, MessageCircle, AlertTriangle,
-  GraduationCap, Rocket, Star, Handshake, Library, CalendarClock, TrendingUp,
-  BarChart3, ListChecks, Clock, Zap, Activity, FileText, Mail, CheckCircle2,
+  ArrowRight, ArrowUpRight, Plus, Check, Star, Send, Radio,
 } from "lucide-react";
-import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT } from "../data/mentorship.js";
+import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT, MENTOR_LINKS } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
-import { Trend, Bars, Gauge } from "../components/Charts.jsx";
 import Seo from "../components/Seo.jsx";
 
-const ACCENT = "#FF693D";        // brand orange
-const GOLD = "#FF693D";          // highlight gold
-const INK = "#0f172a";           // dark text for light mode
-const MUTE = "#475569";          // soft grey for light mode
 const WA_NUMBER = "917877596464";
 
-/* string → icon, so per-page metrics can live in the data file */
-const ICONS = {
-  clock: Clock, activity: Activity, flame: Flame, check: CheckCircle2,
-  file: FileText, trend: TrendingUp, bar: BarChart3, target: Target,
-  zap: Zap, list: ListChecks,
+/* ── warm paper / coral / navy theme ── */
+const T = {
+  paper: "#F7F3EC", paper2: "#F1EBE0", card: "#FFFFFF",
+  ink: "#1B1B24", body: "#54525C", muted: "#8C877E",
+  line: "#E4DED2", lineDk: "#D6CFC0",
+  coral: "#FF693D", coralDk: "#D8512A", coralSoft: "#FFE7DE",
+  navy: "#12141C", navy2: "#191C26", navyLine: "rgba(255,255,255,.10)",
+  onNavy: "#EDEBE6", onNavyMute: "#8E93A3",
 };
 
-/* ════════════════════════════════════════════════
-   Small building blocks
-════════════════════════════════════════════════ */
-function SectionTitle({ kicker, children, sub }) {
-  return (
-    <div style={{ textAlign: "center", maxWidth: 780, margin: "0 auto 48px" }}>
-      {kicker && (
-        <span style={{
-          display: "inline-block", fontSize: 12, fontWeight: 800, letterSpacing: "2px",
-          textTransform: "uppercase", color: ACCENT, marginBottom: 14,
-        }}>{kicker}</span>
-      )}
-      <h2 style={{
-        fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800,
-        fontSize: "clamp(1.7rem,4vw,2.7rem)", lineHeight: 1.12, letterSpacing: "-1px",
-        color: INK, margin: 0,
-      }}>{children}</h2>
-      {sub && <p style={{ color: MUTE, fontSize: "1.05rem", lineHeight: 1.7, marginTop: 16 }}>{sub}</p>}
-    </div>
-  );
-}
-
-function Accent({ children }) {
-  return <span style={{ background: `linear-gradient(90deg,${ACCENT},${GOLD})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{children}</span>;
-}
-
+/* ── small building blocks ── */
 function Reveal({ children, delay = 0, className, style }) {
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, delay }}
-      style={style}
-    >
+    <motion.div className={className} style={style}
+      initial={{ opacity: 0, y: 26 }} whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-70px" }} transition={{ duration: 0.6, delay, ease: [0.16, 0.84, 0.32, 1] }}>
       {children}
     </motion.div>
   );
 }
-
-function Section({ children, style }) {
-  return (
-    <section style={{ padding: "92px 0", position: "relative", overflow: "hidden", ...style }}>
-      <div className="container" style={{ position: "relative", zIndex: 1 }}>{children}</div>
-    </section>
-  );
+function Label({ children, dark }) {
+  return <span className={dark ? "mj-label mj-label-dark" : "mj-label"}>{children}</span>;
 }
 
-/* ── Cascading price drop: 7999 → 3999 → 1999 ── */
-function PriceDrop({ drops, size = "lg" }) {
-  const final = drops[drops.length - 1];
-  const struck = drops.slice(0, -1);
-  const big = size === "lg" ? 42 : 30;
+/* ═══════════════ HERO — journal masthead ═══════════════ */
+function Hero({ cfg, plan, year, exam, openEnrol, scrollTo }) {
   return (
-    <div style={{ display: "flex", alignItems: "baseline", gap: 9, flexWrap: "wrap" }}>
-      {struck.map((d, i) => (
-        <span key={d} style={{ fontSize: size === "lg" ? 17 : 14, color: "#9ca3af", textDecoration: "line-through", textDecorationColor: "#ef4444", fontWeight: 700 }}>
-          ₹{d}{i < struck.length - 1 ? "" : ""}
-        </span>
-      ))}
-      <motion.span
-        initial={{ scale: 0.9 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
-        style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: big, color: INK, lineHeight: 1 }}>
-        ₹{final}
-      </motion.span>
-      <span style={{ fontSize: 12.5, color: MUTE }}>one-time</span>
-    </div>
-  );
-}
+    <section className="mj-hero">
+      <span className="mj-watermark" aria-hidden="true">{year}</span>
+      <div className="mj-wrap mj-hero-inner">
+        <div className="mj-hero-meta">
+          <span className="mj-pill"><span className="mj-dot" /> COHORT · BATCH 07</span>
+          <span className="mj-issue">VOL. 27 / ISSUE 01 · COLLEGEPARICHAY MENTORSHIP JOURNAL</span>
+          <span className="mj-pill mj-pill-warn">{SEATS_LEFT} SEATS · CLOSING SOON</span>
+        </div>
 
-/* ── Seats-left urgency bar ── */
-function SeatsBar({ compact }) {
-  const pct = Math.round((SEATS_LEFT / SEATS_LIMIT) * 100);
-  return (
-    <div style={{ width: "100%" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: compact ? 12 : 12.5, fontWeight: 800, color: "#dc2626" }}>
-          <Flame size={13} /> Only {SEATS_LEFT} of {SEATS_LIMIT} seats left
-        </span>
-        <span style={{ fontSize: 11.5, fontWeight: 700, color: MUTE }}>Enrol fast</span>
-      </div>
-      <div style={{ height: 7, borderRadius: 50, background: "rgba(0,0,0,.08)", overflow: "hidden" }}>
-        <motion.div
-          initial={{ width: 0 }} whileInView={{ width: `${pct}%` }} viewport={{ once: true }} transition={{ duration: 0.9 }}
-          style={{ height: "100%", borderRadius: 50, background: "linear-gradient(90deg,#ef4444,#f59e0b)" }} />
-      </div>
-    </div>
-  );
-}
-
-
-
-/* ════════════════════════════════════════════════
-   FLOATING ENROL CARD — dynamic, follows the user through every
-   section (top-right on desktop, sticky bottom bar on phones)
-════════════════════════════════════════════════ */
-function FloatingEnrol({ cfg, scrollToEnrol }) {
-  const { open: openEnrol } = useEnrol();
-  const [closed, setClosed] = useState(false);
-  const [idx, setIdx] = useState(0);
-
-  // On phones/tablets the enrol bar is a sticky bottom bar; flag the body so the
-  // floating action buttons (chat / WhatsApp / back-to-top) can lift above it.
-  useEffect(() => {
-    if (closed) return;
-    document.body.classList.add("mentor-enrol-bar");
-    return () => document.body.classList.remove("mentor-enrol-bar");
-  }, [closed]);
-
-  if (closed) return null;
-
-  const multi = cfg.tracks.length > 1;
-  const tr = cfg.tracks[idx] || cfg.tracks[0];
-  const meta = MENTOR_PLANS[tr.plan];
-
-  return (
-    <div className="mentor-float-enrol" aria-label="Quick enrol">
-      {/* ── Desktop / tablet: full floating card ── */}
-      <motion.div
-        className="mfe-card"
-        initial={{ opacity: 0, x: 48 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ type: "spring", stiffness: 240, damping: 22, delay: 0.5 }}
-      >
-        <motion.span aria-hidden className="mfe-glow"
-          animate={{ opacity: [0.45, 0.85, 0.45] }} transition={{ duration: 3.4, repeat: Infinity }} />
-        <button className="mfe-close" onClick={() => setClosed(true)} aria-label="Hide enrol card">
-          <X size={14} />
-        </button>
-
-        <span className="mfe-kicker"><Flame size={12} /> Limited seats</span>
-
-        {multi && (
-          <div className="mfe-toggle" role="tablist" aria-label="Choose exam">
-            {cfg.tracks.map((t, i) => (
-              <button key={t.plan} role="tab" aria-selected={i === idx}
-                onClick={() => setIdx(i)} className={i === idx ? "mfe-toggle-on" : ""}>
-                {t.exam.split(" ")[0]}
+        <div className="mj-hero-grid">
+          <Reveal className="mj-hero-left">
+            <h1 className="mj-hero-h1">
+              A 1-on-1 mentorship built by <em>IITians</em> — with weekly test surgery,
+              a live tracker your parents can read, and the calm rhythm that actually
+              gets you a rank in <em>{exam}.</em>
+            </h1>
+            <div className="mj-hero-cta">
+              <button className="mj-btn-dark" onClick={() => openEnrol(plan)}>Start at ₹1 <ArrowRight size={17} /></button>
+              <button className="mj-btn-link" onClick={() => scrollTo("method")}>
+                <span className="mj-btn-circ"><ArrowUpRight size={15} /></span> SEE THE METHOD
               </button>
-            ))}
-          </div>
-        )}
+            </div>
+          </Reveal>
 
-        <div className="mfe-exam">{tr.exam} Mentorship</div>
-        <div style={{ margin: "2px 0 10px" }}><PriceDrop drops={meta.drops} size="sm" /></div>
-        <div style={{ marginBottom: 14 }}><SeatsBar compact /></div>
-
-        <button className="mfe-cta" onClick={() => openEnrol(tr.plan)}>
-          Enrol Now — ₹{meta.amount} <ArrowRight size={16} />
-        </button>
-        <button className="mfe-link" onClick={scrollToEnrol}>View all plans</button>
-        <div className="mfe-secure"><ShieldCheck size={12} color="#22c55e" /> Secure payment · Razorpay</div>
-      </motion.div>
-
-      {/* ── Mobile: slim sticky bottom bar ── */}
-      <div className="mfe-bar">
-        <div className="mfe-bar-info">
-          <span className="mfe-bar-price">₹{meta.amount}</span>
-          <span className="mfe-bar-seats"><Flame size={12} /> {SEATS_LEFT} of {SEATS_LIMIT} seats left</span>
-        </div>
-        <button className="mfe-cta" onClick={() => openEnrol(tr.plan)} style={{ width: "auto", padding: "11px 20px", flexShrink: 0 }}>
-          Enrol <ArrowRight size={15} />
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   HERO (light)
-════════════════════════════════════════════════ */
-function Hero({ cfg, scrollToEnrol }) {
-  return (
-    <section style={{
-      position: "relative", overflow: "hidden",
-      background: "var(--page-bg)",
-      paddingTop: 140, paddingBottom: 80,
-    }}>
-      <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 60, alignItems: "center", maxWidth: 1040, margin: "0 auto" }}>
-          
-          {/* Left: Text & CTA */}
-          <div style={{ textAlign: "left" }}>
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-              style={{ fontSize: 13, fontWeight: 800, letterSpacing: "3px", textTransform: "uppercase", marginBottom: 16 }}>
-              <Accent>{cfg.tagline}</Accent>
-            </motion.div>
-
-            <motion.span
-              initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700,
-                color: "#c2410c", background: "rgba(255, 105, 61,.12)", border: "1px solid rgba(255, 105, 61,.4)",
-                padding: "7px 18px", borderRadius: 50, marginBottom: 22,
-              }}>
-              {cfg.badge}
-            </motion.span>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-              style={{
-                fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 900,
-                fontSize: "clamp(2.3rem,5vw,4.2rem)", lineHeight: 1.05, letterSpacing: "-2px",
-                color: INK, margin: "0 0 20px",
-              }}>
-              {cfg.title[0]}<br />
-              <Accent>{cfg.title[1]}</Accent>
-              {cfg.title[2] ? <><br />{cfg.title[2]}</> : null}
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-              style={{ color: MUTE, fontSize: "clamp(1rem,2vw,1.15rem)", lineHeight: 1.75, maxWidth: 540, marginBottom: 32 }}>
-              {cfg.subtitle}
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}
-              style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 36 }}>
-              <button onClick={scrollToEnrol} style={ctaSolid}>JOIN NOW <ArrowRight size={18} /></button>
-              <a href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! I want to know more about the " + cfg.eyebrow)}`}
-                target="_blank" rel="noreferrer" style={ctaGhost}>
-                <MessageCircle size={18} /> Talk to a mentor
-              </a>
-            </motion.div>
-
-            {/* stats strip */}
-            {cfg.stats && (
-              <motion.div
-                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }}
-                style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-                {cfg.stats.map((s) => (
-                  <div key={s.lbl} style={{ flex: 1, minWidth: 120, background: "var(--page-bg)", border: "1px solid rgba(0, 0, 0, 0.08)", borderRadius: 14, padding: "14px 12px", boxShadow: "0 4px 14px rgba(0,0,0,0.04)" }}>
-                    <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK }}>{s.val}</div>
-                    <div style={{ fontSize: 11.5, color: MUTE, marginTop: 3 }}>{s.lbl}</div>
-                  </div>
-                ))}
-              </motion.div>
-            )}
-          </div>
-
-          {/* Right: Small Image */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.42 }}
-            style={{
-              position: "relative",
-              borderRadius: 24,
-              border: "1px solid rgba(255, 105, 61,.2)",
-              boxShadow: "0 30px 70px -30px rgba(255, 105, 61,.3)",
-              overflow: "hidden",
-              maxWidth: 400,
-              margin: "0 auto"
-            }}>
-            <img src={cfg.heroImage || "/images/hero_mentorship.png"} alt="Mentorship Dashboard" style={{ width: "100%", display: "block" }} />
-          </motion.div>
+          <Reveal delay={0.12} className="mj-hero-visual">
+            <span className="mj-badge-jump"><b>AVG JUMP</b>+18,400 ranks</span>
+            <div className="mj-hero-imgcard">
+              <img src={cfg.heroImage} alt={`${exam} mentorship`} loading="eager" />
+            </div>
+            <span className="mj-badge-live"><span className="mj-dot mj-dot-live" /> LIVE NOW · 312 studying</span>
+          </Reveal>
         </div>
       </div>
     </section>
   );
 }
 
-/* ════════════════════════════════════════════════
-   "THIS PLAN IS FOR YOU"
-════════════════════════════════════════════════ */
-function ForYou({ cfg }) {
+/* ═══════════════ STAT BAND ═══════════════ */
+function StatBand({ cfg }) {
   return (
-    <Section style={{ background: "var(--page-bg)" }}>
-      <SectionTitle kicker="Sound familiar?">This Plan Is <Accent>For You</Accent> If…</SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(280px, 100%), 1fr))", gap: 16, maxWidth: 940, margin: "0 auto" }}>
-        {cfg.forYou.map((t, i) => (
-          <Reveal key={t} delay={i * 0.05}>
-            <div style={card}>
-              <span style={{ fontSize: 22 }}>👉</span>
-              <span style={{ color: INK, fontSize: 15, lineHeight: 1.5, fontWeight: 600 }}>{t}</span>
-            </div>
-          </Reveal>
+    <section className="mj-statband">
+      <div className="mj-wrap mj-stat-row">
+        {(cfg.stats || []).map((s, i) => (
+          <div key={i} className="mj-stat">
+            <div className="mj-stat-v">{s.val}</div>
+            <div className="mj-stat-l">{s.lbl}</div>
+          </div>
         ))}
       </div>
-    </Section>
+    </section>
   );
 }
 
-/* ════════════════════════════════════════════════
-   WHY FOUNDATION (foundation only)
-════════════════════════════════════════════════ */
-function WhyFoundation({ cfg }) {
-  if (!cfg.whyFoundation) return null;
+/* ═══════════════ QUALIFIER — "is this you?" ═══════════════ */
+function Qualifier({ cfg }) {
   return (
-    <Section style={{ background: "var(--page-bg)" }}>
-      <SectionTitle kicker="Why it matters">Why <Accent>Foundation</Accent> Matters</SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(260px, 100%), 1fr))", gap: 18 }}>
-        {cfg.whyFoundation.map((t, i) => (
-          <Reveal key={t} delay={i * 0.08}>
-            <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 14, minHeight: 150, borderTop: `3px solid ${ACCENT}` }}>
-              <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: 40, color: GOLD, lineHeight: 1 }}>{i + 1}</span>
-              <span style={{ color: INK, fontSize: 15.5, lineHeight: 1.6, fontWeight: 600 }}>{t}</span>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   HOW WE GUIDE
-════════════════════════════════════════════════ */
-const GUIDE_ICONS = [Rocket, Users, Target, Trophy, Flame, Star];
-function HowWeGuide({ cfg }) {
-  return (
-    <Section style={{ background: "var(--page-bg)" }}>
-      <SectionTitle kicker="The system" sub="A 1-on-1 mentorship engine built to fix the exact reasons most aspirants fail.">
-        How We <Accent>Guide</Accent> You
-      </SectionTitle>
-      
-      {/* 6-card vertical alternating strip layout */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 32, maxWidth: 840, margin: "0 auto", position: "relative" }}>
-        
-        {/* The glowing vertical timeline line */}
-        <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", top: 20, bottom: 20, width: 2, background: "linear-gradient(180deg, rgba(255, 105, 61, 0) 0%, rgba(255, 105, 61, 0.4) 15%, rgba(139, 92, 246, 0.4) 50%, rgba(14, 165, 164, 0.4) 85%, rgba(14, 165, 164, 0) 100%)", zIndex: 0 }} className="desktop-timeline" />
-        <style>{`
-          @media (max-width: 768px) {
-            .desktop-timeline { left: 32px !important; transform: none !important; }
-            .timeline-card { width: 100% !important; margin-left: 0 !important; align-self: flex-start !important; }
-            .timeline-dot { left: -42px !important; right: auto !important; }
-          }
-        `}</style>
-
-        {cfg.howWeGuide.map((g, i) => {
-          const Icon = GUIDE_ICONS[i % GUIDE_ICONS.length];
-          const isEven = i % 2 === 0;
-          const c = isEven ? "#FF693D" : "#8b5cf6";
-          
-          return (
-            <Reveal key={g.title} delay={i * 0.1} className="timeline-card" style={{ 
-                display: "flex", width: "45%", alignSelf: isEven ? "flex-end" : "flex-start",
-                position: "relative"
-              }}>
-                
-                {/* Center dot for desktop */}
-                <div className="timeline-dot" style={{ position: "absolute", [isEven ? "left" : "right"]: -54, top: "50%", transform: "translateY(-50%)", width: 16, height: 16, borderRadius: "50%", background: "var(--page-bg)", border: `3px solid ${c}`, zIndex: 2 }} />
-
-                <motion.div whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  style={{ 
-                    ...card, 
-                    flexDirection: "column", alignItems: "flex-start", gap: 16, 
-                    position: "relative", zIndex: 1, padding: "28px 32px",
-                    borderTop: `4px solid ${c}`, width: "100%",
-                    background: "var(--page-bg)", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 4px 20px rgba(0,0,0,0.04)"
-                  }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 12, background: `${c}16`, border: `1px solid ${c}33`, display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0 }}>
-                    <Icon size={24} color={c} />
-                  </div>
-                  <div>
-                    <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK, margin: "0 0 8px" }}>{g.title}</h3>
-                    <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.6, margin: 0 }}>{g.desc}</p>
-                  </div>
-                </motion.div>
+    <section className="mj-section">
+      <div className="mj-wrap">
+        <Reveal>
+          <p className="mj-lead">
+            This program is designed for <em>one type of aspirant</em> — the one who
+            wants a real system, not another shelf of unopened books.
+          </p>
+        </Reveal>
+        <div className="mj-checklist">
+          {(cfg.forYou || []).map((line, i) => (
+            <Reveal key={i} delay={(i % 2) * 0.05} className={i % 2 ? "mj-check-card mj-check-right" : "mj-check-card"}>
+              <span className="mj-check-ic"><Check size={16} strokeWidth={3} /></span>
+              <span className="mj-check-t">{line}</span>
+              <span className="mj-check-n">{String(i + 1).padStart(2, "0")}</span>
             </Reveal>
-          );
-        })}
-      </div>
-    </Section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   WEEKLY TEST ANALYSIS — mock report card
-════════════════════════════════════════════════ */
-function TestAnalysis({ cfg }) {
-  const m = cfg.metrics;
-  const trend = m.test.trend.map((v, i) => ({ t: `T${i + 1}`, v }));
-  return (
-    <Section style={{ background: "var(--page-bg)" }}>
-      <SectionTitle kicker="Every test counts" sub="No test is just a score. Every week your mentor turns it into a one-page action plan.">
-        Weekly <Accent>Test Analysis</Accent>
-      </SectionTitle>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 26, alignItems: "stretch", maxWidth: 1040, margin: "0 auto" }}>
-        {/* Left — what we analyse */}
-        <Reveal>
-          <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 20, height: "100%", padding: "32px 36px" }}>
-            <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: "1.6rem", color: INK, margin: 0 }}>
-              Deep Diagnostics <br/><span style={{ color: ACCENT }}>Every Week</span>
-            </h3>
-            <p style={{ color: MUTE, fontSize: 15, lineHeight: 1.6, marginBottom: 8 }}>
-              Giving tests is useless if you don't learn from them. Our mentors don't just ask for your score; they perform a surgical strike on your performance to extract exactly where you're losing marks.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 22, width: "100%" }}>
-              {[
-                { Icon: BarChart3, c: "#FF693D", t: "Score & Accuracy Trend", d: "A clear visual graph mapping your trajectory and striking rate over time." },
-                { Icon: Target,    c: "#ef4444", t: "Silly-Mistake Audit", d: "We track marks lost to calculation errors or misreading the question to kill them permanently." },
-                { Icon: Zap,       c: "#8b5cf6", t: "Weak-Chapter Heatmap", d: "A ranked list of topics dragging your score down, turning blindspots into targets." },
-                { Icon: Clock,     c: "#0ea5a4", t: "Time-Management Review", d: "Detailed breakdown of where you over-spent time vs where you rushed." },
-                { Icon: ListChecks,c: "#22c55e", t: "Actionable Fix-List", d: "You walk away with 3-5 concrete actions to execute before the next test." },
-              ].map(({ Icon, c, t, d }) => (
-                <div key={t} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-                  <span style={{ width: 44, height: 44, borderRadius: 14, background: `${c}16`, border: `1px solid ${c}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                    <Icon size={20} color={c} />
-                  </span>
-                  <div>
-                    <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 15.5, color: INK, marginBottom: 4 }}>{t}</div>
-                    <div style={{ fontSize: 14, color: MUTE, lineHeight: 1.5 }}>{d}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-
-        {/* Right — mock report & analytics image */}
-        <Reveal delay={0.08}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 20, height: "100%" }}>
-            <div style={{ borderRadius: 18, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.16)", boxShadow: "0 18px 44px -24px rgba(0,0,0,.6)" }}>
-              <img src={cfg.analyticsImage || "/images/analytics_mentorship.png"} alt="Analytics Dashboard" style={{ width: "100%", maxHeight: 380, objectFit: "contain", display: "block" }} />
-            </div>
-            
-            <div style={{ background: "var(--page-bg)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 18, padding: "28px 24px", flex: 1, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#8b5cf6)" }} />
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
-              <div>
-                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: ACCENT }}>Weekly Report</div>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.15rem", color: INK }}>Test Analysis · {m.test.week}</div>
-              </div>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 13, fontWeight: 800, color: "#22c55e", background: "rgba(34,197,94,.12)", border: "1px solid rgba(34,197,94,.3)", padding: "6px 12px", borderRadius: 50 }}>
-                <TrendingUp size={14} /> {m.test.gain}
-              </span>
-            </div>
-
-            {/* score trend bars */}
-            <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130, padding: "0 4px 8px", borderBottom: "1px solid rgba(0,0,0,.08)", marginBottom: 18 }}>
-              {trend.map((d, i) => (
-                <div key={d.t} style={{ flex: 1, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center", gap: 6 }}>
-                  <div style={{ flex: 1, width: "100%", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
-                    <motion.div
-                      initial={{ height: 0 }} whileInView={{ height: `${d.v}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.07 }}
-                      style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === trend.length - 1 ? "linear-gradient(180deg,#FF693D,#FF693D)" : "rgba(255, 105, 61,.4)" }} />
-                  </div>
-                  <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 700 }}>{d.t}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* weak chapters */}
-            <div style={{ marginBottom: 18 }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: MUTE, marginBottom: 10 }}>Critical Weak Chapters</div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {m.test.weak.map((w) => (
-                  <span key={w} style={{ fontSize: 12, fontWeight: 800, color: "#dc2626", background: "rgba(239,68,68,.1)", border: "1px solid rgba(239,68,68,.2)", padding: "5px 12px", borderRadius: 50 }}>{w}</span>
-                ))}
-              </div>
-            </div>
-
-            {/* fix list */}
-            <div style={{ background: "rgba(255, 105, 61,.04)", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 14, padding: "16px 18px" }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: "#fdba74", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
-                <ListChecks size={15} /> Your priority fix-list
-              </div>
-              {m.test.fix.map((a) => (
-                <div key={a} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 8 }}>
-                  <Check size={16} color="#22c55e" strokeWidth={3} style={{ flexShrink: 0, marginTop: 2 }} />
-                  <span style={{ fontSize: 13.5, color: INK, lineHeight: 1.4 }}>{a}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          </div>
-        </Reveal>
-      </div>
-    </Section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   IMPROVEMENT CHARTS — growth + before/after
-════════════════════════════════════════════════ */
-function ChartCard({ title, hint, children }) {
-  return (
-    <div style={{ background: "var(--page-bg)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 18, padding: "22px 22px 18px", height: "100%", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#FF693D)" }} />
-      <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: "1.05rem", color: INK, margin: "0 0 4px" }}>{title}</h3>
-      {hint && <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 14px" }}>{hint}</p>}
-      {children}
-    </div>
-  );
-}
-function ImprovementCharts({ m }) {
-  const growth = m.growth.you.map((you, i) => ({ year: `Wk ${i + 1}`, you, batch: m.growth.batch[i] }));
-  return (
-    <Section style={{ background: "var(--page-bg)" }}>
-      <SectionTitle kicker="Proof, not promises" sub="Real, visible improvement — tracked every week and shared with you and your parents.">
-        Improvement <Accent>Charts</Accent>
-      </SectionTitle>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(320px, 100%), 1fr))", gap: 22, maxWidth: 1040, margin: "0 auto" }}>
-        <Reveal>
-          <ChartCard title={m.growth.label} hint={m.growth.hint}>
-            <Trend data={growth} lines={[{ key: "you", label: "You", color: "#FF693D" }, { key: "batch", label: "Batch avg", color: "#6366f1" }]} height={250} />
-          </ChartCard>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <ChartCard title="Before vs After — by subject" hint="Average score lift after mentorship">
-            <Bars data={m.subjects} bars={[{ key: "Before", label: "Before", color: "#cbd5e1" }, { key: "After", label: "After", color: "#FF693D" }]} height={250} />
-          </ChartCard>
-        </Reveal>
-      </div>
-
-      {/* outcome stat tiles */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(180px, 100%), 1fr))", gap: 16, maxWidth: 1040, margin: "20px auto 0" }}>
-        {m.outcomes.map((s, i) => (
-          <Reveal key={s.l} delay={i * 0.05}>
-            <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 4, borderTop: `3px solid ${s.c}` }}>
-              <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: 26, color: s.c }}>{s.v}</span>
-              <span style={{ fontSize: 13, color: MUTE, fontWeight: 600 }}>{s.l}</span>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   LIVE STUDENT TRACKING
-════════════════════════════════════════════════ */
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-function LiveTracking({ m }) {
-  const week = m.weekHours.map((h, i) => ({ d: DAYS[i], h }));
-  const maxH = Math.max(...m.weekHours);
-  const maxIdx = m.weekHours.indexOf(maxH);
-  return (
-    <Section style={{ background: "var(--page-bg)" }}>
-      <SectionTitle kicker="Always on" sub="Your mentor sees your effort live — so nothing ever slips through the cracks.">
-        Live Student <Accent>Tracking</Accent>
-      </SectionTitle>
-
-      <div style={{ maxWidth: 1040, margin: "0 auto" }}>
-        <Reveal>
-          <div style={{ background: "var(--page-bg)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 20, padding: "24px 26px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#22c55e,#FF693D)" }} />
-
-            {/* header */}
-            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
-              <div style={{ width: 46, height: 46, borderRadius: "50%", background: "linear-gradient(135deg,#FF693D,#FF693D)", color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>{m.student.name[0]}</div>
-              <div style={{ flex: 1, minWidth: 160 }}>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.05rem", color: INK }}>{m.student.name} · {m.student.exam}</div>
-                <div style={{ fontSize: 12.5, color: MUTE }}>Mentor: {m.student.mentor}</div>
-              </div>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#16a34a", background: "rgba(34,197,94,.12)", border: "1px solid rgba(34,197,94,.3)", padding: "6px 13px", borderRadius: 50 }}>
-                <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} style={{ width: 8, height: 8, borderRadius: "50%", background: "#16a34a", display: "block" }} />
-                LIVE · Active now
-              </span>
-            </div>
-
-            {/* stat tiles */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(130px, 100%), 1fr))", gap: 12, marginBottom: 22 }}>
-              {m.liveTiles.map(({ icon, c, v, l }) => {
-                const Icon = ICONS[icon];
-                return (
-                  <div key={l} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
-                    <Icon size={18} color={c} style={{ marginBottom: 6 }} />
-                    <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 17, color: INK }}>{v}</div>
-                    <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{l}</div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* weekly hours + gauge */}
-            <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 22, alignItems: "center" }} className="track-grid">
-              <div>
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: MUTE, marginBottom: 10 }}>Study hours · this week</div>
-                <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130 }}>
-                  {week.map((x, i) => (
-                    <div key={x.d} style={{ flex: 1, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center", gap: 6 }}>
-                      <span style={{ fontSize: 10.5, fontWeight: 700, color: INK }}>{x.h}h</span>
-                      <div style={{ flex: 1, width: "100%", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
-                        <motion.div
-                          initial={{ height: 0 }} whileInView={{ height: `${(x.h / maxH) * 100}%` }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }}
-                          style={{ width: "100%", maxWidth: 26, borderRadius: "6px 6px 0 0", background: i === maxIdx ? "linear-gradient(180deg,#FF693D,#FF693D)" : "rgba(255, 105, 61,.4)" }} />
-                      </div>
-                      <span style={{ fontSize: 10.5, color: MUTE }}>{x.d}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: MUTE, marginBottom: 4 }}>Weekly goal</div>
-                <Gauge value={m.goalPct} label="of target" color="#22c55e" height={170} />
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </Section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   PARENT WEEKLY BOOKLET
-════════════════════════════════════════════════ */
-function ParentBooklet({ m }) {
-  return (
-    <Section style={{ background: "var(--page-bg)" }}>
-      <SectionTitle kicker="Parents stay in the loop" sub="Every Sunday, parents get a simple weekly booklet — exactly what their child did and how they're improving.">
-        Parent <Accent>Weekly Booklet</Accent>
-      </SectionTitle>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 0, maxWidth: 960, margin: "0 auto", boxShadow: "0 26px 60px -30px rgba(26,26,46,.5)", borderRadius: 20, overflow: "hidden" }}>
-        {/* cover */}
-        <Reveal>
-          <div style={{ background: "linear-gradient(150deg,#FF693D,#E0421F 60%,#c2410c)", color: "#fff", padding: "34px 30px", height: "100%", position: "relative", overflow: "hidden", minHeight: 360 }}>
-            <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
-            <div style={{ position: "relative" }}>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 11.5, fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase", background: "rgba(255,255,255,.2)", padding: "6px 14px", borderRadius: 50, marginBottom: 22 }}>
-                <FileText size={14} /> Parent Report
-              </div>
-              <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 900, fontSize: "1.9rem", lineHeight: 1.15, marginBottom: 10 }}>Weekly<br />Progress Booklet</div>
-              <p style={{ fontSize: 13.5, color: "rgba(255,255,255,.85)", lineHeight: 1.6, marginBottom: 26 }}>A clear, jargon-free summary of your child's week — effort, tests, improvement and what's next.</p>
-              <div style={{ borderTop: "1px solid rgba(255,255,255,.25)", paddingTop: 16 }}>
-                <div style={{ fontSize: 12, opacity: .8 }}>Student</div>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.1rem" }}>{m.student.line}</div>
-                <div style={{ fontSize: 12, opacity: .8, marginTop: 6 }}>{m.parent.week} · CollegeParichay Mentorship</div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* inside page */}
-        <Reveal delay={0.08}>
-          <div style={{ background: "var(--page-bg)", padding: "30px 30px", height: "100%" }}>
-            {m.parent.rows.map(({ icon, c, l, v, note }) => {
-              const Icon = ICONS[icon];
-              return (
-                <div key={l} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 0", borderBottom: "1px solid rgba(0,0,0,.07)" }}>
-                  <span style={{ width: 36, height: 36, borderRadius: 10, background: `${c}16`, border: `1px solid ${c}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                    <Icon size={17} color={c} />
-                  </span>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13.5, fontWeight: 700, color: INK }}>{l}</div>
-                    <div style={{ fontSize: 11.5, color: MUTE }}>{note}</div>
-                  </div>
-                  <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 16, color: c }}>{v}</div>
-                </div>
-              );
-            })}
-
-            <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 12, padding: "12px 14px", marginTop: 16 }}>
-              <div style={{ fontSize: 11.5, fontWeight: 800, color: "#9a3412", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
-                <Star size={13} /> Mentor's remark
-              </div>
-              <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.55, margin: 0 }}>
-                "{m.parent.remark}"
-              </p>
-            </div>
-
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginTop: 16, flexWrap: "wrap" }}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: "#16a34a" }}>
-                <MessageCircle size={14} /> Sent on WhatsApp
-              </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: "#6366f1" }}>
-                <Mail size={14} /> Emailed every Sunday
-              </span>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </Section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   TWO-YEAR PLAN (2028 only)
-════════════════════════════════════════════════ */
-function TwoYearPlan({ cfg }) {
-  if (!cfg.twoYearPlan) return null;
-  return (
-    <Section style={{ background: "linear-gradient(160deg,#ffffff,#ffffff)" }}>
-      <SectionTitle kicker="The roadmap">The <Accent>2-Year</Accent> Plan</SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(240px, 100%), 1fr))", gap: 18 }}>
-        {cfg.twoYearPlan.map((p, i) => (
-          <Reveal key={p.phase} delay={i * 0.07}>
-            <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 10, height: "100%", borderTop: `3px solid ${ACCENT}` }}>
-              <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "1px", color: ACCENT, textTransform: "uppercase" }}>{p.phase}</span>
-              <span style={{ fontSize: 12.5, color: MUTE, fontWeight: 600 }}>{p.when}</span>
-              <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: "1.05rem", color: INK, margin: "2px 0 0" }}>{p.title}</h3>
-              <p style={{ color: MUTE, fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>{p.desc}</p>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   TESTIMONIALS
-════════════════════════════════════════════════ */
-function Testimonials({ cfg }) {
-  return (
-    <Section style={{ background: "transparent" }}>
-      <SectionTitle kicker="Real results">Students From The <Accent>2025 Batch</Accent></SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(280px, 100%), 1fr))", gap: 18 }}>
-        {cfg.testimonials.map((t, i) => (
-          <Reveal key={t.name} delay={i * 0.05}>
-            <div style={{ ...card, flexDirection: "column", alignItems: "flex-start", gap: 14, height: "100%" }}>
-              <div style={{ display: "flex", gap: 3 }}>
-                {[...Array(5)].map((_, k) => <Star key={k} size={15} color={GOLD} fill={GOLD} />)}
-              </div>
-              <p style={{ color: INK, fontSize: 14.5, lineHeight: 1.65, margin: 0, fontStyle: "italic" }}>“{t.quote}”</p>
-              <div style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: 12, paddingTop: 6, borderTop: "1px solid rgba(0,0,0,.08)", width: "100%" }}>
-                <div style={{ width: 42, height: 42, borderRadius: "50%", background: `linear-gradient(135deg,${ACCENT},${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 16, flexShrink: 0 }}>{t.name[0]}</div>
-                <div>
-                  <div style={{ fontWeight: 700, color: INK, fontSize: 14 }}>{t.name}</div>
-                  <div style={{ fontSize: 12, color: ACCENT, fontWeight: 700 }}>{t.improvement}</div>
-                  <div style={{ fontSize: 11.5, color: MUTE }}>{t.batch}</div>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   ENROL (track pricing cards) — JEE + NEET
-════════════════════════════════════════════════ */
-function Enrol({ cfg }) {
-  const { open: openEnrol } = useEnrol();
-  return (
-    <section id="enrol" style={{ padding: "92px 0", background: "transparent", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
-      <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <SectionTitle kicker="Limited spots" sub="One-time enrolment. Serious aspirants only. Pick your track below.">
-          Join the <Accent>Mentorship</Accent> Program
-        </SectionTitle>
-
-        <div style={{ display: "grid", gridTemplateColumns: cfg.tracks.length > 1 ? "repeat(auto-fit,minmax(min(300px, 100%), 1fr))" : "minmax(300px,440px)", gap: 22, maxWidth: 920, margin: "0 auto", justifyContent: "center" }}>
-          {cfg.tracks.map((tr, i) => {
-            const meta = MENTOR_PLANS[tr.plan];
-            return (
-              <Reveal key={tr.plan} delay={i * 0.08}>
-                <motion.div whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  style={{
-                    background: "var(--page-bg)", borderRadius: 20, border: `1px solid ${tr.accent}33`, padding: "30px 26px",
-                    height: "100%", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden",
-                    boxShadow: `0 24px 50px -26px ${tr.accent}66`,
-                  }}>
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${tr.accent},${GOLD})` }} />
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                    <span style={{ width: 42, height: 42, borderRadius: 12, background: `${tr.accent}18`, border: `1px solid ${tr.accent}44`, display: "grid", placeItems: "center" }}>
-                      <GraduationCap size={21} color={tr.accent} />
-                    </span>
-                    <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.3rem", color: INK, margin: 0 }}>{tr.exam}</h3>
-                  </div>
-                  <p style={{ color: MUTE, fontSize: 13.5, marginBottom: 18 }}>{tr.line}</p>
-
-                  <div style={{ marginBottom: 14 }}>
-                    <PriceDrop drops={meta.drops} />
-                  </div>
-                  <div style={{ marginBottom: 20 }}>
-                    <SeatsBar />
-                  </div>
-
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
-                    {["Personal 1-on-1 mentor", "Daily targets + accountability", "Weekly test analysis", "Backlog clearing sprints", "WhatsApp support throughout"].map((b) => (
-                      <div key={b} style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                        <Check size={16} color="#22c55e" strokeWidth={3} />
-                        <span style={{ color: MUTE, fontSize: 13.5 }}>{b}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button onClick={() => openEnrol(tr.plan)}
-                    style={{
-                      marginTop: "auto", width: "100%", padding: "15px", borderRadius: 12, border: "none",
-                      background: `linear-gradient(135deg,${ACCENT},${GOLD})`, color: "#fff",
-                      fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 15.5, cursor: "pointer",
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                      boxShadow: `0 10px 26px ${tr.accent}55`,
-                    }}>
-                    Enrol — ₹{meta.amount} <ArrowRight size={17} />
-                  </button>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 12, fontSize: 12, color: MUTE, fontWeight: 600 }}>
-                    <ShieldCheck size={13} color="#22c55e" /> Secure payment via Razorpay
-                  </div>
-                </motion.div>
-              </Reveal>
-            );
-          })}
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 28, color: "#c2410c", fontSize: 13.5, fontWeight: 700 }}>
-          <AlertTriangle size={15} /> Limited spots. Serious aspirants only.
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-/* ════════════════════════════════════════════════
-   CONTACT FORM (-> WhatsApp)
-════════════════════════════════════════════════ */
-function Contact({ cfg }) {
-  const [f, setF] = useState({ name: "", phone: "", message: "" });
-  const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
-  const submit = (e) => {
-    e.preventDefault();
-    const text = `Hi! I'm ${f.name || "a student"} (${f.phone}). Interested in ${cfg.eyebrow}.\n\n${f.message}`;
-    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, "_blank");
-  };
+/* ═══════════════ § 02 · METHOD (dark, horizontal steps) ═══════════════ */
+function Method({ cfg }) {
   return (
-    <Section style={{ background: "transparent" }}>
-      <SectionTitle kicker="Get in touch">Join Our <Accent>Mentorship</Accent> Program</SectionTitle>
-      <form onSubmit={submit} style={{ maxWidth: 520, margin: "0 auto", display: "flex", flexDirection: "column", gap: 14 }}>
-        <input required value={f.name} onChange={set("name")} placeholder="Your name" style={input} />
-        <input required value={f.phone} onChange={set("phone")} placeholder="Phone number" inputMode="tel" style={input} />
-        <textarea value={f.message} onChange={set("message")} placeholder="Your message (optional)" rows={4} style={{ ...input, resize: "vertical" }} />
-        <button type="submit" style={{ ...ctaSolid, justifyContent: "center", width: "100%" }}>Submit <ArrowRight size={17} /></button>
-      </form>
-    </Section>
+    <section id="method" className="mj-dark">
+      <div className="mj-wrap">
+        <div className="mj-dark-head">
+          <div>
+            <Label dark>§ 02 · METHOD</Label>
+            <h2 className="mj-display mj-display-lg mj-on-navy">A calm, connected system —<br /><em>Day 1 to Rank Day.</em></h2>
+          </div>
+          <span className="mj-scrollhint">SCROLL →</span>
+        </div>
+      </div>
+      <div className="mj-steps">
+        {(cfg.howWeGuide || []).map((s, i) => (
+          <div key={i} className="mj-step">
+            <div className="mj-step-top">
+              <span className="mj-step-n">{String(i + 1).padStart(2, "0")}</span>
+              <span className="mj-step-tag">STEP</span>
+            </div>
+            <h3 className="mj-step-t">{s.title}</h3>
+            <p className="mj-step-d">{s.desc}</p>
+            <span className="mj-step-foot">→ {i + 1 < (cfg.howWeGuide.length) ? `CONTINUE TO ${String(i + 2).padStart(2, "0")}` : "RANK ACHIEVED"}</span>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
-/* ════════════════════════════════════════════════
-   FAQ ACCORDION
-════════════════════════════════════════════════ */
+/* ═══════════════ § 04 · PROGRESS (dashboard) ═══════════════ */
+function LineChart({ you = [], batch = [] }) {
+  const all = [...you, ...batch, 1];
+  const max = Math.max(...all);
+  const W = 520, H = 150, n = Math.max(you.length, 2);
+  const pts = (arr) => arr.map((v, i) => `${(i / (n - 1)) * W},${H - (v / max) * (H - 12) - 6}`).join(" ");
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="mj-line" preserveAspectRatio="none">
+      <polyline points={pts(batch)} fill="none" stroke="rgba(255,255,255,.22)" strokeWidth="2.5" strokeDasharray="4 5" />
+      <polyline points={pts(you)} fill="none" stroke={T.coral} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      {you.map((v, i) => (
+        <circle key={i} cx={(i / (n - 1)) * W} cy={H - (v / max) * (H - 12) - 6} r="3.5" fill={T.coral} />
+      ))}
+    </svg>
+  );
+}
+function Progress({ cfg }) {
+  const m = cfg.metrics || {};
+  const g = m.growth || {};
+  const pct = m.outcomes?.find((o) => /percentile|%ile/i.test(o.l)) || m.outcomes?.[1] || { v: "94%", l: "Rank percentile" };
+  const wk = m.weekHours || [];
+  const wkMax = Math.max(...wk, 1);
+  const totalH = wk.reduce((a, b) => a + b, 0).toFixed(0);
+  return (
+    <section className="mj-section">
+      <div className="mj-wrap">
+        <Reveal className="mj-sec-head">
+          <div>
+            <Label>§ 04 · PROGRESS</Label>
+            <h2 className="mj-display mj-display-lg">Numbers that <em>move.</em></h2>
+          </div>
+          <p className="mj-sec-sub">The dashboard shows the week — not the semester. Small wins, stacked visibly.</p>
+        </Reveal>
+
+        <div className="mj-prog-grid">
+          <Reveal className="mj-prog-card mj-navy-card">
+            <div className="mj-card-head"><span>MOCK SCORE · LAST {(g.you || []).length} WKS</span><span className="mj-up">↗ +120% growth</span></div>
+            <LineChart you={g.you} batch={g.batch} />
+          </Reveal>
+          <Reveal delay={0.08} className="mj-prog-card mj-coral-card">
+            <span className="mj-card-head-lite">RANK PERCENTILE</span>
+            <div className="mj-bignum">{pct.v}</div>
+            <div className="mj-bignum-l">{pct.l}</div>
+          </Reveal>
+          <Reveal delay={0.12} className="mj-prog-card mj-paper-card mj-prog-bars">
+            <div className="mj-card-head-lite mj-dk">WEEKLY STUDY HOURS</div>
+            <div className="mj-bars">
+              {wk.map((h, i) => (
+                <div key={i} className="mj-bar-col">
+                  <div className="mj-bar" style={{ height: `${(h / wkMax) * 100}%` }} />
+                  <span>W{i + 1}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal delay={0.16} className="mj-prog-card mj-paper-card mj-prog-hours">
+            <div className="mj-card-head-lite mj-dk">HOURS THIS WEEK</div>
+            <div className="mj-bignum mj-dk">{totalH}h</div>
+            <div className="mj-bignum-l mj-up-dk">↗ tracked live with your mentor</div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════ § 05 · LIVE TRACKING ═══════════════ */
+function LiveTracking({ cfg }) {
+  const m = cfg.metrics || {};
+  const tiles = m.liveTiles || [];
+  return (
+    <section className="mj-section">
+      <div className="mj-wrap">
+        <Reveal className="mj-sec-head">
+          <div>
+            <Label>§ 05 · LIVE TRACKING</Label>
+            <h2 className="mj-display mj-display-lg">A dashboard that feels<br /><em>alive — because it is.</em></h2>
+          </div>
+          <span className="mj-live-chip"><span className="mj-dot mj-dot-live" /> SESSION · LIVE</span>
+        </Reveal>
+
+        <Reveal delay={0.08} className="mj-tracker">
+          <div className="mj-tracker-bar">
+            <span className="mj-traffic"><i /><i /><i /></span>
+            <span className="mj-tracker-title">PARICHAY / TRACKER · {(m.student?.name || "STUDENT").toUpperCase()}</span>
+            <span className="mj-tracker-stream"><Radio size={12} /> STREAMING</span>
+          </div>
+          <div className="mj-tracker-body">
+            <div className="mj-tracker-img"><img src={cfg.analyticsImage} alt="Live tracking dashboard" loading="lazy" /></div>
+            <div className="mj-tracker-tiles">
+              {tiles.map((t, i) => (
+                <div key={i} className="mj-tile">
+                  <span className="mj-tile-l">{t.l}</span>
+                  <span className="mj-tile-v" style={{ color: t.c }}>{t.v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════ § 06 · FOR PARENTS ═══════════════ */
+function ForParents({ cfg }) {
+  const p = cfg.metrics?.parent || {};
+  return (
+    <section className="mj-section">
+      <div className="mj-wrap mj-parent-grid">
+        <Reveal>
+          <Label>§ 06 · FOR PARENTS</Label>
+          <h2 className="mj-display mj-display-lg">A window into <em>the week.</em></h2>
+          <p className="mj-body">Every Sunday, a printable one-pager lands in your inbox. Not marketing.
+            The exact hours, tests, ranks and mentor notes your child heard that week.</p>
+          <button className="mj-btn-outline" onClick={() => window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! Can I see a sample parent weekly report?")}`, "_blank")}>
+            See sample <ArrowUpRight size={15} />
+          </button>
+        </Reveal>
+
+        <Reveal delay={0.1} className="mj-weekly">
+          <div className="mj-weekly-top">
+            <span className="mj-weekly-name">The Weekly</span>
+            <span className="mj-weekly-vol">{p.week ? p.week.toUpperCase() : "VOL 14"} · PARENT REPORT</span>
+          </div>
+          <div className="mj-weekly-body">
+            <div className="mj-weekly-featured">
+              <span className="mj-featured-lbl">FEATURED</span>
+              <p className="mj-featured-quote">{p.remark || "Consistency jumped this week — next we focus on the weakest chapter."}</p>
+              <div className="mj-weekly-photo"><img src="/images/home_mentorship_overview.png" alt="Weekly booklet" loading="lazy" /></div>
+            </div>
+            <div className="mj-weekly-glance">
+              <span className="mj-glance-lbl">AT A GLANCE</span>
+              {(p.rows || []).slice(0, 5).map((r, i) => (
+                <div key={i} className="mj-glance-row">
+                  <span>{r.l}</span><strong style={{ color: r.c }}>{r.v}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mj-weekly-foot"><span>PARICHAY · PARENT REPORT</span><span>PAGE 01 / 04</span></div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════ § 07 · REAL THREADS (whatsapp) ═══════════════ */
+const CHATS = [
+  { from: "student", t: "Sir I'm stuck on rotational motion, been 2 hrs 😩", time: "11:42 PM" },
+  { from: "mentor", t: "Send me the Q. Skip torque-heavy ones tonight — do the 6 PYQs I marked, we'll do the rest on Sunday.", time: "11:45 PM" },
+  { from: "student", t: "Mock went 178/300 today 🔥 up from 126", time: "6:10 PM" },
+  { from: "mentor", t: "That's the jump we planned. Chemistry accuracy is your next 20 marks — capsule coming at 7am.", time: "6:12 PM" },
+];
+function WhatsApp() {
+  return (
+    <section className="mj-section">
+      <div className="mj-wrap">
+        <Reveal className="mj-sec-head">
+          <div>
+            <Label>§ 07 · REAL THREADS</Label>
+            <h2 className="mj-display mj-display-lg">What actually happens<br />in <em>your WhatsApp.</em></h2>
+          </div>
+          <p className="mj-sec-sub">Unedited. Unscripted. Late-night doubt, Sunday plan, Wednesday pep talk.</p>
+        </Reveal>
+        <div className="mj-chats">
+          {CHATS.map((c, i) => (
+            <Reveal key={i} delay={(i % 4) * 0.05} className="mj-chat" style={{ ["--tilt"]: `${(i % 2 ? 1 : -1) * (1.5 + i * 0.4)}deg` }}>
+              <span className="mj-tape" />
+              <div className={c.from === "mentor" ? "mj-bubble mj-bubble-mentor" : "mj-bubble"}>
+                <span className="mj-bubble-who">{c.from === "mentor" ? "Mentor · IIT Delhi" : "You"}</span>
+                <p>{c.t}</p>
+                <span className="mj-bubble-time">{c.time}</span>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════ § 08 · THE PATH ═══════════════ */
+function ThePath({ cfg }) {
+  return (
+    <section className="mj-section mj-path">
+      <div className="mj-wrap">
+        <Reveal style={{ textAlign: "center" }}>
+          <Label>§ 08 · THE PATH</Label>
+          <h2 className="mj-display mj-display-xl">From confused aspirant<br />to <em>confident ranker.</em></h2>
+        </Reveal>
+        <Reveal delay={0.1} className="mj-path-card">
+          <img src={cfg.roadmapImage} alt="Mentorship roadmap" loading="lazy" />
+          <span className="mj-path-cap">JOURNEY · INTAKE → BACKLOG → RANK PUSH</span>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════ § 09 · ALUMNI (proof) ═══════════════ */
+function Proof({ cfg }) {
+  return (
+    <section className="mj-section">
+      <div className="mj-wrap mj-proof-grid">
+        <div className="mj-proof-head">
+          <Label>§ 09 · ALUMNI</Label>
+          <h2 className="mj-display mj-display-lg">Chose to be<br /><em>mentored,</em><br />not just taught.</h2>
+          <div className="mj-stars">
+            {[0, 1, 2, 3, 4].map((i) => <Star key={i} size={18} fill={T.coral} color={T.coral} />)}
+            <span>4.9 / 5 · 1,240 REVIEWS</span>
+          </div>
+        </div>
+        <div className="mj-proof-masonry">
+          {(cfg.testimonials || []).map((t, i) => (
+            <Reveal key={i} delay={(i % 2) * 0.06} className="mj-quote-card">
+              <span className="mj-quote-mark">&ldquo;</span>
+              <p className="mj-quote-t">{t.quote}</p>
+              <div className="mj-quote-by">
+                <span className="mj-quote-av">{t.name[0]}</span>
+                <div><strong>{t.name}</strong><span>{t.improvement}</span></div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════ PRICING ═══════════════ */
+const INCLUDED = [
+  "1-on-1 IITian mentor for 12 months", "Weekly personalised study plan",
+  "Weekly test analysis + priority checklist", "Live study tracking dashboard",
+  "Parent weekly booklet", "24/7 WhatsApp doubt support",
+  "Full mock marathon in final phase", "Rank prediction + college shortlist",
+];
+function Pricing({ plan, exam, openEnrol }) {
+  const p = MENTOR_PLANS[plan] || { amount: 1, old: 7999 };
+  return (
+    <section id="enrol" className="mj-section">
+      <div className="mj-wrap">
+        <Reveal style={{ textAlign: "center" }}>
+          <h2 className="mj-display mj-display-xl">One plan. Everything.<br />Start at <em>₹{p.amount}.</em></h2>
+        </Reveal>
+        <Reveal delay={0.1} className="mj-price-card">
+          <div className="mj-price-left">
+            <span className="mj-price-kicker">ADMISSION PASS</span>
+            <span className="mj-price-plan">{exam}</span>
+            <div className="mj-price-amt">₹{p.amount}</div>
+            <div className="mj-price-old">₹{p.old?.toLocaleString("en-IN")}</div>
+            <div className="mj-price-terms">7-DAY TRIAL · THEN ₹{p.old?.toLocaleString("en-IN")}/YR</div>
+            <span className="mj-price-seats">⚡ {SEATS_LEFT} SEATS LEFT</span>
+          </div>
+          <div className="mj-price-right">
+            <span className="mj-inc-lbl">EVERYTHING INCLUDED</span>
+            <div className="mj-inc-grid">
+              {INCLUDED.map((f) => (
+                <div key={f} className="mj-inc-item"><Check size={15} strokeWidth={3} color={T.coral} /> {f}</div>
+              ))}
+            </div>
+            <button className="mj-btn-dark mj-btn-block" onClick={() => openEnrol(plan)}>Claim your seat <ArrowRight size={17} /></button>
+            <div className="mj-price-foot"><span>◈ RAZORPAY</span><span>⟲ 7-DAY REFUND</span></div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════ FAQ ═══════════════ */
 function Faqs({ cfg }) {
   const [open, setOpen] = useState(0);
   return (
-    <Section style={{ background: "transparent" }}>
-      <SectionTitle kicker="Questions">Frequently Asked <Accent>Questions</Accent></SectionTitle>
-      <div style={{ maxWidth: 720, margin: "0 auto" }}>
-        {cfg.faqs.map((q, i) => {
-          const isOpen = open === i;
-          return (
-            <div key={q.q} style={{ background: "var(--page-bg)", border: `1px solid ${isOpen ? "rgba(255, 105, 61,.45)" : "rgba(0,0,0,.08)"}`, borderRadius: 14, marginBottom: 12, overflow: "hidden", boxShadow: isOpen ? "0 6px 20px rgba(255, 105, 61,.12)" : "0 1px 6px rgba(0,0,0,.04)" }}>
-              <button onClick={() => setOpen(isOpen ? -1 : i)} style={{
-                width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14,
-                padding: "18px 20px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left",
-                fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: "1rem", color: INK,
-              }}>
-                {q.q}
-                <ChevronDown size={19} color={ACCENT} style={{ flexShrink: 0, transform: isOpen ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
+    <section className="mj-section">
+      <div className="mj-wrap">
+        <Reveal><Label>§ 10 · QUESTIONS</Label>
+          <h2 className="mj-display mj-display-lg mj-faq-h">Everything you're<br /><em>wondering.</em></h2>
+        </Reveal>
+        <div className="mj-faqs">
+          {(cfg.faqs || []).map((f, i) => (
+            <div key={i} className={open === i ? "mj-faq mj-faq-open" : "mj-faq"}>
+              <button className="mj-faq-q" onClick={() => setOpen(open === i ? -1 : i)}>
+                <span className="mj-faq-n">{String(i + 1).padStart(2, "0")}</span>
+                <span className="mj-faq-qt">{f.q}</span>
+                <span className="mj-faq-ic"><Plus size={18} /></span>
               </button>
-              <AnimatePresence>
-                {isOpen && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }} style={{ overflow: "hidden" }}>
-                    <div style={{ padding: "0 20px 20px", color: MUTE, fontSize: 14.5, lineHeight: 1.7 }}>{q.a}</div>
+              <AnimatePresence initial={false}>
+                {open === i && (
+                  <motion.div className="mj-faq-a" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.28 }}>
+                    <p>{f.a}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
-          );
-        })}
-      </div>
-    </Section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   WHATSAPP PROOF — CSS phone-frame chat mockups
-════════════════════════════════════════════════ */
-function PhoneFrame({ contact, messages, accent = "#25D366" }) {
-  return (
-    <div style={{
-      width: "100%", maxWidth: 230, margin: "0 auto", aspectRatio: "9 / 18",
-      background: "var(--page-bg)", borderRadius: 28, border: "1px solid rgba(0,0,0,.2)",
-      boxShadow: "0 18px 40px -16px rgba(0,0,0,.5), inset 0 0 0 5px #1c1c1c",
-      padding: 6, position: "relative", overflow: "hidden",
-    }}>
-      <div style={{ position: "absolute", top: 8, left: "50%", transform: "translateX(-50%)", width: 64, height: 16, background: "#1c1c1c", borderRadius: 12, zIndex: 3 }} />
-      <div style={{ width: "100%", height: "100%", borderRadius: 22, overflow: "hidden", background: "#0b141a", display: "flex", flexDirection: "column" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "14px 10px 9px", background: "#202c33", flexShrink: 0 }}>
-          <span style={{ width: 26, height: 26, borderRadius: "50%", background: accent, display: "grid", placeItems: "center", flexShrink: 0, fontSize: 11, fontWeight: 800, color: "#0a0a0a" }}>{contact[0]}</span>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#e9edef", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{contact}</div>
-            <div style={{ fontSize: 8, color: "#8696a0" }}>online</div>
-          </div>
-        </div>
-        <div style={{ flex: 1, padding: "10px 8px", display: "flex", flexDirection: "column", gap: 7, overflow: "hidden", backgroundImage: "radial-gradient(rgba(255,255,255,.03) 1px, transparent 1px)", backgroundSize: "14px 14px" }}>
-          {messages.map((m, i) => {
-            const out = m.side === "out";
-            return (
-              <div key={i} style={{ alignSelf: out ? "flex-end" : "flex-start", maxWidth: "82%" }}>
-                <div style={{ background: out ? "#005c4b" : "#202c33", color: "#e9edef", borderRadius: 9, borderTopRightRadius: out ? 2 : 9, borderTopLeftRadius: out ? 9 : 2, padding: "6px 9px 5px", fontSize: 9.5, lineHeight: 1.4, whiteSpace: "pre-line" }}>
-                  {m.name && <div style={{ fontSize: 8.5, fontWeight: 800, color: "#FF693D", marginBottom: 1 }}>{m.name}</div>}
-                  {m.text}
-                  <span style={{ display: "block", textAlign: "right", fontSize: 7.5, color: out ? "rgba(233,237,239,.6)" : "#8696a0", marginTop: 2 }}>{m.time}{out ? " ✓✓" : ""}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 8px", background: "#0b141a", flexShrink: 0 }}>
-          <div style={{ flex: 1, background: "#202c33", borderRadius: 16, padding: "6px 10px", fontSize: 8.5, color: "#8696a0" }}>Message</div>
-          <span style={{ width: 24, height: 24, borderRadius: "50%", background: accent, display: "grid", placeItems: "center", flexShrink: 0 }}>
-            <Play size={11} color="#0a0a0a" fill="#0a0a0a" style={{ marginLeft: 1 }} />
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const PROOF_CARDS = [
-  { head: ["Figuring it out ", "together", ", that's how we grow."], contact: "JEE Squad · Group", messages: [
-    { side: "in", name: "Rahul", text: "Guys which teacher for Rotational Motion?", time: "10:02" },
-    { side: "in", name: "Priya", text: "MR sir on YouTube is 🔥 for that", time: "10:03" },
-    { side: "out", text: "Adding the playlist — do Q's after each lecture", time: "10:05" },
-    { side: "in", name: "Rahul", text: "Got it, starting today 💪", time: "10:06" },
-  ] },
-  { head: ["Marks jumped from ", "20 to 126", ". That's the shift."], contact: "Aman · Mentor", messages: [
-    { side: "in", text: "Bhaiya I got 126 in the last test!!", time: "21:14" },
-    { side: "in", text: "Last time it was just 20 😭", time: "21:14" },
-    { side: "out", text: "That's the shift we worked for 🔥 proud of you", time: "21:15" },
-    { side: "in", text: "Thank you so much 🙏", time: "21:16" },
-  ] },
-  { head: ["Festival or not — the ", "system", " keeps going."], contact: "Community · Announcements", messages: [
-    { side: "out", text: "Happy Diwali everyone 🪔", time: "09:00" },
-    { side: "out", text: "But the system doesn't pause:\n1. Hit your syllabus targets\n2. Attempt today's mock\n3. Daily tasks — non-negotiable", time: "09:01" },
-    { side: "in", text: "On it bhaiya 🚀", time: "09:05" },
-  ] },
-  { head: ["12 hours tracked", ". Discipline in action."], contact: "Sneha · Mentor", accent: "#22c55e", messages: [
-    { side: "in", text: "📷 Study tracker — 12h 04m", time: "23:40" },
-    { side: "in", text: "Revised Thermodynamics + Organic today", time: "23:41" },
-    { side: "out", text: "12 hours tracked 👏 discipline in action", time: "23:42" },
-    { side: "out", text: "Proud of you. Sleep now, recover.", time: "23:42" },
-  ] },
-  { head: ["When something feels off, it gets ", "fixed", "."], contact: "Community · Announcements", messages: [
-    { side: "out", text: "📢 New: Feedback & Complaint form is live", time: "12:00" },
-    { side: "out", text: "If anything feels off, tell us — anonymously too", time: "12:00" },
-    { side: "out", text: "Your voice shapes the system 🙌", time: "12:01" },
-    { side: "in", text: "This is why I trust this place 🙏", time: "12:10" },
-  ] },
-  { head: ["Doubt at ", "1 AM", "? Someone's there."], contact: "Dev · Mentor", messages: [
-    { side: "in", text: "Bhaiya stuck on this integral 😩", time: "01:02" },
-    { side: "in", text: "📷 my handwritten attempt", time: "01:02" },
-    { side: "out", text: "📷 full solution", time: "01:09" },
-    { side: "out", text: "Use substitution u = 1+x². You almost had it 💪", time: "01:09" },
-  ] },
-];
-
-function WhatsAppProof() {
-  return (
-    <Section style={{ background: "var(--page-bg)" }}>
-      <SectionTitle kicker="From the inside" sub="This is what mentorship looks like from the inside.">
-        Real Mentorship. <Accent>Real Results.</Accent>
-      </SectionTitle>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 20, maxWidth: 1040, margin: "0 auto" }}>
-        {PROOF_CARDS.map((c, i) => (
-          <Reveal key={i} delay={(i % 3) * 0.06}>
-            <motion.div whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              style={{ background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.08)", borderRadius: 12, padding: "24px 22px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", height: "100%", display: "flex", flexDirection: "column", gap: 18 }}>
-              <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.12rem", lineHeight: 1.3, color: INK, margin: 0 }}>
-                {c.head[0]}<span style={{ color: ACCENT }}>{c.head[1]}</span>{c.head[2] || ""}
-              </h3>
-              <PhoneFrame contact={c.contact} messages={c.messages} accent={c.accent} />
-            </motion.div>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   YOUR JOURNEY WITH COLLEGE PARICHAY — 6-step cards
-════════════════════════════════════════════════ */
-const JOURNEY_STEPS = [
-  { Icon: Rocket,        c: "#FF693D", title: "Click on Join and Enroll",         desc: "Take the first bold step." },
-  { Icon: Handshake,     c: "#ef4444", title: "Mentor Contacts You in 24 Hours",  desc: "Your CollegeParichay mentor sends you the first WhatsApp message." },
-  { Icon: Library,       c: "#8b5cf6", title: "Receive Study Materials",          desc: "Kickstart your journey with all your notes and plans ready." },
-  { Icon: CalendarClock, c: "#0ea5a4", title: "Get Strict Guidance",              desc: "Daily accountability, weekly targets, zero procrastination." },
-  { Icon: TrendingUp,    c: "#22c55e", title: "Score 250+ in JEE / 650+ in NEET", desc: "Get into flow state and hit your maximum potential." },
-  { Icon: GraduationCap, c: "#6366f1", title: "Get Your Dream College",           desc: "Your dream IIT or medical college is waiting for you!" },
-];
-
-function JourneyBrand({ cfg }) {
-  return (
-    <section style={{ padding: "92px 0", background: "transparent", position: "relative", overflow: "hidden" }}>
-      <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <SectionTitle kicker="How it works" sub="Six steps from where you are to where you deserve to be.">
-          Your Journey With <Accent>CollegeParichay</Accent>
-        </SectionTitle>
-
-        <Reveal delay={0.1}>
-          <div style={{ maxWidth: 860, margin: "0 auto 40px", borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255, 105, 61,.2)", boxShadow: "0 22px 48px -24px rgba(26,26,46,.4)" }}>
-            <img src={cfg.roadmapImage || "/images/roadmap_mentorship.png"} alt="Mentorship Roadmap" style={{ width: "100%", maxHeight: 420, objectFit: "contain", display: "block" }} />
-          </div>
-        </Reveal>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(280px, 100%), 1fr))", gap: 22, maxWidth: 1040, margin: "0 auto" }}>
-          {JOURNEY_STEPS.map((s, i) => {
-            const Icon = s.Icon;
-            return (
-              <Reveal key={s.title} delay={(i % 3) * 0.07}>
-                <motion.div whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  style={{
-                    background: "var(--page-bg)", borderRadius: 18, padding: "34px 28px", height: "100%",
-                    boxShadow: "0 22px 48px -24px rgba(26,26,46,.42), 0 2px 10px rgba(0,0,0,.05)",
-                    border: "1px solid rgba(255, 105, 61,.12)", textAlign: "center",
-                    display: "flex", flexDirection: "column", alignItems: "center", gap: 12, position: "relative", overflow: "hidden",
-                  }}>
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${s.c},${s.c}99)` }} />
-                  <span style={{ alignSelf: "flex-start", fontSize: 12, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: s.c }}>Step {i + 1}</span>
-                  {/* gradient icon badge */}
-                  <div style={{ position: "relative", marginTop: 4 }}>
-                    <motion.div
-                      animate={{ y: [0, -5, 0] }} transition={{ duration: 2.6, repeat: Infinity, delay: i * 0.2 }}
-                      style={{
-                        width: 74, height: 74, borderRadius: "50%",
-                        background: `linear-gradient(135deg,${s.c},${s.c}bb)`,
-                        display: "grid", placeItems: "center",
-                        boxShadow: `0 12px 28px -8px ${s.c}88`,
-                        border: "4px solid #fff",
-                      }}>
-                      <Icon size={32} color="#fff" strokeWidth={2} />
-                    </motion.div>
-                    <span style={{ position: "absolute", bottom: -4, right: -4, width: 26, height: 26, borderRadius: "50%", background: "var(--page-bg)", border: `2px solid ${s.c}`, display: "grid", placeItems: "center", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 12, color: s.c }}>{i + 1}</span>
-                  </div>
-                  <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "6px 0 0", lineHeight: 1.3 }}>{s.title}</h3>
-                  <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.55, margin: 0 }}>{s.desc}</p>
-                </motion.div>
-              </Reveal>
-            );
-          })}
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-/* ════════════════════════════════════════════════
-   CROSS-PAGE NAV
-════════════════════════════════════════════════ */
-function MentorTabs({ variant }) {
-  const label = (slug) => slug === "neet" ? "NEET" : slug === "jee-2027" ? "JEE 2027" : "JEE 2028";
+/* ═══════════════ § 11 · TALK TO US ═══════════════ */
+function TalkToUs({ exam }) {
+  const [f, setF] = useState({ name: "", phone: "", email: "", goal: "" });
+  const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  const submit = (e) => {
+    e.preventDefault();
+    const text = `Hi! I'd like a callback about ${exam} mentorship.\nName: ${f.name}\nPhone: ${f.phone}\nEmail: ${f.email}\nGoal: ${f.goal}`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, "_blank");
+  };
   return (
-    <div style={{ position: "relative", zIndex: 2, background: "var(--page-bg)", borderBottom: "1px solid rgba(255, 105, 61,.14)", paddingTop: 114 }}>
-      <div className="container" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", padding: "12px 0" }}>
-        {Object.values(MENTORSHIP).map((m) => {
-          const active = m.slug === variant;
-          return (
-            <Link key={m.slug} to={`/mentorship/${m.slug}`} style={{
-              fontSize: 13, fontWeight: 700, padding: "8px 18px", borderRadius: 50, textDecoration: "none",
-              color: active ? "#fff" : "#7c3a12",
-              background: active ? `linear-gradient(135deg,${ACCENT},${GOLD})` : "rgba(255, 105, 61,.08)",
-              border: `1px solid ${active ? "transparent" : "rgba(255, 105, 61,.25)"}`,
-              boxShadow: active ? "0 6px 16px -6px rgba(255, 105, 61,.6)" : "none",
-            }}>{label(m.slug)}</Link>
-          );
-        })}
+    <section className="mj-section mj-talk">
+      <div className="mj-wrap mj-talk-grid">
+        <Reveal>
+          <Label>§ 11 · TALK TO US</Label>
+          <h2 className="mj-display mj-display-lg">Not sure?<br /><em>Let&rsquo;s talk.</em></h2>
+          <p className="mj-body">A 15-minute call, no pressure. We&rsquo;ll listen to where you are,
+            share what the year could look like, and let you decide.</p>
+          <div className="mj-reach">
+            <span>REACH US · HELLO@COLLEGEPARICHAY.IN</span>
+            <span>CALL · +91 78775 96464</span>
+          </div>
+        </Reveal>
+        <Reveal delay={0.1} className="mj-form">
+          <form onSubmit={submit}>
+            <div className="mj-form-row">
+              <label className="mj-field"><span>Your name</span><input required value={f.name} onChange={set("name")} placeholder="Your name" /></label>
+              <label className="mj-field"><span>Phone</span><input required inputMode="tel" value={f.phone} onChange={set("phone")} placeholder="Phone" /></label>
+            </div>
+            <label className="mj-field"><span>Email</span><input type="email" value={f.email} onChange={set("email")} placeholder="Email" /></label>
+            <label className="mj-field"><span>Tell us about your goal</span><textarea rows={3} value={f.goal} onChange={set("goal")} placeholder="Tell us about your goal" /></label>
+            <button className="mj-btn-dark mj-btn-block" type="submit">Request a callback <Send size={16} /></button>
+          </form>
+        </Reveal>
       </div>
-    </div>
+    </section>
   );
 }
 
-/* ════════════════════════════════════════════════
-   MAIN PAGE
-════════════════════════════════════════════════ */
+/* ═══════════════ variant tabs + floating enrol ═══════════════ */
+function VariantTabs({ variant }) {
+  return (
+    <div className="mj-wrap mj-tabs">
+      {MENTOR_LINKS.map((l) => (
+        <Link key={l.slug} to={l.to} className={l.slug === variant ? "mj-tab mj-tab-on" : "mj-tab"}>{l.label}</Link>
+      ))}
+    </div>
+  );
+}
+/* ═══════════════ PAGE ═══════════════ */
 export default function Mentorship() {
   const { variant } = useParams();
   const cfg = MENTORSHIP[variant];
+  const { open: openEnrol } = useEnrol();
   if (!cfg) return <Navigate to="/mentorship/jee-2027" replace />;
 
-  const scrollToEnrol = () => document.getElementById("enrol")?.scrollIntoView({ behavior: "smooth" });
+  const plan = cfg.tracks?.[0]?.plan || "mentor-jee-2027";
+  const exam = cfg.tracks?.[0]?.exam || "JEE 2027";
+  const year = (cfg.eyebrow || "").match(/\d{4}/)?.[0] || String(MENTOR_PLANS[plan]?.year || "2027");
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <div style={{ background: "var(--page-bg)", color: INK, minHeight: "100vh", position: "relative" }}>
-      <div style={{ position: "relative", zIndex: 1 }}>
-        <Seo
-        title={`${(variant || "jee-2027").replace(/-/g, " ").toUpperCase()} Mentorship by IITians — 1-on-1 Guidance`}
-        description="1-on-1 JEE & NEET mentorship by IIT Roorkee alumni — daily targets, test analysis, live tracking and parent reports. Limited seats. Enrol on CollegeParichay."
+    <div className="mj">
+      <Seo
+        title={`${exam} Mentorship by IITians — 1-on-1 Guidance | CollegeParichay`}
+        description="1-on-1 JEE & NEET mentorship by IIT alumni — daily targets, weekly test analysis, live tracking and parent reports. Limited seats. Start at ₹1 on CollegeParichay."
         path={`/mentorship/${variant}`}
       />
-      <MentorTabs variant={variant} />
-      <FloatingEnrol cfg={cfg} scrollToEnrol={scrollToEnrol} />
-      <Hero cfg={cfg} scrollToEnrol={scrollToEnrol} />
-      <ForYou cfg={cfg} />
-      <WhyFoundation cfg={cfg} />
-      <HowWeGuide cfg={cfg} />
-      <TestAnalysis cfg={cfg} />
-      <ImprovementCharts m={cfg.metrics} />
-      <LiveTracking m={cfg.metrics} />
-      <ParentBooklet m={cfg.metrics} />
-      <WhatsAppProof />
-      <TwoYearPlan cfg={cfg} />
-      <JourneyBrand cfg={cfg} />
-      <Testimonials cfg={cfg} />
-      <Enrol cfg={cfg} />
-      <Contact cfg={cfg} />
+      <VariantTabs variant={variant} />
+      <Hero cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
+      <StatBand cfg={cfg} />
+      <Qualifier cfg={cfg} />
+      <Method cfg={cfg} />
+      <Progress cfg={cfg} />
+      <LiveTracking cfg={cfg} />
+      <ForParents cfg={cfg} />
+      <WhatsApp />
+      <ThePath cfg={cfg} />
+      <Proof cfg={cfg} />
+      <Pricing plan={plan} exam={exam} openEnrol={openEnrol} />
       <Faqs cfg={cfg} />
-      </div>
+      <TalkToUs exam={exam} />
+      <style>{CSS}</style>
     </div>
   );
 }
 
-/* ════════════════════════════════════════════════
-   shared styles
-════════════════════════════════════════════════ */
-const ctaSolid = {
-  display: "inline-flex", alignItems: "center", gap: 9, padding: "14px 30px", borderRadius: 12,
-  background: `linear-gradient(135deg,${ACCENT},${GOLD})`, color: "#fff", fontFamily: "'Space Grotesk',sans-serif",
-  fontWeight: 800, fontSize: 15.5, border: "none", cursor: "pointer", textDecoration: "none", letterSpacing: "0.3px",
-  boxShadow: "0 10px 30px rgba(255, 105, 61,.4)",
-};
-const ctaGhost = {
-  display: "inline-flex", alignItems: "center", gap: 9, padding: "14px 26px", borderRadius: 12,
-  background: "var(--page-bg)", color: ACCENT, fontFamily: "'Space Grotesk',sans-serif",
-  fontWeight: 700, fontSize: 15, border: `1.5px solid ${ACCENT}`, cursor: "pointer", textDecoration: "none",
-};
-const card = {
-  display: "flex", alignItems: "center", gap: 14, background: "var(--page-bg)",
-  border: "1px solid rgba(0,0,0,0.08)", borderRadius: 16, padding: "20px 22px",
-  boxShadow: "0 4px 20px 0 rgba(0,0,0,0.04)",
-};
-const input = {
-  width: "100%", padding: "14px 16px", fontSize: 15, borderRadius: 12,
-  background: "#f8fafc", border: "1.5px solid rgba(0,0,0,0.06)", color: INK, outline: "none",
-  fontFamily: "'DM Sans',sans-serif", boxSizing: "border-box",
-};
+const CSS = `
+.mj { background:${T.paper}; color:${T.ink}; font-family:'DM Sans',sans-serif; overflow-x:hidden; }
+.mj * { box-sizing:border-box; }
+.mj-wrap { max-width:1200px; margin:0 auto; padding:0 24px; }
+.mj em { font-family:'Playfair Display',serif; font-style:italic; color:${T.coral}; font-weight:800; }
+.mj-display { font-family:'Playfair Display',serif; font-weight:800; color:${T.ink}; letter-spacing:-.5px; line-height:1.08; margin:14px 0 0; }
+.mj-display em { color:${T.coral}; }
+.mj-display-lg { font-size:clamp(2rem,4.4vw,3.3rem); }
+.mj-display-xl { font-size:clamp(2.3rem,5.4vw,4rem); }
+.mj-on-navy { color:${T.onNavy}; }
+.mj-label { display:inline-flex; align-items:center; gap:8px; padding:5px 13px; border:1px solid ${T.lineDk}; border-radius:6px; background:${T.card}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.body}; }
+.mj-label-dark { background:transparent; border-color:${T.navyLine}; color:${T.onNavyMute}; }
+.mj-body { font:400 1.05rem/1.7 'DM Sans',sans-serif; color:${T.body}; margin:20px 0 0; max-width:460px; }
+.mj-section { padding:clamp(64px,9vw,110px) 0; position:relative; }
+
+/* variant tabs */
+.mj-tabs { display:flex; gap:8px; padding-top:112px; padding-bottom:2px; flex-wrap:wrap; position:relative; z-index:2; }
+.mj-tab { text-decoration:none; padding:8px 16px; border-radius:50px; border:1px solid ${T.line}; background:${T.card}; color:${T.body}; font:700 .82rem/1 'Space Grotesk',sans-serif; transition:.16s; }
+.mj-tab:hover { border-color:${T.coral}; color:${T.coralDk}; }
+.mj-tab-on { background:${T.ink}; border-color:${T.ink}; color:#fff; }
+
+/* hero */
+.mj-hero { position:relative; padding:22px 0 70px; overflow:hidden; border-bottom:1px solid ${T.line}; }
+.mj-watermark { position:absolute; top:-4%; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-style:italic; font-weight:900; font-size:min(42vw,600px); line-height:1; color:transparent; -webkit-text-stroke:1.5px ${T.lineDk}; opacity:.5; pointer-events:none; user-select:none; z-index:0; }
+.mj-hero-inner { position:relative; z-index:1; }
+.mj-hero-meta { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+.mj-pill { display:inline-flex; align-items:center; gap:8px; padding:7px 14px; border:1px solid ${T.lineDk}; border-radius:50px; background:${T.card}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.body}; }
+.mj-pill-warn { color:${T.coralDk}; border-color:${T.coralSoft}; background:${T.coralSoft}; }
+.mj-issue { font:700 .7rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; text-align:center; }
+.mj-dot { width:8px; height:8px; border-radius:50%; background:${T.coral}; flex-shrink:0; }
+.mj-dot-live { background:#22c55e; box-shadow:0 0 0 0 rgba(34,197,94,.5); animation:mjpulse 1.8s infinite; }
+@keyframes mjpulse { 0%{box-shadow:0 0 0 0 rgba(34,197,94,.5);} 100%{box-shadow:0 0 0 8px rgba(34,197,94,0);} }
+.mj-hero-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; margin-top:clamp(40px,7vw,90px); }
+.mj-hero-h1 { font-family:'Playfair Display',serif; font-weight:700; font-size:clamp(1.7rem,3vw,2.5rem); line-height:1.28; letter-spacing:-.3px; color:${T.ink}; margin:0; }
+.mj-hero-cta { display:flex; align-items:center; gap:22px; flex-wrap:wrap; margin-top:34px; }
+.mj-btn-dark { display:inline-flex; align-items:center; gap:9px; padding:15px 26px; border:none; border-radius:12px; background:${T.ink}; color:#fff; font:700 .98rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:transform .16s, background .16s; }
+.mj-btn-dark:hover { background:#000; transform:translateY(-2px); }
+.mj-btn-link { display:inline-flex; align-items:center; gap:10px; background:none; border:none; cursor:pointer; font:800 .74rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.ink}; }
+.mj-btn-circ { display:grid; place-items:center; width:30px; height:30px; border:1px solid ${T.lineDk}; border-radius:50%; transition:.16s; }
+.mj-btn-link:hover .mj-btn-circ { background:${T.coral}; border-color:${T.coral}; color:#fff; }
+.mj-btn-outline { display:inline-flex; align-items:center; gap:8px; margin-top:26px; padding:13px 24px; border:1px solid ${T.lineDk}; border-radius:12px; background:${T.card}; color:${T.ink}; font:700 .9rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.16s; }
+.mj-btn-outline:hover { border-color:${T.coral}; color:${T.coralDk}; }
+.mj-btn-block { width:100%; justify-content:center; margin-top:22px; }
+
+.mj-hero-visual { position:relative; }
+.mj-hero-imgcard { position:relative; border-radius:22px; overflow:hidden; background:${T.navy}; border:1px solid ${T.line}; box-shadow:14px 14px 0 -2px ${T.coral}, 0 30px 60px -30px rgba(0,0,0,.4); }
+.mj-hero-imgcard img { width:100%; display:block; }
+.mj-badge-jump { position:absolute; top:-18px; right:14px; z-index:3; display:flex; flex-direction:column; align-items:flex-end; gap:1px; padding:10px 16px; border-radius:14px; background:${T.coral}; color:#fff; font:800 1.15rem/1 'Playfair Display',serif; box-shadow:0 12px 26px -10px rgba(255,105,61,.7); }
+.mj-badge-jump b { font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; opacity:.85; }
+.mj-badge-live { position:absolute; bottom:-16px; left:14px; z-index:3; display:inline-flex; align-items:center; gap:8px; padding:9px 16px; border-radius:50px; background:${T.card}; border:1px solid ${T.line}; font:700 .78rem/1 'Space Grotesk',sans-serif; color:${T.ink}; box-shadow:0 14px 30px -14px rgba(0,0,0,.35); }
+
+/* stat band */
+.mj-statband { border-bottom:1px solid ${T.line}; }
+.mj-stat-row { display:grid; grid-template-columns:repeat(4,1fr); }
+.mj-stat { padding:34px 10px 34px 0; border-left:1px solid ${T.line}; padding-left:26px; }
+.mj-stat:first-child { border-left:none; padding-left:0; }
+.mj-stat-v { font:800 clamp(1.7rem,3vw,2.4rem)/1 'Playfair Display',serif; color:${T.ink}; }
+.mj-stat-l { margin-top:8px; font:700 .74rem/1.3 'Space Grotesk',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:${T.muted}; }
+
+/* qualifier */
+.mj-lead { font-family:'Playfair Display',serif; font-weight:600; font-size:clamp(1.3rem,2.6vw,2rem); line-height:1.4; color:${T.ink}; max-width:820px; margin:0 0 44px; }
+.mj-checklist { display:flex; flex-direction:column; gap:16px; }
+.mj-check-card { display:flex; align-items:center; gap:16px; width:min(620px,100%); padding:20px 24px; background:${T.card}; border:1px solid ${T.line}; border-radius:16px; box-shadow:0 10px 30px -24px rgba(0,0,0,.4); }
+.mj-check-right { align-self:flex-end; flex-direction:row-reverse; text-align:right; }
+.mj-check-ic { display:grid; place-items:center; width:38px; height:38px; border-radius:50%; background:${T.coral}; color:#fff; flex-shrink:0; }
+.mj-check-t { flex:1; font:600 1rem/1.4 'DM Sans',sans-serif; color:${T.ink}; }
+.mj-check-n { font:800 .8rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
+
+/* dark method */
+.mj-dark { background:${T.navy}; color:${T.onNavy}; padding:clamp(70px,9vw,120px) 0; position:relative; }
+.mj-dark-head { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:44px; }
+.mj-scrollhint { font:800 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.onNavyMute}; white-space:nowrap; }
+.mj-steps { display:flex; gap:20px; overflow-x:auto; padding:4px 24px 20px; scroll-snap-type:x mandatory; max-width:1248px; margin:0 auto; }
+.mj-steps::-webkit-scrollbar { height:6px; } .mj-steps::-webkit-scrollbar-thumb { background:${T.navyLine}; border-radius:6px; }
+.mj-step { scroll-snap-align:start; flex:0 0 320px; min-height:300px; display:flex; flex-direction:column; padding:26px; border:1px solid ${T.navyLine}; border-radius:18px; background:${T.navy2}; }
+.mj-step-top { display:flex; align-items:flex-start; justify-content:space-between; }
+.mj-step-n { font:800 3.4rem/1 'Playfair Display',serif; color:${T.coral}; }
+.mj-step-tag { padding:5px 11px; border:1px solid ${T.navyLine}; border-radius:6px; font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.onNavyMute}; }
+.mj-step-t { font:700 1.35rem/1.25 'Playfair Display',serif; color:${T.onNavy}; margin:auto 0 0; }
+.mj-step-d { font:400 .92rem/1.6 'DM Sans',sans-serif; color:${T.onNavyMute}; margin:12px 0 18px; }
+.mj-step-foot { font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.coral}; padding-top:14px; border-top:1px solid ${T.navyLine}; }
+
+/* section head shared */
+.mj-sec-head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:48px; flex-wrap:wrap; }
+.mj-sec-sub { font:400 1rem/1.6 'DM Sans',sans-serif; color:${T.body}; max-width:320px; }
+.mj-live-chip { display:inline-flex; align-items:center; gap:8px; padding:8px 15px; border:1px solid #bbe6c8; border-radius:50px; background:#e9f8ee; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:#15803d; }
+
+/* progress */
+.mj-prog-grid { display:grid; grid-template-columns:2fr 1fr; grid-auto-rows:auto; gap:18px; }
+.mj-prog-card { border-radius:18px; padding:24px; border:1px solid ${T.line}; }
+.mj-navy-card { grid-row:span 2; background:${T.navy}; border-color:${T.navyLine}; color:${T.onNavy}; display:flex; flex-direction:column; }
+.mj-card-head { display:flex; justify-content:space-between; font:700 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.onNavyMute}; margin-bottom:auto; }
+.mj-up { color:#22c55e; } .mj-up-dk { color:#16a34a; }
+.mj-line { width:100%; height:150px; margin-top:24px; }
+.mj-coral-card { background:${T.coral}; color:#fff; border-color:${T.coral}; display:flex; flex-direction:column; }
+.mj-card-head-lite { font:700 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; opacity:.85; }
+.mj-card-head-lite.mj-dk { color:${T.muted}; opacity:1; }
+.mj-bignum { font:800 clamp(2.6rem,5vw,3.6rem)/1 'Playfair Display',serif; margin-top:14px; }
+.mj-bignum.mj-dk { color:${T.ink}; }
+.mj-bignum-l { font:600 .82rem/1.3 'DM Sans',sans-serif; opacity:.9; margin-top:6px; }
+.mj-paper-card { background:${T.card}; }
+.mj-prog-bars .mj-bars { display:flex; align-items:flex-end; gap:8px; height:90px; margin-top:16px; }
+.mj-bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; }
+.mj-bar { width:100%; background:${T.coral}; border-radius:5px 5px 0 0; min-height:5px; }
+.mj-bar-col span { font:700 .6rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
+
+/* live tracker */
+.mj-tracker { border-radius:20px; overflow:hidden; border:1px solid ${T.navyLine}; background:${T.navy}; box-shadow:0 40px 80px -50px rgba(0,0,0,.6); }
+.mj-tracker-bar { display:flex; align-items:center; gap:14px; padding:12px 18px; border-bottom:1px solid ${T.navyLine}; }
+.mj-traffic { display:flex; gap:6px; } .mj-traffic i { width:11px; height:11px; border-radius:50%; background:#3a3f4d; } .mj-traffic i:first-child{background:#ff5f57;} .mj-traffic i:nth-child(2){background:#febc2e;} .mj-traffic i:nth-child(3){background:#28c840;}
+.mj-tracker-title { font:700 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.onNavyMute}; }
+.mj-tracker-stream { margin-left:auto; display:inline-flex; align-items:center; gap:6px; font:700 .68rem/1 'Space Grotesk',sans-serif; color:#22c55e; }
+.mj-tracker-body { display:grid; grid-template-columns:1.5fr 1fr; gap:0; }
+.mj-tracker-img { border-right:1px solid ${T.navyLine}; background:${T.navy2}; }
+.mj-tracker-img img { width:100%; height:100%; object-fit:cover; display:block; }
+.mj-tracker-tiles { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:${T.navyLine}; }
+.mj-tile { background:${T.navy}; padding:22px 20px; display:flex; flex-direction:column; gap:8px; }
+.mj-tile-l { font:700 .66rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:${T.onNavyMute}; }
+.mj-tile-v { font:800 1.7rem/1 'Playfair Display',serif; }
+
+/* for parents */
+.mj-parent-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:center; }
+.mj-weekly { background:${T.card}; border:1px solid ${T.line}; border-radius:6px; padding:30px; box-shadow:24px 24px 0 -2px ${T.paper2}, 0 30px 60px -34px rgba(0,0,0,.3); }
+.mj-weekly-top { display:flex; align-items:baseline; justify-content:space-between; border-bottom:2px solid ${T.ink}; padding-bottom:12px; }
+.mj-weekly-name { font:800 1.7rem/1 'Playfair Display',serif; font-style:italic; color:${T.ink}; }
+.mj-weekly-vol { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
+.mj-weekly-body { display:grid; grid-template-columns:1.3fr 1fr; gap:24px; margin-top:20px; }
+.mj-featured-lbl, .mj-glance-lbl { font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.coral}; }
+.mj-featured-quote { font:600 1.05rem/1.4 'Playfair Display',serif; color:${T.ink}; margin:10px 0 16px; }
+.mj-weekly-photo { border-radius:8px; overflow:hidden; border:1px solid ${T.line}; }
+.mj-weekly-photo img { width:100%; display:block; }
+.mj-glance-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid ${T.line}; font:500 .84rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
+.mj-glance-row strong { font:800 .9rem/1 'Space Grotesk',sans-serif; }
+.mj-glance-lbl { display:block; margin-bottom:6px; }
+.mj-weekly-foot { display:flex; justify-content:space-between; margin-top:20px; padding-top:14px; border-top:1px solid ${T.line}; font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
+
+/* whatsapp */
+.mj-chats { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+.mj-chat { position:relative; transform:rotate(var(--tilt,0deg)); }
+.mj-tape { position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-4deg); width:70px; height:22px; background:${T.coralSoft}; border:1px solid ${T.coral}; opacity:.6; border-radius:2px; }
+.mj-bubble { background:${T.navy}; border:1px solid ${T.navyLine}; border-radius:16px; padding:20px 18px; box-shadow:0 20px 40px -26px rgba(0,0,0,.5); }
+.mj-bubble-mentor { background:${T.coral}; border-color:${T.coral}; }
+.mj-bubble-who { font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.onNavyMute}; }
+.mj-bubble-mentor .mj-bubble-who { color:rgba(255,255,255,.85); }
+.mj-bubble p { font:500 .92rem/1.5 'DM Sans',sans-serif; color:${T.onNavy}; margin:10px 0; }
+.mj-bubble-mentor p { color:#fff; }
+.mj-bubble-time { font:600 .62rem/1 'Space Grotesk',sans-serif; color:${T.onNavyMute}; }
+.mj-bubble-mentor .mj-bubble-time { color:rgba(255,255,255,.8); }
+
+/* the path */
+.mj-path { text-align:center; }
+.mj-path-card { position:relative; margin:44px auto 0; max-width:1000px; border-radius:22px; overflow:hidden; background:${T.navy}; border:1px solid ${T.line}; box-shadow:0 40px 80px -50px rgba(0,0,0,.5); }
+.mj-path-card img { width:100%; display:block; }
+.mj-path-cap { position:absolute; bottom:14px; left:0; right:0; text-align:center; font:700 .66rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.onNavyMute}; }
+
+/* proof */
+.mj-proof-grid { display:grid; grid-template-columns:.8fr 1.2fr; gap:44px; align-items:start; }
+.mj-proof-head { position:sticky; top:110px; }
+.mj-stars { display:flex; align-items:center; gap:4px; margin-top:22px; }
+.mj-stars span { margin-left:10px; font:700 .74rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; }
+.mj-proof-masonry { columns:2; column-gap:18px; }
+.mj-quote-card { break-inside:avoid; margin-bottom:18px; background:${T.card}; border:1px solid ${T.line}; border-radius:16px; padding:22px; box-shadow:0 12px 30px -24px rgba(0,0,0,.4); }
+.mj-quote-mark { font:800 2.4rem/.6 'Playfair Display',serif; color:${T.coral}; }
+.mj-quote-t { font:500 .98rem/1.55 'DM Sans',sans-serif; color:${T.ink}; margin:6px 0 18px; }
+.mj-quote-by { display:flex; align-items:center; gap:11px; }
+.mj-quote-av { display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:${T.coralSoft}; color:${T.coralDk}; font:800 .9rem/1 'Space Grotesk',sans-serif; flex-shrink:0; }
+.mj-quote-by strong { display:block; font:700 .88rem/1.2 'Space Grotesk',sans-serif; color:${T.ink}; }
+.mj-quote-by span { font:600 .74rem/1.2 'DM Sans',sans-serif; color:${T.coralDk}; }
+
+/* pricing */
+.mj-price-card { display:grid; grid-template-columns:.85fr 1.15fr; margin:44px auto 0; max-width:960px; border-radius:22px; overflow:hidden; border:1px solid ${T.line}; box-shadow:0 40px 80px -50px rgba(0,0,0,.4); }
+.mj-price-left { background:${T.coral}; color:#fff; padding:36px 30px; display:flex; flex-direction:column; }
+.mj-price-kicker { font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; opacity:.9; }
+.mj-price-plan { font:800 1.6rem/1.1 'Playfair Display',serif; margin-top:8px; }
+.mj-price-amt { font:800 3.6rem/1 'Playfair Display',serif; margin-top:auto; }
+.mj-price-old { font:600 1rem/1 'Space Grotesk',sans-serif; text-decoration:line-through; opacity:.75; margin-top:4px; }
+.mj-price-terms { font:700 .66rem/1.3 'Space Grotesk',sans-serif; letter-spacing:.08em; opacity:.9; margin-top:12px; text-transform:uppercase; }
+.mj-price-seats { align-self:flex-start; margin-top:20px; padding:8px 14px; border-radius:50px; background:rgba(0,0,0,.18); font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; }
+.mj-price-right { background:${T.card}; padding:36px 32px; }
+.mj-inc-lbl { font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.muted}; }
+.mj-inc-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 20px; margin:20px 0 8px; }
+.mj-inc-item { display:flex; align-items:flex-start; gap:8px; font:500 .9rem/1.4 'DM Sans',sans-serif; color:${T.ink}; }
+.mj-inc-item svg { flex-shrink:0; margin-top:2px; }
+.mj-price-foot { display:flex; justify-content:space-between; margin-top:16px; font:700 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.muted}; }
+
+/* faq */
+.mj-faq-h { margin-bottom:40px; }
+.mj-faqs { border-top:1px solid ${T.lineDk}; }
+.mj-faq { border-bottom:1px solid ${T.lineDk}; }
+.mj-faq-q { display:flex; align-items:center; gap:20px; width:100%; padding:24px 4px; background:none; border:none; cursor:pointer; text-align:left; }
+.mj-faq-n { font:700 .8rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
+.mj-faq-qt { flex:1; font:700 clamp(1.05rem,2vw,1.4rem)/1.3 'Playfair Display',serif; color:${T.ink}; }
+.mj-faq-ic { display:grid; place-items:center; width:34px; height:34px; border:1px solid ${T.lineDk}; border-radius:50%; color:${T.ink}; transition:.2s; flex-shrink:0; }
+.mj-faq-open .mj-faq-ic { background:${T.coral}; border-color:${T.coral}; color:#fff; transform:rotate(45deg); }
+.mj-faq-a { overflow:hidden; }
+.mj-faq-a p { font:400 1rem/1.7 'DM Sans',sans-serif; color:${T.body}; padding:0 54px 26px; max-width:760px; margin:0; }
+
+/* talk */
+.mj-talk-grid { display:grid; grid-template-columns:.85fr 1.15fr; gap:48px; align-items:center; }
+.mj-reach { display:flex; flex-direction:column; gap:8px; margin-top:30px; font:700 .74rem/1.4 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.muted}; }
+.mj-form { background:${T.card}; border:1px solid ${T.line}; border-radius:22px; padding:34px; box-shadow:0 30px 60px -40px rgba(0,0,0,.3); }
+.mj-form-row { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.mj-field { display:flex; flex-direction:column; gap:6px; margin-bottom:22px; }
+.mj-field span { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:${T.muted}; }
+.mj-field input, .mj-field textarea { border:none; border-bottom:1.5px solid ${T.line}; background:none; padding:8px 2px; font:500 1rem/1.4 'DM Sans',sans-serif; color:${T.ink}; outline:none; resize:vertical; transition:border-color .16s; }
+.mj-field input:focus, .mj-field textarea:focus { border-color:${T.coral}; }
+
+/* responsive */
+@media (max-width:940px) {
+  .mj-hero-grid, .mj-parent-grid, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-tracker-body, .mj-weekly-body { grid-template-columns:1fr; }
+  .mj-hero-visual { order:-1; }
+  .mj-sec-head, .mj-dark-head { flex-direction:column; align-items:flex-start; }
+  .mj-prog-grid { grid-template-columns:1fr 1fr; } .mj-navy-card { grid-row:auto; grid-column:span 2; }
+  .mj-chats { grid-template-columns:1fr 1fr; }
+  .mj-proof-masonry { columns:1; } .mj-proof-head { position:static; }
+  .mj-tracker-img { border-right:none; border-bottom:1px solid ${T.navyLine}; min-height:180px; }
+}
+@media (max-width:560px) {
+  .mj-stat-row { grid-template-columns:1fr 1fr; } .mj-stat { border-left:none; padding-left:0; }
+  .mj-prog-grid, .mj-chats, .mj-form-row, .mj-inc-grid { grid-template-columns:1fr; } .mj-navy-card { grid-column:auto; }
+  .mj-check-right { align-self:stretch; }
+  .mj-badge-jump { font-size:.95rem; } .mj-watermark { font-size:64vw; }
+}
+`;
