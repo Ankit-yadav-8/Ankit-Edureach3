@@ -431,7 +431,12 @@ const CSS = `
 /* ── workspace: sticky filter sidebar + card grid ── */
 .jaa-workspace { display:grid; grid-template-columns:300px 1fr; gap:24px; align-items:start; }
 .jaa-sidebar { position:sticky; top:114px; display:flex; flex-direction:column; gap:16px; }
-.jaa-main { min-width:0; }
+.jaa-main { min-width:0; max-height:calc(100vh - 128px); overflow-y:auto; overflow-x:hidden; padding:4px 10px 4px 4px; margin:-4px -6px -4px -4px; }
+.jaa-main::-webkit-scrollbar { width:10px; }
+.jaa-main::-webkit-scrollbar-track { background:transparent; }
+.jaa-main::-webkit-scrollbar-thumb { background:${T.border}; border-radius:10px; border:2px solid transparent; background-clip:content-box; }
+.jaa-main::-webkit-scrollbar-thumb:hover { background:${T.amber}; background-clip:content-box; }
+.jaa-main { scrollbar-width:thin; scrollbar-color:${T.border} transparent; }
 
 .jaa-side-card { background:${T.surface}; border:1px solid ${T.border}; border-radius:20px; padding:20px; box-shadow:0 18px 48px -32px rgba(26,26,46,.4); display:flex; flex-direction:column; gap:16px; }
 .jaa-side-head { display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
@@ -443,7 +448,7 @@ const CSS = `
 .jaa-howto-ic { width:30px; height:30px; border-radius:9px; display:grid; place-items:center; background:${T.amberSoft}; color:${T.amberDk}; flex-shrink:0; }
 .jaa-howto-head h3 { font:800 .98rem/1.2 'Space Grotesk',sans-serif; color:${T.ink}; margin:0; }
 .jaa-howto-steps { margin:0; padding:0; list-style:none; counter-reset:step; display:flex; flex-direction:column; gap:12px; }
-.jaa-howto-steps li { position:relative; padding-left:30px; font:400 .82rem/1.5 sans-serif; color:${T.body}; counter-increment:step; }
+.jaa-howto-steps li { position:relative; padding-left:30px; font:400 .88rem/1.55 sans-serif; color:${T.body}; counter-increment:step; }
 .jaa-howto-steps li::before { content:counter(step); position:absolute; left:0; top:1px; width:20px; height:20px; border-radius:50%; background:${T.amber}; color:#fff; font:800 .68rem/20px 'Space Grotesk',sans-serif; text-align:center; }
 .jaa-howto-steps strong { color:${T.ink}; font-weight:700; }
 .jaa-howto-tip { display:flex; align-items:flex-start; gap:7px; margin-top:16px; padding:10px 12px; border-radius:11px; background:${T.amberSoft}; color:${T.amberDk}; font:600 .76rem/1.4 sans-serif; }
@@ -453,19 +458,19 @@ const CSS = `
 /* ── segmented pill filters (subject / class / difficulty / trend) ── */
 .jaa-filters { display:flex; flex-direction:column; gap:15px; }
 .jaa-seg-wrap { display:flex; flex-direction:column; gap:7px; }
-.jaa-seg-lbl { font:800 .66rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:${T.muted}; }
+.jaa-seg-lbl { font:800 .7rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:${T.muted}; }
 .jaa-seg { display:flex; flex-wrap:wrap; width:fit-content; max-width:100%; gap:4px; padding:4px; background:${T.surface2}; border:1px solid ${T.border}; border-radius:13px; }
-.jaa-seg-btn { display:inline-flex; align-items:center; gap:7px; white-space:nowrap; cursor:pointer; border:none; background:transparent; color:${T.body}; padding:9px 15px; border-radius:9px; font:700 .82rem/1 'Space Grotesk',sans-serif; transition:background .16s, color .16s, box-shadow .16s; }
+.jaa-seg-btn { display:inline-flex; align-items:center; gap:7px; white-space:nowrap; cursor:pointer; border:none; background:transparent; color:${T.body}; padding:9px 15px; border-radius:9px; font:700 .87rem/1 'Space Grotesk',sans-serif; transition:background .16s, color .16s, box-shadow .16s; }
 .jaa-seg-btn:hover { color:${T.amberDk}; }
 .jaa-seg-btn.on { background:${T.surface}; color:${T.ink}; box-shadow:0 2px 9px -3px rgba(26,26,46,.28), inset 0 -2px 0 var(--on, ${T.amber}); }
 .jaa-seg-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 
 .jaa-search { display:flex; align-items:center; gap:9px; width:100%; background:${T.surface}; border:1px solid ${T.border}; border-radius:11px; padding:12px 15px; }
 .jaa-search:focus-within { border-color:${T.amber}; box-shadow:0 0 0 3px ${T.amberSoft}; }
-.jaa-search input { flex:1; border:none; outline:none; background:none; font:500 .92rem/1 inherit; color:${T.ink}; min-width:0; }
+.jaa-search input { flex:1; border:none; outline:none; background:none; font:500 .96rem/1 inherit; color:${T.ink}; min-width:0; }
 .jaa-search button { display:grid; place-items:center; color:${T.muted}; background:none; border:none; cursor:pointer; }
 .jaa-searchrow { display:flex; flex-wrap:wrap; align-items:center; gap:14px; }
-.jaa-count { font:500 .88rem/1 inherit; color:${T.muted}; margin:0; }
+.jaa-count { font:500 .94rem/1 inherit; color:${T.muted}; margin:0; }
 .jaa-count strong { color:${T.amberDk}; }
 .jaa-reset { cursor:pointer; border:1px solid ${T.border}; background:${T.surface}; color:${T.body}; padding:9px 15px; border-radius:50px; font:700 .8rem/1 'Space Grotesk',sans-serif; }
 .jaa-reset:hover { border-color:${T.error}; color:${T.error}; }
@@ -477,24 +482,24 @@ const CSS = `
 .jaa-card:hover { transform:translateY(-3px); box-shadow:0 18px 38px -20px rgba(26,26,46,.3); }
 .jaa-card-top { display:flex; align-items:flex-start; gap:11px; }
 .jaa-ring { position:relative; display:grid; place-items:center; flex-shrink:0; }
-.jaa-ring-lbl { position:absolute; font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:-.3px; color:${T.ink}; }
+.jaa-ring-lbl { position:absolute; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:-.3px; color:${T.ink}; }
 .jaa-card-head { flex:1; min-width:0; }
-.jaa-cat { display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:50px; background:${T.surface2}; border:1px solid ${T.borderLight}; color:${T.body}; font:700 9px/1 'Space Grotesk',sans-serif; letter-spacing:.07em; text-transform:uppercase; }
-.jaa-chap { font:700 .92rem/1.25 'Space Grotesk',sans-serif; color:${T.ink}; letter-spacing:-.2px; margin:7px 0 0; }
-.jaa-prio { flex-shrink:0; padding:4px 8px; border:1.2px dashed currentColor; border-radius:7px; font:700 8.5px/1 'Space Grotesk',sans-serif; letter-spacing:.06em; }
+.jaa-cat { display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:50px; background:${T.surface2}; border:1px solid ${T.borderLight}; color:${T.body}; font:700 10px/1 'Space Grotesk',sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+.jaa-chap { font:700 1.02rem/1.25 'Space Grotesk',sans-serif; color:${T.ink}; letter-spacing:-.2px; margin:7px 0 0; }
+.jaa-prio { flex-shrink:0; padding:4px 8px; border:1.2px dashed currentColor; border-radius:7px; font:700 9.5px/1 'Space Grotesk',sans-serif; letter-spacing:.06em; }
 .jaa-meta { display:flex; flex-wrap:wrap; gap:12px 20px; margin:13px 0 0; }
 .jaa-metric { display:flex; flex-direction:column; gap:5px; }
-.jaa-metric-cap { font:700 .58rem/1 'Space Grotesk',sans-serif; text-transform:uppercase; letter-spacing:.06em; color:${T.muted}; }
-.jaa-metric-val { font:700 .82rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
-.jaa-diff { align-self:flex-start; padding:3px 8px; border-radius:6px; font:700 .64rem/1.3 inherit; }
-.jaa-focus { font:400 .74rem/1.5 sans-serif; color:${T.body}; margin:12px 0 0; }
-.jaa-toggle { display:inline-flex; align-items:center; gap:6px; margin-top:13px; cursor:pointer; padding:5px 10px; border:1.1px solid ${T.ink}; border-radius:7px; background:transparent; color:${T.ink}; font:700 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+.jaa-metric-cap { font:700 .64rem/1 'Space Grotesk',sans-serif; text-transform:uppercase; letter-spacing:.06em; color:${T.muted}; }
+.jaa-metric-val { font:700 .92rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
+.jaa-diff { align-self:flex-start; padding:4px 9px; border-radius:6px; font:700 .74rem/1.3 inherit; }
+.jaa-focus { font:400 .84rem/1.55 sans-serif; color:${T.body}; margin:12px 0 0; }
+.jaa-toggle { display:inline-flex; align-items:center; gap:6px; margin-top:13px; cursor:pointer; padding:6px 11px; border:1.1px solid ${T.ink}; border-radius:7px; background:transparent; color:${T.ink}; font:700 .66rem/1 'Space Grotesk',sans-serif; letter-spacing:.07em; text-transform:uppercase; }
 .jaa-chev { transition:transform .2s; } .jaa-chev.open { transform:rotate(180deg); }
 .jaa-break { overflow:hidden; }
 .jaa-break-inner { margin-top:8px; padding-top:9px; border-top:1px dashed ${T.border}; display:flex; flex-direction:column; gap:2px; }
 .jaa-brk-row { display:flex; align-items:center; gap:8px; padding:5px 0; }
 .jaa-brk-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
-.jaa-brk-name { font:500 .72rem/1.4 sans-serif; color:${T.body}; }
+.jaa-brk-name { font:500 .8rem/1.45 sans-serif; color:${T.body}; }
 
 .jaa-empty { text-align:center; padding:60px 0; }
 .jaa-empty p { font:700 1.05rem/1 'Space Grotesk',sans-serif; color:${T.body}; margin-bottom:16px; }
@@ -546,6 +551,7 @@ const CSS = `
   /* workspace collapses: filters/how-to stack above the cards */
   .jaa-workspace { grid-template-columns:1fr; gap:20px; }
   .jaa-sidebar { position:static; }
+  .jaa-main { max-height:none; overflow:visible; padding:0; margin:0; }
   .jaa-sum-grid { grid-template-columns:repeat(2,1fr); }
   .jaa-mark-grid { grid-template-columns:repeat(2,1fr); }
   .jaa-dir { padding-top:64px; }
