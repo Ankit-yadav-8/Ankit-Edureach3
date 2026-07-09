@@ -123,9 +123,7 @@ function Method({ cfg }) {
     <section id="method" className="mj-section mj-method">
       <div className="mj-wrap">
         <div className="mj-dark-head">
-          <div>
-            <Label>§ 02 · METHOD</Label>
-            <h2 className="mj-display mj-display-lg">A calm, connected system —<br /><em>Day 1 to Rank Day.</em></h2>
+          <div>            <h2 className="mj-display mj-display-lg">A calm, connected system —<br /><em>Day 1 to Rank Day.</em></h2>
           </div>
           <span className="mj-scrollhint">6 MOVING PARTS · ONE RHYTHM</span>
         </div>
@@ -184,9 +182,7 @@ function Progress({ cfg }) {
     <section className="mj-section">
       <div className="mj-wrap">
         <Reveal className="mj-sec-head">
-          <div>
-            <Label>§ 04 · PROGRESS</Label>
-            <h2 className="mj-display mj-display-lg">Numbers that <em>move.</em></h2>
+          <div>            <h2 className="mj-display mj-display-lg">Numbers that <em>move.</em></h2>
           </div>
           <p className="mj-sec-sub">The dashboard shows the week — not the semester. Small wins, stacked visibly.</p>
         </Reveal>
@@ -295,9 +291,7 @@ function LiveTracking({ cfg }) {
     <section className="mj-section">
       <div className="mj-wrap">
         <Reveal className="mj-sec-head">
-          <div>
-            <Label>§ 05 · LIVE TRACKING</Label>
-            <h2 className="mj-display mj-display-lg">A dashboard that feels<br /><em>alive — because it is.</em></h2>
+          <div>            <h2 className="mj-display mj-display-lg">A dashboard that feels<br /><em>alive — because it is.</em></h2>
           </div>
           <span className="mj-live-chip"><span className="mj-dot mj-dot-live" /> SESSION · LIVE</span>
         </Reveal>
@@ -332,7 +326,7 @@ function LiveTracking({ cfg }) {
                       <div key={i} className="mj-dash-barcol">
                         <span className="mj-dash-barval">{h}h</span>
                         <div className="mj-dash-bartrack">
-                          <motion.div className="mj-dash-bar"
+                          <motion.div className="mj-dash-barfill"
                             initial={{ height: 0 }} whileInView={{ height: `${(h / wkMax) * 100}%` }}
                             viewport={{ once: true, margin: "-40px" }}
                             transition={{ duration: 0.7, delay: 0.05 * i, ease: [0.22, 1, 0.36, 1] }} />
@@ -417,9 +411,7 @@ function ForParents({ cfg }) {
   return (
     <section className="mj-section">
       <div className="mj-wrap mj-parent-grid">
-        <Reveal>
-          <Label>§ 06 · FOR PARENTS</Label>
-          <h2 className="mj-display mj-display-lg">A window into <em>the week.</em></h2>
+        <Reveal>          <h2 className="mj-display mj-display-lg">A window into <em>the week.</em></h2>
           <p className="mj-body">Every Sunday, a printable one-pager lands in your inbox. Not marketing.
             The exact hours, tests, ranks and mentor notes your child heard that week.</p>
           <button className="mj-btn-outline" onClick={() => window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! Can I see a sample parent weekly report?")}`, "_blank")}>
@@ -618,9 +610,7 @@ function WhatsApp() {
     <section className="mj-section">
       <div className="mj-wrap">
         <Reveal className="mj-sec-head">
-          <div>
-            <Label>§ 07 · REAL THREADS</Label>
-            <h2 className="mj-display mj-display-lg">What actually happens<br />in <em>your WhatsApp.</em></h2>
+          <div>            <h2 className="mj-display mj-display-lg">What actually happens<br />in <em>your WhatsApp.</em></h2>
           </div>
           <p className="mj-sec-sub">Unedited. Unscripted. Late-night doubt, Sunday plan, Wednesday pep talk.</p>
         </Reveal>
@@ -639,9 +629,7 @@ function Proof({ cfg }) {
   return (
     <section className="mj-section">
       <div className="mj-wrap mj-proof-grid">
-        <div className="mj-proof-head">
-          <Label>§ 08 · ALUMNI</Label>
-          <h2 className="mj-display mj-display-lg">Chose to be<br /><em>mentored,</em><br />not just taught.</h2>
+        <div className="mj-proof-head">          <h2 className="mj-display mj-display-lg">Chose to be<br /><em>mentored,</em><br />not just taught.</h2>
           <div className="mj-stars">
             {[0, 1, 2, 3, 4].map((i) => <Star key={i} size={18} fill={T.coral} color={T.coral} />)}
             <span>4.9 / 5 · 1,240 REVIEWS</span>
@@ -733,7 +721,7 @@ function Faqs({ cfg }) {
   return (
     <section className="mj-section">
       <div className="mj-wrap">
-        <Reveal><Label>§ 10 · QUESTIONS</Label>
+        <Reveal>
           <h2 className="mj-display mj-display-lg mj-faq-h">Everything you're<br /><em>wondering.</em></h2>
         </Reveal>
         <div className="mj-faqs">
@@ -771,9 +759,7 @@ function TalkToUs({ exam }) {
   return (
     <section className="mj-section mj-talk">
       <div className="mj-wrap mj-talk-grid">
-        <Reveal>
-          <Label>§ 11 · TALK TO US</Label>
-          <h2 className="mj-display mj-display-lg">Not sure?<br /><em>Let&rsquo;s talk.</em></h2>
+        <Reveal>          <h2 className="mj-display mj-display-lg">Not sure?<br /><em>Let&rsquo;s talk.</em></h2>
           <p className="mj-body">A 15-minute call, no pressure. We&rsquo;ll listen to where you are,
             share what the year could look like, and let you decide.</p>
           <div className="mj-reach">
@@ -958,10 +944,10 @@ const CSS = `
 
 /* live tracking — light coded dashboard */
 .mj-dash { border-radius:22px; overflow:hidden; border:1px solid ${T.lineDk}; background:${T.card}; box-shadow:0 40px 80px -50px rgba(0,0,0,.4); }
-.mj-dash-bar { display:flex; align-items:center; gap:14px; padding:13px 20px; background:${T.paper2}; border-bottom:1px solid ${T.line}; }
-.mj-traffic { display:flex; gap:6px; } .mj-traffic i { width:11px; height:11px; border-radius:50%; background:#d9d2c4; } .mj-traffic i:first-child{background:#ff5f57;} .mj-traffic i:nth-child(2){background:#febc2e;} .mj-traffic i:nth-child(3){background:#28c840;}
-.mj-dash-title { font:700 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
-.mj-dash-stream { margin-left:auto; display:inline-flex; align-items:center; gap:6px; font:700 .68rem/1 'Space Grotesk',sans-serif; color:#16a34a; }
+.mj-dash-bar { display:flex; align-items:center; gap:14px; padding:13px 20px; background:${T.ink}; }
+.mj-traffic { display:flex; gap:6px; } .mj-traffic i { width:11px; height:11px; border-radius:50%; background:#3a3f4d; } .mj-traffic i:first-child{background:#ff5f57;} .mj-traffic i:nth-child(2){background:#febc2e;} .mj-traffic i:nth-child(3){background:#28c840;}
+.mj-dash-title { font:700 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:rgba(255,255,255,.72); }
+.mj-dash-stream { margin-left:auto; display:inline-flex; align-items:center; gap:6px; font:700 .68rem/1 'Space Grotesk',sans-serif; color:#4ade80; }
 .mj-dash-body { display:grid; grid-template-columns:1.55fr 1fr; }
 .mj-dash-main { padding:26px 28px; border-right:1px solid ${T.line}; }
 .mj-dash-idrow { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:22px; }
@@ -981,7 +967,7 @@ const CSS = `
 .mj-dash-barcol { flex:1; display:flex; flex-direction:column; align-items:center; height:100%; }
 .mj-dash-barval { font:800 .64rem/1 'Space Grotesk',sans-serif; color:${T.body}; margin-bottom:6px; }
 .mj-dash-bartrack { flex:1; width:100%; display:flex; align-items:flex-end; border-radius:7px; background:${T.paper2}; }
-.mj-dash-bar { width:100%; min-height:6px; border-radius:7px; background:linear-gradient(180deg, #FF8A47, #F1531F); box-shadow:0 6px 14px -6px rgba(255,105,61,.7); }
+.mj-dash-barfill { width:100%; min-height:6px; border-radius:7px; background:linear-gradient(180deg, #FF8A47, #F1531F); box-shadow:0 6px 14px -6px rgba(255,105,61,.7); }
 .mj-dash-barday { font:700 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; margin-top:8px; }
 .mj-dash-ringpanel { display:flex; flex-direction:column; }
 .mj-dring { position:relative; flex:1; display:grid; place-items:center; }
