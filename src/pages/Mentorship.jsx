@@ -47,12 +47,6 @@ function Hero({ cfg, plan, year, exam, openEnrol, scrollTo }) {
     <section className="mj-hero">
       <span className="mj-watermark" aria-hidden="true">{year}</span>
       <div className="mj-wrap mj-hero-inner">
-        <div className="mj-hero-meta">
-          <span className="mj-pill"><span className="mj-dot" /> COHORT · BATCH 07</span>
-          <span className="mj-issue">VOL. 27 / ISSUE 01 · COLLEGEPARICHAY MENTORSHIP JOURNAL</span>
-          <span className="mj-pill mj-pill-warn">{SEATS_LEFT} SEATS · CLOSING SOON</span>
-        </div>
-
         <div className="mj-hero-grid">
           <Reveal className="mj-hero-left">
             <h1 className="mj-hero-h1">
@@ -783,7 +777,7 @@ const CSS = `
 .mj-dot { width:8px; height:8px; border-radius:50%; background:${T.coral}; flex-shrink:0; }
 .mj-dot-live { background:#22c55e; box-shadow:0 0 0 0 rgba(34,197,94,.5); animation:mjpulse 1.8s infinite; }
 @keyframes mjpulse { 0%{box-shadow:0 0 0 0 rgba(34,197,94,.5);} 100%{box-shadow:0 0 0 8px rgba(34,197,94,0);} }
-.mj-hero-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; margin-top:clamp(40px,7vw,90px); }
+.mj-hero-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; margin-top:clamp(16px,3vw,40px); }
 .mj-hero-h1 { position:relative; font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(1.9rem,3.5vw,2.95rem); line-height:1.24; letter-spacing:-.4px; color:${T.ink}; margin:0; text-shadow:0 1px 0 ${T.paper}; }
 .mj-hero-cta { display:flex; align-items:center; gap:22px; flex-wrap:wrap; margin-top:34px; }
 .mj-btn-dark { display:inline-flex; align-items:center; gap:9px; padding:15px 26px; border:none; border-radius:12px; background:${T.ink}; color:#fff; font:700 .98rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:transform .16s, background .16s; }
