@@ -9,7 +9,7 @@ import { useParams, Navigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Plus, Check, Star, Send, Radio,
-  Video, Phone, Paperclip, Camera, Mic, Smile, GraduationCap,
+  Video, Phone, Paperclip, Camera, Mic, Smile, GraduationCap, Sparkles,
 } from "lucide-react";
 import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT, MENTOR_LINKS } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
@@ -409,19 +409,24 @@ function ForParents({ cfg }) {
         <Reveal delay={0.1} className="mj-weekly">
           <div className="mj-weekly-top">
             <span className="mj-weekly-name">The Weekly</span>
-            <span className="mj-weekly-vol">{p.week ? p.week.toUpperCase() : "VOL 14"} · PARENT REPORT</span>
+            <span className="mj-weekly-vol">{p.issue || "VOL 14 · SUN 12 NOV"}</span>
           </div>
           <div className="mj-weekly-body">
             <div className="mj-weekly-featured">
               <span className="mj-featured-lbl">FEATURED</span>
-              <p className="mj-featured-quote">{p.remark || "Consistency jumped this week — next we focus on the weakest chapter."}</p>
-              <div className="mj-weekly-photo"><img src="/images/home_mentorship_overview.png" alt="Weekly booklet" loading="lazy" /></div>
+              <h3 className="mj-featured-quote">{p.headline || p.remark || "Aarav closed his weakest chapter — Rotational Motion."}</h3>
+              {p.body && <p className="mj-featured-body">{p.body}</p>}
+              <div className="mj-weekly-photo">
+                <span className="mj-photo-ic"><Sparkles size={15} /></span>
+                <span className="mj-photo-t">BOOKLET PHOTO</span>
+                <span className="mj-photo-s">DROP IMAGE</span>
+              </div>
             </div>
             <div className="mj-weekly-glance">
               <span className="mj-glance-lbl">AT A GLANCE</span>
               {(p.rows || []).slice(0, 5).map((r, i) => (
                 <div key={i} className="mj-glance-row">
-                  <span>{r.l}</span><strong style={{ color: r.c }}>{r.v}</strong>
+                  <span>{r.l}</span><strong>{r.v}</strong>
                 </div>
               ))}
             </div>
@@ -982,20 +987,25 @@ const CSS = `
 
 /* for parents */
 .mj-parent-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:center; }
-.mj-weekly { position:relative; background:#FBF8F2; border:1px solid ${T.lineDk}; border-radius:8px; padding:32px 34px; box-shadow:18px 18px 0 -2px ${T.coral}, 0 34px 60px -34px rgba(0,0,0,.35); transition:transform .3s, box-shadow .3s; }
-.mj-weekly:hover { transform:translate(-3px,-3px); box-shadow:24px 24px 0 -2px ${T.coral}, 0 40px 70px -38px rgba(0,0,0,.4); }
-.mj-weekly-top { display:flex; align-items:baseline; justify-content:space-between; gap:14px; border-bottom:2.5px solid ${T.ink}; padding-bottom:12px; }
-.mj-weekly-name { font:800 1.9rem/1 'Playfair Display',serif; font-style:italic; color:${T.ink}; letter-spacing:-.5px; }
-.mj-weekly-vol { font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.muted}; text-align:right; }
-.mj-weekly-body { display:grid; grid-template-columns:1.3fr 1fr; gap:26px; margin-top:22px; }
-.mj-weekly-featured { border-right:1px solid ${T.line}; padding-right:24px; }
-.mj-featured-lbl, .mj-glance-lbl { font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.coral}; }
-.mj-featured-quote { font:700 1.35rem/1.22 'Playfair Display',serif; color:${T.ink}; margin:11px 0 16px; letter-spacing:-.3px; }
-.mj-weekly-photo { border-radius:8px; overflow:hidden; border:1px solid ${T.line}; }
-.mj-weekly-photo img { width:100%; display:block; }
-.mj-glance-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid ${T.line}; font:500 .84rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
-.mj-glance-row strong { font:800 .9rem/1 'Space Grotesk',sans-serif; }
-.mj-glance-lbl { display:block; margin-bottom:6px; }
+.mj-weekly { position:relative; background:#FBF8F2; border:1px solid ${T.lineDk}; border-radius:10px; padding:34px 36px; box-shadow:20px 22px 0 -1px ${T.ink}, 0 34px 60px -34px rgba(0,0,0,.5); transition:transform .3s, box-shadow .3s; }
+.mj-weekly:hover { transform:translate(-3px,-3px); box-shadow:24px 26px 0 -1px ${T.ink}, 0 40px 70px -38px rgba(0,0,0,.55); }
+.mj-weekly-top { display:flex; align-items:baseline; justify-content:space-between; gap:14px; border-bottom:1.5px solid ${T.ink}; padding-bottom:14px; }
+.mj-weekly-name { font:600 1.9rem/1 'Playfair Display',serif; font-style:italic; color:${T.ink}; letter-spacing:-.5px; }
+.mj-weekly-vol { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.18em; color:${T.body}; text-align:right; white-space:nowrap; }
+.mj-weekly-body { display:grid; grid-template-columns:1.32fr 1fr; gap:28px; margin-top:24px; }
+.mj-weekly-featured { border-right:1px solid ${T.line}; padding-right:26px; }
+.mj-featured-lbl { font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.18em; color:${T.coral}; }
+.mj-glance-lbl { display:block; margin-bottom:12px; font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.18em; color:${T.ink}; }
+.mj-featured-quote { font:700 1.6rem/1.16 'Playfair Display',serif; color:${T.ink}; margin:13px 0 14px; letter-spacing:-.4px; }
+.mj-featured-body { font:400 .92rem/1.6 'DM Sans',sans-serif; color:#5c6773; margin:0 0 18px; }
+.mj-weekly-photo { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; min-height:180px; border-radius:10px; border:1px solid ${T.lineDk};
+  background:repeating-linear-gradient(45deg, transparent 0 9px, rgba(27,27,36,.09) 9px 10px), ${T.paper2}; }
+.mj-photo-ic { display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:${T.card}; color:${T.coral}; box-shadow:0 4px 10px -4px rgba(0,0,0,.25); margin-bottom:4px; }
+.mj-photo-t { font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.body}; }
+.mj-photo-s { font:700 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; }
+.mj-glance-row { display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:12px 0; border-bottom:1px solid ${T.line}; font:500 .82rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
+.mj-glance-row span { flex-shrink:0; }
+.mj-glance-row strong { font:600 .98rem/1.25 'Playfair Display',serif; color:${T.ink}; text-align:right; }
 .mj-weekly-foot { display:flex; justify-content:space-between; margin-top:20px; padding-top:14px; border-top:1px solid ${T.line}; font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
 
 /* whatsapp — animated phones */
