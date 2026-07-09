@@ -122,8 +122,9 @@ function Qualifier({ cfg }) {
   );
 }
 
-/* ═══════════════ § 02 · METHOD (dark, horizontal steps) ═══════════════ */
+/* ═══════════════ § 02 · METHOD (dark, vertical timeline) ═══════════════ */
 function Method({ cfg }) {
+  const steps = cfg.howWeGuide || [];
   return (
     <section id="method" className="mj-dark">
       <div className="mj-wrap">
@@ -132,21 +133,31 @@ function Method({ cfg }) {
             <Label dark>§ 02 · METHOD</Label>
             <h2 className="mj-display mj-display-lg mj-on-navy">A calm, connected system —<br /><em>Day 1 to Rank Day.</em></h2>
           </div>
-          <span className="mj-scrollhint">SCROLL →</span>
+          <span className="mj-scrollhint">6 MOVING PARTS · ONE RHYTHM</span>
         </div>
-      </div>
-      <div className="mj-steps">
-        {(cfg.howWeGuide || []).map((s, i) => (
-          <div key={i} className="mj-step">
-            <div className="mj-step-top">
-              <span className="mj-step-n">{String(i + 1).padStart(2, "0")}</span>
-              <span className="mj-step-tag">STEP</span>
-            </div>
-            <h3 className="mj-step-t">{s.title}</h3>
-            <p className="mj-step-d">{s.desc}</p>
-            <span className="mj-step-foot">→ {i + 1 < (cfg.howWeGuide.length) ? `CONTINUE TO ${String(i + 2).padStart(2, "0")}` : "RANK ACHIEVED"}</span>
-          </div>
-        ))}
+
+        <div className="mj-vsteps">
+          <motion.span className="mj-vsteps-rail" initial={{ scaleY: 0 }} whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, margin: "-80px" }} transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }} aria-hidden="true" />
+          {steps.map((s, i) => (
+            <motion.div key={i} className="mj-vstep"
+              initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.55, delay: 0.08 * i, ease: [0.16, 0.84, 0.32, 1] }}>
+              <div className="mj-vstep-mark">
+                <span className="mj-vstep-n">{String(i + 1).padStart(2, "0")}</span>
+              </div>
+              <div className="mj-vstep-card">
+                <div className="mj-vstep-cardtop">
+                  <span className="mj-vstep-tag">STEP {String(i + 1).padStart(2, "0")}</span>
+                  <span className="mj-vstep-foot">{i + 1 < steps.length ? `→ ${String(i + 2).padStart(2, "0")}` : "RANK ACHIEVED ★"}</span>
+                </div>
+                <h3 className="mj-vstep-t">{s.title}</h3>
+                <p className="mj-vstep-d">{s.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -218,10 +229,27 @@ function Progress({ cfg }) {
   );
 }
 
-/* ═══════════════ § 05 · LIVE TRACKING ═══════════════ */
+/* ═══════════════ § 05 · LIVE TRACKING (coded dashboard) ═══════════════ */
+const DASH_FEED = [
+  { time: "09:14", tag: "PHY",  c: "#FF693D", t: "Solved 12 Rotational Motion DPPs" },
+  { time: "10:02", tag: "CHM",  c: "#6366f1", t: "Watched Aldehydes revision · 28 min" },
+  { time: "11:30", tag: "MOCK", c: "#22c55e", t: "Mock test #14 submitted · 218/300" },
+  { time: "12:05", tag: "MENT", c: "#0ea5a4", t: "Mentor call scheduled · 6 PM" },
+  { time: "13:45", tag: "MTH",  c: "#eab308", t: "3D Geometry — 20/25 attempted" },
+];
 function LiveTracking({ cfg }) {
   const m = cfg.metrics || {};
-  const tiles = m.liveTiles || [];
+  const wk = m.weekHours || [];
+  const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  const wkMax = Math.max(...wk, 1);
+  const total = wk.reduce((a, b) => a + b, 0);
+  const st = m.student || {};
+  const acc = (m.outcomes || []).find((o) => /accuracy/i.test(o.l))?.v || "86%";
+  const dashStats = [
+    { l: "HRS", v: Math.round(total) },
+    { l: "DPPS", v: 128 },
+    { l: "ACC%", v: parseInt(acc, 10) || 86 },
+  ];
   return (
     <section className="mj-section">
       <div className="mj-wrap">
@@ -233,21 +261,60 @@ function LiveTracking({ cfg }) {
           <span className="mj-live-chip"><span className="mj-dot mj-dot-live" /> SESSION · LIVE</span>
         </Reveal>
 
-        <Reveal delay={0.08} className="mj-tracker">
-          <div className="mj-tracker-bar">
+        <Reveal delay={0.08} className="mj-dash">
+          <div className="mj-dash-bar">
             <span className="mj-traffic"><i /><i /><i /></span>
-            <span className="mj-tracker-title">PARICHAY / TRACKER · {(m.student?.name || "STUDENT").toUpperCase()}</span>
-            <span className="mj-tracker-stream"><Radio size={12} /> STREAMING</span>
+            <span className="mj-dash-title">PARICHAY / TRACKER · {(st.name || "STUDENT").toUpperCase()}.SHARMA</span>
+            <span className="mj-dash-stream"><Radio size={12} /> STREAMING</span>
           </div>
-          <div className="mj-tracker-body">
-            <div className="mj-tracker-img"><img src={cfg.analyticsImage} alt="Live tracking dashboard" loading="lazy" /></div>
-            <div className="mj-tracker-tiles">
-              {tiles.map((t, i) => (
-                <div key={i} className="mj-tile">
-                  <span className="mj-tile-l">{t.l}</span>
-                  <span className="mj-tile-v" style={{ color: t.c }}>{t.v}</span>
+          <div className="mj-dash-body">
+            <div className="mj-dash-main">
+              <div className="mj-dash-idrow">
+                <div>
+                  <span className="mj-dash-kicker">STUDENT · {(st.exam || "JEE 2027").toUpperCase()}</span>
+                  <h3 className="mj-dash-name">{st.line?.split("·")[0]?.trim() || st.name || "Aarav Sharma"}</h3>
+                  <span className="mj-dash-mentor">MENTOR: {(st.mentor || "Rohan · IIT-B").toUpperCase()}</span>
                 </div>
-              ))}
+                <span className="mj-dash-active"><span className="mj-dot mj-dot-live" /> ACTIVE</span>
+              </div>
+
+              <span className="mj-dash-lbl">STUDY HOURS · THIS WEEK</span>
+              <div className="mj-dash-chart">
+                {wk.map((h, i) => (
+                  <div key={i} className="mj-dash-barcol">
+                    <span className="mj-dash-barval">{h}h</span>
+                    <div className="mj-dash-bartrack">
+                      <motion.div className="mj-dash-bar"
+                        initial={{ height: 0 }} whileInView={{ height: `${(h / wkMax) * 100}%` }}
+                        viewport={{ once: true, margin: "-40px" }}
+                        transition={{ duration: 0.7, delay: 0.05 * i, ease: [0.22, 1, 0.36, 1] }} />
+                    </div>
+                    <span className="mj-dash-barday">{days[i]}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mj-dash-stats">
+                {dashStats.map((s, i) => (
+                  <div key={i} className="mj-dash-stat">
+                    <span className="mj-dash-stat-l">{s.l}</span>
+                    <span className="mj-dash-stat-v">{s.v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mj-dash-feed">
+              <span className="mj-dash-lbl">ACTIVITY FEED</span>
+              <div className="mj-dash-feedlist">
+                {DASH_FEED.map((f, i) => (
+                  <Reveal key={i} delay={0.06 * i} className="mj-dash-feeditem">
+                    <span className="mj-dash-feedtime">{f.time}</span>
+                    <span className="mj-dash-feedtag" style={{ color: f.c, borderColor: f.c }}>{f.tag}</span>
+                    <span className="mj-dash-feedtext">{f.t}</span>
+                  </Reveal>
+                ))}
+              </div>
             </div>
           </div>
         </Reveal>
@@ -354,7 +421,7 @@ function Ticks() {
   );
 }
 
-function ChatPhone({ chat, startDelay = 300 }) {
+function ChatPhone({ chat, startDelay = 300, tilt = 0 }) {
   const { script } = chat;
   const [count, setCount] = useState(0);
   const [typing, setTyping] = useState(false);
@@ -406,7 +473,7 @@ function ChatPhone({ chat, startDelay = 300 }) {
   }, [count, typing]);
 
   return (
-    <div className="mj-phonewrap" ref={rootRef}>
+    <div className="mj-phonewrap" ref={rootRef} style={{ ["--tilt"]: `${tilt}deg` }}>
       <div className="mj-phone">
         <span className="mj-phone-island" />
         <div className="mj-phone-screen">
@@ -466,7 +533,7 @@ function WhatsApp() {
         </Reveal>
         <div className="mj-phones">
           {PHONE_CHATS.map((c, i) => (
-            <ChatPhone key={i} chat={c} startDelay={300 + i * 650} />
+            <ChatPhone key={i} chat={c} startDelay={300 + i * 650} tilt={[-3, 2.4, -2.2, 3][i] || 0} />
           ))}
         </div>
       </div>
@@ -474,35 +541,28 @@ function WhatsApp() {
   );
 }
 
-/* ═══════════════ § 08 · THE PATH ═══════════════ */
-function ThePath({ cfg }) {
-  return (
-    <section className="mj-section mj-path">
-      <div className="mj-wrap">
-        <Reveal style={{ textAlign: "center" }}>
-          <Label>§ 08 · THE PATH</Label>
-          <h2 className="mj-display mj-display-xl">From confused aspirant<br />to <em>confident ranker.</em></h2>
-        </Reveal>
-        <Reveal delay={0.1} className="mj-path-card">
-          <img src={cfg.roadmapImage} alt="Mentorship roadmap" loading="lazy" />
-          <span className="mj-path-cap">JOURNEY · INTAKE → BACKLOG → RANK PUSH</span>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════ § 09 · ALUMNI (proof) ═══════════════ */
+/* ═══════════════ § 08 · ALUMNI (proof) ═══════════════ */
 function Proof({ cfg }) {
   return (
     <section className="mj-section">
       <div className="mj-wrap mj-proof-grid">
         <div className="mj-proof-head">
-          <Label>§ 09 · ALUMNI</Label>
+          <Label>§ 08 · ALUMNI</Label>
           <h2 className="mj-display mj-display-lg">Chose to be<br /><em>mentored,</em><br />not just taught.</h2>
           <div className="mj-stars">
             {[0, 1, 2, 3, 4].map((i) => <Star key={i} size={18} fill={T.coral} color={T.coral} />)}
             <span>4.9 / 5 · 1,240 REVIEWS</span>
+          </div>
+          <p className="mj-proof-lead">These aren&rsquo;t testimonials we hunted for. They&rsquo;re messages that
+            landed on their own — the week a rank moved, a backlog cleared, a panic turned into a plan.</p>
+          <div className="mj-proof-stats">
+            <div className="mj-proof-stat"><strong>92%</strong><span>improved their rank within 8 weeks</span></div>
+            <div className="mj-proof-stat"><strong>1,240+</strong><span>aspirants mentored 1-on-1</span></div>
+            <div className="mj-proof-stat"><strong>18,400</strong><span>average ranks jumped</span></div>
+          </div>
+          <div className="mj-proof-quote">
+            <span className="mj-quote-mark">&ldquo;</span>
+            <p>The difference wasn&rsquo;t more content. It was one person who refused to let me drift.</p>
           </div>
         </div>
         <div className="mj-proof-wall" aria-label="Student testimonials">
@@ -682,7 +742,6 @@ export default function Mentorship() {
       <LiveTracking cfg={cfg} />
       <ForParents cfg={cfg} />
       <WhatsApp />
-      <ThePath cfg={cfg} />
       <Proof cfg={cfg} />
       <Pricing plan={plan} exam={exam} openEnrol={openEnrol} />
       <Faqs cfg={cfg} />
@@ -708,14 +767,14 @@ const CSS = `
 .mj-section { padding:clamp(64px,9vw,110px) 0; position:relative; }
 
 /* variant tabs */
-.mj-tabs { display:flex; gap:8px; padding-top:112px; padding-bottom:2px; flex-wrap:wrap; position:relative; z-index:2; }
+.mj-tabs { display:flex; justify-content:center; gap:8px; padding-top:112px; padding-bottom:2px; flex-wrap:wrap; position:relative; z-index:2; }
 .mj-tab { text-decoration:none; padding:8px 16px; border-radius:50px; border:1px solid ${T.line}; background:${T.card}; color:${T.body}; font:700 .82rem/1 'Space Grotesk',sans-serif; transition:.16s; }
 .mj-tab:hover { border-color:${T.coral}; color:${T.coralDk}; }
 .mj-tab-on { background:${T.ink}; border-color:${T.ink}; color:#fff; }
 
 /* hero */
 .mj-hero { position:relative; padding:22px 0 70px; overflow:hidden; border-bottom:1px solid ${T.line}; }
-.mj-watermark { position:absolute; top:-4%; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-style:italic; font-weight:900; font-size:min(42vw,600px); line-height:1; color:transparent; -webkit-text-stroke:1.5px ${T.lineDk}; opacity:.5; pointer-events:none; user-select:none; z-index:0; }
+.mj-watermark { position:absolute; top:-4%; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-style:italic; font-weight:900; font-size:min(42vw,600px); line-height:1; color:transparent; -webkit-text-stroke:1.5px ${T.lineDk}; opacity:.28; pointer-events:none; user-select:none; z-index:0; }
 .mj-hero-inner { position:relative; z-index:1; }
 .mj-hero-meta { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
 .mj-pill { display:inline-flex; align-items:center; gap:8px; padding:7px 14px; border:1px solid ${T.lineDk}; border-radius:50px; background:${T.card}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.body}; }
@@ -725,7 +784,7 @@ const CSS = `
 .mj-dot-live { background:#22c55e; box-shadow:0 0 0 0 rgba(34,197,94,.5); animation:mjpulse 1.8s infinite; }
 @keyframes mjpulse { 0%{box-shadow:0 0 0 0 rgba(34,197,94,.5);} 100%{box-shadow:0 0 0 8px rgba(34,197,94,0);} }
 .mj-hero-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; margin-top:clamp(40px,7vw,90px); }
-.mj-hero-h1 { font-family:'Playfair Display',serif; font-weight:700; font-size:clamp(1.7rem,3vw,2.5rem); line-height:1.28; letter-spacing:-.3px; color:${T.ink}; margin:0; }
+.mj-hero-h1 { position:relative; font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(1.9rem,3.5vw,2.95rem); line-height:1.24; letter-spacing:-.4px; color:${T.ink}; margin:0; text-shadow:0 1px 0 ${T.paper}; }
 .mj-hero-cta { display:flex; align-items:center; gap:22px; flex-wrap:wrap; margin-top:34px; }
 .mj-btn-dark { display:inline-flex; align-items:center; gap:9px; padding:15px 26px; border:none; border-radius:12px; background:${T.ink}; color:#fff; font:700 .98rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:transform .16s, background .16s; }
 .mj-btn-dark:hover { background:#000; transform:translateY(-2px); }
@@ -760,19 +819,25 @@ const CSS = `
 .mj-check-t { flex:1; font:600 1rem/1.4 'DM Sans',sans-serif; color:${T.ink}; }
 .mj-check-n { font:800 .8rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
 
-/* dark method */
-.mj-dark { background:${T.navy}; color:${T.onNavy}; padding:clamp(70px,9vw,120px) 0; position:relative; }
-.mj-dark-head { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:44px; }
+/* dark method — vertical timeline */
+.mj-dark { background:${T.navy}; color:${T.onNavy}; padding:clamp(70px,9vw,120px) 0; position:relative; overflow:hidden; }
+.mj-dark::before { content:""; position:absolute; top:-20%; right:-10%; width:520px; height:520px; border-radius:50%; background:radial-gradient(circle, rgba(255,105,61,.16), transparent 70%); pointer-events:none; }
+.mj-dark-head { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:56px; position:relative; }
 .mj-scrollhint { font:800 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.onNavyMute}; white-space:nowrap; }
-.mj-steps { display:flex; gap:20px; overflow-x:auto; padding:4px 24px 20px; scroll-snap-type:x mandatory; max-width:1248px; margin:0 auto; }
-.mj-steps::-webkit-scrollbar { height:6px; } .mj-steps::-webkit-scrollbar-thumb { background:${T.navyLine}; border-radius:6px; }
-.mj-step { scroll-snap-align:start; flex:0 0 320px; min-height:300px; display:flex; flex-direction:column; padding:26px; border:1px solid ${T.navyLine}; border-radius:18px; background:${T.navy2}; }
-.mj-step-top { display:flex; align-items:flex-start; justify-content:space-between; }
-.mj-step-n { font:800 3.4rem/1 'Playfair Display',serif; color:${T.coral}; }
-.mj-step-tag { padding:5px 11px; border:1px solid ${T.navyLine}; border-radius:6px; font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.onNavyMute}; }
-.mj-step-t { font:700 1.35rem/1.25 'Playfair Display',serif; color:${T.onNavy}; margin:auto 0 0; }
-.mj-step-d { font:400 .92rem/1.6 'DM Sans',sans-serif; color:${T.onNavyMute}; margin:12px 0 18px; }
-.mj-step-foot { font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.coral}; padding-top:14px; border-top:1px solid ${T.navyLine}; }
+.mj-vsteps { position:relative; max-width:860px; margin:0 auto; padding-left:8px; }
+.mj-vsteps-rail { position:absolute; left:31px; top:14px; bottom:34px; width:2px; transform-origin:top; background:linear-gradient(180deg, ${T.coral}, rgba(255,105,61,.15)); }
+.mj-vstep { position:relative; display:grid; grid-template-columns:64px 1fr; gap:24px; align-items:start; margin-bottom:22px; }
+.mj-vstep-mark { position:relative; z-index:2; display:grid; place-items:center; width:64px; height:64px; border-radius:50%; background:${T.navy2}; border:1.5px solid ${T.navyLine}; box-shadow:0 0 0 6px ${T.navy}; transition:.28s; }
+.mj-vstep-n { font:800 1.5rem/1 'Playfair Display',serif; color:${T.coral}; }
+.mj-vstep-card { border:1px solid ${T.navyLine}; border-radius:18px; background:linear-gradient(160deg, ${T.navy2}, ${T.navy}); padding:22px 24px; transition:transform .28s, border-color .28s, box-shadow .28s; }
+.mj-vstep:hover .mj-vstep-card { transform:translateX(6px); border-color:rgba(255,105,61,.5); box-shadow:0 20px 44px -30px rgba(0,0,0,.7); }
+.mj-vstep:hover .mj-vstep-mark { border-color:${T.coral}; background:${T.coral}; }
+.mj-vstep:hover .mj-vstep-n { color:#fff; }
+.mj-vstep-cardtop { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.mj-vstep-tag { padding:4px 10px; border:1px solid ${T.navyLine}; border-radius:6px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.onNavyMute}; }
+.mj-vstep-foot { font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.coral}; }
+.mj-vstep-t { font:700 1.3rem/1.2 'Playfair Display',serif; color:${T.onNavy}; margin:0; }
+.mj-vstep-d { font:400 .94rem/1.6 'DM Sans',sans-serif; color:${T.onNavyMute}; margin:8px 0 0; }
 
 /* section head shared */
 .mj-sec-head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:48px; flex-wrap:wrap; }
@@ -798,23 +863,42 @@ const CSS = `
 .mj-bar { width:100%; background:${T.coral}; border-radius:5px 5px 0 0; min-height:5px; }
 .mj-bar-col span { font:700 .6rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
 
-/* live tracker */
-.mj-tracker { border-radius:20px; overflow:hidden; border:1px solid ${T.navyLine}; background:${T.navy}; box-shadow:0 40px 80px -50px rgba(0,0,0,.6); }
-.mj-tracker-bar { display:flex; align-items:center; gap:14px; padding:12px 18px; border-bottom:1px solid ${T.navyLine}; }
+/* live tracking — coded dashboard */
+.mj-dash { border-radius:22px; overflow:hidden; border:1px solid #2a2f3d; background:#161922; box-shadow:0 46px 90px -50px rgba(0,0,0,.7); }
+.mj-dash-bar { display:flex; align-items:center; gap:14px; padding:13px 20px; background:#12151d; border-bottom:1px solid #262b38; }
 .mj-traffic { display:flex; gap:6px; } .mj-traffic i { width:11px; height:11px; border-radius:50%; background:#3a3f4d; } .mj-traffic i:first-child{background:#ff5f57;} .mj-traffic i:nth-child(2){background:#febc2e;} .mj-traffic i:nth-child(3){background:#28c840;}
-.mj-tracker-title { font:700 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.onNavyMute}; }
-.mj-tracker-stream { margin-left:auto; display:inline-flex; align-items:center; gap:6px; font:700 .68rem/1 'Space Grotesk',sans-serif; color:#22c55e; }
-.mj-tracker-body { display:grid; grid-template-columns:1.5fr 1fr; gap:0; }
-.mj-tracker-img { border-right:1px solid ${T.navyLine}; background:${T.navy2}; }
-.mj-tracker-img img { width:100%; height:100%; object-fit:cover; display:block; }
-.mj-tracker-tiles { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:${T.navyLine}; }
-.mj-tile { background:${T.navy}; padding:22px 20px; display:flex; flex-direction:column; gap:8px; }
-.mj-tile-l { font:700 .66rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:${T.onNavyMute}; }
-.mj-tile-v { font:800 1.7rem/1 'Playfair Display',serif; }
+.mj-dash-title { font:700 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:#9aa2b4; }
+.mj-dash-stream { margin-left:auto; display:inline-flex; align-items:center; gap:6px; font:700 .68rem/1 'Space Grotesk',sans-serif; color:#22c55e; }
+.mj-dash-body { display:grid; grid-template-columns:1.55fr 1fr; }
+.mj-dash-main { padding:26px 28px; border-right:1px solid #262b38; }
+.mj-dash-idrow { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:26px; }
+.mj-dash-kicker { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:#8b93a6; }
+.mj-dash-name { font:800 1.9rem/1.05 'Playfair Display',serif; color:#fff; margin:8px 0 6px; }
+.mj-dash-mentor { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:#8b93a6; }
+.mj-dash-active { display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:50px; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.4); font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:#4ade80; white-space:nowrap; }
+.mj-dash-lbl { display:block; font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:#8b93a6; margin-bottom:16px; }
+.mj-dash-chart { display:flex; align-items:flex-end; gap:12px; height:150px; margin-bottom:26px; }
+.mj-dash-barcol { flex:1; display:flex; flex-direction:column; align-items:center; height:100%; }
+.mj-dash-barval { font:800 .66rem/1 'Space Grotesk',sans-serif; color:#e7e2d9; margin-bottom:6px; }
+.mj-dash-bartrack { flex:1; width:100%; display:flex; align-items:flex-end; border-radius:7px; background:rgba(255,255,255,.04); }
+.mj-dash-bar { width:100%; min-height:6px; border-radius:7px; background:linear-gradient(180deg, #FF8A47, #F1531F); box-shadow:0 0 18px -2px rgba(255,105,61,.6); }
+.mj-dash-barday { font:700 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; color:#8b93a6; margin-top:8px; }
+.mj-dash-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.mj-dash-stat { padding:16px 18px; border-radius:14px; background:#1c202b; border:1px solid #2a2f3d; }
+.mj-dash-stat-l { font:700 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:#8b93a6; }
+.mj-dash-stat-v { display:block; font:800 2rem/1 'Playfair Display',serif; color:#fff; margin-top:8px; }
+.mj-dash-feed { padding:26px 24px; }
+.mj-dash-feedlist { display:flex; flex-direction:column; }
+.mj-dash-feeditem { display:grid; grid-template-columns:auto auto 1fr; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #232834; }
+.mj-dash-feeditem:last-child { border-bottom:none; }
+.mj-dash-feedtime { font:700 .7rem/1 'Space Grotesk',sans-serif; color:#8b93a6; }
+.mj-dash-feedtag { padding:3px 8px; border:1px solid; border-radius:5px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; opacity:.95; }
+.mj-dash-feedtext { font:500 .86rem/1.3 'DM Sans',sans-serif; color:#dfe3ea; }
 
 /* for parents */
 .mj-parent-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:center; }
-.mj-weekly { position:relative; background:#FBF8F2; border:1px solid ${T.lineDk}; border-radius:4px; padding:32px 34px; box-shadow:20px 22px 0 -1px ${T.ink}, 0 34px 60px -34px rgba(0,0,0,.5); }
+.mj-weekly { position:relative; background:#FBF8F2; border:1px solid ${T.lineDk}; border-radius:8px; padding:32px 34px; box-shadow:18px 18px 0 -2px ${T.coral}, 0 34px 60px -34px rgba(0,0,0,.35); transition:transform .3s, box-shadow .3s; }
+.mj-weekly:hover { transform:translate(-3px,-3px); box-shadow:24px 24px 0 -2px ${T.coral}, 0 40px 70px -38px rgba(0,0,0,.4); }
 .mj-weekly-top { display:flex; align-items:baseline; justify-content:space-between; gap:14px; border-bottom:2.5px solid ${T.ink}; padding-bottom:12px; }
 .mj-weekly-name { font:800 1.9rem/1 'Playfair Display',serif; font-style:italic; color:${T.ink}; letter-spacing:-.5px; }
 .mj-weekly-vol { font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.muted}; text-align:right; }
@@ -832,7 +916,9 @@ const CSS = `
 /* whatsapp — animated phones */
 .mj-phones { display:flex; gap:22px; justify-content:center; overflow-x:auto; padding:8px 4px 16px; scroll-snap-type:x mandatory; scrollbar-width:none; }
 .mj-phones::-webkit-scrollbar { display:none; }
-.mj-phonewrap { flex:0 0 auto; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; }
+.mj-phonewrap { flex:0 0 auto; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; transform:rotate(var(--tilt,0deg)); transition:transform .45s cubic-bezier(.22,1,.36,1), opacity .35s; will-change:transform; }
+.mj-phones:hover .mj-phonewrap { opacity:.55; }
+.mj-phonewrap:hover { transform:rotate(0deg) translateY(-10px) scale(1.03); opacity:1; z-index:3; }
 .mj-phone { position:relative; width:264px; height:548px; background:#0b0d12; border-radius:44px; padding:9px; box-shadow:0 0 0 2px #20232b, 0 34px 60px -28px rgba(0,0,0,.6), 0 12px 26px -16px rgba(0,0,0,.4); }
 .mj-phone::before { content:""; position:absolute; left:-3px; top:120px; width:3px; height:56px; background:#191c22; border-radius:3px 0 0 3px; box-shadow:0 74px 0 #191c22; }
 .mj-phone::after { content:""; position:absolute; right:-3px; top:156px; width:3px; height:86px; background:#191c22; border-radius:0 3px 3px 0; }
@@ -876,17 +962,19 @@ const CSS = `
 .mj-wa-field span { flex:1; }
 .mj-wa-mic { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#FF8B48,#F1531F); color:#fff; flex-shrink:0; }
 
-/* the path */
-.mj-path { text-align:center; }
-.mj-path-card { position:relative; margin:44px auto 0; max-width:1000px; border-radius:22px; overflow:hidden; background:${T.navy}; border:1px solid ${T.line}; box-shadow:0 40px 80px -50px rgba(0,0,0,.5); }
-.mj-path-card img { width:100%; display:block; }
-.mj-path-cap { position:absolute; bottom:14px; left:0; right:0; text-align:center; font:700 .66rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.onNavyMute}; }
-
 /* proof */
 .mj-proof-grid { display:grid; grid-template-columns:.8fr 1.2fr; gap:44px; align-items:start; }
 .mj-proof-head { position:sticky; top:110px; }
 .mj-stars { display:flex; align-items:center; gap:4px; margin-top:22px; }
 .mj-stars span { margin-left:10px; font:700 .74rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; }
+.mj-proof-lead { font:400 1.02rem/1.65 'DM Sans',sans-serif; color:${T.body}; margin:26px 0 0; max-width:380px; }
+.mj-proof-stats { display:flex; flex-direction:column; gap:2px; margin:28px 0 0; border-top:1px solid ${T.line}; }
+.mj-proof-stat { display:flex; align-items:baseline; gap:14px; padding:15px 0; border-bottom:1px solid ${T.line}; }
+.mj-proof-stat strong { font:800 1.7rem/1 'Playfair Display',serif; color:${T.coral}; min-width:96px; }
+.mj-proof-stat span { font:500 .88rem/1.35 'DM Sans',sans-serif; color:${T.body}; }
+.mj-proof-quote { margin-top:28px; padding:22px 24px; border-radius:16px; background:${T.ink}; color:#fff; box-shadow:0 24px 44px -30px rgba(0,0,0,.6); }
+.mj-proof-quote .mj-quote-mark { color:${T.coral}; }
+.mj-proof-quote p { font:600 1.05rem/1.45 'Playfair Display',serif; font-style:italic; color:#fff; margin:2px 0 0; }
 .mj-proof-wall { position:relative; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; height:600px; overflow:hidden;
   -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%);
   mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%); }
@@ -945,19 +1033,21 @@ const CSS = `
 
 /* responsive */
 @media (max-width:940px) {
-  .mj-hero-grid, .mj-parent-grid, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-tracker-body, .mj-weekly-body { grid-template-columns:1fr; }
+  .mj-hero-grid, .mj-parent-grid, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body { grid-template-columns:1fr; }
   .mj-hero-visual { order:-1; }
   .mj-sec-head, .mj-dark-head { flex-direction:column; align-items:flex-start; }
   .mj-prog-grid { grid-template-columns:1fr 1fr; } .mj-navy-card { grid-row:auto; grid-column:span 2; }
   .mj-phones { justify-content:flex-start; }
   .mj-proof-wall { grid-template-columns:repeat(2,1fr); height:560px; } .mj-wall-col-2 { display:none; } .mj-proof-head { position:static; }
-  .mj-tracker-img { border-right:none; border-bottom:1px solid ${T.navyLine}; min-height:180px; }
+  .mj-dash-main { border-right:none; border-bottom:1px solid #262b38; }
 }
 @media (max-width:560px) {
   .mj-stat-row { grid-template-columns:1fr 1fr; } .mj-stat { border-left:none; padding-left:0; }
   .mj-prog-grid, .mj-form-row, .mj-inc-grid { grid-template-columns:1fr; } .mj-navy-card { grid-column:auto; }
   .mj-phones { gap:16px; }
   .mj-weekly-featured { border-right:none; padding-right:0; }
+  .mj-vstep { grid-template-columns:48px 1fr; gap:16px; } .mj-vstep-mark { width:48px; height:48px; } .mj-vsteps-rail { left:23px; }
+  .mj-dash-chart { gap:6px; } .mj-dash-barval { font-size:.56rem; }
   .mj-check-right { align-self:stretch; }
   .mj-badge-jump { font-size:.95rem; } .mj-watermark { font-size:64vw; }
 }
