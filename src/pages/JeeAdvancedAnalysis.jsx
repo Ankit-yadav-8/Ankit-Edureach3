@@ -389,7 +389,7 @@ const CSS = `
 .jaa * { box-sizing:border-box; }
 
 /* ── hero (plain full-width on desktop, becomes a card on mobile) ── */
-.jaa-hero { position:relative; padding:128px 0 132px; border-bottom:1px solid ${T.borderLight};
+.jaa-hero { position:relative; padding:210px 0 120px; border-bottom:1px solid ${T.borderLight};
   background-image:radial-gradient(rgba(245,158,11,.16) 1px, transparent 1px); background-size:40px 40px; }
 .jaa-hero-card { position:relative; z-index:1; max-width:1250px; margin:0 auto; padding:0 24px; }
 .jaa-hero-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:80px; align-items:center; }
@@ -576,17 +576,6 @@ const CSS = `
   .jaa-stat-num { font-size:1.5rem; }
   .jaa-btn-primary, .jaa-btn-ghost { width:100%; justify-content:center; }
   .jaa-cta { width:100%; }
-}
-/* Match the site-wide .container widths so page content left-aligns with the
-   navbar/footer instead of sitting inset. Mirrors the --maxw breakpoints. */
-@media (min-width:1025px) and (max-width:1279px) {
-  .jaa-hero-card, .jaa-dir, .jaa-summary, .jaa-marking { max-width:1140px; }
-}
-@media (min-width:1280px) and (max-width:1727px) {
-  .jaa-hero-card, .jaa-dir, .jaa-summary, .jaa-marking { max-width:1400px; }
-}
-@media (min-width:1728px) {
-  .jaa-hero-card, .jaa-dir, .jaa-summary, .jaa-marking { max-width:1600px; padding-inline:2.5rem; }
 }
 @media (prefers-reduced-motion: reduce) { .jaa-orbit { animation:none !important; } }
 `;
