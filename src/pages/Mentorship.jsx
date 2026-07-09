@@ -231,6 +231,47 @@ const DASH_FEED = [
   { time: "12:05", tag: "MENT", c: "#0ea5a4", t: "Mentor call scheduled · 6 PM" },
   { time: "13:45", tag: "MTH",  c: "#eab308", t: "3D Geometry — 20/25 attempted" },
 ];
+function DashArea({ data = [] }) {
+  const max = Math.max(...data, 1), min = Math.min(...data, 0);
+  const W = 320, H = 96, n = Math.max(data.length, 2);
+  const y = (v) => H - 8 - ((v - min) / (max - min || 1)) * (H - 20);
+  const pts = data.map((v, i) => [(i / (n - 1)) * W, y(v)]);
+  const line = pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+  const area = `0,${H} ${line} ${W},${H}`;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="mj-dl" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="mjDashArea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FF693D" stopOpacity=".26" />
+          <stop offset="1" stopColor="#FF693D" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <motion.polygon points={area} fill="url(#mjDashArea)"
+        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.35 }} />
+      <motion.polyline points={line} fill="none" stroke="#FF693D" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"
+        initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.1, ease: "easeInOut" }} />
+      {pts.map((p, i) => (
+        <motion.circle key={i} cx={p[0]} cy={p[1]} r="2.6" fill="#fff" stroke="#FF693D" strokeWidth="1.6"
+          initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.55 + i * 0.05 }} />
+      ))}
+    </svg>
+  );
+}
+function DashRing({ pct = 0, sub }) {
+  const r = 40, c = 2 * Math.PI * r;
+  return (
+    <div className="mj-dring">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r={r} fill="none" stroke={T.line} strokeWidth="9" />
+        <motion.circle cx="50" cy="50" r={r} fill="none" stroke={T.coral} strokeWidth="9" strokeLinecap="round"
+          transform="rotate(-90 50 50)" strokeDasharray={c}
+          initial={{ strokeDashoffset: c }} whileInView={{ strokeDashoffset: c * (1 - pct / 100) }}
+          viewport={{ once: true }} transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }} />
+      </svg>
+      <div className="mj-dring-c"><strong>{pct}%</strong><span>{sub}</span></div>
+    </div>
+  );
+}
 function LiveTracking({ cfg }) {
   const m = cfg.metrics || {};
   const wk = m.weekHours || [];
@@ -238,11 +279,16 @@ function LiveTracking({ cfg }) {
   const wkMax = Math.max(...wk, 1);
   const total = wk.reduce((a, b) => a + b, 0);
   const st = m.student || {};
+  const g = m.growth || {};
   const acc = (m.outcomes || []).find((o) => /accuracy/i.test(o.l))?.v || "86%";
+  const accN = parseInt(acc, 10) || 86;
+  const you = g.you || [];
+  const gain = you.length ? `+${you[you.length - 1] - you[0]}` : "+130";
+  const subjects = m.subjects || [];
   const dashStats = [
     { l: "HRS", v: Math.round(total) },
     { l: "DPPS", v: 128 },
-    { l: "ACC%", v: parseInt(acc, 10) || 86 },
+    { l: "ACC%", v: accN },
   ];
   return (
     <section className="mj-section">
@@ -272,20 +318,33 @@ function LiveTracking({ cfg }) {
                 <span className="mj-dash-active"><span className="mj-dot mj-dot-live" /> ACTIVE</span>
               </div>
 
-              <span className="mj-dash-lbl">STUDY HOURS · THIS WEEK</span>
-              <div className="mj-dash-chart">
-                {wk.map((h, i) => (
-                  <div key={i} className="mj-dash-barcol">
-                    <span className="mj-dash-barval">{h}h</span>
-                    <div className="mj-dash-bartrack">
-                      <motion.div className="mj-dash-bar"
-                        initial={{ height: 0 }} whileInView={{ height: `${(h / wkMax) * 100}%` }}
-                        viewport={{ once: true, margin: "-40px" }}
-                        transition={{ duration: 0.7, delay: 0.05 * i, ease: [0.22, 1, 0.36, 1] }} />
-                    </div>
-                    <span className="mj-dash-barday">{days[i]}</span>
+              <div className="mj-dash-panel">
+                <div className="mj-dash-panelhead"><span className="mj-dash-lbl">MOCK SCORE · LAST {you.length} WEEKS</span><span className="mj-dash-up">↗ {gain} marks</span></div>
+                <DashArea data={you} />
+              </div>
+
+              <div className="mj-dash-two">
+                <div className="mj-dash-panel">
+                  <span className="mj-dash-lbl">STUDY HOURS · THIS WEEK</span>
+                  <div className="mj-dash-chart">
+                    {wk.map((h, i) => (
+                      <div key={i} className="mj-dash-barcol">
+                        <span className="mj-dash-barval">{h}h</span>
+                        <div className="mj-dash-bartrack">
+                          <motion.div className="mj-dash-bar"
+                            initial={{ height: 0 }} whileInView={{ height: `${(h / wkMax) * 100}%` }}
+                            viewport={{ once: true, margin: "-40px" }}
+                            transition={{ duration: 0.7, delay: 0.05 * i, ease: [0.22, 1, 0.36, 1] }} />
+                        </div>
+                        <span className="mj-dash-barday">{days[i]}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
+                <div className="mj-dash-panel mj-dash-ringpanel">
+                  <span className="mj-dash-lbl">ACCURACY</span>
+                  <DashRing pct={accN} sub="avg" />
+                </div>
               </div>
 
               <div className="mj-dash-stats">
@@ -307,6 +366,20 @@ function LiveTracking({ cfg }) {
                     <span className="mj-dash-feedtag" style={{ color: f.c, borderColor: f.c }}>{f.tag}</span>
                     <span className="mj-dash-feedtext">{f.t}</span>
                   </Reveal>
+                ))}
+              </div>
+
+              <span className="mj-dash-lbl mj-dash-lbl-sp">SUBJECT MASTERY</span>
+              <div className="mj-dash-subs">
+                {subjects.map((s, i) => (
+                  <div key={i} className="mj-dash-sub">
+                    <div className="mj-dash-sub-top"><span>{s.name}</span><strong>{s.After}%</strong></div>
+                    <div className="mj-dash-sub-track">
+                      <motion.div className="mj-dash-sub-fill"
+                        initial={{ width: 0 }} whileInView={{ width: `${s.After}%` }}
+                        viewport={{ once: true, margin: "-30px" }} transition={{ duration: 0.9, delay: 0.1 * i, ease: [0.22, 1, 0.36, 1] }} />
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -857,37 +930,55 @@ const CSS = `
 .mj-bar { width:100%; background:${T.coral}; border-radius:5px 5px 0 0; min-height:5px; }
 .mj-bar-col span { font:700 .6rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
 
-/* live tracking — coded dashboard */
-.mj-dash { border-radius:22px; overflow:hidden; border:1px solid #2a2f3d; background:#161922; box-shadow:0 46px 90px -50px rgba(0,0,0,.7); }
-.mj-dash-bar { display:flex; align-items:center; gap:14px; padding:13px 20px; background:#12151d; border-bottom:1px solid #262b38; }
-.mj-traffic { display:flex; gap:6px; } .mj-traffic i { width:11px; height:11px; border-radius:50%; background:#3a3f4d; } .mj-traffic i:first-child{background:#ff5f57;} .mj-traffic i:nth-child(2){background:#febc2e;} .mj-traffic i:nth-child(3){background:#28c840;}
-.mj-dash-title { font:700 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:#9aa2b4; }
-.mj-dash-stream { margin-left:auto; display:inline-flex; align-items:center; gap:6px; font:700 .68rem/1 'Space Grotesk',sans-serif; color:#22c55e; }
+/* live tracking — light coded dashboard */
+.mj-dash { border-radius:22px; overflow:hidden; border:1px solid ${T.lineDk}; background:${T.card}; box-shadow:0 40px 80px -50px rgba(0,0,0,.4); }
+.mj-dash-bar { display:flex; align-items:center; gap:14px; padding:13px 20px; background:${T.paper2}; border-bottom:1px solid ${T.line}; }
+.mj-traffic { display:flex; gap:6px; } .mj-traffic i { width:11px; height:11px; border-radius:50%; background:#d9d2c4; } .mj-traffic i:first-child{background:#ff5f57;} .mj-traffic i:nth-child(2){background:#febc2e;} .mj-traffic i:nth-child(3){background:#28c840;}
+.mj-dash-title { font:700 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
+.mj-dash-stream { margin-left:auto; display:inline-flex; align-items:center; gap:6px; font:700 .68rem/1 'Space Grotesk',sans-serif; color:#16a34a; }
 .mj-dash-body { display:grid; grid-template-columns:1.55fr 1fr; }
-.mj-dash-main { padding:26px 28px; border-right:1px solid #262b38; }
-.mj-dash-idrow { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:26px; }
-.mj-dash-kicker { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:#8b93a6; }
-.mj-dash-name { font:800 1.9rem/1.05 'Playfair Display',serif; color:#fff; margin:8px 0 6px; }
-.mj-dash-mentor { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:#8b93a6; }
-.mj-dash-active { display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:50px; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.4); font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:#4ade80; white-space:nowrap; }
-.mj-dash-lbl { display:block; font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:#8b93a6; margin-bottom:16px; }
-.mj-dash-chart { display:flex; align-items:flex-end; gap:12px; height:150px; margin-bottom:26px; }
+.mj-dash-main { padding:26px 28px; border-right:1px solid ${T.line}; }
+.mj-dash-idrow { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:22px; }
+.mj-dash-kicker { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.muted}; }
+.mj-dash-name { font:800 1.9rem/1.05 'Playfair Display',serif; color:${T.ink}; margin:8px 0 6px; }
+.mj-dash-mentor { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.muted}; }
+.mj-dash-active { display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:50px; background:#e9f8ee; border:1px solid #bbe6c8; font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:#15803d; white-space:nowrap; }
+.mj-dash-lbl { display:block; font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.muted}; margin-bottom:14px; }
+.mj-dash-lbl-sp { margin-top:24px; }
+.mj-dash-panel { padding:18px 18px 16px; margin-bottom:16px; border-radius:16px; background:${T.paper}; border:1px solid ${T.line}; }
+.mj-dash-panelhead { display:flex; align-items:center; justify-content:space-between; }
+.mj-dash-up { font:800 .66rem/1 'Space Grotesk',sans-serif; color:#16a34a; }
+.mj-dl { width:100%; height:96px; display:block; overflow:visible; }
+.mj-dash-two { display:grid; grid-template-columns:1.5fr 1fr; gap:16px; margin-bottom:16px; }
+.mj-dash-two .mj-dash-panel { margin-bottom:0; }
+.mj-dash-chart { display:flex; align-items:flex-end; gap:10px; height:132px; }
 .mj-dash-barcol { flex:1; display:flex; flex-direction:column; align-items:center; height:100%; }
-.mj-dash-barval { font:800 .66rem/1 'Space Grotesk',sans-serif; color:#e7e2d9; margin-bottom:6px; }
-.mj-dash-bartrack { flex:1; width:100%; display:flex; align-items:flex-end; border-radius:7px; background:rgba(255,255,255,.04); }
-.mj-dash-bar { width:100%; min-height:6px; border-radius:7px; background:linear-gradient(180deg, #FF8A47, #F1531F); box-shadow:0 0 18px -2px rgba(255,105,61,.6); }
-.mj-dash-barday { font:700 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; color:#8b93a6; margin-top:8px; }
+.mj-dash-barval { font:800 .64rem/1 'Space Grotesk',sans-serif; color:${T.body}; margin-bottom:6px; }
+.mj-dash-bartrack { flex:1; width:100%; display:flex; align-items:flex-end; border-radius:7px; background:${T.paper2}; }
+.mj-dash-bar { width:100%; min-height:6px; border-radius:7px; background:linear-gradient(180deg, #FF8A47, #F1531F); box-shadow:0 6px 14px -6px rgba(255,105,61,.7); }
+.mj-dash-barday { font:700 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; margin-top:8px; }
+.mj-dash-ringpanel { display:flex; flex-direction:column; }
+.mj-dring { position:relative; flex:1; display:grid; place-items:center; }
+.mj-dring svg { width:118px; height:118px; }
+.mj-dring-c { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.mj-dring-c strong { font:800 1.7rem/1 'Playfair Display',serif; color:${T.ink}; }
+.mj-dring-c span { font:700 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; margin-top:3px; text-transform:uppercase; }
 .mj-dash-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-.mj-dash-stat { padding:16px 18px; border-radius:14px; background:#1c202b; border:1px solid #2a2f3d; }
-.mj-dash-stat-l { font:700 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:#8b93a6; }
-.mj-dash-stat-v { display:block; font:800 2rem/1 'Playfair Display',serif; color:#fff; margin-top:8px; }
+.mj-dash-stat { padding:16px 18px; border-radius:14px; background:${T.paper2}; border:1px solid ${T.line}; }
+.mj-dash-stat-l { font:700 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.muted}; }
+.mj-dash-stat-v { display:block; font:800 2rem/1 'Playfair Display',serif; color:${T.ink}; margin-top:8px; }
 .mj-dash-feed { padding:26px 24px; }
 .mj-dash-feedlist { display:flex; flex-direction:column; }
-.mj-dash-feeditem { display:grid; grid-template-columns:auto auto 1fr; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #232834; }
+.mj-dash-feeditem { display:grid; grid-template-columns:auto auto 1fr; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid ${T.line}; }
 .mj-dash-feeditem:last-child { border-bottom:none; }
-.mj-dash-feedtime { font:700 .7rem/1 'Space Grotesk',sans-serif; color:#8b93a6; }
-.mj-dash-feedtag { padding:3px 8px; border:1px solid; border-radius:5px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; opacity:.95; }
-.mj-dash-feedtext { font:500 .86rem/1.3 'DM Sans',sans-serif; color:#dfe3ea; }
+.mj-dash-feedtime { font:700 .7rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
+.mj-dash-feedtag { padding:3px 8px; border:1px solid; border-radius:5px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; }
+.mj-dash-feedtext { font:500 .86rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
+.mj-dash-subs { display:flex; flex-direction:column; gap:14px; }
+.mj-dash-sub-top { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:6px; font:600 .82rem/1 'DM Sans',sans-serif; color:${T.body}; }
+.mj-dash-sub-top strong { font:800 .82rem/1 'Space Grotesk',sans-serif; color:${T.coralDk}; }
+.mj-dash-sub-track { height:8px; border-radius:6px; background:${T.paper2}; overflow:hidden; }
+.mj-dash-sub-fill { height:100%; border-radius:6px; background:linear-gradient(90deg, #FF8A47, #F1531F); }
 
 /* for parents */
 .mj-parent-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:center; }
@@ -1039,6 +1130,7 @@ const CSS = `
   .mj-phones { gap:16px; }
   .mj-weekly-featured { border-right:none; padding-right:0; }
   .mj-vstep { grid-template-columns:48px 1fr; gap:16px; } .mj-vstep-mark { width:48px; height:48px; } .mj-vsteps-rail { left:23px; }
+  .mj-dash-two { grid-template-columns:1fr; }
   .mj-dash-chart { gap:6px; } .mj-dash-barval { font-size:.56rem; }
   .mj-check-right { align-self:stretch; }
   .mj-badge-jump { font-size:.95rem; } .mj-watermark { font-size:64vw; }
