@@ -120,12 +120,12 @@ function Qualifier({ cfg }) {
 function Method({ cfg }) {
   const steps = cfg.howWeGuide || [];
   return (
-    <section id="method" className="mj-dark">
+    <section id="method" className="mj-section mj-method">
       <div className="mj-wrap">
         <div className="mj-dark-head">
           <div>
-            <Label dark>§ 02 · METHOD</Label>
-            <h2 className="mj-display mj-display-lg mj-on-navy">A calm, connected system —<br /><em>Day 1 to Rank Day.</em></h2>
+            <Label>§ 02 · METHOD</Label>
+            <h2 className="mj-display mj-display-lg">A calm, connected system —<br /><em>Day 1 to Rank Day.</em></h2>
           </div>
           <span className="mj-scrollhint">6 MOVING PARTS · ONE RHYTHM</span>
         </div>
@@ -813,25 +813,25 @@ const CSS = `
 .mj-check-t { flex:1; font:600 1rem/1.4 'DM Sans',sans-serif; color:${T.ink}; }
 .mj-check-n { font:800 .8rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
 
-/* dark method — vertical timeline */
-.mj-dark { background:${T.navy}; color:${T.onNavy}; padding:clamp(70px,9vw,120px) 0; position:relative; overflow:hidden; }
-.mj-dark::before { content:""; position:absolute; top:-20%; right:-10%; width:520px; height:520px; border-radius:50%; background:radial-gradient(circle, rgba(255,105,61,.16), transparent 70%); pointer-events:none; }
+/* method — light vertical timeline */
+.mj-method { position:relative; overflow:hidden; }
+.mj-method::before { content:""; position:absolute; top:-14%; right:-8%; width:520px; height:520px; border-radius:50%; background:radial-gradient(circle, ${T.coralSoft}, transparent 68%); opacity:.55; pointer-events:none; }
 .mj-dark-head { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:56px; position:relative; }
-.mj-scrollhint { font:800 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.onNavyMute}; white-space:nowrap; }
+.mj-scrollhint { font:800 .72rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; white-space:nowrap; }
 .mj-vsteps { position:relative; max-width:860px; margin:0 auto; padding-left:8px; }
-.mj-vsteps-rail { position:absolute; left:31px; top:14px; bottom:34px; width:2px; transform-origin:top; background:linear-gradient(180deg, ${T.coral}, rgba(255,105,61,.15)); }
+.mj-vsteps-rail { position:absolute; left:31px; top:14px; bottom:34px; width:2px; transform-origin:top; background:linear-gradient(180deg, ${T.coral}, ${T.lineDk}); }
 .mj-vstep { position:relative; display:grid; grid-template-columns:64px 1fr; gap:24px; align-items:start; margin-bottom:22px; }
-.mj-vstep-mark { position:relative; z-index:2; display:grid; place-items:center; width:64px; height:64px; border-radius:50%; background:${T.navy2}; border:1.5px solid ${T.navyLine}; box-shadow:0 0 0 6px ${T.navy}; transition:.28s; }
+.mj-vstep-mark { position:relative; z-index:2; display:grid; place-items:center; width:64px; height:64px; border-radius:50%; background:${T.card}; border:1.5px solid ${T.lineDk}; box-shadow:0 0 0 6px ${T.paper}, 0 10px 24px -16px rgba(0,0,0,.4); transition:.28s; }
 .mj-vstep-n { font:800 1.5rem/1 'Playfair Display',serif; color:${T.coral}; }
-.mj-vstep-card { border:1px solid ${T.navyLine}; border-radius:18px; background:linear-gradient(160deg, ${T.navy2}, ${T.navy}); padding:22px 24px; transition:transform .28s, border-color .28s, box-shadow .28s; }
-.mj-vstep:hover .mj-vstep-card { transform:translateX(6px); border-color:rgba(255,105,61,.5); box-shadow:0 20px 44px -30px rgba(0,0,0,.7); }
-.mj-vstep:hover .mj-vstep-mark { border-color:${T.coral}; background:${T.coral}; }
+.mj-vstep-card { border:1px solid ${T.line}; border-radius:18px; background:${T.card}; padding:22px 24px; box-shadow:0 14px 34px -28px rgba(0,0,0,.35); transition:transform .28s, border-color .28s, box-shadow .28s; }
+.mj-vstep:hover .mj-vstep-card { transform:translateX(6px); border-color:${T.coral}; box-shadow:0 24px 48px -30px rgba(255,105,61,.5); }
+.mj-vstep:hover .mj-vstep-mark { border-color:${T.coral}; background:${T.coral}; box-shadow:0 0 0 6px ${T.paper}, 0 12px 26px -12px rgba(255,105,61,.6); }
 .mj-vstep:hover .mj-vstep-n { color:#fff; }
 .mj-vstep-cardtop { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
-.mj-vstep-tag { padding:4px 10px; border:1px solid ${T.navyLine}; border-radius:6px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.onNavyMute}; }
+.mj-vstep-tag { padding:4px 10px; border:1px solid ${T.lineDk}; border-radius:6px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.muted}; }
 .mj-vstep-foot { font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.coral}; }
-.mj-vstep-t { font:700 1.3rem/1.2 'Playfair Display',serif; color:${T.onNavy}; margin:0; }
-.mj-vstep-d { font:400 .94rem/1.6 'DM Sans',sans-serif; color:${T.onNavyMute}; margin:8px 0 0; }
+.mj-vstep-t { font:700 1.3rem/1.2 'Playfair Display',serif; color:${T.ink}; margin:0; }
+.mj-vstep-d { font:400 .94rem/1.6 'DM Sans',sans-serif; color:${T.body}; margin:8px 0 0; }
 
 /* section head shared */
 .mj-sec-head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:48px; flex-wrap:wrap; }
