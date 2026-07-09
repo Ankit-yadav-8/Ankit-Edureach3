@@ -4,11 +4,12 @@
    feature sections, §0X·LABEL micro-headers. Config-driven per variant
    (jee-2027 / jee-2028 / neet) from data/mentorship.js. Image slots are filled
    with the existing /images mentorship assets. */
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Plus, Check, Star, Send, Radio,
+  Video, Phone, Paperclip, Camera, Mic, Smile, GraduationCap,
 } from "lucide-react";
 import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT, MENTOR_LINKS } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
@@ -298,13 +299,160 @@ function ForParents({ cfg }) {
   );
 }
 
-/* ═══════════════ § 07 · REAL THREADS (whatsapp) ═══════════════ */
-const CHATS = [
-  { from: "student", t: "Sir I'm stuck on rotational motion, been 2 hrs 😩", time: "11:42 PM" },
-  { from: "mentor", t: "Send me the Q. Skip torque-heavy ones tonight — do the 6 PYQs I marked, we'll do the rest on Sunday.", time: "11:45 PM" },
-  { from: "student", t: "Mock went 178/300 today 🔥 up from 126", time: "6:10 PM" },
-  { from: "mentor", t: "That's the jump we planned. Chemistry accuracy is your next 20 marks — capsule coming at 7am.", time: "6:12 PM" },
+/* ═══════════════ § 07 · REAL THREADS (animated whatsapp phones) ═══════════════ */
+const PHONE_CHATS = [
+  {
+    caption: "Doubt at 11 pm", mentor: "Mentor Arjun", status: "online · replies in minutes",
+    script: [
+      { me: 1, t: "Sir I'm stuck on rotational motion, been 2 hrs 😩", time: "11:42" },
+      { me: 0, t: "Send me the question 📸 which PYQ?", time: "11:43" },
+      { me: 1, t: "The pulley + inclined plane one from 2019", time: "11:44" },
+      { me: 0, t: "Skip torque-heavy ones tonight. Do the 6 PYQs I marked 💪", time: "11:45" },
+      { me: 0, t: "Sleep by 12 — you've done enough today 🌙", time: "11:46" },
+    ],
+  },
+  {
+    caption: "Sunday plan drop", mentor: "Mentor Sneha", status: "online · replies in minutes",
+    script: [
+      { me: 1, t: "Sir, I can't finish Organic Chem in time 🤢", time: "9:32" },
+      { me: 0, t: "Don't worry Aditi. Let's fix this today 💪", time: "9:33" },
+      { me: 0, t: "First — GOC done or pending?", time: "9:33" },
+      { me: 1, t: "GOC half done. Hydrocarbons not started 🤪", time: "9:34" },
+      { me: 0, t: "Got it. Here's your new 7-day plan 👇\n📅 Mon–Tue → GOC\n📅 Wed–Fri → Hydrocarbons\n📅 Sat → Revision\n📅 Sun → Mock", time: "9:35" },
+      { me: 1, t: "This actually feels doable 🥹", time: "9:36" },
+      { me: 0, t: "It is. I'm targeting 75+ for you this time 🚀", time: "9:37" },
+    ],
+  },
+  {
+    caption: "Mock breakdown", mentor: "Mentor Rahul", status: "online · replies in minutes",
+    script: [
+      { me: 1, t: "Mock went 178/300 today 🔥 up from 126", time: "6:10" },
+      { me: 0, t: "That's the jump we planned 👏", time: "6:11" },
+      { me: 0, t: "Chemistry accuracy is your next 20 marks", time: "6:11" },
+      { me: 1, t: "Yeah I lost 14 marks in silly errors 😔", time: "6:12" },
+      { me: 0, t: "Capsule at 7 am — 10 Qs, timed. Let's kill the silly mistakes 🎯", time: "6:13" },
+    ],
+  },
+  {
+    caption: "Pep talk", mentor: "Mentor Priya", status: "online · replies in minutes",
+    script: [
+      { me: 1, t: "Sir I feel like I'm falling behind everyone 😞", time: "8:40" },
+      { me: 0, t: "You were at 42%ile in March. You're at 88 now 📈", time: "8:41" },
+      { me: 0, t: "Your only competition is last week's you 🫡", time: "8:41" },
+      { me: 1, t: "Needed to hear that 🥹 thank you sir", time: "8:42" },
+      { me: 0, t: "Now close the app and sleep. Big day tomorrow 🌙💪", time: "8:43" },
+    ],
+  },
 ];
+
+function Ticks() {
+  return (
+    <svg className="mj-ticks" viewBox="0 0 18 12" fill="none" aria-hidden="true">
+      <path d="M1 6.5 4 9.5 10 2.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M7 6.5 10 9.5 16 2.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ChatPhone({ chat, startDelay = 300 }) {
+  const { script } = chat;
+  const [count, setCount] = useState(0);
+  const [typing, setTyping] = useState(false);
+  const [started, setStarted] = useState(false);
+  const rootRef = useRef(null);
+  const bodyRef = useRef(null);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { setCount(script.length); return; }
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setStarted(true); io.disconnect(); }
+    }, { threshold: 0.25 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [script.length]);
+
+  useEffect(() => {
+    if (!started) return;
+    let cancelled = false;
+    const timers = [];
+    let i = 0;
+    const wait = (ms, fn) => timers.push(setTimeout(() => { if (!cancelled) fn(); }, ms));
+    const step = () => {
+      if (i >= script.length) {
+        wait(4600, () => { setCount(0); setTyping(false); i = 0; wait(700, step); });
+        return;
+      }
+      const msg = script[i];
+      const reveal = () => {
+        setTyping(false);
+        setCount((c) => c + 1);
+        i += 1;
+        const readMs = 700 + Math.min(msg.t.length * 22, 1800);
+        wait(readMs, step);
+      };
+      if (!msg.me) { setTyping(true); wait(950 + Math.min(msg.t.length * 12, 1200), reveal); }
+      else reveal();
+    };
+    wait(startDelay, step);
+    return () => { cancelled = true; timers.forEach(clearTimeout); };
+  }, [started, script, startDelay]);
+
+  useEffect(() => {
+    const b = bodyRef.current;
+    if (b) b.scrollTo({ top: b.scrollHeight, behavior: "smooth" });
+  }, [count, typing]);
+
+  return (
+    <div className="mj-phonewrap" ref={rootRef}>
+      <div className="mj-phone">
+        <span className="mj-phone-island" />
+        <div className="mj-phone-screen">
+          <div className="mj-wa-header">
+            <div className="mj-wa-head">
+              <span className="mj-wa-status">9:41</span>
+              <span className="mj-wa-bars"><i /><i /><i /></span>
+            </div>
+            <div className="mj-wa-top">
+              <span className="mj-wa-av"><GraduationCap size={18} /><span className="mj-wa-online" /></span>
+              <div className="mj-wa-id">
+                <strong>{chat.mentor} <span className="mj-wa-spark">✨</span></strong>
+                <span>{typing ? "typing…" : chat.status}</span>
+              </div>
+              <Video size={18} className="mj-wa-ic" />
+              <Phone size={17} className="mj-wa-ic" />
+            </div>
+          </div>
+          <div className="mj-wa-body" ref={bodyRef}>
+            <span className="mj-wa-day">Today</span>
+            {script.slice(0, count).map((m, idx) => (
+              <div key={idx} className={m.me ? "mj-wa-row mj-wa-me" : "mj-wa-row"}>
+                <div className={m.me ? "mj-wa-msg mj-wa-msg-me" : "mj-wa-msg"}>
+                  <p>{m.t}</p>
+                  <span className="mj-wa-time">{m.time}{m.me ? <Ticks /> : null}</span>
+                </div>
+              </div>
+            ))}
+            {typing && (
+              <div className="mj-wa-row">
+                <div className="mj-wa-msg mj-wa-typing"><i /><i /><i /></div>
+              </div>
+            )}
+          </div>
+          <div className="mj-wa-input">
+            <Paperclip size={17} />
+            <div className="mj-wa-field"><Smile size={16} /><span>Message your mentor…</span><Camera size={16} /></div>
+            <span className="mj-wa-mic"><Mic size={16} /></span>
+          </div>
+        </div>
+      </div>
+      <span className="mj-phone-cap">&ldquo;{chat.caption}&rdquo;</span>
+    </div>
+  );
+}
+
 function WhatsApp() {
   return (
     <section className="mj-section">
@@ -316,16 +464,9 @@ function WhatsApp() {
           </div>
           <p className="mj-sec-sub">Unedited. Unscripted. Late-night doubt, Sunday plan, Wednesday pep talk.</p>
         </Reveal>
-        <div className="mj-chats">
-          {CHATS.map((c, i) => (
-            <Reveal key={i} delay={(i % 4) * 0.05} className="mj-chat" style={{ ["--tilt"]: `${(i % 2 ? 1 : -1) * (1.5 + i * 0.4)}deg` }}>
-              <span className="mj-tape" />
-              <div className={c.from === "mentor" ? "mj-bubble mj-bubble-mentor" : "mj-bubble"}>
-                <span className="mj-bubble-who">{c.from === "mentor" ? "Mentor · IIT Delhi" : "You"}</span>
-                <p>{c.t}</p>
-                <span className="mj-bubble-time">{c.time}</span>
-              </div>
-            </Reveal>
+        <div className="mj-phones">
+          {PHONE_CHATS.map((c, i) => (
+            <ChatPhone key={i} chat={c} startDelay={300 + i * 650} />
           ))}
         </div>
       </div>
@@ -364,17 +505,29 @@ function Proof({ cfg }) {
             <span>4.9 / 5 · 1,240 REVIEWS</span>
           </div>
         </div>
-        <div className="mj-proof-masonry">
-          {(cfg.testimonials || []).map((t, i) => (
-            <Reveal key={i} delay={(i % 2) * 0.06} className="mj-quote-card">
-              <span className="mj-quote-mark">&ldquo;</span>
-              <p className="mj-quote-t">{t.quote}</p>
-              <div className="mj-quote-by">
-                <span className="mj-quote-av">{t.name[0]}</span>
-                <div><strong>{t.name}</strong><span>{t.improvement}</span></div>
+        <div className="mj-proof-wall" aria-label="Student testimonials">
+          {[0, 1, 2].map((col) => {
+            const base = cfg.testimonials || [];
+            if (!base.length) return null;
+            const rot = base.map((_, k) => base[(k + col) % base.length]);
+            const cards = [...rot, ...rot];
+            return (
+              <div key={col} className={`mj-wall-col mj-wall-col-${col}`}>
+                <div className="mj-wall-track">
+                  {cards.map((t, i) => (
+                    <div key={i} className="mj-quote-card" aria-hidden={i >= rot.length}>
+                      <span className="mj-quote-mark">&ldquo;</span>
+                      <p className="mj-quote-t">{t.quote}</p>
+                      <div className="mj-quote-by">
+                        <span className="mj-quote-av">{t.name[0]}</span>
+                        <div><strong>{t.name}</strong><span>{t.improvement}</span></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -661,13 +814,14 @@ const CSS = `
 
 /* for parents */
 .mj-parent-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:center; }
-.mj-weekly { background:${T.card}; border:1px solid ${T.line}; border-radius:6px; padding:30px; box-shadow:24px 24px 0 -2px ${T.paper2}, 0 30px 60px -34px rgba(0,0,0,.3); }
-.mj-weekly-top { display:flex; align-items:baseline; justify-content:space-between; border-bottom:2px solid ${T.ink}; padding-bottom:12px; }
-.mj-weekly-name { font:800 1.7rem/1 'Playfair Display',serif; font-style:italic; color:${T.ink}; }
-.mj-weekly-vol { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
-.mj-weekly-body { display:grid; grid-template-columns:1.3fr 1fr; gap:24px; margin-top:20px; }
+.mj-weekly { position:relative; background:#FBF8F2; border:1px solid ${T.lineDk}; border-radius:4px; padding:32px 34px; box-shadow:20px 22px 0 -1px ${T.ink}, 0 34px 60px -34px rgba(0,0,0,.5); }
+.mj-weekly-top { display:flex; align-items:baseline; justify-content:space-between; gap:14px; border-bottom:2.5px solid ${T.ink}; padding-bottom:12px; }
+.mj-weekly-name { font:800 1.9rem/1 'Playfair Display',serif; font-style:italic; color:${T.ink}; letter-spacing:-.5px; }
+.mj-weekly-vol { font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.muted}; text-align:right; }
+.mj-weekly-body { display:grid; grid-template-columns:1.3fr 1fr; gap:26px; margin-top:22px; }
+.mj-weekly-featured { border-right:1px solid ${T.line}; padding-right:24px; }
 .mj-featured-lbl, .mj-glance-lbl { font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.coral}; }
-.mj-featured-quote { font:600 1.05rem/1.4 'Playfair Display',serif; color:${T.ink}; margin:10px 0 16px; }
+.mj-featured-quote { font:700 1.35rem/1.22 'Playfair Display',serif; color:${T.ink}; margin:11px 0 16px; letter-spacing:-.3px; }
 .mj-weekly-photo { border-radius:8px; overflow:hidden; border:1px solid ${T.line}; }
 .mj-weekly-photo img { width:100%; display:block; }
 .mj-glance-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid ${T.line}; font:500 .84rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
@@ -675,18 +829,52 @@ const CSS = `
 .mj-glance-lbl { display:block; margin-bottom:6px; }
 .mj-weekly-foot { display:flex; justify-content:space-between; margin-top:20px; padding-top:14px; border-top:1px solid ${T.line}; font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
 
-/* whatsapp */
-.mj-chats { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
-.mj-chat { position:relative; transform:rotate(var(--tilt,0deg)); }
-.mj-tape { position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-4deg); width:70px; height:22px; background:${T.coralSoft}; border:1px solid ${T.coral}; opacity:.6; border-radius:2px; }
-.mj-bubble { background:${T.navy}; border:1px solid ${T.navyLine}; border-radius:16px; padding:20px 18px; box-shadow:0 20px 40px -26px rgba(0,0,0,.5); }
-.mj-bubble-mentor { background:${T.coral}; border-color:${T.coral}; }
-.mj-bubble-who { font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.onNavyMute}; }
-.mj-bubble-mentor .mj-bubble-who { color:rgba(255,255,255,.85); }
-.mj-bubble p { font:500 .92rem/1.5 'DM Sans',sans-serif; color:${T.onNavy}; margin:10px 0; }
-.mj-bubble-mentor p { color:#fff; }
-.mj-bubble-time { font:600 .62rem/1 'Space Grotesk',sans-serif; color:${T.onNavyMute}; }
-.mj-bubble-mentor .mj-bubble-time { color:rgba(255,255,255,.8); }
+/* whatsapp — animated phones */
+.mj-phones { display:flex; gap:22px; justify-content:center; overflow-x:auto; padding:8px 4px 16px; scroll-snap-type:x mandatory; scrollbar-width:none; }
+.mj-phones::-webkit-scrollbar { display:none; }
+.mj-phonewrap { flex:0 0 auto; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; }
+.mj-phone { position:relative; width:264px; height:548px; background:#0b0d12; border-radius:44px; padding:9px; box-shadow:0 0 0 2px #20232b, 0 34px 60px -28px rgba(0,0,0,.6), 0 12px 26px -16px rgba(0,0,0,.4); }
+.mj-phone::before { content:""; position:absolute; left:-3px; top:120px; width:3px; height:56px; background:#191c22; border-radius:3px 0 0 3px; box-shadow:0 74px 0 #191c22; }
+.mj-phone::after { content:""; position:absolute; right:-3px; top:156px; width:3px; height:86px; background:#191c22; border-radius:0 3px 3px 0; }
+.mj-phone-island { position:absolute; top:19px; left:50%; transform:translateX(-50%); width:84px; height:25px; background:#000; border-radius:14px; z-index:7; }
+.mj-phone-screen { position:relative; height:100%; border-radius:35px; overflow:hidden; background:#F6F3EF; display:flex; flex-direction:column; }
+.mj-phone-cap { font:italic 600 1rem/1 'Playfair Display',serif; color:${T.body}; }
+
+.mj-wa-header { background:linear-gradient(145deg,#FF8B48 0%,#FA5E28 55%,#EF5320 100%); color:#fff; padding-top:8px; box-shadow:0 6px 16px -10px rgba(0,0,0,.5); z-index:3; }
+.mj-wa-head { display:flex; align-items:center; justify-content:space-between; padding:2px 20px 3px; }
+.mj-wa-status { font:800 .72rem/1 'Space Grotesk',sans-serif; }
+.mj-wa-bars { display:flex; align-items:flex-end; gap:3px; }
+.mj-wa-bars i { width:3px; background:#fff; border-radius:1px; } .mj-wa-bars i:nth-child(1){height:5px;} .mj-wa-bars i:nth-child(2){height:8px;} .mj-wa-bars i:nth-child(3){height:11px;}
+.mj-wa-top { display:flex; align-items:center; gap:9px; padding:6px 14px 12px; }
+.mj-wa-av { position:relative; display:grid; place-items:center; width:38px; height:38px; border-radius:50%; background:#fff; color:${T.coralDk}; flex-shrink:0; }
+.mj-wa-online { position:absolute; right:-1px; bottom:-1px; width:11px; height:11px; border-radius:50%; background:#25D366; border:2px solid #fff; }
+.mj-wa-id { flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+.mj-wa-id strong { font:700 .92rem/1.15 'DM Sans',sans-serif; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mj-wa-spark { font-size:.78rem; }
+.mj-wa-id span { font:500 .66rem/1 'DM Sans',sans-serif; color:rgba(255,255,255,.9); }
+.mj-wa-ic { color:#fff; flex-shrink:0; opacity:.95; }
+
+.mj-wa-body { flex:1; overflow:hidden; padding:12px 10px 6px; display:flex; flex-direction:column; align-items:stretch;
+  background:#F6F3EF radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px); background-size:16px 16px; }
+.mj-wa-day { align-self:center; margin-bottom:10px; padding:4px 12px; border-radius:8px; background:#fff; border:1px solid ${T.line}; font:600 .64rem/1 'DM Sans',sans-serif; color:${T.muted}; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+.mj-wa-row { display:flex; margin-bottom:7px; animation:mjPop .32s cubic-bezier(.2,.8,.3,1.1) both; }
+.mj-wa-me { justify-content:flex-end; }
+@keyframes mjPop { from { opacity:0; transform:translateY(8px) scale(.96); } to { opacity:1; transform:none; } }
+.mj-wa-msg { max-width:80%; padding:7px 10px 5px; border-radius:14px; background:#fff; color:#1f2733; box-shadow:0 1px 1.5px rgba(0,0,0,.12); border-top-left-radius:4px; }
+.mj-wa-msg-me { background:linear-gradient(135deg,#FF8B48,#F1531F); color:#fff; border-top-left-radius:14px; border-top-right-radius:4px; box-shadow:0 2px 6px -2px rgba(241,83,31,.5); }
+.mj-wa-msg p { margin:0; font:500 .78rem/1.34 'DM Sans',sans-serif; white-space:pre-line; word-break:break-word; }
+.mj-wa-time { display:flex; align-items:center; justify-content:flex-end; gap:3px; margin-top:2px; font:500 .58rem/1 'DM Sans',sans-serif; color:${T.muted}; }
+.mj-wa-msg-me .mj-wa-time { color:rgba(255,255,255,.85); }
+.mj-ticks { width:14px; height:9px; flex-shrink:0; }
+.mj-wa-typing { display:flex; gap:4px; padding:11px 12px; border-top-left-radius:4px; }
+.mj-wa-typing i { width:6px; height:6px; border-radius:50%; background:${T.muted}; animation:mjType 1s infinite ease-in-out; }
+.mj-wa-typing i:nth-child(2){ animation-delay:.15s; } .mj-wa-typing i:nth-child(3){ animation-delay:.3s; }
+@keyframes mjType { 0%,60%,100%{ transform:translateY(0); opacity:.5; } 30%{ transform:translateY(-4px); opacity:1; } }
+
+.mj-wa-input { display:flex; align-items:center; gap:9px; padding:9px 12px 15px; background:#F6F3EF; color:${T.muted}; }
+.mj-wa-field { flex:1; display:flex; align-items:center; gap:7px; padding:7px 10px; border-radius:18px; background:#fff; border:1px solid ${T.line}; font:500 .72rem/1 'DM Sans',sans-serif; color:${T.muted}; }
+.mj-wa-field span { flex:1; }
+.mj-wa-mic { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#FF8B48,#F1531F); color:#fff; flex-shrink:0; }
 
 /* the path */
 .mj-path { text-align:center; }
@@ -699,8 +887,17 @@ const CSS = `
 .mj-proof-head { position:sticky; top:110px; }
 .mj-stars { display:flex; align-items:center; gap:4px; margin-top:22px; }
 .mj-stars span { margin-left:10px; font:700 .74rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; }
-.mj-proof-masonry { columns:2; column-gap:18px; }
-.mj-quote-card { break-inside:avoid; margin-bottom:18px; background:${T.card}; border:1px solid ${T.line}; border-radius:16px; padding:22px; box-shadow:0 12px 30px -24px rgba(0,0,0,.4); }
+.mj-proof-wall { position:relative; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; height:600px; overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%);
+  mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%); }
+.mj-wall-col { overflow:hidden; }
+.mj-wall-track { display:block; animation:mjWall 40s linear infinite; will-change:transform; }
+.mj-wall-col-0 .mj-wall-track { animation-duration:44s; }
+.mj-wall-col-1 .mj-wall-track { animation-duration:56s; }
+.mj-wall-col-2 .mj-wall-track { animation-duration:50s; animation-direction:reverse; }
+.mj-proof-wall:hover .mj-wall-track { animation-play-state:paused; }
+@keyframes mjWall { from { transform:translateY(0); } to { transform:translateY(-50%); } }
+.mj-quote-card { margin-bottom:16px; background:${T.card}; border:1px solid ${T.line}; border-radius:16px; padding:22px; box-shadow:0 12px 30px -24px rgba(0,0,0,.4); }
 .mj-quote-mark { font:800 2.4rem/.6 'Playfair Display',serif; color:${T.coral}; }
 .mj-quote-t { font:500 .98rem/1.55 'DM Sans',sans-serif; color:${T.ink}; margin:6px 0 18px; }
 .mj-quote-by { display:flex; align-items:center; gap:11px; }
@@ -752,14 +949,20 @@ const CSS = `
   .mj-hero-visual { order:-1; }
   .mj-sec-head, .mj-dark-head { flex-direction:column; align-items:flex-start; }
   .mj-prog-grid { grid-template-columns:1fr 1fr; } .mj-navy-card { grid-row:auto; grid-column:span 2; }
-  .mj-chats { grid-template-columns:1fr 1fr; }
-  .mj-proof-masonry { columns:1; } .mj-proof-head { position:static; }
+  .mj-phones { justify-content:flex-start; }
+  .mj-proof-wall { grid-template-columns:repeat(2,1fr); height:560px; } .mj-wall-col-2 { display:none; } .mj-proof-head { position:static; }
   .mj-tracker-img { border-right:none; border-bottom:1px solid ${T.navyLine}; min-height:180px; }
 }
 @media (max-width:560px) {
   .mj-stat-row { grid-template-columns:1fr 1fr; } .mj-stat { border-left:none; padding-left:0; }
-  .mj-prog-grid, .mj-chats, .mj-form-row, .mj-inc-grid { grid-template-columns:1fr; } .mj-navy-card { grid-column:auto; }
+  .mj-prog-grid, .mj-form-row, .mj-inc-grid { grid-template-columns:1fr; } .mj-navy-card { grid-column:auto; }
+  .mj-phones { gap:16px; }
+  .mj-weekly-featured { border-right:none; padding-right:0; }
   .mj-check-right { align-self:stretch; }
   .mj-badge-jump { font-size:.95rem; } .mj-watermark { font-size:64vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mj-wall-track { animation:none; }
+  .mj-proof-wall { height:auto; -webkit-mask-image:none; mask-image:none; }
 }
 `;
