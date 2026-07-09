@@ -421,7 +421,7 @@ function Ticks() {
   );
 }
 
-function ChatPhone({ chat, startDelay = 300, tilt = 0 }) {
+function ChatPhone({ chat, startDelay = 300 }) {
   const { script } = chat;
   const [count, setCount] = useState(0);
   const [typing, setTyping] = useState(false);
@@ -473,7 +473,7 @@ function ChatPhone({ chat, startDelay = 300, tilt = 0 }) {
   }, [count, typing]);
 
   return (
-    <div className="mj-phonewrap" ref={rootRef} style={{ ["--tilt"]: `${tilt}deg` }}>
+    <div className="mj-phonewrap" ref={rootRef}>
       <div className="mj-phone">
         <span className="mj-phone-island" />
         <div className="mj-phone-screen">
@@ -533,7 +533,7 @@ function WhatsApp() {
         </Reveal>
         <div className="mj-phones">
           {PHONE_CHATS.map((c, i) => (
-            <ChatPhone key={i} chat={c} startDelay={300 + i * 650} tilt={[-3, 2.4, -2.2, 3][i] || 0} />
+            <ChatPhone key={i} chat={c} startDelay={300 + i * 650} />
           ))}
         </div>
       </div>
@@ -916,9 +916,7 @@ const CSS = `
 /* whatsapp — animated phones */
 .mj-phones { display:flex; gap:22px; justify-content:center; overflow-x:auto; padding:8px 4px 16px; scroll-snap-type:x mandatory; scrollbar-width:none; }
 .mj-phones::-webkit-scrollbar { display:none; }
-.mj-phonewrap { flex:0 0 auto; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; transform:rotate(var(--tilt,0deg)); transition:transform .45s cubic-bezier(.22,1,.36,1), opacity .35s; will-change:transform; }
-.mj-phones:hover .mj-phonewrap { opacity:.55; }
-.mj-phonewrap:hover { transform:rotate(0deg) translateY(-10px) scale(1.03); opacity:1; z-index:3; }
+.mj-phonewrap { flex:0 0 auto; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; }
 .mj-phone { position:relative; width:264px; height:548px; background:#0b0d12; border-radius:44px; padding:9px; box-shadow:0 0 0 2px #20232b, 0 34px 60px -28px rgba(0,0,0,.6), 0 12px 26px -16px rgba(0,0,0,.4); }
 .mj-phone::before { content:""; position:absolute; left:-3px; top:120px; width:3px; height:56px; background:#191c22; border-radius:3px 0 0 3px; box-shadow:0 74px 0 #191c22; }
 .mj-phone::after { content:""; position:absolute; right:-3px; top:156px; width:3px; height:86px; background:#191c22; border-radius:0 3px 3px 0; }
