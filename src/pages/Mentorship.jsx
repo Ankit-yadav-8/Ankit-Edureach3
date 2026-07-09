@@ -870,9 +870,9 @@ function Proof({ cfg }) {
             <span>4.9 / 5 · 1,240 REVIEWS</span>
           </div>
           <div className="mj-proof-stats">
-            <div className="mj-proof-stat"><strong>92%</strong><span>improved their rank within 8 weeks</span></div>
+            <div className="mj-proof-stat"><strong>92%</strong><span>improved their rank in 8 weeks</span></div>
             <div className="mj-proof-stat"><strong>1,240+</strong><span>aspirants mentored 1-on-1</span></div>
-            <div className="mj-proof-stat"><strong>18,400</strong><span>average ranks jumped</span></div>
+            <div className="mj-proof-stat"><strong>18,400</strong><span>average rank jump</span></div>
           </div>
           <div className="mj-proof-quote">
             <span className="mj-quote-mark">&ldquo;</span>
@@ -1435,9 +1435,9 @@ const CSS = `
 .mj-stars span { margin-left:10px; font:700 .74rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; }
 .mj-proof-lead { font:400 1.02rem/1.65 'DM Sans',sans-serif; color:${T.body}; margin:26px 0 0; max-width:380px; }
 .mj-proof-stats { display:flex; flex-direction:column; gap:2px; margin:28px 0 0; border-top:1px solid ${T.line}; }
-.mj-proof-stat { display:flex; align-items:baseline; gap:14px; padding:15px 0; border-bottom:1px solid ${T.line}; }
-.mj-proof-stat strong { font:800 1.7rem/1 'Playfair Display',serif; color:${T.coral}; min-width:96px; }
-.mj-proof-stat span { font:500 .88rem/1.35 'DM Sans',sans-serif; color:${T.body}; }
+.mj-proof-stat { display:flex; align-items:center; gap:16px; padding:15px 0; border-bottom:1px solid ${T.line}; }
+.mj-proof-stat strong { font:800 1.7rem/1 'Playfair Display',serif; color:${T.coral}; min-width:104px; flex-shrink:0; }
+.mj-proof-stat span { font:500 .9rem/1.35 'DM Sans',sans-serif; color:${T.body}; }
 .mj-proof-quote { margin-top:28px; padding:22px 24px; border-radius:16px; background:${T.ink}; color:#fff; box-shadow:0 24px 44px -30px rgba(0,0,0,.6); }
 .mj-proof-quote .mj-quote-mark { color:${T.coral}; }
 .mj-proof-quote p { font:600 1.05rem/1.45 'Playfair Display',serif; font-style:italic; color:#fff; margin:2px 0 0; }
@@ -1446,10 +1446,10 @@ const CSS = `
 .mj-proof-chips { display:flex; flex-wrap:wrap; gap:8px; }
 .mj-proof-chips span { padding:7px 13px; border-radius:50px; border:1px solid ${T.lineDk}; background:${T.card}; font:700 .74rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
 .mj-proof-land { display:flex; flex-direction:column; }
-.mj-proof-landrow { display:flex; align-items:baseline; gap:14px; padding:12px 0; border-bottom:1px solid ${T.line}; }
+.mj-proof-landrow { display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:1px solid ${T.line}; }
 .mj-proof-landrow:first-child { border-top:1px solid ${T.line}; }
-.mj-proof-landrow strong { font:800 1.4rem/1 'Playfair Display',serif; color:${T.coralDk}; min-width:64px; }
-.mj-proof-landrow span { font:500 .88rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
+.mj-proof-landrow strong { font:800 1.4rem/1 'Playfair Display',serif; color:${T.coralDk}; min-width:104px; flex-shrink:0; }
+.mj-proof-landrow span { font:500 .9rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
 .mj-proof-verified { display:flex; align-items:center; gap:9px; margin-top:24px; padding-top:20px; border-top:1px solid ${T.lineDk}; font:600 .82rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
 .mj-proof-vic { display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:${T.coral}; color:#fff; flex-shrink:0; }
 .mj-proof-wall { position:relative; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; height:600px; overflow:hidden;
