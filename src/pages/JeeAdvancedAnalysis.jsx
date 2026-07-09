@@ -389,13 +389,14 @@ const CSS = `
 .jaa * { box-sizing:border-box; }
 
 /* ── hero (plain full-width on desktop, becomes a card on mobile) ── */
-.jaa-hero { padding:100px 0 120px; }
-.jaa-hero-card { max-width:1250px; margin:0 auto; padding:0 24px; }
+.jaa-hero { position:relative; padding:128px 0 132px; border-bottom:1px solid ${T.borderLight};
+  background-image:radial-gradient(rgba(245,158,11,.16) 1px, transparent 1px); background-size:40px 40px; }
+.jaa-hero-card { position:relative; z-index:1; max-width:1250px; margin:0 auto; padding:0 24px; }
 .jaa-hero-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:80px; align-items:center; }
 .jaa-title { font:800 clamp(2.6rem,4.4vw,3.9rem)/1.12 'Space Grotesk','Sora',sans-serif; letter-spacing:-.5px; color:${T.ink}; margin:0; }
 .jaa-hl { color:${T.amber}; }
-.jaa-sub { font:400 1.14rem/1.7 inherit; color:${T.body}; max-width:540px; margin:24px 0 0; }
-.jaa-stats { display:flex; flex-wrap:wrap; gap:48px; margin:40px 0 0; }
+.jaa-sub { font:400 1.14rem/1.7 inherit; color:${T.body}; max-width:540px; margin:26px 0 0; }
+.jaa-stats { display:flex; flex-wrap:wrap; gap:48px; margin:44px 0 0; }
 .jaa-stat { display:flex; flex-direction:column; gap:8px; }
 .jaa-stat-num { font:800 2.3rem/1 'Space Grotesk',sans-serif; color:${T.ink}; letter-spacing:-1px; }
 .jaa-stat:first-child .jaa-stat-num { color:${T.amber}; }
