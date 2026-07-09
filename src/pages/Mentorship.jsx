@@ -158,38 +158,97 @@ function Method({ cfg }) {
 
 /* ═══════════════ § 04 · TEST ANALYSIS (animated) ═══════════════ */
 const TA_STEPS = ["You enter test data", "AI analyses your paper", "Trends visualised", "Strategies + rank predicted"];
-function TrendLine({ data, color, target }) {
-  const series = target ? [...data, ...target] : data;
-  const max = Math.max(...series, 1), min = Math.min(...series);
-  const W = 300, H = 88, n = Math.max(data.length, 2);
-  const y = (v) => H - 8 - ((v - min) / ((max - min) || 1)) * (H - 22);
-  const pts = data.map((v, i) => [(i / (n - 1)) * W, y(v)]);
-  const line = pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+function AnalysisChart({ series, xLabels, yTicks, yMin, yMax, suffix = "", yLabel, active }) {
+  const W = 348, H = 202, padL = 42, padR = 12, padT = 14, padB = 40;
+  const pw = W - padL - padR, ph = H - padT - padB;
+  const n = xLabels.length;
+  const X = (i) => padL + (n <= 1 ? pw / 2 : (i / (n - 1)) * pw);
+  const Y = (v) => padT + (1 - (v - yMin) / ((yMax - yMin) || 1)) * ph;
+  const pts = (d) => d.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="mj-ta-svg" preserveAspectRatio="none" aria-hidden="true">
-      {target && (
-        <motion.line x1="0" y1={y(target[0])} x2={W} y2={y(target[0])} stroke={T.ink} strokeWidth="2" strokeDasharray="3 4" opacity=".4"
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6 }} />
-      )}
-      <motion.polyline points={line} fill="none" stroke={color} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
-        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, ease: "easeInOut" }} />
-      {pts.map((p, i) => (
-        <motion.circle key={i} cx={p[0]} cy={p[1]} r="2.4" fill="#fff" stroke={color} strokeWidth="1.5"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 + i * 0.05 }} />
+    <svg viewBox={`0 0 ${W} ${H}`} className="mj-ta-chart" role="img" aria-label={yLabel}>
+      {/* horizontal gridlines + y ticks */}
+      {yTicks.map((t, i) => (
+        <g key={`y${i}`}>
+          <line x1={padL} y1={Y(t)} x2={W - padR} y2={Y(t)} stroke={T.line} strokeWidth="1" />
+          <text x={padL - 7} y={Y(t) + 3} textAnchor="end" className="mj-ta-axtxt">{t}{suffix}</text>
+        </g>
+      ))}
+      {/* vertical gridlines + x labels */}
+      {xLabels.map((l, i) => (
+        <g key={`x${i}`}>
+          <line x1={X(i)} y1={padT} x2={X(i)} y2={padT + ph} stroke={T.line} strokeWidth="1" opacity=".55" />
+          <text x={X(i)} y={padT + ph + 15} textAnchor="middle" className="mj-ta-axtxt">{l}</text>
+        </g>
+      ))}
+      {/* axis lines */}
+      <line x1={padL} y1={padT} x2={padL} y2={padT + ph} stroke={T.lineDk} strokeWidth="1.2" />
+      <line x1={padL} y1={padT + ph} x2={W - padR} y2={padT + ph} stroke={T.lineDk} strokeWidth="1.2" />
+      {/* axis captions */}
+      <text x={padL + pw / 2} y={H - 5} textAnchor="middle" className="mj-ta-axcap">MOCK TESTS &#8594;</text>
+      {yLabel && <text transform={`rotate(-90 13 ${padT + ph / 2})`} x={13} y={padT + ph / 2} textAnchor="middle" className="mj-ta-axcap">{yLabel}</text>}
+
+      {!active && <text x={padL + pw / 2} y={padT + ph / 2} textAnchor="middle" className="mj-ta-wait">Waiting for data…</text>}
+
+      {active && series.map((s, si) => (
+        <g key={si}>
+          {s.area && (
+            <motion.polygon points={`${padL},${padT + ph} ${pts(s.data)} ${W - padR},${padT + ph}`} fill={s.color}
+              initial={{ opacity: 0 }} animate={{ opacity: 0.1 }} transition={{ duration: 0.8, delay: 0.5 + si * 0.25 }} />
+          )}
+          <motion.polyline points={pts(s.data)} fill="none" stroke={s.color} strokeWidth={s.w || 2.4}
+            strokeLinecap="round" strokeLinejoin="round" strokeDasharray={s.dashed ? "5 4" : undefined} opacity={s.dashed ? 0.7 : 1}
+            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, ease: "easeInOut", delay: si * 0.28 }} />
+          {!s.dashed && s.data.map((v, i) => (
+            <motion.circle key={i} cx={X(i)} cy={Y(v)} r={s.w >= 2.6 ? 2.8 : 2.1} fill="#fff" stroke={s.color} strokeWidth="1.5"
+              initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: si * 0.28 + 0.55 + i * 0.045 }} />
+          ))}
+        </g>
       ))}
     </svg>
   );
 }
+function ChartLegend({ series }) {
+  return (
+    <div className="mj-ta-legend">
+      {series.map((s, i) => (
+        <span key={i}><i style={{ background: s.color, opacity: s.dashed ? 0.6 : 1 }} />{s.name}</span>
+      ))}
+    </div>
+  );
+}
 function TestAnalysis({ cfg }) {
   const m = cfg.metrics || {};
-  const you = m.growth?.you || [84, 120, 150, 178, 196, 214];
+  const you = m.growth?.you || m.test?.trend || [84, 120, 150, 178, 196, 214];
   const total = 300;
   const scored = you[you.length - 1] || 214;
   const prev = you[you.length - 2] || scored;
   const pctUp = prev ? Math.max(Math.round(((scored - prev) / prev) * 100), 1) : 9;
   const accN = parseInt((m.outcomes || []).find((o) => /accuracy/i.test(o.l))?.v || "86", 10) || 86;
-  const accTrend = [accN - 16, accN - 12, accN - 14, accN - 8, accN - 5, accN - 3, accN].map((v) => Math.max(v, 40));
+
+  /* ── multi-line chart data ── */
+  const nP = you.length;
+  const xL = you.map((_, i) => `M${i + 1}`);
+  const batch = m.growth?.batch || you.map((v) => Math.round(v * 0.62));
   const target = you.map(() => Math.round(total * 0.75));
+  const mentored = you.map((v, i) => Math.round(v + (v - batch[i]) * 0.35 * (i / (nP - 1)))); // projected-with-mentor lift
+  const sMax = Math.ceil(Math.max(...you, ...batch, ...target, ...mentored) / 50) * 50;
+  const sTicks = []; for (let v = 0; v <= sMax; v += 50) sTicks.push(v);
+  const scoreSeries = [
+    { name: "You", color: T.coral, data: you, w: 2.9, area: true },
+    { name: "With mentor", color: T.coralDk, data: mentored, w: 2.2, dashed: false },
+    { name: "Batch avg", color: "#b7ae9f", data: batch, w: 2 },
+    { name: "Target", color: T.ink, data: target, dashed: true, w: 2 },
+  ];
+  const accYou = you.map((_, i) => Math.max(Math.round(accN - (nP - 1 - i) * 2.4), 44));
+  const accBatch = accYou.map((v) => Math.max(v - 11, 36));
+  const accGoal = you.map(() => 90);
+  const accSeries = [
+    { name: "You", color: "#16a34a", data: accYou, w: 2.9, area: true },
+    { name: "Batch avg", color: "#b7ae9f", data: accBatch, w: 2 },
+    { name: "Goal", color: T.ink, data: accGoal, dashed: true, w: 2 },
+  ];
+
   const weak = m.test?.weak || ["Rotational Motion", "Thermodynamics", "p-Block"];
   const exam = cfg.tracks?.[0]?.exam || "JEE Main 2026";
   const strategies = [
@@ -279,7 +338,11 @@ function TestAnalysis({ cfg }) {
                 <motion.div key="rank" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: 0.1 }} className="mj-ta-rank">
                   <span className="mj-ta-rank-l">🎯 PREDICTED {exam.toUpperCase()} RANK</span>
                   <div className="mj-ta-rank-row">
-                    {rank.map((r, i) => <div key={i} className="mj-ta-rank-c"><strong>{r.v}</strong><span>{r.l}</span></div>)}
+                    {rank.map((r, i) => (
+                      <motion.div key={i} className="mj-ta-rank-c" initial={{ opacity: 0, y: 8, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.25 + i * 0.1, type: "spring", stiffness: 260, damping: 18 }}>
+                        <strong>{r.v}</strong><span>{r.l}</span>
+                      </motion.div>
+                    ))}
                   </div>
                 </motion.div>
               )}
@@ -288,13 +351,14 @@ function TestAnalysis({ cfg }) {
 
           <div className="mj-ta-right">
             <div className="mj-ta-card">
-              <div className="mj-ta-cardhead"><strong>Score trend</strong><span>vs 75% target</span></div>
-              {stage >= 2 ? <TrendLine data={you} target={target} color={T.coral} /> : <div className="mj-ta-waiting">Waiting for data…</div>}
-              <div className="mj-ta-legend"><span><i style={{ background: T.coral }} /> You</span><span><i style={{ background: T.ink }} /> Target</span></div>
+              <div className="mj-ta-cardhead"><strong>Score trend</strong><span>marks · out of {total}</span></div>
+              <AnalysisChart series={scoreSeries} xLabels={xL} yTicks={sTicks} yMin={0} yMax={sMax} yLabel="MARKS" active={stage >= 2} />
+              <ChartLegend series={scoreSeries} />
             </div>
             <div className="mj-ta-card">
               <div className="mj-ta-cardhead"><strong>Accuracy trend</strong><span>correct ÷ attempted</span></div>
-              {stage >= 2 ? <TrendLine data={accTrend} color="#16a34a" /> : <div className="mj-ta-waiting">Waiting for data…</div>}
+              <AnalysisChart series={accSeries} xLabels={xL} yTicks={[40, 60, 80, 100]} yMin={40} yMax={100} suffix="%" yLabel="ACCURACY" active={stage >= 2} />
+              <ChartLegend series={accSeries} />
             </div>
             <div className="mj-ta-card">
               <div className="mj-ta-cardhead"><strong>💡 Strategies to do better</strong></div>
@@ -781,6 +845,27 @@ function Proof({ cfg }) {
             <span className="mj-quote-mark">&ldquo;</span>
             <p>The difference wasn&rsquo;t more content. It was one person who refused to let me drift.</p>
           </div>
+
+          <div className="mj-proof-block">
+            <span className="mj-proof-blbl">MENTORS FROM</span>
+            <div className="mj-proof-chips">
+              <span>IIT Delhi</span><span>IIT Bombay</span><span>AIIMS</span><span>NIT Trichy</span>
+            </div>
+          </div>
+
+          <div className="mj-proof-block">
+            <span className="mj-proof-blbl">WHERE THEY LANDED</span>
+            <div className="mj-proof-land">
+              <div className="mj-proof-landrow"><strong>340+</strong><span>into IITs &amp; IISc</span></div>
+              <div className="mj-proof-landrow"><strong>520+</strong><span>into NITs &amp; IIITs</span></div>
+              <div className="mj-proof-landrow"><strong>180+</strong><span>into AIIMS &amp; top GMCs</span></div>
+            </div>
+          </div>
+
+          <div className="mj-proof-verified">
+            <span className="mj-proof-vic"><Check size={12} strokeWidth={3} /></span>
+            Every review is from a verified, enrolled student.
+          </div>
         </div>
         <div className="mj-proof-wall" aria-label="Student testimonials">
           {[0, 1, 2].map((col) => {
@@ -1089,7 +1174,8 @@ const CSS = `
 .mj-ta-pill { display:inline-flex; align-items:center; gap:7px; padding:6px 14px; border-radius:50px; background:${T.coralSoft}; border:1px solid ${T.coral}; font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.coralDk}; }
 .mj-ta-steps { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:12px 8px; margin-bottom:44px; }
 .mj-ta-step { display:inline-flex; align-items:center; gap:9px; }
-.mj-ta-step:not(:last-child)::after { content:""; width:26px; height:1.5px; margin-left:8px; background:${T.lineDk}; }
+.mj-ta-step:not(:last-child)::after { content:""; width:28px; height:2px; margin-left:8px; border-radius:2px; background:${T.lineDk}; transition:background .5s ease; }
+.mj-ta-step-done:not(:last-child)::after { background:${T.coral}; }
 .mj-ta-stepn { display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:${T.card}; border:1.5px solid ${T.lineDk}; font:800 .74rem/1 'Space Grotesk',sans-serif; color:${T.muted}; flex-shrink:0; transition:.3s; }
 .mj-ta-step-on .mj-ta-stepn { background:${T.coral}; border-color:${T.coral}; color:#fff; box-shadow:0 0 0 5px ${T.coralSoft}; }
 .mj-ta-step-done .mj-ta-stepn { background:${T.coral}; border-color:${T.coral}; color:#fff; }
@@ -1106,8 +1192,10 @@ const CSS = `
 .mj-ta-field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
 .mj-ta-field span { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.04em; color:${T.muted}; }
 .mj-ta-input { padding:11px 13px; border-radius:9px; border:1px solid ${T.line}; background:${T.paper}; font:600 .92rem/1 'DM Sans',sans-serif; color:${T.ink}; }
-.mj-ta-btn { width:100%; margin-top:6px; padding:14px; border:none; border-radius:11px; background:${T.coralSoft}; color:${T.coralDk}; font:800 .92rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.3s; }
+.mj-ta-btn { position:relative; overflow:hidden; width:100%; margin-top:6px; padding:14px; border:none; border-radius:11px; background:${T.coralSoft}; color:${T.coralDk}; font:800 .92rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.3s; }
 .mj-ta-btn-on { background:linear-gradient(135deg,#FF8A47,#F1531F); color:#fff; box-shadow:0 14px 30px -14px rgba(255,105,61,.7); }
+.mj-ta-btn-on::after { content:""; position:absolute; top:0; left:-60%; width:45%; height:100%; background:linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent); transform:skewX(-18deg); animation:mjShimmer 1.5s infinite; }
+@keyframes mjShimmer { 0%{ left:-60%; } 60%,100%{ left:120%; } }
 .mj-ta-banner { display:flex; align-items:center; gap:9px; margin-top:16px; padding:13px 15px; border-radius:11px; background:#e9f8ee; border:1px solid #bbe6c8; font:600 .84rem/1.3 'DM Sans',sans-serif; color:#15803d; }
 .mj-ta-banner svg { flex-shrink:0; }
 .mj-ta-rank { margin-top:14px; padding:16px 18px; border-radius:13px; border:1px dashed ${T.lineDk}; background:${T.paper2}; }
@@ -1120,12 +1208,15 @@ const CSS = `
 .mj-ta-cardhead { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
 .mj-ta-cardhead strong { font:800 .96rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
 .mj-ta-cardhead span { font:600 .68rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
-.mj-ta-svg { width:100%; height:88px; display:block; overflow:visible; }
+.mj-ta-chart { width:100%; height:auto; display:block; }
+.mj-ta-axtxt { font:700 8px/1 'Space Grotesk',sans-serif; fill:${T.muted}; }
+.mj-ta-axcap { font:800 7px/1 'Space Grotesk',sans-serif; letter-spacing:.12em; fill:${T.muted}; opacity:.8; }
+.mj-ta-wait { font:italic 600 11px/1 'DM Sans',sans-serif; fill:${T.muted}; }
 .mj-ta-waiting { display:grid; place-items:center; height:88px; font:600 .82rem/1 'DM Sans',sans-serif; color:${T.muted}; }
 .mj-ta-waiting-sm { height:70px; font-style:italic; }
-.mj-ta-legend { display:flex; gap:18px; margin-top:12px; }
+.mj-ta-legend { display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; }
 .mj-ta-legend span { display:inline-flex; align-items:center; gap:6px; font:600 .7rem/1 'DM Sans',sans-serif; color:${T.body}; }
-.mj-ta-legend i { width:9px; height:9px; border-radius:50%; }
+.mj-ta-legend i { width:14px; height:3px; border-radius:2px; }
 .mj-ta-strat { display:flex; flex-direction:column; gap:12px; }
 .mj-ta-strat-i { display:flex; align-items:flex-start; gap:11px; font:500 .84rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
 .mj-ta-strat-ic { display:grid; place-items:center; width:26px; height:26px; border-radius:8px; background:${T.coralSoft}; color:${T.coralDk}; flex-shrink:0; }
@@ -1295,6 +1386,17 @@ const CSS = `
 .mj-proof-quote { margin-top:28px; padding:22px 24px; border-radius:16px; background:${T.ink}; color:#fff; box-shadow:0 24px 44px -30px rgba(0,0,0,.6); }
 .mj-proof-quote .mj-quote-mark { color:${T.coral}; }
 .mj-proof-quote p { font:600 1.05rem/1.45 'Playfair Display',serif; font-style:italic; color:#fff; margin:2px 0 0; }
+.mj-proof-block { margin-top:26px; padding-top:22px; border-top:1px solid ${T.lineDk}; }
+.mj-proof-blbl { display:block; font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; margin-bottom:14px; }
+.mj-proof-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.mj-proof-chips span { padding:7px 13px; border-radius:50px; border:1px solid ${T.lineDk}; background:${T.card}; font:700 .74rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
+.mj-proof-land { display:flex; flex-direction:column; }
+.mj-proof-landrow { display:flex; align-items:baseline; gap:14px; padding:12px 0; border-bottom:1px solid ${T.line}; }
+.mj-proof-landrow:first-child { border-top:1px solid ${T.line}; }
+.mj-proof-landrow strong { font:800 1.4rem/1 'Playfair Display',serif; color:${T.coralDk}; min-width:64px; }
+.mj-proof-landrow span { font:500 .88rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
+.mj-proof-verified { display:flex; align-items:center; gap:9px; margin-top:24px; padding-top:20px; border-top:1px solid ${T.lineDk}; font:600 .82rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
+.mj-proof-vic { display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:${T.coral}; color:#fff; flex-shrink:0; }
 .mj-proof-wall { position:relative; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; height:600px; overflow:hidden;
   -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%);
   mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%); }
