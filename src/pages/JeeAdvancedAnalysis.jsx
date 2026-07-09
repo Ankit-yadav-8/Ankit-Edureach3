@@ -3,7 +3,7 @@
    (all 80), each with weightage ring / avg-Qs / difficulty / priority and a
    sub-topic breakdown, plus three dropdown filters (class, difficulty, trend)
    and a search. Below the grid: a 200-hour study-time split by subject and the
-   marking scheme. Warm neutral / amber theme. */
+   marking scheme. Warm neutral / coral theme. */
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,12 +15,12 @@ import Seo from "../components/Seo.jsx";
 import { JEE_ADV_CHAPTERS } from "../data/jeeAdvancedChapters.js";
 import { SUBJECT_SUMMARY, MARKING_SCHEME } from "../data/jeeAdvancedMeta.js";
 
-/* ── warm neutral / amber theme ── */
+/* ── warm neutral / coral theme (keys keep the `amber*` names for stability) ── */
 const T = {
   bg: "#F5F3EE", surface: "#FFFFFF", surface2: "#FAF9F4",
   border: "#D8D8D2", borderLight: "#E8E6DF",
   ink: "#1A1A2E", body: "#57535C", muted: "#9A958E",
-  amber: "#F59E0B", amberDk: "#B45309", amberSoft: "#FEF3C7",
+  amber: "#FF693D", amberDk: "#C2410C", amberSoft: "#FFE7E0",
   error: "#DC2626", errorSoft: "#FCE9E9", success: "#16A34A", successSoft: "#E4F5EA",
 };
 const SUBJECTS = {
@@ -374,7 +374,7 @@ const CSS = `
 
 /* ── hero (plain full-width on desktop, becomes a card on mobile) ── */
 .jaa-hero { position:relative; padding:210px 0 120px; border-bottom:1px solid ${T.borderLight};
-  background-image:radial-gradient(rgba(245,158,11,.16) 1px, transparent 1px); background-size:40px 40px; }
+  background-image:radial-gradient(rgba(255,105,61,.16) 1px, transparent 1px); background-size:40px 40px; }
 .jaa-hero-card { position:relative; z-index:1; max-width:1250px; margin:0 auto; padding:0 24px; }
 .jaa-hero-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:80px; align-items:center; }
 .jaa-title { font:800 clamp(2.6rem,4.4vw,3.9rem)/1.12 'Space Grotesk','Sora',sans-serif; letter-spacing:-.5px; color:${T.ink}; margin:0; }
@@ -386,18 +386,18 @@ const CSS = `
 .jaa-stat:first-child .jaa-stat-num { color:${T.amber}; }
 .jaa-stat-cap { font:700 .82rem/1.1 inherit; text-transform:uppercase; letter-spacing:.05em; color:${T.muted}; }
 .jaa-cta { display:flex; flex-wrap:wrap; gap:20px; align-items:center; margin:44px 0 0; }
-.jaa-btn-primary { display:inline-flex; align-items:center; gap:9px; cursor:pointer; border:none; padding:18px 32px; border-radius:14px; font:700 1.05rem/1 'Space Grotesk',sans-serif; color:#fff; background:${T.amber}; box-shadow:0 10px 30px rgba(245,158,11,.32); transition:transform .18s, box-shadow .18s, background .18s; }
-.jaa-btn-primary:hover { background:#e08e08; transform:translateY(-3px); box-shadow:0 16px 34px rgba(245,158,11,.44); }
+.jaa-btn-primary { display:inline-flex; align-items:center; gap:9px; cursor:pointer; border:none; padding:18px 32px; border-radius:14px; font:700 1.05rem/1 'Space Grotesk',sans-serif; color:#fff; background:${T.amber}; box-shadow:0 10px 30px rgba(255,105,61,.32); transition:transform .18s, box-shadow .18s, background .18s; }
+.jaa-btn-primary:hover { background:#E85A2E; transform:translateY(-3px); box-shadow:0 16px 34px rgba(255,105,61,.44); }
 .jaa-btn-ghost { display:inline-flex; align-items:center; gap:8px; cursor:pointer; background:transparent; border:none; color:${T.amber}; font:700 1rem/1 'Space Grotesk',sans-serif; padding:8px 6px; transition:gap .18s, color .18s; }
 .jaa-btn-ghost:hover { color:${T.amberDk}; gap:12px; }
 
 .jaa-visual { position:relative; height:480px; }
 .jaa-orbit { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); border-radius:50%; }
 .jaa-orbit-1 { width:300px; height:300px; border:2px dashed ${T.amber}66; }
-.jaa-orbit-2 { width:410px; height:410px; border:1px dashed #FDE68A; }
+.jaa-orbit-2 { width:410px; height:410px; border:1px dashed #FFC9BC; }
 .jaa-core { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:164px; height:164px; z-index:10; }
 .jaa-core-svg { position:absolute; inset:0; }
-.jaa-core-face { position:absolute; inset:14px; border-radius:50%; background:${T.surface}; box-shadow:0 22px 44px -12px rgba(245,158,11,.4); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
+.jaa-core-face { position:absolute; inset:14px; border-radius:50%; background:${T.surface}; box-shadow:0 22px 44px -12px rgba(255,105,61,.4); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
 .jaa-core-num { font:800 2.5rem/1 'Space Grotesk',sans-serif; color:${T.amber}; letter-spacing:-1px; }
 .jaa-core-cap { font:700 .72rem/1.25 inherit; text-transform:uppercase; letter-spacing:.04em; color:${T.muted}; text-align:center; }
 .jaa-fcard { position:absolute; z-index:12; display:flex; flex-direction:column; gap:2px; background:${T.surface}; padding:13px 15px; border-radius:15px; border:1px solid ${T.border}; box-shadow:0 16px 34px -16px rgba(26,26,46,.26); width:150px; }
