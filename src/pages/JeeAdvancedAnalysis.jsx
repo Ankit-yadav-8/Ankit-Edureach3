@@ -57,8 +57,8 @@ function Ring({ pct, color, label }) {
         <motion.circle
           cx="30" cy="30" r={r} fill="none" stroke={color} strokeWidth="5" strokeLinecap="round"
           transform="rotate(-90 30 30)" strokeDasharray={C}
-          initial={{ strokeDashoffset: C }} whileInView={{ strokeDashoffset: C * (1 - pct) }}
-          viewport={{ once: true }} transition={{ duration: 1, ease: "easeInOut" }}
+          initial={{ strokeDashoffset: C }} animate={{ strokeDashoffset: C * (1 - pct) }}
+          transition={{ duration: 1, ease: "easeInOut" }}
         />
       </svg>
       <span className="jaa-ring-lbl">{label}</span>
@@ -79,8 +79,7 @@ function ChapterCard({ c, index, forceOpen }) {
   return (
     <motion.article
       className="jaa-card" style={{ "--accent": sub.color }}
-      initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-30px" }}
+      initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: Math.min(index, 10) * 0.03 }}
     >
       <div className="jaa-card-top">
