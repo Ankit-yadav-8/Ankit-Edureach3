@@ -893,8 +893,8 @@ function Proof({ cfg }) {
               <span className="mj-proof-blbl">WHERE THEY LANDED</span>
               <div className="mj-proof-metrics mj-proof-metrics-sm">
                 <div className="mj-metric"><strong>340+</strong><span>IITs &amp; IISc</span></div>
-                <div className="mj-metric"><strong>520+</strong><span>NITs &amp; IIITs</span></div>
-                <div className="mj-metric"><strong>180+</strong><span>AIIMS &amp; GMCs</span></div>
+                <div className="mj-metric"><strong>520+</strong><span>NITs, IIITs &amp; GFTIs</span></div>
+                <div className="mj-metric"><strong>180+</strong><span>BITS &amp; top private</span></div>
               </div>
             </div>
 
