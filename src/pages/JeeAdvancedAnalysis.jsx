@@ -4,11 +4,11 @@
    sub-topic breakdown, plus three dropdown filters (class, difficulty, trend)
    and a search. Below the grid: a 200-hour study-time split by subject and the
    marking scheme. Warm neutral / amber theme. */
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Atom, FlaskConical, Sigma, Search, X, ChevronDown, Check, Sparkles,
+  Atom, FlaskConical, Sigma, Search, X, ChevronDown, Sparkles,
   Target, ArrowRight, Clock, ShieldCheck,
 } from "lucide-react";
 import Seo from "../components/Seo.jsx";
@@ -128,47 +128,11 @@ function ChapterCard({ c, index, forceOpen }) {
   );
 }
 
-/* ── dropdown filter ── */
-function Dropdown({ label, options, value, onChange, fmt }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener("mousedown", h);
-    return () => document.removeEventListener("mousedown", h);
-  }, [open]);
-  const show = (o) => (o === "All" ? "All" : fmt ? fmt(o) : o);
-  return (
-    <div className="jaa-dd" ref={ref}>
-      <span className="jaa-dd-lbl">{label}</span>
-      <button className={open ? "jaa-dd-btn open" : "jaa-dd-btn"} onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-        <span className={value === "All" ? "jaa-dd-val all" : "jaa-dd-val"}>{show(value)}</span>
-        <ChevronDown size={14} className={open ? "jaa-chev open" : "jaa-chev"} />
-      </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div className="jaa-dd-menu"
-            initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.14 }}>
-            {options.map((o) => (
-              <button key={o} className={value === o ? "jaa-dd-opt on" : "jaa-dd-opt"}
-                onClick={() => { onChange(o); setOpen(false); }}>
-                {show(o)}{value === o && <Check size={13} />}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
 /* ── segmented pill toggle (subject / class) ── */
 function Segmented({ label, options, value, onChange, dots, fmt }) {
   return (
     <div className="jaa-seg-wrap">
-      <span className="jaa-dd-lbl">{label}</span>
+      <span className="jaa-seg-lbl">{label}</span>
       <div className="jaa-seg" role="tablist" aria-label={label}>
         {options.map((o) => (
           <button key={o} role="tab" aria-selected={value === o}
@@ -341,16 +305,16 @@ export default function JeeAdvancedAnalysis() {
           </div>
 
           <div className="jaa-console-body">
-            <Segmented label="Subject" options={SUBJECT_FILTERS} value={subject} onChange={setSubject} dots={SUBJECT_DOTS} />
-            <div className="jaa-ddrow">
+            <div className="jaa-filters">
+              <Segmented label="Subject" options={SUBJECT_FILTERS} value={subject} onChange={setSubject} dots={SUBJECT_DOTS} />
               <Segmented label="Class" options={CLASS_FILTERS} value={cls} onChange={setCls} fmt={(o) => (o === "All" ? "All" : `Class ${o}`)} />
-              <Dropdown label="Difficulty" options={DIFF_FILTERS} value={diff} onChange={setDiff} />
-              <Dropdown label="Trend" options={TREND_FILTERS} value={trend} onChange={setTrend} />
-              <div className="jaa-search">
-                <Search size={16} color={T.muted} />
-                <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search a chapter or sub-topic…" />
-                {q && <button onClick={() => setQ("")} aria-label="Clear"><X size={15} /></button>}
-              </div>
+              <Segmented label="Difficulty" options={DIFF_FILTERS} value={diff} onChange={setDiff} />
+              <Segmented label="Trend" options={TREND_FILTERS} value={trend} onChange={setTrend} />
+            </div>
+            <div className="jaa-search">
+              <Search size={16} color={T.muted} />
+              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search a chapter or sub-topic…" />
+              {q && <button onClick={() => setQ("")} aria-label="Clear"><X size={15} /></button>}
             </div>
             <div className="jaa-searchrow">
               <p className="jaa-count"><strong>{filtered.length}</strong> of 80 chapters shown</p>
@@ -448,32 +412,19 @@ const CSS = `
 .jaa-console-head .jaa-h2 { font-size:clamp(1.4rem,2.6vw,1.8rem); margin-top:12px; }
 .jaa-console-body { display:flex; flex-direction:column; gap:16px; }
 
-/* ── segmented pill toggle (subject / class) ── */
+/* ── segmented pill filters (subject / class / difficulty / trend) ── */
+.jaa-filters { display:flex; flex-direction:column; gap:15px; }
 .jaa-seg-wrap { display:flex; flex-direction:column; gap:7px; }
-.jaa-seg { display:inline-flex; align-self:flex-start; max-width:100%; gap:4px; padding:4px; background:${T.surface2}; border:1px solid ${T.border}; border-radius:13px; overflow-x:auto; }
-.jaa-seg-btn { display:inline-flex; align-items:center; gap:7px; white-space:nowrap; cursor:pointer; border:none; background:transparent; color:${T.body}; padding:9px 16px; border-radius:9px; font:700 .84rem/1 'Space Grotesk',sans-serif; transition:background .16s, color .16s, box-shadow .16s; }
+.jaa-seg-lbl { font:800 .66rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:${T.muted}; }
+.jaa-seg { display:flex; flex-wrap:wrap; width:fit-content; max-width:100%; gap:4px; padding:4px; background:${T.surface2}; border:1px solid ${T.border}; border-radius:13px; }
+.jaa-seg-btn { display:inline-flex; align-items:center; gap:7px; white-space:nowrap; cursor:pointer; border:none; background:transparent; color:${T.body}; padding:9px 15px; border-radius:9px; font:700 .82rem/1 'Space Grotesk',sans-serif; transition:background .16s, color .16s, box-shadow .16s; }
 .jaa-seg-btn:hover { color:${T.amberDk}; }
 .jaa-seg-btn.on { background:${T.surface}; color:${T.ink}; box-shadow:0 2px 9px -3px rgba(26,26,46,.28), inset 0 -2px 0 var(--on, ${T.amber}); }
 .jaa-seg-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 
-/* ── dropdown filters ── */
-.jaa-ddrow { display:flex; flex-wrap:wrap; align-items:flex-end; gap:14px; }
-.jaa-dd { position:relative; display:flex; flex-direction:column; gap:7px; min-width:150px; }
-.jaa-dd-lbl { font:800 .66rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:${T.muted}; }
-.jaa-dd-btn { display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; width:100%; border:1px solid ${T.border}; background:${T.surface2}; border-radius:11px; padding:11px 14px; font:600 .88rem/1 inherit; color:${T.ink}; transition:border-color .15s, box-shadow .15s; }
-.jaa-dd-btn:hover { border-color:${T.amber}; }
-.jaa-dd-btn.open { border-color:${T.amber}; box-shadow:0 0 0 3px ${T.amberSoft}; }
-.jaa-dd-val { font-weight:700; } .jaa-dd-val.all { font-weight:600; color:${T.muted}; }
-.jaa-dd-btn .jaa-chev { color:${T.muted}; transition:transform .2s; } .jaa-dd-btn .jaa-chev.open { transform:rotate(180deg); color:${T.amber}; }
-.jaa-dd-menu { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:30; background:${T.surface}; border:1px solid ${T.border}; border-radius:12px; padding:5px; box-shadow:0 20px 44px -18px rgba(26,26,46,.42); max-height:280px; overflow:auto; }
-.jaa-dd-opt { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; cursor:pointer; border:none; background:none; text-align:left; padding:9px 11px; border-radius:8px; font:600 .86rem/1 inherit; color:${T.body}; transition:background .12s, color .12s; }
-.jaa-dd-opt:hover { background:${T.surface2}; color:${T.ink}; }
-.jaa-dd-opt.on { background:${T.amberSoft}; color:${T.amberDk}; font-weight:700; }
-.jaa-dd-opt.on svg { color:${T.amber}; }
-
-.jaa-search { display:flex; align-items:center; gap:9px; flex:1 1 240px; min-width:220px; background:${T.surface}; border:1px solid ${T.border}; border-radius:11px; padding:11px 15px; align-self:stretch; }
+.jaa-search { display:flex; align-items:center; gap:9px; width:100%; background:${T.surface}; border:1px solid ${T.border}; border-radius:11px; padding:12px 15px; }
 .jaa-search:focus-within { border-color:${T.amber}; box-shadow:0 0 0 3px ${T.amberSoft}; }
-.jaa-search input { flex:1; border:none; outline:none; background:none; font:500 .92rem/1 inherit; color:${T.ink}; }
+.jaa-search input { flex:1; border:none; outline:none; background:none; font:500 .92rem/1 inherit; color:${T.ink}; min-width:0; }
 .jaa-search button { display:grid; place-items:center; color:${T.muted}; background:none; border:none; cursor:pointer; }
 .jaa-searchrow { display:flex; flex-wrap:wrap; align-items:center; gap:14px; }
 .jaa-count { font:500 .88rem/1 inherit; color:${T.muted}; margin:0; }
@@ -569,8 +520,6 @@ const CSS = `
   .jaa-hero-card { padding:30px 20px; border-radius:20px; }
   .jaa-visual { display:none; }
   .jaa-console { padding:20px 16px; border-radius:18px; }
-  .jaa-ddrow { flex-direction:column; align-items:stretch; }
-  .jaa-dd { min-width:0; }
   .jaa-grid, .jaa-sum-grid, .jaa-mark-grid { grid-template-columns:1fr; }
 }
 @media (max-width:420px) {
