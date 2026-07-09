@@ -1235,18 +1235,18 @@ const CSS = `
 .mj-ta-step-done .mj-ta-stepn { background:${T.coral}; border-color:${T.coral}; color:#fff; }
 .mj-ta-steptxt { font:700 .8rem/1.2 'Space Grotesk',sans-serif; color:${T.body}; white-space:nowrap; }
 .mj-ta-step-off .mj-ta-steptxt { color:${T.muted}; }
-.mj-ta-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
-.mj-ta-form { background:${T.card}; border:1px solid ${T.line}; border-radius:18px; padding:26px; box-shadow:0 20px 44px -34px rgba(0,0,0,.35); }
-.mj-ta-formhead { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; }
+.mj-ta-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:stretch; }
+.mj-ta-form { display:flex; flex-direction:column; justify-content:center; height:100%; background:${T.card}; border:1px solid ${T.line}; border-radius:18px; padding:24px; box-shadow:0 20px 44px -34px rgba(0,0,0,.35); }
+.mj-ta-formhead { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
 .mj-ta-formhead strong { font:800 1.05rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
 .mj-ta-tabs { display:inline-flex; gap:3px; padding:3px; border-radius:9px; background:${T.paper2}; }
 .mj-ta-tabs i { font:700 .66rem/1 'Space Grotesk',sans-serif; font-style:normal; padding:5px 10px; border-radius:6px; color:${T.muted}; }
 .mj-ta-tab-on { background:${T.card}; color:${T.coralDk} !important; box-shadow:0 1px 3px rgba(0,0,0,.12); }
 .mj-ta-frow { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.mj-ta-field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.mj-ta-field { display:flex; flex-direction:column; gap:5px; margin-bottom:10px; }
 .mj-ta-field span { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.04em; color:${T.muted}; }
-.mj-ta-input { padding:11px 13px; border-radius:9px; border:1px solid ${T.line}; background:${T.paper}; font:600 .92rem/1 'DM Sans',sans-serif; color:${T.ink}; }
-.mj-ta-btn { position:relative; overflow:hidden; width:100%; margin-top:6px; padding:14px; border:none; border-radius:11px; background:${T.coralSoft}; color:${T.coralDk}; font:800 .92rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.3s; }
+.mj-ta-input { padding:8px 13px; border-radius:9px; border:1px solid ${T.line}; background:${T.paper}; font:600 .9rem/1 'DM Sans',sans-serif; color:${T.ink}; }
+.mj-ta-btn { position:relative; overflow:hidden; width:100%; margin-top:14px; padding:13px; border:none; border-radius:11px; background:${T.coralSoft}; color:${T.coralDk}; font:800 .92rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.3s; }
 .mj-ta-btn-on { background:linear-gradient(135deg,#FF8A47,#F1531F); color:#fff; box-shadow:0 14px 30px -14px rgba(255,105,61,.7); }
 .mj-ta-btn-on::after { content:""; position:absolute; top:0; left:-60%; width:45%; height:100%; background:linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent); transform:skewX(-18deg); animation:mjShimmer 1.5s infinite; }
 @keyframes mjShimmer { 0%{ left:-60%; } 60%,100%{ left:120%; } }
