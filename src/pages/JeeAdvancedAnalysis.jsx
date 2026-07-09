@@ -497,8 +497,9 @@ const CSS = `
 
 /* ── responsive ── */
 @media (max-width:1000px) {
-  /* mobile / tablet: hero becomes a contained card */
-  .jaa-hero { padding:56px 16px 64px; }
+  /* mobile / tablet: hero becomes a contained card. Top padding clears the
+     98px fixed header (TopBar 34 + Navbar 64) so the card isn't overlapped. */
+  .jaa-hero { padding:118px 16px 64px; }
   .jaa-hero-card { max-width:600px; padding:36px 30px; background:${T.surface}; border:1px solid ${T.border}; border-radius:24px; box-shadow:0 24px 60px -34px rgba(26,26,46,.3); }
   .jaa-hero-grid { grid-template-columns:1fr; gap:24px; text-align:center; }
   .jaa-title, .jaa-sub { margin-left:auto; margin-right:auto; }
@@ -516,7 +517,7 @@ const CSS = `
   .jaa-stat-cap { font-size:.6rem; line-height:1.3; }
 }
 @media (max-width:760px) {
-  .jaa-hero { padding:48px 12px 52px; }
+  .jaa-hero { padding:116px 12px 52px; }
   .jaa-hero-card { padding:30px 20px; border-radius:20px; }
   .jaa-visual { display:none; }
   .jaa-console { padding:20px 16px; border-radius:18px; }
@@ -528,6 +529,17 @@ const CSS = `
   .jaa-stat-num { font-size:1.5rem; }
   .jaa-btn-primary, .jaa-btn-ghost { width:100%; justify-content:center; }
   .jaa-cta { width:100%; }
+}
+/* Match the site-wide .container widths so page content left-aligns with the
+   navbar/footer instead of sitting inset. Mirrors the --maxw breakpoints. */
+@media (min-width:1025px) and (max-width:1279px) {
+  .jaa-hero-card, .jaa-dir, .jaa-summary, .jaa-marking { max-width:1140px; }
+}
+@media (min-width:1280px) and (max-width:1727px) {
+  .jaa-hero-card, .jaa-dir, .jaa-summary, .jaa-marking { max-width:1400px; }
+}
+@media (min-width:1728px) {
+  .jaa-hero-card, .jaa-dir, .jaa-summary, .jaa-marking { max-width:1600px; padding-inline:2.5rem; }
 }
 @media (prefers-reduced-motion: reduce) { .jaa-orbit { animation:none !important; } }
 `;
