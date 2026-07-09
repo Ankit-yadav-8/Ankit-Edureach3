@@ -9,7 +9,7 @@ import { useParams, Navigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Plus, Check, Star, Send, Radio,
-  Video, Phone, Paperclip, Camera, Mic, Smile, GraduationCap, Sparkles,
+  Video, Phone, Paperclip, Camera, Mic, Smile, Sparkles,
   BookOpen, CircleDot, Zap, Target, Clock,
 } from "lucide-react";
 import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT, MENTOR_LINKS } from "../data/mentorship.js";
@@ -56,7 +56,7 @@ function Hero({ cfg, plan, year, exam, openEnrol, scrollTo }) {
               gets you a rank in <em>{exam}.</em>
             </h1>
             <div className="mj-hero-cta">
-              <button className="mj-btn-dark" onClick={() => openEnrol(plan)}>Start at ₹1 <ArrowRight size={17} /></button>
+              <button className="mj-btn-dark" onClick={() => openEnrol(plan)}>Start at ₹2,499 <ArrowRight size={17} /></button>
               <button className="mj-btn-link" onClick={() => scrollTo("method")}>
                 <span className="mj-btn-circ"><ArrowUpRight size={15} /></span> SEE THE METHOD
               </button>
@@ -765,7 +765,7 @@ function ChatPhone({ chat, startDelay = 300 }) {
               <span className="mj-wa-bars"><i /><i /><i /></span>
             </div>
             <div className="mj-wa-top">
-              <span className="mj-wa-av"><GraduationCap size={18} /><span className="mj-wa-online" /></span>
+              <span className="mj-wa-av"><b className="mj-wa-cp">CP</b><span className="mj-wa-online" /></span>
               <div className="mj-wa-id">
                 <strong>{chat.mentor} <span className="mj-wa-spark">✨</span></strong>
                 <span>{typing ? "typing…" : chat.status}</span>
@@ -1031,7 +1031,7 @@ export default function Mentorship() {
     <div className="mj">
       <Seo
         title={`${exam} Mentorship by IITians — 1-on-1 Guidance | CollegeParichay`}
-        description="1-on-1 JEE & NEET mentorship by IIT alumni — daily targets, weekly test analysis, live tracking and parent reports. Limited seats. Start at ₹1 on CollegeParichay."
+        description="1-on-1 JEE & NEET mentorship by IIT alumni — daily targets, weekly test analysis, live tracking and parent reports. Limited seats. Start at ₹2,499 on CollegeParichay."
         path={`/mentorship/${variant}`}
       />
       <VariantTabs variant={variant} />
@@ -1344,6 +1344,7 @@ const CSS = `
 .mj-wa-bars i { width:3px; background:#fff; border-radius:1px; } .mj-wa-bars i:nth-child(1){height:5px;} .mj-wa-bars i:nth-child(2){height:8px;} .mj-wa-bars i:nth-child(3){height:11px;}
 .mj-wa-top { display:flex; align-items:center; gap:9px; padding:6px 14px 12px; }
 .mj-wa-av { position:relative; display:grid; place-items:center; width:38px; height:38px; border-radius:50%; background:#fff; color:${T.coralDk}; flex-shrink:0; }
+.mj-wa-cp { font:800 15px/1 'Space Grotesk',sans-serif; letter-spacing:-.5px; color:${T.coralDk}; }
 .mj-wa-online { position:absolute; right:-1px; bottom:-1px; width:11px; height:11px; border-radius:50%; background:#25D366; border:2px solid #fff; }
 .mj-wa-id { flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
 .mj-wa-id strong { font:700 .92rem/1.15 'DM Sans',sans-serif; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
