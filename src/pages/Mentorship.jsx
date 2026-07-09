@@ -421,27 +421,33 @@ function ForParents({ cfg }) {
   const focus = (cfg.metrics?.test?.fix || []).slice(0, 3);
   return (
     <section className="mj-section">
-      <div className="mj-wrap mj-parent-grid">
-        <Reveal className="mj-booklet">
-          <span className="mj-booklet-pill"><BookOpen size={13} /> PARENT REPORT</span>
-          <h2 className="mj-booklet-h">Weekly Progress<br />Booklet</h2>
-          <p className="mj-booklet-sub">A clear, jargon-free summary of your child&rsquo;s week — effort, tests, improvement and what&rsquo;s next.</p>
-          <div className="mj-booklet-div" />
-          <span className="mj-booklet-lbl">STUDENT</span>
-          <strong className="mj-booklet-name">{st.name || "Your child"}</strong>
-          <span className="mj-booklet-meta">{exam} · CollegeParichay Mentorship</span>
-          <span className="mj-booklet-lbl mj-booklet-lbl2">WHAT&rsquo;S INSIDE</span>
-          <ul className="mj-booklet-list">
-            {BOOKLET_INSIDE.map((it, i) => (
-              <li key={i}><CircleDot size={15} /> {it}</li>
-            ))}
-          </ul>
-          <button className="mj-booklet-btn" onClick={() => window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! Can I see a sample parent weekly report?")}`, "_blank")}>
-            See a sample booklet <ArrowUpRight size={16} />
-          </button>
+      <div className="mj-wrap">
+        <Reveal className="mj-sec-head">
+          <div><h2 className="mj-display mj-display-lg">A window into <em>the week.</em></h2></div>
+          <p className="mj-sec-sub">Every Sunday a printable one-pager lands in your inbox — the real hours, tests, ranks and mentor notes your child heard that week.</p>
         </Reveal>
 
-        <Reveal delay={0.1} className="mj-weekly">
+        <Reveal delay={0.1} className="mj-parent-card">
+          <div className="mj-booklet">
+            <span className="mj-booklet-pill"><BookOpen size={13} /> PARENT REPORT</span>
+            <h2 className="mj-booklet-h">Weekly Progress<br />Booklet</h2>
+            <p className="mj-booklet-sub">A clear, jargon-free summary of your child&rsquo;s week — effort, tests, improvement and what&rsquo;s next.</p>
+            <div className="mj-booklet-div" />
+            <span className="mj-booklet-lbl">STUDENT</span>
+            <strong className="mj-booklet-name">{st.name || "Your child"}</strong>
+            <span className="mj-booklet-meta">{exam} · CollegeParichay Mentorship</span>
+            <span className="mj-booklet-lbl mj-booklet-lbl2">WHAT&rsquo;S INSIDE</span>
+            <ul className="mj-booklet-list">
+              {BOOKLET_INSIDE.map((it, i) => (
+                <li key={i}><CircleDot size={15} /> {it}</li>
+              ))}
+            </ul>
+            <button className="mj-booklet-btn" onClick={() => window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! Can I see a sample parent weekly report?")}`, "_blank")}>
+              See a sample booklet <ArrowUpRight size={16} />
+            </button>
+          </div>
+
+          <div className="mj-weekly">
           <div className="mj-weekly-top">
             <span className="mj-weekly-name">The Weekly</span>
             <span className="mj-weekly-vol">{p.issue || "VOL 14 · SUN 12 NOV"}</span>
@@ -475,6 +481,7 @@ function ForParents({ cfg }) {
             </div>
           </div>
           <div className="mj-weekly-foot"><span>PARICHAY · PARENT REPORT</span><span>PAGE 01 / 04</span></div>
+          </div>
         </Reveal>
       </div>
     </section>
@@ -658,14 +665,17 @@ function WhatsApp() {
 function Proof({ cfg }) {
   return (
     <section className="mj-section">
-      <div className="mj-wrap mj-proof-grid">
-        <div className="mj-proof-head">          <h2 className="mj-display mj-display-lg">Chose to be<br /><em>mentored,</em><br />not just taught.</h2>
+      <div className="mj-wrap">
+        <Reveal className="mj-sec-head">
+          <div><h2 className="mj-display mj-display-lg">Chose to be <em>mentored,</em><br />not just taught.</h2></div>
+          <p className="mj-sec-sub">Real messages from students who stopped drifting — the week a rank moved, a backlog cleared, a panic turned into a plan.</p>
+        </Reveal>
+        <div className="mj-proof-grid">
+        <div className="mj-proof-head">
           <div className="mj-stars">
             {[0, 1, 2, 3, 4].map((i) => <Star key={i} size={18} fill={T.coral} color={T.coral} />)}
             <span>4.9 / 5 · 1,240 REVIEWS</span>
           </div>
-          <p className="mj-proof-lead">These aren&rsquo;t testimonials we hunted for. They&rsquo;re messages that
-            landed on their own — the week a rank moved, a backlog cleared, a panic turned into a plan.</p>
           <div className="mj-proof-stats">
             <div className="mj-proof-stat"><strong>92%</strong><span>improved their rank within 8 weeks</span></div>
             <div className="mj-proof-stat"><strong>1,240+</strong><span>aspirants mentored 1-on-1</span></div>
@@ -699,6 +709,7 @@ function Proof({ cfg }) {
               </div>
             );
           })}
+        </div>
         </div>
       </div>
     </section>
@@ -1037,10 +1048,11 @@ const CSS = `
 .mj-dash-next-s { font:500 .78rem/1.3 'DM Sans',sans-serif; color:rgba(255,255,255,.72); }
 
 /* for parents */
-.mj-parent-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:stretch; }
-.mj-booklet { display:flex; flex-direction:column; padding:36px 34px; border-radius:18px; color:#fff;
-  background:linear-gradient(160deg, #FF7A3C 0%, #F1531F 60%, #E0481B 100%);
-  box-shadow:0 34px 70px -40px rgba(241,83,31,.8), inset 0 0 0 1px rgba(255,255,255,.08); position:relative; overflow:hidden; }
+.mj-parent-card { display:grid; grid-template-columns:.92fr 1.08fr; align-items:stretch; border-radius:20px; overflow:hidden; border:1px solid ${T.lineDk};
+  box-shadow:20px 22px 0 -2px ${T.coral}, 0 40px 70px -40px rgba(0,0,0,.32); transition:transform .3s, box-shadow .3s; }
+.mj-parent-card:hover { transform:translate(-3px,-3px); box-shadow:26px 28px 0 -2px ${T.coral}, 0 46px 76px -44px rgba(0,0,0,.38); }
+.mj-booklet { display:flex; flex-direction:column; padding:36px 34px; color:#fff;
+  background:linear-gradient(160deg, #FF7A3C 0%, #F1531F 60%, #E0481B 100%); position:relative; overflow:hidden; }
 .mj-booklet::before { content:""; position:absolute; inset:0; background:
   repeating-linear-gradient(0deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px),
   repeating-linear-gradient(90deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px); pointer-events:none; }
@@ -1062,8 +1074,7 @@ const CSS = `
 .mj-weekly-nextlist { list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
 .mj-weekly-nextlist li { display:flex; align-items:flex-start; gap:9px; font:500 .84rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
 .mj-weekly-nextlist svg { flex-shrink:0; margin-top:2px; color:${T.coral}; }
-.mj-weekly { position:relative; background:#FBF8F2; border:1px solid ${T.lineDk}; border-radius:10px; padding:34px 36px; box-shadow:20px 22px 0 -1px ${T.ink}, 0 34px 60px -34px rgba(0,0,0,.5); transition:transform .3s, box-shadow .3s; }
-.mj-weekly:hover { transform:translate(-3px,-3px); box-shadow:24px 26px 0 -1px ${T.ink}, 0 40px 70px -38px rgba(0,0,0,.55); }
+.mj-weekly { position:relative; display:flex; flex-direction:column; background:#FBF8F2; padding:34px 36px; }
 .mj-weekly-top { display:flex; align-items:baseline; justify-content:space-between; gap:14px; border-bottom:1.5px solid ${T.ink}; padding-bottom:14px; }
 .mj-weekly-name { font:600 1.9rem/1 'Playfair Display',serif; font-style:italic; color:${T.ink}; letter-spacing:-.5px; }
 .mj-weekly-vol { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.18em; color:${T.body}; text-align:right; white-space:nowrap; }
@@ -1081,7 +1092,7 @@ const CSS = `
 .mj-glance-row { display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:12px 0; border-bottom:1px solid ${T.line}; font:500 .82rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
 .mj-glance-row span { flex-shrink:0; }
 .mj-glance-row strong { font:600 .98rem/1.25 'Playfair Display',serif; color:${T.ink}; text-align:right; }
-.mj-weekly-foot { display:flex; justify-content:space-between; margin-top:20px; padding-top:14px; border-top:1px solid ${T.line}; font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
+.mj-weekly-foot { display:flex; justify-content:space-between; margin-top:auto; padding-top:18px; border-top:1px solid ${T.line}; font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
 
 /* whatsapp — animated phones */
 .mj-phones { display:flex; gap:22px; justify-content:center; overflow-x:auto; padding:8px 4px 16px; scroll-snap-type:x mandatory; scrollbar-width:none; }
@@ -1201,7 +1212,7 @@ const CSS = `
 
 /* responsive */
 @media (max-width:940px) {
-  .mj-hero-grid, .mj-parent-grid, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body { grid-template-columns:1fr; }
+  .mj-hero-grid, .mj-parent-card, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body { grid-template-columns:1fr; }
   .mj-hero-visual { order:-1; }
   .mj-sec-head, .mj-dark-head { flex-direction:column; align-items:center; }
   .mj-prog-grid { grid-template-columns:1fr 1fr; } .mj-navy-card { grid-row:auto; grid-column:span 2; }
