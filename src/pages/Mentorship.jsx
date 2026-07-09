@@ -285,6 +285,7 @@ function LiveTracking({ cfg }) {
   const you = g.you || [];
   const gain = you.length ? `+${you[you.length - 1] - you[0]}` : "+130";
   const subjects = m.subjects || [];
+  const fixList = (m.test?.fix || []).slice(0, 3);
   const dashStats = [
     { l: "HRS", v: Math.round(total) },
     { l: "DPPS", v: 128 },
@@ -381,6 +382,26 @@ function LiveTracking({ cfg }) {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {fixList.length > 0 && (
+                <>
+                  <span className="mj-dash-lbl mj-dash-lbl-sp">THIS WEEK&rsquo;S FIX-LIST</span>
+                  <div className="mj-dash-fix">
+                    {fixList.map((f, i) => (
+                      <Reveal key={i} delay={0.06 * i} className="mj-dash-fixitem">
+                        <span className="mj-dash-fixcheck"><Check size={12} strokeWidth={3} /></span>
+                        <span className="mj-dash-fixtext">{f}</span>
+                      </Reveal>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              <div className="mj-dash-next">
+                <span className="mj-dash-next-l"><Radio size={11} /> NEXT MENTOR CALL</span>
+                <strong>Today · 6:00 PM</strong>
+                <span className="mj-dash-next-s">Weekly review + next-week plan</span>
               </div>
             </div>
           </div>
@@ -984,6 +1005,14 @@ const CSS = `
 .mj-dash-sub-top strong { font:800 .82rem/1 'Space Grotesk',sans-serif; color:${T.coralDk}; }
 .mj-dash-sub-track { height:8px; border-radius:6px; background:${T.paper2}; overflow:hidden; }
 .mj-dash-sub-fill { height:100%; border-radius:6px; background:linear-gradient(90deg, #FF8A47, #F1531F); }
+.mj-dash-fix { display:flex; flex-direction:column; gap:10px; }
+.mj-dash-fixitem { display:flex; align-items:flex-start; gap:10px; }
+.mj-dash-fixcheck { display:grid; place-items:center; width:20px; height:20px; border-radius:6px; background:${T.coralSoft}; color:${T.coralDk}; flex-shrink:0; margin-top:1px; }
+.mj-dash-fixtext { font:500 .84rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
+.mj-dash-next { display:flex; flex-direction:column; gap:4px; margin-top:20px; padding:16px 18px; border-radius:14px; background:${T.ink}; color:#fff; }
+.mj-dash-next-l { display:inline-flex; align-items:center; gap:6px; font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.coral}; }
+.mj-dash-next strong { font:700 1.15rem/1.1 'Playfair Display',serif; color:#fff; margin-top:4px; }
+.mj-dash-next-s { font:500 .78rem/1.3 'DM Sans',sans-serif; color:rgba(255,255,255,.72); }
 
 /* for parents */
 .mj-parent-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:center; }
