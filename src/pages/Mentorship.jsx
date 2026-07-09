@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Plus, Check, Star, Send, Radio,
   Video, Phone, Paperclip, Camera, Mic, Smile, GraduationCap, Sparkles,
-  BookOpen, CircleDot,
+  BookOpen, CircleDot, Zap, Target, Clock,
 } from "lucide-react";
 import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT, MENTOR_LINKS } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
@@ -156,65 +156,161 @@ function Method({ cfg }) {
   );
 }
 
-/* ═══════════════ § 04 · PROGRESS (dashboard) ═══════════════ */
-function LineChart({ you = [], batch = [] }) {
-  const all = [...you, ...batch, 1];
-  const max = Math.max(...all);
-  const W = 520, H = 150, n = Math.max(you.length, 2);
-  const pts = (arr) => arr.map((v, i) => `${(i / (n - 1)) * W},${H - (v / max) * (H - 12) - 6}`).join(" ");
+/* ═══════════════ § 04 · TEST ANALYSIS (animated) ═══════════════ */
+const TA_STEPS = ["You enter test data", "AI analyses your paper", "Trends visualised", "Strategies + rank predicted"];
+function TrendLine({ data, color, target }) {
+  const series = target ? [...data, ...target] : data;
+  const max = Math.max(...series, 1), min = Math.min(...series);
+  const W = 300, H = 88, n = Math.max(data.length, 2);
+  const y = (v) => H - 8 - ((v - min) / ((max - min) || 1)) * (H - 22);
+  const pts = data.map((v, i) => [(i / (n - 1)) * W, y(v)]);
+  const line = pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="mj-line" preserveAspectRatio="none">
-      <polyline points={pts(batch)} fill="none" stroke="rgba(255,255,255,.22)" strokeWidth="2.5" strokeDasharray="4 5" />
-      <polyline points={pts(you)} fill="none" stroke={T.coral} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-      {you.map((v, i) => (
-        <circle key={i} cx={(i / (n - 1)) * W} cy={H - (v / max) * (H - 12) - 6} r="3.5" fill={T.coral} />
+    <svg viewBox={`0 0 ${W} ${H}`} className="mj-ta-svg" preserveAspectRatio="none" aria-hidden="true">
+      {target && (
+        <motion.line x1="0" y1={y(target[0])} x2={W} y2={y(target[0])} stroke={T.ink} strokeWidth="2" strokeDasharray="3 4" opacity=".4"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6 }} />
+      )}
+      <motion.polyline points={line} fill="none" stroke={color} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
+        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, ease: "easeInOut" }} />
+      {pts.map((p, i) => (
+        <motion.circle key={i} cx={p[0]} cy={p[1]} r="2.4" fill="#fff" stroke={color} strokeWidth="1.5"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 + i * 0.05 }} />
       ))}
     </svg>
   );
 }
-function Progress({ cfg }) {
+function TestAnalysis({ cfg }) {
   const m = cfg.metrics || {};
-  const g = m.growth || {};
-  const pct = m.outcomes?.find((o) => /percentile|%ile/i.test(o.l)) || m.outcomes?.[1] || { v: "94%", l: "Rank percentile" };
-  const wk = m.weekHours || [];
-  const wkMax = Math.max(...wk, 1);
-  const totalH = wk.reduce((a, b) => a + b, 0).toFixed(0);
+  const you = m.growth?.you || [84, 120, 150, 178, 196, 214];
+  const total = 300;
+  const scored = you[you.length - 1] || 214;
+  const prev = you[you.length - 2] || scored;
+  const pctUp = prev ? Math.max(Math.round(((scored - prev) / prev) * 100), 1) : 9;
+  const accN = parseInt((m.outcomes || []).find((o) => /accuracy/i.test(o.l))?.v || "86", 10) || 86;
+  const accTrend = [accN - 16, accN - 12, accN - 14, accN - 8, accN - 5, accN - 3, accN].map((v) => Math.max(v, 40));
+  const target = you.map(() => Math.round(total * 0.75));
+  const weak = m.test?.weak || ["Rotational Motion", "Thermodynamics", "p-Block"];
+  const exam = cfg.tracks?.[0]?.exam || "JEE Main 2026";
+  const strategies = [
+    { Ic: BookOpen, t: `Add 1 hr/day to ${weak[0]} — your weakest area this week.` },
+    { Ic: Zap, t: `Attack ${weak[1] || "Physics"}${weak[2] ? " & " + weak[2] : ""} first — the most recurring weak chapters.` },
+    { Ic: Clock, t: "Reserve the last 10 min per paper to recheck — silly errors cost ~5 marks." },
+    { Ic: Target, t: `Accuracy at ${accN}% — skip low-confidence questions to dodge negatives.` },
+  ];
+  const rank = [
+    { v: "9,842", l: "All-India" }, { v: "2,410", l: "Category" },
+    { v: "99.31", l: "percentile" }, { v: "1.8k–2.6k", l: "likely band" },
+  ];
+
+  const [stage, setStage] = useState(0);
+  const rootRef = useRef(null);
+  const started = useRef(false);
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) { setStage(3); return; }
+    const timers = [];
+    const cycle = () => {
+      setStage(0);
+      timers.push(setTimeout(() => setStage(1), 1400));
+      timers.push(setTimeout(() => setStage(2), 2700));
+      timers.push(setTimeout(() => setStage(3), 4500));
+      timers.push(setTimeout(cycle, 9500));
+    };
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started.current) { started.current = true; cycle(); io.disconnect(); }
+    }, { threshold: 0.3 });
+    io.observe(el);
+    return () => { io.disconnect(); timers.forEach(clearTimeout); };
+  }, []);
+  const active = stage === 0 ? 1 : stage === 1 ? 2 : stage === 2 ? 3 : 4;
+
   return (
-    <section className="mj-section">
+    <section className="mj-section mj-ta" ref={rootRef}>
       <div className="mj-wrap">
         <Reveal className="mj-sec-head">
-          <div>            <h2 className="mj-display mj-display-lg">Numbers that <em>move.</em></h2>
-          </div>
-          <p className="mj-sec-sub">The dashboard shows the week — not the semester. Small wins, stacked visibly.</p>
+          <span className="mj-ta-pill"><span className="mj-dot mj-dot-live" /> LIVE PRODUCT PREVIEW</span>
+          <div><h2 className="mj-display mj-display-lg">See how your test turns<br />into a <em>game plan.</em></h2></div>
+          <p className="mj-sec-sub">Enter your marks. Watch the analysis spot the trend, predict your rank, and hand you the next steps.</p>
         </Reveal>
 
-        <div className="mj-prog-grid">
-          <Reveal className="mj-prog-card mj-navy-card">
-            <div className="mj-card-head"><span>MOCK SCORE · LAST {(g.you || []).length} WKS</span><span className="mj-up">↗ +120% growth</span></div>
-            <LineChart you={g.you} batch={g.batch} />
-          </Reveal>
-          <Reveal delay={0.08} className="mj-prog-card mj-coral-card">
-            <span className="mj-card-head-lite">RANK PERCENTILE</span>
-            <div className="mj-bignum">{pct.v}</div>
-            <div className="mj-bignum-l">{pct.l}</div>
-          </Reveal>
-          <Reveal delay={0.12} className="mj-prog-card mj-paper-card mj-prog-bars">
-            <div className="mj-card-head-lite mj-dk">WEEKLY STUDY HOURS</div>
-            <div className="mj-bars">
-              {wk.map((h, i) => (
-                <div key={i} className="mj-bar-col">
-                  <div className="mj-bar" style={{ height: `${(h / wkMax) * 100}%` }} />
-                  <span>W{i + 1}</span>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-          <Reveal delay={0.16} className="mj-prog-card mj-paper-card mj-prog-hours">
-            <div className="mj-card-head-lite mj-dk">HOURS THIS WEEK</div>
-            <div className="mj-bignum mj-dk">{totalH}h</div>
-            <div className="mj-bignum-l mj-up-dk">↗ tracked live with your mentor</div>
-          </Reveal>
+        <div className="mj-ta-steps">
+          {TA_STEPS.map((s, i) => {
+            const num = i + 1;
+            const st = num < active ? "done" : num === active ? "on" : "off";
+            return (
+              <div key={i} className={`mj-ta-step mj-ta-step-${st}`}>
+                <span className="mj-ta-stepn">{num < active ? <Check size={13} strokeWidth={3} /> : num}</span>
+                <span className="mj-ta-steptxt">{s}</span>
+              </div>
+            );
+          })}
         </div>
+
+        <Reveal delay={0.06} className="mj-ta-grid">
+          <div className="mj-ta-form">
+            <div className="mj-ta-formhead">
+              <strong>Add a test result</strong>
+              <span className="mj-ta-tabs"><i className="mj-ta-tab-on">Mock</i><i>Mains</i><i>Advanced</i></span>
+            </div>
+            <label className="mj-ta-field"><span>Test name</span><div className="mj-ta-input">Mock 7</div></label>
+            <div className="mj-ta-frow">
+              <label className="mj-ta-field"><span>Total marks</span><div className="mj-ta-input">{total}</div></label>
+              <label className="mj-ta-field"><span>Marks scored</span><div className="mj-ta-input">{scored}</div></label>
+            </div>
+            <div className="mj-ta-frow">
+              <label className="mj-ta-field"><span>Correct</span><div className="mj-ta-input">71</div></label>
+              <label className="mj-ta-field"><span>Wrong</span><div className="mj-ta-input">9</div></label>
+            </div>
+            <label className="mj-ta-field"><span>Skipped</span><div className="mj-ta-input">10</div></label>
+            <button className={`mj-ta-btn ${stage >= 1 ? "mj-ta-btn-on" : ""}`}>
+              {stage >= 1 && stage < 3 ? "Analysing…" : "+ Analyse this test"}
+            </button>
+            <AnimatePresence>
+              {stage >= 3 && (
+                <motion.div key="banner" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mj-ta-banner">
+                  <Check size={15} strokeWidth={3} /> Great work — your score is up {pctUp}% vs last mock. Momentum going.
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <AnimatePresence>
+              {stage >= 3 && (
+                <motion.div key="rank" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: 0.1 }} className="mj-ta-rank">
+                  <span className="mj-ta-rank-l">🎯 PREDICTED {exam.toUpperCase()} RANK</span>
+                  <div className="mj-ta-rank-row">
+                    {rank.map((r, i) => <div key={i} className="mj-ta-rank-c"><strong>{r.v}</strong><span>{r.l}</span></div>)}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="mj-ta-right">
+            <div className="mj-ta-card">
+              <div className="mj-ta-cardhead"><strong>Score trend</strong><span>vs 75% target</span></div>
+              {stage >= 2 ? <TrendLine data={you} target={target} color={T.coral} /> : <div className="mj-ta-waiting">Waiting for data…</div>}
+              <div className="mj-ta-legend"><span><i style={{ background: T.coral }} /> You</span><span><i style={{ background: T.ink }} /> Target</span></div>
+            </div>
+            <div className="mj-ta-card">
+              <div className="mj-ta-cardhead"><strong>Accuracy trend</strong><span>correct ÷ attempted</span></div>
+              {stage >= 2 ? <TrendLine data={accTrend} color="#16a34a" /> : <div className="mj-ta-waiting">Waiting for data…</div>}
+            </div>
+            <div className="mj-ta-card">
+              <div className="mj-ta-cardhead"><strong>💡 Strategies to do better</strong></div>
+              {stage >= 3 ? (
+                <div className="mj-ta-strat">
+                  {strategies.map((s, i) => (
+                    <motion.div key={i} className="mj-ta-strat-i" initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.12 }}>
+                      <span className="mj-ta-strat-ic"><s.Ic size={14} /></span>
+                      <span>{s.t}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : <div className="mj-ta-waiting mj-ta-waiting-sm">Personalised tips appear after analysis…</div>}
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -858,8 +954,8 @@ export default function Mentorship() {
       <StatBand cfg={cfg} />
       <Qualifier cfg={cfg} />
       <Method cfg={cfg} />
-      <Progress cfg={cfg} />
       <LiveTracking cfg={cfg} />
+      <TestAnalysis cfg={cfg} />
       <ForParents cfg={cfg} />
       <WhatsApp />
       <Proof cfg={cfg} />
@@ -988,6 +1084,51 @@ const CSS = `
 .mj-bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; }
 .mj-bar { width:100%; background:${T.coral}; border-radius:5px 5px 0 0; min-height:5px; }
 .mj-bar-col span { font:700 .6rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
+
+/* test analysis */
+.mj-ta-pill { display:inline-flex; align-items:center; gap:7px; padding:6px 14px; border-radius:50px; background:${T.coralSoft}; border:1px solid ${T.coral}; font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.coralDk}; }
+.mj-ta-steps { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:12px 8px; margin-bottom:44px; }
+.mj-ta-step { display:inline-flex; align-items:center; gap:9px; }
+.mj-ta-step:not(:last-child)::after { content:""; width:26px; height:1.5px; margin-left:8px; background:${T.lineDk}; }
+.mj-ta-stepn { display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:${T.card}; border:1.5px solid ${T.lineDk}; font:800 .74rem/1 'Space Grotesk',sans-serif; color:${T.muted}; flex-shrink:0; transition:.3s; }
+.mj-ta-step-on .mj-ta-stepn { background:${T.coral}; border-color:${T.coral}; color:#fff; box-shadow:0 0 0 5px ${T.coralSoft}; }
+.mj-ta-step-done .mj-ta-stepn { background:${T.coral}; border-color:${T.coral}; color:#fff; }
+.mj-ta-steptxt { font:700 .8rem/1.2 'Space Grotesk',sans-serif; color:${T.body}; white-space:nowrap; }
+.mj-ta-step-off .mj-ta-steptxt { color:${T.muted}; }
+.mj-ta-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
+.mj-ta-form { background:${T.card}; border:1px solid ${T.line}; border-radius:18px; padding:26px; box-shadow:0 20px 44px -34px rgba(0,0,0,.35); }
+.mj-ta-formhead { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; }
+.mj-ta-formhead strong { font:800 1.05rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
+.mj-ta-tabs { display:inline-flex; gap:3px; padding:3px; border-radius:9px; background:${T.paper2}; }
+.mj-ta-tabs i { font:700 .66rem/1 'Space Grotesk',sans-serif; font-style:normal; padding:5px 10px; border-radius:6px; color:${T.muted}; }
+.mj-ta-tab-on { background:${T.card}; color:${T.coralDk} !important; box-shadow:0 1px 3px rgba(0,0,0,.12); }
+.mj-ta-frow { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.mj-ta-field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.mj-ta-field span { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.04em; color:${T.muted}; }
+.mj-ta-input { padding:11px 13px; border-radius:9px; border:1px solid ${T.line}; background:${T.paper}; font:600 .92rem/1 'DM Sans',sans-serif; color:${T.ink}; }
+.mj-ta-btn { width:100%; margin-top:6px; padding:14px; border:none; border-radius:11px; background:${T.coralSoft}; color:${T.coralDk}; font:800 .92rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.3s; }
+.mj-ta-btn-on { background:linear-gradient(135deg,#FF8A47,#F1531F); color:#fff; box-shadow:0 14px 30px -14px rgba(255,105,61,.7); }
+.mj-ta-banner { display:flex; align-items:center; gap:9px; margin-top:16px; padding:13px 15px; border-radius:11px; background:#e9f8ee; border:1px solid #bbe6c8; font:600 .84rem/1.3 'DM Sans',sans-serif; color:#15803d; }
+.mj-ta-banner svg { flex-shrink:0; }
+.mj-ta-rank { margin-top:14px; padding:16px 18px; border-radius:13px; border:1px dashed ${T.lineDk}; background:${T.paper2}; }
+.mj-ta-rank-l { font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.body}; }
+.mj-ta-rank-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:12px; }
+.mj-ta-rank-c strong { display:block; font:800 1.15rem/1 'Playfair Display',serif; color:${T.coralDk}; }
+.mj-ta-rank-c span { font:600 .58rem/1.2 'DM Sans',sans-serif; color:${T.muted}; }
+.mj-ta-right { display:flex; flex-direction:column; gap:16px; }
+.mj-ta-card { background:${T.card}; border:1px solid ${T.line}; border-radius:16px; padding:20px 22px; box-shadow:0 16px 36px -30px rgba(0,0,0,.3); }
+.mj-ta-cardhead { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.mj-ta-cardhead strong { font:800 .96rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
+.mj-ta-cardhead span { font:600 .68rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
+.mj-ta-svg { width:100%; height:88px; display:block; overflow:visible; }
+.mj-ta-waiting { display:grid; place-items:center; height:88px; font:600 .82rem/1 'DM Sans',sans-serif; color:${T.muted}; }
+.mj-ta-waiting-sm { height:70px; font-style:italic; }
+.mj-ta-legend { display:flex; gap:18px; margin-top:12px; }
+.mj-ta-legend span { display:inline-flex; align-items:center; gap:6px; font:600 .7rem/1 'DM Sans',sans-serif; color:${T.body}; }
+.mj-ta-legend i { width:9px; height:9px; border-radius:50%; }
+.mj-ta-strat { display:flex; flex-direction:column; gap:12px; }
+.mj-ta-strat-i { display:flex; align-items:flex-start; gap:11px; font:500 .84rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
+.mj-ta-strat-ic { display:grid; place-items:center; width:26px; height:26px; border-radius:8px; background:${T.coralSoft}; color:${T.coralDk}; flex-shrink:0; }
 
 /* live tracking — light coded dashboard */
 .mj-dash { border-radius:22px; overflow:hidden; border:1px solid ${T.lineDk}; background:${T.card}; box-shadow:0 40px 80px -50px rgba(0,0,0,.4); }
@@ -1212,7 +1353,8 @@ const CSS = `
 
 /* responsive */
 @media (max-width:940px) {
-  .mj-hero-grid, .mj-parent-card, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body { grid-template-columns:1fr; }
+  .mj-hero-grid, .mj-parent-card, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body, .mj-ta-grid { grid-template-columns:1fr; }
+  .mj-ta-step:not(:last-child)::after { display:none; }
   .mj-hero-visual { order:-1; }
   .mj-sec-head, .mj-dark-head { flex-direction:column; align-items:center; }
   .mj-prog-grid { grid-template-columns:1fr 1fr; } .mj-navy-card { grid-row:auto; grid-column:span 2; }
