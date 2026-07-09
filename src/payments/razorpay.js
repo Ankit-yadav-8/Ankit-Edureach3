@@ -16,10 +16,15 @@ export function loadRazorpay() {
   return scriptPromise;
 }
 
-async function post(path, body) {
+async function post(path, body, token) {
   const res = await fetch(API_BASE + path, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      // When signed in, tag the request so the server can link the enrolment to
+      // the account (independent of whatever email is typed into the form).
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
@@ -31,12 +36,14 @@ async function post(path, body) {
    1. create an order on our server (amount is fixed server-side)
    2. open the Razorpay checkout
    3. verify the signature on our server
-   Resolves with { paymentId } on success, rejects/cancels otherwise. */
-export async function startPayment(details) {
+   Resolves with { paymentId } on success, rejects/cancels otherwise.
+   `token` (optional) is the logged-in account's JWT, forwarded so the server
+   can tie the enrolment to that account. */
+export async function startPayment(details, token) {
   const ok = await loadRazorpay();
   if (!ok) throw new Error("Could not load the payment gateway. Check your connection.");
 
-  const order = await post("/api/payment/order", details);
+  const order = await post("/api/payment/order", details, token);
 
   return new Promise((resolve, reject) => {
     const rzp = new window.Razorpay({
@@ -66,7 +73,7 @@ export async function startPayment(details) {
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
             ...details,
-          });
+          }, token);
           resolve({ paymentId: response.razorpay_payment_id });
         } catch (e) {
           reject(e);

@@ -4,7 +4,7 @@ import Razorpay from "razorpay";
 import Enrollment from "../models/Enrollment.js";
 import User from "../models/User.js";
 import { requireAdmin } from "../middleware/admin.js";
-import { requireAuth } from "../middleware/auth.js";
+import { requireAuth, optionalAuth } from "../middleware/auth.js";
 import { ensureStudentId, nextStudentId } from "../utils/studentId.js";
 import { batchLabelFor, validUntilFor } from "../utils/plans.js";
 
@@ -17,9 +17,9 @@ const PLANS = {
   "all-colleges":  { amount: 499,  label: "All Colleges Counselling (Any Rank)" },
   // ── Mentorship plans (JEE & NEET) ──
   "mentor-jee-2027":   { amount: 2499, label: "JEE 2027 Mentorship Program" },
-  "mentor-neet-2027":  { amount: 2499, label: "NEET 2027 Mentorship Program" },
+  "mentor-neet-2027":  { amount: 1, label: "NEET 2027 Mentorship Program" },
   "mentor-jee-2028":   { amount: 2499, label: "JEE 2028 Mentorship Program (2-Year)" },
-  "mentor-neet-2028":  { amount: 2499, label: "NEET 2028 Mentorship Program (2-Year)" },
+  "mentor-neet-2028":  { amount: 1, label: "NEET 2028 Mentorship Program (2-Year)" },
   "mentor-foundation": { amount: 2499, label: "Foundation Mentorship (Class 9–10)" },
 };
 
@@ -82,7 +82,7 @@ router.post("/order", async (req, res) => {
 /* ── Verify the payment signature ─────────────────────────────────
    Body: { razorpay_order_id, razorpay_payment_id, razorpay_signature,
            plan, name, email, phone, ... }                                 */
-router.post("/verify", async (req, res) => {
+router.post("/verify", optionalAuth, async (req, res) => {
   try {
     if (!KEY_SECRET) return res.status(503).json({ error: "Payments are not configured yet." });
 
@@ -117,6 +117,9 @@ router.post("/verify", async (req, res) => {
         {
           plan,
           amount: planMeta.amount,
+          // Link to the signed-in account when present — the reliable owner key,
+          // independent of the (editable) email/phone typed into the form.
+          ...(req.user?.id ? { userId: req.user.id } : {}),
           name:      String(req.body.name || "").trim(),
           email:     String(req.body.email || "").trim().toLowerCase(),
           phone:     String(req.body.phone || "").trim(),
@@ -155,9 +158,15 @@ router.post("/verify", async (req, res) => {
 router.get("/my-enrollments", requireAuth, async (req, res) => {
   res.set("Cache-Control", "no-store");
   try {
-    const user = await User.findById(req.user.id).select("email").lean();
-    if (!user?.email) return res.json({ enrollments: [] });
-    const items = await Enrollment.find({ status: "paid", email: user.email.toLowerCase() })
+    const user = await User.findById(req.user.id).select("email phone").lean();
+    // Match a purchase to this account by ANY stable identifier: the account id
+    // stored at checkout, the account email, or the account phone (matched on
+    // the last 10 digits so formatting differences don't hide a paid enrolment).
+    const or = [{ userId: req.user.id }];
+    if (user?.email) or.push({ email: user.email.toLowerCase() });
+    const phone10 = String(user?.phone || "").replace(/\D/g, "").slice(-10);
+    if (phone10.length === 10) or.push({ phone: new RegExp(phone10 + "$") });
+    const items = await Enrollment.find({ status: "paid", $or: or })
       .sort({ createdAt: -1 }).lean();
     // Mentorship enrolments carry a student ID, a batch label and a validity
     // window — back-fill the ID here so older students get one on first open.

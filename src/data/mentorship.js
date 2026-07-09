@@ -18,9 +18,9 @@ export const SEATS_LEFT = 37; // shown as "X of 120 seats left"
    All mentorship plans are now a flat ₹2,499 (cascade shown for marketing). */
 export const MENTOR_PLANS = {
   "mentor-jee-2027":  { amount: 2499, old: 7999, drops: [7999, 4999, 2499], exam: "JEE",        year: 2027 },
-  "mentor-neet-2027": { amount: 2499, old: 7999, drops: [7999, 4999, 2499], exam: "NEET",       year: 2027 },
+  "mentor-neet-2027": { amount: 1, old: 7999, drops: [7999, 4999, 1], exam: "NEET",       year: 2027 },
   "mentor-jee-2028":  { amount: 2499, old: 7999, drops: [7999, 4999, 2499], exam: "JEE",        year: 2028 },
-  "mentor-neet-2028": { amount: 2499, old: 7999, drops: [7999, 4999, 2499], exam: "NEET",       year: 2028 },
+  "mentor-neet-2028": { amount: 1, old: 7999, drops: [7999, 4999, 1], exam: "NEET",       year: 2028 },
   "mentor-foundation":{ amount: 2499, old: 5999, drops: [5999, 2499],       exam: "Foundation", year: null },
 };
 

@@ -31,7 +31,7 @@ const PLAN_META = {
     band: "1-on-1 IITian mentor · Class 12 / Droppers",
   },
   "mentor-neet-2027": {
-    amount: 2499, old: 7999, kind: "mentorship", targetExam: "NEET 2027",
+    amount: 1, old: 7999, kind: "mentorship", targetExam: "NEET 2027",
     title: "NEET 2027 Mentorship Program",
     band: "1-on-1 doctor mentor · Class 12 / Droppers",
   },
@@ -41,7 +41,7 @@ const PLAN_META = {
     band: "2-year IITian mentorship · Class 11",
   },
   "mentor-neet-2028": {
-    amount: 2499, old: 7999, kind: "mentorship", targetExam: "NEET 2028",
+    amount: 1, old: 7999, kind: "mentorship", targetExam: "NEET 2028",
     title: "NEET 2028 Mentorship (2-Year)",
     band: "2-year doctor mentorship · Class 11",
   },
@@ -104,7 +104,7 @@ function EnrolModal({ plan, onClose }) {
   const isMentorship = meta.kind === "mentorship";
   // Pre-fill contact details straight from the logged-in account — the student
   // can still edit any of them before paying.
-  const { user } = useAuth() || {};
+  const { user, token } = useAuth() || {};
   const [f, setF] = useState(() => ({
     ...EMPTY,
     name:      user?.name      || "",
@@ -144,7 +144,7 @@ function EnrolModal({ plan, onClose }) {
     if (!validate()) return;
     setBusy(true);
     try {
-      const { paymentId } = await startPayment({ plan, targetExam: meta.targetExam || "", ...f });
+      const { paymentId } = await startPayment({ plan, targetExam: meta.targetExam || "", ...f }, token);
       setDone({ paymentId });
     } catch (e) {
       if (e.message !== "CANCELLED")

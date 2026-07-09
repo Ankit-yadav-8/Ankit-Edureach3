@@ -6,6 +6,11 @@ const enrollmentSchema = new mongoose.Schema(
     // first paid mentorship enrolment; back-filled for older enrolments on read.
     studentId: { type: String, default: null, index: true },
 
+    // The logged-in account that made this purchase (when authenticated at
+    // checkout). This is the reliable link to the user — the `email`/`phone`
+    // below are editable in the form and may not match the account.
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null, index: true },
+
     // Plan
     plan: {
       type: String,
