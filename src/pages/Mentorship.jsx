@@ -11,6 +11,7 @@ import {
   ArrowRight, ArrowUpRight, Plus, Check, Star, Send, Radio,
   Video, Phone, Paperclip, Camera, Mic, Smile, Sparkles,
   BookOpen, CircleDot, Zap, Target, Clock,
+  Brain, PlayCircle, Activity,
 } from "lucide-react";
 import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT, MENTOR_LINKS } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
@@ -42,35 +43,67 @@ function Label({ children, dark }) {
   return <span className={dark ? "mj-label mj-label-dark" : "mj-label"}>{children}</span>;
 }
 
-/* ═══════════════ HERO — journal masthead ═══════════════ */
+/* ═══════════════ HERO — glassmorphic performance engine ═══════════════ */
 function Hero({ cfg, plan, year, exam, openEnrol, scrollTo }) {
+  const p = MENTOR_PLANS[plan] || { amount: 2499 };
+  const cards = [
+    { Ic: Activity, t: "Effort Engine", d: "Daily targets and check-ins that track momentum, not just marks." },
+    { Ic: Brain, t: "IITian Mentors", d: "Direct 1-on-1 access to the minds who've already decoded the rank." },
+    { Ic: Zap, t: "Syllabus Velocity", d: `Every week mapped in real time against the ${exam} exam timeline.` },
+  ];
   return (
     <section className="mj-hero">
+      <div className="mj-hero-bg" aria-hidden="true">
+        <span className="mj-orb mj-orb-a" />
+        <span className="mj-orb mj-orb-b" />
+        <span className="mj-gem"><span className="mj-gem-core" /></span>
+        <span className="mj-grid" />
+      </div>
       <span className="mj-watermark" aria-hidden="true">{year}</span>
+
       <div className="mj-wrap mj-hero-inner">
-        <div className="mj-hero-grid">
-          <Reveal className="mj-hero-left">
+        <div className="mj-hero-center">
+          <Reveal className="mj-glass-tag">
+            <Sparkles size={13} /> <span>{year} Cohort · Elite 1-on-1 Access</span>
+          </Reveal>
+          <Reveal delay={0.08}>
             <h1 className="mj-hero-h1">
-              A 1-on-1 mentorship built by <em>IITians</em> — with weekly test surgery,
-              a live tracker your parents can read, and the calm rhythm that actually
-              gets you a rank in <em>{exam}.</em>
+              A 1-on-1 mentorship built by <em>IITians</em> — weekly test surgery,
+              a live tracker your parents can read, and the calm rhythm that gets
+              you a rank in <em>{exam}.</em>
             </h1>
-            <div className="mj-hero-cta">
-              <button className="mj-btn-dark" onClick={() => openEnrol(plan)}>Start at ₹2,499 <ArrowRight size={17} /></button>
-              <button className="mj-btn-link" onClick={() => scrollTo("method")}>
-                <span className="mj-btn-circ"><ArrowUpRight size={15} /></span> SEE THE METHOD
-              </button>
-            </div>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <p className="mj-hero-sub">
+              Continuous effort tracking, direct mentor access, and a syllabus mapped
+              to the {exam} timeline — one calm system from Day 1 to Rank Day.
+            </p>
+          </Reveal>
+          <Reveal delay={0.24} className="mj-hero-cta">
+            <button className="mj-btn-glow" onClick={() => openEnrol(plan)}>
+              Start at ₹{(p.amount || 2499).toLocaleString("en-IN")} <ArrowRight size={18} />
+            </button>
+            <button className="mj-btn-glass" onClick={() => scrollTo("method")}>
+              See the method <PlayCircle size={18} />
+            </button>
           </Reveal>
 
-          <Reveal delay={0.12} className="mj-hero-visual">
-            <span className="mj-badge-jump"><b>AVG JUMP</b>+18,400 ranks</span>
-            <div className="mj-hero-imgcard">
-              <img src={cfg.heroImage} alt={`${exam} mentorship`} loading="eager" />
-            </div>
-            <span className="mj-badge-live"><span className="mj-dot mj-dot-live" /> LIVE NOW · 312 studying</span>
+          <Reveal delay={0.32} className="mj-hero-cards">
+            {cards.map(({ Ic, t, d }, i) => (
+              <div key={i} className="mj-gcard">
+                <span className="mj-gcard-ic"><Ic size={20} /></span>
+                <h3>{t}</h3>
+                <p>{d}</p>
+              </div>
+            ))}
           </Reveal>
         </div>
+      </div>
+
+      <div className="mj-hero-live" aria-hidden="true">
+        <div className="mj-hl-top"><span className="mj-dot mj-dot-live" /> LIVE · 312 STUDYING NOW</div>
+        <div className="mj-hl-row"><span>TARGET</span><b>AIR &lt; 500</b></div>
+        <div className="mj-hl-bar"><span style={{ width: "92%" }} /></div>
       </div>
     </section>
   );
@@ -1073,35 +1106,56 @@ const CSS = `
 .mj-tab:hover { border-color:${T.coral}; color:${T.coralDk}; }
 .mj-tab-on { background:${T.ink}; border-color:${T.ink}; color:#fff; }
 
-/* hero */
-.mj-hero { position:relative; padding:22px 0 70px; overflow:hidden; border-bottom:1px solid ${T.line}; }
-.mj-watermark { position:absolute; top:-4%; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-style:italic; font-weight:900; font-size:min(42vw,600px); line-height:1; color:transparent; -webkit-text-stroke:1.5px ${T.lineDk}; opacity:.28; pointer-events:none; user-select:none; z-index:0; }
-.mj-hero-inner { position:relative; z-index:1; }
-.mj-hero-meta { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
-.mj-pill { display:inline-flex; align-items:center; gap:8px; padding:7px 14px; border:1px solid ${T.lineDk}; border-radius:50px; background:${T.card}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.body}; }
-.mj-pill-warn { color:${T.coralDk}; border-color:${T.coralSoft}; background:${T.coralSoft}; }
-.mj-issue { font:700 .7rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; text-align:center; }
+/* hero — glassmorphic performance engine (coral + cream) */
+.mj-hero { position:relative; padding:clamp(96px,13vw,158px) 0 clamp(74px,9vw,116px); overflow:hidden; border-bottom:1px solid ${T.line}; background:radial-gradient(130% 90% at 50% -12%, #FFF7F2 0%, ${T.paper} 58%); }
+.mj-hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.mj-orb { position:absolute; border-radius:50%; filter:blur(72px); }
+.mj-orb-a { width:540px; height:540px; top:-170px; left:-130px; background:radial-gradient(circle, rgba(255,105,61,.42), transparent 70%); opacity:.6; animation:mjfloat 16s ease-in-out infinite; }
+.mj-orb-b { width:480px; height:480px; bottom:-200px; right:-110px; background:radial-gradient(circle, rgba(255,178,130,.4), transparent 70%); opacity:.55; animation:mjfloat 21s ease-in-out infinite reverse; }
+@keyframes mjfloat { 0%,100%{transform:translate(0,0);} 50%{transform:translate(42px,32px);} }
+.mj-gem { position:absolute; top:34%; left:50%; width:360px; height:360px; transform:translate(-50%,-50%); animation:mjspin 30s linear infinite; }
+.mj-gem-core { position:absolute; inset:0; clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%); background:conic-gradient(from 0deg, rgba(255,105,61,.5), rgba(255,196,158,.22), rgba(216,81,42,.5), rgba(255,105,61,.5)); filter:blur(7px); opacity:.38; }
+@keyframes mjspin { to{transform:rotate(360deg);} }
+.mj-grid { position:absolute; inset:0; background-image:linear-gradient(${T.lineDk} 1px,transparent 1px),linear-gradient(90deg,${T.lineDk} 1px,transparent 1px); background-size:46px 46px; opacity:.05; -webkit-mask-image:radial-gradient(72% 62% at 50% 40%, #000, transparent 76%); mask-image:radial-gradient(72% 62% at 50% 40%, #000, transparent 76%); }
+.mj-watermark { position:absolute; top:-2%; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-style:italic; font-weight:900; font-size:min(42vw,600px); line-height:1; color:transparent; -webkit-text-stroke:1.5px ${T.lineDk}; opacity:.16; pointer-events:none; user-select:none; z-index:1; }
+
+.mj-hero-inner { position:relative; z-index:2; }
+.mj-hero-center { display:flex; flex-direction:column; align-items:center; text-align:center; max-width:880px; margin:0 auto; }
+.mj-glass-tag { display:inline-flex; align-items:center; gap:8px; padding:8px 17px; border-radius:50px; background:rgba(255,255,255,.6); -webkit-backdrop-filter:blur(12px) saturate(160%); backdrop-filter:blur(12px) saturate(160%); border:1px solid rgba(255,105,61,.3); color:${T.coralDk}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; text-transform:uppercase; box-shadow:0 10px 26px -14px rgba(255,105,61,.55); }
+.mj-hero-h1 { position:relative; font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(2rem,4.9vw,3.6rem); line-height:1.16; letter-spacing:-.6px; color:${T.ink}; margin:26px 0 0; }
+.mj-hero-sub { font:400 clamp(1rem,1.5vw,1.18rem)/1.7 'DM Sans',sans-serif; color:${T.body}; max-width:640px; margin:22px 0 0; }
+.mj-hero-cta { display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap; margin-top:36px; }
+.mj-btn-glow { display:inline-flex; align-items:center; gap:10px; padding:16px 30px; border:none; border-radius:14px; background:linear-gradient(135deg, ${T.coral}, ${T.coralDk}); color:#fff; font:700 1rem/1 'Space Grotesk',sans-serif; cursor:pointer; box-shadow:0 12px 32px -8px rgba(255,105,61,.55); animation:mjglow 3.6s ease-in-out infinite; transition:transform .16s; }
+.mj-btn-glow:hover { transform:translateY(-2px) scale(1.02); }
+@keyframes mjglow { 0%,100%{box-shadow:0 12px 32px -12px rgba(255,105,61,.45);} 50%{box-shadow:0 16px 46px -8px rgba(255,105,61,.78);} }
+.mj-btn-glass { display:inline-flex; align-items:center; gap:10px; padding:16px 28px; border-radius:14px; background:rgba(255,255,255,.55); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid ${T.lineDk}; color:${T.ink}; font:700 1rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.16s; }
+.mj-btn-glass:hover { border-color:${T.coral}; color:${T.coralDk}; transform:translateY(-2px); }
+
 .mj-dot { width:8px; height:8px; border-radius:50%; background:${T.coral}; flex-shrink:0; }
 .mj-dot-live { background:#22c55e; box-shadow:0 0 0 0 rgba(34,197,94,.5); animation:mjpulse 1.8s infinite; }
 @keyframes mjpulse { 0%{box-shadow:0 0 0 0 rgba(34,197,94,.5);} 100%{box-shadow:0 0 0 8px rgba(34,197,94,0);} }
-.mj-hero-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; margin-top:clamp(16px,3vw,40px); }
-.mj-hero-h1 { position:relative; font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(1.9rem,3.5vw,2.95rem); line-height:1.24; letter-spacing:-.4px; color:${T.ink}; margin:0; text-shadow:0 1px 0 ${T.paper}; }
-.mj-hero-cta { display:flex; align-items:center; gap:22px; flex-wrap:wrap; margin-top:34px; }
+.mj-pill { display:inline-flex; align-items:center; gap:8px; padding:7px 14px; border:1px solid ${T.lineDk}; border-radius:50px; background:${T.card}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.body}; }
+.mj-pill-warn { color:${T.coralDk}; border-color:${T.coralSoft}; background:${T.coralSoft}; }
+
 .mj-btn-dark { display:inline-flex; align-items:center; gap:9px; padding:15px 26px; border:none; border-radius:12px; background:${T.ink}; color:#fff; font:700 .98rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:transform .16s, background .16s; }
 .mj-btn-dark:hover { background:#000; transform:translateY(-2px); }
-.mj-btn-link { display:inline-flex; align-items:center; gap:10px; background:none; border:none; cursor:pointer; font:800 .74rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.ink}; }
-.mj-btn-circ { display:grid; place-items:center; width:30px; height:30px; border:1px solid ${T.lineDk}; border-radius:50%; transition:.16s; }
-.mj-btn-link:hover .mj-btn-circ { background:${T.coral}; border-color:${T.coral}; color:#fff; }
 .mj-btn-outline { display:inline-flex; align-items:center; gap:8px; margin-top:26px; padding:13px 24px; border:1px solid ${T.lineDk}; border-radius:12px; background:${T.card}; color:${T.ink}; font:700 .9rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.16s; }
 .mj-btn-outline:hover { border-color:${T.coral}; color:${T.coralDk}; }
 .mj-btn-block { width:100%; justify-content:center; margin-top:22px; }
 
-.mj-hero-visual { position:relative; }
-.mj-hero-imgcard { position:relative; border-radius:22px; overflow:hidden; background:${T.navy}; border:1px solid ${T.line}; box-shadow:14px 14px 0 -2px ${T.coral}, 0 30px 60px -30px rgba(0,0,0,.4); }
-.mj-hero-imgcard img { width:100%; display:block; }
-.mj-badge-jump { position:absolute; top:-18px; right:14px; z-index:3; display:flex; flex-direction:column; align-items:flex-end; gap:1px; padding:10px 16px; border-radius:14px; background:${T.coral}; color:#fff; font:800 1.15rem/1 'Playfair Display',serif; box-shadow:0 12px 26px -10px rgba(255,105,61,.7); }
-.mj-badge-jump b { font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; opacity:.85; }
-.mj-badge-live { position:absolute; bottom:-16px; left:14px; z-index:3; display:inline-flex; align-items:center; gap:8px; padding:9px 16px; border-radius:50px; background:${T.card}; border:1px solid ${T.line}; font:700 .78rem/1 'Space Grotesk',sans-serif; color:${T.ink}; box-shadow:0 14px 30px -14px rgba(0,0,0,.35); }
+.mj-hero-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; width:100%; margin-top:56px; }
+.mj-gcard { text-align:center; padding:26px 18px; border-radius:20px; background:rgba(255,255,255,.5); -webkit-backdrop-filter:blur(16px) saturate(170%); backdrop-filter:blur(16px) saturate(170%); border:1px solid rgba(255,255,255,.72); box-shadow:0 22px 52px -34px rgba(27,27,36,.42), inset 0 1px 0 rgba(255,255,255,.6); transition:transform .2s, box-shadow .2s; }
+.mj-gcard:hover { transform:translateY(-4px); box-shadow:0 28px 62px -30px rgba(255,105,61,.5); }
+.mj-gcard-ic { display:inline-grid; place-items:center; width:46px; height:46px; border-radius:14px; background:${T.coralSoft}; color:${T.coralDk}; margin-bottom:14px; }
+.mj-gcard h3 { font:700 1.05rem/1.2 'Space Grotesk',sans-serif; color:${T.ink}; margin:0 0 8px; }
+.mj-gcard p { font:400 .85rem/1.55 'DM Sans',sans-serif; color:${T.body}; margin:0; }
+
+.mj-hero-live { position:absolute; bottom:44px; right:34px; z-index:3; width:232px; padding:18px; border-radius:18px; background:rgba(255,255,255,.62); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.72); box-shadow:0 26px 62px -30px rgba(27,27,36,.5); }
+.mj-hl-top { display:flex; align-items:center; gap:8px; font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.coralDk}; }
+.mj-hl-row { display:flex; justify-content:space-between; align-items:baseline; margin-top:14px; font:700 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
+.mj-hl-row b { font:800 1.2rem/1 'Playfair Display',serif; color:${T.ink}; }
+.mj-hl-bar { margin-top:10px; height:6px; border-radius:50px; background:${T.line}; overflow:hidden; }
+.mj-hl-bar span { display:block; height:100%; border-radius:50px; background:linear-gradient(90deg,${T.coral},${T.coralDk}); }
 
 /* stat band */
 .mj-statband { border-bottom:1px solid ${T.line}; }
@@ -1456,9 +1510,11 @@ const CSS = `
 
 /* responsive */
 @media (max-width:940px) {
-  .mj-hero-grid, .mj-parent-card, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body, .mj-ta-grid { grid-template-columns:1fr; }
+  .mj-parent-card, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body, .mj-ta-grid { grid-template-columns:1fr; }
   .mj-ta-step:not(:last-child)::after { display:none; }
-  .mj-hero-visual { order:-1; }
+  .mj-hero-live { display:none; }
+  .mj-hero-cards { grid-template-columns:1fr; max-width:420px; margin-left:auto; margin-right:auto; }
+  .mj-gem { width:260px; height:260px; }
   .mj-sec-head, .mj-dark-head { flex-direction:column; align-items:center; }
   .mj-prog-grid { grid-template-columns:1fr 1fr; } .mj-navy-card { grid-row:auto; grid-column:span 2; }
   .mj-phones { justify-content:flex-start; }
@@ -1474,7 +1530,7 @@ const CSS = `
   .mj-dash-two { grid-template-columns:1fr; }
   .mj-dash-chart { gap:6px; } .mj-dash-barval { font-size:.56rem; }
   .mj-check-right { align-self:stretch; }
-  .mj-badge-jump { font-size:.95rem; } .mj-watermark { font-size:64vw; }
+  .mj-watermark { font-size:64vw; }
 }
 @media (prefers-reduced-motion: reduce) {
   .mj-wall-track { animation:none; }
