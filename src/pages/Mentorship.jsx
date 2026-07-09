@@ -865,39 +865,43 @@ function Proof({ cfg }) {
         </Reveal>
         <div className="mj-proof-grid">
         <div className="mj-proof-head">
-          <div className="mj-stars">
-            {[0, 1, 2, 3, 4].map((i) => <Star key={i} size={18} fill={T.coral} color={T.coral} />)}
-            <span>4.9 / 5 · 1,240 REVIEWS</span>
-          </div>
-          <div className="mj-proof-stats">
-            <div className="mj-proof-stat"><strong>92%</strong><span>improved their rank in 8 weeks</span></div>
-            <div className="mj-proof-stat"><strong>1,240+</strong><span>aspirants mentored 1-on-1</span></div>
-            <div className="mj-proof-stat"><strong>18,400</strong><span>average rank jump</span></div>
-          </div>
-          <div className="mj-proof-quote">
-            <span className="mj-quote-mark">&ldquo;</span>
-            <p>The difference wasn&rsquo;t more content. It was one person who refused to let me drift.</p>
-          </div>
-
-          <div className="mj-proof-block">
-            <span className="mj-proof-blbl">MENTORS FROM</span>
-            <div className="mj-proof-chips">
-              <span>IIT Delhi</span><span>IIT Bombay</span><span>AIIMS</span><span>NIT Trichy</span>
+          <div className="mj-proof-card">
+            <div className="mj-stars">
+              {[0, 1, 2, 3, 4].map((i) => <Star key={i} size={18} fill={T.coral} color={T.coral} />)}
+              <span>4.9 / 5 · 1,240 REVIEWS</span>
             </div>
-          </div>
 
-          <div className="mj-proof-block">
-            <span className="mj-proof-blbl">WHERE THEY LANDED</span>
-            <div className="mj-proof-land">
-              <div className="mj-proof-landrow"><strong>340+</strong><span>into IITs &amp; IISc</span></div>
-              <div className="mj-proof-landrow"><strong>520+</strong><span>into NITs &amp; IIITs</span></div>
-              <div className="mj-proof-landrow"><strong>180+</strong><span>into AIIMS &amp; top GMCs</span></div>
+            <div className="mj-proof-quote">
+              <span className="mj-quote-mark">&ldquo;</span>
+              <p>The difference wasn&rsquo;t more content. It was one person who refused to let me drift.</p>
             </div>
-          </div>
 
-          <div className="mj-proof-verified">
-            <span className="mj-proof-vic"><Check size={12} strokeWidth={3} /></span>
-            Every review is from a verified, enrolled student.
+            <div className="mj-proof-metrics">
+              <div className="mj-metric"><strong>92%</strong><span>improved in 8 weeks</span></div>
+              <div className="mj-metric"><strong>1,240+</strong><span>mentored 1-on-1</span></div>
+              <div className="mj-metric"><strong>18,400</strong><span>avg rank jump</span></div>
+            </div>
+
+            <div className="mj-proof-block">
+              <span className="mj-proof-blbl">MENTORS FROM</span>
+              <div className="mj-proof-chips">
+                <span>IIT Delhi</span><span>IIT Bombay</span><span>AIIMS</span><span>NIT Trichy</span>
+              </div>
+            </div>
+
+            <div className="mj-proof-block">
+              <span className="mj-proof-blbl">WHERE THEY LANDED</span>
+              <div className="mj-proof-metrics mj-proof-metrics-sm">
+                <div className="mj-metric"><strong>340+</strong><span>IITs &amp; IISc</span></div>
+                <div className="mj-metric"><strong>520+</strong><span>NITs &amp; IIITs</span></div>
+                <div className="mj-metric"><strong>180+</strong><span>AIIMS &amp; GMCs</span></div>
+              </div>
+            </div>
+
+            <div className="mj-proof-verified">
+              <span className="mj-proof-vic"><Check size={12} strokeWidth={3} /></span>
+              Every review is from a verified, enrolled student.
+            </div>
           </div>
         </div>
         <div className="mj-proof-wall" aria-label="Student testimonials">
@@ -1429,28 +1433,23 @@ const CSS = `
 .mj-wa-mic { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#FF8B48,#F1531F); color:#fff; flex-shrink:0; }
 
 /* proof */
-.mj-proof-grid { display:grid; grid-template-columns:.8fr 1.2fr; gap:44px; align-items:start; }
-.mj-proof-head { position:sticky; top:110px; }
-.mj-stars { display:flex; align-items:center; gap:4px; margin-top:22px; }
+.mj-proof-grid { display:grid; grid-template-columns:.82fr 1.18fr; gap:32px; align-items:stretch; }
+.mj-proof-head { display:flex; }
+.mj-proof-card { display:flex; flex-direction:column; justify-content:space-between; gap:20px; width:100%; padding:26px; border-radius:22px; background:${T.card}; border:1px solid ${T.line}; box-shadow:0 34px 66px -46px rgba(0,0,0,.42); }
+.mj-stars { display:flex; align-items:center; gap:4px; }
 .mj-stars span { margin-left:10px; font:700 .74rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; }
-.mj-proof-lead { font:400 1.02rem/1.65 'DM Sans',sans-serif; color:${T.body}; margin:26px 0 0; max-width:380px; }
-.mj-proof-stats { display:flex; flex-direction:column; gap:2px; margin:28px 0 0; border-top:1px solid ${T.line}; }
-.mj-proof-stat { display:flex; align-items:center; gap:16px; padding:15px 0; border-bottom:1px solid ${T.line}; }
-.mj-proof-stat strong { font:800 1.7rem/1 'Playfair Display',serif; color:${T.coral}; min-width:104px; flex-shrink:0; }
-.mj-proof-stat span { font:500 .9rem/1.35 'DM Sans',sans-serif; color:${T.body}; }
-.mj-proof-quote { margin-top:28px; padding:22px 24px; border-radius:16px; background:${T.ink}; color:#fff; box-shadow:0 24px 44px -30px rgba(0,0,0,.6); }
+.mj-proof-quote { padding:20px 22px; border-radius:15px; background:${T.ink}; color:#fff; box-shadow:0 22px 40px -30px rgba(0,0,0,.6); }
 .mj-proof-quote .mj-quote-mark { color:${T.coral}; }
-.mj-proof-quote p { font:600 1.05rem/1.45 'Playfair Display',serif; font-style:italic; color:#fff; margin:2px 0 0; }
-.mj-proof-block { margin-top:26px; padding-top:22px; border-top:1px solid ${T.lineDk}; }
-.mj-proof-blbl { display:block; font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; margin-bottom:14px; }
+.mj-proof-quote p { font:600 1.02rem/1.45 'Playfair Display',serif; font-style:italic; color:#fff; margin:2px 0 0; }
+.mj-proof-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; }
+.mj-metric { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; text-align:center; padding:15px 8px; border-radius:14px; background:${T.paper}; border:1px solid ${T.line}; }
+.mj-metric strong { font:800 1.5rem/1 'Playfair Display',serif; color:${T.coral}; }
+.mj-metric span { font:600 .68rem/1.25 'DM Sans',sans-serif; color:${T.body}; }
+.mj-proof-metrics-sm .mj-metric strong { font-size:1.32rem; color:${T.coralDk}; }
+.mj-proof-blbl { display:block; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; margin-bottom:11px; }
 .mj-proof-chips { display:flex; flex-wrap:wrap; gap:8px; }
-.mj-proof-chips span { padding:7px 13px; border-radius:50px; border:1px solid ${T.lineDk}; background:${T.card}; font:700 .74rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
-.mj-proof-land { display:flex; flex-direction:column; }
-.mj-proof-landrow { display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:1px solid ${T.line}; }
-.mj-proof-landrow:first-child { border-top:1px solid ${T.line}; }
-.mj-proof-landrow strong { font:800 1.4rem/1 'Playfair Display',serif; color:${T.coralDk}; min-width:104px; flex-shrink:0; }
-.mj-proof-landrow span { font:500 .9rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
-.mj-proof-verified { display:flex; align-items:center; gap:9px; margin-top:24px; padding-top:20px; border-top:1px solid ${T.lineDk}; font:600 .82rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
+.mj-proof-chips span { padding:7px 13px; border-radius:50px; border:1px solid ${T.lineDk}; background:${T.paper}; font:700 .74rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
+.mj-proof-verified { display:flex; align-items:center; gap:9px; padding-top:18px; border-top:1px solid ${T.line}; font:600 .82rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
 .mj-proof-vic { display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:${T.coral}; color:#fff; flex-shrink:0; }
 .mj-proof-wall { position:relative; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; height:600px; overflow:hidden;
   -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%);
