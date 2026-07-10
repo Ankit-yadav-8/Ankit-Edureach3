@@ -5,7 +5,7 @@
    Mobile: light bg + #FF693D accents
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 /* Hide native number-input spinner arrows everywhere — keep inputs clean */
 input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
@@ -49,7 +49,7 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
 
   /* Single flat site-wide canvas colour — soft warm off-white.
      No glows, no grid/mesh overlays: every page surface uses this. */
-  --page-bg:     oklch(99% .005 60);
+  --page-bg:     oklch(98.7% 0.022 95.277);
 
   --nav-h:       64px;   /* fixed navbar height — modals/pages clear this */
   --radius:      14px;
@@ -171,15 +171,12 @@ input,select,textarea { font-family:inherit; }
   position:sticky;
   top:0;
   z-index:200;
-  background:rgba(255,252,249,.97) !important;
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(255, 105, 61,.15);
+  background:transparent !important;
   width:100%;
   max-width:100%;
-  overflow:hidden;
-  box-shadow:0 1px 16px rgba(0,0,0,.07);
+  pointer-events:none; /* Let clicks pass through transparent areas */
 }
+.navbar > * { pointer-events:auto; } /* Restore clicks for contents */
 .navbar-inner {
   display:flex;
   align-items:center;

@@ -1486,8 +1486,8 @@ export default function Hero({ onSearch }) {
   /* ── Single centred column on every size ── */
   const gridCols = "1fr";
 
-  /* ── Hero background — very light warm cream ── */
-  const heroBg = "#FFFFFF";
+  /* ── Hero background — matches global --page-bg ── */
+  const heroBg = "var(--page-bg)";
 
   return (
     <section
