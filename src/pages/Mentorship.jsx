@@ -1341,8 +1341,8 @@ const CSS = `
 
 /* for parents */
 .mj-parent-card { display:grid; grid-template-columns:.92fr 1.08fr; align-items:stretch; border-radius:20px; overflow:hidden; border:1px solid ${T.lineDk};
-  box-shadow:20px 22px 0 -2px ${T.coral}, 0 40px 70px -40px rgba(0,0,0,.32); transition:transform .3s, box-shadow .3s; }
-.mj-parent-card:hover { transform:translate(-3px,-3px); box-shadow:26px 28px 0 -2px ${T.coral}, 0 46px 76px -44px rgba(0,0,0,.38); }
+  box-shadow:0 40px 70px -40px rgba(0,0,0,.32); transition:transform .3s, box-shadow .3s; }
+.mj-parent-card:hover { transform:translateY(-3px); box-shadow:0 46px 76px -44px rgba(0,0,0,.38); }
 .mj-booklet { display:flex; flex-direction:column; padding:36px 34px; color:#fff;
   background:linear-gradient(160deg, #FF7A3C 0%, #F1531F 60%, #E0481B 100%); position:relative; overflow:hidden; }
 .mj-booklet::before { content:""; position:absolute; inset:0; background:
