@@ -125,16 +125,16 @@ const ASPIRANT_POINTS = [
 
 const QUALIFIER_MENTORS = [
   {
-    name: "Ankit Kumar",
-    role: "Co-Founder, IIT Roorkee",
-    img: "/assets/team/ankit.png?v=2",
-    thought: "Every aspirant hits a wall where effort stops working. Our goal is to break that wall by showing you the strategic blindspots you can't see yourself."
-  },
-  {
     name: "Ankit Yadav",
     role: "Founder, IIT Roorkee",
     img: "/assets/team/ankit2.PNG",
-    thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank."
+    thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank. We've built this system from our own experiences of cracking IIT, focusing purely on high-yield output rather than just mindless hard work."
+  },
+  {
+    name: "Ankit Kumar",
+    role: "Co-Founder, IIT Roorkee (AIR 3846 CRL, 938 OBC)",
+    img: "/assets/team/ankit.png?v=2",
+    thought: "Every aspirant hits a wall where effort stops working. Our goal is to break that wall by showing you the strategic blindspots you can't see yourself. Having navigated this journey to secure AIR 3846, I know exactly where students lose their confidence and how to rebuild it."
   }
 ];
 
@@ -189,9 +189,8 @@ function Qualifier({ cfg }) {
       `}</style>
       <div className="mj-wrap">
         <Reveal>
-          <p className="mj-lead">
-            This program is designed for <em>one type of aspirant</em> — the one who
-            wants a real system, not another shelf of unopened books.
+          <p className="mj-lead" style={{ textAlign: "center", margin: "0 auto 44px", fontStyle: "normal", maxWidth: "600px", fontWeight: 500 }}>
+            Built for the aspirant who wants a real system, not unopened books.
           </p>
         </Reveal>
         
@@ -234,14 +233,13 @@ function Qualifier({ cfg }) {
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
                       <img src={m.img} alt={m.name} style={{ width: 50, height: 50, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.2)" }} />
                       <div>
-                        <strong style={{ display: "block", color: "#fff", fontFamily: "Playfair Display, serif", fontSize: "1.1rem", fontStyle: "italic" }}>{m.name}</strong>
-                        <span style={{ display: "block", color: "rgba(255,255,255,0.7)", fontFamily: "Space Grotesk", fontSize: "0.75rem", letterSpacing: "0.05em", textTransform: "uppercase", marginTop: 2 }}>
+                        <strong style={{ display: "block", color: "#fff", fontFamily: "Playfair Display, serif", fontSize: "1.15rem", fontStyle: "normal" }}>{m.name}</strong>
+                        <span style={{ display: "block", color: "rgba(255,255,255,0.7)", fontFamily: "Space Grotesk", fontSize: "0.72rem", letterSpacing: "0.05em", textTransform: "uppercase", marginTop: 2 }}>
                           {m.role}
                         </span>
                       </div>
                     </div>
-                    <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 12, padding: "14px 18px", color: "rgba(255,255,255,0.9)", fontSize: "0.85rem", lineHeight: 1.6, fontStyle: "italic", position: "relative" }}>
-                      <span style={{ position: "absolute", top: -8, left: 16, background: "var(--coral)", padding: "0 6px", borderRadius: 4, color: "#fff", fontSize: "0.8rem", fontFamily: "Playfair Display", fontWeight: 800 }}>"</span>
+                    <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 12, padding: "16px 20px", color: "rgba(255,255,255,0.95)", fontSize: "0.88rem", lineHeight: 1.6, fontFamily: "DM Sans, sans-serif", fontStyle: "normal", position: "relative" }}>
                       {m.thought}
                     </div>
                   </motion.div>
