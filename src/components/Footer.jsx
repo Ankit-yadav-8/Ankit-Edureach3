@@ -179,7 +179,7 @@ function DevCard({ t, index = 0 }) {
             ))}
           </span>
           {t.tagline && (
-            <span style={{ display: "block", fontSize: "0.76rem", color: "rgba(255,255,255,.65)", marginTop: 8, fontStyle: "italic", lineHeight: 1.4 }}>
+            <span style={{ display: "block", fontSize: "0.82rem", color: "rgba(255,255,255,.85)", marginTop: 12, fontStyle: "normal", lineHeight: 1.5 }}>
               "{t.tagline}"
             </span>
           )}
