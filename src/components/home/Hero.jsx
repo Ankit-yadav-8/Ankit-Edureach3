@@ -1446,6 +1446,67 @@ function HeroStoryCard() {
   );
 }
 
+/* ════════════════════════════════════════════════
+   ANIMATED HERO BACKGROUND — Class 11 style:
+   warm dot-grid, radial coral glow, rotating dashed
+   ellipse rings, and twinkling particles.
+════════════════════════════════════════════════ */
+function HeroAnimatedBg() {
+  const CORAL = "#FF693D";
+  const rings = [
+    { w: 1240, h: 680, dur: 150, dir: 1, op: 0.5 },
+    { w: 900, h: 540, dur: 110, dir: -1, op: 0.6 },
+    { w: 580, h: 400, dur: 80, dir: 1, op: 0.7 },
+  ];
+  const particles = [
+    { top: "17%", left: "12%", s: 6, d: 5 },
+    { top: "30%", right: "10%", s: 5, d: 6.5 },
+    { bottom: "24%", left: "9%", s: 7, d: 5.8 },
+    { bottom: "18%", right: "13%", s: 5, d: 7 },
+    { top: "60%", left: "19%", s: 4, d: 6 },
+    { top: "22%", left: "47%", s: 4, d: 6.4 },
+  ];
+  return (
+    <>
+      {/* Warm dot-grid, faded toward the edges */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0, zIndex: 0,
+        backgroundImage: "radial-gradient(rgba(255,105,61,0.16) 1px, transparent 1px)",
+        backgroundSize: "22px 22px", opacity: 0.5,
+        maskImage: "radial-gradient(ellipse 72% 68% at 50% 44%, #000 36%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(ellipse 72% 68% at 50% 44%, #000 36%, transparent 100%)",
+      }} />
+      {/* Radial coral glow behind the headline */}
+      <div aria-hidden style={{
+        position: "absolute", top: "44%", left: "50%", transform: "translate(-50%,-50%)",
+        width: 720, height: 720, borderRadius: "50%", zIndex: 0,
+        background: "radial-gradient(circle, rgba(255,105,61,0.15) 0%, rgba(255,138,91,0.05) 42%, transparent 68%)",
+      }} />
+      {/* Rotating dashed ellipse rings */}
+      {rings.map((r, i) => (
+        <motion.div key={i} aria-hidden
+          animate={{ rotate: 360 * r.dir }}
+          transition={{ repeat: Infinity, duration: r.dur, ease: "linear" }}
+          style={{
+            position: "absolute", top: "44%", left: "50%", zIndex: 0,
+            width: r.w, height: r.h, marginLeft: -r.w / 2, marginTop: -r.h / 2,
+            borderRadius: "50%", border: "2px dashed rgba(255,105,61,0.22)", opacity: r.op,
+          }} />
+      ))}
+      {/* Twinkling particles */}
+      {particles.map((p, i) => {
+        const { s, d, ...pos } = p;
+        return (
+          <motion.span key={i} aria-hidden
+            animate={{ y: [0, -12, 0], opacity: [0.3, 0.85, 0.3] }}
+            transition={{ repeat: Infinity, duration: d, ease: "easeInOut", delay: i * 0.6 }}
+            style={{ position: "absolute", zIndex: 1, width: s, height: s, borderRadius: "50%", background: CORAL, ...pos }} />
+        );
+      })}
+    </>
+  );
+}
+
 export default function Hero({ onSearch }) {
   const [q, setQ] = useState("");
   const nav = useNavigate();
@@ -1486,8 +1547,8 @@ export default function Hero({ onSearch }) {
   /* ── Single centred column on every size ── */
   const gridCols = "1fr";
 
-  /* ── Hero background — very light warm cream ── */
-  const heroBg = "#FFFFFF";
+  /* ── Hero background — warm cream (matches Class 11 hub) ── */
+  const heroBg = "var(--page-bg)";
 
   return (
     <section
@@ -1505,6 +1566,9 @@ export default function Hero({ onSearch }) {
         boxSizing: "border-box",
       }}
     >
+      {/* ═══ Animated background (Class 11 style) ═══ */}
+      <HeroAnimatedBg />
+
       {/* ═══ Content wrapper ═══ */}
       <div
         ref={containerRef}
@@ -1571,30 +1635,16 @@ export default function Hero({ onSearch }) {
                 </span>.
               </h1>
 
-              {/* Startup line */}
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 7,
-                marginBottom: "1.2rem",
-                fontFamily: "'Inter', 'Space Grotesk', system-ui, sans-serif",
-                fontWeight: 600,
-                fontSize: "clamp(12px, 2.8vw, 15px)",
-                color: "#444",
-                whiteSpace: "nowrap",
-                maxWidth: "100%",
-              }}>
-                An <span style={{ color: "#FF5A36" }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
-              </div>
-
-              {/* Subtext */}
+              {/* Subtext — one concise line */}
               <p style={{
                 color: "#666",
                 fontSize: isXs ? "1rem" : "1.15rem",
-                maxWidth: 680, margin: "0 auto",
+                maxWidth: 580, margin: "0 auto",
                 lineHeight: 1.6,
                 fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                 fontWeight: 400,
               }}>
-                Predict your JEE rank from marks, discover every college you can get into across all JoSAA &amp; CSAB rounds, and track every deadline — all in one place.
+                Predict your rank, find your college, and never miss a deadline — all in one place.
               </p>
 
               <div style={{ marginBottom: "2.5rem" }} />
