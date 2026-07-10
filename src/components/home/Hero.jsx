@@ -1486,7 +1486,7 @@ export default function Hero({ onSearch }) {
   /* ── Single centred column on every size ── */
   const gridCols = "1fr";
 
-  /* ── Hero background — clean white ── */
+  /* ── Hero background — very light warm cream ── */
   const heroBg = "#FFFFFF";
 
   return (
@@ -1541,27 +1541,41 @@ export default function Hero({ onSearch }) {
               }}>
                 Know your rank.
                 <br />
-                Find your{" "}
-                <span style={{ position: "relative", color: "#FF5A36", whiteSpace: "nowrap", display: "inline-block" }}>
-                  college
-                  <svg viewBox="0 0 200 16" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"
-                    style={{ position: "absolute", left: 0, right: 0, bottom: "-0.18em", width: "100%", height: "0.36em" }}>
-                    <path d="M4 10 C 45 3, 80 3, 110 8 C 140 13, 172 4, 196 8" stroke="#FF5A36" strokeWidth="4" strokeLinecap="round" fill="none"/>
+                Find your <span style={{
+                  color: "#FF5A36",
+                  whiteSpace: "nowrap",
+                }}>college</span><span style={{ color: "#FF5A36", display: "inline-flex", alignItems: "center", margin: "0 2px" }}>
+                  <svg width="28" height="11" viewBox="0 0 28 11" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: "translateY(1px)" }}>
+                    <path d="M2 8C5 8 7 2 10 2C13 2 15 8 18 8C21 8 23 2 26 2" stroke="#FF5A36" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                </span>
-                <span style={{ color: "#111111" }}>.</span>
+                </span>.
               </h1>
 
-              {/* Subtext — one concise line */}
+              {/* Startup line */}
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 7,
+                marginBottom: "1.2rem",
+                fontFamily: "'Inter', 'Space Grotesk', system-ui, sans-serif",
+                fontWeight: 600,
+                fontSize: "clamp(12px, 2.8vw, 15px)",
+                color: "#444",
+                whiteSpace: "nowrap",
+                maxWidth: "100%",
+              }}>
+                An <span style={{ color: "#FF5A36" }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
+              </div>
+
+              {/* Subtext */}
               <p style={{
                 color: "#666",
-                fontSize: isXs ? "1rem" : "1.15rem",
-                maxWidth: 580, margin: "0 auto",
+                fontSize: isXs ? "0.95rem" : "1.12rem",
+                maxWidth: "100%", margin: "0 auto",
                 lineHeight: 1.6,
                 fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                 fontWeight: 400,
+                whiteSpace: isXs ? "normal" : "nowrap",
               }}>
-                Predict your JEE rank, discover every college you can get into, and track every deadline. <strong style={{ color: "#333333", fontWeight: 700 }}>Built by IIT Roorkee alumni.</strong>
+                Predict your rank, find your college, and track every deadline — all in one place.
               </p>
 
               <div style={{ marginBottom: "2.5rem" }} />
@@ -1591,7 +1605,7 @@ export default function Hero({ onSearch }) {
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#E0421F"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#FF5A36"; }}
               >
-                Predict My College <ArrowRight size={18} />
+                Predict My College <Target size={18} />
               </button>
 
               <button
@@ -1607,34 +1621,37 @@ export default function Hero({ onSearch }) {
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.2)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(0,0,0,.1)"; }}
               >
-                Join Community <ArrowRight size={18} />
+                Join community <ArrowRight size={18} />
               </button>
             </motion.div>
 
-            {/* ── Trust row — three dotted highlights ── */}
+            {/* ── Trust row ── */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.46 }}
               style={{
-                display: "flex", alignItems: "center", flexWrap: "wrap",
-                gap: isXs ? "10px 20px" : "10px 32px", marginTop: 12,
+                display: "flex", alignItems: "center", gap: 12, marginTop: 12,
                 justifyContent: "center",
               }}
             >
-              {[
-                "Trusted by 3,200+ aspirants",
-                "Free rank predictor",
-              ].map((t) => (
-                <span key={t} style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  fontSize: isXs ? 12.5 : 14, color: "#4B5563", fontWeight: 500,
-                  fontFamily: "'Inter', system-ui, sans-serif", whiteSpace: "nowrap",
-                }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF5A36", flexShrink: 0 }} />
-                  {t}
-                </span>
-              ))}
+              <div style={{ display: "flex" }}>
+                {[
+                  { bg: "#FF7A50", t: "A" },
+                  { bg: "#FF6636", t: "P" },
+                  { bg: "#E85223", t: "R" },
+                ].map((a, i) => (
+                  <span key={a.t} style={{
+                    width: 40, height: 40, borderRadius: "50%", background: a.bg,
+                    border: "2.5px solid #ffffff", display: "grid", placeItems: "center",
+                    marginLeft: i === 0 ? 0 : -14, boxShadow: "0 4px 10px rgba(0,0,0,.08)",
+                    fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 900, fontSize: 13.5, color: "#fff", letterSpacing: "-0.2px"
+                  }}>{a.t}</span>
+                ))}
+              </div>
+              <p style={{ margin: 0, fontSize: isXs ? 13 : 14.5, color: "#4B5563", fontFamily: "'Inter', system-ui, sans-serif", lineHeight: 1.4 }}>
+                Trusted by <strong style={{ color: "#111", fontWeight: 700 }}>3,200+</strong> JEE &amp; NEET aspirants
+              </p>
             </motion.div>
 
           </div>
