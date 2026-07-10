@@ -1446,67 +1446,6 @@ function HeroStoryCard() {
   );
 }
 
-/* ════════════════════════════════════════════════
-   ANIMATED HERO BACKGROUND — Class 11 style:
-   warm dot-grid, radial coral glow, rotating dashed
-   ellipse rings, and twinkling particles.
-════════════════════════════════════════════════ */
-function HeroAnimatedBg() {
-  const CORAL = "#FF693D";
-  const rings = [
-    { w: 1240, h: 680, dur: 150, dir: 1, op: 0.5 },
-    { w: 900, h: 540, dur: 110, dir: -1, op: 0.6 },
-    { w: 580, h: 400, dur: 80, dir: 1, op: 0.7 },
-  ];
-  const particles = [
-    { top: "17%", left: "12%", s: 6, d: 5 },
-    { top: "30%", right: "10%", s: 5, d: 6.5 },
-    { bottom: "24%", left: "9%", s: 7, d: 5.8 },
-    { bottom: "18%", right: "13%", s: 5, d: 7 },
-    { top: "60%", left: "19%", s: 4, d: 6 },
-    { top: "22%", left: "47%", s: 4, d: 6.4 },
-  ];
-  return (
-    <>
-      {/* Warm dot-grid, faded toward the edges */}
-      <div aria-hidden style={{
-        position: "absolute", inset: 0, zIndex: 0,
-        backgroundImage: "radial-gradient(rgba(255,105,61,0.16) 1px, transparent 1px)",
-        backgroundSize: "22px 22px", opacity: 0.5,
-        maskImage: "radial-gradient(ellipse 72% 68% at 50% 44%, #000 36%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(ellipse 72% 68% at 50% 44%, #000 36%, transparent 100%)",
-      }} />
-      {/* Radial coral glow behind the headline */}
-      <div aria-hidden style={{
-        position: "absolute", top: "44%", left: "50%", transform: "translate(-50%,-50%)",
-        width: 720, height: 720, borderRadius: "50%", zIndex: 0,
-        background: "radial-gradient(circle, rgba(255,105,61,0.15) 0%, rgba(255,138,91,0.05) 42%, transparent 68%)",
-      }} />
-      {/* Rotating dashed ellipse rings */}
-      {rings.map((r, i) => (
-        <motion.div key={i} aria-hidden
-          animate={{ rotate: 360 * r.dir }}
-          transition={{ repeat: Infinity, duration: r.dur, ease: "linear" }}
-          style={{
-            position: "absolute", top: "44%", left: "50%", zIndex: 0,
-            width: r.w, height: r.h, marginLeft: -r.w / 2, marginTop: -r.h / 2,
-            borderRadius: "50%", border: "2px dashed rgba(255,105,61,0.22)", opacity: r.op,
-          }} />
-      ))}
-      {/* Twinkling particles */}
-      {particles.map((p, i) => {
-        const { s, d, ...pos } = p;
-        return (
-          <motion.span key={i} aria-hidden
-            animate={{ y: [0, -12, 0], opacity: [0.3, 0.85, 0.3] }}
-            transition={{ repeat: Infinity, duration: d, ease: "easeInOut", delay: i * 0.6 }}
-            style={{ position: "absolute", zIndex: 1, width: s, height: s, borderRadius: "50%", background: CORAL, ...pos }} />
-        );
-      })}
-    </>
-  );
-}
-
 export default function Hero({ onSearch }) {
   const [q, setQ] = useState("");
   const nav = useNavigate();
@@ -1547,8 +1486,8 @@ export default function Hero({ onSearch }) {
   /* ── Single centred column on every size ── */
   const gridCols = "1fr";
 
-  /* ── Hero background — warm cream (matches Class 11 hub) ── */
-  const heroBg = "var(--page-bg)";
+  /* ── Hero background — clean white ── */
+  const heroBg = "#FFFFFF";
 
   return (
     <section
@@ -1566,9 +1505,6 @@ export default function Hero({ onSearch }) {
         boxSizing: "border-box",
       }}
     >
-      {/* ═══ Animated background (Class 11 style) ═══ */}
-      <HeroAnimatedBg />
-
       {/* ═══ Content wrapper ═══ */}
       <div
         ref={containerRef}
@@ -1592,26 +1528,6 @@ export default function Hero({ onSearch }) {
           {/* ══ CENTER — hero text ══ */}
           <div style={{ textAlign: "center", minWidth: 0, width: "100%", maxWidth: 860, margin: "0 auto" }}>
 
-            {/* Badge */}
-            <div style={{ textAlign: "center", marginBottom: isXs ? 24 : 36 }}>
-              <span
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  background: "#FFF3E6",
-                  color: "#D95E33",
-                  fontSize: isXs ? 10 : 11.5, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase",
-                  padding: isXs ? "8px 16px" : "10px 22px", borderRadius: 50,
-                  fontFamily: "'Inter', 'Space Grotesk', system-ui, sans-serif",
-                }}>
-                <motion.span
-                  animate={{ scale: [1, 1.25, 1], opacity: [1, 0.6, 1] }}
-                  transition={{ duration: 1.8, repeat: Infinity }}
-                  style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }}
-                />
-                {isXs ? "JEE 2026 is Live" : "JEE 2026 Season is Live — Start Your Journey"}
-              </span>
-            </div>
-
             {/* Headline */}
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.05 }}>
               <h1 style={{
@@ -1625,14 +1541,15 @@ export default function Hero({ onSearch }) {
               }}>
                 Know your rank.
                 <br />
-                Find your <span style={{
-                  color: "#FF5A36",
-                  whiteSpace: "nowrap",
-                }}>college</span><span style={{ color: "#FF5A36", display: "inline-flex", alignItems: "center", margin: "0 2px" }}>
-                  <svg width="28" height="11" viewBox="0 0 28 11" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: "translateY(1px)" }}>
-                    <path d="M2 8C5 8 7 2 10 2C13 2 15 8 18 8C21 8 23 2 26 2" stroke="#FF5A36" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+                Find your{" "}
+                <span style={{ position: "relative", color: "#FF5A36", whiteSpace: "nowrap", display: "inline-block" }}>
+                  college
+                  <svg viewBox="0 0 200 16" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"
+                    style={{ position: "absolute", left: 0, right: 0, bottom: "-0.18em", width: "100%", height: "0.36em" }}>
+                    <path d="M4 10 C 45 3, 80 3, 110 8 C 140 13, 172 4, 196 8" stroke="#FF5A36" strokeWidth="4" strokeLinecap="round" fill="none"/>
                   </svg>
-                </span>.
+                </span>
+                <span style={{ color: "#111111" }}>.</span>
               </h1>
 
               {/* Subtext — one concise line */}
@@ -1644,80 +1561,10 @@ export default function Hero({ onSearch }) {
                 fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                 fontWeight: 400,
               }}>
-                Predict your rank, find your college, and never miss a deadline — all in one place.
+                Predict your JEE rank, discover every college you can get into, and track every deadline. <strong style={{ color: "#333333", fontWeight: 700 }}>Built by IIT Roorkee alumni.</strong>
               </p>
 
               <div style={{ marginBottom: "2.5rem" }} />
-            </motion.div>
-
-            {/* ── Search bar ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.18 }}
-              style={{ width: "100%", maxWidth: 640, margin: "0 auto 1.5rem" }}
-            >
-              <div style={{
-                display: "flex",
-                gap: 6,
-                background: "var(--page-bg)",
-                padding: isXs ? 6 : 8,
-                borderRadius: 9999,
-                boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
-                border: "1px solid rgba(0,0,0,.04)",
-                transition: "border 0.3s ease, box-shadow 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.border = "1px solid #FF5A36";
-                e.currentTarget.style.boxShadow = "0 12px 30px rgba(255, 90, 54, 0.15)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.border = "1px solid rgba(0,0,0,.04)";
-                e.currentTarget.style.boxShadow = "0 10px 40px rgba(0,0,0,0.06)";
-              }}>
-                <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 10, paddingLeft: isXs ? 16 : 24, minWidth: 0 }}>
-                  <Search size={18} color="#9ca3af" style={{ flexShrink: 0 }} />
-                  <input
-                    value={q}
-                    onChange={(e) => setQ(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && go()}
-                    placeholder="Search colleges, exams…"
-                    onFocus={onSearch}
-                    style={{
-                      border: "none",
-                      outline: "none",
-                      flex: 1,
-                      minWidth: 0,
-                      fontSize: 15,
-                      fontFamily: "'Inter', system-ui, sans-serif",
-                      background: "transparent",
-                      color: "#111",
-                    }}
-                  />
-                </div>
-                <button
-                  onClick={() => go()}
-                  style={{
-                    borderRadius: 9999,
-                    padding: isXs ? "10px 20px" : "12px 32px",
-                    fontSize: isXs ? 13 : 15,
-                    fontWeight: 600,
-                    fontFamily: "'Inter', system-ui, sans-serif",
-                    whiteSpace: "nowrap",
-                    flexShrink: 0,
-                    background: "#FF5A36",
-                    color: "#fff",
-                    boxShadow: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    transition: "background 0.2s",
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "#E0421F"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "#FF5A36"; }}
-                >
-                  Search
-                </button>
-              </div>
             </motion.div>
 
             {/* ── Primary + secondary CTAs ── */}
@@ -1744,7 +1591,7 @@ export default function Hero({ onSearch }) {
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#E0421F"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#FF5A36"; }}
               >
-                Predict My College <Target size={18} />
+                Predict My College <ArrowRight size={18} />
               </button>
 
               <button
@@ -1760,37 +1607,34 @@ export default function Hero({ onSearch }) {
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.2)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(0,0,0,.1)"; }}
               >
-                Join community <ArrowRight size={18} />
+                Join Community <ArrowRight size={18} />
               </button>
             </motion.div>
 
-            {/* ── Trust row ── */}
+            {/* ── Trust row — three dotted highlights ── */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.46 }}
               style={{
-                display: "flex", alignItems: "center", gap: 12, marginTop: 12,
+                display: "flex", alignItems: "center", flexWrap: "wrap",
+                gap: isXs ? "10px 20px" : "10px 32px", marginTop: 12,
                 justifyContent: "center",
               }}
             >
-              <div style={{ display: "flex" }}>
-                {[
-                  { bg: "#FF7A50", t: "A" },
-                  { bg: "#FF6636", t: "P" },
-                  { bg: "#E85223", t: "R" },
-                ].map((a, i) => (
-                  <span key={a.t} style={{
-                    width: 40, height: 40, borderRadius: "50%", background: a.bg,
-                    border: "2.5px solid #ffffff", display: "grid", placeItems: "center",
-                    marginLeft: i === 0 ? 0 : -14, boxShadow: "0 4px 10px rgba(0,0,0,.08)",
-                    fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 900, fontSize: 13.5, color: "#fff", letterSpacing: "-0.2px"
-                  }}>{a.t}</span>
-                ))}
-              </div>
-              <p style={{ margin: 0, fontSize: isXs ? 13 : 14.5, color: "#4B5563", fontFamily: "'Inter', system-ui, sans-serif", lineHeight: 1.4 }}>
-                Trusted by <strong style={{ color: "#111", fontWeight: 700 }}>3,200+</strong> JEE &amp; NEET aspirants
-              </p>
+              {[
+                "Trusted by 3,200+ aspirants",
+                "Free rank predictor",
+              ].map((t) => (
+                <span key={t} style={{
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  fontSize: isXs ? 12.5 : 14, color: "#4B5563", fontWeight: 500,
+                  fontFamily: "'Inter', system-ui, sans-serif", whiteSpace: "nowrap",
+                }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF5A36", flexShrink: 0 }} />
+                  {t}
+                </span>
+              ))}
             </motion.div>
 
           </div>
