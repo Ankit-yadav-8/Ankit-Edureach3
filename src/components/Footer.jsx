@@ -178,6 +178,17 @@ function DevCard({ t, index = 0 }) {
               </span>
             ))}
           </span>
+          {t.tagline && (
+            <span style={{ display: "block", fontSize: "0.76rem", color: "rgba(255,255,255,.65)", marginTop: 8, fontStyle: "italic", lineHeight: 1.4 }}>
+              "{t.tagline}"
+            </span>
+          )}
+          {t.college && (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.7rem", color: "#fb9b85", fontWeight: 700, marginTop: 8, letterSpacing: 0.5, textTransform: "uppercase" }}>
+              <MapPin size={10} />
+              {t.college}
+            </span>
+          )}
         </span>
         <ArrowUpRight className="fdev-arrow" size={16} color="rgba(255,255,255,.55)" />
       </Link>
@@ -191,7 +202,7 @@ export default function Footer() {
     <footer style={{ background: "#0a0a0a", color: "#fff", paddingTop: "3.5rem" }}>
       <style>{`
         .fdev-card {
-          display: flex; align-items: center; gap: 14px;
+          display: flex; align-items: flex-start; gap: 14px;
           padding: 14px 18px; border-radius: 16px;
           background: rgba(255,255,255,0.05);
           border: 1px solid rgba(249,115,22,0.25);
@@ -310,20 +321,20 @@ export default function Footer() {
           {/* "Built by developers" badge */}
           <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
             <span
-              className="fteam-badge glow-pulse"
+              className="fteam-badge"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 7,
-                padding: "5px 18px",
-                borderRadius: 99,
-                background: "#FF693D",
-                fontSize: ".78rem",
-                fontWeight: 700,
+                padding: "6px 20px",
+                borderRadius: 50,
+                background: "rgba(255,105,61,0.1)",
+                border: "1px solid rgba(255,105,61,0.3)",
+                fontSize: ".76rem",
+                fontWeight: 800,
                 letterSpacing: 1.2,
                 textTransform: "uppercase",
-                color: "#fff",
-                boxShadow: "0 0 22px rgba(255, 105, 61,.6), 0 0 0 1px rgba(255,255,255,.12)",
+                color: "#FF693D",
               }}
             >
               <Code2 size={13} />

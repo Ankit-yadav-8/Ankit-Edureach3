@@ -21,7 +21,7 @@ const WA_NUMBER = "917877596464";
 
 /* ── warm paper / coral / navy theme ── */
 const T = {
-  paper: "#F7F3EC", paper2: "#F1EBE0", card: "#FFFFFF",
+  paper: "var(--page-bg)", paper2: "#F1EBE0", card: "#FFFFFF",
   ink: "#1B1B24", body: "#54525C", muted: "#8C877E",
   line: "#E4DED2", lineDk: "#D6CFC0",
   coral: "#FF693D", coralDk: "#D8512A", coralSoft: "#FFE7DE",
@@ -1036,25 +1036,28 @@ function TalkToUs({ exam }) {
   };
   return (
     <section className="mj-section mj-talk">
-      <div className="mj-wrap mj-talk-grid">
-        <Reveal>          <h2 className="mj-display mj-display-lg">Not sure?<br /><em>Let&rsquo;s talk.</em></h2>
-          <p className="mj-body">A 15-minute call, no pressure. We&rsquo;ll listen to where you are,
-            share what the year could look like, and let you decide.</p>
-          <div className="mj-reach">
-            <span>REACH US · HELLO@COLLEGEPARICHAY.IN</span>
-            <span>CALL · +91 78775 96464</span>
-          </div>
-        </Reveal>
-        <Reveal delay={0.1} className="mj-form">
-          <form onSubmit={submit}>
-            <div className="mj-form-row">
-              <label className="mj-field"><span>Your name</span><input required value={f.name} onChange={set("name")} placeholder="Your name" /></label>
-              <label className="mj-field"><span>Phone</span><input required inputMode="tel" value={f.phone} onChange={set("phone")} placeholder="Phone" /></label>
+      <div className="mj-wrap">
+        <Reveal className="mj-parent-card">
+          <div className="mj-talk-booklet">
+            <h2 className="mj-display mj-display-lg">Not sure?<br /><em>Let&rsquo;s talk.</em></h2>
+            <p className="mj-body">A 15-minute call, no pressure. We&rsquo;ll listen to where you are,
+              share what the year could look like, and let you decide.</p>
+            <div className="mj-reach">
+              <span>REACH US · HELLO@COLLEGEPARICHAY.IN</span>
+              <span>CALL · +91 78775 96464</span>
             </div>
-            <label className="mj-field"><span>Email</span><input type="email" value={f.email} onChange={set("email")} placeholder="Email" /></label>
-            <label className="mj-field"><span>Tell us about your goal</span><textarea rows={3} value={f.goal} onChange={set("goal")} placeholder="Tell us about your goal" /></label>
-            <button className="mj-btn-dark mj-btn-block" type="submit">Request a callback <Send size={16} /></button>
-          </form>
+          </div>
+          <div className="mj-talk-form-wrap">
+            <form onSubmit={submit}>
+              <div className="mj-form-row">
+                <label className="mj-field"><span>Your name</span><input required value={f.name} onChange={set("name")} placeholder="Your name" /></label>
+                <label className="mj-field"><span>Phone</span><input required inputMode="tel" value={f.phone} onChange={set("phone")} placeholder="Phone" /></label>
+              </div>
+              <label className="mj-field"><span>Email</span><input type="email" value={f.email} onChange={set("email")} placeholder="Email" /></label>
+              <label className="mj-field"><span>Tell us about your goal</span><textarea rows={3} value={f.goal} onChange={set("goal")} placeholder="Tell us about your goal" /></label>
+              <button className="mj-btn-dark mj-btn-block" type="submit">Request a callback <Send size={16} /></button>
+            </form>
+          </div>
         </Reveal>
       </div>
     </section>
@@ -1123,13 +1126,13 @@ const CSS = `
 .mj-section { padding:clamp(64px,9vw,110px) 0; position:relative; }
 
 /* variant tabs */
-.mj-tabs { display:flex; justify-content:center; gap:8px; padding-top:112px; padding-bottom:2px; flex-wrap:wrap; position:relative; z-index:2; }
+.mj-tabs { display:flex; justify-content:center; gap:8px; padding-top:48px; padding-bottom:2px; flex-wrap:wrap; position:relative; z-index:2; }
 .mj-tab { text-decoration:none; padding:8px 16px; border-radius:50px; border:1px solid ${T.line}; background:${T.card}; color:${T.body}; font:700 .82rem/1 'Space Grotesk',sans-serif; transition:.16s; }
 .mj-tab:hover { border-color:${T.coral}; color:${T.coralDk}; }
 .mj-tab-on { background:${T.ink}; border-color:${T.ink}; color:#fff; }
 
 /* hero — glassmorphic performance engine (coral + cream) */
-.mj-hero { position:relative; padding:clamp(92px,12vw,150px) 0 clamp(70px,8vw,104px); overflow:hidden; border-bottom:1px solid ${T.line}; background:radial-gradient(120% 90% at 50% -10%, #FFFCF8 0%, #FFF6F0 34%, ${T.paper} 72%); }
+.mj-hero { position:relative; padding:clamp(92px,12vw,150px) 0 clamp(70px,8vw,104px); overflow:hidden; border-bottom:1px solid ${T.line}; background:var(--page-bg); }
 .mj-hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
 .mj-orb { position:absolute; border-radius:50%; filter:blur(90px); }
 .mj-orb-a { width:520px; height:520px; top:-210px; left:-150px; background:radial-gradient(circle, rgba(255,105,61,.24), transparent 70%); opacity:.5; animation:mjfloat 16s ease-in-out infinite; }
@@ -1502,11 +1505,11 @@ const CSS = `
 .mj-wa-mic { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#FF8B48,#F1531F); color:#fff; flex-shrink:0; }
 
 /* proof — static bento wall */
-.mj-proof-top { display:flex; align-items:flex-end; justify-content:space-between; gap:28px 40px; flex-wrap:wrap; margin-bottom:34px; }
-.mj-proof-intro { max-width:560px; }
+.mj-proof-top { display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; margin-bottom:44px; }
+.mj-proof-intro { max-width:640px; }
 .mj-proof-intro h2 { margin:0; }
-.mj-proof-intro .mj-sec-sub { margin:14px 0 0; text-align:left; }
-.mj-proof-kpis { display:flex; align-items:flex-start; gap:16px 30px; flex-wrap:wrap; }
+.mj-proof-intro .mj-sec-sub { margin:14px 0 0; text-align:center; }
+.mj-proof-kpis { display:flex; justify-content:center; align-items:center; gap:16px 30px; flex-wrap:wrap; margin-top:8px; }
 .mj-kpi { display:flex; flex-direction:column; gap:5px; }
 .mj-kpi-stars { display:flex; gap:2px; }
 .mj-kpi strong { font:800 1.4rem/1 'Playfair Display',serif; color:${T.coral}; }
@@ -1576,11 +1579,17 @@ const CSS = `
 .mj-faq-a p { font:400 .96rem/1.7 'DM Sans',sans-serif; color:${T.body}; padding:0 22px 20px; margin:0; }
 
 /* talk */
-.mj-talk-grid { display:grid; grid-template-columns:.85fr 1.15fr; gap:48px; align-items:center; }
-.mj-reach { display:flex; flex-direction:column; gap:8px; margin-top:30px; font:700 .74rem/1.4 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.muted}; }
-.mj-form { background:${T.card}; border:1px solid ${T.line}; border-radius:22px; padding:34px; box-shadow:0 30px 60px -40px rgba(0,0,0,.3); }
+.mj-talk-booklet { display:flex; flex-direction:column; padding:44px 44px 44px 54px; color:#fff; background:linear-gradient(160deg, #FF7A3C 0%, #F1531F 60%, #E0481B 100%); position:relative; overflow:hidden; }
+.mj-talk-booklet::before { content:""; position:absolute; inset:0; background:repeating-linear-gradient(0deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px),repeating-linear-gradient(90deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px); pointer-events:none; }
+.mj-talk-booklet > * { position:relative; }
+.mj-talk-booklet .mj-display { color:#fff; margin-bottom: 24px; }
+.mj-talk-booklet .mj-display em { color:rgba(255,255,255,.9); font-style:italic; }
+.mj-talk-booklet .mj-body { color:rgba(255,255,255,.9); margin-bottom:44px; max-width: 420px; font-size:1.05rem; line-height:1.6; }
+.mj-talk-booklet .mj-reach { margin-top:auto; display:flex; flex-direction:column; gap:10px; font:700 .74rem/1.4 'Space Grotesk',sans-serif; letter-spacing:.08em; color:rgba(255,255,255,.75); }
+
+.mj-talk-form-wrap { background:#FBF8F2; padding:44px 54px; display:flex; flex-direction:column; justify-content:center; }
 .mj-form-row { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-.mj-field { display:flex; flex-direction:column; gap:6px; margin-bottom:22px; }
+.mj-field { display:flex; flex-direction:column; gap:6px; margin-bottom:24px; }
 .mj-field span { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:${T.muted}; }
 .mj-field input, .mj-field textarea { border:none; border-bottom:1.5px solid ${T.line}; background:none; padding:8px 2px; font:500 1rem/1.4 'DM Sans',sans-serif; color:${T.ink}; outline:none; resize:vertical; transition:border-color .16s; }
 .mj-field input:focus, .mj-field textarea:focus { border-color:${T.coral}; }
