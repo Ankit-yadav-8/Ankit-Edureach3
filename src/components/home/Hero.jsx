@@ -1581,6 +1581,76 @@ export default function Hero({ onSearch }) {
               <div style={{ marginBottom: "2.5rem" }} />
             </motion.div>
 
+            {/* ── Search bar ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.18 }}
+              style={{ width: "100%", maxWidth: 640, margin: "0 auto 1.5rem" }}
+            >
+              <div style={{
+                display: "flex",
+                gap: 6,
+                background: "var(--page-bg)",
+                padding: isXs ? 6 : 8,
+                borderRadius: 9999,
+                boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
+                border: "1px solid rgba(0,0,0,.04)",
+                transition: "border 0.3s ease, box-shadow 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.border = "1px solid #FF5A36";
+                e.currentTarget.style.boxShadow = "0 12px 30px rgba(255, 90, 54, 0.15)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.border = "1px solid rgba(0,0,0,.04)";
+                e.currentTarget.style.boxShadow = "0 10px 40px rgba(0,0,0,0.06)";
+              }}>
+                <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 10, paddingLeft: isXs ? 16 : 24, minWidth: 0 }}>
+                  <Search size={18} color="#9ca3af" style={{ flexShrink: 0 }} />
+                  <input
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && go()}
+                    placeholder="Search colleges, exams…"
+                    onFocus={onSearch}
+                    style={{
+                      border: "none",
+                      outline: "none",
+                      flex: 1,
+                      minWidth: 0,
+                      fontSize: 15,
+                      fontFamily: "'Inter', system-ui, sans-serif",
+                      background: "transparent",
+                      color: "#111",
+                    }}
+                  />
+                </div>
+                <button
+                  onClick={() => go()}
+                  style={{
+                    borderRadius: 9999,
+                    padding: isXs ? "10px 20px" : "12px 32px",
+                    fontSize: isXs ? 13 : 15,
+                    fontWeight: 600,
+                    fontFamily: "'Inter', system-ui, sans-serif",
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
+                    background: "#FF5A36",
+                    color: "#fff",
+                    boxShadow: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    transition: "background 0.2s",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "#E0421F"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "#FF5A36"; }}
+                >
+                  Search
+                </button>
+              </div>
+            </motion.div>
+
             {/* ── Primary + secondary CTAs ── */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
