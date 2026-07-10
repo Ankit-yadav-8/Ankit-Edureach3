@@ -150,7 +150,8 @@ export const MENTORSHIP = {
       { q: "I already have coaching. How will I manage mentorship?", a: "Mentorship sits on top of your coaching — it doesn't replace it. We make your existing classes actually count by fixing retention, backlog and consistency. Most students spend just 10–15 extra minutes a day on the system." },
       { q: "I have a lot of backlog. Is this for me?", a: "Absolutely — backlog students are exactly who this is built for. Your mentor designs backlog-clearing sprints so you catch up in a structured, stress-free way instead of panicking." },
       { q: "I struggle with consistency.", a: "That's the #1 problem we solve. Daily micro-capsules, streaks and a real human checking on you make consistency almost automatic." },
-      { q: "Can I get a discount?", a: "No. The price is already a fraction of what 1-on-1 mentorship costs — and serious aspirants don't negotiate their future." },
+      { q: "Can I get a discount?", a: "No. The price is already a fraction of what 1-on-1 mentorship costs — and serious aspirants don't negotiate their future." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
+      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy—whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
 
     tracks: [
@@ -278,7 +279,8 @@ export const MENTORSHIP = {
       { q: "Isn't Class 11 too early to start mentorship?", a: "No — it's the perfect time. The students who finish two years ahead are the ones who started right. Early mentorship prevents the backlog and panic droppers face." },
       { q: "Will this clash with my school and coaching?", a: "No. The 2-year system is light daily — 10–15 minutes — and is designed to make your school and coaching far more effective, not add load." },
       { q: "Why is the 2-year plan better?", a: "Because you get two full years of 1-on-1 mentorship instead of one — far more mentor time, more sprints and a longer roadmap. It's the highest-value plan we offer." },
-      { q: "Can I get a discount?", a: "No. Early-bird pricing is already the lowest this plan will ever be." },
+      { q: "Can I get a discount?", a: "No. Early-bird pricing is already the lowest this plan will ever be." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
+      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy—whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
 
     tracks: [
@@ -399,7 +401,8 @@ export const MENTORSHIP = {
       { q: "I have joined a famous offline coaching. Why need this?", a: "Offline coaching teaches 500 students at once. We tell YOU exactly what to do when you go home. Mentorship fixes retention and consistency." },
       { q: "Is Physics covered properly?", a: "Yes. Physics is the rank decider in NEET. Your mentor will provide specific strategies, formula sheets, and targeted practice for Physics." },
       { q: "I have a huge backlog in Class 11. Can I still clear NEET?", a: "Yes. Your mentor will design a specific backlog-clearing sprint alongside your current syllabus so you catch up." },
-      { q: "Can I choose between 2027 and 2028 plans?", a: "Yes. You can select either the NEET 2027 or NEET 2028 plan from the tracks below." },
+      { q: "Can I choose between 2027 and 2028 plans?", a: "Yes. You can select either the NEET 2027 or NEET 2028 plan from the tracks below." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
+      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy—whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
 
     tracks: [
@@ -518,7 +521,8 @@ export const MENTORSHIP = {
       { name: "Rahul S.",  batch: "Foundation", improvement: "NTSE Stage 1 Cleared", quote: "Mentorship helped me balance school and NTSE perfectly." },
     ],
     faqs: [
-      { q: "Is Class 9 too early?", a: "It's the perfect time to build concepts without the pressure of boards." },
+      { q: "Is Class 9 too early?", a: "It's the perfect time to build concepts without the pressure of boards." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
+      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy—whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
     tracks: [
       { plan: "mentor-foundation",  exam: "Foundation",  accent: "#FF693D", line: "IITian mentors · Class 9 & 10" },

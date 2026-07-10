@@ -1040,21 +1040,19 @@ function Faqs({ cfg }) {
         </Reveal>
         <div className="mj-faqs">
           {(cfg.faqs || []).map((f, i) => (
-            <Reveal key={i} delay={i * 0.1}>
-              <div className={open === i ? "mj-faq mj-faq-open" : "mj-faq"}>
-                <button className="mj-faq-q" onClick={() => setOpen(open === i ? -1 : i)}>
-                  <span className="mj-faq-ic"><Plus size={20} strokeWidth={2.5} /></span>
-                  <span className="mj-faq-qt">{f.q}</span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {open === i && (
-                    <motion.div className="mj-faq-a" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.28 }}>
-                      <p>{f.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </Reveal>
+            <div key={i} className={open === i ? "mj-faq mj-faq-open" : "mj-faq"}>
+              <button className="mj-faq-q" onClick={() => setOpen(open === i ? -1 : i)}>
+                <span className="mj-faq-qt">{f.q}</span>
+                <span className="mj-faq-ic">{open === i ? <Minus size={16} /> : <Plus size={16} />}</span>
+              </button>
+              <AnimatePresence initial={false}>
+                {open === i && (
+                  <motion.div className="mj-faq-a" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.28 }}>
+                    <p>{f.a}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ))}
         </div>
       </div>
@@ -1585,21 +1583,20 @@ const CSS = `
 .mj-price-foot { display:flex; justify-content:space-between; margin-top:16px; font:700 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.muted}; }
 
 /* faq */
-.mj-faq-head { display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; margin-bottom:44px; }
+.mj-faq-head { display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; margin-bottom:36px; }
 .mj-faq-pill { display:inline-flex; align-items:center; gap:7px; padding:7px 15px; border-radius:50px; background:${T.coralSoft}; color:${T.coralDk}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; }
 .mj-faq-pill svg { flex-shrink:0; }
 .mj-faq-h { margin:0; }
 .mj-faq-head .mj-sec-sub { margin:0; }
-.mj-faqs { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px; align-items:stretch; max-width:1040px; margin:0 auto; }
-.mj-faq { background:${T.card}; border:1px solid ${T.line}; border-radius:24px; box-shadow:0 10px 30px -24px rgba(0,0,0,.15); overflow:hidden; transition:transform .25s, border-color .25s, box-shadow .25s; display:flex; flex-direction:column; min-height:260px; }
-.mj-faq:hover { transform:translateY(-6px); box-shadow:0 24px 48px -30px rgba(0,0,0,.25); border-color:#FFB59A; }
-.mj-faq-open { border-color:${T.coral}; box-shadow:0 16px 36px -22px rgba(255,105,61,.45); background: linear-gradient(180deg, #fff, ${T.coralSoft} 200%); }
-.mj-faq-q { display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between; flex:1; width:100%; padding:28px 28px 20px; background:none; border:none; cursor:pointer; text-align:left; }
-.mj-faq-ic { align-self:flex-end; display:grid; place-items:center; width:44px; height:44px; border-radius:50%; background:${T.paper}; border:1px solid ${T.line}; color:${T.coralDk}; transition:.3s; flex-shrink:0; }
-.mj-faq-open .mj-faq-ic { background:${T.coral}; border-color:${T.coral}; color:#fff; transform:rotate(45deg); }
-.mj-faq-qt { font:700 1.25rem/1.3 'Sora',sans-serif; color:${T.ink}; margin-top:32px; padding-bottom:8px; }
+.mj-faqs { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; max-width:1000px; margin:0 auto; }
+.mj-faq { background:${T.card}; border:1px solid ${T.line}; border-radius:16px; box-shadow:0 10px 30px -24px rgba(0,0,0,.32); overflow:hidden; transition:border-color .2s, box-shadow .2s; }
+.mj-faq-open { border-color:#F6C6B6; box-shadow:0 16px 36px -22px rgba(255,105,61,.42); }
+.mj-faq-q { display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%; padding:19px 22px; background:none; border:none; cursor:pointer; text-align:left; }
+.mj-faq-qt { flex:1; font:700 1.02rem/1.35 'Sora',sans-serif; color:${T.ink}; }
+.mj-faq-ic { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:${T.coralSoft}; color:${T.coralDk}; transition:.2s; flex-shrink:0; }
+.mj-faq-open .mj-faq-ic { background:${T.coral}; color:#fff; }
 .mj-faq-a { overflow:hidden; }
-.mj-faq-a p { font:400 1rem/1.7 'DM Sans',sans-serif; color:${T.body}; padding:0 28px 28px; margin:0; }
+.mj-faq-a p { font:400 .96rem/1.7 'DM Sans',sans-serif; color:${T.body}; padding:0 22px 20px; margin:0; }
 
 /* talk */
 .mj-talk-booklet { display:flex; flex-direction:column; padding:44px 44px 44px 54px; color:#fff; background:linear-gradient(160deg, #FF7A3C 0%, #F1531F 60%, #E0481B 100%); position:relative; overflow:hidden; }
