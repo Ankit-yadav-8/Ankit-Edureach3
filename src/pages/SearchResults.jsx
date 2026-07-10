@@ -22,9 +22,9 @@ export default function SearchResults() {
   const runSearch = (term) => setSp({ q: term });
 
   return (
-    <div className="page">
-      <Seo title="Search" robots="noindex, follow" path="/search" />
-      <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "40px 0" }}>
+    <div className="page" style={{ background: "var(--page-bg)", minHeight: "100vh" }}>
+      <Seo title="Search Results" description="Search colleges, exams, and articles." />
+      <section style={{ background: "var(--page-bg)", color: "var(--ink)", padding: "40px 0" }}>
         <div className="container">
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Smart Search</span>
           <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,4vw,2.2rem)", margin: "8px 0 4px" }}>

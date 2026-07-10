@@ -35,7 +35,7 @@ export default function NeetStrategy() {
   const { scrollYProgress } = useScroll();
 
   return (
-    <div className="page strategy-wrapper" style={{ background: "var(--bg)", minHeight: "100vh" }}>
+    <div className="page strategy-wrapper" style={{ background: "var(--page-bg)", minHeight: "100vh" }}>
       <Seo 
         title="NEET Exam Strategy & Roadmap" 
         description="Master Biology, Maximize Accuracy & Build a Medical Rank with Smart Preparation." 

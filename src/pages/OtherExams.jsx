@@ -314,7 +314,7 @@ export default function OtherExams() {
 const CSS = `
 /* ── hero (soft dotted surface — matches the branch-page reference) ── */
 .oe-hero {
-  position:relative; padding:44px 0 64px; background:#fff;
+  position:relative; padding:44px 0 64px; background:var(--page-bg);
   background-image:radial-gradient(${CL.coral}22 1px, transparent 1px);
   background-size:38px 38px; background-position:-8px -8px;
   border-bottom:1px solid ${CL.cream3};
@@ -359,7 +359,7 @@ const CSS = `
 .oe-map-swatch { width:18px; height:5px; border-radius:3px; }
 
 /* ── directory ── */
-.oe-directory { background:#fff; padding:70px 0 90px; }
+.oe-directory { background:var(--page-bg); padding:70px 0 90px; }
 .oe-dir-title { font:800 clamp(1.7rem,4vw,2.5rem)/1.15 ${CL.display}; color:${CL.ink}; letter-spacing:-1px; margin:14px 0 0; }
 .oe-dir-sub { font:500 1.05rem/1.6 sans-serif; color:${CL.body}; margin:12px 0 0; }
 

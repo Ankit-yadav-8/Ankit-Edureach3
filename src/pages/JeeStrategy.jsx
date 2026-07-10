@@ -36,7 +36,7 @@ export default function JeeStrategy() {
   const { scrollYProgress } = useScroll();
 
   return (
-    <div className="page strategy-wrapper" style={{ background: "var(--bg)", minHeight: "100vh" }}>
+    <div className="page strategy-wrapper" style={{ background: "var(--page-bg)", minHeight: "100vh" }}>
       <Seo 
         title="JEE Exam Strategy & Roadmap" 
         description="Master JEE Main & Advanced with Proven Roadmaps, Topper Frameworks, AI Insights & Smart Preparation" 

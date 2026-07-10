@@ -345,7 +345,7 @@ export default function Admin() {
 
   // ── DASHBOARD ─────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: "100vh", background: "radial-gradient(1200px 500px at 100% -10%, #fdeede 0%, transparent 55%), radial-gradient(1000px 460px at -10% 110%, #eef0fb 0%, transparent 50%), linear-gradient(180deg,#faf8f4 0%,#f5f3ef 100%)", padding: "32px 0 60px", position: "relative" }}>
+    <div style={{ minHeight: "100vh", background: "var(--page-bg)", padding: "32px 0 60px", position: "relative" }}>
       <style>{`
         @keyframes admUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: none; } }
         @keyframes admSpin { to { transform: rotate(360deg); } }
