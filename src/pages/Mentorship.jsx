@@ -140,6 +140,8 @@ const QUALIFIER_MENTORS = [
 
 /* ═══════════════ QUALIFIER — "is this you?" ═══════════════ */
 function Qualifier({ cfg }) {
+  const hurdles = cfg?.qualifierHurdles || ASPIRANT_POINTS;
+  const mentors = cfg?.qualifierMentors || QUALIFIER_MENTORS;
   return (
     <section className="mj-section">
       <style>{`
@@ -200,23 +202,19 @@ function Qualifier({ cfg }) {
               Are you facing these hurdles?
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {ASPIRANT_POINTS.map((pt, i) => (
-                <motion.div key={i} className="mj-qual-pt"
-                  initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.5, delay: i * 0.1 }}>
-                  <div className="mj-qual-pt-ic">
-                    <Check size={16} strokeWidth={3} />
-                  </div>
-                  <div>
-                    <strong style={{ display: "block", color: "var(--ink)", fontFamily: "Sora", fontSize: "0.95rem", fontWeight: 800, marginBottom: 4 }}>
-                      {pt.title}
-                    </strong>
-                    <span style={{ display: "block", color: "var(--body)", fontFamily: "DM Sans", fontSize: "0.86rem", lineHeight: 1.5 }}>
-                      {pt.desc}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
+              <div className="mj-qual-l-list">
+                {hurdles.map((pt, i) => (
+                  <motion.div key={i} className="mj-qual-pt"
+                    initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.1 * i }}>
+                    <div className="mj-qual-icon"><Check size={16} strokeWidth={3} /></div>
+                    <div className="mj-qual-tx">
+                      <strong>{pt.title}</strong>
+                      <p style={{ marginTop: 6, color: "var(--body)", fontSize: "0.85rem", lineHeight: 1.5 }}>{pt.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
           
@@ -226,7 +224,7 @@ function Qualifier({ cfg }) {
                 Guidance from the Founders
               </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-                {QUALIFIER_MENTORS.map((m, i) => (
+                {mentors.map((m, i) => (
                   <motion.div key={i} className="mj-qual-mentor"
                     initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}>
@@ -443,7 +441,9 @@ function TestAnalysis({ cfg }) {
 
         <div className="mj-ta-topbar">
           <div className="mj-ta-topbar-l">
-            <span className="mj-ta-topbar-badge"><LineChart size={16} strokeWidth={2.4} /></span>
+            <span className="mj-ta-topbar-badge" style={{ padding: 0, overflow: "hidden" }}>
+              <img src="/cplogo3.jpeg" alt="CP" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </span>
             <div>
               <strong>{exam} · Test Tracker</strong>
               <span>ADMIT CODE {isNeet ? "NEET" : "JEE"}-TRK-0419 · Target session: {session}</span>
@@ -459,7 +459,9 @@ function TestAnalysis({ cfg }) {
         <div className="mj-ta-grid">
           <div className="mj-ta-form">
             <div className="mj-ta-formtop">
-              <span className="mj-ta-formbadge"><LineChart size={17} strokeWidth={2.4} /></span>
+              <span className="mj-ta-formbadge" style={{ padding: 0, overflow: "hidden" }}>
+                <img src="/cplogo3.jpeg" alt="CP" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </span>
               <div className="mj-ta-formtop-tx">
                 <strong>Add a test result</strong>
                 <span>Log every attempt — mocks count as much as the real thing.</span>

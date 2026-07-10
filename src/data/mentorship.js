@@ -29,6 +29,7 @@ export const MENTOR_LINKS = [
   { slug: "jee-2027", label: "JEE 2027", to: "/mentorship/jee-2027", price: 2499, tag: "Class 12 / Droppers" },
   { slug: "jee-2028", label: "JEE 2028", to: "/mentorship/jee-2028", price: 2499, tag: "Class 11 · 2-Year Plan" },
   { slug: "neet",     label: "NEET",     to: "/mentorship/neet",     price: 2499, tag: "Medical Aspirants" },
+  { slug: "foundation", label: "Foundation", to: "/mentorship/foundation", price: 2499, tag: "Class 9 & 10" },
 ];
 
 /* ════════════════════════════════════════════════════════════════
@@ -406,4 +407,122 @@ export const MENTORSHIP = {
       { plan: "mentor-neet-2028", exam: "NEET 2028", accent: "#0ea5a4", line: "2-year Doctor mentorship · concept-first" },
     ],
   },
+
+  /* ─────────────────────────── Foundation ─────────────────── */
+  "foundation": {
+    slug: "foundation",
+    eyebrow: "Foundation Mentorship",
+    tagline: "Start Right. Build Deep.",
+    badge: "🚀 Class 9 & 10 Aspirants",
+    title: ["Start Early.", "Stay Ahead.", ""],
+    subtitle: "CollegeParichay Foundation program builds deep concepts and logical reasoning for Class 9 and 10 students. No burnout, just a rock-solid base for future competitive exams.",
+    videoNote: "Watch how early preparation changes the game",
+    heroImage: "/images/jee_2028_hero.png",
+    analyticsImage: "/images/jee_2028_analytics.png",
+    roadmapImage: "/images/jee_2028_roadmap.png",
+    stats: [
+      { val: "Pre-JEE", lbl: "Foundation focus" },
+      { val: "1-on-1", lbl: "Personal mentor" },
+      { val: "Weekly", lbl: "Checkpoints" },
+      { val: "No burnout", lbl: "Paced learning" },
+    ],
+    metrics: {
+      student: { name: "Rahul", klass: "Class 10", mentor: "Vikram (IIT KGP)", line: "Rahul · Class 10", exam: "Foundation" },
+      growth: {
+        label: "Concept mastery over 8 weeks", hint: "You vs batch average",
+        you:   [40, 48, 55, 62, 70, 78, 85, 90],
+        batch: [35, 40, 45, 50, 55, 60, 65, 70],
+      },
+      subjects: [
+        { name: "Science",   Before: 45, After: 85 },
+        { name: "Maths",     Before: 50, After: 90 },
+        { name: "MAT",       Before: 30, After: 75 },
+      ],
+      outcomes: [
+        { v: "+40%",    l: "Concept mastery gain", c: "#FF693D" },
+        { v: "88%",     l: "Average accuracy",     c: "#22c55e" },
+        { v: "Strong",  l: "Olympiad readiness",   c: "#6366f1" },
+        { v: "15 days", l: "Avg study streak",     c: "#ef4444" },
+      ],
+      weekHours: [2, 3, 2.5, 3.5, 2, 4, 1.5],
+      goalPct: 80,
+      liveTiles: [
+        { icon: "clock",    c: "#FF693D", v: "2h 15m",  l: "Today" },
+        { icon: "activity", c: "#6366f1", v: "15h",     l: "This week" },
+        { icon: "flame",    c: "#ef4444", v: "15 days", l: "Streak" },
+        { icon: "check",    c: "#22c55e", v: "10 / 12", l: "Tasks done" },
+      ],
+      test: {
+        week: "Week 6", gain: "+25 marks", trend: [40, 48, 52, 60, 68, 75],
+        weak: ["Geometry", "Light", "Number Systems"],
+        fix:  ["Revise Geometry proofs", "Daily 5 Light numericals"],
+      },
+      parent: {
+        week: "Week 6",
+        issue: "VOL 12 · SUN 12 NOV",
+        headline: "Rahul is developing strong logical reasoning.",
+        body: "Rahul has significantly improved his geometry problem-solving speed. We are slowly integrating higher-order thinking skills (HOTS).",
+        rows: [
+          { l: "Study hours",     v: "15 / 14 hrs" },
+          { l: "Concept mastery", v: "85%" },
+          { l: "Checkpoints",     v: "Done" },
+          { l: "Weak areas",      v: "Light" },
+          { l: "Mentor note",     v: "Great focus" },
+        ],
+        remark: "Rahul is doing well. Next week we focus on Light.",
+      },
+    },
+    forYou: [
+      "You're unsure when to start JEE/NEET prep",
+      "School exams clash with competitive prep",
+      "You lack clarity on career options",
+      "Your basics aren't strong enough",
+      "You want to crack NTSE or Olympiads",
+    ],
+    qualifierHurdles: [
+      { title: "You're unsure when to start JEE/NEET prep", desc: "Starting too early causes burnout, starting too late adds pressure. We'll find the perfect pace for Class 9/10." },
+      { title: "School exams clash with competitive prep", desc: "Balancing board exams and Olympiads/foundation is tough. We'll create a schedule that manages both." },
+      { title: "You lack clarity on career options", desc: "Engineering or Medical? We'll help you explore your interests and make an informed decision early on." },
+      { title: "Your basics aren't strong enough", desc: "Advanced concepts require a solid foundation. We focus on building deep conceptual clarity from the ground up." },
+      { title: "You want to crack NTSE or Olympiads", desc: "These exams require a different approach than school tests. Our experts will guide you through the specific patterns." }
+    ],
+    qualifierMentors: [
+      {
+        name: "Ankit Yadav",
+        role: "Founder, IIT Roorkee",
+        img: "/assets/team/ankit2.PNG",
+        thought: "Starting early is an advantage only if the direction is right. For Foundation students, we focus on building a resilient mindset and an unbreakable conceptual base that makes clearing future competitive exams a natural outcome."
+      },
+      {
+        name: "Ankit Kumar",
+        role: "Co-Founder, IIT Roorkee",
+        img: "/assets/team/ankit.png?v=2",
+        thought: "We don't want Class 9 and 10 students to burn out. Our Foundation mentorship is designed to spark curiosity, build logical reasoning, and slowly ramp up the intensity without compromising their school life."
+      }
+    ],
+    howWeGuide: [
+      { tag: "FOUNDATION", title: "Concept-First Capsules", desc: "Daily capsules that build deep understanding from the ground up.",
+        tasks: ["Concepts built from first principles", "Mapped to Class 9 & 10", "No rote learning"],
+        chips: ["Concept-first", "Daily capsules"] },
+      { tag: "BALANCE", title: "School + Olympiad Prep", desc: "We manage both school boards and competitive exams smoothly.",
+        tasks: ["Balanced timetable", "Board-focused revision", "Olympiad HOTS"],
+        chips: ["Timetable", "HOTS"] },
+    ],
+    journey: [
+      { title: "Intake call with your mentor", desc: "A 45-min call to map your current level and interests." },
+      { title: "Personalised study roadmap", desc: "A plan that balances school and foundation without stress." },
+      { title: "Daily targets via gamified system", desc: "Micro-capsules + streaks keep you moving." },
+      { title: "Weekly test analysis", desc: "Review tests with your mentor." },
+    ],
+    testimonials: [
+      { name: "Rahul S.",  batch: "Foundation", improvement: "NTSE Stage 1 Cleared", quote: "Mentorship helped me balance school and NTSE perfectly." },
+    ],
+    faqs: [
+      { q: "Is Class 9 too early?", a: "It's the perfect time to build concepts without the pressure of boards." },
+    ],
+    tracks: [
+      { plan: "mentor-foundation",  exam: "Foundation",  accent: "#FF693D", line: "IITian mentors · Class 9 & 10" },
+    ],
+  },
+
 };
