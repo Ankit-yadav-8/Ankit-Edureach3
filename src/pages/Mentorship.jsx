@@ -154,33 +154,134 @@ function Method({ cfg }) {
 
         <div className="mj-vsteps">
           <motion.span className="mj-vsteps-rail" initial={{ scaleY: 0 }} whileInView={{ scaleY: 1 }}
-            viewport={{ once: true, margin: "-80px" }} transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }} aria-hidden="true" />
-          {steps.map((s, i) => (
-            <motion.div key={i} className="mj-vstep"
-              initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.55, delay: 0.08 * i, ease: [0.16, 0.84, 0.32, 1] }}>
-              <div className="mj-vstep-mark">
-                <span className="mj-vstep-n">{String(i + 1).padStart(2, "0")}</span>
-              </div>
-              <div className="mj-vstep-card">
-                <div className="mj-vstep-cardtop">
-                  <span className="mj-vstep-tag">STEP {String(i + 1).padStart(2, "0")}</span>
-                  <span className="mj-vstep-foot">{i + 1 < steps.length ? `→ ${String(i + 2).padStart(2, "0")}` : "RANK ACHIEVED ★"}</span>
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: Math.max(steps.length * 0.24, 0.9), ease: [0.33, 0, 0.12, 1] }} aria-hidden="true" />
+          {steps.map((s, i) => {
+            const at = 0.14 + i * 0.2; /* each step lands as the rail reaches it */
+            return (
+              <motion.div key={i} className="mj-vstep"
+                initial={{ opacity: 0, x: 28, y: 12 }} whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: "-70px" }}
+                transition={{ duration: 0.5, delay: at, ease: [0.16, 0.84, 0.32, 1] }}>
+                <motion.div className="mj-vstep-mark"
+                  initial={{ scale: 0.35, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true, margin: "-70px" }}
+                  transition={{ delay: at + 0.06, type: "spring", stiffness: 320, damping: 17 }}>
+                  <span className="mj-vstep-n">{String(i + 1).padStart(2, "0")}</span>
+                </motion.div>
+                <div className="mj-vstep-card">
+                  <div className="mj-vstep-cardtop">
+                    <span className="mj-vstep-tag">STEP {String(i + 1).padStart(2, "0")}</span>
+                    <span className="mj-vstep-foot">{i + 1 < steps.length ? `→ ${String(i + 2).padStart(2, "0")}` : "RANK ACHIEVED ★"}</span>
+                  </div>
+                  <h3 className="mj-vstep-t">{s.title}</h3>
+                  <p className="mj-vstep-d">{s.desc}</p>
                 </div>
-                <h3 className="mj-vstep-t">{s.title}</h3>
-                <p className="mj-vstep-d">{s.desc}</p>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
 
-/* ═══════════════ § 04 · TEST ANALYSIS (static product preview) ═══════════════ */
-function TestAnalysis() {
+/* ═══════════════ § 04 · TEST ANALYSIS (coded, per-variant static preview) ═══════════════ */
+const TA_STEPS = ["You enter test data", "AI analyses your paper", "Trends visualised", "Strategies + rank predicted"];
+function AnalysisChart({ series, xLabels, yTicks, yMin, yMax, suffix = "", yLabel }) {
+  const W = 348, H = 202, padL = 42, padR = 12, padT = 14, padB = 40;
+  const pw = W - padL - padR, ph = H - padT - padB;
+  const n = xLabels.length;
+  const X = (i) => padL + (n <= 1 ? pw / 2 : (i / (n - 1)) * pw);
+  const Y = (v) => padT + (1 - (v - yMin) / ((yMax - yMin) || 1)) * ph;
+  const pts = (d) => d.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="mj-ta-chart" role="img" aria-label={yLabel}>
+      {yTicks.map((t, i) => (
+        <g key={`y${i}`}>
+          <line x1={padL} y1={Y(t)} x2={W - padR} y2={Y(t)} stroke={T.line} strokeWidth="1" strokeLinecap="round" strokeDasharray={i === 0 ? undefined : "1 6"} opacity={i === 0 ? 1 : 0.9} />
+          <text x={padL - 9} y={Y(t) + 3} textAnchor="end" className="mj-ta-axtxt">{t}{suffix}</text>
+        </g>
+      ))}
+      {xLabels.map((l, i) => (
+        <g key={`x${i}`}>
+          <line x1={X(i)} y1={padT + ph} x2={X(i)} y2={padT + ph + 4} stroke={T.lineDk} strokeWidth="1" opacity=".7" />
+          <text x={X(i)} y={padT + ph + 16} textAnchor="middle" className="mj-ta-axtxt">{l}</text>
+        </g>
+      ))}
+      <line x1={padL} y1={padT} x2={padL} y2={padT + ph} stroke={T.lineDk} strokeWidth="1.2" />
+      <line x1={padL} y1={padT + ph} x2={W - padR} y2={padT + ph} stroke={T.lineDk} strokeWidth="1.4" />
+      <text x={padL + pw / 2} y={H - 5} textAnchor="middle" className="mj-ta-axcap">MOCK TESTS &#8594;</text>
+      {yLabel && <text transform={`rotate(-90 13 ${padT + ph / 2})`} x={13} y={padT + ph / 2} textAnchor="middle" className="mj-ta-axcap">{yLabel}</text>}
+      {series.map((s, si) => (
+        <g key={si}>
+          {s.area && <polygon points={`${padL},${padT + ph} ${pts(s.data)} ${W - padR},${padT + ph}`} fill={s.color} opacity="0.1" />}
+          <polyline points={pts(s.data)} fill="none" stroke={s.color} strokeWidth={s.w || 2.4} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={s.dashed ? "5 4" : undefined} opacity={s.dashed ? 0.7 : 1} />
+          {!s.dashed && s.data.map((v, i) => (
+            <circle key={i} cx={X(i)} cy={Y(v)} r={s.w >= 2.6 ? 2.8 : 2.1} fill="#fff" stroke={s.color} strokeWidth="1.5" />
+          ))}
+        </g>
+      ))}
+    </svg>
+  );
+}
+function ChartLegend({ series }) {
+  return (
+    <div className="mj-ta-legend">
+      {series.map((s, i) => (<span key={i}><i style={{ background: s.color, opacity: s.dashed ? 0.6 : 1 }} />{s.name}</span>))}
+    </div>
+  );
+}
+function TestAnalysis({ cfg }) {
+  const m = cfg.metrics || {};
+  const isNeet = /neet/i.test(cfg.slug || "");
+  const you = m.growth?.you || m.test?.trend || [84, 120, 150, 178, 196, 214];
+  const total = isNeet ? 720 : 300;
+  const scored = you[you.length - 1] || (isNeet ? 610 : 214);
+  const prev = you[you.length - 2] || scored;
+  const pctUp = prev ? Math.max(Math.round(((scored - prev) / prev) * 100), 1) : 9;
+  const accN = parseInt((m.outcomes || []).find((o) => /accuracy/i.test(o.l))?.v || "86", 10) || 86;
+  const totalQ = isNeet ? 180 : 75;
+  const correct = Math.round((scored / total) * totalQ * 0.92);
+  const wrong = Math.max(Math.round((totalQ - correct) * 0.42), 1);
+  const skipped = Math.max(totalQ - correct - wrong, 0);
+
+  const nP = you.length;
+  const xL = you.map((_, i) => `M${i + 1}`);
+  const batch = m.growth?.batch || you.map((v) => Math.round(v * 0.62));
+  const target = you.map(() => Math.round(total * 0.75));
+  const mentored = you.map((v, i) => Math.round(v + (v - batch[i]) * 0.35 * (i / (nP - 1))));
+  const sRawMax = Math.max(...you, ...batch, ...target, ...mentored);
+  const sStep = [50, 100, 150, 200, 250, 300, 400].find((s) => s >= sRawMax / 5) || 400;
+  const sMax = Math.ceil(sRawMax / sStep) * sStep;
+  const sTicks = []; for (let v = 0; v <= sMax; v += sStep) sTicks.push(v);
+  const scoreSeries = [
+    { name: "You", color: T.coral, data: you, w: 2.9, area: true },
+    { name: "With mentor", color: T.coralDk, data: mentored, w: 2.2 },
+    { name: "Batch avg", color: "#b7ae9f", data: batch, w: 2 },
+    { name: "Target", color: T.ink, data: target, dashed: true, w: 2 },
+  ];
+  const accYou = you.map((_, i) => Math.max(Math.round(accN - (nP - 1 - i) * 2.4), 44));
+  const accBatch = accYou.map((v) => Math.max(v - 11, 36));
+  const accGoal = you.map(() => 90);
+  const accSeries = [
+    { name: "You", color: "#16a34a", data: accYou, w: 2.9, area: true },
+    { name: "Batch avg", color: "#b7ae9f", data: accBatch, w: 2 },
+    { name: "Goal", color: T.ink, data: accGoal, dashed: true, w: 2 },
+  ];
+
+  const weak = m.test?.weak || ["Rotational Motion", "Thermodynamics", "p-Block"];
+  const exam = cfg.tracks?.[0]?.exam || (isNeet ? "NEET 2027" : "JEE Main 2026");
+  const strategies = [
+    { Ic: BookOpen, t: `Add 1 hr/day to ${weak[0]} — your weakest area this week.` },
+    { Ic: Zap, t: `Attack ${weak[1] || "Physics"}${weak[2] ? " & " + weak[2] : ""} first — the most recurring weak chapters.` },
+    { Ic: Clock, t: "Reserve the last 10 min per paper to recheck — silly errors cost ~5 marks." },
+    { Ic: Target, t: `Accuracy at ${accN}% — skip low-confidence questions to dodge negatives.` },
+  ];
+  const rank = isNeet
+    ? [{ v: "4,980", l: "All-India" }, { v: "1,210", l: "Category" }, { v: "99.28", l: "percentile" }, { v: "4k–6k", l: "likely band" }]
+    : [{ v: "9,842", l: "All-India" }, { v: "2,410", l: "Category" }, { v: "99.31", l: "percentile" }, { v: "1.8k–2.6k", l: "likely band" }];
+
   return (
     <section className="mj-section mj-ta">
       <div className="mj-wrap">
@@ -189,9 +290,77 @@ function TestAnalysis() {
           <div><h2 className="mj-display mj-display-lg">See how your test turns<br />into a <em>game plan.</em></h2></div>
           <p className="mj-sec-sub">Enter your marks and the analyser spots the trend, predicts your rank, and hands you the next steps — automatically.</p>
         </Reveal>
-        <div className="mj-ta-shot">
-          <img src="/images/test_analysis_preview.png" width="982" height="787"
-            alt="Test analysis dashboard — score and accuracy trends, predicted rank and personalised strategies" loading="lazy" />
+
+        <div className="mj-ta-steps">
+          {TA_STEPS.map((s, i) => (
+            <div key={i} className="mj-ta-step mj-ta-step-done">
+              <span className="mj-ta-stepn"><Check size={13} strokeWidth={3} /></span>
+              <span className="mj-ta-steptxt">{s}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="mj-ta-grid">
+          <div className="mj-ta-form">
+            <div className="mj-ta-formtop">
+              <span className="mj-ta-formbadge"><LineChart size={17} strokeWidth={2.4} /></span>
+              <div className="mj-ta-formtop-tx">
+                <strong>Add a test result</strong>
+                <span>Sample mock pre-filled — this is a live preview</span>
+              </div>
+              <span className="mj-ta-tabs"><i className="mj-ta-tab-on">Mock</i><i>{isNeet ? "NEET" : "Mains"}</i><i>{isNeet ? "AIIMS" : "Advanced"}</i></span>
+            </div>
+            <label className="mj-ta-field"><span>Test name</span><div className="mj-ta-input">Mock {nP - 1}</div></label>
+            <div className="mj-ta-frow">
+              <label className="mj-ta-field"><span>Total marks</span><div className="mj-ta-input">{total}</div></label>
+              <label className="mj-ta-field"><span>Marks scored</span><div className="mj-ta-input">{scored}</div></label>
+            </div>
+            <div className="mj-ta-frow">
+              <label className="mj-ta-field"><span>Correct</span><div className="mj-ta-input">{correct}</div></label>
+              <label className="mj-ta-field"><span>Wrong</span><div className="mj-ta-input">{wrong}</div></label>
+            </div>
+            <label className="mj-ta-field"><span>Skipped</span><div className="mj-ta-input">{skipped}</div></label>
+            <button className="mj-ta-btn mj-ta-btn-on">+ Analyse this test</button>
+            <div className="mj-ta-banner">
+              <Check size={15} strokeWidth={3} /> Great work — your score is up {pctUp}% vs last mock. Momentum going.
+            </div>
+            <div className="mj-ta-rank">
+              <span className="mj-ta-rank-l">🎯 PREDICTED {exam.toUpperCase()} RANK</span>
+              <div className="mj-ta-rank-row">
+                {rank.map((r, i) => (
+                  <div key={i} className="mj-ta-rank-c"><strong>{r.v}</strong><span>{r.l}</span></div>
+                ))}
+              </div>
+            </div>
+            <div className="mj-ta-formfoot">
+              <ShieldCheck size={13} strokeWidth={2.4} />
+              <span>Your marks stay private — used only to build your plan.</span>
+            </div>
+          </div>
+
+          <div className="mj-ta-right">
+            <div className="mj-ta-card">
+              <div className="mj-ta-cardhead"><strong>Score trend</strong><span>marks · out of {total}</span></div>
+              <AnalysisChart series={scoreSeries} xLabels={xL} yTicks={sTicks} yMin={0} yMax={sMax} yLabel="MARKS" />
+              <ChartLegend series={scoreSeries} />
+            </div>
+            <div className="mj-ta-card">
+              <div className="mj-ta-cardhead"><strong>Accuracy trend</strong><span>correct ÷ attempted</span></div>
+              <AnalysisChart series={accSeries} xLabels={xL} yTicks={[40, 60, 80, 100]} yMin={40} yMax={100} suffix="%" yLabel="ACCURACY" />
+              <ChartLegend series={accSeries} />
+            </div>
+            <div className="mj-ta-card">
+              <div className="mj-ta-cardhead"><strong>💡 Strategies to do better</strong></div>
+              <div className="mj-ta-strat">
+                {strategies.map((s, i) => (
+                  <div key={i} className="mj-ta-strat-i">
+                    <span className="mj-ta-strat-ic"><s.Ic size={14} /></span>
+                    <span>{s.t}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -855,7 +1024,6 @@ export default function Mentorship() {
       />
       <VariantTabs variant={variant} />
       <Hero cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
-      <StatBand cfg={cfg} />
       <Qualifier cfg={cfg} />
       <Method cfg={cfg} />
       <LiveTracking cfg={cfg} />
