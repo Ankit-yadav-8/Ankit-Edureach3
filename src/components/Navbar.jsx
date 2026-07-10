@@ -186,7 +186,7 @@ export default function Navbar({ onSearch }) {
     <>
       <nav
         style={{
-          position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
+          position: "fixed", top: 34, left: 0, right: 0, zIndex: 1000,
           height: 64,
           width: "100%",
           background: "var(--page-bg)",
