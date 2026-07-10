@@ -44,7 +44,7 @@ function Label({ children, dark }) {
 }
 
 /* ═══════════════ HERO — glassmorphic performance engine ═══════════════ */
-function Hero({ cfg, plan, year, exam, openEnrol, scrollTo }) {
+function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
   const p = MENTOR_PLANS[plan] || { amount: 2499, exam: "JEE" };
   const isNeet = p.exam === "NEET";
   const ifaceLabel = isNeet ? "NEET" : p.exam === "JEE" ? "JEE Main" : "exam";
@@ -59,7 +59,9 @@ function Hero({ cfg, plan, year, exam, openEnrol, scrollTo }) {
 
       <div className="mj-wrap mj-hero-inner">
         <div className="mj-hero-center">
-          <Reveal className="mj-hero-pill">
+          <VariantTabs variant={variant} />
+          
+          <Reveal className="mj-hero-pill" style={{ marginTop: "32px" }}>
             <span className="mj-dot" /> Built by IITians &amp; NITians
           </Reveal>
           <Reveal delay={0.08}>
@@ -1174,7 +1176,7 @@ function TalkToUs({ exam }) {
 /* ═══════════════ variant tabs + floating enrol ═══════════════ */
 function VariantTabs({ variant }) {
   return (
-    <div className="mj-wrap mj-tabs">
+    <div className="mj-tabs" style={{ padding: 0, margin: 0 }}>
       {MENTOR_LINKS.map((l) => (
         <Link key={l.slug} to={l.to} className={l.slug === variant ? "mj-tab mj-tab-on" : "mj-tab"}>{l.label}</Link>
       ))}
@@ -1200,8 +1202,7 @@ export default function Mentorship() {
         description="1-on-1 JEE & NEET mentorship by IIT alumni — daily targets, weekly test analysis, live tracking and parent reports. Limited seats. Start at ₹2,499 on CollegeParichay."
         path={`/mentorship/${variant}`}
       />
-      <VariantTabs variant={variant} />
-      <Hero cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
+      <Hero variant={variant} cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
       <Qualifier cfg={cfg} />
       <Method cfg={cfg} />
       <LiveTracking cfg={cfg} />
