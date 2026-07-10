@@ -8,10 +8,10 @@ import { useState, useRef, useEffect } from "react";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowRight, ArrowUpRight, Plus, Check, Star, Send, Radio,
+  ArrowRight, ArrowUpRight, Plus, Minus, HelpCircle, Check, Star, Send, Radio,
   Video, Phone, Paperclip, Camera, Mic, Smile, Sparkles,
   BookOpen, CircleDot, Zap, Target, Clock,
-  Brain, PlayCircle, Activity,
+  Brain, PlayCircle, Activity, LineChart, ShieldCheck,
 } from "lucide-react";
 import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT, MENTOR_LINKS } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
@@ -45,65 +45,55 @@ function Label({ children, dark }) {
 
 /* ═══════════════ HERO — glassmorphic performance engine ═══════════════ */
 function Hero({ cfg, plan, year, exam, openEnrol, scrollTo }) {
-  const p = MENTOR_PLANS[plan] || { amount: 2499 };
-  const cards = [
-    { Ic: Activity, t: "Effort Engine", d: "Daily targets and check-ins that track momentum, not just marks." },
-    { Ic: Brain, t: "IITian Mentors", d: "Direct 1-on-1 access to the minds who've already decoded the rank." },
-    { Ic: Zap, t: "Syllabus Velocity", d: `Every week mapped in real time against the ${exam} exam timeline.` },
-  ];
+  const p = MENTOR_PLANS[plan] || { amount: 2499, exam: "JEE" };
+  const isNeet = p.exam === "NEET";
+  const ifaceLabel = isNeet ? "NEET" : p.exam === "JEE" ? "JEE Main" : "exam";
+  const dream = isNeet ? "medical-college" : "IIT / NIT";
+  const bullets = [`Real ${ifaceLabel} interface`, "One-time payment", "7-day money-back"];
   return (
     <section className="mj-hero">
       <div className="mj-hero-bg" aria-hidden="true">
         <span className="mj-orb mj-orb-a" />
         <span className="mj-orb mj-orb-b" />
-        <span className="mj-gem"><span className="mj-gem-core" /></span>
-        <span className="mj-grid" />
       </div>
-      <span className="mj-watermark" aria-hidden="true">{year}</span>
 
       <div className="mj-wrap mj-hero-inner">
         <div className="mj-hero-center">
-          <Reveal className="mj-glass-tag">
-            <Sparkles size={13} /> <span>{year} Cohort · Elite 1-on-1 Access</span>
+          <Reveal className="mj-hero-pill">
+            <span className="mj-dot" /> Built by IITians &amp; NITians
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="mj-hero-h1">
-              A 1-on-1 mentorship built by <em>IITians</em> — weekly test surgery,
-              a live tracker your parents can read, and the calm rhythm that gets
-              you a rank in <em>{exam}.</em>
+              The mentorship built<br />for{" "}
+              <span className="mj-hero-accent">
+                {exam}.
+                <svg className="mj-hero-uline" viewBox="0 0 320 14" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M5 9 C 78 3, 244 3, 315 8" />
+                </svg>
+              </span>
             </h1>
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mj-hero-sub">
-              Continuous effort tracking, direct mentor access, and a syllabus mapped
-              to the {exam} timeline — one calm system from Day 1 to Rank Day.
+              Real-exam mocks, deep AI analysis, and 1-on-1 mentorship from 99%ilers —
+              everything to turn your {dream} dream into a real rank.
             </p>
           </Reveal>
           <Reveal delay={0.24} className="mj-hero-cta">
             <button className="mj-btn-glow" onClick={() => openEnrol(plan)}>
-              Start at ₹{(p.amount || 2499).toLocaleString("en-IN")} <ArrowRight size={18} />
+              Get Started <ArrowRight size={18} />
             </button>
-            <button className="mj-btn-glass" onClick={() => scrollTo("method")}>
-              See the method <PlayCircle size={18} />
+            <button className="mj-btn-glass" onClick={() => scrollTo("enrol")}>
+              View Plans
             </button>
           </Reveal>
 
-          <Reveal delay={0.32} className="mj-hero-cards">
-            {cards.map(({ Ic, t, d }, i) => (
-              <div key={i} className="mj-gcard">
-                <span className="mj-gcard-ic"><Ic size={20} /></span>
-                <h3>{t}</h3>
-                <p>{d}</p>
-              </div>
+          <Reveal delay={0.32} className="mj-hero-bullets">
+            {bullets.map((b, i) => (
+              <span key={i} className="mj-hero-bullet"><i /> {b}</span>
             ))}
           </Reveal>
         </div>
-      </div>
-
-      <div className="mj-hero-live" aria-hidden="true">
-        <div className="mj-hl-top"><span className="mj-dot mj-dot-live" /> LIVE · 312 STUDYING NOW</div>
-        <div className="mj-hl-row"><span>TARGET</span><b>AIR &lt; 500</b></div>
-        <div className="mj-hl-bar"><span style={{ width: "92%" }} /></div>
       </div>
     </section>
   );
@@ -200,23 +190,25 @@ function AnalysisChart({ series, xLabels, yTicks, yMin, yMax, suffix = "", yLabe
   const pts = (d) => d.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="mj-ta-chart" role="img" aria-label={yLabel}>
-      {/* horizontal gridlines + y ticks */}
+      {/* horizontal gridlines + y ticks — hairline dashed, baseline solid */}
       {yTicks.map((t, i) => (
         <g key={`y${i}`}>
-          <line x1={padL} y1={Y(t)} x2={W - padR} y2={Y(t)} stroke={T.line} strokeWidth="1" />
-          <text x={padL - 7} y={Y(t) + 3} textAnchor="end" className="mj-ta-axtxt">{t}{suffix}</text>
+          <line x1={padL} y1={Y(t)} x2={W - padR} y2={Y(t)} stroke={T.line}
+            strokeWidth="1" strokeLinecap="round"
+            strokeDasharray={i === 0 ? undefined : "1 6"} opacity={i === 0 ? 1 : 0.9} />
+          <text x={padL - 9} y={Y(t) + 3} textAnchor="end" className="mj-ta-axtxt">{t}{suffix}</text>
         </g>
       ))}
-      {/* vertical gridlines + x labels */}
+      {/* x labels + short baseline ticks (no full vertical gridlines — keeps it clean) */}
       {xLabels.map((l, i) => (
         <g key={`x${i}`}>
-          <line x1={X(i)} y1={padT} x2={X(i)} y2={padT + ph} stroke={T.line} strokeWidth="1" opacity=".55" />
-          <text x={X(i)} y={padT + ph + 15} textAnchor="middle" className="mj-ta-axtxt">{l}</text>
+          <line x1={X(i)} y1={padT + ph} x2={X(i)} y2={padT + ph + 4} stroke={T.lineDk} strokeWidth="1" opacity=".7" />
+          <text x={X(i)} y={padT + ph + 16} textAnchor="middle" className="mj-ta-axtxt">{l}</text>
         </g>
       ))}
       {/* axis lines */}
       <line x1={padL} y1={padT} x2={padL} y2={padT + ph} stroke={T.lineDk} strokeWidth="1.2" />
-      <line x1={padL} y1={padT + ph} x2={W - padR} y2={padT + ph} stroke={T.lineDk} strokeWidth="1.2" />
+      <line x1={padL} y1={padT + ph} x2={W - padR} y2={padT + ph} stroke={T.lineDk} strokeWidth="1.4" />
       {/* axis captions */}
       <text x={padL + pw / 2} y={H - 5} textAnchor="middle" className="mj-ta-axcap">MOCK TESTS &#8594;</text>
       {yLabel && <text transform={`rotate(-90 13 ${padT + ph / 2})`} x={13} y={padT + ph / 2} textAnchor="middle" className="mj-ta-axcap">{yLabel}</text>}
@@ -265,8 +257,10 @@ function TestAnalysis({ cfg }) {
   const batch = m.growth?.batch || you.map((v) => Math.round(v * 0.62));
   const target = you.map(() => Math.round(total * 0.75));
   const mentored = you.map((v, i) => Math.round(v + (v - batch[i]) * 0.35 * (i / (nP - 1)))); // projected-with-mentor lift
-  const sMax = Math.ceil(Math.max(...you, ...batch, ...target, ...mentored) / 50) * 50;
-  const sTicks = []; for (let v = 0; v <= sMax; v += 50) sTicks.push(v);
+  const sRawMax = Math.max(...you, ...batch, ...target, ...mentored);
+  const sStep = [50, 100, 150, 200, 250, 300].find((s) => s >= sRawMax / 5) || 300; // aim for ~5–6 gridlines
+  const sMax = Math.ceil(sRawMax / sStep) * sStep;
+  const sTicks = []; for (let v = 0; v <= sMax; v += sStep) sTicks.push(v);
   const scoreSeries = [
     { name: "You", color: T.coral, data: you, w: 2.9, area: true },
     { name: "With mentor", color: T.coralDk, data: mentored, w: 2.2, dashed: false },
@@ -342,8 +336,12 @@ function TestAnalysis({ cfg }) {
 
         <Reveal delay={0.06} className="mj-ta-grid">
           <div className="mj-ta-form">
-            <div className="mj-ta-formhead">
-              <strong>Add a test result</strong>
+            <div className="mj-ta-formtop">
+              <span className="mj-ta-formbadge"><LineChart size={17} strokeWidth={2.4} /></span>
+              <div className="mj-ta-formtop-tx">
+                <strong>Add a test result</strong>
+                <span>Sample mock pre-filled — this is a live preview</span>
+              </div>
               <span className="mj-ta-tabs"><i className="mj-ta-tab-on">Mock</i><i>Mains</i><i>Advanced</i></span>
             </div>
             <label className="mj-ta-field"><span>Test name</span><div className="mj-ta-input">Mock 7</div></label>
@@ -380,6 +378,10 @@ function TestAnalysis({ cfg }) {
                 </motion.div>
               )}
             </AnimatePresence>
+            <div className="mj-ta-formfoot">
+              <ShieldCheck size={13} strokeWidth={2.4} />
+              <span>Your marks stay private — used only to build your plan.</span>
+            </div>
           </div>
 
           <div className="mj-ta-right">
@@ -980,16 +982,17 @@ function Faqs({ cfg }) {
   return (
     <section className="mj-section">
       <div className="mj-wrap">
-        <Reveal>
-          <h2 className="mj-display mj-display-lg mj-faq-h">Everything you're<br /><em>wondering.</em></h2>
+        <Reveal className="mj-faq-head">
+          <span className="mj-faq-pill"><HelpCircle size={13} /> FAQ</span>
+          <h2 className="mj-display mj-display-lg mj-faq-h">Everything you're <em>wondering.</em></h2>
+          <p className="mj-sec-sub">Everything students and parents ask us before getting started.</p>
         </Reveal>
         <div className="mj-faqs">
           {(cfg.faqs || []).map((f, i) => (
             <div key={i} className={open === i ? "mj-faq mj-faq-open" : "mj-faq"}>
               <button className="mj-faq-q" onClick={() => setOpen(open === i ? -1 : i)}>
-                <span className="mj-faq-n">{String(i + 1).padStart(2, "0")}</span>
                 <span className="mj-faq-qt">{f.q}</span>
-                <span className="mj-faq-ic"><Plus size={18} /></span>
+                <span className="mj-faq-ic">{open === i ? <Minus size={16} /> : <Plus size={16} />}</span>
               </button>
               <AnimatePresence initial={false}>
                 {open === i && (
@@ -1111,11 +1114,11 @@ const CSS = `
 .mj-tab-on { background:${T.ink}; border-color:${T.ink}; color:#fff; }
 
 /* hero — glassmorphic performance engine (coral + cream) */
-.mj-hero { position:relative; padding:clamp(96px,13vw,158px) 0 clamp(74px,9vw,116px); overflow:hidden; border-bottom:1px solid ${T.line}; background:radial-gradient(130% 90% at 50% -12%, #FFF7F2 0%, ${T.paper} 58%); }
+.mj-hero { position:relative; padding:clamp(92px,12vw,150px) 0 clamp(70px,8vw,104px); overflow:hidden; border-bottom:1px solid ${T.line}; background:radial-gradient(120% 90% at 50% -10%, #FFFCF8 0%, #FFF6F0 34%, ${T.paper} 72%); }
 .mj-hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
-.mj-orb { position:absolute; border-radius:50%; filter:blur(72px); }
-.mj-orb-a { width:540px; height:540px; top:-170px; left:-130px; background:radial-gradient(circle, rgba(255,105,61,.42), transparent 70%); opacity:.6; animation:mjfloat 16s ease-in-out infinite; }
-.mj-orb-b { width:480px; height:480px; bottom:-200px; right:-110px; background:radial-gradient(circle, rgba(255,178,130,.4), transparent 70%); opacity:.55; animation:mjfloat 21s ease-in-out infinite reverse; }
+.mj-orb { position:absolute; border-radius:50%; filter:blur(90px); }
+.mj-orb-a { width:520px; height:520px; top:-210px; left:-150px; background:radial-gradient(circle, rgba(255,105,61,.24), transparent 70%); opacity:.5; animation:mjfloat 16s ease-in-out infinite; }
+.mj-orb-b { width:460px; height:460px; bottom:-240px; right:-140px; background:radial-gradient(circle, rgba(255,178,130,.22), transparent 70%); opacity:.5; animation:mjfloat 21s ease-in-out infinite reverse; }
 @keyframes mjfloat { 0%,100%{transform:translate(0,0);} 50%{transform:translate(42px,32px);} }
 .mj-gem { position:absolute; top:34%; left:50%; width:360px; height:360px; transform:translate(-50%,-50%); animation:mjspin 30s linear infinite; }
 .mj-gem-core { position:absolute; inset:0; clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%); background:conic-gradient(from 0deg, rgba(255,105,61,.5), rgba(255,196,158,.22), rgba(216,81,42,.5), rgba(255,105,61,.5)); filter:blur(7px); opacity:.38; }
@@ -1124,11 +1127,20 @@ const CSS = `
 .mj-watermark { position:absolute; top:-2%; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-style:italic; font-weight:900; font-size:min(42vw,600px); line-height:1; color:transparent; -webkit-text-stroke:1.5px ${T.lineDk}; opacity:.16; pointer-events:none; user-select:none; z-index:1; }
 
 .mj-hero-inner { position:relative; z-index:2; }
-.mj-hero-center { display:flex; flex-direction:column; align-items:center; text-align:center; max-width:880px; margin:0 auto; }
+.mj-hero-center { display:flex; flex-direction:column; align-items:center; text-align:center; max-width:940px; margin:0 auto; }
+.mj-hero-pill { display:inline-flex; align-items:center; gap:9px; padding:8px 18px; border-radius:50px; background:${T.coralSoft}; border:1px solid #F6CDBE; color:${T.coralDk}; font:700 .84rem/1 'Sora',sans-serif; box-shadow:0 10px 26px -16px rgba(255,105,61,.6); }
+.mj-hero-pill .mj-dot { width:7px; height:7px; background:${T.coral}; box-shadow:0 0 0 4px rgba(255,105,61,.14); }
 .mj-glass-tag { display:inline-flex; align-items:center; gap:8px; padding:8px 17px; border-radius:50px; background:rgba(255,255,255,.6); -webkit-backdrop-filter:blur(12px) saturate(160%); backdrop-filter:blur(12px) saturate(160%); border:1px solid rgba(255,105,61,.3); color:${T.coralDk}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; text-transform:uppercase; box-shadow:0 10px 26px -14px rgba(255,105,61,.55); }
-.mj-hero-h1 { position:relative; font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(2rem,4.9vw,3.6rem); line-height:1.16; letter-spacing:-.6px; color:${T.ink}; margin:26px 0 0; }
-.mj-hero-sub { font:400 clamp(1rem,1.5vw,1.18rem)/1.7 'DM Sans',sans-serif; color:${T.body}; max-width:640px; margin:22px 0 0; }
-.mj-hero-cta { display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap; margin-top:36px; }
+.mj-hero-h1 { position:relative; font-family:'Sora',sans-serif; font-weight:800; font-size:clamp(2.5rem,6.6vw,5.1rem); line-height:1.05; letter-spacing:-.03em; color:${T.ink}; margin:30px 0 0; }
+.mj-hero-accent { position:relative; display:inline-block; background:linear-gradient(96deg, #E5401A 0%, #FF7A45 52%, #FF9E6B 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; white-space:nowrap; }
+.mj-hero-uline { position:absolute; left:2%; bottom:-.14em; width:96%; height:.26em; overflow:visible; }
+.mj-hero-uline path { fill:none; stroke:${T.coral}; stroke-width:5; stroke-linecap:round; vector-effect:non-scaling-stroke; }
+.mj-hero-sub { font:400 clamp(1.04rem,1.6vw,1.3rem)/1.62 'DM Sans',sans-serif; color:${T.body}; max-width:660px; margin:26px 0 0; }
+.mj-hero-cta { display:flex; align-items:center; justify-content:center; gap:15px; flex-wrap:wrap; margin-top:38px; }
+.mj-hero-cta .mj-btn-glow, .mj-hero-cta .mj-btn-glass { border-radius:50px; padding:16px 32px; }
+.mj-hero-bullets { display:flex; align-items:center; justify-content:center; gap:14px 28px; flex-wrap:wrap; margin-top:34px; }
+.mj-hero-bullet { display:inline-flex; align-items:center; gap:9px; font:600 .92rem/1 'DM Sans',sans-serif; color:${T.body}; }
+.mj-hero-bullet i { width:7px; height:7px; border-radius:50%; background:${T.coral}; flex-shrink:0; }
 .mj-btn-glow { display:inline-flex; align-items:center; gap:10px; padding:16px 30px; border:none; border-radius:14px; background:linear-gradient(135deg, ${T.coral}, ${T.coralDk}); color:#fff; font:700 1rem/1 'Space Grotesk',sans-serif; cursor:pointer; box-shadow:0 12px 32px -8px rgba(255,105,61,.55); animation:mjglow 3.6s ease-in-out infinite; transition:transform .16s; }
 .mj-btn-glow:hover { transform:translateY(-2px) scale(1.02); }
 @keyframes mjglow { 0%,100%{box-shadow:0 12px 32px -12px rgba(255,105,61,.45);} 50%{box-shadow:0 16px 46px -8px rgba(255,105,61,.78);} }
@@ -1239,8 +1251,15 @@ const CSS = `
 .mj-ta-step-done .mj-ta-stepn { background:${T.coral}; border-color:${T.coral}; color:#fff; }
 .mj-ta-steptxt { font:700 .8rem/1.2 'Space Grotesk',sans-serif; color:${T.body}; white-space:nowrap; }
 .mj-ta-step-off .mj-ta-steptxt { color:${T.muted}; }
-.mj-ta-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:stretch; }
-.mj-ta-form { display:flex; flex-direction:column; justify-content:center; height:100%; background:${T.card}; border:1px solid ${T.line}; border-radius:18px; padding:24px; box-shadow:0 20px 44px -34px rgba(0,0,0,.35); }
+.mj-ta-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
+.mj-ta-form { position:sticky; top:96px; display:flex; flex-direction:column; justify-content:flex-start; background:${T.card}; border:1px solid ${T.line}; border-radius:18px; padding:24px; box-shadow:0 20px 44px -34px rgba(0,0,0,.35); }
+.mj-ta-formtop { display:flex; align-items:center; gap:12px; padding-bottom:16px; margin-bottom:18px; border-bottom:1px solid ${T.line}; }
+.mj-ta-formbadge { display:grid; place-items:center; width:38px; height:38px; flex-shrink:0; border-radius:11px; background:${T.coralSoft}; color:${T.coralDk}; }
+.mj-ta-formtop-tx { display:flex; flex-direction:column; gap:3px; margin-right:auto; }
+.mj-ta-formtop-tx strong { font:800 1.05rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
+.mj-ta-formtop-tx span { font:600 .7rem/1.25 'DM Sans',sans-serif; color:${T.muted}; }
+.mj-ta-formfoot { display:flex; align-items:center; gap:8px; margin-top:auto; padding-top:18px; font:600 .72rem/1.3 'DM Sans',sans-serif; color:${T.muted}; }
+.mj-ta-formfoot svg { flex-shrink:0; color:${T.coralDk}; opacity:.85; }
 .mj-ta-formhead { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
 .mj-ta-formhead strong { font:800 1.05rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
 .mj-ta-tabs { display:inline-flex; gap:3px; padding:3px; border-radius:9px; background:${T.paper2}; }
@@ -1339,26 +1358,26 @@ const CSS = `
 
 /* for parents */
 .mj-parent-card { display:grid; grid-template-columns:.92fr 1.08fr; align-items:stretch; border-radius:20px; overflow:hidden; border:1px solid ${T.lineDk};
-  box-shadow:20px 22px 0 -2px ${T.coral}, 0 40px 70px -40px rgba(0,0,0,.32); transition:transform .3s, box-shadow .3s; }
-.mj-parent-card:hover { transform:translate(-3px,-3px); box-shadow:26px 28px 0 -2px ${T.coral}, 0 46px 76px -44px rgba(0,0,0,.38); }
-.mj-booklet { display:flex; flex-direction:column; padding:36px 34px; color:#fff;
-  background:linear-gradient(160deg, #FF7A3C 0%, #F1531F 60%, #E0481B 100%); position:relative; overflow:hidden; }
+  box-shadow:0 30px 70px -44px rgba(0,0,0,.34); transition:transform .3s, box-shadow .3s; }
+.mj-parent-card:hover { transform:translateY(-3px); box-shadow:0 42px 84px -46px rgba(0,0,0,.42); }
+.mj-booklet { display:flex; flex-direction:column; padding:36px 34px; color:${T.body};
+  background:linear-gradient(160deg, #FBF6EE 0%, #F3EBDE 100%); position:relative; overflow:hidden; border-right:1px solid ${T.line}; }
 .mj-booklet::before { content:""; position:absolute; inset:0; background:
-  repeating-linear-gradient(0deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px),
-  repeating-linear-gradient(90deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px); pointer-events:none; }
+  repeating-linear-gradient(0deg, transparent 0 33px, rgba(0,0,0,.028) 33px 34px),
+  repeating-linear-gradient(90deg, transparent 0 33px, rgba(0,0,0,.028) 33px 34px); pointer-events:none; }
 .mj-booklet > * { position:relative; }
-.mj-booklet-pill { align-self:flex-start; display:inline-flex; align-items:center; gap:7px; padding:7px 14px; border-radius:50px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.25); font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; }
-.mj-booklet-h { font:800 2.1rem/1.08 'Playfair Display',serif; letter-spacing:-.5px; margin:20px 0 0; color:#fff; }
-.mj-booklet-sub { font:400 .98rem/1.55 'DM Sans',sans-serif; color:rgba(255,255,255,.9); margin:14px 0 0; max-width:400px; }
-.mj-booklet-div { height:1px; background:rgba(255,255,255,.22); margin:24px 0 22px; }
-.mj-booklet-lbl { font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:rgba(255,255,255,.7); }
+.mj-booklet-pill { align-self:flex-start; display:inline-flex; align-items:center; gap:7px; padding:7px 14px; border-radius:50px; background:${T.coralSoft}; border:1px solid #F6CDBE; color:${T.coralDk}; font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; }
+.mj-booklet-h { font:800 2.1rem/1.08 'Playfair Display',serif; letter-spacing:-.5px; margin:20px 0 0; color:${T.ink}; }
+.mj-booklet-sub { font:400 .98rem/1.55 'DM Sans',sans-serif; color:${T.body}; margin:14px 0 0; max-width:400px; }
+.mj-booklet-div { height:1px; background:${T.line}; margin:24px 0 22px; }
+.mj-booklet-lbl { font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; }
 .mj-booklet-lbl2 { margin-top:22px; }
-.mj-booklet-name { display:block; font:800 1.35rem/1.1 'Playfair Display',serif; color:#fff; margin:8px 0 4px; }
-.mj-booklet-meta { font:600 .8rem/1.3 'DM Sans',sans-serif; color:rgba(255,255,255,.82); }
+.mj-booklet-name { display:block; font:800 1.35rem/1.1 'Playfair Display',serif; color:${T.ink}; margin:8px 0 4px; }
+.mj-booklet-meta { font:600 .8rem/1.3 'DM Sans',sans-serif; color:${T.body}; }
 .mj-booklet-list { list-style:none; margin:14px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
-.mj-booklet-list li { display:flex; align-items:center; gap:11px; font:600 .96rem/1.3 'DM Sans',sans-serif; color:#fff; }
-.mj-booklet-list svg { flex-shrink:0; opacity:.9; }
-.mj-booklet-btn { margin-top:auto; align-self:flex-start; display:inline-flex; align-items:center; gap:9px; margin-top:28px; padding:13px 22px; border:none; border-radius:12px; background:#fff; color:${T.coralDk}; font:800 .92rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:transform .16s, box-shadow .16s; box-shadow:0 12px 26px -14px rgba(0,0,0,.4); }
+.mj-booklet-list li { display:flex; align-items:center; gap:11px; font:600 .96rem/1.3 'DM Sans',sans-serif; color:${T.ink}; }
+.mj-booklet-list svg { flex-shrink:0; color:${T.coral}; }
+.mj-booklet-btn { margin-top:auto; align-self:flex-start; display:inline-flex; align-items:center; gap:9px; margin-top:28px; padding:13px 22px; border:none; border-radius:12px; background:linear-gradient(135deg,#FF8A47,#F1531F); color:#fff; font:800 .92rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:transform .16s, box-shadow .16s; box-shadow:0 14px 30px -14px rgba(255,105,61,.6); }
 .mj-booklet-btn:hover { transform:translateY(-2px); box-shadow:0 18px 34px -16px rgba(0,0,0,.5); }
 .mj-weekly-next { margin-top:22px; padding-top:18px; border-top:1px solid ${T.line}; }
 .mj-weekly-nextlist { list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
@@ -1486,16 +1505,20 @@ const CSS = `
 .mj-price-foot { display:flex; justify-content:space-between; margin-top:16px; font:700 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.muted}; }
 
 /* faq */
-.mj-faq-h { margin-bottom:40px; }
-.mj-faqs { border-top:1px solid ${T.lineDk}; }
-.mj-faq { border-bottom:1px solid ${T.lineDk}; }
-.mj-faq-q { display:flex; align-items:center; gap:20px; width:100%; padding:24px 4px; background:none; border:none; cursor:pointer; text-align:left; }
-.mj-faq-n { font:700 .8rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
-.mj-faq-qt { flex:1; font:700 clamp(1.05rem,2vw,1.4rem)/1.3 'Playfair Display',serif; color:${T.ink}; }
-.mj-faq-ic { display:grid; place-items:center; width:34px; height:34px; border:1px solid ${T.lineDk}; border-radius:50%; color:${T.ink}; transition:.2s; flex-shrink:0; }
-.mj-faq-open .mj-faq-ic { background:${T.coral}; border-color:${T.coral}; color:#fff; transform:rotate(45deg); }
+.mj-faq-head { display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; margin-bottom:36px; }
+.mj-faq-pill { display:inline-flex; align-items:center; gap:7px; padding:7px 15px; border-radius:50px; background:${T.coralSoft}; color:${T.coralDk}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; }
+.mj-faq-pill svg { flex-shrink:0; }
+.mj-faq-h { margin:0; }
+.mj-faq-head .mj-sec-sub { margin:0; }
+.mj-faqs { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; max-width:1000px; margin:0 auto; }
+.mj-faq { background:${T.card}; border:1px solid ${T.line}; border-radius:16px; box-shadow:0 10px 30px -24px rgba(0,0,0,.32); overflow:hidden; transition:border-color .2s, box-shadow .2s; }
+.mj-faq-open { border-color:#F6C6B6; box-shadow:0 16px 36px -22px rgba(255,105,61,.42); }
+.mj-faq-q { display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%; padding:19px 22px; background:none; border:none; cursor:pointer; text-align:left; }
+.mj-faq-qt { flex:1; font:700 1.02rem/1.35 'Playfair Display',serif; color:${T.ink}; }
+.mj-faq-ic { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:${T.coralSoft}; color:${T.coralDk}; transition:.2s; flex-shrink:0; }
+.mj-faq-open .mj-faq-ic { background:${T.coral}; color:#fff; }
 .mj-faq-a { overflow:hidden; }
-.mj-faq-a p { font:400 1rem/1.7 'DM Sans',sans-serif; color:${T.body}; padding:0 54px 26px; max-width:760px; margin:0; }
+.mj-faq-a p { font:400 .96rem/1.7 'DM Sans',sans-serif; color:${T.body}; padding:0 22px 20px; margin:0; }
 
 /* talk */
 .mj-talk-grid { display:grid; grid-template-columns:.85fr 1.15fr; gap:48px; align-items:center; }
@@ -1509,7 +1532,9 @@ const CSS = `
 
 /* responsive */
 @media (max-width:940px) {
-  .mj-parent-card, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body, .mj-ta-grid { grid-template-columns:1fr; }
+  .mj-parent-card, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body, .mj-ta-grid, .mj-faqs { grid-template-columns:1fr; }
+  .mj-ta-form { position:static; top:auto; }
+  .mj-booklet { border-right:none; border-bottom:1px solid ${T.line}; }
   .mj-ta-step:not(:last-child)::after { display:none; }
   .mj-hero-live { display:none; }
   .mj-hero-cards { grid-template-columns:1fr; max-width:420px; margin-left:auto; margin-right:auto; }
