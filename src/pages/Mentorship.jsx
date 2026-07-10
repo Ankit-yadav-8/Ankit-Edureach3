@@ -1367,7 +1367,7 @@ const CSS = `
   repeating-linear-gradient(90deg, transparent 0 33px, rgba(0,0,0,.028) 33px 34px); pointer-events:none; }
 .mj-booklet > * { position:relative; }
 .mj-booklet-pill { align-self:flex-start; display:inline-flex; align-items:center; gap:7px; padding:7px 14px; border-radius:50px; background:${T.coralSoft}; border:1px solid #F6CDBE; color:${T.coralDk}; font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; }
-.mj-booklet-h { font:800 2.1rem/1.08 'Playfair Display',serif; letter-spacing:-.5px; margin:20px 0 0; color:${T.ink}; }
+.mj-booklet-h { font:800 2.1rem/1.08 'Playfair Display',serif; letter-spacing:-.5px; margin:20px 0 0; color:${T.coralDk}; }
 .mj-booklet-sub { font:400 .98rem/1.55 'DM Sans',sans-serif; color:${T.body}; margin:14px 0 0; max-width:400px; }
 .mj-booklet-div { height:1px; background:${T.line}; margin:24px 0 22px; }
 .mj-booklet-lbl { font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; }
