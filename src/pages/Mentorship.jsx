@@ -1102,7 +1102,7 @@ function TalkToUs({ exam }) {
 /* ═══════════════ variant tabs + floating enrol ═══════════════ */
 function VariantTabs({ variant }) {
   return (
-    <div className="mj-tabs" style={{ padding: 0, margin: 0 }}>
+    <div className="mj-tabs">
       {MENTOR_LINKS.map((l) => (
         <Link key={l.slug} to={l.to} className={l.slug === variant ? "mj-tab mj-tab-on" : "mj-tab"}>{l.label}</Link>
       ))}
