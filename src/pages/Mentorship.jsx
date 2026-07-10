@@ -193,8 +193,8 @@ function Qualifier({ cfg }) {
       `}</style>
       <div className="mj-wrap">
         <Reveal>
-          <p className="mj-lead" style={{ textAlign: "center", margin: "0 auto 44px", fontStyle: "normal", maxWidth: "600px", fontWeight: 500 }}>
-            Built for the aspirant who wants a real system, not unopened books.
+          <p className="mj-lead" style={{ textAlign: "center", margin: "0 auto 44px", fontStyle: "normal", maxWidth: "600px", fontWeight: 400, fontFamily: "'DM Sans', sans-serif", fontSize: "1.15rem", lineHeight: 1.6, color: "var(--body)" }}>
+            Built for the aspirant who wants a <span style={{ color: "#FF693D", fontWeight: 600 }}>real system</span>, not unopened books.
           </p>
         </Reveal>
         
@@ -995,10 +995,10 @@ function Proof({ cfg }) {
   const statPool = isNeet
     ? [{ big: "340+", sub: "into govt MBBS seats" }, { big: "12,600", sub: "avg NEET rank jump" }, { big: "180+", sub: "into top private medical" }]
     : [{ big: "340+", sub: "into IITs & IISc" }, { big: "18,400", sub: "avg rank jump" }, { big: "520+", sub: "into NITs & IIITs" }];
-  /* featured spans 2 cols, orange spans 1 — pad with stat tiles so every row stays full */
-  let slots = 2 + 1 + rest.length;
+  /* we want 6 cards total: ts + pads */
   const pads = [];
-  while (slots % 3 !== 0) { pads.push(statPool[pads.length % statPool.length]); slots++; }
+  let slots = ts.length;
+  while (slots < 6) { pads.push(statPool[pads.length % statPool.length]); slots++; }
   return (
     <section className="mj-section">
       <div className="mj-wrap">
@@ -1018,24 +1018,8 @@ function Proof({ cfg }) {
         </div>
 
         <div className="mj-bento">
-          <article className="mj-bento-card mj-bento-feat">
-            <span className="mj-bento-badge"><Sparkles size={12} /> Featured story</span>
-            <span className="mj-quote-mark">&ldquo;</span>
-            <p className="mj-bento-q">{feat.quote}</p>
-            <div className="mj-bento-by">
-              <span className="mj-quote-av">{feat.name[0]}</span>
-              <div><strong>{feat.name}</strong><span>{feat.improvement}</span></div>
-            </div>
-          </article>
-
-          <article className="mj-bento-card mj-bento-orange">
-            <div className="mj-bento-big">10&times;</div>
-            <span className="mj-bento-olbl">RANK JUMP</span>
-            <p className="mj-bento-otext">From the 40k range to under 4k — what one focused year of 1-on-1 mentoring does.</p>
-          </article>
-
-          {rest.map((t, i) => (
-            <article key={i} className={`mj-bento-card ${i % 2 === 1 ? "mj-bento-dark" : ""}`}>
+          {ts.map((t, i) => (
+            <article key={i} className="mj-bento-card">
               <span className="mj-quote-mark">&ldquo;</span>
               <p className="mj-bento-q2">{t.quote}</p>
               <div className="mj-bento-by">
@@ -1625,26 +1609,13 @@ const CSS = `
 .mj-quote-mark { font:800 2.6rem/.5 'Playfair Display',serif; color:${T.coral}; }
 
 .mj-bento { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-.mj-bento-card { position:relative; display:flex; flex-direction:column; padding:26px; border-radius:20px; border:1px solid ${T.line}; background:${T.card}; box-shadow:0 22px 46px -34px rgba(0,0,0,.34); }
+.mj-bento-card { position:relative; display:flex; flex-direction:column; padding:26px; border-radius:20px; border:1px solid ${T.line}; background:${T.card}; box-shadow:0 12px 30px -16px rgba(0,0,0,.15); transition:transform .2s, box-shadow .2s; }
+.mj-bento-card:hover { transform:translateY(-3px); box-shadow:0 18px 40px -20px rgba(0,0,0,.2); border-color:#FFB59A; }
 .mj-bento-by { display:flex; align-items:center; gap:11px; margin-top:auto; padding-top:20px; }
 .mj-quote-av { display:grid; place-items:center; width:38px; height:38px; border-radius:50%; background:${T.coralSoft}; color:${T.coralDk}; font:800 .92rem/1 'Space Grotesk',sans-serif; flex-shrink:0; }
 .mj-bento-by strong { display:block; font:700 .9rem/1.2 'Space Grotesk',sans-serif; color:${T.ink}; }
 .mj-bento-by span { font:600 .74rem/1.2 'DM Sans',sans-serif; color:${T.coralDk}; }
 .mj-bento-q2 { font:500 1rem/1.55 'DM Sans',sans-serif; color:${T.ink}; margin:10px 0 0; }
-
-.mj-bento-feat { grid-column:span 2; }
-.mj-bento-feat .mj-bento-q { font:600 1.5rem/1.35 'Playfair Display',serif; font-style:italic; color:#fff; margin:14px 0 0; }
-.mj-bento-feat, .mj-bento-dark { background:${T.ink}; border-color:transparent; }
-.mj-bento-dark .mj-bento-q2 { color:#fff; }
-.mj-bento-feat .mj-bento-by strong, .mj-bento-dark .mj-bento-by strong { color:#fff; }
-.mj-bento-feat .mj-bento-by span, .mj-bento-dark .mj-bento-by span { color:#FFB59A; }
-.mj-bento-feat .mj-bento-by .mj-quote-av, .mj-bento-dark .mj-bento-by .mj-quote-av { background:rgba(255,255,255,.14); color:#fff; }
-.mj-bento-badge { align-self:flex-start; display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border-radius:50px; background:rgba(255,255,255,.14); color:#fff; font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
-
-.mj-bento-orange { background:linear-gradient(160deg,#FF7A3C,#F1531F); border-color:transparent; color:#fff; }
-.mj-bento-big { font:800 3.2rem/1 'Playfair Display',serif; color:#fff; }
-.mj-bento-olbl { font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:rgba(255,255,255,.85); margin-top:4px; }
-.mj-bento-otext { font:500 .95rem/1.5 'DM Sans',sans-serif; color:rgba(255,255,255,.95); margin:14px 0 0; }
 
 .mj-bento-stat { justify-content:center; background:${T.coralSoft}; border-color:#F6D8CC; }
 .mj-bento-stat strong { font:800 2.6rem/1 'Playfair Display',serif; color:${T.coralDk}; }
