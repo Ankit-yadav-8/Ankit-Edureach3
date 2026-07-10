@@ -1165,7 +1165,7 @@ const CSS = `
 .mj-tab-on { background:${T.ink}; border-color:${T.ink}; color:#fff; }
 
 /* hero — glassmorphic performance engine (coral + cream) */
-.mj-hero { position:relative; padding:clamp(40px,5vw,60px) 0 clamp(70px,8vw,104px); overflow:hidden; border-bottom:1px solid ${T.line}; background:var(--page-bg); }
+.mj-hero { position:relative; padding:clamp(110px,12vw,130px) 0 clamp(70px,8vw,104px); overflow:hidden; border-bottom:1px solid ${T.line}; background:var(--page-bg); }
 .mj-hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
 .mj-orb { position:absolute; border-radius:50%; filter:blur(90px); }
 .mj-orb-a { width:520px; height:520px; top:-210px; left:-150px; background:radial-gradient(circle, rgba(255,105,61,.24), transparent 70%); opacity:.5; animation:mjfloat 16s ease-in-out infinite; }
