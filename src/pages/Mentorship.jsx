@@ -179,220 +179,20 @@ function Method({ cfg }) {
   );
 }
 
-/* ═══════════════ § 04 · TEST ANALYSIS (animated) ═══════════════ */
-const TA_STEPS = ["You enter test data", "AI analyses your paper", "Trends visualised", "Strategies + rank predicted"];
-function AnalysisChart({ series, xLabels, yTicks, yMin, yMax, suffix = "", yLabel, active }) {
-  const W = 348, H = 202, padL = 42, padR = 12, padT = 14, padB = 40;
-  const pw = W - padL - padR, ph = H - padT - padB;
-  const n = xLabels.length;
-  const X = (i) => padL + (n <= 1 ? pw / 2 : (i / (n - 1)) * pw);
-  const Y = (v) => padT + (1 - (v - yMin) / ((yMax - yMin) || 1)) * ph;
-  const pts = (d) => d.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+/* ═══════════════ § 04 · TEST ANALYSIS (static product preview) ═══════════════ */
+function TestAnalysis() {
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="mj-ta-chart" role="img" aria-label={yLabel}>
-      {/* horizontal gridlines + y ticks — hairline dashed, baseline solid */}
-      {yTicks.map((t, i) => (
-        <g key={`y${i}`}>
-          <line x1={padL} y1={Y(t)} x2={W - padR} y2={Y(t)} stroke={T.line}
-            strokeWidth="1" strokeLinecap="round"
-            strokeDasharray={i === 0 ? undefined : "1 6"} opacity={i === 0 ? 1 : 0.9} />
-          <text x={padL - 9} y={Y(t) + 3} textAnchor="end" className="mj-ta-axtxt">{t}{suffix}</text>
-        </g>
-      ))}
-      {/* x labels + short baseline ticks (no full vertical gridlines — keeps it clean) */}
-      {xLabels.map((l, i) => (
-        <g key={`x${i}`}>
-          <line x1={X(i)} y1={padT + ph} x2={X(i)} y2={padT + ph + 4} stroke={T.lineDk} strokeWidth="1" opacity=".7" />
-          <text x={X(i)} y={padT + ph + 16} textAnchor="middle" className="mj-ta-axtxt">{l}</text>
-        </g>
-      ))}
-      {/* axis lines */}
-      <line x1={padL} y1={padT} x2={padL} y2={padT + ph} stroke={T.lineDk} strokeWidth="1.2" />
-      <line x1={padL} y1={padT + ph} x2={W - padR} y2={padT + ph} stroke={T.lineDk} strokeWidth="1.4" />
-      {/* axis captions */}
-      <text x={padL + pw / 2} y={H - 5} textAnchor="middle" className="mj-ta-axcap">MOCK TESTS &#8594;</text>
-      {yLabel && <text transform={`rotate(-90 13 ${padT + ph / 2})`} x={13} y={padT + ph / 2} textAnchor="middle" className="mj-ta-axcap">{yLabel}</text>}
-
-      {!active && <text x={padL + pw / 2} y={padT + ph / 2} textAnchor="middle" className="mj-ta-wait">Waiting for data…</text>}
-
-      {active && series.map((s, si) => (
-        <g key={si}>
-          {s.area && (
-            <motion.polygon points={`${padL},${padT + ph} ${pts(s.data)} ${W - padR},${padT + ph}`} fill={s.color}
-              initial={{ opacity: 0 }} whileInView={{ opacity: 0.1 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.8, delay: 0.35 + si * 0.2 }} />
-          )}
-          <motion.polyline points={pts(s.data)} fill="none" stroke={s.color} strokeWidth={s.w || 2.4}
-            strokeLinecap="round" strokeLinejoin="round" strokeDasharray={s.dashed ? "5 4" : undefined} opacity={s.dashed ? 0.7 : 1}
-            initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.9, ease: "easeInOut", delay: si * 0.22 }} />
-          {!s.dashed && s.data.map((v, i) => (
-            <motion.circle key={i} cx={X(i)} cy={Y(v)} r={s.w >= 2.6 ? 2.8 : 2.1} fill="#fff" stroke={s.color} strokeWidth="1.5"
-              initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, margin: "-40px" }} transition={{ delay: si * 0.22 + 0.45 + i * 0.04 }} />
-          ))}
-        </g>
-      ))}
-    </svg>
-  );
-}
-function ChartLegend({ series }) {
-  return (
-    <div className="mj-ta-legend">
-      {series.map((s, i) => (
-        <span key={i}><i style={{ background: s.color, opacity: s.dashed ? 0.6 : 1 }} />{s.name}</span>
-      ))}
-    </div>
-  );
-}
-function TestAnalysis({ cfg }) {
-  const m = cfg.metrics || {};
-  const you = m.growth?.you || m.test?.trend || [84, 120, 150, 178, 196, 214];
-  const total = 300;
-  const scored = you[you.length - 1] || 214;
-  const prev = you[you.length - 2] || scored;
-  const pctUp = prev ? Math.max(Math.round(((scored - prev) / prev) * 100), 1) : 9;
-  const accN = parseInt((m.outcomes || []).find((o) => /accuracy/i.test(o.l))?.v || "86", 10) || 86;
-
-  /* ── multi-line chart data ── */
-  const nP = you.length;
-  const xL = you.map((_, i) => `M${i + 1}`);
-  const batch = m.growth?.batch || you.map((v) => Math.round(v * 0.62));
-  const target = you.map(() => Math.round(total * 0.75));
-  const mentored = you.map((v, i) => Math.round(v + (v - batch[i]) * 0.35 * (i / (nP - 1)))); // projected-with-mentor lift
-  const sRawMax = Math.max(...you, ...batch, ...target, ...mentored);
-  const sStep = [50, 100, 150, 200, 250, 300].find((s) => s >= sRawMax / 5) || 300; // aim for ~5–6 gridlines
-  const sMax = Math.ceil(sRawMax / sStep) * sStep;
-  const sTicks = []; for (let v = 0; v <= sMax; v += sStep) sTicks.push(v);
-  const scoreSeries = [
-    { name: "You", color: T.coral, data: you, w: 2.9, area: true },
-    { name: "With mentor", color: T.coralDk, data: mentored, w: 2.2, dashed: false },
-    { name: "Batch avg", color: "#b7ae9f", data: batch, w: 2 },
-    { name: "Target", color: T.ink, data: target, dashed: true, w: 2 },
-  ];
-  const accYou = you.map((_, i) => Math.max(Math.round(accN - (nP - 1 - i) * 2.4), 44));
-  const accBatch = accYou.map((v) => Math.max(v - 11, 36));
-  const accGoal = you.map(() => 90);
-  const accSeries = [
-    { name: "You", color: "#16a34a", data: accYou, w: 2.9, area: true },
-    { name: "Batch avg", color: "#b7ae9f", data: accBatch, w: 2 },
-    { name: "Goal", color: T.ink, data: accGoal, dashed: true, w: 2 },
-  ];
-
-  const weak = m.test?.weak || ["Rotational Motion", "Thermodynamics", "p-Block"];
-  const exam = cfg.tracks?.[0]?.exam || "JEE Main 2026";
-  const strategies = [
-    { Ic: BookOpen, t: `Add 1 hr/day to ${weak[0]} — your weakest area this week.` },
-    { Ic: Zap, t: `Attack ${weak[1] || "Physics"}${weak[2] ? " & " + weak[2] : ""} first — the most recurring weak chapters.` },
-    { Ic: Clock, t: "Reserve the last 10 min per paper to recheck — silly errors cost ~5 marks." },
-    { Ic: Target, t: `Accuracy at ${accN}% — skip low-confidence questions to dodge negatives.` },
-  ];
-  const rank = [
-    { v: "9,842", l: "All-India" }, { v: "2,410", l: "Category" },
-    { v: "99.31", l: "percentile" }, { v: "1.8k–2.6k", l: "likely band" },
-  ];
-
-  /* Fully-analysed from the first paint — every chart, the rank card and the
-     strategies populate immediately (charts still draw in when scrolled into view). */
-  const stage = 3;
-  const rootRef = useRef(null);
-  const active = 4;
-
-  return (
-    <section className="mj-section mj-ta" ref={rootRef}>
+    <section className="mj-section mj-ta">
       <div className="mj-wrap">
         <Reveal className="mj-sec-head">
           <span className="mj-ta-pill"><span className="mj-dot mj-dot-live" /> LIVE PRODUCT PREVIEW</span>
           <div><h2 className="mj-display mj-display-lg">See how your test turns<br />into a <em>game plan.</em></h2></div>
-          <p className="mj-sec-sub">Enter your marks. Watch the analysis spot the trend, predict your rank, and hand you the next steps.</p>
+          <p className="mj-sec-sub">Enter your marks and the analyser spots the trend, predicts your rank, and hands you the next steps — automatically.</p>
         </Reveal>
-
-        <div className="mj-ta-steps">
-          {TA_STEPS.map((s, i) => {
-            const num = i + 1;
-            const st = num < active ? "done" : num === active ? "on" : "off";
-            return (
-              <div key={i} className={`mj-ta-step mj-ta-step-${st}`}>
-                <span className="mj-ta-stepn">{num < active ? <Check size={13} strokeWidth={3} /> : num}</span>
-                <span className="mj-ta-steptxt">{s}</span>
-              </div>
-            );
-          })}
+        <div className="mj-ta-shot">
+          <img src="/images/test_analysis_preview.png" width="982" height="787"
+            alt="Test analysis dashboard — score and accuracy trends, predicted rank and personalised strategies" loading="lazy" />
         </div>
-
-        <Reveal delay={0.06} className="mj-ta-grid">
-          <div className="mj-ta-form">
-            <div className="mj-ta-formtop">
-              <span className="mj-ta-formbadge"><LineChart size={17} strokeWidth={2.4} /></span>
-              <div className="mj-ta-formtop-tx">
-                <strong>Add a test result</strong>
-                <span>Sample mock pre-filled — this is a live preview</span>
-              </div>
-              <span className="mj-ta-tabs"><i className="mj-ta-tab-on">Mock</i><i>Mains</i><i>Advanced</i></span>
-            </div>
-            <label className="mj-ta-field"><span>Test name</span><div className="mj-ta-input">Mock 7</div></label>
-            <div className="mj-ta-frow">
-              <label className="mj-ta-field"><span>Total marks</span><div className="mj-ta-input">{total}</div></label>
-              <label className="mj-ta-field"><span>Marks scored</span><div className="mj-ta-input">{scored}</div></label>
-            </div>
-            <div className="mj-ta-frow">
-              <label className="mj-ta-field"><span>Correct</span><div className="mj-ta-input">71</div></label>
-              <label className="mj-ta-field"><span>Wrong</span><div className="mj-ta-input">9</div></label>
-            </div>
-            <label className="mj-ta-field"><span>Skipped</span><div className="mj-ta-input">10</div></label>
-            <button className={`mj-ta-btn ${stage >= 1 ? "mj-ta-btn-on" : ""}`}>
-              {stage >= 1 && stage < 3 ? "Analysing…" : "+ Analyse this test"}
-            </button>
-            <AnimatePresence>
-              {stage >= 3 && (
-                <motion.div key="banner" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mj-ta-banner">
-                  <Check size={15} strokeWidth={3} /> Great work — your score is up {pctUp}% vs last mock. Momentum going.
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <AnimatePresence>
-              {stage >= 3 && (
-                <motion.div key="rank" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: 0.1 }} className="mj-ta-rank">
-                  <span className="mj-ta-rank-l">🎯 PREDICTED {exam.toUpperCase()} RANK</span>
-                  <div className="mj-ta-rank-row">
-                    {rank.map((r, i) => (
-                      <motion.div key={i} className="mj-ta-rank-c" initial={{ opacity: 0, y: 8, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.25 + i * 0.1, type: "spring", stiffness: 260, damping: 18 }}>
-                        <strong>{r.v}</strong><span>{r.l}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <div className="mj-ta-formfoot">
-              <ShieldCheck size={13} strokeWidth={2.4} />
-              <span>Your marks stay private — used only to build your plan.</span>
-            </div>
-          </div>
-
-          <div className="mj-ta-right">
-            <div className="mj-ta-card">
-              <div className="mj-ta-cardhead"><strong>Score trend</strong><span>marks · out of {total}</span></div>
-              <AnalysisChart series={scoreSeries} xLabels={xL} yTicks={sTicks} yMin={0} yMax={sMax} yLabel="MARKS" active={stage >= 2} />
-              <ChartLegend series={scoreSeries} />
-            </div>
-            <div className="mj-ta-card">
-              <div className="mj-ta-cardhead"><strong>Accuracy trend</strong><span>correct ÷ attempted</span></div>
-              <AnalysisChart series={accSeries} xLabels={xL} yTicks={[40, 60, 80, 100]} yMin={40} yMax={100} suffix="%" yLabel="ACCURACY" active={stage >= 2} />
-              <ChartLegend series={accSeries} />
-            </div>
-            <div className="mj-ta-card">
-              <div className="mj-ta-cardhead"><strong>💡 Strategies to do better</strong></div>
-              {stage >= 3 ? (
-                <div className="mj-ta-strat">
-                  {strategies.map((s, i) => (
-                    <motion.div key={i} className="mj-ta-strat-i" initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.12 }}>
-                      <span className="mj-ta-strat-ic"><s.Ic size={14} /></span>
-                      <span>{s.t}</span>
-                    </motion.div>
-                  ))}
-                </div>
-              ) : <div className="mj-ta-waiting mj-ta-waiting-sm">Personalised tips appear after analysis…</div>}
-            </div>
-          </div>
-        </Reveal>
       </div>
     </section>
   );
@@ -1234,6 +1034,8 @@ const CSS = `
 .mj-ta-step-done .mj-ta-stepn { background:${T.coral}; border-color:${T.coral}; color:#fff; }
 .mj-ta-steptxt { font:700 .8rem/1.2 'Space Grotesk',sans-serif; color:${T.body}; white-space:nowrap; }
 .mj-ta-step-off .mj-ta-steptxt { color:${T.muted}; }
+.mj-ta-shot { border-radius:20px; overflow:hidden; border:1px solid ${T.line}; background:${T.card}; box-shadow:0 34px 74px -42px rgba(27,27,36,.4); }
+.mj-ta-shot img { display:block; width:100%; height:auto; }
 .mj-ta-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
 .mj-ta-form { position:sticky; top:96px; display:flex; flex-direction:column; justify-content:flex-start; background:${T.card}; border:1px solid ${T.line}; border-radius:18px; padding:24px; box-shadow:0 20px 44px -34px rgba(0,0,0,.35); }
 .mj-ta-formtop { display:flex; align-items:center; gap:12px; padding-bottom:16px; margin-bottom:18px; border-bottom:1px solid ${T.line}; }
