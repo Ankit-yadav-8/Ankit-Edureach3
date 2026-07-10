@@ -243,9 +243,10 @@ function ChartLegend({ series }) {
 function TestAnalysis({ cfg }) {
   const m = cfg.metrics || {};
   const isNeet = /neet/i.test(cfg.slug || "");
-  const you = m.growth?.you || m.test?.trend || [84, 120, 150, 178, 196, 214];
+  const base = m.growth?.you || m.test?.trend || [84, 98, 92, 126, 150, 178, 196, 214];
+  const you = base.length >= 9 ? base : [...base, Math.round(base[base.length - 1] * 1.06)];
   const total = isNeet ? 720 : 300;
-  const scored = you[you.length - 1] || (isNeet ? 610 : 214);
+  const scored = you[you.length - 1] || (isNeet ? 650 : 214);
   const prev = you[you.length - 2] || scored;
   const pctUp = prev ? Math.max(Math.round(((scored - prev) / prev) * 100), 1) : 9;
   const accN = parseInt((m.outcomes || []).find((o) => /accuracy/i.test(o.l))?.v || "86", 10) || 86;
@@ -255,11 +256,15 @@ function TestAnalysis({ cfg }) {
   const skipped = Math.max(totalQ - correct - wrong, 0);
 
   const nP = you.length;
-  const xL = you.map((_, i) => `M${i + 1}`);
-  const batch = m.growth?.batch || you.map((v) => Math.round(v * 0.62));
+  const xPool = isNeet
+    ? ["Mock 8", "Mock 11", "NEET GT", "AIIMS GT", "Mock 15", "Grand T", "Mock 17", "Full test", "Full test", "Full test"]
+    : ["Mock 8", "Mock 11", "JEE Adv", "JEE Adv", "Mock 15", "JEE Main", "Mock 17", "Full test", "Full test", "Full test"];
+  const xL = you.map((_, i) => xPool[i] || `T${i + 1}`);
+  const batch = m.growth?.batch && m.growth.batch.length >= nP ? m.growth.batch : you.map((v) => Math.round(v * 0.62));
   const target = you.map(() => Math.round(total * 0.75));
   const mentored = you.map((v, i) => Math.round(v + (v - batch[i]) * 0.35 * (i / (nP - 1))));
-  const sRawMax = Math.max(...you, ...batch, ...target, ...mentored);
+  const topper = you.map(() => Math.round(total * 0.9));
+  const sRawMax = Math.max(...you, ...batch, ...target, ...mentored, ...topper);
   const sStep = [50, 100, 150, 200, 250, 300, 400].find((s) => s >= sRawMax / 5) || 400;
   const sMax = Math.ceil(sRawMax / sStep) * sStep;
   const sTicks = []; for (let v = 0; v <= sMax; v += sStep) sTicks.push(v);
@@ -267,15 +272,18 @@ function TestAnalysis({ cfg }) {
     { name: "You", color: T.coral, data: you, w: 2.9, area: true },
     { name: "With mentor", color: T.coralDk, data: mentored, w: 2.2 },
     { name: "Batch avg", color: "#b7ae9f", data: batch, w: 2 },
-    { name: "Target", color: T.ink, data: target, dashed: true, w: 2 },
+    { name: "Topper avg", color: "#6366f1", data: topper, dashed: true, w: 2 },
+    { name: "Target 75%", color: T.ink, data: target, dashed: true, w: 2 },
   ];
-  const accYou = you.map((_, i) => Math.max(Math.round(accN - (nP - 1 - i) * 2.4), 44));
+  const accYou = you.map((_, i) => Math.max(Math.round(accN - (nP - 1 - i) * 2.2), 44));
   const accBatch = accYou.map((v) => Math.max(v - 11, 36));
   const accGoal = you.map(() => 90);
+  const accTop = you.map(() => 95);
   const accSeries = [
     { name: "You", color: "#16a34a", data: accYou, w: 2.9, area: true },
     { name: "Batch avg", color: "#b7ae9f", data: accBatch, w: 2 },
-    { name: "Goal", color: T.ink, data: accGoal, dashed: true, w: 2 },
+    { name: "Topper", color: "#6366f1", data: accTop, dashed: true, w: 2 },
+    { name: "Goal 90%", color: T.ink, data: accGoal, dashed: true, w: 2 },
   ];
 
   const weak = m.test?.weak || ["Rotational Motion", "Thermodynamics", "p-Block"];
@@ -286,9 +294,22 @@ function TestAnalysis({ cfg }) {
     { Ic: Clock, t: "Reserve the last 10 min per paper to recheck — silly errors cost ~5 marks." },
     { Ic: Target, t: `Accuracy at ${accN}% — skip low-confidence questions to dodge negatives.` },
   ];
-  const rank = isNeet
-    ? [{ v: "4,980", l: "All-India" }, { v: "1,210", l: "Category" }, { v: "99.28", l: "percentile" }, { v: "4k–6k", l: "likely band" }]
-    : [{ v: "9,842", l: "All-India" }, { v: "2,410", l: "Category" }, { v: "99.31", l: "percentile" }, { v: "1.8k–2.6k", l: "likely band" }];
+  const slug = cfg.slug || (isNeet ? "neet" : "jee-2027");
+  const RANKS = {
+    "jee-2027": [{ v: "9,842", l: "All-India CRL" }, { v: "2,410", l: "OBC-NCL rank" }, { v: "99.31", l: "percentile" }, { v: "1.8k–2.6k", l: "likely band" }],
+    "jee-2028": [{ v: "38,200", l: "All-India CRL" }, { v: "9,400", l: "OBC-NCL rank" }, { v: "96.40", l: "percentile" }, { v: "34k–42k", l: "likely band" }],
+    "neet": [{ v: "6,188", l: "All-India rank" }, { v: "1,418", l: "OBC-NCL rank" }, { v: "99.62", l: "percentile" }, { v: "5.6k–6.9k", l: "likely band" }],
+  };
+  const rank = RANKS[slug] || RANKS["jee-2027"];
+  const testsLogged = { "jee-2027": 18, "jee-2028": 6, "neet": 21 }[slug] || 14;
+
+  const year = parseInt((cfg.eyebrow || "").match(/\d{4}/)?.[0] || "2027", 10);
+  const daysToGo = Math.max(Math.round((new Date(year, isNeet ? 4 : 0, 15) - new Date()) / 86400000), 30);
+  const session = isNeet ? `May ${year}` : `Jan ${year}`;
+  const subs = (m.subjects || []).map((s) => {
+    const cap = s.After <= 100 ? 100 : s.name === "Biology" ? 360 : 180; // NEET stores raw marks
+    return { name: s.name, pct: Math.min(Math.round((s.After / cap) * 100), 100) };
+  });
 
   return (
     <section className="mj-section mj-ta">
@@ -299,13 +320,19 @@ function TestAnalysis({ cfg }) {
           <p className="mj-sec-sub">Enter your marks and the analyser spots the trend, predicts your rank, and hands you the next steps — automatically.</p>
         </Reveal>
 
-        <div className="mj-ta-steps">
-          {TA_STEPS.map((s, i) => (
-            <div key={i} className="mj-ta-step mj-ta-step-done">
-              <span className="mj-ta-stepn"><Check size={13} strokeWidth={3} /></span>
-              <span className="mj-ta-steptxt">{s}</span>
+        <div className="mj-ta-topbar">
+          <div className="mj-ta-topbar-l">
+            <span className="mj-ta-topbar-badge"><LineChart size={16} strokeWidth={2.4} /></span>
+            <div>
+              <strong>{exam} · Test Tracker</strong>
+              <span>ADMIT CODE {isNeet ? "NEET" : "JEE"}-TRK-0419 · Target session: {session}</span>
             </div>
-          ))}
+          </div>
+          <div className="mj-ta-topbar-r">
+            <div><strong>{daysToGo}</strong><span>days to go</span></div>
+            <div><strong>{testsLogged}</strong><span>tests logged</span></div>
+            <div><strong>{accN}%</strong><span>avg accuracy</span></div>
+          </div>
         </div>
 
         <div className="mj-ta-grid">
@@ -314,32 +341,49 @@ function TestAnalysis({ cfg }) {
               <span className="mj-ta-formbadge"><LineChart size={17} strokeWidth={2.4} /></span>
               <div className="mj-ta-formtop-tx">
                 <strong>Add a test result</strong>
-                <span>Sample mock pre-filled — this is a live preview</span>
+                <span>Log every attempt — mocks count as much as the real thing.</span>
               </div>
-              <span className="mj-ta-tabs"><i className="mj-ta-tab-on">Mock</i><i>{isNeet ? "NEET" : "Mains"}</i><i>{isNeet ? "AIIMS" : "Advanced"}</i></span>
+              <span className="mj-ta-tabs"><i className="mj-ta-tab-on">Mock</i><i>{isNeet ? "Full" : "Mains"}</i><i>{isNeet ? "PCB" : "Adv"}</i></span>
             </div>
-            <label className="mj-ta-field"><span>Test name</span><div className="mj-ta-input">Mock {nP - 1}</div></label>
+            <label className="mj-ta-field"><span>Test name</span><div className="mj-ta-input">Mock {nP + 3}</div></label>
             <div className="mj-ta-frow">
               <label className="mj-ta-field"><span>Total marks</span><div className="mj-ta-input">{total}</div></label>
               <label className="mj-ta-field"><span>Marks scored</span><div className="mj-ta-input">{scored}</div></label>
             </div>
-            <div className="mj-ta-frow">
+            <div className="mj-ta-frow mj-ta-frow-3">
               <label className="mj-ta-field"><span>Correct</span><div className="mj-ta-input">{correct}</div></label>
               <label className="mj-ta-field"><span>Wrong</span><div className="mj-ta-input">{wrong}</div></label>
+              <label className="mj-ta-field"><span>Skipped</span><div className="mj-ta-input">{skipped}</div></label>
             </div>
-            <label className="mj-ta-field"><span>Skipped</span><div className="mj-ta-input">{skipped}</div></label>
+            <div className="mj-ta-frow">
+              <label className="mj-ta-field"><span>Silly mistakes</span><div className="mj-ta-input mj-ta-input-ph">e.g. 3</div></label>
+              <label className="mj-ta-field"><span>Silly mistake topic</span><div className="mj-ta-input mj-ta-input-ph">e.g. Sign errors</div></label>
+            </div>
+            <label className="mj-ta-field"><span>Over-spent time on (quick pick)</span><div className="mj-ta-input mj-ta-input-ph mj-ta-input-sel">Select subject</div></label>
             <button className="mj-ta-btn mj-ta-btn-on">+ Analyse this test</button>
             <div className="mj-ta-banner">
-              <Check size={15} strokeWidth={3} /> Great work — your score is up {pctUp}% vs last mock. Momentum going.
+              <Check size={15} strokeWidth={3} /> Full test · {Math.round((scored / total) * 100)}% · {accN}% accuracy — up {pctUp}% on your last mock. Keep the streak.
             </div>
             <div className="mj-ta-rank">
-              <span className="mj-ta-rank-l">🎯 PREDICTED {exam.toUpperCase()} RANK</span>
+              <span className="mj-ta-rank-l">🏆 PREDICTED {exam.toUpperCase()} RANK · {scored} MARKS</span>
+              <span className="mj-ta-rank-sub">Based on your last 6 full-length tests</span>
               <div className="mj-ta-rank-row">
-                {rank.map((r, i) => (
-                  <div key={i} className="mj-ta-rank-c"><strong>{r.v}</strong><span>{r.l}</span></div>
+                {rank.map((r, i) => (<div key={i} className="mj-ta-rank-c"><strong>{r.v}</strong><span>{r.l}</span></div>))}
+              </div>
+              <span className="mj-ta-rank-foot">Estimate only — actual rank depends on official normalisation &amp; shift difficulty.</span>
+            </div>
+            {subs.length > 0 && (
+              <div className="mj-ta-subs">
+                <span className="mj-ta-subs-l">SUBJECT ACCURACY · LAST 6 TESTS</span>
+                {subs.map((s, i) => (
+                  <div key={i} className="mj-ta-sub">
+                    <span>{s.name}</span>
+                    <div className="mj-ta-subbar"><i style={{ width: `${s.pct}%` }} /></div>
+                    <b>{s.pct}%</b>
+                  </div>
                 ))}
               </div>
-            </div>
+            )}
             <div className="mj-ta-formfoot">
               <ShieldCheck size={13} strokeWidth={2.4} />
               <span>Your marks stay private — used only to build your plan.</span>
@@ -357,7 +401,7 @@ function TestAnalysis({ cfg }) {
               <AnalysisChart series={accSeries} xLabels={xL} yTicks={[40, 60, 80, 100]} yMin={40} yMax={100} suffix="%" yLabel="ACCURACY" />
               <ChartLegend series={accSeries} />
             </div>
-            <div className="mj-ta-card">
+            <div className="mj-ta-card mj-ta-card-grow">
               <div className="mj-ta-cardhead"><strong>💡 Strategies to do better</strong></div>
               <div className="mj-ta-strat">
                 {strategies.map((s, i) => (
@@ -1209,8 +1253,17 @@ const CSS = `
 .mj-ta-step-off .mj-ta-steptxt { color:${T.muted}; }
 .mj-ta-shot { border-radius:20px; overflow:hidden; border:1px solid ${T.line}; background:${T.card}; box-shadow:0 34px 74px -42px rgba(27,27,36,.4); }
 .mj-ta-shot img { display:block; width:100%; height:auto; }
-.mj-ta-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
-.mj-ta-form { position:sticky; top:96px; display:flex; flex-direction:column; justify-content:flex-start; background:${T.card}; border:1px solid ${T.line}; border-radius:18px; padding:24px; box-shadow:0 20px 44px -34px rgba(0,0,0,.35); }
+.mj-ta-topbar { display:flex; align-items:center; justify-content:space-between; gap:16px 24px; flex-wrap:wrap; margin-bottom:18px; padding:16px 22px; border-radius:16px; border:1px solid ${T.line}; background:linear-gradient(120deg, ${T.coralSoft}, ${T.card} 60%); box-shadow:0 16px 40px -34px rgba(0,0,0,.3); }
+.mj-ta-topbar-l { display:flex; align-items:center; gap:12px; }
+.mj-ta-topbar-badge { display:grid; place-items:center; width:36px; height:36px; flex-shrink:0; border-radius:10px; background:${T.coral}; color:#fff; }
+.mj-ta-topbar-l strong { display:block; font:800 1rem/1.1 'Space Grotesk',sans-serif; color:${T.ink}; }
+.mj-ta-topbar-l span { font:700 .64rem/1.3 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; }
+.mj-ta-topbar-r { display:flex; align-items:center; gap:26px; }
+.mj-ta-topbar-r div { display:flex; flex-direction:column; }
+.mj-ta-topbar-r strong { font:800 1.25rem/1 'Playfair Display',serif; color:${T.coralDk}; }
+.mj-ta-topbar-r span { font:700 .58rem/1.2 'Space Grotesk',sans-serif; letter-spacing:.08em; text-transform:uppercase; color:${T.muted}; }
+.mj-ta-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:stretch; }
+.mj-ta-form { display:flex; flex-direction:column; justify-content:flex-start; height:100%; background:${T.card}; border:1px solid ${T.line}; border-radius:18px; padding:24px; box-shadow:0 20px 44px -34px rgba(0,0,0,.35); }
 .mj-ta-formtop { display:flex; align-items:center; gap:12px; padding-bottom:16px; margin-bottom:18px; border-bottom:1px solid ${T.line}; }
 .mj-ta-formbadge { display:grid; place-items:center; width:38px; height:38px; flex-shrink:0; border-radius:11px; background:${T.coralSoft}; color:${T.coralDk}; }
 .mj-ta-formtop-tx { display:flex; flex-direction:column; gap:3px; margin-right:auto; }
@@ -1224,9 +1277,13 @@ const CSS = `
 .mj-ta-tabs i { font:700 .66rem/1 'Space Grotesk',sans-serif; font-style:normal; padding:5px 10px; border-radius:6px; color:${T.muted}; }
 .mj-ta-tab-on { background:${T.card}; color:${T.coralDk} !important; box-shadow:0 1px 3px rgba(0,0,0,.12); }
 .mj-ta-frow { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.mj-ta-frow-3 { grid-template-columns:repeat(3,1fr); }
 .mj-ta-field { display:flex; flex-direction:column; gap:5px; margin-bottom:10px; }
 .mj-ta-field span { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.04em; color:${T.muted}; }
 .mj-ta-input { padding:8px 13px; border-radius:9px; border:1px solid ${T.line}; background:${T.paper}; font:600 .9rem/1 'DM Sans',sans-serif; color:${T.ink}; }
+.mj-ta-input-ph { color:${T.muted}; font-weight:500; }
+.mj-ta-input-sel { display:flex; align-items:center; justify-content:space-between; }
+.mj-ta-input-sel::after { content:"▾"; color:${T.muted}; }
 .mj-ta-btn { position:relative; overflow:hidden; width:100%; margin-top:14px; padding:13px; border:none; border-radius:11px; background:${T.coralSoft}; color:${T.coralDk}; font:800 .92rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.3s; }
 .mj-ta-btn-on { background:linear-gradient(135deg,#FF8A47,#F1531F); color:#fff; box-shadow:0 14px 30px -14px rgba(255,105,61,.7); }
 .mj-ta-btn-on::after { content:""; position:absolute; top:0; left:-60%; width:45%; height:100%; background:linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent); transform:skewX(-18deg); animation:mjShimmer 1.5s infinite; }
@@ -1234,11 +1291,22 @@ const CSS = `
 .mj-ta-banner { display:flex; align-items:center; gap:9px; margin-top:16px; padding:13px 15px; border-radius:11px; background:#e9f8ee; border:1px solid #bbe6c8; font:600 .84rem/1.3 'DM Sans',sans-serif; color:#15803d; }
 .mj-ta-banner svg { flex-shrink:0; }
 .mj-ta-rank { margin-top:14px; padding:16px 18px; border-radius:13px; border:1px dashed ${T.lineDk}; background:${T.paper2}; }
-.mj-ta-rank-l { font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.body}; }
-.mj-ta-rank-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:12px; }
-.mj-ta-rank-c strong { display:block; font:800 1.15rem/1 'Playfair Display',serif; color:${T.coralDk}; }
-.mj-ta-rank-c span { font:600 .58rem/1.2 'DM Sans',sans-serif; color:${T.muted}; }
+.mj-ta-rank-l { display:block; font:800 .6rem/1.2 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.body}; }
+.mj-ta-rank-sub { display:block; font:600 .64rem/1.2 'DM Sans',sans-serif; color:${T.muted}; margin-top:5px; }
+.mj-ta-rank-row { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:12px; }
+.mj-ta-rank-c { padding:11px 13px; border-radius:10px; background:${T.card}; border:1px solid ${T.line}; }
+.mj-ta-rank-c strong { display:block; font:800 1.2rem/1 'Playfair Display',serif; color:${T.coralDk}; }
+.mj-ta-rank-c span { font:600 .6rem/1.2 'DM Sans',sans-serif; color:${T.muted}; }
+.mj-ta-rank-foot { display:block; font:500 .58rem/1.4 'DM Sans',sans-serif; color:${T.muted}; margin-top:12px; }
+.mj-ta-subs { margin-top:14px; padding:15px 17px; border-radius:12px; background:${T.paper}; border:1px solid ${T.line}; }
+.mj-ta-subs-l { font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.13em; color:${T.muted}; }
+.mj-ta-sub { display:grid; grid-template-columns:74px 1fr 40px; align-items:center; gap:10px; margin-top:11px; }
+.mj-ta-sub > span { font:700 .74rem/1 'Space Grotesk',sans-serif; color:${T.body}; }
+.mj-ta-sub b { font:800 .74rem/1 'Space Grotesk',sans-serif; color:${T.coralDk}; text-align:right; }
+.mj-ta-subbar { height:7px; border-radius:5px; background:${T.paper2}; overflow:hidden; }
+.mj-ta-subbar i { display:block; height:100%; border-radius:5px; background:linear-gradient(90deg,#FF8A47,#F1531F); }
 .mj-ta-right { display:flex; flex-direction:column; gap:16px; }
+.mj-ta-card-grow { flex:1; }
 .mj-ta-card { background:${T.card}; border:1px solid ${T.line}; border-radius:16px; padding:20px 22px; box-shadow:0 16px 36px -30px rgba(0,0,0,.3); }
 .mj-ta-cardhead { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
 .mj-ta-cardhead strong { font:800 .96rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
