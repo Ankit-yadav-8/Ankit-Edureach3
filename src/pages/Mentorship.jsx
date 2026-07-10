@@ -641,78 +641,74 @@ function WhatsApp() {
 
 /* ═══════════════ § 08 · ALUMNI (proof) ═══════════════ */
 function Proof({ cfg }) {
+  const ts = cfg.testimonials || [];
+  if (!ts.length) return null;
+  const feat = ts[0];
+  const rest = ts.slice(1);
+  const isNeet = /neet/i.test(cfg.slug || "");
+  const statPool = isNeet
+    ? [{ big: "340+", sub: "into govt MBBS seats" }, { big: "12,600", sub: "avg NEET rank jump" }, { big: "180+", sub: "into top private medical" }]
+    : [{ big: "340+", sub: "into IITs & IISc" }, { big: "18,400", sub: "avg rank jump" }, { big: "520+", sub: "into NITs & IIITs" }];
+  /* featured spans 2 cols, orange spans 1 — pad with stat tiles so every row stays full */
+  let slots = 2 + 1 + rest.length;
+  const pads = [];
+  while (slots % 3 !== 0) { pads.push(statPool[pads.length % statPool.length]); slots++; }
   return (
     <section className="mj-section">
       <div className="mj-wrap">
-        <Reveal className="mj-sec-head">
-          <div><h2 className="mj-display mj-display-lg">Chose to be <em>mentored,</em><br />not just taught.</h2></div>
-          <p className="mj-sec-sub">Real messages from students who stopped drifting — the week a rank moved, a backlog cleared, a panic turned into a plan.</p>
-        </Reveal>
-        <div className="mj-proof-grid">
-        <div className="mj-proof-head">
-          <div className="mj-proof-card">
-            <div className="mj-stars">
-              {[0, 1, 2, 3, 4].map((i) => <Star key={i} size={18} fill={T.coral} color={T.coral} />)}
-              <span>4.9 / 5 · 1,240 REVIEWS</span>
+        <div className="mj-proof-top">
+          <div className="mj-proof-intro">
+            <h2 className="mj-display mj-display-lg">Real <em>turnarounds.</em></h2>
+            <p className="mj-sec-sub">Every quote below is from a mentored student who cleared JEE or NEET with us.</p>
+          </div>
+          <div className="mj-proof-kpis">
+            <div className="mj-kpi">
+              <div className="mj-kpi-stars">{[0, 1, 2, 3, 4].map((i) => <Star key={i} size={15} fill={T.coral} color={T.coral} />)}</div>
+              <span>4.9 / 5 · 1,240 reviews</span>
             </div>
-
-            <div className="mj-proof-quote">
-              <span className="mj-quote-mark">&ldquo;</span>
-              <p>The difference wasn&rsquo;t more content. It was one person who refused to let me drift.</p>
-            </div>
-
-            <div className="mj-proof-metrics">
-              <div className="mj-metric"><strong>92%</strong><span>improved in 8 weeks</span></div>
-              <div className="mj-metric"><strong>1,240+</strong><span>mentored 1-on-1</span></div>
-              <div className="mj-metric"><strong>18,400</strong><span>avg rank jump</span></div>
-            </div>
-
-            <div className="mj-proof-block">
-              <span className="mj-proof-blbl">MENTORS FROM</span>
-              <div className="mj-proof-chips">
-                <span>IIT Delhi</span><span>IIT Bombay</span><span>AIIMS</span><span>NIT Trichy</span>
-              </div>
-            </div>
-
-            <div className="mj-proof-block">
-              <span className="mj-proof-blbl">WHERE THEY LANDED</span>
-              <div className="mj-proof-metrics mj-proof-metrics-sm">
-                <div className="mj-metric"><strong>340+</strong><span>IITs &amp; IISc</span></div>
-                <div className="mj-metric"><strong>520+</strong><span>NITs, IIITs &amp; GFTIs</span></div>
-                <div className="mj-metric"><strong>180+</strong><span>BITS &amp; top private</span></div>
-              </div>
-            </div>
-
-            <div className="mj-proof-verified">
-              <span className="mj-proof-vic"><Check size={12} strokeWidth={3} /></span>
-              Every review is from a verified, enrolled student.
-            </div>
+            <div className="mj-kpi"><strong>92%</strong><span>improved in 8 weeks</span></div>
+            <div className="mj-kpi"><strong>1,240+</strong><span>mentored 1-on-1</span></div>
           </div>
         </div>
-        <div className="mj-proof-wall" aria-label="Student testimonials">
-          {[0, 1, 2].map((col) => {
-            const base = cfg.testimonials || [];
-            if (!base.length) return null;
-            const rot = base.map((_, k) => base[(k + col) % base.length]);
-            const cards = [...rot, ...rot];
-            return (
-              <div key={col} className={`mj-wall-col mj-wall-col-${col}`}>
-                <div className="mj-wall-track">
-                  {cards.map((t, i) => (
-                    <div key={i} className="mj-quote-card" aria-hidden={i >= rot.length}>
-                      <span className="mj-quote-mark">&ldquo;</span>
-                      <p className="mj-quote-t">{t.quote}</p>
-                      <div className="mj-quote-by">
-                        <span className="mj-quote-av">{t.name[0]}</span>
-                        <div><strong>{t.name}</strong><span>{t.improvement}</span></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+
+        <div className="mj-bento">
+          <article className="mj-bento-card mj-bento-feat">
+            <span className="mj-bento-badge"><Sparkles size={12} /> Featured story</span>
+            <span className="mj-quote-mark">&ldquo;</span>
+            <p className="mj-bento-q">{feat.quote}</p>
+            <div className="mj-bento-by">
+              <span className="mj-quote-av">{feat.name[0]}</span>
+              <div><strong>{feat.name}</strong><span>{feat.improvement}</span></div>
+            </div>
+          </article>
+
+          <article className="mj-bento-card mj-bento-orange">
+            <div className="mj-bento-big">10&times;</div>
+            <span className="mj-bento-olbl">RANK JUMP</span>
+            <p className="mj-bento-otext">From the 40k range to under 4k — what one focused year of 1-on-1 mentoring does.</p>
+          </article>
+
+          {rest.map((t, i) => (
+            <article key={i} className={`mj-bento-card ${i % 2 === 1 ? "mj-bento-dark" : ""}`}>
+              <span className="mj-quote-mark">&ldquo;</span>
+              <p className="mj-bento-q2">{t.quote}</p>
+              <div className="mj-bento-by">
+                <span className="mj-quote-av">{t.name[0]}</span>
+                <div><strong>{t.name}</strong><span>{t.improvement}</span></div>
               </div>
-            );
-          })}
+            </article>
+          ))}
+
+          {pads.map((s, i) => (
+            <article key={`p${i}`} className="mj-bento-card mj-bento-stat">
+              <strong>{s.big}</strong><span>{s.sub}</span>
+            </article>
+          ))}
         </div>
+
+        <div className="mj-proof-verified mj-proof-verified-c">
+          <span className="mj-proof-vic"><Check size={12} strokeWidth={3} /></span>
+          Every review is from a verified, enrolled student.
         </div>
       </div>
     </section>
@@ -1236,42 +1232,47 @@ const CSS = `
 .mj-wa-field span { flex:1; }
 .mj-wa-mic { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#FF8B48,#F1531F); color:#fff; flex-shrink:0; }
 
-/* proof */
-.mj-proof-grid { display:grid; grid-template-columns:.82fr 1.18fr; gap:32px; align-items:stretch; }
-.mj-proof-head { display:flex; }
-.mj-proof-card { display:flex; flex-direction:column; justify-content:space-between; gap:20px; width:100%; padding:26px; border-radius:22px; background:${T.card}; border:1px solid ${T.line}; box-shadow:0 34px 66px -46px rgba(0,0,0,.42); }
-.mj-stars { display:flex; align-items:center; gap:4px; }
-.mj-stars span { margin-left:10px; font:700 .74rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; }
-.mj-proof-quote { padding:20px 22px; border-radius:15px; background:${T.ink}; color:#fff; box-shadow:0 22px 40px -30px rgba(0,0,0,.6); }
-.mj-proof-quote .mj-quote-mark { color:${T.coral}; }
-.mj-proof-quote p { font:600 1.02rem/1.45 'Playfair Display',serif; font-style:italic; color:#fff; margin:2px 0 0; }
-.mj-proof-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; }
-.mj-metric { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; text-align:center; padding:15px 8px; border-radius:14px; background:${T.paper}; border:1px solid ${T.line}; }
-.mj-metric strong { font:800 1.5rem/1 'Playfair Display',serif; color:${T.coral}; }
-.mj-metric span { font:600 .68rem/1.25 'DM Sans',sans-serif; color:${T.body}; }
-.mj-proof-metrics-sm .mj-metric strong { font-size:1.32rem; color:${T.coralDk}; }
-.mj-proof-blbl { display:block; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:${T.muted}; margin-bottom:11px; }
-.mj-proof-chips { display:flex; flex-wrap:wrap; gap:8px; }
-.mj-proof-chips span { padding:7px 13px; border-radius:50px; border:1px solid ${T.lineDk}; background:${T.paper}; font:700 .74rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
-.mj-proof-verified { display:flex; align-items:center; gap:9px; padding-top:18px; border-top:1px solid ${T.line}; font:600 .82rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
+/* proof — static bento wall */
+.mj-proof-top { display:flex; align-items:flex-end; justify-content:space-between; gap:28px 40px; flex-wrap:wrap; margin-bottom:34px; }
+.mj-proof-intro { max-width:560px; }
+.mj-proof-intro h2 { margin:0; }
+.mj-proof-intro .mj-sec-sub { margin:14px 0 0; text-align:left; }
+.mj-proof-kpis { display:flex; align-items:flex-start; gap:16px 30px; flex-wrap:wrap; }
+.mj-kpi { display:flex; flex-direction:column; gap:5px; }
+.mj-kpi-stars { display:flex; gap:2px; }
+.mj-kpi strong { font:800 1.4rem/1 'Playfair Display',serif; color:${T.coral}; }
+.mj-kpi span { font:700 .66rem/1.3 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; text-transform:uppercase; }
+.mj-quote-mark { font:800 2.6rem/.5 'Playfair Display',serif; color:${T.coral}; }
+
+.mj-bento { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.mj-bento-card { position:relative; display:flex; flex-direction:column; padding:26px; border-radius:20px; border:1px solid ${T.line}; background:${T.card}; box-shadow:0 22px 46px -34px rgba(0,0,0,.34); }
+.mj-bento-by { display:flex; align-items:center; gap:11px; margin-top:auto; padding-top:20px; }
+.mj-quote-av { display:grid; place-items:center; width:38px; height:38px; border-radius:50%; background:${T.coralSoft}; color:${T.coralDk}; font:800 .92rem/1 'Space Grotesk',sans-serif; flex-shrink:0; }
+.mj-bento-by strong { display:block; font:700 .9rem/1.2 'Space Grotesk',sans-serif; color:${T.ink}; }
+.mj-bento-by span { font:600 .74rem/1.2 'DM Sans',sans-serif; color:${T.coralDk}; }
+.mj-bento-q2 { font:500 1rem/1.55 'DM Sans',sans-serif; color:${T.ink}; margin:10px 0 0; }
+
+.mj-bento-feat { grid-column:span 2; }
+.mj-bento-feat .mj-bento-q { font:600 1.5rem/1.35 'Playfair Display',serif; font-style:italic; color:#fff; margin:14px 0 0; }
+.mj-bento-feat, .mj-bento-dark { background:${T.ink}; border-color:transparent; }
+.mj-bento-dark .mj-bento-q2 { color:#fff; }
+.mj-bento-feat .mj-bento-by strong, .mj-bento-dark .mj-bento-by strong { color:#fff; }
+.mj-bento-feat .mj-bento-by span, .mj-bento-dark .mj-bento-by span { color:#FFB59A; }
+.mj-bento-feat .mj-bento-by .mj-quote-av, .mj-bento-dark .mj-bento-by .mj-quote-av { background:rgba(255,255,255,.14); color:#fff; }
+.mj-bento-badge { align-self:flex-start; display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border-radius:50px; background:rgba(255,255,255,.14); color:#fff; font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
+
+.mj-bento-orange { background:linear-gradient(160deg,#FF7A3C,#F1531F); border-color:transparent; color:#fff; }
+.mj-bento-big { font:800 3.2rem/1 'Playfair Display',serif; color:#fff; }
+.mj-bento-olbl { font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.16em; color:rgba(255,255,255,.85); margin-top:4px; }
+.mj-bento-otext { font:500 .95rem/1.5 'DM Sans',sans-serif; color:rgba(255,255,255,.95); margin:14px 0 0; }
+
+.mj-bento-stat { justify-content:center; background:${T.coralSoft}; border-color:#F6D8CC; }
+.mj-bento-stat strong { font:800 2.6rem/1 'Playfair Display',serif; color:${T.coralDk}; }
+.mj-bento-stat span { font:700 .8rem/1.35 'Space Grotesk',sans-serif; color:${T.body}; margin-top:6px; }
+
+.mj-proof-verified { display:flex; align-items:center; gap:9px; padding-top:18px; font:600 .82rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
+.mj-proof-verified-c { justify-content:center; padding-top:0; margin-top:26px; }
 .mj-proof-vic { display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:${T.coral}; color:#fff; flex-shrink:0; }
-.mj-proof-wall { position:relative; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; height:600px; overflow:hidden;
-  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%);
-  mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%); }
-.mj-wall-col { overflow:hidden; }
-.mj-wall-track { display:block; animation:mjWall 40s linear infinite; will-change:transform; }
-.mj-wall-col-0 .mj-wall-track { animation-duration:44s; }
-.mj-wall-col-1 .mj-wall-track { animation-duration:56s; }
-.mj-wall-col-2 .mj-wall-track { animation-duration:50s; animation-direction:reverse; }
-.mj-proof-wall:hover .mj-wall-track { animation-play-state:paused; }
-@keyframes mjWall { from { transform:translateY(0); } to { transform:translateY(-50%); } }
-.mj-quote-card { margin-bottom:16px; background:${T.card}; border:1px solid ${T.line}; border-radius:16px; padding:22px; box-shadow:0 12px 30px -24px rgba(0,0,0,.4); }
-.mj-quote-mark { font:800 2.4rem/.6 'Playfair Display',serif; color:${T.coral}; }
-.mj-quote-t { font:500 .98rem/1.55 'DM Sans',sans-serif; color:${T.ink}; margin:6px 0 18px; }
-.mj-quote-by { display:flex; align-items:center; gap:11px; }
-.mj-quote-av { display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:${T.coralSoft}; color:${T.coralDk}; font:800 .9rem/1 'Space Grotesk',sans-serif; flex-shrink:0; }
-.mj-quote-by strong { display:block; font:700 .88rem/1.2 'Space Grotesk',sans-serif; color:${T.ink}; }
-.mj-quote-by span { font:600 .74rem/1.2 'DM Sans',sans-serif; color:${T.coralDk}; }
 
 /* pricing */
 .mj-price-card { display:grid; grid-template-columns:.85fr 1.15fr; margin:44px auto 0; max-width:960px; border-radius:22px; overflow:hidden; border:1px solid ${T.line}; box-shadow:0 40px 80px -50px rgba(0,0,0,.4); }
@@ -1317,7 +1318,9 @@ const CSS = `
 
 /* responsive */
 @media (max-width:940px) {
-  .mj-parent-card, .mj-proof-grid, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body, .mj-ta-grid, .mj-faqs { grid-template-columns:1fr; }
+  .mj-parent-card, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body, .mj-ta-grid, .mj-faqs { grid-template-columns:1fr; }
+  .mj-bento { grid-template-columns:1fr; } .mj-bento-feat { grid-column:auto; }
+  .mj-proof-top { align-items:flex-start; }
   .mj-ta-form { position:static; top:auto; }
   .mj-ta-step:not(:last-child)::after { display:none; }
   .mj-hero-live { display:none; }
@@ -1326,7 +1329,6 @@ const CSS = `
   .mj-sec-head, .mj-dark-head { flex-direction:column; align-items:center; }
   .mj-prog-grid { grid-template-columns:1fr 1fr; } .mj-navy-card { grid-row:auto; grid-column:span 2; }
   .mj-phones { justify-content:flex-start; }
-  .mj-proof-wall { grid-template-columns:repeat(2,1fr); height:560px; } .mj-wall-col-2 { display:none; } .mj-proof-head { position:static; }
   .mj-dash-main { border-right:none; border-bottom:1px solid #262b38; }
 }
 @media (max-width:560px) {
@@ -1339,9 +1341,5 @@ const CSS = `
   .mj-dash-chart { gap:6px; } .mj-dash-barval { font-size:.56rem; }
   .mj-check-right { align-self:stretch; }
   .mj-watermark { font-size:64vw; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .mj-wall-track { animation:none; }
-  .mj-proof-wall { height:auto; -webkit-mask-image:none; mask-image:none; }
 }
 `;
