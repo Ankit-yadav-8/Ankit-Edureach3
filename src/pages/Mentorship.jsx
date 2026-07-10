@@ -219,14 +219,14 @@ function AnalysisChart({ series, xLabels, yTicks, yMin, yMax, suffix = "", yLabe
         <g key={si}>
           {s.area && (
             <motion.polygon points={`${padL},${padT + ph} ${pts(s.data)} ${W - padR},${padT + ph}`} fill={s.color}
-              initial={{ opacity: 0 }} animate={{ opacity: 0.1 }} transition={{ duration: 0.8, delay: 0.5 + si * 0.25 }} />
+              initial={{ opacity: 0 }} whileInView={{ opacity: 0.1 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.8, delay: 0.35 + si * 0.2 }} />
           )}
           <motion.polyline points={pts(s.data)} fill="none" stroke={s.color} strokeWidth={s.w || 2.4}
             strokeLinecap="round" strokeLinejoin="round" strokeDasharray={s.dashed ? "5 4" : undefined} opacity={s.dashed ? 0.7 : 1}
-            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, ease: "easeInOut", delay: si * 0.28 }} />
+            initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.9, ease: "easeInOut", delay: si * 0.22 }} />
           {!s.dashed && s.data.map((v, i) => (
             <motion.circle key={i} cx={X(i)} cy={Y(v)} r={s.w >= 2.6 ? 2.8 : 2.1} fill="#fff" stroke={s.color} strokeWidth="1.5"
-              initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: si * 0.28 + 0.55 + i * 0.045 }} />
+              initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, margin: "-40px" }} transition={{ delay: si * 0.22 + 0.45 + i * 0.04 }} />
           ))}
         </g>
       ))}
@@ -289,28 +289,11 @@ function TestAnalysis({ cfg }) {
     { v: "99.31", l: "percentile" }, { v: "1.8k–2.6k", l: "likely band" },
   ];
 
-  const [stage, setStage] = useState(0);
+  /* Fully-analysed from the first paint — every chart, the rank card and the
+     strategies populate immediately (charts still draw in when scrolled into view). */
+  const stage = 3;
   const rootRef = useRef(null);
-  const started = useRef(false);
-  useEffect(() => {
-    const el = rootRef.current;
-    if (!el) return;
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) { setStage(3); return; }
-    const timers = [];
-    const cycle = () => {
-      setStage(0);
-      timers.push(setTimeout(() => setStage(1), 1400));
-      timers.push(setTimeout(() => setStage(2), 2700));
-      timers.push(setTimeout(() => setStage(3), 4500));
-      timers.push(setTimeout(cycle, 9500));
-    };
-    const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !started.current) { started.current = true; cycle(); io.disconnect(); }
-    }, { threshold: 0.3 });
-    io.observe(el);
-    return () => { io.disconnect(); timers.forEach(clearTimeout); };
-  }, []);
-  const active = stage === 0 ? 1 : stage === 1 ? 2 : stage === 2 ? 3 : 4;
+  const active = 4;
 
   return (
     <section className="mj-section mj-ta" ref={rootRef}>
