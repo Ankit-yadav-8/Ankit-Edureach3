@@ -148,7 +148,8 @@ function Qualifier({ cfg }) {
   );
 }
 
-/* ═══════════════ § 02 · METHOD (dark, vertical timeline) ═══════════════ */
+/* ═══════════════ § 02 · METHOD (vertical roadmap timeline) ═══════════════ */
+const STEP_ICONS = [Zap, Brain, Activity, Target, BookOpen, Clock];
 function Method({ cfg }) {
   const steps = cfg.howWeGuide || [];
   return (
@@ -166,6 +167,7 @@ function Method({ cfg }) {
             transition={{ duration: Math.max(steps.length * 0.24, 0.9), ease: [0.33, 0, 0.12, 1] }} aria-hidden="true" />
           {steps.map((s, i) => {
             const at = 0.14 + i * 0.2; /* each step lands as the rail reaches it */
+            const Ic = STEP_ICONS[i % STEP_ICONS.length];
             return (
               <motion.div key={i} className="mj-vstep"
                 initial={{ opacity: 0, x: 28, y: 12 }} whileInView={{ opacity: 1, x: 0, y: 0 }}
@@ -179,11 +181,25 @@ function Method({ cfg }) {
                 </motion.div>
                 <div className="mj-vstep-card">
                   <div className="mj-vstep-cardtop">
-                    <span className="mj-vstep-tag">STEP {String(i + 1).padStart(2, "0")}</span>
+                    <span className="mj-vstep-ic"><Ic size={16} strokeWidth={2.4} /></span>
+                    <span className="mj-vstep-tag">{s.tag || `STEP ${String(i + 1).padStart(2, "0")}`}</span>
                     <span className="mj-vstep-foot">{i + 1 < steps.length ? `→ ${String(i + 2).padStart(2, "0")}` : "RANK ACHIEVED ★"}</span>
                   </div>
                   <h3 className="mj-vstep-t">{s.title}</h3>
                   <p className="mj-vstep-d">{s.desc}</p>
+                  {s.tasks?.length > 0 && (
+                    <div className="mj-vstep-tasks">
+                      <span className="mj-vstep-tasksl"><Target size={12} strokeWidth={2.6} /> KEY TASKS</span>
+                      <ul>
+                        {s.tasks.map((t, k) => (<li key={k}><Check size={12} strokeWidth={3} /> {t}</li>))}
+                      </ul>
+                    </div>
+                  )}
+                  {s.chips?.length > 0 && (
+                    <div className="mj-vstep-chips">
+                      {s.chips.map((c, k) => (<span key={k}>{c}</span>))}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             );
@@ -1206,11 +1222,19 @@ const CSS = `
 .mj-vstep:hover .mj-vstep-card { transform:translateX(6px); border-color:${T.coral}; box-shadow:0 24px 48px -30px rgba(255,105,61,.5); }
 .mj-vstep:hover .mj-vstep-mark { border-color:${T.coral}; background:${T.coral}; box-shadow:0 0 0 6px ${T.paper}, 0 12px 26px -12px rgba(255,105,61,.6); }
 .mj-vstep:hover .mj-vstep-n { color:#fff; }
-.mj-vstep-cardtop { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.mj-vstep-cardtop { display:flex; align-items:center; gap:10px; margin-bottom:11px; }
+.mj-vstep-ic { display:grid; place-items:center; width:30px; height:30px; flex-shrink:0; border-radius:9px; background:${T.coralSoft}; color:${T.coralDk}; }
 .mj-vstep-tag { padding:4px 10px; border:1px solid ${T.lineDk}; border-radius:6px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.muted}; }
-.mj-vstep-foot { font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.coral}; }
+.mj-vstep-foot { margin-left:auto; font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.coral}; white-space:nowrap; }
 .mj-vstep-t { font:700 1.3rem/1.2 'Playfair Display',serif; color:${T.ink}; margin:0; }
 .mj-vstep-d { font:400 .94rem/1.6 'DM Sans',sans-serif; color:${T.body}; margin:8px 0 0; }
+.mj-vstep-tasks { margin-top:15px; padding-top:15px; border-top:1px solid ${T.line}; }
+.mj-vstep-tasksl { display:inline-flex; align-items:center; gap:6px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.coralDk}; }
+.mj-vstep-tasks ul { list-style:none; margin:11px 0 0; padding:0; display:flex; flex-direction:column; gap:9px; }
+.mj-vstep-tasks li { display:flex; align-items:flex-start; gap:9px; font:500 .87rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
+.mj-vstep-tasks li svg { flex-shrink:0; margin-top:3px; color:${T.coral}; }
+.mj-vstep-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:15px; }
+.mj-vstep-chips span { padding:6px 12px; border-radius:50px; background:${T.paper}; border:1px solid ${T.line}; font:700 .72rem/1 'Space Grotesk',sans-serif; color:${T.coralDk}; }
 
 /* section head shared */
 .mj-sec-head { display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px; margin-bottom:52px; }
