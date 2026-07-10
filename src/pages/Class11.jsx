@@ -1,6 +1,5 @@
 import SyllabusToolkit from "../components/syllabus/SyllabusToolkit.jsx";
 import { PREMIUM_CLASS_11 } from "../data/premiumClass11.js";
-import { Atom, FlaskConical, Sigma, Leaf } from "lucide-react";
 
 export default function Class11() {
   const heroProps = {
@@ -17,13 +16,7 @@ export default function Class11() {
       { value: "900+", label: "practice questions" }
     ],
     primaryButton: { text: "Start Learning", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
-    secondaryButton: { text: "Explore Full Syllabus", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
-    floatingCards: [
-      { title: "Physics", subtitle: "15 chapters", icon: Atom, color: "#6366f1", progress: 35 },
-      { title: "Chemistry", subtitle: "14 chapters", icon: FlaskConical, color: "#ef4444", progress: 45 },
-      { title: "Mathematics", subtitle: "14 chapters", icon: Sigma, color: "#f59e0b", progress: 30 },
-      { title: "Biology", subtitle: "22 chapters", icon: Leaf, color: "#10b981", progress: 55 },
-    ]
+    secondaryButton: { text: "Explore Full Syllabus", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } }
   };
 
   return (
