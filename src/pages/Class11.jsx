@@ -5,16 +5,15 @@ import { Atom, FlaskConical, Sigma, Activity } from "lucide-react";
 export default function Class11() {
   const heroProps = {
     badgeText: "SYLLABUS HUB · CLASS 11",
-    titlePart1: "The foundation year.",
-    titlePart2: "Build ",
-    highlight1: "concepts",
-    titlePart3: ", master ",
-    highlight2: "basics.",
-    description: "Complete chapter-wise toolkit for Physics, Chemistry, Mathematics, and Biology. Everything you need to kickstart your preparation.",
+    titlePart1: "Master the ",
+    highlight1: "Fundamentals.",
+    titlePart2: " Crack the ",
+    highlight2: "Future.",
+    description: "A premium chapter-wise toolkit for Physics, Chemistry, Mathematics and Biology — everything you need to build a rock-solid foundation for JEE & NEET.",
     stats: [
-      { value: "60+", label: "core chapters", color: "#EF4444" },
-      { value: "4", label: "subjects mapped", color: "#0f172a" },
-      { value: "900+", label: "practice questions", color: "#0f172a" }
+      { value: "60+", label: "CORE CHAPTERS" },
+      { value: "4", label: "SUBJECTS" },
+      { value: "900+", label: "PRACTICE QUESTIONS" }
     ],
     primaryButton: { text: "Start Physics — Ch. 1", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
     secondaryButton: { text: "See full syllabus", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },

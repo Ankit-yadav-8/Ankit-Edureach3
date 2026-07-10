@@ -5,16 +5,16 @@ import { Atom, FlaskConical, Sigma, Activity } from "lucide-react";
 export default function Class12() {
   const heroProps = {
     badgeText: "SYLLABUS HUB · CLASS 12",
-    titlePart1: "Two exams, one chapter list.",
-    titlePart2: "Study ",
-    highlight1: "once",
-    titlePart3: ", walk in ",
-    highlight2: "ready twice.",
+    titlePart1: "Master the ",
+    highlight1: "Fundamentals.",
+    titlePart2: " Crack the ",
+    highlight2: "Future.",
+    titlePart3: "",
     description: "Every Class 12 chapter cross-tagged for CBSE boards and JEE/NEET overlap — so a night on Electrostatics counts for both.",
     stats: [
-      { value: "184", label: "days to Boards", color: "#EF4444" },
-      { value: "58", label: "chapters mapped", color: "#0f172a" },
-      { value: "1,200+", label: "practice questions", color: "#0f172a" }
+      { value: "184", label: "DAYS TO BOARDS" },
+      { value: "58", label: "CHAPTERS MAPPED" },
+      { value: "1,200+", label: "PRACTICE QUESTIONS" }
     ],
     primaryButton: { text: "Start Physics — Ch. 1", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
     secondaryButton: { text: "See full syllabus", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },

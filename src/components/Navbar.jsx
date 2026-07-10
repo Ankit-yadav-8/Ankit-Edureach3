@@ -185,12 +185,14 @@ export default function Navbar({ onSearch }) {
   return (
     <>
       <nav
-        className="navbar"
         style={{
-          position: "fixed", top: 16, left: 0, right: 0, zIndex: 1000,
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
           height: 64,
           width: "100%",
-          transition: "top .3s ease",
+          background: "var(--page-bg)",
+          borderBottom: "1px solid rgba(0,0,0,0.06)",
+          boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.03)" : "none",
+          transition: "box-shadow .3s ease",
         }}
       >
         {/* Inner wrapper shares the site `.container` width so the bar lines up
@@ -244,9 +246,7 @@ export default function Navbar({ onSearch }) {
           style={{
             display: "flex", alignItems: "center", gap: 4,
             justifySelf: "center", justifyContent: "center", minWidth: 0,
-            margin: 0, padding: "6px 8px", listStyle: "none",
-            background: "#ffffff", borderRadius: 50, border: "1px solid rgba(0,0,0,0.06)",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.04)"
+            margin: 0, padding: 0, listStyle: "none",
           }}
         >
           {navItems.map((item) => (
@@ -401,7 +401,7 @@ export default function Navbar({ onSearch }) {
               onClick={() => navigate("/dashboard")}
               className="cta-desktop"
               title="My Dashboard"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", alignItems: "center", gap: 8, padding: "5px 12px 5px 5px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)", background: "#ffffff", color: "var(--navy)", fontWeight: 600, cursor: "pointer", fontSize: "0.9rem", transition: "all 0.2s", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", alignItems: "center", gap: 8, padding: "5px 12px 5px 5px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "var(--page-bg)", color: "var(--navy)", fontWeight: 600, cursor: "pointer", fontSize: "0.9rem", transition: "all 0.2s" }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.08)"; }}
             >
@@ -414,7 +414,7 @@ export default function Navbar({ onSearch }) {
             <button
               onClick={openLogin}
               className="cta-desktop nav-ghost-cta"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", padding: "8px 16px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)", background: "#ffffff", color: "var(--navy)", fontWeight: 700, cursor: "pointer", fontSize: "0.85rem", boxShadow: "0 4px 12px rgba(0,0,0,0.04)" }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", padding: "8px 16px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)", background: "var(--page-bg)", color: "var(--navy)", fontWeight: 700, cursor: "pointer", fontSize: "0.85rem" }}
             >
               Login
             </button>
@@ -752,11 +752,11 @@ export default function Navbar({ onSearch }) {
 
 const navLinkStyle = (active) => ({
   display: "flex", alignItems: "center", gap: 5,
-  padding: "0.5rem 1.1rem", fontSize: "0.9rem", fontWeight: active ? 600 : 500,
-  color: active ? "#ffffff" : "#4b5563",
+  padding: "0.46rem 0.8rem", fontSize: "0.9rem", fontWeight: active ? 700 : 600,
+  color: active ? "#111" : "#444",
   borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
   fontFamily: "'Plus Jakarta Sans', sans-serif", fontStyle: "normal", letterSpacing: "-0.01em",
-  background: active ? "#111827" : "transparent",
+  background: active ? "rgba(0,0,0,.04)" : "transparent",
   border: "none",
   boxShadow: "none",
   transition: "background .2s ease, color .2s ease",

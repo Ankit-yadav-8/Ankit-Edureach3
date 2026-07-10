@@ -49,7 +49,7 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
 
   /* Single flat site-wide canvas colour — soft warm off-white.
      No glows, no grid/mesh overlays: every page surface uses this. */
-  --page-bg:     oklch(98.7% 0.022 95.277);
+  --page-bg:     #FFFFFF;
 
   --nav-h:       64px;   /* fixed navbar height — modals/pages clear this */
   --radius:      14px;
@@ -65,6 +65,34 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
   --bp-lg:  1280px;
   --bp-xl:  1728px;
   --bp-xxl: 1920px;
+
+  /* ── User Requested Theme Variables ── */
+  --background: oklch(99.5% .01 35);
+  --foreground: oklch(19% .03 260);
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(19% .03 260);
+  --popover: oklch(100% 0 0);
+  --popover-foreground: oklch(19% .03 260);
+  --primary: oklch(68% .18 35);
+  --primary-foreground: oklch(100% 0 0);
+  --secondary: oklch(96% .02 35);
+  --secondary-foreground: oklch(25% .03 260);
+  --muted-foreground: oklch(55% .02 260);
+  --accent: oklch(94% .05 35);
+  --accent-foreground: oklch(25% .05 35);
+  --destructive: oklch(60% .24 27);
+  --destructive-foreground: oklch(100% 0 0);
+  --color-border: oklch(68% .18 35 / .12);
+  --input: oklch(90% .02 35);
+  --ring: oklch(68% .18 35);
+  --brand: #ff693d;
+  --brand-2: #ff8f6b;
+  --brand-soft: #ffe8e3;
+  --brand-glow: 255 105 61;
+  --gradient-brand: linear-gradient(135deg, #ff693d 0%, #ff8f6b 100%);
+  --shadow-warm: 0 10px 40px -12px #ff693d59;
+  --shadow-warm-lg: 0 24px 60px -20px #ff693d73;
+  --shadow-soft: 0 8px 24px -8px #1e140a14;
 }
 
 /* ════════════════════════════════════════════════
@@ -171,12 +199,15 @@ input,select,textarea { font-family:inherit; }
   position:sticky;
   top:0;
   z-index:200;
-  background:transparent !important;
+  background:#FFFFFF !important;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(0,0,0,.08);
   width:100%;
   max-width:100%;
-  pointer-events:none; /* Let clicks pass through transparent areas */
+  overflow:hidden;
+  box-shadow:0 1px 16px rgba(0,0,0,.03);
 }
-.navbar > * { pointer-events:auto; } /* Restore clicks for contents */
 .navbar-inner {
   display:flex;
   align-items:center;
