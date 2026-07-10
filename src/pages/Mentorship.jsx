@@ -193,8 +193,8 @@ function Qualifier({ cfg }) {
       `}</style>
       <div className="mj-wrap">
         <Reveal>
-          <p className="mj-lead" style={{ textAlign: "center", margin: "0 auto 44px", fontStyle: "normal", maxWidth: "600px", fontWeight: 400, fontFamily: "'DM Sans', sans-serif", fontSize: "1.15rem", lineHeight: 1.6, color: "var(--body)" }}>
-            Built for the aspirant who wants a <span style={{ color: "#FF693D", fontWeight: 600 }}>real system</span>, not unopened books.
+          <p className="mj-lead" style={{ textAlign: "center", margin: "0 auto 44px", fontStyle: "normal", maxWidth: "680px", fontWeight: 700, fontFamily: "'Sora', sans-serif", fontSize: "1.75rem", lineHeight: 1.4, color: "var(--ink)", letterSpacing: "-0.02em" }}>
+            Built for the aspirant who wants a <span style={{ color: "#FF693D", fontWeight: 800 }}>real system</span>, not unopened books.
           </p>
         </Reveal>
         
