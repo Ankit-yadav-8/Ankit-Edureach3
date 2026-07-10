@@ -147,7 +147,7 @@ function PremiumChapterCard({ chapter, idx, subjectColor, subjectIcon: Icon, sub
   );
 }
 
-import PremiumHero from "../PremiumHero.jsx";
+import SyllabusHero from "../SyllabusHero.jsx";
 
 export default function SyllabusToolkit({ data, heroProps, seoTitle, seoDesc, seoPath, classLevel }) {
   const subjects = Object.keys(data);
@@ -158,7 +158,7 @@ export default function SyllabusToolkit({ data, heroProps, seoTitle, seoDesc, se
     <div className="page" style={{ background: "var(--page-bg)", minHeight: "100vh" }}>
       <Seo title={seoTitle} description={seoDesc} path={seoPath} />
 
-      {heroProps && <PremiumHero {...heroProps} />}
+      {heroProps && <SyllabusHero {...heroProps} />}
       
       <section style={{ padding: "40px 0" }}>
         <div className="container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>

@@ -1,29 +1,28 @@
 import SyllabusToolkit from "../components/syllabus/SyllabusToolkit.jsx";
 import { PREMIUM_CLASS_11 } from "../data/premiumClass11.js";
-import { Atom, FlaskConical, Sigma, Activity } from "lucide-react";
+import { Atom, FlaskConical, Sigma, Leaf } from "lucide-react";
 
 export default function Class11() {
   const heroProps = {
     badgeText: "SYLLABUS HUB · CLASS 11",
-    titlePart1: "Master the ",
-    highlight1: "Fundamentals.",
-    titlePart2: " Crack the ",
-    highlight2: "Future.",
+    titleLines: [
+      [{ text: "Master the" }],
+      [{ text: "Fundamentals.", accent: true }],
+      [{ text: "Crack the " }, { text: "Future.", accent: true }],
+    ],
     description: "A premium chapter-wise toolkit for Physics, Chemistry, Mathematics and Biology — everything you need to build a rock-solid foundation for JEE & NEET.",
     stats: [
-      { value: "60+", label: "CORE CHAPTERS" },
-      { value: "4", label: "SUBJECTS" },
-      { value: "900+", label: "PRACTICE QUESTIONS" }
+      { value: "60+", label: "core chapters" },
+      { value: "4", label: "subjects" },
+      { value: "900+", label: "practice questions" }
     ],
-    primaryButton: { text: "Start Physics — Ch. 1", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
-    secondaryButton: { text: "See full syllabus", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
-    chartPercentage: 25,
-    chartLabel: "foundation\nbuilt",
+    primaryButton: { text: "Start Learning", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
+    secondaryButton: { text: "Explore Full Syllabus", onClick: () => { window.scrollTo({top: 800, behavior: 'smooth'}) } },
     floatingCards: [
-      { title: "Physics", subtitle: "15 chapters", icon: Atom, color: "#6366f1", progress: 30, pos: { top: "5%", left: "5%" } },
-      { title: "Chemistry", subtitle: "14 chapters", icon: FlaskConical, color: "#ef4444", progress: 40, pos: { top: "15%", right: "5%" } },
-      { title: "Maths", subtitle: "14 chapters", icon: Sigma, color: "#f59e0b", progress: 20, pos: { bottom: "5%", left: "10%" } },
-      { title: "Biology", subtitle: "22 chapters", icon: Activity, color: "#10b981", progress: 10, pos: { bottom: "10%", right: "10%" } },
+      { title: "Physics", subtitle: "15 chapters", icon: Atom, color: "#6366f1", progress: 35 },
+      { title: "Chemistry", subtitle: "14 chapters", icon: FlaskConical, color: "#ef4444", progress: 45 },
+      { title: "Mathematics", subtitle: "14 chapters", icon: Sigma, color: "#f59e0b", progress: 30 },
+      { title: "Biology", subtitle: "22 chapters", icon: Leaf, color: "#10b981", progress: 55 },
     ]
   };
 
