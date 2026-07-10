@@ -255,6 +255,7 @@ function Qualifier({ cfg }) {
 
 /* ═══════════════ § 02 · METHOD (vertical roadmap timeline) ═══════════════ */
 const STEP_ICONS = [Zap, Brain, Activity, Target, BookOpen, Clock];
+const STEP_COLORS = ["#FF693D", "#6366f1", "#eab308", "#22c55e", "#0ea5a4", "#ec4899"];
 function Method({ cfg }) {
   const steps = cfg.howWeGuide || [];
   return (
@@ -269,19 +270,20 @@ function Method({ cfg }) {
         <div className="mj-vsteps">
           <motion.span className="mj-vsteps-rail" initial={{ scaleY: 0 }} whileInView={{ scaleY: 1 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: Math.max(steps.length * 0.24, 0.9), ease: [0.33, 0, 0.12, 1] }} aria-hidden="true" />
+            transition={{ duration: Math.max(steps.length * 0.15, 0.6), ease: "easeOut" }} aria-hidden="true" />
           {steps.map((s, i) => {
-            const at = 0.14 + i * 0.2; /* each step lands as the rail reaches it */
+            const at = i * 0.12; /* faster staggered delay */
             const Ic = STEP_ICONS[i % STEP_ICONS.length];
+            const color = STEP_COLORS[i % STEP_COLORS.length];
             return (
-              <motion.div key={i} className="mj-vstep"
-                initial={{ opacity: 0, x: 28, y: 12 }} whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true, margin: "-70px" }}
-                transition={{ duration: 0.5, delay: at, ease: [0.16, 0.84, 0.32, 1] }}>
+              <motion.div key={i} className="mj-vstep" style={{ "--step-color": color }}
+                initial={{ opacity: 0, x: 20, y: 10 }} whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.4, delay: at, ease: "easeOut" }}>
                 <motion.div className="mj-vstep-mark"
-                  initial={{ scale: 0.35, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }}
-                  viewport={{ once: true, margin: "-70px" }}
-                  transition={{ delay: at + 0.06, type: "spring", stiffness: 320, damping: 17 }}>
+                  initial={{ scale: 0.5, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ delay: at, type: "spring", stiffness: 400, damping: 25 }}>
                   <span className="mj-vstep-n">{String(i + 1).padStart(2, "0")}</span>
                 </motion.div>
                 <div className="mj-vstep-card">
@@ -985,66 +987,6 @@ function WhatsApp() {
   );
 }
 
-/* ═══════════════ § 08 · ALUMNI (proof) ═══════════════ */
-function Proof({ cfg }) {
-  const ts = cfg.testimonials || [];
-  if (!ts.length) return null;
-  const feat = ts[0];
-  const rest = ts.slice(1);
-  const isNeet = /neet/i.test(cfg.slug || "");
-  const statPool = isNeet
-    ? [{ big: "340+", sub: "into govt MBBS seats" }, { big: "12,600", sub: "avg NEET rank jump" }, { big: "180+", sub: "into top private medical" }]
-    : [{ big: "340+", sub: "into IITs & IISc" }, { big: "18,400", sub: "avg rank jump" }, { big: "520+", sub: "into NITs & IIITs" }];
-  /* we want 6 cards total: ts + pads */
-  const pads = [];
-  let slots = ts.length;
-  while (slots < 6) { pads.push(statPool[pads.length % statPool.length]); slots++; }
-  return (
-    <section className="mj-section">
-      <div className="mj-wrap">
-        <div className="mj-proof-top">
-          <div className="mj-proof-intro">
-            <h2 className="mj-display mj-display-lg">Real <em>turnarounds.</em></h2>
-            <p className="mj-sec-sub">Every quote below is from a mentored student who cleared JEE or NEET with us.</p>
-          </div>
-          <div className="mj-proof-kpis">
-            <div className="mj-kpi">
-              <div className="mj-kpi-stars">{[0, 1, 2, 3, 4].map((i) => <Star key={i} size={15} fill={T.coral} color={T.coral} />)}</div>
-              <span>4.9 / 5 · 1,240 reviews</span>
-            </div>
-            <div className="mj-kpi"><strong>92%</strong><span>improved in 8 weeks</span></div>
-            <div className="mj-kpi"><strong>1,240+</strong><span>mentored 1-on-1</span></div>
-          </div>
-        </div>
-
-        <div className="mj-bento">
-          {ts.map((t, i) => (
-            <article key={i} className="mj-bento-card">
-              <span className="mj-quote-mark">&ldquo;</span>
-              <p className="mj-bento-q2">{t.quote}</p>
-              <div className="mj-bento-by">
-                <span className="mj-quote-av">{t.name[0]}</span>
-                <div><strong>{t.name}</strong><span>{t.improvement}</span></div>
-              </div>
-            </article>
-          ))}
-
-          {pads.map((s, i) => (
-            <article key={`p${i}`} className="mj-bento-card mj-bento-stat">
-              <strong>{s.big}</strong><span>{s.sub}</span>
-            </article>
-          ))}
-        </div>
-
-        <div className="mj-proof-verified mj-proof-verified-c">
-          <span className="mj-proof-vic"><Check size={12} strokeWidth={3} /></span>
-          Every review is from a verified, enrolled student.
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ═══════════════ PRICING ═══════════════ */
 const INCLUDED = [
   "1-on-1 IITian mentor for 12 months", "Weekly personalised study plan",
@@ -1193,7 +1135,6 @@ export default function Mentorship() {
       <TestAnalysis cfg={cfg} />
       <ForParents cfg={cfg} />
       <WhatsApp />
-      <Proof cfg={cfg} />
       <Pricing plan={plan} exam={exam} openEnrol={openEnrol} />
       <Faqs cfg={cfg} />
       <TalkToUs exam={exam} />
@@ -1311,25 +1252,25 @@ const CSS = `
 .mj-vsteps { position:relative; max-width:860px; margin:0 auto; padding-left:8px; }
 .mj-vsteps-rail { position:absolute; left:31px; top:14px; bottom:34px; width:2px; transform-origin:top; background:linear-gradient(180deg, ${T.coral}, ${T.lineDk}); }
 .mj-vstep { position:relative; display:grid; grid-template-columns:64px 1fr; gap:24px; align-items:start; margin-bottom:22px; }
-.mj-vstep-mark { position:relative; z-index:2; display:grid; place-items:center; width:64px; height:64px; border-radius:50%; background:${T.card}; border:1.5px solid ${T.lineDk}; box-shadow:0 0 0 6px ${T.paper}, 0 10px 24px -16px rgba(0,0,0,.4); transition:.28s; }
-.mj-vstep-n { font:800 1.5rem/1 'Sora',sans-serif; color:${T.coral}; }
-.mj-vstep-card { border:1px solid ${T.line}; border-radius:18px; background:${T.card}; padding:22px 24px; box-shadow:0 14px 34px -28px rgba(0,0,0,.35); transition:transform .28s, border-color .28s, box-shadow .28s; }
-.mj-vstep:hover .mj-vstep-card { transform:translateX(6px); border-color:${T.coral}; box-shadow:0 24px 48px -30px rgba(255,105,61,.5); }
-.mj-vstep:hover .mj-vstep-mark { border-color:${T.coral}; background:${T.coral}; box-shadow:0 0 0 6px ${T.paper}, 0 12px 26px -12px rgba(255,105,61,.6); }
+.mj-vstep-mark { position:relative; z-index:2; display:grid; place-items:center; width:64px; height:64px; border-radius:50%; background:${T.card}; border:1.5px solid ${T.lineDk}; box-shadow:0 0 0 6px ${T.paper}, 0 10px 24px -16px rgba(0,0,0,.4); transition:.2s; }
+.mj-vstep-n { font:800 1.5rem/1 'Sora',sans-serif; color:var(--step-color, ${T.coral}); }
+.mj-vstep-card { border:1px solid ${T.line}; border-radius:18px; background:${T.card}; padding:22px 24px; box-shadow:0 14px 34px -28px rgba(0,0,0,.35); transition:transform .2s, border-color .2s, box-shadow .2s; }
+.mj-vstep:hover .mj-vstep-card { transform:translateX(6px); border-color:var(--step-color, ${T.coral}); box-shadow:0 24px 48px -30px rgba(0,0,0,.2); }
+.mj-vstep:hover .mj-vstep-mark { border-color:var(--step-color, ${T.coral}); background:var(--step-color, ${T.coral}); box-shadow:0 0 0 6px ${T.paper}, 0 12px 26px -12px rgba(0,0,0,.3); }
 .mj-vstep:hover .mj-vstep-n { color:#fff; }
 .mj-vstep-cardtop { display:flex; align-items:center; gap:10px; margin-bottom:11px; }
-.mj-vstep-ic { display:grid; place-items:center; width:30px; height:30px; flex-shrink:0; border-radius:9px; background:${T.coralSoft}; color:${T.coralDk}; }
+.mj-vstep-ic { display:grid; place-items:center; width:30px; height:30px; flex-shrink:0; border-radius:9px; background:var(--step-color, ${T.coral}); color:#fff; opacity:0.95; }
 .mj-vstep-tag { padding:4px 10px; border:1px solid ${T.lineDk}; border-radius:6px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.muted}; }
-.mj-vstep-foot { margin-left:auto; font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.coral}; white-space:nowrap; }
+.mj-vstep-foot { margin-left:auto; font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:var(--step-color, ${T.coral}); white-space:nowrap; }
 .mj-vstep-t { font:700 1.3rem/1.2 'Sora',sans-serif; color:${T.ink}; margin:0; }
 .mj-vstep-d { font:400 .94rem/1.6 'DM Sans',sans-serif; color:${T.body}; margin:8px 0 0; }
 .mj-vstep-tasks { margin-top:15px; padding-top:15px; border-top:1px solid ${T.line}; }
-.mj-vstep-tasksl { display:inline-flex; align-items:center; gap:6px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.coralDk}; }
+.mj-vstep-tasksl { display:inline-flex; align-items:center; gap:6px; font:800 .58rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:var(--step-color, ${T.coral}); }
 .mj-vstep-tasks ul { list-style:none; margin:11px 0 0; padding:0; display:flex; flex-direction:column; gap:9px; }
 .mj-vstep-tasks li { display:flex; align-items:flex-start; gap:9px; font:500 .87rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
-.mj-vstep-tasks li svg { flex-shrink:0; margin-top:3px; color:${T.coral}; }
+.mj-vstep-tasks li svg { flex-shrink:0; margin-top:3px; color:var(--step-color, ${T.coral}); }
 .mj-vstep-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:15px; }
-.mj-vstep-chips span { padding:6px 12px; border-radius:50px; background:${T.paper}; border:1px solid ${T.line}; font:700 .72rem/1 'Space Grotesk',sans-serif; color:${T.coralDk}; }
+.mj-vstep-chips span { padding:6px 12px; border-radius:50px; background:${T.paper}; border:1px solid ${T.line}; font:700 .72rem/1 'Space Grotesk',sans-serif; color:var(--step-color, ${T.coral}); }
 
 /* section head shared */
 .mj-sec-head { display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px; margin-bottom:52px; }
