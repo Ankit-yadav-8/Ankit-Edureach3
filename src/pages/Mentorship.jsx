@@ -62,7 +62,7 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
           <VariantTabs variant={variant} />
           
           <Reveal className="mj-hero-pill" style={{ marginTop: "32px" }}>
-            <span className="mj-dot" /> Built by IITians &amp; NITians
+            <span className="mj-dot" /> Built by IITians
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="mj-hero-h1">
