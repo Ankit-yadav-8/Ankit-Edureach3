@@ -204,7 +204,7 @@ function Qualifier({ cfg }) {
               Are you facing these hurdles?
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <div className="mj-qual-l-list">
+              <div className="mj-qual-l-list" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 {hurdles.map((pt, i) => (
                   <motion.div key={i} className="mj-qual-pt"
                     initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
