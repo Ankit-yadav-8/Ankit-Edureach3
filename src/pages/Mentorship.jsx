@@ -115,10 +115,78 @@ function StatBand({ cfg }) {
   );
 }
 
+const ASPIRANT_POINTS = [
+  { title: "You have backlogs and no idea where to start", desc: "The pile of untouched chapters is growing every week. We'll give you a structured recovery plan to catch up without burning out." },
+  { title: "You go to coaching but your retention is zero", desc: "You understand concepts in class, but blank out during tests. Our active recall strategies ensure knowledge actually sticks." },
+  { title: "You're consistent for 2 days then disappear for 10", desc: "Motivation comes in bursts, but discipline is missing. We build an accountability system that keeps you on track daily." },
+  { title: "You want IIT but fear you're not smart enough", desc: "Self-doubt creeps in when you see toppers solving questions faster. We show you how consistent smart work beats raw talent." },
+  { title: "You study hard but your test scores never move", desc: "You're putting in 10-hour days but still scoring the same. We analyze your test attempts to fix the hidden gaps in your strategy." }
+];
+
+const QUALIFIER_MENTORS = [
+  {
+    name: "Ankit Kumar",
+    role: "Co-Founder, IIT Roorkee",
+    img: "/assets/team/ankit.png?v=2",
+    thought: "Every aspirant hits a wall where effort stops working. Our goal is to break that wall by showing you the strategic blindspots you can't see yourself."
+  },
+  {
+    name: "Ankit Yadav",
+    role: "Founder, IIT Roorkee",
+    img: "/assets/team/ankit2.PNG",
+    thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank."
+  }
+];
+
 /* ═══════════════ QUALIFIER — "is this you?" ═══════════════ */
 function Qualifier({ cfg }) {
   return (
     <section className="mj-section">
+      <style>{`
+        .mj-qualifier-split {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          border-radius: 24px;
+          border: 1px solid var(--line);
+          background: var(--card);
+          box-shadow: 0 20px 60px -30px rgba(0,0,0,.15);
+          overflow: hidden;
+          margin-top: 44px;
+        }
+        .mj-qual-left {
+          padding: 40px;
+          background: var(--card);
+        }
+        .mj-qual-right {
+          padding: 40px;
+          background: linear-gradient(135deg, #FF7A3C, #F1531F);
+          color: #fff;
+          position: relative;
+        }
+        .mj-qual-right::before {
+          content: ""; position: absolute; inset: 0;
+          background: repeating-linear-gradient(45deg, transparent 0 10px, rgba(255,255,255,.05) 10px 12px);
+          pointer-events: none;
+        }
+        .mj-qual-pt {
+          display: flex; align-items: flex-start; gap: 14px;
+          padding: 16px; border-radius: 14px;
+          border: 1px solid var(--line); background: #F7F7F8;
+          transition: transform .2s, box-shadow .2s;
+        }
+        .mj-qual-pt:hover {
+          transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(0,0,0,.1);
+          border-color: rgba(249,115,22,0.3);
+        }
+        .mj-qual-pt-ic {
+          display: grid; place-items: center; width: 28px; height: 28px;
+          border-radius: 50%; background: #FCE7E0; color: #E0421F; flex-shrink: 0;
+        }
+        @media (max-width: 860px) {
+          .mj-qualifier-split { grid-template-columns: 1fr; }
+          .mj-qual-left, .mj-qual-right { padding: 30px 24px; }
+        }
+      `}</style>
       <div className="mj-wrap">
         <Reveal>
           <p className="mj-lead">
@@ -126,22 +194,61 @@ function Qualifier({ cfg }) {
             wants a real system, not another shelf of unopened books.
           </p>
         </Reveal>
-        <div className="mj-checklist">
-          {(cfg.forYou || []).map((line, i) => {
-            const right = i % 2 === 1;
-            return (
-              <motion.div key={i} className={right ? "mj-check-card mj-check-right" : "mj-check-card"}
-                initial={{ opacity: 0, x: right ? 96 : -96 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                whileHover={{ y: -4 }}
-                viewport={{ once: true, margin: "-70px" }}
-                transition={{ duration: 0.62, ease: [0.16, 0.84, 0.32, 1] }}>
-                <span className="mj-check-ic"><Check size={16} strokeWidth={3} /></span>
-                <span className="mj-check-t">{line}</span>
-                <span className="mj-check-n">{String(i + 1).padStart(2, "0")}</span>
-              </motion.div>
-            );
-          })}
+        
+        <div className="mj-qualifier-split">
+          <div className="mj-qual-left">
+            <h3 style={{ fontSize: "1.4rem", fontFamily: "Playfair Display, serif", color: "var(--ink)", marginBottom: 24, fontStyle: "italic" }}>
+              Are you facing these hurdles?
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {ASPIRANT_POINTS.map((pt, i) => (
+                <motion.div key={i} className="mj-qual-pt"
+                  initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.5, delay: i * 0.1 }}>
+                  <div className="mj-qual-pt-ic">
+                    <Check size={16} strokeWidth={3} />
+                  </div>
+                  <div>
+                    <strong style={{ display: "block", color: "var(--ink)", fontFamily: "Sora", fontSize: "0.95rem", fontWeight: 800, marginBottom: 4 }}>
+                      {pt.title}
+                    </strong>
+                    <span style={{ display: "block", color: "var(--body)", fontFamily: "DM Sans", fontSize: "0.86rem", lineHeight: 1.5 }}>
+                      {pt.desc}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="mj-qual-right">
+            <div style={{ position: "relative", zIndex: 2 }}>
+              <h3 style={{ fontSize: "1.1rem", fontFamily: "Space Grotesk, sans-serif", color: "#fff", marginBottom: 24, letterSpacing: "1px", textTransform: "uppercase" }}>
+                Guidance from the Founders
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                {QUALIFIER_MENTORS.map((m, i) => (
+                  <motion.div key={i} className="mj-qual-mentor"
+                    initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                      <img src={m.img} alt={m.name} style={{ width: 50, height: 50, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.2)" }} />
+                      <div>
+                        <strong style={{ display: "block", color: "#fff", fontFamily: "Playfair Display, serif", fontSize: "1.1rem", fontStyle: "italic" }}>{m.name}</strong>
+                        <span style={{ display: "block", color: "rgba(255,255,255,0.7)", fontFamily: "Space Grotesk", fontSize: "0.75rem", letterSpacing: "0.05em", textTransform: "uppercase", marginTop: 2 }}>
+                          {m.role}
+                        </span>
+                      </div>
+                    </div>
+                    <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 12, padding: "14px 18px", color: "rgba(255,255,255,0.9)", fontSize: "0.85rem", lineHeight: 1.6, fontStyle: "italic", position: "relative" }}>
+                      <span style={{ position: "absolute", top: -8, left: 16, background: "var(--coral)", padding: "0 6px", borderRadius: 4, color: "#fff", fontSize: "0.8rem", fontFamily: "Playfair Display", fontWeight: 800 }}>"</span>
+                      {m.thought}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
