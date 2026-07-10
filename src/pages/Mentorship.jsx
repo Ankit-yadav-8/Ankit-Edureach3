@@ -127,13 +127,21 @@ function Qualifier({ cfg }) {
           </p>
         </Reveal>
         <div className="mj-checklist">
-          {(cfg.forYou || []).map((line, i) => (
-            <Reveal key={i} delay={(i % 2) * 0.05} className={i % 2 ? "mj-check-card mj-check-right" : "mj-check-card"}>
-              <span className="mj-check-ic"><Check size={16} strokeWidth={3} /></span>
-              <span className="mj-check-t">{line}</span>
-              <span className="mj-check-n">{String(i + 1).padStart(2, "0")}</span>
-            </Reveal>
-          ))}
+          {(cfg.forYou || []).map((line, i) => {
+            const right = i % 2 === 1;
+            return (
+              <motion.div key={i} className={right ? "mj-check-card mj-check-right" : "mj-check-card"}
+                initial={{ opacity: 0, x: right ? 96 : -96 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                whileHover={{ y: -4 }}
+                viewport={{ once: true, margin: "-70px" }}
+                transition={{ duration: 0.62, ease: [0.16, 0.84, 0.32, 1] }}>
+                <span className="mj-check-ic"><Check size={16} strokeWidth={3} /></span>
+                <span className="mj-check-t">{line}</span>
+                <span className="mj-check-n">{String(i + 1).padStart(2, "0")}</span>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -1131,7 +1139,8 @@ const CSS = `
 /* qualifier */
 .mj-lead { font-family:'Playfair Display',serif; font-weight:600; font-size:clamp(1.3rem,2.6vw,2rem); line-height:1.4; color:${T.ink}; max-width:820px; margin:0 0 44px; }
 .mj-checklist { display:flex; flex-direction:column; gap:16px; }
-.mj-check-card { display:flex; align-items:center; gap:16px; width:min(620px,100%); padding:20px 24px; background:${T.card}; border:1px solid ${T.line}; border-radius:16px; box-shadow:0 10px 30px -24px rgba(0,0,0,.4); }
+.mj-check-card { display:flex; align-items:center; gap:16px; width:min(620px,100%); padding:20px 24px; background:${T.card}; border:1px solid ${T.line}; border-radius:16px; box-shadow:0 10px 30px -24px rgba(0,0,0,.4); transition:border-color .22s, box-shadow .22s; }
+.mj-check-card:hover { border-color:${T.coral}; box-shadow:0 22px 46px -28px rgba(255,105,61,.5); }
 .mj-check-right { align-self:flex-end; flex-direction:row-reverse; text-align:right; }
 .mj-check-ic { display:grid; place-items:center; width:38px; height:38px; border-radius:50%; background:${T.coral}; color:#fff; flex-shrink:0; }
 .mj-check-t { flex:1; font:600 1rem/1.4 'DM Sans',sans-serif; color:${T.ink}; }
