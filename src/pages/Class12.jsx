@@ -8,7 +8,7 @@ export default function Class12() {
     titleLines: [
       [{ text: "Master the" }],
       [{ text: "Advanced.", accent: true }],
-      [{ text: "Crack the " }, { text: "Boards.", accent: true }],
+      [{ text: "Crack the " }, { text: "Competition.", accent: true }],
     ],
     description: "A premium chapter-wise toolkit for Physics, Chemistry, Mathematics and Biology — cross-tagged for CBSE boards and JEE/NEET so every night of study counts twice.",
     stats: [

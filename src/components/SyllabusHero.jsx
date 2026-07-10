@@ -9,10 +9,10 @@ import { motion } from "framer-motion";
 
 // Corner anchor + entrance-slide direction for each floating card (by index).
 const CORNERS = [
-  { pos: { top: 22, left: 36 },    from: { x: -46, y: -26 } }, // top-left
-  { pos: { top: 22, right: 36 },   from: { x: 46, y: -26 } },  // top-right
-  { pos: { bottom: 30, left: 36 }, from: { x: -46, y: 26 } },  // bottom-left
-  { pos: { bottom: 30, right: 36 },from: { x: 46, y: 26 } },   // bottom-right
+  { pos: { top: 20, left: 24 },    from: { x: -46, y: -26 } }, // top-left
+  { pos: { top: 20, right: 24 },   from: { x: 46, y: -26 } },  // top-right
+  { pos: { bottom: 26, left: 24 }, from: { x: -46, y: 26 } },  // bottom-left
+  { pos: { bottom: 26, right: 24 },from: { x: 46, y: 26 } },   // bottom-right
 ];
 
 const CORAL = "#FF693D";
@@ -62,7 +62,7 @@ export default function SyllabusHero({
         .sh-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; text-align: center; position: relative; z-index: 3; }
         .sh-title { font-family: "Space Grotesk","Sora",sans-serif; font-weight: 700; color: ${INK};
           font-size: clamp(2.5rem, 6.4vw, 4.5rem); line-height: 1.04; letter-spacing: -0.02em; margin: 0 0 24px; }
-        .sh-deco { position: absolute; inset: 0; max-width: 1340px; margin: 0 auto; z-index: 2; pointer-events: none; }
+        .sh-deco { position: absolute; inset: 0; max-width: 1180px; margin: 0 auto; z-index: 2; pointer-events: none; }
         .sh-card { position: absolute; width: 208px; background: #fff; border-radius: 22px;
           box-shadow: 0 18px 44px rgba(20,20,40,0.09), 0 2px 8px rgba(20,20,40,0.04);
           padding: 16px 18px; pointer-events: auto; }
