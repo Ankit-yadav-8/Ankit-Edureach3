@@ -51,6 +51,7 @@ const Privacy = lazy(() => import("./pages/Privacy.jsx"));
 const Terms = lazy(() => import("./pages/Terms.jsx"));
 const Dashboard = lazy(() => import("./pages/Dashboard.jsx"));
 const MentorshipDashboard = lazy(() => import("./pages/MentorshipDashboard.jsx"));
+const MentorDashboard = lazy(() => import("./pages/MentorDashboard.jsx"));
 const PublicCommunity = lazy(() => import("./pages/PublicCommunity.jsx"));
 const Branches = lazy(() => import("./pages/Branches.jsx"));
 const BranchDetail = lazy(() => import("./pages/BranchDetail.jsx"));
@@ -193,6 +194,8 @@ export default function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mentorship-dashboard" element={<MentorshipDashboard />} />
+          {/* Mentor-facing, separate from the student dashboard above. */}
+          <Route path="/mentor" element={<MentorDashboard />} />
           <Route path="/community" element={<PublicCommunity />} />
           <Route path="/branches" element={<Branches />} />
           <Route path="/branches/:slug" element={<BranchDetail />} />

@@ -115,6 +115,30 @@ export const apiAdminGetMentorTasks = (adminToken, studentId) =>
 export const apiAdminSetMentorTasks = (adminToken, studentId, tasks) =>
   adminReq(`/api/mentorship/admin/tasks/${encodeURIComponent(studentId)}`, adminToken, { method: "PUT", body: { tasks } });
 
+// ── Mentor dashboard ────────────────────────────────────────────────────────
+// Mentors authenticate with their own credentials and carry a mentor-typed
+// token — the server refuses it on any student route, so it is kept in its own
+// storage key rather than reusing the student session.
+export const apiMentorLogin    = (b) => req("/api/mentor/login", { method: "POST", body: b });
+export const apiMentorMe       = (token) => req("/api/mentor/me", { token });
+export const apiMentorSetPassword = (token, b) => req("/api/mentor/password", { method: "POST", body: b, token });
+export const apiMentorStudents = (token) => req("/api/mentor/students", { token });
+const mentorScoped = (sid, path) => `/api/mentor/students/${encodeURIComponent(sid)}/${path}`;
+export const apiMentorStudentProgress = (token, sid) => req(mentorScoped(sid, "progress"), { token });
+export const apiMentorStudentTests    = (token, sid) => req(mentorScoped(sid, "tests"), { token });
+export const apiMentorStudentTasks    = (token, sid) => req(mentorScoped(sid, "tasks"), { token });
+
+// ── Admin → mentor management ───────────────────────────────────────────────
+export const apiAdminMentorList   = (adminToken) => adminReq("/api/admin/mentors", adminToken);
+export const apiAdminMentorCreate = (adminToken, b) => adminReq("/api/admin/mentors", adminToken, { method: "POST", body: b });
+export const apiAdminMentorUpdate = (adminToken, id, b) => adminReq(`/api/admin/mentors/${id}`, adminToken, { method: "PATCH", body: b });
+export const apiAdminMentorAssign = (adminToken, id, studentId) =>
+  adminReq(`/api/admin/mentors/${id}/students`, adminToken, { method: "POST", body: { studentId } });
+export const apiAdminMentorUnassign = (adminToken, id, studentId) =>
+  adminReq(`/api/admin/mentors/${id}/students/${encodeURIComponent(studentId)}`, adminToken, { method: "DELETE" });
+export const apiAdminMentorResetPassword = (adminToken, id) =>
+  adminReq(`/api/admin/mentors/${id}/reset-password`, adminToken, { method: "POST" });
+
 export const apiTestList        = (token, plan, category) => req(`/api/tests${batchQ(plan, category ? `category=${category}` : "")}`, { token });
 export const apiTestGet         = (token, id, plan) => req(`/api/tests/${id}${batchQ(plan)}`, { token });
 export const apiTestSubmit      = (token, id, b, plan) => req(`/api/tests/${id}/submit${batchQ(plan)}`, { method: "POST", body: b, token });
