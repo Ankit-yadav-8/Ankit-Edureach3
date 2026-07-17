@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Flame, Clock, ClipboardList, Layers, TrendingUp, TrendingDown,
   ChevronLeft, ChevronRight, AlertTriangle, CheckCircle2, Eye,
-  Plus, Trash2, Save, Loader2, Pencil,
+  Plus, Trash2, Save, Loader2, Pencil, Lock, History, UserCheck,
 } from "lucide-react";
 
 /* ══════════════════════════════════════════════
@@ -23,6 +23,17 @@ const SORA = "Sora, system-ui, sans-serif";
 
 const isoDay = (d) => new Date(d).toISOString().slice(0, 10);
 const round1 = (n) => Math.round(n * 10) / 10;
+
+/* ISO week key — MUST match the student dashboard's weekKey() so the completion
+   the student ticks lines up with the week the mentor reads. */
+function weekKey(d = new Date()) {
+  const dt = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = dt.getUTCDay() || 7;
+  dt.setUTCDate(dt.getUTCDate() + 4 - day);
+  const yStart = new Date(Date.UTC(dt.getUTCFullYear(), 0, 1));
+  const wk = Math.ceil((((dt - yStart) / 86400000) + 1) / 7);
+  return `${dt.getUTCFullYear()}-W${wk}`;
+}
 
 /* Consecutive days logged, counting back from today (yesterday if today is blank). */
 function streakOf(entries) {
@@ -260,8 +271,16 @@ function Backlog({ backlog }) {
 /* ── Section 4 — the tasks the mentor assigns this student ─────────────────────
    Editable: add, rename, remove and save. Saving replaces the whole list, which
    is exactly what the student then sees as their mandatory "From your mentor"
-   fix-list. A local draft is kept until Save so edits never half-apply. */
-function Tasks({ tasks, onSave }) {
+   fix-list. A local draft is kept until Save so edits never half-apply.
+
+   Completion is authoritative from the student: a task the student has ticked
+   THIS week (completedTexts) shows as done and is LOCKED — the mentor can't
+   rename or remove it, so a finished task can't be quietly changed underneath
+   them. `history` is the record of what was completed in earlier weeks, kept
+   here even though the student's own view resets each week. `studentTasks` is
+   the extra work the student set for themselves. */
+function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
+  const done = completedTexts || new Set();
   const serverText = (tasks || []).map((t) => t.text).join("\n");
   const [draft, setDraft] = useState(() => (tasks || []).map((t, i) => ({ id: t.id || `mt-${i}`, text: t.text })));
   const [newTask, setNewTask] = useState("");
@@ -278,6 +297,7 @@ function Tasks({ tasks, onSave }) {
   }, [serverText]);
 
   const dirty = draft.map((t) => t.text.trim()).filter(Boolean).join("\n") !== serverText;
+  const doneCount = draft.filter((t) => done.has(t.text)).length;
 
   const add = (e) => {
     e?.preventDefault();
@@ -286,8 +306,9 @@ function Tasks({ tasks, onSave }) {
     setDraft((p) => [...p, { id: `mt-${Date.now()}`, text }]);
     setNewTask("");
   };
-  const edit = (id, text) => setDraft((p) => p.map((t) => (t.id === id ? { ...t, text } : t)));
-  const remove = (id) => setDraft((p) => p.filter((t) => t.id !== id));
+  // Edits/removes are refused for a completed task — the student already finished it.
+  const edit = (id, text) => setDraft((p) => p.map((t) => (t.id === id && !done.has(t.text) ? { ...t, text } : t)));
+  const remove = (id) => setDraft((p) => p.filter((t) => t.id !== id || done.has(t.text)));
 
   const save = async () => {
     if (!onSave) return;
@@ -309,10 +330,17 @@ function Tasks({ tasks, onSave }) {
 
   return (
     <div>
-      <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 14px", lineHeight: 1.55 }}>
-        Set the tasks this student must work through. They appear in their dashboard under
-        <strong style={{ color: "var(--navy)" }}> “From your mentor”</strong> and roll into the weekly parent report.
-      </p>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", margin: "0 0 12px" }}>
+        <p style={{ fontSize: 12, color: "var(--muted)", margin: 0, lineHeight: 1.55, flex: 1, minWidth: 200 }}>
+          Set the tasks this student must work through. They appear in their dashboard under
+          <strong style={{ color: "var(--navy)" }}> “From your mentor”</strong> and roll into the weekly parent report.
+        </p>
+        {draft.length > 0 && (
+          <span style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11.5, fontWeight: 800, color: "#16a34a", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 50, padding: "4px 11px" }}>
+            <CheckCircle2 size={12} /> {doneCount}/{draft.length} done this week
+          </span>
+        )}
+      </div>
 
       {/* add a task */}
       <form onSubmit={add} style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
@@ -338,24 +366,37 @@ function Tasks({ tasks, onSave }) {
       {/* the draft list */}
       {draft.length ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
-          {draft.map((t, i) => (
-            <div key={t.id} style={{
-              display: "flex", alignItems: "center", gap: 10, padding: "8px 10px 8px 12px",
-              background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 11,
-            }}>
-              <span style={{
-                width: 20, height: 20, borderRadius: 6, flexShrink: 0,
-                background: `${ACCENT}18`, color: ACCENT, display: "grid", placeItems: "center",
-                fontSize: 10, fontWeight: 800,
-              }}>{i + 1}</span>
-              <input value={t.text} onChange={(e) => edit(t.id, e.target.value)}
-                style={{ flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent", fontSize: 13, color: "var(--navy)", fontFamily: "inherit" }} />
-              <button onClick={() => remove(t.id)} title="Remove" aria-label="Remove task"
-                style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "#fff5f5", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                <Trash2 size={13} />
-              </button>
-            </div>
-          ))}
+          {draft.map((t, i) => {
+            const isDone = done.has(t.text);
+            return (
+              <div key={t.id} style={{
+                display: "flex", alignItems: "center", gap: 10, padding: "8px 10px 8px 12px",
+                background: isDone ? "#f0fdf4" : "var(--sky)",
+                border: `1px solid ${isDone ? "#bbf7d0" : "var(--line)"}`, borderRadius: 11,
+              }}>
+                <span style={{
+                  width: 20, height: 20, borderRadius: 6, flexShrink: 0, display: "grid", placeItems: "center",
+                  fontSize: 10, fontWeight: 800,
+                  background: isDone ? "#16a34a" : `${ACCENT}18`, color: isDone ? "#fff" : ACCENT,
+                }}>{isDone ? <CheckCircle2 size={13} /> : i + 1}</span>
+                <input value={t.text} onChange={(e) => edit(t.id, e.target.value)} readOnly={isDone}
+                  title={isDone ? "Completed by the student — locked" : undefined}
+                  style={{ flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent", fontSize: 13,
+                    color: isDone ? "#15803d" : "var(--navy)", fontFamily: "inherit", cursor: isDone ? "default" : "text" }} />
+                {isDone ? (
+                  <span title="Completed — locked" aria-label="Completed and locked"
+                    style={{ display: "inline-flex", alignItems: "center", gap: 4, flexShrink: 0, fontSize: 10.5, fontWeight: 800, color: "#16a34a", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 50, padding: "4px 9px" }}>
+                    <Lock size={11} /> Done
+                  </span>
+                ) : (
+                  <button onClick={() => remove(t.id)} title="Remove" aria-label="Remove task"
+                    style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "#fff5f5", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                    <Trash2 size={13} />
+                  </button>
+                )}
+              </div>
+            );
+          })}
         </div>
       ) : (
         <div style={{ padding: "22px 16px", textAlign: "center", color: "var(--muted)", fontSize: 12.5, marginBottom: 16 }}>
@@ -384,6 +425,55 @@ function Tasks({ tasks, onSave }) {
         {busy ? <Loader2 size={15} className="cp-spin" /> : <Save size={15} />}
         {dirty ? "Save task list" : "Saved"}
       </button>
+
+      {/* student's own tasks — extra work they set themselves (read-only) */}
+      {Array.isArray(studentTasks) && studentTasks.length > 0 && (
+        <div style={{ marginTop: 24, paddingTop: 18, borderTop: "1px solid var(--line)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
+            <UserCheck size={14} color="#6366f1" />
+            <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 13, color: "var(--navy)" }}>Extra work the student set themselves</span>
+            <span style={{ fontSize: 10.5, fontWeight: 800, color: "#6366f1", background: "#eef2ff", border: "1px solid #c7d2fe", borderRadius: 50, padding: "2px 8px" }}>
+              {studentTasks.filter((t) => t.done).length}/{studentTasks.length}
+            </span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+            {studentTasks.map((t, i) => (
+              <div key={t.id || i} style={{ display: "flex", alignItems: "center", gap: 9, padding: "8px 11px", background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 10 }}>
+                <span style={{ width: 16, height: 16, borderRadius: 5, flexShrink: 0, display: "grid", placeItems: "center",
+                  background: t.done ? "#16a34a" : "#fff", border: `1.5px solid ${t.done ? "#16a34a" : "#cbd5e1"}` }}>
+                  {t.done && <CheckCircle2 size={11} color="#fff" />}
+                </span>
+                <span style={{ fontSize: 12.5, color: t.done ? "#15803d" : "var(--navy)", textDecoration: t.done ? "line-through" : "none", lineHeight: 1.45 }}>{t.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* completion record — kept even after the student's weekly reset */}
+      {Array.isArray(history) && history.length > 0 && (
+        <div style={{ marginTop: 24, paddingTop: 18, borderTop: "1px solid var(--line)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
+            <History size={14} color="var(--muted)" />
+            <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 13, color: "var(--navy)" }}>Completion record</span>
+            <span style={{ fontSize: 11, color: "var(--muted)" }}>· earlier weeks (kept for you)</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {history.map(({ week, tasks: wkTasks }) => (
+              <div key={week}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6 }}>{week}</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {wkTasks.map((tx, j) => (
+                    <span key={j} style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11.5, fontWeight: 600, color: "#15803d", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "4px 9px" }}>
+                      <CheckCircle2 size={11} /> {tx}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -426,6 +516,21 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
         correct: a.correctCount, wrong: a.wrongCount, skipped: a.skippedCount,
       }));
   const backlog = Array.isArray(progress?.backlog) ? progress.backlog : [];
+
+  // Task completion the student ticks lives in their progress blob as
+  // fixDone = { [weekKey]: [taskText, …] }. It's the same store the student's
+  // "From your mentor" checkboxes write to, so it's authoritative here.
+  const fixDone = (progress && typeof progress.fixDone === "object" && progress.fixDone) || {};
+  const curWeek = weekKey();
+  const assignedTexts = new Set((tasks || []).map((t) => t.text));
+  // Currently-assigned tasks the student has completed THIS week (→ lock them).
+  const completedTexts = new Set((fixDone[curWeek] || []).filter((x) => assignedTexts.has(x)));
+  // The record: what got completed in earlier weeks, newest week first.
+  const history = Object.keys(fixDone)
+    .filter((w) => w !== curWeek && Array.isArray(fixDone[w]) && fixDone[w].length)
+    .sort((a, b) => b.localeCompare(a))
+    .map((w) => ({ week: w, tasks: fixDone[w] }));
+  const studentTasks = Array.isArray(progress?.weeklyTasks) ? progress.weeklyTasks : [];
 
   const go = (d) => setI((p) => Math.min(Math.max(p + d, 0), SECTIONS.length - 1));
 
@@ -520,7 +625,8 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
             {section.key === "log"     && <StudyLog entries={entries} />}
             {section.key === "tests"   && <TestAnalysis tests={testList} />}
             {section.key === "backlog" && <Backlog backlog={backlog} />}
-            {section.key === "tasks"   && <Tasks tasks={tasks || []} onSave={onSaveTasks} />}
+            {section.key === "tasks"   && <Tasks tasks={tasks || []} onSave={onSaveTasks}
+              completedTexts={completedTexts} history={history} studentTasks={studentTasks} />}
           </motion.div>
         </AnimatePresence>
       </div>

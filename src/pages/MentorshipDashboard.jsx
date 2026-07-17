@@ -92,49 +92,10 @@ const ADV_FULL_TOTAL    = 360;   // both papers combined (indicative — varies 
 const ADV_FULL_QUESTIONS = 102;  // typical total questions across both papers (varies by year)
 const ADV_PAPER_MINUTES = 180;   // each Advanced paper is 3 hours (6h total)
 
-/* ── demo seed (used until the student logs their own data) ───────── */
-function seedSubjects(total, subjects) {
-  const perH = round1(total / subjects.length);
-  const m = {};
-  subjects.forEach((s, j) => {
-    const h = j === subjects.length - 1 ? round1(total - perH * (subjects.length - 1)) : perH;
-    m[s] = { h, t: Math.max(0, Math.round(h * 2)) };
-  });
-  return m;
-}
-function seedTracking(subjects) {
-  const today = new Date();
-  const hrs = [4.5, 6, 5, 7, 6, 8, 2.5];
-  return hrs.map((h, i) => {
-    const d = new Date(today); d.setDate(today.getDate() - (6 - i));
-    const subs = seedSubjects(h, subjects);
-    const tasksDone = subjects.reduce((s, k) => s + subs[k].t, 0);
-    return { date: isoDay(d), hours: h, subjects: subs, tasksDone, tasksTotal: Math.round(tasksDone * 1.15), routine: i % 4 !== 0 };
-  });
-}
-function seedTests() {
-  const today = new Date();
-  const mk = (n, back, total, scored, correct, wrong, skipped, silly, sillyTopic, overspent, weak, times) => {
-    const d = new Date(today); d.setDate(today.getDate() - back);
-    const timeTotal = times ? Object.values(times).reduce((s, v) => s + v, 0) : 0;
-    return { id: `${n}-${back}`, name: n, type: "mock", date: isoDay(d), total, scored, correct, wrong, skipped, silly, sillyTopic, overspent, weak, times: times || {}, timeTotal };
-  };
-  return [
-    mk("Mock 1", 21, 300, 126, 48, 22, 20, 8, "Units & Dimensions", "Physics", ["Rotational Motion", "Thermodynamics"], { Physics: 72, Chemistry: 54, Maths: 64 }),
-    mk("Mock 2", 14, 300, 150, 56, 18, 16, 6, "Mole Concept",       "Maths",   ["p-Block", "Probability"],            { Physics: 70, Chemistry: 56, Maths: 62 }),
-    mk("Mock 3", 7,  300, 178, 64, 14, 12, 3, "Sign errors",        "Physics", ["Rotational Motion", "p-Block"],      { Physics: 71, Chemistry: 53, Maths: 60 }),
-  ];
-}
-function seedBacklog() {
-  const today = new Date();
-  const shift = (days) => { const d = new Date(today); d.setDate(d.getDate() + days); return isoDay(d); };
-  return [
-    { id: "b1", subject: "Physics",             topic: "Rotational Motion",      strength: "weak",   targetDate: shift(-2), done: false }, // overdue
-    { id: "b2", subject: "Organic Chemistry",   topic: "Aldehydes & Ketones",    strength: "medium", targetDate: shift(9),  done: false },
-    { id: "b3", subject: "Maths",               topic: "Probability",            strength: "weak",   targetDate: shift(3),  done: true  },
-    { id: "b4", subject: "Inorganic Chemistry", topic: "Coordination Compounds", strength: "strong", targetDate: shift(12), done: false },
-  ];
-}
+/* No demo/seed data: an enrolled student's dashboard starts empty and fills in
+   only as they log real work. (Earlier builds seeded the last 7 days, which then
+   got persisted to the server and showed as fake hours/tests — see the
+   pre-enrolment purge in the body.) */
 
 function streakOf(entries) {
   const set = new Set(entries.map((e) => e.date));
@@ -417,9 +378,9 @@ function DashboardBody({ urlPlan = "" }) {
   const isNEET = /neet/i.test(planExam) && !/jee/i.test(planExam);
   const rankEnabled = /jee/i.test(planExam) && !isFoundation;
 
-  const [entries, setEntries] = useState(() => loadScoped(TRACK_KEY, L_TRACK, null) || seedTracking(subjectsFor("JEE / NEET")));
-  const [tests, setTests] = useState(() => loadScoped(TEST_KEY, L_TEST, null) || seedTests());
-  const [backlog, setBacklog] = useState(() => loadScoped(BACKLOG_KEY, L_BACKLOG, null) || seedBacklog());
+  const [entries, setEntries] = useState(() => loadScoped(TRACK_KEY, L_TRACK, []) || []);
+  const [tests, setTests] = useState(() => loadScoped(TEST_KEY, L_TEST, []) || []);
+  const [backlog, setBacklog] = useState(() => loadScoped(BACKLOG_KEY, L_BACKLOG, []) || []);
   const [fixDone, setFixDone] = useState(() => loadScoped(FIX_KEY, L_FIX, {}));
   const [weeklyTasks, setWeeklyTasks] = useState(() => loadScoped(WTASK_KEY, L_WTASK, []));
   // Chapter strength + this-week coverage — [{ id, subject, topic, strength, coverage }]
@@ -540,6 +501,24 @@ function DashboardBody({ urlPlan = "" }) {
     const t = setTimeout(() => { apiSaveProgress(token, selectedPlan, data).catch(() => {}); }, 900);
     return () => clearTimeout(t);
   }, [token, selectedPlan, progressLoaded, entries, tests, backlog, weeklyTasks, chapterLog, fixDone, reportPrefs, lastAuto]);
+
+  // Purge any pre-enrolment demo residue. Earlier builds seeded the last 7 days
+  // and persisted it, so a student who joined on (say) Thursday could show fake
+  // Mon–Wed hours and old mock tests. You can't have logged study for a batch
+  // before you enrolled in it, so anything dated before the enrolment day is not
+  // real — drop it. The debounced save above then writes the cleaned copy back.
+  useEffect(() => {
+    if (!progressLoaded || !identity.enrolledOn) return;
+    const enrollDay = isoDay(identity.enrolledOn);
+    setEntries((prev) => {
+      const clean = prev.filter((e) => e.date && e.date >= enrollDay);
+      return clean.length === prev.length ? prev : clean;
+    });
+    setTests((prev) => {
+      const clean = prev.filter((t) => !t.date || t.date >= enrollDay);
+      return clean.length === prev.length ? prev : clean;
+    });
+  }, [progressLoaded, identity.enrolledOn]);
 
   // Switch to another of the student's batches — re-points the URL, which
   // remounts the body against that batch's data + community.
@@ -738,18 +717,8 @@ function DashboardBody({ urlPlan = "" }) {
     return { overrun, worst: worst && worst[1] > 0 ? worst[0] : null, extraQ, sillyAvg, totalSpent };
   }, [avgTimePer, examSections, idealPace, isNEET, testsSorted]);
 
-  /* ── auto weekly fix-list ── */
+  /* ── weekly fix-list completion (mentor-assigned tasks only) ── */
   const wk = weekKey();
-  const fixList = useMemo(() => {
-    const list = [];
-    if (weakRanked[0]) list.push(`Re-do ${weakRanked[0][0]} PYQs (2 hrs) — your most recurring weak chapter`);
-    if (latest && Number(latest.silly) > 0) list.push(`Kill silly mistakes — re-attempt last test's ${latest.silly} silly errors slowly & carefully`);
-    if (weakRanked[1]) list.push(`Revise ${weakRanked[1][0]} formula sheet daily`);
-    if (lowestSubject && thisWkH[lowestSubject] < WEEK_TARGET_HRS / subjects.length) list.push(`Give ${shortName(lowestSubject)} an extra 1 hr/day — it's your least-studied subject this week`);
-    if (timeRanked[0]) list.push(`Time-box ${shortName(timeRanked[0][0])} in the next paper — you keep over-spending there`);
-    if (weakRanked[2]) list.push(`10 timed ${weakRanked[2][0]} questions before the next test`);
-    return list.slice(0, 5);
-  }, [weakRanked, latest, lowestSubject, timeRanked, thisWkH, subjects.length]);
   const fixDoneSet = fixDone[wk] || [];
   const toggleFix = (label) => setFixDone((prev) => {
     const cur = new Set(prev[wk] || []);
@@ -787,7 +756,7 @@ function DashboardBody({ urlPlan = "" }) {
       const d = round1(weekHours - prevWeekHours);
       out.push({ tone: d >= 0 ? "up" : "down", text: `${d >= 0 ? "Study time up" : "Study time down"} ${Math.abs(d)}h vs last week (${round1(prevWeekHours)}h → ${round1(weekHours)}h).` });
     }
-    if (weakRanked[0]) out.push({ tone: "down", text: `${weakRanked[0][0]} is your #1 recurring weak area (${weakRanked[0][1]}× flagged). It's in this week's fix-list.` });
+    if (weakRanked[0]) out.push({ tone: "down", text: `${weakRanked[0][0]} is your #1 recurring weak area (${weakRanked[0][1]}× flagged). Prioritise it this week.` });
     if (lowestSubject) out.push({ tone: "flat", text: `${shortName(lowestSubject)} got the least time this week (${round1(thisWkH[lowestSubject])}h). Balance it before the next test.` });
     return out;
   }, [latest, prev, improvement, weekHours, prevWeekHours, weakRanked, lowestSubject, thisWkH]);
@@ -1790,11 +1759,11 @@ function DashboardBody({ urlPlan = "" }) {
             </ToolCard>
 
 
-            {/* Weekly fix-list — auto suggestions + the student's own weekly tasks
-                (both roll up into the weekly parent report). */}
-            <ToolCard icon={ListChecks} color={GREEN} title="Your weekly fix-list" desc="Suggested actions plus your own tasks — all summarised in the weekly parent report.">
-              {/* tasks set by the mentor (admin) for this student */}
-              {mentorTasks.length > 0 && (
+            {/* Weekly fix-list — the mentor's assigned tasks + the student's own
+                tasks (both roll up into the weekly parent report). */}
+            <ToolCard icon={ListChecks} color={GREEN} title="Your weekly fix-list" desc="Your mentor's tasks plus your own — all summarised in the weekly parent report.">
+              {/* tasks your mentor assigned for this student */}
+              {mentorTasks.length > 0 ? (
                 <div style={{ marginBottom: 16 }}>
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, color: "#6d28d9", background: "#f5f3ff", border: "1px solid #ede9fe", borderRadius: 50, padding: "3px 10px", marginBottom: 8 }}>
                     <Brain size={12} /> From your mentor
@@ -1814,26 +1783,13 @@ function DashboardBody({ urlPlan = "" }) {
                       );
                     })}
                   </div>
-                </div>
-              )}
-              {/* auto suggestions from tests + backlog */}
-              {fixList.length > 0 && (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 8 }}>Suggested this week</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {fixList.map((label) => {
-                      const done = fixDoneSet.includes(label);
-                      return (
-                        <button key={label} onClick={() => toggleFix(label)}
-                          style={{ display: "flex", gap: 10, alignItems: "flex-start", textAlign: "left", background: done ? "#f0faf4" : "#fff", border: `1px solid ${done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px", cursor: "pointer" }}>
-                          <span style={{ width: 19, height: 19, borderRadius: 6, border: `1.5px solid ${done ? GREEN : "#cbd5e1"}`, background: done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
-                            {done && <CheckCircle2 size={14} color="#fff" />}
-                          </span>
-                          <span style={{ fontSize: 13, color: done ? "#15803d" : "#374151", lineHeight: 1.45, textDecoration: done ? "line-through" : "none" }}>{label}</span>
-                        </button>
-                      );
-                    })}
+                  <div style={{ fontSize: 11.5, color: MUTE, marginTop: 8, lineHeight: 1.5 }}>
+                    Tick these off as you finish them — your mentor sees your progress live. They reset each week.
                   </div>
+                </div>
+              ) : (
+                <div style={{ marginBottom: 16, padding: "14px 14px", background: "#faf5ff", border: "1px dashed #ddd6fe", borderRadius: 11, fontSize: 12.5, color: "#6d28d9", lineHeight: 1.5 }}>
+                  <strong>No mentor tasks yet.</strong> When your mentor assigns tasks, they'll appear here as your must-do list.
                 </div>
               )}
 
