@@ -22,6 +22,7 @@ import Reviews from "../components/Reviews.jsx";
 import Gallery from "../components/Gallery.jsx";
 import ROICalculator from "../components/ROICalculator.jsx";
 import CutoffSection from "../components/CutoffSection.jsx";
+import CampusMap from "../components/CampusMap.jsx";
 import Seo, { SITE_URL } from "../components/Seo.jsx";
 import { Youtube, Map as MapIcon } from "lucide-react";
 
@@ -589,15 +590,10 @@ export default function CollegeDetail() {
                 </div>
                 <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid rgba(0,0,0,.08)" }}>
                   {college.coords && college.coords.lat ? (
-                    <iframe
-                      title={`${college.name} location map`}
-                      style={{ width: "100%", height: 300, border: 0, display: "block" }}
-                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${college.coords.lng - 0.03},${college.coords.lat - 0.015},${college.coords.lng + 0.03},${college.coords.lat + 0.015}&layer=mapnik&marker=${college.coords.lat},${college.coords.lng}`}
-                      loading="lazy"
-                    />
+                    <CampusMap college={college} />
                   ) : (
                     <div style={{
-                      width: "100%", height: 300, display: "flex", alignItems: "center",
+                      width: "100%", height: 380, display: "flex", alignItems: "center",
                       justifyContent: "center", background: "var(--sky)", borderRadius: 14,
                       flexDirection: "column", gap: 8,
                     }}>
