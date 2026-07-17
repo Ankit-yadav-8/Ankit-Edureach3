@@ -165,7 +165,10 @@ router.get("/my-enrollments", requireAuth, async (req, res) => {
     const or = [{ userId: req.user.id }];
     if (user?.email) or.push({ email: user.email.toLowerCase() });
     const phone10 = String(user?.phone || "").replace(/\D/g, "").slice(-10);
-    if (phone10.length === 10) or.push({ phone: new RegExp(phone10 + "$") });
+    // Equality against the stored phone10, not /\d{10}$/ against free-text
+    // `phone`: a suffix regex can't use an index, so having it inside this $or
+    // made the whole query a collection scan no matter what else matched.
+    if (phone10.length === 10) or.push({ phone10 });
     const items = await Enrollment.find({ status: "paid", $or: or })
       .sort({ createdAt: -1 }).lean();
     // Mentorship enrolments carry a student ID, a batch label and a validity

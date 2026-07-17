@@ -19,6 +19,7 @@ import aiRoutes from "./routes/ai.js";
 import testRoutes from "./routes/tests.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 import { startDailyReportJob } from "./jobs/dailyReport.js";
+import { backfillPhone10 } from "./jobs/backfillPhone10.js";
 
 dotenv.config();
 const app = express();
@@ -127,5 +128,6 @@ connectDB()
     app.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`));
     startWeeklyReportJob(); // weekly parent progress emails (best-effort, dev-safe)
     startDailyReportJob();  // daily parent progress emails from synced data (dev-safe)
+    backfillPhone10();      // one-time; no-op once every enrolment has the field
   })
   .catch((e) => { console.error("❌ DB error:", e.message); process.exit(1); });

@@ -20,6 +20,10 @@ function writeCache(user) {
 function clearCache() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
+  // The dashboard caches the account's plans to paint before the API answers
+  // (see Dashboard.jsx). It's account-scoped, but signing out should still not
+  // leave the last user's purchases sitting in a shared browser.
+  localStorage.removeItem("cp:plans");
 }
 
 // Sessions are deliberately short-lived (see server/utils/tokens.js), so an

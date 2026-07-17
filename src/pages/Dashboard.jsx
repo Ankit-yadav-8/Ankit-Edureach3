@@ -34,6 +34,31 @@ const CARD = {
   boxShadow: "0 8px 30px -18px rgba(26,26,46,.18)",
 };
 
+/* Last-known plans, so the dashboard can paint before the API answers.
+   Scoped per account: a shared browser must never show one user's plans to the
+   next. Purely a display cache — every plan is still re-verified server-side
+   before it grants access to anything. */
+const PLANS_CACHE = "cp:plans";
+
+function readCachedPlans() {
+  try {
+    const raw = localStorage.getItem(PLANS_CACHE);
+    if (!raw) return null;
+    const { email, plans } = JSON.parse(raw);
+    const me = JSON.parse(localStorage.getItem("edureach:user") || "null")?.email;
+    if (!me || email !== me) return null;   // different account — ignore it
+    return Array.isArray(plans) ? plans : null;
+  } catch { return null; }
+}
+
+function writeCachedPlans(plans) {
+  try {
+    const me = JSON.parse(localStorage.getItem("edureach:user") || "null")?.email;
+    if (!me) return;
+    localStorage.setItem(PLANS_CACHE, JSON.stringify({ email: me, plans }));
+  } catch { /* private mode / quota — the cache is optional */ }
+}
+
 const isMentorshipPlan = (key) => String(key || "").startsWith("mentor-");
 const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
@@ -213,13 +238,30 @@ export default function Dashboard() {
     return () => { document.title = prev; };
   }, []);
 
+  // Show the plans we already know about immediately, then refresh in the
+  // background. Your plans barely change, but the API is on a free tier that can
+  // take 30-50s to wake — so waiting on the network before rendering anything
+  // meant staring at "Loading your plans…" for that whole time, every visit.
+  // Cached first, truth second: a stale plan for a moment beats a spinner.
   useEffect(() => {
     if (!token) { setLoading(false); return; }
     let alive = true;
+
+    const cached = readCachedPlans();
+    if (cached) { setPlans(cached); setLoading(false); }
+
     apiMyEnrollments(token)
-      .then((d) => { if (alive) setPlans(d.enrollments || []); })
-      .catch(() => { if (alive) setPlans([]); })
+      .then((d) => {
+        if (!alive) return;
+        const fresh = d.enrollments || [];
+        setPlans(fresh);
+        writeCachedPlans(fresh);
+      })
+      // Keep whatever the cache gave us if the refresh fails — dropping to an
+      // empty list would tell a paying student they have no plans.
+      .catch(() => { if (alive && !cached) setPlans([]); })
       .finally(() => { if (alive) setLoading(false); });
+
     return () => { alive = false; };
   }, [token]);
 

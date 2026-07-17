@@ -26,8 +26,14 @@ const enrollmentSchema = new mongoose.Schema(
 
     // Student details
     name:      { type: String, trim: true, required: true },
-    email:     { type: String, lowercase: true, trim: true, default: "" },
+    email:     { type: String, lowercase: true, trim: true, default: "", index: true },
     phone:     { type: String, trim: true, default: "" },
+    // The last 10 digits of `phone`, stored separately so "my plans" can find an
+    // enrolment by phone with an indexed equality match. `phone` itself is free
+    // text (spacing, +91, dashes), and the old lookup used /\d{10}$/ against it —
+    // a suffix regex can never use an index, so every dashboard load scanned the
+    // whole collection. Written on save; back-filled lazily on read for old rows.
+    phone10:   { type: String, trim: true, default: "", index: true },
     homeState: { type: String, trim: true, default: "" },
 
     // Parent contact — weekly progress report is emailed here (mentorship).
@@ -52,5 +58,20 @@ const enrollmentSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// "My plans" always filters on status:"paid" and sorts newest-first. Without
+// this, that read scanned every enrolment in the collection on each dashboard
+// open — which only gets slower as enrolments grow.
+enrollmentSchema.index({ status: 1, createdAt: -1 });
+
+// Keep phone10 in step with phone automatically, so nothing has to remember to
+// set it at each of the places an enrolment is written.
+enrollmentSchema.pre("save", function (next) {
+  if (this.isModified("phone")) {
+    const d = String(this.phone || "").replace(/\D/g, "");
+    this.phone10 = d.length >= 10 ? d.slice(-10) : "";
+  }
+  next();
+});
 
 export default mongoose.model("Enrollment", enrollmentSchema);
