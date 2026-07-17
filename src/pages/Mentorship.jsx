@@ -129,13 +129,13 @@ const QUALIFIER_MENTORS = [
   {
     name: "Ankit Yadav",
     role: "Founder, IIT Roorkee",
-    img: "/assets/team/ankit2.PNG",
+    img: "/assets/team/ankit2.webp",
     thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank. We've built this system from our own experiences of cracking IIT, focusing purely on high-yield output rather than just mindless hard work."
   },
   {
     name: "Ankit Kumar",
     role: "Co-Founder, IIT Roorkee (AIR 3846 CRL, 938 OBC)",
-    img: "/assets/team/ankit.png?v=2",
+    img: "/assets/team/ankit.webp",
     thought: "Every aspirant hits a wall where effort stops working. Our goal is to break that wall by showing you the strategic blindspots you can't see yourself. Having navigated this journey to secure AIR 3846, I know exactly where students lose their confidence and how to rebuild it."
   }
 ];

@@ -10,7 +10,7 @@ export const TEAM = [
   {
     id: "team-head",
     initials: "AY",
-    photo: "/assets/team/ankit2.PNG",
+    photo: "/assets/team/ankit2.webp",
     name: "Ankit Yadav",
     role: "Founder & CEO",
     accent: "#FF693D",
@@ -52,7 +52,7 @@ export const TEAM = [
   {
     id: "developer-1",
     initials: "AK",
-    photo: "/assets/team/ankit.png?v=2",
+    photo: "/assets/team/ankit.webp",
     name: "Ankit Kumar",
     role: "Co-Founder & CTO",
     accent: "#FF693D",

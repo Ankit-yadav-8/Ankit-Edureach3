@@ -37,7 +37,7 @@ const FOUNDERS = [
   {
     name: "Ankit Yadav",
     initials: "AY",
-    photo: "/assets/team/ankit2.PNG",
+    photo: "/assets/team/ankit2.webp",
     role: "Founder & CEO",
     accent: "#FF693D",
     edu: "B.Tech, IIT Roorkee",
@@ -48,7 +48,7 @@ const FOUNDERS = [
   {
     name: "Ankit Kumar",
     initials: "AK",
-    photo: "/assets/team/ankit.png?v=2",
+    photo: "/assets/team/ankit.webp",
     role: "Co-Founder & CTO",
     accent: "#FF693D",
     badge: "Visionary behind the Platform",
