@@ -4,7 +4,6 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import TopBar from "./components/TopBar.jsx";
 import Footer from "./components/Footer.jsx";
-import SearchOverlay from "./components/SearchOverlay.jsx";
 import { ScrollProgress, BackToTop } from "./components/ScrollUtils.jsx";
 const ScrollProgressBar = lazy(() => import("./components/Animations.jsx").then(m => ({ default: m.ScrollProgressBar })));
 
@@ -51,6 +50,11 @@ const Privacy = lazy(() => import("./pages/Privacy.jsx"));
 const Terms = lazy(() => import("./pages/Terms.jsx"));
 const Dashboard = lazy(() => import("./pages/Dashboard.jsx"));
 const MentorshipDashboard = lazy(() => import("./pages/MentorshipDashboard.jsx"));
+// Both were eager, and both reach the search index -> data/colleges.js, so every
+// page preloaded ~100KB of college data plus the index build just to render a
+// floating button and a closed overlay. Neither is needed for first paint.
+const Chatbot = lazy(() => import("./components/Chatbot.jsx"));
+const SearchOverlay = lazy(() => import("./components/SearchOverlay.jsx"));
 const MentorDashboard = lazy(() => import("./pages/MentorDashboard.jsx"));
 const PublicCommunity = lazy(() => import("./pages/PublicCommunity.jsx"));
 const Branches = lazy(() => import("./pages/Branches.jsx"));
@@ -66,7 +70,6 @@ const Class12 = lazy(() => import("./pages/Class12.jsx"));
 const JeeStrategy = lazy(() => import("./pages/JeeStrategy.jsx"));
 const NeetStrategy = lazy(() => import("./pages/NeetStrategy.jsx"));
 import CompareTray from "./components/CompareTray.jsx";
-import Chatbot from "./components/Chatbot.jsx";
 import WhatsAppButton from "./components/WhatsAppButton.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
 import ReviewPopup from "./components/ReviewPopup.jsx";
@@ -216,11 +219,15 @@ export default function App() {
       <Footer />
       <BackToTop />
       <CompareTray />
-      <Chatbot />
+      <Suspense fallback={null}><Chatbot /></Suspense>
       <WhatsAppButton />
       <AuthModal />
       <ReviewPopup />
-      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      {searchOpen && (
+        <Suspense fallback={null}>
+          <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+        </Suspense>
+      )}
     </>
   );
 }

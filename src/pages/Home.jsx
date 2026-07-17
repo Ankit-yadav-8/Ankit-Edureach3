@@ -6,6 +6,7 @@ import React, { lazy, Suspense } from "react";
 import Seo from "../components/Seo.jsx";
 import Hero from "../components/home/Hero.jsx";
 import ToolsGrid from "../components/home/ToolsGrid.jsx";
+import Defer from "../components/Defer.jsx";
 
 const BranchCatalog = lazy(() => import("../components/home/BranchCatalog.jsx"));
 const AdvancedPredictorHome = lazy(() => import("../components/home/AdvancedPredictorHome.jsx"));
@@ -112,33 +113,37 @@ export default function Home({ onSearch }) {
       {/* ── Smart tools (LIVE-card grid) ── */}
       <ToolsGrid />
 
-      <Suspense fallback={<div style={{ minHeight: "100vh" }}></div>}>
+      {/* Every section below the fold is gated on approaching the viewport.
+          They were lazy() but rendered immediately, which splits the code
+          without delaying it — all nine fetched and executed during load,
+          costing ~1.3s of blocking time for pixels nobody had scrolled to. */}
+      <Suspense fallback={null}>
         {/* ── Branch Explorer — 220+ branches, 10 paths ── */}
-        <BranchCatalog />
+        <Defer minHeight={520}><BranchCatalog /></Defer>
 
         {/* ── JoSAA · JEE Advanced rank predictor (full tool) ── */}
-        <AdvancedPredictorHome />
+        <Defer minHeight={640}><AdvancedPredictorHome /></Defer>
 
         {/* ── College Reviews — give a review / browse by college ── */}
-        <CollegeReviews />
+        <Defer minHeight={480}><CollegeReviews /></Defer>
 
         {/* ── Branch vs College — 6-question assessment ── */}
-        <BranchVsCollege />
+        <Defer minHeight={480}><BranchVsCollege /></Defer>
 
         {/* ── 1-on-1 Mentorship plans ── */}
-        <PlansSection />
+        <Defer minHeight={560}><PlansSection /></Defer>
 
         {/* ── Explore Colleges — flagship IITs (tool-style cards) ── */}
-        <ExploreColleges />
+        <Defer minHeight={520}><ExploreColleges /></Defer>
 
         {/* ── Premium colleges that take your JEE rank (outside JoSAA) ── */}
-        <PremiumColleges />
+        <Defer minHeight={520}><PremiumColleges /></Defer>
 
         {/* ── Admission timeline — wavy quarter rail, auto-advancing "NOW" ── */}
-        <AdmissionTimeline />
+        <Defer minHeight={520}><AdmissionTimeline /></Defer>
 
         {/* ── FAQ ── */}
-        <FaqSection />
+        <Defer minHeight={420}><FaqSection /></Defer>
       </Suspense>
     </>
   );
