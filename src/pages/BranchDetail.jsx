@@ -388,7 +388,7 @@ function Insights({ b, extra }) {
 
       {/* Row 2: Salary */}
       <Card title="5-Year Salary Trajectory">
-        <Trend data={salaryData} lines={[{ key: "Top 10%", label: "Top 10%", color: CL.coralText }, { key: "Median", label: "Median", color: CL.blue }]} height={240} fmt={v => `₹${v}L`} />
+        <Trend data={salaryData} lines={[{ key: "Top 10%", label: "Top 10%", color: CL.coral }, { key: "Median", label: "Median", color: CL.blue }]} height={240} fmt={v => `₹${v}L`} />
       </Card>
 
       {/* Row 3: Industry + Role Salary */}
@@ -679,7 +679,7 @@ export default function BranchDetail() {
               {/* Job Growth */}
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
                 <div style={{ fontSize: 10, fontWeight: 800, color: CL.muted, letterSpacing: 0.5, textTransform: "uppercase" }}>Job Growth</div>
-                <div style={{ fontSize: F.base, fontWeight: 800, color: CL.coralText }}>{b.stats.jobGrowth}</div>
+                <div style={{ fontSize: F.base, fontWeight: 800, color: CL.coral }}>{b.stats.jobGrowth}</div>
               </div>
               
               <div style={{ width: 1, height: 36, background: CL.line }} />

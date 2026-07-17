@@ -338,7 +338,7 @@ export function DirectionDial({ norm = 0, size = 240, label = true }) {
       {label && (
         <>
           <text x="20" y={H + 10} fontSize="10.5" fontWeight="800" letterSpacing="1" fill={CL.coralDk} fontFamily={CL.display}>BRANCH</text>
-          <text x={W - 20} y={H + 10} fontSize="10.5" fontWeight="800" letterSpacing="1" fill={CL.greenText} fontFamily={CL.display} textAnchor="end">COLLEGE</text>
+          <text x={W - 20} y={H + 10} fontSize="10.5" fontWeight="800" letterSpacing="1" fill="#0a8f5b" fontFamily={CL.display} textAnchor="end">COLLEGE</text>
         </>
       )}
     </svg>
@@ -351,8 +351,7 @@ function CompassStrip({ answers }) {
   const { sum, norm } = scoreState(answers);
   const answered = answers.some(Boolean);
   const pos = ((norm + 1) / 2) * 100;
-  // tone colours caption TEXT -> use the AA-safe variants, not the bright fills.
-  const tone = !answered || Math.abs(norm) < 0.1 ? CL.amberText : norm > 0 ? CL.greenText : CL.coralText;
+  const tone = !answered || Math.abs(norm) < 0.1 ? CL.amber : norm > 0 ? CL.green : CL.coral;
   const caption = !answered
     ? "Answer to see your needle move"
     : Math.abs(norm) < 0.1 ? "Sitting near the middle so far"
@@ -362,7 +361,7 @@ function CompassStrip({ answers }) {
       <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10.5, fontWeight: 800, letterSpacing: "1px", marginBottom: 9 }}>
         <span style={{ color: CL.coralDk }}>BRANCH</span>
         <motion.span key={caption} initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: tone, letterSpacing: ".3px", textTransform: "none", fontWeight: 700 }}>{caption}</motion.span>
-        <span style={{ color: CL.greenText }}>COLLEGE</span>
+        <span style={{ color: "#0a8f5b" }}>COLLEGE</span>
       </div>
       <div style={{ position: "relative", height: 6, borderRadius: 50, background: `linear-gradient(90deg, ${CL.coral}, ${CL.amber}, ${CL.green})`, opacity: answered ? 1 : 0.45 }}>
         {/* centre tick */}
@@ -645,10 +644,10 @@ export default function BranchVsCollege({ asPage = false }) {
   const branchResult = phase === "result" && mode === "branch" ? computeBranch(answers) : null;
   const H = mode === "bvc"
     ? { eyebrow: "AI Trade-off Analyzer",
-        title: <>Your rank will force a trade-off.<br /><span style={{ color: CL.coralText }}>Know your side</span> before you fill a single choice.</>,
+        title: <>Your rank will force a trade-off.<br /><span style={{ color: CL.coral }}>Know your side</span> before you fill a single choice.</>,
         sub: "10 fact-based scenarios · no wrong answers — see whether real hiring, research and regret patterns put you on the branch or the college side." }
     : { eyebrow: "AI Branch Finder",
-        title: <>Not sure which branch?<br /><span style={{ color: CL.coralText }}>Find the field</span> that actually fits you.</>,
+        title: <>Not sure which branch?<br /><span style={{ color: CL.coral }}>Find the field</span> that actually fits you.</>,
         sub: "8 quick scenarios from an aspirant's real life — we match your instincts to one of 8 engineering branches." };
 
   return (
@@ -709,7 +708,7 @@ export default function BranchVsCollege({ asPage = false }) {
               const on = mode === m.id;
               return (
                 <button key={m.id} onClick={() => switchMode(m.id)}
-                  style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "11px 12px", borderRadius: 50, cursor: "pointer", fontFamily: CL.display, fontWeight: 800, fontSize: 13, border: `1.5px solid ${on ? CL.coralText : CL.cream3}`, background: on ? CL.coralText : CL.card, color: on ? "#fff" : CL.ink2, boxShadow: on ? `0 8px 20px -10px ${CL.coral}` : "none", transition: "all .18s" }}>
+                  style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "11px 12px", borderRadius: 50, cursor: "pointer", fontFamily: CL.display, fontWeight: 800, fontSize: 13, border: `1.5px solid ${on ? CL.coral : CL.cream3}`, background: on ? CL.coral : CL.card, color: on ? "#fff" : CL.ink2, boxShadow: on ? `0 8px 20px -10px ${CL.coral}` : "none", transition: "all .18s" }}>
                   <m.icon size={15} color={on ? "#fff" : CL.coral} /> {m.label}
                 </button>
               );

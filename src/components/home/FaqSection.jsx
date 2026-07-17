@@ -61,7 +61,7 @@ export default function FaqSection() {
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <span style={clEyebrow}><HelpCircle size={13} /> FAQ</span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", color: CL.ink, letterSpacing: "-1px", margin: "16px 0 10px", lineHeight: 1.12 }}>
-            Frequently asked <span style={{ color: CL.coralText }}>questions</span>
+            Frequently asked <span style={{ color: CL.coral }}>questions</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.02rem" }}>Everything students and parents ask us before getting started.</p>
         </div>

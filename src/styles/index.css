@@ -23,10 +23,7 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
   --navy-light:  #f0e8df;
   --navy-mid:    #e8dcd4;
   --navy-dark:   #d8ccbf;
-  --coral:       #FF693D;   /* decorative only: icons, borders, fills */
-  /* Text-safe coral: #FF693D is 2.86:1 on white, below the 4.5:1 AA floor for
-     text and for white-on-coral buttons. #B93D12 is 5.62:1 both ways. */
-  --coral-text:  #B93D12;
+  --coral:       #FF693D;
   --coral-light: #f47a5e;
   --gold:        #f4a261;
   --orange:      #FF693D;
@@ -229,7 +226,7 @@ input,select,textarea { font-family:inherit; }
   align-items:center;
   gap:.4rem;
 }
-.brand-logo .dot-in { color:var(--coral-text); }
+.brand-logo .dot-in { color:var(--coral); }
 
 /* Desktop nav links */
 .desktop-nav {
@@ -254,10 +251,10 @@ input,select,textarea { font-family:inherit; }
   border-radius:4px;
   transition:width .25s ease;
 }
-.desktop-nav a:hover { color:var(--coral-text); }
+.desktop-nav a:hover { color:#FF693D; }
 .desktop-nav a:hover::after,
 .desktop-nav a.active::after { width:100%; }
-.desktop-nav a.active { color:var(--coral-text); font-weight:600; }
+.desktop-nav a.active { color:#FF693D; font-weight:600; }
 
 /* Button-based nav items (JEE / Colleges / Tools …) — subtle lift + glow on hover */
 .desktop-nav > li > button {
@@ -352,9 +349,9 @@ input,select,textarea { font-family:inherit; }
   font-weight:600;
   transition:var(--transition);
 }
-.btn-nav-ghost:hover { background:rgba(255, 105, 61,.08); color:var(--coral-text); border-color:rgba(255, 105, 61,.4); }
+.btn-nav-ghost:hover { background:rgba(255, 105, 61,.08); color:#FF693D; border-color:rgba(255, 105, 61,.4); }
 .btn-nav-cta {
-  background:var(--coral-text);
+  background:var(--coral);
   color:#fff;
   padding:.5rem 1.2rem;
   border-radius:var(--radius-pill);
@@ -363,7 +360,7 @@ input,select,textarea { font-family:inherit; }
   box-shadow:0 4px 14px rgba(249,115,22,.35);
   transition:var(--transition);
 }
-.btn-nav-cta:hover { background:#a3350f; transform:translateY(-1px); }
+.btn-nav-cta:hover { background:var(--coral-light); transform:translateY(-1px); }
 
 /* Hamburger */
 .hamburger {
@@ -683,7 +680,7 @@ input,select,textarea { font-family:inherit; }
   align-items:center;
   gap:.4rem;
   background:rgba(255, 105, 61,.10);
-  color:var(--coral-text);
+  color:var(--coral);
   font-weight:700;
   font-size:0.70rem;
   letter-spacing:3px;
@@ -702,7 +699,7 @@ input,select,textarea { font-family:inherit; }
   font-family:"Space Grotesk","Sora",sans-serif;
   color:#1a1a2e;
 }
-.section-title .accent { color:var(--coral-text); }
+.section-title .accent { color:var(--coral); }
 .title-bar {
   display:flex;
   flex-direction:column;
@@ -734,15 +731,15 @@ input,select,textarea { font-family:inherit; }
   white-space:nowrap;
 }
 .btn-coral {
-  background: var(--coral-text);
+  background: #FF693D;
   color: #fff;
-  box-shadow: 0 6px 18px rgba(185, 61, 18,.30);
+  box-shadow: 0 6px 18px rgba(255, 105, 61,.30);
 }
-.btn-coral:hover { background:#a3350f; box-shadow:0 8px 22px rgba(185, 61, 18,.4); }
+.btn-coral:hover { background:#e36a14; box-shadow:0 8px 22px rgba(255, 105, 61,.4); }
 /* Every site button is the same flat orange now (navbar buttons are excluded —
    they use their own inline styles). */
 .btn-ghost {
-  background: var(--coral-text);
+  background: #FF693D;
   color: #fff;
   border: none;
 }
@@ -2136,10 +2133,10 @@ textarea.input { width:100%; }
     grid-template-columns: 1fr !important;
   }
   .brand-logo             { color:#1a1a2e !important; }
-  .brand-logo .dot-in     { color:var(--coral-text) !important; }
+  .brand-logo .dot-in     { color:#FF693D !important; }
   .hamburger {
     border:1.5px solid rgba(255, 105, 61,.35) !important;
-    color:var(--coral-text) !important;
+    color:#FF693D !important;
     background:rgba(255, 105, 61,.08) !important;
   }
   .hamburger:hover        { background:rgba(255, 105, 61,.16) !important; }
@@ -2153,9 +2150,9 @@ textarea.input { width:100%; }
     color:#374151 !important;
     border-bottom-color:rgba(0,0,0,.07) !important;
   }
-  .mobile-drawer a:hover { color:var(--coral-text) !important; }
+  .mobile-drawer a:hover { color:#FF693D !important; }
   .mobile-drawer .btn-nav-cta {
-    background:linear-gradient(135deg,var(--coral-text),#c4611f) !important;
+    background:linear-gradient(135deg,#FF693D,#f9953d) !important;
     color:#fff !important;
     box-shadow:0 4px 14px rgba(255, 105, 61,.30) !important;
   }
@@ -2165,7 +2162,7 @@ textarea.input { width:100%; }
   }
   .btn-nav-ghost:hover {
     background:rgba(255, 105, 61,.08) !important;
-    color:var(--coral-text) !important;
+    color:#FF693D !important;
     border-color:rgba(255, 105, 61,.4) !important;
   }
   /* Mobile logout button on light bg */
@@ -2222,7 +2219,7 @@ textarea.input { width:100%; }
   }
   .hero-search input   { color:#1c1c28; }
   .hero-search button  {
-    background: var(--coral-text) !important;
+    background: #FF693D !important;
     color:#fff !important;
   }
 
@@ -2246,7 +2243,7 @@ textarea.input { width:100%; }
   .btn-predict,
   .btn-eligibility,
   .btn-nav-cta {
-    background: var(--coral-text) !important;
+    background: #FF693D !important;
     color:#fff !important;
     box-shadow:0 6px 22px rgba(255, 105, 61,.45) !important;
   }
@@ -2261,7 +2258,7 @@ textarea.input { width:100%; }
 
   /* Ghost button */
   .btn-ghost {
-    background: var(--coral-text) !important;
+    background: #FF693D !important;
     color:#fff !important;
     border:none !important;
   }
@@ -2273,7 +2270,7 @@ textarea.input { width:100%; }
 
   /* Light button */
   .btn-light {
-    background: var(--coral-text) !important;
+    background: #FF693D !important;
     color: #fff !important;
     border: none !important;
   }
@@ -2348,13 +2345,13 @@ textarea.input { width:100%; }
   /* Eyebrow */
   .eyebrow {
     background:rgba(255, 105, 61,.10) !important;
-    color:var(--coral-text) !important;
+    color:#FF693D !important;
   }
 
   /* Pill hover */
   .pill:hover {
-    background:var(--coral-text) !important;
-    border-color:var(--coral-text) !important;
+    background:#FF693D !important;
+    border-color:#FF693D !important;
     color:#fff !important;
   }
 

@@ -93,7 +93,7 @@ export default function CompareExams() {
         <div className="container">
           <span style={clEyebrow}><GitCompare size={13} /> AI Exam Comparison</span>
           <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.5rem)", letterSpacing: "-0.5px", color: CL.ink, margin: "12px 0 6px" }}>
-            Compare entrance exams, get an <span style={{ color: CL.coralText }}>AI read</span>
+            Compare entrance exams, get an <span style={{ color: CL.coral }}>AI read</span>
           </h1>
           <p style={{ color: CL.body, maxWidth: 620 }}>
             Pick as many exams as you like to see difficulty, college reach, competition and 5-year cutoff trends side by side — then a plain-English take on where to start.
@@ -121,7 +121,7 @@ export default function CompareExams() {
                 ))}
                 {EXAMS.some((e) => !picked.includes(e.slug)) && (
                   <button onClick={() => setShowPicker(true)}
-                    style={{ minHeight: 180, border: `1.5px dashed ${CL.cream3}`, borderRadius: 18, background: CL.card, color: CL.coralText, fontWeight: 700, fontFamily: CL.display, display: "grid", placeItems: "center", cursor: "pointer" }}>
+                    style={{ minHeight: 180, border: `1.5px dashed ${CL.cream3}`, borderRadius: 18, background: CL.card, color: CL.coral, fontWeight: 700, fontFamily: CL.display, display: "grid", placeItems: "center", cursor: "pointer" }}>
                     <span style={{ display: "grid", justifyItems: "center", gap: 8 }}><Plus size={26} /> Add exam</span>
                   </button>
                 )}

@@ -210,7 +210,7 @@ export default function Navbar({ onSearch }) {
               width: 38,
               height: 38,
               borderRadius: "50%",
-              background: "var(--coral-text)",
+              background: "#FF693D",
               display: "grid",
               placeItems: "center",
               flexShrink: 0,

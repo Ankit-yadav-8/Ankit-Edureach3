@@ -271,7 +271,7 @@ export default function Footer() {
                   borderRadius: "50%",
                   display: "grid",
                   placeItems: "center",
-                  background: "var(--coral-text)",
+                  background: "#FF693D",
                   flexShrink: 0,
                 }}
               >

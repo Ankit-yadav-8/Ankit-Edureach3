@@ -1542,9 +1542,9 @@ export default function Hero({ onSearch }) {
                 Know your rank.
                 <br />
                 Find your <span style={{
-                  color: "var(--coral-text)",
+                  color: "#FF5A36",
                   whiteSpace: "nowrap",
-                }}>college</span><span style={{ color: "var(--coral-text)", display: "inline-flex", alignItems: "center", margin: "0 2px" }}>
+                }}>college</span><span style={{ color: "#FF5A36", display: "inline-flex", alignItems: "center", margin: "0 2px" }}>
                   <svg width="28" height="11" viewBox="0 0 28 11" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: "translateY(1px)" }}>
                     <path d="M2 8C5 8 7 2 10 2C13 2 15 8 18 8C21 8 23 2 26 2" stroke="#FF5A36" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
@@ -1562,7 +1562,7 @@ export default function Hero({ onSearch }) {
                 whiteSpace: "nowrap",
                 maxWidth: "100%",
               }}>
-                An <span style={{ color: "var(--coral-text)" }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
+                An <span style={{ color: "#FF5A36" }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
               </div>
 
               {/* Subtext */}
@@ -1636,15 +1636,15 @@ export default function Hero({ onSearch }) {
                     fontFamily: "'Inter', system-ui, sans-serif",
                     whiteSpace: "nowrap",
                     flexShrink: 0,
-                    background: "var(--coral-text)",
+                    background: "#FF5A36",
                     color: "#fff",
                     boxShadow: "none",
                     border: "none",
                     cursor: "pointer",
                     transition: "background 0.2s",
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "#A3350F"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "var(--coral-text)"; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "#E0421F"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "#FF5A36"; }}
                 >
                   Search
                 </button>
@@ -1667,13 +1667,13 @@ export default function Hero({ onSearch }) {
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
                   padding: isXs ? "12px 24px" : "14px 32px", borderRadius: 9999, cursor: "pointer",
-                  background: "var(--coral-text)", border: "none", color: "#fff",
+                  background: "#FF5A36", border: "none", color: "#fff",
                   fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
-                  boxShadow: "0 8px 24px rgba(185, 61, 18, 0.3)",
+                  boxShadow: "0 8px 24px rgba(255, 90, 54, 0.3)",
                   transition: "all .2s", whiteSpace: "nowrap",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#A3350F"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "var(--coral-text)"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#E0421F"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#FF5A36"; }}
               >
                 Predict My College <Target size={18} />
               </button>
@@ -1729,4 +1729,4 @@ export default function Hero({ onSearch }) {
       </div>
     </section>
   );
-}
+}

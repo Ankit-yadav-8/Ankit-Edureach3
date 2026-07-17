@@ -22,13 +22,9 @@ const WA_NUMBER = "917877596464";
 /* ── warm paper / coral / navy theme ── */
 const T = {
   paper: "var(--page-bg)", paper2: "#F1EBE0", card: "#FFFFFF",
-  ink: "#1B1B24", body: "#54525C",
-  /* muted was #8C877E and coralDk #D8512A — 3.0-4.1:1 against this page's
-     surfaces (#FFFFFF / #F1EBE0 / #FFE7DE), under the 4.5:1 AA floor. These
-     clear all three. `coral` stays bright for icons/fills. */
-  muted: "#6B6760",
+  ink: "#1B1B24", body: "#54525C", muted: "#8C877E",
   line: "#E4DED2", lineDk: "#D6CFC0",
-  coral: "#FF693D", coralDk: "#B93D12", coralSoft: "#FFE7DE",
+  coral: "#FF693D", coralDk: "#D8512A", coralSoft: "#FFE7DE",
   navy: "#12141C", navy2: "#191C26", navyLine: "rgba(255,255,255,.10)",
   onNavy: "#EDEBE6", onNavyMute: "#8E93A3",
 };

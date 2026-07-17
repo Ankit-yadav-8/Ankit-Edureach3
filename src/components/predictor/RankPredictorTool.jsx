@@ -41,7 +41,7 @@ const EMPTY_ITEM = {
   show:   { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 20 } },
 };
 
-export default function RankPredictorTool({ accent = "#FF693D", accentText = accent, advanced = false }) {
+export default function RankPredictorTool({ accent = "#FF693D", advanced = false }) {
   const cap      = maxPerSubject(advanced);
   const totalMax = maxTotal(advanced);
   const cats     = advanced ? CATS_ADV : CATS_MAIN;
@@ -149,7 +149,7 @@ export default function RankPredictorTool({ accent = "#FF693D", accentText = acc
           <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.25rem", marginBottom: 4, display: "flex", alignItems: "center", gap: 9 }}>
             <span style={{
               display: "grid", placeItems: "center", width: 32, height: 32, borderRadius: 9,
-              background: `${accent}18`, color: accentText, flexShrink: 0,
+              background: `${accent}18`, color: accent, flexShrink: 0,
             }}>
               <GaugeIcon size={18} />
             </span>
@@ -221,7 +221,7 @@ export default function RankPredictorTool({ accent = "#FF693D", accentText = acc
               </span>
               <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 16, color: "var(--navy)" }}>
                 {liveTotal}<span style={{ fontSize: 12, color: "var(--muted)", fontWeight: 600 }}> / {totalMax}</span>
-                <span style={{ fontSize: 12, color: accentText, fontWeight: 700, marginLeft: 8 }}>{livePct}%</span>
+                <span style={{ fontSize: 12, color: accent, fontWeight: 700, marginLeft: 8 }}>{livePct}%</span>
               </span>
             </div>
             <div style={{ height: 8, borderRadius: 5, background: "#e7e7ee", overflow: "hidden" }}>
@@ -250,8 +250,8 @@ export default function RankPredictorTool({ accent = "#FF693D", accentText = acc
                     style={{
                       padding: "7px 14px", borderRadius: 50, cursor: "pointer",
                       fontSize: 12.5, fontWeight: 700, fontFamily: "Sora",
-                      border: `1px solid ${active ? accentText : "var(--line)"}`,
-                      background: active ? accentText : "#fff",
+                      border: `1px solid ${active ? accent : "var(--line)"}`,
+                      background: active ? accent : "#fff",
                       color: active ? "#fff" : "var(--navy)",
                       boxShadow: active ? `0 2px 10px ${accent}40` : "none",
                       transition: "all .16s",
@@ -286,7 +286,7 @@ export default function RankPredictorTool({ accent = "#FF693D", accentText = acc
             <button
               className="btn full"
               style={{
-                background: hasOverflow ? "#cbd5e1" : accentText, color: "#fff", justifyContent: "center",
+                background: hasOverflow ? "#cbd5e1" : accent, color: "#fff", justifyContent: "center",
                 boxShadow: hasOverflow ? "none" : `0 6px 18px ${accent}44`, fontWeight: 700,
                 cursor: hasOverflow ? "not-allowed" : "pointer",
               }}
@@ -336,7 +336,7 @@ export default function RankPredictorTool({ accent = "#FF693D", accentText = acc
                 Your predicted rank &amp; colleges will appear here
               </motion.p>
               <motion.p variants={EMPTY_ITEM} style={{ marginTop: 4, fontSize: 13 }}>
-                Enter your marks and hit <strong style={{ color: accentText }}>Predict my rank</strong>.
+                Enter your marks and hit <strong style={{ color: accent }}>Predict my rank</strong>.
               </motion.p>
               <motion.p variants={EMPTY_ITEM} style={{ marginTop: 10, fontSize: 12, display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 50, background: "var(--sky)", border: "1px solid var(--line)" }}>
                 <Target size={12} color={accent} />
@@ -355,7 +355,7 @@ export default function RankPredictorTool({ accent = "#FF693D", accentText = acc
       </div>
 
       {/* ── How the Rank Predictor works ── */}
-      <RankPredictorNotes accent={accent} accentText={accentText} advanced={advanced} />
+      <RankPredictorNotes accent={accent} advanced={advanced} />
     </>
   );
 }
@@ -363,7 +363,7 @@ export default function RankPredictorTool({ accent = "#FF693D", accentText = acc
 /* ══════════════════════════════════════════════
    "Good to know" points about the Rank Predictor
 ══════════════════════════════════════════════ */
-function RankPredictorNotes({ accent, accentText, advanced }) {
+function RankPredictorNotes({ accent, advanced }) {
   const points = [
     {
       icon: GaugeIcon,
@@ -390,7 +390,7 @@ function RankPredictorNotes({ accent, accentText, advanced }) {
         : "The NIT/IIIT options shown use your category rank against JoSAA closing ranks. Tap 'See all colleges' for the full branch-wise predictor.",
     },
   ];
-  return <NotesBlock accent={accent} accentText={accentText} eyebrow="About this tool" heading="How the Rank Predictor works" points={points}
+  return <NotesBlock accent={accent} eyebrow="About this tool" heading="How the Rank Predictor works" points={points}
     note={advanced
       ? "Estimates use 2025 actuals + 2026 projections — expect ±5–10% variance. Not an official prediction; verify on jeeadv.ac.in."
       : "Estimates model past marks-vs-rank trends — actual ranks vary by session & shift normalisation. Not an official prediction; verify on jeemain.nta.nic.in."} />;
@@ -441,7 +441,7 @@ function MainResult({ res, scorePct, totalMax, accent, nav, colleges, collegesLo
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 5, marginTop: 8,
             padding: "4px 10px", borderRadius: 50, fontSize: 12, fontWeight: 700,
-            background: `${accent}14`, color: accentText,
+            background: `${accent}14`, color: accent,
           }}>
             <TrendingUp size={12} /> {res.percentile} %ile
           </div>
@@ -783,11 +783,11 @@ function StatBox({ label, value, sub, accent }) {
    College Predictor too). Renders a titled card with a
    responsive grid of icon + text points.
 ══════════════════════════════════════════════ */
-export function NotesBlock({ accent, accentText = accent, eyebrow, heading, points, note }) {
+export function NotesBlock({ accent, eyebrow, heading, points, note }) {
   return (
     <div className="card" style={{ marginTop: 22, borderTop: `3px solid ${accent}` }}>
       <div style={{ marginBottom: 14 }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: accentText, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 3 }}>
+        <div style={{ fontSize: 11, fontWeight: 800, color: accent, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 3 }}>
           {eyebrow}
         </div>
         <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, color: "var(--navy)" }}>{heading}</h4>

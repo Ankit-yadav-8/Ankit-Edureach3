@@ -81,7 +81,7 @@ function CollegeCard({ c, nav, extra }) {
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(20,12,4,.55), transparent 55%)" }} />
         <span style={{
           position: "absolute", top: 12, left: 12, display: "inline-flex", alignItems: "center", gap: 5,
-          fontSize: 11, fontWeight: 800, color: "#fff", background: CL.coralText,
+          fontSize: 11, fontWeight: 800, color: "#fff", background: CL.coral,
           padding: "5px 11px", borderRadius: 50, boxShadow: "0 6px 16px rgba(255, 105, 61,.4)",
         }}>
           <Trophy size={12} /> NIRF #{c.nirf}
@@ -129,7 +129,7 @@ export default function ExploreColleges() {
         <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 44px" }}>
           <span style={clEyebrow}><Building2 size={13} /> Explore Colleges</span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4vw,2.7rem)", color: CL.ink, letterSpacing: "-1px", margin: "16px 0 12px", lineHeight: 1.12 }}>
-            Start with the <span style={{ color: CL.coralText }}>flagship IITs.</span>
+            Start with the <span style={{ color: CL.coral }}>flagship IITs.</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7 }}>
             Real photos, verified cutoffs, placements and fees for every IIT, NIT and IIIT — here are six of the most-chosen institutes to begin your exploration.
@@ -154,7 +154,7 @@ export default function ExploreColleges() {
             onClick={() => nav("/colleges")}
             style={{
               display: "inline-flex", alignItems: "center", gap: 9,
-              background: CL.coralText, color: "#fff", border: "none", borderRadius: 50,
+              background: CL.coral, color: "#fff", border: "none", borderRadius: 50,
               padding: "13px 26px", fontFamily: CL.display, fontWeight: 800, fontSize: 14.5,
               cursor: "pointer", boxShadow: "0 10px 26px rgba(255, 105, 61,.35)",
             }}

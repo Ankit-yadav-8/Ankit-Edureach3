@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Compass } from "lucide-react";
-import Seo from "../components/Seo.jsx";   
+import Seo from "../components/Seo.jsx";
 
 export default function NotFound() {
   return (

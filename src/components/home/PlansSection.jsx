@@ -42,7 +42,7 @@ export default function PlansSection() {
         <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 36px" }}>
           <span style={clEyebrow}><GraduationCap size={13} /> 1-on-1 Mentorship</span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.2vw,2.8rem)", color: CL.ink, letterSpacing: "-1.2px", margin: "16px 0 12px", lineHeight: 1.1 }}>
-            Your personal <span style={{ color: CL.coralText }}>IITian mentor.</span>
+            Your personal <span style={{ color: CL.coral }}>IITian mentor.</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7 }}>
             Stop guessing. Get a customised daily study plan, weekly test analysis and real accountability from mentors who have actually cracked JEE &amp; NEET.
@@ -79,7 +79,7 @@ export default function PlansSection() {
               ))}
             </div>
             <Link to="/mentorship" style={{
-              display: "inline-flex", alignItems: "center", gap: 8, background: CL.coralText, color: "#fff",
+              display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff",
               padding: "15px 26px", borderRadius: 14, fontFamily: CL.display, fontWeight: 800, fontSize: 15.5,
               textDecoration: "none", boxShadow: "0 10px 24px -8px rgba(255, 105, 61,.6)",
             }}>
