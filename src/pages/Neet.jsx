@@ -5,9 +5,10 @@ import PageHero from "../components/home/PageHero.jsx";
 import { Bars, Trend, Gauge } from "../components/Charts.jsx";
 import Reveal from "../components/Reveal.jsx";
 import { NEET_COLLEGES, NEET_STATES, NEET_TOTAL_SEATS } from "../data/neetColleges.js";
+import { NotesBlock } from "../components/predictor/NotesBlock.jsx";
 import {
   Atom, FlaskConical, Leaf, FileText, CheckCircle2, ArrowRight, RotateCcw,
-  MapPin, Globe, Target, TrendingUp, TrendingDown, Building2, AlertCircle,
+  MapPin, Globe, Target, TrendingUp, TrendingDown, Building2,
   Stethoscope, Users, Landmark, Gauge as GaugeIcon, BadgeCheck, Sparkles,
   CalendarDays, Trophy, Clock, BookOpen,
 } from "lucide-react";
@@ -244,31 +245,6 @@ function Block({ id, eyebrow, title, sub, children, bg }) {
         <Reveal>{children}</Reveal>
       </div>
     </section>
-  );
-}
-
-/* ── "Good to know" notes block (local copy of the JEE predictor's) ── */
-function NotesBlock({ accent, eyebrow, heading, points, note }) {
-  return (
-    <div className="card" style={{ marginTop: 22, borderTop: `3px solid ${accent}` }}>
-      <div style={{ marginBottom: 14 }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: accent, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 3 }}>{eyebrow}</div>
-        <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, color: "var(--navy)" }}>{heading}</h4>
-      </div>
-      <div className="notes-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        {points.map(({ icon: Icon, title, body }) => (
-          <div key={title} style={{ display: "flex", gap: 11, padding: "13px 15px", background: "var(--sky)", borderRadius: 12, border: "1px solid var(--line)" }}>
-            <span style={{ display: "grid", placeItems: "center", width: 32, height: 32, borderRadius: 9, background: `${accent}18`, color: accent, flexShrink: 0 }}><Icon size={17} /></span>
-            <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, color: "var(--navy)", marginBottom: 3 }}>{title}</div>
-              <p style={{ fontSize: 12.5, color: "var(--muted)", lineHeight: 1.55, margin: 0 }}>{body}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-      {note && <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 12, display: "flex", alignItems: "center", gap: 6 }}><AlertCircle size={13} color={accent} style={{ flexShrink: 0 }} /> {note}</p>}
-      <style>{`@media (max-width: 640px){ .notes-grid{ grid-template-columns: 1fr !important; } }`}</style>
-    </div>
   );
 }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   Gauge as GaugeIcon, RotateCcw, ArrowRight, Trophy,
@@ -11,6 +11,13 @@ import { useCollegePredictor } from "../../hooks/useCollegePredictor.js";
 import { TIER_COLOR } from "../../utils/collegePredictor.js";
 import { Gauge } from "../Charts.jsx";
 import { fmtRank } from "../../utils/format.js";
+import { NotesBlock } from "./NotesBlock.jsx";
+import {
+  RankEstimateVisual, CategoryRankVisual, RangeBandVisual, CollegeMatchVisual,
+} from "./NotesVisuals.jsx";
+
+/* Re-exported for the College Predictor, which has always imported it from here. */
+export { NotesBlock };
 
 /* NOTE: no module-scope pre-warm. This component renders on the homepage, so a
    module-level loadPredictorDB() fetched josaa_2025.csv (~12 MB) on every visit
@@ -364,9 +371,19 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
    "Good to know" points about the Rank Predictor
 ══════════════════════════════════════════════ */
 function RankPredictorNotes({ accent, advanced }) {
+  /* The illustrations differ between Main and Advanced (subject split, IIT vs
+     NIT tiles). Memoise the bound wrappers so their component identity is stable
+     across the parent's re-renders — a fresh identity every keystroke would
+     remount the visuals and restart every loop. */
+  const [Estimate, Colleges] = useMemo(() => [
+    (p) => <RankEstimateVisual {...p} advanced={advanced} />,
+    (p) => <CollegeMatchVisual {...p} advanced={advanced} />,
+  ], [advanced]);
+
   const points = [
     {
       icon: GaugeIcon,
+      visual: Estimate,
       title: "How your rank is estimated",
       body: advanced
         ? "Your Paper 1 + Paper 2 marks are mapped to an All-India CRL using 2025 actual marks-vs-rank data cross-checked against 2026 projections."
@@ -374,23 +391,27 @@ function RankPredictorNotes({ accent, advanced }) {
     },
     {
       icon: Trophy,
+      visual: CategoryRankVisual,
       title: "CRL + your category rank",
       body: "You get both the All-India (CRL) rank and your reserved-category rank. For SC/ST/OBC-NCL/EWS, the category rank is what actually drives counselling — so that's what we predict colleges with.",
     },
     {
       icon: Target,
+      visual: RangeBandVisual,
       title: "A range, not a single number",
       body: "Real ranks shift with shift-wise normalisation, paper difficulty and the candidate pool, so we show a realistic low–high band around the estimate rather than one exact figure.",
     },
     {
       icon: Building2,
+      visual: Colleges,
       title: "Colleges matched to that rank",
       body: advanced
         ? "The IIT options shown use your category rank against JoSAA closing ranks. Tap 'See all IIT options' for the full branch-wise predictor."
         : "The NIT/IIIT options shown use your category rank against JoSAA closing ranks. Tap 'See all colleges' for the full branch-wise predictor.",
     },
   ];
-  return <NotesBlock accent={accent} eyebrow="About this tool" heading="How the Rank Predictor works" points={points}
+  return <NotesBlock accent={accent} eyebrow="About this tool" heading="How the Rank Predictor works"
+    highlight="Rank Predictor" points={points}
     note={advanced
       ? "Estimates use 2025 actuals + 2026 projections — expect ±5–10% variance. Not an official prediction; verify on jeeadv.ac.in."
       : "Estimates model past marks-vs-rank trends — actual ranks vary by session & shift normalisation. Not an official prediction; verify on jeemain.nta.nic.in."} />;
@@ -778,48 +799,3 @@ function StatBox({ label, value, sub, accent }) {
   );
 }
 
-/* ══════════════════════════════════════════════
-   Shared "Good to know" points block (reused by the
-   College Predictor too). Renders a titled card with a
-   responsive grid of icon + text points.
-══════════════════════════════════════════════ */
-export function NotesBlock({ accent, eyebrow, heading, points, note }) {
-  return (
-    <div className="card" style={{ marginTop: 22, borderTop: `3px solid ${accent}` }}>
-      <div style={{ marginBottom: 14 }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: accent, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 3 }}>
-          {eyebrow}
-        </div>
-        <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, color: "var(--navy)" }}>{heading}</h4>
-      </div>
-
-      <div className="notes-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        {points.map(({ icon: Icon, title, body }) => (
-          <div key={title} style={{
-            display: "flex", gap: 11, padding: "13px 15px",
-            background: "var(--sky)", borderRadius: 12, border: "1px solid var(--line)",
-          }}>
-            <span style={{
-              display: "grid", placeItems: "center", width: 32, height: 32, borderRadius: 9,
-              background: `${accent}18`, color: accent, flexShrink: 0,
-            }}>
-              <Icon size={17} />
-            </span>
-            <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, color: "var(--navy)", marginBottom: 3 }}>{title}</div>
-              <p style={{ fontSize: 12.5, color: "var(--muted)", lineHeight: 1.55, margin: 0 }}>{body}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {note && (
-        <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 12, display: "flex", alignItems: "center", gap: 6 }}>
-          <AlertCircle size={13} color={accent} style={{ flexShrink: 0 }} /> {note}
-        </p>
-      )}
-
-      <style>{`@media (max-width: 640px){ .notes-grid{ grid-template-columns: 1fr !important; } }`}</style>
-    </div>
-  );
-}
