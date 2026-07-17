@@ -22,7 +22,6 @@ import Reviews from "../components/Reviews.jsx";
 import Gallery from "../components/Gallery.jsx";
 import ROICalculator from "../components/ROICalculator.jsx";
 import CutoffSection from "../components/CutoffSection.jsx";
-import CampusMap from "../components/CampusMap.jsx";
 import Seo, { SITE_URL } from "../components/Seo.jsx";
 import { Youtube, Map as MapIcon } from "lucide-react";
 
@@ -558,9 +557,10 @@ export default function CollegeDetail() {
                 <Gallery slug={college.slug} accent={college.accent} />
               </div>
 
-              {/* ── Location & Map — full-width premium card ── */}
+              {/* ── Location — full-width premium card. The embedded map was
+                     dropped; "Open in Maps" hands off to Google Maps instead. ── */}
               <div className="card" style={{ overflow: "hidden" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div style={{
                     width: 36, height: 36, borderRadius: 10,
                     background: "rgba(255, 105, 61, .1)",
@@ -587,29 +587,6 @@ export default function CollegeDetail() {
                   >
                     Open in Maps <ExternalLink size={12} />
                   </a>
-                </div>
-                <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid rgba(0,0,0,.08)" }}>
-                  {college.coords && college.coords.lat ? (
-                    <CampusMap college={college} />
-                  ) : (
-                    <div style={{
-                      width: "100%", height: 380, display: "flex", alignItems: "center",
-                      justifyContent: "center", background: "var(--sky)", borderRadius: 14,
-                      flexDirection: "column", gap: 8,
-                    }}>
-                      <MapPin size={28} color="var(--coral)" />
-                      <span style={{ fontSize: 13, color: "var(--muted)" }}>
-                        Map coordinates not available
-                      </span>
-                      <a
-                        href={`https://www.google.com/maps/search/${encodeURIComponent(college.name + " " + (college.location || ""))}`}
-                        target="_blank" rel="noreferrer"
-                        style={{ fontSize: 13, color: "#FF693D", fontWeight: 600, textDecoration: "none" }}
-                      >
-                        View on Google Maps →
-                      </a>
-                    </div>
-                  )}
                 </div>
               </div>
 
