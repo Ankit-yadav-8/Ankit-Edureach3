@@ -6,9 +6,9 @@ import TopBar from "./components/TopBar.jsx";
 import Footer from "./components/Footer.jsx";
 import SearchOverlay from "./components/SearchOverlay.jsx";
 import { ScrollProgress, BackToTop } from "./components/ScrollUtils.jsx";
-import { ScrollProgressBar } from "./components/Animations.jsx";
+const ScrollProgressBar = lazy(() => import("./components/Animations.jsx").then(m => ({ default: m.ScrollProgressBar })));
 
-import Home from "./pages/Home.jsx";
+const Home = lazy(() => import("./pages/Home.jsx"));
 
 /* Route-level code splitting: only Home ships in the initial bundle; every
    other page is fetched on navigation. Previously all ~50 pages were static
