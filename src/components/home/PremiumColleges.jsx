@@ -81,7 +81,7 @@ export default function PremiumColleges() {
         <div style={{ maxWidth: 760, marginBottom: 34 }}>
           <span style={clEyebrow}><span style={{ width: 7, height: 7, borderRadius: "50%", background: CL.coral }} /> JEE Scores Valid Here</span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", color: CL.ink, letterSpacing: "-1px", margin: "16px 0 10px", lineHeight: 1.12 }}>
-            Top-Tier Institutions Accepting Your <span style={{ color: CL.coral }}>JEE Rank</span>
+            Top-Tier Institutions Accepting Your <span style={{ color: CL.coralText }}>JEE Rank</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.02rem", lineHeight: 1.6 }}>
             Independent of JoSAA — use your JEE score to apply directly on their official websites.

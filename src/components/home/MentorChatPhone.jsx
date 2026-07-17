@@ -145,7 +145,7 @@ export default function MentorChatPhone() {
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ position: "relative", flexShrink: 0 }}>
                 <div style={{ width: 38, height: 38, borderRadius: "50%", background: "#fff", display: "grid", placeItems: "center" }}>
-                  <span style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 15, letterSpacing: "-0.5px", color: CL.coral, lineHeight: 1 }}>CP</span>
+                  <span style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 15, letterSpacing: "-0.5px", color: CL.coralText, lineHeight: 1 }}>CP</span>
                 </div>
                 <span style={{ position: "absolute", right: 0, bottom: 0, width: 11, height: 11, borderRadius: "50%", background: "#22c55e", border: "2px solid #fff" }} />
               </div>

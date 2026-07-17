@@ -77,7 +77,7 @@ function FilterDropdown({ icon: Icon, label, value, options, counts, onSelect })
 const HUB = { x: 80, y: 280 };
 const MAP_LINES = [
   {
-    key: "national", label: "National", color: CL.coral, lbl: { anchor: "middle", dx: 0, dy: -13 },
+    key: "national", label: "National", color: CL.coralText, lbl: { anchor: "middle", dx: 0, dy: -13 },
     pts: [[80, 280], [180, 280], [250, 210], [335, 178], [425, 152], [515, 134], [600, 120]],
     stations: [
       { x: 250, y: 210, name: "BITSAT" }, { x: 335, y: 178, name: "CUET UG" }, { x: 425, y: 152, name: "AMUEEE" },

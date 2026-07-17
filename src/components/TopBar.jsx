@@ -13,7 +13,9 @@ export default function TopBar() {
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 1001,
         height: 34, display: "flex", alignItems: "center", justifyContent: "center",
         gap: 14, padding: "0 1rem",
-        background: "#FF693D", color: "#fff",
+        /* Text-safe coral, not #FF693D: this strip is white text on a solid
+           fill, and #FF693D only reaches 2.86:1 against white. */
+        background: "var(--coral-text)", color: "#fff",
         fontFamily: "'Space Grotesk','Sora',sans-serif",
         fontSize: 12.5, fontWeight: 600, letterSpacing: ".2px",
         borderBottom: "1px solid rgba(255,255,255,.18)",
@@ -32,7 +34,7 @@ export default function TopBar() {
             display: "grid", placeItems: "center", flexShrink: 0,
           }}
         >
-          <span style={{ color: "#FF693D", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 8.5, letterSpacing: "-0.3px", lineHeight: 1 }}>
+          <span style={{ color: "var(--coral-text)", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 8.5, letterSpacing: "-0.3px", lineHeight: 1 }}>
             CP
           </span>
         </span>

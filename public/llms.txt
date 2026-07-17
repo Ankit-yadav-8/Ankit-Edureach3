@@ -1,0 +1,56 @@
+# College Parichay
+
+> Free JEE and NEET college-discovery tools for Indian students — rank and college predictors built on official JoSAA data, the full NMC medical-college list, cutoff analysis, branch guides and 1-on-1 mentorship. Built by IIT Roorkee alumni.
+
+College Parichay helps students turn an exam rank into an actual admission decision. Cutoffs come from the official JoSAA seat-allotment data (2018–2025); the medical-college dataset is derived from the NMC UG seat matrix. Predictions are indicative — students should confirm against josaa.nic.in, mcc.nic.in and nta.ac.in before locking choices.
+
+## Tools
+
+- [Smart Tools hub](https://collegeparichay.in/tools): Every predictor and planner in one place.
+- [JEE Main rank predictor](https://collegeparichay.in/jee-main): Predict rank from marks or NTA percentile.
+- [JEE Advanced & college predictor](https://collegeparichay.in/jee-advanced): Match a rank to IIT seats.
+- [NEET college predictor](https://collegeparichay.in/neet): Match a NEET rank to medical colleges.
+- [Official JoSAA cutoffs](https://collegeparichay.in/cutoffs): Opening and closing ranks, 2018–2025.
+- [Branch vs College analyzer](https://collegeparichay.in/branch-vs-college): Decide when the institute matters more than the branch.
+- [Choice-list planner](https://collegeparichay.in/planner): Build and order a JoSAA choice list.
+- [Campus map explorer](https://collegeparichay.in/map): Browse colleges geographically.
+- [Compare colleges](https://collegeparichay.in/compare): Side-by-side comparison.
+
+## Colleges
+
+- [Engineering colleges](https://collegeparichay.in/colleges): IITs, NITs, IIITs and GFTIs.
+- [Medical colleges](https://collegeparichay.in/neet-colleges): All 780 MBBS colleges from the NMC seat matrix.
+- [Private universities](https://collegeparichay.in/private-universities): Private engineering options.
+- [Branch guides](https://collegeparichay.in/branches): What each engineering branch actually involves.
+- [College reviews](https://collegeparichay.in/reviews): Student-written reviews.
+- [Scholarships](https://collegeparichay.in/scholarships): Scholarship listings.
+
+## Counselling
+
+- [JoSAA 2026 hub](https://collegeparichay.in/josaa-2026): Process, dates and rules.
+- [JoSAA Round 1 result](https://collegeparichay.in/josaa-round-1-result-2026): Round 1 seat allotment.
+- [Exam comparison](https://collegeparichay.in/compare-exams): JEE vs other entrance exams.
+- [Other exams](https://collegeparichay.in/other-exams): BITSAT, VITEEE, state exams and more.
+
+## Guides and blog
+
+- [Blog](https://collegeparichay.in/blog): Counselling, branch-choice and college-selection guides.
+- [NEET UG Result 2026](https://collegeparichay.in/blog/neet-ug-result-2026): Scorecard, cutoff, toppers and AIR.
+- [What to do after the NEET result](https://collegeparichay.in/blog/what-to-do-after-neet-result-2026): Step-by-step admission roadmap.
+- [NEET counselling 2026 guide](https://collegeparichay.in/blog/neet-counselling-2026-guide): MCC AIQ and state counselling, end to end.
+- [Expected NEET cutoff 2026](https://collegeparichay.in/blog/expected-neet-cutoff-2026-government-medical-colleges): Category-wise rank estimates.
+- [Top government medical colleges](https://collegeparichay.in/blog/top-government-medical-colleges-neet-2026): Fees, seats and cutoffs compared.
+- [JEE strategy](https://collegeparichay.in/jee-strategy): Preparation strategy and chapter weightage.
+- [NEET strategy](https://collegeparichay.in/neet-strategy): NEET preparation strategy.
+- [Class 11 syllabus](https://collegeparichay.in/class-11) and [Class 12 syllabus](https://collegeparichay.in/class-12): Syllabus breakdowns.
+
+## Mentorship
+
+- [Mentorship programs](https://collegeparichay.in/mentorship): 1-on-1 mentorship for JEE and NEET aspirants.
+
+## About
+
+- [About College Parichay](https://collegeparichay.in/about): Who builds this.
+- [How to use the site](https://collegeparichay.in/how-to-use): Getting started.
+- [Privacy policy](https://collegeparichay.in/privacy)
+- [Terms of use](https://collegeparichay.in/terms)

@@ -14,12 +14,16 @@ import { BLOG_POSTS } from "../data/blog.js";
 
 const ICONS = { BookOpen, GitCompareArrows, Gauge, Building2, Brain, ListChecks, TrendingUp, ShieldCheck, Layers, Trophy, Medal, Award };
 const ACCENTS = { coral: CL.coral, green: CL.green, blue: CL.blue, violet: CL.violet, amber: CL.amber };
+/* Text-safe counterparts — the bright accents above are 2.4-3.5:1 on white and
+   fail AA wherever an accent colours actual text (category label, "Read", links). */
+const ACCENTS_TEXT = { coral: CL.coralText, green: CL.greenText, blue: CL.blueText, violet: CL.violet, amber: CL.amberText };
 
 const CATEGORIES = ["All", "NEET", "Counselling", "Strategy", "Exams", "Careers", "Colleges"];
 
 function PostCard({ p }) {
   const Ic = ICONS[p.iconName] || BookOpen;
   const accent = ACCENTS[p.accent] || CL.coral;
+  const accentText = ACCENTS_TEXT[p.accent] || CL.coralText;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -43,14 +47,14 @@ function PostCard({ p }) {
               {p.badge}
             </span>
           </div>
-          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".04em", color: accent, marginBottom: 7, textTransform: "uppercase" }}>{p.category}</div>
+          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".04em", color: accentText, marginBottom: 7, textTransform: "uppercase" }}>{p.category}</div>
           <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.08rem", color: CL.ink, lineHeight: 1.25, letterSpacing: "-0.3px", marginBottom: 9 }}>{p.title}</h3>
           <p style={{ color: CL.body, fontSize: 13.2, lineHeight: 1.6, marginBottom: 16, flex: 1 }}>{p.snippet}</p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 14, borderTop: `1px solid ${CL.line}` }}>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, color: CL.muted, fontWeight: 600 }}>
               <Clock size={12} /> {p.read}
             </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: accent, fontFamily: CL.display }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: accentText, fontFamily: CL.display }}>
               Read <ArrowRight size={13} />
             </span>
           </div>
@@ -67,6 +71,7 @@ function HeroPreview() {
       {cards.map((p, i) => {
         const Ic = ICONS[p.iconName] || BookOpen;
         const accent = ACCENTS[p.accent] || CL.coral;
+        const accentText = ACCENTS_TEXT[p.accent] || CL.coralText;
         return (
           <Link to={p.link || `/blog/${p.slug}`} key={p.slug} style={{ textDecoration: "none" }}>
             <motion.div
@@ -85,7 +90,7 @@ function HeroPreview() {
               </span>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: accent, textTransform: "uppercase", letterSpacing: 0.5 }}>{p.category}</span>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: accentText, textTransform: "uppercase", letterSpacing: 0.5 }}>{p.category}</span>
                   <span style={{ fontSize: 10, color: CL.muted }}>· {p.read}</span>
                 </div>
                 <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 13.5, color: CL.ink, lineHeight: 1.35, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{p.title}</div>
@@ -118,8 +123,8 @@ export default function Blog() {
             <div>
               <span style={clEyebrow}><Sparkles size={13} /> College Parichay Blog</span>
               <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2.1rem,5vw,3.3rem)", color: CL.ink, letterSpacing: "-1.4px", lineHeight: 1.07, margin: "18px 0 16px" }}>
-                Crack JEE with <span style={{ color: CL.amber }}>better insights.</span><br />
-                <span style={{ color: CL.coral }}>Decisions, sorted.</span>
+                Crack JEE with <span style={{ color: CL.amberText }}>better insights.</span><br />
+                <span style={{ color: CL.coralText }}>Decisions, sorted.</span>
               </h1>
               <p style={{ color: CL.body, fontSize: "1.06rem", lineHeight: 1.7, maxWidth: 460 }}>
                 Honest, data-backed guides on counselling, branch choice and college selection — written by IIT Roorkee alumni who've lived the JoSAA chaos.
@@ -139,8 +144,8 @@ export default function Blog() {
                 <button key={c} onClick={() => setCat(c)} style={{
                   padding: "9px 18px", borderRadius: 50, cursor: "pointer", fontFamily: CL.display,
                   fontWeight: 700, fontSize: 13, transition: "all .15s",
-                  background: on ? CL.coral : CL.card, color: on ? "#fff" : CL.ink2,
-                  border: `1px solid ${on ? CL.coral : CL.line}`,
+                  background: on ? CL.coralText : CL.card, color: on ? "#fff" : CL.ink2,
+                  border: `1px solid ${on ? CL.coralText : CL.line}`,
                   boxShadow: on ? "0 8px 20px rgba(255, 105, 61,.28)" : "none",
                 }}>{c}</button>
               );

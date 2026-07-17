@@ -78,7 +78,7 @@ export default function RankToCutoff() {
           <div>
             <span style={clEyebrow}><Zap size={13} /> Rank → Cutoff engine</span>
             <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2.1rem,4.6vw,3.2rem)", color: CL.ink, letterSpacing: "-1.6px", margin: "18px 0 16px", lineHeight: 1.06 }}>
-              See the seats your rank can <span style={{ color: CL.coral }}>actually reach.</span>
+              See the seats your rank can <span style={{ color: CL.coralText }}>actually reach.</span>
             </h2>
             <p style={{ color: CL.body, fontSize: "1.05rem", lineHeight: 1.75, marginBottom: 24, maxWidth: 450 }}>
               Drop in a mock rank or your final JEE Advanced result and watch matching IITs and branches surface in real time — each one weighed against the ranks it actually closed at.
@@ -93,7 +93,7 @@ export default function RankToCutoff() {
                 </div>
               ))}
             </div>
-            <Link to="/jee-advanced" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff", padding: "13px 24px", borderRadius: 12, fontFamily: CL.display, fontWeight: 800, fontSize: 14.5, boxShadow: "0 10px 26px rgba(255, 105, 61,.35)" }}>
+            <Link to="/jee-advanced" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: CL.coralText, color: "#fff", padding: "13px 24px", borderRadius: 12, fontFamily: CL.display, fontWeight: 800, fontSize: 14.5, boxShadow: "0 10px 26px rgba(255, 105, 61,.35)" }}>
               Open the full JEE Advanced predictor <ArrowRight size={16} />
             </Link>
           </div>

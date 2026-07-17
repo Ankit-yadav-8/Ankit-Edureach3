@@ -369,7 +369,7 @@ export default function CollegeReviews() {
         <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 36px" }}>
           <span style={clEyebrow}><MessageSquareQuote size={13} /> Campus Reviews</span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.2vw,2.8rem)", color: CL.ink, letterSpacing: "-1.2px", margin: "16px 0 12px", lineHeight: 1.1 }}>
-            Real <span style={{ color: CL.coral }}>hostel &amp; mess</span> reviews
+            Real <span style={{ color: CL.coralText }}>hostel &amp; mess</span> reviews
           </h2>
           <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7 }}>
             Honest, student-written reviews of campus life. Share yours, or read what students say about any college.
@@ -381,9 +381,9 @@ export default function CollegeReviews() {
             {view === "home" && (
               <motion.div key="home" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}
                 style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(260px, 100%), 1fr))", gap: 18 }}>
-                <OptionCard icon={PenSquare} accent={CL.coral} soft={CL.coralSoft} title="Give a college review"
+                <OptionCard icon={PenSquare} accent={CL.coral} accentText={CL.coralText} soft={CL.coralSoft} title="Give a college review"
                   desc="Rate the hostel & mess, add quick tags and a comment. Takes a minute." cta="Write a review" onClick={() => { setPreset(""); setView("give"); }} />
-                <OptionCard icon={Star} accent={CL.green} soft={CL.greenSoft} title="See all college reviews"
+                <OptionCard icon={Star} accent={CL.green} accentText={CL.greenText} soft={CL.greenSoft} title="See all college reviews"
                   desc={totalReviews ? `${totalReviews} review${totalReviews !== 1 ? "s" : ""} across ${totalColleges} college${totalColleges !== 1 ? "s" : ""}. Search and read.` : "Search any college and read student reviews."}
                   cta="Browse reviews" onClick={() => setView("see")} />
               </motion.div>
@@ -397,7 +397,7 @@ export default function CollegeReviews() {
   );
 }
 
-function OptionCard({ icon: Icon, accent, soft, title, desc, cta, onClick }) {
+function OptionCard({ icon: Icon, accent, accentText, soft, title, desc, cta, onClick }) {
   return (
     <motion.button onClick={onClick} whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
       style={{ textAlign: "left", cursor: "pointer", background: "var(--page-bg)", border: `1px solid ${CL.line}`, borderRadius: 20, padding: "26px 24px", boxShadow: CL.shadow, display: "flex", flexDirection: "column", gap: 12, position: "relative", overflow: "hidden" }}>
@@ -405,7 +405,7 @@ function OptionCard({ icon: Icon, accent, soft, title, desc, cta, onClick }) {
       <span style={{ width: 54, height: 54, borderRadius: 16, background: soft, display: "grid", placeItems: "center", position: "relative" }}><Icon size={26} color={accent} /></span>
       <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.25rem", color: CL.ink, position: "relative" }}>{title}</div>
       <div style={{ color: CL.body, fontSize: 13.5, lineHeight: 1.55, flex: 1, position: "relative" }}>{desc}</div>
-      <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontFamily: CL.display, fontWeight: 800, fontSize: 14, color: accent, position: "relative" }}>{cta} <ChevronRight size={17} /></span>
+      <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontFamily: CL.display, fontWeight: 800, fontSize: 14, color: accentText || accent, position: "relative" }}>{cta} <ChevronRight size={17} /></span>
     </motion.button>
   );
 }

@@ -44,7 +44,7 @@ export default function JosaaAwaitedResult({ roundNo, expected, path, blurb }) {
           <span style={clEyebrow}>JoSAA 2026 · Round {roundNo}</span>
           <div className="jar-await"><Clock size={13} /> Result Awaited</div>
           <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2rem,5vw,3rem)", color: CL.ink, letterSpacing: "-1.3px", lineHeight: 1.08, margin: "14px 0 12px" }}>
-            JoSAA 2026 Round {roundNo} <span style={{ color: CL.coral }}>Seat Allotment</span>
+            JoSAA 2026 Round {roundNo} <span style={{ color: CL.coralText }}>Seat Allotment</span>
           </h1>
           <p style={{ color: CL.body, fontSize: "1.06rem", lineHeight: 1.7, maxWidth: 640 }}>{blurb}</p>
           <div className="jar-expected"><CheckCircle2 size={15} color={CL.green} /> Expected: <strong>{expected}</strong></div>

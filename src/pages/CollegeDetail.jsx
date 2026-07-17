@@ -25,13 +25,15 @@ import CutoffSection from "../components/CutoffSection.jsx";
 import Seo, { SITE_URL } from "../components/Seo.jsx";
 import { Youtube, Map as MapIcon } from "lucide-react";
 
-// Kick off the DB load as soon as this module is imported
-loadCutoffDB();
-
 const TABS = ["Overview", "Cutoff", "Fees", "Courses", "Placements", "Campus Life", "Reviews"];
 const tabKey = (t) => t.toLowerCase().split(" ")[0];
 
 export default function CollegeDetail() {
+  // Kick off the 8-year cutoff DB load when this page mounts — NOT at module
+  // scope: App.jsx imports every page, so a module-level call fetched ~85 MB
+  // of JoSAA CSVs on every route, including the homepage.
+  useEffect(() => { loadCutoffDB(); }, []);
+
   const { slug } = useParams();
   const [sp, setSp] = useSearchParams();
   const nav = useNavigate();

@@ -124,7 +124,7 @@ export default function Compare() {
         <div className="container">
           <span style={clEyebrow}><GitCompare size={13} /> AI College Comparison</span>
           <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.5rem)", letterSpacing: "-0.5px", color: CL.ink, margin: "12px 0 6px" }}>
-            Compare colleges, get an <span style={{ color: CL.coral }}>AI verdict</span>
+            Compare colleges, get an <span style={{ color: CL.coralText }}>AI verdict</span>
           </h1>
           <p style={{ color: CL.body, maxWidth: 620 }}>
             Add as many colleges as you like. Our engine scores each on placements, ranking, selectivity and value — then tells you which one to protect in your JoSAA list.

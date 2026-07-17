@@ -52,17 +52,21 @@ const ICON = { github: Github, linkedin: Linkedin, dribbble: Dribbble };
 function Col({ title, links, unclickable }) {
   return (
     <div>
-      <h4
+      {/* h2, not h4: these are top-level site sections. Pages end on h2/h3, so
+          an h4 here skipped a level and failed the heading-order audit. Size is
+          set inline, so the rendered footer is unchanged. */}
+      <h2
         style={{
           color: "#fff",
           fontSize: ".95rem",
+          fontWeight: 700,
           letterSpacing: 1,
           textTransform: "uppercase",
           marginBottom: ".4rem",
         }}
       >
         {title}
-      </h4>
+      </h2>
       <div
         style={{
           width: 36,
@@ -267,7 +271,7 @@ export default function Footer() {
                   borderRadius: "50%",
                   display: "grid",
                   placeItems: "center",
-                  background: "#FF693D",
+                  background: "var(--coral-text)",
                   flexShrink: 0,
                 }}
               >

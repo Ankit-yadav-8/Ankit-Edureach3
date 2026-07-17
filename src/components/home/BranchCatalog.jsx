@@ -112,14 +112,14 @@ export default function BranchCatalog() {
             <Sparkles size={13} /> Branch Explorer
           </span>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.4vw,2.9rem)", color: CL.ink, letterSpacing: "-1.3px", margin: "16px 0 12px", lineHeight: 1.08 }}>
-            Distilled into <span style={{ color: CL.coral, fontStyle: "italic" }}>{BRANCHES.length} clear domains.</span>
+            Distilled into <span style={{ color: CL.coralText, fontStyle: "italic" }}>{BRANCHES.length} clear domains.</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.08rem", lineHeight: 1.7, fontStyle: "italic", maxWidth: 640, margin: "0 auto" }}>
             We've carefully bucketed every engineering specialization into {BRANCHES.length} primary domains. Dive deep into exclusive data on <strong style={{ color: CL.ink }}>placements, 5-year salary arcs, real-world AI disruption risk</strong>, and the top recruiters hiring right now — ensuring absolutely nothing slips through the cracks as you plan your future.
           </p>
           <div style={{ marginTop: 24 }}>
             <Link to="/branches" style={{
-              display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff",
+              display: "inline-flex", alignItems: "center", gap: 8, background: CL.coralText, color: "#fff",
               padding: "12px 24px", borderRadius: 14, fontFamily: CL.display, fontWeight: 800, fontSize: 15,
               textDecoration: "none", boxShadow: "0 10px 24px -8px rgba(255, 105, 61,.6)"
             }}>

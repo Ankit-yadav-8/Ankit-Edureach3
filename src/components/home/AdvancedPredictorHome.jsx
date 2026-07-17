@@ -70,7 +70,7 @@ export default function AdvancedPredictorHome() {
         </div>
 
         {tab === "rank" ? (
-          <RankPredictorTool accent={ADV} advanced />
+          <RankPredictorTool accent={ADV} accentText={CL.coralText} advanced />
         ) : (
           <>
             <div style={{

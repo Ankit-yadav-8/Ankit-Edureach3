@@ -21,7 +21,14 @@ export function useCollegePredictor() {
   const workerRef = useRef(null);
   const reqIdRef  = useRef(0);   // latest request id; stale responses are dropped
 
-  useEffect(() => {
+  /* The worker fetches josaa_2025.csv (~12 MB) as soon as it boots, so it is
+     created on demand rather than on mount — this hook is used by components
+     that render on the homepage, where that fetch is pure waste until the user
+     actually engages with the predictor. Still created once and kept alive, so
+     the CSV is parsed only once per session. */
+  const getWorker = useCallback(() => {
+    if (workerRef.current) return workerRef.current;
+
     const worker = new Worker(
       new URL("../workers/collegePredictor.worker.js", import.meta.url),
       { type: "module" }
@@ -41,8 +48,18 @@ export function useCollegePredictor() {
     };
 
     workerRef.current = worker;
-    return () => worker.terminate();
+    return worker;
   }, []);
+
+  // Terminate on unmount only — never re-create mid-session.
+  useEffect(() => () => {
+    workerRef.current?.terminate();
+    workerRef.current = null;
+  }, []);
+
+  /* Spin the worker up (and let it start fetching) ahead of the first predict,
+     e.g. on the user's first keystroke. */
+  const warmWorker = useCallback(() => { getWorker(); }, [getWorker]);
 
   const predict = useCallback((opts, grouped = false) => {
     const reqId = ++reqIdRef.current;   // newest request wins
@@ -50,12 +67,12 @@ export function useCollegePredictor() {
     setError(null);
     setResults(null);
 
-    workerRef.current?.postMessage({
+    getWorker().postMessage({
       reqId,
       type: grouped ? "grouped" : "flat",
       opts,
     });
-  }, []);
+  }, [getWorker]);
 
   const reset = useCallback(() => {
     reqIdRef.current++;   // invalidate any in-flight response
@@ -64,5 +81,5 @@ export function useCollegePredictor() {
     setError(null);
   }, []);
 
-  return { predict, reset, results, loading, error };
+  return { predict, reset, warmWorker, results, loading, error };
 }

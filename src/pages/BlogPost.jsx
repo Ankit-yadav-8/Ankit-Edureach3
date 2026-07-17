@@ -14,6 +14,9 @@ import { BLOG_POSTS, getBlogPost } from "../data/blog.js";
 
 const ICONS = { BookOpen, GitCompareArrows, Gauge, Building2, Brain, ListChecks, TrendingUp, ShieldCheck, Layers, Trophy, Medal, Award };
 const ACCENTS = { coral: CL.coral, green: CL.green, blue: CL.blue, violet: CL.violet, amber: CL.amber };
+/* Text-safe counterparts — the bright accents above are 2.4-3.5:1 on white and
+   fail AA wherever an accent colours actual text (category label, "Read", links). */
+const ACCENTS_TEXT = { coral: CL.coralText, green: CL.greenText, blue: CL.blueText, violet: CL.violet, amber: CL.amberText };
 
 /* Inline spans: {t} text · {b} bold · {i} italic · {l,h} link (internal = SPA nav) */
 function Spans({ spans, accent }) {
@@ -31,7 +34,7 @@ function Spans({ spans, accent }) {
 }
 
 /* Renders one body block — supports rich ({type}) and legacy ({h?,p}) shapes. */
-function Block({ block, accent }) {
+function Block({ block, accent, accentText }) {
   const pStyle = { fontSize: "1.04rem", lineHeight: 1.85, color: CL.body, margin: "0 0 20px" };
   if (block.type === "h2")
     return <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.42rem", color: CL.ink, letterSpacing: "-0.5px", margin: "34px 0 14px", lineHeight: 1.25 }}>{block.t}</h2>;
@@ -43,13 +46,13 @@ function Block({ block, accent }) {
         {block.items.map((it, i) => (
           <li key={i} style={{ position: "relative", paddingLeft: 22, fontSize: "1.04rem", lineHeight: 1.7, color: CL.body }}>
             <span style={{ position: "absolute", left: 2, top: 9, width: 7, height: 7, borderRadius: "50%", background: accent }} />
-            <Spans spans={it} accent={accent} />
+            <Spans spans={it} accent={accentText} />
           </li>
         ))}
       </ul>
     );
   if (block.type === "p")
-    return <p style={pStyle}><Spans spans={block.s} accent={accent} /></p>;
+    return <p style={pStyle}><Spans spans={block.s} accent={accentText} /></p>;
   if (block.type === "note")
     return (
       <div style={{
@@ -57,7 +60,7 @@ function Block({ block, accent }) {
         background: `${accent}0E`, borderLeft: `3px solid ${accent}`,
         fontSize: "1rem", lineHeight: 1.7, color: CL.ink2,
       }}>
-        <Spans spans={block.s} accent={accent} />
+        <Spans spans={block.s} accent={accentText} />
       </div>
     );
   if (block.type === "table")
@@ -73,7 +76,7 @@ function Block({ block, accent }) {
                   fontFamily: CL.display, fontWeight: 800, fontSize: 12.5, color: CL.ink,
                   borderBottom: `1px solid ${CL.line}`, whiteSpace: "nowrap",
                 }}>
-                  <Spans spans={cell} accent={accent} />
+                  <Spans spans={cell} accent={accentText} />
                 </th>
               ))}
             </tr>
@@ -86,7 +89,7 @@ function Block({ block, accent }) {
                     padding: "10px 14px", color: CL.body, lineHeight: 1.6, verticalAlign: "top",
                     borderBottom: r === block.rows.length - 1 ? "none" : `1px solid ${CL.line}`,
                   }}>
-                    <Spans spans={cell} accent={accent} />
+                    <Spans spans={cell} accent={accentText} />
                   </td>
                 ))}
               </tr>
@@ -129,6 +132,7 @@ export default function BlogPost() {
 
   const Ic = ICONS[post.iconName] || BookOpen;
   const accent = ACCENTS[post.accent] || CL.coral;
+  const accentText = ACCENTS_TEXT[post.accent] || CL.coralText;
   const isNeet = post.category === "NEET";
 
   // "Read next" — prefer siblings in the same category, then fill from the rest
@@ -177,7 +181,7 @@ export default function BlogPost() {
               <Ic size={26} color={accent} />
             </span>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".06em", color: accent, textTransform: "uppercase" }}>{post.category}</div>
+              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".06em", color: accentText, textTransform: "uppercase" }}>{post.category}</div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, color: CL.muted, marginTop: 3 }}>
                 <Clock size={13} /> {post.read} · {post.tag}
               </div>
@@ -194,7 +198,7 @@ export default function BlogPost() {
             {post.snippet}
           </p>
 
-          {post.body.map((block, i) => <Block key={i} block={block} accent={accent} />)}
+          {post.body.map((block, i) => <Block key={i} block={block} accent={accent} accentText={accentText} />)}
 
           <div style={{ marginTop: 30, padding: "18px 20px", borderRadius: 14, background: CL.coralSoft + "66", border: `1px solid ${CL.coral}33`, fontSize: 13.5, color: CL.ink2, lineHeight: 1.6 }}>
             {isNeet
@@ -209,6 +213,7 @@ export default function BlogPost() {
               {more.map((p) => {
                 const PIc = ICONS[p.iconName] || BookOpen;
                 const pac = ACCENTS[p.accent] || CL.coral;
+                const pacText = ACCENTS_TEXT[p.accent] || CL.coralText;
                 return (
                   <Link key={p.slug} to={`/blog/${p.slug}`} style={{ textDecoration: "none" }}>
                     <div style={{ background: CL.card, border: `1px solid ${CL.line}`, borderRadius: 14, boxShadow: CL.shadow, padding: "16px 16px", height: "100%" }}>
@@ -216,7 +221,7 @@ export default function BlogPost() {
                         <PIc size={17} color={pac} />
                       </span>
                       <div style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 14, color: CL.ink, lineHeight: 1.3, marginBottom: 6 }}>{p.title}</div>
-                      <div style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, color: pac }}>Read <ArrowRight size={12} /></div>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, color: pacText }}>Read <ArrowRight size={12} /></div>
                     </div>
                   </Link>
                 );

@@ -199,7 +199,7 @@ export default function AdmissionTimeline() {
             <span style={clEyebrow}><CalendarRange size={13} /> Admission Calendar · 2026 – 27 Cycle</span>
           </div>
           <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2rem,4.5vw,2.8rem)", color: CL.ink, letterSpacing: "-1px", lineHeight: 1.15 }}>
-            The complete <span style={{ color: CL.coral }}>admission season.</span>
+            The complete <span style={{ color: CL.coralText }}>admission season.</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.08rem", lineHeight: 1.6, margin: "16px auto 24px" }}>
             Every major exam, result and counselling window from Jan 2026 to Jun 2027 — with a live marker that moves each month so you never miss a deadline.

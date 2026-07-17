@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
@@ -9,62 +9,72 @@ import { ScrollProgress, BackToTop } from "./components/ScrollUtils.jsx";
 import { ScrollProgressBar } from "./components/Animations.jsx";
 
 import Home from "./pages/Home.jsx";
-import JeeMain from "./pages/JeeMain.jsx";
-import JeeAdvanced from "./pages/JeeAdvanced.jsx";
-import JeeAdvancedAnalysis from "./pages/JeeAdvancedAnalysis.jsx";
-import JeeAdvancedResult from "./pages/JeeAdvancedResult.jsx";
-import Colleges from "./pages/Colleges.jsx";
-import CollegeDetail from "./pages/CollegeDetail.jsx";
-import PrivateDetail from "./pages/PrivateDetail.jsx";
-import PrivateUnis from "./pages/PrivateUnis.jsx";
-import About from "./pages/About.jsx";
-import Developer from "./pages/Developer.jsx";
-import Compare from "./pages/Compare.jsx";
-import Shortlist from "./pages/Shortlist.jsx";
-import ForYou from "./pages/ForYou.jsx";
-import Josaa2026 from "./pages/Josaa2026.jsx";
-import JosaaRound1Result from "./pages/JosaaRound1Result.jsx";
-import JosaaRound2Result from "./pages/JosaaRound2Result.jsx";
-import JosaaRound3Result from "./pages/JosaaRound3Result.jsx";
-import CounsellingPlanner from "./pages/CounsellingPlanner.jsx";
-import CollegeMap from "./pages/CollegeMap.jsx";
-import CompareExams from "./pages/CompareExams.jsx";
-import OtherExams from "./pages/OtherExams.jsx";
-import Tools from "./pages/Tools.jsx";
-import Reviews from "./pages/Reviews.jsx";
-import Scholarships from "./pages/Scholarships.jsx";
-import OfficialCutoffs from "./pages/OfficialCutoffs.jsx";
+
+/* Route-level code splitting: only Home ships in the initial bundle; every
+   other page is fetched on navigation. Previously all ~50 pages were static
+   imports, so one 2.6 MB chunk had to parse before the homepage could paint. */
+const JeeMain = lazy(() => import("./pages/JeeMain.jsx"));
+const JeeAdvanced = lazy(() => import("./pages/JeeAdvanced.jsx"));
+const JeeAdvancedAnalysis = lazy(() => import("./pages/JeeAdvancedAnalysis.jsx"));
+const JeeAdvancedResult = lazy(() => import("./pages/JeeAdvancedResult.jsx"));
+const Colleges = lazy(() => import("./pages/Colleges.jsx"));
+const CollegeDetail = lazy(() => import("./pages/CollegeDetail.jsx"));
+const PrivateDetail = lazy(() => import("./pages/PrivateDetail.jsx"));
+const PrivateUnis = lazy(() => import("./pages/PrivateUnis.jsx"));
+const About = lazy(() => import("./pages/About.jsx"));
+const Developer = lazy(() => import("./pages/Developer.jsx"));
+const Compare = lazy(() => import("./pages/Compare.jsx"));
+const Shortlist = lazy(() => import("./pages/Shortlist.jsx"));
+const ForYou = lazy(() => import("./pages/ForYou.jsx"));
+const Josaa2026 = lazy(() => import("./pages/Josaa2026.jsx"));
+const JosaaRound1Result = lazy(() => import("./pages/JosaaRound1Result.jsx"));
+const JosaaRound2Result = lazy(() => import("./pages/JosaaRound2Result.jsx"));
+const JosaaRound3Result = lazy(() => import("./pages/JosaaRound3Result.jsx"));
+const CounsellingPlanner = lazy(() => import("./pages/CounsellingPlanner.jsx"));
+const CollegeMap = lazy(() => import("./pages/CollegeMap.jsx"));
+const CompareExams = lazy(() => import("./pages/CompareExams.jsx"));
+const OtherExams = lazy(() => import("./pages/OtherExams.jsx"));
+const Tools = lazy(() => import("./pages/Tools.jsx"));
+const Reviews = lazy(() => import("./pages/Reviews.jsx"));
+const Scholarships = lazy(() => import("./pages/Scholarships.jsx"));
+const OfficialCutoffs = lazy(() => import("./pages/OfficialCutoffs.jsx"));
+const SearchResults = lazy(() => import("./pages/SearchResults.jsx"));
+const NotFound = lazy(() => import("./pages/NotFound.jsx"));
+const Admin = lazy(() => import("./pages/Admin.jsx"));
+const JeeResources = lazy(() => import("./pages/JeeResources.jsx"));
+const Neet = lazy(() => import("./pages/Neet.jsx"));
+const NeetColleges = lazy(() => import("./pages/NeetColleges.jsx"));
+const NeetCollegeDetail = lazy(() => import("./pages/NeetCollegeDetail.jsx"));
+const HowToUse = lazy(() => import("./pages/HowToUse.jsx"));
+const Mentorship = lazy(() => import("./pages/Mentorship.jsx"));
+const Privacy = lazy(() => import("./pages/Privacy.jsx"));
+const Terms = lazy(() => import("./pages/Terms.jsx"));
+const Dashboard = lazy(() => import("./pages/Dashboard.jsx"));
+const MentorshipDashboard = lazy(() => import("./pages/MentorshipDashboard.jsx"));
+const PublicCommunity = lazy(() => import("./pages/PublicCommunity.jsx"));
+const Branches = lazy(() => import("./pages/Branches.jsx"));
+const BranchDetail = lazy(() => import("./pages/BranchDetail.jsx"));
+const BranchVsCollegePage = lazy(() => import("./pages/BranchVsCollegePage.jsx"));
+const Blog = lazy(() => import("./pages/Blog.jsx"));
+const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
+const CampusNotes = lazy(() => import("./pages/CampusNotes.jsx"));
+const CollegeParichayAI = lazy(() => import("./pages/CollegeParichayAI.jsx"));
+const CampusFests = lazy(() => import("./pages/CampusFests.jsx"));
+const Class11 = lazy(() => import("./pages/Class11.jsx"));
+const Class12 = lazy(() => import("./pages/Class12.jsx"));
+const JeeStrategy = lazy(() => import("./pages/JeeStrategy.jsx"));
+const NeetStrategy = lazy(() => import("./pages/NeetStrategy.jsx"));
 import CompareTray from "./components/CompareTray.jsx";
 import Chatbot from "./components/Chatbot.jsx";
 import WhatsAppButton from "./components/WhatsAppButton.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
 import ReviewPopup from "./components/ReviewPopup.jsx";
-import SearchResults from "./pages/SearchResults.jsx";
-import NotFound from "./pages/NotFound.jsx";
-import Admin from "./pages/Admin.jsx";
-import JeeResources from "./pages/JeeResources.jsx";
-import Neet from "./pages/Neet.jsx";
-import NeetColleges from "./pages/NeetColleges.jsx";
-import NeetCollegeDetail from "./pages/NeetCollegeDetail.jsx";
-import HowToUse from "./pages/HowToUse.jsx";
-import Mentorship from "./pages/Mentorship.jsx";
-import Privacy from "./pages/Privacy.jsx";
-import Terms from "./pages/Terms.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import MentorshipDashboard from "./pages/MentorshipDashboard.jsx";
-import PublicCommunity from "./pages/PublicCommunity.jsx";
-import Branches from "./pages/Branches.jsx";
-import BranchDetail from "./pages/BranchDetail.jsx";
-import BranchVsCollegePage from "./pages/BranchVsCollegePage.jsx";
-import Blog from "./pages/Blog.jsx";
-import BlogPost from "./pages/BlogPost.jsx";
-import CampusNotes from "./pages/CampusNotes.jsx";
-import CollegeParichayAI from "./pages/CollegeParichayAI.jsx";
-import CampusFests from "./pages/CampusFests.jsx";
-import Class11 from "./pages/Class11.jsx";
-import Class12 from "./pages/Class12.jsx";
-import JeeStrategy from "./pages/JeeStrategy.jsx";
-import NeetStrategy from "./pages/NeetStrategy.jsx";
+
+/* Placeholder shown while a lazily-loaded page chunk is in flight. Holds a
+   viewport-height box so swapping it for the real page shifts nothing (CLS). */
+function RouteFallback() {
+  return <div style={{ minHeight: "100vh" }} aria-busy="true" />;
+}
 
 /* Scroll to top on path change — unless navigating to a hash anchor. */
 function ScrollManager() {
@@ -105,9 +115,11 @@ export default function App() {
     return (
       <>
         <ScrollManager />
-        <Routes>
-          <Route path="/admin" element={<Admin />} />
-        </Routes>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/admin" element={<Admin />} />
+          </Routes>
+        </Suspense>
       </>
     );
   }
@@ -119,9 +131,11 @@ export default function App() {
     return (
       <>
         <ScrollManager />
-        <Routes>
-          <Route path="/ai" element={<CollegeParichayAI />} />
-        </Routes>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/ai" element={<CollegeParichayAI />} />
+          </Routes>
+        </Suspense>
         <AuthModal />
       </>
     );
@@ -137,6 +151,7 @@ export default function App() {
       <Navbar onSearch={() => setSearchOpen(true)} />
 
       <main>
+        <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<Home onSearch={() => setSearchOpen(true)} />} />
           <Route path="/jee-main" element={<JeeMain />} />
@@ -192,6 +207,7 @@ export default function App() {
           <Route path="/neet-strategy" element={<NeetStrategy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </main>
 
       <Footer />
