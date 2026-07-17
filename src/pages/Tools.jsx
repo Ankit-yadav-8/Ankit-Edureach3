@@ -6,7 +6,10 @@ import ToolsGrid from "../components/home/ToolsGrid.jsx";
 import Seo, { SITE_URL } from "../components/Seo.jsx";
 import BackButton from "../components/BackButton.jsx";
 
-/* Real tools + their in-app destinations — used for the ItemList schema. */
+/* Real tools + their in-app destinations — used for the ItemList schema.
+   The Mentor Dashboard card in ToolsGrid is deliberately absent: it's a
+   staff-only sign-in, /mentor is noindex, and listing it here would tell search
+   engines a noindex page is a public tool. */
 const TOOL_LINKS = [
   ["Events & Fest Marketplace", "/campus-fests"],
   ["JEE Rank Predictor", "/jee-main#rank"],

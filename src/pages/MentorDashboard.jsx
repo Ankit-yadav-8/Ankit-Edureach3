@@ -1,11 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Users, LogOut, Lock, Loader2, ShieldCheck, GraduationCap,
-  ChevronDown, AlertCircle, Eye,
-} from "lucide-react";
+import { Users, LogOut, Lock, Loader2, ShieldCheck, AlertCircle } from "lucide-react";
 import Seo from "../components/Seo.jsx";
 import StudentReport from "../components/mentor/StudentReport.jsx";
+import MentorHero from "../components/mentor/MentorHero.jsx";
 import {
   apiMentorLogin, apiMentorMe, apiMentorSetPassword, apiMentorStudents,
   apiMentorStudentProgress, apiMentorStudentTests, apiMentorStudentTasks,
@@ -169,99 +167,6 @@ function SetPassword({ token, onDone }) {
   );
 }
 
-/* ── Hero — mirrors the mentorship page's banner ─── */
-function Hero({ mentor, students, activeId, onPick }) {
-  const [open, setOpen] = useState(false);
-  const active = students.find((s) => s.studentId === activeId);
-
-  return (
-    <div style={{
-      position: "relative", overflow: "hidden", borderRadius: 18, marginBottom: 22,
-      padding: "24px 26px", boxShadow: `0 14px 40px ${ACCENT}33`,
-      background: `linear-gradient(135deg, ${ACCENT} 0%, ${ACCENT}cc 60%, ${ACCENT}99 100%)`,
-    }}>
-      <div aria-hidden style={{
-        position: "absolute", inset: 0,
-        background: "radial-gradient(circle at 80% 20%, rgba(255,255,255,.28) 0%, transparent 55%)",
-      }} />
-      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
-        <div style={{
-          width: 60, height: 60, borderRadius: 16, flexShrink: 0, display: "grid", placeItems: "center",
-          background: "rgba(255,255,255,.18)", border: "2px solid rgba(255,255,255,.4)", backdropFilter: "blur(4px)",
-        }}>
-          <GraduationCap size={28} color="#fff" />
-        </div>
-
-        <div style={{ flex: 1, minWidth: 220 }}>
-          <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.2, textTransform: "uppercase", color: "rgba(255,255,255,.85)" }}>
-            Mentor dashboard
-          </span>
-          <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: "clamp(1.3rem,3vw,1.9rem)", color: "#fff", lineHeight: 1.1, marginTop: 3 }}>
-            {mentor.name}
-          </div>
-          <div style={{ display: "flex", gap: 16, marginTop: 7, flexWrap: "wrap", fontSize: 12.5, color: "rgba(255,255,255,.92)" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <Users size={13} /> {students.length} student{students.length === 1 ? "" : "s"} assigned
-            </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <Eye size={13} /> Read-only access
-            </span>
-          </div>
-        </div>
-
-        {/* Student switcher — the mentor may hold more than one student. */}
-        {students.length > 0 && (
-          <div style={{ position: "relative", flexShrink: 0 }}>
-            <button
-              onClick={() => setOpen((o) => !o)}
-              style={{
-                display: "flex", alignItems: "center", gap: 9, padding: "9px 14px", borderRadius: 10,
-                background: "rgba(255,255,255,.95)", border: "none", cursor: "pointer", minWidth: 190,
-              }}
-            >
-              <div style={{ flex: 1, textAlign: "left" }}>
-                <div style={{ fontSize: 9.5, color: "var(--muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}>
-                  Viewing
-                </div>
-                <div style={{ fontFamily: SORA, fontWeight: 700, fontSize: 13, color: "var(--navy)" }}>
-                  {active ? active.name : "Select a student"}
-                </div>
-              </div>
-              <ChevronDown size={15} color="var(--muted)" style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform .18s" }} />
-            </button>
-
-            {open && (
-              <motion.div
-                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.16 }}
-                style={{
-                  position: "absolute", top: "calc(100% + 6px)", right: 0, zIndex: 20, minWidth: 240,
-                  background: "#fff", border: "1px solid var(--line)", borderRadius: 11,
-                  boxShadow: "0 12px 34px rgba(15,23,42,.16)", overflow: "hidden",
-                }}
-              >
-                {students.map((s) => (
-                  <button
-                    key={s.studentId}
-                    onClick={() => { onPick(s.studentId); setOpen(false); }}
-                    style={{
-                      display: "block", width: "100%", textAlign: "left", padding: "10px 13px",
-                      border: "none", cursor: "pointer",
-                      background: s.studentId === activeId ? `${ACCENT}0f` : "#fff",
-                    }}
-                  >
-                    <div style={{ fontWeight: 700, fontSize: 12.5, color: "var(--navy)" }}>{s.name}</div>
-                    <div style={{ fontSize: 10.5, color: "var(--muted)", marginTop: 1 }}>{s.studentId} · {s.plan}</div>
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 /* ── Page ───────────────────────────────────── */
 export default function MentorDashboard() {
   const [token, setToken] = useState(readToken);
@@ -368,7 +273,7 @@ export default function MentorDashboard() {
     <>
       <Seo title="Mentor dashboard · College Parichay" robots="noindex, nofollow" />
       <div className="container" style={{ padding: "120px 0 60px" }}>
-        <Hero mentor={mentor} students={students} activeId={activeId} onPick={setActiveId} />
+        <MentorHero mentor={mentor} students={students} activeId={activeId} onPick={setActiveId} />
 
         {err && (
           <div style={{

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Gauge, Crosshair, BarChart3, Map, ListChecks,
-  GitCompareArrows, Layers, Sparkles, Ticket,
+  GitCompareArrows, Layers, Sparkles, Ticket, GraduationCap,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
@@ -56,6 +56,12 @@ const TOOLS = [
     bullets: ["Safe / Moderate / Reach mix", "Float, Slide & Upgrade guidance", "Printable export list"],
     to: "/planner", live: true,
   },
+  {
+    icon: GraduationCap, title: "Mentor Dashboard", accent: "#FF693D",
+    desc: "For assigned mentors only. Sign in with the credentials your admin issued to follow your students' progress.",
+    bullets: ["Track assigned students only", "Study log, tests & backlog", "View-only — never edits their data"],
+    to: "/mentor", live: true, mentorOnly: true,
+  },
 ];
 
 const containerV = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
@@ -66,7 +72,10 @@ const itemV = {
 
 function ToolCard({ t, nav }) {
   const [isHovered, setIsHovered] = useState(false);
-  const badgeColor = t.hot ? "#FF693D" : "#10b981"; // Orange for NEW, Green for LIVE
+  // Orange for NEW, green for LIVE, slate for staff-only entry points — those
+  // aren't a tool students can use, so they shouldn't wear the same "LIVE" badge.
+  const badgeColor = t.mentorOnly ? "#64748b" : t.hot ? "#FF693D" : "#10b981";
+  const badgeText = t.mentorOnly ? "MENTORS" : t.hot ? "NEW" : "LIVE";
   const iconColor = t.accent;
 
   return (
@@ -116,7 +125,7 @@ function ToolCard({ t, nav }) {
             fontWeight: 800,
             letterSpacing: "0.02em"
           }}>
-            {t.hot ? "NEW" : "LIVE"}
+            {badgeText}
           </div>
         )}
       </div>
