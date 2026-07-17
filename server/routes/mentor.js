@@ -38,13 +38,25 @@ async function resolveAndAudit(req, resource) {
   return enr;
 }
 
-// Mentors are read-only over student data by design. This router exposes GETs
-// only for anything student-owned; the sole writes it allows are to the mentor's
-// own credentials. Anything a mentor authors FOR a student (tasks, guidance,
-// chat) lands in mentor-owned collections, never inside the student's own blob.
+// Mentors are read-only over student DATA by design. This router exposes GETs
+// only for anything student-owned; the writes it allows are to the mentor's own
+// credentials and to the tasks it assigns a student. Anything a mentor authors
+// FOR a student (tasks, guidance, chat) lands in mentor-owned collections, never
+// inside the student's own progress blob.
 
 const MAX_FAILED = 5;
 const LOCK_MS = 15 * 60 * 1000;
+
+// Normalise a submitted task list: accept strings or {text} objects, trim, drop
+// blanks, cap at 20, and give each a stable id. Mirrors the student-facing shape
+// in mentorship.js so the student's dashboard renders them unchanged.
+const sanitizeTasks = (arr) =>
+  (Array.isArray(arr) ? arr : [])
+    .map((t) => (typeof t === "string" ? t : t?.text))
+    .map((s) => String(s || "").trim())
+    .filter(Boolean)
+    .slice(0, 20)
+    .map((text, i) => ({ id: `mt-${Date.now()}-${i}`, text }));
 
 const publicMentor = (m) => ({
   id: String(m._id), name: m.name, email: m.email,
@@ -176,7 +188,7 @@ router.get("/students/:studentId/tests", requireMentor, requirePasswordChanged, 
   }
 });
 
-/* ── The tasks a student currently sees — READ ONLY in this phase ────────── */
+/* ── The tasks this student sees — the mentor reads and sets them ─────────── */
 router.get("/students/:studentId/tasks", requireMentor, requirePasswordChanged, async (req, res) => {
   try {
     const enr = await resolveAndAudit(req, "tasks");
@@ -185,6 +197,28 @@ router.get("/students/:studentId/tasks", requireMentor, requirePasswordChanged, 
     res.json({ tasks: doc?.tasks || [] });
   } catch (e) {
     console.error("[mentor/tasks]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* ── Assign / replace this student's task list ────────────────────────────────
+   The one write a mentor has over what a student sees. It targets the
+   mentor-owned MentorTask collection (keyed by the CP ID), so it flows straight
+   into the student's "From your mentor" fix-list without touching their own
+   progress blob. Scoped to the mentor's assigned students by resolveAndAudit. */
+router.put("/students/:studentId/tasks", requireMentor, requirePasswordChanged, async (req, res) => {
+  try {
+    const enr = await resolveAndAudit(req, "tasks:write");
+    if (!enr) return res.status(404).json({ error: "Student not found" });
+    const tasks = sanitizeTasks(req.body?.tasks);
+    const doc = await MentorTask.findOneAndUpdate(
+      { studentId: enr.studentId },
+      { studentId: enr.studentId, tasks, assignedByMentorId: req.mentor._id, assignedByName: req.mentor.name },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ).lean();
+    res.json({ ok: true, tasks: doc.tasks });
+  } catch (e) {
+    console.error("[mentor/tasks PUT]", e.message);
     res.status(500).json({ error: "Server error" });
   }
 });

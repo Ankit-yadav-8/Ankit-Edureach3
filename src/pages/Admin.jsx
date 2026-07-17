@@ -1,13 +1,12 @@
 import { useState, useEffect, useCallback, Fragment } from "react";
 import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
-  ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText, ListChecks,
+  ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText,
   GraduationCap,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
 import TestUpload from "../components/admin/TestUpload.jsx";
-import MentorTasks from "../components/admin/MentorTasks.jsx";
 import Mentors from "../components/admin/Mentors.jsx";
 
 const TOKEN_STORAGE = "edureach:adminToken";
@@ -17,7 +16,7 @@ const ORANGE = "#FF693D";
 // no stat cards, no CSV export, no shared search/table. Named rather than
 // spelled out per site, so adding a tab doesn't mean finding every
 // `tab !== "x" && tab !== "y"` chain and appending to it.
-const SELF_CONTAINED_TABS = new Set(["community", "tests", "tasks", "mentors"]);
+const SELF_CONTAINED_TABS = new Set(["community", "tests", "mentors"]);
 
 const fmtDate = (iso) => {
   if (!iso) return "—";
@@ -457,7 +456,6 @@ export default function Admin() {
             { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
             { k: "community", label: "Community", icon: MessagesSquare },
             { k: "tests", label: "Tests", icon: FileText },
-            { k: "tasks", label: "Weekly Tasks", icon: ListChecks },
             { k: "mentors", label: "Mentors", icon: GraduationCap },
           ].map(({ k, label, icon: Icon, count }) => {
             const active = tab === k;
@@ -572,8 +570,6 @@ export default function Admin() {
           <CommunityModeration token={token} />
         ) : tab === "tests" ? (
           <TestUpload token={token} />
-        ) : tab === "tasks" ? (
-          <MentorTasks token={token} />
         ) : tab === "mentors" ? (
           <Mentors token={token} />
         ) : tab === "users" ? (

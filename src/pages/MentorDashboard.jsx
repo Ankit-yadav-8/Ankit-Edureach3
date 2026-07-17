@@ -7,6 +7,7 @@ import MentorHero from "../components/mentor/MentorHero.jsx";
 import {
   apiMentorLogin, apiMentorMe, apiMentorSetPassword, apiMentorStudents,
   apiMentorStudentProgress, apiMentorStudentTests, apiMentorStudentTasks,
+  apiMentorSetStudentTasks,
 } from "../auth/api.js";
 
 const ACCENT = "#FF693D";
@@ -243,6 +244,15 @@ export default function MentorDashboard() {
     return () => { cancelled = true; };
   }, [token, activeId]);
 
+  // Persist a task list the mentor assigned to the student on screen, then adopt
+  // the server's normalised copy so the view matches exactly what was stored.
+  const saveTasks = useCallback(async (texts) => {
+    if (!token || !activeId) return;
+    const { tasks } = await apiMentorSetStudentTasks(token, activeId, texts);
+    setReport((r) => ({ ...r, tasks }));
+    return tasks;
+  }, [token, activeId]);
+
   if (booting) {
     return (
       <div style={{ minHeight: "60vh", display: "grid", placeItems: "center", color: "var(--muted)" }}>
@@ -301,13 +311,13 @@ export default function MentorDashboard() {
           </div>
         ) : (
           <StudentReport progress={report.progress} tests={report.tests} tasks={report.tasks}
-            updatedAt={report.updatedAt} />
+            updatedAt={report.updatedAt} onSaveTasks={saveTasks} />
         )}
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginTop: 22, flexWrap: "wrap" }}>
           <p style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11.5, color: "var(--muted)", margin: 0 }}>
             <Lock size={12} color={ACCENT} />
-            You can view your assigned students' data but never change it. They keep full control of their own dashboard.
+            You can view your students' study data (never change it) and set the tasks they must complete. They keep full control of their own dashboard.
           </p>
           <button
             onClick={signOut}

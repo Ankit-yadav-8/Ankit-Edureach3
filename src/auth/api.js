@@ -115,12 +115,6 @@ export const apiAdminTestCreate     = (adminToken, b) => adminReq("/api/tests/ad
 export const apiAdminTestList       = (adminToken, plan, category) => adminReq(`/api/tests/admin${batchQ(plan, category ? `category=${category}` : "")}`, adminToken);
 export const apiAdminTestDelete     = (adminToken, id) => adminReq(`/api/tests/admin/${id}`, adminToken, { method: "DELETE" });
 
-// ── Mentor weekly tasks (admin sets per student ID) ──────────────────────────
-export const apiAdminGetMentorTasks = (adminToken, studentId) =>
-  adminReq(`/api/mentorship/admin/tasks/${encodeURIComponent(studentId)}`, adminToken);
-export const apiAdminSetMentorTasks = (adminToken, studentId, tasks) =>
-  adminReq(`/api/mentorship/admin/tasks/${encodeURIComponent(studentId)}`, adminToken, { method: "PUT", body: { tasks } });
-
 // ── Mentor dashboard ────────────────────────────────────────────────────────
 // Mentors authenticate with their own credentials and carry a mentor-typed
 // token — the server refuses it on any student route, so it is kept in its own
@@ -133,6 +127,9 @@ const mentorScoped = (sid, path) => `/api/mentor/students/${encodeURIComponent(s
 export const apiMentorStudentProgress = (token, sid) => req(mentorScoped(sid, "progress"), { token });
 export const apiMentorStudentTests    = (token, sid) => req(mentorScoped(sid, "tests"), { token });
 export const apiMentorStudentTasks    = (token, sid) => req(mentorScoped(sid, "tasks"), { token });
+// Assign / replace the student's mandatory task list — the one write a mentor has.
+export const apiMentorSetStudentTasks = (token, sid, tasks) =>
+  req(mentorScoped(sid, "tasks"), { method: "PUT", body: { tasks }, token });
 
 // ── Admin → mentor management ───────────────────────────────────────────────
 export const apiAdminMentorList   = (adminToken) => adminReq("/api/admin/mentors", adminToken);

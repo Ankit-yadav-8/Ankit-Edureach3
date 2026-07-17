@@ -1,18 +1,21 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Flame, Clock, ClipboardList, Layers, TrendingUp, TrendingDown,
   ChevronLeft, ChevronRight, AlertTriangle, CheckCircle2, Eye,
+  Plus, Trash2, Save, Loader2, Pencil,
 } from "lucide-react";
 
 /* ══════════════════════════════════════════════
-   The mentor's read-only view of one student.
+   The mentor's view of one student.
 
-   Everything here renders from the student's own progress blob
-   { entries, tests, backlog, weeklyTasks } exactly as the student
-   saved it. There is deliberately no edit affordance anywhere in
-   this file — the mentor observes, and the server has no write
-   path for student data regardless of what the UI offers.
+   The study log, tests and backlog render from the student's own
+   progress blob { entries, tests, backlog } exactly as they saved
+   it — read-only, and the server has no write path for that data.
+
+   The one thing the mentor OWNS is the task list: they assign it
+   here and it lands in the student's mandatory "From your mentor"
+   fix-list. That section (and only that one) is editable.
 ══════════════════════════════════════════════ */
 
 const ACCENT = "#FF693D";
@@ -254,41 +257,143 @@ function Backlog({ backlog }) {
   );
 }
 
-/* ── Section 4 — tasks the student currently sees ─── */
-function Tasks({ tasks }) {
-  if (!tasks.length) {
-    return <Empty>No tasks are currently set for this student.</Empty>;
-  }
+/* ── Section 4 — the tasks the mentor assigns this student ─────────────────────
+   Editable: add, rename, remove and save. Saving replaces the whole list, which
+   is exactly what the student then sees as their mandatory "From your mentor"
+   fix-list. A local draft is kept until Save so edits never half-apply. */
+function Tasks({ tasks, onSave }) {
+  const serverText = (tasks || []).map((t) => t.text).join("\n");
+  const [draft, setDraft] = useState(() => (tasks || []).map((t, i) => ({ id: t.id || `mt-${i}`, text: t.text })));
+  const [newTask, setNewTask] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState({ type: "", text: "" });
+
+  // Re-seed when the mentor switches to a different student (or the saved list
+  // changes), unless the mentor has an unsaved draft in progress.
+  useEffect(() => {
+    setDraft((tasks || []).map((t, i) => ({ id: t.id || `mt-${i}`, text: t.text })));
+    setMsg({ type: "", text: "" });
+    setNewTask("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serverText]);
+
+  const dirty = draft.map((t) => t.text.trim()).filter(Boolean).join("\n") !== serverText;
+
+  const add = (e) => {
+    e?.preventDefault();
+    const text = newTask.trim();
+    if (!text) return;
+    setDraft((p) => [...p, { id: `mt-${Date.now()}`, text }]);
+    setNewTask("");
+  };
+  const edit = (id, text) => setDraft((p) => p.map((t) => (t.id === id ? { ...t, text } : t)));
+  const remove = (id) => setDraft((p) => p.filter((t) => t.id !== id));
+
+  const save = async () => {
+    if (!onSave) return;
+    setBusy(true); setMsg({ type: "", text: "" });
+    try {
+      const texts = draft.map((t) => t.text.trim()).filter(Boolean);
+      await onSave(texts);
+      setMsg({ type: "ok", text: texts.length ? `Assigned ${texts.length} task${texts.length === 1 ? "" : "s"}.` : "Cleared this student's task list." });
+    } catch (e) {
+      setMsg({ type: "err", text: e.message || "Could not save. Try again." });
+    } finally { setBusy(false); }
+  };
+
+  const inputStyle = {
+    flex: 1, minWidth: 0, padding: "10px 12px", borderRadius: 9, fontSize: 13,
+    border: "1px solid var(--line)", background: "#fff", color: "var(--navy)",
+    outline: "none", fontFamily: "inherit",
+  };
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      {tasks.map((t, i) => (
-        <motion.div
-          key={t.id || i}
-          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28, delay: i * 0.04 }}
+    <div>
+      <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 14px", lineHeight: 1.55 }}>
+        Set the tasks this student must work through. They appear in their dashboard under
+        <strong style={{ color: "var(--navy)" }}> “From your mentor”</strong> and roll into the weekly parent report.
+      </p>
+
+      {/* add a task */}
+      <form onSubmit={add} style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+        <input
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+          placeholder="Add a task — e.g. Finish Rotational Motion PYQs"
+          style={inputStyle}
+          onFocus={(e) => { e.target.style.borderColor = ACCENT; }}
+          onBlur={(e) => { e.target.style.borderColor = "var(--line)"; }}
+        />
+        <button type="submit" disabled={!newTask.trim()}
           style={{
-            display: "flex", alignItems: "flex-start", gap: 10, padding: "12px 14px",
-            background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 11,
-          }}
-        >
-          <span style={{
-            width: 20, height: 20, borderRadius: 6, flexShrink: 0, marginTop: 1,
-            background: `${ACCENT}18`, color: ACCENT, display: "grid", placeItems: "center",
-            fontSize: 10, fontWeight: 800,
-          }}>{i + 1}</span>
-          <div style={{ fontSize: 12.5, color: "var(--navy)", lineHeight: 1.55 }}>{t.text}</div>
-        </motion.div>
-      ))}
+            display: "inline-flex", alignItems: "center", gap: 6, border: "none", borderRadius: 9,
+            padding: "0 16px", height: 40, fontFamily: SORA, fontWeight: 700, fontSize: 13,
+            background: newTask.trim() ? ACCENT : `${ACCENT}66`, color: "#fff",
+            cursor: newTask.trim() ? "pointer" : "not-allowed", flexShrink: 0,
+          }}>
+          <Plus size={15} /> Add
+        </button>
+      </form>
+
+      {/* the draft list */}
+      {draft.length ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
+          {draft.map((t, i) => (
+            <div key={t.id} style={{
+              display: "flex", alignItems: "center", gap: 10, padding: "8px 10px 8px 12px",
+              background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 11,
+            }}>
+              <span style={{
+                width: 20, height: 20, borderRadius: 6, flexShrink: 0,
+                background: `${ACCENT}18`, color: ACCENT, display: "grid", placeItems: "center",
+                fontSize: 10, fontWeight: 800,
+              }}>{i + 1}</span>
+              <input value={t.text} onChange={(e) => edit(t.id, e.target.value)}
+                style={{ flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent", fontSize: 13, color: "var(--navy)", fontFamily: "inherit" }} />
+              <button onClick={() => remove(t.id)} title="Remove" aria-label="Remove task"
+                style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "#fff5f5", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                <Trash2 size={13} />
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={{ padding: "22px 16px", textAlign: "center", color: "var(--muted)", fontSize: 12.5, marginBottom: 16 }}>
+          No tasks set yet — add the first one above.
+        </div>
+      )}
+
+      {msg.text && (
+        <div style={{
+          borderRadius: 9, padding: "9px 12px", marginBottom: 14, fontSize: 12.5, fontWeight: 600, lineHeight: 1.5,
+          background: msg.type === "ok" ? "#f0fdf4" : "#fef2f2",
+          border: `1px solid ${msg.type === "ok" ? "#86efac" : "#fecaca"}`,
+          color: msg.type === "ok" ? "#166534" : "#b91c1c",
+        }}>
+          {msg.text}
+        </div>
+      )}
+
+      <button onClick={save} disabled={busy || !dirty}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 8, border: "none", borderRadius: 10,
+          padding: "0 20px", height: 44, fontFamily: SORA, fontWeight: 800, fontSize: 13.5,
+          background: busy || !dirty ? `${ACCENT}66` : ACCENT, color: "#fff",
+          cursor: busy || !dirty ? "not-allowed" : "pointer",
+        }}>
+        {busy ? <Loader2 size={15} className="cp-spin" /> : <Save size={15} />}
+        {dirty ? "Save task list" : "Saved"}
+      </button>
     </div>
   );
 }
 
 /* ── The stepper shell — one section at a time ─── */
 const SECTIONS = [
-  { key: "log",     label: "Study log",     icon: Clock,         blurb: "Daily hours, streak and task completion." },
-  { key: "tests",   label: "Test analysis", icon: TrendingUp,    blurb: "Scores, accuracy and recurring mistakes." },
-  { key: "backlog", label: "Backlog",       icon: Layers,        blurb: "Pending topics and what's slipping." },
-  { key: "tasks",   label: "Their tasks",   icon: ClipboardList, blurb: "What this student currently sees as assigned." },
+  { key: "log",     label: "Study log",     icon: Clock,         blurb: "Daily hours, streak and task completion.", readOnly: true },
+  { key: "tests",   label: "Test analysis", icon: TrendingUp,    blurb: "Scores, accuracy and recurring mistakes.", readOnly: true },
+  { key: "backlog", label: "Backlog",       icon: Layers,        blurb: "Pending topics and what's slipping.", readOnly: true },
+  { key: "tasks",   label: "Assign tasks",  icon: ClipboardList, blurb: "The tasks you set this student — their mandatory fix-list." },
 ];
 
 /* How stale is what the mentor is looking at? The student's dashboard syncs to
@@ -305,7 +410,7 @@ function freshness(updatedAt) {
   return days === 1 ? "yesterday" : `${days} days ago`;
 }
 
-export default function StudentReport({ progress, tests, tasks, updatedAt }) {
+export default function StudentReport({ progress, tests, tasks, updatedAt, onSaveTasks }) {
   const [i, setI] = useState(0);
   const section = SECTIONS[i];
   const synced = freshness(updatedAt);
@@ -358,13 +463,23 @@ export default function StudentReport({ progress, tests, tasks, updatedAt }) {
               <h3 style={{ fontFamily: SORA, fontWeight: 800, fontSize: 17, color: "var(--navy)", margin: 0 }}>
                 {section.label}
               </h3>
-              <span style={{
-                display: "inline-flex", alignItems: "center", gap: 4, fontSize: 9.5, fontWeight: 800,
-                letterSpacing: ".05em", textTransform: "uppercase", color: "var(--muted)",
-                background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 50, padding: "3px 8px",
-              }}>
-                <Eye size={10} /> Read only
-              </span>
+              {section.readOnly ? (
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 4, fontSize: 9.5, fontWeight: 800,
+                  letterSpacing: ".05em", textTransform: "uppercase", color: "var(--muted)",
+                  background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 50, padding: "3px 8px",
+                }}>
+                  <Eye size={10} /> Read only
+                </span>
+              ) : (
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 4, fontSize: 9.5, fontWeight: 800,
+                  letterSpacing: ".05em", textTransform: "uppercase", color: ACCENT,
+                  background: `${ACCENT}12`, border: `1px solid ${ACCENT}44`, borderRadius: 50, padding: "3px 8px",
+                }}>
+                  <Pencil size={10} /> You set these
+                </span>
+              )}
             </div>
             <p style={{ fontSize: 12, color: "var(--muted)", margin: "3px 0 0" }}>
               {section.blurb}
@@ -405,7 +520,7 @@ export default function StudentReport({ progress, tests, tasks, updatedAt }) {
             {section.key === "log"     && <StudyLog entries={entries} />}
             {section.key === "tests"   && <TestAnalysis tests={testList} />}
             {section.key === "backlog" && <Backlog backlog={backlog} />}
-            {section.key === "tasks"   && <Tasks tasks={tasks || []} />}
+            {section.key === "tasks"   && <Tasks tasks={tasks || []} onSave={onSaveTasks} />}
           </motion.div>
         </AnimatePresence>
       </div>
