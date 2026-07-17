@@ -1152,7 +1152,7 @@ function DashboardBody({ urlPlan = "" }) {
                 <Icon size={19} color={ORANGE} />
               </span>
               <div>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: NAVY, marginBottom: 6 }}>{label}</div>
+                <div style={{ fontFamily: "Sora", fontWeight: 600, fontSize: 15, color: NAVY, marginBottom: 6 }}>{label}</div>
                 <div style={{ fontSize: 12.5, color: MUTE, lineHeight: 1.55 }}>{desc}</div>
               </div>
             </button>
