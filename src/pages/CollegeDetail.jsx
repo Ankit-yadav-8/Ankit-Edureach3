@@ -611,8 +611,8 @@ export default function CollegeDetail() {
                   </p>
                   <iframe
                     title="map"
-                    style={{ width: "100%", height: 220, border: 0, borderRadius: 12, marginTop: 12 }}
-                    src={`https://www.google.com/maps?q=${college.coords.lat},${college.coords.lng}&z=14&output=embed`}
+                    style={{ width: "100%", height: 250, border: 0, borderRadius: 12, marginTop: 12 }}
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(college.name + (college.location ? " " + college.location : ""))}&z=14&output=embed`}
                     loading="lazy"
                   />
                   <h4 style={{ fontFamily: "Sora", fontWeight: 700, margin: "16px 0 8px" }}>
