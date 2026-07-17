@@ -1,6 +1,15 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapPin, Layers, ArrowRight } from "lucide-react";
+// Leaflet is imported rather than read off window.L from a CDN <script>.
+// The CDN tags used to live in index.html, which meant every page paid for
+// Leaflet just so this one route could use it — and when those tags were
+// removed with the Campus Life map, this page silently rendered an empty box
+// (the old code did `if (!window.L) return`, so there was nothing to see and
+// no error). Importing it keeps it in this route's lazy chunk, and keeps
+// script-src at 'self' with no unpkg exception.
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { COLLEGES } from "../data/colleges.js";
 import { fmtINR } from "../utils/format.js";
 import Seo from "../components/Seo.jsx";
@@ -25,8 +34,7 @@ export default function CollegeMap() {
 
   // init map once
   useEffect(() => {
-    const L = window.L;
-    if (!L || !mapEl.current || mapRef.current) return;
+    if (!mapEl.current || mapRef.current) return;
     const map = L.map(mapEl.current, { scrollWheelZoom: true, zoomControl: true }).setView([22.8, 80], 5);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '&copy; OpenStreetMap contributors', maxZoom: 18,
@@ -39,8 +47,7 @@ export default function CollegeMap() {
 
   // (re)draw markers when filter changes
   useEffect(() => {
-    const L = window.L;
-    if (!L || !mapRef.current || !layerRef.current) return;
+    if (!mapRef.current || !layerRef.current) return;
     layerRef.current.clearLayers();
     const pts = [];
     list.forEach((c) => {
