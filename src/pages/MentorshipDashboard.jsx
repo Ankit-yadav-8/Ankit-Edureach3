@@ -2,12 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home, GraduationCap, LineChart as LineIcon, Mail, Activity,
+  GraduationCap, LineChart as LineIcon, Mail, Activity,
   Flame, Clock, CheckCircle2, Target, TrendingUp, TrendingDown, Plus, Sparkles,
   ShieldCheck, ArrowRight, Users, BarChart3, Rocket, Zap, Crosshair, Timer,
   ListChecks, Lock, Loader2, RotateCw, Pencil, Trash2, CalendarDays, Brain,
   BookOpen, Minus, Trophy, Send, Lightbulb, Hourglass, AlertCircle,
-  MessagesSquare, BadgeCheck,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiLogin, apiSendParentReport, apiMyMentorTasks, apiMyMentor, apiGetProgress, apiSaveProgress } from "../auth/api.js";
@@ -1047,14 +1046,13 @@ function DashboardBody({ urlPlan = "" }) {
   const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
   const initial = (user?.name || user?.email || "U").charAt(0).toUpperCase();
 
-  const NAV_LINKS = [
-    { id: "live-tracking",    label: "Live student tracking", desc: "Subject-wise daily log & streak", icon: Activity,        color: "#ef4444" },
-    { id: "subject-analysis", label: "Subject-wise analysis", desc: "Hours, tasks & day comparison",   icon: BarChart3,       color: "#6366f1" },
-    { id: "test-analysis",    label: "Test analysis",         desc: rankEnabled ? "Marks → charts + rank" : "Marks → AI charts", icon: LineIcon, color: "#8b5cf6" },
-    { id: "mentor-tools",     label: "What your mentor breaks down", desc: "Silly mistakes · weak chapters", icon: Brain,      color: GOLD },
-    { id: "backlog",          label: "Backlog clearing sprints", desc: "List & clear pending topics",  icon: Rocket,          color: "#7c3aed" },
-    { id: "community",        label: "Batch community",       desc: "Ask doubts · photos & video",      icon: MessagesSquare,  color: "#0ea5e9" },
-    { id: "parent-report",    label: "Weekly report & tasks", desc: "Tasks + auto parent email",        icon: Mail,            color: GREEN },
+  const FEATURES = [
+    { id: "live-tracking",    label: "Live student tracking",       desc: "Subject-wise daily log and streak, updated as you study.", icon: Activity },
+    { id: "subject-analysis", label: "Subject-wise analysis",       desc: "Hours, tasks and day-by-day comparison across subjects.", icon: BarChart3 },
+    { id: "test-analysis",    label: "Test analysis",               desc: rankEnabled ? "Marks turned into charts, trends and rank prediction." : "Marks turned into charts and trend analysis.", icon: LineIcon },
+    { id: "mentor-tools",     label: "What your mentor breaks down", desc: "Silly-mistake audit and weak-chapter heatmap, explained plainly.", icon: Brain },
+    { id: "backlog",          label: "Backlog clearing sprints",    desc: "A running list of pending topics, cleared one sprint at a time.", icon: Rocket },
+    { id: "parent-report",    label: "Weekly report and tasks",     desc: "Tasks for the week, with an auto email sent to your parents.", icon: Mail },
   ];
 
   return (
@@ -1065,30 +1063,29 @@ function DashboardBody({ urlPlan = "" }) {
           sit flush against the navbar. */}
       <div style={{ paddingTop: 138, textAlign: "center" }}>
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-          style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 800, letterSpacing: "2.5px", textTransform: "uppercase", color: ORANGE, background: "rgba(255,105,61,.08)", border: "1px solid rgba(255,105,61,.2)", borderRadius: 50, padding: "6px 14px", marginBottom: 14 }}>
-          <Sparkles size={13} /> 1-on-1 · Personalised · Verified
+          style={{ display: "inline-block", fontSize: 12, fontWeight: 800, letterSpacing: ".02em", color: ORANGE, background: "rgba(255,105,61,.1)", borderRadius: 50, padding: "6px 16px", marginBottom: 16 }}>
+          1-on-1 · personalised · verified
         </motion.div>
         <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .05 }}
-          style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,3.4vw,2.3rem)", color: NAVY, margin: 0, letterSpacing: "-0.5px", lineHeight: 1.1 }}>
-          Mentorship Dashboard
+          style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.7rem,3.6vw,2.4rem)", color: NAVY, margin: 0, letterSpacing: "-0.5px", lineHeight: 1.1 }}>
+          Mentorship dashboard
         </motion.h1>
 
         {/* Batch switcher — only when the student owns more than one plan, so
             opening "Foundation" never lands them on the JEE 2027 dashboard. */}
         {myBatches.length > 1 && (
           <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 }}
-            style={{ display: "inline-flex", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", marginTop: 16, background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.2)", borderRadius: 50, padding: "6px 8px", boxShadow: "0 14px 30px -24px rgba(13,27,62,.5)" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 800, color: MUTE, padding: "0 6px 0 10px" }}>
-              <GraduationCap size={14} color={ORANGE} /> Your batches
+            style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "center", marginTop: 20 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", padding: "8px 18px", borderRadius: 50, fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: MUTE, background: "#fff", border: "1px solid #ececec" }}>
+              Your batches
             </span>
             {myBatches.map((b) => {
               const on = b.plan === selectedPlan;
               return (
                 <button key={b.plan} onClick={() => switchBatch(b.plan)}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 15px", borderRadius: 50, cursor: on ? "default" : "pointer", fontFamily: "Sora", fontWeight: 800, fontSize: 12.5,
-                    border: `1.5px solid ${on ? ORANGE : "#e5e7eb"}`, background: on ? `linear-gradient(135deg,${ORANGE},${GOLD})` : "#fff", color: on ? "#fff" : NAVY,
-                    boxShadow: on ? `0 8px 18px -10px ${ORANGE}` : "none" }}>
-                  {on && <CheckCircle2 size={13} />} {b.label}
+                  style={{ display: "inline-flex", alignItems: "center", padding: "8px 18px", borderRadius: 50, cursor: on ? "default" : "pointer", fontFamily: "Sora", fontWeight: 800, fontSize: 13,
+                    border: `1px solid ${on ? ORANGE : "#ececec"}`, background: on ? ORANGE : "#fff", color: on ? "#fff" : NAVY }}>
+                  {b.label}
                 </button>
               );
             })}
@@ -1096,133 +1093,92 @@ function DashboardBody({ urlPlan = "" }) {
         )}
       </div>
 
-      {/* ══ HERO ══ */}
-      <div style={{ maxWidth: 1180, margin: "0 auto", padding: "26px 24px 0" }}>
-        <div style={{
-          position: "relative", overflow: "hidden", borderRadius: 24,
-          background: "linear-gradient(160deg,#fffaf5 0%,#ffffff 55%,#f3faf6 100%)",
-          border: "1px solid rgba(255, 105, 61,.14)",
-          boxShadow: "0 22px 54px -44px rgba(13,27,62,.3)",
-        }}>
-          <div style={{ position: "relative", display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.05fr) minmax(0,1fr)", gap: 16, padding: "18px" }} className="md-hero-grid">
+      {/* ══ HERO — centered welcome ══ */}
+      <div style={{ position: "relative", overflow: "hidden" }}>
+        {/* decorative rising "trajectory" — faint dashed line + dots, top-right */}
+        <svg className="md-hero-line" width="380" height="170" viewBox="0 0 380 170" fill="none" aria-hidden="true"
+          style={{ position: "absolute", top: 6, right: 0, pointerEvents: "none" }}>
+          <path d="M8 150 C 100 140, 150 100, 215 78 S 320 26, 360 12" stroke={ORANGE} strokeWidth="2" strokeDasharray="4 7" strokeLinecap="round" opacity=".45" />
+          <circle cx="150" cy="102" r="4" fill={ORANGE} opacity=".4" />
+          <circle cx="256" cy="52" r="4.5" fill={ORANGE} opacity=".65" />
+          <circle cx="360" cy="12" r="5.5" fill={ORANGE} />
+        </svg>
 
-            {/* LEFT — user / plan card */}
-            <motion.div initial={{ opacity: 0, x: -22 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5 }}
-              style={{ background: "var(--page-bg)", borderRadius: 18, border: "1px solid #eee", padding: "22px 20px", display: "flex", flexDirection: "column", boxShadow: "0 14px 34px -30px rgba(13,27,62,.35)" }}>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 16 }}>
-                <div style={{ width: 60, height: 60, borderRadius: "50%", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontSize: 26, fontWeight: 800, fontFamily: "Sora", flexShrink: 0 }}>{initial}</div>
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-                    <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.2rem", color: NAVY, lineHeight: 1.15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.name || "Student"}</div>
-                    {identity.status && (
-                      <span style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 800, padding: "3px 9px", borderRadius: 50, textTransform: "capitalize",
-                        color: identity.status === "active" ? "#16a34a" : "#dc2626",
-                        background: identity.status === "active" ? "rgba(34,197,94,.12)" : "rgba(220,38,38,.1)",
-                        border: `1px solid ${identity.status === "active" ? "rgba(34,197,94,.35)" : "rgba(220,38,38,.3)"}` }}>
-                        {identity.status === "active" && <CheckCircle2 size={11} />}{identity.status}
-                      </span>
-                    )}
-                  </div>
-                  {/* Clean global student ID — CP-2026-00042 */}
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 7, padding: "4px 11px", borderRadius: 8, fontFamily: "monospace", fontSize: 13, fontWeight: 700, letterSpacing: ".02em",
-                    color: identity.studentId ? "#0f766e" : "#94a3b8", background: identity.studentId ? "rgba(13,148,136,.08)" : "#f1f5f9", border: `1px solid ${identity.studentId ? "rgba(13,148,136,.3)" : "#e5e7eb"}` }}>
-                    <BadgeCheck size={13} /> {identity.studentId || "ID pending"}
-                  </span>
-                </div>
-              </div>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .06 }}
+          style={{ position: "relative", maxWidth: 720, margin: "0 auto", padding: "48px 24px 8px", textAlign: "center" }}>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
-                {[
-                  { icon: GraduationCap, c: ORANGE,    l: "Batch",         v: identity.batchLabel || planLabel },
-                  { icon: CalendarDays,  c: "#6366f1", l: "Enrolled on",   v: identity.enrolledOn ? fmtFull(identity.enrolledOn) : "—" },
-                  { icon: ShieldCheck,   c: GREEN,     l: "Valid until",   v: identity.validUntil ? fmtFull(identity.validUntil) : "—" },
-                  { icon: Mail,          c: "#0ea5e9", l: "Email",         v: user?.email },
-                  { icon: Flame,         c: "#ef4444", l: "Current streak", v: `${streak} day${streak === 1 ? "" : "s"}` },
-                ].map(({ icon: Icon, c, l, v }) => (
-                  <div key={l} style={{ display: "flex", alignItems: "center", gap: 11 }}>
-                    <span style={{ width: 36, height: 36, borderRadius: 10, background: `${c}14`, border: `1px solid ${c}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                      <Icon size={17} color={c} />
-                    </span>
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".04em" }}>{l}</div>
-                      <div style={{ fontSize: 13.5, color: NAVY, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis" }}>{v}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {/* status + student ID pill */}
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 800, borderRadius: 50, padding: "6px 15px",
+            color: identity.status === "expired" ? "#dc2626" : ORANGE,
+            background: identity.status === "expired" ? "rgba(220,38,38,.08)" : "rgba(255,105,61,.1)" }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: identity.status === "expired" ? "#dc2626" : ORANGE, display: "block" }} />
+            <span style={{ textTransform: "capitalize" }}>{identity.status || "Active"}</span>
+            {identity.studentId && <span style={{ opacity: .55 }}>·</span>}
+            {identity.studentId && <span style={{ fontFamily: "monospace", letterSpacing: ".02em" }}>{identity.studentId}</span>}
+          </span>
 
-              {/* Batch community shortcut */}
-              <button onClick={() => scrollTo("community")}
-                style={{ marginTop: "auto", textAlign: "left", width: "100%", marginBottom: 12, padding: "14px 15px", borderRadius: 14, cursor: "pointer",
-                  background: "linear-gradient(135deg,rgba(14,165,233,.12),rgba(14,165,233,.03))", border: "1px solid rgba(14,165,233,.3)",
-                  display: "flex", alignItems: "center", gap: 12, transition: "box-shadow .15s, transform .15s" }}
-                onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 12px 26px -14px rgba(14,165,233,.7)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
-                <span style={{ width: 40, height: 40, borderRadius: 11, background: "#0ea5e9", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <MessagesSquare size={19} color="#fff" />
-                </span>
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: "block", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: NAVY }}>Batch Community</span>
-                  <span style={{ display: "block", fontSize: 11.5, color: MUTE, marginTop: 1, lineHeight: 1.4 }}>Meet your batchmates & ask doubts with photos and video.</span>
-                </span>
-                <ArrowRight size={16} color="#0ea5e9" />
-              </button>
+          {/* welcome heading with hand-drawn coral underline on the name */}
+          <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(2rem,5vw,3rem)", color: NAVY, lineHeight: 1.12, letterSpacing: "-1px", margin: "18px 0 0" }}>
+            Welcome back,<br />
+            <span style={{ position: "relative", display: "inline-block", color: ORANGE }}>
+              {(user?.name || "there").trim().split(/\s+/)[0]}.
+              <svg width="100%" height="14" viewBox="0 0 200 14" preserveAspectRatio="none" fill="none"
+                style={{ position: "absolute", left: 0, bottom: -6, width: "100%" }} aria-hidden="true">
+                <path d="M3 9 C 45 3, 100 3, 150 7 S 190 11, 197 6" stroke={ORANGE} strokeWidth="3" strokeLinecap="round" opacity=".85" />
+              </svg>
+            </span>
+          </h2>
 
-              <button onClick={() => navigate("/")}
-                style={{ width: "100%", padding: "13px", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "var(--page-bg)", color: NAVY, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                <Home size={16} /> Home
-              </button>
-            </motion.div>
+          <p style={{ color: MUTE, fontSize: 15.5, lineHeight: 1.7, margin: "22px auto 0", maxWidth: 500 }}>
+            Log your day, track every test, and get a clean weekly report — everything to turn your prep into a real rank.
+          </p>
 
-            {/* MIDDLE — programme description */}
-            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .08 }}
-              style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "8px 6px" }}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#c2410c", background: "rgba(255, 105, 61,.12)", border: "1px solid rgba(255, 105, 61,.35)", padding: "6px 14px", borderRadius: 50, alignSelf: "flex-start", marginBottom: 16 }}>
-                <Sparkles size={13} /> Your private mentorship space
-              </span>
-              <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.4rem,2.6vw,2rem)", color: INK, lineHeight: 1.2, margin: "0 0 14px", letterSpacing: "-0.5px" }}>
-                Everything about your journey, in one place.
-              </h2>
-              <p style={{ color: MUTE, fontSize: 15, lineHeight: 1.7, margin: 0 }}>
-                Log study hours & tasks <strong style={{ color: NAVY }}>subject by subject</strong> once a day, enter every test
-                {rankEnabled && <> (with <strong style={{ color: NAVY }}>JEE rank prediction</strong>)</>}, and list your backlog.
-                We turn it into charts, week-on-week comparisons, a silly-mistake audit, a weak-chapter heatmap, strategies and a
-                fix-list — and email a clean weekly report to your parents.
-              </p>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 18 }}>
-                <button onClick={() => scrollTo("live-tracking")} style={{ background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", border: "none", padding: "12px 20px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, boxShadow: `0 12px 26px -10px ${ORANGE}` }}>
-                  Log today <ArrowRight size={16} />
-                </button>
-                <button onClick={() => scrollTo("test-analysis")} style={{ background: "var(--page-bg)", color: NAVY, border: "1.5px solid #e5e7eb", padding: "12px 20px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer" }}>
-                  Add a test
-                </button>
-              </div>
-            </motion.div>
-
-            {/* RIGHT — jump links */}
-            <motion.div initial={{ opacity: 0, x: 22 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5, delay: .12 }}
-              style={{ background: "var(--page-bg)", borderRadius: 18, border: "1px solid #eee", padding: "18px", boxShadow: "0 14px 34px -30px rgba(13,27,62,.35)" }}>
-              <div style={{ fontSize: 11.5, fontWeight: 800, color: "#9ca3af", textTransform: "uppercase", letterSpacing: ".06em", margin: "2px 4px 12px" }}>Jump to</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                {NAV_LINKS.map(({ id, label, desc, icon: Icon, color }) => (
-                  <button key={id} onClick={() => scrollTo(id)}
-                    style={{ textAlign: "left", background: "var(--page-bg)", border: "1px solid #eee", borderRadius: 14, padding: "11px 13px", cursor: "pointer", display: "flex", gap: 12, alignItems: "center", transition: "box-shadow .15s, transform .15s" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 12px 26px -14px ${color}99`; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
-                    <span style={{ width: 38, height: 38, borderRadius: 11, background: `${color}14`, border: `1px solid ${color}30`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                      <Icon size={18} color={color} />
-                    </span>
-                    <span style={{ flex: 1, minWidth: 0 }}>
-                      <span style={{ display: "block", fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, color: NAVY }}>{label}</span>
-                      <span style={{ display: "block", fontSize: 11.5, color: "#9ca3af", marginTop: 1 }}>{desc}</span>
-                    </span>
-                    <ArrowRight size={15} color="#cbd5e1" />
-                  </button>
-                ))}
-              </div>
-            </motion.div>
+          {/* actions */}
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginTop: 26 }}>
+            <button onClick={() => scrollTo("live-tracking")} style={{ background: ORANGE, color: "#fff", border: "none", padding: "13px 24px", borderRadius: 50, fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, boxShadow: `0 12px 26px -12px ${ORANGE}` }}>
+              Log today <ArrowRight size={16} />
+            </button>
+            <button onClick={() => scrollTo("test-analysis")} style={{ background: "#fff", color: NAVY, border: "1px solid #ececec", padding: "13px 24px", borderRadius: 50, fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer" }}>
+              Add a test
+            </button>
           </div>
-        </div>
+
+          {/* meta pills — batch, enrolment, validity, streak */}
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginTop: 26 }}>
+            {[
+              { icon: GraduationCap, text: identity.batchLabel || planLabel },
+              { icon: CalendarDays,  text: identity.enrolledOn ? `Enrolled ${fmtFull(identity.enrolledOn)}` : null },
+              { icon: ShieldCheck,   text: identity.validUntil ? `Valid until ${fmtFull(identity.validUntil)}` : null },
+              { icon: Flame,         text: `${streak} day${streak === 1 ? "" : "s"} streak` },
+            ].filter((p) => p.text).map(({ icon: Icon, text }) => (
+              <span key={text} style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 700, color: MUTE, background: "#fff", border: "1px solid #ececec", borderRadius: 50, padding: "7px 14px" }}>
+                <Icon size={14} color={ORANGE} /> {text}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* ══ FEATURE GRID — what the dashboard gives you ══ */}
+      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 0" }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .12 }}
+          className="md-feature-grid"
+          style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1, background: "#ececec", border: "1px solid #ececec", borderRadius: 18, overflow: "hidden" }}>
+          {FEATURES.map(({ id, label, desc, icon: Icon }) => (
+            <button key={id} onClick={() => scrollTo(id)}
+              style={{ textAlign: "left", background: "var(--page-bg)", border: "none", padding: "24px 22px 26px", cursor: "pointer", display: "flex", flexDirection: "column", gap: 14, transition: "background .15s" }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,105,61,.04)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "var(--page-bg)"; }}>
+              <span style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(255,105,61,.1)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <Icon size={19} color={ORANGE} />
+              </span>
+              <div>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: NAVY, marginBottom: 6 }}>{label}</div>
+                <div style={{ fontSize: 12.5, color: MUTE, lineHeight: 1.55 }}>{desc}</div>
+              </div>
+            </button>
+          ))}
+        </motion.div>
       </div>
 
       {/* ══ STICKY SECTION NAV ══ */}
@@ -2073,11 +2029,15 @@ function DashboardBody({ urlPlan = "" }) {
       </div>
 
       <style>{`
+        @media (max-width: 980px) {
+          .md-feature-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .md-hero-line { display: none !important; }
+        }
         @media (max-width: 900px) {
-          .md-hero-grid { grid-template-columns: 1fr !important; }
           .md-booklet { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 760px) {
+          .md-feature-grid { grid-template-columns: 1fr !important; }
           .md-track-grid { grid-template-columns: 1fr !important; }
           .md-tools-grid { grid-template-columns: 1fr !important; }
         }
