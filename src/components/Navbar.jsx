@@ -5,7 +5,7 @@ import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
   BookOpen, FlaskConical, Sigma, Zap, Trophy, LogOut, Sparkles,
-  HelpCircle, Flame, Globe2, Edit3, Activity, Clock, ClipboardCheck, Compass
+  HelpCircle, Flame, Globe2, Edit3, Activity, Clock, ClipboardCheck, Compass, GraduationCap
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -117,6 +117,9 @@ const TOOLS_MEGA = [
       { label: "Official Cutoffs",      to: "/cutoffs",      icon: FileText,    desc: "Real JoSAA opening & closing ranks, round by round" },
       { label: "Scholarships & Loans",  to: "/scholarships", icon: BadgeCheck,  desc: "Funding, scholarships & education loans for your seat" },
       { label: "Admin Data",            to: "/admin",        icon: ShieldCheck, desc: "Manage listings & portal data (admins only)" },
+      // Sits beside Admin Data because it's the same kind of thing: a staff
+      // sign-in, not a tool students can use.
+      { label: "Mentor Dashboard",      to: "/mentor",       icon: GraduationCap, desc: "Mentors sign in with the email & password from your admin" },
     ],
   },
   {

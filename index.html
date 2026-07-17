@@ -295,19 +295,19 @@
   <link rel="preconnect"   href="https://www.google.com" />
 
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap" />
+  <!-- Async CSS: media="print" keeps this off the render-blocking path while it
+       downloads, then it's flipped to "all" to apply. The flip used to be an
+       inline onload="" handler, which CSP blocks along with every other inline
+       script — leaving the site on fallback fonts forever. src/main.jsx now
+       flips anything tagged data-async-css. -->
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap"
-    rel="stylesheet" media="print" onload="this.media='all'" />
+    rel="stylesheet" media="print" data-async-css />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap" /></noscript>
 
   <!-- SPA redirect (GitHub Pages / Netlify fallback) -->
-  <script>
-    (function(l){
-      if(l.search[1]==='/'){
-        var d=l.search.slice(1).split('&').map(function(s){return s.replace(/~and~/g,'&');}).join('?');
-        window.history.replaceState(null,null,l.pathname.slice(0,-1)+d+l.hash);
-      }
-    })(window.location);
-  </script>
+  <!-- The SPA deep-link fallback that used to live here as an inline script now
+       runs at the top of src/main.jsx. It was the only reason the CSP had to
+       allow 'unsafe-inline' on script-src; with it gone, script-src is 'self'. -->
 
 </head>
 <body>
