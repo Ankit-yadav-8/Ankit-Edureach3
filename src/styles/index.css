@@ -3637,3 +3637,4 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 
 /* ── Hero campus image — subtle zoom on hover (reference style) ── */
 .cp-hero-img:hover .cp-hero-img__photo { transform: scale(1.05); }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }

@@ -194,7 +194,12 @@ function MeshDots({ dotCount = 80 }) {
     resize();
     window.addEventListener("resize", resize);
     const COLORS = ["#6366f1", "#FF693D", "#0ea5a4", "#8b5cf6", "#f4a261", "#ffffff"];
-    const dots = Array.from({ length: dotCount }, () => ({
+    
+    // Reduce dot count significantly on mobile to improve performance
+    const isMobile = window.innerWidth <= 768;
+    const actualDotCount = isMobile ? Math.min(25, dotCount) : dotCount;
+    
+    const dots = Array.from({ length: actualDotCount }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       r: Math.random() * 1.5 + 0.3,
@@ -205,7 +210,14 @@ function MeshDots({ dotCount = 80 }) {
       pulse: Math.random() * Math.PI * 2,
     }));
     let raf;
-    const draw = () => {
+    let lastDraw = 0;
+    const draw = (timestamp) => {
+      // Limit framerate to 30fps on mobile to save CPU/battery
+      if (isMobile && timestamp - lastDraw < 33) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
+      lastDraw = timestamp;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       dots.forEach((d) => {
         d.x += d.sx;
@@ -1529,7 +1541,7 @@ export default function Hero({ onSearch }) {
           <div style={{ textAlign: "center", minWidth: 0, width: "100%", maxWidth: 860, margin: "0 auto" }}>
 
             {/* Headline */}
-            <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.05 }}>
+            <div style={{ animation: "fadeInUp 0.65s ease-out", animationFillMode: "both" }}>
               <h1 style={{
                 fontFamily: "'Space Grotesk', 'Sora', system-ui, -apple-system, sans-serif",
                 fontWeight: 800,
@@ -1579,7 +1591,7 @@ export default function Hero({ onSearch }) {
               </p>
 
               <div style={{ marginBottom: "2.5rem" }} />
-            </motion.div>
+            </div>
 
             {/* ── Search bar ── */}
             <motion.div
