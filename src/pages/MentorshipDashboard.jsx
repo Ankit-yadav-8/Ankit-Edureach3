@@ -10,7 +10,7 @@ import {
   MessagesSquare, BadgeCheck,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
-import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiSendParentReport, apiMyMentorTasks, apiGetProgress, apiSaveProgress } from "../auth/api.js";
+import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiLogin, apiSendParentReport, apiMyMentorTasks, apiGetProgress, apiSaveProgress } from "../auth/api.js";
 import Community from "../components/mentorship/Community.jsx";
 import TestSeries from "../components/mentorship/TestSeries.jsx";
 import { Trend, Gauge, CenterDonut, DonutLegend, Bars } from "../components/Charts.jsx";
@@ -211,8 +211,9 @@ export default function MentorshipDashboard() {
    ════════════════════════════════════════════════════════════════ */
 function OtpGate({ email, name, onVerified }) {
   const navigate = useNavigate();
-  const [step, setStep] = useState("intro"); // intro | code
+  const [step, setStep] = useState("intro"); // intro | code | password
   const [code, setCode] = useState("");
+  const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState({ type: "", text: "" });
 
@@ -245,6 +246,21 @@ function OtpGate({ email, name, onVerified }) {
     } finally { setBusy(false); }
   };
 
+  // Password is a second way to prove the same thing the OTP proves: that the
+  // person at the keyboard is this account's owner, not just someone on a
+  // logged-in device. It re-checks the sign-up password server-side against this
+  // account's own email — so it can't be used to open anyone else's dashboard.
+  const verifyPassword = async () => {
+    if (!password) return;
+    setBusy(true); setMsg({ type: "", text: "" });
+    try {
+      await apiLogin({ email, password });
+      onVerified();
+    } catch (e) {
+      setMsg({ type: "err", text: e.message || "Incorrect password. Try again." });
+    } finally { setBusy(false); }
+  };
+
   return (
     <section style={{ background: "var(--page-bg)", minHeight: "100vh", display: "grid", placeItems: "center", padding: "120px 16px 60px" }}>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -259,15 +275,49 @@ function OtpGate({ email, name, onVerified }) {
         </h2>
         <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.6, textAlign: "center", margin: "10px 0 22px" }}>
           Your mentorship dashboard is private. {step === "intro"
-            ? <>We'll email a 6-digit code to <strong style={{ color: NAVY }}>{masked}</strong> to confirm it's really you.</>
-            : <>Enter the 6-digit code we sent to <strong style={{ color: NAVY }}>{masked}</strong>.</>}
+            ? <>We'll email a 6-digit code to <strong style={{ color: NAVY }}>{masked}</strong> — or just use your password.</>
+            : step === "password"
+              ? <>Enter the password you use to sign in to <strong style={{ color: NAVY }}>{masked}</strong>.</>
+              : <>Enter the 6-digit code we sent to <strong style={{ color: NAVY }}>{masked}</strong>.</>}
         </p>
 
         {step === "intro" ? (
-          <button onClick={send} disabled={busy}
-            style={{ width: "100%", height: 52, borderRadius: 14, border: "none", background: busy ? `${ORANGE}99` : `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 15, cursor: busy ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 9, boxShadow: `0 12px 26px -10px ${ORANGE}` }}>
-            {busy ? <><Loader2 size={18} style={{ animation: "spin .8s linear infinite" }} /> Sending code…</> : <><Mail size={18} /> Send code to my email</>}
-          </button>
+          <>
+            <button onClick={send} disabled={busy}
+              style={{ width: "100%", height: 52, borderRadius: 14, border: "none", background: busy ? `${ORANGE}99` : `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 15, cursor: busy ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 9, boxShadow: `0 12px 26px -10px ${ORANGE}` }}>
+              {busy ? <><Loader2 size={18} style={{ animation: "spin .8s linear infinite" }} /> Sending code…</> : <><Mail size={18} /> Send code to my email</>}
+            </button>
+
+            {/* Waiting on an email every time is the slow path when you already
+                know your password. Same proof, less friction. */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "16px 0" }}>
+              <span style={{ flex: 1, height: 1, background: "#e2e8f0" }} />
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: "#94a3b8" }}>OR</span>
+              <span style={{ flex: 1, height: 1, background: "#e2e8f0" }} />
+            </div>
+            <button onClick={() => { setStep("password"); setMsg({ type: "", text: "" }); }} disabled={busy}
+              style={{ width: "100%", height: 48, borderRadius: 14, background: "transparent", border: `1.5px solid ${ORANGE}40`, color: ORANGE, fontFamily: "Sora", fontWeight: 800, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+              <Lock size={16} /> Use my password instead
+            </button>
+          </>
+        ) : step === "password" ? (
+          <>
+            <input
+              type="password" placeholder="Your account password" value={password} autoFocus
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && verifyPassword()}
+              style={{ width: "100%", fontSize: 15, color: "#1e293b", height: 54, padding: "0 16px", border: `2px solid ${password ? ORANGE : "#e2e8f0"}`, borderRadius: 14, background: password ? `${ORANGE}08` : "#f8fafc", outline: "none", boxSizing: "border-box", marginBottom: 14, fontFamily: "inherit" }}
+            />
+            <button onClick={verifyPassword} disabled={busy || !password}
+              style={{ width: "100%", height: 52, borderRadius: 14, border: "none", background: busy || !password ? `${ORANGE}99` : `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 15, cursor: busy || !password ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 9, boxShadow: `0 12px 26px -10px ${ORANGE}` }}>
+              {busy ? <><Loader2 size={18} style={{ animation: "spin .8s linear infinite" }} /> Checking…</> : <><ShieldCheck size={18} /> Verify &amp; open dashboard</>}
+            </button>
+            <button onClick={() => { setStep("intro"); setPassword(""); setMsg({ type: "", text: "" }); }} disabled={busy}
+              style={{ width: "100%", height: 44, marginTop: 10, borderRadius: 12, background: "transparent", border: `1.5px solid ${ORANGE}30`, color: ORANGE, fontWeight: 700, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
+              <Mail size={14} /> Email me a code instead
+            </button>
+          </>
         ) : (
           <>
             <input
