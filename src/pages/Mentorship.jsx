@@ -995,7 +995,7 @@ const INCLUDED = [
   "Full mock marathon in final phase", "Rank prediction + college shortlist",
 ];
 function Pricing({ plan, exam, openEnrol }) {
-  const p = MENTOR_PLANS[plan] || { amount: 1, old: 7999 };
+  const p = MENTOR_PLANS[plan] || { amount: 2499, old: 7999 };
   return (
     <section id="enrol" className="mj-section">
       <div className="mj-wrap">

@@ -17,9 +17,9 @@ const PLANS = {
   "all-colleges":  { amount: 499,  label: "All Colleges Counselling (Any Rank)" },
   // ── Mentorship plans (JEE & NEET) ──
   "mentor-jee-2027":   { amount: 2499, label: "JEE 2027 Mentorship Program" },
-  "mentor-neet-2027":  { amount: 1, label: "NEET 2027 Mentorship Program" },
+  "mentor-neet-2027":  { amount: 2499, label: "NEET 2027 Mentorship Program" },
   "mentor-jee-2028":   { amount: 2499, label: "JEE 2028 Mentorship Program (2-Year)" },
-  "mentor-neet-2028":  { amount: 1, label: "NEET 2028 Mentorship Program (2-Year)" },
+  "mentor-neet-2028":  { amount: 2499, label: "NEET 2028 Mentorship Program (2-Year)" },
   "mentor-foundation": { amount: 2499, label: "Foundation Mentorship (Class 9–10)" },
 };
 

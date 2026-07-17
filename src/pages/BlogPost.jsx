@@ -5,14 +5,14 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   BookOpen, GitCompareArrows, Gauge, Building2, Brain, ListChecks,
-  TrendingUp, ShieldCheck, Layers, Clock, ArrowRight,
+  TrendingUp, ShieldCheck, Layers, Clock, ArrowRight, Trophy, Medal, Award,
 } from "lucide-react";
 import Seo from "../components/Seo.jsx";
 import BackButton from "../components/BackButton.jsx";
 import { CL } from "../components/home/clTheme.js";
 import { BLOG_POSTS, getBlogPost } from "../data/blog.js";
 
-const ICONS = { BookOpen, GitCompareArrows, Gauge, Building2, Brain, ListChecks, TrendingUp, ShieldCheck, Layers };
+const ICONS = { BookOpen, GitCompareArrows, Gauge, Building2, Brain, ListChecks, TrendingUp, ShieldCheck, Layers, Trophy, Medal, Award };
 const ACCENTS = { coral: CL.coral, green: CL.green, blue: CL.blue, violet: CL.violet, amber: CL.amber };
 
 /* Inline spans: {t} text · {b} bold · {i} italic · {l,h} link (internal = SPA nav) */
@@ -50,6 +50,51 @@ function Block({ block, accent }) {
     );
   if (block.type === "p")
     return <p style={pStyle}><Spans spans={block.s} accent={accent} /></p>;
+  if (block.type === "note")
+    return (
+      <div style={{
+        margin: "0 0 22px", padding: "14px 18px", borderRadius: 12,
+        background: `${accent}0E`, borderLeft: `3px solid ${accent}`,
+        fontSize: "1rem", lineHeight: 1.7, color: CL.ink2,
+      }}>
+        <Spans spans={block.s} accent={accent} />
+      </div>
+    );
+  if (block.type === "table")
+    return (
+      /* Wide tables scroll inside their own container so the page never scrolls sideways. */
+      <div style={{ margin: "0 0 24px", overflowX: "auto", borderRadius: 12, border: `1px solid ${CL.line}`, background: CL.card }}>
+        <table style={{ borderCollapse: "collapse", width: "100%", minWidth: 460, fontSize: 14 }}>
+          <thead>
+            <tr>
+              {block.head.map((cell, i) => (
+                <th key={i} style={{
+                  textAlign: "left", padding: "11px 14px", background: `${accent}12`,
+                  fontFamily: CL.display, fontWeight: 800, fontSize: 12.5, color: CL.ink,
+                  borderBottom: `1px solid ${CL.line}`, whiteSpace: "nowrap",
+                }}>
+                  <Spans spans={cell} accent={accent} />
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {block.rows.map((row, r) => (
+              <tr key={r} style={{ background: r % 2 ? CL.cream2 : "transparent" }}>
+                {row.map((cell, c) => (
+                  <td key={c} style={{
+                    padding: "10px 14px", color: CL.body, lineHeight: 1.6, verticalAlign: "top",
+                    borderBottom: r === block.rows.length - 1 ? "none" : `1px solid ${CL.line}`,
+                  }}>
+                    <Spans spans={cell} accent={accent} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
   // legacy { h?, p }
   return (
     <div style={{ marginBottom: 2 }}>

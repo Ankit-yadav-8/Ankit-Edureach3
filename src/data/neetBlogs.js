@@ -5,6 +5,13544 @@
 
 export const NEET_BLOG_POSTS = [
   {
+    "slug": "neet-ug-result-2026",
+    "title": "NEET UG Result 2026 Out: Scorecard, Cutoff & Rank",
+    "snippet": "NEET UG Result 2026 declared on 16 July at neet.nta.nic.in. Download your scorecard, check category-wise cutoff, AIR, toppers list and counselling dates.",
+    "metaDescription": "NEET UG Result 2026 declared on 16 July at neet.nta.nic.in. Download your scorecard, check category-wise cutoff, AIR, toppers list and counselling dates.",
+    "focusKeyword": "NEET Result 2026",
+    "secondaryKeywords": [
+      "NEET scorecard 2026",
+      "NEET cutoff 2026",
+      "NEET result link",
+      "NEET counselling 2026",
+      "NEET rank 2026",
+      "neet.nta.nic.in result"
+    ],
+    "category": "NEET",
+    "categoryLabel": "NEET Counselling",
+    "author": "College Parichay Counselling Desk",
+    "date": "2026-07-17",
+    "read": "14 min read",
+    "iconName": "Trophy",
+    "accent": "coral",
+    "badge": "RESULT OUT",
+    "tag": "NEET 2026",
+    "body": [
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "NEET UG Result 2026 was declared by the National Testing Agency on 16 July 2026 at neet.nta.nic.in."
+          },
+          {
+            "t": " Around 20 lakh candidates appeared and 11.21 lakh qualified. Aryan Gupta (Punjab) and Panshul Bansal (Haryana) jointly topped with 715/720. Candidates can download the scorecard using their application number and date of birth."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "i": "Reviewed by the College Parichay counselling desk — updated 17 July 2026."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "NEET UG Result 2026: What Was Announced"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The wait is over. On the evening of "
+          },
+          {
+            "b": "16 July 2026"
+          },
+          {
+            "t": ", the National Testing Agency (NTA) closed the longest, most anxious chapter of your year and published the NEET UG 2026 result on "
+          },
+          {
+            "b": "neet.nta.nic.in"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "If you are reading this with a scorecard open in another tab, take a breath first. Whatever the number says, it is one input into a decision, not the decision itself. We have sat with thousands of students on the other side of this exact moment, and the pattern is consistent: the students who do well in admissions are not always the ones with the highest marks. They are the ones who understand what their rank actually buys them, and who move fast and correctly in the four weeks that follow."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Here is what NTA released alongside the result:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Individual scorecards with subject-wise marks, total, percentile and "
+            },
+            {
+              "b": "All India Rank (AIR)"
+            }
+          ],
+          [
+            {
+              "t": "Category-wise "
+            },
+            {
+              "b": "qualifying cutoff"
+            },
+            {
+              "t": " marks and percentiles"
+            }
+          ],
+          [
+            {
+              "t": "The national "
+            },
+            {
+              "b": "toppers list"
+            }
+          ],
+          [
+            {
+              "b": "State and UT toppers"
+            }
+          ],
+          [
+            {
+              "t": "Score distribution bands"
+            }
+          ],
+          [
+            {
+              "t": "Language-wise and centre-wise participation data"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The final answer key was published the same day, 16 July, after the OMR response sheet challenge window closed on 15 July. That sequencing matters: your result is calculated against the "
+          },
+          {
+            "b": "final"
+          },
+          {
+            "t": " key, not the provisional one you may have used to self-evaluate in late June. If your self-calculated score and your official score differ, the answer key revision is almost always the reason."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Not sure what your rank means in seat terms? The fastest honest answer is our "
+          },
+          {
+            "l": "NEET rank predictor and college predictor",
+            "h": "/neet"
+          },
+          {
+            "t": " — it maps your AIR against previous years' closing ranks rather than guesswork."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "How to Download Your NEET UG 2026 Scorecard"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The process is short. The mistakes people make around it are not."
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Go to "
+            },
+            {
+              "b": "neet.nta.nic.in"
+            }
+          ],
+          [
+            {
+              "t": "Click on the link that reads "
+            },
+            {
+              "b": "\"NEET (UG) 2026 Result\""
+            }
+          ],
+          [
+            {
+              "t": "Enter your "
+            },
+            {
+              "b": "Application Number"
+            },
+            {
+              "t": ", "
+            },
+            {
+              "b": "Date of Birth"
+            },
+            {
+              "t": ", and the "
+            },
+            {
+              "b": "Security Pin"
+            },
+            {
+              "t": " shown on screen"
+            }
+          ],
+          [
+            {
+              "t": "Click "
+            },
+            {
+              "b": "Submit"
+            }
+          ],
+          [
+            {
+              "t": "Your scorecard loads on screen"
+            }
+          ],
+          [
+            {
+              "b": "Download the PDF and take at least two printouts"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "That last step is not filler advice. The NTA scorecard portal stays open for a limited window, and MCC and every state counselling authority will ask for the scorecard at document verification. Students who lose the PDF in September end up filing grievance requests during the exact week they should be locking choices."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Save it in three places:"
+          },
+          {
+            "t": " your phone, your email (mail it to yourself), and a cloud drive. Name the file something you can find under pressure — "
+          },
+          {
+            "b": "NEET2026_Scorecard_YourName_RollNo.pdf"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Direct Result Link and Login Credentials"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Official portal:"
+          },
+          {
+            "t": " neet.nta.nic.in"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "You will need:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Credential"
+            }
+          ],
+          [
+            {
+              "t": "Where to find it"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Application Number"
+              }
+            ],
+            [
+              {
+                "t": "On your NEET 2026 admit card and confirmation page"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Date of Birth"
+              }
+            ],
+            [
+              {
+                "t": "As entered in your application form (not as on your Aadhaar, if they differ)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Security Pin"
+              }
+            ],
+            [
+              {
+                "t": "Displayed live on the login screen — case sensitive"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Lost your application number?"
+          },
+          {
+            "t": " The NTA login page has a \"Forgot Application Number\" recovery flow that works off your name, date of birth and registered mobile or email. Use it before contacting the helpline — it resolves the vast majority of cases in under two minutes."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Site not loading?"
+          },
+          {
+            "t": " On result day and the two days after, neet.nta.nic.in runs under extreme load. If you see a timeout, do not panic and do not go looking for a \"mirror link.\" There are no official mirrors. Wait 15 minutes and retry, ideally between 11 PM and 6 AM when traffic collapses."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "NEET UG 2026 Result Statistics at a Glance"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Particular"
+            }
+          ],
+          [
+            {
+              "t": "Detail"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Exam Name"
+              }
+            ],
+            [
+              {
+                "t": "NEET (UG) 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Conducting Body"
+              }
+            ],
+            [
+              {
+                "t": "National Testing Agency (NTA)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Result Date"
+              }
+            ],
+            [
+              {
+                "t": "16 July 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Official Website"
+              }
+            ],
+            [
+              {
+                "t": "neet.nta.nic.in"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Candidates Appeared"
+              }
+            ],
+            [
+              {
+                "t": "~20 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Candidates Qualified"
+              }
+            ],
+            [
+              {
+                "b": "11.21 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Overall Qualification Rate"
+              }
+            ],
+            [
+              {
+                "t": "~56%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Exam Languages"
+              }
+            ],
+            [
+              {
+                "t": "13"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Exam Centres"
+              }
+            ],
+            [
+              {
+                "t": "5,440"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Cities Covered"
+              }
+            ],
+            [
+              {
+                "t": "551 in India, 14 abroad"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Highest Score"
+              }
+            ],
+            [
+              {
+                "t": "715 / 720 (joint)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Counselling Authority (AIQ)"
+              }
+            ],
+            [
+              {
+                "t": "Medical Counselling Committee (MCC)"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The number that should reframe your thinking: 11.21 lakh qualified."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "India has roughly 1.18 lakh MBBS seats across government and private colleges combined. Government MBBS seats are around 56,000. So qualifying is not the milestone — it is the entry ticket to a queue of over eleven lakh people competing for a fraction of that number of seats."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "This is not said to discourage you. It is said because the single most expensive mistake NEET students make is treating \"I qualified\" as \"I will get MBBS.\" Understanding the funnel early is what lets you make good decisions about BDS, BAMS, BSc Nursing, private colleges, deemed universities, and the drop-year question — instead of discovering the maths in October when every option has closed."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "NEET UG 2026 Toppers List"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Two candidates share the top spot in NEET UG 2026, both at "
+          },
+          {
+            "b": "715 out of 720"
+          },
+          {
+            "t": " — a score that means four incorrect or unattempted marks across 180 questions."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Rank"
+            }
+          ],
+          [
+            {
+              "t": "Candidate"
+            }
+          ],
+          [
+            {
+              "t": "State"
+            }
+          ],
+          [
+            {
+              "t": "Marks"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "1 (joint)"
+              }
+            ],
+            [
+              {
+                "b": "Aryan Gupta"
+              }
+            ],
+            [
+              {
+                "t": "Punjab"
+              }
+            ],
+            [
+              {
+                "t": "715"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "1 (joint)"
+              }
+            ],
+            [
+              {
+                "b": "Panshul Bansal"
+              }
+            ],
+            [
+              {
+                "t": "Haryana"
+              }
+            ],
+            [
+              {
+                "t": "715"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Why 715 and not 720?"
+          },
+          {
+            "t": " A perfect 720 requires all 180 questions correct. At 715, the candidate has effectively conceded a single question (–1 negative on one wrong answer against a 720 baseline yields 715). At this altitude, tie-breaking is decided by NTA's published policy: higher marks in Biology, then Chemistry, then the lowest proportion of incorrect answers, and finally age. Both toppers here are reported as joint AIR 1, meaning the tie-break criteria did not separate them at the reporting level."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Candidates at this score band are effectively choosing between "
+          },
+          {
+            "l": "AIIMS Delhi",
+            "h": "/neet-colleges/all-india-institute-of-medical-sciences-new-delhi-125-7-seats-are-earmarked-for-indian-nationals-and-07-seats-are-earmarked-for-foreign-under-self-finance"
+          },
+          {
+            "t": " and nothing else — AIIMS Delhi's MBBS closing rank for General AIQ has historically sat inside the top 60."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Score Distribution: How Many Scored What"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "This table is the most useful thing on this page. Read it slowly."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Score Band"
+            }
+          ],
+          [
+            {
+              "t": "Number of Candidates"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Above 700"
+              }
+            ],
+            [
+              {
+                "b": "19"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "690 and above"
+              }
+            ],
+            [
+              {
+                "b": "138"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "650 and above"
+              }
+            ],
+            [
+              {
+                "b": "1,492"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "600 and above"
+              }
+            ],
+            [
+              {
+                "b": "10,160"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "500 and above"
+              }
+            ],
+            [
+              {
+                "b": "90,780"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What this tells you, concretely:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Above 700 = 19 candidates."
+            },
+            {
+              "t": " This is the AIIMS Delhi / top-3 AIIMS band. If you are here, your only real question is which AIIMS."
+            }
+          ],
+          [
+            {
+              "b": "650+ = 1,492 candidates."
+            },
+            {
+              "t": " This band comfortably clears every AIIMS, JIPMER, "
+            },
+            {
+              "l": "Maulana Azad Medical College",
+              "h": "/neet-colleges/maulana-azad-medical-college-new-delhi"
+            },
+            {
+              "t": ", and the top government colleges in AIQ."
+            }
+          ],
+          [
+            {
+              "b": "600+ = 10,160 candidates."
+            },
+            {
+              "t": " Against ~7,500 AIQ government MBBS seats (15% of state government seats plus central institutions), a 600+ score is a strong government MBBS position through AIQ, and near-guaranteed through state quota in most states."
+            }
+          ],
+          [
+            {
+              "b": "500+ = 90,780 candidates."
+            },
+            {
+              "t": " This is the band where the real decisions happen. A 500+ score is a good score. It is also, against 56,000 government seats nationally, not a guarantee of one. State of domicile matters enormously here — 500 in Rajasthan state quota and 500 in Delhi state quota are two completely different outcomes."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The steepness is the story."
+          },
+          {
+            "t": " Notice the gap between 600+ (10,160) and 500+ (90,780). Nine times as many candidates sit in that 100-mark band. That compression is why five marks can move your AIR by several thousand ranks in the middle of the distribution, and why students at 480–520 should be running college predictions rather than estimating."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Run your number against last year's actual closing ranks: "
+          },
+          {
+            "l": "NEET College Predictor",
+            "h": "/neet"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Category-Wise Qualified Candidates"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Category"
+            }
+          ],
+          [
+            {
+              "t": "Qualified Candidates"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "General"
+              }
+            ],
+            [
+              {
+                "t": "2.91 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "OBC-NCL"
+              }
+            ],
+            [
+              {
+                "t": "5.12 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "SC"
+              }
+            ],
+            [
+              {
+                "t": "1.59 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "ST"
+              }
+            ],
+            [
+              {
+                "t": "63,716"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Gen-EWS"
+              }
+            ],
+            [
+              {
+                "t": "95,026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "PwBD"
+              }
+            ],
+            [
+              {
+                "t": "3,666"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "PwD"
+              }
+            ],
+            [
+              {
+                "t": "303"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Total"
+              }
+            ],
+            [
+              {
+                "b": "11.21 lakh"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Reading this correctly matters."
+          },
+          {
+            "t": " OBC-NCL is the largest qualified block at 5.12 lakh — 46% of all qualifiers. But OBC-NCL reservation in AIQ is 27%. That imbalance is the arithmetic reason OBC-NCL closing ranks in AIQ often sit closer to General closing ranks than students expect, and it is why an OBC-NCL candidate should never assume a large cushion below the General cutoff at good colleges."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "EWS candidates:"
+          },
+          {
+            "t": " Your certificate must be issued for "
+          },
+          {
+            "b": "financial year 2025–26"
+          },
+          {
+            "t": " and in the prescribed central format. An EWS certificate in a state format, or one issued for an earlier financial year, will be rejected at MCC document verification and your EWS claim will collapse to General mid-counselling. Check this today, not in September."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "NEET UG 2026 Qualifying Cutoff Explained"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Here is the single most misunderstood thing about NEET."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The qualifying cutoff is not the admission cutoff."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The qualifying cutoff is a percentile threshold, fixed by regulation, that determines whether your name enters the merit list at all. It has almost nothing to do with whether you get a seat."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "The percentile framework (stable across years)"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Category"
+            }
+          ],
+          [
+            {
+              "t": "Qualifying Percentile"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "General / EWS"
+              }
+            ],
+            [
+              {
+                "t": "50th percentile"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "OBC-NCL"
+              }
+            ],
+            [
+              {
+                "t": "40th percentile"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "SC"
+              }
+            ],
+            [
+              {
+                "t": "40th percentile"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "ST"
+              }
+            ],
+            [
+              {
+                "t": "40th percentile"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "General-PwD"
+              }
+            ],
+            [
+              {
+                "t": "45th percentile"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "OBC / SC / ST-PwD"
+              }
+            ],
+            [
+              {
+                "t": "40th percentile"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "These percentile requirements are laid down under the regulations of the "
+          },
+          {
+            "b": "National Medical Commission (NMC)"
+          },
+          {
+            "t": " and do not change year to year. What changes is the "
+          },
+          {
+            "b": "marks"
+          },
+          {
+            "t": " that correspond to those percentiles, because that depends on how the cohort performed."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "For historical trend context"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "For reference, the General category 50th-percentile cutoff has moved substantially across recent years as paper difficulty and cohort size shifted. The direction of travel is what matters for interpretation, not the exact figure: a harder paper compresses the distribution downward and pulls the qualifying marks down with it, while an easier paper pushes it up. Because 11.21 lakh of ~20 lakh qualified in 2026 — a qualification rate of roughly 56%, broadly consistent with recent years — the 2026 cutoff is unlikely to be an outlier."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What you should actually care about:"
+          },
+          {
+            "t": " the "
+          },
+          {
+            "b": "closing rank"
+          },
+          {
+            "t": " at the colleges you want. That is a different number entirely, published by MCC and state authorities after each counselling round. See our full breakdown in "
+          },
+          {
+            "l": "Expected NEET Cutoff 2026 for Government Medical Colleges",
+            "h": "/blog/expected-neet-cutoff-2026-government-medical-colleges"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "What Your Scorecard Actually Tells You"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Check every one of these fields the moment you download it:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Candidate's Name"
+            },
+            {
+              "t": " — must match your Class 10 certificate exactly"
+            }
+          ],
+          [
+            {
+              "b": "Roll Number"
+            }
+          ],
+          [
+            {
+              "b": "Application Number"
+            }
+          ],
+          [
+            {
+              "b": "Subject-wise Marks"
+            },
+            {
+              "t": " — Physics, Chemistry, Biology (Botany + Zoology)"
+            }
+          ],
+          [
+            {
+              "b": "Total Marks Obtained"
+            },
+            {
+              "t": " (out of 720)"
+            }
+          ],
+          [
+            {
+              "b": "Percentile Score"
+            }
+          ],
+          [
+            {
+              "b": "All India Rank (AIR)"
+            }
+          ],
+          [
+            {
+              "b": "Category Rank"
+            }
+          ],
+          [
+            {
+              "b": "Qualifying Status"
+            }
+          ],
+          [
+            {
+              "b": "Candidate Category"
+            }
+          ],
+          [
+            {
+              "b": "Category-wise Cutoff Status"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The name field is the one that bites people."
+          },
+          {
+            "t": " If your scorecard says \"Aryan Gupta\" and your Class 10 marksheet says \"Aryan Kumar Gupta,\" you will hit a wall at document verification. Raise it with NTA now — during counselling, MCC will not fix an NTA-side data error for you."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Understanding AIR vs Category Rank vs Percentile"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Three numbers, three different jobs. Students conflate them constantly."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "All India Rank (AIR)"
+          },
+          {
+            "t": " — your position among all 20 lakh candidates who appeared. This is the number MCC uses for the "
+          },
+          {
+            "b": "open/unreserved"
+          },
+          {
+            "t": " merit list in All India Quota counselling. Everyone competes on AIR for open seats."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Category Rank"
+          },
+          {
+            "t": " — your position among candidates of your own category. This is used for "
+          },
+          {
+            "b": "reserved seats"
+          },
+          {
+            "t": " within AIQ and state counselling. An OBC-NCL candidate with AIR 45,000 might have a category rank of 18,000, and both numbers are live simultaneously in different merit lists."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Percentile"
+          },
+          {
+            "t": " — the percentage of candidates who scored at or below you. Percentile determines "
+          },
+          {
+            "i": "qualification"
+          },
+          {
+            "t": ". It plays no role in seat allotment. A 99.2 percentile sounds spectacular and, against 20 lakh candidates, corresponds to an AIR near 16,000 — which is a completely different conversation from what \"99.2 percentile\" feels like."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The practical rule:"
+          },
+          {
+            "t": " for admissions, ignore percentile entirely. Work with AIR and category rank."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "State Toppers and State-Wise Performance"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Candidates from "
+          },
+          {
+            "b": "all 36 States and Union Territories"
+          },
+          {
+            "t": " qualified in NEET UG 2026."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "State / UT"
+            }
+          ],
+          [
+            {
+              "t": "Topper"
+            }
+          ],
+          [
+            {
+              "t": "Marks"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Ladakh"
+              }
+            ],
+            [
+              {
+                "t": "Jigmet Yangchan Lamo"
+              }
+            ],
+            [
+              {
+                "t": "530"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Andaman & Nicobar Islands"
+              }
+            ],
+            [
+              {
+                "t": "Dhruv Tripathi"
+              }
+            ],
+            [
+              {
+                "t": "606"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Lakshadweep"
+              }
+            ],
+            [
+              {
+                "t": "Fahmida Anees"
+              }
+            ],
+            [
+              {
+                "t": "573"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Additional NTA highlights:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "17 state toppers"
+            },
+            {
+              "t": " scored 700 or above"
+            }
+          ],
+          [
+            {
+              "b": "26 state toppers"
+            },
+            {
+              "t": " scored above 690"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The spread here is worth noticing. The gap between a 715 national topper and a 530 state topper in Ladakh is not a statement about ability — it is a statement about coaching density, school infrastructure and candidate pool size. It is also precisely why "
+          },
+          {
+            "b": "state quota (85%) counselling exists and why your domicile is one of the most valuable assets you hold."
+          },
+          {
+            "t": " A 530 in Ladakh's state quota and a 530 in Karnataka's state quota lead to entirely different colleges."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "If you have a domicile you have not thought about — a state you were born in, schooled in, or where your parents are domiciled — check its eligibility rules this week. It is the highest-leverage 30 minutes available to you right now."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Full state-wise breakdown: NEET UG 2026 State-Wise Toppers and Cutoffs."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Women in NEET 2026: The Numbers"
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "More than 58%"
+            },
+            {
+              "t": " of all qualified candidates are women"
+            }
+          ],
+          [
+            {
+              "t": "Women's qualification rate: "
+            },
+            {
+              "b": "56.8%"
+            }
+          ],
+          [
+            {
+              "t": "Men's qualification rate: "
+            },
+            {
+              "b": "55.1%"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Women now form a clear majority of NEET qualifiers, and they qualify at a higher rate than men. This continues a multi-year trend in Indian medical education and is one of the few genuinely uncomplicated good-news lines in this year's data."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "What Happens Immediately After the Result"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The result is a starting gun, not a finish line. Here is the sequence:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Download and secure the scorecard"
+            },
+            {
+              "t": " (today)"
+            }
+          ],
+          [
+            {
+              "b": "Check your AIR and category rank"
+            },
+            {
+              "t": " — not your percentile"
+            }
+          ],
+          [
+            {
+              "b": "Run a college prediction"
+            },
+            {
+              "t": " against last year's closing ranks — "
+            },
+            {
+              "l": "do it here",
+              "h": "/neet"
+            }
+          ],
+          [
+            {
+              "b": "Assemble your document set"
+            },
+            {
+              "t": " — this is the step everyone underestimates"
+            }
+          ],
+          [
+            {
+              "b": "Register for MCC AIQ counselling"
+            },
+            {
+              "t": " at mcc.nic.in when the window opens"
+            }
+          ],
+          [
+            {
+              "b": "Register separately for your state counselling"
+            },
+            {
+              "t": " — these are parallel processes, not sequential"
+            }
+          ],
+          [
+            {
+              "b": "Fill and lock choices"
+            },
+            {
+              "t": " — the locking step is where seats are won and lost"
+            }
+          ],
+          [
+            {
+              "b": "Participate in seat allotment rounds"
+            }
+          ],
+          [
+            {
+              "b": "Complete document verification"
+            }
+          ],
+          [
+            {
+              "b": "Report to the allotted college"
+            },
+            {
+              "t": " within the deadline"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Steps 5 and 6 run in parallel, and missing either one is unrecoverable."
+          },
+          {
+            "t": " MCC registration and state counselling registration are separate portals, separate fees, separate deadlines. Every year, thousands of students register for one and assume it covers the other."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Full step-by-step roadmap: "
+          },
+          {
+            "l": "What To Do After NEET Result 2026",
+            "h": "/blog/what-to-do-after-neet-result-2026"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Common Scorecard Errors and How to Fix Them"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Error"
+            }
+          ],
+          [
+            {
+              "t": "What to do"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Name spelling mismatch"
+              }
+            ],
+            [
+              {
+                "t": "Contact NTA immediately via the official grievance channel with your Class 10 certificate"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Wrong category displayed"
+              }
+            ],
+            [
+              {
+                "t": "Raise with NTA — do "
+              },
+              {
+                "b": "not"
+              },
+              {
+                "t": " wait for counselling; MCC cannot override NTA data"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Wrong date of birth"
+              }
+            ],
+            [
+              {
+                "t": "Same — NTA grievance, with Class 10 certificate as proof"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Marks don't match your self-evaluation"
+              }
+            ],
+            [
+              {
+                "t": "Almost always the final answer key revision. Compare against the "
+              },
+              {
+                "b": "final"
+              },
+              {
+                "t": " key published 16 July, not the provisional key from 25 June"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "PwBD status not reflected"
+              }
+            ],
+            [
+              {
+                "t": "Raise with NTA and be prepared for the separate disability certification process at designated centres during counselling"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Timeline discipline:"
+          },
+          {
+            "t": " NTA's correction and grievance window is short. If something is wrong on your scorecard, today is the day."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Fraud Warnings from NTA"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "NTA has explicitly warned candidates about fraudulent calls, fake admission offers and websites claiming guaranteed seats or score improvements. This warning is issued every year because the fraud is real, industrial and targets students in exactly this window."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Hard rules:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "No one can guarantee you a medical seat."
+            },
+            {
+              "t": " Not for money, not for a \"management quota booking,\" not for anything. Allotment is algorithmic and rank-based."
+            }
+          ],
+          [
+            {
+              "b": "Never share your NEET login credentials."
+            },
+            {
+              "t": " Not with a coaching institute, not with a \"counsellor,\" not with anyone offering to fill your choices for you."
+            }
+          ],
+          [
+            {
+              "b": "Never pay anyone who calls you claiming to be from MCC or NTA."
+            },
+            {
+              "t": " Neither body calls candidates asking for money."
+            }
+          ],
+          [
+            {
+              "b": "Only trust these domains:"
+            }
+          ],
+          [
+            {
+              "b": "neet.nta.nic.in"
+            },
+            {
+              "t": " — result, scorecard, notices"
+            }
+          ],
+          [
+            {
+              "b": "mcc.nic.in"
+            },
+            {
+              "t": " — All India Quota counselling"
+            }
+          ],
+          [
+            {
+              "t": "Your official state counselling portal"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Legitimate counselling guidance — including ours — helps you understand your options and fill your choice list well. It does not, and cannot, get you a seat your rank does not earn."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "NEET UG 2026 Important Dates Timeline"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Event"
+            }
+          ],
+          [
+            {
+              "t": "Date"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Provisional Answer Key Released"
+              }
+            ],
+            [
+              {
+                "t": "25 June 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Answer Key Challenge Window"
+              }
+            ],
+            [
+              {
+                "t": "25–28 June 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "OMR Response Sheet Available"
+              }
+            ],
+            [
+              {
+                "t": "13–15 July 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Final Answer Key Released"
+              }
+            ],
+            [
+              {
+                "t": "16 July 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "NEET UG 2026 Result Declared"
+              }
+            ],
+            [
+              {
+                "b": "16 July 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "MCC AIQ Counselling Registration"
+              }
+            ],
+            [
+              {
+                "t": "To be announced"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "State Counselling Registration"
+              }
+            ],
+            [
+              {
+                "t": "Announced state-wise"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Watch mcc.nic.in daily from here."
+          },
+          {
+            "t": " MCC does not send SMS reminders for round openings. The registration window for Round 1 is typically under a week, and it does not extend for people who weren't watching."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "When was the NEET UG 2026 result declared?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "NTA declared the NEET UG 2026 result on "
+          },
+          {
+            "b": "16 July 2026"
+          },
+          {
+            "t": " at neet.nta.nic.in, along with the final answer key."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "How many candidates qualified NEET UG 2026?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "11.21 lakh"
+          },
+          {
+            "t": " candidates qualified out of nearly 20 lakh who appeared — a qualification rate of approximately 56%."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Who topped NEET UG 2026?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Aryan Gupta"
+          },
+          {
+            "t": " from Punjab and "
+          },
+          {
+            "b": "Panshul Bansal"
+          },
+          {
+            "t": " from Haryana jointly topped with "
+          },
+          {
+            "b": "715 out of 720"
+          },
+          {
+            "t": " marks."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the direct link to download the NEET UG 2026 scorecard?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The official link is on "
+          },
+          {
+            "b": "neet.nta.nic.in"
+          },
+          {
+            "t": ". Log in with your Application Number, Date of Birth and the Security Pin. There is no official mirror link — ignore any other site claiming to host the result."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "I forgot my application number. How do I get my result?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Use the \"Forgot Application Number\" recovery option on the NTA login page. It works with your name, date of birth and registered mobile or email."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the qualifying percentile for NEET UG 2026?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "50th percentile for General and EWS, 45th for General-PwD, and 40th for OBC-NCL, SC, ST and reserved-category PwD candidates. These thresholds are set under NMC regulations and do not change year to year."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Does qualifying NEET mean I will get an MBBS seat?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. 11.21 lakh candidates qualified, and India has roughly 1.18 lakh MBBS seats in total (around 56,000 government). Qualification makes you eligible for counselling — it does not guarantee admission."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the difference between AIR and category rank?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "AIR is your position among all candidates and is used for open/unreserved seats. Category rank is your position within your own category and is used for reserved seats. Both are live at the same time in different merit lists."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Does my percentile matter for admission?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. Percentile only determines qualification. Seat allotment is entirely rank-based. Work with your AIR and category rank."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "My score is different from what I calculated. Why?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Your result is computed against the "
+          },
+          {
+            "b": "final"
+          },
+          {
+            "t": " answer key published on 16 July, not the provisional key from 25 June. Answers dropped or revised after the challenge window are the usual explanation."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "When will MCC counselling registration begin?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "MCC has not yet announced the Round 1 registration date. Monitor "
+          },
+          {
+            "b": "mcc.nic.in"
+          },
+          {
+            "t": " — the window is typically short and is not extended."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Do I need to register separately for state counselling?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Yes. MCC AIQ counselling (15% of government seats plus central institutions) and state counselling (85% of state government seats) are entirely separate processes with separate portals, fees and deadlines. Register for both."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "There is a spelling mistake in my name on the scorecard. What do I do?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Contact NTA immediately through the official grievance channel with your Class 10 certificate as proof. MCC cannot correct NTA-generated data during counselling."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "How many candidates scored above 600 in NEET UG 2026?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "10,160"
+          },
+          {
+            "t": " candidates scored 600 or above. 90,780 scored 500 or above, 1,492 scored 650 or above, and only 19 scored above 700."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Can anyone guarantee me a medical seat for a fee?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. NTA has issued an explicit warning about this. Seat allotment is algorithmic and rank-based. Anyone promising a guaranteed seat is running a fraud."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "what-to-do-after-neet-result-2026",
+    "title": "What To Do After NEET Result 2026: Admission Roadmap",
+    "snippet": "NEET UG 2026 result is out. Here is the exact step-by-step roadmap: MCC vs state counselling, documents, choice filling, seat allotment and deadlines.",
+    "metaDescription": "NEET UG 2026 result is out. Here is the exact step-by-step roadmap: MCC vs state counselling, documents, choice filling, seat allotment and deadlines.",
+    "focusKeyword": "after NEET result",
+    "secondaryKeywords": [
+      "NEET counselling process",
+      "MBBS admission 2026",
+      "BDS admission",
+      "MCC counselling",
+      "state quota counselling",
+      "NEET choice filling"
+    ],
+    "category": "NEET",
+    "categoryLabel": "NEET Counselling",
+    "author": "College Parichay Counselling Desk",
+    "date": "2026-07-17",
+    "read": "14 min read",
+    "iconName": "ListChecks",
+    "accent": "blue",
+    "badge": "ROADMAP",
+    "tag": "NEET 2026",
+    "body": [
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "After the NEET UG 2026 result, complete these steps in order:"
+          },
+          {
+            "t": " download your scorecard, confirm your All India Rank and category rank, run a college prediction, assemble your document set, register separately for both MCC AIQ counselling at mcc.nic.in and your state counselling portal, fill and lock choices, then attend seat allotment rounds and report to your allotted college."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "i": "Reviewed by the College Parichay counselling desk — updated 17 July 2026."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "The 48-Hour Checklist"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The "
+          },
+          {
+            "l": "NEET UG 2026 result was declared on 16 July",
+            "h": "/blog/neet-ug-result-2026"
+          },
+          {
+            "t": ". 11.21 lakh candidates qualified. The next four to six weeks decide where all of them go."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Here is what to do before Sunday:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "[ ] Download the scorecard PDF and back it up in three places"
+            }
+          ],
+          [
+            {
+              "t": "[ ] Write down your "
+            },
+            {
+              "b": "AIR"
+            },
+            {
+              "t": " and your "
+            },
+            {
+              "b": "category rank"
+            },
+            {
+              "t": " on paper"
+            }
+          ],
+          [
+            {
+              "t": "[ ] Run a college prediction against last year's closing ranks"
+            }
+          ],
+          [
+            {
+              "t": "[ ] Open a folder and start collecting the 12 documents listed below"
+            }
+          ],
+          [
+            {
+              "t": "[ ] Bookmark "
+            },
+            {
+              "b": "mcc.nic.in"
+            },
+            {
+              "t": " and your state counselling portal"
+            }
+          ],
+          [
+            {
+              "t": "[ ] Check whether you hold a domicile you haven't considered"
+            }
+          ],
+          [
+            {
+              "t": "[ ] If EWS: verify your certificate is in the central format for FY 2025–26"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "That's it. Everything else can wait a week. These cannot."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Step 1: Read Your Rank, Not Your Marks"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Your marks are an emotional number. Your rank is an operational one."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The three numbers on your scorecard and what each is for:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Number"
+            }
+          ],
+          [
+            {
+              "t": "What it does"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Percentile"
+              }
+            ],
+            [
+              {
+                "t": "Determines whether you qualified. Plays "
+              },
+              {
+                "b": "zero"
+              },
+              {
+                "t": " role in seat allotment. Ignore it from here."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "All India Rank (AIR)"
+              }
+            ],
+            [
+              {
+                "t": "Your position among ~20 lakh candidates. Used for "
+              },
+              {
+                "b": "open/unreserved"
+              },
+              {
+                "t": " seats in AIQ."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Category Rank"
+              }
+            ],
+            [
+              {
+                "t": "Your position within your category. Used for "
+              },
+              {
+                "b": "reserved"
+              },
+              {
+                "t": " seats in AIQ and state counselling."
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Both AIR and category rank are live simultaneously."
+          },
+          {
+            "t": " An OBC-NCL candidate competes on AIR for open seats "
+          },
+          {
+            "i": "and"
+          },
+          {
+            "t": " on category rank for OBC seats, in the same round, in the same choice list. You do not pick one. The system runs both."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Context for your number"
+          },
+          {
+            "t": ", from the official 2026 distribution:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Score Band"
+            }
+          ],
+          [
+            {
+              "t": "Candidates"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Above 700"
+              }
+            ],
+            [
+              {
+                "t": "19"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "690+"
+              }
+            ],
+            [
+              {
+                "t": "138"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "650+"
+              }
+            ],
+            [
+              {
+                "t": "1,492"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "600+"
+              }
+            ],
+            [
+              {
+                "t": "10,160"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "500+"
+              }
+            ],
+            [
+              {
+                "t": "90,780"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Against roughly "
+          },
+          {
+            "b": "56,000 government MBBS seats"
+          },
+          {
+            "t": " nationally and "
+          },
+          {
+            "b": "~1.18 lakh"
+          },
+          {
+            "t": " MBBS seats in total, this table is your reality check. If you are at 500, you are in the top 90,780 of 20 lakh — genuinely good — and still in a real fight for a government seat."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Step 2: Run an Honest College Prediction"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Do this before you form any opinion about your options."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "A college prediction maps your AIR and category rank against "
+          },
+          {
+            "b": "actual closing ranks from previous years' counselling rounds"
+          },
+          {
+            "t": " — not against marks, not against vibes, not against what your coaching batchmate says."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What a good prediction accounts for:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Your AIR "
+            },
+            {
+              "b": "and"
+            },
+            {
+              "t": " category rank"
+            }
+          ],
+          [
+            {
+              "t": "Your "
+            },
+            {
+              "b": "state of domicile"
+            },
+            {
+              "t": " (this changes everything)"
+            }
+          ],
+          [
+            {
+              "t": "AIQ vs state quota separately"
+            }
+          ],
+          [
+            {
+              "t": "Round-wise closing ranks, not just final round"
+            }
+          ],
+          [
+            {
+              "t": "Government, deemed and private, separately"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What a bad prediction does:"
+          },
+          {
+            "t": " gives you one list based on marks alone."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Run your NEET 2026 college prediction",
+            "h": "/neet"
+          },
+          {
+            "t": " — it's free and takes about a minute."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Then do the thing most students skip: "
+          },
+          {
+            "b": "sort the output into three buckets."
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Reach"
+            },
+            {
+              "t": " — colleges where your rank is worse than last year's closing rank by up to ~15%"
+            }
+          ],
+          [
+            {
+              "b": "Match"
+            },
+            {
+              "t": " — colleges where your rank comfortably cleared last year"
+            }
+          ],
+          [
+            {
+              "b": "Safe"
+            },
+            {
+              "t": " — colleges where your rank cleared by a wide margin"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "You will need all three when you build your choice list. A choice list made only of reach colleges is how students end up unallotted in Round 1."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Step 3: Assemble Your Documents Now"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "This is the step everybody underestimates and it is the step that actually loses seats."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The standard MCC document set:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "NEET UG 2026 "
+            },
+            {
+              "b": "Admit Card"
+            }
+          ],
+          [
+            {
+              "t": "NEET UG 2026 "
+            },
+            {
+              "b": "Scorecard / Result"
+            }
+          ],
+          [
+            {
+              "b": "Class 10 certificate"
+            },
+            {
+              "t": " (for date of birth)"
+            }
+          ],
+          [
+            {
+              "b": "Class 12 certificate and marksheet"
+            }
+          ],
+          [
+            {
+              "b": "Photo ID"
+            },
+            {
+              "t": " — Aadhaar / PAN / Passport / Driving Licence"
+            }
+          ],
+          [
+            {
+              "b": "Eight passport-size photographs"
+            },
+            {
+              "t": " (same as used in the application)"
+            }
+          ],
+          [
+            {
+              "b": "Provisional Allotment Letter"
+            },
+            {
+              "t": " (generated after allotment)"
+            }
+          ],
+          [
+            {
+              "b": "Caste / Category certificate"
+            },
+            {
+              "t": " — in the "
+            },
+            {
+              "b": "central government format"
+            },
+            {
+              "t": " for AIQ"
+            }
+          ],
+          [
+            {
+              "b": "EWS certificate"
+            },
+            {
+              "t": " — central format, issued for "
+            },
+            {
+              "b": "FY 2025–26"
+            }
+          ],
+          [
+            {
+              "b": "PwBD certificate"
+            },
+            {
+              "t": " — from a designated disability assessment centre"
+            }
+          ],
+          [
+            {
+              "b": "Domicile certificate"
+            },
+            {
+              "t": " — for state counselling"
+            }
+          ],
+          [
+            {
+              "b": "Migration certificate"
+            },
+            {
+              "t": " — required by many colleges at reporting"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The two that break people:"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Category certificate format."
+          },
+          {
+            "t": " For AIQ counselling, your OBC-NCL / SC / ST certificate must be in the "
+          },
+          {
+            "b": "central government prescribed format"
+          },
+          {
+            "t": " issued by a competent authority. A state-format certificate is valid for state counselling and "
+          },
+          {
+            "b": "invalid for AIQ"
+          },
+          {
+            "t": ". These are different documents. If you only have the state one, apply for the central one today — it takes two to four weeks in most districts, and MCC will not wait."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "EWS financial year."
+          },
+          {
+            "t": " The certificate must be issued for FY "
+          },
+          {
+            "b": "2025–26"
+          },
+          {
+            "t": ". An EWS certificate from FY 2024–25 will be rejected. Your EWS claim then collapses to General mid-counselling, which at the margin is the difference between a government seat and no seat."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Do this today."
+          },
+          {
+            "t": " Not after Round 1 allotment. Not when MCC announces dates. Today."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Step 4: Understand AIQ vs State Quota"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "This is the structural fact that everything else depends on."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": ""
+            }
+          ],
+          [
+            {
+              "b": "All India Quota (AIQ)"
+            }
+          ],
+          [
+            {
+              "b": "State Quota"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Conducted by"
+              }
+            ],
+            [
+              {
+                "b": "MCC"
+              },
+              {
+                "t": " (mcc.nic.in)"
+              }
+            ],
+            [
+              {
+                "t": "State counselling authority"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Covers"
+              }
+            ],
+            [
+              {
+                "b": "15%"
+              },
+              {
+                "t": " of state government college seats + 100% of central institutions (AIIMS, JIPMER, ESIC, AFMC, Central Universities, BHU, AMU) + Deemed Universities"
+              }
+            ],
+            [
+              {
+                "b": "85%"
+              },
+              {
+                "t": " of state government college seats + state private colleges"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Eligibility"
+              }
+            ],
+            [
+              {
+                "t": "All qualified candidates, nationwide"
+              }
+            ],
+            [
+              {
+                "t": "Usually requires "
+              },
+              {
+                "b": "domicile"
+              },
+              {
+                "t": " of that state"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Merit basis"
+              }
+            ],
+            [
+              {
+                "t": "AIR (open) + category rank (reserved)"
+              }
+            ],
+            [
+              {
+                "t": "State merit list, derived from NEET marks"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Registration"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Fee"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Deadlines"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Read the last three rows again."
+          },
+          {
+            "t": " MCC counselling and state counselling are two entirely independent processes running in parallel. Registering for one does not register you for the other. Every single year, thousands of students discover this after their state's registration window has closed."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Your domicile is an asset."
+          },
+          {
+            "t": " 85% of government seats in your home state are reserved for candidates with that state's domicile. That is a vastly larger pool than the 15% AIQ share. If you have any domicile you haven't considered — birth, schooling, parents' residence — read that state's eligibility rules this week. Rules vary sharply: some states require 7 years of schooling, some require the parent's domicile, some accept either."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Do both."
+          },
+          {
+            "t": " There is no scenario in which registering for only one is correct."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Full mechanics: "
+          },
+          {
+            "l": "NEET Counselling 2026 Complete Guide",
+            "h": "/blog/neet-counselling-2026-guide"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Step 5: Register for MCC Counselling"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Portal:"
+          },
+          {
+            "t": " mcc.nic.in"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The MCC round structure:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Round"
+            }
+          ],
+          [
+            {
+              "t": "What it is"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Round 1"
+              }
+            ],
+            [
+              {
+                "t": "First allotment. Free exit available."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Round 2"
+              }
+            ],
+            [
+              {
+                "t": "Second allotment from the remaining pool."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Round 3"
+              }
+            ],
+            [
+              {
+                "t": "Third allotment."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Stray Vacancy Round"
+              }
+            ],
+            [
+              {
+                "t": "Final round for leftover seats. "
+              },
+              {
+                "b": "No exit — resignation is not permitted."
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Registration steps:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Register with your NEET application number and roll number"
+            }
+          ],
+          [
+            {
+              "t": "Pay the registration fee and the "
+            },
+            {
+              "b": "security deposit"
+            },
+            {
+              "t": " (refundable, and forfeited if you violate the round rules)"
+            }
+          ],
+          [
+            {
+              "t": "Fill your choices"
+            }
+          ],
+          [
+            {
+              "b": "Lock"
+            },
+            {
+              "t": " your choices"
+            }
+          ],
+          [
+            {
+              "t": "Await allotment"
+            }
+          ],
+          [
+            {
+              "t": "Report to the allotted college with documents"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Watch the site daily."
+          },
+          {
+            "t": " MCC does not send SMS reminders. Round 1 registration is typically open for under a week. It does not extend."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Step 6: Register for State Counselling — Separately"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Your state counselling authority runs its own portal, its own schedule and its own rules. There is no single national state-counselling site."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Find yours"
+          },
+          {
+            "t": " by searching for \"[Your State] NEET UG counselling 2026 official\" and verifying it is a "
+          },
+          {
+            "b": ".gov.in"
+          },
+          {
+            "t": " or "
+          },
+          {
+            "b": ".nic.in"
+          },
+          {
+            "t": " domain. Register the moment the window opens."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "State counselling generally requires:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Domicile certificate"
+            }
+          ],
+          [
+            {
+              "t": "Category certificate "
+            },
+            {
+              "b": "in the state format"
+            },
+            {
+              "t": " (different from the central format you need for AIQ)"
+            }
+          ],
+          [
+            {
+              "t": "All standard NEET documents"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Timing:"
+          },
+          {
+            "t": " state counselling schedules are usually aligned to MCC's rounds but are not identical. You will find yourself managing two calendars at once. Put both on your phone with alerts."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Step 7: Build Your Choice List"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "This is where seats are actually won."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The core principle: order by genuine preference, not by probability."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The allotment algorithm processes your list top-down and gives you the "
+          },
+          {
+            "b": "highest choice you are eligible for"
+          },
+          {
+            "t": ". It does not penalise you for listing an ambitious choice at #1. If your rank doesn't reach it, the algorithm simply moves to #2. There is no cost to optimism at the top of your list."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The cost is at the bottom."
+          },
+          {
+            "t": " Every choice you "
+          },
+          {
+            "i": "don't"
+          },
+          {
+            "t": " list is a seat you cannot be allotted."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "How to build it:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Start with your "
+            },
+            {
+              "b": "reach"
+            },
+            {
+              "t": " colleges, in true preference order"
+            }
+          ],
+          [
+            {
+              "t": "Then your "
+            },
+            {
+              "b": "match"
+            },
+            {
+              "t": " colleges"
+            }
+          ],
+          [
+            {
+              "t": "Then your "
+            },
+            {
+              "b": "safe"
+            },
+            {
+              "t": " colleges"
+            }
+          ],
+          [
+            {
+              "b": "List everything you would genuinely attend."
+            },
+            {
+              "t": " A long list costs you nothing."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The two failure modes:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Too short."
+            },
+            {
+              "t": " Students list 15 choices, get nothing in Round 1, and watch better options fill in Round 2. Fill 100+ choices if you have 100+ acceptable options."
+            }
+          ],
+          [
+            {
+              "b": "Listing something you won't join."
+            },
+            {
+              "t": " If you would not attend a college, do not list it. Being allotted a seat you then abandon has consequences — forfeited security deposit, and in some rounds, debarment from subsequent rounds."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Government vs private:"
+          },
+          {
+            "t": " a government MBBS seat at a mid-tier college beats a private MBBS seat at a \"better\" one on almost every dimension that matters — fees (₹50k–₹2L vs ₹60L–₹1.2Cr total), stipend, patient load, PG prospects. Order accordingly unless you have a specific reason not to."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Compare before you decide: "
+          },
+          {
+            "l": "Top Government Medical Colleges Accepting NEET 2026",
+            "h": "/blog/top-government-medical-colleges-neet-2026"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Step 8: Lock Your Choices"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Fill ≠ Lock."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Choices you have filled but not locked are not submitted. If you do not lock before the deadline, most portals auto-lock your list at the deadline — but do not rely on that. Some do not, and an unlocked list is an unprocessed list."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Lock explicitly. Take a screenshot of the confirmation. Download the locked choice list PDF."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Then stop looking at it. You cannot change a locked list, and the anxiety of second-guessing it for four days serves no purpose."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Step 9: Seat Allotment and the Free Exit Rule"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Allotment results are published on the portal on the announced date. You will see either an allotted seat or \"not allotted.\""
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Your options after Round 1 allotment:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Option"
+            }
+          ],
+          [
+            {
+              "t": "What happens"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Accept and report"
+              }
+            ],
+            [
+              {
+                "t": "You join. You are out of subsequent rounds."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Free exit"
+              }
+            ],
+            [
+              {
+                "t": "Available in Round 1 only. Surrender the seat, security deposit refunded, participate in Round 2."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Upgrade"
+              }
+            ],
+            [
+              {
+                "t": "Report to the allotted college but opt for upgrade in the next round. Rules vary — read the round's information bulletin carefully."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Do nothing"
+              }
+            ],
+            [
+              {
+                "t": "Seat is forfeited, security deposit is forfeited. Never do this."
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The Stray Vacancy Round has no exit."
+          },
+          {
+            "t": " If you are allotted a seat in the stray round, you must join. Resignation is not permitted. Do not enter the stray round with choices you are unwilling to accept."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Read each round's information bulletin."
+          },
+          {
+            "t": " MCC changes rules between years and between rounds. The bulletin for Round 2 in 2026 is the only authority on Round 2 in 2026 — not what your senior told you about 2024."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Step 10: Document Verification and Reporting"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Report to the allotted college with:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Provisional allotment letter"
+            }
+          ],
+          [
+            {
+              "t": "All original documents from Step 3"
+            }
+          ],
+          [
+            {
+              "t": "Photocopies (bring three sets)"
+            }
+          ],
+          [
+            {
+              "t": "Fee payment as specified"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The reporting deadline is absolute."
+          },
+          {
+            "t": " Not \"usually flexible.\" Absolute. Miss it and your seat goes back into the pool."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Do not hand over your original documents permanently."
+          },
+          {
+            "t": " Colleges verify and return. Some ask to retain originals until course completion — this practice has been directed against by regulators, and you are within your rights to ask for a written justification and a receipt."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "If Your Score Is Below 500: Your Real Options"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "90,780 candidates scored 500+. That means roughly 10.3 lakh qualified candidates scored below 500. If you are one of them, you are in the largest group in this exam, and the internet is about to be very unhelpful to you."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Here is the honest version."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Government MBBS below 500"
+          },
+          {
+            "t": " is possible in specific circumstances: reserved category with a favourable state quota, a state with a low candidate-to-seat ratio, or the North Eastern states and UTs. It is not possible in Delhi, Maharashtra, Karnataka or Tamil Nadu general category. Run the prediction — don't guess."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Your actual option set:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Path"
+            }
+          ],
+          [
+            {
+              "t": "Reality"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Government MBBS"
+              }
+            ],
+            [
+              {
+                "t": "Depends entirely on category + domicile. Predict, don't assume."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "BDS (government)"
+              }
+            ],
+            [
+              {
+                "t": "Closing ranks sit well below MBBS. A government BDS seat is a real, viable, often-underrated career."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "BAMS / BHMS / BUMS (AYUSH)"
+              }
+            ],
+            [
+              {
+                "t": "Through AACCC counselling. Growing sector, government jobs available."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "BSc Nursing"
+              }
+            ],
+            [
+              {
+                "t": "Through MCC for central institutions. Strong employability, strong overseas pathway."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "BVSc"
+              }
+            ],
+            [
+              {
+                "t": "Veterinary — through the VCI quota via MCC."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Private MBBS"
+              }
+            ],
+            [
+              {
+                "t": "₹60L–₹1.2Cr total cost. Do the maths on this honestly, with your parents, before you register."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Drop year"
+              }
+            ],
+            [
+              {
+                "t": "See below."
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "On private MBBS:"
+          },
+          {
+            "t": " the fee is not the sticker price. Add hostel, mess and the opportunity cost of a family taking on debt at 10–12% for five years. A ₹90L course financed at 11% over 10 years costs roughly ₹1.5 crore in repayment. A government BDS seat costs under ₹3 lakh. This is a family financial decision, not a prestige decision, and it deserves an evening with a spreadsheet rather than an afternoon of emotion."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Explore what's actually available: "
+          },
+          {
+            "l": "Compare medical colleges by fees, seats and cutoff",
+            "h": "/neet-colleges"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "The Drop Year Decision"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Some honest guidance, since almost nobody gives it."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "A drop year makes sense when:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Your score was materially depressed by something specific and fixable (illness on exam day, one subject collapsed while the others held, a genuine preparation gap you can name)"
+            }
+          ],
+          [
+            {
+              "t": "You have a concrete, different plan — not \"study harder\""
+            }
+          ],
+          [
+            {
+              "t": "Your family can support it financially and emotionally"
+            }
+          ],
+          [
+            {
+              "t": "You are within striking distance: a 550 going for 650 is a credible plan"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "A drop year is a bad idea when:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "You scored 300 and are hoping for 650. That is a 350-mark gain. It happens, rarely, and not by default."
+            }
+          ],
+          [
+            {
+              "t": "Your reasoning is \"I couldn't face telling people I took BDS\""
+            }
+          ],
+          [
+            {
+              "t": "You have already dropped once and the gain was under 50 marks"
+            }
+          ],
+          [
+            {
+              "t": "You have a viable government BDS or AYUSH seat in hand and are gambling it on a maybe"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The number that should inform this:"
+          },
+          {
+            "t": " the second attempt improves scores for most serious repeaters, but the median gain is modest — not transformational. Plan against the median, not the topper interview you watched on YouTube."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "And the thing nobody says:"
+          },
+          {
+            "t": " a doctor who took a government BDS seat and built a good practice is doing better, on every measurable axis, than a person who dropped three years and then took private MBGS on a ₹1 crore loan. The prestige ranking in your head is not the outcome ranking in reality."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Talk it through with someone who has no stake in the answer: "
+          },
+          {
+            "l": "book a free 15-minute call with an IITian mentor",
+            "h": "/mentorship"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Mistakes That Cost Students Seats Every Year"
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Registering for MCC but not state counselling"
+            },
+            {
+              "t": " (or vice versa). Both. Always."
+            }
+          ],
+          [
+            {
+              "b": "Wrong category certificate format."
+            },
+            {
+              "t": " Central format for AIQ, state format for state. They are different documents."
+            }
+          ],
+          [
+            {
+              "b": "EWS certificate from the wrong financial year."
+            },
+            {
+              "t": " Must be FY 2025–26."
+            }
+          ],
+          [
+            {
+              "b": "Filling choices but not locking them."
+            }
+          ],
+          [
+            {
+              "b": "A choice list that is too short."
+            },
+            {
+              "t": " Every unlisted college is an unwinnable seat."
+            }
+          ],
+          [
+            {
+              "b": "Listing a college you won't join."
+            },
+            {
+              "t": " Allotment has consequences."
+            }
+          ],
+          [
+            {
+              "b": "Missing the reporting deadline."
+            },
+            {
+              "t": " It is absolute."
+            }
+          ],
+          [
+            {
+              "b": "Entering the stray vacancy round casually."
+            },
+            {
+              "t": " No exit. None."
+            }
+          ],
+          [
+            {
+              "b": "Trusting a phone call."
+            },
+            {
+              "t": " MCC and NTA do not call you. Anyone who does, asking for money or credentials, is running a fraud."
+            }
+          ],
+          [
+            {
+              "b": "Not reading the round's information bulletin."
+            },
+            {
+              "t": " Rules change between rounds and years."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the first thing to do after the NEET UG 2026 result?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Download and back up your scorecard, then note your AIR and category rank. Everything else follows from those two numbers."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Do I need to register separately for MCC and state counselling?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Yes. They are entirely separate processes with separate portals, fees and deadlines. Registering for one does not register you for the other."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the difference between AIQ and state quota?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "AIQ (via MCC) covers 15% of state government college seats plus all central institutions and deemed universities. State quota covers the remaining 85% of state government seats plus state private colleges, and generally requires domicile."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "When will MCC counselling 2026 registration begin?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "MCC has not announced the date. Monitor mcc.nic.in daily — the window is short and is not extended."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Which category certificate do I need for AIQ counselling?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The "
+          },
+          {
+            "b": "central government prescribed format"
+          },
+          {
+            "t": ". A state-format certificate is not accepted for AIQ. If you only hold the state one, apply for the central certificate immediately — it takes two to four weeks."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "My EWS certificate is from last year. Is it valid?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. It must be issued for financial year "
+          },
+          {
+            "b": "2025–26"
+          },
+          {
+            "t": " and in the central format. An older certificate will be rejected and your EWS claim will collapse to General."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "How many choices should I fill?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Every college you would genuinely attend, in true preference order. A long list costs nothing. A short list costs seats."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Will listing an ambitious college first hurt my chances?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. The algorithm gives you the highest choice you are eligible for and moves down the list if you aren't. There is no penalty for optimism at the top."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is free exit in MCC counselling?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "In Round 1 only, you may surrender an allotted seat and have your security deposit refunded, then participate in Round 2. This option does not exist in the stray vacancy round."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Can I resign a seat allotted in the stray vacancy round?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. The stray vacancy round has no exit provision. Only enter it with choices you are willing to accept."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Is a government BDS seat better than a private MBBS seat?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "It depends on your family's finances. A private MBBS costs ₹60L–₹1.2Cr; a government BDS costs under ₹3 lakh. Run the actual numbers with your parents before deciding on prestige grounds."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Should I take a drop year?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Only if you can name a specific, fixable reason your score was depressed, have a concrete different plan, and are within realistic striking distance of your target. \"Study harder\" is not a plan."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Can anyone guarantee me a seat through management quota?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. NTA has explicitly warned against this. Allotment is algorithmic and rank-based. Anyone guaranteeing a seat for money is running a fraud."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What documents do colleges keep at reporting?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Colleges verify and return originals. If asked to surrender originals permanently, request written justification and a receipt."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What if I'm not allotted anything in Round 1?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "You automatically participate in Round 2 with a fresh choice-filling window. Use the Round 1 closing ranks — published by MCC — to recalibrate your list."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "expected-neet-cutoff-2026-government-medical-colleges",
+    "title": "Expected NEET Cutoff 2026 for Government Medical Colleges",
+    "snippet": "Expected NEET 2026 cutoff for government medical colleges, built from NTA's official score distribution. Category-wise, AIQ and state quota rank estimates.",
+    "metaDescription": "Expected NEET 2026 cutoff for government medical colleges, built from NTA's official score distribution. Category-wise, AIQ and state quota rank estimates.",
+    "focusKeyword": "NEET cutoff 2026",
+    "secondaryKeywords": [
+      "expected NEET cutoff 2026",
+      "AIIMS cutoff 2026",
+      "government medical college cutoff",
+      "NEET closing rank 2026",
+      "NEET category wise cutoff"
+    ],
+    "category": "NEET",
+    "categoryLabel": "NEET Counselling",
+    "author": "College Parichay Counselling Desk",
+    "date": "2026-07-17",
+    "read": "15 min read",
+    "iconName": "Gauge",
+    "accent": "amber",
+    "badge": "CUTOFFS",
+    "tag": "Cutoffs",
+    "body": [
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "The NEET 2026 qualifying cutoff is the 50th percentile for General/EWS, 45th for General-PwD and 40th for OBC-NCL, SC and ST."
+          },
+          {
+            "t": " The admission cutoff is different and much higher: government MBBS through All India Quota typically closes around AIR 10,000–15,000 for General, based on previous years' MCC closing ranks."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "i": "Reviewed by the College Parichay counselling desk — updated 17 July 2026. Rank estimates are derived from NTA's official NEET UG 2026 score distribution and previous years' MCC closing ranks."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "The Two Cutoffs Everyone Confuses"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Before a single number: there are "
+          },
+          {
+            "b": "two completely different things"
+          },
+          {
+            "t": " called \"NEET cutoff,\" and mixing them up is the most common and most expensive error a NEET candidate makes."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": ""
+            }
+          ],
+          [
+            {
+              "b": "Qualifying Cutoff"
+            }
+          ],
+          [
+            {
+              "b": "Admission Cutoff (Closing Rank)"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "What it is"
+              }
+            ],
+            [
+              {
+                "t": "A percentile threshold set by regulation"
+              }
+            ],
+            [
+              {
+                "t": "The rank of the last student admitted to a specific college"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Who sets it"
+              }
+            ],
+            [
+              {
+                "t": "NTA, under NMC regulations"
+              }
+            ],
+            [
+              {
+                "t": "Nobody. It's an "
+              },
+              {
+                "i": "outcome"
+              },
+              {
+                "t": " of counselling."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "When you know it"
+              }
+            ],
+            [
+              {
+                "t": "Result day — "
+              },
+              {
+                "b": "16 July 2026"
+              }
+            ],
+            [
+              {
+                "t": "After each counselling round concludes"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "What it means"
+              }
+            ],
+            [
+              {
+                "t": "Whether you're on the merit list"
+              }
+            ],
+            [
+              {
+                "t": "Whether you get a seat"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Typical General value"
+              }
+            ],
+            [
+              {
+                "t": "~50th percentile"
+              }
+            ],
+            [
+              {
+                "t": "AIR ~10,000–15,000 for government MBBS"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Relationship"
+              }
+            ],
+            [
+              {
+                "t": "You must clear this to enter counselling"
+              }
+            ],
+            [
+              {
+                "t": "This is what actually decides your college"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "11.21 lakh candidates cleared the qualifying cutoff in 2026."
+          },
+          {
+            "t": " There are roughly "
+          },
+          {
+            "b": "56,000 government MBBS seats"
+          },
+          {
+            "t": " in India. The qualifying cutoff told 11.21 lakh people they were eligible. The admission cutoff will tell about 56,000 of them where they're going."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Everything below is about the second number. That's the one that matters."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "The percentile framework (fixed under NMC regulations)"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Category"
+            }
+          ],
+          [
+            {
+              "t": "Qualifying Percentile"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "General / EWS"
+              }
+            ],
+            [
+              {
+                "b": "50th"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "General-PwD"
+              }
+            ],
+            [
+              {
+                "b": "45th"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "OBC-NCL"
+              }
+            ],
+            [
+              {
+                "b": "40th"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "SC"
+              }
+            ],
+            [
+              {
+                "b": "40th"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "ST"
+              }
+            ],
+            [
+              {
+                "b": "40th"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "OBC / SC / ST-PwD"
+              }
+            ],
+            [
+              {
+                "b": "40th"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "These percentiles do not change year to year. They are laid down under the regulations of the "
+          },
+          {
+            "b": "National Medical Commission (NMC)"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "NEET UG 2026 qualifying marks"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What we can say with confidence:"
+          },
+          {
+            "t": " 11.21 lakh of ~20 lakh candidates qualified — a rate of roughly "
+          },
+          {
+            "b": "56%"
+          },
+          {
+            "t": ", broadly consistent with recent years. That stability means the 2026 qualifying cutoff is very unlikely to be an outlier in either direction."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Why the marks move but the percentile doesn't:"
+          },
+          {
+            "t": " the 50th percentile is defined against the cohort, not against an absolute standard. A harder paper compresses the whole distribution downward and drags the qualifying marks down with it. An easier paper pushes them up. The percentile stays at 50 regardless. This is why \"the cutoff went down, so the paper was easy\" is exactly backwards."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Your Marks to Rank Conversion — From Official 2026 Data"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "This section is the most useful thing on this page, and it isn't an estimate."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "NTA published the actual score distribution for NEET UG 2026. That gives us hard anchor points converting marks directly to All India Rank — because if 1,492 candidates scored 650 or above, then a score of 650 corresponds to an AIR of approximately 1,492."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Official anchor points (NTA, 16 July 2026)"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Your Score"
+            }
+          ],
+          [
+            {
+              "t": "Approximate AIR"
+            }
+          ],
+          [
+            {
+              "t": "Confidence"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Above 700"
+              }
+            ],
+            [
+              {
+                "b": "≤ 19"
+              }
+            ],
+            [
+              {
+                "t": "Official"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "690"
+              }
+            ],
+            [
+              {
+                "b": "≈ 138"
+              }
+            ],
+            [
+              {
+                "t": "Official"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "650"
+              }
+            ],
+            [
+              {
+                "b": "≈ 1,492"
+              }
+            ],
+            [
+              {
+                "t": "Official"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "600"
+              }
+            ],
+            [
+              {
+                "b": "≈ 10,160"
+              }
+            ],
+            [
+              {
+                "t": "Official"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "500"
+              }
+            ],
+            [
+              {
+                "b": "≈ 90,780"
+              }
+            ],
+            [
+              {
+                "t": "Official"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "These five rows are derived directly from NTA's published distribution. They are not predictions."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Interpolated bands (between the anchors)"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The rows below are "
+          },
+          {
+            "b": "interpolated"
+          },
+          {
+            "t": ", not official. Use them for orientation, not for decisions."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Score Band"
+            }
+          ],
+          [
+            {
+              "t": "Estimated AIR Range"
+            }
+          ],
+          [
+            {
+              "t": "Basis"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "700–720"
+              }
+            ],
+            [
+              {
+                "t": "1 – 19"
+              }
+            ],
+            [
+              {
+                "t": "Official"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "690–700"
+              }
+            ],
+            [
+              {
+                "t": "19 – 138"
+              }
+            ],
+            [
+              {
+                "t": "Official"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "670–690"
+              }
+            ],
+            [
+              {
+                "t": "138 – ~600"
+              }
+            ],
+            [
+              {
+                "i": "Interpolated"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "650–670"
+              }
+            ],
+            [
+              {
+                "t": "~600 – 1,492"
+              }
+            ],
+            [
+              {
+                "i": "Interpolated"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "630–650"
+              }
+            ],
+            [
+              {
+                "t": "1,492 – ~4,000"
+              }
+            ],
+            [
+              {
+                "i": "Interpolated"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "600–630"
+              }
+            ],
+            [
+              {
+                "t": "~4,000 – 10,160"
+              }
+            ],
+            [
+              {
+                "t": "Official endpoints, "
+              },
+              {
+                "i": "interpolated"
+              },
+              {
+                "t": " interior"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "570–600"
+              }
+            ],
+            [
+              {
+                "t": "10,160 – ~25,000"
+              }
+            ],
+            [
+              {
+                "i": "Interpolated"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "550–570"
+              }
+            ],
+            [
+              {
+                "t": "~25,000 – ~40,000"
+              }
+            ],
+            [
+              {
+                "i": "Interpolated"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "520–550"
+              }
+            ],
+            [
+              {
+                "t": "~40,000 – ~68,000"
+              }
+            ],
+            [
+              {
+                "i": "Interpolated"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "500–520"
+              }
+            ],
+            [
+              {
+                "t": "~68,000 – 90,780"
+              }
+            ],
+            [
+              {
+                "t": "Official endpoint, "
+              },
+              {
+                "i": "interpolated"
+              },
+              {
+                "t": " interior"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Read the shape, not just the numbers."
+          },
+          {
+            "t": " Between 690 and 650 — a 40-mark band — sit about 1,350 candidates. Between 600 and 500 — a 100-mark band — sit about 80,600 candidates."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "That is a "
+          },
+          {
+            "b": "60x difference in density."
+          },
+          {
+            "t": " It means:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "At the top, marks are cheap and ranks are expensive. Going from 690 to 700 moves you ~120 ranks."
+            }
+          ],
+          [
+            {
+              "t": "In the middle, marks are catastrophically expensive. Going from 550 to 560 moves you roughly 8,000 ranks."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "If you are between 480 and 580, five marks is the difference between two entirely different colleges."
+          },
+          {
+            "t": " This is why estimating your position from a coaching institute's rank predictor is not good enough, and why students in this band should map their actual AIR against actual closing ranks."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Map your AIR against real closing ranks →",
+            "h": "/neet"
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "How Cutoffs Are Actually Determined"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Nobody sets an admission cutoff. It emerges."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Here is the mechanism:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "All qualified candidates are ranked by AIR (and by category rank within each category)"
+            }
+          ],
+          [
+            {
+              "t": "Each candidate submits an ordered choice list"
+            }
+          ],
+          [
+            {
+              "t": "The allotment algorithm processes candidates in rank order — best rank first"
+            }
+          ],
+          [
+            {
+              "t": "Each candidate gets the highest choice on their list that still has a seat available"
+            }
+          ],
+          [
+            {
+              "t": "When a college's seats run out, the rank of the last candidate allotted becomes that college's "
+            },
+            {
+              "b": "closing rank"
+            },
+            {
+              "t": " for that round and category"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The closing rank is a residue, not a target."
+          },
+          {
+            "t": " It's whatever rank happened to be standing when the seats ran out."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "This is why cutoffs move between years."
+          },
+          {
+            "t": " The four levers:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Lever"
+            }
+          ],
+          [
+            {
+              "t": "Effect"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Paper difficulty"
+              }
+            ],
+            [
+              {
+                "t": "Changes the marks-to-rank mapping, not the rank-to-college mapping"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Seat matrix changes"
+              }
+            ],
+            [
+              {
+                "t": "New colleges or seat increases pull closing ranks "
+              },
+              {
+                "i": "down"
+              },
+              {
+                "t": " (worse ranks get in)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Candidate preferences"
+              }
+            ],
+            [
+              {
+                "t": "If a college becomes fashionable, its closing rank tightens"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Number of candidates"
+              }
+            ],
+            [
+              {
+                "t": "More candidates at the same seat count pushes closing ranks tighter"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The practical consequence:"
+          },
+          {
+            "t": " compare "
+          },
+          {
+            "b": "ranks to ranks"
+          },
+          {
+            "t": ", never marks to marks. A 600 in 2024 and a 600 in 2026 are different ranks. But AIR 5,000 in 2024 and AIR 5,000 in 2026 buy roughly similar colleges, adjusted for seat matrix changes."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Every \"expected cutoff in marks\" article you read is doing the wrong arithmetic. Work in ranks."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Expected AIQ Cutoff 2026 for Government MBBS"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "All India Quota = 15% of state government college seats + 100% of central institutions."
+          },
+          {
+            "t": " That's roughly 7,000–8,000 government MBBS seats nationally, contested by all 11.21 lakh qualifiers."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Expected AIQ closing rank bands, General category"
+      },
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "These are indicative bands derived from previous years' MCC closing ranks, adjusted for the 2026 cohort. They are estimates. Verify against MCC's published Round-wise closing ranks at mcc.nic.in once released."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "College Tier"
+            }
+          ],
+          [
+            {
+              "t": "Expected AIQ Closing Rank (General)"
+            }
+          ],
+          [
+            {
+              "t": "Expected Score Equivalent"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "AIIMS Delhi"
+              }
+            ],
+            [
+              {
+                "t": "~50 – 70"
+              }
+            ],
+            [
+              {
+                "t": "700+"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Top 3 AIIMS"
+              },
+              {
+                "t": " (Delhi, Jodhpur, Bhopal)"
+              }
+            ],
+            [
+              {
+                "t": "~50 – 2,000"
+              }
+            ],
+            [
+              {
+                "t": "645+"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "MAMC, JIPMER, top metro government"
+              }
+            ],
+            [
+              {
+                "t": "~150 – 700"
+              }
+            ],
+            [
+              {
+                "t": "665+"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Other AIIMS"
+              }
+            ],
+            [
+              {
+                "t": "~1,500 – 6,000"
+              }
+            ],
+            [
+              {
+                "t": "615+"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Top state government colleges (AIQ)"
+              }
+            ],
+            [
+              {
+                "t": "~2,000 – 8,000"
+              }
+            ],
+            [
+              {
+                "t": "605+"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Mid-tier state government (AIQ)"
+              }
+            ],
+            [
+              {
+                "t": "~8,000 – 15,000"
+              }
+            ],
+            [
+              {
+                "t": "585+"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Lower-tier government MBBS (AIQ)"
+              }
+            ],
+            [
+              {
+                "t": "~15,000 – 25,000"
+              }
+            ],
+            [
+              {
+                "t": "~570+"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The headline number: a General-category candidate needs roughly AIR 15,000 or better for a realistic shot at government MBBS through AIQ."
+          },
+          {
+            "t": " From the official 2026 distribution, AIR 15,000 sits somewhere in the high 570s to low 580s."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Do not over-read this."
+          },
+          {
+            "t": " AIQ is only 15% of state seats. Your state quota is a completely different and usually far more favourable competition. Keep reading."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Expected AIIMS Cutoff 2026"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "AIIMS seats are allotted entirely through MCC AIQ counselling — there is no state quota at AIIMS. That makes them the most brutally competitive seats in the country."
+          }
+        ]
+      },
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "Indicative closing ranks, General category, AIQ. Verify against MCC data."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Institute"
+            }
+          ],
+          [
+            {
+              "t": "Expected Closing Rank (General, AIQ)"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "l": "AIIMS Delhi",
+                "h": "/neet-colleges/all-india-institute-of-medical-sciences-new-delhi-125-7-seats-are-earmarked-for-indian-nationals-and-07-seats-are-earmarked-for-foreign-under-self-finance"
+              }
+            ],
+            [
+              {
+                "t": "~50 – 70"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "l": "AIIMS Jodhpur",
+                "h": "/neet-colleges/all-india-institute-of-medical-sciences-jodhpur"
+              }
+            ],
+            [
+              {
+                "t": "~600 – 1,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "l": "AIIMS Bhopal",
+                "h": "/neet-colleges/all-india-institute-of-medical-sciences-bhopal"
+              }
+            ],
+            [
+              {
+                "t": "~1,200 – 2,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Bhubaneswar"
+              }
+            ],
+            [
+              {
+                "t": "~1,000 – 1,800"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Rishikesh"
+              }
+            ],
+            [
+              {
+                "t": "~1,100 – 1,900"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Patna"
+              }
+            ],
+            [
+              {
+                "t": "~1,500 – 2,400"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Raipur"
+              }
+            ],
+            [
+              {
+                "t": "~1,800 – 2,800"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Nagpur"
+              }
+            ],
+            [
+              {
+                "t": "~2,000 – 3,200"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Newer AIIMS (Gorakhpur, Bathinda, Deoghar, Bibinagar, Mangalagiri, Rajkot, Kalyani, Guwahati, Vijaypur, Madurai, Bilaspur, Rewari)"
+              }
+            ],
+            [
+              {
+                "t": "~2,500 – 6,000"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Reality check against the official 2026 data:"
+          },
+          {
+            "t": " only "
+          },
+          {
+            "b": "19 candidates scored above 700"
+          },
+          {
+            "t": ", and only "
+          },
+          {
+            "b": "138 scored 690 or above"
+          },
+          {
+            "t": ". AIIMS Delhi has roughly 130 MBBS seats. That means the AIIMS Delhi entering class is drawn almost entirely from the ~138 candidates above 690 — with reservation distributing those seats across categories."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The newer AIIMS are the underrated play."
+          },
+          {
+            "t": " They close 50–100x wider than AIIMS Delhi, carry the same AIIMS degree, the same fee structure (roughly ₹6,000 for the entire course versus ₹60 lakh–₹1.2 crore at a private college), and a genuinely good stipend. A candidate at AIR 4,000 choosing a \"prestigious\" old state college over AIIMS Rajkot is usually optimising for their uncle's opinion, not their career."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Expected Cutoff for Top Government Medical Colleges"
+      },
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "Indicative AIQ closing ranks, General category. State quota ranks are substantially wider — see the next section."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "College"
+            }
+          ],
+          [
+            {
+              "t": "Expected AIQ Closing Rank (General)"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "l": "Maulana Azad Medical College, Delhi",
+                "h": "/neet-colleges/maulana-azad-medical-college-new-delhi"
+              }
+            ],
+            [
+              {
+                "t": "~150 – 300"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "JIPMER Puducherry"
+              }
+            ],
+            [
+              {
+                "t": "~300 – 600"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "VMMC & Safdarjung Hospital, Delhi"
+              }
+            ],
+            [
+              {
+                "t": "~350 – 700"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Lady Hardinge Medical College, Delhi"
+              }
+            ],
+            [
+              {
+                "t": "~500 – 1,200"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "University College of Medical Sciences, Delhi"
+              }
+            ],
+            [
+              {
+                "t": "~700 – 1,400"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "IMS BHU, Varanasi"
+              }
+            ],
+            [
+              {
+                "t": "~700 – 1,300"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Seth GS Medical College (KEM), Mumbai"
+              }
+            ],
+            [
+              {
+                "t": "~1,000 – 2,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "l": "Grant Medical College, Mumbai",
+                "h": "/neet-colleges/grant-medical-college-mumbai"
+              }
+            ],
+            [
+              {
+                "t": "~2,000 – 4,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Madras Medical College, Chennai"
+              }
+            ],
+            [
+              {
+                "t": "~1,500 – 3,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Bangalore Medical College"
+              }
+            ],
+            [
+              {
+                "t": "~1,800 – 3,500"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "l": "King George's Medical University, Lucknow",
+                "h": "/neet-colleges/king-george-medical-university-lucknow"
+              }
+            ],
+            [
+              {
+                "t": "~1,800 – 3,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Government Medical College, Nagpur"
+              }
+            ],
+            [
+              {
+                "t": "~3,000 – 6,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "l": "SMS Medical College, Jaipur",
+                "h": "/neet-colleges/sms-medical-college-jaipur"
+              }
+            ],
+            [
+              {
+                "t": "~2,500 – 5,000"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "A note on [CMC Vellore](/neet-colleges/christian-medical-college-vellore):"
+          },
+          {
+            "t": " CMC is a private minority institution, not a government college, and it runs its own additional selection process alongside NEET. It doesn't belong on a government-college cutoff list, and students who assume it works like a government seat get surprised by the bond and service commitments. Read the college page before you list it."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Full profiles with fees, seats, campus and reviews: "
+          },
+          {
+            "l": "Top Government Medical Colleges Accepting NEET 2026",
+            "h": "/blog/top-government-medical-colleges-neet-2026"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Category-Wise Expected Cutoff 2026"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Here is the official 2026 qualified-candidate breakdown, and why it matters for your expectations:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Category"
+            }
+          ],
+          [
+            {
+              "t": "Qualified 2026"
+            }
+          ],
+          [
+            {
+              "t": "Share of Qualifiers"
+            }
+          ],
+          [
+            {
+              "t": "AIQ Reservation"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "General"
+              }
+            ],
+            [
+              {
+                "t": "2.91 lakh"
+              }
+            ],
+            [
+              {
+                "t": "26%"
+              }
+            ],
+            [
+              {
+                "t": "— (open)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "OBC-NCL"
+              }
+            ],
+            [
+              {
+                "b": "5.12 lakh"
+              }
+            ],
+            [
+              {
+                "b": "46%"
+              }
+            ],
+            [
+              {
+                "b": "27%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "SC"
+              }
+            ],
+            [
+              {
+                "t": "1.59 lakh"
+              }
+            ],
+            [
+              {
+                "t": "14%"
+              }
+            ],
+            [
+              {
+                "t": "15%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "ST"
+              }
+            ],
+            [
+              {
+                "t": "63,716"
+              }
+            ],
+            [
+              {
+                "t": "6%"
+              }
+            ],
+            [
+              {
+                "t": "7.5%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Gen-EWS"
+              }
+            ],
+            [
+              {
+                "t": "95,026"
+              }
+            ],
+            [
+              {
+                "t": "8%"
+              }
+            ],
+            [
+              {
+                "t": "10%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "PwBD"
+              }
+            ],
+            [
+              {
+                "t": "3,666"
+              }
+            ],
+            [
+              {
+                "t": "0.3%"
+              }
+            ],
+            [
+              {
+                "t": "5% (horizontal)"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Read the OBC-NCL row carefully. This is the most important line in this article for the largest group of readers."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "OBC-NCL candidates are "
+          },
+          {
+            "b": "46% of all qualifiers"
+          },
+          {
+            "t": " but hold "
+          },
+          {
+            "b": "27% of AIQ reserved seats"
+          },
+          {
+            "t": ". That is the single most oversubscribed category in Indian medical admissions. The practical result: "
+          },
+          {
+            "b": "OBC-NCL closing ranks at good colleges sit much closer to General closing ranks than most students expect"
+          },
+          {
+            "t": " — often within 20–40%, not the 2–3x cushion that gets assumed."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "If you are OBC-NCL and planning on the basis of \"I'll get in well below the General cutoff,\" recalibrate now."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Expected category-wise closing rank multipliers (indicative)"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Relative to the General closing rank at the same college, roughly:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Category"
+            }
+          ],
+          [
+            {
+              "t": "Typical Closing Rank vs General"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "EWS"
+              }
+            ],
+            [
+              {
+                "t": "~1.2x – 2x wider"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "OBC-NCL"
+              }
+            ],
+            [
+              {
+                "t": "~1.3x – 2.5x wider"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "SC"
+              }
+            ],
+            [
+              {
+                "t": "~4x – 8x wider"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "ST"
+              }
+            ],
+            [
+              {
+                "t": "~6x – 12x wider"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "These are rules of thumb, not rules."
+          },
+          {
+            "t": " The multiplier varies enormously by college and by state. A college with a large ST population in its state will behave differently from one without. Use the predictor with your actual category rank rather than multiplying in your head."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "EWS candidates, one more time:"
+          },
+          {
+            "t": " your certificate must be "
+          },
+          {
+            "b": "central format, financial year 2025–26"
+          },
+          {
+            "t": ". A certificate in state format or from FY 2024–25 gets rejected at MCC document verification and your claim collapses to General mid-counselling. At a 1.2x–2x multiplier, that collapse is frequently the difference between a government seat and none. Check it today."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "State Quota: Why Your Domicile Changes Everything"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "85% of state government college seats are reserved for state domicile candidates."
+          },
+          {
+            "t": " That's roughly 48,000 of the ~56,000 government MBBS seats in India, versus ~8,000 in AIQ."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "You've been reading AIQ numbers. "
+          },
+          {
+            "b": "State quota is six times bigger and you are competing against a state, not a country."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "The variance is enormous"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The same score produces wildly different outcomes depending on domicile, driven by the ratio of a state's NEET candidates to its government seats:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "State type"
+            }
+          ],
+          [
+            {
+              "t": "Example"
+            }
+          ],
+          [
+            {
+              "t": "Effect on your rank's value"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "High candidate-to-seat ratio"
+              }
+            ],
+            [
+              {
+                "t": "Delhi, Maharashtra, Karnataka, Tamil Nadu, Kerala"
+              }
+            ],
+            [
+              {
+                "t": "State quota barely easier than AIQ"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Moderate ratio"
+              }
+            ],
+            [
+              {
+                "t": "Rajasthan, MP, Gujarat, UP, West Bengal"
+              }
+            ],
+            [
+              {
+                "t": "State quota meaningfully easier"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Low ratio"
+              }
+            ],
+            [
+              {
+                "t": "Most North Eastern states, Ladakh, A&N, Lakshadweep, smaller UTs"
+              }
+            ],
+            [
+              {
+                "t": "State quota dramatically easier"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The official 2026 state topper data makes this concrete: "
+          },
+          {
+            "b": "Ladakh's state topper scored 530."
+          },
+          {
+            "t": " The national topper scored 715. A 530 in Ladakh's state quota and a 530 in Karnataka's state quota lead to completely different lives."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "This is not a statement about ability."
+          },
+          {
+            "t": " It's a statement about coaching density, school infrastructure and pool size. And it is why your domicile is the single most valuable asset you hold right now."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Do this today"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "If you have any domicile you haven't considered — a state you were born in, schooled in for 7+ years, or where your parents are domiciled — read that state's eligibility rules this week. Rules vary sharply:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Some states require 7 years of continuous schooling"
+            }
+          ],
+          [
+            {
+              "t": "Some accept the parent's domicile"
+            }
+          ],
+          [
+            {
+              "t": "Some accept either"
+            }
+          ],
+          [
+            {
+              "t": "Some require the Class 10 "
+            },
+            {
+              "b": "and"
+            },
+            {
+              "t": " 12 to be from the state"
+            }
+          ],
+          [
+            {
+              "t": "A few states (notably Delhi) have their own restrictive definitions"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Thirty minutes on your state counselling authority's information bulletin is the highest-leverage thing available to you right now."
+          },
+          {
+            "t": " Higher than anything else in this article."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Expected BDS Cutoff 2026"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "BDS closing ranks sit substantially wider than MBBS, and government BDS is the most consistently underrated option in Indian medical admissions."
+          }
+        ]
+      },
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "Indicative AIQ closing ranks, General category."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Tier"
+            }
+          ],
+          [
+            {
+              "t": "Expected AIQ Closing Rank (General)"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Top government dental colleges"
+              }
+            ],
+            [
+              {
+                "t": "~15,000 – 30,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Mid-tier government dental"
+              }
+            ],
+            [
+              {
+                "t": "~30,000 – 60,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Lower-tier government dental"
+              }
+            ],
+            [
+              {
+                "t": "~60,000 – 1,20,000"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The honest comparison"
+          },
+          {
+            "t": " most content refuses to make:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": ""
+            }
+          ],
+          [
+            {
+              "t": "Government BDS"
+            }
+          ],
+          [
+            {
+              "t": "Private MBBS"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Total course fee"
+              }
+            ],
+            [
+              {
+                "t": "Under ₹3 lakh"
+              }
+            ],
+            [
+              {
+                "t": "₹60 lakh – ₹1.2 crore"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Financed cost (11%, 10 yr)"
+              }
+            ],
+            [
+              {
+                "t": "Negligible"
+              }
+            ],
+            [
+              {
+                "b": "~₹1.5 crore repaid"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Stipend during internship"
+              }
+            ],
+            [
+              {
+                "t": "Yes"
+              }
+            ],
+            [
+              {
+                "t": "Often minimal"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Practice autonomy"
+              }
+            ],
+            [
+              {
+                "t": "High — clinic-based from year 1 of practice"
+              }
+            ],
+            [
+              {
+                "t": "Requires PG for real autonomy"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "A candidate around AIR 40,000 choosing to finance a ₹90 lakh private MBBS over a government BDS seat is making a ₹1.5 crore decision on prestige grounds. Some of them should. Most of them haven't done the arithmetic."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Explore BDS colleges and cutoffs →",
+            "h": "/neet-colleges"
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Deemed and Private: The Other Number"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Deemed universities are counselled through "
+          },
+          {
+            "b": "MCC"
+          },
+          {
+            "t": ", not state authorities. Private colleges are counselled through state authorities."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Deemed university closing ranks are wide"
+          },
+          {
+            "t": " — frequently into the lakhs — because the binding constraint is not rank. It's money."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": ""
+            }
+          ],
+          [
+            {
+              "t": "Deemed University MBBS"
+            }
+          ],
+          [
+            {
+              "t": "Private College MBBS"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Counselling"
+              }
+            ],
+            [
+              {
+                "t": "MCC"
+              }
+            ],
+            [
+              {
+                "t": "State authority"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Typical total fee"
+              }
+            ],
+            [
+              {
+                "t": "₹80 lakh – ₹1.5 crore"
+              }
+            ],
+            [
+              {
+                "t": "₹60 lakh – ₹1.2 crore"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Closing rank (General)"
+              }
+            ],
+            [
+              {
+                "t": "Often 1,50,000+"
+              }
+            ],
+            [
+              {
+                "t": "Varies widely by state"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "NRI quota"
+              }
+            ],
+            [
+              {
+                "t": "Yes, far wider ranks"
+              }
+            ],
+            [
+              {
+                "t": "Yes"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The thing to understand:"
+          },
+          {
+            "t": " at deemed universities, the \"cutoff\" that filters you is the fee, not the rank. If you cannot fund it, the closing rank is irrelevant to you, and time spent researching deemed cutoffs is time not spent on your state quota choice list."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Before you register:"
+          },
+          {
+            "t": " sit down with your parents and a calculator. Not a conversation — a spreadsheet. Course fee + hostel + mess + interest over the repayment period. Then compare against what a government BDS, a government AYUSH seat, or a considered drop year actually costs. See the full framework in "
+          },
+          {
+            "l": "What To Do After NEET Result 2026",
+            "h": "/blog/what-to-do-after-neet-result-2026"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Round-Wise Cutoff Movement"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Closing ranks are not one number. They move across rounds, and understanding the direction saves seats."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Round"
+            }
+          ],
+          [
+            {
+              "t": "Typical closing rank behaviour"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Round 1"
+              }
+            ],
+            [
+              {
+                "b": "Tightest."
+              },
+              {
+                "t": " Everyone's in the pool, best ranks take the best seats."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Round 2"
+              }
+            ],
+            [
+              {
+                "b": "Loosens."
+              },
+              {
+                "t": " Round 1 candidates who took free exit or joined elsewhere vacate seats."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Round 3"
+              }
+            ],
+            [
+              {
+                "b": "Loosens further."
+              },
+              {
+                "t": " More attrition."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Stray Vacancy"
+              }
+            ],
+            [
+              {
+                "b": "Widest — sometimes dramatically."
+              },
+              {
+                "t": " Leftover seats, small pool. "
+              },
+              {
+                "b": "No exit permitted."
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The strategic implications:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Don't despair at Round 1."
+            },
+            {
+              "t": " A rank that misses a college in Round 1 frequently clears it in Round 2 or 3. Round 1 closing ranks are the "
+            },
+            {
+              "i": "hardest"
+            },
+            {
+              "t": " version of the number."
+            }
+          ],
+          [
+            {
+              "b": "Use Round 1 closing ranks to recalibrate."
+            },
+            {
+              "t": " MCC publishes them. They are the single best input for your Round 2 choice list — better than any prediction, because they're this year's actual data."
+            }
+          ],
+          [
+            {
+              "b": "The stray round is a trap for the careless."
+            },
+            {
+              "t": " Ranks are widest, which is tempting. But there is no exit — if you're allotted, you must join. Only enter with choices you will genuinely accept."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Why Expected Cutoffs Are Estimates, Not Promises"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Everything in this article that isn't drawn from NTA's official distribution is an estimate. Here's exactly what that means, because you deserve to know how much weight to put on each number."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What is official and hard:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "The qualifying percentile framework (50th/45th/40th) — NMC regulation, doesn't change"
+            }
+          ],
+          [
+            {
+              "t": "The 2026 score distribution anchor points (700+ → 19; 690 → 138; 650 → 1,492; 600 → 10,160; 500 → 90,780) — published by NTA"
+            }
+          ],
+          [
+            {
+              "t": "The category-wise qualified counts"
+            }
+          ],
+          [
+            {
+              "t": "The marks→AIR conversion "
+            },
+            {
+              "b": "at those five anchor points"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What is interpolated:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Every marks→AIR row "
+            },
+            {
+              "i": "between"
+            },
+            {
+              "t": " the anchor points"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What is estimated:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Every college closing rank in this article. All of them. These are derived from previous years' MCC data adjusted for the 2026 cohort, and they will be wrong by some margin."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What will make them wrong:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Seat matrix changes (new colleges, seat increases) — these pull closing ranks wider"
+            }
+          ],
+          [
+            {
+              "t": "Shifts in candidate preference between colleges"
+            }
+          ],
+          [
+            {
+              "t": "Round-wise movement, which is large"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The only authoritative source for 2026 closing ranks is MCC and your state counselling authority, after each round concludes."
+          },
+          {
+            "t": " Nothing on this page — or any page, including the ones with more confident-looking tables — is a substitute."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Use these estimates for one job:"
+          },
+          {
+            "t": " deciding what to research and what to put on your choice list. Do not use them to decide that a college is out of reach and skip listing it. Listing costs nothing. Not listing costs seats."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Run your prediction against actual closing rank data →",
+            "h": "/neet"
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the NEET 2026 qualifying cutoff?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The 50th percentile for General and EWS, 45th for General-PwD, and 40th for OBC-NCL, SC and ST. These percentiles are fixed under NMC regulations. The corresponding marks ranges were published by NTA with the result on 16 July 2026."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Is the qualifying cutoff the same as the admission cutoff?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No, and this is the most costly confusion in NEET. The qualifying cutoff decides whether you enter counselling — 11.21 lakh candidates cleared it in 2026. The admission cutoff is a college's closing rank and decides whether you get a seat. There are roughly 56,000 government MBBS seats."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What rank do I need for government MBBS in 2026?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Through All India Quota, roughly AIR 15,000 or better for General category. Through state quota, it depends entirely on your domicile — the variance between states is enormous."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the expected AIIMS Delhi cutoff for 2026?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Approximately AIR 50–70 for General category. Context: only 19 candidates scored above 700 and 138 scored 690 or above in NEET 2026."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "If I scored 600, what is my rank?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Approximately "
+          },
+          {
+            "b": "AIR 10,160"
+          },
+          {
+            "t": ". This is drawn from NTA's official 2026 score distribution, which reported 10,160 candidates at 600 or above."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "If I scored 650, what is my rank?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Approximately "
+          },
+          {
+            "b": "AIR 1,492"
+          },
+          {
+            "t": " — again from NTA's official distribution."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Why do NEET cutoffs change every year?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Because closing ranks are an outcome of counselling, not a target. They shift with paper difficulty (which changes the marks-to-rank mapping), seat matrix changes, candidate preferences and cohort size. Always compare ranks to ranks, never marks to marks."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Is the OBC-NCL cutoff much lower than General?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Less than most students assume. OBC-NCL candidates are 46% of all 2026 qualifiers but hold 27% of AIQ reserved seats — the most oversubscribed category. Expect closing ranks roughly 1.3x–2.5x wider than General, not 3x or more."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Does state quota have a different cutoff from AIQ?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Yes, and it's usually far more favourable. State quota is 85% of state government seats — roughly 48,000 nationally versus ~8,000 in AIQ — and you compete only against your state's domicile candidates."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Do cutoffs go down in later rounds?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Yes. Round 1 closing ranks are the tightest. Rounds 2 and 3 loosen as candidates vacate seats, and the stray vacancy round is widest. But the stray round has no exit provision — only enter it with choices you will accept."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the expected government BDS cutoff for 2026?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Roughly AIR 15,000–30,000 for top government dental colleges, extending to 1,20,000+ for lower-tier government BDS in General category."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What rank do deemed universities require?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Often 1,50,000 or wider. But rank is not the real filter at deemed universities — the ₹80 lakh to ₹1.5 crore fee is. If you can't fund it, the closing rank is irrelevant to your planning."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "My EWS certificate is from FY 2024–25. Is it valid for 2026 counselling?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. It must be issued for "
+          },
+          {
+            "b": "FY 2025–26"
+          },
+          {
+            "t": " in the central government format. An invalid EWS certificate collapses your claim to General mid-counselling, which at a 1.2x–2x rank multiplier frequently costs a government seat."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Can I trust expected cutoff articles?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Only as far as they're honest about their basis. The marks-to-rank anchor points in this article come from NTA's official distribution. Every college closing rank here is an estimate from previous years' MCC data and will carry error. The only authoritative 2026 closing ranks come from MCC after each round."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Should I skip listing a college if my rank is above its expected cutoff?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. Never. Listing a choice costs nothing — the algorithm simply moves down your list if you're not eligible. Every college you don't list is a seat you cannot be allotted. Expected cutoffs should guide your research, not shorten your choice list."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "top-government-medical-colleges-neet-2026",
+    "title": "Top Government Medical Colleges Accepting NEET 2026",
+    "snippet": "Best government medical colleges accepting NEET 2026 — fees, MBBS seats, expected cutoff, campus, internship stipend and placements, compared side by side.",
+    "metaDescription": "Best government medical colleges accepting NEET 2026 — fees, MBBS seats, expected cutoff, campus, internship stipend and placements, compared side by side.",
+    "focusKeyword": "best medical colleges",
+    "secondaryKeywords": [
+      "government medical colleges",
+      "AIIMS colleges",
+      "top MBBS colleges India",
+      "government medical college fees",
+      "MBBS seats"
+    ],
+    "category": "NEET",
+    "categoryLabel": "NEET Counselling",
+    "author": "College Parichay Counselling Desk",
+    "date": "2026-07-17",
+    "read": "16 min read",
+    "iconName": "Building2",
+    "accent": "green",
+    "badge": "COMPARE",
+    "tag": "MBBS Colleges",
+    "body": [
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "The top government medical colleges accepting NEET 2026 are AIIMS Delhi, Maulana Azad Medical College, JIPMER Puducherry, AIIMS Jodhpur, Seth GS Medical College Mumbai and IMS BHU."
+          },
+          {
+            "t": " Government MBBS costs between ₹6,000 and ₹5 lakh for the full course, against ₹60 lakh to ₹1.2 crore at private colleges."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "i": "Reviewed by the College Parichay counselling desk — updated 17 July 2026. Fees, seats and closing ranks are indicative; verify against the NMC seat matrix and MCC's published data before locking choices."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Why Government Medical Colleges Win"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Let's dispose of the debate quickly, because it isn't close."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": ""
+            }
+          ],
+          [
+            {
+              "t": "Government MBBS"
+            }
+          ],
+          [
+            {
+              "t": "Private MBBS"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Total course fee"
+              }
+            ],
+            [
+              {
+                "t": "₹6,000 – ₹5,00,000"
+              }
+            ],
+            [
+              {
+                "t": "₹60,00,000 – ₹1,20,00,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Financed cost"
+              },
+              {
+                "t": " (11%, 10 yr)"
+              }
+            ],
+            [
+              {
+                "t": "Negligible"
+              }
+            ],
+            [
+              {
+                "b": "~₹1.5 crore repaid"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Patient volume"
+              }
+            ],
+            [
+              {
+                "t": "Very high — the training that matters"
+              }
+            ],
+            [
+              {
+                "t": "Often thin"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Internship stipend"
+              }
+            ],
+            [
+              {
+                "t": "Yes, ₹15,000 – ₹30,000/month typical"
+              }
+            ],
+            [
+              {
+                "t": "Frequently minimal or nil"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Faculty"
+              }
+            ],
+            [
+              {
+                "t": "Generally senior, research-active"
+              }
+            ],
+            [
+              {
+                "t": "Variable"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "PG prospects"
+              }
+            ],
+            [
+              {
+                "t": "Strong — clinical exposure drives NEET PG performance"
+              }
+            ],
+            [
+              {
+                "t": "Variable"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Alumni network"
+              }
+            ],
+            [
+              {
+                "t": "Deep, decades old"
+              }
+            ],
+            [
+              {
+                "t": "Thin at newer colleges"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The training argument is the real one, not the fee argument."
+          },
+          {
+            "t": " A government medical college in a tier-2 city sees a patient load that a well-funded private college in the same city structurally cannot. Medicine is an apprenticeship. Volume is the curriculum."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The financial argument is still worth stating plainly."
+          },
+          {
+            "t": " A ₹90 lakh private MBBS financed at 11% over 10 years costs roughly ₹1.5 crore in total repayment. That is a decision that shapes a family's finances into the 2030s. It deserves an evening with a spreadsheet, not an afternoon of emotion."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Where private genuinely makes sense:"
+          },
+          {
+            "t": " you have the cash without debt, your rank doesn't reach government MBBS anywhere including your state quota, and you've honestly assessed a drop year and concluded against it. That's a real scenario for some families. It just isn't the default."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "11.21 lakh candidates qualified NEET 2026. There are roughly "
+          },
+          {
+            "b": "56,000 government MBBS seats"
+          },
+          {
+            "t": ". This article is about which of them to want, and — more usefully — which of them you can actually reach."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Find out which of these your rank opens →",
+            "h": "/neet"
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "How We Ranked These Colleges"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Not by NIRF. Not by brand recall. By the things that change your life:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Clinical exposure"
+            },
+            {
+              "t": " — patient volume, hospital bed strength, case diversity"
+            }
+          ],
+          [
+            {
+              "b": "Faculty depth"
+            },
+            {
+              "t": " — senior clinicians who actually teach"
+            }
+          ],
+          [
+            {
+              "b": "PG outcomes"
+            },
+            {
+              "t": " — NEET PG performance of graduating batches"
+            }
+          ],
+          [
+            {
+              "b": "Infrastructure"
+            },
+            {
+              "t": " — labs, library, hospital, hostel"
+            }
+          ],
+          [
+            {
+              "b": "Fee"
+            },
+            {
+              "t": " — total cost including hostel and mess"
+            }
+          ],
+          [
+            {
+              "b": "Stipend"
+            },
+            {
+              "t": " — internship compensation"
+            }
+          ],
+          [
+            {
+              "b": "Bond terms"
+            },
+            {
+              "t": " — service obligations and penalty amounts"
+            }
+          ],
+          [
+            {
+              "b": "Alumni network"
+            },
+            {
+              "t": " — depth and reach"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What we deliberately ignored:"
+          },
+          {
+            "t": " campus aesthetics, marketing brochures, and the \"top 10\" lists that recycle the same six names with no methodology."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "A caveat you're owed:"
+          },
+          {
+            "t": " the tier structure below reflects a broad national consensus among counsellors, not a precise ordering. The gap between #8 and #12 on any list like this is within noise. Do not agonise over it. Do agonise over government vs private, and over your state quota."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "The Top 10 at a Glance"
+      },
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "Indicative figures. Seats change year to year with NMC approvals — verify against the current NMC seat matrix. Closing ranks are estimates from previous years' MCC data."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "#"
+            }
+          ],
+          [
+            {
+              "t": "College"
+            }
+          ],
+          [
+            {
+              "t": "Approx MBBS Seats"
+            }
+          ],
+          [
+            {
+              "t": "Approx Total Fee"
+            }
+          ],
+          [
+            {
+              "t": "Est. AIQ Closing Rank (General)"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "1"
+              }
+            ],
+            [
+              {
+                "l": "AIIMS Delhi",
+                "h": "/neet-colleges/all-india-institute-of-medical-sciences-new-delhi-125-7-seats-are-earmarked-for-indian-nationals-and-07-seats-are-earmarked-for-foreign-under-self-finance"
+              }
+            ],
+            [
+              {
+                "t": "~130"
+              }
+            ],
+            [
+              {
+                "b": "~₹6,000"
+              }
+            ],
+            [
+              {
+                "t": "~50 – 70"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "2"
+              }
+            ],
+            [
+              {
+                "l": "Maulana Azad Medical College, Delhi",
+                "h": "/neet-colleges/maulana-azad-medical-college-new-delhi"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹1 lakh"
+              }
+            ],
+            [
+              {
+                "t": "~150 – 300"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "3"
+              }
+            ],
+            [
+              {
+                "t": "JIPMER Puducherry"
+              }
+            ],
+            [
+              {
+                "t": "~200"
+              }
+            ],
+            [
+              {
+                "t": "~₹15,000"
+              }
+            ],
+            [
+              {
+                "t": "~300 – 600"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "4"
+              }
+            ],
+            [
+              {
+                "l": "AIIMS Jodhpur",
+                "h": "/neet-colleges/all-india-institute-of-medical-sciences-jodhpur"
+              }
+            ],
+            [
+              {
+                "t": "~125"
+              }
+            ],
+            [
+              {
+                "t": "~₹6,000"
+              }
+            ],
+            [
+              {
+                "t": "~600 – 1,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "5"
+              }
+            ],
+            [
+              {
+                "t": "VMMC & Safdarjung Hospital, Delhi"
+              }
+            ],
+            [
+              {
+                "t": "~170"
+              }
+            ],
+            [
+              {
+                "t": "~₹1 lakh"
+              }
+            ],
+            [
+              {
+                "t": "~350 – 700"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "6"
+              }
+            ],
+            [
+              {
+                "t": "Seth GS Medical College (KEM), Mumbai"
+              }
+            ],
+            [
+              {
+                "t": "~200"
+              }
+            ],
+            [
+              {
+                "t": "~₹5 lakh"
+              }
+            ],
+            [
+              {
+                "t": "~1,000 – 2,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "7"
+              }
+            ],
+            [
+              {
+                "t": "IMS BHU, Varanasi"
+              }
+            ],
+            [
+              {
+                "t": "~110"
+              }
+            ],
+            [
+              {
+                "t": "~₹50,000"
+              }
+            ],
+            [
+              {
+                "t": "~700 – 1,300"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "8"
+              }
+            ],
+            [
+              {
+                "l": "AIIMS Bhopal",
+                "h": "/neet-colleges/all-india-institute-of-medical-sciences-bhopal"
+              }
+            ],
+            [
+              {
+                "t": "~125"
+              }
+            ],
+            [
+              {
+                "t": "~₹6,000"
+              }
+            ],
+            [
+              {
+                "t": "~1,200 – 2,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "9"
+              }
+            ],
+            [
+              {
+                "t": "Madras Medical College, Chennai"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹75,000"
+              }
+            ],
+            [
+              {
+                "t": "~1,500 – 3,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "10"
+              }
+            ],
+            [
+              {
+                "l": "King George's Medical University, Lucknow",
+                "h": "/neet-colleges/king-george-medical-university-lucknow"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹3 lakh"
+              }
+            ],
+            [
+              {
+                "t": "~1,800 – 3,000"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Note on AIIMS fees:"
+          },
+          {
+            "t": " roughly ₹6,000 for the "
+          },
+          {
+            "i": "entire"
+          },
+          {
+            "t": " MBBS course. That is not a typo, and it is not a discount — it is what publicly funded medical education costs a student in India. Set against a ₹90 lakh private alternative, the newer AIIMS are the single largest arbitrage available to a NEET candidate."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "AIIMS Delhi"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Est. closing rank (General, AIQ): ~50 – 70"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~130 seats"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~₹6,000 total fee"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The reality check, using the official 2026 distribution: "
+          },
+          {
+            "b": "only 19 candidates scored above 700, and 138 scored 690 or above."
+          },
+          {
+            "t": " AIIMS Delhi's entering class is drawn almost entirely from that group of 138, with reservation distributing seats across categories."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Why it's #1 and it isn't arguable:"
+          },
+          {
+            "t": " the patient volume at AIIMS Delhi is among the highest of any teaching hospital anywhere. The faculty are the people who write the Indian guidelines. The alumni network runs every major department in the country. If you're at AIR 60, the decision is already made."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The honest downside:"
+          },
+          {
+            "t": " the pressure is real, the Delhi cost of living is real, and the institutional culture is not gentle. Students who arrive expecting the brand to carry them find out otherwise in year one."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Read the complete AIIMS Delhi review →",
+            "h": "/neet-colleges/all-india-institute-of-medical-sciences-new-delhi-125-7-seats-are-earmarked-for-indian-nationals-and-07-seats-are-earmarked-for-foreign-under-self-finance"
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Maulana Azad Medical College, Delhi"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Est. closing rank (General, AIQ): ~150 – 300"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~250 seats"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~₹1 lakh total"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The strongest non-AIIMS government college in India, and by some arguments the best clinical training in Delhi. Attached to Lok Nayak Hospital, GB Pant and Guru Nanak Eye Centre — a case volume and diversity that few institutions anywhere match."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The structural note:"
+          },
+          {
+            "t": " MAMC is a Delhi college, so "
+          },
+          {
+            "b": "85% of its seats go to Delhi domicile candidates"
+          },
+          {
+            "t": " through state counselling. The AIQ closing rank above applies to only 15% of seats. If you hold Delhi domicile, MAMC is dramatically more reachable than that number suggests. If you don't, it's brutally competitive."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "250 seats"
+          },
+          {
+            "t": " is a large batch — bigger than AIIMS Delhi — which means more seats at a wider rank band than the tier suggests."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Complete review of Maulana Azad Medical College →",
+            "h": "/neet-colleges/maulana-azad-medical-college-new-delhi"
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "JIPMER Puducherry"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Est. closing rank (General, AIQ): ~300 – 600"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~200 seats"
+          },
+          {
+            "t": " (Puducherry + Karaikal) · "
+          },
+          {
+            "b": "~₹15,000 total"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "An Institute of National Importance, counselled entirely through MCC — "
+          },
+          {
+            "b": "no state quota"
+          },
+          {
+            "t": ", which means every seat is contested nationally. Exceptional clinical training, a genuinely research-forward culture, and a fee structure close to AIIMS."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The underrated part:"
+          },
+          {
+            "t": " JIPMER's PG outcomes are outstanding, and the Puducherry campus is one of the more liveable in Indian medical education. Students who choose a \"bigger name\" metro college over JIPMER at a similar rank are usually optimising for their family's recognition of the name."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "MBBS at JIPMER — full profile →"
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "AIIMS Jodhpur"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Est. closing rank: ~600 – 1,000"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~125 seats"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~₹6,000"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The strongest of the second-generation AIIMS. Infrastructure is genuinely excellent, faculty recruitment has been serious, and it has established itself as the clear #2 AIIMS. At AIR 800, this is an easy yes over most alternatives."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "AIIMS Jodhpur cutoff and review →",
+            "h": "/neet-colleges/all-india-institute-of-medical-sciences-jodhpur"
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "VMMC & Safdarjung Hospital, Delhi"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Est. closing rank: ~350 – 700"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~170 seats"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~₹1 lakh"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Safdarjung is one of the highest-volume hospitals in India. The clinical exposure is extraordinary — arguably unmatched for sheer case load. Central government institution, so no state quota restriction."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Seth GS Medical College (KEM), Mumbai"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Est. closing rank: ~1,000 – 2,000"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~200 seats"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~₹5 lakh"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "KEM's reputation in Indian medicine is close to unimpeachable. Maharashtra state quota applies to 85% of seats, so Maharashtra domicile candidates reach it at a much wider rank."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "IMS BHU, Varanasi"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Est. closing rank: ~700 – 1,300"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~110 seats"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~₹50,000"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Central university, counselled through MCC. Strong legacy, deep alumni network, and a fee structure far below state colleges of comparable standing."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "BHU IMS complete review →"
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "AIIMS Bhopal"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Est. closing rank: ~1,200 – 2,000"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~125 seats"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~₹6,000"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Solid third-tier AIIMS with improving clinical volume. Same degree, same fee, same stipend structure as AIIMS Delhi."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "AIIMS Bhopal cutoff and review →",
+            "h": "/neet-colleges/all-india-institute-of-medical-sciences-bhopal"
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Lady Hardinge Medical College, Delhi"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Est. closing rank: ~500 – 1,200"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~200 seats"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~₹1 lakh"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Women-only. Central government institution with excellent clinical training and a strong record."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "University College of Medical Sciences, Delhi"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Est. closing rank: ~700 – 1,400"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~170 seats"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "b": "~₹1 lakh"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Delhi University affiliated, attached to GTB Hospital. 85% Delhi state quota."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Tier 3: Strong Government Colleges Worth Targeting"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "These are the colleges where most readers of this article will actually end up — and there is nothing second-rate about that. A government MBBS seat is a government MBBS seat."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "College"
+            }
+          ],
+          [
+            {
+              "t": "Est. AIQ Closing Rank (General)"
+            }
+          ],
+          [
+            {
+              "t": "Approx Seats"
+            }
+          ],
+          [
+            {
+              "t": "Approx Total Fee"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Madras Medical College, Chennai"
+              }
+            ],
+            [
+              {
+                "t": "~1,500 – 3,000"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹75,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Bangalore Medical College"
+              }
+            ],
+            [
+              {
+                "t": "~1,800 – 3,500"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹3 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "l": "King George's Medical University, Lucknow",
+                "h": "/neet-colleges/king-george-medical-university-lucknow"
+              }
+            ],
+            [
+              {
+                "t": "~1,800 – 3,000"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹3 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "l": "Grant Medical College, Mumbai",
+                "h": "/neet-colleges/grant-medical-college-mumbai"
+              }
+            ],
+            [
+              {
+                "t": "~2,000 – 4,000"
+              }
+            ],
+            [
+              {
+                "t": "~200"
+              }
+            ],
+            [
+              {
+                "t": "~₹5 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "l": "SMS Medical College, Jaipur",
+                "h": "/neet-colleges/sms-medical-college-jaipur"
+              }
+            ],
+            [
+              {
+                "t": "~2,500 – 5,000"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹1 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Government Medical College, Nagpur"
+              }
+            ],
+            [
+              {
+                "t": "~3,000 – 6,000"
+              }
+            ],
+            [
+              {
+                "t": "~200"
+              }
+            ],
+            [
+              {
+                "t": "~₹5 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "BJ Medical College, Ahmedabad"
+              }
+            ],
+            [
+              {
+                "t": "~3,000 – 6,000"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹1 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Gandhi Medical College, Bhopal"
+              }
+            ],
+            [
+              {
+                "t": "~4,000 – 8,000"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹1 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Osmania Medical College, Hyderabad"
+              }
+            ],
+            [
+              {
+                "t": "~3,500 – 7,000"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹50,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Calcutta Medical College"
+              }
+            ],
+            [
+              {
+                "t": "~3,000 – 6,000"
+              }
+            ],
+            [
+              {
+                "t": "~250"
+              }
+            ],
+            [
+              {
+                "t": "~₹50,000"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The pattern worth noticing:"
+          },
+          {
+            "t": " every one of these is a state college, which means "
+          },
+          {
+            "b": "85% of their seats go to state domicile candidates."
+          },
+          {
+            "t": " The AIQ ranks above cover 15%. Your state quota rank for your own state's colleges will be dramatically wider."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "This is why the single highest-leverage action available to you is checking your domicile"
+          },
+          {
+            "t": ", not researching colleges. Covered in full in "
+          },
+          {
+            "l": "Expected NEET Cutoff 2026 for Government Medical Colleges",
+            "h": "/blog/expected-neet-cutoff-2026-government-medical-colleges"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Compare these colleges side by side →",
+            "h": "/neet-colleges"
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "The Newer AIIMS: The Most Underrated Seats in India"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Institute"
+            }
+          ],
+          [
+            {
+              "t": "Est. AIQ Closing Rank (General)"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "AIIMS Bhubaneswar"
+              }
+            ],
+            [
+              {
+                "t": "~1,000 – 1,800"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Rishikesh"
+              }
+            ],
+            [
+              {
+                "t": "~1,100 – 1,900"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Patna"
+              }
+            ],
+            [
+              {
+                "t": "~1,500 – 2,400"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Raipur"
+              }
+            ],
+            [
+              {
+                "t": "~1,800 – 2,800"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Nagpur"
+              }
+            ],
+            [
+              {
+                "t": "~2,000 – 3,200"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Gorakhpur"
+              }
+            ],
+            [
+              {
+                "t": "~2,500 – 4,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Bathinda"
+              }
+            ],
+            [
+              {
+                "t": "~2,800 – 4,500"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Deoghar"
+              }
+            ],
+            [
+              {
+                "t": "~3,000 – 5,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Bibinagar"
+              }
+            ],
+            [
+              {
+                "t": "~3,000 – 5,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Mangalagiri"
+              }
+            ],
+            [
+              {
+                "t": "~2,800 – 4,500"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Rajkot"
+              }
+            ],
+            [
+              {
+                "t": "~3,000 – 5,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Kalyani"
+              }
+            ],
+            [
+              {
+                "t": "~3,000 – 5,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Guwahati"
+              }
+            ],
+            [
+              {
+                "t": "~3,500 – 5,500"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Vijaypur (Jammu)"
+              }
+            ],
+            [
+              {
+                "t": "~3,500 – 5,500"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Madurai"
+              }
+            ],
+            [
+              {
+                "t": "~3,500 – 5,500"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Bilaspur"
+              }
+            ],
+            [
+              {
+                "t": "~3,500 – 5,500"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "AIIMS Rewari"
+              }
+            ],
+            [
+              {
+                "t": "~4,000 – 6,000"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Make the case plainly."
+          },
+          {
+            "t": " A candidate at AIR 4,000 can reach a newer AIIMS. That seat carries:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "The same degree"
+            },
+            {
+              "t": " — \"MBBS, AIIMS\" with the institute name"
+            }
+          ],
+          [
+            {
+              "b": "The same fee"
+            },
+            {
+              "t": " — roughly ₹6,000 for the full course"
+            }
+          ],
+          [
+            {
+              "b": "The same stipend structure"
+            }
+          ],
+          [
+            {
+              "b": "No state quota restriction"
+            },
+            {
+              "t": " — they're MCC-counselled, open to everyone"
+            }
+          ],
+          [
+            {
+              "b": "Rapidly improving clinical volume"
+            },
+            {
+              "t": " as the hospitals mature"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Against a state government college at the same rank with a ₹5 lakh fee, or a private college at ₹90 lakh, the arithmetic isn't subtle."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The honest counter-argument, because you deserve it:"
+          },
+          {
+            "t": " the newest AIIMS have genuinely thinner patient volume than an established state college in a dense city, and faculty recruitment at some is still filling out. If you're choosing between AIIMS Rewari and Grant Medical College Mumbai, that's a real trade — brand and fee against clinical volume. It's not obvious. Talk to someone who's been through it."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What isn't a real trade:"
+          },
+          {
+            "t": " AIIMS Rajkot at ₹6,000 versus a private college at ₹90 lakh. Take the AIIMS."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Talk to an IITian mentor about this exact decision — free 15 min →",
+            "h": "/mentorship"
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Government Medical Colleges by State"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Because 85% of government seats run through state quota, this is the list that will actually determine your outcome."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "State"
+            }
+          ],
+          [
+            {
+              "t": "Notable Government Medical Colleges"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Delhi"
+              }
+            ],
+            [
+              {
+                "t": "AIIMS Delhi, MAMC, VMMC Safdarjung, Lady Hardinge, UCMS"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Maharashtra"
+              }
+            ],
+            [
+              {
+                "t": "Seth GS (KEM), Grant Medical College, BJ Medical College Pune, GMC Nagpur, AIIMS Nagpur"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Tamil Nadu"
+              }
+            ],
+            [
+              {
+                "t": "Madras Medical College, Stanley Medical College, Coimbatore Medical College, AIIMS Madurai"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Uttar Pradesh"
+              }
+            ],
+            [
+              {
+                "t": "KGMU Lucknow, IMS BHU, GSVM Kanpur, AIIMS Gorakhpur"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Rajasthan"
+              }
+            ],
+            [
+              {
+                "t": "SMS Jaipur, AIIMS Jodhpur, RNT Udaipur, SP Medical College Bikaner"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Karnataka"
+              }
+            ],
+            [
+              {
+                "t": "Bangalore Medical College, Mysore Medical College, KIMS Hubli"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "West Bengal"
+              }
+            ],
+            [
+              {
+                "t": "Calcutta Medical College, NRS Medical College, IPGMER, AIIMS Kalyani"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Madhya Pradesh"
+              }
+            ],
+            [
+              {
+                "t": "Gandhi Medical College Bhopal, AIIMS Bhopal, MGM Indore"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Gujarat"
+              }
+            ],
+            [
+              {
+                "t": "BJ Medical College Ahmedabad, AIIMS Rajkot, Government Medical College Surat"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Telangana"
+              }
+            ],
+            [
+              {
+                "t": "Osmania Medical College, Gandhi Medical College, AIIMS Bibinagar"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Bihar"
+              }
+            ],
+            [
+              {
+                "t": "AIIMS Patna, PMCH, NMCH"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Punjab"
+              }
+            ],
+            [
+              {
+                "t": "GMC Amritsar, GMC Patiala, AIIMS Bathinda"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Kerala"
+              }
+            ],
+            [
+              {
+                "t": "Government Medical College Thiruvananthapuram, Kozhikode, Kottayam"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Odisha"
+              }
+            ],
+            [
+              {
+                "t": "AIIMS Bhubaneswar, SCB Cuttack, MKCG Berhampur"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The variance across these states is enormous"
+          },
+          {
+            "t": ", driven by the ratio of a state's NEET candidates to its government seats. Delhi, Maharashtra, Karnataka and Tamil Nadu have brutal state quotas — barely easier than AIQ. Most North Eastern states, Ladakh, and the smaller UTs have dramatically easier ones. The official 2026 data makes the point: "
+          },
+          {
+            "b": "Ladakh's state topper scored 530"
+          },
+          {
+            "t": " against a national topper at 715."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Browse all government medical colleges by state →",
+            "h": "/neet-colleges"
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Fees: The Real Comparison"
+      },
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "Indicative total course fees, tuition only. Add hostel and mess — typically ₹30,000 – ₹1,00,000 per year."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Institution Type"
+            }
+          ],
+          [
+            {
+              "t": "Total Course Fee (Tuition)"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "AIIMS (any)"
+              }
+            ],
+            [
+              {
+                "b": "~₹6,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "JIPMER"
+              }
+            ],
+            [
+              {
+                "t": "~₹15,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Central universities (BHU, AMU)"
+              }
+            ],
+            [
+              {
+                "t": "~₹50,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Delhi government colleges"
+              }
+            ],
+            [
+              {
+                "t": "~₹1 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Most state government colleges"
+              }
+            ],
+            [
+              {
+                "t": "₹1 lakh – ₹5 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Government dental (BDS)"
+              }
+            ],
+            [
+              {
+                "t": "Under ₹3 lakh"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Deemed universities"
+              }
+            ],
+            [
+              {
+                "t": "₹80 lakh – ₹1.5 crore"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Private colleges"
+              }
+            ],
+            [
+              {
+                "t": "₹60 lakh – ₹1.2 crore"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "NRI quota"
+              }
+            ],
+            [
+              {
+                "t": "₹1 crore+"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The number that should end the debate:"
+          },
+          {
+            "t": " a ₹90 lakh private MBBS financed at 11% over 10 years costs approximately "
+          },
+          {
+            "b": "₹1.5 crore in total repayment."
+          },
+          {
+            "t": " That is 250x the cost of an AIIMS seat, for a degree that is — in employment and PG terms — worth less."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Where this actually gets decided:"
+          },
+          {
+            "t": " in a conversation with your parents that most families have too late and too emotionally. Have it in July, with a spreadsheet, not in September with a deadline."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The full framework for that conversation: "
+          },
+          {
+            "l": "What To Do After NEET Result 2026",
+            "h": "/blog/what-to-do-after-neet-result-2026"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Internship Stipend"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The compulsory rotating internship is a paid year at government colleges. It is frequently unpaid or nominally paid at private ones — a difference of ₹2–4 lakh over the year, on top of the fee gap."
+          }
+        ]
+      },
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "Indicative monthly stipend. Varies by state and revises periodically — verify with the college."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Institution Type"
+            }
+          ],
+          [
+            {
+              "t": "Typical Monthly Stipend"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "AIIMS / central institutions"
+              }
+            ],
+            [
+              {
+                "t": "~₹25,000 – ₹30,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Delhi government colleges"
+              }
+            ],
+            [
+              {
+                "t": "~₹25,000 – ₹30,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Most state government colleges"
+              }
+            ],
+            [
+              {
+                "t": "~₹15,000 – ₹25,000"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Some state colleges"
+              }
+            ],
+            [
+              {
+                "t": "Lower, and periodically disputed"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Private colleges"
+              }
+            ],
+            [
+              {
+                "t": "Often minimal or nil"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Stipend disputes at private colleges are a recurring issue that NMC has had to intervene on. It's a live problem, not a historical one. Ask current interns at any college you're seriously considering — not the admissions office."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "What \"Placements\" Actually Means in Medicine"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Let's be straight, because a lot of content on this topic is imported wholesale from engineering and is simply wrong."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "MBBS does not have campus placements."
+          },
+          {
+            "t": " There is no placement cell putting a package in your hand at graduation. Anyone showing you an \"average package\" for an MBBS college is either confused or selling something."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What actually happens after MBBS:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Path"
+            }
+          ],
+          [
+            {
+              "t": "Reality"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "NEET PG"
+              }
+            ],
+            [
+              {
+                "t": "The overwhelming majority route. MD/MS specialisation. "
+              },
+              {
+                "b": "This is what your college choice actually influences."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Government service"
+              }
+            ],
+            [
+              {
+                "t": "State health services, CHC/PHC postings. Stable, pensionable."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Junior residency"
+              }
+            ],
+            [
+              {
+                "t": "1–3 years, ₹60,000 – ₹1,00,000/month at government institutions."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "General practice"
+              }
+            ],
+            [
+              {
+                "t": "Own clinic. Common in tier-2 and tier-3 cities."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "INI-CET / AIIMS PG"
+              }
+            ],
+            [
+              {
+                "t": "For the AIIMS/PGI/JIPMER PG route."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "USMLE / PLAB"
+              }
+            ],
+            [
+              {
+                "t": "Overseas practice. Requires separate, expensive preparation."
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "So the question isn't \"what are the placements.\" It's: does this college's clinical exposure prepare me for NEET PG?"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "That answer is driven by:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Patient volume during clinical years"
+            }
+          ],
+          [
+            {
+              "t": "Faculty who teach rather than delegate"
+            }
+          ],
+          [
+            {
+              "t": "A peer group that studies"
+            }
+          ],
+          [
+            {
+              "t": "Internship quality"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Which is exactly why AIIMS Delhi, MAMC and JIPMER dominate NEET PG outcomes."
+          },
+          {
+            "t": " It's not the brand. It's the case load."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Bond and Service Obligations"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The section most \"top colleges\" articles skip, which is why students find out about it after joining."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Many state government colleges impose a compulsory rural service bond"
+          },
+          {
+            "t": " after MBBS. Terms vary enormously by state:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Element"
+            }
+          ],
+          [
+            {
+              "t": "Typical range"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Service period"
+              }
+            ],
+            [
+              {
+                "t": "1 – 5 years"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Penalty for breaking"
+              }
+            ],
+            [
+              {
+                "t": "₹5 lakh – ₹40 lakh+"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Enforcement"
+              }
+            ],
+            [
+              {
+                "t": "Varies by state; some states withhold your degree certificate"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "This is a real constraint on your life, not a formality."
+          },
+          {
+            "t": " A 5-year bond with a ₹40 lakh penalty materially changes what a \"free\" government seat costs you — particularly if you're planning NEET PG immediately after internship."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Some states are far more aggressive than others."
+          },
+          {
+            "t": " Read the bond terms in your state counselling authority's information bulletin "
+          },
+          {
+            "b": "before you lock choices"
+          },
+          {
+            "t": ", not after allotment."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "AIIMS and central institutions"
+          },
+          {
+            "t": " generally have lighter or no bond obligations — another point in the newer-AIIMS column that rarely makes the comparison tables."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "How to Choose Between Two Government Colleges"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "You'll face this in choice filling. Here's the order that matters:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Clinical volume"
+            },
+            {
+              "t": " — the hospital's case load. This is the curriculum. Everything else is secondary."
+            }
+          ],
+          [
+            {
+              "b": "Bond terms"
+            },
+            {
+              "t": " — a 5-year bond with a ₹40 lakh penalty is a bigger deal than a college being 20 places \"higher\""
+            }
+          ],
+          [
+            {
+              "b": "Fee"
+            },
+            {
+              "t": " — AIIMS at ₹6,000 vs a state college at ₹5 lakh is a real difference for many families"
+            }
+          ],
+          [
+            {
+              "b": "Stipend"
+            },
+            {
+              "t": " — ₹30,000 vs ₹15,000 over an internship year is ₹1.8 lakh"
+            }
+          ],
+          [
+            {
+              "b": "Distance from home"
+            },
+            {
+              "t": " — underrated. Five years is a long time, and the support system matters more than students expect at 17"
+            }
+          ],
+          [
+            {
+              "b": "Peer group"
+            },
+            {
+              "t": " — a batch that studies pulls you upward. Real effect, hard to measure."
+            }
+          ],
+          [
+            {
+              "b": "Brand"
+            },
+            {
+              "t": " — last. It matters least and gets weighted most."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The mistake almost everyone makes:"
+          },
+          {
+            "t": " ordering the choice list by perceived prestige rather than by these factors. You will live in this decision for five years and carry its bond for up to five more."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The other mistake:"
+          },
+          {
+            "t": " agonising over #8 versus #12 on a list like this. That gap is within noise. The gaps that matter are government vs private, AIQ vs state quota, and bond vs no bond."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Compare any two colleges on fees, seats, cutoff and reviews →",
+            "h": "/neet-colleges"
+          },
+          {
+            "t": " · "
+          },
+          {
+            "l": "Read student reviews →",
+            "h": "/neet-colleges"
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Which is the best government medical college in India?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "AIIMS Delhi, on clinical volume, faculty and PG outcomes. Its expected 2026 closing rank is around AIR 50–70 for General category — from a pool where only 138 candidates scored 690 or above."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "How much does government MBBS cost?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Between ₹6,000 (AIIMS) and roughly ₹5 lakh (some state colleges) for the full course, tuition only. Add ₹30,000–₹1,00,000 per year for hostel and mess."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Is a newer AIIMS better than an established state government college?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "It depends on the specific pair. Newer AIIMS win on fee (~₹6,000), degree brand, stipend and no state-quota restriction. Established state colleges in dense cities often win on patient volume. Against a "
+          },
+          {
+            "i": "private"
+          },
+          {
+            "t": " college, take the AIIMS without hesitation."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What rank do I need for AIIMS Delhi?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Roughly AIR 50–70 for General through AIQ. Only 19 candidates scored above 700 in NEET 2026."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Do government medical colleges have placements?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. MBBS has no campus placement system. Graduates go to NEET PG, government service, junior residency or general practice. Anyone quoting an \"average package\" for MBBS is misinformed."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the internship stipend at government medical colleges?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Typically ₹15,000–₹30,000 per month, highest at AIIMS and central institutions. Private colleges frequently pay little or nothing — a ₹2–4 lakh difference over the internship year."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is a medical college bond?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "A compulsory rural service obligation imposed by many state governments after MBBS. Periods run 1–5 years with penalties from ₹5 lakh to ₹40 lakh+. Read your state's bulletin before locking choices."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "How many government MBBS seats are there in India?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Roughly 56,000, against 11.21 lakh NEET 2026 qualifiers."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Is Maulana Azad Medical College better than AIIMS Jodhpur?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "MAMC has stronger clinical volume; AIIMS Jodhpur has a lower fee, the AIIMS degree and no state-quota restriction. MAMC's 85% Delhi quota means the answer depends entirely on whether you hold Delhi domicile."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Is CMC Vellore a government college?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. CMC Vellore is a private minority institution with its own additional selection process and service commitments. It doesn't belong on a government college list."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Can I get a government medical college with 500 marks?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Approximately AIR 90,780 in 2026. Through AIQ General, no. Through state quota, it depends entirely on your domicile and category — the variance between states is enormous. Run a prediction."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Which state has the easiest government medical college admission?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Broadly, states with a low candidate-to-seat ratio — most North Eastern states, Ladakh, and the smaller UTs. Ladakh's 2026 state topper scored 530 against a national topper at 715. Delhi, Maharashtra, Karnataka and Tamil Nadu are the hardest."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Should I take a private MBBS if I don't get government?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Only after honestly costing it. A ₹90 lakh private MBBS financed at 11% over 10 years repays roughly ₹1.5 crore. Compare that against government BDS (under ₹3 lakh), government AYUSH, or a considered drop year — with your parents and a spreadsheet."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Do AIIMS have a state quota?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. All AIIMS seats are allotted through MCC All India Quota counselling. Every seat is contested nationally."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "How do I choose between two government colleges in my choice list?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "In order: clinical volume, bond terms, fee, stipend, distance from home, peer group, and brand last. Brand matters least and gets weighted most."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "neet-counselling-2026-guide",
+    "title": "NEET Counselling 2026: Complete MCC & State Guide",
+    "snippet": "Complete NEET counselling 2026 guide — MCC AIQ registration, state quota, choice filling, seat allotment rounds, documents required and free exit rules.",
+    "metaDescription": "Complete NEET counselling 2026 guide — MCC AIQ registration, state quota, choice filling, seat allotment rounds, documents required and free exit rules.",
+    "focusKeyword": "NEET counselling 2026",
+    "secondaryKeywords": [
+      "MCC counselling",
+      "AIQ counselling",
+      "state counselling",
+      "choice filling",
+      "seat allotment",
+      "documents required for NEET counselling"
+    ],
+    "category": "NEET",
+    "categoryLabel": "NEET Counselling",
+    "author": "College Parichay Counselling Desk",
+    "date": "2026-07-17",
+    "read": "18 min read",
+    "iconName": "Layers",
+    "accent": "violet",
+    "badge": "GUIDE",
+    "tag": "Counselling",
+    "body": [
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "NEET counselling 2026 runs through two separate processes: MCC All India Quota counselling at mcc.nic.in covering 15% of state government seats plus all central institutions, and state counselling covering the remaining 85%."
+          },
+          {
+            "t": " Both require separate registration, separate fees and separate deadlines. Candidates must register for both."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "i": "Reviewed by the College Parichay counselling desk — updated 17 July 2026. Round rules change between years and between rounds; the information bulletin for each round is the only authority on that round."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "How NEET Counselling Actually Works"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The "
+          },
+          {
+            "l": "NEET UG 2026 result was declared on 16 July",
+            "h": "/blog/neet-ug-result-2026"
+          },
+          {
+            "t": ". "
+          },
+          {
+            "b": "11.21 lakh candidates qualified."
+          },
+          {
+            "t": " India has roughly "
+          },
+          {
+            "b": "56,000 government MBBS seats"
+          },
+          {
+            "t": " and about "
+          },
+          {
+            "b": "1.18 lakh MBBS seats"
+          },
+          {
+            "t": " in total."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Counselling is the machine that maps the first number onto the second. It is not a test, an interview, or a negotiation. It's an algorithm, and it runs on two inputs: "
+          },
+          {
+            "b": "your rank"
+          },
+          {
+            "t": " and "
+          },
+          {
+            "b": "your choice list."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "You cannot change your rank. You have total control over your choice list. "
+          },
+          {
+            "b": "That asymmetry is the entire strategic content of counselling"
+          },
+          {
+            "t": ", and almost every avoidable seat loss in India traces back to a student who optimised nothing about the one input they controlled."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The core loop, repeated each round:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Register on the portal and pay the fees"
+            }
+          ],
+          [
+            {
+              "t": "Fill an ordered list of choices"
+            }
+          ],
+          [
+            {
+              "b": "Lock"
+            },
+            {
+              "t": " the list"
+            }
+          ],
+          [
+            {
+              "t": "The algorithm processes candidates in rank order and gives each the highest choice they're eligible for"
+            }
+          ],
+          [
+            {
+              "t": "Results publish"
+            }
+          ],
+          [
+            {
+              "t": "You accept, exit, upgrade, or forfeit"
+            }
+          ],
+          [
+            {
+              "t": "Vacated seats roll into the next round"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "That's it. Everything below is detail on those seven steps."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "MCC vs State Counselling: The Structural Split"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "This is the fact everything else depends on. Read the table, then read the paragraph under it."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": ""
+            }
+          ],
+          [
+            {
+              "b": "All India Quota (AIQ)"
+            }
+          ],
+          [
+            {
+              "b": "State Quota"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Authority"
+              }
+            ],
+            [
+              {
+                "t": "Medical Counselling Committee (MCC)"
+              }
+            ],
+            [
+              {
+                "t": "State counselling authority"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Portal"
+              }
+            ],
+            [
+              {
+                "b": "mcc.nic.in"
+              }
+            ],
+            [
+              {
+                "t": "Varies by state"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Covers"
+              }
+            ],
+            [
+              {
+                "t": "15% of state government college seats · "
+              },
+              {
+                "b": "100%"
+              },
+              {
+                "t": " of AIIMS, JIPMER, ESIC, AFMC, Central Universities (BHU, AMU, Delhi University), Deemed Universities"
+              }
+            ],
+            [
+              {
+                "t": "85% of state government college seats · state private colleges"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Approx MBBS seats"
+              }
+            ],
+            [
+              {
+                "t": "~8,000 government + deemed"
+              }
+            ],
+            [
+              {
+                "t": "~48,000 government + private"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Eligibility"
+              }
+            ],
+            [
+              {
+                "t": "All qualified candidates, nationwide"
+              }
+            ],
+            [
+              {
+                "t": "Usually requires state "
+              },
+              {
+                "b": "domicile"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Merit basis"
+              }
+            ],
+            [
+              {
+                "t": "AIR (open) + category rank (reserved)"
+              }
+            ],
+            [
+              {
+                "t": "State merit list derived from NEET marks"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Category certificate"
+              }
+            ],
+            [
+              {
+                "b": "Central format"
+              }
+            ],
+            [
+              {
+                "b": "State format"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Registration"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Fee"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Deadlines"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ],
+            [
+              {
+                "t": "Separate"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Read the last four rows again, slowly."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "MCC counselling and state counselling are two entirely independent processes running in parallel. Registering for one does not register you for the other. There is no shared login, no shared fee, no shared calendar, and no system that notices you've missed one."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Every year, thousands of students register for one and assume it covers the other."
+          },
+          {
+            "t": " They find out in September."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "And notice which is bigger."
+          },
+          {
+            "t": " State quota is roughly "
+          },
+          {
+            "b": "six times"
+          },
+          {
+            "t": " the size of AIQ in government MBBS terms. Everyone spends July reading about AIQ closing ranks. Most of them will get their seat through state quota."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Your domicile is the most valuable asset you hold right now."
+          },
+          {
+            "t": " If you have any domicile you haven't considered — a state you were born in, schooled in for 7+ years, or where your parents are domiciled — read that state's eligibility rules this week. Thirty minutes. Highest-leverage action available to you."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "The Complete 2026 Counselling Calendar"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Event"
+            }
+          ],
+          [
+            {
+              "t": "Date"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Provisional Answer Key"
+              }
+            ],
+            [
+              {
+                "t": "25 June 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Answer Key Challenge Window"
+              }
+            ],
+            [
+              {
+                "t": "25–28 June 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "OMR Response Sheet Available"
+              }
+            ],
+            [
+              {
+                "t": "13–15 July 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Final Answer Key"
+              }
+            ],
+            [
+              {
+                "t": "16 July 2026"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "NEET UG 2026 Result"
+              }
+            ],
+            [
+              {
+                "b": "16 July 2026"
+              },
+              {
+                "t": " ✅"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "MCC Round 1 Registration"
+              }
+            ],
+            [
+              {
+                "b": "To be announced"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "MCC Round 1 Choice Filling"
+              }
+            ],
+            [
+              {
+                "t": "To be announced"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "MCC Round 1 Allotment"
+              }
+            ],
+            [
+              {
+                "t": "To be announced"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "MCC Round 2"
+              }
+            ],
+            [
+              {
+                "t": "To be announced"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "MCC Round 3"
+              }
+            ],
+            [
+              {
+                "t": "To be announced"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "MCC Stray Vacancy Round"
+              }
+            ],
+            [
+              {
+                "t": "To be announced"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "State Counselling"
+              }
+            ],
+            [
+              {
+                "t": "Announced state-wise"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "MCC has not announced the Round 1 date."
+          },
+          {
+            "t": " Monitor "
+          },
+          {
+            "b": "mcc.nic.in"
+          },
+          {
+            "t": " daily from now."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Two things about that instruction that aren't obvious:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "MCC does not send SMS reminders."
+            },
+            {
+              "t": " There is no notification. Nobody will tell you. The only mechanism is you, checking the site."
+            }
+          ],
+          [
+            {
+              "b": "Round 1 registration is typically open for under a week, and it does not extend."
+            },
+            {
+              "t": " Not for exams, not for illness, not for \"I didn't know.\""
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Put a daily calendar alert on your phone. This is not paranoia — it's the single cheapest insurance available in this process."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "MCC AIQ Counselling: Full Mechanics"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Portal:"
+          },
+          {
+            "t": " "
+          },
+          {
+            "b": "mcc.nic.in"
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "The round structure"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Round"
+            }
+          ],
+          [
+            {
+              "t": "Pool"
+            }
+          ],
+          [
+            {
+              "t": "Free exit?"
+            }
+          ],
+          [
+            {
+              "t": "Notes"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Round 1"
+              }
+            ],
+            [
+              {
+                "t": "Everyone"
+              }
+            ],
+            [
+              {
+                "b": "Yes"
+              }
+            ],
+            [
+              {
+                "t": "Tightest closing ranks."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Round 2"
+              }
+            ],
+            [
+              {
+                "t": "Round 1 non-joiners + exits + fresh"
+              }
+            ],
+            [
+              {
+                "t": "Rules vary — read the bulletin"
+              }
+            ],
+            [
+              {
+                "t": "Ranks loosen."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Round 3"
+              }
+            ],
+            [
+              {
+                "t": "Remaining pool"
+              }
+            ],
+            [
+              {
+                "t": "Rules vary"
+              }
+            ],
+            [
+              {
+                "t": "Ranks loosen further."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Stray Vacancy"
+              }
+            ],
+            [
+              {
+                "t": "Leftover seats"
+              }
+            ],
+            [
+              {
+                "b": "NO"
+              }
+            ],
+            [
+              {
+                "t": "Widest ranks. "
+              },
+              {
+                "b": "Mandatory joining."
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What happens across rounds"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Closing ranks "
+          },
+          {
+            "b": "loosen"
+          },
+          {
+            "t": " from Round 1 to stray. The mechanism is attrition: candidates who take free exit, join elsewhere, or simply don't report vacate seats that roll into the next round's pool."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Three consequences worth internalising:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Round 1 closing ranks are the hardest version of the number."
+            },
+            {
+              "t": " A rank that misses a college in Round 1 frequently clears it in Round 2 or 3. Do not despair at Round 1."
+            }
+          ],
+          [
+            {
+              "b": "MCC publishes Round 1 closing ranks."
+            },
+            {
+              "t": " They are the best possible input for your Round 2 list — better than any prediction, because they're "
+            },
+            {
+              "i": "this year's actual data"
+            },
+            {
+              "t": " rather than last year's adjusted."
+            }
+          ],
+          [
+            {
+              "b": "The stray round is the widest and the most dangerous."
+            },
+            {
+              "t": " See its own section below."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Read each round's information bulletin."
+          },
+          {
+            "t": " MCC changes rules between years and between rounds. The bulletin for Round 2 of 2026 is the only authority on Round 2 of 2026 — not what your senior told you about 2024, and not this article."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "The Seat Matrix: What's Actually Available"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The seat matrix is MCC's published list of every seat, by college, course, category and quota. It publishes before choice filling."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Read it. Actually read it."
+          },
+          {
+            "t": " Most students never open it and fill choices from memory and rumour."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Seat type in AIQ"
+            }
+          ],
+          [
+            {
+              "t": "What it is"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "AIQ Government"
+              }
+            ],
+            [
+              {
+                "t": "15% of state government college seats"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Central Institutions"
+              }
+            ],
+            [
+              {
+                "t": "AIIMS, JIPMER, ESIC, AFMC, BHU, AMU, DU, Central Universities — 100% through MCC"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Deemed Universities"
+              }
+            ],
+            [
+              {
+                "t": "100% through MCC. High fee."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Central Universities"
+              }
+            ],
+            [
+              {
+                "t": "Through MCC"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "ESIC"
+              }
+            ],
+            [
+              {
+                "t": "Insured Persons quota + open"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "AFMC"
+              }
+            ],
+            [
+              {
+                "t": "Separate additional selection process"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "B.Sc Nursing"
+              }
+            ],
+            [
+              {
+                "t": "Central institutions, through MCC"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "What the seat matrix tells you that nothing else will:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Exactly how many seats exist in your category at each college"
+            }
+          ],
+          [
+            {
+              "t": "Which colleges are new this year ("
+            },
+            {
+              "b": "new colleges have no closing rank history — they're often the softest seats in the matrix"
+            },
+            {
+              "t": ")"
+            }
+          ],
+          [
+            {
+              "t": "Which colleges had seat increases (these loosen closing ranks)"
+            }
+          ],
+          [
+            {
+              "t": "Whether the course you assumed exists actually does"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The new-college point is the actionable one."
+          },
+          {
+            "t": " A college added to the matrix this year has no historical closing rank, so no predictor covers it and most students skip it. That's precisely why it closes wide. Read the matrix, find the new entries, list them."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "AIQ reservation"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Category"
+            }
+          ],
+          [
+            {
+              "t": "AIQ Reservation"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "OBC-NCL"
+              }
+            ],
+            [
+              {
+                "t": "27%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "SC"
+              }
+            ],
+            [
+              {
+                "t": "15%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "ST"
+              }
+            ],
+            [
+              {
+                "t": "7.5%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "EWS"
+              }
+            ],
+            [
+              {
+                "t": "10%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "PwBD"
+              }
+            ],
+            [
+              {
+                "t": "5% (horizontal)"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "The arithmetic nobody publishes"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Set the reservation against the official 2026 qualified counts:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Category"
+            }
+          ],
+          [
+            {
+              "t": "Qualified 2026"
+            }
+          ],
+          [
+            {
+              "t": "Share of Qualifiers"
+            }
+          ],
+          [
+            {
+              "t": "AIQ Reservation"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "General"
+              }
+            ],
+            [
+              {
+                "t": "2.91 lakh"
+              }
+            ],
+            [
+              {
+                "t": "26%"
+              }
+            ],
+            [
+              {
+                "t": "—"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "OBC-NCL"
+              }
+            ],
+            [
+              {
+                "b": "5.12 lakh"
+              }
+            ],
+            [
+              {
+                "b": "46%"
+              }
+            ],
+            [
+              {
+                "b": "27%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "SC"
+              }
+            ],
+            [
+              {
+                "t": "1.59 lakh"
+              }
+            ],
+            [
+              {
+                "t": "14%"
+              }
+            ],
+            [
+              {
+                "t": "15%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "ST"
+              }
+            ],
+            [
+              {
+                "t": "63,716"
+              }
+            ],
+            [
+              {
+                "t": "6%"
+              }
+            ],
+            [
+              {
+                "t": "7.5%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Gen-EWS"
+              }
+            ],
+            [
+              {
+                "t": "95,026"
+              }
+            ],
+            [
+              {
+                "t": "8%"
+              }
+            ],
+            [
+              {
+                "t": "10%"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "PwBD"
+              }
+            ],
+            [
+              {
+                "t": "3,666"
+              }
+            ],
+            [
+              {
+                "t": "0.3%"
+              }
+            ],
+            [
+              {
+                "t": "5% (horizontal)"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "OBC-NCL candidates are 46% of all qualifiers and hold 27% of AIQ reserved seats."
+          },
+          {
+            "t": " That is the most oversubscribed category in Indian medical admissions by a wide margin."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The practical consequence:"
+          },
+          {
+            "t": " OBC-NCL closing ranks at good colleges sit much closer to General than students expect — often within 1.3x to 2.5x, not the 3x+ cushion that gets assumed in coaching-centre folklore. If you're OBC-NCL and planning on the basis of a large cushion, recalibrate today."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "SC and ST candidates have a genuinely favourable ratio"
+          },
+          {
+            "t": " (14% of qualifiers for 15% of seats; 6% for 7.5%). Closing ranks typically run 4x–8x and 6x–12x wider than General respectively."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Horizontal vs vertical reservation"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Vertical"
+          },
+          {
+            "t": " (SC/ST/OBC/EWS) — separate merit lists, separate seat pools. "
+          },
+          {
+            "b": "Horizontal"
+          },
+          {
+            "t": " (PwBD) — cuts "
+          },
+          {
+            "i": "across"
+          },
+          {
+            "t": " all vertical categories. A PwBD candidate competes within their own vertical category's PwBD sub-quota."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "This distinction confuses people constantly. A SC-PwBD candidate is in the SC list, competing for the PwBD seats within it."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Everyone competes on AIR for open seats regardless of category."
+          },
+          {
+            "t": " If your AIR clears the open cutoff, you take an open seat and free your category seat for someone else. This is automatic. You don't choose it."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Full rank-band detail: "
+          },
+          {
+            "l": "Expected NEET Cutoff 2026 for Government Medical Colleges",
+            "h": "/blog/expected-neet-cutoff-2026-government-medical-colleges"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Special Quotas Most Students Miss"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Free money, structurally. Almost nobody checks."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Quota"
+            }
+          ],
+          [
+            {
+              "t": "Who's eligible"
+            }
+          ],
+          [
+            {
+              "t": "Where"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "ESIC — Insured Persons (IP)"
+              }
+            ],
+            [
+              {
+                "t": "Children of ESIC-insured workers"
+              }
+            ],
+            [
+              {
+                "t": "ESIC colleges via MCC"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "AFMC"
+              }
+            ],
+            [
+              {
+                "t": "Meets AFMC criteria + separate selection"
+              }
+            ],
+            [
+              {
+                "t": "AFMC Pune via MCC"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "NRI"
+              }
+            ],
+            [
+              {
+                "t": "NRI/OCI candidates"
+              }
+            ],
+            [
+              {
+                "t": "Deemed + private. Far wider ranks, far higher fees."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Wards of Defence Personnel"
+              }
+            ],
+            [
+              {
+                "t": "Varies by state"
+              }
+            ],
+            [
+              {
+                "t": "State counselling"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Government school quota"
+              }
+            ],
+            [
+              {
+                "t": "Varies by state (notably Tamil Nadu's 7.5%)"
+              }
+            ],
+            [
+              {
+                "t": "State counselling"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "PwBD"
+              }
+            ],
+            [
+              {
+                "t": "Certified from a designated centre"
+              }
+            ],
+            [
+              {
+                "t": "Both"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Jammu & Kashmir migrant"
+              }
+            ],
+            [
+              {
+                "t": "As notified"
+              }
+            ],
+            [
+              {
+                "t": "State counselling"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Single girl child"
+              }
+            ],
+            [
+              {
+                "t": "A few states"
+              }
+            ],
+            [
+              {
+                "t": "State counselling"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The ESIC-IP one is worth five minutes of your time."
+          },
+          {
+            "t": " If either parent is an ESIC-insured worker — and lakhs of Indian families are without thinking of it as a quota — the IP quota closing ranks are "
+          },
+          {
+            "i": "substantially"
+          },
+          {
+            "t": " wider than open ESIC seats. Ask your parents whether their employer deducts ESIC. It takes one question."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The state-specific ones are where the real variance lives."
+          },
+          {
+            "t": " Tamil Nadu's 7.5% government school quota, various defence quotas, various regional quotas — these are in your "
+          },
+          {
+            "b": "state counselling authority's information bulletin"
+          },
+          {
+            "t": ", and each state's list is different."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Read your state's bulletin cover to cover."
+          },
+          {
+            "t": " It is a boring 60-page PDF. It is also the highest information-density document in this entire process, and reading it puts you ahead of roughly 90% of your competition."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Documents Required: The Complete List"
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "NEET UG 2026 "
+            },
+            {
+              "b": "Admit Card"
+            }
+          ],
+          [
+            {
+              "t": "NEET UG 2026 "
+            },
+            {
+              "b": "Scorecard / Result"
+            }
+          ],
+          [
+            {
+              "b": "Class 10 certificate"
+            },
+            {
+              "t": " — for date of birth"
+            }
+          ],
+          [
+            {
+              "b": "Class 12 certificate and marksheet"
+            }
+          ],
+          [
+            {
+              "b": "Photo ID"
+            },
+            {
+              "t": " — Aadhaar / PAN / Passport / Driving Licence"
+            }
+          ],
+          [
+            {
+              "b": "Eight passport-size photographs"
+            },
+            {
+              "t": " — same as used in the application"
+            }
+          ],
+          [
+            {
+              "b": "Provisional Allotment Letter"
+            },
+            {
+              "t": " — generated after allotment"
+            }
+          ],
+          [
+            {
+              "b": "Caste / Category certificate"
+            },
+            {
+              "t": " — "
+            },
+            {
+              "b": "central format"
+            },
+            {
+              "t": " for AIQ"
+            }
+          ],
+          [
+            {
+              "b": "EWS certificate"
+            },
+            {
+              "t": " — "
+            },
+            {
+              "b": "central format, FY 2025–26"
+            }
+          ],
+          [
+            {
+              "b": "PwBD certificate"
+            },
+            {
+              "t": " — from a designated disability assessment centre"
+            }
+          ],
+          [
+            {
+              "b": "Domicile certificate"
+            },
+            {
+              "t": " — for state counselling"
+            }
+          ],
+          [
+            {
+              "b": "Migration certificate"
+            },
+            {
+              "t": " — required by many colleges at reporting"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Bring three photocopy sets to every verification."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Start collecting today."
+          },
+          {
+            "t": " Not when MCC announces dates. The certificates in items 8–11 take "
+          },
+          {
+            "b": "two to four weeks"
+          },
+          {
+            "t": " to obtain in most districts, and the counselling calendar does not wait for your tehsildar's office."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "The Certificate Format Trap"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "This section exists because it is the single most common unforced error in Indian medical counselling, and almost no content covers it."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Category certificate: central vs state format"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "They are different documents."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": ""
+            }
+          ],
+          [
+            {
+              "t": "AIQ (MCC)"
+            }
+          ],
+          [
+            {
+              "t": "State counselling"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Required format"
+              }
+            ],
+            [
+              {
+                "b": "Central government prescribed format"
+              }
+            ],
+            [
+              {
+                "b": "State format"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Issued by"
+              }
+            ],
+            [
+              {
+                "t": "Competent authority, central format"
+              }
+            ],
+            [
+              {
+                "t": "State competent authority"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Valid for the other?"
+              }
+            ],
+            [
+              {
+                "b": "No"
+              }
+            ],
+            [
+              {
+                "b": "No"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "A state-format OBC-NCL certificate is "
+          },
+          {
+            "b": "valid for state counselling and invalid for AIQ"
+          },
+          {
+            "t": ". If you show up to MCC document verification with a state-format certificate, your category claim collapses to General on the spot."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "If you only hold the state one, apply for the central one today."
+          },
+          {
+            "t": " Two to four weeks in most districts. MCC will not wait, will not accept an application receipt, and will not make an exception."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "EWS: the financial year trap"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The EWS certificate must be:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Central government format"
+            }
+          ],
+          [
+            {
+              "t": "Issued for financial year "
+            },
+            {
+              "b": "2025–26"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "An EWS certificate from FY 2024–25 is invalid. It gets rejected at verification, your EWS claim collapses to General, and at a 1.2x–2x rank multiplier that collapse is frequently the exact difference between a government seat and none."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Check the financial year on your certificate right now."
+          },
+          {
+            "t": " This paragraph has probably saved more seats than everything else on this page."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "OBC-NCL: the validity window"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The non-creamy-layer certificate must be current per the counselling authority's requirement. An expired NCL certificate is an invalid NCL certificate."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Registration: Step by Step"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "On `mcc.nic.in`:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "Register"
+            },
+            {
+              "t": " with your NEET application number and roll number"
+            }
+          ],
+          [
+            {
+              "b": "Fill personal details"
+            },
+            {
+              "t": " — these must match your NEET application exactly"
+            }
+          ],
+          [
+            {
+              "b": "Pay the registration fee"
+            },
+            {
+              "t": " — non-refundable, varies by category and seat type"
+            }
+          ],
+          [
+            {
+              "b": "Pay the security deposit"
+            },
+            {
+              "t": " — refundable, but forfeited if you violate round rules"
+            }
+          ],
+          [
+            {
+              "b": "Fill choices"
+            }
+          ],
+          [
+            {
+              "b": "Lock choices"
+            }
+          ],
+          [
+            {
+              "t": "Await allotment"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Errors that break registration:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Name mismatch with your NEET application → fix with NTA first, not MCC"
+            }
+          ],
+          [
+            {
+              "t": "Wrong category selected during registration → some fields can't be edited after payment"
+            }
+          ],
+          [
+            {
+              "t": "Payment succeeds but doesn't reflect → wait 24h, then raise a grievance with the transaction ID. Do not pay twice."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Take screenshots at every step."
+          },
+          {
+            "t": " Registration confirmation, fee payment, locked choice list. The MCC portal has a well-earned reputation for load problems during peak windows, and a screenshot is your only evidence."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Choice Filling: The Strategy That Wins Seats"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "This is where the entire process is decided. Read this section twice."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "The one principle"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Order by genuine preference. Not by probability."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The algorithm processes your list top-down and gives you the "
+          },
+          {
+            "b": "highest choice you are eligible for"
+          },
+          {
+            "t": ". If your rank doesn't reach choice #1, it moves to #2. Then #3. It does not penalise you, downgrade you, or notice that you were ambitious."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "There is zero cost to optimism at the top of your list."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The cost is entirely at the bottom."
+          },
+          {
+            "t": " Every college you don't list is a seat you cannot be allotted."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "How to build it"
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Run a prediction and sort the output into "
+            },
+            {
+              "b": "reach / match / safe"
+            },
+            {
+              "t": " buckets — "
+            },
+            {
+              "l": "do that here",
+              "h": "/neet"
+            }
+          ],
+          [
+            {
+              "t": "List your "
+            },
+            {
+              "b": "reach"
+            },
+            {
+              "t": " colleges first, in true preference order"
+            }
+          ],
+          [
+            {
+              "t": "Then "
+            },
+            {
+              "b": "match"
+            }
+          ],
+          [
+            {
+              "t": "Then "
+            },
+            {
+              "b": "safe"
+            }
+          ],
+          [
+            {
+              "b": "List everything you would genuinely attend."
+            },
+            {
+              "t": " A 200-choice list costs you nothing but an hour."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "The two failure modes"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Too short."
+          },
+          {
+            "t": " Students list 15 choices, get nothing in Round 1, and watch options fill in Round 2 that they'd have taken happily. If you have 150 acceptable colleges, list 150."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Listing something you won't join."
+          },
+          {
+            "t": " If you would not attend a college, "
+          },
+          {
+            "b": "do not list it."
+          },
+          {
+            "t": " Being allotted a seat you then abandon carries consequences — forfeited security deposit, and in some rounds, debarment from subsequent rounds. And in the stray round, it isn't optional at all."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "The government-vs-private ordering"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "A government MBBS seat at a mid-tier college beats a private MBBS seat at a \"better\" one on almost every axis that matters:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": ""
+            }
+          ],
+          [
+            {
+              "t": "Government MBBS"
+            }
+          ],
+          [
+            {
+              "t": "Private MBBS"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Total fee"
+              }
+            ],
+            [
+              {
+                "t": "₹6,000 – ₹5 lakh"
+              }
+            ],
+            [
+              {
+                "t": "₹60 lakh – ₹1.2 crore"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Financed cost (11%, 10yr)"
+              }
+            ],
+            [
+              {
+                "t": "Negligible"
+              }
+            ],
+            [
+              {
+                "b": "~₹1.5 crore repaid"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Internship stipend"
+              }
+            ],
+            [
+              {
+                "t": "₹15,000 – ₹30,000/month"
+              }
+            ],
+            [
+              {
+                "t": "Often minimal"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Patient volume"
+              }
+            ],
+            [
+              {
+                "t": "High — this is the curriculum"
+              }
+            ],
+            [
+              {
+                "t": "Often thin"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Order accordingly, unless you have a specific reason not to. And \"the campus looked nicer\" is not a ₹1.5 crore reason."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "College-by-college detail: "
+          },
+          {
+            "l": "Top Government Medical Colleges Accepting NEET 2026",
+            "h": "/blog/top-government-medical-colleges-neet-2026"
+          },
+          {
+            "t": "."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Locking: Fill Is Not Submit"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "A filled list is not a submitted list."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Most portals auto-lock at the deadline. "
+          },
+          {
+            "b": "Do not rely on that."
+          },
+          {
+            "t": " Some don't, and an unlocked list is an unprocessed list — which means no allotment, in a round you paid for."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Do this:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Lock explicitly"
+            }
+          ],
+          [
+            {
+              "t": "Screenshot the confirmation"
+            }
+          ],
+          [
+            {
+              "t": "Download the locked choice list PDF"
+            }
+          ],
+          [
+            {
+              "t": "Then close the tab and stop looking at it"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "You cannot change a locked list. Four days of second-guessing it changes nothing except your sleep."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Seat Allotment and the Algorithm"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The algorithm is a straightforward serial dictatorship:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Sort all candidates by rank — best first"
+            }
+          ],
+          [
+            {
+              "t": "For each candidate, walk their choice list top-down"
+            }
+          ],
+          [
+            {
+              "t": "Allot the first choice with a seat available in their eligible category"
+            }
+          ],
+          [
+            {
+              "t": "Remove that seat from the pool"
+            }
+          ],
+          [
+            {
+              "t": "Next candidate"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Two properties worth understanding:"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "It's not a lottery."
+          },
+          {
+            "t": " Given everyone's rank and everyone's choice list, the outcome is fully determined. There is no luck in it and nothing to pray about after locking."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Your result depends on other people's choice lists"
+          },
+          {
+            "t": ", which is why closing ranks move year to year even at a fixed seat count. If a college becomes fashionable, its closing rank tightens — not because it got better, but because better ranks listed it higher."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Results publish on the portal."
+          },
+          {
+            "t": " You'll see an allotted seat or \"not allotted.\""
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Free Exit, Upgrade and Resignation"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Your options after an allotment:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Option"
+            }
+          ],
+          [
+            {
+              "t": "What happens"
+            }
+          ],
+          [
+            {
+              "t": "Deposit"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Accept and report"
+              }
+            ],
+            [
+              {
+                "t": "You join. Out of subsequent rounds."
+              }
+            ],
+            [
+              {
+                "t": "Refunded per rules"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Free exit"
+              },
+              {
+                "t": " (Round 1 only)"
+              }
+            ],
+            [
+              {
+                "t": "Surrender the seat, participate in Round 2"
+              }
+            ],
+            [
+              {
+                "b": "Refunded"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Upgrade"
+              }
+            ],
+            [
+              {
+                "t": "Report but opt for upgrade next round. "
+              },
+              {
+                "b": "Rules vary by round — read the bulletin."
+              }
+            ],
+            [
+              {
+                "t": "Held"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Do nothing"
+              }
+            ],
+            [
+              {
+                "t": "Seat forfeited, deposit forfeited, possible debarment"
+              }
+            ],
+            [
+              {
+                "b": "Forfeited"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "\"Do nothing\" is never the answer."
+          },
+          {
+            "t": " If you don't want the seat, take the free exit explicitly. Silence is the most expensive option on this table."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "On upgrade:"
+          },
+          {
+            "t": " the rules genuinely change between years and rounds. Whether you can upgrade, whether you must report first, whether your existing seat is held — all of it is specified in that round's information bulletin and nowhere else. Read it. This article is not a substitute and neither is your senior."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "The Stray Vacancy Round: Read This Twice"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The stray vacancy round has no exit provision. If you are allotted a seat, you must join. Resignation is not permitted."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Why it's tempting:"
+          },
+          {
+            "t": " closing ranks are widest here — sometimes dramatically. Seats appear that were unreachable in Round 1."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Why it's dangerous:"
+          },
+          {
+            "t": " those wide ranks are attached to seats nobody wanted. Some of them are at expensive deemed universities. If you list a ₹1.2 crore deemed seat \"just in case\" and get allotted, you are joining, or you are forfeiting your deposit and absorbing whatever debarment applies."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The rule, and it's simple:"
+          }
+        ]
+      },
+      {
+        "type": "note",
+        "s": [
+          {
+            "b": "Only list choices in the stray round that you will genuinely accept, at the fee they carry, if allotted."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Not \"probably.\" Not \"if nothing better comes.\" There is nothing better coming. The stray round is the last round."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Before you fill it:"
+          },
+          {
+            "t": " open your locked list, go line by line, and for each one ask "
+          },
+          {
+            "i": "\"if this is my allotment, am I joining?\""
+          },
+          {
+            "t": " Delete every line where the answer isn't yes."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Security Deposit and Fees"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Payment"
+            }
+          ],
+          [
+            {
+              "t": "Refundable?"
+            }
+          ],
+          [
+            {
+              "t": "Notes"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Registration fee"
+              }
+            ],
+            [
+              {
+                "b": "No"
+              }
+            ],
+            [
+              {
+                "t": "Varies by category and seat type"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Security deposit"
+              }
+            ],
+            [
+              {
+                "b": "Yes"
+              },
+              {
+                "t": " — if you follow the rules"
+              }
+            ],
+            [
+              {
+                "t": "Forfeited on violation"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "College fee"
+              }
+            ],
+            [
+              {
+                "t": "At the college"
+              }
+            ],
+            [
+              {
+                "t": "Paid on reporting"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The security deposit is a behavioural instrument, not a revenue instrument."
+          },
+          {
+            "t": " It exists to stop candidates blocking seats they don't want. Free exit in Round 1 returns it. Abandoning a seat forfeits it."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Deemed university deposits are substantially higher"
+          },
+          {
+            "t": " than government ones — which is a deliberate filter, and worth knowing before you casually add deemed choices to a list."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Refund timelines are slow."
+          },
+          {
+            "t": " Budget for the money being gone for a while."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Document Verification and Reporting"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Report to the allotted college with:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "t": "Provisional allotment letter"
+            }
+          ],
+          [
+            {
+              "t": "All originals from the document list"
+            }
+          ],
+          [
+            {
+              "t": "Three photocopy sets"
+            }
+          ],
+          [
+            {
+              "t": "Fee payment as specified"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "The reporting deadline is absolute"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Not \"usually flexible.\" Absolute. Miss it and your seat returns to the pool for the next round. There is no appeal, and \"my train was cancelled\" is not a category MCC recognises."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Travel a day early."
+          },
+          {
+            "t": " For a decision this size, a hotel night is not an expense."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "On your original documents"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Colleges verify and return. "
+          },
+          {
+            "b": "Some ask to retain originals until course completion."
+          },
+          {
+            "t": " This practice has been directed against by regulators, and you are within your rights to ask for written justification and a receipt."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Practical advice:"
+          },
+          {
+            "t": " don't turn it into a confrontation on day one. Ask politely, get a receipt, and escalate through proper channels afterwards if needed. You have five years at this institution."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "State Counselling: What's Different"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "There is no single national state-counselling portal. Each state runs its own."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Find yours:"
+          },
+          {
+            "t": " search \"[Your State] NEET UG counselling 2026 official\" and "
+          },
+          {
+            "b": "verify the domain is `.gov.in` or `.nic.in`"
+          },
+          {
+            "t": " before entering anything."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What differs from MCC"
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Element"
+            }
+          ],
+          [
+            {
+              "t": "Difference"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "b": "Domicile"
+              }
+            ],
+            [
+              {
+                "t": "Required. Rules vary sharply — 7 years' schooling, parent's domicile, Class 10+12 from the state, or combinations"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Category certificate"
+              }
+            ],
+            [
+              {
+                "b": "State format"
+              },
+              {
+                "t": ", not central"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Merit list"
+              }
+            ],
+            [
+              {
+                "t": "State's own, derived from NEET marks"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Rounds"
+              }
+            ],
+            [
+              {
+                "t": "Usually mirror MCC's structure, but not the dates"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Special quotas"
+              }
+            ],
+            [
+              {
+                "t": "State-specific — government school quota, defence wards, regional quotas"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "b": "Bond"
+              }
+            ],
+            [
+              {
+                "b": "Many states impose a compulsory rural service bond after MBBS"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "The bond"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "This is the thing students discover after joining."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "Element"
+            }
+          ],
+          [
+            {
+              "t": "Typical range"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "Service period"
+              }
+            ],
+            [
+              {
+                "t": "1 – 5 years"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Penalty for breaking"
+              }
+            ],
+            [
+              {
+                "t": "₹5 lakh – ₹40 lakh+"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "Enforcement"
+              }
+            ],
+            [
+              {
+                "t": "Varies; some states withhold the degree certificate"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "A 5-year bond with a ₹40 lakh penalty materially changes what a \"free\" government seat costs you — especially if you're planning NEET PG straight after internship."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Read the bond terms in your state's information bulletin before you lock choices."
+          },
+          {
+            "t": " Not after allotment."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Managing two calendars"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "You will be running MCC and state counselling simultaneously, on different dates, with different documents. Put both on your phone with alerts. This is the most common place organised students beat higher-ranked disorganised ones."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "AYUSH Counselling Through AACCC"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "BAMS, BHMS, BUMS and BSMS run through the "
+          },
+          {
+            "b": "AYUSH Admissions Central Counselling Committee (AACCC)"
+          },
+          {
+            "t": " at "
+          },
+          {
+            "b": "aaccc.gov.in"
+          },
+          {
+            "t": " for the All India Quota, and through state authorities for state quota."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Separate process. Separate registration. Separate portal."
+          },
+          {
+            "t": " It is not part of MCC."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The honest framing:"
+          },
+          {
+            "t": " AYUSH is not a consolation prize, and it is not equivalent to MBBS. It's a distinct professional path with real government employment, a growing sector, and genuinely lower fees than private MBBS. Some students who take it are delighted. Some are miserable because they took it while still wanting MBBS."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The question worth answering honestly:"
+          },
+          {
+            "t": " do you want "
+          },
+          {
+            "i": "this"
+          },
+          {
+            "t": ", or do you want MBBS and this is what's available? Both answers are legitimate. Only one of them should lead to registering."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "BSc Nursing and BVSc Counselling"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "BSc Nursing"
+          },
+          {
+            "t": " — MCC conducts counselling for central institutions. State authorities for the rest. Strong employability, and a genuinely strong overseas pathway that is underrated in Indian family conversations about medicine."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "BVSc (Veterinary)"
+          },
+          {
+            "t": " — through the VCI quota via MCC, plus state counselling."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Both have closing ranks substantially wider than MBBS. Both are real careers. Neither is a failure."
+          }
+        ]
+      },
+      {
+        "type": "h2",
+        "t": "Fraud: How the Scams Actually Work"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "NTA has issued an explicit warning about fraudulent calls, fake admission offers and sites claiming guaranteed seats. This warning is annual because the fraud is industrial and it targets students in exactly this window, at exactly the moment they're most frightened."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "Here is how it actually works, so you recognise it:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "head": [
+          [
+            {
+              "t": "The pitch"
+            }
+          ],
+          [
+            {
+              "t": "The reality"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "t": "\"Management quota seat available, pay to book\""
+              }
+            ],
+            [
+              {
+                "t": "There is no bookable management quota in NEET. Allotment is algorithmic."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "\"We'll fill your choices for you — share your login\""
+              }
+            ],
+            [
+              {
+                "t": "They lock a list you didn't choose, often at a college paying them a commission."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "\"Call from MCC — pending verification fee\""
+              }
+            ],
+            [
+              {
+                "t": "MCC does not call candidates. Ever."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "\"Guaranteed admission or full refund\""
+              }
+            ],
+            [
+              {
+                "t": "The refund does not exist. Neither does the guarantee."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "t": "\"Special quota, limited seats, decide today\""
+              }
+            ],
+            [
+              {
+                "t": "Urgency is the tell. Every real deadline is published on a government site."
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "The hard rules:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "items": [
+          [
+            {
+              "b": "No one can guarantee you a seat."
+            },
+            {
+              "t": " Not for money. Allotment is algorithmic and rank-based."
+            }
+          ],
+          [
+            {
+              "b": "Never share your NEET or MCC login."
+            },
+            {
+              "t": " Not with a coaching institute, not with a \"counsellor,\" not with anyone."
+            }
+          ],
+          [
+            {
+              "b": "MCC and NTA do not call you asking for money."
+            }
+          ],
+          [
+            {
+              "b": "Only trust:"
+            },
+            {
+              "t": " "
+            },
+            {
+              "b": "neet.nta.nic.in"
+            },
+            {
+              "t": " · "
+            },
+            {
+              "b": "mcc.nic.in"
+            },
+            {
+              "t": " · "
+            },
+            {
+              "b": "aaccc.gov.in"
+            },
+            {
+              "t": " · your official state portal"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "b": "And a word about us:"
+          },
+          {
+            "t": " legitimate counselling guidance — including College Parichay's — helps you understand your options, read the seat matrix, and build a good choice list. It does not, and cannot, get you a seat your rank does not earn. "
+          },
+          {
+            "b": "Anyone telling you otherwise, including anyone claiming to be us, is lying to you."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "l": "Get counselling support from College Parichay →",
+            "h": "/mentorship"
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "When will NEET counselling 2026 begin?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "MCC has not announced the Round 1 registration date. Monitor "
+          },
+          {
+            "b": "mcc.nic.in"
+          },
+          {
+            "t": " daily — there are no SMS reminders and the window is typically under a week without extension."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Do I need to register separately for MCC and state counselling?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Yes. They are entirely independent processes with separate portals, fees and deadlines. Registering for one does not register you for the other."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the difference between AIQ and state quota?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "AIQ (via MCC) covers 15% of state government seats plus 100% of central institutions and deemed universities — roughly 8,000 government MBBS seats. State quota covers the remaining 85% plus state private colleges — roughly 48,000 seats — and requires domicile."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Which category certificate do I need for AIQ counselling?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "The "
+          },
+          {
+            "b": "central government prescribed format"
+          },
+          {
+            "t": ". A state-format certificate is valid for state counselling and invalid for AIQ. If you only hold the state one, apply for the central one immediately — it takes two to four weeks."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "My EWS certificate is from FY 2024–25. Is it valid?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. It must be issued for "
+          },
+          {
+            "b": "FY 2025–26"
+          },
+          {
+            "t": " in central format. An invalid EWS certificate collapses your claim to General mid-counselling."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "How many choices should I fill?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Every college you would genuinely attend, in true preference order. A long list costs nothing. A short list costs seats."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Will listing an ambitious college first hurt my chances?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. The algorithm gives you the highest choice you're eligible for and moves down your list otherwise. There is no penalty for optimism at the top."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is free exit in MCC counselling?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "In Round 1 only, you may surrender an allotted seat with your security deposit refunded and participate in Round 2. It does not exist in the stray vacancy round."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Can I resign a seat allotted in the stray vacancy round?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. The stray round has no exit provision — allotment means mandatory joining. Only list choices you will genuinely accept at the fee they carry."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What happens if I don't report to my allotted college?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Your seat is forfeited, your security deposit is forfeited, and depending on the round you may be debarred from subsequent rounds. If you don't want a seat, take the free exit explicitly. Never stay silent."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Do closing ranks go down in later rounds?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Yes. Round 1 is tightest; ranks loosen through Rounds 2, 3 and stray as candidates vacate seats. Use MCC's published Round 1 closing ranks to recalibrate your Round 2 list — that's this year's real data."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Is there a bond for government medical colleges?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Many state colleges impose a compulsory rural service bond of 1–5 years with penalties from ₹5 lakh to ₹40 lakh+. Terms vary sharply by state. Read your state's information bulletin before locking choices."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "What is the ESIC IP quota?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "A quota at ESIC medical colleges for children of ESIC-insured workers, with substantially wider closing ranks than open ESIC seats. Ask your parents whether their employer deducts ESIC — lakhs of families are eligible without realising it."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "How do I apply for AYUSH courses?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "Through "
+          },
+          {
+            "b": "AACCC"
+          },
+          {
+            "t": " at "
+          },
+          {
+            "b": "aaccc.gov.in"
+          },
+          {
+            "t": " for All India Quota, and through state authorities for state quota. It is a completely separate process from MCC."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Can anyone guarantee me a seat through management quota?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "No. NTA has explicitly warned against this. Allotment is algorithmic and rank-based. Anyone guaranteeing a seat for money — including anyone claiming to represent us — is running a fraud."
+          }
+        ]
+      },
+      {
+        "type": "h3",
+        "t": "Why do I need to read the seat matrix?"
+      },
+      {
+        "type": "p",
+        "s": [
+          {
+            "t": "It shows exactly how many seats exist in your category at each college, and which colleges are "
+          },
+          {
+            "b": "new this year"
+          },
+          {
+            "t": ". New colleges have no closing-rank history, so no predictor covers them and most students skip them — which is exactly why they close wide."
+          }
+        ]
+      }
+    ]
+  },
+  {
     "slug": "neet-marks-vs-college",
     "title": "NEET Marks vs College: What Score Actually Gets You Where (2026 Guide)",
     "snippet": "Wondering what college you can get with your NEET marks? Here's an honest, score-by-score breakdown of MBBS options in 2026 — government, private, and everything between.",
