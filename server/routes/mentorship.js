@@ -15,6 +15,7 @@ import User from "../models/User.js";
 import Enrollment from "../models/Enrollment.js";
 import MentorTask from "../models/MentorTask.js";
 import MentorProgress from "../models/MentorProgress.js";
+import Mentor from "../models/Mentor.js";
 import { requireAuth } from "../middleware/auth.js";
 import { sendMail } from "../utils/mailer.js";
 
@@ -327,6 +328,26 @@ router.get("/my-tasks", requireAuth, async (req, res) => {
     res.json({ tasks: doc?.tasks || [] });
   } catch (e) {
     console.error("[mentorship/my-tasks]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Student — the mentor assigned to their student ID (shown in live tracking).
+// Only the mentor's public-facing name + college is returned, and only to a
+// student who actually owns the ID — never their email, phone or internal id.
+router.get("/my-mentor", requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("email").lean();
+    const email = (user?.email || "").toLowerCase();
+    const studentId = String(req.query.studentId || "").trim().toUpperCase();
+    if (!email || !studentId) return res.json({ mentor: null });
+    const owns = await Enrollment.exists({ studentId, email, status: "paid" });
+    if (!owns) return res.json({ mentor: null });
+    const mentor = await Mentor.findOne({ students: studentId, active: true })
+      .select("name college").lean();
+    res.json({ mentor: mentor ? { name: mentor.name, college: mentor.college || "" } : null });
+  } catch (e) {
+    console.error("[mentorship/my-mentor]", e.message);
     res.status(500).json({ error: "Server error" });
   }
 });

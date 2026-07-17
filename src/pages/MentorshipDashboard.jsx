@@ -10,7 +10,7 @@ import {
   MessagesSquare, BadgeCheck,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
-import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiLogin, apiSendParentReport, apiMyMentorTasks, apiGetProgress, apiSaveProgress } from "../auth/api.js";
+import { apiMyEnrollments, apiSendOtp, apiVerifyOtp, apiLogin, apiSendParentReport, apiMyMentorTasks, apiMyMentor, apiGetProgress, apiSaveProgress } from "../auth/api.js";
 import Community from "../components/mentorship/Community.jsx";
 import TestSeries from "../components/mentorship/TestSeries.jsx";
 import { Trend, Gauge, CenterDonut, DonutLegend, Bars } from "../components/Charts.jsx";
@@ -446,6 +446,8 @@ function DashboardBody({ urlPlan = "" }) {
   const [testAskStage, setTestAskStage] = useState("ask"); // "ask" → "confirm"
   // Weekly tasks the mentor/admin assigned for this student (shown as suggested).
   const [mentorTasks, setMentorTasks] = useState([]);
+  // The mentor assigned to this student ID — { name, college } — for the header.
+  const [mentor, setMentor] = useState(null);
   // True once this batch's data has been pulled from the server, so the save
   // effect won't overwrite the server with local seed data before it loads.
   const [progressLoaded, setProgressLoaded] = useState(false);
@@ -481,13 +483,23 @@ function DashboardBody({ urlPlan = "" }) {
     return () => { alive = false; };
   }, [token, urlPlan]);
 
-  // Pull the mentor-assigned weekly tasks for this student ID (set by the admin).
+  // Pull the mentor-assigned weekly tasks for this student ID (set by the mentor).
   useEffect(() => {
     if (!token || !identity.studentId) { setMentorTasks([]); return; }
     let alive = true;
     apiMyMentorTasks(token, identity.studentId)
       .then((d) => { if (alive) setMentorTasks(Array.isArray(d.tasks) ? d.tasks : []); })
       .catch(() => { if (alive) setMentorTasks([]); });
+    return () => { alive = false; };
+  }, [token, identity.studentId]);
+
+  // Who's mentoring this student ID — name + college for the tracking header.
+  useEffect(() => {
+    if (!token || !identity.studentId) { setMentor(null); return; }
+    let alive = true;
+    apiMyMentor(token, identity.studentId)
+      .then((d) => { if (alive) setMentor(d.mentor || null); })
+      .catch(() => { if (alive) setMentor(null); });
     return () => { alive = false; };
   }, [token, identity.studentId]);
 
@@ -1079,13 +1091,16 @@ function DashboardBody({ urlPlan = "" }) {
   return (
     <section style={{ background: "var(--page-bg)", minHeight: "100vh", paddingBottom: 70 }}>
       {/* ── Title strip ── */}
-      <div style={{ paddingTop: 104, textAlign: "center" }}>
+      {/* The fixed header is 98px tall (34px announcement + 64px nav); this
+          top padding clears it with real breathing room so the eyebrow doesn't
+          sit flush against the navbar. */}
+      <div style={{ paddingTop: 138, textAlign: "center" }}>
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-          style={{ fontSize: 12, fontWeight: 800, letterSpacing: "3px", textTransform: "uppercase", color: ORANGE, marginBottom: 8 }}>
-          1-on-1 · Personalised · Verified
+          style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 800, letterSpacing: "2.5px", textTransform: "uppercase", color: ORANGE, background: "rgba(255,105,61,.08)", border: "1px solid rgba(255,105,61,.2)", borderRadius: 50, padding: "6px 14px", marginBottom: 14 }}>
+          <Sparkles size={13} /> 1-on-1 · Personalised · Verified
         </motion.div>
         <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .05 }}
-          style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.7rem,4vw,2.6rem)", color: NAVY, margin: 0, letterSpacing: "-0.5px" }}>
+          style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,3.4vw,2.3rem)", color: NAVY, margin: 0, letterSpacing: "-0.5px", lineHeight: 1.1 }}>
           Mentorship Dashboard
         </motion.h1>
 
@@ -1113,18 +1128,18 @@ function DashboardBody({ urlPlan = "" }) {
       </div>
 
       {/* ══ HERO ══ */}
-      <div style={{ maxWidth: 1180, margin: "0 auto", padding: "28px 24px 0" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto", padding: "26px 24px 0" }}>
         <div style={{
-          position: "relative", overflow: "hidden", borderRadius: 26,
+          position: "relative", overflow: "hidden", borderRadius: 24,
           background: "linear-gradient(160deg,#fffaf5 0%,#ffffff 55%,#f3faf6 100%)",
-          border: "1px solid rgba(255, 105, 61,.16)", padding: "10px",
-          boxShadow: "0 30px 70px -40px rgba(13,27,62,.4)",
+          border: "1px solid rgba(255, 105, 61,.14)",
+          boxShadow: "0 22px 54px -44px rgba(13,27,62,.3)",
         }}>
-          <div style={{ position: "relative", display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.05fr) minmax(0,1fr)", gap: 18, padding: "16px" }} className="md-hero-grid">
+          <div style={{ position: "relative", display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.05fr) minmax(0,1fr)", gap: 16, padding: "18px" }} className="md-hero-grid">
 
             {/* LEFT — user / plan card */}
             <motion.div initial={{ opacity: 0, x: -22 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5 }}
-              style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #eee", padding: "26px 24px", display: "flex", flexDirection: "column", boxShadow: "0 18px 40px -28px rgba(13,27,62,.4)" }}>
+              style={{ background: "var(--page-bg)", borderRadius: 18, border: "1px solid #eee", padding: "22px 20px", display: "flex", flexDirection: "column", boxShadow: "0 14px 34px -30px rgba(13,27,62,.35)" }}>
               <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 16 }}>
                 <div style={{ width: 60, height: 60, borderRadius: "50%", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontSize: 26, fontWeight: 800, fontFamily: "Sora", flexShrink: 0 }}>{initial}</div>
                 <div style={{ minWidth: 0, flex: 1 }}>
@@ -1217,7 +1232,7 @@ function DashboardBody({ urlPlan = "" }) {
 
             {/* RIGHT — jump links */}
             <motion.div initial={{ opacity: 0, x: 22 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5, delay: .12 }}
-              style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #eee", padding: "20px", boxShadow: "0 18px 40px -28px rgba(13,27,62,.4)" }}>
+              style={{ background: "var(--page-bg)", borderRadius: 18, border: "1px solid #eee", padding: "18px", boxShadow: "0 14px 34px -30px rgba(13,27,62,.35)" }}>
               <div style={{ fontSize: 11.5, fontWeight: 800, color: "#9ca3af", textTransform: "uppercase", letterSpacing: ".06em", margin: "2px 4px 12px" }}>Jump to</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
                 {NAV_LINKS.map(({ id, label, desc, icon: Icon, color }) => (
@@ -1257,7 +1272,11 @@ function DashboardBody({ urlPlan = "" }) {
               <div style={{ width: 46, height: 46, borderRadius: "50%", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18 }}>{initial}</div>
               <div style={{ flex: 1, minWidth: 160 }}>
                 <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK }}>{user?.name || "Student"} · {planExam}</div>
-                <div style={{ fontSize: 12.5, color: MUTE }}>Mentor: Assigned · 1-on-1</div>
+                <div style={{ fontSize: 12.5, color: MUTE }}>
+                  {mentor?.name
+                    ? <>Mentor: <strong style={{ color: NAVY, fontWeight: 700 }}>{mentor.name}</strong>{mentor.college ? ` · ${mentor.college}` : ""}</>
+                    : "Mentor: Assigned · 1-on-1"}
+                </div>
               </div>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#16a34a", background: "rgba(34,197,94,.12)", border: "1px solid rgba(34,197,94,.3)", padding: "6px 13px", borderRadius: 50 }}>
                 <motion.span animate={{ opacity: [1, .3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} style={{ width: 8, height: 8, borderRadius: "50%", background: "#16a34a", display: "block" }} />

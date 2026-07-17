@@ -49,6 +49,9 @@ export const apiSendParentReport = (token, b) => req("/api/mentorship/parent-rep
 // Mentor-assigned weekly tasks — student fetches the ones set for their batch.
 export const apiMyMentorTasks = (token, studentId) =>
   req(`/api/mentorship/my-tasks${studentId ? `?studentId=${encodeURIComponent(studentId)}` : ""}`, { token });
+// The mentor assigned to this student ID — name + college, for the tracking header.
+export const apiMyMentor = (token, studentId) =>
+  req(`/api/mentorship/my-mentor${studentId ? `?studentId=${encodeURIComponent(studentId)}` : ""}`, { token });
 // Cross-device dashboard sync — load/save the study-data blob per account + plan.
 export const apiGetProgress = (token, plan) =>
   req(`/api/mentorship/progress${plan ? `?plan=${encodeURIComponent(plan)}` : ""}`, { token });
