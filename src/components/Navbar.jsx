@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown, Search, Target, Menu, X,
-  BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award, ShieldCheck,
+  BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award,
   BookOpen, FlaskConical, Sigma, Zap, Trophy, LogOut, Sparkles,
   HelpCircle, Flame, Globe2, Edit3, Activity, Clock, ClipboardCheck, Compass, GraduationCap
 } from "lucide-react";
@@ -116,9 +116,11 @@ const TOOLS_MEGA = [
     items: [
       { label: "Official Cutoffs",      to: "/cutoffs",      icon: FileText,    desc: "Real JoSAA opening & closing ranks, round by round" },
       { label: "Scholarships & Loans",  to: "/scholarships", icon: BadgeCheck,  desc: "Funding, scholarships & education loans for your seat" },
-      { label: "Admin Data",            to: "/admin",        icon: ShieldCheck, desc: "Manage listings & portal data (admins only)" },
-      // Sits beside Admin Data because it's the same kind of thing: a staff
-      // sign-in, not a tool students can use.
+      // Admin Data is deliberately NOT listed. This menu is shown to every
+      // visitor, and the admin panel is for two people — signposting it to
+      // everyone bought nothing. /admin still works when typed directly; this
+      // removes the advertising, not the access, and the panel is gated by
+      // key + OTP server-side regardless.
       { label: "Mentor Dashboard",      to: "/mentor",       icon: GraduationCap, desc: "Mentors sign in with the email & password from your admin" },
     ],
   },

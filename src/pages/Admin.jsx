@@ -76,6 +76,10 @@ export default function Admin() {
   const [authed, setAuthed] = useState(false);
   // two-step admin login: enter key → OTP emailed to the admin inbox → verify
   const [step, setStep] = useState("key");          // "key" | "otp"
+  // Which admin inbox gets the code. Chosen by INDEX — the real addresses never
+  // leave the server, the picker only ever shows masked labels.
+  const [inboxes, setInboxes] = useState([]);
+  const [inbox, setInbox] = useState(0);
   const [adminKey, setAdminKey] = useState("");     // verified key, kept for step 2
   const [enteringKey, setEnteringKey] = useState("");
   const [enteringOtp, setEnteringOtp] = useState("");
@@ -149,6 +153,14 @@ export default function Admin() {
 
   useEffect(() => { if (token) fetchUsers(token); /* eslint-disable-next-line */ }, []);
 
+  // Masked list of inboxes a code may be sent to, so each owner can pick their own.
+  useEffect(() => {
+    fetch(API_BASE + "/api/admin/inboxes")
+      .then((r) => r.json())
+      .then((d) => setInboxes(d.inboxes || []))
+      .catch(() => setInboxes([]));  // picker just hides; the default inbox still works
+  }, []);
+
   // Step 1 — verify the admin key on the server, which emails an OTP to the
   // admin inbox. We never advance to step 2 unless the key was correct.
   async function requestOtp(k) {
@@ -156,7 +168,7 @@ export default function Admin() {
     try {
       const res = await fetch(API_BASE + "/api/admin/request-otp", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: k }),
+        body: JSON.stringify({ key: k, inbox }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not send the code");
@@ -174,7 +186,7 @@ export default function Admin() {
     try {
       const res = await fetch(API_BASE + "/api/admin/verify-otp", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: adminKey, code }),
+        body: JSON.stringify({ key: adminKey, code, inbox }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Invalid code");
@@ -280,6 +292,45 @@ export default function Admin() {
                   }}
                 />
               </div>
+
+              {/* Which inbox gets the code. Two owners share this panel, so each
+                  sends the code to their own address instead of asking the other
+                  to read it out. Labels are masked — the server never sends the
+                  real addresses to the browser, and the choice travels as an
+                  index it validates against its own allowlist. */}
+              {inboxes.length > 1 && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#7c7368", marginBottom: 7 }}>
+                    Send the code to
+                  </div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {inboxes.map((ib) => {
+                      const on = inbox === ib.id;
+                      return (
+                        <button
+                          key={ib.id} type="button" onClick={() => setInbox(ib.id)}
+                          style={{
+                            flex: "1 1 auto", minWidth: 150, padding: "10px 12px", borderRadius: 10,
+                            border: `1.5px solid ${on ? ORANGE : "#e5e7eb"}`,
+                            background: on ? `${ORANGE}0f` : "#fff",
+                            color: on ? ORANGE : "#7c7368",
+                            fontWeight: on ? 800 : 600, fontSize: 12.5, cursor: "pointer",
+                            display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7,
+                          }}
+                        >
+                          <Mail size={13} /> {ib.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {inbox !== 0 && (
+                    <p style={{ fontSize: 11.5, color: "#92400e", background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 8, padding: "7px 10px", margin: "8px 0 0", lineHeight: 1.5 }}>
+                      The owner is notified whenever a code goes to this inbox.
+                    </p>
+                  )}
+                </div>
+              )}
+
               <button
                 disabled={busy || !enteringKey}
                 onClick={() => requestOtp(enteringKey)}
