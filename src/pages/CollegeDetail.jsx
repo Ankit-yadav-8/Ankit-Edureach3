@@ -556,74 +556,150 @@ export default function CollegeDetail() {
                 </h4>
                 <Gallery slug={college.slug} accent={college.accent} />
               </div>
-              <div className="grid-2" style={{ gap: 24, alignItems: "start" }}>
-                <div className="card">
-                  <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8,
+
+              {/* ── Location & Map — full-width premium card ── */}
+              <div className="card" style={{ overflow: "hidden" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                  <div style={{
+                    width: 36, height: 36, borderRadius: 10,
+                    background: "rgba(255, 105, 61, .1)",
+                    border: "1px solid rgba(255, 105, 61, .25)",
+                    display: "grid", placeItems: "center", flexShrink: 0,
+                  }}>
+                    <MapPin size={18} color="var(--coral)" />
+                  </div>
+                  <div>
+                    <h4 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 16, margin: 0 }}>Location</h4>
+                    <p style={{ color: "var(--muted)", fontSize: 13, margin: 0, marginTop: 2 }}>
+                      {college.location}
+                    </p>
+                  </div>
+                  <a
+                    href={`https://www.google.com/maps/search/${encodeURIComponent(college.name + " " + (college.location || ""))}`}
+                    target="_blank" rel="noreferrer"
+                    style={{
+                      marginLeft: "auto", display: "flex", alignItems: "center", gap: 5,
+                      background: "rgba(255, 105, 61, .1)", border: "1px solid rgba(255, 105, 61, .25)",
+                      borderRadius: 8, padding: "6px 12px", fontSize: 12, fontWeight: 600,
+                      color: "#FF693D", textDecoration: "none", whiteSpace: "nowrap",
+                    }}
+                  >
+                    Open in Maps <ExternalLink size={12} />
+                  </a>
+                </div>
+                <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid rgba(0,0,0,.08)" }}>
+                  <iframe
+                    title={`${college.name} location map`}
+                    style={{ width: "100%", height: 300, border: 0, display: "block" }}
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(college.name + " " + (college.location || ""))}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+
+              <div className="grid-2" style={{ gap: 22, alignItems: "start" }}>
+                {/* ── Virtual Tour & Videos — redesigned card ── */}
+                <div className="card" style={{ overflow: "hidden", position: "relative" }}>
+                  <div style={{
+                    position: "absolute", top: 0, left: 0, right: 0, height: 3,
+                    background: "linear-gradient(90deg, #FF693D, #f97316, #FF693D)",
+                  }} />
+                  <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 4,
                     display: "flex", alignItems: "center", gap: 8 }}>
                     <Youtube size={18} color="var(--coral)" /> Virtual tour & videos
                   </h4>
-                  <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>
+                  <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 14 }}>
                     Watch real campus tours, placement talks and student vlogs.
                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     {[
-                      ["Campus tour",         `${college.name} campus tour`],
-                      ["Placement reviews",   `${college.name} placements review`],
-                      ["Student vlog / life", `${college.name} student life vlog`],
-                    ].map(([label, query]) => (
+                      ["🎬", "Campus tour",         `${college.name} campus tour`],
+                      ["💼", "Placement reviews",   `${college.name} placements review`],
+                      ["🎓", "Student vlog / life", `${college.name} student life vlog`],
+                    ].map(([emoji, label, query]) => (
                       <a
                         key={label}
                         href={`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`}
                         target="_blank" rel="noreferrer"
                         style={{
                           display: "flex", justifyContent: "space-between", alignItems: "center",
-                          padding: "11px 14px", background: "var(--sky)", borderRadius: 10,
-                          color: "var(--navy)", fontWeight: 500, fontSize: 14,
+                          padding: "12px 14px", background: "var(--sky)", borderRadius: 12,
+                          color: "var(--navy)", fontWeight: 600, fontSize: 14,
+                          border: "1px solid rgba(255, 105, 61, .1)",
+                          textDecoration: "none",
+                          transition: "all .2s",
                         }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255, 105, 61, .08)"; e.currentTarget.style.borderColor = "rgba(255, 105, 61, .25)"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = "var(--sky)"; e.currentTarget.style.borderColor = "rgba(255, 105, 61, .1)"; }}
                       >
-                        <span style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                          <Youtube size={16} color="var(--coral)" /> {label}
+                        <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <span style={{ fontSize: 16 }}>{emoji}</span> {label}
                         </span>
                         <ExternalLink size={14} color="var(--muted)" />
                       </a>
                     ))}
                     <a
-                      href={`https://www.google.com/maps/search/${encodeURIComponent(college.name)}`}
+                      href={`https://www.google.com/maps/search/${encodeURIComponent(college.name)}/@${college.coords?.lat || ""},${college.coords?.lng || ""},17z`}
                       target="_blank" rel="noreferrer"
                       style={{
                         display: "flex", justifyContent: "space-between", alignItems: "center",
-                        padding: "11px 14px", background: "var(--sky)", borderRadius: 10,
-                        color: "var(--navy)", fontWeight: 500, fontSize: 14,
+                        padding: "12px 14px", background: "rgba(14, 165, 164, .06)", borderRadius: 12,
+                        color: "var(--navy)", fontWeight: 600, fontSize: 14,
+                        border: "1px solid rgba(14, 165, 164, .15)",
+                        textDecoration: "none",
+                        transition: "all .2s",
                       }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(14, 165, 164, .12)"; e.currentTarget.style.borderColor = "rgba(14, 165, 164, .3)"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(14, 165, 164, .06)"; e.currentTarget.style.borderColor = "rgba(14, 165, 164, .15)"; }}
                     >
-                      <span style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                        <MapIcon size={16} color="var(--teal)" /> Street View & 360° on Maps
+                      <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ fontSize: 16 }}>🗺️</span> Street View & 360° on Maps
                       </span>
                       <ExternalLink size={14} color="var(--muted)" />
                     </a>
                   </div>
                 </div>
 
-                <div className="card">
-                  <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8 }}>Location</h4>
-                  <p style={{ color: "var(--muted)", display: "flex", gap: 6, alignItems: "center" }}>
-                    <MapPin size={16} /> {college.location}
-                  </p>
-                  <iframe
-                    title="map"
-                    style={{ width: "100%", height: 250, border: 0, borderRadius: 12, marginTop: 12 }}
-                    src={`https://www.google.com/maps?q=${encodeURIComponent(college.name + (college.location ? " " + college.location : ""))}&z=14&output=embed`}
-                    loading="lazy"
-                  />
-                  <h4 style={{ fontFamily: "Sora", fontWeight: 700, margin: "16px 0 8px" }}>
-                    Campus highlights
+                {/* ── Campus Highlights — redesigned card ── */}
+                <div className="card" style={{ overflow: "hidden", position: "relative" }}>
+                  <div style={{
+                    position: "absolute", top: 0, left: 0, right: 0, height: 3,
+                    background: "linear-gradient(90deg, #0ea5a4, #22c55e, #0ea5a4)",
+                  }} />
+                  <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 4,
+                    display: "flex", alignItems: "center", gap: 8 }}>
+                    <Building2 size={18} color="var(--teal)" /> Campus highlights
                   </h4>
-                  <ul style={{ paddingLeft: 18, color: "var(--muted)", lineHeight: 1.9 }}>
-                    <li>Fully residential campus with multiple hostels</li>
-                    <li>Active technical, cultural & sports societies</li>
-                    <li>Central library, sports complex & medical centre</li>
-                    <li>Startup incubation & research park access</li>
-                  </ul>
+                  <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 14 }}>
+                    What makes {college.name} campus special.
+                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {[
+                      ["🏠", "Fully residential campus", "Multiple hostels with modern amenities"],
+                      ["🎭", "Active societies", "Technical, cultural & sports clubs"],
+                      ["📚", "Central library", "Sports complex & medical centre"],
+                      ["🚀", "Startup incubation", "Research park & innovation labs"],
+                      ["🌐", "Wi-Fi campus", "24/7 internet & smart classrooms"],
+                    ].map(([emoji, title, sub]) => (
+                      <div key={title} style={{
+                        display: "flex", alignItems: "center", gap: 12,
+                        padding: "12px 14px", background: "rgba(14, 165, 164, .04)",
+                        borderRadius: 12, border: "1px solid rgba(14, 165, 164, .1)",
+                      }}>
+                        <span style={{
+                          fontSize: 18, width: 36, height: 36, borderRadius: 10,
+                          background: "rgba(14, 165, 164, .08)",
+                          display: "grid", placeItems: "center", flexShrink: 0,
+                        }}>{emoji}</span>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 14, color: "var(--navy)" }}>{title}</div>
+                          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>{sub}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

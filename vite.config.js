@@ -20,6 +20,10 @@ export default defineConfig({
             if (id.includes("react")) return "vendor";
             return "libs";
           }
+          // Split large data files into separate async chunks
+          if (id.includes("/data/neetBlogs")) return "data-neet";
+          if (id.includes("/data/colleges.js")) return "data-colleges";
+          if (id.includes("/data/premiumClass")) return "data-premium";
         },
       },
     },
