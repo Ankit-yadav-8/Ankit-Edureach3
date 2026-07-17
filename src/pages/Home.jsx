@@ -2,18 +2,20 @@
    Hero → tools → branch catalog → rank-to-cutoff → branch vs college →
    plans → explore/premium colleges → admission timeline → FAQ. News, the
    application radar and top-colleges blocks now live on dedicated pages. */
+import React, { lazy, Suspense } from "react";
 import Seo from "../components/Seo.jsx";
 import Hero from "../components/home/Hero.jsx";
 import ToolsGrid from "../components/home/ToolsGrid.jsx";
-import BranchCatalog from "../components/home/BranchCatalog.jsx";
-import AdvancedPredictorHome from "../components/home/AdvancedPredictorHome.jsx";
-import CollegeReviews from "../components/home/CollegeReviews.jsx";
-import BranchVsCollege from "../components/home/BranchVsCollege.jsx";
-import PlansSection from "../components/home/PlansSection.jsx";
-import ExploreColleges from "../components/home/ExploreColleges.jsx";
-import PremiumColleges from "../components/home/PremiumColleges.jsx";
-import AdmissionTimeline from "../components/home/AdmissionTimeline.jsx";
-import FaqSection from "../components/home/FaqSection.jsx";
+
+const BranchCatalog = lazy(() => import("../components/home/BranchCatalog.jsx"));
+const AdvancedPredictorHome = lazy(() => import("../components/home/AdvancedPredictorHome.jsx"));
+const CollegeReviews = lazy(() => import("../components/home/CollegeReviews.jsx"));
+const BranchVsCollege = lazy(() => import("../components/home/BranchVsCollege.jsx"));
+const PlansSection = lazy(() => import("../components/home/PlansSection.jsx"));
+const ExploreColleges = lazy(() => import("../components/home/ExploreColleges.jsx"));
+const PremiumColleges = lazy(() => import("../components/home/PremiumColleges.jsx"));
+const AdmissionTimeline = lazy(() => import("../components/home/AdmissionTimeline.jsx"));
+const FaqSection = lazy(() => import("../components/home/FaqSection.jsx"));
 
 export default function Home({ onSearch }) {
   const jsonLd = {
@@ -110,32 +112,34 @@ export default function Home({ onSearch }) {
       {/* ── Smart tools (LIVE-card grid) ── */}
       <ToolsGrid />
 
-      {/* ── Branch Explorer — 220+ branches, 10 paths ── */}
-      <BranchCatalog />
+      <Suspense fallback={<div style={{ minHeight: "100vh" }}></div>}>
+        {/* ── Branch Explorer — 220+ branches, 10 paths ── */}
+        <BranchCatalog />
 
-      {/* ── JoSAA · JEE Advanced rank predictor (full tool) ── */}
-      <AdvancedPredictorHome />
+        {/* ── JoSAA · JEE Advanced rank predictor (full tool) ── */}
+        <AdvancedPredictorHome />
 
-      {/* ── College Reviews — give a review / browse by college ── */}
-      <CollegeReviews />
+        {/* ── College Reviews — give a review / browse by college ── */}
+        <CollegeReviews />
 
-      {/* ── Branch vs College — 6-question assessment ── */}
-      <BranchVsCollege />
+        {/* ── Branch vs College — 6-question assessment ── */}
+        <BranchVsCollege />
 
-      {/* ── 1-on-1 Mentorship plans ── */}
-      <PlansSection />
+        {/* ── 1-on-1 Mentorship plans ── */}
+        <PlansSection />
 
-      {/* ── Explore Colleges — flagship IITs (tool-style cards) ── */}
-      <ExploreColleges />
+        {/* ── Explore Colleges — flagship IITs (tool-style cards) ── */}
+        <ExploreColleges />
 
-      {/* ── Premium colleges that take your JEE rank (outside JoSAA) ── */}
-      <PremiumColleges />
+        {/* ── Premium colleges that take your JEE rank (outside JoSAA) ── */}
+        <PremiumColleges />
 
-      {/* ── Admission timeline — wavy quarter rail, auto-advancing "NOW" ── */}
-      <AdmissionTimeline />
+        {/* ── Admission timeline — wavy quarter rail, auto-advancing "NOW" ── */}
+        <AdmissionTimeline />
 
-      {/* ── FAQ ── */}
-      <FaqSection />
+        {/* ── FAQ ── */}
+        <FaqSection />
+      </Suspense>
     </>
   );
 }
