@@ -13,6 +13,8 @@ import communityRoutes from "./routes/community.js";
 import publicCommunityRoutes from "./routes/publicCommunity.js";
 import reviewRoutes from "./routes/reviews.js";
 import adminRoutes from "./routes/admin.js";
+import adminMentorRoutes from "./routes/adminMentors.js";
+import mentorRoutes from "./routes/mentor.js";
 import aiRoutes from "./routes/ai.js";
 import testRoutes from "./routes/tests.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
@@ -61,12 +63,25 @@ const envOrigins = (process.env.CLIENT_ORIGIN || "").split(",").map((s) => s.tri
 const DEV_ORIGINS = ["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"];
 const allowedOrigins = [...new Set([...envOrigins, ...DEV_ORIGINS])];
 
+// `credentials: true` means a permissive origin check lets ANY site make
+// authenticated cross-origin calls with a logged-in user's token. Previously an
+// unset CLIENT_ORIGIN (envOrigins.length === 0) fell back to allowing every
+// origin — the insecure default applied exactly when config was forgotten in
+// production. Outside development the allowlist is now required.
+const IS_PROD = process.env.NODE_ENV === "production";
+if (IS_PROD && envOrigins.length === 0) {
+  console.warn("[cors] CLIENT_ORIGIN is not set — cross-origin browser requests will be refused.");
+}
+
 app.use(cors({
   origin: (origin, cb) => {
-    // Allow requests with no origin (curl, mobile apps, same-origin server calls)
+    // No Origin header: curl, mobile apps, same-origin server calls. These
+    // aren't browser cross-origin requests, so CORS isn't the control here.
     if (!origin) return cb(null, true);
-    if (allowedOrigins.includes(origin) || envOrigins.includes("*") || envOrigins.length === 0)
-      return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
+    // "*" stays honoured as an explicit opt-in, but only outside production —
+    // a wildcard with credentials is exactly the combination to avoid.
+    if (!IS_PROD && (envOrigins.includes("*") || envOrigins.length === 0)) return cb(null, true);
     cb(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
@@ -88,7 +103,13 @@ const apiLimiter     = rl({ windowMs: 60 * 1000, max: 120 });
 app.get("/", (_req, res) => res.send("EduReach API ✅"));
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/otp", authLimiter, otpRoutes);
+// Mounted BEFORE /api/admin: Express matches prefixes in order, so the broader
+// /api/admin mount would otherwise catch these first and subject mentor
+// management (ordinary data traffic) to the strict login rate limit.
+app.use("/api/admin/mentors", apiLimiter, adminMentorRoutes);
 app.use("/api/admin", authLimiter, adminRoutes);
+// Mentor login is a credential endpoint, so it takes the strict auth limiter.
+app.use("/api/mentor", authLimiter, mentorRoutes);
 app.use("/api/users", apiLimiter, userRoutes);
 app.use("/api/cutoffs", apiLimiter, cutoffRoutes);
 app.use("/api/payment", apiLimiter, paymentRoutes);
