@@ -2,14 +2,22 @@ import { useState, useEffect, useCallback, Fragment } from "react";
 import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
   ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText, ListChecks,
+  GraduationCap,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
 import TestUpload from "../components/admin/TestUpload.jsx";
 import MentorTasks from "../components/admin/MentorTasks.jsx";
+import Mentors from "../components/admin/Mentors.jsx";
 
 const TOKEN_STORAGE = "edureach:adminToken";
 const ORANGE = "#FF693D";
+
+// Tabs that render one self-contained component and own their whole surface:
+// no stat cards, no CSV export, no shared search/table. Named rather than
+// spelled out per site, so adding a tab doesn't mean finding every
+// `tab !== "x" && tab !== "y"` chain and appending to it.
+const SELF_CONTAINED_TABS = new Set(["community", "tests", "tasks", "mentors"]);
 
 const fmtDate = (iso) => {
   if (!iso) return "—";
@@ -378,7 +386,7 @@ export default function Admin() {
               <RefreshCw size={14} style={{ animation: busy ? "spin 1s linear infinite" : "none" }} />
               {busy ? "Refreshing…" : "Refresh"}
             </button>
-            {tab !== "community" && tab !== "tests" && tab !== "tasks" && (
+            {!SELF_CONTAINED_TABS.has(tab) && (
               <button onClick={exportActive}
                 style={{ background: ORANGE, color: "#fff", border: "none", height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
                 <Download size={14} /> Export CSV
@@ -399,6 +407,7 @@ export default function Admin() {
             { k: "community", label: "Community", icon: MessagesSquare },
             { k: "tests", label: "Tests", icon: FileText },
             { k: "tasks", label: "Weekly Tasks", icon: ListChecks },
+            { k: "mentors", label: "Mentors", icon: GraduationCap },
           ].map(({ k, label, icon: Icon, count }) => {
             const active = tab === k;
             return (
@@ -423,7 +432,7 @@ export default function Admin() {
         </div>
 
         {/* Stat cards */}
-        {tab === "community" || tab === "tests" || tab === "tasks" ? null : tab === "users" ? (
+        {SELF_CONTAINED_TABS.has(tab) ? null : tab === "users" ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
           <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
@@ -514,6 +523,8 @@ export default function Admin() {
           <TestUpload token={token} />
         ) : tab === "tasks" ? (
           <MentorTasks token={token} />
+        ) : tab === "mentors" ? (
+          <Mentors token={token} />
         ) : tab === "users" ? (
         <div className="adm-card" style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 8px 30px rgba(13,27,62,.06)" }}>
 
