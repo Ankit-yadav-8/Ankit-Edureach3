@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { apiLogin, apiSignup, apiMe } from "./api.js";
+import { apiLogin, apiSignup, apiMe, apiRefresh, apiLogoutAll } from "./api.js";
 
 const Ctx = createContext(null);
 export const useAuth = () => useContext(Ctx);
@@ -22,6 +22,20 @@ function clearCache() {
   localStorage.removeItem(USER_KEY);
 }
 
+// Sessions are deliberately short-lived (see server/utils/tokens.js), so an
+// active user's token is renewed in the background before it lapses rather than
+// bouncing them to the login screen mid-task.
+const RENEW_WHEN_UNDER_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
+
+/* Reads `exp` out of the JWT body. This is a scheduling hint only — nothing is
+   trusted from it, the server verifies every token on every request. */
+function msUntilExpiry(token) {
+  try {
+    const body = JSON.parse(atob(token.split(".")[1]));
+    return typeof body.exp === "number" ? body.exp * 1000 - Date.now() : null;
+  } catch { return null; }
+}
+
 // ── provider ──────────────────────────────────────────────────
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || "");
@@ -38,11 +52,33 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (!token) { setUser(null); return; }
+    let cancelled = false;
 
-    // Background verify — update user silently; clear if token is stale
+    // Background verify — update user silently; clear if the token is stale.
+    // This is also where a REVOKED session lands: the server now rejects a token
+    // whose version no longer matches the account (password reset, log-out-
+    // everywhere), and that 401 signs this device out for real.
     apiMe(token)
-      .then(({ user }) => { setUser(user); writeCache(user); })
-      .catch(() => { clearCache(); setToken(""); setUser(null); });
+      .then(async ({ user }) => {
+        if (cancelled) return;
+        setUser(user); writeCache(user);
+
+        const left = msUntilExpiry(token);
+        if (left !== null && left < RENEW_WHEN_UNDER_MS) {
+          try {
+            const { token: fresh } = await apiRefresh(token);
+            if (cancelled || !fresh) return;
+            localStorage.setItem(TOKEN_KEY, fresh);
+            setToken(fresh); // re-runs this effect once with the new token
+          } catch { /* keep the current token; it's still valid until it isn't */ }
+        }
+      })
+      .catch(() => {
+        if (cancelled) return;
+        clearCache(); setToken(""); setUser(null);
+      });
+
+    return () => { cancelled = true; };
   }, [token]);
 
   const save = ({ token, user }) => {
@@ -67,6 +103,13 @@ export function AuthProvider({ children }) {
     login:  async (email, password) => save(await apiLogin({ email, password })),
     signup: async (form) => save(await apiSignup(form)),
     logout: () => { clearCache(); setToken(""); setUser(null); },
+    // Ends the session on every other device too. Keeps this one signed in with
+    // the fresh token the server hands back.
+    logoutEverywhere: async () => {
+      const { token: fresh } = await apiLogoutAll(token);
+      localStorage.setItem(TOKEN_KEY, fresh);
+      setToken(fresh);
+    },
     loginOpen, loginMode,
     openLogin:   () => { setLoginMode("login");  setLoginOpen(true); },
     openSignup:  () => { setLoginMode("signup"); setLoginOpen(true); },

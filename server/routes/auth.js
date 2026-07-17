@@ -1,12 +1,12 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import User from "../models/User.js";
 import { requireAuth } from "../middleware/auth.js";
+import { signStudentToken } from "../utils/tokens.js";
 
 const router = express.Router();
-const sign = (u) => jwt.sign({ id: u._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+const sign = signStudentToken;
 // Email must be a valid address ending in "@gmail.com" or ".in"
 const isEmail = (e) => {
   const s = String(e || "").toLowerCase().trim();
@@ -60,6 +60,41 @@ router.get("/me", requireAuth, async (req, res) => {
   const user = await User.findById(req.user.id).select("-passwordHash -resetTokenHash");
   if (!user) return res.status(404).json({ error: "Not found" });
   res.json({ user });
+});
+
+// Swap a still-valid token for a fresh one. This is what lets the session TTL be
+// short without logging active people out: the client renews in the background
+// rather than the user being bounced to the login screen mid-task.
+//
+// It is NOT a way to extend a dead or revoked token — requireAuth has already
+// rejected those, so a stolen token that's been revoked cannot renew itself.
+router.post("/refresh", requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("tokenVersion");
+    if (!user) return res.status(404).json({ error: "Not found" });
+    res.json({ token: sign(user) });
+  } catch (e) {
+    console.error("[auth/refresh]", e.message);
+    res.status(500).json({ error: "Could not refresh session" });
+  }
+});
+
+// "Log out everywhere" — the only way to evict a session from a device the user
+// no longer holds (lost phone, shared computer, a token they think was stolen).
+// Bumping tokenVersion kills every token for the account, this one included.
+router.post("/logout-all", requireAuth, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user.id, { $inc: { tokenVersion: 1 } }, { new: true }
+    ).select("tokenVersion");
+    if (!user) return res.status(404).json({ error: "Not found" });
+    // Hand back a working token so the current device stays signed in; every
+    // other device is now holding a dead one.
+    res.json({ ok: true, token: sign(user) });
+  } catch (e) {
+    console.error("[auth/logout-all]", e.message);
+    res.status(500).json({ error: "Could not sign out other devices" });
+  }
 });
 
 // Update the logged-in user's own profile. Only the fields present in the body
@@ -130,8 +165,12 @@ router.post("/reset", async (req, res) => {
     const hash = crypto.createHash("sha256").update(String(token)).digest("hex");
     const user = await User.findOne({ resetTokenHash: hash, resetExpires: { $gt: new Date() } });
     if (!user) return res.status(400).json({ error: "Reset link is invalid or expired" });
-    user.passwordHash = await bcrypt.hash(String(password), 10);
+    // Cost 12 to match signup — reset was still on the old cost of 10.
+    user.passwordHash = await bcrypt.hash(String(password), 12);
     user.resetTokenHash = undefined; user.resetExpires = undefined;
+    // A reset usually means "someone else may have my account". Retire every
+    // token already issued for it, so the reset actually evicts them.
+    user.tokenVersion = (user.tokenVersion || 0) + 1;
     await user.save();
     res.json({ ok: true, token: sign(user), user: pub(user) });
   } catch (e) { console.error("[auth/reset]", e.message); res.status(500).json({ error: "Could not reset password. Please try again." }); }

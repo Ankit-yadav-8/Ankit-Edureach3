@@ -1,12 +1,12 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import Otp from "../models/Otp.js";
 import { sendOtpEmail } from "../utils/mailer.js";
+import { signStudentToken } from "../utils/tokens.js";
 
 const router = express.Router();
-const sign = (u) => jwt.sign({ id: u._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+const sign = signStudentToken;
 const cleanEmail = (e) => String(e || "").trim().toLowerCase();
 // Email must be a valid address ending in "@gmail.com" or ".in"
 const isEmail = (e) => {

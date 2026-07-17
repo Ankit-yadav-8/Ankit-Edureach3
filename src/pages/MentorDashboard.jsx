@@ -175,13 +175,13 @@ export default function MentorDashboard() {
 
   const [students, setStudents] = useState([]);
   const [activeId, setActiveId] = useState("");
-  const [report, setReport] = useState({ progress: null, tests: [], tasks: [] });
+  const [report, setReport] = useState({ progress: null, tests: [], tasks: [], updatedAt: null });
   const [loadingStudent, setLoadingStudent] = useState(false);
   const [err, setErr] = useState("");
 
   const signOut = useCallback(() => {
     writeToken(""); setToken(""); setMentor(null);
-    setStudents([]); setActiveId(""); setReport({ progress: null, tests: [], tasks: [] });
+    setStudents([]); setActiveId(""); setReport({ progress: null, tests: [], tasks: [], updatedAt: null });
   }, []);
 
   // Resume a stored session. A revoked mentor or a rotated tokenVersion is
@@ -233,7 +233,7 @@ export default function MentorDashboard() {
           apiMentorStudentTasks(token, activeId).catch(() => ({ tasks: [] })),
         ]);
         if (cancelled) return;
-        setReport({ progress: p.data, tests: t.attempts || [], tasks: k.tasks || [] });
+        setReport({ progress: p.data, tests: t.attempts || [], tasks: k.tasks || [], updatedAt: p.updatedAt });
       } catch (e) {
         if (!cancelled) setErr(e.message || "Could not load this student");
       } finally {
@@ -300,7 +300,8 @@ export default function MentorDashboard() {
             <Loader2 size={22} className="cp-spin" color={ACCENT} />
           </div>
         ) : (
-          <StudentReport progress={report.progress} tests={report.tests} tasks={report.tasks} />
+          <StudentReport progress={report.progress} tests={report.tests} tasks={report.tasks}
+            updatedAt={report.updatedAt} />
         )}
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginTop: 22, flexWrap: "wrap" }}>

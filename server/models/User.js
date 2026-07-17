@@ -13,6 +13,13 @@ const userSchema = new mongoose.Schema(
     resetTokenHash: { type: String },
     resetExpires:   { type: Date },
     lastLogin:    { type: Date },
+
+    // Bumped to invalidate every session token already issued for this account.
+    // A JWT can't be taken back once signed, so this is the only way a password
+    // reset or a "log out everywhere" can actually end a stolen session.
+    // Tokens carry the value they were minted with; requireAuth rejects any
+    // that no longer match.
+    tokenVersion: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

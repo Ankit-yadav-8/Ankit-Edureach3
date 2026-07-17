@@ -291,9 +291,24 @@ const SECTIONS = [
   { key: "tasks",   label: "Their tasks",   icon: ClipboardList, blurb: "What this student currently sees as assigned." },
 ];
 
-export default function StudentReport({ progress, tests, tasks }) {
+/* How stale is what the mentor is looking at? The student's dashboard syncs to
+   the server as they use it, so this is the honest answer to "am I seeing today's
+   work or last week's" — which a mentor checking in daily needs to know. */
+function freshness(updatedAt) {
+  if (!updatedAt) return null;
+  const mins = Math.floor((Date.now() - new Date(updatedAt)) / 60000);
+  if (mins < 2) return "just now";
+  if (mins < 60) return `${mins} min ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  return days === 1 ? "yesterday" : `${days} days ago`;
+}
+
+export default function StudentReport({ progress, tests, tasks, updatedAt }) {
   const [i, setI] = useState(0);
   const section = SECTIONS[i];
+  const synced = freshness(updatedAt);
 
   const entries = Array.isArray(progress?.entries) ? progress.entries : [];
   // Test data can come from the student's own blob or from server-graded
@@ -351,7 +366,10 @@ export default function StudentReport({ progress, tests, tasks }) {
                 <Eye size={10} /> Read only
               </span>
             </div>
-            <p style={{ fontSize: 12, color: "var(--muted)", margin: "3px 0 0" }}>{section.blurb}</p>
+            <p style={{ fontSize: 12, color: "var(--muted)", margin: "3px 0 0" }}>
+              {section.blurb}
+              {synced && <> · <span title={new Date(updatedAt).toLocaleString()}>student last synced {synced}</span></>}
+            </p>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>

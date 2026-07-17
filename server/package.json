@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test:authz": "node test/authz.test.mjs"
+    "test:authz": "node test/authz.test.mjs",
+    "test:session": "node test/session.test.mjs",
+    "test": "node test/authz.test.mjs && node test/session.test.mjs"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

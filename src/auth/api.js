@@ -33,6 +33,12 @@ async function req(path, { method = "GET", body, token } = {}) {
 export const apiSignup    = (b) => req("/api/auth/signup", { method: "POST", body: b });
 export const apiLogin     = (b) => req("/api/auth/login",  { method: "POST", body: b });
 export const apiMe        = (token) => req("/api/auth/me", { token });
+// Swap a still-valid token for a fresh one, so a short session TTL never
+// interrupts an active user. A revoked token can't renew — requireAuth kills it.
+export const apiRefresh   = (token) => req("/api/auth/refresh", { method: "POST", token });
+// Ends every session for the account (lost phone, shared computer) and returns a
+// fresh token so the device that asked stays signed in.
+export const apiLogoutAll = (token) => req("/api/auth/logout-all", { method: "POST", token });
 export const apiUpdateProfile = (token, b) => req("/api/auth/profile", { method: "PATCH", body: b, token });
 export const apiForgot    = (b) => req("/api/auth/forgot", { method: "POST", body: b });
 export const apiReset     = (b) => req("/api/auth/reset",  { method: "POST", body: b });
