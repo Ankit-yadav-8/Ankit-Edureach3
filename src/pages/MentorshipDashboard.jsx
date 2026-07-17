@@ -1118,13 +1118,13 @@ function DashboardBody({ urlPlan = "" }) {
           </span>
 
           {/* welcome heading with hand-drawn coral underline on the name */}
-          <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(2rem,5vw,3rem)", color: NAVY, lineHeight: 1.12, letterSpacing: "-1px", margin: "18px 0 0" }}>
+          <h2 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "clamp(1.5rem,3.6vw,2.1rem)", color: NAVY, lineHeight: 1.15, letterSpacing: "-0.5px", margin: "16px 0 0" }}>
             Welcome back,<br />
             <span style={{ position: "relative", display: "inline-block", color: ORANGE }}>
               {(user?.name || "there").trim().split(/\s+/)[0]}.
-              <svg width="100%" height="14" viewBox="0 0 200 14" preserveAspectRatio="none" fill="none"
-                style={{ position: "absolute", left: 0, bottom: -6, width: "100%" }} aria-hidden="true">
-                <path d="M3 9 C 45 3, 100 3, 150 7 S 190 11, 197 6" stroke={ORANGE} strokeWidth="3" strokeLinecap="round" opacity=".85" />
+              <svg width="100%" height="12" viewBox="0 0 200 12" preserveAspectRatio="none" fill="none"
+                style={{ position: "absolute", left: 0, bottom: -5, width: "100%" }} aria-hidden="true">
+                <path d="M3 8 C 45 3, 100 3, 150 6 S 190 9, 197 5" stroke={ORANGE} strokeWidth="2.5" strokeLinecap="round" opacity=".8" />
               </svg>
             </span>
           </h2>
