@@ -4,11 +4,39 @@ import Mentor from "../models/Mentor.js";
 import MentorProgress from "../models/MentorProgress.js";
 import MentorTask from "../models/MentorTask.js";
 import TestAttempt from "../models/TestAttempt.js";
+import MentorAccessLog from "../models/MentorAccessLog.js";
 import {
   signMentorToken, requireMentor, requirePasswordChanged, resolveAssignedStudent,
 } from "../middleware/mentor.js";
 
 const router = express.Router();
+
+/**
+ * Record that a mentor read (or tried to read) a student.
+ *
+ * Fire-and-forget on purpose: an audit write must never fail the request or add
+ * latency to it. The trade-off is explicit — a dropped write loses one log line,
+ * whereas awaiting it would let a slow log take the feature down. Denied
+ * attempts are logged too; those are the ones worth looking at.
+ */
+function audit(req, { studentId, resource, allowed }) {
+  MentorAccessLog.create({
+    mentorId: req.mentor._id,
+    mentorEmail: req.mentor.email,
+    studentId: String(studentId || "").toUpperCase(),
+    resource,
+    allowed,
+    ip: req.ip || "",
+    userAgent: String(req.headers["user-agent"] || "").slice(0, 300),
+  }).catch((e) => console.error("[mentor/audit]", e.message));
+}
+
+/** Resolve + log in one step, so no read path can forget to record itself. */
+async function resolveAndAudit(req, resource) {
+  const enr = await resolveAssignedStudent(req.mentor, req.params.studentId);
+  audit(req, { studentId: req.params.studentId, resource, allowed: !!enr });
+  return enr;
+}
 
 // Mentors are read-only over student data by design. This router exposes GETs
 // only for anything student-owned; the sole writes it allows are to the mentor's
@@ -113,7 +141,7 @@ router.get("/students", requireMentor, requirePasswordChanged, async (req, res) 
 /* ── One student's dashboard data — READ ONLY ────────────────────────────── */
 router.get("/students/:studentId/progress", requireMentor, requirePasswordChanged, async (req, res) => {
   try {
-    const enr = await resolveAssignedStudent(req.mentor, req.params.studentId);
+    const enr = await resolveAndAudit(req, "progress");
     // Same 404 for "not assigned" and "doesn't exist" — a mentor must not be
     // able to probe which CP IDs are real by diffing the responses.
     if (!enr) return res.status(404).json({ error: "Student not found" });
@@ -133,7 +161,7 @@ router.get("/students/:studentId/progress", requireMentor, requirePasswordChange
 /* ── One student's test attempts — READ ONLY ─────────────────────────────── */
 router.get("/students/:studentId/tests", requireMentor, requirePasswordChanged, async (req, res) => {
   try {
-    const enr = await resolveAssignedStudent(req.mentor, req.params.studentId);
+    const enr = await resolveAndAudit(req, "tests");
     if (!enr) return res.status(404).json({ error: "Student not found" });
 
     // Scoped to the plan this mentor is assigned for, not the whole account —
@@ -151,7 +179,7 @@ router.get("/students/:studentId/tests", requireMentor, requirePasswordChanged, 
 /* ── The tasks a student currently sees — READ ONLY in this phase ────────── */
 router.get("/students/:studentId/tasks", requireMentor, requirePasswordChanged, async (req, res) => {
   try {
-    const enr = await resolveAssignedStudent(req.mentor, req.params.studentId);
+    const enr = await resolveAndAudit(req, "tasks");
     if (!enr) return res.status(404).json({ error: "Student not found" });
     const doc = await MentorTask.findOne({ studentId: enr.studentId }).lean();
     res.json({ tasks: doc?.tasks || [] });

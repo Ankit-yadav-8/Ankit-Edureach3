@@ -5,7 +5,7 @@ import {
   User, Mail, Phone, MapPin, GraduationCap, Calendar, LogOut,
   ArrowUpRight, Loader2, Check, Compass, Pencil, X, ShieldCheck,
   Bot, Sparkles, Send, Award, Hash, Stethoscope, CreditCard,
-  Gauge, Crosshair, GitCompare, Users,
+  Gauge, Crosshair, GitCompare, Users, ShieldOff,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments, apiUpdateProfile } from "../auth/api.js";
@@ -185,11 +185,26 @@ function Detail({ icon: Ic, label, value, color, bg, span }) {
 }
 
 export default function Dashboard() {
-  const { user, token, isLoggedIn, logout, openLogin, updateUser } = useAuth();
+  const { user, token, isLoggedIn, logout, openLogin, updateUser, logoutEverywhere } = useAuth();
   const navigate = useNavigate();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [confirmLogout, setConfirmLogout] = useState(false);
+  const [allBusy, setAllBusy] = useState(false);
+  const [allMsg, setAllMsg] = useState("");
+
+  // Ends every OTHER session for this account. This device keeps working via the
+  // fresh token the server hands back, so the user isn't punished for securing
+  // their account.
+  async function signOutEverywhere() {
+    setAllBusy(true); setAllMsg("");
+    try {
+      await logoutEverywhere();
+      setAllMsg("Signed out on all other devices. This one is still signed in.");
+    } catch {
+      setAllMsg("Couldn't sign out other devices. Please try again.");
+    } finally { setAllBusy(false); }
+  }
   const [editOpen, setEditOpen] = useState(false);
 
   useEffect(() => {
@@ -468,6 +483,26 @@ export default function Dashboard() {
               <div style={{ display: "flex", gap: 10 }}>
                 <button onClick={() => setConfirmLogout(false)} style={{ flex: 1, padding: "12px 0", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "#fff", color: INK, fontWeight: 700, cursor: "pointer" }}>No</button>
                 <button onClick={() => { logout(); setConfirmLogout(false); navigate("/"); }} style={{ flex: 1, padding: "12px 0", borderRadius: 12, border: "none", background: "#e5484d", color: "#fff", fontWeight: 700, cursor: "pointer", boxShadow: "0 6px 18px -6px #e5484d" }}>Yes, log out</button>
+              </div>
+
+              {/* Logging out here only forgets the token on THIS device — a session
+                  on a phone you've lost, or a shared computer, keeps working until
+                  it expires. This is the only way to actually end those. */}
+              <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid #f0e9e0" }}>
+                <button
+                  onClick={signOutEverywhere} disabled={allBusy}
+                  style={{
+                    width: "100%", padding: "10px 0", borderRadius: 10,
+                    border: "1.5px solid #e5484d40", background: "#fff", color: "#e5484d",
+                    fontWeight: 700, fontSize: ".82rem", cursor: allBusy ? "wait" : "pointer",
+                    display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7,
+                  }}
+                >
+                  <ShieldOff size={14} /> {allBusy ? "Signing out everywhere…" : "Sign out on all devices"}
+                </button>
+                <p style={{ fontSize: ".72rem", color: BODY, margin: "8px 0 0", lineHeight: 1.5 }}>
+                  {allMsg || "Ends your session on every other phone, tablet and computer. Use this if you've lost a device or think someone else is signed in."}
+                </p>
               </div>
             </motion.div>
           </motion.div>

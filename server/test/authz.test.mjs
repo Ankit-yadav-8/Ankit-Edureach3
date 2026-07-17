@@ -24,6 +24,7 @@ import mentorRoutes from "../routes/mentor.js";
 import adminMentorRoutes from "../routes/adminMentors.js";
 import Enrollment from "../models/Enrollment.js";
 import MentorProgress from "../models/MentorProgress.js";
+import MentorAccessLog from "../models/MentorAccessLog.js";
 
 const mem = await MongoMemoryServer.create();
 await mongoose.connect(mem.getUri("authz-test"));
@@ -130,6 +131,28 @@ for (const [m, p] of [["PUT", "progress"], ["POST", "progress"], ["PATCH", "prog
 }
 const after = await MentorProgress.findOne({ email: "mine@example.com" }).lean();
 check("student's data unchanged on disk", after.data.hacked === undefined && after.data.entries.length === 1);
+
+console.log("\naudit log\n");
+// The reads above already happened; the audit writes are fire-and-forget.
+await new Promise((r) => setTimeout(r, 400));
+const logRes = await call("/api/admin/mentors/access-log", { admin: ADMIN });
+check("admin can read the access log", logRes.status === 200, `-> ${logRes.status}`);
+check("the DENIED read of an unassigned student was recorded", (logRes.body.deniedCount || 0) >= 1,
+  `deniedCount=${logRes.body.deniedCount}`);
+// Both refused reads above must appear: the unassigned-but-real student, and
+// the CP ID that doesn't exist. Entries come back newest-first, so don't assume
+// which is [0] — assert the set.
+const deniedRows = (logRes.body.entries || []).filter((e) => !e.allowed);
+const deniedIds = deniedRows.map((e) => e.studentId).sort();
+check("both refused reads are recorded, naming the student probed",
+  deniedIds.join(",") === "CP-2026-00099,CP-9999-12345", `got [${deniedIds}]`);
+check("denied rows name the mentor who probed",
+  deniedRows.every((e) => e.mentorEmail === "m@example.com"));
+check("log holds no student data, only who/what/when",
+  !JSON.stringify(logRes.body.entries || []).includes("hours"));
+check("the access log itself requires admin auth",
+  (await call("/api/admin/mentors/access-log")).status === 403);
+check("rows are actually persisted", (await MentorAccessLog.countDocuments()) > 0);
 
 console.log("\nadmin revoke kills live sessions\n");
 await call(`/api/admin/mentors/${mentorId}`, { method: "PATCH", admin: ADMIN, body: { active: false } });

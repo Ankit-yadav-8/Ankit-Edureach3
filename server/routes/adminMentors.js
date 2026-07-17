@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import Mentor from "../models/Mentor.js";
 import Enrollment from "../models/Enrollment.js";
+import MentorAccessLog from "../models/MentorAccessLog.js";
 import { requireAdmin } from "../middleware/admin.js";
 
 // Admin-only management of mentor accounts. Every route here sits behind
@@ -22,6 +23,30 @@ const publicMentor = (m) => ({
 function generatePassword() {
   return crypto.randomBytes(9).toString("base64url").slice(0, 12);
 }
+
+/* ── Access log ──────────────────────────────────────────────────────────────
+   Who read which student, and when. A log nobody can read is only half a
+   control, so it's surfaced here rather than living only in the database.
+   `?denied=1` filters to refused attempts — a burst of those is someone probing
+   for CP IDs they weren't given. */
+router.get("/access-log", async (req, res) => {
+  try {
+    const q = {};
+    if (req.query.mentorId) q.mentorId = req.query.mentorId;
+    if (req.query.studentId) q.studentId = String(req.query.studentId).toUpperCase();
+    if (req.query.denied === "1") q.allowed = false;
+
+    const limit = Math.min(Number(req.query.limit) || 100, 500);
+    const [entries, deniedCount] = await Promise.all([
+      MentorAccessLog.find(q).sort({ createdAt: -1 }).limit(limit).lean(),
+      MentorAccessLog.countDocuments({ ...q, allowed: false }),
+    ]);
+    res.json({ entries, deniedCount });
+  } catch (e) {
+    console.error("[admin/mentors access-log]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
 /* ── List / create ───────────────────────────────────────────────────────── */
 router.get("/", async (_req, res) => {
