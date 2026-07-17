@@ -1070,27 +1070,6 @@ function DashboardBody({ urlPlan = "" }) {
           style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.7rem,3.6vw,2.4rem)", color: NAVY, margin: 0, letterSpacing: "-0.5px", lineHeight: 1.1 }}>
           Mentorship dashboard
         </motion.h1>
-
-        {/* Batch switcher — only when the student owns more than one plan, so
-            opening "Foundation" never lands them on the JEE 2027 dashboard. */}
-        {myBatches.length > 1 && (
-          <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 }}
-            style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "center", marginTop: 20 }}>
-            <span style={{ display: "inline-flex", alignItems: "center", padding: "8px 18px", borderRadius: 50, fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: MUTE, background: "#fff", border: "1px solid #ececec" }}>
-              Your batches
-            </span>
-            {myBatches.map((b) => {
-              const on = b.plan === selectedPlan;
-              return (
-                <button key={b.plan} onClick={() => switchBatch(b.plan)}
-                  style={{ display: "inline-flex", alignItems: "center", padding: "8px 18px", borderRadius: 50, cursor: on ? "default" : "pointer", fontFamily: "Sora", fontWeight: 800, fontSize: 13,
-                    border: `1px solid ${on ? ORANGE : "#ececec"}`, background: on ? ORANGE : "#fff", color: on ? "#fff" : NAVY }}>
-                  {b.label}
-                </button>
-              );
-            })}
-          </motion.div>
-        )}
       </div>
 
       {/* ══ HERO — centered welcome ══ */}
