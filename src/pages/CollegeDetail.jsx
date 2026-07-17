@@ -588,14 +588,32 @@ export default function CollegeDetail() {
                   </a>
                 </div>
                 <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid rgba(0,0,0,.08)" }}>
-                  <iframe
-                    title={`${college.name} location map`}
-                    style={{ width: "100%", height: 300, border: 0, display: "block" }}
-                    src={`https://maps.google.com/maps?q=${encodeURIComponent(college.name + " " + (college.location || ""))}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    allowFullScreen
-                  />
+                  {college.coords && college.coords.lat ? (
+                    <iframe
+                      title={`${college.name} location map`}
+                      style={{ width: "100%", height: 300, border: 0, display: "block" }}
+                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${college.coords.lng - 0.03},${college.coords.lat - 0.015},${college.coords.lng + 0.03},${college.coords.lat + 0.015}&layer=mapnik&marker=${college.coords.lat},${college.coords.lng}`}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div style={{
+                      width: "100%", height: 300, display: "flex", alignItems: "center",
+                      justifyContent: "center", background: "var(--sky)", borderRadius: 14,
+                      flexDirection: "column", gap: 8,
+                    }}>
+                      <MapPin size={28} color="var(--coral)" />
+                      <span style={{ fontSize: 13, color: "var(--muted)" }}>
+                        Map coordinates not available
+                      </span>
+                      <a
+                        href={`https://www.google.com/maps/search/${encodeURIComponent(college.name + " " + (college.location || ""))}`}
+                        target="_blank" rel="noreferrer"
+                        style={{ fontSize: 13, color: "#FF693D", fontWeight: 600, textDecoration: "none" }}
+                      >
+                        View on Google Maps →
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
 
