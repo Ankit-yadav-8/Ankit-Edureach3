@@ -261,8 +261,12 @@ function OtpGate({ email, name, onVerified }) {
     } finally { setBusy(false); }
   };
 
+  // The card is centred, so top padding only shifts it by half of what you add —
+  // 120px sat it too close under the fixed header on short, wide viewports.
+  // minHeight drops to 88vh so the extra headroom actually moves the card down
+  // rather than just making the section taller than the screen.
   return (
-    <section style={{ background: "var(--page-bg)", minHeight: "100vh", display: "grid", placeItems: "center", padding: "120px 16px 60px" }}>
+    <section style={{ background: "var(--page-bg)", minHeight: "88vh", display: "grid", placeItems: "center", padding: "180px 16px 72px" }}>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
         style={{ width: "100%", maxWidth: 440, background: "var(--page-bg)", borderRadius: 24, border: "1px solid rgba(255, 105, 61,.18)", padding: "34px 30px", boxShadow: "0 30px 70px -40px rgba(13,27,62,.5)", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${ORANGE},${GREEN})` }} />
