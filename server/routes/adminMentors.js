@@ -19,9 +19,17 @@ const publicMentor = (m) => ({
 });
 
 // Readable but unguessable — the admin passes this to the mentor out of band,
-// and the mentor is forced to replace it on first sign-in.
-function generatePassword() {
-  return crypto.randomBytes(9).toString("base64url").slice(0, 12);
+// and the mentor is forced to replace it on first sign-in. Drawn from a
+// deliberately unambiguous alphabet: no 0/O/o, 1/l/I, and no +/-/_ that get
+// dropped or mangled when a one-time password is read aloud, retyped, or copied
+// by hand. That handoff — not the crypto — is where these passwords actually
+// fail, so the format is chosen to survive it. 12 chars over 54 symbols ≈ 71
+// bits of entropy, on par with the base64url tokens this replaces.
+const PW_ALPHABET = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+function generatePassword(len = 12) {
+  let out = "";
+  for (let i = 0; i < len; i++) out += PW_ALPHABET[crypto.randomInt(PW_ALPHABET.length)];
+  return out;
 }
 
 /* ── Access log ──────────────────────────────────────────────────────────────
@@ -64,7 +72,9 @@ router.post("/", async (req, res) => {
     if (await Mentor.exists({ email })) return res.status(409).json({ error: "A mentor with that email already exists" });
 
     // The admin may supply a password, else we mint one and return it ONCE.
-    const password = String(req.body?.password || "") || generatePassword();
+    // Trim it so a stray space pasted into the form doesn't become part of the
+    // hash — the same normalisation the login endpoint applies to what's typed.
+    const password = String(req.body?.password || "").trim() || generatePassword();
     if (password.length < 8) return res.status(400).json({ error: "Password must be at least 8 characters" });
 
     const mentor = await Mentor.create({

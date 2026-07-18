@@ -68,7 +68,11 @@ const publicMentor = (m) => ({
 router.post("/login", async (req, res) => {
   try {
     const email = String(req.body?.email || "").toLowerCase().trim();
-    const password = String(req.body?.password || "");
+    // Trim: a one-time password copied from the admin handoff often carries a
+    // trailing space or newline, which would otherwise fail the hash compare and
+    // surface as a bogus "invalid email or password". Generated passwords never
+    // contain spaces, so this only ever removes accidental whitespace.
+    const password = String(req.body?.password || "").trim();
     if (!email || !password) return res.status(400).json({ error: "Email and password required" });
 
     const mentor = await Mentor.findOne({ email });
@@ -112,8 +116,12 @@ router.get("/me", requireMentor, (req, res) => res.json({ mentor: publicMentor(r
 /* ── Password change — mandatory after an admin issues credentials ───────── */
 router.post("/password", requireMentor, async (req, res) => {
   try {
-    const current = String(req.body?.currentPassword || "");
-    const next = String(req.body?.newPassword || "");
+    // Trim both sides so the temporary password (often pasted with a trailing
+    // space) matches, and so the new password is stored exactly as it will be
+    // trimmed at login — otherwise a stray space here would lock the mentor out
+    // on their very next sign-in.
+    const current = String(req.body?.currentPassword || "").trim();
+    const next = String(req.body?.newPassword || "").trim();
     if (next.length < 8) return res.status(400).json({ error: "New password must be at least 8 characters" });
 
     const mentor = await Mentor.findById(req.mentor._id);
