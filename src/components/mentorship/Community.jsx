@@ -1,49 +1,24 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Users, Sparkles, Loader2, ShieldCheck, Lock, MessagesSquare,
-  RefreshCw, Search, Inbox, ArrowLeftRight, X, Globe2, Bot,
+  Users, Loader2, ShieldCheck, Lock, MessagesSquare,
+  RefreshCw, ArrowLeftRight, Globe2, Bot,
 } from "lucide-react";
 import AiDoubtSolver from "./AiDoubtSolver.jsx";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext.jsx";
 import {
   API_BASE,
-  apiCommunityMe, apiCommunityMembers, apiCommunityFeed, apiCommunityCreatePost,
+  apiCommunityMe, apiCommunityFeed, apiCommunityCreatePost,
   apiCommunityDeletePost, apiCommunityLikePost, apiCommunityReplies, apiCommunityReply,
   apiCommunityLikeReply, apiCommunitySignUpload,
 } from "../../auth/api.js";
 import {
-  ORANGE, GOLD, GREEN, NAVY, MUTE, CYAN,
-  SUBJECTS, Avatar, Composer, PostCard,
+  ORANGE, GOLD, NAVY, MUTE, CYAN,
+  SUBJECTS, Composer, PostCard,
 } from "./communityKit.jsx";
 
 const API_HOST = (() => { try { return new URL(API_BASE).host; } catch { return API_BASE; } })();
-
-/* ── batchmates grid ─────────────────────────────────────────────── */
-function MemberGrid({ token, plan, batchLabel }) {
-  const [data, setData] = useState(null);
-  useEffect(() => { apiCommunityMembers(token, plan).then(setData).catch(() => setData({ members: [], count: 0 })); }, [token, plan]);
-  if (!data) return <div style={{ display: "flex", alignItems: "center", gap: 8, color: MUTE, padding: 16 }}><Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} /> Loading batchmates…</div>;
-  return (
-    <div>
-      <div style={{ fontSize: 13, color: MUTE, marginBottom: 12 }}>
-        <strong style={{ color: NAVY }}>{data.count}</strong> student{data.count === 1 ? "" : "s"} in {batchLabel}.
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(190px, 100%), 1fr))", gap: 12 }}>
-        {data.members.map((m, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 11, background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 14, padding: "12px 14px" }}>
-            <Avatar name={m.name} size={40} />
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: 13.5, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.name}</div>
-              <div style={{ fontSize: 11, fontFamily: "monospace", color: "#94a3b8" }}>{m.studentId || "—"}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /* ════════════════════════════════════════════════════════════════
    BATCH COMMUNITY (main)
@@ -55,9 +30,7 @@ export default function Community({ plan, onSwitchBatch }) {
   const [me, setMe] = useState(null);
   const [locked, setLocked] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState("all"); // all | highlights | unanswered | members
-  const [subject, setSubject] = useState(""); // subject chip filter
-  const [query, setQuery] = useState(""); // client-side search
+  const [tab, setTab] = useState("all"); // all | ai
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const mounted = useRef(true);
@@ -85,17 +58,17 @@ export default function Community({ plan, onSwitchBatch }) {
   }, [token, plan]);
 
   const loadFeed = useCallback((which = tab, silent = false) => {
-    if (which === "members" || which === "ai") return;
+    if (which === "ai") return;
     if (!silent) setRefreshing(true);
-    apiCommunityFeed(token, which, plan, subject)
+    apiCommunityFeed(token, which, plan)
       .then((d) => { if (mounted.current) setPosts(d.posts || []); })
       .catch(() => {})
       .finally(() => mounted.current && setRefreshing(false));
-  }, [token, plan, tab, subject]);
+  }, [token, plan, tab]);
 
-  // load + poll the feed (skip while on the members tab)
+  // load + poll the feed (skip while on the AI solver tab)
   useEffect(() => {
-    if (!me || tab === "members" || tab === "ai") return;
+    if (!me || tab === "ai") return;
     loadFeed(tab);
     const iv = setInterval(() => {
       if (document.visibilityState === "visible") loadFeed(tab, true);
@@ -119,17 +92,6 @@ export default function Community({ plan, onSwitchBatch }) {
     apiCommunityDeletePost(token, id, plan).catch(() => loadFeed(tab, true));
   };
   const onReplied = (postId, count) => setPosts((p) => p.map((x) => x.id === postId ? { ...x, replyCount: count } : x));
-
-  // Client-side search across the already-loaded feed (author / text / subject).
-  const shown = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return posts;
-    return posts.filter((p) =>
-      (p.text || "").toLowerCase().includes(q) ||
-      (p.authorName || "").toLowerCase().includes(q) ||
-      (p.subject || "").toLowerCase().includes(q) ||
-      (p.studentId || "").toLowerCase().includes(q));
-  }, [posts, query]);
 
   /* ── states ── */
   if (loading) {
@@ -164,9 +126,6 @@ export default function Community({ plan, onSwitchBatch }) {
   const TABS = [
     { id: "all", label: "Feed", icon: MessagesSquare },
     { id: "ai", label: "AI Solver", icon: Bot },
-    { id: "highlights", label: "Highlights", icon: Sparkles },
-    { id: "unanswered", label: "Unanswered", icon: Inbox },
-    { id: "members", label: "Batchmates", icon: Users },
   ];
   const subjects = SUBJECTS[me.exam] || SUBJECTS.JEE;
   const otherBatches = (me.allBatches || []).filter((b) => b.plan !== me.plan);
@@ -210,7 +169,7 @@ export default function Community({ plan, onSwitchBatch }) {
 
       {/* composer */}
       <div style={{ marginBottom: 16 }}>
-        <Composer token={token} exam={me.exam} canUpload={me.cloudinaryReady} signUpload={api.signUpload} plan={plan} onSubmit={createPost} />
+        <Composer token={token} exam={me.exam} simple canUpload={me.cloudinaryReady} signUpload={api.signUpload} plan={plan} onSubmit={createPost} />
         {!me.cloudinaryReady && (
           <div style={{ fontSize: 12, color: "#b45309", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginTop: 8, lineHeight: 1.55 }}>
             Photo / video uploads aren't configured on this server
@@ -232,7 +191,7 @@ export default function Community({ plan, onSwitchBatch }) {
             </button>
           );
         })}
-        {tab !== "members" && (
+        {tab !== "ai" && (
           <button onClick={() => loadFeed(tab)} title="Refresh"
             style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 13px", borderRadius: 50, border: "1.5px solid #e5e7eb", background: "var(--page-bg)", color: MUTE, cursor: "pointer", fontWeight: 700, fontSize: 12.5 }}>
             <RefreshCw size={14} style={refreshing ? { animation: "spin 1s linear infinite" } : undefined} /> Refresh
@@ -240,52 +199,18 @@ export default function Community({ plan, onSwitchBatch }) {
         )}
       </div>
 
-      {/* subject filter + search (feed tabs only) */}
-      {tab !== "members" && tab !== "ai" && (
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-          <button onClick={() => setSubject("")}
-            style={{ padding: "6px 13px", borderRadius: 50, cursor: "pointer", fontSize: 12.5, fontWeight: 700, border: `1.5px solid ${subject === "" ? ORANGE : "#e5e7eb"}`, background: subject === "" ? `${ORANGE}14` : "#fff", color: subject === "" ? ORANGE : MUTE }}>
-            All subjects
-          </button>
-          {subjects.map((s) => {
-            const on = subject === s;
-            return (
-              <button key={s} onClick={() => setSubject(on ? "" : s)}
-                style={{ padding: "6px 13px", borderRadius: 50, cursor: "pointer", fontSize: 12.5, fontWeight: 700, border: `1.5px solid ${on ? ORANGE : "#e5e7eb"}`, background: on ? `${ORANGE}14` : "#fff", color: on ? ORANGE : MUTE }}>
-                {s}
-              </button>
-            );
-          })}
-          <div style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 7, background: "var(--page-bg)", border: "1.5px solid #e5e7eb", borderRadius: 50, padding: "6px 12px", minWidth: 180 }}>
-            <Search size={15} color={MUTE} />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search doubts…"
-              style={{ border: "none", outline: "none", fontSize: 13, color: NAVY, background: "transparent", width: "100%" }} />
-            {query && <button onClick={() => setQuery("")} style={{ border: "none", background: "transparent", cursor: "pointer", color: MUTE, display: "grid", placeItems: "center" }}><X size={14} /></button>}
-          </div>
-        </div>
-      )}
-
       {/* content */}
-      {tab === "members" ? (
-        <MemberGrid token={token} plan={plan} batchLabel={me.batchLabel} />
-      ) : tab === "ai" ? (
+      {tab === "ai" ? (
         <AiDoubtSolver token={token} exam={me.exam} subjects={subjects} />
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          {shown.length === 0 ? (
+          {posts.length === 0 ? (
             <div style={{ textAlign: "center", padding: "34px 20px", background: "var(--page-bg)", border: "1px dashed #e5e7eb", borderRadius: 18, color: MUTE }}>
               <ShieldCheck size={28} color="#cbd5e1" style={{ marginBottom: 8 }} />
-              <div style={{ fontWeight: 700, color: NAVY, marginBottom: 4 }}>
-                {query ? "No matches" : tab === "highlights" ? "No highlights yet" : tab === "unanswered" ? "No open doubts" : "No posts yet"}
-              </div>
-              <div style={{ fontSize: 13.5 }}>
-                {query ? "Try a different search term."
-                  : tab === "highlights" ? "Posts with likes & replies will show up here."
-                  : tab === "unanswered" ? "Every doubt has been answered. 🎉"
-                  : "Be the first to ask a doubt in your batch."}
-              </div>
+              <div style={{ fontWeight: 700, color: NAVY, marginBottom: 4 }}>No posts yet</div>
+              <div style={{ fontSize: 13.5 }}>Be the first to ask a doubt in your batch.</div>
             </div>
-          ) : shown.map((p) => (
+          ) : posts.map((p) => (
             <PostCard key={p.id} api={api} token={token} post={p} exam={me.exam} canUpload={me.cloudinaryReady} onLike={likePost} onDelete={deletePost} onReplied={onReplied} />
           ))}
         </div>

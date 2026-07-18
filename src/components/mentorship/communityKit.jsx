@@ -120,7 +120,7 @@ export function PillBtn({ active, color, onClick, children, title }) {
 }
 
 /* ── shared composer (used for posts + replies) ───────────────────── */
-export function Composer({ token, exam, compact, onSubmit, placeholder, autoFocus, canUpload = true, signUpload, plan, initialTag }) {
+export function Composer({ token, exam, compact, simple, onSubmit, placeholder, autoFocus, canUpload = true, signUpload, plan, initialTag }) {
   const [text, setText] = useState("");
   const [tag, setTag] = useState(initialTag || "doubt");
   const [subject, setSubject] = useState("");
@@ -198,7 +198,7 @@ export function Composer({ token, exam, compact, onSubmit, placeholder, autoFocu
         style={{ width: "100%", border: "none", outline: "none", resize: "vertical", fontSize: 14.5, color: INK, fontFamily: "inherit", lineHeight: 1.6, background: "transparent" }}
       />
 
-      {!compact && (
+      {!compact && !simple && (
         <div style={{ display: "flex", gap: 7, flexWrap: "wrap", margin: "6px 0 4px" }}>
           {POST_TAGS.map((t) => {
             const m = TAG_META[t]; const on = tag === t;
