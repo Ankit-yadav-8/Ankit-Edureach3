@@ -59,21 +59,6 @@ const FOUNDERS = [
   },
 ];
 
-/* ── Operations team data ──────────────────────────────────── */
-const OPERATIONS = [
-  {
-    name: "K. Gopal",
-    initials: "KG",
-    photo: "/assets/team/K.Gopal.jpeg",
-    role: "COO & Operations Head",
-    accent: "#FF693D",
-    edu: "B.Tech, IIT Roorkee",
-    bio: "Hi, I'm K. Gopal, Operations Head at College Parichay and an IIT Roorkee student. I oversee all operational aspects of the platform — ensuring seamless day-to-day functioning, team coordination, and execution across departments. Like every student who has used this platform, I experienced firsthand how overwhelming the college admission process can be. Being part of College Parichay is my way of channelling that experience into something that truly matters. One mission: helping every student make confident, data-driven decisions.",
-    skills: ["Operations", "Team Coordination", "Execution", "Strategy", "Communication", "Management"],
-    socials: { instagram: "https://www.instagram.com/_mr_gopal.___0?utm_source=qr&igsh=M3V5eXRzcGExeTR2", whatsapp: WA },
-  },
-];
-
 /* ── Values ────────────────────────────────────────────────── */
 const VALUES = [
   { icon: ShieldCheck, color: "#FF693D", t: "Honest, not hype",     d: "Real data and clear caveats. We tell you when a number is an estimate — never fake certainty." },
@@ -222,7 +207,7 @@ function SectionHead({ icon: Icon, eyebrow, title, sub }) {
   );
 }
 
-/* ── Team member card (founders + operations) ──────────────── */
+/* ── Team member card (founders) ───────────────────────────── */
 function TeamCard({ f, idx, badgeIcon: BadgeIcon, badgeLabel }) {
   return (
     <motion.div
@@ -393,18 +378,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── OPERATIONS ── */}
-      <section style={{ background: "var(--page-bg)", padding: "0 0 76px" }}>
-        <div className="container">
-          <SectionHead icon={Users} eyebrow="The Operations Team" title="Keeping everything running smoothly" sub="The people behind the scenes making sure students always come first" />
-          <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
-            {OPERATIONS.map((f, idx) => (
-              <TeamCard key={f.name} f={f} idx={idx} badgeIcon={Zap} badgeLabel="Operations" />
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── OUR STORY ── */}
       <section style={{ background: "var(--page-bg)", padding: "96px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
         <div className="container" style={{ maxWidth: 1160 }}>
@@ -420,8 +393,8 @@ export default function About() {
           <Reveal>
             <p style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.65rem)", lineHeight: 1.6, fontWeight: 600, color: "var(--navy)", margin: "0 0 34px", maxWidth: 1040 }}>
               College Parichay was founded by two <strong>IIT Roorkee</strong> alumni —{" "}
-              <strong>Ankit Yadav</strong> (Founder &amp; CEO) and <strong>Ankit Kumar</strong> (Co-Founder &amp; CTO) —
-              with <strong>K. Gopal</strong> (COO &amp; Operations Head) keeping everything running. Three students from the
+              <strong>Ankit Yadav</strong> (Founder &amp; CEO) and <strong>Ankit Kumar</strong> (Co-Founder &amp; CTO).
+              Two students from the
               same campus, building the platform we wished existed when we were the ones staring at rank lists and cutoffs.
             </p>
           </Reveal>
@@ -459,7 +432,6 @@ export default function About() {
               {[
                 ["Ankit Yadav", "Founder & CEO"],
                 ["Ankit Kumar", "Co-Founder & CTO"],
-                ["K. Gopal", "COO & Operations Head"],
               ].map(([name, role]) => (
                 <div key={name} style={{
                   display: "flex", flexDirection: "column", gap: 3,
