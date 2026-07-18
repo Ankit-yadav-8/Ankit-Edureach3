@@ -98,13 +98,24 @@ function HoursBars({ entries }) {
   const max = Math.max(...days.map((d) => d.hours), 1);
 
   return (
-    <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 110, padding: "0 2px" }}>
+    <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 128, padding: "0 2px" }}>
       {days.map((d, i) => (
-        <div key={d.iso} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
+        <div key={d.iso} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 4 }}>
+          {/* hour value, right above its bar — so the number is readable, not just on hover */}
+          {d.hours > 0 && (
+            <motion.span
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.22 + i * 0.02 }}
+              style={{ fontSize: 9.5, fontWeight: 800, color: ACCENT, fontFamily: "Sora, sans-serif", lineHeight: 1 }}
+            >
+              {d.hours}h
+            </motion.span>
+          )}
           <motion.div
             title={`${d.iso} — ${d.hours}h`}
             initial={{ height: 0 }}
-            animate={{ height: `${Math.max((d.hours / max) * 86, d.hours ? 4 : 2)}px` }}
+            animate={{ height: `${Math.max((d.hours / max) * 80, d.hours ? 4 : 2)}px` }}
             transition={{ duration: 0.45, delay: i * 0.02, ease: [0.22, 1, 0.36, 1] }}
             style={{
               width: "100%", borderRadius: "4px 4px 2px 2px",

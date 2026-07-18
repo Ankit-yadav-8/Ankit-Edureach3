@@ -775,7 +775,7 @@ function DashboardBody({ urlPlan = "" }) {
   const strategies = useMemo(() => {
     const out = [];
     if (lowestSubject) out.push({ icon: Target, color: subColor(lowestSubject), text: `Balance your effort: add ~1 hr/day to ${shortName(lowestSubject)} — it's your least-studied subject this week.` });
-    if (weakRanked[0]) out.push({ icon: Zap, color: "#8b5cf6", text: `Attack ${weakRanked[0][0]} first — your most recurring weak chapter. Aim for 30 PYQs this week.` });
+    if (weakRanked[0]) out.push({ icon: Zap, color: "#FF693D", text: `Attack ${weakRanked[0][0]} first — your most recurring weak chapter. Aim for 30 PYQs this week.` });
     if (latest && Number(latest.silly) >= 3) out.push({ icon: Crosshair, color: "#ef4444", text: `Reserve the last 10 min of every paper to recheck — you lost ~${latest.silly} marks to silly errors.` });
     if (latest && acc(latest) < 80) out.push({ icon: ShieldCheck, color: "#0891b2", text: `Accuracy is ${acc(latest)}% — skip low-confidence questions to dodge negative marking.` });
     out.push({ icon: RotateCw, color: GREEN, text: "Revise within 24 hrs, then again at 7 days — spaced revision beats re-reading." });
@@ -1206,7 +1206,7 @@ function DashboardBody({ urlPlan = "" }) {
                 { icon: Activity, c: "#6366f1", v: `${round1(weekHours)}h`, l: "This week" },
                 { icon: Flame, c: "#ef4444", v: `${streak} day${streak === 1 ? "" : "s"}`, l: "Streak" },
                 { icon: CheckCircle2, c: "#22c55e", v: tasksLabel, l: "Tasks done" },
-                { icon: Target, c: "#8b5cf6", v: `${routinePct}%`, l: "Routine kept" },
+                { icon: Target, c: "#FF693D", v: `${routinePct}%`, l: "Routine kept" },
               ].map(({ icon: Icon, c, v, l }) => (
                 <div key={l} style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
                   <Icon size={18} color={c} style={{ marginBottom: 6 }} />
@@ -1447,23 +1447,23 @@ function DashboardBody({ urlPlan = "" }) {
         </Section>
 
         {/* ── TEST ANALYSIS ── */}
-        <Section id="test-analysis" kicker="Every test counts" title="Test Analysis" tColor="#8b5cf6"
+        <Section id="test-analysis" kicker="Every test counts" title="Test Analysis" tColor="#FF693D"
           sub={rankEnabled
             ? "Enter your marks, silly mistakes and weak chapters. Pick JEE Mains/Advanced to get a predicted rank — everything else is analysed automatically."
             : "Enter your marks, silly mistakes and weak chapters — we analyse accuracy, score and week-on-week change automatically."}>
           {/* Nudge: no test logged in a week → ask if one was taken, then guide
               them to log it. "No" simply snoozes it for the day. */}
           {showTestReminder && (
-            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: "linear-gradient(135deg,#f5f3ff,#fdf2ff)", border: "1px solid rgba(139,92,246,.28)", borderRadius: 14, padding: "13px 16px", marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: "linear-gradient(135deg,#fff5f1,#fff4ef)", border: "1px solid rgba(255,105,61,.28)", borderRadius: 14, padding: "13px 16px", marginBottom: 16 }}>
               {testAskStage === "ask" ? (
                 <>
-                  <AlertCircle size={18} color="#8b5cf6" style={{ flexShrink: 0 }} />
+                  <AlertCircle size={18} color="#FF693D" style={{ flexShrink: 0 }} />
                   <span style={{ flex: 1, minWidth: 180, fontSize: 13.5, fontWeight: 700, color: NAVY }}>
                     Have you taken a test since your last update? Keep your analysis up to date.
                   </span>
                   <div style={{ display: "flex", gap: 8 }}>
                     <button type="button" onClick={() => setTestAskStage("confirm")}
-                      style={{ background: "#8b5cf6", color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontFamily: "Sora", fontWeight: 800, fontSize: 12.5, cursor: "pointer", boxShadow: "0 8px 18px -10px #8b5cf6" }}>
+                      style={{ background: "#FF693D", color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontFamily: "Sora", fontWeight: 800, fontSize: 12.5, cursor: "pointer", boxShadow: "0 8px 18px -10px #FF693D" }}>
                       Yes, I did
                     </button>
                     <button type="button" onClick={() => { setTestRemindSnooze(todayIso); setTestAskStage("ask"); }}
@@ -1474,12 +1474,12 @@ function DashboardBody({ urlPlan = "" }) {
                 </>
               ) : (
                 <>
-                  <Sparkles size={18} color="#8b5cf6" style={{ flexShrink: 0 }} />
+                  <Sparkles size={18} color="#FF693D" style={{ flexShrink: 0 }} />
                   <span style={{ flex: 1, minWidth: 180, fontSize: 13.5, fontWeight: 700, color: NAVY }}>
                     Great — add its marks below and we'll refresh your score, accuracy{rankEnabled ? " and rank" : ""} instantly.
                   </span>
                   <button type="button" onClick={() => scrollTo("add-test-form")}
-                    style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#8b5cf6", color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontFamily: "Sora", fontWeight: 800, fontSize: 12.5, cursor: "pointer", boxShadow: "0 8px 18px -10px #8b5cf6" }}>
+                    style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#FF693D", color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontFamily: "Sora", fontWeight: 800, fontSize: 12.5, cursor: "pointer", boxShadow: "0 8px 18px -10px #FF693D" }}>
                     <Plus size={14} /> Update the test
                   </button>
                 </>
@@ -1488,8 +1488,8 @@ function DashboardBody({ urlPlan = "" }) {
           )}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(330px, 100%), 1fr))", gap: 18 }}>
             {/* left — input + reports + strategies */}
-            <div id="add-test-form" style={{ background: "var(--page-bg)", border: "1px solid rgba(139,92,246,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#8b5cf6,#22c55e)" }} />
+            <div id="add-test-form" style={{ background: "var(--page-bg)", border: "1px solid rgba(255,105,61,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${ORANGE},${GOLD})` }} />
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "0 0 14px" }}>Add a test result</h3>
 
               {/* JEE-only test type toggle — Advanced logs both papers together */}
@@ -1497,7 +1497,7 @@ function DashboardBody({ urlPlan = "" }) {
                 <div style={{ display: "flex", gap: 7, marginBottom: 14, flexWrap: "wrap" }}>
                   {[["mock", "Mock / Other"], ["main", "JEE Mains"], ["adv", "JEE Advanced"]].map(([val, lbl]) => (
                     <button type="button" key={val} onClick={() => setTestType(val)}
-                      style={{ flex: "1 1 96px", padding: "9px 8px", borderRadius: 10, border: `1.5px solid ${testForm.type === val ? "#8b5cf6" : "#e5e7eb"}`, background: testForm.type === val ? "#8b5cf610" : "#fff", color: testForm.type === val ? "#6d28d9" : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
+                      style={{ flex: "1 1 96px", padding: "9px 8px", borderRadius: 10, border: `1.5px solid ${testForm.type === val ? "#FF693D" : "#e5e7eb"}`, background: testForm.type === val ? "#FF693D10" : "#fff", color: testForm.type === val ? "#E0421F" : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
                       {val !== "mock" && <Trophy size={13} />}{lbl}
                     </button>
                   ))}
@@ -1510,20 +1510,20 @@ function DashboardBody({ urlPlan = "" }) {
                 {rankEnabled && isAdv(testForm.type) ? (
                   <>
                     {/* both papers logged together — full exam is 6 hours (3h + 3h) */}
-                    <div style={{ background: "#f5f3ff", border: "1px solid #ddd6fe", borderRadius: 12, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <Timer size={14} color="#6d28d9" />
-                      <span style={{ fontSize: 11.5, fontWeight: 800, color: "#6d28d9" }}>Full exam · 6 hours total</span>
-                      <span style={{ fontSize: 11, color: "#7c3aed" }}>Paper 1 · 3h + Paper 2 · 3h — enter both papers below</span>
+                    <div style={{ background: "#fff5f1", border: "1px solid #fecfbf", borderRadius: 12, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <Timer size={14} color="#E0421F" />
+                      <span style={{ fontSize: 11.5, fontWeight: 800, color: "#E0421F" }}>Full exam · 6 hours total</span>
+                      <span style={{ fontSize: 11, color: "#FF693D" }}>Paper 1 · 3h + Paper 2 · 3h — enter both papers below</span>
                     </div>
 
-                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#6d28d9" }}>Paper 1 · marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)</div>
+                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#E0421F" }}>Paper 1 · marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)</div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
                       <NumField label="Physics" value={testForm.mp} onChange={(v) => setTestForm((s) => ({ ...s, mp: v }))} placeholder="0" full />
                       <NumField label="Chemistry" value={testForm.mc} onChange={(v) => setTestForm((s) => ({ ...s, mc: v }))} placeholder="0" full />
                       <NumField label="Maths" value={testForm.mm} onChange={(v) => setTestForm((s) => ({ ...s, mm: v }))} placeholder="0" full />
                     </div>
 
-                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#6d28d9" }}>Paper 2 · marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)</div>
+                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#E0421F" }}>Paper 2 · marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)</div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
                       <NumField label="Physics" value={testForm.mp2} onChange={(v) => setTestForm((s) => ({ ...s, mp2: v }))} placeholder="0" full />
                       <NumField label="Chemistry" value={testForm.mc2} onChange={(v) => setTestForm((s) => ({ ...s, mc2: v }))} placeholder="0" full />
@@ -1540,7 +1540,7 @@ function DashboardBody({ urlPlan = "" }) {
                   </>
                 ) : rankEnabled && testForm.type === "main" ? (
                   <>
-                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#6d28d9", marginTop: -2 }}>
+                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#E0421F", marginTop: -2 }}>
                       Marks per section (out of {maxPerSubject(false)} each · total {maxTotal(false)})
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
@@ -1569,7 +1569,7 @@ function DashboardBody({ urlPlan = "" }) {
 
                 <SelectField label="Over-spent time on (quick pick)" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
                 <button type="submit" disabled={!testFormComplete()}
-                  style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: testFormComplete() ? "linear-gradient(135deg,#8b5cf6,#6d28d9)" : "#c4b5fd", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: testFormComplete() ? "pointer" : "not-allowed", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: testFormComplete() ? "linear-gradient(135deg,#FF693D,#E0421F)" : "#ffc2b0", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: testFormComplete() ? "pointer" : "not-allowed", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <Plus size={16} /> {rankEnabled && (testForm.type === "main" || isAdv(testForm.type)) ? "Analyse & predict rank" : "Analyse this test"}
                 </button>
                 {!testFormComplete() && (
@@ -1605,8 +1605,8 @@ function DashboardBody({ urlPlan = "" }) {
 
             {/* right — charts + strategies */}
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-              <ChartCard title="Score trend" hint="Your marks across every test (vs 75% target)" accent="#8b5cf6">
-                <Trend data={scoreTrend} lines={[{ key: "you", label: "You", color: ORANGE }, { key: "target", label: "Target (75%)", color: "#8b5cf6" }]} height={200} />
+              <ChartCard title="Score trend" hint="Your marks across every test (vs 75% target)" accent="#FF693D">
+                <Trend data={scoreTrend} lines={[{ key: "you", label: "You", color: ORANGE }, { key: "target", label: "Target (75%)", color: "#94a3b8" }]} height={200} />
               </ChartCard>
               <ChartCard title="Accuracy trend" hint="Correct ÷ attempted, test over test" accent="#22c55e">
                 <Trend data={accTrend} lines={[{ key: "accuracy", label: "Accuracy %", color: "#22c55e" }]} height={180} fmt={(v) => `${v}%`} />
@@ -1682,7 +1682,7 @@ function DashboardBody({ urlPlan = "" }) {
             </ToolCard>
 
             {/* Chapter strength & weekly coverage — feeds the parent chapter report */}
-            <ToolCard icon={BookOpen} color="#8b5cf6" title="Add a chapter" desc="Tag each chapter weak / medium / strong and how much you covered this week — it appears in your Chapter-strength report.">
+            <ToolCard icon={BookOpen} color="#FF693D" title="Add a chapter" desc="Tag each chapter weak / medium / strong and how much you covered this week — it appears in your Chapter-strength report.">
               <form onSubmit={addChapter} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   <SelectField label="Subject" value={chapForm.subject || subjects[0]} onChange={(v) => setChapForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
@@ -1703,12 +1703,12 @@ function DashboardBody({ urlPlan = "" }) {
                     })}
                   </div>
                 </div>
-                <button type="submit" style={{ padding: "11px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
+                <button type="submit" style={{ padding: "11px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
                   <Plus size={15} /> Add chapter
                 </button>
               </form>
               <div style={{ marginTop: 12, fontSize: 12, color: MUTE, lineHeight: 1.5, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
-                Added chapters {chapterLog.length ? <><strong style={{ color: NAVY }}>({chapterLog.length})</strong> </> : ""}appear in your <strong style={{ color: "#6d28d9" }}>Chapter-strength report</strong> — where you can review and remove them.
+                Added chapters {chapterLog.length ? <><strong style={{ color: NAVY }}>({chapterLog.length})</strong> </> : ""}appear in your <strong style={{ color: "#E0421F" }}>Chapter-strength report</strong> — where you can review and remove them.
               </div>
             </ToolCard>
 
@@ -1719,7 +1719,7 @@ function DashboardBody({ urlPlan = "" }) {
               {/* tasks your mentor assigned for this student */}
               {mentorTasks.length > 0 ? (
                 <div style={{ marginBottom: 16 }}>
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, color: "#6d28d9", background: "#f5f3ff", border: "1px solid #ede9fe", borderRadius: 50, padding: "3px 10px", marginBottom: 8 }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, color: "#E0421F", background: "#fff5f1", border: "1px solid #ffe0d4", borderRadius: 50, padding: "3px 10px", marginBottom: 8 }}>
                     <Brain size={12} /> From your mentor
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -1728,11 +1728,11 @@ function DashboardBody({ urlPlan = "" }) {
                       const done = fixDoneSet.includes(label);
                       return (
                         <button key={t.id || label} onClick={() => toggleFix(label)}
-                          style={{ display: "flex", gap: 10, alignItems: "flex-start", textAlign: "left", background: done ? "#f5f3ff" : "#fff", border: `1px solid ${done ? "#ddd6fe" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px", cursor: "pointer" }}>
-                          <span style={{ width: 19, height: 19, borderRadius: 6, border: `1.5px solid ${done ? "#8b5cf6" : "#cbd5e1"}`, background: done ? "#8b5cf6" : "#fff", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                          style={{ display: "flex", gap: 10, alignItems: "flex-start", textAlign: "left", background: done ? "#fff5f1" : "#fff", border: `1px solid ${done ? "#fecfbf" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px", cursor: "pointer" }}>
+                          <span style={{ width: 19, height: 19, borderRadius: 6, border: `1.5px solid ${done ? "#FF693D" : "#cbd5e1"}`, background: done ? "#FF693D" : "#fff", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
                             {done && <CheckCircle2 size={14} color="#fff" />}
                           </span>
-                          <span style={{ fontSize: 13, color: done ? "#6d28d9" : "#374151", lineHeight: 1.45, textDecoration: done ? "line-through" : "none" }}>{label}</span>
+                          <span style={{ fontSize: 13, color: done ? "#E0421F" : "#374151", lineHeight: 1.45, textDecoration: done ? "line-through" : "none" }}>{label}</span>
                         </button>
                       );
                     })}
@@ -1742,7 +1742,7 @@ function DashboardBody({ urlPlan = "" }) {
                   </div>
                 </div>
               ) : (
-                <div style={{ marginBottom: 16, padding: "14px 14px", background: "#faf5ff", border: "1px dashed #ddd6fe", borderRadius: 11, fontSize: 12.5, color: "#6d28d9", lineHeight: 1.5 }}>
+                <div style={{ marginBottom: 16, padding: "14px 14px", background: "#fff7f3", border: "1px dashed #fecfbf", borderRadius: 11, fontSize: 12.5, color: "#E0421F", lineHeight: 1.5 }}>
                   <strong>No mentor tasks yet.</strong> When your mentor assigns tasks, they'll appear here as your must-do list.
                 </div>
               )}
@@ -1840,40 +1840,47 @@ function DashboardBody({ urlPlan = "" }) {
         </Section>
 
         {/* ── BACKLOG ── */}
-        <Section id="backlog" kicker="Catch up without burning out" title="Backlog Clearing Sprints" tColor="#7c3aed"
+        <Section id="backlog" kicker="Catch up without burning out" title="Backlog Clearing Sprints" tColor="#FF693D"
           sub="A structured catch-up system that clears months of pending chapters — list them, rate your strength, and set a plan date.">
-          <div style={{ background: "var(--page-bg)", border: "1px solid rgba(124,58,237,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#7c3aed,#a855f7)" }} />
+          <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255,105,61,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
 
             <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginBottom: 18 }}>
-              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#f5f3ff", border: "1px solid #ddd6fe", display: "grid", placeItems: "center" }}><Rocket size={22} color="#7c3aed" /></span>
+              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#fff5f1", border: "1px solid #fecfbf", display: "grid", placeItems: "center" }}><Rocket size={22} color="#FF693D" /></span>
               <div style={{ flex: 1, minWidth: 180 }}>
                 <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK }}>Your backlog · {backlogDone}/{backlog.length} cleared</div>
                 <div style={{ height: 9, borderRadius: 6, background: "#f1f5f9", overflow: "hidden", marginTop: 8, maxWidth: 320 }}>
-                  <motion.div initial={{ width: 0 }} animate={{ width: `${backlogPct}%` }} style={{ height: "100%", borderRadius: 6, background: "linear-gradient(90deg,#7c3aed,#a855f7)" }} />
+                  <motion.div initial={{ width: 0 }} animate={{ width: `${backlogPct}%` }} style={{ height: "100%", borderRadius: 6, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
                 </div>
               </div>
-              <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 26, color: "#7c3aed" }}>{backlogPct}%</div>
+              <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 26, color: "#FF693D" }}>{backlogPct}%</div>
             </div>
 
-            <form onSubmit={addBacklog} style={{ background: "#faf8ff", border: "1px solid #ede9fe", borderRadius: 14, padding: "16px 18px", marginBottom: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(140px, 100%), 1fr))", gap: 10, alignItems: "flex-end" }}>
+            <form onSubmit={addBacklog} style={{ background: "#fff8f4", border: "1px solid #ffe0d4", borderRadius: 14, padding: "16px 18px", marginBottom: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(140px, 100%), 1fr))", gap: 10, alignItems: "flex-end" }}>
               <SelectField label="Subject" value={blForm.subject} onChange={(v) => setBlForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, s]))} />
               <TextField label="Topic / chapter" value={blForm.topic} onChange={(v) => setBlForm((s) => ({ ...s, topic: v }))} placeholder="e.g. Rotational Motion" />
               <SelectField label="How strong are you?" value={blForm.strength} onChange={(v) => setBlForm((s) => ({ ...s, strength: v }))} options={["weak", "medium", "strong"]} labels={{ weak: "Weak", medium: "Medium", strong: "Strong" }} />
               <DateField label="Target date" value={blForm.targetDate} onChange={(v) => setBlForm((s) => ({ ...s, targetDate: v }))} />
-              <button type="submit" style={{ padding: "12px 16px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#7c3aed,#a855f7)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, height: 42 }}>
+              <button type="submit" style={{ padding: "12px 16px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, height: 42 }}>
                 <Plus size={15} /> Add
               </button>
             </form>
 
             {backlog.length ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <motion.div style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.05 } } }}>
+                <AnimatePresence initial={false}>
                 {backlog.map((b) => {
                   const st = STRENGTHS[b.strength] || STRENGTHS.weak;
                   const date = blDate(b);
                   const overdue = !b.done && date && date < todayIso;
                   return (
-                    <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: b.done ? "#f8fafc" : overdue ? "#fff5f5" : "#fff", border: `1px solid ${overdue ? "#fecaca" : "#eef2f7"}`, borderRadius: 13, padding: "13px 15px", opacity: b.done ? 0.72 : 1 }}>
+                    <motion.div key={b.id} layout
+                      variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
+                      exit={{ opacity: 0, x: -14, transition: { duration: 0.18 } }}
+                      whileHover={{ x: 3 }}
+                      transition={{ type: "spring", stiffness: 320, damping: 28 }}
+                      style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: b.done ? "#f8fafc" : overdue ? "#fff5f5" : "#fff", border: `1px solid ${overdue ? "#fecaca" : "#eef2f7"}`, borderRadius: 13, padding: "13px 15px", opacity: b.done ? 0.72 : 1 }}>
                       <button onClick={() => toggleBacklog(b.id)} title={b.done ? "Mark as pending" : "Mark cleared"}
                         style={{ width: 24, height: 24, borderRadius: 7, border: `1.5px solid ${b.done ? GREEN : "#cbd5e1"}`, background: b.done ? GREEN : "#fff", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
                         {b.done && <CheckCircle2 size={16} color="#fff" />}
@@ -1892,10 +1899,11 @@ function DashboardBody({ urlPlan = "" }) {
                       <button onClick={() => removeBacklog(b.id)} title="Remove" style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "var(--page-bg)", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
                         <Trash2 size={14} />
                       </button>
-                    </div>
+                    </motion.div>
                   );
                 })}
-              </div>
+                </AnimatePresence>
+              </motion.div>
             ) : (
               <div style={{ textAlign: "center", padding: "26px 0", color: "#9ca3af", fontSize: 13.5 }}>
                 <BookOpen size={26} style={{ marginBottom: 8, opacity: .6 }} /><br />No backlog yet — add your pending chapters above.
@@ -1931,19 +1939,19 @@ function DashboardBody({ urlPlan = "" }) {
             rows={[
               { icon: Clock, color: ORANGE, label: "Study hours", sub: `${round1(weekHours - prevWeekHours) >= 0 ? "+" : ""}${round1(weekHours - prevWeekHours)}h vs last week`, value: `${round1(weekHours)} h` },
               { icon: Flame, color: "#ef4444", label: "Day streak", sub: `Active ${last7.filter((e) => Number(e.hours) > 0).length} of 7 days`, value: `${streak} day${streak === 1 ? "" : "s"}` },
-              { icon: Target, color: "#8b5cf6", label: "Routine kept", sub: "Followed the plan", value: `${routinePct}%` },
+              { icon: Target, color: "#FF693D", label: "Routine kept", sub: "Followed the plan", value: `${routinePct}%` },
               { icon: CheckCircle2, color: "#0891b2", label: "Tasks (latest day)", sub: "Done vs planned", value: tasksLabel },
               { icon: ListChecks, color: "#14b8a6", label: "Weekly tasks done", sub: `${weeklyTasks.length ? Math.round((weeklyDone / weeklyTasks.length) * 100) : 0}% complete`, value: `${weeklyDone} / ${weeklyTasks.length}` },
               { icon: LineIcon, color: "#6366f1", label: "Latest test", sub: latest ? "Most recent result" : "None logged yet", value: latest ? `${latest.scored}/${latest.total} (${pct(latest)}%)` : "—" },
               { icon: improvement != null && improvement < 0 ? TrendingDown : TrendingUp, color: improvement != null && improvement < 0 ? "#ef4444" : "#22c55e", label: "Change vs last test", sub: latest && prev ? `${prev.name} → ${latest.name}` : "Add another test", value: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
               ...(rankEnabled && latestRankTest?.rank?.ranked ? [{
-                icon: Trophy, color: "#6d28d9", label: "Predicted rank",
+                icon: Trophy, color: "#E0421F", label: "Predicted rank",
                 sub: `${latestRankTest.name} · included in report`,
                 value: latestRankTest.rank.advanced
                   ? `CRL ${inr(latestRankTest.rank.crlLo ?? latestRankTest.rank.low)}–${inr(latestRankTest.rank.crlHi ?? latestRankTest.rank.high)}`
                   : `CRL ${inr(latestRankTest.rank.crl)}`,
               }] : []),
-              { icon: Rocket, color: "#7c3aed", label: "Backlog cleared", sub: "Chapters done", value: `${backlogDone} / ${backlog.length}` },
+              { icon: Rocket, color: "#FF693D", label: "Backlog cleared", sub: "Chapters done", value: `${backlogDone} / ${backlog.length}` },
             ]}
             remark={insights[0]?.text || "Log your daily hours and tests through the week — this booklet fills in automatically and is emailed to your parent every Sunday."}
             remarkTitle="This week's highlight"
@@ -1992,7 +2000,7 @@ function DashboardBody({ urlPlan = "" }) {
                 { icon: Target, color: todayEntry.routine ? "#22c55e" : "#ef4444", label: "Routine kept", sub: "Planned vs done", value: todayEntry.routine ? "Followed" : "Missed" },
                 ...(todayTest ? [{ icon: LineIcon, color: "#6366f1", label: "Test today", sub: todayTest.name, value: `${todayTest.scored}/${todayTest.total}` }] : []),
                 ...(rankEnabled && latestRankTest?.rank?.ranked ? [{
-                  icon: Trophy, color: "#6d28d9", label: "Predicted rank",
+                  icon: Trophy, color: "#E0421F", label: "Predicted rank",
                   sub: `${latestRankTest.name} · included in report`,
                   value: latestRankTest.rank.advanced
                     ? `CRL ${inr(latestRankTest.rank.crlLo ?? latestRankTest.rank.low)}–${inr(latestRankTest.rank.crlHi ?? latestRankTest.rank.high)}`
@@ -2163,8 +2171,10 @@ function ToolCard({ icon: Icon, color, title, desc, children }) {
   );
 }
 
+const rankTileVar = { hidden: { opacity: 0, y: 12, scale: 0.96 }, show: { opacity: 1, y: 0, scale: 1 } };
+
 function RankCard({ r, name }) {
-  const purple = "#6d28d9";
+  const accent = "#E0421F";
   if (!r.ranked) {
     return (
       <div style={{ marginTop: 16, background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 14, padding: "14px 16px" }}>
@@ -2180,14 +2190,14 @@ function RankCard({ r, name }) {
   }
   const rng = (lo, hi) => `${inr(lo)} – ${inr(hi)}`;
   return (
-    <div style={{ marginTop: 16, background: "linear-gradient(135deg,#f5f3ff,#fff)", border: `1px solid ${purple}33`, borderRadius: 14, padding: "16px" }}>
+    <div style={{ marginTop: 16, background: "linear-gradient(135deg,#fff5f1,#fff)", border: `1px solid ${accent}33`, borderRadius: 14, padding: "16px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: (r.projected || (r.advanced && r.paper1 != null)) ? 4 : 10, flexWrap: "wrap" }}>
-        <Trophy size={17} color={purple} />
+        <Trophy size={17} color={accent} />
         <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: INK }}>
           Predicted {r.advanced ? "JEE Advanced" : "JEE Main"} 2026 rank · {r.total}{r.examMax ? `/${r.examMax}` : ""} marks
         </span>
         {r.paper && (
-          <span style={{ fontSize: 10.5, fontWeight: 800, color: purple, background: `${purple}14`, borderRadius: 50, padding: "2px 8px" }}>Paper {r.paper}</span>
+          <span style={{ fontSize: 10.5, fontWeight: 800, color: accent, background: `${accent}14`, borderRadius: 50, padding: "2px 8px" }}>Paper {r.paper}</span>
         )}
       </div>
       {r.advanced && r.paper1 != null && (
@@ -2200,30 +2210,32 @@ function RankCard({ r, name }) {
           Projected full-test rank from Paper {r.paper} ({r.paperMarks}/{ADV_PAPER_TOTAL}) — assumes a similar Paper {r.paper === 1 ? 2 : 1}. Log both papers for a sharper estimate.
         </div>
       )}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(110px, 100%), 1fr))", gap: 10, marginBottom: 10 }}>
-        <div style={{ background: "var(--page-bg)", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
-          <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{r.advanced ? rng(r.crlLo ?? r.low, r.crlHi ?? r.high) : inr(r.crl)}</div>
+      <motion.div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(110px, 100%), 1fr))", gap: 10, marginBottom: 10 }}
+        initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}
+        variants={{ show: { transition: { staggerChildren: 0.07 } } }}>
+        <motion.div variants={rankTileVar} style={{ background: "var(--page-bg)", border: `1px solid ${accent}22`, borderRadius: 11, padding: "11px 12px" }}>
+          <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: accent }}>{r.advanced ? rng(r.crlLo ?? r.low, r.crlHi ?? r.high) : inr(r.crl)}</div>
           <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{r.advanced ? "CRL range" : "All-India CRL"}</div>
-        </div>
+        </motion.div>
         {!r.isGeneral && r.categoryRank && (
-          <div style={{ background: "var(--page-bg)", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{inr(r.categoryRank)}</div>
+          <motion.div variants={rankTileVar} style={{ background: "var(--page-bg)", border: `1px solid ${accent}22`, borderRadius: 11, padding: "11px 12px" }}>
+            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: accent }}>{inr(r.categoryRank)}</div>
             <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{r.category} rank</div>
-          </div>
+          </motion.div>
         )}
         {r.percentile != null && !r.advanced && (
-          <div style={{ background: "var(--page-bg)", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{r.percentile}</div>
+          <motion.div variants={rankTileVar} style={{ background: "var(--page-bg)", border: `1px solid ${accent}22`, borderRadius: 11, padding: "11px 12px" }}>
+            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: accent }}>{r.percentile}</div>
             <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>percentile</div>
-          </div>
+          </motion.div>
         )}
         {!r.advanced && (
-          <div style={{ background: "var(--page-bg)", border: `1px solid ${purple}22`, borderRadius: 11, padding: "11px 12px" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: purple }}>{rng(r.low, r.high)}</div>
+          <motion.div variants={rankTileVar} style={{ background: "var(--page-bg)", border: `1px solid ${accent}22`, borderRadius: 11, padding: "11px 12px" }}>
+            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: accent }}>{rng(r.low, r.high)}</div>
             <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>likely band</div>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
       {r.advanced && r.branches?.length > 0 && (
         <div style={{ fontSize: 12.5, color: "#374151", lineHeight: 1.55 }}>
           <strong style={{ color: NAVY }}>Possible:</strong> {r.branches.join(" · ")}
