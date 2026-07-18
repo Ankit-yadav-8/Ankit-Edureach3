@@ -1373,19 +1373,19 @@ function DashboardBody({ urlPlan = "" }) {
         </Section>
 
         {/* ── SUBJECT-WISE ANALYSIS ── */}
-        <Section id="subject-analysis" kicker="Every subject counts" title="Subject-wise Analysis" tColor="#6366f1"
+        <Section id="subject-analysis" kicker="Every subject counts" title="Subject-wise Analysis" tColor={ORANGE}
           sub="See exactly where your hours and tasks go, compare day-by-day, and check this week against last week.">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 18, marginBottom: 18 }}>
-            <ChartCard title="Study hours per subject · last 7 days" hint="Compare each subject day by day" accent="#6366f1">
+            <ChartCard title="Study hours per subject · last 7 days" hint="Compare each subject day by day" accent={ORANGE}>
               <Trend data={subjectHourTrend} lines={subjectLines} height={230} fmt={(v) => `${v}h`} />
             </ChartCard>
-            <ChartCard title="Tasks completed per subject · last 7 days" hint="How many tasks you cleared, by subject" accent="#15a06e">
+            <ChartCard title="Tasks completed per subject · last 7 days" hint="How many tasks you cleared, by subject" accent={ORANGE}>
               <Trend data={subjectTaskTrend} lines={subjectLines} height={230} />
             </ChartCard>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.4fr)", gap: 18, alignItems: "start" }} className="md-track-grid">
-            <ChartCard title="Time split this week" hint="Share of study hours per subject" accent="#8b5cf6">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 18, alignItems: "start" }} className="md-track-grid">
+            <ChartCard title="Time split this week" hint="Share of study hours per subject" accent={ORANGE}>
               {subjectPie.length ? (
                 <div className="md-donut-row" style={{ display: "grid", gridTemplateColumns: "minmax(150px,auto) minmax(0,1fr)", gap: 16, alignItems: "center" }}>
                   <CenterDonut
@@ -1401,39 +1401,47 @@ function DashboardBody({ urlPlan = "" }) {
               ) : <ChartHint text="Log today's subject hours to see your split." />}
             </ChartCard>
 
-            <ChartCard title="Subject breakdown" hint="Hours, tasks and weekly change per subject" accent="#6366f1">
-              <div className="md-subject-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 12 }}>
+            <ChartCard title="Subject breakdown" hint="Hours, tasks and weekly change per subject" accent={ORANGE}>
+              <motion.div
+                className="md-subject-grid"
+                style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(140px, 100%), 1fr))", gap: 10 }}
+                initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}
+                variants={{ show: { transition: { staggerChildren: 0.06 } } }}
+              >
                 {subjects.map((s) => {
                   const now = round1(thisWkH[s]); const was = round1(lastWkH[s]);
                   const d = round1(now - was);
                   const c = subColor(s);
                   const tasks = Math.round(thisWkT[s]);
                   return (
-                    // full-tint card — the whole card is washed in the subject colour
-                    <div key={s} style={{ background: `linear-gradient(155deg, ${c}14, ${c}04)`, border: `1px solid ${c}33`, borderRadius: 16, padding: "13px 14px 14px", boxShadow: `0 14px 34px -30px ${c}`, display: "flex", flexDirection: "column" }}>
-                      {/* header: dot + name + THIS WEEK pill */}
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 9 }}>
-                        <span style={{ width: 10, height: 10, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}22`, flexShrink: 0 }} />
-                        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: NAVY }}>{shortName(s)}</span>
-                        <span style={{ marginLeft: "auto", fontSize: 9, fontWeight: 800, color: c, background: `${c}1c`, borderRadius: 50, padding: "2px 8px", textTransform: "uppercase", letterSpacing: ".03em" }}>this week</span>
+                    // Clean, compact card: neutral surface with a single subject-coloured
+                    // accent (the dot + the number), so the grid reads calm, not rainbow.
+                    <motion.div key={s}
+                      variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } }}
+                      whileHover={{ y: -3 }}
+                      transition={{ type: "spring", stiffness: 320, damping: 26 }}
+                      style={{ background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 14, padding: "12px 13px", boxShadow: "0 10px 26px -22px rgba(26,26,46,.5)", display: "flex", flexDirection: "column" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
+                        <span style={{ width: 9, height: 9, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}1f`, flexShrink: 0 }} />
+                        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 12.5, color: NAVY }}>{shortName(s)}</span>
                       </div>
                       <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
-                        <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 27, color: c, lineHeight: 1 }}>{now}</span>
-                        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: c }}>hrs</span>
+                        <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 23, color: c, lineHeight: 1 }}>{now}</span>
+                        <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12.5, color: MUTE }}>hrs</span>
                       </div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "5px 12px", marginTop: 9 }}>
-                        <span style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
-                          <CheckCircle2 size={12} color={c} /> {tasks} task{tasks === 1 ? "" : "s"}
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 11px", marginTop: 8 }}>
+                        <span style={{ fontSize: 11, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          <CheckCircle2 size={11} color={c} /> {tasks} task{tasks === 1 ? "" : "s"}
                         </span>
-                        <span style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
-                          <Clock size={12} color={c} /> {round1(now / 7)}h/day
+                        <span style={{ fontSize: 11, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          <Clock size={11} color={c} /> {round1(now / 7)}h/day
                         </span>
                       </div>
                       <DeltaPill d={d} unit="h" subtext="vs last week" />
-                    </div>
+                    </motion.div>
                   );
                 })}
-              </div>
+              </motion.div>
             </ChartCard>
           </div>
         </Section>
@@ -2130,12 +2138,15 @@ function ProgressBooklet({ title, subtitle, studentName, studentSub, rows, extra
 
 function ChartCard({ title, hint, accent = ORANGE, children }) {
   return (
-    <div style={{ background: "var(--page-bg)", border: `1px solid ${accent}28`, borderRadius: 18, padding: "20px 20px 16px", boxShadow: "0 16px 40px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      style={{ background: "var(--page-bg)", border: `1px solid ${accent}28`, borderRadius: 18, padding: "20px 20px 16px", boxShadow: "0 16px 40px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${accent},${GOLD})` }} />
       <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1rem", color: INK, margin: "0 0 2px" }}>{title}</h3>
       {hint && <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 12px" }}>{hint}</p>}
       {children}
-    </div>
+    </motion.div>
   );
 }
 
