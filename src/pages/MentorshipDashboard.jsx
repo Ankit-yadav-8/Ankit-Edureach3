@@ -1903,7 +1903,7 @@ function DashboardBody({ urlPlan = "" }) {
         </Section>
 
         {/* ── BATCH COMMUNITY ── */}
-        <Section id="community" kicker="Your batch, in one room" title="Batch Community" tColor="#0ea5e9"
+        <Section id="community" kicker="Your batch, in one room" title="Batch Community" tColor="#FF693D"
           sub="Meet your batchmates and post doubts with photos & videos — peers and mentors reply, and the best ones get highlighted.">
           <Community plan={selectedPlan || urlPlan || undefined} onSwitchBatch={switchBatch} />
         </Section>

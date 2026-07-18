@@ -133,14 +133,14 @@ export default function Community({ plan, onSwitchBatch }) {
   return (
     <div>
       {/* batch header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", background: `linear-gradient(135deg,${NAVY},#16224a)`, color: "#fff", borderRadius: 18, padding: "16px 20px", marginBottom: 16 }}>
-        <div style={{ width: 46, height: 46, borderRadius: 13, background: "rgba(255,255,255,.12)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", background: `linear-gradient(135deg,${ORANGE},#E0421F)`, color: "#fff", borderRadius: 18, padding: "16px 20px", marginBottom: 16 }}>
+        <div style={{ width: 46, height: 46, borderRadius: 13, background: "rgba(255,255,255,.18)", display: "grid", placeItems: "center", flexShrink: 0 }}>
           <Users size={22} color="#fff" />
         </div>
         <div style={{ flex: 1, minWidth: 160 }}>
           <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem" }}>{me.batchLabel} · Community</div>
-          <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.7)" }}>
-            {me.batchmateCount} member{me.batchmateCount === 1 ? "" : "s"} · You are <span style={{ fontFamily: "monospace", color: GOLD }}>{me.studentId}</span>
+          <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.85)" }}>
+            {me.batchmateCount} member{me.batchmateCount === 1 ? "" : "s"} · You are <span style={{ fontFamily: "monospace", fontWeight: 800, color: "#fff" }}>{me.studentId}</span>
           </div>
         </div>
         <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#86efac", background: "rgba(34,197,94,.16)", border: "1px solid rgba(134,239,172,.4)", padding: "6px 13px", borderRadius: 50 }}>
@@ -186,8 +186,8 @@ export default function Community({ plan, onSwitchBatch }) {
           return (
             <button key={t.id} onClick={() => setTab(t.id)}
               style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 15px", borderRadius: 50, cursor: "pointer", fontFamily: "Sora", fontWeight: 700, fontSize: 13,
-                border: `1.5px solid ${on ? CYAN : "#e5e7eb"}`, background: on ? CYAN : "#fff", color: on ? "#fff" : NAVY, boxShadow: on ? `0 8px 18px -8px ${CYAN}` : "none" }}>
-              <t.icon size={15} color={on ? "#fff" : CYAN} /> {t.label}
+                border: `1.5px solid ${on ? ORANGE : "#e5e7eb"}`, background: on ? ORANGE : "#fff", color: on ? "#fff" : NAVY, boxShadow: on ? `0 8px 18px -8px ${ORANGE}` : "none" }}>
+              <t.icon size={15} color={on ? "#fff" : ORANGE} /> {t.label}
             </button>
           );
         })}
@@ -211,7 +211,7 @@ export default function Community({ plan, onSwitchBatch }) {
               <div style={{ fontSize: 13.5 }}>Be the first to ask a doubt in your batch.</div>
             </div>
           ) : posts.map((p) => (
-            <PostCard key={p.id} api={api} token={token} post={p} exam={me.exam} canUpload={me.cloudinaryReady} onLike={likePost} onDelete={deletePost} onReplied={onReplied} />
+            <PostCard key={p.id} api={api} token={token} post={p} exam={me.exam} accent={ORANGE} canUpload={me.cloudinaryReady} onLike={likePost} onDelete={deletePost} onReplied={onReplied} />
           ))}
         </div>
       )}

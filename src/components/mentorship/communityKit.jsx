@@ -267,7 +267,7 @@ export function Composer({ token, exam, compact, simple, onSubmit, placeholder, 
 }
 
 /* ── reply thread ─────────────────────────────────────────────────── */
-export function ReplyThread({ api, token, post, exam, onReplied, canUpload, showRole }) {
+export function ReplyThread({ api, token, post, exam, onReplied, canUpload, showRole, accent = CYAN }) {
   const [replies, setReplies] = useState(null);
   const [busy, setBusy] = useState(true);
 
@@ -292,7 +292,7 @@ export function ReplyThread({ api, token, post, exam, onReplied, canUpload, show
   };
 
   return (
-    <div style={{ marginTop: 12, paddingLeft: 14, borderLeft: `2px solid ${CYAN}22` }}>
+    <div style={{ marginTop: 12, paddingLeft: 14, borderLeft: `2px solid ${accent}22` }}>
       {busy && <div style={{ display: "flex", alignItems: "center", gap: 8, color: MUTE, fontSize: 13, padding: "4px 0" }}><Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> Loading replies…</div>}
       {replies?.map((r) => (
         <div key={r.id} style={{ display: "flex", gap: 10, padding: "8px 0" }}>
@@ -324,7 +324,7 @@ export function ReplyThread({ api, token, post, exam, onReplied, canUpload, show
 }
 
 /* ── single post card ─────────────────────────────────────────────── */
-export function PostCard({ api, token, post, exam, onLike, onDelete, onReplied, canUpload, showRole }) {
+export function PostCard({ api, token, post, exam, onLike, onDelete, onReplied, canUpload, showRole, accent = CYAN }) {
   const [open, setOpen] = useState(false);
   const tag = TAG_META[post.tag] || TAG_META.doubt;
   return (
@@ -348,7 +348,7 @@ export function PostCard({ api, token, post, exam, onLike, onDelete, onReplied, 
             <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 800, color: tag.color, background: `${tag.color}14`, border: `1px solid ${tag.color}30`, padding: "2px 8px", borderRadius: 50 }}>
               <tag.icon size={11} /> {tag.label}
             </span>
-            {post.subject && <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 11, fontWeight: 700, color: CYAN, background: `${CYAN}10`, padding: "2px 8px", borderRadius: 50 }}><Hash size={10} />{post.subject}</span>}
+            {post.subject && <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 11, fontWeight: 700, color: accent, background: `${accent}10`, padding: "2px 8px", borderRadius: 50 }}><Hash size={10} />{post.subject}</span>}
             {post.pinned && <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 11, fontWeight: 800, color: ORANGE }}><Pin size={11} /> Highlighted</span>}
           </div>
         </div>
@@ -367,7 +367,7 @@ export function PostCard({ api, token, post, exam, onLike, onDelete, onReplied, 
         <PillBtn active={post.likedByMe} color="#ef4444" onClick={() => onLike(post.id)} title="Upvote">
           <Heart size={14} fill={post.likedByMe ? "#ef4444" : "none"} /> {post.likeCount || 0}
         </PillBtn>
-        <PillBtn active={open} color={CYAN} onClick={() => setOpen((o) => !o)} title="Replies">
+        <PillBtn active={open} color={accent} onClick={() => setOpen((o) => !o)} title="Replies">
           <CornerDownRight size={14} /> {post.replyCount || 0} {post.replyCount === 1 ? "reply" : "replies"}
         </PillBtn>
       </div>
@@ -375,7 +375,7 @@ export function PostCard({ api, token, post, exam, onLike, onDelete, onReplied, 
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} style={{ overflow: "hidden" }}>
-            <ReplyThread api={api} token={token} post={post} exam={exam} onReplied={onReplied} canUpload={canUpload} showRole={showRole} />
+            <ReplyThread api={api} token={token} post={post} exam={exam} onReplied={onReplied} canUpload={canUpload} showRole={showRole} accent={accent} />
           </motion.div>
         )}
       </AnimatePresence>

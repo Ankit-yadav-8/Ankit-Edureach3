@@ -104,14 +104,14 @@ export default function AiDoubtSolver({ token, exam = "JEE", subjects = [] }) {
   return (
     <div style={{ background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 20, overflow: "hidden", boxShadow: "0 18px 44px -34px rgba(13,27,62,.4)", display: "flex", flexDirection: "column", height: "min(72vh, 720px)" }}>
       {/* header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 18px", background: `linear-gradient(135deg,${NAVY},#16224a)`, color: "#fff" }}>
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(255,255,255,.12)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 18px", background: `linear-gradient(135deg,${ORANGE},#E0421F)`, color: "#fff" }}>
+        <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(255,255,255,.18)", display: "grid", placeItems: "center", flexShrink: 0 }}>
           <Bot size={22} color="#fff" />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.02rem", display: "flex", alignItems: "center", gap: 7 }}>
             College Parichay AI
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 800, color: NAVY, background: GOLD, padding: "2px 8px", borderRadius: 50 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 800, color: ORANGE, background: "#fff", padding: "2px 8px", borderRadius: 50 }}>
               <Sparkles size={10} /> DOUBT SOLVER
             </span>
           </div>
