@@ -21,7 +21,13 @@ import {
 const ACCENT = "#FF693D";
 const SORA = "Sora, system-ui, sans-serif";
 
-const isoDay = (d) => new Date(d).toISOString().slice(0, 10);
+// Local calendar day (YYYY-MM-DD) — MUST match the student dashboard's isoDay,
+// which uses local (not UTC) time, so the day keys the student writes line up
+// with what the mentor reads here (no IST-past-midnight off-by-one).
+const isoDay = (d) => {
+  const x = new Date(d);
+  return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
+};
 const round1 = (n) => Math.round(n * 10) / 10;
 
 /* ISO week key — MUST match the student dashboard's weekKey() so the completion

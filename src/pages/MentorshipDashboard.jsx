@@ -29,8 +29,19 @@ const load = (key, fallback) => {
 };
 const save = (key, val) => { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} };
 
-const isoDay = (d) => new Date(d).toISOString().slice(0, 10);
-const fmtDay = (iso) => new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+// Local calendar day (YYYY-MM-DD). Deliberately NOT toISOString(), which is
+// UTC — past midnight in IST (UTC+5:30) that rolls the date back a day, so
+// "today" showed yesterday and the log/streak landed on the wrong date.
+const isoDay = (d) => {
+  const x = new Date(d);
+  return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
+};
+// `iso` is a local YYYY-MM-DD from isoDay — parse its parts as a local date so
+// the label matches the day exactly, never off by one from a UTC re-parse.
+const fmtDay = (iso) => {
+  const [y, m, d] = String(iso).split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+};
 const fmtFull = (d) => new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const round1 = (n) => Math.round(Number(n || 0) * 10) / 10;
