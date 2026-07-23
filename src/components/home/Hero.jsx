@@ -66,37 +66,7 @@ export default function Hero() {
   const headingSize = isXs ? "2.5rem" : isMobile ? "3.1rem" : isTablet ? "4.2rem" : "clamp(3.8rem, 6vw, 6rem)";
 
   return (
-    <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: "#FFF9F4" }}>
-      {/* ── background layers ── */}
-      {/* soft warm wash + coral glow */}
-      <div aria-hidden style={{
-        position: "absolute", inset: 0, zIndex: 0,
-        background: "radial-gradient(120% 80% at 50% 8%, rgba(255,90,54,.10), transparent 55%), linear-gradient(180deg, #FFF6EF 0%, #FFFAF6 55%, #FFFFFF 100%)",
-      }} />
-      {/* dotted grid */}
-      <div aria-hidden style={{
-        position: "absolute", inset: 0, zIndex: 0,
-        backgroundImage: "radial-gradient(rgba(28,28,40,.07) 1px, transparent 1px)",
-        backgroundSize: "24px 24px",
-        maskImage: "radial-gradient(80% 70% at 50% 40%, #000 55%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(80% 70% at 50% 40%, #000 55%, transparent 100%)",
-      }} />
-      {/* faint dashed orbits — slow rotate */}
-      <motion.svg aria-hidden viewBox="0 0 1000 1000"
-        animate={{ rotate: 360 }} transition={{ duration: 140, repeat: Infinity, ease: "linear" }}
-        style={{ position: "absolute", top: "42%", left: "50%", width: "150%", height: "150%", transform: "translate(-50%,-50%)", zIndex: 0, opacity: 0.55 }}>
-        <ellipse cx="500" cy="500" rx="480" ry="300" fill="none" stroke="rgba(28,28,40,.14)" strokeWidth="1.4" strokeDasharray="2 10" />
-        <ellipse cx="500" cy="500" rx="360" ry="220" fill="none" stroke="rgba(255,90,54,.16)" strokeWidth="1.4" strokeDasharray="2 10" />
-        <circle cx="980" cy="500" r="4" fill={CORAL} opacity="0.6" />
-        <circle cx="140" cy="280" r="3" fill="rgba(28,28,40,.3)" />
-      </motion.svg>
-      {/* giant faint wordmark */}
-      <div aria-hidden style={{ position: "absolute", left: 0, right: 0, bottom: isMobile ? "2%" : "4%", textAlign: "center", overflow: "hidden", zIndex: 0, pointerEvents: "none" }}>
-        <span style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(3.5rem, 15vw, 15rem)", color: "rgba(255,90,54,.055)", whiteSpace: "nowrap", letterSpacing: "-0.03em", lineHeight: 1 }}>
-          College Parichay
-        </span>
-      </div>
-
+    <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: "#FFFFFF" }}>
       {/* ── content ── */}
       <div className="container" style={{
         position: "relative", zIndex: 2, width: "100%", boxSizing: "border-box",
