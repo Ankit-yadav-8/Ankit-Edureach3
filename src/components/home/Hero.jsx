@@ -13,8 +13,8 @@ import {
    Mentorship-Hub product card + testimonials.
 ════════════════════════════════════════════════ */
 
-const CORAL    = "#FF5A36";
-const CORAL_DK = "#E0421F";
+const CORAL    = "#F47B20";
+const CORAL_DK = "#D96A10";
 const INK      = "#1c1c28";
 
 /* ── breakpoints ── */
@@ -101,7 +101,7 @@ function Feat({ icon, bg, color, label, wide }) {
     <motion.div
       whileHover={{ y: -2, borderColor: `${CORAL}66` }}
       style={{
-        border: "1px solid #F0E4D6", background: "#FFFCF8", borderRadius: 12,
+        border: "1px solid #F0E4D6", background: "#FFFFFF", borderRadius: 12,
         padding: "12px 13px", display: "flex", alignItems: "center", gap: 9,
         fontSize: 12.5, color: "#3D3324", fontWeight: 600, cursor: "default",
         gridColumn: wide ? "1 / -1" : undefined,
@@ -141,7 +141,7 @@ function MentorshipHubMock({ isMobile }) {
         {/* ── sidebar ── */}
         <div style={{
           width: isMobile ? "auto" : 230, flexShrink: 0,
-          background: "#FFFBF6",
+          background: "#FFFFFF",
           borderRight: isMobile ? "none" : "1px solid #F0E4D6",
           borderBottom: isMobile ? "1px solid #F0E4D6" : "none",
           padding: "18px 14px", display: "flex", flexDirection: "column",
@@ -317,7 +317,7 @@ export default function Hero({ onSearch }) {
               padding: "14px 30px", borderRadius: 9999, whiteSpace: "nowrap",
               background: CORAL, border: "none", color: "#fff",
               fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
-              boxShadow: "0 8px 24px rgba(255, 90, 54, 0.3)", transition: "all .2s",
+              boxShadow: "0 8px 24px rgba(244, 123, 32, 0.32)", transition: "all .2s",
             }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = CORAL_DK; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = CORAL; }}
