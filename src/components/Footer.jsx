@@ -477,8 +477,8 @@ export default function Footer() {
       </div>
 
       {/* giant CampusLoom-style wordmark — ghosted brand at the base */}
-      <div aria-hidden style={{ position: "absolute", left: 0, right: 0, bottom: 0, textAlign: "center", overflow: "hidden", pointerEvents: "none", zIndex: 0, lineHeight: 0.8 }}>
-        <span style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(3.5rem, 17vw, 17rem)", color: "rgba(255,255,255,.045)", whiteSpace: "nowrap", letterSpacing: "-0.03em", display: "inline-block", transform: "translateY(26%)" }}>
+      <div aria-hidden style={{ position: "absolute", left: 0, right: 0, bottom: 26, textAlign: "center", overflow: "hidden", pointerEvents: "none", zIndex: 0, lineHeight: 1.12 }}>
+        <span style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(2.8rem, 12.5vw, 12.5rem)", color: "rgba(255,255,255,.055)", whiteSpace: "nowrap", letterSpacing: "-0.03em", display: "inline-block", textShadow: "0 6px 50px rgba(255,90,54,.18), 0 2px 3px rgba(0,0,0,.5)" }}>
           College Parichay
         </span>
       </div>
