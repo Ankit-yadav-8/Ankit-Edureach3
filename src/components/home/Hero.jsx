@@ -13,7 +13,7 @@ import { Search, Target } from "lucide-react";
 const CORAL    = "#FF5A36";
 const CORAL_DK = "#E0421F";
 const INK      = "#1c1c28";
-const MARKER   = "#F2C879"; // warm gold marker-highlighter under the keywords
+const MARKER   = "#FFB59E"; // soft coral marker-highlighter under the keywords
 
 /* ── breakpoints ── */
 function useBreakpoint() {
