@@ -193,9 +193,9 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
       </div>
 
       <style>{`
-        .mh-hero { position:relative; overflow:hidden; border-radius:24px; margin-bottom:24px;
+        .mh-hero { position:relative; z-index:20; border-radius:24px; margin-bottom:24px;
           border:1px solid ${T.line}; background:var(--page-bg); }
-        .mh-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+        .mh-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; border-radius:24px; }
         .mh-orb { position:absolute; border-radius:50%; filter:blur(80px); }
         .mh-orb-a { width:420px; height:420px; top:-190px; left:-120px;
           background:radial-gradient(circle, rgba(255,105,61,.26), transparent 70%); opacity:.55;
@@ -266,6 +266,7 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
           .mh-inner { padding:24px 20px 26px; }
           .mh-switch-wrap { width:100%; }
           .mh-switch { width:100%; }
+          .mh-menu { left:0; right:0; min-width:0; width:100%; }
           .mh-watermark { font-size:34vw; }
         }
         @media (prefers-reduced-motion: reduce) {
