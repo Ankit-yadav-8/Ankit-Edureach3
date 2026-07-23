@@ -78,7 +78,6 @@ const stepsContainer = { hidden: {}, show: { transition: { staggerChildren: 0.15
 const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
 
 function HeroSteps({ isMobile }) {
-  const nav = useNavigate();
   return (
     <motion.div
       variants={stepsContainer} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.35 }}
@@ -92,9 +91,8 @@ function HeroSteps({ isMobile }) {
       <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: isMobile ? 30 : 24 }}>
         {STEPS.map((s) => (
           <motion.div
-            key={s.n} variants={stepVariant} whileHover={{ y: -4 }}
-            onClick={() => nav(s.to)}
-            style={{ textAlign: "center", position: "relative", zIndex: 1, cursor: "pointer" }}
+            key={s.n} variants={stepVariant}
+            style={{ textAlign: "center", position: "relative", zIndex: 1 }}
           >
             <div style={{
               width: 68, height: 68, borderRadius: "50%", margin: "0 auto 16px",
