@@ -430,12 +430,9 @@ function MobileCyclePhone() {
 /* ════════════════════════════════════════════════
    ANIMATED HEADLINE — word-by-word reveal + drawn underline
 ════════════════════════════════════════════════ */
-const WORDS = [
-  { t: "Know", c: false }, { t: "your", c: false }, { t: "rank.", c: true },
-  { t: "Find", c: false }, { t: "your", c: false }, { t: "college.", c: true },
-  { t: "Meet", c: false }, { t: "your", c: false }, { t: "mentor.", c: true },
-];
-const headVariants = { hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } } };
+const LINE_A = [{ t: "Predict", c: false }, { t: "your", c: false }, { t: "rank.", c: true }];
+const LINE_B = [{ t: "Meet", c: false }, { t: "your", c: false }, { t: "mentor.", c: true }];
+const headVariants = { hidden: {}, show: { transition: { staggerChildren: 0.07, delayChildren: 0.1 } } };
 const blackWord = {
   hidden: { opacity: 0, y: "0.55em", filter: "blur(6px)" },
   show:   { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
@@ -466,7 +463,7 @@ function HeadWord({ w, order }) {
 export default function Hero() {
   const nav = useNavigate();
   const { isXs, isMobile, isTablet } = useBreakpoint();
-  const headingSize = isXs ? "1.7rem" : isMobile ? "2rem" : isTablet ? "2.15rem" : "clamp(1.9rem, 2.9vw, 2.5rem)";
+  const headingSize = isXs ? "2.4rem" : isMobile ? "3rem" : isTablet ? "3.8rem" : "clamp(3.4rem, 5vw, 5rem)";
 
   return (
     <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: "#FFFFFF" }}>
@@ -479,9 +476,14 @@ export default function Hero() {
         <div style={{ position: "relative", maxWidth: 1120, margin: "0 auto", textAlign: "center" }}>
           <motion.h1
             variants={headVariants} initial="hidden" animate="show"
-            style={{ fontFamily: "'Space Grotesk','Sora',system-ui,sans-serif", fontWeight: 800, color: INK, fontSize: headingSize, lineHeight: 1.25, letterSpacing: "-0.02em", margin: 0, whiteSpace: isMobile ? "normal" : "nowrap" }}
+            style={{ fontFamily: "'Space Grotesk','Sora',system-ui,sans-serif", fontWeight: 800, color: INK, fontSize: headingSize, lineHeight: 1.08, letterSpacing: "-0.03em", margin: 0 }}
           >
-            {(() => { let o = 0; return WORDS.map((w, idx) => <HeadWord key={idx} w={w} order={w.c ? o++ : 0} />); })()}
+            <span style={{ display: "block" }}>
+              {LINE_A.map((w, idx) => <HeadWord key={idx} w={w} order={0} />)}
+            </span>
+            <span style={{ display: "block" }}>
+              {LINE_B.map((w, idx) => <HeadWord key={idx} w={w} order={1} />)}
+            </span>
           </motion.h1>
 
           {/* startup line — single line, previous style */}
