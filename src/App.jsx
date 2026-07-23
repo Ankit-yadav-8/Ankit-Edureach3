@@ -9,7 +9,10 @@ import { lazyRetry, clearChunkReloadFlag } from "./utils/lazyRetry.js";
 import { ScrollProgress, BackToTop } from "./components/ScrollUtils.jsx";
 const ScrollProgressBar = lazyRetry(() => import("./components/Animations.jsx").then(m => ({ default: m.ScrollProgressBar })));
 
-const Home = lazyRetry(() => import("./pages/Home.jsx"));
+// Home (the landing page + hero) ships in the entry bundle so it paints the
+// instant the main JS runs — no extra lazy-chunk round-trip on first load. Its
+// own below-the-fold sections are still lazy/deferred inside Home.jsx.
+import Home from "./pages/Home.jsx";
 
 /* Route-level code splitting: only Home ships in the initial bundle; every
    other page is fetched on navigation. Previously all ~50 pages were static

@@ -108,9 +108,7 @@ export default function Hero({ onSearch }) {
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
           style={{ margin: `${isMobile ? "1.6rem" : "2rem"} auto 0`, maxWidth: 560, fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 400, fontSize: isXs ? "1rem" : "1.1rem", color: "#6b6770", lineHeight: 1.65 }}
         >
-          Free tools, real analysis and honest guidance to crack JEE &amp; NEET and find a better college life.
-          <br style={{ display: isXs ? "none" : "block" }} />
-          Built by <b style={{ color: INK, fontWeight: 600 }}>IITians who walk the same road</b>.
+          An <span style={{ color: CORAL, fontWeight: 700 }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
         </motion.p>
 
         {/* CTAs */}
@@ -121,8 +119,8 @@ export default function Hero({ onSearch }) {
           <button
             onClick={openSearch}
             style={{
-              display: "inline-flex", alignItems: "center", gap: 9, cursor: "pointer",
-              padding: "13px 26px", borderRadius: 9999, whiteSpace: "nowrap",
+              display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
+              minWidth: isXs ? 200 : 230, padding: "14px 26px", borderRadius: 9999, whiteSpace: "nowrap",
               background: "#fff", border: "1px solid rgba(0,0,0,.14)", color: "#111",
               fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
               boxShadow: "0 4px 12px rgba(0,0,0,.03)", transition: "all .2s",
@@ -135,8 +133,8 @@ export default function Hero({ onSearch }) {
           <button
             onClick={() => nav("/jee-main#college")}
             style={{
-              display: "inline-flex", alignItems: "center", gap: 9, cursor: "pointer",
-              padding: "14px 30px", borderRadius: 9999, whiteSpace: "nowrap",
+              display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
+              minWidth: isXs ? 200 : 230, padding: "14px 30px", borderRadius: 9999, whiteSpace: "nowrap",
               background: CORAL, border: "none", color: "#fff",
               fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
               boxShadow: "0 8px 24px rgba(255, 90, 54, 0.3)", transition: "all .2s",
