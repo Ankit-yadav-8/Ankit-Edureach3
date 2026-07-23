@@ -68,6 +68,50 @@ function HeadWord({ w, order }) {
   );
 }
 
+/* ── 3-step journey: Mentorship → Rank → Dream College ── */
+const STEPS = [
+  { n: "01", title: "Mentorship", to: "/mentorship", desc: "A 1-on-1 IITian / doctor mentor with daily targets and weekly test analysis." },
+  { n: "02", title: "Rank", to: "/jee-main", desc: "Free JEE & NEET predictors turn your marks into an accurate All-India rank." },
+  { n: "03", title: "Dream College", to: "/for-you", desc: "Match that rank to every IIT, NIT & IIIT and plan your JoSAA choices." },
+];
+const stepsContainer = { hidden: {}, show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } } };
+const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
+
+function HeroSteps({ isMobile }) {
+  const nav = useNavigate();
+  return (
+    <motion.div
+      variants={stepsContainer} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.35 }}
+      style={{ maxWidth: 980, margin: isMobile ? "3rem auto 0" : "4.5rem auto 0", position: "relative" }}
+    >
+      {/* connecting line behind the circles (desktop/tablet) */}
+      {!isMobile && (
+        <div aria-hidden style={{ position: "absolute", top: 34, left: "16%", right: "16%", height: 2, zIndex: 0,
+          background: "linear-gradient(90deg, transparent, rgba(28,28,40,.14) 14%, rgba(28,28,40,.14) 86%, transparent)" }} />
+      )}
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: isMobile ? 30 : 24 }}>
+        {STEPS.map((s) => (
+          <motion.div
+            key={s.n} variants={stepVariant} whileHover={{ y: -4 }}
+            onClick={() => nav(s.to)}
+            style={{ textAlign: "center", position: "relative", zIndex: 1, cursor: "pointer" }}
+          >
+            <div style={{
+              width: 68, height: 68, borderRadius: "50%", margin: "0 auto 16px",
+              background: "#fff", border: "1px solid rgba(28,28,40,.1)",
+              boxShadow: "0 10px 26px -10px rgba(28,28,40,.2)", display: "grid", placeItems: "center",
+            }}>
+              <span style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: 22, color: CORAL }}>{s.n}</span>
+            </div>
+            <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: 18, color: INK, marginBottom: 8 }}>{s.title}</div>
+            <p style={{ margin: "0 auto", maxWidth: 250, fontSize: 13.5, color: "#6b6770", lineHeight: 1.6, fontFamily: "'Inter',system-ui,sans-serif" }}>{s.desc}</p>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Hero({ onSearch }) {
   const nav = useNavigate();
   const { isXs, isMobile, isTablet } = useBreakpoint();
@@ -155,6 +199,9 @@ export default function Hero({ onSearch }) {
             Predict my college <Target size={18} />
           </button>
         </motion.div>
+
+        {/* ══ 3-step journey ══ */}
+        <HeroSteps isMobile={isMobile} />
       </div>
     </section>
   );
