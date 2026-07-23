@@ -460,9 +460,10 @@ function HeadWord({ w, order }) {
 /* ════════════════════════════════════════════════
    HERO — MAIN EXPORT
 ════════════════════════════════════════════════ */
-export default function Hero() {
+export default function Hero({ onSearch }) {
   const nav = useNavigate();
   const { isXs, isMobile, isTablet } = useBreakpoint();
+  const openSearch = () => { if (onSearch) onSearch(); else nav("/search"); };
   const headingSize = isXs ? "2.4rem" : isMobile ? "3rem" : isTablet ? "3.8rem" : "clamp(3.4rem, 5vw, 5rem)";
 
   return (
@@ -506,7 +507,7 @@ export default function Hero() {
           style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 14, margin: "2rem 0 0" }}
         >
           <button
-            onClick={() => nav("/search")}
+            onClick={openSearch}
             style={{
               display: "inline-flex", alignItems: "center", gap: 9, cursor: "pointer",
               padding: "13px 26px", borderRadius: 9999, whiteSpace: "nowrap",
