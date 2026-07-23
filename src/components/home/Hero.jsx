@@ -1,26 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  Search, GraduationCap, ArrowRight, Target, TrendingUp, Users, Trophy,
-  Crosshair, ChevronRight, LayoutDashboard, BarChart3, CalendarDays,
-  MapPin, Check, Stethoscope, Award, Signal, Wifi, BatteryFull,
+  Search, Target, Bell, Sparkles, Users, CalendarClock, LineChart,
+  ChevronRight, ChevronLeft, Landmark, CalendarDays, Map, Archive,
+  Share2, Star, MoreHorizontal, BadgeCheck, MessageCircle, BellRing,
+  ListChecks,
 } from "lucide-react";
 
 /* ════════════════════════════════════════════════
-   HERO — big centred headline → twin CTAs → an
-   animated product dashboard (sidebar sections cycle
-   one-by-one, styled like the live site) + a phone.
-   Mobile shows a mentorship-style animated phone.
+   HERO — big animated headline → twin CTAs → a
+   Mentorship-Hub product card + testimonials.
 ════════════════════════════════════════════════ */
 
 const CORAL    = "#FF5A36";
 const CORAL_DK = "#E0421F";
 const INK      = "#1c1c28";
-const VIOLET   = "#8b5cf6";
-const TEAL     = "#0ea5a4";
-const GREEN    = "#22c55e";
-const AMBER     = "#E29A2E";
 
 /* ── breakpoints ── */
 function useBreakpoint() {
@@ -51,380 +46,7 @@ function useBreakpoint() {
     isMobile:  bp === "mobile" || bp === "xs",
     isTablet:  bp === "tablet" || bp === "ipadpro",
     isDesktop: bp === "desktop",
-    isSmall:   bp !== "desktop" && bp !== "ipadpro",
   };
-}
-
-/* auto-advancing index */
-function useCycle(len, ms) {
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setI((p) => (p + 1) % len), ms);
-    return () => clearInterval(t);
-  }, [len, ms]);
-  return [i, setI];
-}
-
-/* ════════════════════════════════════════════════
-   SECTION DATA (mirrors the real site)
-════════════════════════════════════════════════ */
-const SECTIONS = [
-  { key: "dashboard",  label: "Dashboard",     Icon: LayoutDashboard, accent: CORAL,  title: "Dashboard",         sub: "Your admission cockpit" },
-  { key: "predictor",  label: "Rank Predictor", Icon: Crosshair,       accent: CORAL,  title: "College Predictor",  sub: "Your rank → every college you can get" },
-  { key: "colleges",   label: "Colleges",       Icon: GraduationCap,   accent: TEAL,   title: "Explore Colleges",   sub: "850+ IITs · NITs · IIITs" },
-  { key: "cutoffs",    label: "Cutoffs",        Icon: BarChart3,       accent: VIOLET, title: "JoSAA Cutoffs 2025", sub: "Closing ranks, round-wise" },
-  { key: "mentorship", label: "Mentorship",     Icon: Users,           accent: GREEN,  title: "1-on-1 Mentorship",  sub: "JEE & NEET · 2027 · 2028" },
-];
-
-const PRED = [
-  { rank: "01", name: "IIT Bombay", branch: "CSE",        chance: 96, tone: GREEN, pkg: "₹33.8L" },
-  { rank: "02", name: "IIT Delhi",  branch: "CSE",        chance: 88, tone: GREEN, pkg: "₹32.3L" },
-  { rank: "03", name: "IIT Madras", branch: "Electrical", chance: 71, tone: AMBER, pkg: "₹31.2L" },
-  { rank: "04", name: "NIT Trichy", branch: "CSE",        chance: 54, tone: AMBER, pkg: "₹18.4L" },
-];
-const COLLEGE_ROWS = [
-  { name: "IIT Bombay", tag: "IIT", nirf: 3, pkg: "₹33.8L", tone: CORAL },
-  { name: "IIT Delhi",  tag: "IIT", nirf: 2, pkg: "₹32.3L", tone: VIOLET },
-  { name: "IIT Madras", tag: "IIT", nirf: 1, pkg: "₹31.2L", tone: TEAL },
-  { name: "NIT Trichy", tag: "NIT", nirf: 9, pkg: "₹18.4L", tone: GREEN },
-];
-const CUTOFF_ROWS = [
-  ["IIT Bombay", "CSE", "67"],
-  ["IIT Delhi",  "CSE", "110"],
-  ["IIT Madras", "EE",  "512"],
-  ["NIT Trichy", "CSE", "5,020"],
-];
-const PLANS = [
-  { exam: "JEE 2027",  tag: "1:1 · Daily targets", price: "₹2,499", color: CORAL,  Icon: Trophy },
-  { exam: "NEET 2027", tag: "1:1 · Doctor mentor",  price: "₹2,499", color: GREEN,  Icon: Stethoscope },
-  { exam: "JEE 2028",  tag: "Foundation track",     price: "₹2,499", color: VIOLET, Icon: Award },
-];
-const TARGETS = [["Physics", 72, CORAL], ["Chemistry", 64, VIOLET], ["Maths", 85, TEAL]];
-
-/* ════════════════════════════════════════════════
-   SECTION BODY (shared by dashboard + phone; `compact`
-   tightens it for the phone screen)
-════════════════════════════════════════════════ */
-function SecHead({ title, sub, compact }) {
-  return (
-    <div style={{ marginBottom: compact ? 11 : 15 }}>
-      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: compact ? 16 : 20, color: INK }}>{title}</div>
-      <div style={{ fontSize: compact ? 10.5 : 12, color: "rgba(28,28,40,.5)", marginTop: 2 }}>{sub}</div>
-    </div>
-  );
-}
-function Bar({ pct, tone, compact }) {
-  return (
-    <div style={{ height: compact ? 5 : 6, borderRadius: 4, background: "#ececf0", overflow: "hidden" }}>
-      <motion.div
-        initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, ease: "easeOut" }}
-        style={{ height: "100%", borderRadius: 4, background: tone }}
-      />
-    </div>
-  );
-}
-
-function SectionBody({ k, compact }) {
-  const gap = compact ? 8 : 10;
-  const card = { border: "1px solid rgba(28,28,40,.08)", borderRadius: compact ? 11 : 12, background: "#fff" };
-
-  if (k === "dashboard") {
-    const tiles = [
-      { lbl: "Predicted AIR", val: "4,846", tone: CORAL },
-      { lbl: "Colleges matched", val: "12", tone: TEAL },
-      { lbl: "Next deadline", val: "2d", tone: VIOLET },
-    ];
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: compact ? 7 : 10 }}>
-          {tiles.map((t) => (
-            <div key={t.lbl} style={{ ...card, padding: compact ? "9px 8px" : "12px 12px" }}>
-              <div style={{ fontSize: compact ? 8.5 : 10, fontWeight: 800, letterSpacing: ".4px", color: "rgba(28,28,40,.45)", textTransform: "uppercase" }}>{t.lbl}</div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: compact ? 17 : 22, color: t.tone, marginTop: 3 }}>{t.val}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ ...card, padding: compact ? "11px 12px" : "14px 15px" }}>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: compact ? 12 : 13.5, color: INK, marginBottom: compact ? 9 : 12 }}>This week's targets</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: compact ? 9 : 12 }}>
-            {TARGETS.map(([name, pct, tone]) => (
-              <div key={name}>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: compact ? 11 : 12, marginBottom: 5 }}>
-                  <span style={{ color: "rgba(28,28,40,.7)", fontWeight: 600 }}>{name}</span>
-                  <span style={{ color: tone, fontWeight: 800 }}>{pct}%</span>
-                </div>
-                <Bar pct={pct} tone={tone} compact={compact} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (k === "predictor") {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap }}>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#f7f6f9", border: "1px solid rgba(28,28,40,.07)", borderRadius: 8, padding: "6px 11px", fontSize: 11.5, color: INK, fontWeight: 700 }}>
-            <Target size={12} color={CORAL} /> AIR&nbsp;4,846
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#f7f6f9", border: "1px solid rgba(28,28,40,.07)", borderRadius: 8, padding: "6px 11px", fontSize: 11.5, color: "rgba(28,28,40,.7)" }}>
-            General <ChevronRight size={12} style={{ transform: "rotate(90deg)" }} color="#9ca3af" />
-          </div>
-          {!compact && (
-            <button style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6, background: CORAL, color: "#fff", border: "none", borderRadius: 8, padding: "6px 15px", fontSize: 12, fontWeight: 800, fontFamily: "Sora" }}>
-              Predict <ArrowRight size={12} />
-            </button>
-          )}
-        </div>
-        {(compact ? PRED.slice(0, 3) : PRED).map((c) => (
-          <div key={c.name} style={{ ...card, display: "flex", alignItems: "center", gap: 10, padding: compact ? "8px 10px" : "10px 12px" }}>
-            <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 11, color: "#c8c5cf", flexShrink: 0 }}>{c.rank}</span>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: compact ? 12 : 13, color: INK }}>{c.name}</div>
-              <div style={{ fontSize: compact ? 10 : 11, color: "rgba(28,28,40,.5)" }}>{c.branch} · avg {c.pkg}</div>
-              <div style={{ marginTop: 6 }}><Bar pct={c.chance} tone={c.tone} compact={compact} /></div>
-            </div>
-            <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: compact ? 12 : 13, color: c.tone, flexShrink: 0 }}>{c.chance}%</span>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  if (k === "colleges") {
-    return (
-      <div style={{ display: compact ? "flex" : "grid", flexDirection: "column", gridTemplateColumns: "1fr 1fr", gap: compact ? 8 : 10 }}>
-        {(compact ? COLLEGE_ROWS.slice(0, 3) : COLLEGE_ROWS).map((c) => (
-          <div key={c.name} style={{ ...card, display: "flex", alignItems: "center", gap: 10, padding: compact ? "9px 10px" : "11px 12px" }}>
-            <span style={{ width: 34, height: 34, borderRadius: 9, background: `${c.tone}18`, border: `1.5px solid ${c.tone}38`, display: "grid", placeItems: "center", flexShrink: 0, fontFamily: "Sora", fontWeight: 800, fontSize: 10, color: c.tone }}>{c.tag}</span>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: compact ? 12 : 13, color: INK }}>{c.name}</div>
-              <div style={{ fontSize: compact ? 10 : 11, color: "rgba(28,28,40,.5)" }}>NIRF #{c.nirf} · avg {c.pkg}</div>
-            </div>
-            <ArrowRight size={14} color={c.tone} style={{ flexShrink: 0 }} />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  if (k === "cutoffs") {
-    return (
-      <div style={{ ...card, overflow: "hidden" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 0.9fr", gap: 6, padding: compact ? "8px 11px" : "10px 14px", background: "#faf9fb", fontSize: compact ? 9.5 : 10.5, fontWeight: 800, letterSpacing: ".4px", color: "rgba(28,28,40,.5)", textTransform: "uppercase" }}>
-          <span>College</span><span>Branch</span><span style={{ textAlign: "right" }}>Close</span>
-        </div>
-        {(compact ? CUTOFF_ROWS.slice(0, 3) : CUTOFF_ROWS).map(([col, br, cr], i) => (
-          <div key={col} style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 0.9fr", gap: 6, padding: compact ? "9px 11px" : "11px 14px", borderTop: i === 0 ? "none" : "1px solid rgba(28,28,40,.06)", alignItems: "center" }}>
-            <span style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: compact ? 11.5 : 12.5, color: INK }}>{col}</span>
-            <span style={{ fontSize: compact ? 11 : 12, color: "rgba(28,28,40,.6)" }}>{br}</span>
-            <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: compact ? 11.5 : 12.5, color: VIOLET, textAlign: "right" }}>{cr}</span>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  /* mentorship */
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap }}>
-      {PLANS.map(({ exam, tag, price, color, Icon }) => (
-        <div key={exam} style={{ ...card, display: "flex", alignItems: "center", gap: 11, padding: compact ? "9px 11px" : "11px 13px" }}>
-          <span style={{ width: 34, height: 34, borderRadius: 9, background: `${color}18`, border: `1.5px solid ${color}38`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-            <Icon size={16} color={color} />
-          </span>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: compact ? 12.5 : 13.5, color: INK }}>{exam} Mentorship</div>
-            <div style={{ fontSize: compact ? 10 : 11, color: "rgba(28,28,40,.5)" }}>{tag}</div>
-          </div>
-          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: compact ? 12.5 : 14, color, flexShrink: 0 }}>{price}</span>
-        </div>
-      ))}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,90,54,.07)", border: "1px solid rgba(255,90,54,.18)", borderRadius: 11, padding: compact ? "8px 11px" : "10px 13px" }}>
-        <span style={{ width: 26, height: 26, borderRadius: "50%", background: `linear-gradient(135deg,${CORAL},${CORAL_DK})`, display: "grid", placeItems: "center", flexShrink: 0, fontFamily: "Sora", fontWeight: 800, fontSize: 10, color: "#fff" }}>AK</span>
-        <div style={{ fontSize: compact ? 10.5 : 11.5, color: "rgba(28,28,40,.7)" }}>Mentored by <b style={{ color: INK }}>IITians & doctors</b></div>
-        <Check size={15} color={GREEN} strokeWidth={3} style={{ marginLeft: "auto" }} />
-      </div>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   ANIMATED DASHBOARD (desktop / tablet)
-════════════════════════════════════════════════ */
-function AnimatedDashboard({ width = 860 }) {
-  const [i, setI] = useCycle(SECTIONS.length, 3000);
-  const sec = SECTIONS[i];
-  return (
-    <div style={{
-      width, background: "#fff", borderRadius: 18, overflow: "hidden",
-      border: "1px solid rgba(28,28,40,.08)",
-      boxShadow: "0 40px 80px -30px rgba(28,28,40,.35), 0 10px 24px -12px rgba(28,28,40,.14)",
-    }}>
-      {/* browser chrome */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "11px 14px", borderBottom: "1px solid rgba(28,28,40,.06)" }}>
-        {["#ff5f57", "#febc2e", "#28c840"].map((c) => <span key={c} style={{ width: 11, height: 11, borderRadius: "50%", background: c }} />)}
-        <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-          <span style={{ fontSize: 11.5, color: "#9ca3af", background: "#f4f4f6", padding: "5px 16px", borderRadius: 7, fontFamily: "'Inter',sans-serif" }}>collegeparichay.in/{sec.key}</span>
-        </div>
-      </div>
-
-      <div style={{ display: "flex", minHeight: 430 }}>
-        {/* sidebar */}
-        <div style={{ width: 196, background: "#faf9fb", borderRight: "1px solid rgba(28,28,40,.06)", padding: "16px 12px", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
-            <span style={{ width: 26, height: 26, borderRadius: 8, background: `linear-gradient(135deg,${CORAL},${CORAL_DK})`, display: "grid", placeItems: "center", fontFamily: "Sora", fontWeight: 800, fontSize: 11, color: "#fff" }}>CP</span>
-            <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: INK }}>CollegeParichay</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", border: "1px solid rgba(28,28,40,.08)", borderRadius: 8, padding: "7px 10px", marginBottom: 14 }}>
-            <Search size={13} color="#9ca3af" />
-            <span style={{ fontSize: 11.5, color: "#b6b3bb" }}>Search…</span>
-          </div>
-          {SECTIONS.map(({ key, label, Icon }, idx) => {
-            const active = idx === i;
-            return (
-              <div key={key} onClick={() => setI(idx)} style={{ position: "relative", cursor: "pointer", marginBottom: 3 }}>
-                {active && (
-                  <motion.div layoutId="cp-nav-pill" transition={{ type: "spring", stiffness: 500, damping: 38 }}
-                    style={{ position: "absolute", inset: 0, background: "rgba(255,90,54,.1)", borderRadius: 8 }} />
-                )}
-                <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 9, padding: "9px 10px", fontSize: 12.5, fontFamily: "'Inter',sans-serif", color: active ? CORAL_DK : "rgba(28,28,40,.62)", fontWeight: active ? 700 : 500, transition: "color .3s" }}>
-                  <Icon size={15} color={active ? CORAL : "#9ca3af"} /> {label}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* main — crossfades per active section */}
-        <div style={{ flex: 1, padding: "18px 22px", minWidth: 0, position: "relative" }}>
-          <AnimatePresence mode="wait">
-            <motion.div key={sec.key}
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
-              <SecHead title={sec.title} sub={sec.sub} />
-              <SectionBody k={sec.key} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   STATIC PHONE (desktop companion, overlaps dashboard)
-════════════════════════════════════════════════ */
-function PhoneMock() {
-  return (
-    <div style={{ width: 236, borderRadius: 40, padding: 9, background: "#0b0b12", boxShadow: "0 44px 90px -26px rgba(28,28,40,.5), 0 12px 28px -14px rgba(28,28,40,.3)", border: "1px solid rgba(255,255,255,.08)" }}>
-      <div style={{ borderRadius: 32, overflow: "hidden", background: "#0f0f18", position: "relative" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 18px 6px", fontSize: 11, color: "#fff", fontWeight: 700 }}>
-          <span>9:41</span>
-          <span style={{ display: "flex", gap: 5, alignItems: "center", opacity: 0.85 }}><Signal size={12} /><Wifi size={12} /><BatteryFull size={16} /></span>
-        </div>
-        <div style={{ padding: "14px 18px 10px", textAlign: "center" }}>
-          <div style={{ width: 46, height: 46, borderRadius: 14, margin: "0 auto 12px", background: `linear-gradient(135deg,${CORAL},${CORAL_DK})`, display: "grid", placeItems: "center", boxShadow: `0 10px 24px -6px ${CORAL}aa` }}>
-            <GraduationCap size={24} color="#fff" />
-          </div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 19, color: "#fff", lineHeight: 1.25 }}>Hi Aspirant,<br />your rank is ready</div>
-        </div>
-        <div style={{ padding: "6px 14px 16px", display: "flex", flexDirection: "column", gap: 9 }}>
-          <div style={{ background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.09)", borderRadius: 14, padding: "12px 13px" }}>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", fontWeight: 700, letterSpacing: ".5px" }}>PREDICTED RANK</div>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 24, color: "#fff", marginTop: 2 }}>AIR&nbsp;4,846</div>
-            <div style={{ fontSize: 11, color: GREEN, fontWeight: 700, marginTop: 3, display: "flex", alignItems: "center", gap: 4 }}><TrendingUp size={12} /> Top 1.2% percentile</div>
-          </div>
-          <div style={{ background: "rgba(255,90,54,.14)", border: "1px solid rgba(255,90,54,.3)", borderRadius: 14, padding: "11px 13px" }}>
-            <div style={{ fontSize: 10, color: "#ffb59e", fontWeight: 700, letterSpacing: ".5px" }}>TOP MATCH</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
-              <span style={{ width: 26, height: 26, borderRadius: 8, background: "rgba(255,255,255,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}><Trophy size={14} color="#fff" /></span>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: "#fff" }}>IIT Bombay</div>
-                <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.6)" }}>CSE · 96% chance</div>
-              </div>
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.09)", borderRadius: 14, padding: "10px 13px" }}>
-            <CalendarDays size={15} color={VIOLET} />
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <div style={{ fontSize: 12, color: "#fff", fontWeight: 700 }}>JoSAA Round 1</div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)" }}>Choice filling · Jun 28</div>
-            </div>
-            <span style={{ fontSize: 10, fontWeight: 800, color: "#0f0f18", background: CORAL, padding: "3px 8px", borderRadius: 6 }}>2d</span>
-          </div>
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", padding: "10px 0 14px", borderTop: "1px solid rgba(255,255,255,.06)" }}>
-          {[Crosshair, GraduationCap, Users, MapPin].map((Icon, k) => <Icon key={k} size={18} color={k === 0 ? CORAL : "rgba(255,255,255,.4)"} />)}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   ANIMATED PHONE (mobile) — cycles the same sections
-   with a mentorship-style bottom tab + crossfade.
-════════════════════════════════════════════════ */
-function MobileCyclePhone() {
-  const [i, setI] = useCycle(SECTIONS.length, 2800);
-  const sec = SECTIONS[i];
-  return (
-    <div style={{ width: "100%", maxWidth: 320, margin: "0 auto" }}>
-      <div style={{ position: "relative", borderRadius: 42, background: "#15151f", padding: 9, boxShadow: "0 34px 70px -26px rgba(26,26,46,.55), 0 0 0 2px rgba(26,26,46,.05)" }}>
-        <div style={{ position: "relative", borderRadius: 34, overflow: "hidden", background: "#f5f4f6", display: "flex", flexDirection: "column", minHeight: 520 }}>
-          {/* notch */}
-          <div style={{ position: "absolute", top: 9, left: "50%", transform: "translateX(-50%)", width: "34%", height: 20, background: "#15151f", borderRadius: 20, zIndex: 6 }} />
-
-          {/* coral header */}
-          <div style={{ flexShrink: 0, background: `linear-gradient(135deg,${CORAL},${CORAL_DK})`, color: "#fff", padding: "10px 15px 13px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 10.5, fontWeight: 800, marginBottom: 10 }}>
-              <span>9:41</span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><Signal size={12} /><Wifi size={12} /><BatteryFull size={16} /></span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,.16)", border: "1px solid rgba(255,255,255,.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                <sec.Icon size={18} color="#fff" />
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 10, opacity: 0.9, fontWeight: 700, letterSpacing: ".4px" }}>COLLEGEPARICHAY</div>
-                <AnimatePresence mode="wait">
-                  <motion.div key={sec.key} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.3 }}
-                    style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 16, letterSpacing: "-.2px" }}>{sec.title}</motion.div>
-                </AnimatePresence>
-              </div>
-              <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.6, repeat: Infinity }} style={{ width: 9, height: 9, borderRadius: "50%", background: "#fff", flexShrink: 0 }} />
-            </div>
-          </div>
-
-          {/* body */}
-          <div style={{ flex: 1, minHeight: 0, padding: "14px 13px", overflow: "hidden" }}>
-            <AnimatePresence mode="wait">
-              <motion.div key={sec.key} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
-                <div style={{ fontSize: 11.5, color: "rgba(28,28,40,.5)", marginBottom: 12 }}>{sec.sub}</div>
-                <SectionBody k={sec.key} compact />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* bottom tab bar */}
-          <div style={{ flexShrink: 0, background: "#fff", borderTop: "1px solid rgba(26,26,46,.07)", padding: "9px 6px 13px", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
-            {SECTIONS.map(({ key, Icon }, idx) => {
-              const active = idx === i;
-              return (
-                <div key={key} onClick={() => setI(idx)} style={{ position: "relative", padding: "7px 12px", cursor: "pointer" }}>
-                  {active && <motion.div layoutId="cp-tab-pill" transition={{ type: "spring", stiffness: 500, damping: 38 }} style={{ position: "absolute", inset: 0, background: "rgba(255,90,54,.12)", borderRadius: 10 }} />}
-                  <Icon size={19} color={active ? CORAL : "#b6b3bb"} style={{ position: "relative" }} />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 /* ════════════════════════════════════════════════
@@ -441,7 +63,6 @@ const coralWord = {
   hidden: { opacity: 0, scale: 0.6, y: "0.2em" },
   show:   { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 380, damping: 17 } },
 };
-
 function HeadWord({ w, order }) {
   return (
     <motion.span variants={w.c ? coralWord : blackWord}
@@ -454,6 +75,175 @@ function HeadWord({ w, order }) {
         </svg>
       )}
     </motion.span>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   MENTORSHIP-HUB PRODUCT CARD (replaces the dashboard)
+════════════════════════════════════════════════ */
+const LINE_ART = "#B85E13";
+
+function NavItem({ icon, label, active, sub }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", gap: sub ? 6 : 8,
+      fontSize: 12.5, marginBottom: 11,
+      color: active ? CORAL : sub ? "#7A6A54" : "#5A4C3B",
+      fontWeight: active ? 700 : 500,
+    }}>
+      {icon} {label}
+    </div>
+  );
+}
+
+function Feat({ icon, bg, color, label, wide }) {
+  return (
+    <motion.div
+      whileHover={{ y: -2, borderColor: `${CORAL}66` }}
+      style={{
+        border: "1px solid #F0E4D6", background: "#FFFCF8", borderRadius: 12,
+        padding: "12px 13px", display: "flex", alignItems: "center", gap: 9,
+        fontSize: 12.5, color: "#3D3324", fontWeight: 600, cursor: "default",
+        gridColumn: wide ? "1 / -1" : undefined,
+      }}
+    >
+      <span style={{ width: 30, height: 30, borderRadius: 8, background: bg, color, display: "grid", placeItems: "center", flexShrink: 0 }}>{icon}</span>
+      {label}
+    </motion.div>
+  );
+}
+
+function Testimonial({ quote, initials, name, role, avBg, avColor }) {
+  return (
+    <div style={{ flex: 1, background: "#fff", borderRadius: 16, padding: 16, border: "1px solid #F0E4D6" }}>
+      <p style={{ fontSize: 12.5, fontStyle: "italic", color: INK, lineHeight: 1.6, margin: "0 0 12px" }}>{quote}</p>
+      <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+        <div style={{ width: 30, height: 30, borderRadius: "50%", background: avBg, color: avColor, display: "grid", placeItems: "center", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>{initials}</div>
+        <div>
+          <p style={{ margin: 0, fontSize: 12.5, fontWeight: 700, color: INK }}>{name}</p>
+          <p style={{ margin: 0, fontSize: 10.5, color: "#A99378" }}>{role}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MentorshipHubMock({ isMobile }) {
+  return (
+    <div style={{ width: "100%", maxWidth: 960, margin: "0 auto" }}>
+      {/* card */}
+      <div style={{
+        display: "flex", flexDirection: isMobile ? "column" : "row",
+        background: "#fff", borderRadius: 18, overflow: "hidden",
+        border: "1px solid #F0E4D6",
+        boxShadow: "0 30px 70px -34px rgba(40,33,26,.28), 0 8px 20px -12px rgba(40,33,26,.1)",
+      }}>
+        {/* ── sidebar ── */}
+        <div style={{
+          width: isMobile ? "auto" : 230, flexShrink: 0,
+          background: "#FFFBF6",
+          borderRight: isMobile ? "none" : "1px solid #F0E4D6",
+          borderBottom: isMobile ? "1px solid #F0E4D6" : "none",
+          padding: "18px 14px", display: "flex", flexDirection: "column",
+        }}>
+          {/* brand */}
+          <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 20 }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: `linear-gradient(135deg,${CORAL},${CORAL_DK})`, display: "grid", placeItems: "center", color: "#fff", fontSize: 12, fontWeight: 800, letterSpacing: "-0.02em", fontFamily: "Sora" }}>CP</div>
+            <div style={{ lineHeight: 1.15 }}>
+              <div style={{ fontSize: 13.5, fontWeight: 700, color: "#28211A", fontFamily: "Sora" }}>College Parichay</div>
+              <div style={{ fontSize: 9.5, color: "#B08B60", fontWeight: 500 }}>by IIT Roorkee alumni</div>
+            </div>
+            <Bell size={16} color="#B7ADA0" style={{ marginLeft: "auto" }} />
+          </div>
+
+          {/* search + ask */}
+          <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
+            <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 6, background: "#FDF1E4", borderRadius: 8, padding: "6px 10px", fontSize: 12, color: "#B08B60" }}>
+              <Search size={13} /> Search
+            </div>
+            <div style={{ flex: 0.6, display: "flex", alignItems: "center", gap: 6, background: "#FEECD8", borderRadius: 8, padding: "6px 10px", fontSize: 12, color: "#8A6A3F" }}>
+              <Sparkles size={13} /> Ask
+            </div>
+          </div>
+
+          <p style={{ fontSize: 10.5, color: "#C4A87F", margin: "0 0 8px", letterSpacing: ".05em", textTransform: "uppercase", fontWeight: 600 }}>Favorites</p>
+          <NavItem active icon={<Users size={15} />} label="Find a mentor" />
+          <NavItem icon={<CalendarClock size={15} />} label="My sessions" />
+          <NavItem icon={<LineChart size={15} />} label="Rank predictor" />
+
+          <p style={{ fontSize: 10.5, color: "#C4A87F", margin: "10px 0 8px", letterSpacing: ".05em", textTransform: "uppercase", fontWeight: 600 }}>My channels</p>
+          <NavItem sub icon={<><ChevronRight size={12} /><Landmark size={15} /></>} label="Colleges & cutoffs" />
+          <NavItem sub icon={<><ChevronRight size={12} /><CalendarDays size={15} /></>} label="JoSAA deadlines" />
+
+          <div style={{ marginTop: isMobile ? 8 : "auto", borderTop: "1px solid #F0E4D6", paddingTop: 12 }}>
+            <NavItem icon={<Map size={15} />} label="Campus map" />
+            <div style={{ marginBottom: 0 }}><NavItem icon={<Archive size={15} />} label="Archive" /></div>
+          </div>
+        </div>
+
+        {/* ── main ── */}
+        <div style={{ flex: 1, padding: isMobile ? "16px 16px 22px" : "16px 26px 26px", minWidth: 0 }}>
+          {/* topbar */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#5A4C3B" }}>
+              <ChevronLeft size={15} color="#B7ADA0" />
+              <ChevronRight size={15} color="#B7ADA0" />
+              <Users size={15} color={CORAL} style={{ marginLeft: 6 }} /> Mentorship hub
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, color: "#C4A87F" }}>
+              <Share2 size={15} /><Star size={15} /><MoreHorizontal size={15} />
+            </div>
+          </div>
+
+          {/* hero banner */}
+          <div style={{ background: "linear-gradient(135deg,#FEECD8,#FDDFC0)", borderRadius: 16, height: 150, marginBottom: 20, position: "relative", overflow: "hidden" }}>
+            <svg width="160" viewBox="0 0 160 100" style={{ position: "absolute", left: 24, top: 26 }}>
+              <circle cx="38" cy="34" r="17" fill="none" stroke={LINE_ART} strokeWidth="1.6" />
+              <path d="M16 76 Q38 54 60 76" fill="none" stroke={LINE_ART} strokeWidth="1.6" />
+              <circle cx="102" cy="46" r="13" fill="none" stroke={LINE_ART} strokeWidth="1.6" />
+              <path d="M82 80 Q102 62 122 80" fill="none" stroke={LINE_ART} strokeWidth="1.6" />
+              <path d="M58 42 L84 50" stroke={LINE_ART} strokeWidth="1.2" strokeDasharray="2 3" />
+            </svg>
+            <div style={{ position: "absolute", right: 16, top: 16, background: "rgba(255,255,255,0.78)", borderRadius: 20, padding: "5px 13px", fontSize: 11, color: "#B85E13", fontWeight: 600, display: "flex", alignItems: "center", gap: 5 }}>
+              <BadgeCheck size={13} /> Verified IITian mentors
+            </div>
+          </div>
+
+          <h2 style={{ fontSize: 21, fontWeight: 700, margin: "0 0 6px", color: "#28211A", fontFamily: "Sora" }}>Mentorship hub</h2>
+          <p style={{ fontSize: 13, color: "#6E5D48", lineHeight: 1.65, margin: "0 0 22px", maxWidth: 480 }}>
+            Get matched with an IITian mentor, book 1:1 sessions, and plan your JoSAA choices with confidence — all inside Parichay.
+          </p>
+
+          <h3 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px", color: "#28211A", fontFamily: "Sora" }}>Features</h3>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 10, marginBottom: 22 }}>
+            <Feat icon={<Users size={15} />} bg="#FEECD8" color="#B85E13" label="Mentor matching" />
+            <Feat icon={<CalendarClock size={15} />} bg="#E6F1FB" color="#185FA5" label="Session booking" />
+            <Feat icon={<LineChart size={15} />} bg="#FBEAF0" color="#993556" label="Rank predictor" />
+          </div>
+
+          <h3 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px", color: "#28211A", fontFamily: "Sora" }}>More ways to connect</h3>
+          <p style={{ fontSize: 12, color: "#6E5D48", lineHeight: 1.65, margin: "0 0 14px", maxWidth: 480 }}>
+            Chat with mentors between sessions, compare colleges with peers, and get reminders before every counselling deadline.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2,1fr)", gap: 10 }}>
+            <Feat icon={<MessageCircle size={15} />} bg="#EAF3DE" color="#3B6D11" label="1:1 chat" />
+            <Feat icon={<Map size={15} />} bg="#E1F5EE" color="#0F6E56" label="Campus map explorer" />
+            <Feat icon={<BellRing size={15} />} bg="#FAEEDA" color="#854F0B" label="Deadline nudges" />
+            <Feat icon={<ListChecks size={15} />} bg="#EEEDFE" color="#3C3489" label="Choice list planner" />
+          </div>
+        </div>
+      </div>
+
+      {/* testimonials */}
+      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 14, marginTop: 18 }}>
+        <Testimonial
+          quote={'"My mentor got matched to me in a day. Booking sessions around mock tests has never been this easy."'}
+          initials="RA" name="Riya Agarwal" role="JEE aspirant, target CSE" avBg="#FEECD8" avColor="#B85E13" />
+        <Testimonial
+          quote={'"The rank predictor and mentor notes give my mentees a clear plan instead of just a cutoff number."'}
+          initials="SK" name="Sanjay Kulkarni" role="Mentor, IIT Roorkee alumnus" avBg="#E1F5EE" avColor="#0F6E56" />
+      </div>
+    </div>
   );
 }
 
@@ -487,7 +277,7 @@ export default function Hero({ onSearch }) {
             </span>
           </motion.h1>
 
-          {/* startup line — single line, previous style */}
+          {/* startup line — single line */}
           <motion.div
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
             style={{
@@ -536,24 +326,13 @@ export default function Hero({ onSearch }) {
           </button>
         </motion.div>
 
-        {/* ══ Product mockups ══ */}
+        {/* ══ Mentorship-hub product card ══ */}
         <motion.div
           initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          style={{ marginTop: isMobile ? "2.6rem" : "3.6rem", display: "flex", justifyContent: "center", paddingBottom: 30 }}
+          style={{ marginTop: isMobile ? "2.6rem" : "3.6rem", paddingBottom: 30 }}
         >
-          {isMobile ? (
-            <MobileCyclePhone />
-          ) : (
-            <div style={{ position: "relative", width: isTablet ? 760 : 980, maxWidth: "100%", display: "flex", justifyContent: "center" }}>
-              <div style={{ transform: isTablet ? "scale(0.82)" : "none", transformOrigin: "top center" }}>
-                <AnimatedDashboard width={860} />
-              </div>
-              <div style={{ position: "absolute", right: isTablet ? -4 : 12, bottom: -18, transform: isTablet ? "scale(0.88)" : "none", transformOrigin: "bottom right" }}>
-                <PhoneMock />
-              </div>
-            </div>
-          )}
+          <MentorshipHubMock isMobile={isMobile} />
         </motion.div>
       </div>
     </section>
