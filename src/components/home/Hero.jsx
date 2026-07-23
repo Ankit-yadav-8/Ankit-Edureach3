@@ -1,29 +1,28 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  Search, Sparkles, TrendingUp, Crosshair,
-  GraduationCap, Users, Star, Award, ArrowRight,
-  BookOpen, Target, MapPin, Trophy, Zap, ChevronRight,
-  Stethoscope, Radar, Info, Check, Globe2,
+  Search, GraduationCap, ArrowRight, Target, Play, Check,
+  TrendingUp, Users, Trophy, Stethoscope, Crosshair, Bell,
+  Sparkles, ChevronRight, LayoutDashboard, BarChart3, CalendarDays,
+  MapPin,
 } from "lucide-react";
-import {
-  TypewriterText,
-  FloatingOrbs,
-  AnimatedNumber,
-} from "../Animations.jsx";
 
 /* ════════════════════════════════════════════════
-   HOOK — useIsMobile / useBreakpoint
+   HERO — Rootly-style layout, College Parichay theme.
+   Big centred headline with floating notification cards →
+   twin CTAs → institute logo cloud → a product dashboard
+   mockup + phone mockup rising from a warm coral→violet mist.
 ════════════════════════════════════════════════ */
-/*
-  Device breakpoints (CSS logical pixels / device-independent pixels):
-  xs      : ≤ 430px  — small Android, iPhone SE/14/15 mini
-  mobile  : ≤ 768px  — iPhone 14/15 Pro, Android, phablets
-  tablet  : ≤ 1024px — iPad mini/Air/10th portrait + landscape, Android tablets
-  ipadpro : ≤ 1366px — iPad Pro 11" landscape, iPad Pro 12.9" both
-  desktop : > 1366px — MacBook Air/Pro, Windows laptops, iMac
-*/
+
+const CORAL   = "#FF5A36";
+const CORAL_DK = "#E0421F";
+const INK     = "#1c1c28";
+const VIOLET  = "#8b5cf6";
+const TEAL    = "#0ea5a4";
+const GREEN   = "#22c55e";
+
+/* ── breakpoints ── */
 function useBreakpoint() {
   const [bp, setBp] = useState(() => {
     if (typeof window === "undefined") return "desktop";
@@ -34,7 +33,6 @@ function useBreakpoint() {
     if (w <= 1366) return "ipadpro";
     return "desktop";
   });
-
   useEffect(() => {
     const update = () => {
       const w = window.innerWidth;
@@ -47,11 +45,10 @@ function useBreakpoint() {
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
-
   return {
     bp,
-    isMobile:  bp === "mobile" || bp === "xs",
     isXs:      bp === "xs",
+    isMobile:  bp === "mobile" || bp === "xs",
     isTablet:  bp === "tablet" || bp === "ipadpro",
     isDesktop: bp === "desktop",
     isSmall:   bp !== "desktop" && bp !== "ipadpro",
@@ -59,1344 +56,325 @@ function useBreakpoint() {
 }
 
 /* ════════════════════════════════════════════════
-   CONSTANTS
+   FLOATING NOTIFICATION CARD (over the headline)
 ════════════════════════════════════════════════ */
-const ABOUT_ACCENT = "#FF693D";
+function FloatCard({ children, style, delay = 0.35, float = 8 }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14, scale: 0.94 }}
+      animate={{ opacity: 1, y: [0, -float, 0], scale: 1 }}
+      transition={{
+        opacity: { duration: 0.6, delay },
+        scale:   { duration: 0.6, delay },
+        y:       { duration: 6, repeat: Infinity, ease: "easeInOut", delay },
+      }}
+      style={{
+        position: "absolute",
+        background: "#fff",
+        borderRadius: 15,
+        boxShadow: "0 22px 48px -14px rgba(28,28,40,.34), 0 4px 12px rgba(28,28,40,.06)",
+        border: "1px solid rgba(255,255,255,.8)",
+        zIndex: 5,
+        ...style,
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
-/* warm cream marker-highlight (reference editorial style) — wraps inline so
-   it stays glued to its words across line breaks. */
-const HIGHLIGHT = {
-  background: "#FCE3C7",
-  borderRadius: 6,
-  padding: "0.02em 0.2em",
-  boxDecorationBreak: "clone",
-  WebkitBoxDecorationBreak: "clone",
-};
+/* small rank chip card (top-right of headline) */
+function RankChip() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 9, padding: "9px 12px" }}>
+      <div style={{ display: "flex" }}>
+        {["#FF7A50", "#8b5cf6", "#22c55e"].map((c, i) => (
+          <span key={i} style={{
+            width: 24, height: 24, borderRadius: "50%", background: c,
+            border: "2px solid #fff", marginLeft: i === 0 ? 0 : -9,
+          }} />
+        ))}
+      </div>
+      <span style={{
+        fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: 12.5,
+        color: CORAL_DK, background: "rgba(255,90,54,.12)", padding: "3px 9px", borderRadius: 8,
+      }}>#AIR&nbsp;4,846</span>
+      <TrendingUp size={15} color={GREEN} />
+    </div>
+  );
+}
 
-const TOP_COLLEGES = [
-  { name: "IIT Bombay",  type: "IIT",  nirf: 3,  avg: "₹33.8L", placed: 96, color: "#6366f1" },
-  { name: "IIT Delhi",   type: "IIT",  nirf: 2,  avg: "₹32.3L", placed: 96, color: "#FF693D" },
-  { name: "IIT Roorkee",  type: "IIT",  nirf: 6,  avg: "₹30.7L", placed: 95, color: "#0ea5a4" },
-  { name: "IIT Madras",  type: "IIT",  nirf: 1, avg: "₹31.2L", placed: 97, color: "#8b5cf6" },
-  { name: "IIT Kanpur",    type: "IIT", nirf: 4, avg: "₹32.6L", placed: 97, color: "#10b981" },
-];
+/* app-notification card (below/left of headline) */
+function PredictionCard() {
+  return (
+    <div style={{ padding: "11px 13px", width: 264 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 8 }}>
+        <span style={{
+          width: 30, height: 30, borderRadius: 9, flexShrink: 0,
+          background: `linear-gradient(135deg, ${CORAL}, ${CORAL_DK})`,
+          display: "grid", placeItems: "center",
+        }}>
+          <GraduationCap size={17} color="#fff" />
+        </span>
+        <div style={{ lineHeight: 1.25 }}>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 12.5, color: INK }}>
+            CollegeParichay <span style={{ fontSize: 8.5, fontWeight: 800, letterSpacing: ".5px", color: CORAL, background: "rgba(255,90,54,.12)", padding: "1px 5px", borderRadius: 5, marginLeft: 2, verticalAlign: "middle" }}>APP</span>
+          </div>
+          <div style={{ fontSize: 10, color: "#9ca3af" }}>Prediction ready · 12:19&nbsp;PM</div>
+        </div>
+      </div>
+      <div style={{ fontSize: 11.5, color: "rgba(28,28,40,.72)", lineHeight: 1.45, marginBottom: 8 }}>
+        Your rank maps to <b style={{ color: INK }}>12 IITs</b> — top match CSE at IIT Bombay.
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, fontWeight: 800, color: "#0a8f5b", background: "rgba(34,197,94,.14)", padding: "3px 8px", borderRadius: 6 }}>
+          <Check size={11} strokeWidth={3} /> 98% match
+        </span>
+        <span style={{ fontSize: 10, fontWeight: 800, color: VIOLET, background: "rgba(139,92,246,.13)", padding: "3px 8px", borderRadius: 6 }}>JoSAA ready</span>
+      </div>
+    </div>
+  );
+}
 
 /* ════════════════════════════════════════════════
-   STATS BAR
+   INSTITUTE LOGO CLOUD
 ════════════════════════════════════════════════ */
-function StatsBar({ isMobile, isXs }) {
-  const stats = [
-    { icon: <Users size={isXs ? 16 : 20} />,      val: "3,200+",  lbl: "Students helped",    iconClass: "orange" },
-    { icon: <BookOpen size={isXs ? 16 : 20} />,   val: "850+",    lbl: "Colleges listed",    iconClass: "teal"   },
-    { icon: <Target size={isXs ? 16 : 20} />,     val: "98% acc", lbl: "Rank predictions",   iconClass: "green"  },
-    { icon: <TrendingUp size={isXs ? 16 : 20} />, val: "1.2M+",   lbl: "Cutoff data points", iconClass: "orange" },
-  ];
-
-  const palette = {
-    orange: { bg: "rgba(255, 105, 61,.18)",  border: "rgba(255, 105, 61,.35)", color: "#FF693D" },
-    teal:   { bg: "rgba(14,165,164,.15)",  border: "rgba(14,165,164,.30)", color: "#0ea5a4" },
-    green:  { bg: "rgba(34,197,94,.13)",   border: "rgba(34,197,94,.28)",  color: "#22c55e" },
-  };
-
+const LOGOS = [
+  "IIT Bombay", "IIT Delhi", "IIT Madras", "NIT Trichy", "BITS Pilani",
+  "IIIT Hyderabad", "IIT Roorkee", "NIT Warangal", "IIT Kanpur", "VIT",
+];
+function LogoCloud({ isMobile }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5 }}
-      style={{
-        display: "grid",
-        gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
-        gap: isXs ? 10 : 12,
-        width: "100%",
-        maxWidth: 580,
-        margin: isMobile ? "6px auto 0" : "0 auto",
-        padding: isXs ? "16px 2px" : "20px 0",
-        boxSizing: "border-box",
-        borderTop: "1px solid rgba(255, 105, 61,.20)",
-        borderBottom: "1px solid rgba(255, 105, 61,.20)",
-      }}
+      transition={{ delay: 0.55, duration: 0.6 }}
+      style={{ width: "100%", maxWidth: 880, margin: "0 auto" }}
     >
-      {stats.map(({ icon, val, lbl, iconClass }) => {
-        const c = palette[iconClass];
-        return (
-          <div
-            key={lbl}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: isXs ? 8 : 10,
-              background: "rgba(255,255,255,.72)",
-              border: "1px solid rgba(255, 105, 61,.18)",
-              borderRadius: 12,
-              padding: isXs ? "10px 9px" : "12px 10px",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            <div
-              style={{
-                width: isXs ? 30 : 38,
-                height: isXs ? 30 : 38,
-                borderRadius: 9,
-                flexShrink: 0,
-                display: "grid",
-                placeItems: "center",
-                background: c.bg,
-                border: `1px solid ${c.border}`,
-                color: c.color,
-              }}
-            >
-              {icon}
-            </div>
-            <div>
-              <div
-                style={{
-                  fontFamily: "'Space Grotesk','Sora',sans-serif",
-                  fontWeight: 800,
-                  fontSize: isXs ? "0.82rem" : "clamp(.9rem,1.8vw,1.05rem)",
-                  color: "#1c1c28",
-                  lineHeight: 1.1,
-                }}
-              >
-                {val}
-              </div>
-              <div
-                style={{
-                  fontSize: isXs ? 9 : 10.5,
-                  color: "rgba(28,28,40,.50)",
-                  marginTop: 3,
-                  fontFamily: "'DM Sans',sans-serif",
-                  lineHeight: 1.3,
-                }}
-              >
-                {lbl}
-              </div>
-            </div>
-          </div>
-        );
-      })}
-    </motion.div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   MESH DOTS CANVAS — performance-aware
-════════════════════════════════════════════════ */
-function MeshDots({ dotCount = 80 }) {
-  const canvasRef = useRef(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    resize();
-    window.addEventListener("resize", resize);
-    const COLORS = ["#6366f1", "#FF693D", "#0ea5a4", "#8b5cf6", "#f4a261", "#ffffff"];
-    
-    // Reduce dot count significantly on mobile to improve performance
-    const isMobile = window.innerWidth <= 768;
-    const actualDotCount = isMobile ? Math.min(25, dotCount) : dotCount;
-    
-    const dots = Array.from({ length: actualDotCount }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.5 + 0.3,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      alpha: Math.random() * 0.4 + 0.05,
-      sx: (Math.random() - 0.5) * 0.2,
-      sy: (Math.random() - 0.5) * 0.2,
-      pulse: Math.random() * Math.PI * 2,
-    }));
-    let raf;
-    let lastDraw = 0;
-    const draw = (timestamp) => {
-      // Limit framerate to 30fps on mobile to save CPU/battery
-      if (isMobile && timestamp - lastDraw < 33) {
-        raf = requestAnimationFrame(draw);
-        return;
-      }
-      lastDraw = timestamp;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      dots.forEach((d) => {
-        d.x += d.sx;
-        d.y += d.sy;
-        d.pulse += 0.015;
-        if (d.x < 0) d.x = canvas.width;
-        if (d.x > canvas.width) d.x = 0;
-        if (d.y < 0) d.y = canvas.height;
-        if (d.y > canvas.height) d.y = 0;
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = d.color;
-        ctx.globalAlpha = d.alpha * (0.5 + 0.5 * Math.sin(d.pulse));
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      });
-      raf = requestAnimationFrame(draw);
-    };
-    draw();
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
-    };
-  }, [dotCount]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: "absolute",
-        inset: 0,
-        width: "100%",
-        height: "100%",
-        pointerEvents: "none",
-        zIndex: 1,
-      }}
-    />
-  );
-}
-
-/* ════════════════════════════════════════════════
-   ABOUT US CARD (left panel — desktop only)
-════════════════════════════════════════════════ */
-function AboutUsCard() {
-  const nav = useNavigate();
-  const ACCENT = ABOUT_ACCENT;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 0 }}   /* x:0 — no horizontal bleed on any size */
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.7, delay: 0.3 }}
-      className="hero-about-col"
-      style={{
-        background: "var(--page-bg)",
-        border: "1px solid rgba(255, 105, 61,.20)",
-        borderRadius: 20,
-        padding: "1.1rem 1.2rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.85rem",
-        boxShadow: "0 8px 30px rgba(13,27,62,.08)",
-        position: "relative",
-        overflow: "hidden",
-        minWidth: 0, /* prevent flex blowout */
-      }}
-    >
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{
-                  width: 40, height: 40, borderRadius: 11,
-                  background: "rgba(255, 105, 61,.12)",
-                  border: "1.5px solid rgba(255, 105, 61,.3)",
-                  display: "grid", placeItems: "center", flexShrink: 0,
-                }}>
-                  <span style={{
-                    fontFamily: "'Sora', sans-serif",
-                    fontWeight: 800,
-                    fontSize: 13,
-                    color: "#FF693D",
-                    letterSpacing: "0.5px",
-                  }}>CP</span>
-                </div>
-        <div>
-          <div style={{ fontSize: 9.5, color: "#FF693D", fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>About Us</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#1c1c28", fontSize: "1rem" }}>College Parichay</div>
-        </div>
-        <span style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block", flexShrink: 0 }} />
-      </div>
-
-      <div style={{ height: 1, background: "rgba(0,0,0,.07)" }} />
-
-      {/* Origin story */}
       <div style={{
-        background: "rgba(255, 105, 61,.06)",
-        border: "1px solid rgba(255, 105, 61,.14)",
-        borderRadius: 10, padding: "10px 12px",
+        fontSize: 11.5, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase",
+        color: "rgba(28,28,40,.42)", textAlign: "center", marginBottom: 16,
+        fontFamily: "'Inter',system-ui,sans-serif",
       }}>
-        <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", marginBottom: 6 }}>Our Story</div>
-        <p style={{ fontSize: 12, color: "rgba(28,28,40,.7)", lineHeight: 1.65, margin: 0 }}>
-          Built in an <span style={{ color: "#FF693D", fontWeight: 700 }}>IIT Roorkee</span> hostel room by students who lived the JoSAA chaos — and decided to fix it for everyone after them.
-        </p>
+        Aspirants aiming for the best — with data on
       </div>
-
-      {/* Values */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-        {[
-          { emoji: "🛡️", label: "Honest data",   sub: "Real cutoffs, real caveats" },
-          { emoji: "❤️", label: "Student-first", sub: "Built by students, for students" },
-          { emoji: "⚡", label: "One platform",  sub: "Rank · College · Counselling" },
-        ].map(({ emoji, label, sub }) => (
-          <div key={label} style={{
-            display: "flex", alignItems: "center", gap: 10,
-            background: "rgba(0,0,0,.025)", border: "1px solid rgba(0,0,0,.06)",
-            borderRadius: 10, padding: "8px 11px",
+      <div style={{
+        display: "flex", flexWrap: "wrap", justifyContent: "center",
+        gap: isMobile ? "14px 20px" : "16px 34px",
+      }}>
+        {LOGOS.map((name) => (
+          <span key={name} style={{
+            display: "inline-flex", alignItems: "center", gap: 7,
+            fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 700,
+            fontSize: isMobile ? 13 : 15, color: "rgba(28,28,40,.5)",
+            filter: "grayscale(1)", opacity: 0.85,
           }}>
-            <span style={{ fontSize: 15, flexShrink: 0 }}>{emoji}</span>
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#1c1c28" }}>{label}</div>
-              <div style={{ fontSize: 10.5, color: "rgba(28,28,40,.5)" }}>{sub}</div>
-            </div>
-          </div>
+            <GraduationCap size={isMobile ? 15 : 17} color="rgba(28,28,40,.4)" />
+            {name}
+          </span>
         ))}
       </div>
-
-      <div style={{ height: 1, background: "rgba(0,0,0,.07)" }} />
-
-      {/* Mini stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-        {[{ val: "IIT-R", lbl: "Founded" }, { val: "3", lbl: "Engineers" }, { val: "Free", lbl: "Always" }].map(({ val, lbl }) => (
-          <div key={lbl} style={{
-            textAlign: "center", background: "rgba(0,0,0,.025)",
-            borderRadius: 9, padding: "8px 4px",
-          }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: "#1c1c28" }}>{val}</div>
-            <div style={{ fontSize: 10, color: "rgba(28,28,40,.5)", marginTop: 1 }}>{lbl}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* CTA */}
-      <button
-        onClick={() => nav("/about")}
-        style={{
-          display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: "#FF693D",
-          color: "#fff", border: "none", borderRadius: 11,
-          padding: "10px 14px", fontSize: 12.5, fontWeight: 800,
-          fontFamily: "Sora", cursor: "pointer", marginTop: "auto",
-          transition: "background .2s",
-        }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = "#e36a14"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "#FF693D"; }}
-      >
-        Our Story <ArrowRight size={13} />
-      </button>
     </motion.div>
   );
 }
 
 /* ════════════════════════════════════════════════
-   DEVELOPER PROFILE CARD (left panel — desktop only)
+   DASHBOARD MOCKUP
 ════════════════════════════════════════════════ */
-function DevProfileCard() {
-  const nav = useNavigate();
-  const ACCENT = "#FF693D";
-  const SKILLS = ["React", "Node.js", "AI / GPT", "Python", "MongoDB", "REST APIs"];
-
+const NAV = [
+  { icon: LayoutDashboard, label: "Dashboard" },
+  { icon: Crosshair, label: "Rank Predictor", active: true },
+  { icon: GraduationCap, label: "Colleges" },
+  { icon: BarChart3, label: "Cutoffs" },
+  { icon: Users, label: "Mentorship" },
+];
+const PRED = [
+  { rank: "01", name: "IIT Bombay", branch: "CSE", chance: 96, tone: GREEN, pkg: "₹33.8L" },
+  { rank: "02", name: "IIT Delhi", branch: "CSE", chance: 88, tone: GREEN, pkg: "₹32.3L" },
+  { rank: "03", name: "IIT Madras", branch: "Electrical", chance: 71, tone: "#E29A2E", pkg: "₹31.2L" },
+  { rank: "04", name: "NIT Trichy", branch: "CSE", chance: 54, tone: "#E29A2E", pkg: "₹18.4L" },
+];
+const ROUNDS = [
+  ["JoSAA Round 1", "Jun 28"],
+  ["JoSAA Round 2", "Jul 05"],
+  ["CSAB Special", "Jul 22"],
+];
+function DashboardMock({ scale = 1 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 0 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.7, delay: 0.3 }}
-      className="hero-about-col"
-      style={{
-        background: "rgba(10,10,26,0.72)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        border: "1px solid rgba(255,255,255,.1)",
-        borderRadius: 20,
-        padding: "1.1rem 1.2rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.85rem",
-        boxShadow: "0 0 0 1px rgba(255,255,255,.06), 0 24px 64px rgba(0,0,0,.6)",
-        position: "relative",
-        overflow: "hidden",
-        minWidth: 0,
-      }}
-    >
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${ACCENT}, transparent)` }} />
-
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ width: 38, height: 38, borderRadius: 10, background: `${ACCENT}20`, border: `1.5px solid ${ACCENT}40`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-          <span style={{ fontSize: 17 }}>👨‍💻</span>
+    <div style={{
+      width: 780, transform: `scale(${scale})`, transformOrigin: "top center",
+      background: "#fff", borderRadius: 18, overflow: "hidden",
+      border: "1px solid rgba(28,28,40,.08)",
+      boxShadow: "0 40px 80px -30px rgba(28,28,40,.35), 0 10px 24px -12px rgba(28,28,40,.14)",
+    }}>
+      {/* browser chrome */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "11px 14px", borderBottom: "1px solid rgba(28,28,40,.06)" }}>
+        {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
+          <span key={c} style={{ width: 11, height: 11, borderRadius: "50%", background: c }} />
+        ))}
+        <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+          <span style={{ fontSize: 11.5, color: "#9ca3af", background: "#f4f4f6", padding: "5px 16px", borderRadius: 7, fontFamily: "'Inter',sans-serif" }}>
+            collegeparichay.in/predictor
+          </span>
         </div>
-        <div>
-          <div style={{ fontSize: 9, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.6px", textTransform: "uppercase" }}>Developer</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: ".97rem" }}>Ankit Yadav GPT</div>
-        </div>
-        <motion.span
-          animate={{ boxShadow: ["0 0 0px #22c55e", "0 0 12px #22c55e", "0 0 0px #22c55e"] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block", flexShrink: 0 }}
-        />
       </div>
 
-      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
-
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <div style={{
-          width: 56, height: 56, borderRadius: 14, flexShrink: 0,
-          background: `linear-gradient(135deg, ${ACCENT}, #E0421F)`,
-          display: "grid", placeItems: "center",
-          border: `2px solid ${ACCENT}66`,
-          boxShadow: `0 0 22px ${ACCENT}44`,
-          position: "relative",
-        }}>
-          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 20, color: "#fff" }}>AK</span>
-          <span style={{ position: "absolute", bottom: 2, right: 2, width: 11, height: 11, borderRadius: "50%", background: "#22c55e", border: "2px solid #0a0a1a", boxShadow: "0 0 8px #22c55e" }} />
-        </div>
-        <div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: "#fff" }}>Ankit Yadav GPT</div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 4 }}>
-            <span style={{ fontSize: 10, background: "rgba(255, 105, 61,.18)", color: "#fdba74", border: "1px solid rgba(255, 105, 61,.32)", padding: "2px 8px", borderRadius: 50, fontWeight: 700 }}>IIT Roorkee</span>
-            <span style={{ fontSize: 10, background: "rgba(99,102,241,.18)", color: "#a5b4fc", border: "1px solid rgba(99,102,241,.28)", padding: "2px 8px", borderRadius: 50, fontWeight: 700 }}>AI Dev</span>
+      <div style={{ display: "flex", minHeight: 400 }}>
+        {/* sidebar */}
+        <div style={{ width: 186, background: "#faf9fb", borderRight: "1px solid rgba(28,28,40,.06)", padding: "16px 12px", flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
+            <span style={{ width: 26, height: 26, borderRadius: 8, background: `linear-gradient(135deg,${CORAL},${CORAL_DK})`, display: "grid", placeItems: "center", fontFamily: "Sora", fontWeight: 800, fontSize: 11, color: "#fff" }}>CP</span>
+            <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: INK }}>CollegeParichay</span>
           </div>
-          <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.42)", marginTop: 3 }}>AIR 4846 · JEE Advanced · Founder</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", border: "1px solid rgba(28,28,40,.08)", borderRadius: 8, padding: "7px 10px", marginBottom: 14 }}>
+            <Search size={13} color="#9ca3af" />
+            <span style={{ fontSize: 11.5, color: "#b6b3bb" }}>Search…</span>
+          </div>
+          {NAV.map(({ icon: Icon, label, active }) => (
+            <div key={label} style={{
+              display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", borderRadius: 8, marginBottom: 3,
+              background: active ? "rgba(255,90,54,.1)" : "transparent",
+              color: active ? CORAL_DK : "rgba(28,28,40,.62)",
+              fontWeight: active ? 700 : 500, fontSize: 12, fontFamily: "'Inter',sans-serif",
+            }}>
+              <Icon size={15} color={active ? CORAL : "#9ca3af"} /> {label}
+            </div>
+          ))}
+        </div>
+
+        {/* main */}
+        <div style={{ flex: 1, padding: "18px 20px", minWidth: 0 }}>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 19, color: INK, marginBottom: 2 }}>College Predictor</div>
+          <div style={{ fontSize: 12, color: "rgba(28,28,40,.5)", marginBottom: 14 }}>Your rank → every college you can realistically get.</div>
+
+          {/* filter row */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 7, background: "#f7f6f9", border: "1px solid rgba(28,28,40,.07)", borderRadius: 8, padding: "7px 12px", fontSize: 12, color: INK, fontWeight: 700 }}>
+              <Target size={13} color={CORAL} /> AIR&nbsp;4,846
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 7, background: "#f7f6f9", border: "1px solid rgba(28,28,40,.07)", borderRadius: 8, padding: "7px 12px", fontSize: 12, color: "rgba(28,28,40,.7)" }}>
+              General <ChevronRight size={13} style={{ transform: "rotate(90deg)" }} color="#9ca3af" />
+            </div>
+            <button style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6, background: CORAL, color: "#fff", border: "none", borderRadius: 8, padding: "7px 16px", fontSize: 12, fontWeight: 800, fontFamily: "Sora" }}>
+              Predict <ArrowRight size={13} />
+            </button>
+          </div>
+
+          <div style={{ display: "flex", gap: 16 }}>
+            {/* predicted list */}
+            <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+              {PRED.map((c) => (
+                <div key={c.name} style={{ display: "flex", alignItems: "center", gap: 11, border: "1px solid rgba(28,28,40,.07)", borderRadius: 11, padding: "10px 12px" }}>
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 12, color: "#c8c5cf", flexShrink: 0 }}>{c.rank}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: 13, color: INK }}>{c.name}</div>
+                    <div style={{ fontSize: 11, color: "rgba(28,28,40,.5)" }}>{c.branch} · avg {c.pkg}</div>
+                    <div style={{ height: 5, borderRadius: 4, background: "#eee", marginTop: 6, overflow: "hidden" }}>
+                      <div style={{ width: `${c.chance}%`, height: "100%", borderRadius: 4, background: c.tone }} />
+                    </div>
+                  </div>
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: c.tone, flexShrink: 0 }}>{c.chance}%</span>
+                </div>
+              ))}
+            </div>
+
+            {/* counselling schedule */}
+            <div style={{ width: 158, flexShrink: 0, background: "#faf9fb", border: "1px solid rgba(28,28,40,.06)", borderRadius: 12, padding: "13px 12px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 11 }}>
+                <CalendarDays size={14} color={VIOLET} />
+                <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 12, color: INK }}>Counselling</span>
+              </div>
+              {ROUNDS.map(([r, d], i) => (
+                <div key={r} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 9 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: i === 0 ? CORAL : "rgba(28,28,40,.2)", flexShrink: 0 }} />
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 11.5, fontWeight: 700, color: INK, whiteSpace: "nowrap" }}>{r}</div>
+                    <div style={{ fontSize: 10, color: "rgba(28,28,40,.45)" }}>{d}</div>
+                  </div>
+                </div>
+              ))}
+              <div style={{ marginTop: 12, background: "rgba(255,90,54,.08)", borderRadius: 9, padding: "9px 10px" }}>
+                <div style={{ fontSize: 10, color: CORAL_DK, fontWeight: 800, letterSpacing: ".5px" }}>NEXT ROUND</div>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: INK, marginTop: 1 }}>2d&nbsp;: 14h</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
 
-      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
+/* ════════════════════════════════════════════════
+   PHONE MOCKUP
+════════════════════════════════════════════════ */
+function PhoneMock() {
+  return (
+    <div style={{
+      width: 236, borderRadius: 40, padding: 9, background: "#0b0b12",
+      boxShadow: "0 44px 90px -26px rgba(28,28,40,.5), 0 12px 28px -14px rgba(28,28,40,.3)",
+      border: "1px solid rgba(255,255,255,.08)",
+    }}>
+      <div style={{ borderRadius: 32, overflow: "hidden", background: "#0f0f18", position: "relative" }}>
+        {/* status bar */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 18px 6px", fontSize: 11, color: "#fff", fontWeight: 700 }}>
+          <span>9:41</span>
+          <span style={{ display: "flex", gap: 5, alignItems: "center", opacity: 0.85 }}>
+            <span style={{ fontSize: 10 }}>▂▄▆</span>
+            <span style={{ width: 20, height: 10, border: "1.4px solid #fff", borderRadius: 3, position: "relative" }}>
+              <span style={{ position: "absolute", inset: 1.5, right: 5, background: "#fff", borderRadius: 1 }} />
+            </span>
+          </span>
+        </div>
 
-      <div>
-        <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", marginBottom: 8 }}>Tech Stack</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-          {SKILLS.map((s) => (
-            <span key={s} style={{
-              fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 50,
-              background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.10)",
-              color: "rgba(255,255,255,.78)", fontFamily: "'DM Sans', sans-serif",
-            }}>{s}</span>
+        {/* greeting */}
+        <div style={{ padding: "14px 18px 10px", textAlign: "center" }}>
+          <div style={{ width: 46, height: 46, borderRadius: 14, margin: "0 auto 12px", background: `linear-gradient(135deg,${CORAL},${CORAL_DK})`, display: "grid", placeItems: "center", boxShadow: `0 10px 24px -6px ${CORAL}aa` }}>
+            <GraduationCap size={24} color="#fff" />
+          </div>
+          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 19, color: "#fff", lineHeight: 1.25 }}>
+            Hi Aspirant,<br />your rank is ready
+          </div>
+        </div>
+
+        {/* cards */}
+        <div style={{ padding: "6px 14px 16px", display: "flex", flexDirection: "column", gap: 9 }}>
+          <div style={{ background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.09)", borderRadius: 14, padding: "12px 13px" }}>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", fontWeight: 700, letterSpacing: ".5px" }}>PREDICTED RANK</div>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 24, color: "#fff", marginTop: 2 }}>AIR&nbsp;4,846</div>
+            <div style={{ fontSize: 11, color: GREEN, fontWeight: 700, marginTop: 3, display: "flex", alignItems: "center", gap: 4 }}>
+              <TrendingUp size={12} /> Top 1.2% percentile
+            </div>
+          </div>
+          <div style={{ background: "rgba(255,90,54,.14)", border: "1px solid rgba(255,90,54,.3)", borderRadius: 14, padding: "11px 13px" }}>
+            <div style={{ fontSize: 10, color: "#ffb59e", fontWeight: 700, letterSpacing: ".5px" }}>TOP MATCH</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+              <span style={{ width: 26, height: 26, borderRadius: 8, background: "rgba(255,255,255,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <Trophy size={14} color="#fff" />
+              </span>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: "#fff" }}>IIT Bombay</div>
+                <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.6)" }}>CSE · 96% chance</div>
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.09)", borderRadius: 14, padding: "10px 13px" }}>
+            <CalendarDays size={15} color={VIOLET} />
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ fontSize: 12, color: "#fff", fontWeight: 700 }}>JoSAA Round 1</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)" }}>Choice filling · Jun 28</div>
+            </div>
+            <span style={{ fontSize: 10, fontWeight: 800, color: "#0f0f18", background: CORAL, padding: "3px 8px", borderRadius: 6 }}>2d</span>
+          </div>
+        </div>
+
+        {/* bottom nav */}
+        <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", padding: "10px 0 14px", borderTop: "1px solid rgba(255,255,255,.06)" }}>
+          {[Crosshair, GraduationCap, Users, MapPin].map((Icon, i) => (
+            <Icon key={i} size={18} color={i === 0 ? CORAL : "rgba(255,255,255,.4)"} />
           ))}
         </div>
       </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-        {[{ val: "850+", lbl: "Colleges" }, { val: "8 yrs", lbl: "Data" }, { val: "3,200+", lbl: "Students" }].map(({ val, lbl }) => (
-          <div key={lbl} style={{ textAlign: "center", background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.07)", borderRadius: 9, padding: "8px 4px" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13, color: ACCENT }}>{val}</div>
-            <div style={{ fontSize: 9.5, color: "rgba(255,255,255,.38)", marginTop: 1 }}>{lbl}</div>
-          </div>
-        ))}
-      </div>
-
-      <button
-        onClick={() => nav("/developer")}
-        style={{
-          display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: `linear-gradient(135deg, ${ACCENT}, #E0421F)`,
-          color: "#fff", border: "none", borderRadius: 11,
-          padding: "10px 14px", fontSize: 12.5, fontWeight: 700,
-          fontFamily: "Sora", cursor: "pointer", marginTop: "auto",
-          boxShadow: `0 4px 20px ${ACCENT}55`, transition: "all .2s",
-        }}
-        onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `0 8px 28px ${ACCENT}88`; }}
-        onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `0 4px 20px ${ACCENT}55`; }}
-      >
-        View Developer Profile <ArrowRight size={13} />
-      </button>
-    </motion.div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   LIVE COLLEGE PANEL (right panel)
-   Visible: desktop (full) · tablet (condensed, right col)
-════════════════════════════════════════════════ */
-function LiveCollegePanel({ isTablet }) {
-  const [activeIdx, setActiveIdx] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setActiveIdx((i) => (i + 1) % TOP_COLLEGES.length), 2800);
-    return () => clearInterval(t);
-  }, []);
-  const c = TOP_COLLEGES[activeIdx];
-
-  /* On tablet show only 3 colleges to save space */
-  const colleges = isTablet ? TOP_COLLEGES.slice(0, 3) : TOP_COLLEGES;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 0 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.7, delay: 0.3 }}
-      className="hero-about-col"
-      style={{
-        background: "rgba(10,10,26,0.72)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        border: "1px solid rgba(255,255,255,.1)",
-        borderRadius: 20,
-        padding: isTablet ? "0.9rem 1rem" : "1.1rem 1.2rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: isTablet ? "0.7rem" : "0.9rem",
-        boxShadow: "0 0 0 1px rgba(255,255,255,.06), 0 24px 64px rgba(0,0,0,.6)",
-        position: "relative",
-        overflow: "hidden",
-        minWidth: 0,
-      }}
-    >
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${c.color}, transparent)`, transition: "background .6s" }} />
-
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 11, background: `${c.color}22`, border: `1.5px solid ${c.color}44`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-          <GraduationCap size={19} color={c.color} />
-        </div>
-        <div>
-          <div style={{ fontSize: 9.5, color: "#9ca3af", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase" }}>Live College Data</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#fff", fontSize: isTablet ? ".88rem" : "1rem" }}>Top Institutes 2026</div>
-        </div>
-        <motion.span
-          animate={{ boxShadow: ["0 0 0px #22c55e", "0 0 14px #22c55e", "0 0 0px #22c55e"], scale: [1, 1.15, 1] }}
-          transition={{ duration: 1.8, repeat: Infinity }}
-          style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block" }}
-        />
-      </div>
-
-      <div style={{ height: 1, background: "rgba(255,255,255,.08)" }} />
-
-      {/* College list */}
-      <div style={{ display: "flex", flexDirection: "column", gap: isTablet ? 6 : 8 }}>
-        {colleges.map((col, i) => (
-          <motion.div
-            key={col.name}
-            animate={{ opacity: i === activeIdx % colleges.length ? 1 : 0.45, scale: i === activeIdx % colleges.length ? 1 : 0.97 }}
-            transition={{ duration: 0.4 }}
-            style={{
-              display: "flex", alignItems: "center", gap: 8,
-              background: i === activeIdx % colleges.length ? `${col.color}18` : "rgba(255,255,255,.03)",
-              border: `1px solid ${i === activeIdx % colleges.length ? col.color + "44" : "rgba(255,255,255,.06)"}`,
-              borderRadius: 10, padding: isTablet ? "6px 8px" : "7px 10px",
-              transition: "border .4s, background .4s",
-            }}
-          >
-            <span style={{ width: 28, height: 28, borderRadius: 8, background: `${col.color}22`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-              <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 9, color: col.color }}>{col.type}</span>
-            </span>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: isTablet ? 11 : 12, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{col.name}</div>
-              <div style={{ fontSize: isTablet ? 9 : 10, color: "#9ca3af", whiteSpace: "nowrap" }}>NIRF #{col.nirf} · {col.placed}% placed</div>
-            </div>
-            <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <div style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 800, fontSize: isTablet ? 11 : 12.5, color: col.color }}>{col.avg}</div>
-              <div style={{ fontSize: 9.5, color: "#6b7280" }}>avg pkg</div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Mini stat row — lifted up: tighter top margin so the IITs/NITs/IIITs
-          counts + Explore button sit a touch higher in the panel */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginTop: -2 }}>
-        {[{ val: "23", lbl: "IITs" }, { val: "31", lbl: "NITs" }, { val: "26+", lbl: "IIITs" }].map(({ val, lbl }) => (
-          <div key={lbl} style={{ textAlign: "center", background: "rgba(255,255,255,.04)", borderRadius: 9, padding: isTablet ? "6px 4px" : "8px 4px" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: isTablet ? 13 : 15, color: "#fff" }}>{val}</div>
-            <div style={{ fontSize: 10, color: "#6b7280", marginTop: 1 }}>{lbl}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* CTA button */}
-      <button
-        onClick={() => window.location.href = "/colleges"}
-        style={{
-          display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: "linear-gradient(135deg, #FF693D, #E0421F)",
-          color: "#fff", border: "none", borderRadius: 11,
-          padding: isTablet ? "9px 12px" : "11px 16px",
-          fontSize: isTablet ? 12 : 13, fontWeight: 700,
-          fontFamily: "Sora", cursor: "pointer",
-          boxShadow: "0 4px 20px rgba(249,115,22,.4)", transition: "all .2s",
-        }}
-        onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(249,115,22,.55)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 20px rgba(249,115,22,.4)"; }}
-      >
-        Explore All Colleges <ArrowRight size={14} />
-      </button>
-    </motion.div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   MENTORSHIP CARD (right panel) — JEE & NEET 2027 / 2028
-   Replaces the old live-college panel. Dynamic + animated.
-════════════════════════════════════════════════ */
-function MentorshipHeroCard({ isTablet }) {
-  const nav = useNavigate();
-  const GOLD = "#FF693D";
-  const [active, setActive] = useState(0);
-
-  // rotating spotlight across the JEE/NEET tracks
-  const tracks = [
-    { exam: "JEE 2027",  price: "₹2,499", color: "#FF693D", to: "/mentorship/jee-2027" },
-    { exam: "NEET 2027", price: "₹2,499", color: "#22c55e", to: "/mentorship/jee-2027" },
-    { exam: "JEE 2028",  price: "₹2,499", color: "#FF693D", to: "/mentorship/jee-2028" },
-    { exam: "NEET 2028", price: "₹2,499", color: "#22c55e", to: "/mentorship/jee-2028" },
-  ];
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 0 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.7, delay: 0.3 }}
-      className="hero-about-col"
-      style={{
-        background: "var(--page-bg)",
-        border: "1px solid rgba(255, 105, 61,.20)",
-        borderRadius: 20,
-        padding: isTablet ? "0.95rem 1rem" : "1.1rem 1.2rem",
-        display: "flex", flexDirection: "column", gap: isTablet ? "0.7rem" : "0.85rem",
-        boxShadow: "0 8px 30px rgba(13,27,62,.08)",
-        position: "relative", overflow: "hidden", minWidth: 0,
-      }}
-    >
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(255, 105, 61,.12)", border: "1.5px solid rgba(255, 105, 61,.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-          <GraduationCap size={20} color="#FF693D" />
-        </div>
-        <div>
-          <div style={{ fontSize: 9.5, color: "#FF693D", fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" }}>1-on-1 Mentorship</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#1c1c28", fontSize: isTablet ? ".9rem" : "1rem" }}>JEE & NEET · 2027 · 2028</div>
-        </div>
-        <span style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", display: "block" }} />
-      </div>
-
-      <div style={{ height: 1, background: "rgba(0,0,0,.07)" }} />
-
-      {/* Mentorship tracks */}
-      <div style={{ display: "flex", flexDirection: "column", gap: isTablet ? 6 : 8 }}>
-        {tracks.map((tr) => (
-          <div
-            key={tr.exam}
-            onClick={() => nav(tr.to)}
-            style={{
-              display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
-              background: `${tr.color}12`,
-              border: `1px solid ${tr.color}33`,
-              borderRadius: 10, padding: isTablet ? "7px 9px" : "8px 11px",
-            }}
-          >
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: tr.color, flexShrink: 0 }} />
-            <span style={{ flex: 1, fontFamily: "Space Grotesk,Sora", fontWeight: 700, fontSize: isTablet ? 12 : 13, color: "#1c1c28" }}>{tr.exam} Mentorship</span>
-            <span style={{ fontFamily: "Space Grotesk,Sora", fontWeight: 800, fontSize: isTablet ? 12 : 13.5, color: tr.color }}>{tr.price}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* mini stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-        {[{ val: "1:1", lbl: "Mentor" }, { val: "1000+", lbl: "Students" }, { val: "Daily", lbl: "Targets" }].map(({ val, lbl }) => (
-          <div key={lbl} style={{ textAlign: "center", background: "rgba(0,0,0,.025)", borderRadius: 9, padding: isTablet ? "6px 4px" : "8px 4px" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: isTablet ? 13 : 15, color: "#1c1c28" }}>{val}</div>
-            <div style={{ fontSize: 10, color: "rgba(28,28,40,.5)", marginTop: 1 }}>{lbl}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* CTA */}
-      <button
-        onClick={() => nav("/mentorship/jee-2027")}
-        style={{
-          display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-          background: "#FF693D",
-          color: "#fff", border: "none", borderRadius: 11,
-          padding: isTablet ? "9px 12px" : "11px 16px",
-          fontSize: isTablet ? 12 : 13, fontWeight: 800,
-          fontFamily: "Sora", cursor: "pointer",
-          transition: "background .2s",
-        }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = "#e36a14"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "#FF693D"; }}
-      >
-        Explore Mentorship <ArrowRight size={14} />
-      </button>
-    </motion.div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   ROTATING HERO CARD (right column)
-   Merges the old left/right hero cards into ONE
-   auto-cycling showcase — jastro-style: white card,
-   soft layered shadow, rounded, pill CTA.
-════════════════════════════════════════════════ */
-const HERO_CARDS = [
-  {
-    key: "jee-main", accent: "#FF693D", Icon: Crosshair,
-    eyebrow: "Free Tool", title: "JEE Main Rank Predictor",
-    rows: [
-      ["Percentile → Rank", "Instant"],
-      ["Categories", "All"],
-      ["Updated for", "2026"],
-    ],
-    cta: "Predict my rank", to: "/jee-main#college",
-  },
-  {
-    key: "jee-adv", accent: "#8b5cf6", Icon: Trophy,
-    eyebrow: "Free Tool", title: "JEE Advanced Predictor",
-    rows: [
-      ["Marks → AIR", "Instant"],
-      ["IIT branch chances", "23 IITs"],
-      ["CRL + category", "Yes"],
-    ],
-    cta: "Check IIT chances", to: "/jee-advanced#college",
-  },
-  {
-    key: "college", accent: "#0ea5a4", Icon: GraduationCap,
-    eyebrow: "Smart Match", title: "College Predictor",
-    rows: [
-      ["Rank → colleges", "Personalised"],
-      ["IIT · NIT · IIIT", "850+"],
-      ["JoSAA cutoffs", "2018–25"],
-    ],
-    cta: "Find my colleges", to: "/for-you",
-  },
-  {
-    key: "mentorship", accent: "#FF693D", Icon: Users,
-    eyebrow: "1-on-1", title: "JEE & NEET Mentorship",
-    rows: [
-      ["Daily targets", "Yes"],
-      ["Mentors", "IITians"],
-      ["Starts at", "₹2,499"],
-    ],
-    cta: "Explore mentorship", to: "/mentorship/jee-2027",
-  },
-  {
-    key: "colleges", accent: "#6366f1", Icon: MapPin,
-    eyebrow: "Explore", title: "850+ Colleges",
-    rows: [
-      ["Reviews & cutoffs", "Verified"],
-      ["Placements & fees", "Branch-wise"],
-      ["IITs · NITs · IIITs", "All"],
-    ],
-    cta: "Browse colleges", to: "/colleges",
-  },
-];
-
-function RotatingHeroCard({ isMobile }) {
-  const nav = useNavigate();
-  const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (paused) return;
-    const t = setInterval(() => setI((p) => (p + 1) % HERO_CARDS.length), 3500);
-    return () => clearInterval(t);
-  }, [paused]);
-
-  const c = HERO_CARDS[i];
-
-  return (
-    <div
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      style={{ width: "100%", maxWidth: isMobile ? 460 : "none", margin: isMobile ? "10px auto 0" : 0 }}
-    >
-      <div style={{ position: "relative", minHeight: 318 }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={c.key}
-            initial={{ opacity: 0, x: 36 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -36 }}
-            transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
-            style={{
-              background: "var(--page-bg)",
-              border: "1px solid rgba(0,0,0,.07)",
-              borderRadius: 18,
-              padding: "1.2rem 1.25rem",
-              boxShadow:
-                "0 1px 3px rgba(0,0,0,.05), 0 20px 25px -5px rgba(0,0,0,.06), 0 10px 10px -5px rgba(0,0,0,.04)",
-              display: "flex", flexDirection: "column", gap: "0.9rem",
-              position: "absolute", inset: 0, overflow: "hidden",
-            }}
-          >
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, transparent, ${c.accent}, transparent)` }} />
-
-            {/* header */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 42, height: 42, borderRadius: 12, background: `${c.accent}18`, border: `1.5px solid ${c.accent}40`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                <c.Icon size={20} color={c.accent} />
-              </div>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 9.5, color: c.accent, fontWeight: 800, letterSpacing: "1.4px", textTransform: "uppercase" }}>{c.eyebrow}</div>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#1c1c28", fontSize: "1.02rem", lineHeight: 1.2 }}>{c.title}</div>
-              </div>
-              <span style={{ marginLeft: "auto", width: 9, height: 9, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
-            </div>
-
-            <div style={{ height: 1, background: "rgba(0,0,0,.07)" }} />
-
-            {/* rows */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {c.rows.map(([label, value]) => (
-                <div key={label} style={{ display: "flex", alignItems: "center", gap: 9, background: "rgba(0,0,0,.025)", border: "1px solid rgba(0,0,0,.05)", borderRadius: 10, padding: "8px 11px" }}>
-                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: c.accent, flexShrink: 0 }} />
-                  <span style={{ flex: 1, fontSize: 12.5, color: "rgba(28,28,40,.72)", fontWeight: 500 }}>{label}</span>
-                  <span style={{ fontSize: 12.5, fontWeight: 800, color: "#1c1c28" }}>{value}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* CTA — pill (jastro) */}
-            <button
-              onClick={() => nav(c.to)}
-              style={{
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-                background: c.accent, color: "#fff", border: "none", borderRadius: 9999,
-                padding: "11px 16px", fontSize: 13.5, fontWeight: 800, fontFamily: "Sora",
-                cursor: "pointer", marginTop: "auto",
-              }}
-            >
-              {c.cta} <ArrowRight size={15} />
-            </button>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* dots */}
-      <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
-        {HERO_CARDS.map((card, idx) => (
-          <button
-            key={card.key}
-            onClick={() => setI(idx)}
-            aria-label={card.title}
-            style={{
-              width: idx === i ? 22 : 7, height: 7, borderRadius: 9999, border: "none",
-              background: idx === i ? c.accent : "rgba(0,0,0,.18)",
-              cursor: "pointer", transition: "all .3s", padding: 0,
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   HERO FEATURE CARDS — detailed cards (radar style:
-   header + info + bottom CTA button → page). Counselling
-   and Our Story rotate their content (scroll effect).
-════════════════════════════════════════════════ */
-const COUNSEL_LIST = [
-  "IIT Bombay · CSE ≤ AIR 68",
-  "IIT Delhi · CSE ≤ AIR 110",
-  "IIT Madras · CSE ≤ AIR 162",
-  "NIT Trichy · CSE ≤ 5,000",
-  "IIIT Hyderabad · CSE ≤ 2,500",
-  "NIT Warangal · CSE ≤ 8,000",
-];
-const STORY_LINES = [
-  "Built in an IIT Roorkee hostel room.",
-  "By students who lived the JoSAA chaos.",
-  "Now free for every aspirant after them.",
-  "Honest data · student-first · always free.",
-];
-
-const FEATURE_CARDS = [
-  { key: "jee-main", accent: "#FF693D", Icon: Crosshair, eyebrow: "Free Tool", title: "JEE Main",
-    rows: [["Percentile → Rank", "Instant"], ["College chances", "IIT·NIT·IIIT"], ["Updated", "2026"]],
-    cta: "Open JEE Main", to: "/jee-main" },
-  { key: "jee-adv", accent: "#8b5cf6", Icon: Trophy, eyebrow: "Free Tool", title: "JEE Advanced",
-    rows: [["Marks → AIR", "Instant"], ["IIT branches", "23 IITs"], ["CRL + category", "Yes"]],
-    cta: "Open JEE Advanced", to: "/jee-advanced" },
-  { key: "neet", accent: "#22c55e", Icon: Award, eyebrow: "Free Tool", title: "NEET",
-    rows: [["Rank predictor", "Yes"], ["MBBS colleges", "Explore"], ["Cutoffs", "All-India"]],
-    cta: "Open NEET", to: "/neet" },
-  { key: "mentorship", accent: "#FF693D", Icon: Users, eyebrow: "1-on-1", title: "Mentorship",
-    rows: [["JEE & NEET", "2027·2028"], ["Daily targets", "Yes"], ["Starts at", "₹2,499"]],
-    cta: "Explore Mentorship", to: "/mentorship/jee-2027" },
-  { key: "counselling", accent: "#0ea5a4", Icon: GraduationCap, eyebrow: "Counselling", title: "Colleges",
-    rotate: COUNSEL_LIST, cta: "Browse Colleges", to: "/colleges" },
-  { key: "about", accent: "#6366f1", Icon: Sparkles, eyebrow: "About Us", title: "Our Story",
-    rotate: STORY_LINES, cta: "About Us", to: "/about" },
-];
-
-function RotatingLine({ items, accent }) {
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setI((p) => (p + 1) % items.length), 2200);
-    return () => clearInterval(t);
-  }, [items.length]);
-  return (
-    <div style={{ flex: 1, minHeight: 92, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.4 }}
-          style={{ display: "flex", alignItems: "center", gap: 9, background: `${accent}0e`, border: `1px solid ${accent}26`, borderRadius: 10, padding: "13px 13px" }}
-        >
-          <span style={{ width: 7, height: 7, borderRadius: "50%", background: accent, flexShrink: 0 }} />
-          <span style={{ fontSize: 13, fontWeight: 600, color: "#1c1c28", lineHeight: 1.4 }}>{items[i]}</span>
-        </motion.div>
-      </AnimatePresence>
-      <div style={{ display: "flex", gap: 4, marginTop: 10, justifyContent: "center" }}>
-        {items.map((_, idx) => (
-          <span key={idx} style={{ width: idx === i ? 16 : 6, height: 6, borderRadius: 9999, background: idx === i ? accent : "rgba(0,0,0,.15)", transition: "all .3s" }} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function HeroFeatureCards({ isMobile, isXs }) {
-  const nav = useNavigate();
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: isXs ? "1fr" : isMobile ? "repeat(2,1fr)" : "repeat(3,1fr)",
-        gap: 16,
-        width: "100%",
-      }}
-    >
-      {FEATURE_CARDS.map((c) => (
-        <div
-          key={c.key}
-          style={{
-            display: "flex", flexDirection: "column", gap: 12,
-            background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.07)", borderRadius: 18,
-            padding: "1.15rem 1.2rem", textAlign: "left", minHeight: 240,
-            boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 20px 25px -5px rgba(0,0,0,.06), 0 10px 10px -5px rgba(0,0,0,.04)",
-          }}
-        >
-          {/* header */}
-          <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
-            <span style={{ width: 44, height: 44, borderRadius: 12, background: `${c.accent}18`, border: `1.5px solid ${c.accent}38`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-              <c.Icon size={21} color={c.accent} />
-            </span>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 9.5, color: c.accent, fontWeight: 800, letterSpacing: "1.3px", textTransform: "uppercase" }}>{c.eyebrow}</div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, color: "#1c1c28", fontSize: "1.08rem", lineHeight: 1.15 }}>{c.title}</div>
-            </div>
-          </div>
-
-          <div style={{ height: 1, background: "rgba(0,0,0,.07)" }} />
-
-          {/* body — info rows OR rotating list */}
-          {c.rotate ? (
-            <RotatingLine items={c.rotate} accent={c.accent} />
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: 1 }}>
-              {c.rows.map(([label, value]) => (
-                <div key={label} style={{ display: "flex", alignItems: "center", gap: 9, background: "rgba(0,0,0,.025)", border: "1px solid rgba(0,0,0,.05)", borderRadius: 9, padding: "7px 10px" }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: c.accent, flexShrink: 0 }} />
-                  <span style={{ flex: 1, fontSize: 12.5, color: "rgba(28,28,40,.72)", fontWeight: 500 }}>{label}</span>
-                  <span style={{ fontSize: 12.5, fontWeight: 800, color: "#1c1c28" }}>{value}</span>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* bottom CTA — pill → page */}
-          <button
-            onClick={() => nav(c.to)}
-            style={{
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-              background: c.accent, color: "#fff", border: "none", borderRadius: 9999,
-              padding: "10px 16px", fontSize: 13, fontWeight: 800, fontFamily: "Sora", cursor: "pointer",
-            }}
-          >
-            {c.cta} <ArrowRight size={15} />
-          </button>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   HERO RADAR CARD (right column) — one rich, fully
-   informative card that auto-scrolls one-by-one:
-   coloured header + description + link rows (→) +
-   bottom CTA, with dot navigation.
-════════════════════════════════════════════════ */
-const HERO_RADAR = [
-  { key: "jee-main", accent: "#FF693D", eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College Predictor",
-    desc: "Turn your NTA percentile into a rank and see every IIT, NIT & IIIT you can get.",
-    links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"], ["Exam dates & pattern", "/jee-main"]],
-    cta: "Open JEE Main", to: "/jee-main" },
-  { key: "jee-adv", accent: "#8b5cf6", eyebrow: "JEE ADVANCED 2026", title: "JEE Advanced — IIT Predictor",
-    desc: "Marks to AIR, then the exact IITs and branches you qualify for, category-wise.",
-    links: [["JEE Advanced Rank Predictor", "/jee-advanced"], ["Result & Rank List 2026", "/jee-advanced-result-2026"], ["IIT Cutoffs & branches", "/cutoffs"], ["JoSAA Round 1 result", "/josaa-round-1-result-2026"]],
-    cta: "Open JEE Advanced", to: "/jee-advanced" },
-  { key: "neet", accent: "#22c55e", eyebrow: "NEET 2026", title: "NEET — Rank & College Finder",
-    desc: "Predict your NEET rank and explore MBBS & medical colleges with cutoffs.",
-    links: [["NEET Rank Predictor", "/neet"], ["Medical College Finder", "/neet"], ["NEET Cutoffs", "/neet"], ["Counselling guidance", "/planner"]],
-    cta: "Open NEET", to: "/neet" },
-  { key: "mentorship", accent: "#FF693D", eyebrow: "1-ON-1 MENTORSHIP", title: "Mentorship by IITians",
-    desc: "Daily targets, test analysis & live tracking for JEE and NEET aspirants.",
-    links: [["JEE 2027 Mentorship", "/mentorship/jee-2027"], ["JEE 2028 Mentorship", "/mentorship/jee-2028"], ["NEET Mentorship", "/mentorship/jee-2027"], ["How it works", "/mentorship/jee-2027"]],
-    cta: "Explore Mentorship", to: "/mentorship/jee-2027" },
-  { key: "counselling", accent: "#0ea5a4", eyebrow: "JoSAA & CSAB", title: "Counselling — Plan Every Round",
-    desc: "Build your choice list, track round dates and read official cutoffs.",
-    links: [["JoSAA Counselling Planner", "/planner"], ["JoSAA Round 1 Result", "/josaa-round-1-result-2026"], ["All Cutoffs 2018–2025", "/cutoffs"], ["JoSAA 2026 Guide", "/josaa-2026"]],
-    cta: "Open Counselling Planner", to: "/planner" },
-  { key: "colleges", accent: "#6366f1", eyebrow: "850+ COLLEGES", title: "Colleges & Our Story",
-    desc: "Reviews, cutoffs, placements & fees for every IIT, NIT and IIIT — built by IIT Roorkee alumni.",
-    links: [["All IIT · NIT · IIIT", "/colleges"], ["Compare colleges", "/compare"], ["College map", "/map"], ["About / Our story", "/about"]],
-    cta: "Browse Colleges", to: "/colleges" },
-];
-
-function HeroRadarCard({ isMobile }) {
-  const nav = useNavigate();
-  const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (paused) return;
-    const t = setInterval(() => setI((p) => (p + 1) % HERO_RADAR.length), 4200);
-    return () => clearInterval(t);
-  }, [paused]);
-
-  const c = HERO_RADAR[i];
-
-  return (
-    <div
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      style={{ width: "100%", maxWidth: isMobile ? 460 : "none", margin: isMobile ? "4px auto 0" : 0 }}
-    >
-      <div style={{ position: "relative", minHeight: 404 }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={c.key}
-            initial={{ opacity: 0, x: 36 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -36 }}
-            transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
-            style={{
-              position: "absolute", inset: 0,
-              background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.08)", borderRadius: 20, overflow: "hidden",
-              boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 24px 30px -8px rgba(0,0,0,.10), 0 12px 14px -8px rgba(0,0,0,.05)",
-              display: "flex", flexDirection: "column",
-            }}
-          >
-            {/* coloured header */}
-            <div style={{ background: `linear-gradient(135deg, ${c.accent}, ${c.accent}cc)`, color: "#fff", padding: "15px 18px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 10, fontWeight: 800, letterSpacing: "1.2px", opacity: 0.95 }}>
-                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--page-bg)", display: "inline-block" }} /> {c.eyebrow}
-              </div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", marginTop: 6, lineHeight: 1.25 }}>{c.title}</div>
-            </div>
-
-            {/* body */}
-            <div style={{ padding: "14px 16px 16px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-              <p style={{ fontSize: 12.5, color: "rgba(28,28,40,.66)", lineHeight: 1.5, margin: 0 }}>{c.desc}</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                {c.links.map(([label, to]) => (
-                  <button
-                    key={label}
-                    onClick={() => nav(to)}
-                    style={{
-                      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, width: "100%",
-                      background: "rgba(0,0,0,.02)", border: "1px solid rgba(0,0,0,.06)", borderRadius: 10, padding: "9px 12px",
-                      cursor: "pointer", fontSize: 12.5, fontWeight: 600, color: "#1c1c28", textAlign: "left",
-                      transition: "background .18s, border-color .18s",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = `${c.accent}10`; e.currentTarget.style.borderColor = `${c.accent}40`; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,.02)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.06)"; }}
-                  >
-                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
-                    <ArrowRight size={14} color={c.accent} style={{ flexShrink: 0 }} />
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => nav(c.to)}
-                style={{
-                  marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-                  background: c.accent, color: "#fff", border: "none", borderRadius: 9999,
-                  padding: "11px 16px", fontSize: 13.5, fontWeight: 800, fontFamily: "Sora", cursor: "pointer",
-                }}
-              >
-                {c.cta} <ArrowRight size={15} />
-              </button>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* dots */}
-      <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
-        {HERO_RADAR.map((card, idx) => (
-          <button
-            key={card.key}
-            onClick={() => setI(idx)}
-            aria-label={card.title}
-            style={{ width: idx === i ? 22 : 7, height: 7, borderRadius: 9999, border: "none", background: idx === i ? c.accent : "rgba(0,0,0,.18)", cursor: "pointer", transition: "all .3s", padding: 0 }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   HERO ROTATING SIDE CARDS — both hero columns are now
-   auto-scrolling cards. LEFT cycles Our Story · Tools ·
-   Explore Colleges. RIGHT cycles Mentorship · JEE Adv ·
-   JEE Main · NEET. Coloured header + description +
-   link rows (→ pages) + CTA, with dot navigation.
-════════════════════════════════════════════════ */
-const HERO_LEFT = [
-  { key: "story", accent: "#6366f1", Icon: Sparkles, eyebrow: "ABOUT US", title: "Our Story",
-    desc: "Built in an IIT Roorkee hostel room by students who lived the JoSAA chaos first-hand — now free for every aspirant who comes after them.",
-    highlights: ["IIT Roorkee", "Student-first", "Always free"],
-    links: [["Our mission & story", "/about"], ["Meet the team behind it", "/about"], ["How to use CollegeParichay", "/how-to-use"], ["Browse all colleges", "/colleges"]],
-    cta: "Read Our Story", to: "/about" },
-  { key: "tools", accent: "#0ea5a4", Icon: Zap, eyebrow: "FREE TOOLS", title: "Tools for Smarter Choices",
-    desc: "Free calculators and explorers that plan your admission end-to-end — from fees and ROI to the perfect choice-filling order.",
-    highlights: ["ROI calc", "College map", "Choice list"],
-    links: [["ROI / Fees Calculator", "/scholarships"], ["Campus Map Explorer", "/map"], ["Choice List Planner", "/planner"], ["Colleges for You", "/for-you"]],
-    cta: "Explore All Tools", to: "/for-you" },
-  { key: "colleges", accent: "#FF693D", Icon: GraduationCap, eyebrow: "850+ COLLEGES", title: "Explore Colleges",
-    desc: "Verified reviews, year-wise cutoffs, placements and fees for every IIT, NIT, IIIT and top private university in India.",
-    highlights: ["850+ listed", "Cutoffs", "Placements"],
-    links: [["All IIT · NIT · IIIT", "/colleges"], ["Compare colleges side-by-side", "/compare"], ["Private universities", "/private-universities"], ["Colleges on the map", "/map"]],
-    cta: "Explore Colleges", to: "/colleges" },
-];
-
-const HERO_RIGHT = [
-  { key: "mentorship", accent: "#FF693D", Icon: Users, eyebrow: "1-ON-1 MENTORSHIP", title: "Mentorship by IITians",
-    desc: "A personal IITian / doctor mentor, daily targets and weekly test analysis for JEE & NEET — every plan, Foundation to Droppers, in one place.",
-    highlights: ["1-on-1", "Daily targets", "IITian mentors"],
-    links: [["JEE & NEET 2027 plan", "/mentorship"], ["JEE & NEET 2028 plan", "/mentorship"], ["Foundation · Class 9–10", "/mentorship"], ["View all mentorship plans", "/mentorship"]],
-    cta: "See All Mentorship Plans", to: "/mentorship" },
-  { key: "jee-adv", accent: "#8b5cf6", Icon: Trophy, eyebrow: "JEE ADVANCED 2026", title: "JEE Advanced — IIT Predictor",
-    desc: "Convert your marks to an All-India Rank, then see the exact IITs and branches you qualify for — category-wise, across all 23 IITs.",
-    highlights: ["Marks → AIR", "23 IITs", "Category-wise"],
-    links: [["JEE Advanced Rank Predictor", "/jee-advanced"], ["Result & Rank List 2026", "/jee-advanced-result-2026"], ["IIT Cutoffs & branches", "/cutoffs"], ["JoSAA Round 1 result", "/josaa-round-1-result-2026"]],
-    cta: "Open JEE Advanced", to: "/jee-advanced" },
-  { key: "jee-main", accent: "#FF693D", Icon: Crosshair, eyebrow: "JEE MAIN 2026", title: "JEE Main — Rank & College",
-    desc: "Turn your NTA percentile into a rank, then discover every IIT, NIT, IIIT and GFTI seat you can realistically get this year.",
-    highlights: ["%ile → Rank", "NIT · IIIT", "2026 data"],
-    links: [["JEE Main Rank Predictor", "/jee-main"], ["Personalised College Predictor", "/for-you"], ["JoSAA Cutoffs 2018–2025", "/cutoffs"], ["Exam dates & pattern", "/jee-main"]],
-    cta: "Open JEE Main", to: "/jee-main" },
-  { key: "neet", accent: "#22c55e", Icon: Stethoscope, eyebrow: "NEET 2026", title: "NEET — Rank & College Finder",
-    desc: "Predict your NEET rank and explore MBBS, BDS and other medical colleges with both All-India-quota and state-quota cutoffs.",
-    highlights: ["Rank predict", "MBBS / BDS", "AIQ + state"],
-    links: [["NEET Rank Predictor", "/neet"], ["Medical College Finder", "/neet"], ["Counselling guidance", "/planner"], ["MBBS scholarships", "/scholarships"]],
-    cta: "Open NEET", to: "/neet" },
-];
-
-function HeroRotatingCard({ slides, isMobile, interval = 4600, minHeight = 492 }) {
-  const nav = useNavigate();
-  const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (paused) return;
-    const t = setInterval(() => setI((p) => (p + 1) % slides.length), interval);
-    return () => clearInterval(t);
-  }, [paused, slides.length, interval]);
-
-  const idx = i % slides.length;
-  const c = slides[idx];
-  const Icon = c.Icon;
-
-  return (
-    <div
-      className="hero-about-col"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      style={{ width: "100%", maxWidth: isMobile ? 460 : "none", margin: isMobile ? "4px auto 0" : 0, minWidth: 0 }}
-    >
-      <div style={{ position: "relative", minHeight }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={c.key}
-            initial={{ opacity: 0, y: 18, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -14, scale: 0.98 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            whileHover={{ y: -4 }}
-            style={{
-              position: "absolute", inset: 0,
-              background: "var(--page-bg)", border: `1px solid ${c.accent}22`, borderRadius: 22, overflow: "hidden",
-              boxShadow: `0 1px 3px rgba(0,0,0,.05), 0 30px 50px -18px ${c.accent}44, 0 12px 18px -10px rgba(0,0,0,.10)`,
-              display: "flex", flexDirection: "column",
-            }}
-          >
-            {/* coloured header with shimmer sweep */}
-            <div style={{ position: "relative", background: `linear-gradient(135deg, ${c.accent}, ${c.accent}cc)`, color: "#fff", padding: "16px 18px", overflow: "hidden" }}>
-              <motion.div
-                aria-hidden
-                animate={{ x: ["-120%", "240%"] }}
-                transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.7 }}
-                style={{ position: "absolute", top: 0, bottom: 0, width: "45%", background: "linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent)", pointerEvents: "none" }}
-              />
-              <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 11 }}>
-                <motion.span
-                  initial={{ rotate: -8, scale: 0.8, opacity: 0 }}
-                  animate={{ rotate: 0, scale: 1, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                  style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(255,255,255,.18)", border: "1px solid rgba(255,255,255,.35)", display: "grid", placeItems: "center", flexShrink: 0 }}
-                >
-                  <Icon size={21} color="#fff" />
-                </motion.span>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 9.5, fontWeight: 800, letterSpacing: "1.3px", opacity: 0.95 }}>
-                    <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.6, repeat: Infinity }} style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--page-bg)", display: "inline-block" }} />
-                    {c.eyebrow}
-                  </div>
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.04rem", marginTop: 4, lineHeight: 1.2 }}>{c.title}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* auto-rotate progress bar */}
-            <div style={{ height: 3, background: "rgba(0,0,0,.06)", position: "relative", overflow: "hidden" }}>
-              <motion.div
-                key={`${c.key}-${paused}`}
-                initial={{ width: paused ? "100%" : "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ duration: paused ? 0 : interval / 1000, ease: "linear" }}
-                style={{ position: "absolute", left: 0, top: 0, bottom: 0, background: c.accent }}
-              />
-            </div>
-
-            {/* body */}
-            <div style={{ padding: "13px 16px 16px", display: "flex", flexDirection: "column", gap: 11, flex: 1 }}>
-              <p style={{ fontSize: 12.5, color: "rgba(28,28,40,.66)", lineHeight: 1.55, margin: 0 }}>{c.desc}</p>
-
-              {/* highlight chips */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                {c.highlights.map((h) => (
-                  <span key={h} style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10.5, fontWeight: 700, color: c.accent, background: `${c.accent}12`, border: `1px solid ${c.accent}2e`, borderRadius: 9999, padding: "4px 10px" }}>
-                    <Check size={11} color={c.accent} strokeWidth={3} /> {h}
-                  </span>
-                ))}
-              </div>
-
-              {/* link rows (staggered) */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                {c.links.map(([label, to], li) => (
-                  <motion.button
-                    key={label}
-                    initial={{ opacity: 0, x: 14 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.12 + li * 0.06, duration: 0.35 }}
-                    onClick={() => nav(to)}
-                    style={{
-                      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, width: "100%",
-                      background: "rgba(0,0,0,.02)", border: "1px solid rgba(0,0,0,.06)", borderRadius: 11, padding: "9px 12px",
-                      cursor: "pointer", fontSize: 12.5, fontWeight: 600, color: "#1c1c28", textAlign: "left",
-                      transition: "background .18s, border-color .18s, transform .18s",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = `${c.accent}10`; e.currentTarget.style.borderColor = `${c.accent}40`; e.currentTarget.style.transform = "translateX(3px)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,.02)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.06)"; e.currentTarget.style.transform = ""; }}
-                  >
-                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
-                    <ArrowRight size={14} color={c.accent} style={{ flexShrink: 0 }} />
-                  </motion.button>
-                ))}
-              </div>
-
-              {/* CTA */}
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => nav(c.to)}
-                style={{
-                  marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-                  background: `linear-gradient(135deg, ${c.accent}, ${c.accent}d0)`, color: "#fff", border: "none", borderRadius: 9999,
-                  padding: "12px 16px", fontSize: 13.5, fontWeight: 800, fontFamily: "Sora", cursor: "pointer",
-                  boxShadow: `0 8px 22px -6px ${c.accent}99`,
-                }}
-              >
-                {c.cta} <ArrowRight size={15} />
-              </motion.button>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* dots */}
-      <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
-        {slides.map((card, d) => (
-          <button
-            key={card.key}
-            onClick={() => setI(d)}
-            aria-label={card.title}
-            style={{ width: d === idx ? 24 : 7, height: 7, borderRadius: 9999, border: "none", background: d === idx ? c.accent : "rgba(0,0,0,.18)", cursor: "pointer", transition: "all .3s", padding: 0 }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   SIX FEATURE CARDS — single horizontal row below the
-   hero heading. Each: icon → title → sub → CTA pinned
-   bottom. Scroll-reveal fade-up. Radar card is taller,
-   accented, lists colleges + a "Radar" badge.
-════════════════════════════════════════════════ */
-const SIX_CARDS = [
-  { key: "jee-adv", Icon: Trophy, accent: "#8b5cf6", title: "JEE Advanced", desc: "Cutoffs · Predictor · IIT Seat Matrix", cta: "Explore JEE Advanced", to: "/jee-advanced" },
-  { key: "jee-main", Icon: GraduationCap, accent: "#FF693D", title: "JEE Mains", desc: "Rank Predict · NIT Cutoffs · Sessions", cta: "Explore JEE Mains", to: "/jee-main" },
-  { key: "neet", Icon: Stethoscope, accent: "#22c55e", title: "NEET", desc: "MBBS Colleges · State Cutoffs · AIQ", cta: "Explore NEET", to: "/neet" },
-  { key: "mentorship", Icon: Users, accent: "#FF693D", title: "Mentorship", desc: "1-on-1 with IITian Mentors · Personalised Guidance", cta: "Book a Session", to: "/mentorship/jee-2027" },
-  { key: "radar", Icon: Radar, accent: "#FF693D", title: "Application & Counselling Radar", radar: true, colleges: ["IIT Bombay", "IIT Delhi", "NIT Trichy", "NIT Warangal", "BITS Pilani", "KIIT", "VIT"], cta: "View Radar", to: "/planner" },
-  { key: "about", Icon: Info, accent: "#6366f1", title: "About Us / Our Story", desc: "IIT Roorkee Startup · Built by IITians", cta: "Our Story", to: "/about" },
-];
-
-function SixFeatureCards({ isMobile, isXs }) {
-  const nav = useNavigate();
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: isXs ? "repeat(2,1fr)" : isMobile ? "repeat(3,1fr)" : "repeat(6,1fr)",
-        gap: 14, width: "100%", alignItems: "start",
-      }}
-    >
-      {SIX_CARDS.map((c, idx) => (
-        <motion.div
-          key={c.key}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.4, delay: idx * 0.05, ease: "easeOut" }}
-          onClick={() => nav(c.to)}
-          style={{
-            cursor: "pointer", display: "flex", flexDirection: "column", gap: 8,
-            minHeight: c.radar ? 232 : 200, textAlign: "left",
-            background: "var(--page-bg)",
-            border: c.radar ? "1.5px solid #FF693D" : "1px solid rgba(0,0,0,.08)",
-            borderRadius: 16, padding: "16px 14px", position: "relative",
-            boxShadow: "0 1px 3px rgba(0,0,0,.05)",
-            transition: "box-shadow .25s, transform .25s",
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,.05)"; e.currentTarget.style.transform = ""; }}
-        >
-          {c.radar && (
-            <span style={{ position: "absolute", top: 10, right: 10, fontSize: 9, fontWeight: 800, letterSpacing: ".5px", color: "#FF693D", background: "rgba(249,115,22,.12)", border: "1px solid rgba(249,115,22,.3)", borderRadius: 9999, padding: "2px 8px" }}>Radar</span>
-          )}
-          <span style={{ width: 40, height: 40, borderRadius: 11, background: `${c.accent}18`, border: `1.5px solid ${c.accent}38`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-            <c.Icon size={20} color={c.accent} />
-          </span>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: "#1c1c28", lineHeight: 1.2 }}>{c.title}</div>
-          {c.radar ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 3, flex: 1 }}>
-              {c.colleges.map((col) => (
-                <div key={col} style={{ fontSize: 11, color: "rgba(28,28,40,.66)", display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: c.accent, flexShrink: 0 }} />{col}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ fontSize: 11.5, color: "rgba(28,28,40,.62)", lineHeight: 1.45, flex: 1 }}>{c.desc}</div>
-          )}
-          <button
-            onClick={(e) => { e.stopPropagation(); nav(c.to); }}
-            style={{
-              marginTop: "auto", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
-              background: c.accent, color: "#fff", border: "none", borderRadius: 9999, padding: "8px 12px",
-              fontSize: 11.5, fontWeight: 800, fontFamily: "Sora", cursor: "pointer", width: "100%",
-            }}
-          >
-            {c.cta} <ArrowRight size={13} />
-          </button>
-        </motion.div>
-      ))}
     </div>
   );
 }
@@ -1404,341 +382,163 @@ function SixFeatureCards({ isMobile, isXs }) {
 /* ════════════════════════════════════════════════
    HERO — MAIN EXPORT
 ════════════════════════════════════════════════ */
-/* ════════════════════════════════════════════════
-   HERO STORY CARD (right column — desktop/laptop)
-   A single IIT Roorkee campus card with the founders'
-   story written across the bottom. Hidden on mobile
-   via .hero-about-col (mobile shows the centre text only).
-════════════════════════════════════════════════ */
-function HeroStoryCard() {
-  const [imgOk, setImgOk] = useState(true);
-
-  return (
-    <motion.div
-      className="hero-about-col cp-hero-img"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay: 0.25 }}
-      style={{
-        position: "relative", width: "100%", aspectRatio: "5 / 4", minWidth: 0,
-        borderRadius: 24, overflow: "hidden",
-        border: "1px solid rgba(0,0,0,.06)",
-        background: "linear-gradient(135deg, #1b1b2e, #0a0a1a)",
-        boxShadow: "0 1px 3px rgba(0,0,0,.05), 0 30px 60px -20px rgba(13,27,62,.28), 0 12px 18px -10px rgba(0,0,0,.10)",
-      }}
-    >
-      {/* campus image — IIT Roorkee main building */}
-      {imgOk && (
-        <img
-          src="/assets/team/IITs/IITs/IIT%20ROORKEE.jpg"
-          alt="IIT Roorkee main building — where College Parichay was built"
-          onError={() => setImgOk(false)}
-          className="cp-hero-img__photo"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", transition: "transform .7s ease" }}
-        />
-      )}
-
-      {/* floating glass badge — Data Accuracy (reference style, bottom-left) */}
-      <div style={{
-        position: "absolute", bottom: 16, left: 16, zIndex: 2,
-        display: "flex", alignItems: "center", gap: 10,
-        background: "rgba(255,255,255,.85)", backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,.35)",
-        borderRadius: 14, padding: "10px 13px", boxShadow: "0 10px 28px rgba(0,0,0,.20)",
-      }}>
-        <span style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(15,174,110,.14)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-          <Check size={20} color="#0FAE6E" />
-        </span>
-        <div>
-          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(28,28,40,.6)", letterSpacing: ".3px" }}>Data Accuracy</div>
-          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 20, color: "#1c1c28", lineHeight: 1.1, marginTop: 1 }}>98.5%</div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-export default function Hero({ onSearch }) {
-  const [q, setQ] = useState("");
+export default function Hero() {
   const nav = useNavigate();
-  const { bp, isMobile, isXs, isTablet, isDesktop } = useBreakpoint();
+  const { isXs, isMobile, isTablet, isSmall } = useBreakpoint();
 
-  /* Align the hero heading's left edge to where "Parichay" ends in the
-     navbar wordmark — measured live with getBoundingClientRect. Desktop only. */
-  const containerRef = useRef(null);
-  const [headOffset, setHeadOffset] = useState(0);
-  useEffect(() => {
-    const measure = () => {
-      if (typeof window === "undefined" || window.innerWidth <= 1024) { setHeadOffset(0); return; }
-      const wm = document.getElementById("cp-wordmark");
-      const cont = containerRef.current;
-      if (!wm || !cont) { setHeadOffset(0); return; }
-      const off = wm.getBoundingClientRect().right - cont.getBoundingClientRect().left;
-      setHeadOffset(off > 0 && off < 360 ? off : 0);
-    };
-    measure();
-    const id = setTimeout(measure, 250);
-    window.addEventListener("resize", measure);
-    return () => { clearTimeout(id); window.removeEventListener("resize", measure); };
-  }, []);
-
-  const go = (term) => {
-    const t = (term ?? q).trim();
-    if (t) nav(`/search?q=${encodeURIComponent(t)}`);
-  };
-
-  /* ── Responsive heading font size ── */
-  const headingSize =
-    isXs                          ? "2.4rem"  :
-    isMobile                      ? "3.2rem"    :
-    bp === "tablet"               ? "4.2rem"  :
-    bp === "ipadpro"              ? "clamp(4.5rem,5.5vw,5rem)" :
-    "clamp(5rem,6vw,6rem)";
-
-  /* ── Single centred column on every size ── */
-  const gridCols = "1fr";
-
-  /* ── Hero background — very light warm cream ── */
-  const heroBg = "#FFFFFF";
+  const headingSize = isXs ? "2.5rem" : isMobile ? "3rem" : isTablet ? "4rem" : "clamp(4.2rem, 5.4vw, 5.4rem)";
 
   return (
-    <section
-      style={{
-        position: "relative",
-        overflow: "hidden",
-        background: heroBg,
-        paddingTop: isXs ? 114 : isMobile ? 124 : isTablet ? 134 : 144,
-        paddingBottom: isXs ? 60 : isMobile ? 80 : isTablet ? 100 : 120,
-        minHeight: isMobile ? "auto" : isTablet ? "90vh" : "95vh",
-        display: "flex",
-        alignItems: "center",
-        width: "100%",
-        maxWidth: "100%",
-        boxSizing: "border-box",
-      }}
-    >
-      {/* ═══ Content wrapper ═══ */}
-      <div
-        ref={containerRef}
-        className="container"
-        style={{
-          position: "relative",
-          zIndex: 2,
-          width: "100%",
-          paddingInline: "1.5rem",
-          boxSizing: "border-box",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "100%",
-          }}
+    <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
+      {/* ── layered warm-coral → violet → mist background ── */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0, zIndex: 0,
+        background: `
+          radial-gradient(120% 75% at 50% -12%, rgba(255,138,92,.55), transparent 55%),
+          radial-gradient(80% 55% at 82% 8%, rgba(255,90,54,.20), transparent 60%),
+          radial-gradient(90% 60% at 12% 26%, rgba(139,92,246,.18), transparent 62%),
+          linear-gradient(180deg, #FFEADD 0%, #FCE1E7 18%, #F0E6F6 42%, #E7E7F6 62%, #F4F2FB 84%, #FFFFFF 100%)
+        `,
+      }} />
+      {/* soft blurred "mountain" blobs */}
+      <div aria-hidden style={{ position: "absolute", left: "-8%", top: "34%", width: 520, height: 320, background: "rgba(139,92,246,.22)", filter: "blur(80px)", borderRadius: "50%", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "absolute", right: "-6%", top: "40%", width: 480, height: 300, background: "rgba(255,90,54,.16)", filter: "blur(80px)", borderRadius: "50%", zIndex: 0 }} />
+
+      <div className="container" style={{
+        position: "relative", zIndex: 2, width: "100%",
+        paddingInline: "1.5rem", boxSizing: "border-box",
+        paddingTop: isXs ? 118 : isMobile ? 128 : isTablet ? 138 : 150,
+      }}>
+        {/* ══ Headline with floating cards ══ */}
+        <div style={{ position: "relative", maxWidth: 920, margin: "0 auto", textAlign: "center" }}>
+          {!isSmall && (
+            <>
+              <FloatCard delay={0.4} style={{ top: -6, right: "6%", transform: "rotate(3deg)" }}>
+                <RankChip />
+              </FloatCard>
+              <FloatCard delay={0.55} float={10} style={{ top: 92, left: "3%", transform: "rotate(-3deg)" }}>
+                <PredictionCard />
+              </FloatCard>
+            </>
+          )}
+
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            style={{
+              fontFamily: "'Space Grotesk','Sora',system-ui,sans-serif",
+              fontWeight: 800, color: INK, fontSize: headingSize,
+              lineHeight: 1.06, letterSpacing: "-0.04em", margin: 0,
+              position: "relative", zIndex: 3,
+            }}
+          >
+            Predict your <span style={{ color: CORAL }}>rank</span>
+            <br />
+            find your dream <span style={{ position: "relative", color: CORAL, whiteSpace: "nowrap" }}>
+              college
+              <svg width="100%" height="12" viewBox="0 0 200 12" preserveAspectRatio="none" style={{ position: "absolute", left: 0, bottom: "-0.12em", width: "100%" }}>
+                <path d="M3 8C40 3 70 3 100 6C130 9 160 9 197 4" stroke={CORAL} strokeWidth="4" strokeLinecap="round" fill="none" />
+              </svg>
+            </span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            style={{
+              margin: isSmall ? "1.4rem auto 0" : "2.2rem auto 0", maxWidth: 560,
+              fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 400,
+              fontSize: isXs ? "1rem" : "1.15rem", color: "rgba(28,28,40,.62)", lineHeight: 1.55,
+            }}
+          >
+            An <b style={{ color: CORAL, fontWeight: 700 }}>IIT Roorkee</b> startup — predict your JEE &amp; NEET rank,
+            match every IIT · NIT · IIIT, and track each counselling deadline. All free.
+          </motion.p>
+        </div>
+
+        {/* ══ Twin CTAs ══ */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.28 }}
+          style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 14, margin: "2rem 0 0" }}
         >
-          {/* ══ CENTER — hero text ══ */}
-          <div style={{ textAlign: "center", minWidth: 0, width: "100%", maxWidth: 860, margin: "0 auto" }}>
+          <button
+            onClick={() => nav("/how-to-use")}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 9, cursor: "pointer",
+              padding: "13px 26px", borderRadius: 9999, whiteSpace: "nowrap",
+              background: "rgba(255,255,255,.75)", backdropFilter: "blur(8px)",
+              border: "1px solid rgba(28,28,40,.1)", color: INK,
+              fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
+              boxShadow: "0 4px 14px rgba(28,28,40,.06)",
+            }}
+          >
+            <span style={{ width: 22, height: 22, borderRadius: "50%", background: CORAL, display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <Play size={11} color="#fff" fill="#fff" style={{ marginLeft: 1 }} />
+            </span>
+            Watch demo
+          </button>
+          <button
+            onClick={() => nav("/jee-main#college")}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 9, cursor: "pointer",
+              padding: "14px 30px", borderRadius: 9999, whiteSpace: "nowrap",
+              background: INK, border: "none", color: "#fff",
+              fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
+              boxShadow: "0 10px 26px -6px rgba(28,28,40,.4)",
+              transition: "transform .2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
+          >
+            Predict my college <ArrowRight size={17} />
+          </button>
+        </motion.div>
 
-            {/* Headline */}
-            <div style={{ animation: "fadeInUp 0.65s ease-out", animationFillMode: "both" }}>
-              <h1 style={{
-                fontFamily: "'Space Grotesk', 'Sora', system-ui, -apple-system, sans-serif",
-                fontWeight: 800,
-                color: "#111111",
-                fontSize: headingSize,
-                lineHeight: 1.05,
-                letterSpacing: "-0.04em",
-                margin: "0 0 1.8rem",
-              }}>
-                Know your rank.
-                <br />
-                Find your <span style={{
-                  color: "#FF5A36",
-                  whiteSpace: "nowrap",
-                }}>college</span><span style={{ color: "#FF5A36", display: "inline-flex", alignItems: "center", margin: "0 2px" }}>
-                  <svg width="28" height="11" viewBox="0 0 28 11" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: "translateY(1px)" }}>
-                    <path d="M2 8C5 8 7 2 10 2C13 2 15 8 18 8C21 8 23 2 26 2" stroke="#FF5A36" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </span>.
-              </h1>
+        {/* ══ Logo cloud ══ */}
+        <div style={{ margin: isSmall ? "2.6rem 0 0" : "3.4rem 0 0" }}>
+          <LogoCloud isMobile={isMobile} />
+        </div>
 
-              {/* Startup line */}
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 7,
-                marginBottom: "1.2rem",
-                fontFamily: "'Inter', 'Space Grotesk', system-ui, sans-serif",
-                fontWeight: 600,
-                fontSize: "clamp(12px, 2.8vw, 15px)",
-                color: "#444",
-                whiteSpace: "nowrap",
-                maxWidth: "100%",
-              }}>
-                An <span style={{ color: "#FF5A36" }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
+        {/* ══ Product mockups rising from the mist ══ */}
+        <div style={{
+          position: "relative", marginTop: isSmall ? "2.4rem" : "3.4rem",
+          maxHeight: isSmall ? 340 : 430, overflow: "hidden",
+        }}>
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            style={{ position: "relative", display: "flex", justifyContent: "center", paddingBottom: 40 }}
+          >
+            {isMobile ? (
+              /* mobile — dashboard only, scaled to fit */
+              <div style={{ transform: "scale(0.46)", transformOrigin: "top center", height: 300 }}>
+                <DashboardMock />
               </div>
-
-              {/* Subtext */}
-              <p style={{
-                color: "#666",
-                fontSize: isXs ? "0.95rem" : "1.12rem",
-                maxWidth: "100%", margin: "0 auto",
-                lineHeight: 1.6,
-                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                fontWeight: 400,
-                whiteSpace: isXs ? "normal" : "nowrap",
-              }}>
-                Predict your rank, find your college, and track every deadline — all in one place.
-              </p>
-
-              <div style={{ marginBottom: "2.5rem" }} />
-            </div>
-
-            {/* ── Search bar ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.18 }}
-              style={{ width: "100%", maxWidth: 640, margin: "0 auto 1.5rem" }}
-            >
-              <div style={{
-                display: "flex",
-                gap: 6,
-                background: "var(--page-bg)",
-                padding: isXs ? 6 : 8,
-                borderRadius: 9999,
-                boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
-                border: "1px solid rgba(0,0,0,.04)",
-                transition: "border 0.3s ease, box-shadow 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.border = "1px solid #FF5A36";
-                e.currentTarget.style.boxShadow = "0 12px 30px rgba(255, 90, 54, 0.15)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.border = "1px solid rgba(0,0,0,.04)";
-                e.currentTarget.style.boxShadow = "0 10px 40px rgba(0,0,0,0.06)";
-              }}>
-                <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 10, paddingLeft: isXs ? 16 : 24, minWidth: 0 }}>
-                  <Search size={18} color="#9ca3af" style={{ flexShrink: 0 }} />
-                  <input
-                    value={q}
-                    onChange={(e) => setQ(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && go()}
-                    placeholder="Search colleges, exams…"
-                    onFocus={onSearch}
-                    style={{
-                      border: "none",
-                      outline: "none",
-                      flex: 1,
-                      minWidth: 0,
-                      fontSize: 15,
-                      fontFamily: "'Inter', system-ui, sans-serif",
-                      background: "transparent",
-                      color: "#111",
-                    }}
-                  />
+            ) : (
+              <div style={{ position: "relative", width: isTablet ? 720 : 900, maxWidth: "100%", display: "flex", justifyContent: "center" }}>
+                <div style={{ transform: isTablet ? "scale(0.82)" : "none", transformOrigin: "top center" }}>
+                  <DashboardMock />
                 </div>
-                <button
-                  onClick={() => go()}
-                  style={{
-                    borderRadius: 9999,
-                    padding: isXs ? "10px 20px" : "12px 32px",
-                    fontSize: isXs ? 13 : 15,
-                    fontWeight: 600,
-                    fontFamily: "'Inter', system-ui, sans-serif",
-                    whiteSpace: "nowrap",
-                    flexShrink: 0,
-                    background: "#FF5A36",
-                    color: "#fff",
-                    boxShadow: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    transition: "background 0.2s",
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "#E0421F"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "#FF5A36"; }}
-                >
-                  Search
-                </button>
+                {/* phone overlapping right edge */}
+                <div style={{ position: "absolute", right: isTablet ? -6 : 8, bottom: -20, transform: isTablet ? "scale(0.88)" : "none", transformOrigin: "bottom right" }}>
+                  <PhoneMock />
+                </div>
               </div>
-            </motion.div>
+            )}
+          </motion.div>
 
-            {/* ── Primary + secondary CTAs ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.34 }}
-              style={{
-                display: "flex", flexWrap: "wrap",
-                justifyContent: "center",
-                gap: 16, margin: "10px 0 30px",
-              }}
-            >
-              <button
-                onClick={() => nav("/jee-main#college")}
-                style={{
-                  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
-                  padding: isXs ? "12px 24px" : "14px 32px", borderRadius: 9999, cursor: "pointer",
-                  background: "#FF5A36", border: "none", color: "#fff",
-                  fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
-                  boxShadow: "0 8px 24px rgba(255, 90, 54, 0.3)",
-                  transition: "all .2s", whiteSpace: "nowrap",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#E0421F"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = "#FF5A36"; }}
-              >
-                Predict My College <Target size={18} />
-              </button>
-
-              <button
-                onClick={() => nav("/community")}
-                style={{
-                  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9,
-                  padding: isXs ? "12px 24px" : "14px 32px", borderRadius: 9999, cursor: "pointer",
-                  background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.1)", color: "#111",
-                  fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
-                  boxShadow: "0 4px 12px rgba(0,0,0,.03)",
-                  transition: "all .2s", whiteSpace: "nowrap",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.2)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(0,0,0,.1)"; }}
-              >
-                Join community <ArrowRight size={18} />
-              </button>
-            </motion.div>
-
-            {/* ── Trust row ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.46 }}
-              style={{
-                display: "flex", alignItems: "center", gap: 12, marginTop: 12,
-                justifyContent: "center",
-              }}
-            >
-              <div style={{ display: "flex" }}>
-                {[
-                  { bg: "#FF7A50", t: "A" },
-                  { bg: "#FF6636", t: "P" },
-                  { bg: "#E85223", t: "R" },
-                ].map((a, i) => (
-                  <span key={a.t} style={{
-                    width: 40, height: 40, borderRadius: "50%", background: a.bg,
-                    border: "2.5px solid #ffffff", display: "grid", placeItems: "center",
-                    marginLeft: i === 0 ? 0 : -14, boxShadow: "0 4px 10px rgba(0,0,0,.08)",
-                    fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 900, fontSize: 13.5, color: "#fff", letterSpacing: "-0.2px"
-                  }}>{a.t}</span>
-                ))}
-              </div>
-              <p style={{ margin: 0, fontSize: isXs ? 13 : 14.5, color: "#4B5563", fontFamily: "'Inter', system-ui, sans-serif", lineHeight: 1.4 }}>
-                Trusted by <strong style={{ color: "#111", fontWeight: 700 }}>3,200+</strong> JEE &amp; NEET aspirants
-              </p>
-            </motion.div>
-
-          </div>
+          {/* mist fade over the bottom of the mockups */}
+          <div aria-hidden style={{
+            position: "absolute", left: 0, right: 0, bottom: 0, height: isSmall ? 90 : 130,
+            background: "linear-gradient(180deg, transparent, #FFFFFF 82%)", pointerEvents: "none",
+          }} />
         </div>
       </div>
     </section>
   );
-}
+}
