@@ -203,7 +203,7 @@ function DevCard({ t, index = 0 }) {
 /* ── Footer ─────────────────────────────────────────────────────── */
 export default function Footer() {
   return (
-    <footer style={{ background: "#0a0a0a", color: "#fff", paddingTop: "3.5rem" }}>
+    <footer style={{ background: "#0a0a0a", color: "#fff", paddingTop: "3.5rem", position: "relative", overflow: "hidden" }}>
       <style>{`
         .fdev-card {
           display: flex; align-items: flex-start; gap: 14px;
@@ -243,7 +243,7 @@ export default function Footer() {
           .fteam-grid { grid-template-columns: 1fr; max-width: 460px; }
         }
       `}</style>
-      <div className="container">
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
 
         {/* Main link grid */}
         <div
@@ -474,6 +474,13 @@ export default function Footer() {
           }}
         >
         </p>
+      </div>
+
+      {/* giant CampusLoom-style wordmark — ghosted brand at the base */}
+      <div aria-hidden style={{ position: "absolute", left: 0, right: 0, bottom: 0, textAlign: "center", overflow: "hidden", pointerEvents: "none", zIndex: 0, lineHeight: 0.8 }}>
+        <span style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(3.5rem, 17vw, 17rem)", color: "rgba(255,255,255,.045)", whiteSpace: "nowrap", letterSpacing: "-0.03em", display: "inline-block", transform: "translateY(26%)" }}>
+          College Parichay
+        </span>
       </div>
     </footer>
   );
