@@ -13,7 +13,7 @@ import { Search, Target } from "lucide-react";
 const CORAL    = "#FF5A36";
 const CORAL_DK = "#E0421F";
 const INK      = "#1c1c28";
-const MARKER   = "#FFC46B"; // warm amber marker-highlighter under the keywords
+const MARKER   = "#F2C879"; // warm gold marker-highlighter under the keywords
 
 /* ── breakpoints ── */
 function useBreakpoint() {
@@ -49,8 +49,12 @@ const coralWord = {
   hidden: { opacity: 0, scale: 0.6, y: "0.2em" },
   show:   { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 380, damping: 17 } },
 };
-const LINE_A = [{ t: "Predictor", c: false }, { t: "tools", c: false }, { t: "that", c: false }, { t: "know", c: false }, { t: "the", c: false }, { t: "numbers.", c: true }];
-const LINE_B = [{ t: "Mentors", c: false }, { t: "who", c: false }, { t: "know", c: false }, { t: "the", c: false }, { t: "journey.", c: true }];
+const HEAD_LINES = [
+  [{ t: "Tools", c: false }, { t: "that", c: false }, { t: "know", c: false }],
+  [{ t: "the", c: false }, { t: "numbers.", c: true }],
+  [{ t: "Mentors", c: false }, { t: "who", c: false }, { t: "know", c: false }],
+  [{ t: "the", c: false }, { t: "journey.", c: true }],
+];
 
 function HeadWord({ w, order }) {
   return (
@@ -71,7 +75,7 @@ export default function Hero({ onSearch }) {
   const nav = useNavigate();
   const { isXs, isMobile, isTablet } = useBreakpoint();
   const openSearch = () => { if (onSearch) onSearch(); else nav("/search"); };
-  const headingSize = isXs ? "1.7rem" : isMobile ? "2.1rem" : isTablet ? "2.8rem" : "clamp(2.6rem, 4vw, 3.5rem)";
+  const headingSize = isXs ? "2.3rem" : isMobile ? "2.9rem" : isTablet ? "3.6rem" : "clamp(3.4rem, 5vw, 4.6rem)";
 
   return (
     <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: "#FFFFFF" }}>
@@ -96,12 +100,14 @@ export default function Hero({ onSearch }) {
           variants={headVariants} initial="hidden" animate="show"
           style={{ fontFamily: "'Space Grotesk','Sora',system-ui,sans-serif", fontWeight: 800, color: INK, fontSize: headingSize, lineHeight: 1.08, letterSpacing: "-0.03em", margin: 0 }}
         >
-          <span style={{ display: "block" }}>
-            {LINE_A.map((w, idx) => <HeadWord key={idx} w={w} order={0} />)}
-          </span>
-          <span style={{ display: "block" }}>
-            {LINE_B.map((w, idx) => <HeadWord key={idx} w={w} order={1} />)}
-          </span>
+          {(() => {
+            let o = 0;
+            return HEAD_LINES.map((line, li) => (
+              <span key={li} style={{ display: "block" }}>
+                {line.map((w, wi) => <HeadWord key={wi} w={w} order={w.c ? o++ : 0} />)}
+              </span>
+            ));
+          })()}
         </motion.h1>
 
         {/* subtext */}
