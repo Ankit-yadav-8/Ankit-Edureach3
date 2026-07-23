@@ -48,8 +48,8 @@ const coralWord = {
   hidden: { opacity: 0, scale: 0.6, y: "0.2em" },
   show:   { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 380, damping: 17 } },
 };
-const LINE_A = [{ t: "Predict", c: false }, { t: "your", c: false }, { t: "rank.", c: true }];
-const LINE_B = [{ t: "Meet", c: false }, { t: "your", c: false }, { t: "mentor.", c: true }];
+const LINE_A = [{ t: "Predictor", c: false }, { t: "tools", c: false }, { t: "that", c: false }, { t: "know", c: false }, { t: "the", c: false }, { t: "numbers.", c: true }];
+const LINE_B = [{ t: "Mentors", c: false }, { t: "who", c: false }, { t: "know", c: false }, { t: "the", c: false }, { t: "journey.", c: true }];
 
 function HeadWord({ w, order }) {
   return (
@@ -70,7 +70,7 @@ export default function Hero({ onSearch }) {
   const nav = useNavigate();
   const { isXs, isMobile, isTablet } = useBreakpoint();
   const openSearch = () => { if (onSearch) onSearch(); else nav("/search"); };
-  const headingSize = isXs ? "2.5rem" : isMobile ? "3.1rem" : isTablet ? "4.2rem" : "clamp(3.8rem, 6vw, 6rem)";
+  const headingSize = isXs ? "1.7rem" : isMobile ? "2.1rem" : isTablet ? "2.8rem" : "clamp(2.6rem, 4vw, 3.5rem)";
 
   return (
     <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: "#FFFFFF" }}>
