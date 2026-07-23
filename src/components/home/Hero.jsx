@@ -13,7 +13,6 @@ import { Search, Target } from "lucide-react";
 const CORAL    = "#FF5A36";
 const CORAL_DK = "#E0421F";
 const INK      = "#1c1c28";
-const MARKER   = "#FFB59E"; // soft coral marker-highlighter under the keywords
 
 /* ── breakpoints ── */
 function useBreakpoint() {
@@ -50,10 +49,8 @@ const coralWord = {
   show:   { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 380, damping: 17 } },
 };
 const HEAD_LINES = [
-  [{ t: "Tools", c: false }, { t: "that", c: false }, { t: "know", c: false }],
-  [{ t: "the", c: false }, { t: "numbers.", c: true }],
-  [{ t: "Mentors", c: false }, { t: "who", c: false }, { t: "know", c: false }],
-  [{ t: "the", c: false }, { t: "journey.", c: true }],
+  [{ t: "Predict", c: false }, { t: "your", c: false }, { t: "rank.", c: true }],
+  [{ t: "Meet", c: false }, { t: "your", c: false }, { t: "mentor.", c: true }],
 ];
 
 function HeadWord({ w, order }) {
@@ -62,9 +59,9 @@ function HeadWord({ w, order }) {
       style={{ display: "inline-block", marginRight: "0.26em", color: w.c ? CORAL : INK, position: w.c ? "relative" : undefined, whiteSpace: "nowrap" }}>
       {w.t}
       {w.c && (
-        <svg width="106%" height="20" viewBox="0 0 200 20" preserveAspectRatio="none" style={{ position: "absolute", left: "-3%", bottom: "-0.2em", width: "106%", zIndex: -1 }}>
-          <motion.path d="M6 12 C 55 5, 150 5, 194 10" stroke={MARKER} strokeWidth="13" strokeLinecap="round" fill="none"
-            initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 0.6, delay: 0.9 + order * 0.28, ease: "easeInOut" }} />
+        <svg width="100%" height="12" viewBox="0 0 200 12" preserveAspectRatio="none" style={{ position: "absolute", left: 0, bottom: "-0.1em", width: "100%" }}>
+          <motion.path d="M3 8C40 3 70 3 100 6C130 9 160 9 197 4" stroke={CORAL} strokeWidth="4" strokeLinecap="round" fill="none"
+            initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 0.55, delay: 0.9 + order * 0.28, ease: "easeInOut" }} />
         </svg>
       )}
     </motion.span>
@@ -75,7 +72,7 @@ export default function Hero({ onSearch }) {
   const nav = useNavigate();
   const { isXs, isMobile, isTablet } = useBreakpoint();
   const openSearch = () => { if (onSearch) onSearch(); else nav("/search"); };
-  const headingSize = isXs ? "2.3rem" : isMobile ? "2.9rem" : isTablet ? "3.6rem" : "clamp(3.4rem, 5vw, 4.6rem)";
+  const headingSize = isXs ? "2.4rem" : isMobile ? "3rem" : isTablet ? "3.8rem" : "clamp(3.4rem, 5vw, 5rem)";
 
   return (
     <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: "#FFFFFF" }}>
