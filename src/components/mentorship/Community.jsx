@@ -112,9 +112,9 @@ export default function Community({ plan, onSwitchBatch }) {
           Everyone is welcome in the open public community meanwhile.
         </p>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-          <a href="/mentorship" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", textDecoration: "none", padding: "11px 22px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14 }}>
+          <Link to="/mentorship" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", textDecoration: "none", padding: "11px 22px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14 }}>
             Explore mentorship plans
-          </a>
+          </Link>
           <Link to="/community" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--page-bg)", border: `1.5px solid ${CYAN}`, color: CYAN, textDecoration: "none", padding: "11px 22px", borderRadius: 12, fontFamily: "Sora", fontWeight: 800, fontSize: 14 }}>
             <Globe2 size={16} /> Public community
           </Link>

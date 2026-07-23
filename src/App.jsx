@@ -1,74 +1,76 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
 import TopBar from "./components/TopBar.jsx";
 import Footer from "./components/Footer.jsx";
+import RouteErrorBoundary from "./components/RouteErrorBoundary.jsx";
+import { lazyRetry, clearChunkReloadFlag } from "./utils/lazyRetry.js";
 import { ScrollProgress, BackToTop } from "./components/ScrollUtils.jsx";
-const ScrollProgressBar = lazy(() => import("./components/Animations.jsx").then(m => ({ default: m.ScrollProgressBar })));
+const ScrollProgressBar = lazyRetry(() => import("./components/Animations.jsx").then(m => ({ default: m.ScrollProgressBar })));
 
-const Home = lazy(() => import("./pages/Home.jsx"));
+const Home = lazyRetry(() => import("./pages/Home.jsx"));
 
 /* Route-level code splitting: only Home ships in the initial bundle; every
    other page is fetched on navigation. Previously all ~50 pages were static
    imports, so one 2.6 MB chunk had to parse before the homepage could paint. */
-const JeeMain = lazy(() => import("./pages/JeeMain.jsx"));
-const JeeAdvanced = lazy(() => import("./pages/JeeAdvanced.jsx"));
-const JeeAdvancedAnalysis = lazy(() => import("./pages/JeeAdvancedAnalysis.jsx"));
-const JeeAdvancedResult = lazy(() => import("./pages/JeeAdvancedResult.jsx"));
-const Colleges = lazy(() => import("./pages/Colleges.jsx"));
-const CollegeDetail = lazy(() => import("./pages/CollegeDetail.jsx"));
-const PrivateDetail = lazy(() => import("./pages/PrivateDetail.jsx"));
-const PrivateUnis = lazy(() => import("./pages/PrivateUnis.jsx"));
-const About = lazy(() => import("./pages/About.jsx"));
-const Developer = lazy(() => import("./pages/Developer.jsx"));
-const Compare = lazy(() => import("./pages/Compare.jsx"));
-const Shortlist = lazy(() => import("./pages/Shortlist.jsx"));
-const ForYou = lazy(() => import("./pages/ForYou.jsx"));
-const Josaa2026 = lazy(() => import("./pages/Josaa2026.jsx"));
-const JosaaRound1Result = lazy(() => import("./pages/JosaaRound1Result.jsx"));
-const JosaaRound2Result = lazy(() => import("./pages/JosaaRound2Result.jsx"));
-const JosaaRound3Result = lazy(() => import("./pages/JosaaRound3Result.jsx"));
-const CounsellingPlanner = lazy(() => import("./pages/CounsellingPlanner.jsx"));
-const CollegeMap = lazy(() => import("./pages/CollegeMap.jsx"));
-const CompareExams = lazy(() => import("./pages/CompareExams.jsx"));
-const OtherExams = lazy(() => import("./pages/OtherExams.jsx"));
-const Tools = lazy(() => import("./pages/Tools.jsx"));
-const Reviews = lazy(() => import("./pages/Reviews.jsx"));
-const Scholarships = lazy(() => import("./pages/Scholarships.jsx"));
-const OfficialCutoffs = lazy(() => import("./pages/OfficialCutoffs.jsx"));
-const SearchResults = lazy(() => import("./pages/SearchResults.jsx"));
-const NotFound = lazy(() => import("./pages/NotFound.jsx"));
-const Admin = lazy(() => import("./pages/Admin.jsx"));
-const JeeResources = lazy(() => import("./pages/JeeResources.jsx"));
-const Neet = lazy(() => import("./pages/Neet.jsx"));
-const NeetColleges = lazy(() => import("./pages/NeetColleges.jsx"));
-const NeetCollegeDetail = lazy(() => import("./pages/NeetCollegeDetail.jsx"));
-const HowToUse = lazy(() => import("./pages/HowToUse.jsx"));
-const Mentorship = lazy(() => import("./pages/Mentorship.jsx"));
-const Privacy = lazy(() => import("./pages/Privacy.jsx"));
-const Terms = lazy(() => import("./pages/Terms.jsx"));
-const Dashboard = lazy(() => import("./pages/Dashboard.jsx"));
-const MentorshipDashboard = lazy(() => import("./pages/MentorshipDashboard.jsx"));
+const JeeMain = lazyRetry(() => import("./pages/JeeMain.jsx"));
+const JeeAdvanced = lazyRetry(() => import("./pages/JeeAdvanced.jsx"));
+const JeeAdvancedAnalysis = lazyRetry(() => import("./pages/JeeAdvancedAnalysis.jsx"));
+const JeeAdvancedResult = lazyRetry(() => import("./pages/JeeAdvancedResult.jsx"));
+const Colleges = lazyRetry(() => import("./pages/Colleges.jsx"));
+const CollegeDetail = lazyRetry(() => import("./pages/CollegeDetail.jsx"));
+const PrivateDetail = lazyRetry(() => import("./pages/PrivateDetail.jsx"));
+const PrivateUnis = lazyRetry(() => import("./pages/PrivateUnis.jsx"));
+const About = lazyRetry(() => import("./pages/About.jsx"));
+const Developer = lazyRetry(() => import("./pages/Developer.jsx"));
+const Compare = lazyRetry(() => import("./pages/Compare.jsx"));
+const Shortlist = lazyRetry(() => import("./pages/Shortlist.jsx"));
+const ForYou = lazyRetry(() => import("./pages/ForYou.jsx"));
+const Josaa2026 = lazyRetry(() => import("./pages/Josaa2026.jsx"));
+const JosaaRound1Result = lazyRetry(() => import("./pages/JosaaRound1Result.jsx"));
+const JosaaRound2Result = lazyRetry(() => import("./pages/JosaaRound2Result.jsx"));
+const JosaaRound3Result = lazyRetry(() => import("./pages/JosaaRound3Result.jsx"));
+const CounsellingPlanner = lazyRetry(() => import("./pages/CounsellingPlanner.jsx"));
+const CollegeMap = lazyRetry(() => import("./pages/CollegeMap.jsx"));
+const CompareExams = lazyRetry(() => import("./pages/CompareExams.jsx"));
+const OtherExams = lazyRetry(() => import("./pages/OtherExams.jsx"));
+const Tools = lazyRetry(() => import("./pages/Tools.jsx"));
+const Reviews = lazyRetry(() => import("./pages/Reviews.jsx"));
+const Scholarships = lazyRetry(() => import("./pages/Scholarships.jsx"));
+const OfficialCutoffs = lazyRetry(() => import("./pages/OfficialCutoffs.jsx"));
+const SearchResults = lazyRetry(() => import("./pages/SearchResults.jsx"));
+const NotFound = lazyRetry(() => import("./pages/NotFound.jsx"));
+const Admin = lazyRetry(() => import("./pages/Admin.jsx"));
+const JeeResources = lazyRetry(() => import("./pages/JeeResources.jsx"));
+const Neet = lazyRetry(() => import("./pages/Neet.jsx"));
+const NeetColleges = lazyRetry(() => import("./pages/NeetColleges.jsx"));
+const NeetCollegeDetail = lazyRetry(() => import("./pages/NeetCollegeDetail.jsx"));
+const HowToUse = lazyRetry(() => import("./pages/HowToUse.jsx"));
+const Mentorship = lazyRetry(() => import("./pages/Mentorship.jsx"));
+const Privacy = lazyRetry(() => import("./pages/Privacy.jsx"));
+const Terms = lazyRetry(() => import("./pages/Terms.jsx"));
+const Dashboard = lazyRetry(() => import("./pages/Dashboard.jsx"));
+const MentorshipDashboard = lazyRetry(() => import("./pages/MentorshipDashboard.jsx"));
 // Both were eager, and both reach the search index -> data/colleges.js, so every
 // page preloaded ~100KB of college data plus the index build just to render a
 // floating button and a closed overlay. Neither is needed for first paint.
-const Chatbot = lazy(() => import("./components/Chatbot.jsx"));
-const SearchOverlay = lazy(() => import("./components/SearchOverlay.jsx"));
-const MentorDashboard = lazy(() => import("./pages/MentorDashboard.jsx"));
-const PublicCommunity = lazy(() => import("./pages/PublicCommunity.jsx"));
-const Branches = lazy(() => import("./pages/Branches.jsx"));
-const BranchDetail = lazy(() => import("./pages/BranchDetail.jsx"));
-const BranchVsCollegePage = lazy(() => import("./pages/BranchVsCollegePage.jsx"));
-const Blog = lazy(() => import("./pages/Blog.jsx"));
-const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
-const CampusNotes = lazy(() => import("./pages/CampusNotes.jsx"));
-const CollegeParichayAI = lazy(() => import("./pages/CollegeParichayAI.jsx"));
-const CampusFests = lazy(() => import("./pages/CampusFests.jsx"));
-const Class11 = lazy(() => import("./pages/Class11.jsx"));
-const Class12 = lazy(() => import("./pages/Class12.jsx"));
-const JeeStrategy = lazy(() => import("./pages/JeeStrategy.jsx"));
-const NeetStrategy = lazy(() => import("./pages/NeetStrategy.jsx"));
+const Chatbot = lazyRetry(() => import("./components/Chatbot.jsx"));
+const SearchOverlay = lazyRetry(() => import("./components/SearchOverlay.jsx"));
+const MentorDashboard = lazyRetry(() => import("./pages/MentorDashboard.jsx"));
+const PublicCommunity = lazyRetry(() => import("./pages/PublicCommunity.jsx"));
+const Branches = lazyRetry(() => import("./pages/Branches.jsx"));
+const BranchDetail = lazyRetry(() => import("./pages/BranchDetail.jsx"));
+const BranchVsCollegePage = lazyRetry(() => import("./pages/BranchVsCollegePage.jsx"));
+const Blog = lazyRetry(() => import("./pages/Blog.jsx"));
+const BlogPost = lazyRetry(() => import("./pages/BlogPost.jsx"));
+const CampusNotes = lazyRetry(() => import("./pages/CampusNotes.jsx"));
+const CollegeParichayAI = lazyRetry(() => import("./pages/CollegeParichayAI.jsx"));
+const CampusFests = lazyRetry(() => import("./pages/CampusFests.jsx"));
+const Class11 = lazyRetry(() => import("./pages/Class11.jsx"));
+const Class12 = lazyRetry(() => import("./pages/Class12.jsx"));
+const JeeStrategy = lazyRetry(() => import("./pages/JeeStrategy.jsx"));
+const NeetStrategy = lazyRetry(() => import("./pages/NeetStrategy.jsx"));
 import CompareTray from "./components/CompareTray.jsx";
 import WhatsAppButton from "./components/WhatsAppButton.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
@@ -113,6 +115,22 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Mark this load as healthy (re-enables stale-chunk auto-reload for the next
+  // deploy) and warm the most-visited route chunks while the browser is idle,
+  // so the first click on those links navigates instantly instead of waiting
+  // on a download.
+  useEffect(() => {
+    clearChunkReloadFlag();
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1200));
+    const cancel = window.cancelIdleCallback || clearTimeout;
+    const id = idle(() => {
+      [JeeMain, JeeAdvanced, Colleges, OfficialCutoffs, ForYou, Neet, Mentorship,
+       CounsellingPlanner, CollegeMap, Compare, Branches, BranchVsCollegePage,
+       CampusFests, PrivateUnis, SearchResults].forEach((c) => c.preload?.());
+    });
+    return () => cancel(id);
+  }, []);
+
   // Admin dashboard renders standalone — no public navbar, footer, chatbot,
   // WhatsApp button, compare tray or auth modal bleeding into it.
   if (pathname.startsWith("/admin")) {
@@ -155,6 +173,7 @@ export default function App() {
       <Navbar onSearch={() => setSearchOpen(true)} />
 
       <main>
+        <RouteErrorBoundary key={pathname}>
         <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<Home onSearch={() => setSearchOpen(true)} />} />
@@ -214,6 +233,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
         </Suspense>
+        </RouteErrorBoundary>
       </main>
 
       <Footer />
