@@ -490,120 +490,89 @@ function MentorshipHubMock({ isMobile }) {
 ════════════════════════════════════════════════ */
 export default function Hero({ onSearch }) {
   const nav = useNavigate();
-  const { bp, isXs, isMobile, isSmall } = useBreakpoint();
+  const { isXs, isMobile, isTablet } = useBreakpoint();
   const openSearch = () => { if (onSearch) onSearch(); else nav("/search"); };
-  const twoCol = !isSmall; // side-by-side on ipadpro + desktop
-  const headingSize =
-    bp === "xs"      ? "2.05rem" :
-    bp === "mobile"  ? "2.5rem"  :
-    bp === "tablet"  ? "3rem"    :
-    bp === "ipadpro" ? "2.7rem"  :
-                       "clamp(2.7rem, 3.3vw, 3.5rem)";
+  const headingSize = isXs ? "2.4rem" : isMobile ? "3rem" : isTablet ? "3.8rem" : "clamp(3.4rem, 5vw, 5rem)";
 
   return (
     <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: "#FFFFFF" }}>
       <div className="container" style={{
         position: "relative", zIndex: 2, width: "100%",
         paddingInline: "1.5rem", boxSizing: "border-box",
-        paddingTop: isXs ? 118 : isMobile ? 128 : twoCol ? 150 : 138,
+        paddingTop: isXs ? 118 : isMobile ? 128 : isTablet ? 138 : 150,
         paddingBottom: isMobile ? 48 : 72,
       }}>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: twoCol ? "minmax(0, 0.85fr) minmax(0, 1.15fr)" : "1fr",
-          gap: twoCol ? 44 : 40,
-          alignItems: "center",
-        }}>
-          {/* ══ LEFT — copy ══ */}
-          <div style={{ textAlign: twoCol ? "left" : "center", maxWidth: twoCol ? "none" : 720, margin: twoCol ? 0 : "0 auto" }}>
-            {/* eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }}
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `${CORAL}14`, border: `1px solid ${CORAL}30`, color: CORAL_DK, borderRadius: 9999, padding: "6px 14px", fontSize: 12.5, fontWeight: 700, fontFamily: "'Inter',system-ui,sans-serif", marginBottom: 18 }}
-            >
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: CORAL }} /> 1-on-1 mentorship · free rank predictors
-            </motion.div>
-
-            <motion.h1
-              variants={headVariants} initial="hidden" animate="show"
-              style={{ fontFamily: "'Space Grotesk','Sora',system-ui,sans-serif", fontWeight: 800, color: INK, fontSize: headingSize, lineHeight: 1.08, letterSpacing: "-0.03em", margin: 0 }}
-            >
-              <span style={{ display: "block" }}>
-                {LINE_A.map((w, idx) => <HeadWord key={idx} w={w} order={0} />)}
-              </span>
-              <span style={{ display: "block" }}>
-                {LINE_B.map((w, idx) => <HeadWord key={idx} w={w} order={1} />)}
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-              style={{ marginTop: 18, marginBottom: 0, marginInline: twoCol ? 0 : "auto", maxWidth: twoCol ? 460 : 560, fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 500, fontSize: isXs ? "1rem" : "1.08rem", color: "#5b5b66", lineHeight: 1.55 }}
-            >
-              An <b style={{ color: CORAL_DK, fontWeight: 700 }}>IIT Roorkee</b> startup — predict your JEE &amp; NEET rank and get a personal IITian mentor. All free.
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.32 }}
-              style={{ display: "flex", flexWrap: "wrap", justifyContent: twoCol ? "flex-start" : "center", gap: 14, marginTop: 26 }}
-            >
-              <button
-                onClick={openSearch}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 9, cursor: "pointer",
-                  padding: "13px 26px", borderRadius: 9999, whiteSpace: "nowrap",
-                  background: "#fff", border: "1px solid rgba(0,0,0,.14)", color: "#111",
-                  fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
-                  boxShadow: "0 4px 12px rgba(0,0,0,.03)", transition: "all .2s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.28)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(0,0,0,.14)"; }}
-              >
-                <Search size={17} /> Search
-              </button>
-              <button
-                onClick={() => nav("/jee-main#college")}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 9, cursor: "pointer",
-                  padding: "14px 30px", borderRadius: 9999, whiteSpace: "nowrap",
-                  background: CORAL, border: "none", color: "#fff",
-                  fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
-                  boxShadow: "0 8px 24px rgba(255, 90, 54, 0.3)", transition: "all .2s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = CORAL_DK; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = CORAL; }}
-              >
-                Predict my college <Target size={18} />
-              </button>
-            </motion.div>
-
-            {/* trust row */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.44 }}
-              style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 26, justifyContent: twoCol ? "flex-start" : "center" }}
-            >
-              <div style={{ display: "flex" }}>
-                {[["A", "#FF7A50"], ["P", "#FF5A36"], ["R", "#E0421F"]].map(([t, bg], i) => (
-                  <span key={t} style={{ width: 36, height: 36, borderRadius: "50%", background: bg, border: "2.5px solid #fff", display: "grid", placeItems: "center", marginLeft: i === 0 ? 0 : -12, color: "#fff", fontWeight: 800, fontSize: 13, fontFamily: "'Inter',system-ui,sans-serif" }}>{t}</span>
-                ))}
-              </div>
-              <p style={{ margin: 0, fontSize: 14, color: "#4B5563", fontFamily: "'Inter',system-ui,sans-serif" }}>
-                Trusted by <b style={{ color: "#111" }}>3,200+</b> JEE &amp; NEET aspirants
-              </p>
-            </motion.div>
-          </div>
-
-          {/* ══ RIGHT — mentorship-hub card (desktop/tablet) · animated phone (mobile) ══ */}
-          <motion.div
-            initial={{ opacity: 0, x: twoCol ? 50 : 0, y: twoCol ? 0 : 40 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            style={{ minWidth: 0 }}
+        {/* ══ Headline (centered) ══ */}
+        <div style={{ position: "relative", maxWidth: 1120, margin: "0 auto", textAlign: "center" }}>
+          <motion.h1
+            variants={headVariants} initial="hidden" animate="show"
+            style={{ fontFamily: "'Space Grotesk','Sora',system-ui,sans-serif", fontWeight: 800, color: INK, fontSize: headingSize, lineHeight: 1.08, letterSpacing: "-0.03em", margin: 0 }}
           >
-            {isMobile ? <MobileCyclePhone /> : <MentorshipHubMock isMobile={false} />}
+            <span style={{ display: "block" }}>
+              {LINE_A.map((w, idx) => <HeadWord key={idx} w={w} order={0} />)}
+            </span>
+            <span style={{ display: "block" }}>
+              {LINE_B.map((w, idx) => <HeadWord key={idx} w={w} order={1} />)}
+            </span>
+          </motion.h1>
+
+          {/* startup line — single line */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
+            style={{
+              marginTop: isMobile ? "1.3rem" : "1.8rem",
+              fontFamily: "'Inter','Space Grotesk',system-ui,sans-serif", fontWeight: 600,
+              fontSize: "clamp(12px, 2.8vw, 15px)", color: "#444",
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100%",
+            }}
+          >
+            An <span style={{ color: CORAL }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
           </motion.div>
         </div>
+
+        {/* ══ Twin CTAs ══ */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.28 }}
+          style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 14, margin: "2rem 0 0" }}
+        >
+          <button
+            onClick={openSearch}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 9, cursor: "pointer",
+              padding: "13px 26px", borderRadius: 9999, whiteSpace: "nowrap",
+              background: "#fff", border: "1px solid rgba(0,0,0,.14)", color: "#111",
+              fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
+              boxShadow: "0 4px 12px rgba(0,0,0,.03)", transition: "all .2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.28)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(0,0,0,.14)"; }}
+          >
+            <Search size={17} /> Search
+          </button>
+          <button
+            onClick={() => nav("/jee-main#college")}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 9, cursor: "pointer",
+              padding: "14px 30px", borderRadius: 9999, whiteSpace: "nowrap",
+              background: CORAL, border: "none", color: "#fff",
+              fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
+              boxShadow: "0 8px 24px rgba(255, 90, 54, 0.3)", transition: "all .2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = CORAL_DK; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = CORAL; }}
+          >
+            Predict my college <Target size={18} />
+          </button>
+        </motion.div>
+
+        {/* ══ Product visual — full-width card (desktop/tablet) · animated phone (mobile) ══ */}
+        <motion.div
+          initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          style={{ marginTop: isMobile ? "2.6rem" : "3.6rem" }}
+        >
+          {isMobile ? <MobileCyclePhone /> : <MentorshipHubMock isMobile={false} />}
+        </motion.div>
       </div>
     </section>
   );
