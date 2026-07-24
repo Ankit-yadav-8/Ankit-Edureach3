@@ -299,7 +299,7 @@ export default function Hero({ onSearch }) {
             ))}
           </div>
           <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: "#6b6770", whiteSpace: "nowrap" }}>
-            <strong style={{ color: CORAL, fontWeight: 800 }}>3200+</strong> students trust on us
+Trusted by <strong style={{ color: CORAL, fontWeight: 800 }}>3200+</strong> JEE &amp; NEET aspirants
           </span>
           <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: "linear-gradient(90deg, rgba(255,90,54,.4), rgba(28,28,40,.16) 60%, transparent)" }} />
         </motion.div>
