@@ -122,18 +122,32 @@ const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, t
 /* smooth wave threading the three node centres (x = 167 / 500 / 833), with a
    gentle downward valley in each gap so it reads the same across both bays */
 const WAVE = "M0 54 C 55 51 112 50 167 50 C 250 50 292 64 333 64 C 378 64 432 51 500 50 C 572 50 622 64 667 64 C 712 64 758 51 833 50 C 905 50 952 49 1000 46";
-const NODE_X = ["16.667%", "50%", "83.333%"];
+const LOOP = 4.5; // seconds for the dot to travel the whole wave (matches animateMotion dur)
+// each node glows the moment the dot arrives at it (≈ its position fraction × LOOP)
+const NODES = [
+  { left: "16.667%", arrive: 0.7  },
+  { left: "50%",     arrive: 2.15 },
+  { left: "83.333%", arrive: 3.6  },
+];
 
-/* expanding ripple rings behind a node circle */
-function PulseRing({ left, delay }) {
+/* glow flash + ripple rings that fire when the dot reaches this node, once per loop */
+function PulseRing({ left, arrive }) {
   return (
     <div aria-hidden style={{ position: "absolute", top: 34, left, zIndex: 0 }}>
+      {/* warm glow flash */}
+      <motion.span
+        style={{ position: "absolute", top: 0, left: 0, x: "-50%", y: "-50%", width: 84, height: 84, borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(255,90,54,.5), transparent 70%)" }}
+        animate={{ scale: [0.55, 1.3, 1], opacity: [0, 0.9, 0] }}
+        transition={{ duration: 1.1, ease: "easeOut", repeat: Infinity, repeatDelay: LOOP - 1.1, delay: arrive }}
+      />
+      {/* expanding rings */}
       {[0, 1].map((k) => (
         <motion.span key={k}
           style={{ position: "absolute", top: 0, left: 0, x: "-50%", y: "-50%",
-            width: 68, height: 68, borderRadius: "50%", border: "1.5px solid rgba(255,90,54,.4)" }}
-          animate={{ scale: [1, 1.75], opacity: [0.5, 0] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut", delay: delay + k * 1.2 }}
+            width: 68, height: 68, borderRadius: "50%", border: "2px solid rgba(255,90,54,.55)" }}
+          animate={{ scale: [1, 1.9], opacity: [0.75, 0] }}
+          transition={{ duration: 1.2, ease: "easeOut", repeat: Infinity, repeatDelay: LOOP - 1.2, delay: arrive + k * 0.22 }}
         />
       ))}
     </div>
@@ -143,8 +157,8 @@ function PulseRing({ left, delay }) {
 function JourneyLine() {
   return (
     <>
-      {/* ripple rings under each node */}
-      {NODE_X.map((l, i) => <PulseRing key={i} left={l} delay={i * 0.6} />)}
+      {/* each node glows as the dot reaches it */}
+      {NODES.map((n, i) => <PulseRing key={i} left={n.left} arrive={n.arrive} />)}
       {/* wavy connecting line + glowing traveller dot */}
       <svg aria-hidden viewBox="0 0 1000 100" preserveAspectRatio="none"
         style={{ position: "absolute", top: -16, left: 0, width: "100%", height: 100, zIndex: 0, overflow: "visible", pointerEvents: "none" }}>
@@ -287,6 +301,25 @@ export default function Hero({ onSearch }) {
           >
             Predict my college <Target size={18} />
           </button>
+        </motion.div>
+
+        {/* social proof */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}
+          style={{ display: "inline-flex", alignItems: "center", gap: 12, marginTop: isMobile ? "1.4rem" : "1.6rem" }}
+        >
+          <div style={{ display: "flex" }}>
+            {["#FF7A59", "#FFB088", "#7C5CFF", "#FFC24B"].map((c, i) => (
+              <span key={i} style={{
+                width: 30, height: 30, borderRadius: "50%", background: c,
+                border: "2px solid #fff", marginLeft: i === 0 ? 0 : -10,
+                boxShadow: "0 2px 6px rgba(0,0,0,.12)",
+              }} />
+            ))}
+          </div>
+          <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: "#6b6770" }}>
+            <strong style={{ color: INK, fontWeight: 700 }}>3200+</strong> students trust on us
+          </span>
         </motion.div>
 
         {/* ══ 3-step journey ══ */}
