@@ -119,17 +119,70 @@ const STEPS = [
 const stepsContainer = { hidden: {}, show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } } };
 const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
 
+/* one loop of the journey: traveler crosses in TRIP secs, then a short pause */
+const TRIP = 4.2;
+const CYCLE = TRIP + 0.9;
+
+/* confetti burst that fires each time the student reaches the finish (03) */
+const CONFETTI = [
+  { x: 26, y: -30, c: "#FF5A36" }, { x: -22, y: -34, c: "#7C5CFF" },
+  { x: 40, y: -8,  c: "#FFC24B" }, { x: -34, y: -14, c: "#2FBF71" },
+  { x: 14, y: -44, c: "#FF8A5B" }, { x: -10, y: -40, c: "#FFC24B" },
+  { x: 34, y: -28, c: "#7C5CFF" }, { x: -30, y: -30, c: "#FF5A36" },
+];
+function Celebration() {
+  return (
+    <div aria-hidden style={{ position: "absolute", left: "100%", top: "50%", zIndex: 5 }}>
+      {CONFETTI.map((p, i) => (
+        <motion.span key={i}
+          style={{ position: "absolute", width: 7, height: 7, borderRadius: 2, background: p.c }}
+          initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
+          animate={{ opacity: [0, 1, 1, 0], x: [0, p.x], y: [0, p.y, p.y + 18], scale: [0, 1, 0.7], rotate: [0, 180] }}
+          transition={{ duration: 1, ease: "easeOut", repeat: Infinity, repeatDelay: CYCLE - 1, delay: TRIP - 0.3 }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function JourneyLine() {
+  return (
+    <div aria-hidden style={{ position: "absolute", top: 34, left: "16%", right: "16%", height: 2, zIndex: 0 }}>
+      {/* base track */}
+      <div style={{ position: "absolute", inset: 0, borderRadius: 2,
+        background: "linear-gradient(90deg, transparent, rgba(28,28,40,.14) 8%, rgba(28,28,40,.14) 92%, transparent)" }} />
+      {/* coral progress trail sweeping left → right */}
+      <motion.div
+        style={{ position: "absolute", top: 0, bottom: 0, left: 0, borderRadius: 2, transformOrigin: "left center",
+          background: "linear-gradient(90deg, #FF5A36, #FF8A5B)" }}
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: [0, 1, 1, 0] }}
+        transition={{ duration: CYCLE, times: [0, TRIP / CYCLE, 0.94, 1], ease: "easeInOut", repeat: Infinity }}
+      />
+      {/* the student riding the wave across the line */}
+      <motion.div
+        style={{ position: "absolute", top: -14, x: "-50%", fontSize: 26, zIndex: 4,
+          filter: "drop-shadow(0 5px 6px rgba(0,0,0,.18))" }}
+        animate={{ left: ["0%", "100%"], y: [0, -11, 0] }}
+        transition={{
+          left: { duration: TRIP, ease: "easeInOut", repeat: Infinity, repeatDelay: CYCLE - TRIP },
+          y:    { duration: 0.75, ease: "easeInOut", repeat: Infinity },
+        }}
+      >🎓</motion.div>
+      {/* celebration at the finish */}
+      <Celebration />
+    </div>
+  );
+}
+
 function HeroSteps({ isMobile }) {
   return (
     <motion.div
       variants={stepsContainer} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.35 }}
       style={{ maxWidth: 980, margin: isMobile ? "3rem auto 0" : "4.5rem auto 0", position: "relative" }}
     >
-      {/* connecting line behind the circles (desktop/tablet) */}
-      {!isMobile && (
-        <div aria-hidden style={{ position: "absolute", top: 34, left: "16%", right: "16%", height: 2, zIndex: 0,
-          background: "linear-gradient(90deg, transparent, rgba(28,28,40,.14) 14%, rgba(28,28,40,.14) 86%, transparent)" }} />
-      )}
+      {/* animated journey line behind the circles (desktop/tablet) */}
+      {!isMobile && <JourneyLine />}
       <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: isMobile ? 30 : 24 }}>
         {STEPS.map((s) => (
           <motion.div
