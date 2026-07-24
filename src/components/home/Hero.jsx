@@ -68,6 +68,45 @@ function HeadWord({ w, order }) {
   );
 }
 
+/* ── background aurora: soft blurred glass orbs drifting behind the hero.
+   Recreated & upgraded from the reference "glass-shape" effect, tinted to
+   the coral brand palette so it reads as a warm premium wash on white. ── */
+const ORBS = [
+  { size: 480, top: "-8%",  left: "-6%",  color: "rgba(255,90,54,0.22)",  dur: 17, dx: 34,  dy: 26 },
+  { size: 380, top: "6%",   left: "72%",  color: "rgba(255,150,90,0.20)", dur: 21, dx: -30, dy: 34 },
+  { size: 300, top: "58%",  left: "4%",   color: "rgba(255,182,120,0.18)",dur: 19, dx: 26,  dy: -28 },
+  { size: 420, top: "52%",  left: "68%",  color: "rgba(255,90,54,0.16)",  dur: 23, dx: -28, dy: -22 },
+];
+
+function HeroBackground() {
+  return (
+    <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
+      {/* warm gradient wash */}
+      <div style={{ position: "absolute", inset: 0,
+        background: "radial-gradient(1100px 620px at 50% -10%, rgba(255,90,54,0.07), transparent 60%), linear-gradient(180deg, #FFF9F6 0%, #FFFFFF 55%)" }} />
+      {/* drifting blurred orbs */}
+      {ORBS.map((o, i) => (
+        <motion.div
+          key={i}
+          animate={{ x: [0, o.dx, 0], y: [0, o.dy, 0], scale: [1, 1.08, 1] }}
+          transition={{ duration: o.dur, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            position: "absolute", top: o.top, left: o.left,
+            width: o.size, height: o.size, borderRadius: "50%",
+            background: `radial-gradient(circle at 30% 30%, ${o.color}, transparent 70%)`,
+            filter: "blur(60px)",
+          }}
+        />
+      ))}
+      {/* fine dot grid for editorial texture */}
+      <div style={{ position: "absolute", inset: 0, opacity: 0.5,
+        backgroundImage: "radial-gradient(rgba(28,28,40,0.05) 1px, transparent 1px)",
+        backgroundSize: "26px 26px", maskImage: "radial-gradient(80% 70% at 50% 40%, #000 40%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(80% 70% at 50% 40%, #000 40%, transparent 100%)" }} />
+    </div>
+  );
+}
+
 /* ── 3-step journey: Mentorship → Rank → Dream College ── */
 const STEPS = [
   { n: "01", title: "Mentorship", to: "/mentorship", desc: "A 1-on-1 IITian / doctor mentor with daily targets and weekly test analysis." },
@@ -118,6 +157,8 @@ export default function Hero({ onSearch }) {
 
   return (
     <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: "#FFFFFF" }}>
+      {/* ── animated coral aurora background ── */}
+      <HeroBackground />
       {/* ── content ── */}
       <div className="container" style={{
         position: "relative", zIndex: 2, width: "100%", boxSizing: "border-box",
@@ -128,9 +169,9 @@ export default function Hero({ onSearch }) {
         {/* badge */}
         <motion.div
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,90,54,.10)", border: "1px solid rgba(255,90,54,.22)", color: CORAL_DK, borderRadius: 9999, padding: "7px 16px", fontSize: 12, fontWeight: 800, letterSpacing: "1.4px", fontFamily: "'Inter',system-ui,sans-serif", marginBottom: 28 }}
+          style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,90,54,.07)", border: "1px solid rgba(255,90,54,.18)", color: CORAL_DK, borderRadius: 9999, padding: "6px 14px", fontSize: 11.5, fontWeight: 600, letterSpacing: "0.5px", fontFamily: "'Inter',system-ui,sans-serif", marginBottom: 28 }}
         >
-          <motion.span animate={{ opacity: [1, 0.35, 1] }} transition={{ duration: 1.8, repeat: Infinity }} style={{ width: 7, height: 7, borderRadius: "50%", background: CORAL }} />
+          <motion.span animate={{ opacity: [1, 0.35, 1] }} transition={{ duration: 1.8, repeat: Infinity }} style={{ width: 6, height: 6, borderRadius: "50%", background: CORAL }} />
           BUILT FOR JEE &amp; NEET ASPIRANTS
         </motion.div>
 
