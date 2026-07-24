@@ -119,8 +119,9 @@ const STEPS = [
 const stepsContainer = { hidden: {}, show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } } };
 const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
 
-/* smooth wave that threads through the three node centres (x = 167 / 500 / 833) */
-const WAVE = "M0 50 C 60 50 110 50 167 50 C 250 50 292 68 333 66 C 378 64 430 50 500 50 C 572 50 622 32 667 34 C 712 36 760 50 833 50 C 900 50 950 50 1000 50";
+/* smooth wave threading the three node centres (x = 167 / 500 / 833), with a
+   gentle downward valley in each gap so it reads the same across both bays */
+const WAVE = "M0 54 C 55 51 112 50 167 50 C 250 50 292 64 333 64 C 378 64 432 51 500 50 C 572 50 622 64 667 64 C 712 64 758 51 833 50 C 905 50 952 49 1000 46";
 const NODE_X = ["16.667%", "50%", "83.333%"];
 
 /* expanding ripple rings behind a node circle */
