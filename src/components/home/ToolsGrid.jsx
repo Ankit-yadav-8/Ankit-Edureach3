@@ -2,18 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Gauge, Crosshair, BarChart3, Map, ListChecks,
-  GitCompareArrows, Layers, Sparkles, Ticket,
+  Gauge, Crosshair, Map, ListChecks,
+  GitCompareArrows, Layers, Sparkles,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
 const TOOLS = [
-  {
-    icon: Ticket, title: "Events & Fest marketplace", accent: "#FF693D",
-    desc: "Book hackathons, cultural fests, seminars across colleges. Students discover events nearby.",
-    bullets: ["One-tap ticket booking", "Curated, high-impact events", "Connect across colleges"],
-    to: "/campus-fests", live: true, hot: true,
-  },
   {
     icon: Gauge, title: "Rank Predictor", accent: "#FF693D",
     desc: "Enter your expected marks and instantly project your JEE Main rank, percentile and category rank.",
@@ -25,12 +19,6 @@ const TOOLS = [
     desc: "Map your rank against previous years' cutoffs for IITs, NITs, IIITs and GFTIs in one shot.",
     bullets: ["High / medium probability tags", "All JoSAA + CSAB rounds", "Branch & quota filters"],
     to: "/jee-advanced#college", live: true,
-  },
-  {
-    icon: BarChart3, title: "Official Cutoff Analysis", accent: "#FF693D",
-    desc: "Real JoSAA opening & closing ranks with weightage breakdowns built around your target scorecard.",
-    bullets: ["Interactive score slider", "2021-2025 cutoff history", "Priority checklist recommendations"],
-    to: "/cutoffs", live: true,
   },
   {
     icon: Layers, title: "Branch Insights Hub", accent: "#FF693D",
@@ -208,13 +196,18 @@ export default function ToolsGrid() {
           </p>
         </div>
 
-        {/* Cards Grid */}
+        {/* Cards Grid — 3 per row, dropping to 2 then 1 on smaller screens */}
+        <style>{`
+          .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+          @media (max-width: 900px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
+          @media (max-width: 600px) { .tools-grid { grid-template-columns: 1fr; } }
+        `}</style>
         <motion.div
+          className="tools-grid"
           variants={containerV}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))", gap: 24 }}
         >
           {TOOLS.map((t) => <ToolCard key={t.title} t={t} nav={nav} />)}
         </motion.div>

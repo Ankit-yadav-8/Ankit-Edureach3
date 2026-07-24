@@ -5,6 +5,7 @@ import { StrategyReveal, AnimatedWidth, AnimatedHeight } from "../components/Str
 import StudyRoadmap from "../components/StudyRoadmap.jsx";
 import { NEET_ROADMAP } from "../data/roadmaps.js";
 import { Zap, Stethoscope, Microscope, Target } from "lucide-react";
+import "../styles/strategy.css";
 
 export default function NeetStrategy() {
   const heroProps = {

@@ -6,7 +6,9 @@ import { ShortlistProvider } from "./context/Shortlist.jsx";
 import { AuthProvider } from "./auth/AuthContext.jsx";
 import { EnrolProvider } from "./components/EnrolModal.jsx";
 import "./styles/index.css";
-import "./styles/strategy.css";
+// strategy.css is namespaced under .strategy-wrapper and only used by the
+// JEE/NEET strategy pages — imported there so it stays off the global (home)
+// critical-CSS path and loads lazily with those routes.
 
 /**
  * Apply the async-loaded stylesheets. They ship as media="print" so they don't

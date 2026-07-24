@@ -6,6 +6,7 @@ import { StrategyReveal, AnimatedWidth, AnimatedHeight } from "../components/Str
 import StudyRoadmap from "../components/StudyRoadmap.jsx";
 import { JEE_MAIN_ROADMAP, JEE_ADV_ROADMAP } from "../data/roadmaps.js";
 import { Atom, FlaskConical, Sigma, Target } from "lucide-react";
+import "../styles/strategy.css";
 
 export default function JeeStrategy() {
   const heroProps = {
