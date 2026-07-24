@@ -68,41 +68,44 @@ function HeadWord({ w, order }) {
   );
 }
 
-/* ── background aurora: soft blurred glass orbs drifting behind the hero.
-   Recreated & upgraded from the reference "glass-shape" effect, tinted to
-   the coral brand palette so it reads as a warm premium wash on white. ── */
-const ORBS = [
-  { size: 480, top: "-8%",  left: "-6%",  color: "rgba(255,90,54,0.22)",  dur: 17, dx: 34,  dy: 26 },
-  { size: 380, top: "6%",   left: "72%",  color: "rgba(255,150,90,0.20)", dur: 21, dx: -30, dy: 34 },
-  { size: 300, top: "58%",  left: "4%",   color: "rgba(255,182,120,0.18)",dur: 19, dx: 26,  dy: -28 },
-  { size: 420, top: "52%",  left: "68%",  color: "rgba(255,90,54,0.16)",  dur: 23, dx: -28, dy: -22 },
+/* ── background: soft frosted-glass shapes drifting behind the hero
+   (rounded squares, a pill and a circle), recreated from the reference
+   with a gentle float + rotate. Kept subtle so the headline stays hero. ── */
+const SHAPES = [
+  // top-left peach rounded square
+  { w: 200, h: 200, top: "-4%",  left: "-2%", radius: "34%", rot: -10,
+    bg: "linear-gradient(140deg, #FFE4D6, #FFD0BC)", dur: 16, dy: 26, dr: 6 },
+  // right lavender rounded square
+  { w: 130, h: 130, top: "18%",  left: "80%", radius: "30%", rot: 14,
+    bg: "linear-gradient(140deg, #E7DEFF, #CDBEFB)", dur: 20, dy: -22, dr: -8 },
+  // bottom-left peach pill
+  { w: 210, h: 84,  top: "80%",  left: "6%",  radius: "9999px", rot: 0,
+    bg: "linear-gradient(120deg, #FFEAD9, #FFDFC7)", dur: 22, dy: 18, dr: 4 },
+  // bottom-right peach circle
+  { w: 150, h: 150, top: "76%",  left: "82%", radius: "50%", rot: 0,
+    bg: "linear-gradient(150deg, #FFD9C4, #FFC4A8)", dur: 18, dy: -24, dr: 0 },
 ];
 
 function HeroBackground() {
   return (
     <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-      {/* warm gradient wash */}
-      <div style={{ position: "absolute", inset: 0,
-        background: "radial-gradient(1100px 620px at 50% -10%, rgba(255,90,54,0.07), transparent 60%), linear-gradient(180deg, #FFF9F6 0%, #FFFFFF 55%)" }} />
-      {/* drifting blurred orbs */}
-      {ORBS.map((o, i) => (
+      {/* plain white base */}
+      <div style={{ position: "absolute", inset: 0, background: "#FFFFFF" }} />
+      {/* frosted glass shapes */}
+      {SHAPES.map((s, i) => (
         <motion.div
           key={i}
-          animate={{ x: [0, o.dx, 0], y: [0, o.dy, 0], scale: [1, 1.08, 1] }}
-          transition={{ duration: o.dur, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ y: [0, s.dy, 0], rotate: [s.rot, s.rot + s.dr, s.rot] }}
+          transition={{ duration: s.dur, repeat: Infinity, ease: "easeInOut" }}
           style={{
-            position: "absolute", top: o.top, left: o.left,
-            width: o.size, height: o.size, borderRadius: "50%",
-            background: `radial-gradient(circle at 30% 30%, ${o.color}, transparent 70%)`,
-            filter: "blur(60px)",
+            position: "absolute", top: s.top, left: s.left,
+            width: s.w, height: s.h, borderRadius: s.radius, rotate: `${s.rot}deg`,
+            background: s.bg,
+            border: "1px solid rgba(255,255,255,0.65)",
+            boxShadow: "0 30px 60px -20px rgba(120,90,110,0.28), inset 0 1px 2px rgba(255,255,255,0.7)",
           }}
         />
       ))}
-      {/* fine dot grid for editorial texture */}
-      <div style={{ position: "absolute", inset: 0, opacity: 0.5,
-        backgroundImage: "radial-gradient(rgba(28,28,40,0.05) 1px, transparent 1px)",
-        backgroundSize: "26px 26px", maskImage: "radial-gradient(80% 70% at 50% 40%, #000 40%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(80% 70% at 50% 40%, #000 40%, transparent 100%)" }} />
     </div>
   );
 }
@@ -110,8 +113,8 @@ function HeroBackground() {
 /* ── 3-step journey: Mentorship → Rank → Dream College ── */
 const STEPS = [
   { n: "01", title: "Mentorship", to: "/mentorship", desc: "A 1-on-1 IITian / doctor mentor with daily targets and weekly test analysis." },
-  { n: "02", title: "Rank", to: "/jee-main", desc: "Free JEE & NEET predictors turn your marks into an accurate All-India rank." },
-  { n: "03", title: "Dream College", to: "/for-you", desc: "Match that rank to every IIT, NIT & IIIT and plan your JoSAA choices." },
+  { n: "02", title: "Rank", to: "/jee-main", desc: "Your mentor reads your test data and predictors to fix a realistic target rank." },
+  { n: "03", title: "Dream College", to: "/for-you", desc: "Your mentor maps that rank to the right IIT, NIT & IIIT and plans your JoSAA choices." },
 ];
 const stepsContainer = { hidden: {}, show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } } };
 const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
