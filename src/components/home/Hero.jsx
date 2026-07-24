@@ -78,11 +78,11 @@ const SHAPES = [
   // top-right lavender rounded square (lowered so it clears the heading)
   { w: 120, h: 120, top: "34%",  left: "86%", radius: "30%", rot: 14,
     bg: "linear-gradient(140deg, #E7DEFF, #CDBEFB)", dur: 20, dy: -22, dr: -8 },
-  // bottom-left peach pill
-  { w: 200, h: 80,  top: "82%",  left: "3%",  radius: "9999px", rot: 0,
-    bg: "linear-gradient(120deg, #FFEAD9, #FFDFC7)", dur: 22, dy: 18, dr: 4 },
+  // bottom-left lavender rounded square (matches the top-right)
+  { w: 120, h: 120, top: "62%",  left: "3%",  radius: "30%", rot: -12,
+    bg: "linear-gradient(140deg, #E7DEFF, #CDBEFB)", dur: 22, dy: 18, dr: 5 },
   // bottom-right peach circle
-  { w: 150, h: 150, top: "80%",  left: "86%", radius: "50%", rot: 0,
+  { w: 150, h: 150, top: "58%",  left: "86%", radius: "50%", rot: 0,
     bg: "linear-gradient(150deg, #FFD9C4, #FFC4A8)", dur: 18, dy: -24, dr: 0 },
 ];
 
