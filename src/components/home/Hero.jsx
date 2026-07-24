@@ -119,49 +119,11 @@ const STEPS = [
 const stepsContainer = { hidden: {}, show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } } };
 const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
 
-/* smooth wave threading the three node centres (x = 167 / 500 / 833), with a
-   gentle downward valley in each gap so it reads the same across both bays */
-const WAVE = "M0 54 C 55 51 112 50 167 50 C 250 50 292 64 333 64 C 378 64 432 51 500 50 C 572 50 622 64 667 64 C 712 64 758 51 833 50 C 905 50 952 49 1000 46";
-const NODE_LEFTS = ["16.667%", "50%", "83.333%"];
-
-/* soft ring around a node — a faint static ring plus one gentle looping pulse */
-function PulseRing({ left, delay }) {
-  return (
-    <div aria-hidden style={{ position: "absolute", top: 34, left, zIndex: 0 }}>
-      <span style={{ position: "absolute", top: 0, left: 0, transform: "translate(-50%,-50%)",
-        width: 82, height: 82, borderRadius: "50%", border: "1px solid rgba(255,90,54,.16)" }} />
-      <motion.span
-        style={{ position: "absolute", top: 0, left: 0, x: "-50%", y: "-50%",
-          width: 68, height: 68, borderRadius: "50%", border: "1.5px solid rgba(255,90,54,.4)" }}
-        animate={{ scale: [1, 1.4], opacity: [0.45, 0] }}
-        transition={{ duration: 2.8, ease: "easeOut", repeat: Infinity, delay }}
-      />
-    </div>
-  );
-}
-
+/* simple straight line connecting the three nodes, faded at the ends */
 function JourneyLine() {
   return (
-    <>
-      {/* gently pulsing rings under each node */}
-      {NODE_LEFTS.map((l, i) => <PulseRing key={i} left={l} delay={i * 0.5} />)}
-      {/* static wavy connecting line, coral in the middle, fading to dotted at the ends */}
-      <svg aria-hidden viewBox="0 0 1000 100" preserveAspectRatio="none"
-        style={{ position: "absolute", top: -16, left: 0, width: "100%", height: 100, zIndex: 0, overflow: "visible", pointerEvents: "none" }}>
-        <defs>
-          <linearGradient id="coralFade" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0"    stopColor="#FF5A36" stopOpacity="0" />
-            <stop offset="0.07" stopColor="#FF5A36" stopOpacity="1" />
-            <stop offset="0.93" stopColor="#FF5A36" stopOpacity="1" />
-            <stop offset="1"    stopColor="#FF5A36" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        {/* faint dotted guide — shows through at the faded ends */}
-        <path d={WAVE} fill="none" stroke="rgba(255,90,54,.3)" strokeWidth="4" strokeDasharray="0.1 12" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-        {/* solid coral wave (static) */}
-        <path d={WAVE} fill="none" stroke="url(#coralFade)" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-      </svg>
-    </>
+    <div aria-hidden style={{ position: "absolute", top: 34, left: "16%", right: "16%", height: 2, zIndex: 0,
+      background: "linear-gradient(90deg, transparent, #1c1c28 8%, #1c1c28 92%, transparent)" }} />
   );
 }
 
@@ -293,12 +255,14 @@ export default function Hero({ onSearch }) {
         >
           <span style={{ width: isMobile ? 22 : 42, height: 1, background: "linear-gradient(90deg, transparent, rgba(28,28,40,.22))" }} />
           <div style={{ display: "flex" }}>
-            {["#FF7A59", "#FFB088", "#7C5CFF", "#FFC24B"].map((c, i) => (
+            {[["#FF7A59", "A"], ["#FFB088", "P"], ["#7C5CFF", "R"], ["#FFC24B", "S"]].map(([c, ltr], i) => (
               <span key={i} style={{
                 width: 30, height: 30, borderRadius: "50%", background: c,
                 border: "2px solid #fff", marginLeft: i === 0 ? 0 : -10,
                 boxShadow: "0 2px 6px rgba(0,0,0,.12)",
-              }} />
+                display: "grid", placeItems: "center",
+                color: "#fff", fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: 12,
+              }}>{ltr}</span>
             ))}
           </div>
           <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: "#6b6770", whiteSpace: "nowrap" }}>
