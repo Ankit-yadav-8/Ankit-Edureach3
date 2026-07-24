@@ -242,7 +242,13 @@ export default function Footer() {
         @media (max-width: 880px) {
           .fteam-grid { grid-template-columns: 1fr; max-width: 460px; }
         }
+        @keyframes cpFloatOrb1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(100px,80px) scale(1.15); } }
+        @keyframes cpFloatOrb2 { 0% { transform: translate(0,0) scale(1.1); } 100% { transform: translate(-80px,-60px) scale(0.9); } }
       `}</style>
+
+      {/* CampusLoom-style floating glow orbs behind the footer */}
+      <div aria-hidden style={{ position: "absolute", width: 600, height: 600, borderRadius: "50%", top: -220, left: -180, filter: "blur(140px)", opacity: 0.45, pointerEvents: "none", zIndex: 0, background: "radial-gradient(circle, rgba(255,90,54,0.30) 0%, transparent 70%)", animation: "cpFloatOrb1 25s infinite alternate ease-in-out" }} />
+      <div aria-hidden style={{ position: "absolute", width: 500, height: 500, borderRadius: "50%", bottom: -160, right: -120, filter: "blur(140px)", opacity: 0.5, pointerEvents: "none", zIndex: 0, background: "radial-gradient(circle, rgba(255,150,90,0.34) 0%, transparent 70%)", animation: "cpFloatOrb2 20s infinite alternate ease-in-out" }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
 
         {/* Main link grid */}

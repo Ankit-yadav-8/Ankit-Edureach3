@@ -113,8 +113,8 @@ function HeroBackground() {
 /* ── 3-step journey: Mentorship → Rank → Dream College ── */
 const STEPS = [
   { n: "01", title: "Mentorship", to: "/mentorship", desc: "A 1-on-1 IITian / doctor mentor with daily targets and weekly test analysis." },
-  { n: "02", title: "Rank", to: "/jee-main", desc: "Your mentor reads your test data and predictors to fix a realistic target rank." },
-  { n: "03", title: "Dream College", to: "/for-you", desc: "Your mentor maps that rank to the right IIT, NIT & IIIT and plans your JoSAA choices." },
+  { n: "02", title: "Rank", to: "/jee-main", desc: "Your mentor lifts your rank with 1-on-1 doubt solving and a plan to clear every backlog." },
+  { n: "03", title: "Dream College", to: "/for-you", desc: "Guided by your mentor every step, you'll reach your dream college." },
 ];
 const stepsContainer = { hidden: {}, show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } } };
 const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
