@@ -72,18 +72,18 @@ function HeadWord({ w, order }) {
    (rounded squares, a pill and a circle), recreated from the reference
    with a gentle float + rotate. Kept subtle so the headline stays hero. ── */
 const SHAPES = [
-  // top-left peach rounded square
-  { w: 180, h: 180, top: "6%",   left: "3%",  radius: "34%", rot: -12,
-    bg: "linear-gradient(140deg, #FFE4D6, #FFD0BC)", dur: 16, dy: 26, dr: 6 },
-  // top-right lavender rounded square (lowered so it clears the heading)
-  { w: 120, h: 120, top: "34%",  left: "86%", radius: "30%", rot: 14,
-    bg: "linear-gradient(140deg, #E7DEFF, #CDBEFB)", dur: 20, dy: -22, dr: -8 },
-  // bottom-left lavender rounded square (matches the top-right)
-  { w: 120, h: 120, top: "62%",  left: "3%",  radius: "30%", rot: -12,
-    bg: "linear-gradient(140deg, #E7DEFF, #CDBEFB)", dur: 22, dy: 18, dr: 5 },
-  // bottom-right peach circle
-  { w: 150, h: 150, top: "58%",  left: "86%", radius: "50%", rot: 0,
-    bg: "linear-gradient(150deg, #FFD9C4, #FFC4A8)", dur: 18, dy: -24, dr: 0 },
+  // top-left — peach rounded square (largest)
+  { w: 180, h: 180, top: "5%",  left: "2%",  radius: "34%", rot: -12,
+    bg: "linear-gradient(140deg, #FFE4D6, #FFD0BC)", dur: 20, dx: 14,  dy: 24,  dr: 6 },
+  // top-right — lavender rounded square (raised into the corner)
+  { w: 130, h: 130, top: "9%",  left: "85%", radius: "30%", rot: 14,
+    bg: "linear-gradient(140deg, #E7DEFF, #CDBEFB)", dur: 24, dx: -16, dy: 28,  dr: -8 },
+  // bottom-left — lavender rounded square
+  { w: 128, h: 128, top: "64%", left: "3%",  radius: "30%", rot: -14,
+    bg: "linear-gradient(140deg, #E7DEFF, #CDBEFB)", dur: 22, dx: 18,  dy: -22, dr: 7 },
+  // bottom-right — peach circle (dropped low, well clear of the top-right)
+  { w: 150, h: 150, top: "72%", left: "84%", radius: "50%", rot: 0,
+    bg: "linear-gradient(150deg, #FFD9C4, #FFC4A8)", dur: 18, dx: -14, dy: -26, dr: 0 },
 ];
 
 function HeroBackground() {
@@ -91,15 +91,15 @@ function HeroBackground() {
     <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
       {/* plain white base */}
       <div style={{ position: "absolute", inset: 0, background: "#FFFFFF" }} />
-      {/* frosted glass shapes */}
+      {/* frosted glass shapes — organic drift, rotate & breathe, each out of phase */}
       {SHAPES.map((s, i) => (
         <motion.div
           key={i}
-          animate={{ y: [0, s.dy, 0], rotate: [s.rot, s.rot + s.dr, s.rot] }}
-          transition={{ duration: s.dur, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ x: [0, s.dx, 0], y: [0, s.dy, 0], rotate: [s.rot, s.rot + s.dr, s.rot], scale: [1, 1.05, 1] }}
+          transition={{ duration: s.dur, repeat: Infinity, ease: "easeInOut", delay: i * 0.6 }}
           style={{
             position: "absolute", top: s.top, left: s.left,
-            width: s.w, height: s.h, borderRadius: s.radius, rotate: `${s.rot}deg`,
+            width: s.w, height: s.h, borderRadius: s.radius,
             background: s.bg,
             border: "1px solid rgba(255,255,255,0.65)",
             boxShadow: "0 30px 60px -20px rgba(120,90,110,0.28), inset 0 1px 2px rgba(255,255,255,0.7)",
