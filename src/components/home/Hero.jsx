@@ -73,16 +73,16 @@ function HeadWord({ w, order }) {
    with a gentle float + rotate. Kept subtle so the headline stays hero. ── */
 const SHAPES = [
   // top-left peach rounded square
-  { w: 200, h: 200, top: "-4%",  left: "-2%", radius: "34%", rot: -10,
+  { w: 180, h: 180, top: "6%",   left: "3%",  radius: "34%", rot: -12,
     bg: "linear-gradient(140deg, #FFE4D6, #FFD0BC)", dur: 16, dy: 26, dr: 6 },
-  // right lavender rounded square
-  { w: 130, h: 130, top: "18%",  left: "80%", radius: "30%", rot: 14,
+  // top-right lavender rounded square (lowered so it clears the heading)
+  { w: 120, h: 120, top: "34%",  left: "86%", radius: "30%", rot: 14,
     bg: "linear-gradient(140deg, #E7DEFF, #CDBEFB)", dur: 20, dy: -22, dr: -8 },
   // bottom-left peach pill
-  { w: 210, h: 84,  top: "80%",  left: "6%",  radius: "9999px", rot: 0,
+  { w: 200, h: 80,  top: "82%",  left: "3%",  radius: "9999px", rot: 0,
     bg: "linear-gradient(120deg, #FFEAD9, #FFDFC7)", dur: 22, dy: 18, dr: 4 },
   // bottom-right peach circle
-  { w: 150, h: 150, top: "76%",  left: "82%", radius: "50%", rot: 0,
+  { w: 150, h: 150, top: "80%",  left: "86%", radius: "50%", rot: 0,
     bg: "linear-gradient(150deg, #FFD9C4, #FFC4A8)", dur: 18, dy: -24, dr: 0 },
 ];
 
