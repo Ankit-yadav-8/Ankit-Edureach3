@@ -172,7 +172,7 @@ function HeroSteps({ isMobile }) {
   return (
     <motion.div
       variants={stepsContainer} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.35 }}
-      style={{ maxWidth: 980, margin: isMobile ? "3rem auto 0" : "4.5rem auto 0", position: "relative" }}
+      style={{ maxWidth: 980, margin: isMobile ? "2.4rem auto 0" : "3rem auto 0", position: "relative" }}
     >
       {/* animated journey line behind the circles (desktop/tablet) */}
       {!isMobile && <JourneyLine />}
@@ -213,8 +213,8 @@ export default function Hero({ onSearch }) {
       <div className="container" style={{
         position: "relative", zIndex: 2, width: "100%", boxSizing: "border-box",
         paddingInline: "1.5rem", textAlign: "center",
-        paddingTop: isXs ? 130 : isMobile ? 140 : 168,
-        paddingBottom: isMobile ? 90 : 150,
+        paddingTop: isXs ? 116 : isMobile ? 124 : 128,
+        paddingBottom: isMobile ? 72 : 72,
       }}>
         {/* badge */}
         <motion.div
