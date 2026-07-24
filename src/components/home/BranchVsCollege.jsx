@@ -650,83 +650,87 @@ export default function BranchVsCollege({ asPage = false }) {
         title: <>Not sure which branch?<br /><span style={{ color: CL.coral }}>Find the field</span> that actually fits you.</>,
         sub: "8 quick scenarios from an aspirant's real life — we match your instincts to one of 8 engineering branches." };
 
-  /* ── right-hand text panel: eyebrow, headline, blurb + mode selector ── */
-  const TextPanel = (
-    <div className="bvc-textcol">
-      <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 800, letterSpacing: "1.5px", color: CL.coralDk, background: CL.coralSoft, padding: "6px 14px", borderRadius: 50, textTransform: "uppercase" }}>
-        <span style={{ width: 7, height: 7, borderRadius: "50%", background: CL.coral }} /> {H.eyebrow}
-      </span>
-      <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,3.6vw,2.7rem)", color: CL.ink, letterSpacing: "-1.2px", margin: "18px 0 14px", lineHeight: 1.08 }}>
-        {H.title}
-      </h2>
-      <motion.p key={mode} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-        style={{ color: CL.body, fontSize: "1.02rem", lineHeight: 1.7, maxWidth: 480 }}>
-        {H.sub}
-      </motion.p>
-
-      {/* mode selector */}
-      <div className="bvc-mode-select" style={{ marginTop: 26 }}>
-        <div className="bvc-mode-cards">
-          {MODES.map((m) => {
-            const on = mode === m.id;
-            return (
-              <button key={m.id} onClick={() => switchMode(m.id)}
-                style={{
-                  textAlign: "left", padding: "16px 18px", borderRadius: 18, cursor: "pointer",
-                  background: on ? CL.coralSoft : CL.card,
-                  border: `1.5px solid ${on ? CL.coral : CL.line}`,
-                  display: "flex", alignItems: "center", gap: 13, width: "100%",
-                  boxShadow: on ? `0 12px 30px -10px ${CL.coral}66` : CL.shadow,
-                  transition: "transform .18s, background .15s, border-color .15s, box-shadow .2s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; if (!on) { e.currentTarget.style.borderColor = CL.coral + "77"; e.currentTarget.style.background = CL.cream2; e.currentTarget.style.boxShadow = CL.shadowLg; } }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; if (!on) { e.currentTarget.style.borderColor = CL.line; e.currentTarget.style.background = CL.card; e.currentTarget.style.boxShadow = CL.shadow; } }}
-              >
-                <span style={{ width: 44, height: 44, borderRadius: 13, flexShrink: 0, display: "grid", placeItems: "center", background: on ? CL.coral : CL.cream2, border: `1px solid ${on ? CL.coral : CL.cream3}`, transition: "all .15s" }}>
-                  <m.icon size={20} color={on ? "#fff" : CL.coral} />
-                </span>
-                <span style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
-                  <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 14.5, color: CL.ink, letterSpacing: "-0.2px" }}>{m.label}</span>
-                  <span style={{ fontSize: 12, color: CL.muted, fontWeight: 500, lineHeight: 1.3 }}>{m.sub}</span>
-                </span>
-                {on
-                  ? <CheckCircle2 size={19} color={CL.coral} style={{ flexShrink: 0 }} />
-                  : <ArrowRight size={17} color={CL.muted} style={{ flexShrink: 0, opacity: 0.35 }} />}
-              </button>
-            );
-          })}
-        </div>
-        <div className="bvc-mode-toggle">
-          {MODES.map((m) => {
-            const on = mode === m.id;
-            return (
-              <button key={m.id} onClick={() => switchMode(m.id)}
-                style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "11px 12px", borderRadius: 50, cursor: "pointer", fontFamily: CL.display, fontWeight: 800, fontSize: 13, border: `1.5px solid ${on ? CL.coral : CL.cream3}`, background: on ? CL.coral : CL.card, color: on ? "#fff" : CL.ink2, boxShadow: on ? `0 8px 20px -10px ${CL.coral}` : "none", transition: "all .18s" }}>
-                <m.icon size={15} color={on ? "#fff" : CL.coral} /> {m.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <section id="branch-vs-college" style={{ background: CL.cream, padding: asPage ? "104px 0 80px" : "84px 0", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
       {/* soft decorative glow */}
       <div aria-hidden style={{ position: "absolute", top: "6%", left: "50%", width: 640, height: 640, transform: "translateX(-50%)", background: `radial-gradient(circle, ${CL.coralSoft} 0%, transparent 62%)`, opacity: 0.55, pointerEvents: "none", zIndex: 0 }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
+        <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 24px" }}>
+          <span style={clEyebrow}><GitCompareArrows size={13} /> {H.eyebrow}</span>
+          <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.2vw,2.8rem)", color: CL.ink, letterSpacing: "-1.2px", margin: "16px 0 12px", lineHeight: 1.1 }}>
+            {H.title}
+          </h2>
+          {phase === "quiz" && (
+            <motion.p key={mode} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
+              style={{ color: CL.body, fontSize: "1.02rem", lineHeight: 1.65, maxWidth: 580, margin: "0 auto" }}>
+              {H.sub}
+            </motion.p>
+          )}
+        </div>
 
-        {phase === "quiz" ? (
-          /* ── two-column layout: quiz card (left) + text panel (right) ── */
-          <div className="bvc-grid" style={{ maxWidth: 1080, margin: "0 auto" }}>
-            <div className="bvc-quizcol">
-              <AnimatePresence mode="wait" custom={dir}>
-                <motion.div key={`q-${mode}-${step}`}
-                  custom={dir} variants={qVariants} initial="enter" animate="center" exit="exit"
-                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "26px 28px 24px", position: "relative", overflow: "hidden" }}
+        {/* mode selector — two option-style cards on desktop, a compact toggle on phones */}
+        <div className="bvc-mode-select" style={{ maxWidth: 640, margin: "0 auto 30px" }}>
+          {/* desktop / tablet: two side-by-side cards, styled like the quiz options */}
+          <div className="bvc-mode-cards">
+            {MODES.map((m) => {
+              const on = mode === m.id;
+              return (
+                <button key={m.id} onClick={() => switchMode(m.id)}
+                  style={{
+                    textAlign: "left", padding: "20px 22px", borderRadius: 20, cursor: "pointer",
+                    background: on ? CL.coralSoft : CL.card,
+                    border: `1.5px solid ${on ? CL.coral : CL.line}`,
+                    display: "flex", alignItems: "center", gap: 14, width: "100%",
+                    boxShadow: on ? `0 12px 30px -10px ${CL.coral}66` : CL.shadow,
+                    transition: "transform .18s, background .15s, border-color .15s, box-shadow .2s",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; if (!on) { e.currentTarget.style.borderColor = CL.coral + "77"; e.currentTarget.style.background = CL.cream2; e.currentTarget.style.boxShadow = CL.shadowLg; } }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; if (!on) { e.currentTarget.style.borderColor = CL.line; e.currentTarget.style.background = CL.card; e.currentTarget.style.boxShadow = CL.shadow; } }}
                 >
+                  <span style={{ width: 48, height: 48, borderRadius: 14, flexShrink: 0, display: "grid", placeItems: "center", background: on ? CL.coral : CL.cream2, border: `1px solid ${on ? CL.coral : CL.cream3}`, transition: "all .15s" }}>
+                    <m.icon size={21} color={on ? "#fff" : CL.coral} />
+                  </span>
+                  <span style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
+                    <span style={{ fontFamily: CL.display, fontWeight: 800, fontSize: 15, color: CL.ink, letterSpacing: "-0.2px" }}>{m.label}</span>
+                    <span style={{ fontSize: 12.5, color: CL.muted, fontWeight: 500, lineHeight: 1.3 }}>{m.sub}</span>
+                  </span>
+                  {on
+                    ? <CheckCircle2 size={20} color={CL.coral} style={{ flexShrink: 0 }} />
+                    : <ArrowRight size={18} color={CL.muted} style={{ flexShrink: 0, opacity: 0.35 }} />}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* phones: compact two-button toggle — tap one or the other */}
+          <div className="bvc-mode-toggle">
+            {MODES.map((m) => {
+              const on = mode === m.id;
+              return (
+                <button key={m.id} onClick={() => switchMode(m.id)}
+                  style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "11px 12px", borderRadius: 50, cursor: "pointer", fontFamily: CL.display, fontWeight: 800, fontSize: 13, border: `1.5px solid ${on ? CL.coral : CL.cream3}`, background: on ? CL.coral : CL.card, color: on ? "#fff" : CL.ink2, boxShadow: on ? `0 8px 20px -10px ${CL.coral}` : "none", transition: "all .18s" }}>
+                  <m.icon size={15} color={on ? "#fff" : CL.coral} /> {m.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <AnimatePresence mode="wait" custom={dir}>
+          {phase === "analyzing" ? (
+            <AiAnalyzing key={`ai-${mode}`} onDone={() => setPhase("result")} />
+          ) : phase === "result" ? (
+            <motion.div key={`result-${mode}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              {mode === "bvc"
+                ? <VerdictCard verdict={bvcVerdict} onReset={() => reset()} />
+                : <BranchVerdict result={branchResult} onReset={() => reset()} />}
+            </motion.div>
+          ) : (
+            <motion.div key={`q-${mode}-${step}`}
+              custom={dir} variants={qVariants} initial="enter" animate="center" exit="exit"
+              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+              style={{ background: CL.card, borderRadius: 24, border: `1px solid ${CL.line}`, boxShadow: CL.shadowLg, padding: "26px 28px 24px", maxWidth: 640, margin: "0 auto", position: "relative", overflow: "hidden" }}
+            >
               {/* animated gradient accent */}
               <motion.span aria-hidden
                 animate={{ backgroundPosition: ["0% 0%", "200% 0%"] }}
@@ -806,45 +810,8 @@ export default function BranchVsCollege({ asPage = false }) {
                 </div>
               )}
             </motion.div>
-              </AnimatePresence>
-            </div>
-            {TextPanel}
-          </div>
-        ) : (
-          /* ── analyzing / result: centered, full-width ── */
-          <div style={{ textAlign: "center" }}>
-            <div style={{ maxWidth: 720, margin: "0 auto 24px" }}>
-              <span style={clEyebrow}><GitCompareArrows size={13} /> {H.eyebrow}</span>
-              <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.6rem)", color: CL.ink, letterSpacing: "-1.2px", margin: "16px 0 0", lineHeight: 1.1 }}>
-                {H.title}
-              </h2>
-            </div>
-            <AnimatePresence mode="wait">
-              {phase === "analyzing" ? (
-                <AiAnalyzing key={`ai-${mode}`} onDone={() => setPhase("result")} />
-              ) : (
-                <motion.div key={`result-${mode}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  {mode === "bvc"
-                    ? <VerdictCard verdict={bvcVerdict} onReset={() => reset()} />
-                    : <BranchVerdict result={branchResult} onReset={() => reset()} />}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        )}
-
-        {/* responsive two-column rules */}
-        <style>{`
-          .bvc-grid { display: grid; grid-template-columns: 1fr; gap: 30px; align-items: start; }
-          .bvc-quizcol { order: 2; }
-          .bvc-textcol { order: 1; }
-          .bvc-textcol .bvc-mode-cards { grid-template-columns: 1fr; }
-          @media (min-width: 940px) {
-            .bvc-grid { grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr); gap: 48px; align-items: center; }
-            .bvc-quizcol { order: 1; }
-            .bvc-textcol { order: 2; }
-          }
-        `}</style>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
