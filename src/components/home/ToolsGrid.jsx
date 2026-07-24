@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Gauge, Crosshair, Map, ListChecks,
+  Gauge, Crosshair, Map, GraduationCap,
   GitCompareArrows, Layers, Sparkles,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
@@ -39,10 +39,10 @@ const TOOLS = [
     to: "/map", live: true,
   },
   {
-    icon: ListChecks, title: "Choice List Planner", accent: "#FF693D",
-    desc: "A smart, rank-aware JoSAA choice order built around your category and branch preferences.",
-    bullets: ["Safe / Moderate / Reach mix", "Float, Slide & Upgrade guidance", "Printable export list"],
-    to: "/planner", live: true,
+    icon: GraduationCap, title: "JEE 2027 Mentorship", accent: "#FF693D",
+    desc: "1-on-1 mentorship from IITians for JEE 2027 aspirants — daily targets, doubt solving and weekly test analysis.",
+    bullets: ["1-on-1 IITian mentor", "Daily targets & doubt solving", "Weekly test analysis"],
+    to: "/mentorship/jee-2027", live: true, hot: true,
   },
   // No Mentor Dashboard card here. This grid is the student-facing toolkit and
   // renders on the home page; a staff sign-in isn't a tool they can use. It
