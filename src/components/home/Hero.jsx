@@ -119,26 +119,20 @@ const STEPS = [
 const stepsContainer = { hidden: {}, show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } } };
 const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
 
-/* one loop of the journey: traveler crosses in TRIP secs, then a short pause */
-const TRIP = 4.2;
-const CYCLE = TRIP + 0.9;
+/* smooth wave that threads through the three node centres (x = 167 / 500 / 833) */
+const WAVE = "M0 50 C 60 50 110 50 167 50 C 250 50 292 68 333 66 C 378 64 430 50 500 50 C 572 50 622 32 667 34 C 712 36 760 50 833 50 C 900 50 950 50 1000 50";
+const NODE_X = ["16.667%", "50%", "83.333%"];
 
-/* confetti burst that fires each time the student reaches the finish (03) */
-const CONFETTI = [
-  { x: 26, y: -30, c: "#FF5A36" }, { x: -22, y: -34, c: "#7C5CFF" },
-  { x: 40, y: -8,  c: "#FFC24B" }, { x: -34, y: -14, c: "#2FBF71" },
-  { x: 14, y: -44, c: "#FF8A5B" }, { x: -10, y: -40, c: "#FFC24B" },
-  { x: 34, y: -28, c: "#7C5CFF" }, { x: -30, y: -30, c: "#FF5A36" },
-];
-function Celebration() {
+/* expanding ripple rings behind a node circle */
+function PulseRing({ left, delay }) {
   return (
-    <div aria-hidden style={{ position: "absolute", left: "100%", top: "50%", zIndex: 5 }}>
-      {CONFETTI.map((p, i) => (
-        <motion.span key={i}
-          style={{ position: "absolute", width: 7, height: 7, borderRadius: 2, background: p.c }}
-          initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
-          animate={{ opacity: [0, 1, 1, 0], x: [0, p.x], y: [0, p.y, p.y + 18], scale: [0, 1, 0.7], rotate: [0, 180] }}
-          transition={{ duration: 1, ease: "easeOut", repeat: Infinity, repeatDelay: CYCLE - 1, delay: TRIP - 0.3 }}
+    <div aria-hidden style={{ position: "absolute", top: 34, left, zIndex: 0 }}>
+      {[0, 1].map((k) => (
+        <motion.span key={k}
+          style={{ position: "absolute", top: 0, left: 0, x: "-50%", y: "-50%",
+            width: 68, height: 68, borderRadius: "50%", border: "1.5px solid rgba(255,90,54,.4)" }}
+          animate={{ scale: [1, 1.75], opacity: [0.5, 0] }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut", delay: delay + k * 1.2 }}
         />
       ))}
     </div>
@@ -147,31 +141,27 @@ function Celebration() {
 
 function JourneyLine() {
   return (
-    <div aria-hidden style={{ position: "absolute", top: 34, left: "16%", right: "16%", height: 2, zIndex: 0 }}>
-      {/* base track */}
-      <div style={{ position: "absolute", inset: 0, borderRadius: 2,
-        background: "linear-gradient(90deg, transparent, rgba(28,28,40,.14) 8%, rgba(28,28,40,.14) 92%, transparent)" }} />
-      {/* coral progress trail sweeping left → right */}
-      <motion.div
-        style={{ position: "absolute", top: 0, bottom: 0, left: 0, borderRadius: 2, transformOrigin: "left center",
-          background: "linear-gradient(90deg, #FF5A36, #FF8A5B)" }}
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: [0, 1, 1, 0] }}
-        transition={{ duration: CYCLE, times: [0, TRIP / CYCLE, 0.94, 1], ease: "easeInOut", repeat: Infinity }}
-      />
-      {/* the student riding the wave across the line */}
-      <motion.div
-        style={{ position: "absolute", top: -14, x: "-50%", fontSize: 26, zIndex: 4,
-          filter: "drop-shadow(0 5px 6px rgba(0,0,0,.18))" }}
-        animate={{ left: ["0%", "100%"], y: [0, -11, 0] }}
-        transition={{
-          left: { duration: TRIP, ease: "easeInOut", repeat: Infinity, repeatDelay: CYCLE - TRIP },
-          y:    { duration: 0.75, ease: "easeInOut", repeat: Infinity },
-        }}
-      >🎓</motion.div>
-      {/* celebration at the finish */}
-      <Celebration />
-    </div>
+    <>
+      {/* ripple rings under each node */}
+      {NODE_X.map((l, i) => <PulseRing key={i} left={l} delay={i * 0.6} />)}
+      {/* wavy connecting line + glowing traveller dot */}
+      <svg aria-hidden viewBox="0 0 1000 100" preserveAspectRatio="none"
+        style={{ position: "absolute", top: -16, left: 0, width: "100%", height: 100, zIndex: 0, overflow: "visible", pointerEvents: "none" }}>
+        {/* hidden path the dot rides along */}
+        <path id="wavePath" d={WAVE} fill="none" stroke="none" />
+        {/* dotted guide */}
+        <path d={WAVE} fill="none" stroke="rgba(255,90,54,.3)" strokeWidth="5" strokeDasharray="0.1 13" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        {/* solid coral wave */}
+        <path d={WAVE} fill="none" stroke="#FF5A36" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        {/* soft glow + bright dot travelling the wave */}
+        <circle r="9" fill="#FF5A36" opacity="0.22">
+          <animateMotion dur="4.5s" repeatCount="indefinite" calcMode="linear"><mpath xlinkHref="#wavePath" /></animateMotion>
+        </circle>
+        <circle r="4.5" fill="#FF5A36">
+          <animateMotion dur="4.5s" repeatCount="indefinite" calcMode="linear"><mpath xlinkHref="#wavePath" /></animateMotion>
+        </circle>
+      </svg>
+    </>
   );
 }
 
@@ -183,11 +173,12 @@ function HeroSteps({ isMobile }) {
     >
       {/* animated journey line behind the circles (desktop/tablet) */}
       {!isMobile && <JourneyLine />}
-      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: isMobile ? 30 : 24 }}>
-        {STEPS.map((s) => (
+      {/* desktop: 3 across · mobile: triangle (01 on top, 02 & 03 below) */}
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3,1fr)", columnGap: isMobile ? 16 : 24, rowGap: isMobile ? 34 : 0 }}>
+        {STEPS.map((s, i) => (
           <motion.div
             key={s.n} variants={stepVariant}
-            style={{ textAlign: "center", position: "relative", zIndex: 1 }}
+            style={{ textAlign: "center", position: "relative", zIndex: 1, gridColumn: isMobile && i === 0 ? "1 / -1" : "auto" }}
           >
             <div style={{
               width: 68, height: 68, borderRadius: "50%", margin: "0 auto 16px",
@@ -196,8 +187,8 @@ function HeroSteps({ isMobile }) {
             }}>
               <span style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: 22, color: CORAL }}>{s.n}</span>
             </div>
-            <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: 18, color: INK, marginBottom: 8 }}>{s.title}</div>
-            <p style={{ margin: "0 auto", maxWidth: 250, fontSize: 13.5, color: "#6b6770", lineHeight: 1.6, fontFamily: "'Inter',system-ui,sans-serif" }}>{s.desc}</p>
+            <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: isMobile ? 16 : 18, color: INK, marginBottom: 8 }}>{s.title}</div>
+            <p style={{ margin: "0 auto", maxWidth: isMobile ? 230 : 250, fontSize: isMobile ? 12.5 : 13.5, color: "#6b6770", lineHeight: 1.55, fontFamily: "'Inter',system-ui,sans-serif" }}>{s.desc}</p>
           </motion.div>
         ))}
       </div>
