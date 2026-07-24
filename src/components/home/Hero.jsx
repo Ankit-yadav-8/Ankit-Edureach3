@@ -149,11 +149,13 @@ function JourneyLine() {
         style={{ position: "absolute", top: -16, left: 0, width: "100%", height: 100, zIndex: 0, overflow: "visible", pointerEvents: "none" }}>
         {/* hidden path the dot rides along */}
         <path id="wavePath" d={WAVE} fill="none" stroke="none" />
-        {/* dotted guide */}
-        <path d={WAVE} fill="none" stroke="rgba(255,90,54,.3)" strokeWidth="5" strokeDasharray="0.1 13" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-        {/* solid coral wave */}
-        <path d={WAVE} fill="none" stroke="#FF5A36" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-        {/* soft glow + bright dot travelling the wave */}
+        {/* faint dotted guide (the un-drawn portion ahead of the dot) */}
+        <path d={WAVE} fill="none" stroke="rgba(255,90,54,.28)" strokeWidth="4" strokeDasharray="0.1 12" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        {/* solid coral wave that DRAWS in behind the dot, then resets */}
+        <motion.path d={WAVE} fill="none" stroke="#FF5A36" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 4.5, ease: "linear", repeat: Infinity, repeatType: "loop" }} />
+        {/* soft glow + bright dot travelling the wave (kept in sync with the draw) */}
         <circle r="9" fill="#FF5A36" opacity="0.22">
           <animateMotion dur="4.5s" repeatCount="indefinite" calcMode="linear"><mpath xlinkHref="#wavePath" /></animateMotion>
         </circle>
