@@ -122,34 +122,20 @@ const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, t
 /* smooth wave threading the three node centres (x = 167 / 500 / 833), with a
    gentle downward valley in each gap so it reads the same across both bays */
 const WAVE = "M0 54 C 55 51 112 50 167 50 C 250 50 292 64 333 64 C 378 64 432 51 500 50 C 572 50 622 64 667 64 C 712 64 758 51 833 50 C 905 50 952 49 1000 46";
-const LOOP = 4.5; // seconds for the dot to travel the whole wave (matches animateMotion dur)
-// each node glows the moment the dot arrives at it (≈ its position fraction × LOOP)
-const NODES = [
-  { left: "16.667%", arrive: 0.7  },
-  { left: "50%",     arrive: 2.15 },
-  { left: "83.333%", arrive: 3.6  },
-];
+const NODE_LEFTS = ["16.667%", "50%", "83.333%"];
 
-/* glow flash + ripple rings that fire when the dot reaches this node, once per loop */
-function PulseRing({ left, arrive }) {
+/* soft ring around a node — a faint static ring plus one gentle looping pulse */
+function PulseRing({ left, delay }) {
   return (
     <div aria-hidden style={{ position: "absolute", top: 34, left, zIndex: 0 }}>
-      {/* warm glow flash */}
+      <span style={{ position: "absolute", top: 0, left: 0, transform: "translate(-50%,-50%)",
+        width: 82, height: 82, borderRadius: "50%", border: "1px solid rgba(255,90,54,.16)" }} />
       <motion.span
-        style={{ position: "absolute", top: 0, left: 0, x: "-50%", y: "-50%", width: 84, height: 84, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(255,90,54,.5), transparent 70%)" }}
-        animate={{ scale: [0.55, 1.3, 1], opacity: [0, 0.9, 0] }}
-        transition={{ duration: 1.1, ease: "easeOut", repeat: Infinity, repeatDelay: LOOP - 1.1, delay: arrive }}
+        style={{ position: "absolute", top: 0, left: 0, x: "-50%", y: "-50%",
+          width: 68, height: 68, borderRadius: "50%", border: "1.5px solid rgba(255,90,54,.4)" }}
+        animate={{ scale: [1, 1.4], opacity: [0.45, 0] }}
+        transition={{ duration: 2.8, ease: "easeOut", repeat: Infinity, delay }}
       />
-      {/* expanding rings */}
-      {[0, 1].map((k) => (
-        <motion.span key={k}
-          style={{ position: "absolute", top: 0, left: 0, x: "-50%", y: "-50%",
-            width: 68, height: 68, borderRadius: "50%", border: "2px solid rgba(255,90,54,.55)" }}
-          animate={{ scale: [1, 1.9], opacity: [0.75, 0] }}
-          transition={{ duration: 1.2, ease: "easeOut", repeat: Infinity, repeatDelay: LOOP - 1.2, delay: arrive + k * 0.22 }}
-        />
-      ))}
     </div>
   );
 }
@@ -157,26 +143,23 @@ function PulseRing({ left, arrive }) {
 function JourneyLine() {
   return (
     <>
-      {/* each node glows as the dot reaches it */}
-      {NODES.map((n, i) => <PulseRing key={i} left={n.left} arrive={n.arrive} />)}
-      {/* wavy connecting line + glowing traveller dot */}
+      {/* gently pulsing rings under each node */}
+      {NODE_LEFTS.map((l, i) => <PulseRing key={i} left={l} delay={i * 0.5} />)}
+      {/* static wavy connecting line, coral in the middle, fading to dotted at the ends */}
       <svg aria-hidden viewBox="0 0 1000 100" preserveAspectRatio="none"
         style={{ position: "absolute", top: -16, left: 0, width: "100%", height: 100, zIndex: 0, overflow: "visible", pointerEvents: "none" }}>
-        {/* hidden path the dot rides along */}
-        <path id="wavePath" d={WAVE} fill="none" stroke="none" />
-        {/* faint dotted guide (the un-drawn portion ahead of the dot) */}
-        <path d={WAVE} fill="none" stroke="rgba(255,90,54,.28)" strokeWidth="4" strokeDasharray="0.1 12" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-        {/* solid coral wave that DRAWS in behind the dot, then resets */}
-        <motion.path d={WAVE} fill="none" stroke="#FF5A36" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke"
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ duration: 4.5, ease: "linear", repeat: Infinity, repeatType: "loop" }} />
-        {/* soft glow + bright dot travelling the wave (kept in sync with the draw) */}
-        <circle r="9" fill="#FF5A36" opacity="0.22">
-          <animateMotion dur="4.5s" repeatCount="indefinite" calcMode="linear"><mpath xlinkHref="#wavePath" /></animateMotion>
-        </circle>
-        <circle r="4.5" fill="#FF5A36">
-          <animateMotion dur="4.5s" repeatCount="indefinite" calcMode="linear"><mpath xlinkHref="#wavePath" /></animateMotion>
-        </circle>
+        <defs>
+          <linearGradient id="coralFade" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0"    stopColor="#FF5A36" stopOpacity="0" />
+            <stop offset="0.07" stopColor="#FF5A36" stopOpacity="1" />
+            <stop offset="0.93" stopColor="#FF5A36" stopOpacity="1" />
+            <stop offset="1"    stopColor="#FF5A36" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {/* faint dotted guide — shows through at the faded ends */}
+        <path d={WAVE} fill="none" stroke="rgba(255,90,54,.3)" strokeWidth="4" strokeDasharray="0.1 12" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        {/* solid coral wave (static) */}
+        <path d={WAVE} fill="none" stroke="url(#coralFade)" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
       </svg>
     </>
   );
@@ -303,11 +286,12 @@ export default function Hero({ onSearch }) {
           </button>
         </motion.div>
 
-        {/* social proof */}
+        {/* social proof — avatar cluster + count, framed by hairlines */}
         <motion.div
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}
-          style={{ display: "inline-flex", alignItems: "center", gap: 12, marginTop: isMobile ? "1.4rem" : "1.6rem" }}
+          style={{ display: "inline-flex", alignItems: "center", gap: 14, marginTop: isMobile ? "1.4rem" : "1.6rem" }}
         >
+          <span style={{ width: isMobile ? 22 : 42, height: 1, background: "linear-gradient(90deg, transparent, rgba(28,28,40,.22))" }} />
           <div style={{ display: "flex" }}>
             {["#FF7A59", "#FFB088", "#7C5CFF", "#FFC24B"].map((c, i) => (
               <span key={i} style={{
@@ -317,9 +301,10 @@ export default function Hero({ onSearch }) {
               }} />
             ))}
           </div>
-          <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: "#6b6770" }}>
-            <strong style={{ color: INK, fontWeight: 700 }}>3200+</strong> students trust on us
+          <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: "#6b6770", whiteSpace: "nowrap" }}>
+            <strong style={{ color: CORAL, fontWeight: 800 }}>3200+</strong> students trust on us
           </span>
+          <span style={{ width: isMobile ? 22 : 42, height: 1, background: "linear-gradient(90deg, rgba(28,28,40,.22), transparent)" }} />
         </motion.div>
 
         {/* ══ 3-step journey ══ */}
