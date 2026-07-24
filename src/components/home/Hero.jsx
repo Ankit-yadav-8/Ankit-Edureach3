@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, Target } from "lucide-react";
+import { Search, Target, Users } from "lucide-react";
 
 /* ════════════════════════════════════════════════
    HERO — simple, editorial. Warm cream canvas with a
@@ -213,39 +213,72 @@ export default function Hero({ onSearch }) {
           </span> startup — built by IITians, trusted by aspirants
         </motion.p>
 
-        {/* CTAs */}
+        {/* CTAs — wide search bar + two action buttons */}
         <motion.div
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.05 }}
-          style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 14, marginTop: isMobile ? "2rem" : "2.6rem" }}
+          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, marginTop: isMobile ? "2rem" : "2.4rem" }}
         >
-          <button
+          {/* wide search bar */}
+          <div
             onClick={openSearch}
             style={{
-              display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-              minWidth: isXs ? 200 : 230, padding: "14px 26px", borderRadius: 9999, whiteSpace: "nowrap",
-              background: "#fff", border: "1px solid rgba(0,0,0,.14)", color: "#111",
-              fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
-              boxShadow: "0 4px 12px rgba(0,0,0,.03)", transition: "all .2s",
+              display: "flex", alignItems: "center", gap: 10, cursor: "text", boxSizing: "border-box",
+              width: "100%", maxWidth: 620, padding: isXs ? "7px 7px 7px 16px" : "8px 8px 8px 20px",
+              background: "#fff", border: "1px solid rgba(0,0,0,.12)", borderRadius: 9999,
+              boxShadow: "0 10px 30px -14px rgba(0,0,0,.18)",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.28)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(0,0,0,.14)"; }}
           >
-            <Search size={17} /> Search
-          </button>
-          <button
-            onClick={() => nav("/jee-main#college")}
-            style={{
-              display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-              minWidth: isXs ? 200 : 230, padding: "14px 30px", borderRadius: 9999, whiteSpace: "nowrap",
-              background: CORAL, border: "none", color: "#fff",
-              fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
-              boxShadow: "0 8px 24px rgba(255, 90, 54, 0.3)", transition: "all .2s",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = CORAL_DK; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = CORAL; }}
-          >
-            Predict my college <Target size={18} />
-          </button>
+            <Search size={18} style={{ color: "#8a8690", flexShrink: 0 }} />
+            <span style={{ flex: 1, textAlign: "left", color: "#9a969f", fontFamily: "'Inter',system-ui,sans-serif",
+              fontSize: isXs ? 13 : 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              Search colleges, entrance exams, or rankings…
+            </span>
+            <button
+              onClick={openSearch}
+              style={{
+                flexShrink: 0, cursor: "pointer", border: "none", background: CORAL, color: "#fff",
+                padding: isXs ? "9px 16px" : "11px 26px", borderRadius: 9999,
+                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 13 : 14.5,
+                boxShadow: "0 6px 16px rgba(255,90,54,.3)", transition: "background .2s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = CORAL_DK; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = CORAL; }}
+            >
+              Search
+            </button>
+          </div>
+
+          {/* action buttons */}
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 14 }}>
+            <button
+              onClick={() => nav("/jee-main#college")}
+              style={{
+                display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
+                minWidth: isXs ? 190 : 220, padding: "13px 28px", borderRadius: 9999, whiteSpace: "nowrap",
+                background: CORAL, border: "none", color: "#fff",
+                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
+                boxShadow: "0 8px 24px rgba(255, 90, 54, 0.3)", transition: "all .2s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = CORAL_DK; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = CORAL; }}
+            >
+              Predict My College <Target size={18} />
+            </button>
+            <button
+              onClick={() => nav("/community")}
+              style={{
+                display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
+                minWidth: isXs ? 190 : 220, padding: "13px 28px", borderRadius: 9999, whiteSpace: "nowrap",
+                background: "#fff", border: "1px solid rgba(0,0,0,.14)", color: "#111",
+                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
+                boxShadow: "0 4px 12px rgba(0,0,0,.03)", transition: "all .2s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.28)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(0,0,0,.14)"; }}
+            >
+              Join Community <Users size={18} />
+            </button>
+          </div>
         </motion.div>
 
         {/* social proof — avatar cluster + count, framed by hairlines */}
@@ -253,7 +286,7 @@ export default function Hero({ onSearch }) {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}
           style={{ display: "inline-flex", alignItems: "center", gap: 14, marginTop: isMobile ? "1.4rem" : "1.6rem" }}
         >
-          <span style={{ width: isMobile ? 22 : 42, height: 1, background: "linear-gradient(90deg, transparent, rgba(28,28,40,.22))" }} />
+          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: "linear-gradient(90deg, transparent, rgba(28,28,40,.16) 40%, rgba(255,90,54,.4))" }} />
           <div style={{ display: "flex" }}>
             {[["#FF7A59", "A"], ["#FFB088", "P"], ["#7C5CFF", "R"], ["#FFC24B", "S"]].map(([c, ltr], i) => (
               <span key={i} style={{
@@ -268,7 +301,7 @@ export default function Hero({ onSearch }) {
           <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: "#6b6770", whiteSpace: "nowrap" }}>
             <strong style={{ color: CORAL, fontWeight: 800 }}>3200+</strong> students trust on us
           </span>
-          <span style={{ width: isMobile ? 22 : 42, height: 1, background: "linear-gradient(90deg, rgba(28,28,40,.22), transparent)" }} />
+          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: "linear-gradient(90deg, rgba(255,90,54,.4), rgba(28,28,40,.16) 60%, transparent)" }} />
         </motion.div>
 
         {/* ══ 3-step journey ══ */}
