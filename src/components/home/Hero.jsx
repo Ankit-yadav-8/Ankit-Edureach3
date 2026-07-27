@@ -10,9 +10,18 @@ import { Search, Target, Users } from "lucide-react";
    reveal ending in a coral script word. No cards / images.
 ════════════════════════════════════════════════ */
 
-const CORAL    = "#FF5A36";
-const CORAL_DK = "#E0421F";
-const INK      = "#1c1c28";
+const CORAL    = "#F47B20";
+const CORAL_DK = "#FF9A4D";
+const INK      = "#4A4438";
+const TEXT_SOFT= "#8A8272";
+const BASE     = "#EAE7E0";
+const SHADOW_DK = "#C6BEAC";
+const SHADOW_LT = "#FFFFFF";
+
+const raised = `8px 8px 16px ${SHADOW_DK}, -8px -8px 16px ${SHADOW_LT}`;
+const raisedSm = `4px 4px 8px ${SHADOW_DK}, -4px -4px 8px ${SHADOW_LT}`;
+const pressed = `inset 4px 4px 8px ${SHADOW_DK}, inset -4px -4px 8px ${SHADOW_LT}`;
+const searchShadow = `inset 6px 6px 14px ${SHADOW_DK}, inset -6px -6px 14px ${SHADOW_LT}`;
 
 /* ── breakpoints ── */
 function useBreakpoint() {
@@ -59,8 +68,8 @@ function HeadWord({ w, order }) {
       style={{ display: "inline-block", marginRight: "0.26em", color: w.c ? CORAL : INK, position: w.c ? "relative" : undefined, whiteSpace: "nowrap" }}>
       {w.t}
       {w.c && (
-        <svg width="100%" height="12" viewBox="0 0 200 12" preserveAspectRatio="none" style={{ position: "absolute", left: 0, bottom: "-0.1em", width: "100%" }}>
-          <motion.path d="M3 8C40 3 70 3 100 6C130 9 160 9 197 4" stroke={CORAL} strokeWidth="4" strokeLinecap="round" fill="none"
+        <svg width="100%" height="4" viewBox="0 0 100 4" preserveAspectRatio="none" style={{ position: "absolute", left: 0, bottom: "2px", width: "100%" }}>
+          <motion.path d="M0 2L100 2" stroke={CORAL} strokeWidth="4" strokeLinecap="round" fill="none"
             initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 0.55, delay: 0.9 + order * 0.28, ease: "easeInOut" }} />
         </svg>
       )}
@@ -72,26 +81,16 @@ function HeadWord({ w, order }) {
    (rounded squares, a pill and a circle), recreated from the reference
    with a gentle float + rotate. Kept subtle so the headline stays hero. ── */
 const SHAPES = [
-  // top-left — peach rounded square (largest)
-  { w: 180, h: 180, top: "5%",  left: "2%",  radius: "34%", rot: -12,
-    bg: "linear-gradient(140deg, #FFE4D6, #FFD0BC)", dur: 20, dx: 14,  dy: 24,  dr: 6 },
-  // top-right — lavender rounded square (raised into the corner)
-  { w: 130, h: 130, top: "9%",  left: "85%", radius: "30%", rot: 14,
-    bg: "linear-gradient(140deg, #E7DEFF, #CDBEFB)", dur: 24, dx: -16, dy: 28,  dr: -8 },
-  // bottom-left — lavender rounded square
-  { w: 128, h: 128, top: "64%", left: "3%",  radius: "30%", rot: -14,
-    bg: "linear-gradient(140deg, #E7DEFF, #CDBEFB)", dur: 22, dx: 18,  dy: -22, dr: 7 },
-  // bottom-right — peach circle (dropped low, well clear of the top-right)
-  { w: 150, h: 150, top: "72%", left: "84%", radius: "50%", rot: 0,
-    bg: "linear-gradient(150deg, #FFD9C4, #FFC4A8)", dur: 18, dx: -14, dy: -26, dr: 0 },
+  { w: 180, h: 180, top: "5%",  left: "2%",  radius: "34%", rot: -12, type: "raised", dur: 20, dx: 14,  dy: 24,  dr: 6 },
+  { w: 130, h: 130, top: "9%",  left: "85%", radius: "30%", rot: 14,  type: "pressed", dur: 24, dx: -16, dy: 28,  dr: -8 },
+  { w: 128, h: 128, top: "64%", left: "3%",  radius: "50%", rot: -14, type: "raised", dur: 22, dx: 18,  dy: -22, dr: 7 },
+  { w: 150, h: 150, top: "72%", left: "84%", radius: "40%", rot: 0,   type: "pressed", dur: 18, dx: -14, dy: -26, dr: 0 },
 ];
 
 function HeroBackground() {
   return (
     <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-      {/* plain white base */}
-      <div style={{ position: "absolute", inset: 0, background: "#FFFFFF" }} />
-      {/* frosted glass shapes — organic drift, rotate & breathe, each out of phase */}
+      <div style={{ position: "absolute", inset: 0, background: BASE }} />
       {SHAPES.map((s, i) => (
         <motion.div
           key={i}
@@ -100,9 +99,8 @@ function HeroBackground() {
           style={{
             position: "absolute", top: s.top, left: s.left,
             width: s.w, height: s.h, borderRadius: s.radius,
-            background: s.bg,
-            border: "1px solid rgba(255,255,255,0.65)",
-            boxShadow: "0 30px 60px -20px rgba(120,90,110,0.28), inset 0 1px 2px rgba(255,255,255,0.7)",
+            background: BASE,
+            boxShadow: s.type === "raised" ? raised : pressed,
           }}
         />
       ))}
@@ -122,8 +120,8 @@ const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, t
 /* simple straight line connecting the three nodes, faded at the ends */
 function JourneyLine() {
   return (
-    <div aria-hidden style={{ position: "absolute", top: 34, left: "16%", right: "16%", height: 2, zIndex: 0,
-      background: "linear-gradient(90deg, transparent, #1c1c28 8%, #1c1c28 92%, transparent)" }} />
+    <div aria-hidden style={{ position: "absolute", top: 34, left: "16%", right: "16%", height: 3, zIndex: 0,
+      background: `linear-gradient(90deg, ${CORAL} 0%, ${CORAL} 40%, ${SHADOW_DK} 40%, ${SHADOW_DK} 100%)`, borderRadius: 2 }} />
   );
 }
 
@@ -144,13 +142,14 @@ function HeroSteps({ isMobile }) {
           >
             <div style={{
               width: 68, height: 68, borderRadius: "50%", margin: "0 auto 16px",
-              background: "#fff", border: "1px solid rgba(28,28,40,.1)",
-              boxShadow: "0 10px 26px -10px rgba(28,28,40,.2)", display: "grid", placeItems: "center",
+              background: i === 0 ? CORAL : BASE,
+              boxShadow: i === 0 ? `4px 4px 10px rgba(244,123,32,0.3), -4px -4px 10px ${SHADOW_LT}` : raised,
+              display: "grid", placeItems: "center",
             }}>
-              <span style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: 22, color: CORAL }}>{s.n}</span>
+              <span style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: 22, color: i === 0 ? "#fff" : CORAL }}>{s.n}</span>
             </div>
             <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: isMobile ? 16 : 18, color: INK, marginBottom: 8 }}>{s.title}</div>
-            <p style={{ margin: "0 auto", maxWidth: isMobile ? 230 : 250, fontSize: isMobile ? 12.5 : 13.5, color: "#6b6770", lineHeight: 1.55, fontFamily: "'Inter',system-ui,sans-serif" }}>{s.desc}</p>
+            <p style={{ margin: "0 auto", maxWidth: isMobile ? 230 : 250, fontSize: isMobile ? 12.5 : 13.5, color: TEXT_SOFT, lineHeight: 1.55, fontFamily: "'Inter',system-ui,sans-serif" }}>{s.desc}</p>
           </motion.div>
         ))}
       </div>
@@ -165,7 +164,7 @@ export default function Hero({ onSearch }) {
   const headingSize = isXs ? "2.4rem" : isMobile ? "3rem" : isTablet ? "3.8rem" : "clamp(3.4rem, 5vw, 5rem)";
 
   return (
-    <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: "#FFFFFF" }}>
+    <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: BASE }}>
       {/* ── animated coral aurora background ── */}
       <HeroBackground />
       {/* ── content ── */}
@@ -178,10 +177,10 @@ export default function Hero({ onSearch }) {
         {/* badge */}
         <motion.div
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,90,54,.07)", border: "1px solid rgba(255,90,54,.18)", color: CORAL_DK, borderRadius: 9999, padding: "6px 14px", fontSize: 11.5, fontWeight: 600, letterSpacing: "0.5px", fontFamily: "'Inter',system-ui,sans-serif", marginBottom: 28 }}
+          style={{ display: "inline-flex", alignItems: "center", gap: 8, background: BASE, color: CORAL, borderRadius: 9999, padding: "6px 16px", fontSize: 11.5, fontWeight: 700, letterSpacing: "0.5px", fontFamily: "'Inter',system-ui,sans-serif", marginBottom: 28, boxShadow: raisedSm }}
         >
-          <motion.span animate={{ opacity: [1, 0.35, 1] }} transition={{ duration: 1.8, repeat: Infinity }} style={{ width: 6, height: 6, borderRadius: "50%", background: CORAL }} />
-          BUILT FOR JEE &amp; NEET ASPIRANTS
+          <motion.span animate={{ opacity: [1, 0.35, 1] }} transition={{ duration: 1.8, repeat: Infinity }} style={{ width: 8, height: 8, borderRadius: "50%", background: CORAL, boxShadow: `inset 2px 2px 4px rgba(0,0,0,0.2)` }} />
+          Built for JEE &amp; NEET aspirants
         </motion.div>
 
         {/* headline */}
@@ -202,15 +201,9 @@ export default function Hero({ onSearch }) {
         {/* subtext */}
         <motion.p
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
-          style={{ margin: `${isMobile ? "1.6rem" : "2rem"} auto 0`, maxWidth: 560, fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 400, fontSize: isXs ? "1rem" : "1.1rem", color: "#6b6770", lineHeight: 1.65 }}
+          style={{ margin: `${isMobile ? "1.6rem" : "2rem"} auto 0`, maxWidth: 560, fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 500, fontSize: isXs ? "1rem" : "1.1rem", color: TEXT_SOFT, lineHeight: 1.65 }}
         >
-          An <span style={{ position: "relative", color: CORAL, fontWeight: 700, whiteSpace: "nowrap" }}>
-            IIT Roorkee
-            <svg width="100%" height="8" viewBox="0 0 120 8" preserveAspectRatio="none" style={{ position: "absolute", left: 0, bottom: "-3px", width: "100%" }}>
-              <motion.path d="M2 5 C 30 2, 90 2, 118 4" stroke={CORAL} strokeWidth="2.5" strokeLinecap="round" fill="none"
-                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6, delay: 1.5, ease: "easeInOut" }} />
-            </svg>
-          </span> startup — built by IITians, trusted by aspirants
+          An <span style={{ color: CORAL, fontWeight: 700 }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
         </motion.p>
 
         {/* CTAs — wide search bar + two action buttons */}
@@ -224,12 +217,12 @@ export default function Hero({ onSearch }) {
             style={{
               display: "flex", alignItems: "center", gap: 10, cursor: "text", boxSizing: "border-box",
               width: "100%", maxWidth: 620, padding: isXs ? "7px 7px 7px 16px" : "8px 8px 8px 20px",
-              background: "#fff", border: "1px solid rgba(0,0,0,.12)", borderRadius: 9999,
-              boxShadow: "0 10px 30px -14px rgba(0,0,0,.18)",
+              background: BASE, borderRadius: 9999,
+              boxShadow: searchShadow,
             }}
           >
-            <Search size={18} style={{ color: "#8a8690", flexShrink: 0 }} />
-            <span style={{ flex: 1, textAlign: "left", color: "#9a969f", fontFamily: "'Inter',system-ui,sans-serif",
+            <Search size={18} style={{ color: TEXT_SOFT, flexShrink: 0 }} />
+            <span style={{ flex: 1, textAlign: "left", color: TEXT_SOFT, fontFamily: "'Inter',system-ui,sans-serif",
               fontSize: isXs ? 13 : 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               Search colleges, entrance exams, or rankings…
             </span>
@@ -238,11 +231,11 @@ export default function Hero({ onSearch }) {
               style={{
                 flexShrink: 0, cursor: "pointer", border: "none", background: CORAL, color: "#fff",
                 padding: isXs ? "9px 16px" : "11px 26px", borderRadius: 9999,
-                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 13 : 14.5,
-                boxShadow: "0 6px 16px rgba(255,90,54,.3)", transition: "background .2s",
+                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14.5,
+                boxShadow: `4px 4px 10px rgba(0,0,0,0.15), -4px -4px 10px ${SHADOW_LT}`, transition: "all .2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = CORAL_DK; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = CORAL; }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `6px 6px 14px rgba(0,0,0,0.15), -6px -6px 14px ${SHADOW_LT}`; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `4px 4px 10px rgba(0,0,0,0.15), -4px -4px 10px ${SHADOW_LT}`; }}
             >
               Search
             </button>
@@ -254,29 +247,29 @@ export default function Hero({ onSearch }) {
               onClick={() => nav("/jee-main#college")}
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-                minWidth: isXs ? 190 : 220, padding: "13px 28px", borderRadius: 9999, whiteSpace: "nowrap",
+                minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: CORAL, border: "none", color: "#fff",
-                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
-                boxShadow: "0 8px 24px rgba(255, 90, 54, 0.3)", transition: "all .2s",
+                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
+                boxShadow: `4px 4px 10px rgba(0,0,0,0.15), -4px -4px 10px ${SHADOW_LT}`, transition: "all .2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = CORAL_DK; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.background = CORAL; }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `6px 6px 14px rgba(0,0,0,0.15), -6px -6px 14px ${SHADOW_LT}`; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `4px 4px 10px rgba(0,0,0,0.15), -4px -4px 10px ${SHADOW_LT}`; }}
             >
-              Predict My College <Target size={18} />
+              Predict my college <Target size={16} />
             </button>
             <button
               onClick={() => nav("/community")}
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-                minWidth: isXs ? 190 : 220, padding: "13px 28px", borderRadius: 9999, whiteSpace: "nowrap",
-                background: "#fff", border: "1px solid rgba(0,0,0,.14)", color: "#111",
-                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 600, fontSize: isXs ? 14 : 15,
-                boxShadow: "0 4px 12px rgba(0,0,0,.03)", transition: "all .2s",
+                minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
+                background: BASE, border: "none", color: INK,
+                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
+                boxShadow: raisedSm, transition: "all .2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "rgba(0,0,0,.28)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = "rgba(0,0,0,.14)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = pressed; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = raisedSm; }}
             >
-              Join Community <Users size={18} />
+              Join community <Users size={16} />
             </button>
           </div>
         </motion.div>
@@ -286,22 +279,22 @@ export default function Hero({ onSearch }) {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}
           style={{ display: "inline-flex", alignItems: "center", gap: 14, marginTop: isMobile ? "1.4rem" : "1.6rem" }}
         >
-          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: "linear-gradient(90deg, transparent, rgba(28,28,40,.16) 40%, rgba(255,90,54,.4))" }} />
+          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: `linear-gradient(90deg, transparent, ${SHADOW_DK})` }} />
           <div style={{ display: "flex" }}>
-            {[["#FF7A59", "A"], ["#FFB088", "P"], ["#7C5CFF", "R"], ["#FFC24B", "S"]].map(([c, ltr], i) => (
+            {[["#FF9A4D", "A"], ["#F47B20", "P"], ["#7C5CFF", "R"], [BASE, "+"]].map(([c, ltr], i) => (
               <span key={i} style={{
-                width: 30, height: 30, borderRadius: "50%", background: c,
-                border: "2px solid #fff", marginLeft: i === 0 ? 0 : -10,
-                boxShadow: "0 2px 6px rgba(0,0,0,.12)",
+                width: 32, height: 32, borderRadius: "50%", background: c,
+                border: `2px solid ${BASE}`, marginLeft: i === 0 ? 0 : -10,
+                boxShadow: c === BASE ? pressed : `2px 2px 5px rgba(0,0,0,0.1)`,
                 display: "grid", placeItems: "center",
-                color: "#fff", fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: 12,
+                color: c === BASE ? TEXT_SOFT : "#fff", fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: 13,
               }}>{ltr}</span>
             ))}
           </div>
-          <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: "#6b6770", whiteSpace: "nowrap" }}>
-Trusted by <strong style={{ color: CORAL, fontWeight: 800 }}>3200+</strong> JEE &amp; NEET aspirants
+          <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: TEXT_SOFT, whiteSpace: "nowrap" }}>
+            Trusted by <strong style={{ color: CORAL, fontWeight: 800 }}>3200+</strong> JEE &amp; NEET aspirants
           </span>
-          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: "linear-gradient(90deg, rgba(255,90,54,.4), rgba(28,28,40,.16) 60%, transparent)" }} />
+          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: `linear-gradient(90deg, ${SHADOW_DK}, transparent)` }} />
         </motion.div>
 
         {/* ══ 3-step journey ══ */}
