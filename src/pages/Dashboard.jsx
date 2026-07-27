@@ -77,7 +77,7 @@ function LabeledInput({ label, value, onChange, type = "text", placeholder, inpu
   );
 }
 
-/* ── Edit profile modal — name / email / phone / ranks ────────────── */
+/* ── Edit profile modal — name / email / phone ───────────────────── */
 function EditInfoModal({ user, token, onClose, onSaved }) {
   const [f, setF] = useState({
     name: user?.name || "",
@@ -86,9 +86,6 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
     coaching: user?.coaching || "",
     homeState: user?.homeState || "",
     studentClass: user?.studentClass || "",
-    neetRank: user?.neetRank ?? "",
-    jeeMainsRank: user?.jeeMainsRank ?? "",
-    jeeAdvancedRank: user?.jeeAdvancedRank ?? "",
   });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
@@ -108,9 +105,6 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
         coaching: f.coaching.trim(),
         homeState: f.homeState.trim(),
         studentClass: f.studentClass,
-        neetRank: f.neetRank === "" ? null : Number(f.neetRank),
-        jeeMainsRank: f.jeeMainsRank === "" ? null : Number(f.jeeMainsRank),
-        jeeAdvancedRank: f.jeeAdvancedRank === "" ? null : Number(f.jeeAdvancedRank),
       });
       onSaved(updated);
       onClose();
@@ -161,8 +155,7 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
               <LabeledInput label="Coaching" value={f.coaching} onChange={set("coaching")} placeholder="Your coaching" />
               <LabeledInput label="Home state" value={f.homeState} onChange={set("homeState")} placeholder="Home state" />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
                 <span style={{ fontSize: 12, fontWeight: 700, color: "#6b7280" }}>Class</span>
                 <select value={f.studentClass} onChange={set("studentClass")} style={{ width: "100%", padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 14, color: INK, outline: "none", boxSizing: "border-box", background: "#fff" }} onFocus={(e) => { e.target.style.borderColor = CORAL; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }}>
                   <option value="" disabled>Select class…</option>
@@ -170,12 +163,6 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
                   <option value="12">12</option>
                   <option value="12+">12+</option>
                 </select>
-              </div>
-              <LabeledInput label="NEET rank" inputMode="numeric" value={f.neetRank} onChange={set("neetRank")} placeholder="—" />
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <LabeledInput label="JEE Mains rank" inputMode="numeric" value={f.jeeMainsRank} onChange={set("jeeMainsRank")} placeholder="—" />
-              <LabeledInput label="JEE Adv rank" inputMode="numeric" value={f.jeeAdvancedRank} onChange={set("jeeAdvancedRank")} placeholder="—" />
             </div>
           </div>
 
@@ -297,8 +284,6 @@ export default function Dashboard() {
 
   const firstName = (user?.name || "").trim().split(" ")[0] || "Student";
   const mentorPlan = plans.find((p) => isMentorshipPlan(p.plan));
-  const planYear = plans.map((p) => String(p.planLabel || p.plan || "").match(/20\d{2}/)?.[0]).find(Boolean);
-  const aspirantTag = `${planYear ? `JEE ${planYear}` : "JEE / NEET"} · Aspirant`;
 
   const classPhrase = user?.studentClass
     ? `your class of ${user.studentClass}`
@@ -320,10 +305,7 @@ export default function Dashboard() {
     { icon: Phone,         label: "Phone",             value: user?.phone || "—",            color: "#0EA371", bg: "#D6F3E5" },
     { icon: MapPin,        label: "State",             value: user?.homeState || "—",        color: "#DB2777", bg: "#FCE1EA" },
     { icon: Calendar,      label: "Member Since",      value: fmtDate(user?.createdAt),      color: "#E08600", bg: "#FEEBCF" },
-    { icon: BookOpen,      label: "Class",             value: user?.studentClass || "—",     color: CORAL,     bg: CORAL_SOFT },
-    { icon: Stethoscope,   label: "NEET Rank",         value: fmtRank(user?.neetRank),       color: "#0EA371", bg: "#D6F3E5" },
-    { icon: Trophy,        label: "JEE Mains",         value: fmtRank(user?.jeeMainsRank),   color: "#7C3AED", bg: "#EDE7FE" },
-    { icon: Award,         label: "JEE Adv",           value: fmtRank(user?.jeeAdvancedRank),color: "#DB2777", bg: "#FCE1EA" },
+    { icon: Bookmark,      label: "Class",             value: user?.studentClass || "—",     color: "#F59E0B", bg: "#FEF3C7" },
   ];
 
   const QUICK = [

@@ -49,9 +49,6 @@ function validate(mode, f) {
     if (!f.coaching.trim())          e.coaching     = "Coaching is required";
     if (!f.homeState.trim())         e.homeState    = "Home state is required";
     if (!f.studentClass)             e.studentClass = "Class is required";
-    if (f.neetRank && !isRank(f.neetRank)) e.neetRank = "Enter a valid rank number";
-    if (f.jeeMainsRank && !isRank(f.jeeMainsRank)) e.jeeMainsRank = "Enter a valid rank number";
-    if (f.jeeAdvancedRank && !isRank(f.jeeAdvancedRank)) e.jeeAdvancedRank = "Enter a valid rank number";
     if (!f.password)             e.password = "Password is required";
     else if (f.password.length < 6) e.password = "Minimum 6 characters";
   }
@@ -331,7 +328,7 @@ export default function AuthModal() {
   // so it is always dismissible (close X + "browse as guest" skip link).
   const mandatory = false;
   const [mode,    setMode]   = useState("login");
-  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "", jeeMainsRank: "", jeeAdvancedRank: "", remember: false });
+  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", remember: false });
   const [fe,      setFe]     = useState({});
   const [banner,  setBanner] = useState({ type: "", text: "" });
   const [busy,    setBusy]   = useState(false);
@@ -370,7 +367,7 @@ export default function AuthModal() {
 
   const close = () => {
     setMode("login");
-    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "", jeeMainsRank: "", jeeAdvancedRank: "", remember: false });
+    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", remember: false });
     setBanner({ type: "", text: "" });
     setFe({});
     setBusy(false);
@@ -410,7 +407,7 @@ export default function AuthModal() {
   };
 
   const doLogin   = run(async () => { await login(f.email.trim(), f.password); close(); }, "login");
-  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, studentClass: f.studentClass, neetRank: f.neetRank ? Number(f.neetRank) : undefined, jeeMainsRank: f.jeeMainsRank ? Number(f.jeeMainsRank) : undefined, jeeAdvancedRank: f.jeeAdvancedRank ? Number(f.jeeAdvancedRank) : undefined }); close(); }, "signup");
+  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, studentClass: f.studentClass }); close(); }, "signup");
   const doSendOtp = run(async () => {
     setNotReg(false);
     try {

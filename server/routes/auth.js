@@ -32,11 +32,11 @@ const isEmail = (e) => {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)) return false;
   return s.endsWith("@gmail.com") || s.endsWith(".in");
 };
-const pub = (u) => ({ id: u._id, name: u.name, email: u.email, phone: u.phone, coaching: u.coaching, homeState: u.homeState, studentClass: u.studentClass, neetRank: u.neetRank, jeeMainsRank: u.jeeMainsRank, jeeAdvancedRank: u.jeeAdvancedRank });
+const pub = (u) => ({ id: u._id, name: u.name, email: u.email, phone: u.phone, coaching: u.coaching, homeState: u.homeState, studentClass: u.studentClass });
 
 router.post("/signup", async (req, res) => {
   try {
-    let { name, email, phone, coaching, homeState, password, studentClass, neetRank, jeeMainsRank, jeeAdvancedRank } = req.body || {};
+    let { name, email, phone, coaching, homeState, password, studentClass } = req.body || {};
     if (!name || !email || !password || !phone) return res.status(400).json({ error: "Name, email, phone and password are required" });
     if (!String(coaching || "").trim()) return res.status(400).json({ error: "Coaching is required" });
     if (!String(homeState || "").trim()) return res.status(400).json({ error: "Home state is required" });
@@ -53,9 +53,6 @@ router.post("/signup", async (req, res) => {
       coaching: String(coaching || "").trim(),
       homeState: String(homeState || "").trim(),
       studentClass:    studentClass ? String(studentClass).trim() : "",
-      neetRank:        neetRank        ? Number(neetRank)        : undefined,
-      jeeMainsRank:    jeeMainsRank    ? Number(jeeMainsRank)    : undefined,
-      jeeAdvancedRank: jeeAdvancedRank ? Number(jeeAdvancedRank) : undefined,
       passwordHash, lastLogin: new Date(),
     });
     res.status(201).json({ token: sign(user), user: pub(user) });
@@ -155,7 +152,6 @@ router.patch("/profile", requireAuth, async (req, res) => {
     if (coaching  !== undefined) user.coaching  = String(coaching).trim();
     if (homeState !== undefined) user.homeState = String(homeState).trim();
     if (studentClass !== undefined) user.studentClass = String(studentClass).trim();
-    if (neetRank        !== undefined) user.neetRank        = neetRank        === "" || neetRank        == null ? null : Number(neetRank);
 
     await user.save();
     res.json({ user: pub(user) });
