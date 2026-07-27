@@ -191,7 +191,7 @@ export default function Hero({ onSearch }) {
             onClick={openSearch}
             style={{
               display: "flex", alignItems: "center", gap: 10, cursor: "text", boxSizing: "border-box",
-              width: "100%", maxWidth: 620, padding: isXs ? "7px 7px 7px 16px" : "8px 8px 8px 20px",
+              width: "100%", maxWidth: 540, padding: isXs ? "7px 7px 7px 16px" : "8px 8px 8px 20px",
               background: BASE, borderRadius: 9999,
               boxShadow: searchShadow,
             }}
@@ -217,12 +217,12 @@ export default function Hero({ onSearch }) {
           </div>
 
           {/* action buttons */}
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24, marginTop: isMobile ? "2.5rem" : "3rem" }}>
+          <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "center", gap: isMobile ? 16 : 24, marginTop: isMobile ? "2.5rem" : "3rem", width: "100%" }}>
             <button
               onClick={() => nav("/jee-main#college")}
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-                minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
+                width: isMobile ? "100%" : "auto", minWidth: 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: CORAL, border: "none", color: "#fff",
                 fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
                 boxShadow: `8px 8px 16px rgba(255,90,54,0.35), -8px -8px 16px ${SHADOW_LT}`, transition: "all .2s",
@@ -236,7 +236,7 @@ export default function Hero({ onSearch }) {
               onClick={() => nav("/community")}
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-                minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
+                width: isMobile ? "100%" : "auto", minWidth: 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: BASE, border: "none", color: INK,
                 fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
                 boxShadow: raised, transition: "all .2s",
@@ -252,9 +252,9 @@ export default function Hero({ onSearch }) {
         {/* social proof — avatar cluster + count, framed by hairlines */}
         <motion.div
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}
-          style={{ display: "inline-flex", alignItems: "center", gap: 18, marginTop: isMobile ? "4.5rem" : "5.5rem" }}
+          style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: isMobile ? 8 : 18, marginTop: isMobile ? "4.5rem" : "5.5rem", width: "100%" }}
         >
-          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: `linear-gradient(90deg, transparent, rgba(0,0,0,0.15))` }} />
+          <span style={{ width: isMobile ? 16 : 56, flexShrink: 0, height: 1, borderRadius: 1, background: `linear-gradient(90deg, transparent, rgba(0,0,0,0.15))` }} />
           <div style={{ display: "flex" }}>
             {[["#FF7A59", "A"], ["#FF5A36", "P"], ["#7C5CFF", "R"], [BASE, "+"]].map(([c, ltr], i) => (
               <span key={i} style={{
@@ -266,10 +266,10 @@ export default function Hero({ onSearch }) {
               }}>{ltr}</span>
             ))}
           </div>
-          <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: TEXT_SOFT, whiteSpace: "nowrap" }}>
+          <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: TEXT_SOFT, whiteSpace: "normal", textAlign: "center" }}>
             Trusted by <strong style={{ color: CORAL, fontWeight: 800 }}>3200+</strong> JEE &amp; NEET aspirants
           </span>
-          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: `linear-gradient(90deg, rgba(0,0,0,0.15), transparent)` }} />
+          <span style={{ width: isMobile ? 16 : 56, flexShrink: 0, height: 1, borderRadius: 1, background: `linear-gradient(90deg, rgba(0,0,0,0.15), transparent)` }} />
         </motion.div>
       </div>
     </section>
