@@ -2866,11 +2866,10 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   flex: 0 0 380px;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(150deg,#fff5ec 0%,#ffe9d6 38%,#ffddc2 64%,#fff3e6 100%);
-  border-right: 1px solid rgba(255, 105, 61,.16);
+  background: #111827; /* Dark background as requested */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end; /* Align to bottom */
   padding: 36px 32px;
 }
 /* Responsive padding for the backdrop scroll container */
@@ -2906,9 +2905,8 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 .auth-aurora {
   position: absolute; inset: -40%;
   background:
-    radial-gradient(circle at 30% 30%, rgba(255, 105, 61,.55), transparent 45%),
-    radial-gradient(circle at 70% 65%, rgba(234,88,12,.45), transparent 50%),
-    radial-gradient(circle at 50% 90%, rgba(251,191,36,.35), transparent 45%);
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255,.05), transparent 45%),
+    radial-gradient(circle at 70% 65%, rgba(255, 255, 255,.03), transparent 50%);
   filter: blur(14px);
   animation: authAurora 14s ease-in-out infinite;
   pointer-events: none;
@@ -2922,8 +2920,8 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 .auth-mesh {
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(rgba(255, 105, 61,.09) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 105, 61,.09) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255,.05) 1px, transparent 1px);
   background-size: 26px 26px;
   mask-image: radial-gradient(circle at 50% 40%, #000 30%, transparent 75%);
   -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 30%, transparent 75%);
@@ -2936,15 +2934,15 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
 .auth-particle {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 105, 61,.85), rgba(251,191,36,.5));
-  box-shadow: 0 0 10px rgba(255, 105, 61,.45);
+  background: radial-gradient(circle, rgba(255, 255, 255,.85), rgba(255,255,255,.3));
+  box-shadow: 0 0 10px rgba(255, 255, 255,.3);
   animation: authParticle linear infinite;
   pointer-events: none;
 }
 @keyframes authParticle {
   0%   { transform: translateY(0) scale(1);   opacity: 0; }
-  10%  { opacity: .9; }
-  90%  { opacity: .9; }
+  10%  { opacity: .3; }
+  90%  { opacity: .3; }
   100% { transform: translateY(-340px) scale(.3); opacity: 0; }
 }
 
@@ -2963,7 +2961,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   position: absolute; inset: 0;
   border-radius: 26px;
   padding: 1px;
-  background: conic-gradient(from 0deg, transparent 0%, rgba(255, 105, 61,.55) 18%, transparent 38%, transparent 60%, rgba(251,191,36,.5) 78%, transparent 100%);
+  background: conic-gradient(from 0deg, transparent 0%, rgba(0, 0, 0,.1) 18%, transparent 38%, transparent 60%, rgba(0,0,0,.1) 78%, transparent 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;
   mask-composite: exclude;

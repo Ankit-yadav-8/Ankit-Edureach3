@@ -50,6 +50,8 @@ function validate(mode, f) {
     if (!f.homeState.trim())         e.homeState    = "Home state is required";
     if (!f.studentClass)             e.studentClass = "Class is required";
     if (f.neetRank && !isRank(f.neetRank)) e.neetRank = "Enter a valid rank number";
+    if (f.jeeMainsRank && !isRank(f.jeeMainsRank)) e.jeeMainsRank = "Enter a valid rank number";
+    if (f.jeeAdvancedRank && !isRank(f.jeeAdvancedRank)) e.jeeAdvancedRank = "Enter a valid rank number";
     if (!f.password)             e.password = "Password is required";
     else if (f.password.length < 6) e.password = "Minimum 6 characters";
   }
@@ -93,17 +95,17 @@ function Field({ icon: Icon, error, label, ...props }) {
         </label>
       )}
       <div style={{
-        position: "relative", borderRadius: 13,
-        border: `1.5px solid ${borderColor}`,
-        background: error ? "#fff8f8" : "#fff",
-        transition: "border-color .18s, box-shadow .18s",
-        boxShadow: shadow,
+        position: "relative", borderRadius: 50,
+        border: `1.5px solid ${error ? "#ef4444" : "transparent"}`,
+        background: error ? "#fef2f2" : focused ? "#fff" : "#f3f4f6",
+        transition: "all .2s",
+        boxShadow: error ? "0 0 0 2px rgba(239,68,68,.1)" : focused ? "0 0 0 2px rgba(17,24,39,.1)" : "none",
         display: "flex", alignItems: "center",
       }}>
-        <Icon size={15} style={{
-          position: "absolute", left: 14,
-          color: error ? "#ef4444" : focused ? OR : "#94a3b8",
-          transition: "color .18s", flexShrink: 0,
+        <Icon size={16} style={{
+          position: "absolute", left: 16,
+          color: error ? "#ef4444" : focused ? "#111827" : "#94a3b8",
+          transition: "color .2s", flexShrink: 0,
         }} />
         <input
           {...props}
@@ -112,9 +114,9 @@ function Field({ icon: Icon, error, label, ...props }) {
           onBlur={(e)  => { setFocused(false); props.onBlur?.(e); }}
           style={{
             flex: 1, border: "none", background: "transparent", outline: "none",
-            paddingLeft: 40, paddingRight: isPass ? 46 : 14,
-            height: 46, fontSize: 16, fontWeight: 600, letterSpacing: ".01em",
-            color: "#0f172a", borderRadius: 12,
+            paddingLeft: 42, paddingRight: isPass ? 46 : 16,
+            height: 42, fontSize: 14, fontWeight: 500,
+            color: "#111827", borderRadius: 50,
             fontFamily: "inherit",
           }}
         />
@@ -167,17 +169,17 @@ function SelectField({ icon: Icon, error, label, options, placeholder, value, ..
         </label>
       )}
       <div style={{
-        position: "relative", borderRadius: 13,
-        border: `1.5px solid ${borderColor}`,
-        background: error ? "#fff8f8" : "#fff",
-        transition: "border-color .18s, box-shadow .18s",
-        boxShadow: shadow,
+        position: "relative", borderRadius: 50,
+        border: `1.5px solid ${error ? "#ef4444" : "transparent"}`,
+        background: error ? "#fef2f2" : focused ? "#fff" : "#f3f4f6",
+        transition: "all .2s",
+        boxShadow: error ? "0 0 0 2px rgba(239,68,68,.1)" : focused ? "0 0 0 2px rgba(17,24,39,.1)" : "none",
         display: "flex", alignItems: "center",
       }}>
-        <Icon size={15} style={{
-          position: "absolute", left: 14,
-          color: error ? "#ef4444" : focused ? OR : "#94a3b8",
-          transition: "color .18s", flexShrink: 0, zIndex: 1,
+        <Icon size={16} style={{
+          position: "absolute", left: 16,
+          color: error ? "#ef4444" : focused ? "#111827" : "#94a3b8",
+          transition: "color .2s", flexShrink: 0, zIndex: 1,
         }} />
         <select
           {...props}
@@ -186,9 +188,9 @@ function SelectField({ icon: Icon, error, label, options, placeholder, value, ..
           onBlur={(e)  => { setFocused(false); props.onBlur?.(e); }}
           style={{
             flex: 1, width: "100%", border: "none", background: "transparent", outline: "none",
-            paddingLeft: 40, paddingRight: 38,
-            height: 46, fontSize: 16, fontWeight: 600, letterSpacing: ".01em",
-            color: value ? "#0f172a" : "#94a3b8", borderRadius: 12,
+            paddingLeft: 42, paddingRight: 38,
+            height: 42, fontSize: 14, fontWeight: 500,
+            color: value ? "#111827" : "#94a3b8", borderRadius: 50,
             fontFamily: "inherit", appearance: "none", WebkitAppearance: "none",
             MozAppearance: "none", cursor: "pointer",
           }}
@@ -225,7 +227,8 @@ function SelectField({ icon: Icon, error, label, options, placeholder, value, ..
 /* ════════════════════════
    ACTION BUTTON
 ════════════════════════ */
-function ActionBtn({ busy, disabled, label, busyLabel, onClick, shake }) {
+function ActionBtn({ busy, disabled, label, busyLabel, onClick, shake, variant = "primary" }) {
+  const isPrimary = variant === "primary";
   return (
     <motion.button
       animate={shake ? { x: [0, -10, 10, -7, 7, -4, 4, 0] } : {}}
@@ -233,16 +236,15 @@ function ActionBtn({ busy, disabled, label, busyLabel, onClick, shake }) {
       onClick={onClick}
       disabled={busy || disabled}
       style={{
-        width: "100%", height: 50, borderRadius: 9999,
-        background: busy || disabled
-          ? `linear-gradient(135deg, ${OR}99, ${ORD}88)`
-          : `linear-gradient(135deg, ${OR} 0%, ${ORD} 100%)`,
-        border: "none", color: "#fff",
-        fontFamily: "Sora, sans-serif", fontWeight: 700, fontSize: 15,
+        width: "100%", height: 42, borderRadius: 9999,
+        background: isPrimary 
+          ? (busy || disabled ? "#374151" : "#111827")
+          : "#e5e7eb",
+        border: "none", color: isPrimary ? "#fff" : "#111827",
+        fontFamily: "Sora, sans-serif", fontWeight: 700, fontSize: 14,
         cursor: busy || disabled ? "not-allowed" : "pointer",
         display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-        boxShadow: busy || disabled ? "none" : `0 6px 24px ${OR}44, 0 2px 8px ${OR}22`,
-        transition: "box-shadow .2s, background .2s, transform .1s",
+        transition: "background .2s, transform .1s",
         letterSpacing: ".01em",
       }}
       onMouseEnter={(e) => { if (!busy && !disabled) e.currentTarget.style.transform = "translateY(-1px)"; }}
@@ -288,10 +290,10 @@ function Banner({ type, text }) {
 ════════════════════════ */
 function Divider() {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0" }}>
-      <div style={{ flex: 1, height: 1, background: "linear-gradient(to right, transparent, #e2e8f0)" }} />
-      <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: ".08em" }}>OR</span>
-      <div style={{ flex: 1, height: 1, background: "linear-gradient(to left, transparent, #e2e8f0)" }} />
+    <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "14px 0" }}>
+      <div style={{ flex: 1, height: 1, background: "linear-gradient(to right, transparent, #e5e7eb)" }} />
+      <span style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", letterSpacing: ".08em", textTransform: "uppercase" }}>Or</span>
+      <div style={{ flex: 1, height: 1, background: "linear-gradient(to left, transparent, #e5e7eb)" }} />
     </div>
   );
 }
@@ -422,7 +424,7 @@ export default function AuthModal() {
   // so it is always dismissible (close X + "browse as guest" skip link).
   const mandatory = false;
   const [mode,    setMode]   = useState("login");
-  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "" });
+  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "", jeeMainsRank: "", jeeAdvancedRank: "", remember: false });
   const [fe,      setFe]     = useState({});
   const [banner,  setBanner] = useState({ type: "", text: "" });
   const [busy,    setBusy]   = useState(false);
@@ -453,7 +455,7 @@ export default function AuthModal() {
 
   const close = () => {
     setMode("login");
-    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "" });
+    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "", jeeMainsRank: "", jeeAdvancedRank: "", remember: false });
     setBanner({ type: "", text: "" });
     setFe({});
     setBusy(false);
@@ -493,7 +495,7 @@ export default function AuthModal() {
   };
 
   const doLogin   = run(async () => { await login(f.email.trim(), f.password); close(); }, "login");
-  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, studentClass: f.studentClass, neetRank: f.neetRank ? Number(f.neetRank) : undefined }); close(); }, "signup");
+  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, studentClass: f.studentClass, neetRank: f.neetRank ? Number(f.neetRank) : undefined, jeeMainsRank: f.jeeMainsRank ? Number(f.jeeMainsRank) : undefined, jeeAdvancedRank: f.jeeAdvancedRank ? Number(f.jeeAdvancedRank) : undefined }); close(); }, "signup");
   const doSendOtp = run(async () => {
     setNotReg(false);
     try {
@@ -656,28 +658,7 @@ export default function AuthModal() {
               </p>
             </motion.div>
 
-            {/* Login / Sign up tab switcher (only on login/signup) */}
-            {(mode === "login" || mode === "signup") && (
-              <div style={{
-                display: "flex", background: "rgba(255, 105, 61,.10)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 10,
-                padding: 3, marginTop: 18, position: "relative", zIndex: 1,
-              }}>
-                {[["login", "Log in"], ["signup", "Sign up"]].map(([m, lbl]) => (
-                  <button key={m} onClick={() => go(m)}
-                    style={{
-                      flex: 1, border: "none", cursor: "pointer", borderRadius: 8,
-                      padding: "8px 0", fontSize: 13.5, fontWeight: 700, fontFamily: "Sora",
-                      background: mode === m ? `linear-gradient(135deg, ${OR}, ${ORD})` : "transparent",
-                      color: mode === m ? "#fff" : "#a8623a",
-                      transition: "all .2s",
-                      boxShadow: mode === m ? `0 4px 12px -2px ${OR}88` : "none",
-                    }}
-                  >
-                    {lbl}
-                  </button>
-                ))}
-              </div>
-            )}
+            {/* Removed Login / Sign up tabs to match new design */}
           </div>
 
           {/* ─── FORM BODY ─── */}
@@ -704,13 +685,18 @@ export default function AuthModal() {
                   <Field icon={Lock} type="password" placeholder="Password" value={f.password}
                     error={fe.password} onChange={e => set("password", e.target.value)}
                     onKeyDown={e => e.key === "Enter" && doLogin()} autoComplete="current-password" />
-                  <div style={{ textAlign: "right", marginTop: -8, marginBottom: 18 }}>
-                    <button onClick={() => go("forgot")} style={{ background: "none", border: "none", color: OR, fontWeight: 600, cursor: "pointer", fontSize: 12.5, padding: 0 }}>
-                      Forgot password?
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: -6, marginBottom: 16 }}>
+                    <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontSize: 12, color: "#6b7280" }}>
+                      <input type="checkbox" checked={f.remember} onChange={e => set("remember", e.target.checked)} style={{ cursor: "pointer" }} />
+                      Remember Me
+                    </label>
+                    <button onClick={() => go("forgot")} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer", fontSize: 12, padding: 0 }}>
+                      Forgot Password?
                     </button>
                   </div>
-                  <ActionBtn busy={busy} label="Log in →" busyLabel={busyLabel} onClick={doLogin} shake={shake} />
+                  <ActionBtn busy={busy} label="Log in" busyLabel={busyLabel} onClick={doLogin} shake={shake} variant="primary" />
                   <Divider />
+                  <ActionBtn busy={false} disabled={busy} label="Sign up" onClick={() => go("signup")} variant="secondary" />
                   <button onClick={() => go("otpEmail")} style={{
                     width: "100%", height: 46, borderRadius: 13,
                     background: "#f8fafc", border: "1.5px solid #e2e8f0",
@@ -757,6 +743,18 @@ export default function AuthModal() {
                         placeholder="NEET rank (optional)" value={f.neetRank}
                         error={fe.neetRank} onChange={e => set("neetRank", e.target.value.replace(/\D/g, ""))} />
                     </div>
+                    <div style={{ gridColumn: "1/-1", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                      <div style={{ minWidth: 0 }}>
+                        <Field icon={Award} type="tel" inputMode="numeric"
+                          placeholder="JEE Mains rank (optional)" value={f.jeeMainsRank}
+                          error={fe.jeeMainsRank} onChange={e => set("jeeMainsRank", e.target.value.replace(/\D/g, ""))} />
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <Field icon={Trophy} type="tel" inputMode="numeric"
+                          placeholder="JEE Adv rank (optional)" value={f.jeeAdvancedRank}
+                          error={fe.jeeAdvancedRank} onChange={e => set("jeeAdvancedRank", e.target.value.replace(/\D/g, ""))} />
+                      </div>
+                    </div>
                     <div style={{ gridColumn: "1/-1" }}>
                       <Field icon={Lock} type="password" placeholder="Password (min 6 chars) *" value={f.password}
                         error={fe.password} onChange={e => set("password", e.target.value)}
@@ -777,7 +775,9 @@ export default function AuthModal() {
                     </div>
                   )}
                   <p style={{ fontSize: 11, color: "#94a3b8", marginBottom: 14 }}>* Required fields</p>
-                  <ActionBtn busy={busy} label="Create account →" busyLabel={busyLabel} onClick={doSignup} shake={shake} />
+                  <ActionBtn busy={busy} label="Create account" busyLabel={busyLabel} onClick={doSignup} shake={shake} variant="primary" />
+                  <Divider />
+                  <ActionBtn busy={false} disabled={busy} label="Log in" onClick={() => go("login")} variant="secondary" />
                 </>)}
 
                 {/* ═══ OTP EMAIL ═══ */}

@@ -603,7 +603,7 @@ export default function Admin() {
               <table style={{ width: "100%", minWidth: 1100, borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: "#fafafa" }}>
-                    {["#", "", "User", "Email", "Phone", "Coaching", "Class", "Joined", "Last Login"].map((h, hi) => (
+                    {["#", "", "User", "Email", "Phone", "Coaching", "Class", "Mains Rank", "Adv Rank", "Joined", "Last Login"].map((h, hi) => (
                       <th key={hi} style={{
                         padding: "12px 20px", textAlign: "left", fontSize: 11,
                         fontWeight: 700, color: "#999", letterSpacing: ".06em",
@@ -662,6 +662,12 @@ export default function Admin() {
                       <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
                         {u.studentClass || "—"}
                       </td>
+                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>
+                        {u.jeeMainsRank || "—"}
+                      </td>
+                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>
+                        {u.jeeAdvancedRank || "—"}
+                      </td>
                       <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888", whiteSpace: "nowrap" }}>
                         {fmtDate(u.createdAt)}
                       </td>
@@ -677,7 +683,7 @@ export default function Admin() {
                     </tr>
                     {isOpen && (
                       <tr style={{ borderBottom: "1px solid #f0f0f0", background: "#fafafa" }}>
-                        <td colSpan={10} style={{ padding: "0 20px 18px 52px" }}>
+                        <td colSpan={12} style={{ padding: "0 20px 18px 52px" }}>
                           <div style={{ fontSize: 11, fontWeight: 700, color: "#999", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: 8 }}>
                             Full document (MongoDB Atlas)
                           </div>
