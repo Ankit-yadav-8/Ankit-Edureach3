@@ -224,9 +224,9 @@ export default function Navbar({ onSearch }) {
             <span
               style={{
                 color: "#fff",
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontFamily: "Sora, sans-serif",
                 fontWeight: 800,
-                fontSize: "15px",
+                fontSize: "14px",
                 letterSpacing: "-0.5px",
                 lineHeight: 1,
               }}
@@ -236,8 +236,8 @@ export default function Navbar({ onSearch }) {
           </span>
 
           {/* Brand text — clamps down on narrow phones so the bar never overflows */}
-          <span id="cp-wordmark" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "clamp(1rem, 4.4vw, 1.3rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap", color: "#1a1a2e" }}>
-            College <span style={{ color: "#1a1a2e" }}>Parichay</span>
+          <span id="cp-wordmark" style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: "clamp(1rem, 4.4vw, 1.3rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap", color: "#1a1a2e" }}>
+            College Parichay
           </span>
         </Link>
 
@@ -406,7 +406,7 @@ export default function Navbar({ onSearch }) {
               onClick={() => navigate("/dashboard")}
               className="cta-desktop"
               title="My Dashboard"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", alignItems: "center", gap: 8, padding: "5px 12px 5px 5px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "var(--page-bg)", color: "var(--navy)", fontWeight: 600, cursor: "pointer", fontSize: "0.9rem", transition: "all 0.2s" }}
+              style={{ fontFamily: "'DM Sans', sans-serif", display: "flex", alignItems: "center", gap: 8, padding: "5px 12px 5px 5px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "var(--page-bg)", color: "var(--navy)", fontWeight: 600, cursor: "pointer", fontSize: "0.9rem", transition: "all 0.2s" }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.08)"; }}
             >
@@ -419,7 +419,7 @@ export default function Navbar({ onSearch }) {
             <button
               onClick={openLogin}
               className="cta-desktop nav-ghost-cta"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", padding: "8px 16px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)", background: "var(--page-bg)", color: "var(--navy)", fontWeight: 700, cursor: "pointer", fontSize: "0.85rem" }}
+              style={{ fontFamily: "'DM Sans', sans-serif", padding: "8px 16px", borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)", background: "var(--page-bg)", color: "var(--navy)", fontWeight: 700, cursor: "pointer", fontSize: "0.85rem" }}
             >
               Login
             </button>
@@ -757,10 +757,10 @@ export default function Navbar({ onSearch }) {
 
 const navLinkStyle = (active) => ({
   display: "flex", alignItems: "center", gap: 5,
-  padding: "0.46rem 0.8rem", fontSize: "0.9rem", fontWeight: active ? 700 : 600,
-  color: active ? "#111" : "#444",
+  padding: "0.46rem 0.8rem", fontSize: "0.9rem", fontWeight: active ? 700 : 500,
+  color: active ? "#1a1a2e" : "#374151",
   borderRadius: 999, whiteSpace: "nowrap", cursor: "pointer",
-  fontFamily: "'Plus Jakarta Sans', sans-serif", fontStyle: "normal", letterSpacing: "-0.01em",
+  fontFamily: "'DM Sans', sans-serif", fontStyle: "normal", letterSpacing: "0",
   background: active ? "rgba(0,0,0,.04)" : "transparent",
   border: "none",
   boxShadow: "none",
