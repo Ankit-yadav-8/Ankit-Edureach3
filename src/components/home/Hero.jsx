@@ -10,12 +10,12 @@ import { Search, Target, Users } from "lucide-react";
    reveal ending in a coral script word. No cards / images.
 ════════════════════════════════════════════════ */
 
-const CORAL    = "#F47B20";
-const CORAL_DK = "#FF9A4D";
+const CORAL    = "#FF5A36";
+const CORAL_DK = "#E0421F";
 const INK      = "#4A4438";
 const TEXT_SOFT= "#8A8272";
-const BASE     = "#EAE7E0";
-const SHADOW_DK = "#C6BEAC";
+const BASE     = "#FFFFFF";
+const SHADOW_DK = "rgba(0,0,0,0.08)";
 const SHADOW_LT = "#FFFFFF";
 
 const raised = `8px 8px 16px ${SHADOW_DK}, -8px -8px 16px ${SHADOW_LT}`;
@@ -143,7 +143,7 @@ function HeroSteps({ isMobile }) {
             <div style={{
               width: 68, height: 68, borderRadius: "50%", margin: "0 auto 16px",
               background: i === 0 ? CORAL : BASE,
-              boxShadow: i === 0 ? `4px 4px 10px rgba(244,123,32,0.3), -4px -4px 10px ${SHADOW_LT}` : raised,
+              boxShadow: i === 0 ? `4px 4px 10px rgba(255,90,54,0.3), -4px -4px 10px ${SHADOW_LT}` : raised,
               display: "grid", placeItems: "center",
             }}>
               <span style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: 22, color: i === 0 ? "#fff" : CORAL }}>{s.n}</span>
@@ -164,6 +164,7 @@ export default function Hero({ onSearch }) {
   const headingSize = isXs ? "2.4rem" : isMobile ? "3rem" : isTablet ? "3.8rem" : "clamp(3.4rem, 5vw, 5rem)";
 
   return (
+    <>
     <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: BASE }}>
       {/* ── animated coral aurora background ── */}
       <HeroBackground />
@@ -238,10 +239,10 @@ export default function Hero({ onSearch }) {
                 flexShrink: 0, cursor: "pointer", border: "none", background: CORAL, color: "#fff",
                 padding: isXs ? "9px 16px" : "11px 26px", borderRadius: 9999,
                 fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14.5,
-                boxShadow: `4px 4px 10px rgba(0,0,0,0.15), -4px -4px 10px ${SHADOW_LT}`, transition: "all .2s",
+                boxShadow: `4px 4px 10px rgba(255,90,54,0.3), -4px -4px 10px ${SHADOW_LT}`, transition: "all .2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `6px 6px 14px rgba(0,0,0,0.15), -6px -6px 14px ${SHADOW_LT}`; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `4px 4px 10px rgba(0,0,0,0.15), -4px -4px 10px ${SHADOW_LT}`; }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `6px 6px 14px rgba(255,90,54,0.3), -6px -6px 14px ${SHADOW_LT}`; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `4px 4px 10px rgba(255,90,54,0.3), -4px -4px 10px ${SHADOW_LT}`; }}
             >
               Search
             </button>
@@ -285,9 +286,9 @@ export default function Hero({ onSearch }) {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}
           style={{ display: "inline-flex", alignItems: "center", gap: 14, marginTop: isMobile ? "1.4rem" : "1.6rem" }}
         >
-          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: `linear-gradient(90deg, transparent, ${SHADOW_DK})` }} />
+          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: `linear-gradient(90deg, transparent, rgba(0,0,0,0.15))` }} />
           <div style={{ display: "flex" }}>
-            {[["#FF9A4D", "A"], ["#F47B20", "P"], ["#7C5CFF", "R"], [BASE, "+"]].map(([c, ltr], i) => (
+            {[["#FF7A59", "A"], ["#FF5A36", "P"], ["#7C5CFF", "R"], [BASE, "+"]].map(([c, ltr], i) => (
               <span key={i} style={{
                 width: 32, height: 32, borderRadius: "50%", background: c,
                 border: `2px solid ${BASE}`, marginLeft: i === 0 ? 0 : -10,
@@ -300,12 +301,17 @@ export default function Hero({ onSearch }) {
           <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: TEXT_SOFT, whiteSpace: "nowrap" }}>
             Trusted by <strong style={{ color: CORAL, fontWeight: 800 }}>3200+</strong> JEE &amp; NEET aspirants
           </span>
-          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: `linear-gradient(90deg, ${SHADOW_DK}, transparent)` }} />
+          <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: `linear-gradient(90deg, rgba(0,0,0,0.15), transparent)` }} />
         </motion.div>
-
+      </div>
+    </section>
+    
+    <section style={{ width: "100%", background: BASE, paddingBottom: isMobile ? 72 : 92 }}>
+      <div className="container" style={{ paddingInline: "1.5rem" }}>
         {/* ══ 3-step journey ══ */}
         <HeroSteps isMobile={isMobile} />
       </div>
     </section>
+    </>
   );
 }
