@@ -175,7 +175,7 @@ router.post("/forgot", forgotLimiter, async (req, res) => {
       { $set: { used: true } }
     );
 
-    const token = crypto.randomBytes(32).toString("hex");
+    const token = crypto.randomInt(100000, 999999).toString();
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
     await PasswordResetToken.create({
@@ -187,7 +187,7 @@ router.post("/forgot", forgotLimiter, async (req, res) => {
     const devLink = `${(process.env.CLIENT_ORIGIN || "").split(",")[0]}/?reset=${token}`;
     
     // Send email using Brevo
-    await sendPasswordResetEmail(email, devLink);
+    await sendPasswordResetEmail(email, devLink, token);
 
     res.json({ ok: true, ...(process.env.OTP_DEV_MODE !== "false" ? { devToken: token, devLink } : {}) });
   } catch (e) {

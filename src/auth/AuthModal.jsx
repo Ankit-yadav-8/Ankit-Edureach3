@@ -328,7 +328,7 @@ export default function AuthModal() {
   // so it is always dismissible (close X + "browse as guest" skip link).
   const mandatory = false;
   const [mode,    setMode]   = useState("login");
-  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", remember: false });
+  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", confirmPassword: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", remember: false });
   const [fe,      setFe]     = useState({});
   const [banner,  setBanner] = useState({ type: "", text: "" });
   const [busy,    setBusy]   = useState(false);
@@ -367,7 +367,7 @@ export default function AuthModal() {
 
   const close = () => {
     setMode("login");
-    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", remember: false });
+    setF({ name: "", email: "", phone: "", password: "", confirmPassword: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", remember: false });
     setBanner({ type: "", text: "" });
     setFe({});
     setBusy(false);
@@ -433,7 +433,15 @@ export default function AuthModal() {
     if (r.devToken) { set("token", r.devToken); go("reset"); }
     else setBanner({ type: "ok", text: "If that email is registered, a reset link has been sent." });
   }, "forgot");
-  const doReset   = run(async () => { const r = await apiReset({ token: f.token.trim(), password: f.password }); saveSession(r); close(); }, "reset");
+  const doReset   = run(async () => { 
+    if (f.password !== f.confirmPassword) {
+      setFe({ confirmPassword: "Passwords do not match" });
+      setBanner({ type: "err", text: "Passwords do not match." });
+      setShake(true); setTimeout(() => setShake(false), 450);
+      return;
+    }
+    const r = await apiReset({ token: f.token.trim(), password: f.password }); saveSession(r); close(); 
+  }, "reset");
 
   const BACK = ["otpEmail", "otpCode", "forgot", "reset"];
   const H    = HEADS[mode] ?? HEADS.login;
@@ -647,9 +655,10 @@ export default function AuthModal() {
                         
                         {/* Only show token field if we didn't get it from the URL */}
                         {!new URLSearchParams(window.location.search).get("reset") && !f.token && (
-                          <Field icon={KeyRound} placeholder="Reset token *" value={f.token} error={fe.token} onChange={e => set("token", e.target.value)} />
+                          <Field icon={KeyRound} placeholder="6-digit Reset Code *" value={f.token} error={fe.token} onChange={e => set("token", e.target.value)} />
                         )}
-                        <Field icon={Lock} type="password" placeholder="New password (min 8 chars) *" value={f.password} error={fe.password} onChange={e => set("password", e.target.value)} onKeyDown={e => e.key === "Enter" && doReset()} autoComplete="new-password" />
+                        <Field icon={Lock} type="password" placeholder="New password (min 8 chars) *" value={f.password} error={fe.password} onChange={e => set("password", e.target.value)} autoComplete="new-password" />
+                        <Field icon={Lock} type="password" placeholder="Confirm new password *" value={f.confirmPassword} error={fe.confirmPassword} onChange={e => set("confirmPassword", e.target.value)} onKeyDown={e => e.key === "Enter" && doReset()} autoComplete="new-password" />
                         
                         <ActionBtn busy={busy} label="Set new password" busyLabel={busyLabel} onClick={doReset} shake={shake} />
                         <p className="switch-line"><button type="button" onClick={() => go("login")}>Back to login</button></p>

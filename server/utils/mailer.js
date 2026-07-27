@@ -241,9 +241,9 @@ export async function sendOtpEmail(email, code) {
   }
 }
 
-export async function sendPasswordResetEmail(email, resetUrl) {
+export async function sendPasswordResetEmail(email, resetUrl, token) {
   if (isDevMode()) {
-    console.log(`\n[DEV EMAIL] to ${email}\n  Reset Link: ${resetUrl}\n  (set BREVO_API_KEY to send for real; OTP_DEV_MODE=true forces this log-only mode)\n`);
+    console.log(`\n[DEV EMAIL] to ${email}\n  Reset Link: ${resetUrl}\n  Token: ${token}\n  (set BREVO_API_KEY to send for real; OTP_DEV_MODE=true forces this log-only mode)\n`);
     return { ok: true, dev: true };
   }
 
@@ -262,13 +262,15 @@ export async function sendPasswordResetEmail(email, resetUrl) {
       replyTo: { email: replyTo, name: fromName },
       to: [{ email }],
       subject: "Reset your CollegeParichay password",
-      textContent: `Reset your CollegeParichay password using this link: ${resetUrl}\nValid for 15 minutes.`,
+      textContent: `Reset your CollegeParichay password using this link: ${resetUrl}\nOr enter this 6-digit code: ${token}\nValid for 15 minutes.`,
       htmlContent: emailShell(`
         <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">We received a request to reset your CollegeParichay password.</p>
         <div style="margin:20px 0;text-align:center;">
-          <a href="${esc(resetUrl)}" style="display:inline-block;background:#0d1b3e;color:#fff;font-size:14px;font-weight:700;text-decoration:none;padding:12px 24px;border-radius:8px;">Reset Password</a>
+          <a href="${esc(resetUrl)}" style="display:inline-block;background:#0d1b3e;color:#fff;font-size:14px;font-weight:700;text-decoration:none;padding:12px 24px;border-radius:8px;margin-bottom:16px;">Reset Password</a>
+          <p style="font-size:14px;color:#5b6472;margin:0 0 8px;">Or enter this 6-digit code manually:</p>
+          <div style="display:inline-block;background:#f1f5f9;border:1px solid #e2e8f0;padding:12px 24px;border-radius:8px;font-size:24px;font-weight:900;letter-spacing:6px;color:#0f172a;">${esc(token)}</div>
         </div>
-        <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ This link expires in <b>15 minutes</b>. If you didn't request a password reset, you can safely ignore this email.</p>`,
+        <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ This code expires in <b>15 minutes</b>. If you didn't request a password reset, you can safely ignore this email.</p>`,
         { preheader: "Instructions to reset your CollegeParichay password", eyebrow: "Password Reset", footer: "You're receiving this because someone requested a password reset for this email." }),
     });
   } catch (e) {
