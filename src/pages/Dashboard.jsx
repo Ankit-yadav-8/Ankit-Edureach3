@@ -166,7 +166,7 @@ function DetailField({ label, value }) {
 }
 
 export default function Dashboard() {
-  const { user, token, isLoggedIn, logout, openLogin, logoutEverywhere } = useAuth();
+  const { user, token, isLoggedIn, logout, openLogin, logoutEverywhere, updateUser } = useAuth();
   const navigate = useNavigate();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);

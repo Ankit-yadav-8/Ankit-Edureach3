@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar.jsx";
 import TopBar from "./components/TopBar.jsx";
 import Footer from "./components/Footer.jsx";
 import RouteErrorBoundary from "./components/RouteErrorBoundary.jsx";
+import { useAuth } from "./auth/AuthContext.jsx";
 import { lazyRetry, clearChunkReloadFlag } from "./utils/lazyRetry.js";
 import { ScrollProgress, BackToTop } from "./components/ScrollUtils.jsx";
 const ScrollProgressBar = lazyRetry(() => import("./components/Animations.jsx").then(m => ({ default: m.ScrollProgressBar })));
