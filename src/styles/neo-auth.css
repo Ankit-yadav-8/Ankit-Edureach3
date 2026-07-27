@@ -12,6 +12,21 @@
   box-sizing: border-box;
 }
 
+.auth-backdrop {
+  position: fixed; inset: 0; z-index: 300;
+  background: var(--base);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: calc(var(--nav-h) + 20px) 16px 40px;
+}
+
+.card-anim-wrap { width: 100%; max-width: 900px; margin: auto; background: transparent; box-shadow: none; z-index: 1; }
+
 .neo-auth * {
   box-sizing: border-box;
 }
@@ -23,8 +38,8 @@
 .neo-auth .shell {
   position: relative;
   width: 100%;
-  max-width: 960px;
-  min-height: 600px;
+  max-width: 900px;
+  height: min(720px, 90vh);
   display: flex;
   border-radius: 32px;
   background: var(--base);
@@ -96,8 +111,8 @@
 .neo-auth .dial-label { font-size: 11px; color: var(--text-soft); margin-top: 2px; }
 
 .neo-auth .visual-copy {
-  margin-top: auto;
-  padding-top: 40px;
+  margin-top: 50px;
+  margin-bottom: auto;
   text-align: center;
 }
 .neo-auth .visual-copy h1 {
@@ -121,10 +136,18 @@
 .neo-auth .panel {
   flex: 1 1 56%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 28px 30px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 20px;
 }
+
+/* Scrollbar for form panel */
+.neo-auth .panel::-webkit-scrollbar { width: 6px; }
+.neo-auth .panel::-webkit-scrollbar-thumb { background-color: var(--text-faint); border-radius: 10px; }
+.neo-auth .panel::-webkit-scrollbar-track { background: transparent; }
 .neo-auth .form-wrap { width: 100%; max-width: 340px; }
 
 .neo-auth .tabs {
@@ -297,12 +320,23 @@
 
 /* Adjust size of inputs and buttons on mobile as per requirement "reduce the size of every button... so the user not require to scroll" */
 @media (max-width: 760px) {
-  .neo-auth .shell { flex-direction: column; min-height: 0; max-width: 420px; padding: 14px; gap: 14px; }
-  .neo-auth .visual { padding: 24px; }
+  .auth-backdrop { padding: 0 !important; background: var(--base) !important; }
+  .card-anim-wrap { height: 100%; display: flex; align-items: stretch; justify-content: stretch; }
+  .neo-auth .shell { 
+    flex-direction: column; 
+    height: 100vh;
+    min-height: 100vh; 
+    max-width: 100%; 
+    padding: 14px; gap: 14px; 
+    border-radius: 0;
+    box-shadow: none;
+    overflow-y: auto;
+  }
+  .neo-auth .visual { padding: 24px; min-height: fit-content; }
   .neo-auth .dial-wrap { margin-top: 20px; width: 150px; height: 150px; }
   .neo-auth .dial-inner { width: 104px; height: 104px; }
-  .neo-auth .visual-copy { padding-top: 26px; }
-  .neo-auth .panel { padding: 24px 20px; }
+  .neo-auth .visual-copy { margin-top: 26px; }
+  .neo-auth .panel { padding: 24px 20px; overflow: visible; align-items: flex-start; flex: none; }
   .neo-auth .signup-grid { grid-template-columns: 1fr; gap: 0; }
   
   .neo-auth .field input, .neo-auth .field select {

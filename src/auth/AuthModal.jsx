@@ -446,34 +446,21 @@ export default function AuthModal() {
       {/* ── backdrop ── clicking outside does NOT auto-close (use Skip link below) */}
       <motion.div
         key="backdrop"
-        className="auth-backdrop"
+        className="auth-backdrop neo-auth"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.22 }}
-        style={{
-          position: "fixed", inset: 0, zIndex: 300,
-          background: "var(--base)",
-          overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          boxSizing: "border-box",
-          minHeight: "100%",
-          padding: "calc(var(--nav-h) + 20px) 16px 40px",
-        }}
       >
         {/* ── card ── split-panel: showcase (desktop) + form ── */}
         <motion.div
           key="card"
-          className="neo-auth"
           initial={{ opacity: 0, scale: 0.90, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
           transition={{ type: "spring", stiffness: 420, damping: 30 }}
           onClick={e => e.stopPropagation()}
-          style={{ width: "100%", maxWidth: 960, margin: "auto", background: "transparent", boxShadow: "none", zIndex: 1 }}
+          className="card-anim-wrap"
         >
           <div className="shell">
             {(!mandatory || mode === "login" || mode === "signup") && (
