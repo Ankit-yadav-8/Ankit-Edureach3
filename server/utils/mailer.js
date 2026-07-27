@@ -240,3 +240,39 @@ export async function sendOtpEmail(email, code) {
     return { ok: false, dev: false, error: e.message };
   }
 }
+
+export async function sendPasswordResetEmail(email, resetUrl) {
+  if (isDevMode()) {
+    console.log(`\n[DEV EMAIL] to ${email}\n  Reset Link: ${resetUrl}\n  (set BREVO_API_KEY to send for real; OTP_DEV_MODE=true forces this log-only mode)\n`);
+    return { ok: true, dev: true };
+  }
+
+  const VERIFIED_SENDER = "hello@collegeparichay.in";
+  let fromEmail   = String(process.env.SMTP_FROM_EMAIL || "").trim();
+  const fromName  = (process.env.SMTP_FROM_NAME || "CollegeParichay").trim();
+  const replyTo   = String(process.env.REPLY_TO_EMAIL || "collegeparichay@gmail.com").trim();
+
+  if (!fromEmail || FREE_WEBMAIL.test(fromEmail)) {
+    fromEmail = VERIFIED_SENDER;
+  }
+
+  try {
+    return await postToBrevo({
+      sender: { name: fromName, email: fromEmail },
+      replyTo: { email: replyTo, name: fromName },
+      to: [{ email }],
+      subject: "Reset your CollegeParichay password",
+      textContent: `Reset your CollegeParichay password using this link: ${resetUrl}\nValid for 15 minutes.`,
+      htmlContent: emailShell(`
+        <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">We received a request to reset your CollegeParichay password.</p>
+        <div style="margin:20px 0;text-align:center;">
+          <a href="${esc(resetUrl)}" style="display:inline-block;background:#0d1b3e;color:#fff;font-size:14px;font-weight:700;text-decoration:none;padding:12px 24px;border-radius:8px;">Reset Password</a>
+        </div>
+        <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ This link expires in <b>15 minutes</b>. If you didn't request a password reset, you can safely ignore this email.</p>`,
+        { preheader: "Instructions to reset your CollegeParichay password", eyebrow: "Password Reset", footer: "You're receiving this because someone requested a password reset for this email." }),
+    });
+  } catch (e) {
+    console.error("Password reset email send failed:", e.message);
+    return { ok: false, dev: false, error: e.message };
+  }
+}
