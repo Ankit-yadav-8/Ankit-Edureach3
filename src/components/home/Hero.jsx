@@ -77,36 +77,6 @@ function HeadWord({ w, order }) {
   );
 }
 
-/* ── background: soft frosted-glass shapes drifting behind the hero
-   (rounded squares, a pill and a circle), recreated from the reference
-   with a gentle float + rotate. Kept subtle so the headline stays hero. ── */
-const SHAPES = [
-  { w: 180, h: 180, top: "5%",  left: "2%",  radius: "34%", rot: -12, type: "raised", dur: 20, dx: 14,  dy: 24,  dr: 6 },
-  { w: 130, h: 130, top: "9%",  left: "85%", radius: "30%", rot: 14,  type: "pressed", dur: 24, dx: -16, dy: 28,  dr: -8 },
-  { w: 128, h: 128, top: "64%", left: "3%",  radius: "50%", rot: -14, type: "raised", dur: 22, dx: 18,  dy: -22, dr: 7 },
-  { w: 150, h: 150, top: "72%", left: "84%", radius: "40%", rot: 0,   type: "pressed", dur: 18, dx: -14, dy: -26, dr: 0 },
-];
-
-function HeroBackground() {
-  return (
-    <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-      <div style={{ position: "absolute", inset: 0, background: BASE }} />
-      {SHAPES.map((s, i) => (
-        <motion.div
-          key={i}
-          animate={{ x: [0, s.dx, 0], y: [0, s.dy, 0], rotate: [s.rot, s.rot + s.dr, s.rot], scale: [1, 1.05, 1] }}
-          transition={{ duration: s.dur, repeat: Infinity, ease: "easeInOut", delay: i * 0.6 }}
-          style={{
-            position: "absolute", top: s.top, left: s.left,
-            width: s.w, height: s.h, borderRadius: s.radius,
-            background: BASE,
-            boxShadow: s.type === "raised" ? raised : pressed,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 /* ── 3-step journey: Mentorship → Rank → Dream College ── */
 const STEPS = [
@@ -166,8 +136,6 @@ export default function Hero({ onSearch }) {
   return (
     <>
     <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: BASE }}>
-      {/* ── animated coral aurora background ── */}
-      <HeroBackground />
       {/* ── content ── */}
       <div className="container" style={{
         position: "relative", zIndex: 2, width: "100%", boxSizing: "border-box",
@@ -216,7 +184,7 @@ export default function Hero({ onSearch }) {
         {/* CTAs — wide search bar + two action buttons */}
         <motion.div
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.05 }}
-          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, marginTop: isMobile ? "2rem" : "2.4rem" }}
+          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24, marginTop: isMobile ? "2.4rem" : "2.8rem" }}
         >
           {/* wide search bar */}
           <div
@@ -249,7 +217,7 @@ export default function Hero({ onSearch }) {
           </div>
 
           {/* action buttons */}
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 14 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24, marginTop: isMobile ? "2.5rem" : "3rem" }}>
             <button
               onClick={() => nav("/jee-main#college")}
               style={{
@@ -257,10 +225,10 @@ export default function Hero({ onSearch }) {
                 minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: CORAL, border: "none", color: "#fff",
                 fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
-                boxShadow: `4px 4px 10px rgba(0,0,0,0.15), -4px -4px 10px ${SHADOW_LT}`, transition: "all .2s",
+                boxShadow: `8px 8px 16px rgba(255,90,54,0.35), -8px -8px 16px ${SHADOW_LT}`, transition: "all .2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `6px 6px 14px rgba(0,0,0,0.15), -6px -6px 14px ${SHADOW_LT}`; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `4px 4px 10px rgba(0,0,0,0.15), -4px -4px 10px ${SHADOW_LT}`; }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `10px 10px 20px rgba(255,90,54,0.3), -10px -10px 20px ${SHADOW_LT}`; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `8px 8px 16px rgba(255,90,54,0.35), -8px -8px 16px ${SHADOW_LT}`; }}
             >
               Predict my college <Target size={16} />
             </button>
@@ -271,10 +239,10 @@ export default function Hero({ onSearch }) {
                 minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: BASE, border: "none", color: INK,
                 fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
-                boxShadow: raisedSm, transition: "all .2s",
+                boxShadow: raised, transition: "all .2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = pressed; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = raisedSm; }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `10px 10px 20px ${SHADOW_DK}, -10px -10px 20px ${SHADOW_LT}`; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = raised; }}
             >
               Join community <Users size={16} />
             </button>
@@ -284,7 +252,7 @@ export default function Hero({ onSearch }) {
         {/* social proof — avatar cluster + count, framed by hairlines */}
         <motion.div
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}
-          style={{ display: "inline-flex", alignItems: "center", gap: 14, marginTop: isMobile ? "1.4rem" : "1.6rem" }}
+          style={{ display: "inline-flex", alignItems: "center", gap: 18, marginTop: isMobile ? "4.5rem" : "5.5rem" }}
         >
           <span style={{ width: isMobile ? 26 : 56, height: 1, borderRadius: 1, background: `linear-gradient(90deg, transparent, rgba(0,0,0,0.15))` }} />
           <div style={{ display: "flex" }}>
