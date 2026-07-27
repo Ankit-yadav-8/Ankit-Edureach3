@@ -6,6 +6,7 @@
    ============================================================ */
 
 /* Fonts are loaded asynchronously in index.html — no @import needed here */
+@import url('./neo-auth.css');
 
 /* Hide native number-input spinner arrows everywhere — keep inputs clean */
 input[type="number"] { -moz-appearance: textfield; appearance: textfield; }

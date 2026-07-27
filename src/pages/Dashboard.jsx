@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Mail, Phone, MapPin, GraduationCap, Calendar, LogOut,
   ArrowUpRight, Loader2, Check, Compass, Pencil, X, ShieldCheck,
-  Bot, Sparkles, Send, Award, Hash, Stethoscope, CreditCard,
+  Bot, Sparkles, Send, Award, Trophy, Hash, Stethoscope, CreditCard,
   Gauge, Crosshair, GitCompare, Users, ShieldOff, BookOpen,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -87,6 +87,8 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
     homeState: user?.homeState || "",
     studentClass: user?.studentClass || "",
     neetRank: user?.neetRank ?? "",
+    jeeMainsRank: user?.jeeMainsRank ?? "",
+    jeeAdvancedRank: user?.jeeAdvancedRank ?? "",
   });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
@@ -107,6 +109,8 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
         homeState: f.homeState.trim(),
         studentClass: f.studentClass,
         neetRank: f.neetRank === "" ? null : Number(f.neetRank),
+        jeeMainsRank: f.jeeMainsRank === "" ? null : Number(f.jeeMainsRank),
+        jeeAdvancedRank: f.jeeAdvancedRank === "" ? null : Number(f.jeeAdvancedRank),
       });
       onSaved(updated);
       onClose();
@@ -168,6 +172,10 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
                 </select>
               </div>
               <LabeledInput label="NEET rank" inputMode="numeric" value={f.neetRank} onChange={set("neetRank")} placeholder="—" />
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <LabeledInput label="JEE Mains rank" inputMode="numeric" value={f.jeeMainsRank} onChange={set("jeeMainsRank")} placeholder="—" />
+              <LabeledInput label="JEE Adv rank" inputMode="numeric" value={f.jeeAdvancedRank} onChange={set("jeeAdvancedRank")} placeholder="—" />
             </div>
           </div>
 
@@ -314,6 +322,8 @@ export default function Dashboard() {
     { icon: Calendar,      label: "Member Since",      value: fmtDate(user?.createdAt),      color: "#E08600", bg: "#FEEBCF" },
     { icon: BookOpen,      label: "Class",             value: user?.studentClass || "—",     color: CORAL,     bg: CORAL_SOFT },
     { icon: Stethoscope,   label: "NEET Rank",         value: fmtRank(user?.neetRank),       color: "#0EA371", bg: "#D6F3E5" },
+    { icon: Trophy,        label: "JEE Mains",         value: fmtRank(user?.jeeMainsRank),   color: "#7C3AED", bg: "#EDE7FE" },
+    { icon: Award,         label: "JEE Adv",           value: fmtRank(user?.jeeAdvancedRank),color: "#DB2777", bg: "#FCE1EA" },
   ];
 
   const QUICK = [

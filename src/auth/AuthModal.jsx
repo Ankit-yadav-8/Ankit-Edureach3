@@ -50,6 +50,8 @@ function validate(mode, f) {
     if (!f.homeState.trim())         e.homeState    = "Home state is required";
     if (!f.studentClass)             e.studentClass = "Class is required";
     if (f.neetRank && !isRank(f.neetRank)) e.neetRank = "Enter a valid rank number";
+    if (f.jeeMainsRank && !isRank(f.jeeMainsRank)) e.jeeMainsRank = "Enter a valid rank number";
+    if (f.jeeAdvancedRank && !isRank(f.jeeAdvancedRank)) e.jeeAdvancedRank = "Enter a valid rank number";
     if (!f.password)             e.password = "Password is required";
     else if (f.password.length < 6) e.password = "Minimum 6 characters";
   }
@@ -73,58 +75,19 @@ function validate(mode, f) {
    FIELD — with focus glow, icon, eye-toggle, error
 ══════════════════════════════════════════════════ */
 function Field({ icon: Icon, error, label, ...props }) {
-  const [focused, setFocused] = useState(false);
   const [showPw,  setShowPw]  = useState(false);
   const isPass = props.type === "password";
   const type   = isPass ? (showPw ? "text" : "password") : (props.type || "text");
 
-  const borderColor = error ? "#ef4444" : focused ? OR : "#e2e8f0";
-  const shadow      = error
-    ? "0 0 0 3px rgba(239,68,68,.12)"
-    : focused
-      ? `0 0 0 3px ${OR}1a, 0 1px 4px rgba(0,0,0,.06)`
-      : "0 1px 3px rgba(0,0,0,.04)";
-
   return (
-    <div style={{ marginBottom: error ? 6 : 14 }}>
-      {label && (
-        <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 5, display: "block", letterSpacing: ".03em" }}>
-          {label}
-        </label>
-      )}
-      <div style={{
-        position: "relative", borderRadius: 12,
-        border: `1.5px solid ${error ? "#ef4444" : "transparent"}`,
-        background: error ? "#fef2f2" : focused ? "#fff" : "#f9fafb",
-        transition: "all .2s",
-        boxShadow: error ? "0 0 0 2px rgba(239,68,68,.1)" : focused ? "0 0 0 2px rgba(17,24,39,.1)" : "none",
-        display: "flex", alignItems: "center",
-      }}>
-        <Icon size={16} style={{
-          position: "absolute", left: 16,
-          color: error ? "#ef4444" : focused ? "#111827" : "#94a3b8",
-          transition: "color .2s", flexShrink: 0,
-        }} />
-        <input
-          {...props}
-          type={type}
-          onFocus={(e) => { setFocused(true); props.onFocus?.(e); }}
-          onBlur={(e)  => { setFocused(false); props.onBlur?.(e); }}
-          style={{
-            flex: 1, border: "none", background: "transparent", outline: "none",
-            paddingLeft: 42, paddingRight: isPass ? 46 : 16,
-            height: 44, fontSize: 14, fontWeight: 500,
-            color: "#111827", borderRadius: 12,
-            fontFamily: "inherit",
-          }}
-        />
+    <div style={{ marginBottom: error ? 6 : 0 }}>
+      {label && <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 5, display: "block" }}>{label}</label>}
+      <div className={`field ${error ? 'error' : ''}`}>
+        <Icon className="icon" />
+        <input {...props} type={type} />
         {isPass && (
-          <button type="button" onClick={() => setShowPw(v => !v)}
-            style={{ position: "absolute", right: 12, background: "none", border: "none",
-              cursor: "pointer", color: focused ? OR : "#94a3b8",
-              padding: 4, display: "grid", placeItems: "center", borderRadius: 6,
-              transition: "color .18s" }}>
-            {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
+          <button type="button" className="toggle-eye" onClick={() => setShowPw(v => !v)}>
+            {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         )}
       </div>
@@ -151,57 +114,18 @@ function Field({ icon: Icon, error, label, ...props }) {
    SELECT FIELD — same styling as Field, native dropdown
 ══════════════════════════════════════════════════ */
 function SelectField({ icon: Icon, error, label, options, placeholder, value, ...props }) {
-  const [focused, setFocused] = useState(false);
-  const borderColor = error ? "#ef4444" : focused ? OR : "#e2e8f0";
-  const shadow      = error
-    ? "0 0 0 3px rgba(239,68,68,.12)"
-    : focused
-      ? `0 0 0 3px ${OR}1a, 0 1px 4px rgba(0,0,0,.06)`
-      : "0 1px 3px rgba(0,0,0,.04)";
-
   return (
-    <div style={{ marginBottom: error ? 6 : 14 }}>
-      {label && (
-        <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 5, display: "block", letterSpacing: ".03em" }}>
-          {label}
-        </label>
-      )}
-      <div style={{
-        position: "relative", borderRadius: 12,
-        border: `1.5px solid ${error ? "#ef4444" : "transparent"}`,
-        background: error ? "#fef2f2" : focused ? "#fff" : "#f9fafb",
-        transition: "all .2s",
-        boxShadow: error ? "0 0 0 2px rgba(239,68,68,.1)" : focused ? "0 0 0 2px rgba(17,24,39,.1)" : "none",
-        display: "flex", alignItems: "center",
-      }}>
-        <Icon size={16} style={{
-          position: "absolute", left: 16,
-          color: error ? "#ef4444" : focused ? "#111827" : "#94a3b8",
-          transition: "color .2s", flexShrink: 0, zIndex: 1,
-        }} />
-        <select
-          {...props}
-          value={value}
-          onFocus={(e) => { setFocused(true); props.onFocus?.(e); }}
-          onBlur={(e)  => { setFocused(false); props.onBlur?.(e); }}
-          style={{
-            flex: 1, width: "100%", border: "none", background: "transparent", outline: "none",
-            paddingLeft: 42, paddingRight: 38,
-            height: 44, fontSize: 14, fontWeight: 500,
-            color: value ? "#111827" : "#94a3b8", borderRadius: 12,
-            fontFamily: "inherit", appearance: "none", WebkitAppearance: "none",
-            MozAppearance: "none", cursor: "pointer",
-          }}
-        >
+    <div style={{ marginBottom: error ? 6 : 0 }}>
+      {label && <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 5, display: "block" }}>{label}</label>}
+      <div className={`field ${error ? 'error' : ''}`}>
+        <Icon className="icon" />
+        <select {...props} value={value}>
           <option value="" disabled>{placeholder || "Select…"}</option>
           {options.map((o) => (
-            <option key={o} value={o} style={{ color: "#0f172a" }}>{o}</option>
+            <option key={o} value={o}>{o}</option>
           ))}
         </select>
-        <ChevronDown size={16} style={{
-          position: "absolute", right: 12, pointerEvents: "none",
-          color: focused ? OR : "#94a3b8", transition: "color .18s",
-        }} />
+        <ChevronDown size={16} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "var(--text-soft)" }} />
       </div>
       <AnimatePresence>
         {error && (
@@ -232,26 +156,11 @@ function ActionBtn({ busy, disabled, label, busyLabel, onClick, shake }) {
       transition={{ duration: 0.38, type: "tween" }}
       onClick={onClick}
       disabled={busy || disabled}
-      style={{
-        width: "100%", height: 44, borderRadius: 12,
-        background: busy || disabled
-          ? `linear-gradient(135deg, ${OR}99, ${ORD}88)`
-          : `linear-gradient(135deg, ${OR} 0%, ${ORD} 100%)`,
-        border: "none", color: "#fff",
-        fontFamily: "Sora, sans-serif", fontWeight: 700, fontSize: 14,
-        cursor: busy || disabled ? "not-allowed" : "pointer",
-        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-        boxShadow: busy || disabled ? "none" : `0 4px 12px rgba(249,115,22,0.3)`,
-        transition: "box-shadow .2s, background .2s, transform .1s",
-        letterSpacing: ".01em",
-      }}
-      onMouseEnter={(e) => { if (!busy && !disabled) e.currentTarget.style.transform = "translateY(-1px)"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
-      onMouseDown={(e)  => { if (!busy && !disabled) e.currentTarget.style.transform = "translateY(0px)"; }}
+      className="submit"
+      style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
     >
-      {busy
-        ? <><Loader2 size={17} style={{ animation: "spin .75s linear infinite" }} /> {busyLabel}</>
-        : label}
+      {busy ? <Loader2 size={16} style={{ animation: "spin .75s linear infinite" }} /> : null}
+      {busy ? busyLabel || "Please wait…" : label}
     </motion.button>
   );
 }
@@ -493,7 +402,7 @@ export default function AuthModal() {
   };
 
   const doLogin   = run(async () => { await login(f.email.trim(), f.password); close(); }, "login");
-  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, studentClass: f.studentClass, neetRank: f.neetRank ? Number(f.neetRank) : undefined }); close(); }, "signup");
+  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, studentClass: f.studentClass, neetRank: f.neetRank ? Number(f.neetRank) : undefined, jeeMainsRank: f.jeeMainsRank ? Number(f.jeeMainsRank) : undefined, jeeAdvancedRank: f.jeeAdvancedRank ? Number(f.jeeAdvancedRank) : undefined }); close(); }, "signup");
   const doSendOtp = run(async () => {
     setNotReg(false);
     try {
@@ -544,8 +453,7 @@ export default function AuthModal() {
         transition={{ duration: 0.22 }}
         style={{
           position: "fixed", inset: 0, zIndex: 300,
-          background: "rgba(255,247,239,.82)",
-          backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+          background: "var(--base)",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -559,391 +467,234 @@ export default function AuthModal() {
         {/* ── card ── split-panel: showcase (desktop) + form ── */}
         <motion.div
           key="card"
-          className="auth-card"
+          className="neo-auth"
           initial={{ opacity: 0, scale: 0.90, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
           transition={{ type: "spring", stiffness: 420, damping: 30 }}
           onClick={e => e.stopPropagation()}
+          style={{ width: "100%", maxWidth: 960, margin: "auto", background: "transparent", boxShadow: "none", zIndex: 1 }}
         >
+          <div className="shell">
+            {(!mandatory || mode === "login" || mode === "signup") && (
+            <div className="visual">
+              <div className="brand">
+                <div className="brand-mark raised-sm">CP</div>
+                <div className="brand-name">College<b>Parichay</b></div>
+              </div>
 
-          {/* ─── LEFT: animated showcase (login / signup only, desktop) ─── */}
-          {(mode === "login" || mode === "signup") && <ShowcasePanel mode={mode} />}
-
-          {/* ─── RIGHT: form panel ─── */}
-          <div className="auth-form-panel">
-
-          {/* ─── BUSY progress bar ─── */}
-          <AnimatePresence>
-            {busy && (
-              <motion.div
-                key="prog"
-                initial={{ scaleX: 0, opacity: 0 }}
-                animate={{ scaleX: 1, opacity: 1 }}
-                exit={{ opacity: 0 }}
-                style={{
-                  position: "absolute", top: 0, left: 0, right: 0, height: 3,
-                  background: `linear-gradient(90deg, ${OR}, #fbbf24, ${OR})`,
-                  backgroundSize: "200% 100%",
-                  animation: "brandGradient 1.2s linear infinite",
-                  transformOrigin: "left",
-                  zIndex: 10,
-                }}
-              />
-            )}
-          </AnimatePresence>
-
-          {/* ─── HEADER BAND ─── */}
-          <div className="auth-header-band" style={{
-            background: `linear-gradient(135deg, #fff7ef 0%, #ffe9d4 45%, #ffdfc2 100%)`,
-            borderBottom: "1px solid rgba(255, 105, 61,.16)",
-            position: "relative", overflow: "hidden",
-          }}>
-            {/* glow orbs */}
-            <div style={{ position: "absolute", top: -30, right: -20, width: 160, height: 160, borderRadius: "50%", background: `radial-gradient(circle, ${OR}33 0%, transparent 70%)`, pointerEvents: "none" }} />
-            <div style={{ position: "absolute", bottom: -40, left: -20, width: 120, height: 120, borderRadius: "50%", background: `radial-gradient(circle, ${OR}1f 0%, transparent 70%)`, pointerEvents: "none" }} />
-
-            {/* top bar: back + close */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, position: "relative", zIndex: 1 }}>
-              {BACK.includes(mode) ? (
-                <motion.button
-                  whileHover={{ x: -2 }}
-                  onClick={() => go(mode === "otpCode" ? "otpEmail" : "login")}
-                  style={{ background: "rgba(255, 105, 61,.10)", border: "1px solid rgba(255, 105, 61,.25)", borderRadius: 8, cursor: "pointer", color: "#c2410c", padding: "5px 12px", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 5 }}
-                >
-                  <ArrowLeft size={14} /> Back
-                </motion.button>
-              ) : (
-                /* brand pill */
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ width: 30, height: 30, borderRadius: "50%", background: `linear-gradient(135deg,${OR},${ORD})`, display: "grid", placeItems: "center", boxShadow: `0 4px 12px ${OR}55` }}>
-                    <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 12, letterSpacing: "-0.5px", lineHeight: 1 }}>CP</span>
-                  </span>
-                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: ".95rem", color: "#fff" }}>
-                    College <span style={{ color: OR }}>Parichay</span>
-                  </span>
+              <div className="dial-wrap raised">
+                <svg viewBox="0 0 190 190">
+                  <circle className="dial-track" cx="95" cy="95" r="80" fill="none" strokeWidth="10"/>
+                  <circle className="dial-progress" cx="95" cy="95" r="80" fill="none" strokeWidth="10" strokeDasharray="502" strokeDashoffset="60"/>
+                </svg>
+                <div className="dial-inner">
+                  <span className="dial-num">98.7</span>
+                  <span className="dial-label">percentile</span>
                 </div>
-              )}
-
-              {!mandatory && (
-                <button onClick={close} aria-label="Close"
-                  style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(255, 255, 255,.10)", border: "1px solid rgba(255, 255, 255,.22)", cursor: "pointer", color: "#fff", display: "grid", placeItems: "center", transition: "background .15s" }}
-                  onMouseEnter={e => e.currentTarget.style.background = "rgba(255, 255, 255,.2)"}
-                  onMouseLeave={e => e.currentTarget.style.background = "rgba(255, 255, 255,.10)"}
-                  title="Close"
-                >
-                  <X size={15} />
-                </button>
-              )}
-            </div>
-
-            {/* Login / Sign up tab switcher moved to top */}
-            {(mode === "login" || mode === "signup") && (
-              <div style={{
-                display: "flex", background: "#f3f4f6", borderRadius: 14,
-                padding: 4, marginBottom: 24, position: "relative", zIndex: 1,
-              }}>
-                {[["login", "Log in"], ["signup", "Sign up"]].map(([m, lbl]) => (
-                  <button key={m} onClick={() => go(m)}
-                    style={{
-                      flex: 1, border: "none", cursor: "pointer", borderRadius: 10,
-                      padding: "10px 0", fontSize: 13.5, fontWeight: 700, fontFamily: "inherit",
-                      background: mode === m ? OR : "transparent",
-                      color: mode === m ? "#fff" : "#6b7280",
-                      transition: "all .2s",
-                      boxShadow: mode === m ? `0 4px 10px rgba(249,115,22,0.3)` : "none",
-                    }}
-                  >
-                    {lbl}
-                  </button>
-                ))}
               </div>
+
+              <div className="visual-copy">
+                <h1>Know your rank.<br/>Find your <span>dream college.</span></h1>
+                <p>Built by IIT Roorkee alumni — rank prediction, college shortlists and mentorship in one place.</p>
+              </div>
+            </div>
             )}
 
-            {/* title area */}
-            <motion.div
-              key={mode + "_head"}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25 }}
-              style={{ position: "relative", zIndex: 1 }}
-            >
-              <div style={{ fontSize: 28, marginBottom: 6, lineHeight: 1 }}>{H.emoji}</div>
-              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.35rem", color: "#1a1a2e", margin: "0 0 5px", letterSpacing: "-0.3px" }}>
-                {H.title}
-              </h3>
-              <p style={{ color: "#6b7280", fontSize: 13.5, margin: 0, lineHeight: 1.5 }}>
-                {mode === "otpCode"
-                  ? `Code sent to ${f.email || "your email"}`
-                  : H.sub}
-              </p>
-            </motion.div>
-          </div>
-
-          {/* ─── FORM BODY ─── */}
-          <div className="auth-form-body">
-
-            {/* feature pills — login/signup only */}
-            {(mode === "login" || mode === "signup") && <FeaturePills />}
-
-            {/* ── form slide animation ── */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={mode}
-                initial={{ opacity: 0, x: 18 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -14 }}
-                transition={{ duration: 0.2 }}
-              >
-
-                {/* ═══ LOGIN ═══ */}
-                {mode === "login" && (<>
-                  <Field icon={Mail} type="email" placeholder="you@email.com" value={f.email}
-                    error={fe.email} onChange={e => set("email", e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && doLogin()} autoComplete="email" />
-                  <Field icon={Lock} type="password" placeholder="Password" value={f.password}
-                    error={fe.password} onChange={e => set("password", e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && doLogin()} autoComplete="current-password" />
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: -6, marginBottom: 16 }}>
-                    <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontSize: 12, color: "#6b7280" }}>
-                      <input type="checkbox" checked={f.remember} onChange={e => set("remember", e.target.checked)} style={{ cursor: "pointer" }} />
-                      Remember me
-                    </label>
-                    <button onClick={() => go("forgot")} style={{ background: "none", border: "none", color: OR, fontWeight: 600, cursor: "pointer", fontSize: 12, padding: 0 }}>
-                      Forgot password?
-                    </button>
+            <div className="panel" style={{ width: (mode !== "login" && mode !== "signup") ? "100%" : undefined }}>
+              <div className="form-wrap" style={{ margin: (mode !== "login" && mode !== "signup") ? "auto" : undefined }}>
+                {(mode === "login" || mode === "signup") && (
+                  <div className={`tabs ${mode === "signup" ? "signup" : ""}`}>
+                    <div className="tab-glider"></div>
+                    <button type="button" className={mode === "login" ? "active" : ""} onClick={() => go("login")}>Log in</button>
+                    <button type="button" className={mode === "signup" ? "active" : ""} onClick={() => go("signup")}>Sign up</button>
                   </div>
-                  <ActionBtn busy={busy} label="Log in" busyLabel={busyLabel} onClick={doLogin} shake={shake} />
-                  
-                  <div style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: "#6b7280" }}>
-                    New to CollegeParichay? <button onClick={() => go("signup")} style={{ background: "none", border: "none", color: OR, fontWeight: 700, cursor: "pointer", padding: 0 }}>Create an account</button>
-                  </div>
-                </>)}
+                )}
+                
+                {/* ── form slide animation ── */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={mode}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                     {/* login */}
+                     {mode === "login" && (<div className="form active">
+                        <h2 className="title">Welcome back</h2>
+                        <p className="sub">Log in to continue your college search.</p>
+                        
+                        <Field icon={Mail} type="email" placeholder="you@email.com" value={f.email}
+                          error={fe.email} onChange={e => set("email", e.target.value)}
+                          onKeyDown={e => e.key === "Enter" && doLogin()} autoComplete="email" />
+                        <Field icon={Lock} type="password" placeholder="Password" value={f.password}
+                          error={fe.password} onChange={e => set("password", e.target.value)}
+                          onKeyDown={e => e.key === "Enter" && doLogin()} autoComplete="current-password" />
+                        
+                        <div className="row-between">
+                          <label className="remember"><input type="checkbox" checked={f.remember} onChange={e => set("remember", e.target.checked)} /> Remember me</label>
+                          <button type="button" onClick={() => go("forgot")}>Forgot password?</button>
+                        </div>
+                        
+                        <ActionBtn busy={busy} label="Log in" busyLabel={busyLabel} onClick={doLogin} shake={shake} />
+                        
+                        <p className="switch-line">New to CollegeParichay? <button type="button" onClick={() => go("signup")}>Create an account</button></p>
+                     </div>)}
 
-                {/* ═══ SIGNUP ═══ */}
-                {mode === "signup" && (<>
-                  <div className="auth-signup-grid">
-                    <div style={{ gridColumn: "1/-1" }}>
-                      <Field icon={User} placeholder="Full name *" value={f.name}
-                        error={fe.name} onChange={e => set("name", e.target.value)} autoComplete="name" />
-                    </div>
-                    <Field icon={Phone} type="tel" inputMode="numeric" maxLength={10}
-                      placeholder="Mobile number *" value={f.phone}
-                      error={fe.phone} onChange={e => set("phone", e.target.value.replace(/\D/g, ""))} autoComplete="tel" />
-                    <Field icon={GraduationCap} placeholder="Coaching *" value={f.coaching}
-                      error={fe.coaching} onChange={e => set("coaching", e.target.value)} />
-                    <div style={{ gridColumn: "1/-1" }}>
-                      <SelectField icon={MapPin} placeholder="Home state *" value={f.homeState}
-                        options={INDIAN_STATES} error={fe.homeState}
-                        onChange={e => set("homeState", e.target.value)} />
-                    </div>
-                    <div style={{ gridColumn: "1/-1" }}>
-                      <Field icon={Mail} type="email" placeholder="Email address *" value={f.email}
-                        error={fe.email} onChange={e => set("email", e.target.value)} autoComplete="email" />
-                    </div>
-                    <div style={{ gridColumn: "1/-1" }}>
-                      <SelectField icon={BookOpen} placeholder="Class *" value={f.studentClass}
-                        options={["11", "12", "12+"]} error={fe.studentClass}
-                        onChange={e => set("studentClass", e.target.value)} />
-                    </div>
-                    <div style={{ gridColumn: "1/-1" }}>
-                      <Field icon={Stethoscope} type="tel" inputMode="numeric"
-                        placeholder="NEET rank (optional)" value={f.neetRank}
-                        error={fe.neetRank} onChange={e => set("neetRank", e.target.value.replace(/\D/g, ""))} />
-                    </div>
-                    <div style={{ gridColumn: "1/-1" }}>
-                      <Field icon={Lock} type="password" placeholder="Password (min 6 chars) *" value={f.password}
-                        error={fe.password} onChange={e => set("password", e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && doSignup()} autoComplete="new-password" />
-                    </div>
-                  </div>
-                  {/* password strength */}
-                  {f.password.length > 0 && (
-                    <div style={{ display: "flex", gap: 4, marginTop: -4, marginBottom: 12 }}>
-                      {[1,2,3,4].map(i => {
-                        const strength = f.password.length >= 10 && /[A-Z]/.test(f.password) && /\d/.test(f.password) ? 4 : f.password.length >= 8 ? 3 : f.password.length >= 6 ? 2 : 1;
-                        const color = strength >= 4 ? "#22c55e" : strength === 3 ? "#84cc16" : strength === 2 ? "#f59e0b" : "#ef4444";
-                        return <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= strength ? color : "#e2e8f0", transition: "background .2s" }} />;
-                      })}
-                      <span style={{ fontSize: 10.5, color: "#94a3b8", whiteSpace: "nowrap" }}>
-                        {f.password.length < 6 ? "Too short" : f.password.length < 8 ? "Weak" : f.password.length >= 10 && /[A-Z]/.test(f.password) ? "Strong" : "OK"}
-                      </span>
-                    </div>
+                     {/* signup */}
+                     {mode === "signup" && (<div className="form active">
+                        <h2 className="title">Create your account</h2>
+                        <p className="sub">Start predicting your rank in seconds.</p>
+
+                        <div className="signup-grid">
+                          <div className="full-w">
+                            <Field icon={User} placeholder="Full name *" value={f.name} error={fe.name} onChange={e => set("name", e.target.value)} autoComplete="name" />
+                          </div>
+                          <Field icon={Phone} type="tel" inputMode="numeric" maxLength={10} placeholder="Mobile number *" value={f.phone} error={fe.phone} onChange={e => set("phone", e.target.value.replace(/\D/g, ""))} autoComplete="tel" />
+                          <Field icon={GraduationCap} placeholder="Coaching *" value={f.coaching} error={fe.coaching} onChange={e => set("coaching", e.target.value)} />
+                          
+                          <div className="full-w">
+                            <SelectField icon={MapPin} placeholder="Home state *" value={f.homeState} options={INDIAN_STATES} error={fe.homeState} onChange={e => set("homeState", e.target.value)} />
+                          </div>
+                          <div className="full-w">
+                            <Field icon={Mail} type="email" placeholder="Email address *" value={f.email} error={fe.email} onChange={e => set("email", e.target.value)} autoComplete="email" />
+                          </div>
+                          <div className="full-w">
+                            <SelectField icon={BookOpen} placeholder="Class *" value={f.studentClass} options={["11", "12", "12+"]} error={fe.studentClass} onChange={e => set("studentClass", e.target.value)} />
+                          </div>
+                          <div className="full-w">
+                            <Field icon={Stethoscope} type="tel" inputMode="numeric" placeholder="NEET rank (optional)" value={f.neetRank} error={fe.neetRank} onChange={e => set("neetRank", e.target.value.replace(/\D/g, ""))} />
+                          </div>
+                          <div className="full-w">
+                            <Field icon={Trophy} type="tel" inputMode="numeric" placeholder="JEE Mains rank (optional)" value={f.jeeMainsRank} error={fe.jeeMainsRank} onChange={e => set("jeeMainsRank", e.target.value.replace(/\D/g, ""))} />
+                          </div>
+                          <div className="full-w">
+                            <Field icon={Award} type="tel" inputMode="numeric" placeholder="JEE Adv rank (optional)" value={f.jeeAdvancedRank} error={fe.jeeAdvancedRank} onChange={e => set("jeeAdvancedRank", e.target.value.replace(/\D/g, ""))} />
+                          </div>
+                          <div className="full-w">
+                            <Field icon={Lock} type="password" placeholder="Create password *" value={f.password} error={fe.password} onChange={e => set("password", e.target.value)} onKeyDown={e => e.key === "Enter" && doSignup()} autoComplete="new-password" />
+                          </div>
+                        </div>
+
+                        {f.password.length > 0 && (
+                          <div style={{ display: "flex", gap: 4, marginTop: 12, marginBottom: 12 }}>
+                            {[1,2,3,4].map(i => {
+                              const strength = f.password.length >= 10 && /[A-Z]/.test(f.password) && /\d/.test(f.password) ? 4 : f.password.length >= 8 ? 3 : f.password.length >= 6 ? 2 : 1;
+                              const color = strength >= 4 ? "#22c55e" : strength === 3 ? "#84cc16" : strength === 2 ? "#f59e0b" : "#ef4444";
+                              return <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= strength ? color : "#e2e8f0", transition: "background .2s" }} />;
+                            })}
+                          </div>
+                        )}
+                        
+                        <div className="row-between" style={{ justifyContent: "flex-start", gap: 6 }}>
+                          <label className="remember" style={{ fontSize: 11 }}><input type="checkbox" required /> I agree to the Terms and Privacy Policy</label>
+                        </div>
+                        
+                        <ActionBtn busy={busy} label="Create account" busyLabel={busyLabel} onClick={doSignup} shake={shake} />
+                        
+                        <p className="switch-line">Already have an account? <button type="button" onClick={() => go("login")}>Log in</button></p>
+                     </div>)}
+
+                     {/* otpEmail */}
+                     {mode === "otpEmail" && (<div className="form active">
+                        <h2 className="title">Email Verification</h2>
+                        <p className="sub">Enter your email to receive an OTP.</p>
+                        
+                        <Field icon={User} placeholder="Your name (optional)" value={f.name} onChange={e => set("name", e.target.value)} />
+                        <Field icon={Mail} type="email" placeholder="Email address *" value={f.email} error={fe.email} onChange={e => { set("email", e.target.value); if (notReg) setNotReg(false); }} onKeyDown={e => e.key === "Enter" && doSendOtp()} autoComplete="email" />
+                        
+                        <ActionBtn busy={busy} label="Send OTP" busyLabel={busyLabel} onClick={doSendOtp} shake={shake} />
+                        <p className="switch-line"><button type="button" onClick={() => go("login")}>Back to login</button></p>
+                     </div>)}
+
+                     {/* otpCode */}
+                     {mode === "otpCode" && (<div className="form active">
+                        <h2 className="title">Enter Code</h2>
+                        <p className="sub">Code sent to {f.email || "your email"}</p>
+                        
+                        <div style={{ textAlign: "center", marginBottom: 20 }}>
+                          <input
+                            inputMode="numeric" maxLength={6}
+                            placeholder="------"
+                            value={f.code}
+                            onChange={e => set("code", e.target.value.replace(/\D/g, ""))}
+                            onKeyDown={e => e.key === "Enter" && f.code.length === 6 && doVerify()}
+                            autoFocus
+                            style={{
+                              width: "100%", textAlign: "center", letterSpacing: "1em",
+                              fontSize: 34, fontWeight: 900, color: "var(--text)",
+                              height: 72, border: `2px solid ${f.code.length === 6 ? "var(--orange)" : "transparent"}`,
+                              borderRadius: 16, background: "transparent",
+                              outline: "none", fontFamily: "Sora, monospace",
+                              transition: "all .2s",
+                              boxShadow: "inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light)",
+                            }}
+                          />
+                        </div>
+                        
+                        <ActionBtn busy={busy} disabled={f.code.length < 6} label="Verify & continue" busyLabel={busyLabel} onClick={doVerify} shake={shake} />
+                        <p className="switch-line"><button type="button" onClick={doSendOtp} disabled={busy}>Resend code</button></p>
+                     </div>)}
+
+                     {/* forgot */}
+                     {mode === "forgot" && (<div className="form active">
+                        <h2 className="title">Reset Password</h2>
+                        <p className="sub">Enter your email to receive a reset link.</p>
+                        
+                        <Field icon={Mail} type="email" placeholder="Registered email address *" value={f.email} error={fe.email} onChange={e => set("email", e.target.value)} onKeyDown={e => e.key === "Enter" && doForgot()} autoComplete="email" />
+                        
+                        <ActionBtn busy={busy} label="Send reset link" busyLabel={busyLabel} onClick={doForgot} shake={shake} />
+                        <p className="switch-line"><button type="button" onClick={() => go("login")}>Back to login</button></p>
+                     </div>)}
+
+                     {/* reset */}
+                     {mode === "reset" && (<div className="form active">
+                        <h2 className="title">Set New Password</h2>
+                        <p className="sub">Enter your reset token and new password.</p>
+                        
+                        <Field icon={KeyRound} placeholder="Reset token *" value={f.token} error={fe.token} onChange={e => set("token", e.target.value)} />
+                        <Field icon={Lock} type="password" placeholder="New password (min 6 chars) *" value={f.password} error={fe.password} onChange={e => set("password", e.target.value)} onKeyDown={e => e.key === "Enter" && doReset()} autoComplete="new-password" />
+                        
+                        <ActionBtn busy={busy} label="Set new password" busyLabel={busyLabel} onClick={doReset} shake={shake} />
+                        <p className="switch-line"><button type="button" onClick={() => go("login")}>Back to login</button></p>
+                     </div>)}
+
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* banner */}
+                <AnimatePresence>
+                  {banner.text && (
+                    <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} style={{ marginTop: 20, textAlign: "center", color: banner.type === 'error' ? 'red' : 'green', fontSize: 13 }}>
+                      {banner.text}
+                    </motion.div>
                   )}
-                  <p style={{ fontSize: 11, color: "#94a3b8", marginBottom: 14 }}>* Required fields</p>
-                  <ActionBtn busy={busy} label="Sign up" busyLabel={busyLabel} onClick={doSignup} shake={shake} />
-                  <div style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: "#6b7280" }}>
-                    Already have an account? <button onClick={() => go("login")} style={{ background: "none", border: "none", color: OR, fontWeight: 700, cursor: "pointer", padding: 0 }}>Log in</button>
-                  </div>
-                </>)}
-
-                {/* ═══ OTP EMAIL ═══ */}
-                {mode === "otpEmail" && (<>
-                  <Field icon={User} placeholder="Your name (optional)" value={f.name}
-                    onChange={e => set("name", e.target.value)} />
-                  <Field icon={Mail} type="email" placeholder="Email address *" value={f.email}
-                    error={fe.email} onChange={e => { set("email", e.target.value); if (notReg) setNotReg(false); }}
-                    onKeyDown={e => e.key === "Enter" && doSendOtp()} autoComplete="email" />
-                  {notReg ? (
-                    <button onClick={() => go("signup")} style={{
-                      width: "100%", height: 48, borderRadius: 13, border: "none",
-                      background: OR, color: "#fff", fontWeight: 700, fontSize: 14.5,
-                      cursor: "pointer", display: "flex", alignItems: "center",
-                      justifyContent: "center", gap: 8, fontFamily: "inherit",
-                      boxShadow: `0 8px 20px -8px ${OR}`, transition: "transform .12s",
-                    }}
-                      onMouseDown={e => e.currentTarget.style.transform = "scale(.98)"}
-                      onMouseUp={e => e.currentTarget.style.transform = "scale(1)"}
-                      onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
-                    >
-                      Sign up now →
-                    </button>
-                  ) : (
-                    <ActionBtn busy={busy} label="Send OTP →" busyLabel={busyLabel} onClick={doSendOtp} shake={shake} />
-                  )}
-                </>)}
-
-                {/* ═══ OTP CODE ═══ */}
-                {mode === "otpCode" && (<>
-                  <div style={{ textAlign: "center", marginBottom: 20 }}>
-                    {/* big OTP input */}
-                    <input
-                      inputMode="numeric" maxLength={6}
-                      placeholder="——————"
-                      value={f.code}
-                      onChange={e => set("code", e.target.value.replace(/\D/g, ""))}
-                      onKeyDown={e => e.key === "Enter" && f.code.length === 6 && doVerify()}
-                      autoFocus
+                </AnimatePresence>
+                
+                {/* ── skip link — only when auth is optional (logged-in re-auth) ── */}
+                {!mandatory && (mode === "login" || mode === "signup") && (
+                  <div style={{ textAlign: "center", marginTop: 14 }}>
+                    <button
+                      onClick={close}
                       style={{
-                        width: "100%", textAlign: "center", letterSpacing: "1em",
-                        fontSize: 34, fontWeight: 900, color: "#1e293b",
-                        height: 72, border: `2px solid ${f.code.length === 6 ? OR : "#e2e8f0"}`,
-                        borderRadius: 16, background: f.code.length === 6 ? `${OR}08` : "#f8fafc",
-                        outline: "none", fontFamily: "Sora, monospace",
-                        transition: "all .2s",
-                        boxShadow: f.code.length === 6 ? `0 0 0 4px ${OR}1a` : "none",
+                        background: "none", border: "none", cursor: "pointer",
+                        color: "#b0bac8", fontSize: 12, fontWeight: 500,
+                        textDecoration: "underline", textDecorationStyle: "dotted",
+                        padding: "4px 8px", borderRadius: 6,
+                        transition: "color .15s",
+                        fontFamily: "inherit",
                       }}
-                    />
-                    {/* pip progress */}
-                    <div style={{ display: "flex", justifyContent: "center", gap: 7, marginTop: 14 }}>
-                      {Array.from({ length: 6 }).map((_, i) => (
-                        <motion.div key={i}
-                          animate={{ scale: i === f.code.length - 1 ? [1, 1.4, 1] : 1 }}
-                          transition={{ duration: .2 }}
-                          style={{
-                            width: 9, height: 9, borderRadius: "50%",
-                            background: i < f.code.length ? OR : "#e2e8f0",
-                            transition: "background .15s",
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <p style={{ fontSize: 12, color: "#94a3b8", marginTop: 10 }}>
-                      Enter the 6-digit code sent to your email
-                    </p>
+                      onMouseEnter={e => e.currentTarget.style.color = "#64748b"}
+                      onMouseLeave={e => e.currentTarget.style.color = "#b0bac8"}
+                    >
+                      Skip for now — browse as guest
+                    </button>
                   </div>
-                  <ActionBtn busy={busy} disabled={f.code.length < 6} label="Verify & continue →"
-                    busyLabel={busyLabel} onClick={doVerify} shake={shake} />
-                  <button onClick={doSendOtp} disabled={busy}
-                    style={{
-                      width: "100%", height: 44, marginTop: 10, borderRadius: 12,
-                      background: "transparent", border: `1.5px solid ${OR}30`,
-                      color: OR, fontWeight: 600, fontSize: 13.5, cursor: "pointer",
-                      transition: "background .15s, border-color .15s",
-                      fontFamily: "inherit",
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.background = `${OR}0d`; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-                  >
-                    Resend code
-                  </button>
-                </>)}
+                )}
 
-                {/* ═══ FORGOT ═══ */}
-                {mode === "forgot" && (<>
-                  <Field icon={Mail} type="email" placeholder="Registered email address *" value={f.email}
-                    error={fe.email} onChange={e => set("email", e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && doForgot()} autoComplete="email" />
-                  <ActionBtn busy={busy} label="Send reset link →" busyLabel={busyLabel} onClick={doForgot} shake={shake} />
-                </>)}
-
-                {/* ═══ RESET ═══ */}
-                {mode === "reset" && (<>
-                  <Field icon={KeyRound} placeholder="Reset token *" value={f.token}
-                    error={fe.token} onChange={e => set("token", e.target.value)} />
-                  <Field icon={Lock} type="password" placeholder="New password (min 6 chars) *" value={f.password}
-                    error={fe.password} onChange={e => set("password", e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && doReset()} autoComplete="new-password" />
-                  <ActionBtn busy={busy} label="Set new password →" busyLabel={busyLabel} onClick={doReset} shake={shake} />
-                </>)}
-
-              </motion.div>
-            </AnimatePresence>
-
-            {/* ── slow network hint ── */}
-            <AnimatePresence>
-              {slowNet && busy && (
-                <motion.div key="slow" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                  style={{
-                    marginTop: 10,
-                    background: "linear-gradient(135deg,#ffffff,#ffffff)",
-                    border: "1px solid rgba(255, 105, 61,.22)",
-                    borderRadius: 10,
-                    padding: "10px 14px",
-                    display: "flex", alignItems: "flex-start", gap: 8,
-                  }}>
-                  <span style={{ fontSize: 15, flexShrink: 0 }}>☕</span>
-                  <div>
-                    <p style={{ fontSize: 12.5, color: "#78350f", fontWeight: 600, margin: 0 }}>
-                      Server is waking up…
-                    </p>
-                    <p style={{ fontSize: 11.5, color: "#92400e", margin: "2px 0 0", lineHeight: 1.5 }}>
-                      Our free server sleeps when idle. First login takes 20–40 seconds. Please keep this window open.
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* ── banner ── */}
-            <AnimatePresence>
-              {banner.text && <Banner key={banner.text} type={banner.type} text={banner.text} />}
-            </AnimatePresence>
-
-            {/* ── footer trust row ── */}
-            <div style={{
-              marginTop: 20, paddingTop: 16,
-              borderTop: "1px solid #f1f5f9",
-              display: "flex", justifyContent: "center", alignItems: "center", gap: 6,
-            }}>
-              <Sparkles size={12} color={OR} />
-              <span style={{ fontSize: 11.5, color: "#94a3b8" }}>
-                Free · Trusted by <strong style={{ color: "#64748b" }}>3,200+</strong> JEE aspirants
-              </span>
-            </div>
-
-            {/* ── skip link — only when auth is optional (logged-in re-auth) ── */}
-            {!mandatory && (mode === "login" || mode === "signup") && (
-              <div style={{ textAlign: "center", marginTop: 14 }}>
-                <button
-                  onClick={close}
-                  style={{
-                    background: "none", border: "none", cursor: "pointer",
-                    color: "#b0bac8", fontSize: 12, fontWeight: 500,
-                    textDecoration: "underline", textDecorationStyle: "dotted",
-                    padding: "4px 8px", borderRadius: 6,
-                    transition: "color .15s",
-                    fontFamily: "inherit",
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.color = "#64748b"}
-                  onMouseLeave={e => e.currentTarget.style.color = "#b0bac8"}
-                >
-                  Skip for now — browse as guest
-                </button>
               </div>
-            )}
-
-          </div>
+            </div>
           </div>
         </motion.div>
       </motion.div>
