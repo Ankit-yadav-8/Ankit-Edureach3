@@ -749,7 +749,7 @@ export default function AuthModal() {
                     </div>
                     <div style={{ gridColumn: "1/-1" }}>
                       <SelectField icon={BookOpen} placeholder="Class *" value={f.studentClass}
-                        options={["11", "12", "droper"]} error={fe.studentClass}
+                        options={["11", "12", "12+"]} error={fe.studentClass}
                         onChange={e => set("studentClass", e.target.value)} />
                     </div>
                     <div style={{ gridColumn: "1/-1" }}>

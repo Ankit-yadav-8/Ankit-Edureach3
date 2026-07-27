@@ -164,7 +164,7 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
                   <option value="" disabled>Select class…</option>
                   <option value="11">11</option>
                   <option value="12">12</option>
-                  <option value="droper">droper</option>
+                  <option value="12+">12+</option>
                 </select>
               </div>
               <LabeledInput label="NEET rank" inputMode="numeric" value={f.neetRank} onChange={set("neetRank")} placeholder="—" />
