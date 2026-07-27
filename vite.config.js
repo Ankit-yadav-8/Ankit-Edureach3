@@ -15,7 +15,6 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes("node_modules")) {
             if (id.includes("framer-motion")) return "motion";
-            if (id.includes("lucide-react")) return "icons";
 
             // Charting and maths rendering are heavy and only a handful of lazy
             // routes use them. They MUST NOT share a chunk with anything the
@@ -31,6 +30,7 @@ export default defineConfig({
             if (id.includes("katex")) return "katex";
 
             if (id.includes("react-dom") || id.includes("react-router")) return "vendor";
+            if (id.includes("lucide-react")) return "libs";
             if (id.includes("react")) return "vendor";
             return "libs";
           }
