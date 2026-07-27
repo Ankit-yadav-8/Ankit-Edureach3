@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, ShieldCheck, X, Pencil, LogOut, ShieldOff } from "lucide-react";
+import { Loader2, ShieldCheck, X, Pencil, LogOut, ShieldOff, Bot, User, Bookmark, Layers, Trophy, GraduationCap, ArrowRightLeft, Map, Building, Users } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments, apiUpdateProfile } from "../auth/api.js";
 
@@ -234,12 +234,12 @@ export default function Dashboard() {
   const suggestion = `${firstName}, based on your class of ${classPhrase} and ${statePhrase} home state, here are 5 colleges worth targeting...`;
 
   const QUICK = [
-    { label: "Rank predictor",        to: "/jee-main#rank" },
-    { label: "College predictor",     to: "/jee-advanced#college" },
-    { label: "Compare colleges",      to: "/compare" },
-    { label: "Counselling planner",   to: "/planner" },
-    { label: "Explore colleges",      to: "/colleges" },
-    { label: "Community",             to: "/community" },
+    { label: "Rank predictor",        to: "/jee-main#rank",        icon: Trophy },
+    { label: "College predictor",     to: "/jee-advanced#college", icon: GraduationCap },
+    { label: "Compare colleges",      to: "/compare",              icon: ArrowRightLeft },
+    { label: "Counselling planner",   to: "/planner",              icon: Map },
+    { label: "Explore colleges",      to: "/colleges",             icon: Building },
+    { label: "Community",             to: "/community",            icon: Users },
   ];
 
   return (
@@ -267,7 +267,9 @@ export default function Dashboard() {
             <div className="raised" style={{ flex: 1, padding: "30px 30px", borderRadius: 24, background: "var(--base)", display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)" }} />
+                  <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
+                    <Bot size={20} color="var(--orange)" />
+                  </div>
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Parichay AI</span>
@@ -305,7 +307,9 @@ export default function Dashboard() {
             <div className="raised" style={{ flex: 1, padding: "30px", borderRadius: 24, background: "var(--base)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)" }} />
+                  <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
+                    <User size={20} color="var(--orange)" />
+                  </div>
                   <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Your details</span>
                 </div>
                 <button onClick={() => setEditOpen(true)} style={{ background: "transparent", border: "none", color: "var(--orange)", fontFamily: INTER, fontWeight: 600, fontSize: 12, cursor: "pointer" }}>
@@ -335,7 +339,9 @@ export default function Dashboard() {
             <div className="raised" style={{ flex: 1, padding: "30px", borderRadius: 24, background: "var(--base)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)" }} />
+                  <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
+                    <Bookmark size={20} color="var(--orange)" />
+                  </div>
                   <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>My plans</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -351,7 +357,9 @@ export default function Dashboard() {
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   {plans.map((p, i) => (
                     <div key={p._id} className="raised-sm" style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 20px", borderRadius: 16, background: "var(--base)", flexWrap: "wrap" }}>
-                      <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", flexShrink: 0 }} />
+                      <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", flexShrink: 0, display: "grid", placeItems: "center" }}>
+                        <Layers size={18} color="var(--orange)" />
+                      </div>
                       <div style={{ flex: 1, minWidth: 150 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                           <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{p.planLabel || p.plan}</span>
@@ -388,16 +396,20 @@ export default function Dashboard() {
           <Reveal delay={0.25} style={{ display: "flex" }}>
             <div className="raised" style={{ flex: 1, padding: "30px", borderRadius: 24, background: "var(--base)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24 }}>
-                <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)" }} />
+                <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
+                  <Layers size={20} color="var(--orange)" />
+                </div>
                 <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Quick links</span>
               </div>
               <div className="dash-quick">
-                {QUICK.map(({ label, to }) => (
+                {QUICK.map(({ label, to, icon: Icon }) => (
                   <button key={label} onClick={() => navigate(to)} className="raised-sm"
                     style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, padding: "20px 10px", borderRadius: 16, border: "none", background: "var(--base)", cursor: "pointer", transition: "transform .15s" }}
                     onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(0.98)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; }}>
-                    <div className="pressed" style={{ width: 42, height: 42, borderRadius: 12, background: "var(--base)" }} />
+                    <div className="pressed" style={{ width: 42, height: 42, borderRadius: 12, background: "var(--base)", display: "grid", placeItems: "center" }}>
+                      <Icon size={18} color="var(--orange)" />
+                    </div>
                     <span style={{ fontFamily: INTER, fontWeight: 600, fontSize: 12, color: "var(--text)" }}>{label}</span>
                   </button>
                 ))}
