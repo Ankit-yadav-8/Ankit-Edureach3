@@ -5,7 +5,7 @@ import {
   User, Mail, Phone, MapPin, GraduationCap, Calendar, LogOut,
   ArrowUpRight, Loader2, Check, Compass, Pencil, X, ShieldCheck,
   Bot, Sparkles, Send, Award, Hash, Stethoscope, CreditCard,
-  Gauge, Crosshair, GitCompare, Users, ShieldOff,
+  Gauge, Crosshair, GitCompare, Users, ShieldOff, BookOpen,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { apiMyEnrollments, apiUpdateProfile } from "../auth/api.js";
@@ -85,8 +85,7 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
     phone: user?.phone || "",
     coaching: user?.coaching || "",
     homeState: user?.homeState || "",
-    jeeMainsRank: user?.jeeMainsRank ?? "",
-    jeeAdvancedRank: user?.jeeAdvancedRank ?? "",
+    studentClass: user?.studentClass || "",
     neetRank: user?.neetRank ?? "",
   });
   const [busy, setBusy] = useState(false);
@@ -106,8 +105,7 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
         phone: f.phone.replace(/\D/g, "").slice(-10),
         coaching: f.coaching.trim(),
         homeState: f.homeState.trim(),
-        jeeMainsRank: f.jeeMainsRank === "" ? null : Number(f.jeeMainsRank),
-        jeeAdvancedRank: f.jeeAdvancedRank === "" ? null : Number(f.jeeAdvancedRank),
+        studentClass: f.studentClass,
         neetRank: f.neetRank === "" ? null : Number(f.neetRank),
       });
       onSaved(updated);
@@ -159,9 +157,16 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
               <LabeledInput label="Coaching" value={f.coaching} onChange={set("coaching")} placeholder="Your coaching" />
               <LabeledInput label="Home state" value={f.homeState} onChange={set("homeState")} placeholder="Home state" />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-              <LabeledInput label="JEE Main rank" inputMode="numeric" value={f.jeeMainsRank} onChange={set("jeeMainsRank")} placeholder="—" />
-              <LabeledInput label="JEE Advanced rank" inputMode="numeric" value={f.jeeAdvancedRank} onChange={set("jeeAdvancedRank")} placeholder="—" />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#6b7280" }}>Class</span>
+                <select value={f.studentClass} onChange={set("studentClass")} style={{ width: "100%", padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 14, color: INK, outline: "none", boxSizing: "border-box", background: "#fff" }} onFocus={(e) => { e.target.style.borderColor = CORAL; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }}>
+                  <option value="" disabled>Select class…</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="droper">droper</option>
+                </select>
+              </div>
               <LabeledInput label="NEET rank" inputMode="numeric" value={f.neetRank} onChange={set("neetRank")} placeholder="—" />
             </div>
           </div>
@@ -287,14 +292,14 @@ export default function Dashboard() {
   const planYear = plans.map((p) => String(p.planLabel || p.plan || "").match(/20\d{2}/)?.[0]).find(Boolean);
   const aspirantTag = `${planYear ? `JEE ${planYear}` : "JEE / NEET"} · Aspirant`;
 
-  const rankPhrase = user?.jeeMainsRank
-    ? `your JEE Main rank of ${fmtRank(user.jeeMainsRank)}`
+  const classPhrase = user?.studentClass
+    ? `your class of ${user.studentClass}`
     : "your profile";
   const statePhrase = user?.homeState ? ` and ${user.homeState} home state` : "";
-  const suggestion = `${firstName}, based on ${rankPhrase}${statePhrase}, here are 5 colleges worth targeting…`;
+  const suggestion = `${firstName}, based on ${classPhrase}${statePhrase}, here are 5 colleges worth targeting…`;
 
   const chips = [
-    user?.jeeMainsRank ? `Colleges for rank ${fmtRank(user.jeeMainsRank)}?` : "Colleges for my rank?",
+    user?.studentClass ? `Colleges for class ${user.studentClass}?` : "Colleges for my class?",
     "JEE Advanced strategy",
     "Compare NITs vs IIITs",
     user?.homeState ? `${user.homeState} state quota` : "Home-state quota",
@@ -307,8 +312,7 @@ export default function Dashboard() {
     { icon: Phone,         label: "Phone",             value: user?.phone || "—",            color: "#0EA371", bg: "#D6F3E5" },
     { icon: MapPin,        label: "State",             value: user?.homeState || "—",        color: "#DB2777", bg: "#FCE1EA" },
     { icon: Calendar,      label: "Member Since",      value: fmtDate(user?.createdAt),      color: "#E08600", bg: "#FEEBCF" },
-    { icon: Hash,          label: "JEE Main Rank",     value: fmtRank(user?.jeeMainsRank),   color: CORAL,     bg: CORAL_SOFT },
-    { icon: Award,         label: "JEE Advanced Rank", value: fmtRank(user?.jeeAdvancedRank),color: "#7C3AED", bg: "#EDE7FE" },
+    { icon: BookOpen,      label: "Class",             value: user?.studentClass || "—",     color: CORAL,     bg: CORAL_SOFT },
     { icon: Stethoscope,   label: "NEET Rank",         value: fmtRank(user?.neetRank),       color: "#0EA371", bg: "#D6F3E5" },
   ];
 

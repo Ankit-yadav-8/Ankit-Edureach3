@@ -48,10 +48,7 @@ function validate(mode, f) {
     else if (!isPhone(f.phone))      e.phone        = "Enter a valid 10-digit number";
     if (!f.coaching.trim())          e.coaching     = "Coaching is required";
     if (!f.homeState.trim())         e.homeState    = "Home state is required";
-    if (!f.jeeMainsRank)             e.jeeMainsRank = "JEE Mains rank is required";
-    else if (!isRank(f.jeeMainsRank)) e.jeeMainsRank = "Enter a valid rank number";
-    if (!f.jeeAdvancedRank)               e.jeeAdvancedRank = "JEE Advanced rank is required";
-    else if (!isRank(f.jeeAdvancedRank))  e.jeeAdvancedRank = "Enter a valid rank number";
+    if (!f.studentClass)             e.studentClass = "Class is required";
     if (f.neetRank && !isRank(f.neetRank)) e.neetRank = "Enter a valid rank number";
     if (!f.password)             e.password = "Password is required";
     else if (f.password.length < 6) e.password = "Minimum 6 characters";
@@ -425,7 +422,7 @@ export default function AuthModal() {
   // so it is always dismissible (close X + "browse as guest" skip link).
   const mandatory = false;
   const [mode,    setMode]   = useState("login");
-  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", jeeMainsRank: "", jeeAdvancedRank: "", neetRank: "" });
+  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "" });
   const [fe,      setFe]     = useState({});
   const [banner,  setBanner] = useState({ type: "", text: "" });
   const [busy,    setBusy]   = useState(false);
@@ -456,7 +453,7 @@ export default function AuthModal() {
 
   const close = () => {
     setMode("login");
-    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", jeeMainsRank: "", jeeAdvancedRank: "", neetRank: "" });
+    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "" });
     setBanner({ type: "", text: "" });
     setFe({});
     setBusy(false);
@@ -496,7 +493,7 @@ export default function AuthModal() {
   };
 
   const doLogin   = run(async () => { await login(f.email.trim(), f.password); close(); }, "login");
-  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, jeeMainsRank: f.jeeMainsRank ? Number(f.jeeMainsRank) : undefined, jeeAdvancedRank: f.jeeAdvancedRank ? Number(f.jeeAdvancedRank) : undefined, neetRank: f.neetRank ? Number(f.neetRank) : undefined }); close(); }, "signup");
+  const doSignup  = run(async () => { await signup({ name: f.name.trim(), email: f.email.trim(), phone: f.phone, coaching: f.coaching, homeState: f.homeState.trim(), password: f.password, studentClass: f.studentClass, neetRank: f.neetRank ? Number(f.neetRank) : undefined }); close(); }, "signup");
   const doSendOtp = run(async () => {
     setNotReg(false);
     try {
@@ -750,12 +747,11 @@ export default function AuthModal() {
                       <Field icon={Mail} type="email" placeholder="Email address *" value={f.email}
                         error={fe.email} onChange={e => set("email", e.target.value)} autoComplete="email" />
                     </div>
-                    <Field icon={Award} type="tel" inputMode="numeric"
-                      placeholder="JEE Mains rank *" value={f.jeeMainsRank}
-                      error={fe.jeeMainsRank} onChange={e => set("jeeMainsRank", e.target.value.replace(/\D/g, ""))} />
-                    <Field icon={Trophy} type="tel" inputMode="numeric"
-                      placeholder="JEE Advanced rank *" value={f.jeeAdvancedRank}
-                      error={fe.jeeAdvancedRank} onChange={e => set("jeeAdvancedRank", e.target.value.replace(/\D/g, ""))} />
+                    <div style={{ gridColumn: "1/-1" }}>
+                      <SelectField icon={BookOpen} placeholder="Class *" value={f.studentClass}
+                        options={["11", "12", "droper"]} error={fe.studentClass}
+                        onChange={e => set("studentClass", e.target.value)} />
+                    </div>
                     <div style={{ gridColumn: "1/-1" }}>
                       <Field icon={Stethoscope} type="tel" inputMode="numeric"
                         placeholder="NEET rank (optional)" value={f.neetRank}
