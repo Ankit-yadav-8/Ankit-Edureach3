@@ -21,7 +21,7 @@ import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { resolve, dirname, join, extname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { allPaths, SITE } from "./routes.mjs";
+import { allPaths, SITE, STATIC_ROUTES } from "./routes.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DIST = resolve(__dirname, "../dist");
@@ -174,7 +174,7 @@ async function main() {
     process.exit(1);
   }
 
-  let routes = [...new Set(["/", ...allPaths()])]
+  let routes = [...new Set(["/", ...STATIC_ROUTES.map(r => r[0])])]
     .filter((r) => !/^\/(admin|dashboard|search)(\/|$)/.test(r))
     .slice(0, LIMIT);
 
