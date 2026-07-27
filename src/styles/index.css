@@ -2866,7 +2866,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   flex: 0 0 380px;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(150deg,#fff5ec 0%,#ffe9d6 38%,#ffddc2 64%,#fff3e6 100%);
+  background: #111827;
   border-right: 1px solid rgba(255, 105, 61,.16);
   display: flex;
   flex-direction: column;

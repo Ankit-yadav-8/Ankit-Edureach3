@@ -93,17 +93,17 @@ function Field({ icon: Icon, error, label, ...props }) {
         </label>
       )}
       <div style={{
-        position: "relative", borderRadius: 13,
-        border: `1.5px solid ${borderColor}`,
-        background: error ? "#fff8f8" : "#fff",
-        transition: "border-color .18s, box-shadow .18s",
-        boxShadow: shadow,
+        position: "relative", borderRadius: 12,
+        border: `1.5px solid ${error ? "#ef4444" : "transparent"}`,
+        background: error ? "#fef2f2" : focused ? "#fff" : "#f9fafb",
+        transition: "all .2s",
+        boxShadow: error ? "0 0 0 2px rgba(239,68,68,.1)" : focused ? "0 0 0 2px rgba(17,24,39,.1)" : "none",
         display: "flex", alignItems: "center",
       }}>
-        <Icon size={15} style={{
-          position: "absolute", left: 14,
-          color: error ? "#ef4444" : focused ? OR : "#94a3b8",
-          transition: "color .18s", flexShrink: 0,
+        <Icon size={16} style={{
+          position: "absolute", left: 16,
+          color: error ? "#ef4444" : focused ? "#111827" : "#94a3b8",
+          transition: "color .2s", flexShrink: 0,
         }} />
         <input
           {...props}
@@ -112,9 +112,9 @@ function Field({ icon: Icon, error, label, ...props }) {
           onBlur={(e)  => { setFocused(false); props.onBlur?.(e); }}
           style={{
             flex: 1, border: "none", background: "transparent", outline: "none",
-            paddingLeft: 40, paddingRight: isPass ? 46 : 14,
-            height: 46, fontSize: 16, fontWeight: 600, letterSpacing: ".01em",
-            color: "#0f172a", borderRadius: 12,
+            paddingLeft: 42, paddingRight: isPass ? 46 : 16,
+            height: 44, fontSize: 14, fontWeight: 500,
+            color: "#111827", borderRadius: 12,
             fontFamily: "inherit",
           }}
         />
@@ -167,17 +167,17 @@ function SelectField({ icon: Icon, error, label, options, placeholder, value, ..
         </label>
       )}
       <div style={{
-        position: "relative", borderRadius: 13,
-        border: `1.5px solid ${borderColor}`,
-        background: error ? "#fff8f8" : "#fff",
-        transition: "border-color .18s, box-shadow .18s",
-        boxShadow: shadow,
+        position: "relative", borderRadius: 12,
+        border: `1.5px solid ${error ? "#ef4444" : "transparent"}`,
+        background: error ? "#fef2f2" : focused ? "#fff" : "#f9fafb",
+        transition: "all .2s",
+        boxShadow: error ? "0 0 0 2px rgba(239,68,68,.1)" : focused ? "0 0 0 2px rgba(17,24,39,.1)" : "none",
         display: "flex", alignItems: "center",
       }}>
-        <Icon size={15} style={{
-          position: "absolute", left: 14,
-          color: error ? "#ef4444" : focused ? OR : "#94a3b8",
-          transition: "color .18s", flexShrink: 0, zIndex: 1,
+        <Icon size={16} style={{
+          position: "absolute", left: 16,
+          color: error ? "#ef4444" : focused ? "#111827" : "#94a3b8",
+          transition: "color .2s", flexShrink: 0, zIndex: 1,
         }} />
         <select
           {...props}
@@ -186,9 +186,9 @@ function SelectField({ icon: Icon, error, label, options, placeholder, value, ..
           onBlur={(e)  => { setFocused(false); props.onBlur?.(e); }}
           style={{
             flex: 1, width: "100%", border: "none", background: "transparent", outline: "none",
-            paddingLeft: 40, paddingRight: 38,
-            height: 46, fontSize: 16, fontWeight: 600, letterSpacing: ".01em",
-            color: value ? "#0f172a" : "#94a3b8", borderRadius: 12,
+            paddingLeft: 42, paddingRight: 38,
+            height: 44, fontSize: 14, fontWeight: 500,
+            color: value ? "#111827" : "#94a3b8", borderRadius: 12,
             fontFamily: "inherit", appearance: "none", WebkitAppearance: "none",
             MozAppearance: "none", cursor: "pointer",
           }}
@@ -233,15 +233,15 @@ function ActionBtn({ busy, disabled, label, busyLabel, onClick, shake }) {
       onClick={onClick}
       disabled={busy || disabled}
       style={{
-        width: "100%", height: 50, borderRadius: 9999,
+        width: "100%", height: 44, borderRadius: 12,
         background: busy || disabled
           ? `linear-gradient(135deg, ${OR}99, ${ORD}88)`
           : `linear-gradient(135deg, ${OR} 0%, ${ORD} 100%)`,
         border: "none", color: "#fff",
-        fontFamily: "Sora, sans-serif", fontWeight: 700, fontSize: 15,
+        fontFamily: "Sora, sans-serif", fontWeight: 700, fontSize: 14,
         cursor: busy || disabled ? "not-allowed" : "pointer",
         display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-        boxShadow: busy || disabled ? "none" : `0 6px 24px ${OR}44, 0 2px 8px ${OR}22`,
+        boxShadow: busy || disabled ? "none" : `0 4px 12px rgba(249,115,22,0.3)`,
         transition: "box-shadow .2s, background .2s, transform .1s",
         letterSpacing: ".01em",
       }}
@@ -422,7 +422,7 @@ export default function AuthModal() {
   // so it is always dismissible (close X + "browse as guest" skip link).
   const mandatory = false;
   const [mode,    setMode]   = useState("login");
-  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "" });
+  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "", jeeMainsRank: "", jeeAdvancedRank: "", remember: false });
   const [fe,      setFe]     = useState({});
   const [banner,  setBanner] = useState({ type: "", text: "" });
   const [busy,    setBusy]   = useState(false);
@@ -453,7 +453,7 @@ export default function AuthModal() {
 
   const close = () => {
     setMode("login");
-    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "" });
+    setF({ name: "", email: "", phone: "", password: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", neetRank: "", jeeMainsRank: "", jeeAdvancedRank: "", remember: false });
     setBanner({ type: "", text: "" });
     setFe({});
     setBusy(false);
@@ -619,7 +619,7 @@ export default function AuthModal() {
                   <span style={{ width: 30, height: 30, borderRadius: "50%", background: `linear-gradient(135deg,${OR},${ORD})`, display: "grid", placeItems: "center", boxShadow: `0 4px 12px ${OR}55` }}>
                     <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 12, letterSpacing: "-0.5px", lineHeight: 1 }}>CP</span>
                   </span>
-                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: ".95rem", color: "#1a1a2e" }}>
+                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: ".95rem", color: "#fff" }}>
                     College <span style={{ color: OR }}>Parichay</span>
                   </span>
                 </div>
@@ -627,15 +627,38 @@ export default function AuthModal() {
 
               {!mandatory && (
                 <button onClick={close} aria-label="Close"
-                  style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(255, 105, 61,.10)", border: "1px solid rgba(255, 105, 61,.22)", cursor: "pointer", color: "#c2410c", display: "grid", placeItems: "center", transition: "background .15s" }}
-                  onMouseEnter={e => e.currentTarget.style.background = "rgba(255, 105, 61,.2)"}
-                  onMouseLeave={e => e.currentTarget.style.background = "rgba(255, 105, 61,.10)"}
+                  style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(255, 255, 255,.10)", border: "1px solid rgba(255, 255, 255,.22)", cursor: "pointer", color: "#fff", display: "grid", placeItems: "center", transition: "background .15s" }}
+                  onMouseEnter={e => e.currentTarget.style.background = "rgba(255, 255, 255,.2)"}
+                  onMouseLeave={e => e.currentTarget.style.background = "rgba(255, 255, 255,.10)"}
                   title="Close"
                 >
                   <X size={15} />
                 </button>
               )}
             </div>
+
+            {/* Login / Sign up tab switcher moved to top */}
+            {(mode === "login" || mode === "signup") && (
+              <div style={{
+                display: "flex", background: "#f3f4f6", borderRadius: 14,
+                padding: 4, marginBottom: 24, position: "relative", zIndex: 1,
+              }}>
+                {[["login", "Log in"], ["signup", "Sign up"]].map(([m, lbl]) => (
+                  <button key={m} onClick={() => go(m)}
+                    style={{
+                      flex: 1, border: "none", cursor: "pointer", borderRadius: 10,
+                      padding: "10px 0", fontSize: 13.5, fontWeight: 700, fontFamily: "inherit",
+                      background: mode === m ? OR : "transparent",
+                      color: mode === m ? "#fff" : "#6b7280",
+                      transition: "all .2s",
+                      boxShadow: mode === m ? `0 4px 10px rgba(249,115,22,0.3)` : "none",
+                    }}
+                  >
+                    {lbl}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* title area */}
             <motion.div
@@ -655,29 +678,6 @@ export default function AuthModal() {
                   : H.sub}
               </p>
             </motion.div>
-
-            {/* Login / Sign up tab switcher (only on login/signup) */}
-            {(mode === "login" || mode === "signup") && (
-              <div style={{
-                display: "flex", background: "rgba(255, 105, 61,.10)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 10,
-                padding: 3, marginTop: 18, position: "relative", zIndex: 1,
-              }}>
-                {[["login", "Log in"], ["signup", "Sign up"]].map(([m, lbl]) => (
-                  <button key={m} onClick={() => go(m)}
-                    style={{
-                      flex: 1, border: "none", cursor: "pointer", borderRadius: 8,
-                      padding: "8px 0", fontSize: 13.5, fontWeight: 700, fontFamily: "Sora",
-                      background: mode === m ? `linear-gradient(135deg, ${OR}, ${ORD})` : "transparent",
-                      color: mode === m ? "#fff" : "#a8623a",
-                      transition: "all .2s",
-                      boxShadow: mode === m ? `0 4px 12px -2px ${OR}88` : "none",
-                    }}
-                  >
-                    {lbl}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* ─── FORM BODY ─── */}
@@ -698,32 +698,26 @@ export default function AuthModal() {
 
                 {/* ═══ LOGIN ═══ */}
                 {mode === "login" && (<>
-                  <Field icon={Mail} type="email" placeholder="Email address" value={f.email}
+                  <Field icon={Mail} type="email" placeholder="you@email.com" value={f.email}
                     error={fe.email} onChange={e => set("email", e.target.value)}
                     onKeyDown={e => e.key === "Enter" && doLogin()} autoComplete="email" />
                   <Field icon={Lock} type="password" placeholder="Password" value={f.password}
                     error={fe.password} onChange={e => set("password", e.target.value)}
                     onKeyDown={e => e.key === "Enter" && doLogin()} autoComplete="current-password" />
-                  <div style={{ textAlign: "right", marginTop: -8, marginBottom: 18 }}>
-                    <button onClick={() => go("forgot")} style={{ background: "none", border: "none", color: OR, fontWeight: 600, cursor: "pointer", fontSize: 12.5, padding: 0 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: -6, marginBottom: 16 }}>
+                    <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontSize: 12, color: "#6b7280" }}>
+                      <input type="checkbox" checked={f.remember} onChange={e => set("remember", e.target.checked)} style={{ cursor: "pointer" }} />
+                      Remember me
+                    </label>
+                    <button onClick={() => go("forgot")} style={{ background: "none", border: "none", color: OR, fontWeight: 600, cursor: "pointer", fontSize: 12, padding: 0 }}>
                       Forgot password?
                     </button>
                   </div>
-                  <ActionBtn busy={busy} label="Log in →" busyLabel={busyLabel} onClick={doLogin} shake={shake} />
-                  <Divider />
-                  <button onClick={() => go("otpEmail")} style={{
-                    width: "100%", height: 46, borderRadius: 13,
-                    background: "#f8fafc", border: "1.5px solid #e2e8f0",
-                    color: "#374151", fontWeight: 600, fontSize: 13.5, cursor: "pointer",
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    transition: "border-color .2s, background .2s",
-                    fontFamily: "inherit",
-                  }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = OR; e.currentTarget.style.background = `${OR}08`; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = "#f8fafc"; }}
-                  >
-                    <Mail size={15} color={OR} /> Login with email OTP
-                  </button>
+                  <ActionBtn busy={busy} label="Log in" busyLabel={busyLabel} onClick={doLogin} shake={shake} />
+                  
+                  <div style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: "#6b7280" }}>
+                    New to CollegeParichay? <button onClick={() => go("signup")} style={{ background: "none", border: "none", color: OR, fontWeight: 700, cursor: "pointer", padding: 0 }}>Create an account</button>
+                  </div>
                 </>)}
 
                 {/* ═══ SIGNUP ═══ */}
@@ -777,7 +771,10 @@ export default function AuthModal() {
                     </div>
                   )}
                   <p style={{ fontSize: 11, color: "#94a3b8", marginBottom: 14 }}>* Required fields</p>
-                  <ActionBtn busy={busy} label="Create account →" busyLabel={busyLabel} onClick={doSignup} shake={shake} />
+                  <ActionBtn busy={busy} label="Sign up" busyLabel={busyLabel} onClick={doSignup} shake={shake} />
+                  <div style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: "#6b7280" }}>
+                    Already have an account? <button onClick={() => go("login")} style={{ background: "none", border: "none", color: OR, fontWeight: 700, cursor: "pointer", padding: 0 }}>Log in</button>
+                  </div>
                 </>)}
 
                 {/* ═══ OTP EMAIL ═══ */}
