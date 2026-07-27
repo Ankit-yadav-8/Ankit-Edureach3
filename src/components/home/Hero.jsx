@@ -68,8 +68,8 @@ function HeadWord({ w, order }) {
       style={{ display: "inline-block", marginRight: "0.26em", color: w.c ? CORAL : INK, position: w.c ? "relative" : undefined, whiteSpace: "nowrap" }}>
       {w.t}
       {w.c && (
-        <svg width="100%" height="4" viewBox="0 0 100 4" preserveAspectRatio="none" style={{ position: "absolute", left: 0, bottom: "2px", width: "100%" }}>
-          <motion.path d="M0 2L100 2" stroke={CORAL} strokeWidth="4" strokeLinecap="round" fill="none"
+        <svg width="100%" height="12" viewBox="0 0 200 12" preserveAspectRatio="none" style={{ position: "absolute", left: 0, bottom: "-0.1em", width: "100%" }}>
+          <motion.path d="M3 8C40 3 70 3 100 6C130 9 160 9 197 4" stroke={CORAL} strokeWidth="4" strokeLinecap="round" fill="none"
             initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 0.55, delay: 0.9 + order * 0.28, ease: "easeInOut" }} />
         </svg>
       )}
@@ -203,7 +203,13 @@ export default function Hero({ onSearch }) {
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
           style={{ margin: `${isMobile ? "1.6rem" : "2rem"} auto 0`, maxWidth: 560, fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 500, fontSize: isXs ? "1rem" : "1.1rem", color: TEXT_SOFT, lineHeight: 1.65 }}
         >
-          An <span style={{ color: CORAL, fontWeight: 700 }}>IIT Roorkee</span> startup — built by IITians, trusted by aspirants
+          An <span style={{ position: "relative", color: CORAL, fontWeight: 700, whiteSpace: "nowrap" }}>
+            IIT Roorkee
+            <svg width="100%" height="8" viewBox="0 0 120 8" preserveAspectRatio="none" style={{ position: "absolute", left: 0, bottom: "-3px", width: "100%" }}>
+              <motion.path d="M2 5 C 30 2, 90 2, 118 4" stroke={CORAL} strokeWidth="2.5" strokeLinecap="round" fill="none"
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6, delay: 1.5, ease: "easeInOut" }} />
+            </svg>
+          </span> startup — built by IITians, trusted by aspirants
         </motion.p>
 
         {/* CTAs — wide search bar + two action buttons */}
