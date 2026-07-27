@@ -338,6 +338,7 @@
     box-shadow: none;
     overflow-y: visible;
   }
+  .neo-auth .brand { display: none; }
   .neo-auth .visual { padding: 24px; min-height: fit-content; box-shadow: none; }
   .neo-auth .dial-wrap { margin-top: 10px; width: 140px; height: 140px; box-shadow: none; }
   .neo-auth .dial-inner { width: 96px; height: 96px; box-shadow: none; border: 1px solid var(--shadow-dark); }
