@@ -65,14 +65,14 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
   async function save() {
     setErr("");
     if (!f.name.trim()) return setErr("Name cannot be empty");
-    if (!/^\\S+@\\S+\\.\\S+$/.test(f.email.trim())) return setErr("Enter a valid email address");
-    if (!/^\\d{10}$/.test(f.phone.replace(/\\D/g, "").slice(-10))) return setErr("Enter a valid 10-digit phone number");
+    if (!/^\S+@\S+\.\S+$/.test(f.email.trim())) return setErr("Enter a valid email address");
+    if (!/^\d{10}$/.test(f.phone.replace(/\D/g, "").slice(-10))) return setErr("Enter a valid 10-digit phone number");
     setBusy(true);
     try {
       const { user: updated } = await apiUpdateProfile(token, {
         name: f.name.trim(),
         email: f.email.trim().toLowerCase(),
-        phone: f.phone.replace(/\\D/g, "").slice(-10),
+        phone: f.phone.replace(/\D/g, "").slice(-10),
         coaching: f.coaching.trim(),
         homeState: f.homeState.trim(),
         studentClass: f.studentClass,
@@ -234,12 +234,12 @@ export default function Dashboard() {
   const suggestion = `${firstName}, based on your class of ${classPhrase} and ${statePhrase} home state, here are 5 colleges worth targeting...`;
 
   const QUICK = [
-    { label: "Rank predictor",        to: "/jee-main#rank",        icon: Trophy },
-    { label: "College predictor",     to: "/jee-advanced#college", icon: GraduationCap },
-    { label: "Compare colleges",      to: "/compare",              icon: ArrowRightLeft },
-    { label: "Counselling planner",   to: "/planner",              icon: Map },
-    { label: "Explore colleges",      to: "/colleges",             icon: Building },
-    { label: "Community",             to: "/community",            icon: Users },
+    { label: "Rank predictor",        to: "/jee-main#rank",        icon: Trophy,          color: "#f59e0b" },
+    { label: "College predictor",     to: "/jee-advanced#college", icon: GraduationCap,   color: "#6366f1" },
+    { label: "Compare colleges",      to: "/compare",              icon: ArrowRightLeft,  color: "#0ea5e9" },
+    { label: "Counselling planner",   to: "/planner",              icon: Map,             color: "#10b981" },
+    { label: "Explore colleges",      to: "/colleges",             icon: Building,        color: "#f43f5e" },
+    { label: "Community",             to: "/community",            icon: Users,           color: "#8b5cf6" },
   ];
 
   return (
@@ -268,7 +268,7 @@ export default function Dashboard() {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
-                    <Bot size={20} color="var(--orange)" />
+                    <Bot size={20} color="#6366f1" />
                   </div>
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -308,7 +308,7 @@ export default function Dashboard() {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
-                    <User size={20} color="var(--orange)" />
+                    <User size={20} color="#0ea5e9" />
                   </div>
                   <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Your details</span>
                 </div>
@@ -340,7 +340,7 @@ export default function Dashboard() {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
-                    <Bookmark size={20} color="var(--orange)" />
+                    <Bookmark size={20} color="#f59e0b" />
                   </div>
                   <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>My plans</span>
                 </div>
@@ -358,7 +358,7 @@ export default function Dashboard() {
                   {plans.map((p, i) => (
                     <div key={p._id} className="raised-sm" style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 20px", borderRadius: 16, background: "var(--base)", flexWrap: "wrap" }}>
                       <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", flexShrink: 0, display: "grid", placeItems: "center" }}>
-                        <Layers size={18} color="var(--orange)" />
+                        <Layers size={18} color="#10b981" />
                       </div>
                       <div style={{ flex: 1, minWidth: 150 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -397,18 +397,18 @@ export default function Dashboard() {
             <div className="raised" style={{ flex: 1, padding: "30px", borderRadius: 24, background: "var(--base)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24 }}>
                 <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
-                  <Layers size={20} color="var(--orange)" />
+                  <Layers size={20} color="#8b5cf6" />
                 </div>
                 <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Quick links</span>
               </div>
               <div className="dash-quick">
-                {QUICK.map(({ label, to, icon: Icon }) => (
+                {QUICK.map(({ label, to, icon: Icon, color }) => (
                   <button key={label} onClick={() => navigate(to)} className="raised-sm"
                     style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, padding: "20px 10px", borderRadius: 16, border: "none", background: "var(--base)", cursor: "pointer", transition: "transform .15s" }}
                     onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(0.98)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; }}>
                     <div className="pressed" style={{ width: 42, height: 42, borderRadius: 12, background: "var(--base)", display: "grid", placeItems: "center" }}>
-                      <Icon size={18} color="var(--orange)" />
+                      <Icon size={18} color={color} />
                     </div>
                     <span style={{ fontFamily: INTER, fontWeight: 600, fontSize: 12, color: "var(--text)" }}>{label}</span>
                   </button>
