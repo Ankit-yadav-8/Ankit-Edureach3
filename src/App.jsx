@@ -112,8 +112,7 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     if (params.has("reset")) {
       openReset();
-      // Remove it from the URL so it doesn't reopen on refresh if they close the modal
-      window.history.replaceState(null, "", window.location.pathname);
+      // Note: We don't remove it from the URL here anymore; AuthModal will do it after reading.
     }
   }, [openReset]);
 

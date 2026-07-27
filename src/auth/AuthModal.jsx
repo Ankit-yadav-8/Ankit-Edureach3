@@ -335,6 +335,7 @@ export default function AuthModal() {
   const [shake,   setShake]  = useState(false);
   const [slowNet, setSlowNet] = useState(false);
   const [notReg,  setNotReg]  = useState(false);
+  const [hasUrlToken, setHasUrlToken] = useState(false);
   const prevOpen = useRef(false);
 
   useEffect(() => {
@@ -344,7 +345,14 @@ export default function AuthModal() {
       if (loginMode === "reset") {
         const urlParams = new URLSearchParams(window.location.search);
         const t = urlParams.get("reset");
-        if (t) setF((s) => ({ ...s, token: t }));
+        if (t) {
+          setF((s) => ({ ...s, token: t }));
+          setHasUrlToken(true);
+          // Remove it from the URL so it doesn't reopen on refresh
+          window.history.replaceState(null, "", window.location.pathname);
+        } else {
+          setHasUrlToken(false);
+        }
       }
     }
     prevOpen.current = loginOpen;
@@ -373,6 +381,7 @@ export default function AuthModal() {
     setBusy(false);
     setSlowNet(false);
     setNotReg(false);
+    setHasUrlToken(false);
     closeLogin();
   };
 
@@ -654,7 +663,7 @@ export default function AuthModal() {
                         <p className="sub">Choose a strong password for your account.</p>
                         
                         {/* Only show token field if we didn't get it from the URL */}
-                        {!new URLSearchParams(window.location.search).get("reset") && !f.token && (
+                        {!hasUrlToken && (
                           <Field icon={KeyRound} placeholder="6-digit Reset Code *" value={f.token} error={fe.token} onChange={e => set("token", e.target.value)} />
                         )}
                         <Field icon={Lock} type="password" placeholder="New password (min 8 chars) *" value={f.password} error={fe.password} onChange={e => set("password", e.target.value)} autoComplete="new-password" />
