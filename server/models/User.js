@@ -8,8 +8,6 @@ const userSchema = new mongoose.Schema(
     homeState:       { type: String, trim: true, default: "" },
     studentClass:    { type: String, default: "" },
     neetRank:        { type: Number, default: null },
-    jeeMainsRank:    { type: Number, default: null },
-    jeeAdvancedRank: { type: Number, default: null },
     passwordHash: { type: String },
     resetTokenHash: { type: String },
     resetExpires:   { type: Date },

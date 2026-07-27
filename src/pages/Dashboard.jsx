@@ -87,8 +87,6 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
     homeState: user?.homeState || "",
     studentClass: user?.studentClass || "",
     neetRank: user?.neetRank ?? "",
-    jeeMainsRank: user?.jeeMainsRank ?? "",
-    jeeAdvancedRank: user?.jeeAdvancedRank ?? "",
   });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
@@ -109,8 +107,6 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
         homeState: f.homeState.trim(),
         studentClass: f.studentClass,
         neetRank: f.neetRank === "" ? null : Number(f.neetRank),
-        jeeMainsRank: f.jeeMainsRank === "" ? null : Number(f.jeeMainsRank),
-        jeeAdvancedRank: f.jeeAdvancedRank === "" ? null : Number(f.jeeAdvancedRank),
       });
       onSaved(updated);
       onClose();
@@ -172,10 +168,6 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
                 </select>
               </div>
               <LabeledInput label="NEET rank" inputMode="numeric" value={f.neetRank} onChange={set("neetRank")} placeholder="—" />
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <LabeledInput label="JEE Mains rank" inputMode="numeric" value={f.jeeMainsRank} onChange={set("jeeMainsRank")} placeholder="—" />
-              <LabeledInput label="JEE Adv rank" inputMode="numeric" value={f.jeeAdvancedRank} onChange={set("jeeAdvancedRank")} placeholder="—" />
             </div>
           </div>
 
@@ -322,8 +314,6 @@ export default function Dashboard() {
     { icon: Calendar,      label: "Member Since",      value: fmtDate(user?.createdAt),      color: "#E08600", bg: "#FEEBCF" },
     { icon: BookOpen,      label: "Class",             value: user?.studentClass || "—",     color: CORAL,     bg: CORAL_SOFT },
     { icon: Stethoscope,   label: "NEET Rank",         value: fmtRank(user?.neetRank),       color: "#0EA371", bg: "#D6F3E5" },
-    { icon: Award,         label: "JEE Mains Rank",    value: fmtRank(user?.jeeMainsRank),   color: "#3B82F6", bg: "#EFF6FF" },
-    { icon: Trophy,        label: "JEE Adv Rank",      value: fmtRank(user?.jeeAdvancedRank),color: "#8B5CF6", bg: "#F5F3FF" },
   ];
 
   const QUICK = [

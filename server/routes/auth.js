@@ -13,11 +13,11 @@ const isEmail = (e) => {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)) return false;
   return s.endsWith("@gmail.com") || s.endsWith(".in");
 };
-const pub = (u) => ({ id: u._id, name: u.name, email: u.email, phone: u.phone, coaching: u.coaching, homeState: u.homeState, studentClass: u.studentClass, neetRank: u.neetRank, jeeMainsRank: u.jeeMainsRank, jeeAdvancedRank: u.jeeAdvancedRank });
+const pub = (u) => ({ id: u._id, name: u.name, email: u.email, phone: u.phone, coaching: u.coaching, homeState: u.homeState, studentClass: u.studentClass, neetRank: u.neetRank });
 
 router.post("/signup", async (req, res) => {
   try {
-    let { name, email, phone, coaching, homeState, password, studentClass, neetRank, jeeMainsRank, jeeAdvancedRank } = req.body || {};
+    let { name, email, phone, coaching, homeState, password, studentClass, neetRank } = req.body || {};
     if (!name || !email || !password || !phone) return res.status(400).json({ error: "Name, email, phone and password are required" });
     if (!String(coaching || "").trim()) return res.status(400).json({ error: "Coaching is required" });
     if (!String(homeState || "").trim()) return res.status(400).json({ error: "Home state is required" });
@@ -35,8 +35,6 @@ router.post("/signup", async (req, res) => {
       homeState: String(homeState || "").trim(),
       studentClass:    studentClass ? String(studentClass).trim() : "",
       neetRank:        neetRank        ? Number(neetRank)        : undefined,
-      jeeMainsRank:    jeeMainsRank    ? Number(jeeMainsRank)    : undefined,
-      jeeAdvancedRank: jeeAdvancedRank ? Number(jeeAdvancedRank) : undefined,
       passwordHash, lastLogin: new Date(),
     });
     res.status(201).json({ token: sign(user), user: pub(user) });
@@ -106,7 +104,7 @@ router.patch("/profile", requireAuth, async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: "Not found" });
 
-    let { name, email, phone, coaching, homeState, studentClass, neetRank, jeeMainsRank, jeeAdvancedRank } = req.body || {};
+    let { name, email, phone, coaching, homeState, studentClass, neetRank } = req.body || {};
 
     if (name !== undefined) {
       if (!String(name).trim()) return res.status(400).json({ error: "Name cannot be empty" });
@@ -137,8 +135,6 @@ router.patch("/profile", requireAuth, async (req, res) => {
     if (homeState !== undefined) user.homeState = String(homeState).trim();
     if (studentClass !== undefined) user.studentClass = String(studentClass).trim();
     if (neetRank        !== undefined) user.neetRank        = neetRank        === "" || neetRank        == null ? null : Number(neetRank);
-    if (jeeMainsRank    !== undefined) user.jeeMainsRank    = jeeMainsRank    === "" || jeeMainsRank    == null ? null : Number(jeeMainsRank);
-    if (jeeAdvancedRank !== undefined) user.jeeAdvancedRank = jeeAdvancedRank === "" || jeeAdvancedRank == null ? null : Number(jeeAdvancedRank);
 
     await user.save();
     res.json({ user: pub(user) });
