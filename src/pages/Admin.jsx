@@ -603,7 +603,7 @@ export default function Admin() {
               <table style={{ width: "100%", minWidth: 1100, borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: "#fafafa" }}>
-                    {["#", "", "User", "Email", "Phone", "Coaching", "JEE Mains", "JEE Adv.", "Joined", "Last Login"].map((h, hi) => (
+                    {["#", "", "User", "Email", "Phone", "Coaching", "Class", "Joined", "Last Login"].map((h, hi) => (
                       <th key={hi} style={{
                         padding: "12px 20px", textAlign: "left", fontSize: 11,
                         fontWeight: 700, color: "#999", letterSpacing: ".06em",
@@ -660,10 +660,7 @@ export default function Admin() {
                         {u.coaching || <span style={{ color: "#ddd" }}>—</span>}
                       </td>
                       <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
-                        {u.jeeMainsRank ? u.jeeMainsRank.toLocaleString() : "—"}
-                      </td>
-                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
-                        {u.jeeAdvancedRank ? u.jeeAdvancedRank.toLocaleString() : "—"}
+                        {u.studentClass || "—"}
                       </td>
                       <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888", whiteSpace: "nowrap" }}>
                         {fmtDate(u.createdAt)}

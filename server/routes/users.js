@@ -29,10 +29,10 @@ router.get("/export.csv", requireAdmin, async (_req, res) => {
   try {
     const users = await User.find().select("-passwordHash -resetTokenHash").sort({ createdAt: -1 }).lean();
     const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-    const head = "Name,Email,Phone,Coaching,JEE Mains Rank,JEE Advanced Rank,NEET Rank,Joined,Last Login\n";
+    const head = "Name,Email,Phone,Coaching,Class,NEET Rank,Joined,Last Login\n";
     const rows = users.map((u) => [
       u.name, u.email, u.phone, u.coaching,
-      u.jeeMainsRank, u.jeeAdvancedRank, u.neetRank,
+      u.studentClass, u.neetRank,
       u.createdAt?.toISOString(), u.lastLogin?.toISOString(),
     ].map(esc).join(",")).join("\n");
     res.setHeader("Content-Type", "text/csv");
