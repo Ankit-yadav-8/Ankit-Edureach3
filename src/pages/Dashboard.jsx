@@ -243,7 +243,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <section className="neo-auth" style={{ background: "var(--base)", padding: "100px 16px 60px", minHeight: "100vh" }}>
+    <section className="neo-auth" style={{ "--base": "#ffffff", "--shadow-dark": "#d1d9e6", "--shadow-light": "#ffffff", background: "var(--base)", padding: "140px 16px 60px", minHeight: "100vh" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexDirection: "column", gap: 24 }}>
 
         {/* ── Header ─────────────────────────────────────────────── */}
@@ -271,7 +271,7 @@ export default function Dashboard() {
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Parichay AI</span>
-                      <span style={{ fontSize: 9, fontWeight: 800, color: "var(--orange)", background: "rgba(244,123,32,0.15)", padding: "2px 6px", borderRadius: 4 }}>Beta</span>
+                      <span className="raised-sm" style={{ fontSize: 9, fontWeight: 800, color: "var(--orange)", background: "#fff", padding: "4px 8px", borderRadius: 6 }}>BETA</span>
                     </div>
                     <div style={{ fontSize: 12, color: "var(--text-soft)", marginTop: 2, fontWeight: 500 }}>Your personal counselling assistant</div>
                   </div>
@@ -340,7 +340,6 @@ export default function Dashboard() {
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   {!loading && plans.length > 0 && <span style={{ fontSize: 12, color: "var(--text-soft)", fontWeight: 500 }}>{plans.length} active</span>}
-                  <button onClick={() => navigate("/mentorship")} style={{ background: "transparent", border: "none", color: "var(--orange)", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: INTER, padding: 0 }}>Explore all plans</button>
                 </div>
               </div>
 
@@ -356,7 +355,7 @@ export default function Dashboard() {
                       <div style={{ flex: 1, minWidth: 150 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                           <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{p.planLabel || p.plan}</span>
-                          <span style={{ fontSize: 9, fontWeight: 800, padding: "2px 6px", borderRadius: 4, color: "#10B981", background: "rgba(16,185,129,0.12)" }}>Active</span>
+                          <span className="raised-sm" style={{ fontSize: 9, fontWeight: 800, padding: "4px 8px", borderRadius: 6, color: "#10B981", background: "#fff" }}>ACTIVE</span>
                         </div>
                         <div style={{ fontSize: 11.5, color: "var(--text-soft)", marginTop: 4, fontWeight: 500 }}>{fmtDate(p.createdAt)}{p.razorpayPaymentId ? ` · ${p.razorpayPaymentId}` : ""}</div>
                       </div>
@@ -368,6 +367,10 @@ export default function Dashboard() {
                       )}
                     </div>
                   ))}
+                  
+                  <button onClick={() => navigate("/mentorship")} style={{ background: "transparent", border: "none", color: "var(--orange)", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: INTER, padding: "16px 0 0", width: "100%", textAlign: "center", display: "block" }}>
+                    Explore all plans
+                  </button>
                 </div>
               ) : (
                 <div style={{ textAlign: "center", padding: "40px 12px" }}>
