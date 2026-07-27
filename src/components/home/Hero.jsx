@@ -222,7 +222,7 @@ export default function Hero({ onSearch }) {
               onClick={() => nav("/jee-main#college")}
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-                width: isMobile ? "100%" : "auto", minWidth: 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
+                minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: CORAL, border: "none", color: "#fff",
                 fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
                 boxShadow: `8px 8px 16px rgba(255,90,54,0.35), -8px -8px 16px ${SHADOW_LT}`, transition: "all .2s",
@@ -236,7 +236,7 @@ export default function Hero({ onSearch }) {
               onClick={() => nav("/community")}
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-                width: isMobile ? "100%" : "auto", minWidth: 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
+                minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: BASE, border: "none", color: INK,
                 fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
                 boxShadow: raised, transition: "all .2s",
