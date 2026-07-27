@@ -1,9 +1,28 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { rateLimit } from "express-rate-limit";
 import User from "../models/User.js";
+import PasswordResetToken from "../models/PasswordResetToken.js";
 import { requireAuth } from "../middleware/auth.js";
 import { signStudentToken } from "../utils/tokens.js";
+import { sendPasswordResetEmail } from "../utils/mailer.js";
+
+const forgotLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // Limit each IP to 5 forgot password requests per windowMs
+  message: { error: "Too many reset requests from this IP, please try again after an hour" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const resetLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // Limit each IP to 10 reset attempts per windowMs
+  message: { error: "Too many reset attempts from this IP, please try again after an hour" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 const router = express.Router();
 const sign = signStudentToken;
@@ -143,37 +162,88 @@ router.patch("/profile", requireAuth, async (req, res) => {
   } catch (e) { console.error("[auth/profile]", e.message); res.status(500).json({ error: "Could not update profile. Please try again." }); }
 });
 
-router.post("/forgot", async (req, res) => {
+router.post("/forgot", forgotLimiter, async (req, res) => {
   try {
     const email = String(req.body?.email || "").toLowerCase().trim();
+    if (!isEmail(email)) return res.json({ ok: true }); // generic response
+
     const user = await User.findOne({ email });
-    if (!user) return res.json({ ok: true });
-    const token = crypto.randomBytes(24).toString("hex");
-    user.resetTokenHash = crypto.createHash("sha256").update(token).digest("hex");
-    user.resetExpires = new Date(Date.now() + 30 * 60 * 1000);
-    await user.save();
+    if (!user) {
+      // generic response: do not reveal if email exists
+      return res.json({ ok: true });
+    }
+
+    // Invalidate any previously unused tokens for this user
+    await PasswordResetToken.updateMany(
+      { userId: user._id, used: false },
+      { $set: { used: true } }
+    );
+
+    const token = crypto.randomBytes(32).toString("hex");
+    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+
+    await PasswordResetToken.create({
+      userId: user._id,
+      tokenHash,
+      used: false,
+    });
+
     const devLink = `${(process.env.CLIENT_ORIGIN || "").split(",")[0]}/?reset=${token}`;
-    console.log(`\n[DEV RESET] for ${email}: token=${token}\n`);
+    
+    // Send email using Brevo
+    await sendPasswordResetEmail(email, devLink);
+
     res.json({ ok: true, ...(process.env.OTP_DEV_MODE !== "false" ? { devToken: token, devLink } : {}) });
-  } catch (e) { console.error("[auth/forgot]", e.message); res.status(500).json({ error: "Could not process the request. Please try again." }); }
+  } catch (e) {
+    console.error("[auth/forgot]", e.message);
+    res.status(500).json({ error: "Could not process the request. Please try again." });
+  }
 });
 
-router.post("/reset", async (req, res) => {
+router.post("/reset", resetLimiter, async (req, res) => {
   try {
     const { token, password } = req.body || {};
-    if (!token || String(password || "").length < 6) return res.status(400).json({ error: "Invalid token or password too short" });
+    
+    // Require minimum 8 characters for new password policy
+    if (!token || String(password || "").length < 8) {
+      return res.status(400).json({ error: "Invalid token or password must be at least 8 characters" });
+    }
+    
     const hash = crypto.createHash("sha256").update(String(token)).digest("hex");
-    const user = await User.findOne({ resetTokenHash: hash, resetExpires: { $gt: new Date() } });
-    if (!user) return res.status(400).json({ error: "Reset link is invalid or expired" });
-    // Cost 12 to match signup — reset was still on the old cost of 10.
+    
+    // Explicitly check expiresAt since TTL deletion runs periodically (approx 60s)
+    const resetToken = await PasswordResetToken.findOne({
+      tokenHash: hash,
+      used: false,
+      createdAt: { $gt: new Date(Date.now() - 15 * 60 * 1000) } // valid for 15 mins
+    });
+    
+    if (!resetToken) {
+      return res.status(400).json({ error: "Invalid or expired reset link" });
+    }
+
+    const user = await User.findById(resetToken.userId);
+    if (!user) {
+      return res.status(400).json({ error: "Invalid or expired reset link" });
+    }
+
+    // Cost 12 to match signup
     user.passwordHash = await bcrypt.hash(String(password), 12);
-    user.resetTokenHash = undefined; user.resetExpires = undefined;
-    // A reset usually means "someone else may have my account". Retire every
-    // token already issued for it, so the reset actually evicts them.
+    
+    // Retire every token already issued for it, so the reset actually evicts them.
     user.tokenVersion = (user.tokenVersion || 0) + 1;
     await user.save();
+
+    // Mark token as used
+    resetToken.used = true;
+    await resetToken.save();
+
+    // Sign a fresh token and respond
     res.json({ ok: true, token: sign(user), user: pub(user) });
-  } catch (e) { console.error("[auth/reset]", e.message); res.status(500).json({ error: "Could not reset password. Please try again." }); }
+  } catch (e) {
+    console.error("[auth/reset]", e.message);
+    res.status(500).json({ error: "Could not reset password. Please try again." });
+  }
 });
 
 export default router;

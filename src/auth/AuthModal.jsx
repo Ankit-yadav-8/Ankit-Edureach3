@@ -66,7 +66,7 @@ function validate(mode, f) {
   if (mode === "reset") {
     if (!f.token.trim())         e.token    = "Reset token is required";
     if (!f.password)             e.password = "New password is required";
-    else if (f.password.length < 6) e.password = "Minimum 6 characters";
+    else if (f.password.length < 8) e.password = "Minimum 8 characters";
   }
   return e;
 }
@@ -341,7 +341,15 @@ export default function AuthModal() {
   const prevOpen = useRef(false);
 
   useEffect(() => {
-    if (loginOpen && !prevOpen.current) setMode(loginMode || "login");
+    if (loginOpen && !prevOpen.current) {
+      setMode(loginMode || "login");
+      // If we are opening in reset mode, grab the token from the URL if it's there
+      if (loginMode === "reset") {
+        const urlParams = new URLSearchParams(window.location.search);
+        const t = urlParams.get("reset");
+        if (t) setF((s) => ({ ...s, token: t }));
+      }
+    }
     prevOpen.current = loginOpen;
   }, [loginOpen, loginMode]);
 
@@ -638,10 +646,13 @@ export default function AuthModal() {
                      {/* reset */}
                      {mode === "reset" && (<div className="form active">
                         <h2 className="title">Set New Password</h2>
-                        <p className="sub">Enter your reset token and new password.</p>
+                        <p className="sub">Choose a strong password for your account.</p>
                         
-                        <Field icon={KeyRound} placeholder="Reset token *" value={f.token} error={fe.token} onChange={e => set("token", e.target.value)} />
-                        <Field icon={Lock} type="password" placeholder="New password (min 6 chars) *" value={f.password} error={fe.password} onChange={e => set("password", e.target.value)} onKeyDown={e => e.key === "Enter" && doReset()} autoComplete="new-password" />
+                        {/* Only show token field if we didn't get it from the URL */}
+                        {!new URLSearchParams(window.location.search).get("reset") && !f.token && (
+                          <Field icon={KeyRound} placeholder="Reset token *" value={f.token} error={fe.token} onChange={e => set("token", e.target.value)} />
+                        )}
+                        <Field icon={Lock} type="password" placeholder="New password (min 8 chars) *" value={f.password} error={fe.password} onChange={e => set("password", e.target.value)} onKeyDown={e => e.key === "Enter" && doReset()} autoComplete="new-password" />
                         
                         <ActionBtn busy={busy} label="Set new password" busyLabel={busyLabel} onClick={doReset} shake={shake} />
                         <p className="switch-line"><button type="button" onClick={() => go("login")}>Back to login</button></p>

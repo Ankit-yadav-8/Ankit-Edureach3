@@ -105,6 +105,16 @@ function ScrollManager() {
 export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const { pathname } = useLocation();
+  const { openReset } = useAuth();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("reset")) {
+      openReset();
+      // Remove it from the URL so it doesn't reopen on refresh if they close the modal
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, [openReset]);
 
   // Cmd/Ctrl+K to open search
   useEffect(() => {

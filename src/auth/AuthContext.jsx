@@ -117,6 +117,7 @@ export function AuthProvider({ children }) {
     loginOpen, loginMode,
     openLogin:   () => { setLoginMode("login");  setLoginOpen(true); },
     openSignup:  () => { setLoginMode("signup"); setLoginOpen(true); },
+    openReset:   () => { setLoginMode("reset");  setLoginOpen(true); },
     closeLogin:  () => setLoginOpen(false),
     requireAuth: (fn) => (user ? fn?.() : setLoginOpen(true)),
   };
