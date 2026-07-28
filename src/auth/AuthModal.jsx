@@ -5,9 +5,10 @@ import {
   Phone, GraduationCap, CheckCircle2, AlertCircle, MapPin,
   Loader2, Eye, EyeOff, Sparkles, ChevronDown,
   Shield, Zap, BookOpen, Award, Trophy, Stethoscope,
+  ShieldCheck, Copy, Check,
 } from "lucide-react";
 import { useAuth } from "./AuthContext.jsx";
-import { apiForgot, apiReset, apiSendOtp, apiVerifyOtp } from "./api.js";
+import { apiForgot, apiReset, apiSendOtp, apiVerifyOtp, apiVerifyResetOtp } from "./api.js";
 
 /* ── constants ──────────────────────────────────────────────── */
 const OR  = "#FF693D";
@@ -60,10 +61,18 @@ function validate(mode, f) {
     if (!f.email.trim())         e.email = "Email is required";
     else if (!isEmail(f.email))  e.email = EMAIL_ERR;
   }
-  if (mode === "reset") {
-    if (!f.token.trim())         e.token    = "Reset token is required";
+  if (mode === "resetOtp") {
+    if (!f.resetOtp.trim())      e.resetOtp = "Please enter the 6-digit code from your email";
+    else if (f.resetOtp.length !== 6) e.resetOtp = "Code must be exactly 6 digits";
+  }
+  if (mode === "resetVerify") {
+    if (!f.verificationToken.trim()) e.verificationToken = "Please enter the verification token";
+  }
+  if (mode === "resetPassword") {
     if (!f.password)             e.password = "New password is required";
     else if (f.password.length < 8) e.password = "Minimum 8 characters";
+    if (!f.confirmPassword)      e.confirmPassword = "Please confirm your password";
+    else if (f.password !== f.confirmPassword) e.confirmPassword = "Passwords do not match";
   }
   return e;
 }
@@ -312,14 +321,70 @@ function ShowcasePanel({ mode }) {
 }
 
 /* ════════════════════════════════════════════════════════════
+   STEP INDICATOR for password reset flow
+════════════════════════════════════════════════════════════ */
+function ResetStepIndicator({ currentStep }) {
+  const steps = [
+    { num: 1, label: "Enter OTP" },
+    { num: 2, label: "Verify Token" },
+    { num: 3, label: "New Password" },
+  ];
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 0, marginBottom: 20 }}>
+      {steps.map((s, i) => {
+        const isActive = s.num === currentStep;
+        const isDone = s.num < currentStep;
+        return (
+          <div key={s.num} style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+              <motion.div
+                animate={{ scale: isActive ? 1.1 : 1 }}
+                style={{
+                  width: 28, height: 28, borderRadius: "50%",
+                  background: isDone ? "linear-gradient(135deg,#22c55e,#16a34a)" : isActive ? `linear-gradient(135deg,${OR},${ORD})` : "#e2e8f0",
+                  display: "grid", placeItems: "center",
+                  color: isDone || isActive ? "#fff" : "#94a3b8",
+                  fontSize: 12, fontWeight: 800,
+                  boxShadow: isActive ? `0 4px 12px ${OR}44` : isDone ? "0 4px 12px #22c55e44" : "none",
+                  transition: "all .3s",
+                }}
+              >
+                {isDone ? <Check size={14} /> : s.num}
+              </motion.div>
+              <span style={{
+                fontSize: 10, fontWeight: 600,
+                color: isDone ? "#16a34a" : isActive ? OR : "#94a3b8",
+                whiteSpace: "nowrap",
+              }}>
+                {s.label}
+              </span>
+            </div>
+            {i < steps.length - 1 && (
+              <div style={{
+                width: 32, height: 2, borderRadius: 1,
+                background: isDone ? "#22c55e" : "#e2e8f0",
+                margin: "0 4px", marginBottom: 18,
+                transition: "background .3s",
+              }} />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════
    MAIN MODAL
 ════════════════════════════════════════════════════════════ */
 const HEADS = {
-  login:    { emoji: "👋", title: "Welcome back!",        sub: "Continue your college discovery journey." },
-  signup:   { emoji: "🚀", title: "Create your account",  sub: "Join 50,000+ JEE aspirants. Free forever." },
-  otpEmail: { emoji: "✉️", title: "Login with OTP",       sub: "No password needed — we'll email you a code." },
-  forgot:   { emoji: "🔐", title: "Forgot password?",     sub: "Enter your email and we'll send a reset link." },
-  reset:    { emoji: "🔑", title: "Set new password",     sub: "Choose a strong password for your account." },
+  login:         { emoji: "👋", title: "Welcome back!",        sub: "Continue your college discovery journey." },
+  signup:        { emoji: "🚀", title: "Create your account",  sub: "Join 50,000+ JEE aspirants. Free forever." },
+  otpEmail:      { emoji: "✉️", title: "Login with OTP",       sub: "No password needed — we'll email you a code." },
+  forgot:        { emoji: "🔐", title: "Forgot password?",     sub: "Enter your email and we'll send a reset link." },
+  resetOtp:      { emoji: "🔢", title: "Enter Reset Code",     sub: "Enter the 6-digit code from your email." },
+  resetVerify:   { emoji: "🔑", title: "Verify Token",         sub: "Enter the verification token to continue." },
+  resetPassword: { emoji: "🛡️", title: "Set New Password",    sub: "Choose a strong, unique password." },
 };
 
 export default function AuthModal() {
@@ -328,30 +393,31 @@ export default function AuthModal() {
   // so it is always dismissible (close X + "browse as guest" skip link).
   const mandatory = false;
   const [mode,    setMode]   = useState("login");
-  const [f,       setF]      = useState({ name: "", email: "", phone: "", password: "", confirmPassword: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", remember: false });
+  const [f,       setF]      = useState({
+    name: "", email: "", phone: "", password: "", confirmPassword: "", code: "",
+    token: "", coaching: "", homeState: "", studentClass: "", remember: false,
+    resetOtp: "", verificationToken: "", serverVerificationToken: "",
+  });
   const [fe,      setFe]     = useState({});
   const [banner,  setBanner] = useState({ type: "", text: "" });
   const [busy,    setBusy]   = useState(false);
   const [shake,   setShake]  = useState(false);
   const [slowNet, setSlowNet] = useState(false);
   const [notReg,  setNotReg]  = useState(false);
-  const [hasUrlToken, setHasUrlToken] = useState(false);
+  const [copied,  setCopied]  = useState(false);
   const prevOpen = useRef(false);
 
   useEffect(() => {
     if (loginOpen && !prevOpen.current) {
       setMode(loginMode || "login");
-      // If we are opening in reset mode, grab the token from the URL if it's there
-      if (loginMode === "reset") {
+      // If we are opening in resetOtp mode, grab the OTP from the URL if it's there
+      if (loginMode === "resetOtp") {
         const urlParams = new URLSearchParams(window.location.search);
         const t = urlParams.get("reset");
         if (t) {
-          setF((s) => ({ ...s, token: t }));
-          setHasUrlToken(true);
+          setF((s) => ({ ...s, resetOtp: t }));
           // Remove it from the URL so it doesn't reopen on refresh
           window.history.replaceState(null, "", window.location.pathname);
-        } else {
-          setHasUrlToken(false);
         }
       }
     }
@@ -370,18 +436,23 @@ export default function AuthModal() {
     setFe({});
     setSlowNet(false);
     setNotReg(false);
+    setCopied(false);
     setMode(m);
   };
 
   const close = () => {
     setMode("login");
-    setF({ name: "", email: "", phone: "", password: "", confirmPassword: "", code: "", token: "", coaching: "", homeState: "", studentClass: "", remember: false });
+    setF({
+      name: "", email: "", phone: "", password: "", confirmPassword: "", code: "",
+      token: "", coaching: "", homeState: "", studentClass: "", remember: false,
+      resetOtp: "", verificationToken: "", serverVerificationToken: "",
+    });
     setBanner({ type: "", text: "" });
     setFe({});
     setBusy(false);
     setSlowNet(false);
     setNotReg(false);
-    setHasUrlToken(false);
+    setCopied(false);
     closeLogin();
   };
 
@@ -437,22 +508,59 @@ export default function AuthModal() {
       throw e;
     }
   });
+
+  // ── STEP 1: Forgot password — send OTP email ──────────────────────────────
   const doForgot  = run(async () => {
     const r = await apiForgot({ email: f.email.trim() });
-    if (r.devToken) { set("token", r.devToken); go("reset"); }
-    else setBanner({ type: "ok", text: "If that email is registered, a reset link has been sent." });
+    if (r.ok && r.exists) {
+      setBanner({ type: "ok", text: r.message || "A reset link has been sent to your email." });
+      // If dev mode, pre-fill the OTP
+      if (r.devOtp) {
+        set("resetOtp", r.devOtp);
+      }
+      // Move to OTP entry step after a brief moment
+      setTimeout(() => go("resetOtp"), 1200);
+    }
   }, "forgot");
-  const doReset   = run(async () => { 
-    if (f.password !== f.confirmPassword) {
-      setFe({ confirmPassword: "Passwords do not match" });
-      setBanner({ type: "err", text: "Passwords do not match." });
+
+  // ── STEP 2: Verify OTP → get verification token ───────────────────────────
+  const doVerifyResetOtp = run(async () => {
+    const r = await apiVerifyResetOtp({ otp: f.resetOtp.trim() });
+    if (r.ok && r.verificationToken) {
+      // Store the server-returned verification token
+      set("serverVerificationToken", r.verificationToken);
+      setBanner({ type: "ok", text: "OTP verified! Copy the token below and enter it to proceed." });
+      go("resetVerify");
+      // Pre-set the server token so the user can see it
+      setF(s => ({ ...s, serverVerificationToken: r.verificationToken }));
+    }
+  }, "resetOtp");
+
+  // ── STEP 3: Verify the token the user typed ────────────────────────────────
+  const doVerifyToken = run(async () => {
+    // Compare what the user typed with the token the server gave them
+    if (f.verificationToken.trim() !== f.serverVerificationToken) {
+      setBanner({ type: "err", text: "Verification token does not match. Please copy and paste it exactly." });
       setShake(true); setTimeout(() => setShake(false), 450);
       return;
     }
-    const r = await apiReset({ token: f.token.trim(), password: f.password }); saveSession(r); close(); 
-  }, "reset");
+    setBanner({ type: "ok", text: "Token verified! Set your new password." });
+    go("resetPassword");
+    // Carry the verification token forward for the final reset call
+    setF(s => ({ ...s, verificationToken: f.verificationToken, serverVerificationToken: f.serverVerificationToken }));
+  }, "resetVerify");
 
-  const BACK = ["otpEmail", "otpCode", "forgot", "reset"];
+  // ── STEP 4: Set new password ───────────────────────────────────────────────
+  const doResetPassword = run(async () => {
+    const r = await apiReset({
+      verificationToken: f.serverVerificationToken,
+      password: f.password,
+    });
+    saveSession(r);
+    close();
+  }, "resetPassword");
+
+  const BACK = ["otpEmail", "otpCode", "forgot", "resetOtp", "resetVerify", "resetPassword"];
   const H    = HEADS[mode] ?? HEADS.login;
 
   const busyLabel = slowNet ? "Server starting up — please wait…"
@@ -461,7 +569,22 @@ export default function AuthModal() {
     : mode === "otpEmail" ? "Sending code…"
     : mode === "otpCode"  ? "Verifying…"
     : mode === "forgot"   ? "Sending link…"
+    : mode === "resetOtp" ? "Verifying OTP…"
+    : mode === "resetVerify" ? "Checking…"
     : "Saving…";
+
+  // Copy verification token to clipboard
+  const copyToken = () => {
+    if (f.serverVerificationToken) {
+      navigator.clipboard.writeText(f.serverVerificationToken).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
+    }
+  };
+
+  // Which reset step are we on?
+  const resetStep = mode === "resetOtp" ? 1 : mode === "resetVerify" ? 2 : mode === "resetPassword" ? 3 : 0;
 
   return (
     <AnimatePresence>
@@ -649,7 +772,7 @@ export default function AuthModal() {
                      {/* forgot */}
                      {mode === "forgot" && (<div className="form active">
                         <h2 className="title">Reset Password</h2>
-                        <p className="sub">Enter your email to receive a reset link.</p>
+                        <p className="sub">Enter your registered email address.</p>
                         
                         <Field icon={Mail} type="email" placeholder="Registered email address *" value={f.email} error={fe.email} onChange={e => set("email", e.target.value)} onKeyDown={e => e.key === "Enter" && doForgot()} autoComplete="email" />
                         
@@ -657,19 +780,146 @@ export default function AuthModal() {
                         <p className="switch-line"><button type="button" onClick={() => go("login")}>Back to login</button></p>
                      </div>)}
 
-                     {/* reset */}
-                     {mode === "reset" && (<div className="form active">
-                        <h2 className="title">Set New Password</h2>
-                        <p className="sub">Choose a strong password for your account.</p>
+                     {/* ═══ RESET STEP 1: Enter OTP ═══ */}
+                     {mode === "resetOtp" && (<div className="form active">
+                        <ResetStepIndicator currentStep={1} />
+                        <h2 className="title">Enter Reset Code</h2>
+                        <p className="sub">Enter the 6-digit code from your email.</p>
                         
-                        {/* Only show token field if we didn't get it from the URL */}
-                        {!hasUrlToken && (
-                          <Field icon={KeyRound} placeholder="6-digit Reset Code *" value={f.token} error={fe.token} onChange={e => set("token", e.target.value)} />
+                        <div style={{ textAlign: "center", marginBottom: 20 }}>
+                          <input
+                            inputMode="numeric" maxLength={6}
+                            placeholder="------"
+                            value={f.resetOtp}
+                            onChange={e => set("resetOtp", e.target.value.replace(/\D/g, ""))}
+                            onKeyDown={e => e.key === "Enter" && f.resetOtp.length === 6 && doVerifyResetOtp()}
+                            autoFocus
+                            style={{
+                              width: "100%", textAlign: "center", letterSpacing: "1em",
+                              fontSize: 34, fontWeight: 900, color: "var(--text)",
+                              height: 72, border: `2px solid ${f.resetOtp.length === 6 ? "var(--orange)" : "transparent"}`,
+                              borderRadius: 16, background: "transparent",
+                              outline: "none", fontFamily: "Sora, monospace",
+                              transition: "all .2s",
+                              boxShadow: "inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light)",
+                            }}
+                          />
+                        </div>
+                        
+                        <div style={{
+                          display: "flex", alignItems: "center", gap: 6, padding: "8px 12px",
+                          background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 10,
+                          marginBottom: 14,
+                        }}>
+                          <Shield size={14} color="#3b82f6" />
+                          <span style={{ fontSize: 11.5, color: "#1e40af", fontWeight: 500 }}>
+                            This code expires in 15 minutes. Check your spam folder if you don't see it.
+                          </span>
+                        </div>
+                        
+                        <ActionBtn busy={busy} disabled={f.resetOtp.length < 6} label="Verify OTP" busyLabel={busyLabel} onClick={doVerifyResetOtp} shake={shake} />
+                        <p className="switch-line">
+                          <button type="button" onClick={() => go("forgot")}>Request new code</button>
+                          {" · "}
+                          <button type="button" onClick={() => go("login")}>Back to login</button>
+                        </p>
+                     </div>)}
+
+                     {/* ═══ RESET STEP 2: Verification Token ═══ */}
+                     {mode === "resetVerify" && (<div className="form active">
+                        <ResetStepIndicator currentStep={2} />
+                        <h2 className="title">Verification Token</h2>
+                        <p className="sub">Copy the token below and paste it in the field to verify your identity.</p>
+                        
+                        {/* Display the server-generated token for user to copy */}
+                        {f.serverVerificationToken && (
+                          <div style={{ marginBottom: 16 }}>
+                            <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", marginBottom: 6, display: "block", textTransform: "uppercase", letterSpacing: ".5px" }}>
+                              Your verification token
+                            </label>
+                            <div style={{
+                              display: "flex", alignItems: "center", gap: 8,
+                              background: "linear-gradient(135deg,#f0fdf4,#ecfdf5)",
+                              border: "1.5px solid #86efac",
+                              borderRadius: 12, padding: "12px 14px",
+                            }}>
+                              <ShieldCheck size={18} color="#16a34a" style={{ flexShrink: 0 }} />
+                              <code style={{
+                                flex: 1, fontSize: 13, fontWeight: 700, color: "#166534",
+                                wordBreak: "break-all", fontFamily: "monospace",
+                                letterSpacing: ".5px",
+                              }}>
+                                {f.serverVerificationToken}
+                              </code>
+                              <button
+                                type="button"
+                                onClick={copyToken}
+                                style={{
+                                  background: "none", border: "1px solid #86efac", borderRadius: 8,
+                                  padding: "6px 10px", cursor: "pointer", display: "flex",
+                                  alignItems: "center", gap: 4, color: "#166534",
+                                  fontSize: 11, fontWeight: 600, transition: "all .15s",
+                                  flexShrink: 0,
+                                }}
+                              >
+                                {copied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy</>}
+                              </button>
+                            </div>
+                          </div>
                         )}
-                        <Field icon={Lock} type="password" placeholder="New password (min 8 chars) *" value={f.password} error={fe.password} onChange={e => set("password", e.target.value)} autoComplete="new-password" />
-                        <Field icon={Lock} type="password" placeholder="Confirm new password *" value={f.confirmPassword} error={fe.confirmPassword} onChange={e => set("confirmPassword", e.target.value)} onKeyDown={e => e.key === "Enter" && doReset()} autoComplete="new-password" />
                         
-                        <ActionBtn busy={busy} label="Set new password" busyLabel={busyLabel} onClick={doReset} shake={shake} />
+                        <Field
+                          icon={KeyRound}
+                          placeholder="Paste verification token here *"
+                          value={f.verificationToken}
+                          error={fe.verificationToken}
+                          onChange={e => set("verificationToken", e.target.value)}
+                          onKeyDown={e => e.key === "Enter" && doVerifyToken()}
+                        />
+                        
+                        <div style={{
+                          display: "flex", alignItems: "center", gap: 6, padding: "8px 12px",
+                          background: "#fef3c7", border: "1px solid #fcd34d", borderRadius: 10,
+                          marginBottom: 14, marginTop: 8,
+                        }}>
+                          <Shield size={14} color="#d97706" />
+                          <span style={{ fontSize: 11.5, color: "#92400e", fontWeight: 500 }}>
+                            This token is unique to your reset request and cannot be reused.
+                          </span>
+                        </div>
+                        
+                        <ActionBtn busy={busy} label="Verify & Continue" busyLabel={busyLabel} onClick={doVerifyToken} shake={shake} />
+                        <p className="switch-line"><button type="button" onClick={() => go("login")}>Back to login</button></p>
+                     </div>)}
+
+                     {/* ═══ RESET STEP 3: Set New Password ═══ */}
+                     {mode === "resetPassword" && (<div className="form active">
+                        <ResetStepIndicator currentStep={3} />
+                        <h2 className="title">Set New Password</h2>
+                        <p className="sub">Choose a strong, unique password for your account.</p>
+                        
+                        <Field icon={Lock} type="password" placeholder="New password (min 8 chars) *" value={f.password} error={fe.password} onChange={e => set("password", e.target.value)} autoComplete="new-password" />
+                        <Field icon={Lock} type="password" placeholder="Confirm new password *" value={f.confirmPassword} error={fe.confirmPassword} onChange={e => set("confirmPassword", e.target.value)} onKeyDown={e => e.key === "Enter" && doResetPassword()} autoComplete="new-password" />
+
+                        {f.password.length > 0 && (
+                          <div style={{ marginTop: 8, marginBottom: 12 }}>
+                            <div style={{ display: "flex", gap: 4 }}>
+                              {[1,2,3,4].map(i => {
+                                const strength = f.password.length >= 10 && /[A-Z]/.test(f.password) && /\d/.test(f.password) && /[^a-zA-Z0-9]/.test(f.password) ? 4
+                                  : f.password.length >= 10 && /[A-Z]/.test(f.password) && /\d/.test(f.password) ? 3
+                                  : f.password.length >= 8 ? 2 : 1;
+                                const color = strength >= 4 ? "#22c55e" : strength === 3 ? "#84cc16" : strength === 2 ? "#f59e0b" : "#ef4444";
+                                const label = strength >= 4 ? "Strong" : strength === 3 ? "Good" : strength === 2 ? "Fair" : "Weak";
+                                return <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= strength ? color : "#e2e8f0", transition: "background .2s" }} />;
+                              })}
+                            </div>
+                            <p style={{ fontSize: 10.5, color: "#64748b", marginTop: 5, fontWeight: 500 }}>
+                              Use uppercase, numbers, and special characters for a stronger password.
+                            </p>
+                          </div>
+                        )}
+                        
+                        <ActionBtn busy={busy} label="Set new password" busyLabel={busyLabel} onClick={doResetPassword} shake={shake} />
                         <p className="switch-line"><button type="button" onClick={() => go("login")}>Back to login</button></p>
                      </div>)}
 
@@ -679,8 +929,23 @@ export default function AuthModal() {
                 {/* banner */}
                 <AnimatePresence>
                   {banner.text && (
-                    <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} style={{ marginTop: 20, textAlign: "center", color: banner.type === 'error' ? 'red' : 'green', fontSize: 13 }}>
-                      {banner.text}
+                    <motion.div
+                      initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.96 }}
+                      style={{
+                        display: "flex", gap: 10, alignItems: "flex-start",
+                        background: banner.type === "err" ? "linear-gradient(135deg,#fff1f2,#fde8e8)" : "linear-gradient(135deg,#f0fdf4,#dcfce7)",
+                        border: `1.5px solid ${banner.type === "err" ? "#fca5a5" : "#86efac"}`,
+                        borderRadius: 12, padding: "11px 14px", marginTop: 14,
+                        color: banner.type === "err" ? "#991b1b" : "#166534",
+                      }}
+                    >
+                      {banner.type === "err"
+                        ? <AlertCircle size={17} style={{ flexShrink: 0, marginTop: 1 }} color="#ef4444" />
+                        : <CheckCircle2 size={17} style={{ flexShrink: 0, marginTop: 1 }} color="#22c55e" />
+                      }
+                      <span style={{ fontSize: 13.5, lineHeight: 1.55, fontWeight: 700 }}>{banner.text}</span>
                     </motion.div>
                   )}
                 </AnimatePresence>

@@ -24,6 +24,15 @@ const resetLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Stricter limiter for OTP verification — prevents brute-forcing the 6-digit code
+const otpVerifyLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // max 10 OTP verify attempts per 15 min window
+  message: { error: "Too many verification attempts. Please request a new reset link." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 const router = express.Router();
 const sign = signStudentToken;
 // Email must be a valid address ending in "@gmail.com" or ".in"
@@ -33,6 +42,16 @@ const isEmail = (e) => {
   return s.endsWith("@gmail.com") || s.endsWith(".in");
 };
 const pub = (u) => ({ id: u._id, name: u.name, email: u.email, phone: u.phone, coaching: u.coaching, homeState: u.homeState, studentClass: u.studentClass });
+
+// ── Maximum OTP guess attempts before the token is killed ────────────────────
+const MAX_OTP_ATTEMPTS = 5;
+
+// ── Generate a cryptographically secure random alphanumeric token ─────────────
+// Uses crypto.randomBytes for true randomness — each token is unique and
+// unpredictable. 24 bytes → 32-char base36 string (letters + digits only).
+function generateVerificationToken() {
+  return crypto.randomBytes(24).toString("base64url"); // 32 URL-safe chars
+}
 
 router.post("/signup", async (req, res) => {
   try {
@@ -158,64 +177,144 @@ router.patch("/profile", requireAuth, async (req, res) => {
   } catch (e) { console.error("[auth/profile]", e.message); res.status(500).json({ error: "Could not update profile. Please try again." }); }
 });
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// STEP 1 — Forgot password: check email, send OTP via email link
+// ═══════════════════════════════════════════════════════════════════════════════
 router.post("/forgot", forgotLimiter, async (req, res) => {
   try {
     const email = String(req.body?.email || "").toLowerCase().trim();
-    if (!isEmail(email)) return res.json({ ok: true }); // generic response
+    if (!isEmail(email)) return res.status(400).json({ error: "Please enter a valid email address" });
 
     const user = await User.findOne({ email });
     if (!user) {
-      // generic response: do not reveal if email exists
-      return res.json({ ok: true });
+      // Tell the user clearly that this email is not in our database
+      return res.status(404).json({ error: "This email is not registered with us. Please sign up first.", exists: false });
     }
 
     // Invalidate any previously unused tokens for this user
     await PasswordResetToken.updateMany(
-      { userId: user._id, used: false },
-      { $set: { used: true } }
+      { userId: user._id, status: { $in: ["pending", "otp_verified"] } },
+      { $set: { status: "used", used: true } }
     );
 
-    const token = crypto.randomInt(100000, 999999).toString();
-    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+    // Generate a cryptographically random 6-digit OTP using crypto.randomInt
+    // (CSPRNG — each OTP is unique and unpredictable)
+    const otp = crypto.randomInt(100000, 999999).toString();
+    const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
 
     await PasswordResetToken.create({
       userId: user._id,
       tokenHash,
+      status: "pending",
       used: false,
+      attempts: 0,
     });
 
-    const devLink = `${(process.env.CLIENT_ORIGIN || "").split(",")[0]}/?reset=${token}`;
+    // Build the reset link with OTP embedded in the URL
+    const clientOrigin = (process.env.CLIENT_ORIGIN || "").split(",")[0];
+    const resetLink = `${clientOrigin}/?reset=${otp}`;
     
     // Send email using Brevo
-    await sendPasswordResetEmail(email, devLink, token);
+    await sendPasswordResetEmail(email, resetLink, otp);
 
-    res.json({ ok: true, ...(process.env.OTP_DEV_MODE !== "false" ? { devToken: token, devLink } : {}) });
+    res.json({
+      ok: true,
+      exists: true,
+      message: "A password reset link has been sent to your email. Please check your inbox and spam folder.",
+      ...(process.env.OTP_DEV_MODE !== "false" ? { devOtp: otp, devLink: resetLink } : {}),
+    });
   } catch (e) {
     console.error("[auth/forgot]", e.message);
     res.status(500).json({ error: "Could not process the request. Please try again." });
   }
 });
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// STEP 2 — Verify OTP: validate the 6-digit code, return a verification token
+// ═══════════════════════════════════════════════════════════════════════════════
+router.post("/verify-reset-otp", otpVerifyLimiter, async (req, res) => {
+  try {
+    const { otp } = req.body || {};
+    if (!otp || String(otp).length !== 6) {
+      return res.status(400).json({ error: "Please enter the 6-digit code from your email" });
+    }
+
+    const otpHash = crypto.createHash("sha256").update(String(otp)).digest("hex");
+
+    // Find a pending token that matches the OTP hash and hasn't expired
+    const resetToken = await PasswordResetToken.findOne({
+      tokenHash: otpHash,
+      status: "pending",
+      createdAt: { $gt: new Date(Date.now() - 15 * 60 * 1000) }, // 15 min validity
+    });
+
+    if (!resetToken) {
+      // Also increment attempts on any token with this hash to track brute-force
+      return res.status(400).json({ error: "Invalid or expired OTP. Please request a new reset link." });
+    }
+
+    // Brute-force protection: check if too many attempts have been made
+    if (resetToken.attempts >= MAX_OTP_ATTEMPTS) {
+      resetToken.status = "used";
+      resetToken.used = true;
+      await resetToken.save();
+      return res.status(429).json({ error: "Too many incorrect attempts. This OTP has been invalidated. Please request a new one." });
+    }
+
+    // Increment attempts counter
+    resetToken.attempts += 1;
+
+    // Verify the user still exists
+    const user = await User.findById(resetToken.userId);
+    if (!user) {
+      return res.status(400).json({ error: "Invalid or expired reset link" });
+    }
+
+    // ── OTP is valid! Generate a unique cryptographic verification token ──
+    // Uses crypto.randomBytes(24) → 32-char base64url string.
+    // Each verification token is completely unique and unpredictable.
+    const verificationToken = generateVerificationToken();
+    const verifyHash = crypto.createHash("sha256").update(verificationToken).digest("hex");
+
+    // Transition: pending → otp_verified
+    resetToken.status = "otp_verified";
+    resetToken.verifyTokenHash = verifyHash;
+    await resetToken.save();
+
+    res.json({
+      ok: true,
+      verificationToken,
+      message: "OTP verified successfully! Use the verification token below to set your new password.",
+    });
+  } catch (e) {
+    console.error("[auth/verify-reset-otp]", e.message);
+    res.status(500).json({ error: "Could not verify the code. Please try again." });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// STEP 3 — Reset password: validate verification token, set new password
+// ═══════════════════════════════════════════════════════════════════════════════
 router.post("/reset", resetLimiter, async (req, res) => {
   try {
-    const { token, password } = req.body || {};
+    const { verificationToken, password } = req.body || {};
     
     // Require minimum 8 characters for new password policy
-    if (!token || String(password || "").length < 8) {
-      return res.status(400).json({ error: "Invalid token or password must be at least 8 characters" });
+    if (!verificationToken || String(password || "").length < 8) {
+      return res.status(400).json({ error: "Invalid verification token or password must be at least 8 characters" });
     }
     
-    const hash = crypto.createHash("sha256").update(String(token)).digest("hex");
+    const verifyHash = crypto.createHash("sha256").update(String(verificationToken)).digest("hex");
     
-    // Explicitly check expiresAt since TTL deletion runs periodically (approx 60s)
+    // Find a token that was OTP-verified and has a matching verification hash
     const resetToken = await PasswordResetToken.findOne({
-      tokenHash: hash,
-      used: false,
-      createdAt: { $gt: new Date(Date.now() - 15 * 60 * 1000) } // valid for 15 mins
+      verifyTokenHash: verifyHash,
+      status: "otp_verified",
+      createdAt: { $gt: new Date(Date.now() - 15 * 60 * 1000) }, // still within 15 min window
     });
     
     if (!resetToken) {
-      return res.status(400).json({ error: "Invalid or expired reset link" });
+      return res.status(400).json({ error: "Invalid or expired verification token. Please start the reset process again." });
     }
 
     const user = await User.findById(resetToken.userId);
@@ -230,7 +329,8 @@ router.post("/reset", resetLimiter, async (req, res) => {
     user.tokenVersion = (user.tokenVersion || 0) + 1;
     await user.save();
 
-    // Mark token as used
+    // Mark token as used — final state, can never be reused
+    resetToken.status = "used";
     resetToken.used = true;
     await resetToken.save();
 

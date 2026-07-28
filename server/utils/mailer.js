@@ -241,9 +241,9 @@ export async function sendOtpEmail(email, code) {
   }
 }
 
-export async function sendPasswordResetEmail(email, resetUrl, token) {
+export async function sendPasswordResetEmail(email, resetUrl, otp) {
   if (isDevMode()) {
-    console.log(`\n[DEV EMAIL] to ${email}\n  Reset Link: ${resetUrl}\n  Token: ${token}\n  (set BREVO_API_KEY to send for real; OTP_DEV_MODE=true forces this log-only mode)\n`);
+    console.log(`\n[DEV EMAIL] to ${email}\n  Reset Link: ${resetUrl}\n  OTP: ${otp}\n  (set BREVO_API_KEY to send for real; OTP_DEV_MODE=true forces this log-only mode)\n`);
     return { ok: true, dev: true };
   }
 
@@ -262,16 +262,33 @@ export async function sendPasswordResetEmail(email, resetUrl, token) {
       replyTo: { email: replyTo, name: fromName },
       to: [{ email }],
       subject: "Reset your CollegeParichay password",
-      textContent: `Reset your CollegeParichay password using this link: ${resetUrl}\nOr enter this 6-digit code: ${token}\nValid for 15 minutes.`,
+      textContent: `Reset your CollegeParichay password.\n\nClick this link to auto-fill your code: ${resetUrl}\n\nOr enter this 6-digit OTP manually: ${otp}\n\nThis code is unique and expires in 15 minutes. After entering the OTP, you'll receive a verification token to confirm your identity before setting a new password.\n\nIf you didn't request this, ignore this email.`,
       htmlContent: emailShell(`
-        <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">We received a request to reset your CollegeParichay password.</p>
+        <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">We received a request to reset your CollegeParichay password. Follow the steps below:</p>
+        
         <div style="margin:20px 0;text-align:center;">
-          <a href="${esc(resetUrl)}" style="display:inline-block;background:#0d1b3e;color:#fff;font-size:14px;font-weight:700;text-decoration:none;padding:12px 24px;border-radius:8px;margin-bottom:16px;">Reset Password</a>
-          <p style="font-size:14px;color:#5b6472;margin:0 0 8px;">Or enter this 6-digit code manually:</p>
-          <div style="display:inline-block;background:#f1f5f9;border:1px solid #e2e8f0;padding:12px 24px;border-radius:8px;font-size:24px;font-weight:900;letter-spacing:6px;color:#0f172a;">${esc(token)}</div>
+          <p style="font-size:12px;color:#8a93a6;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 10px">Step 1 — Click to auto-fill OTP</p>
+          <a href="${esc(resetUrl)}" style="display:inline-block;background:linear-gradient(135deg,#0d1b3e,#1a2f63);color:#fff;font-size:14px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:10px;box-shadow:0 4px 14px rgba(13,27,62,.25);">🔐 Reset Password</a>
         </div>
+        
+        <div style="margin:16px 0;text-align:center;">
+          <p style="font-size:12px;color:#8a93a6;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 10px">Or enter this code manually</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 auto"><tr>
+            <td align="center" style="background:#f4f6fb;border:1.5px dashed #cbd3e4;border-radius:14px;padding:18px">
+              <div style="font-size:11px;color:#8a93a6;font-weight:700;text-transform:uppercase;letter-spacing:1.4px">Your 6-digit OTP</div>
+              <div style="font-size:38px;font-weight:800;letter-spacing:10px;color:#0d1b3e;margin-top:6px">${esc(otp)}</div>
+            </td>
+          </tr></table>
+        </div>
+        
+        <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:12px 16px;margin:16px 0">
+          <p style="margin:0;font-size:12.5px;color:#92400e;line-height:1.6;font-weight:600">
+            🔒 <b>Security note:</b> This OTP is unique to this request and will be invalidated after 5 incorrect attempts. After entering the OTP, you'll receive a one-time verification token to confirm your identity.
+          </p>
+        </div>
+        
         <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ This code expires in <b>15 minutes</b>. If you didn't request a password reset, you can safely ignore this email.</p>`,
-        { preheader: "Instructions to reset your CollegeParichay password", eyebrow: "Password Reset", footer: "You're receiving this because someone requested a password reset for this email." }),
+        { preheader: `Your CollegeParichay password reset code is ${otp} — valid for 15 minutes`, eyebrow: "Password Reset", footer: "You're receiving this because someone requested a password reset for this email." }),
     });
   } catch (e) {
     console.error("Password reset email send failed:", e.message);

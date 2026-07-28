@@ -40,8 +40,9 @@ export const apiRefresh   = (token) => req("/api/auth/refresh", { method: "POST"
 // fresh token so the device that asked stays signed in.
 export const apiLogoutAll = (token) => req("/api/auth/logout-all", { method: "POST", token });
 export const apiUpdateProfile = (token, b) => req("/api/auth/profile", { method: "PATCH", body: b, token });
-export const apiForgot    = (b) => req("/api/auth/forgot", { method: "POST", body: b });
-export const apiReset     = (b) => req("/api/auth/reset",  { method: "POST", body: b });
+export const apiForgot          = (b) => req("/api/auth/forgot", { method: "POST", body: b });
+export const apiVerifyResetOtp  = (b) => req("/api/auth/verify-reset-otp", { method: "POST", body: b });
+export const apiReset           = (b) => req("/api/auth/reset",  { method: "POST", body: b });
 export const apiSendOtp   = (b) => req("/api/otp/send",    { method: "POST", body: b });
 export const apiVerifyOtp = (b) => req("/api/otp/verify",  { method: "POST", body: b });
 export const apiMyEnrollments = (token) => req("/api/payment/my-enrollments", { token });
