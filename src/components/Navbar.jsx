@@ -224,8 +224,8 @@ export default function Navbar({ onSearch }) {
             <span
               style={{
                 color: "#fff",
-                fontFamily: "Sora, sans-serif",
-                fontWeight: 800,
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 700,
                 fontSize: "14px",
                 letterSpacing: "-0.5px",
                 lineHeight: 1,
@@ -236,7 +236,7 @@ export default function Navbar({ onSearch }) {
           </span>
 
           {/* Brand text — clamps down on narrow phones so the bar never overflows */}
-          <span id="cp-wordmark" style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: "clamp(1rem, 4.4vw, 1.3rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap", color: "#1a1a2e" }}>
+          <span id="cp-wordmark" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "clamp(1.1rem, 4.4vw, 1.4rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap", color: "#1a1a2e" }}>
             College Parichay
           </span>
         </Link>

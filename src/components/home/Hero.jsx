@@ -225,10 +225,10 @@ export default function Hero({ onSearch }) {
                 minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: CORAL, border: "none", color: "#fff",
                 fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
-                boxShadow: `8px 8px 16px rgba(255,90,54,0.35), -8px -8px 16px ${SHADOW_LT}`, transition: "all .2s",
+                boxShadow: `inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.3)`, transition: "all .2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `10px 10px 20px rgba(255,90,54,0.3), -10px -10px 20px ${SHADOW_LT}`; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `8px 8px 16px rgba(255,90,54,0.35), -8px -8px 16px ${SHADOW_LT}`; }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `inset 6px 6px 14px rgba(0,0,0,0.25), inset -6px -6px 14px rgba(255,255,255,0.35)`; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = `inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.3)`; }}
             >
               Predict my college <Target size={16} />
             </button>
@@ -239,10 +239,10 @@ export default function Hero({ onSearch }) {
                 minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: BASE, border: "none", color: INK,
                 fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
-                boxShadow: raised, transition: "all .2s",
+                boxShadow: pressed, transition: "all .2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `10px 10px 20px ${SHADOW_DK}, -10px -10px 20px ${SHADOW_LT}`; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = raised; }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `inset 6px 6px 12px ${SHADOW_DK}, inset -6px -6px 12px ${SHADOW_LT}`; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = pressed; }}
             >
               Join community <Users size={16} />
             </button>
