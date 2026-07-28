@@ -117,34 +117,33 @@ export default function Home({ onSearch }) {
           They were lazy() but rendered immediately, which splits the code
           without delaying it — all nine fetched and executed during load,
           costing ~1.3s of blocking time for pixels nobody had scrolled to. */}
-      <Suspense fallback={null}>
-        {/* ── Branch Explorer — 220+ branches, 10 paths ── */}
-        <Defer minHeight={520}><BranchCatalog /></Defer>
+      
+      {/* ── Branch Explorer — 220+ branches, 10 paths ── */}
+      <Defer minHeight={520}><BranchCatalog /></Defer>
 
-        {/* ── JoSAA · JEE Advanced rank predictor (full tool) ── */}
-        <Defer minHeight={640}><AdvancedPredictorHome /></Defer>
+      {/* ── JoSAA · JEE Advanced rank predictor (full tool) ── */}
+      <Defer minHeight={640}><AdvancedPredictorHome /></Defer>
 
-        {/* ── College Reviews — give a review / browse by college ── */}
-        <Defer minHeight={480}><CollegeReviews /></Defer>
+      {/* ── College Reviews — give a review / browse by college ── */}
+      <Defer minHeight={480}><CollegeReviews /></Defer>
 
-        {/* ── Branch vs College — 6-question assessment ── */}
-        <Defer minHeight={480}><BranchVsCollege /></Defer>
+      {/* ── Branch vs College — 6-question assessment ── */}
+      <Defer minHeight={480}><BranchVsCollege /></Defer>
 
-        {/* ── 1-on-1 Mentorship plans ── */}
-        <Defer minHeight={560}><PlansSection /></Defer>
+      {/* ── 1-on-1 Mentorship plans ── */}
+      <Defer minHeight={560}><PlansSection /></Defer>
 
-        {/* ── Explore Colleges — flagship IITs (tool-style cards) ── */}
-        <Defer minHeight={520}><ExploreColleges /></Defer>
+      {/* ── Explore Colleges — flagship IITs (tool-style cards) ── */}
+      <Defer minHeight={520}><ExploreColleges /></Defer>
 
-        {/* ── Premium colleges that take your JEE rank (outside JoSAA) ── */}
-        <Defer minHeight={520}><PremiumColleges /></Defer>
+      {/* ── Premium colleges that take your JEE rank (outside JoSAA) ── */}
+      <Defer minHeight={520}><PremiumColleges /></Defer>
 
-        {/* ── Admission timeline — wavy quarter rail, auto-advancing "NOW" ── */}
-        <Defer minHeight={520}><AdmissionTimeline /></Defer>
+      {/* ── Admission timeline — wavy quarter rail, auto-advancing "NOW" ── */}
+      <Defer minHeight={520}><AdmissionTimeline /></Defer>
 
-        {/* ── FAQ ── */}
-        <Defer minHeight={420}><FaqSection /></Defer>
-      </Suspense>
+      {/* ── FAQ ── */}
+      <Defer minHeight={420}><FaqSection /></Defer>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 
 /**
  * Renders `children` only once the slot nears the viewport.
@@ -43,8 +43,8 @@ export default function Defer({ children, minHeight = 420, rootMargin = "600px" 
   }, [show, rootMargin]);
 
   return (
-    <div ref={ref} style={show ? undefined : { minHeight }}>
-      {show ? children : null}
+    <div ref={ref} style={{ minHeight }}>
+      {show ? <Suspense fallback={null}>{children}</Suspense> : null}
     </div>
   );
 }
