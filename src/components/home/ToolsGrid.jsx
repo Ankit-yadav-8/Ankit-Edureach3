@@ -57,9 +57,12 @@ const itemV = {
 
 function ToolCard({ t, nav }) {
   const [isHovered, setIsHovered] = useState(false);
-  const badgeColor = t.hot ? "#FF693D" : "#10b981"; // orange for NEW, green for LIVE
+  const badgeColor = t.hot ? "#F47B20" : "#1F8A5F"; 
   const badgeText = t.hot ? "NEW" : "LIVE";
-  const iconColor = t.accent;
+  const iconColor = t.accent; 
+  
+  const shadowDark = "var(--shadow-dark, #CBC3B0)";
+  const shadowLight = "var(--shadow-light, #FFFFFF)";
 
   return (
     <motion.button
@@ -68,84 +71,87 @@ function ToolCard({ t, nav }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        background: "var(--base)",
+        background: "var(--base, #EEEBE4)",
         border: "none",
-        borderRadius: 24,
-        padding: 24,
+        borderRadius: 26,
+        padding: "30px 28px 32px",
         boxShadow: isHovered 
-          ? `8px 8px 20px rgba(0,0,0,0.08), -8px -8px 20px #ffffff` 
-          : `6px 6px 14px rgba(0,0,0,0.05), -6px -6px 14px #ffffff`,
+          ? `14px 14px 28px ${shadowDark}, -14px -14px 28px ${shadowLight}` 
+          : `10px 10px 22px ${shadowDark}, -10px -10px 22px ${shadowLight}`,
         display: "flex",
         flexDirection: "column",
-        transition: "all 0.3s ease",
+        transition: "box-shadow .25s ease, transform .25s ease",
         cursor: "pointer",
         textAlign: "left",
-        transform: isHovered ? "translateY(-4px)" : "translateY(0)"
+        transform: isHovered ? "translateY(-5px)" : "translateY(0)"
       }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20, width: "100%" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 22, width: "100%" }}>
         <div style={{ 
-          width: 48, 
-          height: 48, 
-          borderRadius: 14, 
-          background: isHovered ? iconColor : `${iconColor}10`, 
+          width: 52, 
+          height: 52, 
+          borderRadius: 16, 
+          background: isHovered ? iconColor : `${iconColor}15`, 
           display: "flex", 
           alignItems: "center", 
           justifyContent: "center",
           color: isHovered ? "#ffffff" : iconColor,
+          boxShadow: isHovered ? "none" : `5px 5px 10px ${iconColor}30, -5px -5px 10px #FFFFFF`,
           transition: "all 0.3s ease"
         }}>
-          <t.icon size={24} />
+          <t.icon size={24} strokeWidth={1.8} />
         </div>
         {t.live && (
           <div style={{ 
-            display: "flex", 
+            display: "inline-flex", 
             alignItems: "center", 
-            gap: 6, 
-            background: `${badgeColor}15`, 
+            gap: 5, 
+            background: t.hot ? `${iconColor}15` : `#E1F3EA`, 
             color: badgeColor, 
-            padding: "4px 12px", 
-            borderRadius: 50, 
-            fontSize: 11, 
-            fontWeight: 800,
-            letterSpacing: "0.02em"
+            padding: "5px 11px", 
+            borderRadius: 999, 
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 10, 
+            fontWeight: 700,
+            letterSpacing: "0.5px",
+            boxShadow: t.hot ? `inset 1px 1px 2px ${iconColor}25` : `inset 1px 1px 2px rgba(31,138,95,0.15)`
           }}>
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: badgeColor }}></span>
             {badgeText}
           </div>
         )}
       </div>
 
       <h3 style={{ 
-        fontFamily: "'Space Grotesk', 'Sora', sans-serif", 
-        fontSize: "1.3rem", 
-        fontWeight: 800, 
-        color: "#1a1a2e", 
-        margin: "0 0 12px 0",
-        letterSpacing: "-0.5px"
+        fontFamily: "'Outfit', sans-serif", 
+        fontSize: 18.5, 
+        fontWeight: 700, 
+        color: "var(--text, #241F18)", 
+        margin: "0 0 10px 0",
       }}>
         {t.title}
       </h3>
       <p style={{ 
-        color: "#6b7280", 
-        fontSize: "0.95rem", 
-        lineHeight: 1.6, 
-        margin: "0 0 24px 0",
-        flexGrow: 1
+        color: "var(--text-soft, #6E6656)", 
+        fontSize: 13.5, 
+        lineHeight: 1.65, 
+        margin: "0 0 20px 0",
       }}>
         {t.desc}
       </p>
 
       <ul style={{ 
         listStyle: "none", 
-        padding: 0, 
-        margin: 0, 
+        padding: "16px 0 0", 
+        margin: "auto 0 0", 
+        borderTop: "1px solid rgba(198,190,172,0.4)",
         display: "flex", 
         flexDirection: "column", 
-        gap: 12 
+        gap: 9 
       }}>
         {t.bullets.map((b) => (
-          <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "0.9rem", color: "#4b5563" }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: iconColor, marginTop: 7, flexShrink: 0, opacity: 0.8 }} />
+          <li key={b} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 12.5, color: "var(--text, #241F18)", fontWeight: 500 }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: iconColor, flexShrink: 0, boxShadow: `0 0 0 3px ${iconColor}20` }} />
             <span style={{ lineHeight: 1.4 }}>{b}</span>
           </li>
         ))}
