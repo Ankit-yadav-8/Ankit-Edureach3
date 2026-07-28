@@ -666,6 +666,26 @@ export default function AuthModal() {
                         
                         <ActionBtn busy={busy} label="Log in" busyLabel={busyLabel} onClick={doLogin} shake={shake} />
                         
+                        <Divider />
+                        <button 
+                          type="button" 
+                          className="submit" 
+                          style={{ 
+                            background: "transparent", 
+                            color: "#475569", 
+                            border: "1.5px solid #cbd5e1", 
+                            boxShadow: "none",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "8px"
+                          }} 
+                          onClick={() => go("otpEmail")}
+                        >
+                          <Mail size={16} />
+                          Login with Email OTP
+                        </button>
+                        
                         <p className="switch-line">New to CollegeParichay? <button type="button" onClick={() => go("signup")}>Create an account</button></p>
                      </div>)}
 
