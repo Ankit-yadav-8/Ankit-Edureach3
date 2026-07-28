@@ -131,7 +131,7 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
         <div style={{ display: "flex", gap: 12, marginTop: 32 }}>
           <button onClick={onClose} disabled={busy} className="raised-sm" style={{ flex: 1, padding: "14px 0", borderRadius: 16, border: "none", background: "var(--base)", color: "var(--text)", fontWeight: 700, fontFamily: INTER, cursor: busy ? "not-allowed" : "pointer" }}>Cancel</button>
           <button onClick={save} disabled={busy} className="raised-sm"
-            style={{ flex: 1.5, padding: "14px 0", borderRadius: 16, border: "none", background: "var(--orange)", color: "#fff", fontWeight: 700, fontFamily: INTER, cursor: busy ? "wait" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+            style={{ flex: 1.5, padding: "14px 0", borderRadius: 16, border: "none", background: "#FF5A36", color: "#fff", fontWeight: 700, fontFamily: INTER, cursor: busy ? "wait" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
             {busy ? <Loader2 size={18} className="dash-spin" /> : "Save changes"}
           </button>
         </div>
@@ -220,7 +220,7 @@ export default function Dashboard() {
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, color: "var(--text)", fontSize: "1.6rem", margin: "0 0 12px" }}>Please log in</h2>
           <p style={{ color: "var(--text-soft)", marginBottom: 24, fontSize: 14 }}>Log in to view your dashboard, profile and enrolled programs.</p>
-          <button onClick={openLogin} className="raised-sm" style={{ background: "var(--orange)", color: "#fff", border: "none", padding: "14px 28px", borderRadius: 16, fontWeight: 700, cursor: "pointer", fontFamily: INTER }}>
+          <button onClick={openLogin} className="raised-sm" style={{ background: "#FF5A36", color: "#fff", border: "none", padding: "14px 28px", borderRadius: 16, fontWeight: 700, cursor: "pointer", fontFamily: INTER }}>
             Log in
           </button>
         </div>
@@ -234,7 +234,7 @@ export default function Dashboard() {
   const suggestion = `${firstName}, based on your class of ${classPhrase} and ${statePhrase} home state, here are 5 colleges worth targeting...`;
 
   const hexToRgba = (hex, alpha) => {
-    if (hex.startsWith("var")) return `rgba(244,123,32,${alpha})`; // var(--orange) approx
+    if (hex.startsWith("var")) return `rgba(244,123,32,${alpha})`; // #FF5A36 approx
     if (hex.startsWith("#")) {
       const [r, g, b] = hex.length === 4 
         ? hex.slice(1).split("").map(x => parseInt(x+x, 16))
@@ -261,7 +261,7 @@ export default function Dashboard() {
         <Reveal>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 8, padding: "0 10px" }}>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(1.6rem, 3.5vw, 2.2rem)", color: "var(--text)", margin: 0, letterSpacing: "-0.5px" }}>
-              Welcome back, <span style={{ color: "var(--orange)" }}>{firstName}</span>
+              Welcome back, <span style={{ color: "#FF5A36" }}>{firstName}</span>
             </h1>
             <button onClick={() => setConfirmLogout(true)} className="raised-sm" aria-label="Log out"
               style={{ padding: "10px 20px", borderRadius: 20, border: "none", background: "var(--base)", color: "var(--text)", fontFamily: INTER, fontWeight: 600, fontSize: 13, cursor: "pointer" }}
@@ -284,7 +284,7 @@ export default function Dashboard() {
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Parichay AI</span>
-                      <span className="raised-sm" style={{ fontSize: 9, fontWeight: 800, color: "var(--orange)", background: "#fff", padding: "4px 8px", borderRadius: 6 }}>BETA</span>
+                      <span className="raised-sm" style={{ fontSize: 9, fontWeight: 800, color: "#FF5A36", background: "#fff", padding: "4px 8px", borderRadius: 6 }}>BETA</span>
                     </div>
                     <div style={{ fontSize: 12, color: "var(--text-soft)", marginTop: 2, fontWeight: 500 }}>Your personal counselling assistant</div>
                   </div>
@@ -296,7 +296,7 @@ export default function Dashboard() {
 
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1px", color: "var(--text-faint)", textTransform: "uppercase", margin: "10px 0 12px" }}>SUGGESTED FOR YOU</div>
               <div className="pressed" style={{ borderRadius: 16, padding: "20px", fontSize: 13.5, color: "var(--text)", fontWeight: 500, lineHeight: 1.6, background: "var(--base)" }}>
-                {firstName}, based on your class of <span style={{ color: "var(--orange)" }}>{classPhrase}</span> and <span style={{ color: "var(--orange)" }}>{statePhrase}</span> home state, here are 5 colleges worth targeting...
+                {firstName}, based on your class of <span style={{ color: "#FF5A36" }}>{classPhrase}</span> and <span style={{ color: "#FF5A36" }}>{statePhrase}</span> home state, here are 5 colleges worth targeting...
               </div>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "24px 0" }}>
@@ -308,7 +308,7 @@ export default function Dashboard() {
 
               <div className="pressed" onClick={() => navigate("/ai")} style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "10px 10px 10px 20px", borderRadius: 30, background: "var(--base)", cursor: "text" }}>
                 <span style={{ flex: 1, fontSize: 13, color: "var(--text-faint)", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Ask Parichay AI anything about colleges, ranks, counselling...</span>
-                <span style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--orange)", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "0 4px 10px rgba(244,123,32,0.3)" }}></span>
+                <span style={{ width: 40, height: 40, borderRadius: "50%", background: "#FF5A36", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "0 4px 10px rgba(244,123,32,0.3)" }}></span>
               </div>
             </div>
           </Reveal>
@@ -323,7 +323,7 @@ export default function Dashboard() {
                   </div>
                   <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Your details</span>
                 </div>
-                <button onClick={() => setEditOpen(true)} style={{ background: "transparent", border: "none", color: "var(--orange)", fontFamily: INTER, fontWeight: 600, fontSize: 12, cursor: "pointer" }}>
+                <button onClick={() => setEditOpen(true)} style={{ background: "transparent", border: "none", color: "#FF5A36", fontFamily: INTER, fontWeight: 600, fontSize: 12, cursor: "pointer" }}>
                   Edit
                 </button>
               </div>
@@ -380,14 +380,14 @@ export default function Dashboard() {
                       </div>
                       {isMentorshipPlan(p.plan) && (
                         <button onClick={() => navigate(`/mentorship-dashboard?plan=${encodeURIComponent(p.plan)}`)} className="raised-sm"
-                          style={{ padding: "8px 20px", borderRadius: 12, border: "none", background: "var(--orange)", color: "#fff", fontFamily: INTER, fontWeight: 600, fontSize: 12, cursor: "pointer", flexShrink: 0 }}>
+                          style={{ padding: "8px 20px", borderRadius: 12, border: "none", background: "#FF5A36", color: "#fff", fontFamily: INTER, fontWeight: 600, fontSize: 12, cursor: "pointer", flexShrink: 0 }}>
                           Open
                         </button>
                       )}
                     </div>
                   ))}
                   
-                  <button onClick={() => navigate("/mentorship")} style={{ background: "transparent", border: "none", color: "var(--orange)", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: INTER, padding: "16px 0 0", width: "100%", textAlign: "center", display: "block" }}>
+                  <button onClick={() => navigate("/mentorship")} style={{ background: "transparent", border: "none", color: "#FF5A36", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: INTER, padding: "16px 0 0", width: "100%", textAlign: "center", display: "block" }}>
                     Explore all plans
                   </button>
                 </div>
@@ -395,7 +395,7 @@ export default function Dashboard() {
                 <div style={{ textAlign: "center", padding: "40px 12px" }}>
                   <div style={{ fontSize: 14, color: "var(--text-soft)", marginBottom: 20, fontWeight: 500 }}>You haven't enrolled in any plan yet.</div>
                   <button onClick={() => navigate("/mentorship")} className="raised-sm"
-                    style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 24px", borderRadius: 16, border: "none", background: "var(--orange)", color: "#fff", fontFamily: INTER, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                    style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 24px", borderRadius: 16, border: "none", background: "#FF5A36", color: "#fff", fontFamily: INTER, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
                     Explore mentorship plans
                   </button>
                 </div>
@@ -458,7 +458,7 @@ export default function Dashboard() {
               <p style={{ fontSize: "14px", color: "var(--text-soft)", margin: "0 0 28px", lineHeight: 1.5, fontWeight: 500 }}>Are you sure you want to log out of your account?</p>
               <div style={{ display: "flex", gap: 16 }}>
                 <button onClick={() => setConfirmLogout(false)} className="raised-sm" style={{ flex: 1, padding: "14px 0", borderRadius: 16, border: "none", background: "var(--base)", color: "var(--text)", fontWeight: 700, cursor: "pointer", fontFamily: INTER }}>No</button>
-                <button onClick={() => { logout(); setConfirmLogout(false); navigate("/"); }} className="raised-sm" style={{ flex: 1, padding: "14px 0", borderRadius: 16, border: "none", background: "var(--orange)", color: "#fff", fontWeight: 700, cursor: "pointer", fontFamily: INTER }}>Yes, log out</button>
+                <button onClick={() => { logout(); setConfirmLogout(false); navigate("/"); }} className="raised-sm" style={{ flex: 1, padding: "14px 0", borderRadius: 16, border: "none", background: "#FF5A36", color: "#fff", fontWeight: 700, cursor: "pointer", fontFamily: INTER }}>Yes, log out</button>
               </div>
 
               <div style={{ marginTop: 24, paddingTop: 20 }}>
