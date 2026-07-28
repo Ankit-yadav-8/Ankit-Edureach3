@@ -61,8 +61,11 @@ function ToolCard({ t, nav }) {
   const badgeText = t.hot ? "NEW" : "LIVE";
   const iconColor = t.accent; 
   
-  const shadowDark = "var(--shadow-dark, #CBC3B0)";
+  const shadowDark = "var(--shadow-dark, #DCD6C8)";
   const shadowLight = "var(--shadow-light, #FFFFFF)";
+  const baseBg = "var(--base, #FFFFFF)";
+  const peachBg = "var(--peach, #FFFFFF)";
+  const peachDark = "var(--peach-dark, #E7E1D2)";
 
   return (
     <motion.button
@@ -71,7 +74,7 @@ function ToolCard({ t, nav }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        background: "var(--base, #EEEBE4)",
+        background: baseBg,
         border: `1px solid ${isHovered ? iconColor : 'rgba(0,0,0,0.03)'}`,
         borderRadius: 26,
         padding: "30px 28px 32px",
@@ -91,12 +94,12 @@ function ToolCard({ t, nav }) {
           width: 52, 
           height: 52, 
           borderRadius: 16, 
-          background: isHovered ? iconColor : `${iconColor}15`, 
+          background: isHovered ? iconColor : peachBg, 
           display: "flex", 
           alignItems: "center", 
           justifyContent: "center",
           color: isHovered ? "#ffffff" : iconColor,
-          boxShadow: isHovered ? "none" : `5px 5px 10px ${iconColor}30, -5px -5px 10px #FFFFFF`,
+          boxShadow: isHovered ? "none" : `5px 5px 10px ${peachDark}, -5px -5px 10px #FFFFFF`,
           transition: "all 0.3s ease"
         }}>
           <t.icon size={24} strokeWidth={1.8} />
@@ -106,7 +109,7 @@ function ToolCard({ t, nav }) {
             display: "inline-flex", 
             alignItems: "center", 
             gap: 5, 
-            background: t.hot ? `${iconColor}15` : `#E1F3EA`, 
+            background: baseBg, 
             color: badgeColor, 
             padding: "5px 11px", 
             borderRadius: 999, 
@@ -114,7 +117,9 @@ function ToolCard({ t, nav }) {
             fontSize: 10, 
             fontWeight: 700,
             letterSpacing: "0.5px",
-            boxShadow: t.hot ? `inset 1px 1px 2px ${iconColor}25` : `inset 1px 1px 2px rgba(31,138,95,0.15)`
+            boxShadow: t.hot 
+              ? `inset 2px 2px 4px ${shadowDark}, inset -2px -2px 4px ${shadowLight}, 0 0 0 1px rgba(244,123,32,0.18)`
+              : `inset 2px 2px 4px ${shadowDark}, inset -2px -2px 4px ${shadowLight}, 0 0 0 1px rgba(31,138,95,0.18)`
           }}>
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: badgeColor }}></span>
             {badgeText}
@@ -151,7 +156,7 @@ function ToolCard({ t, nav }) {
       }}>
         {t.bullets.map((b) => (
           <li key={b} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 12.5, color: "var(--text, #241F18)", fontWeight: 500 }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: iconColor, flexShrink: 0, boxShadow: `0 0 0 3px ${iconColor}20` }} />
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: iconColor, flexShrink: 0, boxShadow: `0 0 0 3px ${peachBg}` }} />
             <span style={{ lineHeight: 1.4 }}>{b}</span>
           </li>
         ))}
@@ -163,7 +168,7 @@ function ToolCard({ t, nav }) {
 export default function ToolsGrid() {
   const nav = useNavigate();
   return (
-    <section id="tools" style={{ background: "var(--base)", padding: "80px 0" }}>
+    <section id="tools" style={{ background: "var(--base, #FFFFFF)", padding: "80px 0" }}>
       <div className="container" style={{ maxWidth: 1060, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}
