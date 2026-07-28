@@ -215,8 +215,8 @@ export default function Dashboard() {
     return (
       <section className="neo-auth" style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "120px 16px 60px", background: "var(--base)" }}>
         <div className="raised" style={{ textAlign: "center", maxWidth: 380, padding: 40, borderRadius: 32, background: "var(--base)" }}>
-          <div className="pressed" style={{ width: 64, height: 64, borderRadius: 20, display: "grid", placeItems: "center", margin: "0 auto 24px", background: "var(--base)" }}>
-            <ShieldCheck size={30} color="var(--orange)" />
+          <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,105,61,0.1)", display: "grid", placeItems: "center", margin: "0 auto 24px", boxShadow: "0 4px 12px rgba(255,105,61,0.15)" }}>
+            <ShieldCheck size={30} color="#ff693d" />
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, color: "var(--text)", fontSize: "1.6rem", margin: "0 0 12px" }}>Please log in</h2>
           <p style={{ color: "var(--text-soft)", marginBottom: 24, fontSize: 14 }}>Log in to view your dashboard, profile and enrolled programs.</p>
@@ -233,8 +233,19 @@ export default function Dashboard() {
   const statePhrase = user?.homeState ? user.homeState : "Rajasthan"; // Mocking
   const suggestion = `${firstName}, based on your class of ${classPhrase} and ${statePhrase} home state, here are 5 colleges worth targeting...`;
 
+  const hexToRgba = (hex, alpha) => {
+    if (hex.startsWith("var")) return `rgba(244,123,32,${alpha})`; // var(--orange) approx
+    if (hex.startsWith("#")) {
+      const [r, g, b] = hex.length === 4 
+        ? hex.slice(1).split("").map(x => parseInt(x+x, 16))
+        : hex.match(/\w\w/g).map(x => parseInt(x, 16));
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+    return `rgba(0,0,0,${alpha})`;
+  };
+
   const QUICK = [
-    { label: "Rank predictor",        to: "/jee-main#rank",        icon: Trophy,          color: "#f59e0b" },
+    { label: "Rank predictor",        to: "/jee-main#rank",        icon: Trophy,          color: "#ff693d" },
     { label: "College predictor",     to: "/jee-advanced#college", icon: GraduationCap,   color: "#6366f1" },
     { label: "Compare colleges",      to: "/compare",              icon: ArrowRightLeft,  color: "#0ea5e9" },
     { label: "Counselling planner",   to: "/planner",              icon: Map,             color: "#10b981" },
@@ -267,7 +278,7 @@ export default function Dashboard() {
             <div className="raised" style={{ flex: 1, padding: "30px 30px", borderRadius: 24, background: "var(--base)", display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(99,102,241,0.1)", display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(99,102,241,0.15)" }}>
                     <Bot size={20} color="#6366f1" />
                   </div>
                   <div>
@@ -307,7 +318,7 @@ export default function Dashboard() {
             <div className="raised" style={{ flex: 1, padding: "30px", borderRadius: 24, background: "var(--base)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(14,165,233,0.1)", display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(14,165,233,0.15)" }}>
                     <User size={20} color="#0ea5e9" />
                   </div>
                   <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Your details</span>
@@ -339,8 +350,8 @@ export default function Dashboard() {
             <div className="raised" style={{ flex: 1, padding: "30px", borderRadius: 24, background: "var(--base)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
-                    <Bookmark size={20} color="#f59e0b" />
+                  <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(255,105,61,0.1)", display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(255,105,61,0.15)" }}>
+                    <Bookmark size={20} color="#ff693d" />
                   </div>
                   <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>My plans</span>
                 </div>
@@ -357,7 +368,7 @@ export default function Dashboard() {
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   {plans.map((p, i) => (
                     <div key={p._id} className="raised-sm" style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 20px", borderRadius: 16, background: "var(--base)", flexWrap: "wrap" }}>
-                      <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", flexShrink: 0, display: "grid", placeItems: "center" }}>
+                      <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(16,185,129,0.1)", flexShrink: 0, display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(16,185,129,0.15)" }}>
                         <Layers size={18} color="#10b981" />
                       </div>
                       <div style={{ flex: 1, minWidth: 150 }}>
@@ -396,7 +407,7 @@ export default function Dashboard() {
           <Reveal delay={0.25} style={{ display: "flex" }}>
             <div className="raised" style={{ flex: 1, padding: "30px", borderRadius: 24, background: "var(--base)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24 }}>
-                <div className="pressed" style={{ width: 44, height: 44, borderRadius: 14, background: "var(--base)", display: "grid", placeItems: "center" }}>
+                <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(139,92,246,0.1)", display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(139,92,246,0.15)" }}>
                   <Layers size={20} color="#8b5cf6" />
                 </div>
                 <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Quick links</span>
@@ -407,7 +418,7 @@ export default function Dashboard() {
                     style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, padding: "20px 10px", borderRadius: 16, border: "none", background: "var(--base)", cursor: "pointer", transition: "transform .15s" }}
                     onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(0.98)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; }}>
-                    <div className="pressed" style={{ width: 42, height: 42, borderRadius: 12, background: "var(--base)", display: "grid", placeItems: "center" }}>
+                    <div style={{ width: 42, height: 42, borderRadius: 12, background: hexToRgba(color, 0.1), display: "grid", placeItems: "center", boxShadow: `0 4px 12px ${hexToRgba(color, 0.15)}` }}>
                       <Icon size={18} color={color} />
                     </div>
                     <span style={{ fontFamily: INTER, fontWeight: 600, fontSize: 12, color: "var(--text)" }}>{label}</span>
@@ -440,8 +451,8 @@ export default function Dashboard() {
             <motion.div className="raised" initial={{ opacity: 0, scale: .92, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: .94, y: 12 }}
               transition={{ type: "spring", stiffness: 420, damping: 30 }} onClick={(e) => e.stopPropagation()}
               style={{ width: "min(380px,100%)", background: "var(--base)", borderRadius: 28, padding: "32px 28px 28px", textAlign: "center" }}>
-              <div className="pressed" style={{ width: 64, height: 64, borderRadius: 20, margin: "0 auto 20px", display: "grid", placeItems: "center" }}>
-                <LogOut size={26} color="var(--orange)" />
+              <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,105,61,0.1)", margin: "0 auto 20px", display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(255,105,61,0.15)" }}>
+                <LogOut size={26} color="#ff693d" />
               </div>
               <h3 style={{ fontFamily: INTER, fontWeight: 700, fontSize: "1.3rem", color: "var(--text)", margin: "0 0 10px" }}>Log out?</h3>
               <p style={{ fontSize: "14px", color: "var(--text-soft)", margin: "0 0 28px", lineHeight: 1.5, fontWeight: 500 }}>Are you sure you want to log out of your account?</p>
