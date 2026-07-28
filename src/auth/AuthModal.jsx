@@ -690,15 +690,7 @@ export default function AuthModal() {
                           <div className="full-w">
                             <SelectField icon={BookOpen} placeholder="Class *" value={f.studentClass} options={["11", "12", "12+"]} error={fe.studentClass} onChange={e => set("studentClass", e.target.value)} />
                           </div>
-                          <div className="full-w">
-                            <Field icon={Stethoscope} type="tel" inputMode="numeric" placeholder="NEET rank (optional)" value={f.neetRank} error={fe.neetRank} onChange={e => set("neetRank", e.target.value.replace(/\D/g, ""))} />
-                          </div>
-                          <div className="full-w">
-                            <Field icon={Trophy} type="tel" inputMode="numeric" placeholder="JEE Mains rank (optional)" value={f.jeeMainsRank} error={fe.jeeMainsRank} onChange={e => set("jeeMainsRank", e.target.value.replace(/\D/g, ""))} />
-                          </div>
-                          <div className="full-w">
-                            <Field icon={Award} type="tel" inputMode="numeric" placeholder="JEE Adv rank (optional)" value={f.jeeAdvancedRank} error={fe.jeeAdvancedRank} onChange={e => set("jeeAdvancedRank", e.target.value.replace(/\D/g, ""))} />
-                          </div>
+
                           <div className="full-w">
                             <Field icon={Lock} type="password" placeholder="Create password *" value={f.password} error={fe.password} onChange={e => set("password", e.target.value)} onKeyDown={e => e.key === "Enter" && doSignup()} autoComplete="new-password" />
                           </div>
