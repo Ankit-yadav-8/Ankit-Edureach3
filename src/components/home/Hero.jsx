@@ -219,7 +219,7 @@ export default function Hero({ onSearch }) {
           {/* action buttons */}
           <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "center", gap: isMobile ? 16 : 24, marginTop: isMobile ? "2.5rem" : "3rem", width: "100%" }}>
             <button
-              onClick={() => nav("/jee-2027")}
+              onClick={() => nav("/mentorship/jee-2027")}
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
                 minWidth: isMobile ? 230 : 200, padding: isMobile ? "14px 24px" : "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
