@@ -9,37 +9,37 @@ import { CL, clEyebrow } from "./clTheme.js";
 
 const TOOLS = [
   {
-    icon: Gauge, title: "Rank Predictor", accent: "#FF693D",
+    icon: Gauge, title: "Rank Predictor", accent: "#F47B20", // Orange
     desc: "Enter your expected marks and instantly project your JEE Main rank, percentile and category rank.",
     bullets: ["Marks → percentile → CRL", "Category & home-state ranks", "Session-wise normalisation"],
     to: "/jee-main#rank", live: true,
   },
   {
-    icon: Crosshair, title: "College Predictor", accent: "#FF693D",
+    icon: Crosshair, title: "College Predictor", accent: "#3B82F6", // Blue
     desc: "Map your rank against previous years' cutoffs for IITs, NITs, IIITs and GFTIs in one shot.",
     bullets: ["High / medium probability tags", "All JoSAA + CSAB rounds", "Branch & quota filters"],
     to: "/jee-advanced#college", live: true,
   },
   {
-    icon: Layers, title: "Branch Insights Hub", accent: "#FF693D",
+    icon: Layers, title: "Branch Insights Hub", accent: "#8B5CF6", // Purple
     desc: "Deep dive into 15+ clear engineering domains, exploring future career prospects, salaries, and real-world applications.",
     bullets: ["Future-proof career analysis", "In-depth curriculum breakdown", "Salary trends & hiring insights"],
     to: "/branches", live: true, hot: false,
   },
   {
-    icon: GitCompareArrows, title: "Trade-off Analyzer", accent: "#FF693D",
+    icon: GitCompareArrows, title: "Trade-off Analyzer", accent: "#EC4899", // Pink
     desc: "Stuck between a top-tier college or your preferred branch? Take our quick assessment to find your ideal path forward.",
     bullets: ["Personalized priority quiz", "Data-backed trade-off analysis", "Clear actionable recommendations"],
     to: "/branch-vs-college", live: true, hot: true,
   },
   {
-    icon: Map, title: "Campus Map Explorer", accent: "#FF693D",
+    icon: Map, title: "Campus Map Explorer", accent: "#10B981", // Green
     desc: "Explore every IIT, NIT and IIIT on an interactive map — filter by state, type and ranking.",
     bullets: ["80+ institutes mapped", "State & type filters", "Cutoff & placement drawers"],
     to: "/map", live: true,
   },
   {
-    icon: GraduationCap, title: "JEE 2027 Mentorship", accent: "#FF693D",
+    icon: GraduationCap, title: "JEE 2027 Mentorship", accent: "#F59E0B", // Amber
     desc: "1-on-1 mentorship from IITians for JEE 2027 aspirants — daily targets, doubt solving and weekly test analysis.",
     bullets: ["1-on-1 IITian mentor", "Daily targets & doubt solving", "Weekly test analysis"],
     to: "/mentorship/jee-2027", live: true, hot: true,
@@ -177,14 +177,15 @@ export default function ToolsGrid() {
             display: "inline-flex", 
             alignItems: "center", 
             gap: 6, 
-            background: "#fff0eb", 
-            color: "#FF693D", 
-            padding: "6px 14px", 
-            borderRadius: 50, 
-            fontSize: 12, 
+            background: "var(--base, #FFFFFF)", 
+            color: "#F47B20", 
+            padding: "9px 18px 9px 14px", 
+            borderRadius: 999, 
+            fontSize: 11, 
             fontWeight: 700, 
-            letterSpacing: "0.05em",
-            marginBottom: 20
+            letterSpacing: "0.7px",
+            marginBottom: 20,
+            boxShadow: "5px 5px 10px #DCD6C8, -5px -5px 10px #FFFFFF"
           }}>
             <Sparkles size={14} /> SMART TOOLS
           </span>
@@ -198,15 +199,6 @@ export default function ToolsGrid() {
           }}>
             Everything you need, <span style={{ color: "#FF693D" }}>in one<br/>toolkit.</span>
           </h2>
-          <p style={{ 
-            color: "#6b7280", 
-            fontSize: "1.1rem", 
-            maxWidth: 650, 
-            margin: "0 auto", 
-            lineHeight: 1.6 
-          }}>
-            From rank prediction to branch deep-dives and personalised college lists — every tool, consistent and built for JEE 2026.
-          </p>
         </div>
 
         {/* Cards Grid — 3 per row, dropping to 2 then 1 on smaller screens */}
