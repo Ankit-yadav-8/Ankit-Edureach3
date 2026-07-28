@@ -295,3 +295,53 @@ export async function sendPasswordResetEmail(email, resetUrl, otp) {
     return { ok: false, dev: false, error: e.message };
   }
 }
+
+// ── Verification token email (Step 2 of password reset) ─────────────────────
+// Sent AFTER the user's OTP is confirmed. The token is never returned in an
+// API response — it only ever travels through email, so only the inbox owner
+// can complete the reset. This prevents screen-shoulder or network interception.
+export async function sendVerificationTokenEmail(email, verificationToken) {
+  if (isDevMode()) {
+    console.log(`\n[DEV EMAIL] Verification token to ${email}\n  Token: ${verificationToken}\n  (set BREVO_API_KEY to send for real; OTP_DEV_MODE=true forces this log-only mode)\n`);
+    return { ok: true, dev: true };
+  }
+
+  const { fromEmail, fromName, replyTo } = resolveSender();
+
+  try {
+    return await postToBrevo({
+      sender: { name: fromName, email: fromEmail },
+      replyTo: { email: replyTo, name: fromName },
+      to: [{ email }],
+      subject: "Your CollegeParichay verification token",
+      textContent: `Your CollegeParichay verification token is: ${verificationToken}\n\nCopy and paste this token into the password reset form to set your new password.\n\nThis token is unique and expires in 15 minutes. If you didn't request this, you can safely ignore this email.`,
+      htmlContent: emailShell(`
+        <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">Your OTP has been verified. Use the token below to complete your password reset:</p>
+        
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0"><tr>
+          <td align="center" style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1.5px solid #86efac;border-radius:14px;padding:22px">
+            <div style="font-size:11px;color:#16a34a;font-weight:700;text-transform:uppercase;letter-spacing:1.4px">Verification Token</div>
+            <div style="font-size:16px;font-weight:800;color:#166534;margin-top:8px;word-break:break-all;letter-spacing:1px;font-family:monospace">${esc(verificationToken)}</div>
+          </td>
+        </tr></table>
+        
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;margin:16px 0">
+          <p style="margin:0;font-size:12.5px;color:#1e40af;line-height:1.6;font-weight:600">
+            📋 Copy and paste the token above into the password reset form on CollegeParichay to set your new password.
+          </p>
+        </div>
+        
+        <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:12px 16px;margin:16px 0">
+          <p style="margin:0;font-size:12.5px;color:#92400e;line-height:1.6;font-weight:600">
+            🔒 <b>Security:</b> This token is unique to your request. It cannot be reused and will expire in 15 minutes. Never share this token with anyone.
+          </p>
+        </div>
+        
+        <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ This token expires in <b>15 minutes</b>. If you didn't request a password reset, you can safely ignore this email.</p>`,
+        { preheader: "Your CollegeParichay verification token for password reset", eyebrow: "Step 2 · Verify", footer: "You're receiving this because you verified your OTP for a password reset." }),
+    });
+  } catch (e) {
+    console.error("Verification token email send failed:", e.message);
+    return { ok: false, dev: false, error: e.message };
+  }
+}

@@ -4,8 +4,7 @@ import {
   X, Mail, ArrowLeft, Lock, User, KeyRound,
   Phone, GraduationCap, CheckCircle2, AlertCircle, MapPin,
   Loader2, Eye, EyeOff, Sparkles, ChevronDown,
-  Shield, Zap, BookOpen, Award, Trophy, Stethoscope,
-  ShieldCheck, Copy, Check,
+  Shield, Zap, BookOpen, Award, Trophy, Stethoscope, Check,
 } from "lucide-react";
 import { useAuth } from "./AuthContext.jsx";
 import { apiForgot, apiReset, apiSendOtp, apiVerifyOtp, apiVerifyResetOtp } from "./api.js";
@@ -523,37 +522,33 @@ export default function AuthModal() {
     }
   }, "forgot");
 
-  // ── STEP 2: Verify OTP → get verification token ───────────────────────────
+  // ── STEP 2: Verify OTP → server sends verification token to email ──────────
   const doVerifyResetOtp = run(async () => {
     const r = await apiVerifyResetOtp({ otp: f.resetOtp.trim() });
-    if (r.ok && r.verificationToken) {
-      // Store the server-returned verification token
-      set("serverVerificationToken", r.verificationToken);
-      setBanner({ type: "ok", text: "OTP verified! Copy the token below and enter it to proceed." });
-      go("resetVerify");
-      // Pre-set the server token so the user can see it
-      setF(s => ({ ...s, serverVerificationToken: r.verificationToken }));
+    if (r.ok) {
+      setBanner({ type: "ok", text: r.message || "OTP verified! Check your email for the verification token." });
+      // Dev mode: pre-fill the token for local testing
+      if (r.devToken) {
+        set("verificationToken", r.devToken);
+      }
+      // Move to token entry step
+      setTimeout(() => go("resetVerify"), 1200);
     }
   }, "resetOtp");
 
-  // ── STEP 3: Verify the token the user typed ────────────────────────────────
+  // ── STEP 3: User enters the verification token from their email ────────────
+  // No client-side comparison — the token goes directly to /reset for server validation
   const doVerifyToken = run(async () => {
-    // Compare what the user typed with the token the server gave them
-    if (f.verificationToken.trim() !== f.serverVerificationToken) {
-      setBanner({ type: "err", text: "Verification token does not match. Please copy and paste it exactly." });
-      setShake(true); setTimeout(() => setShake(false), 450);
-      return;
-    }
-    setBanner({ type: "ok", text: "Token verified! Set your new password." });
+    // Just move to the password screen, carrying the token forward.
+    // The actual validation happens server-side when they submit the new password.
     go("resetPassword");
-    // Carry the verification token forward for the final reset call
-    setF(s => ({ ...s, verificationToken: f.verificationToken, serverVerificationToken: f.serverVerificationToken }));
+    setF(s => ({ ...s, verificationToken: f.verificationToken }));
   }, "resetVerify");
 
   // ── STEP 4: Set new password ───────────────────────────────────────────────
   const doResetPassword = run(async () => {
     const r = await apiReset({
-      verificationToken: f.serverVerificationToken,
+      verificationToken: f.verificationToken.trim(),
       password: f.password,
     });
     saveSession(r);
@@ -831,46 +826,27 @@ export default function AuthModal() {
                         <h2 className="title">Verification Token</h2>
                         <p className="sub">Copy the token below and paste it in the field to verify your identity.</p>
                         
-                        {/* Display the server-generated token for user to copy */}
-                        {f.serverVerificationToken && (
-                          <div style={{ marginBottom: 16 }}>
-                            <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", marginBottom: 6, display: "block", textTransform: "uppercase", letterSpacing: ".5px" }}>
-                              Your verification token
-                            </label>
-                            <div style={{
-                              display: "flex", alignItems: "center", gap: 8,
-                              background: "linear-gradient(135deg,#f0fdf4,#ecfdf5)",
-                              border: "1.5px solid #86efac",
-                              borderRadius: 12, padding: "12px 14px",
-                            }}>
-                              <ShieldCheck size={18} color="#16a34a" style={{ flexShrink: 0 }} />
-                              <code style={{
-                                flex: 1, fontSize: 13, fontWeight: 700, color: "#166534",
-                                wordBreak: "break-all", fontFamily: "monospace",
-                                letterSpacing: ".5px",
-                              }}>
-                                {f.serverVerificationToken}
-                              </code>
-                              <button
-                                type="button"
-                                onClick={copyToken}
-                                style={{
-                                  background: "none", border: "1px solid #86efac", borderRadius: 8,
-                                  padding: "6px 10px", cursor: "pointer", display: "flex",
-                                  alignItems: "center", gap: 4, color: "#166534",
-                                  fontSize: 11, fontWeight: 600, transition: "all .15s",
-                                  flexShrink: 0,
-                                }}
-                              >
-                                {copied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy</>}
-                              </button>
-                            </div>
+                        {/* Info: token was sent to email */}
+                        <div style={{
+                          display: "flex", alignItems: "flex-start", gap: 10,
+                          background: "linear-gradient(135deg,#eff6ff,#dbeafe)",
+                          border: "1.5px solid #93c5fd",
+                          borderRadius: 12, padding: "14px 16px", marginBottom: 16,
+                        }}>
+                          <Mail size={20} color="#2563eb" style={{ flexShrink: 0, marginTop: 2 }} />
+                          <div>
+                            <p style={{ margin: 0, fontSize: 13.5, fontWeight: 700, color: "#1e40af" }}>
+                              Check your email
+                            </p>
+                            <p style={{ margin: "4px 0 0", fontSize: 12, color: "#3b82f6", fontWeight: 500, lineHeight: 1.5 }}>
+                              We've sent a verification token to your registered email. Copy it and paste it below.
+                            </p>
                           </div>
-                        )}
+                        </div>
                         
                         <Field
                           icon={KeyRound}
-                          placeholder="Paste verification token here *"
+                          placeholder="Paste verification token from email *"
                           value={f.verificationToken}
                           error={fe.verificationToken}
                           onChange={e => set("verificationToken", e.target.value)}
@@ -884,7 +860,7 @@ export default function AuthModal() {
                         }}>
                           <Shield size={14} color="#d97706" />
                           <span style={{ fontSize: 11.5, color: "#92400e", fontWeight: 500 }}>
-                            This token is unique to your reset request and cannot be reused.
+                            This token is unique, sent only to your email, and expires in 15 minutes.
                           </span>
                         </div>
                         

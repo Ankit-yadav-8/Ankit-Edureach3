@@ -6,7 +6,7 @@ import User from "../models/User.js";
 import PasswordResetToken from "../models/PasswordResetToken.js";
 import { requireAuth } from "../middleware/auth.js";
 import { signStudentToken } from "../utils/tokens.js";
-import { sendPasswordResetEmail } from "../utils/mailer.js";
+import { sendPasswordResetEmail, sendVerificationTokenEmail } from "../utils/mailer.js";
 
 const forgotLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
@@ -281,10 +281,15 @@ router.post("/verify-reset-otp", otpVerifyLimiter, async (req, res) => {
     resetToken.verifyTokenHash = verifyHash;
     await resetToken.save();
 
+    // Send verification token via EMAIL — never expose it in the API response.
+    // This ensures only the email owner can complete the password reset.
+    await sendVerificationTokenEmail(user.email, verificationToken);
+
     res.json({
       ok: true,
-      verificationToken,
-      message: "OTP verified successfully! Use the verification token below to set your new password.",
+      message: "OTP verified! A verification token has been sent to your email.",
+      // Dev mode only — for local testing without email delivery
+      ...(process.env.OTP_DEV_MODE !== "false" ? { devToken: verificationToken } : {}),
     });
   } catch (e) {
     console.error("[auth/verify-reset-otp]", e.message);
