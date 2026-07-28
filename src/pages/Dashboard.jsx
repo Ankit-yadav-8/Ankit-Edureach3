@@ -308,7 +308,7 @@ export default function Dashboard() {
 
               <div className="pressed" onClick={() => navigate("/ai")} style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "10px 10px 10px 20px", borderRadius: 30, background: "var(--base)", cursor: "text" }}>
                 <span style={{ flex: 1, fontSize: 13, color: "var(--text-faint)", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Ask Parichay AI anything about colleges, ranks, counselling...</span>
-                <span style={{ width: 40, height: 40, borderRadius: "50%", background: "#FF5A36", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "0 4px 10px rgba(244,123,32,0.3)" }}></span>
+                <span style={{ width: 46, height: 46, borderRadius: "50%", background: "#FF5A36", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "0 4px 10px rgba(244,123,32,0.3)", color: "#fff", fontSize: 11, fontWeight: 700, fontFamily: INTER, textAlign: "center", lineHeight: 1.1 }}>Ask<br/>Ai</span>
               </div>
             </div>
           </Reveal>

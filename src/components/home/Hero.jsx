@@ -90,7 +90,7 @@ const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, t
 /* simple straight line connecting the three nodes, faded at the ends */
 function JourneyLine() {
   return (
-    <div aria-hidden style={{ position: "absolute", top: 34, left: "16%", right: "16%", height: 3, zIndex: 0,
+    <div aria-hidden style={{ position: "absolute", top: 27, left: "16%", right: "16%", height: 3, zIndex: 0,
       background: `linear-gradient(90deg, ${CORAL} 0%, ${CORAL} 40%, ${SHADOW_DK} 40%, ${SHADOW_DK} 100%)`, borderRadius: 2 }} />
   );
 }
@@ -111,12 +111,12 @@ function HeroSteps({ isMobile }) {
             style={{ textAlign: "center", position: "relative", zIndex: 1, gridColumn: isMobile && i === 0 ? "1 / -1" : "auto" }}
           >
             <div style={{
-              width: 68, height: 68, borderRadius: "50%", margin: "0 auto 16px",
+              width: 54, height: 54, borderRadius: "50%", margin: "0 auto 16px",
               background: i === 0 ? CORAL : BASE,
-              boxShadow: i === 0 ? `4px 4px 10px rgba(255,90,54,0.3), -4px -4px 10px ${SHADOW_LT}` : raised,
+              boxShadow: i === 0 ? `inset 3px 3px 6px rgba(0,0,0,0.15), inset -3px -3px 6px rgba(255,255,255,0.3)` : pressed,
               display: "grid", placeItems: "center",
             }}>
-              <span style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: 22, color: i === 0 ? "#fff" : CORAL }}>{s.n}</span>
+              <span style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: 17, color: i === 0 ? "#fff" : CORAL }}>{s.n}</span>
             </div>
             <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 800, fontSize: isMobile ? 16 : 18, color: INK, marginBottom: 8 }}>{s.title}</div>
             <p style={{ margin: "0 auto", maxWidth: isMobile ? 230 : 250, fontSize: isMobile ? 12.5 : 13.5, color: TEXT_SOFT, lineHeight: 1.55, fontFamily: "'Inter',system-ui,sans-serif" }}>{s.desc}</p>
