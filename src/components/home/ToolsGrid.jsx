@@ -76,8 +76,8 @@ function ToolCard({ t, nav }) {
         borderRadius: 26,
         padding: "30px 28px 32px",
         boxShadow: isHovered 
-          ? `0 12px 30px ${iconColor}20` 
-          : `0 4px 20px rgba(0,0,0,0.02)`,
+          ? `14px 14px 28px ${shadowDark}, -14px -14px 28px ${shadowLight}` 
+          : `10px 10px 22px ${shadowDark}, -10px -10px 22px ${shadowLight}`,
         display: "flex",
         flexDirection: "column",
         transition: "all 0.3s ease",
