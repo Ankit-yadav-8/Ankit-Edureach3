@@ -219,26 +219,26 @@ export default function Hero({ onSearch }) {
           {/* action buttons */}
           <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "center", gap: isMobile ? 16 : 24, marginTop: isMobile ? "2.5rem" : "3rem", width: "100%" }}>
             <button
-              onClick={() => nav("/jee-main#college")}
+              onClick={() => nav("/jee-2027")}
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-                minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
+                minWidth: isMobile ? 230 : 200, padding: isMobile ? "14px 24px" : "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: CORAL, border: "none", color: "#fff",
-                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
+                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 14 : 15,
                 boxShadow: `inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.3)`, transition: "all .2s",
               }}
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `inset 6px 6px 14px rgba(0,0,0,0.25), inset -6px -6px 14px rgba(255,255,255,0.35)`; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = `inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.3)`; }}
             >
-              Predict my college <Target size={16} />
+              Explore Mentorship <Target size={16} />
             </button>
             <button
               onClick={() => nav("/community")}
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-                minWidth: isXs ? 170 : 200, padding: "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
+                minWidth: isMobile ? 230 : 200, padding: isMobile ? "14px 24px" : "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
                 background: BASE, border: "none", color: INK,
-                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14,
+                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 14 : 15,
                 boxShadow: pressed, transition: "all .2s",
               }}
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `inset 6px 6px 12px ${SHADOW_DK}, inset -6px -6px 12px ${SHADOW_LT}`; }}
