@@ -44,12 +44,7 @@ const TOOLS = [
     bullets: ["1-on-1 IITian mentor", "Daily targets & doubt solving", "Weekly test analysis"],
     to: "/mentorship/jee-2027", live: true, hot: true,
   },
-  {
-    icon: Mic, title: "ARIA Voice Tutor", accent: "#ff693d", // Brand orange
-    desc: "Speak your questions naturally and get step-by-step handwritten solutions in real-time.",
-    bullets: ["Voice-activated learning", "Step-by-step breakdowns", "Math & science support"],
-    to: "/ai-tutor", live: true, hot: true,
-  },
+
   // No Mentor Dashboard card here. This grid is the student-facing toolkit and
   // renders on the home page; a staff sign-in isn't a tool they can use. It
   // stays listed in the Navbar's Tools menu, which is where mentors look.
