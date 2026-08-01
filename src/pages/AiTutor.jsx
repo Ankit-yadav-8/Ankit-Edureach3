@@ -262,7 +262,7 @@ export default function AiTutor() {
                     <div
                       key={i}
                       className="neo-step-card"
-                      style={{ animationDelay: \`\${i * 0.35}s\` }}
+                      style={{ animationDelay: `${i * 0.35}s` }}
                     >
                       <span className="neo-step-num">{s.step}</span>
                       <span className="neo-step-text">{s.text}</span>
@@ -272,7 +272,7 @@ export default function AiTutor() {
                   <div
                     className="neo-final-line"
                     style={{
-                      animationDelay: \`\${answerData.steps.length * 0.35 + 0.2}s\`,
+                      animationDelay: `${answerData.steps.length * 0.35 + 0.2}s`,
                     }}
                   >
                     ✓ {answerData.closing}
