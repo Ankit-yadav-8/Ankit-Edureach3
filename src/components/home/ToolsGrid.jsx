@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Gauge, Crosshair, Map, GraduationCap,
-  GitCompareArrows, Layers, Sparkles,
+  GitCompareArrows, Layers, Sparkles, Mic,
 } from "lucide-react";
 import { CL, clEyebrow } from "./clTheme.js";
 
@@ -43,6 +43,12 @@ const TOOLS = [
     desc: "1-on-1 mentorship from IITians for JEE 2027 aspirants — daily targets, doubt solving and weekly test analysis.",
     bullets: ["1-on-1 IITian mentor", "Daily targets & doubt solving", "Weekly test analysis"],
     to: "/mentorship/jee-2027", live: true, hot: true,
+  },
+  {
+    icon: Mic, title: "ARIA Voice Tutor", accent: "#ff693d", // Brand orange
+    desc: "Speak your questions naturally and get step-by-step handwritten solutions in real-time.",
+    bullets: ["Voice-activated learning", "Step-by-step breakdowns", "Math & science support"],
+    to: "/ai-tutor", live: true, hot: true,
   },
   // No Mentor Dashboard card here. This grid is the student-facing toolkit and
   // renders on the home page; a staff sign-in isn't a tool they can use. It

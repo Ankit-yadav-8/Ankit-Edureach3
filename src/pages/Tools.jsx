@@ -19,6 +19,7 @@ const TOOL_LINKS = [
   ["Trade-off Analyzer", "/branch-vs-college"],
   ["Campus Map Explorer", "/map"],
   ["Choice List Planner", "/planner"],
+  ["ARIA Voice Tutor", "/ai-tutor"],
 ];
 
 export default function Tools() {
