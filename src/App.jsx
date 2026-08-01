@@ -140,7 +140,7 @@ export default function App() {
     const id = idle(() => {
       [JeeMain, JeeAdvanced, Colleges, OfficialCutoffs, ForYou, Neet, Mentorship,
        CounsellingPlanner, CollegeMap, Compare, Branches, BranchVsCollegePage,
-       CampusFests, PrivateUnis, SearchResults].forEach((c) => c.preload?.());
+       CampusFests, PrivateUnis, SearchResults, CollegeParichayAI, AiTutor].forEach((c) => c.preload?.());
     });
     return () => cancel(id);
   }, []);
@@ -179,7 +179,9 @@ export default function App() {
 
   return (
     <>
-      <ScrollProgressBar />
+      <Suspense fallback={null}>
+        <ScrollProgressBar />
+      </Suspense>
       <div id="progress-bar" />
       <ScrollProgress />
       <ScrollManager />
