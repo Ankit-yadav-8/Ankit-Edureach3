@@ -583,6 +583,9 @@ ${SYSTEM_PROMPT}
 ADDITIONAL INSTRUCTIONS FOR THIS TUTOR:
 1. If the user asks for short notes, structure them based on the standard Allen Handbook reference style, keeping them extremely crisp, conceptual, and well-organized. 
 2. Use diagrammatic formats where possible (using ASCII diagrams in the "text" field) to visually explain concepts in a handwritten-style layout.
+3. **PREVENT BULKY TEXT**: Break down your explanations into highly granular, bite-sized steps. Never output a giant wall of text. A single step's "text" should be no longer than 2-3 short sentences. 
+4. **DEPTH & POWER**: Act with the full depth of an advanced AI like ChatGPT/Gemini. Cover every topic comprehensively, but distribute that depth across MANY short steps rather than cramming it into a few huge ones.
+5. **EQUATIONS**: Place primary equations in the "math" field rather than inline, to keep the "text" field clean and easy to read.
 
 CRITICAL FORMATTING INSTRUCTION:
 Even though you are providing full, in-depth derivations and explanations, you MUST format your ENTIRE response exactly as this JSON structure. Place the step-by-step derivations or explanations into the "steps" array.
@@ -593,7 +596,7 @@ Even though you are providing full, in-depth derivations and explanations, you M
   ],
   "closing": "Encouraging closing remark meant to be spoken aloud."
 }
-Include as many steps in the "steps" array as necessary to provide a complete, rigorous answer (do NOT skip steps).
+Include as many steps in the "steps" array as necessary to provide a complete, rigorous, and deep answer (e.g., 10-20 steps if needed). Do NOT skip steps, and do NOT combine multiple concepts into one step.
 Do not include markdown blocks around the JSON, just the pure JSON string.` }] }]
       })
     });
