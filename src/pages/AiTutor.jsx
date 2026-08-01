@@ -41,8 +41,27 @@ export default function AiTutor() {
   const [voiceOn, setVoiceOn] = useState(true);
   const [answerData, setAnswerData] = useState(null);
   const [inputText, setInputText] = useState("");
+  const [callActive, setCallActive] = useState(false);
+  const [callMuted, setCallMuted] = useState(false);
+  const [callTime, setCallTime] = useState(0);
 
   const recognitionRef = useRef(null);
+
+  useEffect(() => {
+    let timer;
+    if (callActive) {
+      timer = setInterval(() => setCallTime(prev => prev + 1), 1000);
+    } else {
+      setCallTime(0);
+    }
+    return () => clearInterval(timer);
+  }, [callActive]);
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
 
   useEffect(() => {
     // Inject the Kalam font if not already present
@@ -188,6 +207,39 @@ export default function AiTutor() {
     if (answerData) speak(answerData);
   };
 
+  const handleCallStart = () => {
+    setCallActive(true);
+    setCallMuted(false);
+    
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance("Hi, I'm Aria, your voice tutor. How can I help you today?");
+      utterance.rate = 0.95;
+      utterance.pitch = 1.0;
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = voices.find((v) => /Google US English|Samantha|Female/i.test(v.name));
+      if (preferred) utterance.voice = preferred;
+      
+      utterance.onstart = () => setSpeaking(true);
+      utterance.onend = () => {
+        setSpeaking(false);
+        if (!callMuted && recognitionRef.current) {
+          setListening(true);
+          try { recognitionRef.current.start(); } catch(e) {}
+        }
+      };
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleCallEnd = () => {
+    setCallActive(false);
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    if (recognitionRef.current) recognitionRef.current.stop();
+    setSpeaking(false);
+    setListening(false);
+  };
+
   return (
     <div className="ai-tutor-wrapper">
       <div className="ai-tutor-app">
@@ -255,6 +307,13 @@ export default function AiTutor() {
               </button>
             </div>
           </form>
+
+          <button className="neo-call-btn" onClick={handleCallStart}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 0 0-1.02.24l-2.2 2.2a15.045 15.045 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1A11.36 11.36 0 0 1 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM19 12h2a9 9 0 0 0-9-9v2c3.87 0 7 3.13 7 7zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/>
+            </svg>
+            Call Aria — talk live
+          </button>
         </div>
 
         {/* RIGHT: Handwritten solution */}
@@ -297,6 +356,53 @@ export default function AiTutor() {
           </div>
         </div>
       </div>
+
+      {callActive && (
+        <div className="aria-call-overlay">
+          <div className="aria-call-timer">{formatTime(callTime)}</div>
+          <div className="aria-call-center">
+            <div className={`aria-call-avatar ${speaking ? "speaking" : ""}`}>A</div>
+            <div className="aria-call-name">Aria — your mentor</div>
+            <div className="aria-call-status">
+              {speaking ? "Speaking..." : listening ? "Listening..." : "Connected"}
+            </div>
+          </div>
+          <div className="aria-call-controls">
+            <button 
+              className={`aria-call-btn-circle aria-call-mute ${callMuted ? "muted" : ""}`}
+              onClick={() => {
+                const nextMuted = !callMuted;
+                setCallMuted(nextMuted);
+                if (nextMuted) {
+                  if (recognitionRef.current) recognitionRef.current.stop();
+                  setListening(false);
+                } else {
+                  if (recognitionRef.current) {
+                    setListening(true);
+                    try { recognitionRef.current.start(); } catch(e) {}
+                  }
+                }
+              }}
+            >
+              {callMuted ? (
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.93V21h2v-3.07A7 7 0 0 0 19 11h-2z" opacity="0.3"/>
+                  <path d="M21 21l-18-18-1-1 2-2 18 18z" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.93V21h2v-3.07A7 7 0 0 0 19 11h-2z" />
+                </svg>
+              )}
+            </button>
+            <button className="aria-call-btn-circle aria-call-end" onClick={handleCallEnd}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

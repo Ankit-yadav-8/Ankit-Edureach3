@@ -409,3 +409,144 @@
 .neo-chat-send:active {
   box-shadow: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light);
 }
+
+/* ---- Call Aria Button ---- */
+.neo-call-btn {
+  width: 100%;
+  background: #7a66ff; /* Matches the mock's purple color */
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  box-shadow: 0 4px 12px rgba(122, 102, 255, 0.4);
+  transition: .2s ease;
+}
+
+.neo-call-btn:hover {
+  background: #6a56ef;
+  transform: translateY(-1px);
+}
+
+.neo-call-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(122, 102, 255, 0.3);
+}
+
+/* ---- Full Screen Call Overlay ---- */
+.aria-call-overlay {
+  position: fixed;
+  inset: 0;
+  background: #2a2d3e; /* Dark slate background */
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+  font-family: 'Manrope', 'Sora', sans-serif;
+}
+
+.aria-call-timer {
+  margin-top: 32px;
+  font-size: 14px;
+  color: #8b92a5;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.aria-call-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.aria-call-avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: #5c4dff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  font-weight: 800;
+  color: #ffffff;
+  box-shadow: 0 0 40px rgba(92, 77, 255, 0.4);
+  margin-bottom: 32px;
+}
+
+.aria-call-avatar.speaking {
+  animation: pulse-avatar 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-avatar {
+  0% { box-shadow: 0 0 0 0 rgba(92, 77, 255, 0.7); }
+  70% { box-shadow: 0 0 0 30px rgba(92, 77, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(92, 77, 255, 0); }
+}
+
+.aria-call-name {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.aria-call-status {
+  font-size: 14px;
+  color: #8b92a5;
+}
+
+.aria-call-controls {
+  margin-bottom: 48px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.aria-call-btn-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.aria-call-mute {
+  background: #393d52;
+  color: #8b92a5;
+}
+
+.aria-call-mute.muted {
+  background: #ffffff;
+  color: #2a2d3e;
+}
+
+.aria-call-end {
+  background: #ff5252;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 82, 82, 0.4);
+}
+
+.aria-call-end:hover {
+  background: #ff3b3b;
+  transform: scale(1.05);
+}
+
+.aria-call-btn-circle svg {
+  width: 28px;
+  height: 28px;
+}
