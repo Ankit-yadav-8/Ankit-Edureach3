@@ -535,20 +535,7 @@ export default function CollegeParichayAI() {
                 taRef={taRef} attach={attach} setAttach={setAttach} fileRef={fileRef} onFile={onFile}
                 toggleMic={toggleMic} listening={listening} big />
 
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 9, justifyContent: "center", marginTop: 20 }}>
-                {QUICK.map((q) => (
-                  <button key={q.label} onClick={() => { setInput(q.prompt); taRef.current?.focus(); }}
-                    style={{
-                      display: "inline-flex", alignItems: "center", gap: 8, padding: "9px 14px", borderRadius: 11,
-                      background: t.panel, border: `1px solid ${t.border}`, color: t.text, cursor: "pointer",
-                      fontSize: 13, fontWeight: 600, transition: "all .15s",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = t.accent; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = t.border; e.currentTarget.style.transform = ""; }}>
-                    <q.icon size={15} color={t.accent} /> {q.label}
-                  </button>
-                ))}
-              </div>
+              <div style={{ marginTop: 20 }}></div>
             </div>
           ) : (
             <div style={{ maxWidth: 800, margin: "0 auto", padding: "0 18px", width: "100%", boxSizing: "border-box" }}>
