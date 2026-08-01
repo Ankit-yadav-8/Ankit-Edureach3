@@ -30,7 +30,8 @@ function mathNode(tex, display, key) {
 /* ── inline tokenizer: $math$, $$math$$, \(..\), \[..\], **bold**, *italic*, `code`, [text](url) ── */
 function inline(text, theme) {
   const nodes = [];
-  const re = /(\$\$([\s\S]+?)\$\$)|(\\\[([\s\S]+?)\\\])|(\$(?!\s)([^$\n]+?)\$)|(\\\(([\s\S]+?)\\\))|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)|(`([^`]+)`)|(\[([^\]]+)\]\(([^)]+)\))/g;
+  // Use non-greedy matches for bold/italic to allow nested characters if they don't break the syntax.
+  const re = /(\$\$([\s\S]+?)\$\$)|(\\\[([\s\S]+?)\\\])|(\$(?!\s)([\s\S]+?)\$)|(\\\(([\s\S]+?)\\\))|(\*\*([\s\S]+?)\*\*)|(\*([\s\S]+?)\*)|(`([\s\S]+?)`)|(\[([^\]]+)\]\(([^)]+)\))/g;
   let last = 0, m, key = 0;
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) nodes.push(text.slice(last, m.index));
