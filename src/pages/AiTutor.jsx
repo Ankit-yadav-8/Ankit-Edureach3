@@ -1,41 +1,38 @@
 import { useState, useEffect, useRef } from "react";
 import "../styles/ai-tutor.css";
 
-// ---------------- Config: swap this for your real API call ----------------
-async function getAnswer(question) {
-  // Simulated "LLM" responses for demo purposes.
-  const q = question.toLowerCase();
+const AI_API_KEY = import.meta.env.VITE_AI_API_KEY;
 
-  if (q.includes("2x") || q.includes("solve") || q.includes("equation")) {
+async function getAnswer(question) {
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${AI_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: `You are ARIA, an AI Voice Tutor. A student asks: "${question}". 
+Respond concisely. Format your response exactly as this JSON structure: 
+{ "speech": "A concise introductory sentence", "steps": [{ "step": 1, "text": "Step explanation", "math": "Equation if any" }], "closing": "Encouraging closing remark" }.
+Do not include markdown blocks, just the pure JSON.` }] }]
+      })
+    });
+    
+    if (!res.ok) throw new Error("API Request Failed");
+    const data = await res.json();
+    let text = data.candidates[0].content.parts[0].text;
+    text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+    
+    return JSON.parse(text);
+  } catch (err) {
+    console.error("AI API Error:", err);
     return {
-      speech: "Sure! Let's solve two x plus five equals fifteen, step by step.",
+      speech: "I am having trouble connecting to my brain right now.",
       steps: [
-        { step: 1, text: "Subtract 5 from both sides", math: "2x = 10" },
-        { step: 2, text: "Divide both sides by 2", math: "x = 5" },
+        { step: 1, text: "Check your internet connection", math: "" },
+        { step: 2, text: "Verify the provided API key is valid", math: "" }
       ],
-      closing: "Nice — you've got it!",
+      closing: "Try again in a moment."
     };
   }
-  if (q.includes("photosynthesis")) {
-    return {
-      speech: "Great question. Photosynthesis is how plants make their own food using sunlight.",
-      steps: [
-        { step: 1, text: "Plant takes in sunlight, water, and CO₂", math: "" },
-        { step: 2, text: "Chlorophyll converts this into glucose", math: "" },
-        { step: 3, text: "Oxygen is released as a byproduct", math: "6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂" },
-      ],
-      closing: "That's the whole cycle — nicely done!",
-    };
-  }
-  return {
-    speech: "Here's a general step by step approach to your question.",
-    steps: [
-      { step: 1, text: "Identify what the question is really asking", math: "" },
-      { step: 2, text: "Break it into smaller, familiar parts", math: "" },
-      { step: 3, text: "Solve each part, then combine the results", math: "" },
-    ],
-    closing: "Try asking me a specific math or science question next!",
-  };
 }
 // ---------------------------------------------------------------------------
 
@@ -47,6 +44,7 @@ export default function AiTutor() {
   const [qLabel, setQLabel] = useState("");
   const [voiceOn, setVoiceOn] = useState(true);
   const [answerData, setAnswerData] = useState(null);
+  const [inputText, setInputText] = useState("");
 
   const recognitionRef = useRef(null);
 
@@ -142,6 +140,14 @@ export default function AiTutor() {
     const answer = await getAnswer(question);
     setAnswerData(answer);
     speak(answer);
+  };
+
+  const handleTextSubmit = (e) => {
+    e.preventDefault();
+    if (!inputText.trim()) return;
+    const q = inputText.trim();
+    setInputText("");
+    handleQuestion(q);
   };
 
   const speak = (answer) => {
@@ -241,6 +247,22 @@ export default function AiTutor() {
               ↻ Replay
             </button>
           </div>
+
+          <form className="neo-chat-form" onSubmit={handleTextSubmit}>
+            <input 
+              type="text" 
+              className="neo-chat-input" 
+              placeholder="Or type your question..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+            />
+            <button type="submit" className="neo-chat-send" aria-label="Send">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </form>
         </div>
 
         {/* RIGHT: Handwritten solution */}

@@ -348,3 +348,54 @@
   color: var(--neo-ink-soft);
   text-align: center;
 }
+
+/* ---- Chat Input Form ---- */
+.neo-chat-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.neo-chat-input {
+  flex: 1;
+  background: var(--neo-bg);
+  border: none;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--neo-ink);
+  box-shadow: inset 5px 5px 10px var(--neo-shadow-dark), inset -5px -5px 10px var(--neo-shadow-light);
+  outline: none;
+  transition: box-shadow .2s ease;
+}
+
+.neo-chat-input:focus {
+  box-shadow: inset 6px 6px 12px var(--neo-shadow-dark), inset -6px -6px 12px var(--neo-shadow-light), 0 0 0 2px var(--neo-accent-glow);
+}
+
+.neo-chat-input::placeholder {
+  color: var(--neo-ink-soft);
+}
+
+.neo-chat-send {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: none;
+  background: var(--neo-bg);
+  box-shadow: 5px 5px 10px var(--neo-shadow-dark), -5px -5px 10px var(--neo-shadow-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neo-accent);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: .15s;
+}
+
+.neo-chat-send:active {
+  box-shadow: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light);
+}
