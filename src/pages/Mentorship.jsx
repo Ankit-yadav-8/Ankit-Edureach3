@@ -88,6 +88,9 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
             <button className="mj-btn-glass" onClick={() => scrollTo("enrol")}>
               View Plans
             </button>
+            <Link to="/ai-tutor" className="mj-btn-glass" style={{ display: "inline-flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
+              <Mic size={18} /> Try AI Tutor
+            </Link>
           </Reveal>
 
           <Reveal delay={0.32} className="mj-hero-bullets">
