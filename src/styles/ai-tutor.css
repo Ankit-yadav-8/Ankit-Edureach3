@@ -228,7 +228,7 @@
 .neo-solution-panel {
   display: flex;
   flex-direction: column;
-  min-height: 520px;
+  height: 650px;
 }
 
 .neo-solution-header {
@@ -255,13 +255,24 @@
   box-shadow: inset 4px 4px 10px var(--neo-shadow-dark), inset -4px -4px 10px var(--neo-shadow-light);
   padding: 26px 26px 20px;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent,
     transparent 37px,
     #e4ded0 38px
   );
+}
+
+.neo-paper::-webkit-scrollbar {
+  width: 6px;
+}
+.neo-paper::-webkit-scrollbar-track {
+  background: transparent;
+}
+.neo-paper::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+  border-radius: 10px;
 }
 
 .neo-paper::before {

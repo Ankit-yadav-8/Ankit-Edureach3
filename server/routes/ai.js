@@ -580,6 +580,10 @@ router.post("/tutor", async (req, res) => {
 Follow these academic guidelines for completeness:
 ${SYSTEM_PROMPT}
 
+ADDITIONAL INSTRUCTIONS FOR THIS TUTOR:
+1. If the user asks for short notes, structure them based on the standard Allen Handbook reference style, keeping them extremely crisp, conceptual, and well-organized. 
+2. Use diagrammatic formats where possible (using ASCII diagrams in the "text" field) to visually explain concepts in a handwritten-style layout.
+
 CRITICAL FORMATTING INSTRUCTION:
 Even though you are providing full, in-depth derivations and explanations, you MUST format your ENTIRE response exactly as this JSON structure. Place the step-by-step derivations or explanations into the "steps" array.
 {
