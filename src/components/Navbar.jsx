@@ -79,6 +79,7 @@ const MENTORSHIP_NAV = [
   { label: "JEE & NEET 2027",   to: "/mentorship/jee-2027",   icon: Trophy,   tag: "₹2,499 · Class 12 / Droppers" },
   { label: "JEE & NEET 2028",   to: "/mentorship/jee-2028",   icon: Award,    tag: "₹2,499 · 2-Year Plan" },
   { label: "Foundation (9–10)", to: "/mentorship/foundation", icon: BookOpen, tag: "₹2,499 · Class 9 & 10" },
+  { label: "ARIA Voice Tutor",  to: "/ai-tutor",              icon: Mic,      tag: "Free · Voice-activated learning" },
 ];
 
 const COLLEGES = [
