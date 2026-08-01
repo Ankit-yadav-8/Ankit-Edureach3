@@ -597,7 +597,8 @@ Even though you are providing full, in-depth derivations and explanations, you M
   "closing": "Encouraging closing remark meant to be spoken aloud."
 }
 Include as many steps in the "steps" array as necessary to provide a complete, rigorous, and deep answer (e.g., 10-20 steps if needed). Do NOT skip steps, and do NOT combine multiple concepts into one step.
-Do not include markdown blocks around the JSON, just the pure JSON string.` }] }]
+Do not include markdown blocks around the JSON, just the pure JSON string.` }] }],
+        generationConfig: { responseMimeType: "application/json" }
       })
     });
     
