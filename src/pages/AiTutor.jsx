@@ -278,23 +278,19 @@ export default function AiTutor() {
 
           <div className={`neo-status-text ${listening ? "on" : ""}`}>{statusText}</div>
 
-          <form className="neo-combined-box" onSubmit={handleTextSubmit}>
-            <div className="neo-combined-top">
+          <form className="ai-tutor-controls-form" onSubmit={handleTextSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '8px' }}>
+            <div className="neo-inset" style={{ padding: '16px', width: '100%', minHeight: '80px', display: 'flex' }}>
               <textarea
                 className="neo-combined-input"
                 placeholder="Type or speak your question..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 rows={2}
+                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', resize: 'none', color: 'var(--neo-ink)', fontFamily: 'inherit', fontSize: '13.5px' }}
               />
-              <button type="submit" className="neo-chat-send" aria-label="Send">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-              </button>
             </div>
-            <div className="neo-controls-row">
+            
+            <div className="neo-controls-row" style={{ display: 'flex', gap: '10px', width: '100%' }}>
               <button
                 type="button"
                 className={`neo-pill-btn ${voiceOn ? "active" : ""}`}
@@ -304,6 +300,12 @@ export default function AiTutor() {
               </button>
               <button type="button" className="neo-pill-btn" onClick={handleReplay}>
                 ↻ Replay
+              </button>
+              <button type="submit" className="neo-chat-send" aria-label="Send">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
               </button>
             </div>
           </form>
