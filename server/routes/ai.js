@@ -575,7 +575,22 @@ router.post("/tutor", async (req, res) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: `You are CollegeParichay, an AI Voice Tutor. A student asks: "${question}". \nRespond concisely. Format your response exactly as this JSON structure: \n{ "speech": "A concise introductory sentence", "steps": [{ "step": 1, "text": "Step explanation", "math": "Equation if any" }], "closing": "Encouraging closing remark" }.\nDo not include markdown blocks, just the pure JSON.` }] }]
+        contents: [{ role: 'user', parts: [{ text: `You are CollegeParichay, an AI Voice Tutor. A student asks: "${question}". 
+        
+Follow these academic guidelines for completeness:
+${SYSTEM_PROMPT}
+
+CRITICAL FORMATTING INSTRUCTION:
+Even though you are providing full, in-depth derivations and explanations, you MUST format your ENTIRE response exactly as this JSON structure. Place the step-by-step derivations or explanations into the "steps" array.
+{
+  "speech": "An introductory sentence meant to be spoken aloud.",
+  "steps": [
+    { "step": 1, "text": "Detailed explanation for this step", "math": "Formula or LaTeX if applicable (optional)" }
+  ],
+  "closing": "Encouraging closing remark meant to be spoken aloud."
+}
+Include as many steps in the "steps" array as necessary to provide a complete, rigorous answer (do NOT skip steps).
+Do not include markdown blocks around the JSON, just the pure JSON string.` }] }]
       })
     });
     
