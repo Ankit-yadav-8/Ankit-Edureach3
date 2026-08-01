@@ -496,7 +496,7 @@ router.post("/tutor", async (req, res) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: `You are ARIA, an AI Voice Tutor. A student asks: "${question}". \nRespond concisely. Format your response exactly as this JSON structure: \n{ "speech": "A concise introductory sentence", "steps": [{ "step": 1, "text": "Step explanation", "math": "Equation if any" }], "closing": "Encouraging closing remark" }.\nDo not include markdown blocks, just the pure JSON.` }] }]
+        contents: [{ role: 'user', parts: [{ text: `You are CollegeParichay, an AI Voice Tutor. A student asks: "${question}". \nRespond concisely. Format your response exactly as this JSON structure: \n{ "speech": "A concise introductory sentence", "steps": [{ "step": 1, "text": "Step explanation", "math": "Equation if any" }], "closing": "Encouraging closing remark" }.\nDo not include markdown blocks, just the pure JSON.` }] }]
       })
     });
     
