@@ -566,7 +566,7 @@ router.post("/memory", requireAuth, async (req, res) => {
 
 /* POST /api/ai/tutor — proxy for AiTutor Voice Tutor to avoid browser CORS/API key issues */
 router.post("/tutor", async (req, res) => {
-  const apiKey = process.env.VITE_AI_API_KEY || process.env.AI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_AI_API_KEY || process.env.AI_API_KEY;
   if (!apiKey) return res.status(500).json({ error: "AI Tutor API key not configured on server" });
 
   try {
