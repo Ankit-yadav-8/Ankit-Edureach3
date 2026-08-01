@@ -130,7 +130,7 @@ export default function AiTutor() {
     setTimeout(() => {
       setListening(false);
       handleQuestion(q);
-    }, 1400);
+    }, 500);
   };
 
   const handleQuestion = async (question) => {

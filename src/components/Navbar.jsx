@@ -5,7 +5,7 @@ import {
   ChevronDown, Search, Target, Menu, X,
   BadgeCheck, CalendarDays, FileText, BarChart3, Landmark, Crosshair, Gauge, Heart, GitCompare, Award,
   BookOpen, FlaskConical, Sigma, Zap, Trophy, LogOut, Sparkles,
-  HelpCircle, Flame, Globe2, Edit3, Activity, Clock, ClipboardCheck, Compass, GraduationCap
+  HelpCircle, Flame, Globe2, Edit3, Activity, Clock, ClipboardCheck, Compass, GraduationCap, Mic
 } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
