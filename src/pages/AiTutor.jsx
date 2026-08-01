@@ -303,10 +303,6 @@ export default function AiTutor() {
               )}
             </div>
           </div>
-          <div className="neo-footer-note">
-            Demo runs on sample questions locally — wire in your LLM API call inside{" "}
-            <code>getAnswer()</code> for real answers.
-          </div>
         </div>
       </div>
     </div>
