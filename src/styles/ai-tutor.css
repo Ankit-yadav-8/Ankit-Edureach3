@@ -26,9 +26,9 @@
 
 .ai-tutor-app {
   width: 100%;
-  max-width: 920px;
+  max-width: 1100px;
   display: grid;
-  grid-template-columns: 340px 1fr;
+  grid-template-columns: 400px 1fr;
   gap: 28px;
 }
 
@@ -362,6 +362,7 @@
 }
 
 .neo-combined-input {
+  flex: 1;
   width: 100%;
   background: transparent;
   border: none;
@@ -378,16 +379,11 @@
   font-style: italic;
 }
 
-.neo-combined-controls {
+.neo-combined-top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 12px;
   width: 100%;
-}
-
-.neo-combined-controls .neo-controls-row {
-  flex: 1;
 }
 
 .neo-chat-send {

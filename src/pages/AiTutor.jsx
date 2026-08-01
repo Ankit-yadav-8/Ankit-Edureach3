@@ -279,31 +279,31 @@ export default function AiTutor() {
           <div className={`neo-status-text ${listening ? "on" : ""}`}>{statusText}</div>
 
           <form className="neo-combined-box" onSubmit={handleTextSubmit}>
-            <textarea
-              className="neo-combined-input"
-              placeholder="Type or speak your question..."
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              rows={2}
-            />
-            <div className="neo-combined-controls">
-              <div className="neo-controls-row">
-                <button
-                  type="button"
-                  className={`neo-pill-btn ${voiceOn ? "active" : ""}`}
-                  onClick={toggleVoice}
-                >
-                  {voiceOn ? "🔊 Voice on" : "🔇 Voice off"}
-                </button>
-                <button type="button" className="neo-pill-btn" onClick={handleReplay}>
-                  ↻ Replay
-                </button>
-              </div>
+            <div className="neo-combined-top">
+              <textarea
+                className="neo-combined-input"
+                placeholder="Type or speak your question..."
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                rows={2}
+              />
               <button type="submit" className="neo-chat-send" aria-label="Send">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="22" y1="2" x2="11" y2="13"></line>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                 </svg>
+              </button>
+            </div>
+            <div className="neo-controls-row">
+              <button
+                type="button"
+                className={`neo-pill-btn ${voiceOn ? "active" : ""}`}
+                onClick={toggleVoice}
+              >
+                {voiceOn ? "🔊 Voice on" : "🔇 Voice off"}
+              </button>
+              <button type="button" className="neo-pill-btn" onClick={handleReplay}>
+                ↻ Replay
               </button>
             </div>
           </form>
