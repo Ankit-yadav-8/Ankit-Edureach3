@@ -75,6 +75,7 @@ const Class11 = lazyRetry(() => import("./pages/Class11.jsx"));
 const Class12 = lazyRetry(() => import("./pages/Class12.jsx"));
 const JeeStrategy = lazyRetry(() => import("./pages/JeeStrategy.jsx"));
 const NeetStrategy = lazyRetry(() => import("./pages/NeetStrategy.jsx"));
+const AiTutor = lazyRetry(() => import("./pages/AiTutor.jsx"));
 import CompareTray from "./components/CompareTray.jsx";
 import WhatsAppButton from "./components/WhatsAppButton.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
@@ -243,6 +244,7 @@ export default function App() {
           <Route path="/class-12" element={<Class12 />} />
           <Route path="/jee-strategy" element={<JeeStrategy />} />
           <Route path="/neet-strategy" element={<NeetStrategy />} />
+          <Route path="/ai-tutor" element={<AiTutor />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         </Suspense>

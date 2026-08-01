@@ -1,0 +1,350 @@
+.ai-tutor-wrapper {
+  /* Scope the variables to this page so they don't leak, using the user's neomorphic style but accenting with the brand color */
+  --neo-bg: #e6e9f0;
+  --neo-bg-light: #ffffff;
+  --neo-bg-dark: #c9cedb;
+  --neo-shadow-light: #ffffff;
+  --neo-shadow-dark: #b7bccb;
+  --neo-ink: #1a1a2e;
+  --neo-ink-soft: #6b7280;
+  --neo-accent: #ff693d;
+  --neo-accent-soft: #ff8f6b;
+  --neo-accent-glow: rgba(255, 105, 61, 0.35);
+  --neo-paper: #fbfaf7;
+  --neo-pencil: #3a3f52;
+
+  min-height: calc(100vh - var(--nav-h));
+  background: var(--neo-bg);
+  font-family: 'Manrope', 'Sora', sans-serif;
+  color: var(--neo-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  padding-top: calc(var(--nav-h) + 32px);
+}
+
+.ai-tutor-app {
+  width: 100%;
+  max-width: 920px;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 28px;
+}
+
+@media (max-width: 800px) {
+  .ai-tutor-app {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Neomorphic base ---- */
+.neo-panel {
+  background: var(--neo-bg);
+  border-radius: 28px;
+  box-shadow: 10px 10px 24px var(--neo-shadow-dark), -10px -10px 24px var(--neo-shadow-light);
+  padding: 28px;
+}
+
+.neo-inset {
+  background: var(--neo-bg);
+  border-radius: 20px;
+  box-shadow: inset 6px 6px 14px var(--neo-shadow-dark), inset -6px -6px 14px var(--neo-shadow-light);
+}
+
+/* ---- Left: voice control panel ---- */
+.neo-voice-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+}
+
+.neo-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+}
+
+.neo-brand-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--neo-accent);
+  box-shadow: 0 0 0 4px var(--neo-accent-glow);
+}
+
+.neo-brand-name {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+.neo-brand-sub {
+  font-size: 11px;
+  color: var(--neo-ink-soft);
+  margin-top: -2px;
+}
+
+.neo-mic-stage {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px 0 4px;
+}
+
+.neo-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--neo-accent-soft);
+  opacity: 0;
+}
+
+.neo-mic-btn {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: none;
+  background: var(--neo-bg);
+  box-shadow: 10px 10px 20px var(--neo-shadow-dark), -10px -10px 20px var(--neo-shadow-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: box-shadow .18s ease, transform .18s ease;
+  z-index: 2;
+}
+
+.neo-mic-btn:active {
+  box-shadow: inset 6px 6px 14px var(--neo-shadow-dark), inset -6px -6px 14px var(--neo-shadow-light);
+}
+
+.neo-mic-btn.listening {
+  box-shadow: inset 6px 6px 14px var(--neo-shadow-dark), inset -6px -6px 14px var(--neo-shadow-light);
+}
+
+.neo-mic-btn svg {
+  width: 52px;
+  height: 52px;
+}
+
+.neo-mic-btn .mic-body {
+  fill: var(--neo-ink-soft);
+  transition: fill .2s;
+}
+
+.neo-mic-btn.listening .mic-body {
+  fill: var(--neo-accent);
+}
+
+.neo-mic-btn.speaking .mic-body {
+  fill: #15a06e; /* theme green */
+}
+
+.neo-ring.active {
+  animation: neo-pulse 1.6s ease-out infinite;
+}
+
+@keyframes neo-pulse {
+  0% {
+    width: 150px;
+    height: 150px;
+    opacity: .55;
+  }
+  100% {
+    width: 220px;
+    height: 220px;
+    opacity: 0;
+  }
+}
+
+.neo-status-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neo-ink-soft);
+  min-height: 18px;
+  letter-spacing: .2px;
+}
+
+.neo-status-text.on {
+  color: var(--neo-accent);
+}
+
+.neo-transcript {
+  width: 100%;
+  min-height: 56px;
+  padding: 14px 16px;
+  font-size: 13.5px;
+  color: var(--neo-ink);
+  line-height: 1.5;
+  text-align: left;
+}
+
+.neo-transcript .placeholder {
+  color: var(--neo-ink-soft);
+  font-style: italic;
+}
+
+.neo-controls-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.neo-pill-btn {
+  flex: 1;
+  border: none;
+  background: var(--neo-bg);
+  box-shadow: 5px 5px 10px var(--neo-shadow-dark), -5px -5px 10px var(--neo-shadow-light);
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--neo-ink-soft);
+  cursor: pointer;
+  transition: .15s;
+}
+
+.neo-pill-btn:hover {
+  color: var(--neo-accent);
+}
+
+.neo-pill-btn:active {
+  box-shadow: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light);
+}
+
+.neo-pill-btn.active {
+  color: var(--neo-accent);
+  box-shadow: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light);
+}
+
+/* ---- Right: handwritten solution panel ---- */
+.neo-solution-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 520px;
+}
+
+.neo-solution-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.neo-solution-title {
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.neo-solution-sub {
+  font-size: 11px;
+  color: var(--neo-ink-soft);
+}
+
+.neo-paper {
+  flex: 1;
+  background: var(--neo-paper);
+  border-radius: 18px;
+  box-shadow: inset 4px 4px 10px var(--neo-shadow-dark), inset -4px -4px 10px var(--neo-shadow-light);
+  padding: 26px 26px 20px;
+  position: relative;
+  overflow: hidden;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 37px,
+    #e4ded0 38px
+  );
+}
+
+.neo-paper::before {
+  content: "";
+  position: absolute;
+  left: 44px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e8b4ab;
+  opacity: .6;
+}
+
+.neo-paper-inner {
+  margin-left: 36px;
+}
+
+.neo-empty-state {
+  color: #9b9482;
+  font-family: 'Kalam', cursive;
+  font-size: 20px;
+  margin-top: 40px;
+  opacity: .8;
+}
+
+.neo-step-card {
+  font-family: 'Kalam', cursive;
+  color: var(--neo-pencil);
+  margin-bottom: 22px;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: neo-writeIn .5s ease forwards;
+}
+
+.neo-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--neo-accent);
+  color: var(--neo-accent);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Manrope', 'Sora', sans-serif;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.neo-step-text {
+  font-size: 19px;
+  line-height: 1.4;
+}
+
+.neo-step-math {
+  font-size: 22px;
+  margin-top: 4px;
+  margin-left: 30px;
+  color: #c0392b;
+  text-decoration: underline wavy #e8b4ab;
+  text-underline-offset: 6px;
+}
+
+@keyframes neo-writeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.neo-final-line {
+  font-family: 'Kalam', cursive;
+  font-size: 18px;
+  color: #15a06e; /* theme green */
+  margin-top: 8px;
+  opacity: 0;
+  animation: neo-writeIn .5s ease forwards;
+}
+
+.neo-footer-note {
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--neo-ink-soft);
+  text-align: center;
+}
