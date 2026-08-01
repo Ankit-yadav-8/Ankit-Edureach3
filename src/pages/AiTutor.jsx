@@ -1,19 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import "../styles/ai-tutor.css";
+import { API_BASE } from "../auth/api.js";
 
-const AI_API_KEY = import.meta.env.VITE_AI_API_KEY;
+
 
 async function getAnswer(question) {
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${AI_API_KEY}`, {
+    const res = await fetch(`${API_BASE}/api/ai/tutor`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: `You are ARIA, an AI Voice Tutor. A student asks: "${question}". 
-Respond concisely. Format your response exactly as this JSON structure: 
-{ "speech": "A concise introductory sentence", "steps": [{ "step": 1, "text": "Step explanation", "math": "Equation if any" }], "closing": "Encouraging closing remark" }.
-Do not include markdown blocks, just the pure JSON.` }] }]
-      })
+      body: JSON.stringify({ question })
     });
     
     if (!res.ok) throw new Error("API Request Failed");

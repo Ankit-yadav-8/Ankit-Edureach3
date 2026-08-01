@@ -485,4 +485,30 @@ router.post("/memory", requireAuth, async (req, res) => {
   }
 });
 
+/* POST /api/ai/tutor — proxy for AiTutor Voice Tutor to avoid browser CORS/API key issues */
+router.post("/tutor", async (req, res) => {
+  const apiKey = process.env.VITE_AI_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: "AI Tutor API key not configured on server" });
+
+  try {
+    const question = req.body?.question || "";
+    const fetchRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: `You are ARIA, an AI Voice Tutor. A student asks: "${question}". \nRespond concisely. Format your response exactly as this JSON structure: \n{ "speech": "A concise introductory sentence", "steps": [{ "step": 1, "text": "Step explanation", "math": "Equation if any" }], "closing": "Encouraging closing remark" }.\nDo not include markdown blocks, just the pure JSON.` }] }]
+      })
+    });
+    
+    if (!fetchRes.ok) {
+      return res.status(fetchRes.status).json({ error: "Gemini API Error" });
+    }
+    
+    const data = await fetchRes.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;
