@@ -63,6 +63,8 @@ export default function AiTutor() {
 
       recognition.onresult = (e) => {
         const text = e.results[0][0].transcript;
+        setInputText(text);
+        // Automatically submit the question when they finish speaking
         handleQuestion(text);
       };
       recognition.onerror = () => {
@@ -224,40 +226,34 @@ export default function AiTutor() {
 
           <div className={`neo-status-text ${listening ? "on" : ""}`}>{statusText}</div>
 
-          <div className="neo-inset neo-transcript">
-            {transcript ? (
-              <span>{transcript}</span>
-            ) : (
-              <span className="placeholder">Your question will appear here…</span>
-            )}
-          </div>
-
-          <div className="neo-controls-row">
-            <button
-              className={`neo-pill-btn ${voiceOn ? "active" : ""}`}
-              onClick={toggleVoice}
-            >
-              {voiceOn ? "🔊 Voice on" : "🔇 Voice off"}
-            </button>
-            <button className="neo-pill-btn" onClick={handleReplay}>
-              ↻ Replay
-            </button>
-          </div>
-
-          <form className="neo-chat-form" onSubmit={handleTextSubmit}>
-            <input 
-              type="text" 
-              className="neo-chat-input" 
-              placeholder="Or type your question..."
+          <form className="neo-combined-box" onSubmit={handleTextSubmit}>
+            <textarea
+              className="neo-combined-input"
+              placeholder="Type or speak your question..."
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
+              rows={2}
             />
-            <button type="submit" className="neo-chat-send" aria-label="Send">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-              </svg>
-            </button>
+            <div className="neo-combined-controls">
+              <div className="neo-controls-row">
+                <button
+                  type="button"
+                  className={`neo-pill-btn ${voiceOn ? "active" : ""}`}
+                  onClick={toggleVoice}
+                >
+                  {voiceOn ? "🔊 Voice on" : "🔇 Voice off"}
+                </button>
+                <button type="button" className="neo-pill-btn" onClick={handleReplay}>
+                  ↻ Replay
+                </button>
+              </div>
+              <button type="submit" className="neo-chat-send" aria-label="Send">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
           </form>
         </div>
 
