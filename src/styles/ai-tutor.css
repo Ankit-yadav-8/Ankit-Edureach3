@@ -301,7 +301,7 @@
 .neo-step-card {
   font-family: 'Kalam', cursive;
   color: var(--neo-pencil);
-  margin-bottom: 22px;
+  margin-bottom: 30px;
   opacity: 0;
   transform: translateY(6px);
   animation: neo-writeIn .5s ease forwards;
@@ -325,16 +325,28 @@
 
 .neo-step-text {
   font-size: 19px;
-  line-height: 1.4;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+  display: block;
+}
+
+.neo-step-text p, .neo-step-text ul, .neo-step-text ol {
+  font-family: inherit;
+  margin-top: 4px;
 }
 
 .neo-step-math {
   font-size: 22px;
-  margin-top: 4px;
-  margin-left: 30px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  margin-left: 20px;
   color: #c0392b;
   text-decoration: underline wavy #e8b4ab;
   text-underline-offset: 6px;
+}
+
+.neo-step-math .katex-display {
+  margin: 4px 0;
 }
 
 @keyframes neo-writeIn {

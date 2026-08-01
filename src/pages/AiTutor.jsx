@@ -1,6 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import "../styles/ai-tutor.css";
 import { API_BASE } from "../auth/api.js";
+import Markdown from "../components/ai/Markdown.jsx";
+
+const tutorTheme = {
+  body: "var(--neo-pencil)",
+  inlineCodeBg: "transparent",
+  inlineCodeFg: "var(--neo-accent)",
+  link: "var(--neo-accent)",
+  hr: "rgba(0,0,0,0.1)"
+};
 
 
 
@@ -340,8 +349,8 @@ export default function AiTutor() {
                       style={{ animationDelay: `${i * 0.35}s` }}
                     >
                       <span className="neo-step-num">{s.step}</span>
-                      <span className="neo-step-text">{s.text}</span>
-                      {s.math && <div className="neo-step-math">{s.math}</div>}
+                      <div className="neo-step-text"><Markdown text={s.text} theme={tutorTheme} /></div>
+                      {s.math && <div className="neo-step-math"><Markdown text={`$$${s.math}$$`} theme={tutorTheme} /></div>}
                     </div>
                   ))}
                   <div
