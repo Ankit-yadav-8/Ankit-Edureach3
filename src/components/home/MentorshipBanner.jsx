@@ -93,8 +93,8 @@ export default function MentorshipBanner() {
               transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
               style={{
                 position: "absolute",
-                top: 20,
-                right: 40,
+                top: 0,
+                right: -20,
                 background: "#FFFFFF",
                 padding: "16px 20px",
                 borderRadius: 16,
@@ -122,7 +122,7 @@ export default function MentorshipBanner() {
               style={{
                 position: "absolute",
                 top: 140,
-                left: 0,
+                left: -40,
                 background: "#FFFFFF",
                 padding: "16px 20px",
                 borderRadius: 16,
@@ -149,8 +149,8 @@ export default function MentorshipBanner() {
               transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut", delay: 2 }}
               style={{
                 position: "absolute",
-                bottom: 30,
-                right: 20,
+                bottom: 20,
+                right: 0,
                 background: "#FFFFFF",
                 padding: "16px 20px",
                 borderRadius: 16,
@@ -171,15 +171,21 @@ export default function MentorshipBanner() {
               </div>
             </motion.div>
 
-            {/* Central decorative element connecting them */}
+            {/* Central Photo */}
             <div style={{ 
-              width: 140, height: 140, 
-              borderRadius: "50%", 
-              background: `linear-gradient(135deg, ${CL.coralSoft}, #FFF4F2)`,
-              border: `2px dashed rgba(255,105,61,0.2)`,
-              display: "flex", alignItems: "center", justifyContent: "center"
+              width: 320, height: 320, 
+              position: "relative",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              zIndex: 1
             }}>
-              <CheckCircle2 size={48} color={CL.coral} opacity={0.8} />
+              <img 
+                src="/images/mentor_illustration.png" 
+                alt="Expert Mentorship"
+                style={{
+                  width: "100%", height: "100%", objectFit: "contain",
+                  filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.1))"
+                }} 
+              />
             </div>
 
           </div>
