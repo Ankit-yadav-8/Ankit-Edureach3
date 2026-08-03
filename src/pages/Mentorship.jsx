@@ -1122,7 +1122,7 @@ function TopMentors() {
       name: "Saneh",
       college: "IIT Roorkee",
       branch: "Civil Engineering",
-      thought: "Consistency is more important than perfection. A dedicated effort every day builds the foundation for cracking JEE.",
+      thought: "Hi, I'm Saneh, currently pursuing Civil Engineering at IIT Roorkee. Consistency is more important than perfection. When I started my JEE preparation, I realized that a dedicated effort every single day is what truly builds the foundation for cracking one of the toughest exams. I've faced the highs and lows of this journey, and I'm here to share my strategies, keep you motivated, and guide you step-by-step toward your dream IIT.",
       img: imgSaneh
     },
     {
