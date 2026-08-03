@@ -1388,7 +1388,7 @@ const CSS = `
 .mj-ta-shot img { display:block; width:100%; height:auto; }
 .mj-ta-topbar { display:flex; align-items:center; justify-content:space-between; gap:16px 24px; flex-wrap:wrap; margin-bottom:18px; padding:16px 22px; border-radius:16px; border:1px solid ${T.line}; background:linear-gradient(120deg, ${T.coralSoft}, ${T.card} 60%); box-shadow:0 16px 40px -34px rgba(0,0,0,.3); }
 .mj-ta-topbar-l { display:flex; align-items:center; gap:12px; }
-.mj-ta-topbar-badge { display:grid; place-items:center; width:36px; height:36px; flex-shrink:0; border-radius:10px; background:${T.coral}; color:#fff; }
+.mj-ta-topbar-badge { display:grid; place-items:center; width:36px; height:36px; flex-shrink:0; border-radius:50%; background:transparent; color:#fff; }
 .mj-ta-topbar-l strong { display:block; font:800 1rem/1.1 'Space Grotesk',sans-serif; color:${T.ink}; }
 .mj-ta-topbar-l span { font:700 .64rem/1.3 'Space Grotesk',sans-serif; letter-spacing:.06em; color:${T.muted}; }
 .mj-ta-topbar-r { display:flex; align-items:center; gap:26px; }
@@ -1398,7 +1398,7 @@ const CSS = `
 .mj-ta-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:stretch; }
 .mj-ta-form { display:flex; flex-direction:column; justify-content:flex-start; height:100%; background:${T.card}; border:1px solid ${T.line}; border-radius:18px; padding:24px; box-shadow:0 20px 44px -34px rgba(0,0,0,.35); }
 .mj-ta-formtop { display:flex; align-items:center; gap:12px; padding-bottom:16px; margin-bottom:18px; border-bottom:1px solid ${T.line}; }
-.mj-ta-formbadge { display:grid; place-items:center; width:38px; height:38px; flex-shrink:0; border-radius:11px; background:${T.coralSoft}; color:${T.coralDk}; }
+.mj-ta-formbadge { display:grid; place-items:center; width:38px; height:38px; flex-shrink:0; border-radius:50%; background:transparent; color:${T.coralDk}; }
 .mj-ta-formtop-tx { display:flex; flex-direction:column; gap:3px; margin-right:auto; }
 .mj-ta-formtop-tx strong { font:800 1.05rem/1 'Space Grotesk',sans-serif; color:${T.ink}; }
 .mj-ta-formtop-tx span { font:600 .7rem/1.25 'DM Sans',sans-serif; color:${T.muted}; }
