@@ -16,6 +16,9 @@ import {
 import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT, MENTOR_LINKS } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
 import Seo from "../components/Seo.jsx";
+import imgSaneh from "../images/team/saneh.jpg";
+import imgSaket from "../images/team/saket.jpg";
+import imgMayank from "../images/team/mayank.jpg";
 
 const WA_NUMBER = "917877596464";
 
@@ -1120,21 +1123,21 @@ function TopMentors() {
       college: "IIT Roorkee",
       branch: "Civil Engineering",
       thought: "Consistency is more important than perfection. A dedicated effort every day builds the foundation for cracking JEE.",
-      img: "/assets/team/saneh.jpg"
+      img: imgSaneh
     },
     {
       name: "Saket Choudhary",
       college: "IIT Roorkee",
       branch: "BSBE",
       thought: "Hi, I'm Saket Choudhary, a B.Tech student at IIT Roorkee. Despite scoring a very low percentile in JEE Main, I stayed consistent, changed my strategy, and cracked JEE Advanced to earn my place here. I've been through the same struggles and uncertainty that many aspirants face, and as a mentor, I'm here to help you overcome those challenges and achieve your goals together.",
-      img: "/assets/team/saket.jpg"
+      img: imgSaket
     },
     {
       name: "Mayank Singh",
       college: "IIT Roorkee",
       branch: "Mechanical Engineering",
       thought: "Hi, I am Mayank Singh from iitr mechanical engineering. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. I am all thankful to my mentors and myself. So I'm now here at College Parichay to mentor young minds and pass them what I have earned.",
-      img: "/assets/team/mayank.jpg"
+      img: imgMayank
     }
   ];
 
