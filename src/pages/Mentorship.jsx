@@ -139,7 +139,7 @@ const QUALIFIER_MENTORS = [
     name: "Ankit Kumar",
     role: "Co-Founder, IIT Roorkee (AIR 3846 CRL, 938 OBC)",
     img: "/assets/team/ankit.webp",
-    thought: "Every aspirant hits a wall where effort stops working. Our goal is to break that wall by showing you the strategic blindspots you can't see yourself. Having navigated this journey to secure AIR 3846, I know exactly where students lose their confidence and how to rebuild it."
+    thought: "Every aspirant hits a wall where effort stops working. Our goal is to break that wall by showing you the strategic blindspots you can't see yourself. Having navigated this journey to secure AIR 3846, I know exactly where students lose their confidence and how to rebuild it. I believe that JEE preparation is not just about the number of hours you put in, but how effectively you utilize that time. Through our personalized mentorship, we aim to transform your struggles into strengths, providing you with the very tools and mindsets that helped us conquer one of the toughest exams in the world. Your success is our mission, and we are here to guide you every step of the way."
   }
 ];
 
