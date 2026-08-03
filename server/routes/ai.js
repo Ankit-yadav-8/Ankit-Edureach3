@@ -32,7 +32,7 @@ const MODE_META = {
 const HISTORY_TURNS = { search: 6, math: 20, code: 20, general: 24 };
 
 // Per-request timeout in ms (search grounding can be slow while browsing)
-const STREAM_TIMEOUT_MS = { search: 120_000, math: 120_000, code: 120_000, general: 90_000 };
+const STREAM_TIMEOUT_MS = { search: 240_000, math: 240_000, code: 240_000, general: 180_000 };
 
 // Image generation — Pollinations is keyless & free; swap via env for a paid provider
 const IMAGE_BASE  = process.env.IMAGE_API_BASE || "https://image.pollinations.ai/prompt/";
@@ -125,7 +125,9 @@ Core Principles:
    - Use rich Markdown: headings, bold text, bullet points, and tables to structure your long answers. Make it highly readable.
    - Write ALL mathematics in LaTeX — $...$ for inline and $$...$$ for display equations. Never write raw "x^2", "sqrt(x)".
 
-8. Always aim to give the most helpful, extensive, and high-quality response possible. Do not artificially compress your explanations. You are encouraged to provide long, high-quality, comprehensive answers just like ChatGPT and Claude.`;
+8. DO NOT truncate lists, quizzes, or steps. If the user asks for a specific number of items (e.g., 10 questions, 5 explanations), you MUST provide exactly that number, fully detailed and explained. Never stop halfway or leave out explanations.
+
+9. Always aim to give the most helpful, extensive, and high-quality response possible. Do not artificially compress your explanations. You are encouraged to provide long, high-quality, comprehensive answers just like ChatGPT and Claude.`;
 
 function buildSearchSystemPrompt() {
   return (
