@@ -76,12 +76,10 @@ function ToolCard({ t, nav }) {
       onMouseLeave={() => setIsHovered(false)}
       style={{
         background: baseBg,
-        border: `1px solid ${isHovered ? iconColor : 'rgba(0,0,0,0.03)'}`,
+        border: `1px solid ${isHovered ? iconColor : 'rgba(0,0,0,0.08)'}`,
         borderRadius: 26,
         padding: "30px 28px 32px",
-        boxShadow: isHovered 
-          ? `14px 14px 28px ${shadowDark}, -14px -14px 28px ${shadowLight}` 
-          : `10px 10px 22px ${shadowDark}, -10px -10px 22px ${shadowLight}`,
+        boxShadow: isHovered ? "0 10px 30px rgba(0,0,0,0.06)" : "none",
         display: "flex",
         flexDirection: "column",
         transition: "all 0.3s ease",
@@ -100,7 +98,7 @@ function ToolCard({ t, nav }) {
           alignItems: "center", 
           justifyContent: "center",
           color: isHovered ? "#ffffff" : iconColor,
-          boxShadow: isHovered ? "none" : `5px 5px 10px ${peachDark}, -5px -5px 10px #FFFFFF`,
+          boxShadow: "none",
           transition: "all 0.3s ease"
         }}>
           <t.icon size={24} strokeWidth={1.8} />
@@ -119,8 +117,8 @@ function ToolCard({ t, nav }) {
             fontWeight: 700,
             letterSpacing: "0.5px",
             boxShadow: t.hot 
-              ? `inset 2px 2px 4px ${shadowDark}, inset -2px -2px 4px ${shadowLight}, 0 0 0 1px rgba(244,123,32,0.18)`
-              : `inset 2px 2px 4px ${shadowDark}, inset -2px -2px 4px ${shadowLight}, 0 0 0 1px rgba(31,138,95,0.18)`
+              ? `0 0 0 1px rgba(244,123,32,0.18)`
+              : `0 0 0 1px rgba(31,138,95,0.18)`
           }}>
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: badgeColor }}></span>
             {badgeText}
@@ -186,7 +184,8 @@ export default function ToolsGrid() {
             fontWeight: 700, 
             letterSpacing: "0.7px",
             marginBottom: 20,
-            boxShadow: "5px 5px 10px #DCD6C8, -5px -5px 10px #FFFFFF"
+            boxShadow: "none",
+            border: "1px solid rgba(244,123,32,0.2)"
           }}>
             <Sparkles size={14} /> SMART TOOLS
           </span>
