@@ -6,10 +6,10 @@ import path from 'path';
 // Generate a full-bleed circular SVG
 const svgString = `
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <circle cx="256" cy="256" r="256" fill="#F47B20"/>
-  <text x="256" y="275" text-anchor="middle" dominant-baseline="central"
-        font-family="Arial, Helvetica, sans-serif" font-size="240" font-weight="900"
-        letter-spacing="-10" fill="#ffffff">CP</text>
+  <rect width="512" height="512" fill="#F47B20"/>
+  <text x="256" y="272" text-anchor="middle" dominant-baseline="central"
+        font-family="Arial, Helvetica, sans-serif" font-size="220" font-weight="900"
+        letter-spacing="-8" fill="#ffffff">CP</text>
 </svg>
 `;
 
