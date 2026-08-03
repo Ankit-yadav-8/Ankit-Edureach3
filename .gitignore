@@ -8,6 +8,9 @@ client/node_modules
 # ─────────────────────────────────────────
 # SECRETS — NEVER COMMIT THESE
 # ─────────────────────────────────────────
+test_api.js
+test_tutor.js
+test_local_tutor.js
 .env
 .env.*
 .env.local
