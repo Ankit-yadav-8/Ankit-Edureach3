@@ -1123,17 +1123,17 @@ function TopMentors() {
       img: "/images/saneh.jpg"
     },
     {
-      name: "Saket Kumar",
+      name: "Saket Choudhary",
       college: "IIT Roorkee",
       branch: "BSBE",
-      thought: "I scored very low in JEE Mains, but I didn't let that stop me. With intense focus and the right strategy, I bounced back to score high in JEE Advanced. Never give up.",
+      thought: "Hi, I'm Saket Choudhary, a B.Tech student at IIT Roorkee. Despite scoring a very low percentile in JEE Main, I stayed consistent, changed my strategy, and cracked JEE Advanced to earn my place here. I've been through the same struggles and uncertainty that many aspirants face, and as a mentor, I'm here to help you overcome those challenges and achieve your goals together.",
       img: "/images/saket.jpg"
     },
     {
       name: "Mayank Singh",
       college: "IIT Roorkee",
       branch: "Mechanical Engineering",
-      thought: "Understand the concepts deeply rather than memorizing them. Once the foundation is strong, problem-solving becomes an intuitive process.",
+      thought: "Hi, I am Mayank Singh from iitr mechanical engineering. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. I am all thankful to my mentors and myself. So I'm now here at College Parichay to mentor young minds and pass them what I have earned.",
       img: "/images/mayank.jpg"
     }
   ];
