@@ -87,86 +87,7 @@ export default function MentorshipBanner() {
           {/* Right Animated UI Content */}
           <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", position: "relative", zIndex: 1, height: 320 }} className="mb-anim-area">
             
-            {/* Animated Floating Card 1 */}
-            <div
-              style={{
-                animation: "float1 4s ease-in-out infinite",
-                position: "absolute",
-                top: 0,
-                right: -20,
-                background: "#FFFFFF",
-                padding: "16px 20px",
-                borderRadius: 16,
-                boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
-                border: `1px solid ${CL.line}`,
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                zIndex: 3
-              }}
-            >
-              <div style={{ background: CL.coralSoft, color: CL.coralDk, padding: 10, borderRadius: 10 }}>
-                <Video size={20} />
-              </div>
-              <div>
-                <div style={{ fontSize: 13, color: CL.muted, fontWeight: 600 }}>WEEKLY</div>
-                <div style={{ fontSize: 15, color: CL.ink, fontWeight: 700 }}>1-on-1 Strategy Call</div>
-              </div>
-            </div>
 
-            {/* Animated Floating Card 2 */}
-            <div
-              style={{
-                animation: "float2 5s ease-in-out 1s infinite",
-                position: "absolute",
-                top: 140,
-                left: -40,
-                background: "#FFFFFF",
-                padding: "16px 20px",
-                borderRadius: 16,
-                boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
-                border: `1px solid ${CL.line}`,
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                zIndex: 2
-              }}
-            >
-              <div style={{ background: CL.greenSoft, color: "#0FAE6E", padding: 10, borderRadius: 10 }}>
-                <Target size={20} />
-              </div>
-              <div>
-                <div style={{ fontSize: 13, color: CL.muted, fontWeight: 600 }}>TODAY</div>
-                <div style={{ fontSize: 15, color: CL.ink, fontWeight: 700 }}>Complete Ray Optics</div>
-              </div>
-            </div>
-
-            {/* Animated Floating Card 3 */}
-            <div
-              style={{
-                animation: "float3 4.5s ease-in-out 2s infinite",
-                position: "absolute",
-                bottom: 20,
-                right: 0,
-                background: "#FFFFFF",
-                padding: "16px 20px",
-                borderRadius: 16,
-                boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
-                border: `1px solid ${CL.line}`,
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                zIndex: 4
-              }}
-            >
-              <div style={{ background: CL.amberSoft, color: "#E29A2E", padding: 10, borderRadius: 10 }}>
-                <MessageCircle size={20} />
-              </div>
-              <div>
-                <div style={{ fontSize: 13, color: CL.muted, fontWeight: 600 }}>24/7 SUPPORT</div>
-                <div style={{ fontSize: 15, color: CL.ink, fontWeight: 700 }}>Instant Doubt Solved</div>
-              </div>
-            </div>
 
             {/* Central Photo */}
             <div style={{ 
@@ -213,18 +134,7 @@ export default function MentorshipBanner() {
             transform: scale(0.9);
           }
         }
-        @keyframes float1 {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-12px); }
-        }
-        @keyframes float2 {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(15px); }
-        }
-        @keyframes float3 {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
+
       `}</style>
     </section>
   );
