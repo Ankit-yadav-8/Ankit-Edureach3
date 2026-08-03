@@ -27,10 +27,12 @@
     "leaflet": "^1.9.4",
     "lucide-react": "^0.408.0",
     "mongoose": "^9.6.2",
+    "png-to-ico": "^3.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.0",
-    "recharts": "^2.12.7"
+    "recharts": "^2.12.7",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@sparticuz/chromium": "^149.0.0",

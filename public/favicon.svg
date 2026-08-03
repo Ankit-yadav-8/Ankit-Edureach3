@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="13" fill="#F47B20"/>
-  <text x="32" y="33" text-anchor="middle" dominant-baseline="central"
-        font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="800"
-        letter-spacing="-1.5" fill="#ffffff">CP</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <circle cx="256" cy="256" r="256" fill="#F47B20"/>
+  <text x="256" y="275" text-anchor="middle" dominant-baseline="central"
+        font-family="Arial, Helvetica, sans-serif" font-size="240" font-weight="900"
+        letter-spacing="-10" fill="#ffffff">CP</text>
 </svg>
