@@ -65,14 +65,10 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
   async function save() {
     setErr("");
     if (!f.name.trim()) return setErr("Name cannot be empty");
-    if (!/^\S+@\S+\.\S+$/.test(f.email.trim())) return setErr("Enter a valid email address");
-    if (!/^\d{10}$/.test(f.phone.replace(/\D/g, "").slice(-10))) return setErr("Enter a valid 10-digit phone number");
     setBusy(true);
     try {
       const { user: updated } = await apiUpdateProfile(token, {
         name: f.name.trim(),
-        email: f.email.trim().toLowerCase(),
-        phone: f.phone.replace(/\D/g, "").slice(-10),
         coaching: f.coaching.trim(),
         homeState: f.homeState.trim(),
         studentClass: f.studentClass,
@@ -110,9 +106,16 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <LabeledInput label="Full name" value={f.name} onChange={set("name")} placeholder="Your name" />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-            <LabeledInput label="Email" type="email" value={f.email} onChange={set("email")} placeholder="you@email.com" />
-            <LabeledInput label="Mobile number" type="tel" inputMode="numeric" value={f.phone} onChange={set("phone")} placeholder="10-digit mobile" />
+            <div style={{ opacity: 0.7 }}>
+              <LabeledInput label="Email" type="email" value={f.email} onChange={set("email")} placeholder="you@email.com" disabled={true} />
+            </div>
+            <div style={{ opacity: 0.7 }}>
+              <LabeledInput label="Mobile number" type="tel" inputMode="numeric" value={f.phone} onChange={set("phone")} placeholder="10-digit mobile" disabled={true} />
+            </div>
           </div>
+          <p style={{ fontSize: 11, color: "var(--text-soft)", margin: "-8px 0 0 0" }}>
+            Email and mobile number are primary identities and cannot be changed here. Please contact support to update them.
+          </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
             <LabeledInput label="Coaching" value={f.coaching} onChange={set("coaching")} placeholder="Your coaching" />
             <LabeledInput label="Home state" value={f.homeState} onChange={set("homeState")} placeholder="Home state" />

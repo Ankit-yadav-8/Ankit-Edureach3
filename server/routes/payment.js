@@ -171,6 +171,19 @@ router.get("/my-enrollments", requireAuth, async (req, res) => {
     if (phone10.length === 10) or.push({ phone10 });
     const items = await Enrollment.find({ status: "paid", $or: or })
       .sort({ createdAt: -1 }).lean();
+
+    // Auto-claim any enrollments that matched via email or phone but don't have a userId yet.
+    // This permanently binds them to the user and prevents purchase hijacking.
+    const unlinkedIds = items.filter((e) => !e.userId).map((e) => e._id);
+    if (unlinkedIds.length > 0) {
+      await Enrollment.updateMany(
+        { _id: { $in: unlinkedIds } },
+        { $set: { userId: req.user.id } }
+      );
+      items.forEach(e => {
+        if (!e.userId) e.userId = req.user.id;
+      });
+    }
     // Mentorship enrolments carry a student ID, a batch label and a validity
     // window — back-fill the ID here so older students get one on first open.
     const enrollments = await Promise.all(items.map(async (e) => {

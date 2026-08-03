@@ -149,26 +149,6 @@ router.patch("/profile", requireAuth, async (req, res) => {
       user.name = String(name).trim();
     }
 
-    if (email !== undefined) {
-      email = String(email).toLowerCase().trim();
-      if (!isEmail(email)) return res.status(400).json({ error: "Use a @gmail.com or .in email address" });
-      if (email !== user.email) {
-        const dup = await User.findOne({ email, _id: { $ne: user._id } }).select("_id");
-        if (dup) return res.status(409).json({ error: "Email already registered" });
-        user.email = email;
-      }
-    }
-
-    if (phone !== undefined) {
-      phone = String(phone).trim();
-      if (!/^\d{10}$/.test(phone)) return res.status(400).json({ error: "Enter a valid 10-digit phone number" });
-      if (phone !== user.phone) {
-        const dup = await User.findOne({ phone, _id: { $ne: user._id } }).select("_id");
-        if (dup) return res.status(409).json({ error: "Phone number already registered" });
-        user.phone = phone;
-      }
-    }
-
     if (coaching  !== undefined) user.coaching  = String(coaching).trim();
     if (homeState !== undefined) user.homeState = String(homeState).trim();
     if (studentClass !== undefined) user.studentClass = String(studentClass).trim();
@@ -178,12 +158,6 @@ router.patch("/profile", requireAuth, async (req, res) => {
     // Sync updated profile details to the user's enrollments so mentors see the latest info
     const syncUpdates = {};
     if (name !== undefined) syncUpdates.name = user.name;
-    if (email !== undefined) syncUpdates.email = user.email;
-    if (phone !== undefined) {
-      syncUpdates.phone = user.phone;
-      const d = String(user.phone || "").replace(/\D/g, "");
-      syncUpdates.phone10 = d.length >= 10 ? d.slice(-10) : "";
-    }
     if (homeState !== undefined) syncUpdates.homeState = user.homeState;
     if (studentClass !== undefined) syncUpdates.currentClass = user.studentClass;
     
