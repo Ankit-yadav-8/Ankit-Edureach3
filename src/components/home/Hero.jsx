@@ -48,15 +48,9 @@ function useBreakpoint() {
 }
 
 /* ── word reveal — black words blur-up, coral keywords spring-pop with a drawn underline ── */
-const headVariants = { hidden: {}, show: { transition: { staggerChildren: 0.07, delayChildren: 0.15 } } };
-const blackWord = {
-  hidden: { opacity: 0, y: "0.55em", filter: "blur(6px)" },
-  show:   { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-};
-const coralWord = {
-  hidden: { opacity: 0, scale: 0.6, y: "0.2em" },
-  show:   { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 380, damping: 17 } },
-};
+const headVariants = {};
+const blackWord = {};
+const coralWord = {};
 const HEAD_LINES = [
   [{ t: "Predict", c: false }, { t: "your", c: false }, { t: "rank.", c: true }],
   [{ t: "Meet", c: false }, { t: "your", c: false }, { t: "mentor.", c: true }],
@@ -144,17 +138,15 @@ export default function Hero({ onSearch }) {
         paddingBottom: isMobile ? 72 : 72,
       }}>
         {/* badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+        <div
           style={{ display: "inline-flex", alignItems: "center", gap: 8, background: BASE, color: CORAL, borderRadius: 9999, padding: "6px 16px", fontSize: 11.5, fontWeight: 700, letterSpacing: "0.5px", fontFamily: "'Inter',system-ui,sans-serif", marginBottom: 28, boxShadow: raisedSm }}
         >
           <span style={{ width: 8, height: 8, borderRadius: "50%", background: CORAL, boxShadow: `inset 2px 2px 4px rgba(0,0,0,0.2)`, animation: "heroPulse 1.8s infinite" }} />
           Built for JEE &amp; NEET aspirants
-        </motion.div>
+        </div>
 
         {/* headline */}
-        <motion.h1
-          variants={headVariants} initial="hidden" animate="show"
+        <h1
           style={{ fontFamily: "'Space Grotesk','Sora',system-ui,sans-serif", fontWeight: 800, color: INK, fontSize: headingSize, lineHeight: 1.08, letterSpacing: "-0.03em", margin: 0 }}
         >
           {(() => {
@@ -165,11 +157,10 @@ export default function Hero({ onSearch }) {
               </span>
             ));
           })()}
-        </motion.h1>
+        </h1>
 
         {/* subtext */}
-        <motion.p
-          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
+        <p
           style={{ margin: `${isMobile ? "1.6rem" : "2rem"} auto 0`, maxWidth: 560, fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 500, fontSize: isXs ? "1rem" : "1.1rem", color: TEXT_SOFT, lineHeight: 1.65 }}
         >
           An <span style={{ position: "relative", color: CORAL, fontWeight: 700, whiteSpace: "nowrap" }}>
@@ -179,11 +170,10 @@ export default function Hero({ onSearch }) {
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6, delay: 1.5, ease: "easeInOut" }} />
             </svg>
           </span> startup — built by IITians, trusted by aspirants
-        </motion.p>
+        </p>
 
         {/* CTAs — wide search bar + two action buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.05 }}
+        <div
           style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24, marginTop: isMobile ? "2.4rem" : "2.8rem" }}
         >
           {/* wide search bar */}
@@ -249,11 +239,10 @@ export default function Hero({ onSearch }) {
               Join community <Users size={16} />
             </button>
           </div>
-        </motion.div>
+        </div>
 
         {/* social proof — avatar cluster + count, framed by hairlines */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}
+        <div
           style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: isMobile ? 8 : 18, marginTop: isMobile ? "4.5rem" : "5.5rem", width: "100%" }}
         >
           <span style={{ width: isMobile ? 16 : 56, flexShrink: 0, height: 1, borderRadius: 1, background: `linear-gradient(90deg, transparent, rgba(0,0,0,0.15))` }} />
@@ -272,7 +261,7 @@ export default function Hero({ onSearch }) {
             Trusted by <strong style={{ color: CORAL, fontWeight: 800 }}>3200+</strong> JEE &amp; NEET aspirants
           </span>
           <span style={{ width: isMobile ? 16 : 56, flexShrink: 0, height: 1, borderRadius: 1, background: `linear-gradient(90deg, rgba(0,0,0,0.15), transparent)` }} />
-        </motion.div>
+        </div>
       </div>
     </section>
     

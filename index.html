@@ -133,10 +133,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- Non-render-blocking: media=print until JS flips it to "all" -->
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet" media="print" data-async-css />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" /></noscript>
+  <!-- Render-blocking but prevents FOUT and LCP delays for the critical above-the-fold headline -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- ═══════════════════════════════════
        CRITICAL CSS — inlined for instant first paint
