@@ -148,7 +148,7 @@ export default function Hero({ onSearch }) {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           style={{ display: "inline-flex", alignItems: "center", gap: 8, background: BASE, color: CORAL, borderRadius: 9999, padding: "6px 16px", fontSize: 11.5, fontWeight: 700, letterSpacing: "0.5px", fontFamily: "'Inter',system-ui,sans-serif", marginBottom: 28, boxShadow: raisedSm }}
         >
-          <motion.span animate={{ opacity: [1, 0.35, 1] }} transition={{ duration: 1.8, repeat: Infinity }} style={{ width: 8, height: 8, borderRadius: "50%", background: CORAL, boxShadow: `inset 2px 2px 4px rgba(0,0,0,0.2)` }} />
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: CORAL, boxShadow: `inset 2px 2px 4px rgba(0,0,0,0.2)`, animation: "heroPulse 1.8s infinite" }} />
           Built for JEE &amp; NEET aspirants
         </motion.div>
 
@@ -281,6 +281,12 @@ export default function Hero({ onSearch }) {
         {/* ══ 3-step journey ══ */}
         <HeroSteps isMobile={isMobile} />
       </div>
+      <style>{`
+        @keyframes heroPulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.35; }
+        }
+      `}</style>
     </section>
     </>
   );

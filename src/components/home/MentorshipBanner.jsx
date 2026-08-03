@@ -88,10 +88,9 @@ export default function MentorshipBanner() {
           <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", position: "relative", zIndex: 1, height: 320 }} className="mb-anim-area">
             
             {/* Animated Floating Card 1 */}
-            <motion.div
-              animate={{ y: [0, -12, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+            <div
               style={{
+                animation: "float1 4s ease-in-out infinite",
                 position: "absolute",
                 top: 0,
                 right: -20,
@@ -113,13 +112,12 @@ export default function MentorshipBanner() {
                 <div style={{ fontSize: 13, color: CL.muted, fontWeight: 600 }}>WEEKLY</div>
                 <div style={{ fontSize: 15, color: CL.ink, fontWeight: 700 }}>1-on-1 Strategy Call</div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Animated Floating Card 2 */}
-            <motion.div
-              animate={{ y: [0, 15, 0] }}
-              transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
+            <div
               style={{
+                animation: "float2 5s ease-in-out 1s infinite",
                 position: "absolute",
                 top: 140,
                 left: -40,
@@ -141,13 +139,12 @@ export default function MentorshipBanner() {
                 <div style={{ fontSize: 13, color: CL.muted, fontWeight: 600 }}>TODAY</div>
                 <div style={{ fontSize: 15, color: CL.ink, fontWeight: 700 }}>Complete Ray Optics</div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Animated Floating Card 3 */}
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut", delay: 2 }}
+            <div
               style={{
+                animation: "float3 4.5s ease-in-out 2s infinite",
                 position: "absolute",
                 bottom: 20,
                 right: 0,
@@ -169,7 +166,7 @@ export default function MentorshipBanner() {
                 <div style={{ fontSize: 13, color: CL.muted, fontWeight: 600 }}>24/7 SUPPORT</div>
                 <div style={{ fontSize: 15, color: CL.ink, fontWeight: 700 }}>Instant Doubt Solved</div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Central Photo */}
             <div style={{ 
@@ -181,6 +178,8 @@ export default function MentorshipBanner() {
               <img 
                 src="/images/mentor_illustration.png" 
                 alt="Expert Mentorship"
+                loading="lazy"
+                decoding="async"
                 style={{
                   width: "100%", height: "100%", objectFit: "contain",
                   filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.1))"
@@ -213,6 +212,18 @@ export default function MentorshipBanner() {
           .mb-anim-area > div {
             transform: scale(0.9);
           }
+        }
+        @keyframes float1 {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-12px); }
+        }
+        @keyframes float2 {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(15px); }
+        }
+        @keyframes float3 {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
         }
       `}</style>
     </section>

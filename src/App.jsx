@@ -130,17 +130,15 @@ export default function App() {
   }, []);
 
   // Mark this load as healthy (re-enables stale-chunk auto-reload for the next
-  // deploy) and warm the most-visited route chunks while the browser is idle,
-  // so the first click on those links navigates instantly instead of waiting
-  // on a download.
+  // deploy) and warm the most-critical route chunks while the browser is idle.
+  // We limit this to just 3 highly-visited routes to avoid locking the main 
+  // thread parsing megabytes of JS and causing scroll jank on the homepage.
   useEffect(() => {
     clearChunkReloadFlag();
-    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1200));
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 2000));
     const cancel = window.cancelIdleCallback || clearTimeout;
     const id = idle(() => {
-      [JeeMain, JeeAdvanced, Colleges, OfficialCutoffs, ForYou, Neet, Mentorship,
-       CounsellingPlanner, CollegeMap, Compare, Branches, BranchVsCollegePage,
-       CampusFests, PrivateUnis, SearchResults, CollegeParichayAI].forEach((c) => c.preload?.());
+      [JeeMain, Colleges, ForYou].forEach((c) => c.preload?.());
     });
     return () => cancel(id);
   }, []);
