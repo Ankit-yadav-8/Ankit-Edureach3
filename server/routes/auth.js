@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { rateLimit } from "express-rate-limit";
 import User from "../models/User.js";
 import PasswordResetToken from "../models/PasswordResetToken.js";
+import Enrollment from "../models/Enrollment.js";
 import { requireAuth } from "../middleware/auth.js";
 import { signStudentToken } from "../utils/tokens.js";
 import { sendPasswordResetEmail, sendVerificationTokenEmail } from "../utils/mailer.js";
@@ -173,6 +174,23 @@ router.patch("/profile", requireAuth, async (req, res) => {
     if (studentClass !== undefined) user.studentClass = String(studentClass).trim();
 
     await user.save();
+
+    // Sync updated profile details to the user's enrollments so mentors see the latest info
+    const syncUpdates = {};
+    if (name !== undefined) syncUpdates.name = user.name;
+    if (email !== undefined) syncUpdates.email = user.email;
+    if (phone !== undefined) {
+      syncUpdates.phone = user.phone;
+      const d = String(user.phone || "").replace(/\D/g, "");
+      syncUpdates.phone10 = d.length >= 10 ? d.slice(-10) : "";
+    }
+    if (homeState !== undefined) syncUpdates.homeState = user.homeState;
+    if (studentClass !== undefined) syncUpdates.currentClass = user.studentClass;
+    
+    if (Object.keys(syncUpdates).length > 0) {
+      await Enrollment.updateMany({ userId: user._id }, { $set: syncUpdates });
+    }
+
     res.json({ user: pub(user) });
   } catch (e) { console.error("[auth/profile]", e.message); res.status(500).json({ error: "Could not update profile. Please try again." }); }
 });

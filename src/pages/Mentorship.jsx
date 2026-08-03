@@ -1112,6 +1112,60 @@ function VariantTabs({ variant }) {
     </div>
   );
 }
+/* ═══════════════ MENTORS ═══════════════ */
+function TopMentors() {
+  const mentors = [
+    {
+      name: "Saneh",
+      college: "IIT Roorkee",
+      branch: "Civil Engineering",
+      thought: "Consistency is more important than perfection. A dedicated effort every day builds the foundation for cracking JEE.",
+      img: "/images/saneh.jpg"
+    },
+    {
+      name: "Saket Kumar",
+      college: "IIT Roorkee",
+      branch: "BSBE",
+      thought: "I scored very low in JEE Mains, but I didn't let that stop me. With intense focus and the right strategy, I bounced back to score high in JEE Advanced. Never give up.",
+      img: "/images/saket.jpg"
+    },
+    {
+      name: "Mayank Singh",
+      college: "IIT Roorkee",
+      branch: "Mechanical Engineering",
+      thought: "Understand the concepts deeply rather than memorizing them. Once the foundation is strong, problem-solving becomes an intuitive process.",
+      img: "/images/mayank.jpg"
+    }
+  ];
+
+  return (
+    <section className="mj-section">
+      <div className="mj-wrap">
+        <div className="mj-sec-head">
+          <div className="mj-label">GUIDANCE FROM THE BEST</div>
+          <h2 className="mj-display mj-display-lg">Meet Your <em>Mentors</em></h2>
+          <p className="mj-sec-sub">Learn directly from IITians who have walked the path and conquered the challenges.</p>
+        </div>
+        
+        <div className="mj-mentors-list">
+          {mentors.map((m, i) => (
+            <div key={i} className="mj-mentor-bx">
+              <div className="mj-mentor-bx-img">
+                <img src={m.img} alt={m.name} />
+              </div>
+              <div className="mj-mentor-bx-info">
+                <h3>{m.name}</h3>
+                <span>{m.college} • {m.branch}</span>
+                <p>"{m.thought}"</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ═══════════════ PAGE ═══════════════ */
 export default function Mentorship() {
   const { variant } = useParams();
@@ -1149,6 +1203,7 @@ export default function Mentorship() {
       <Hero variant={variant} cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
       <Qualifier cfg={cfg} />
       <Method cfg={cfg} />
+      {(variant === "jee-2027" || variant === "jee-2028") && <TopMentors />}
       <LiveTracking cfg={cfg} />
       <TestAnalysis cfg={cfg} />
       <ForParents cfg={cfg} />
@@ -1616,6 +1671,16 @@ const CSS = `
 .mj-faq-a { overflow:hidden; }
 .mj-faq-a p { font:400 .96rem/1.7 'DM Sans',sans-serif; color:${T.body}; padding:0 22px 20px; margin:0; }
 
+/* mentors */
+.mj-mentors-list { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.mj-mentor-bx { background:${T.card}; border:1px solid ${T.line}; border-radius:20px; padding:24px; text-align:center; box-shadow:0 12px 30px -16px rgba(0,0,0,.15); transition:transform .2s; }
+.mj-mentor-bx:hover { transform:translateY(-4px); border-color:#FFB59A; }
+.mj-mentor-bx-img { width:100px; height:100px; margin:0 auto 16px; border-radius:50%; overflow:hidden; border:2px solid ${T.coralSoft}; }
+.mj-mentor-bx-img img { width:100%; height:100%; object-fit:cover; }
+.mj-mentor-bx-info h3 { font:800 1.2rem/1.2 'Sora',sans-serif; color:${T.ink}; margin:0; }
+.mj-mentor-bx-info span { display:block; font:700 .74rem/1.3 'Space Grotesk',sans-serif; color:${T.coral}; margin-top:4px; }
+.mj-mentor-bx-info p { font:500 .9rem/1.55 'DM Sans',sans-serif; color:${T.body}; margin:16px 0 0; font-style:italic; }
+
 /* talk */
 .mj-talk-booklet { display:flex; flex-direction:column; padding:44px 44px 44px 54px; color:#fff; background:linear-gradient(160deg, #FF7A3C 0%, #F1531F 60%, #E0481B 100%); position:relative; overflow:hidden; }
 .mj-talk-booklet::before { content:""; position:absolute; inset:0; background:repeating-linear-gradient(0deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px),repeating-linear-gradient(90deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px); pointer-events:none; }
@@ -1634,7 +1699,7 @@ const CSS = `
 
 /* responsive */
 @media (max-width:940px) {
-  .mj-parent-card, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body, .mj-ta-grid, .mj-faqs { grid-template-columns:1fr; }
+  .mj-parent-card, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body, .mj-ta-grid, .mj-faqs, .mj-mentors-list { grid-template-columns:1fr; }
   .mj-bento { grid-template-columns:1fr; } .mj-bento-feat { grid-column:auto; }
   .mj-proof-top { align-items:flex-start; }
   .mj-ta-form { position:static; top:auto; }
