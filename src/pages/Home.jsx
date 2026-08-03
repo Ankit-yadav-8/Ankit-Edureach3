@@ -5,6 +5,7 @@
 import React, { lazy, Suspense } from "react";
 import Seo from "../components/Seo.jsx";
 import Hero from "../components/home/Hero.jsx";
+import MentorshipBanner from "../components/home/MentorshipBanner.jsx";
 import ToolsGrid from "../components/home/ToolsGrid.jsx";
 import Defer from "../components/Defer.jsx";
 
@@ -109,6 +110,9 @@ export default function Home({ onSearch }) {
 
       {/* ── Hero ── */}
       <Hero onSearch={onSearch} />
+
+      {/* ── Mentorship Banner ── */}
+      <MentorshipBanner />
 
       {/* ── Smart tools (LIVE-card grid) ── */}
       <ToolsGrid />
