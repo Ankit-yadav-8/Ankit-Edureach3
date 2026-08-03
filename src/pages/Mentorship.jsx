@@ -1124,12 +1124,27 @@ export default function Mentorship() {
   const year = (cfg.eyebrow || "").match(/\d{4}/)?.[0] || String(MENTOR_PLANS[plan]?.year || "2027");
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
+  // Generate structured FAQ schema for Google AI Overviews (SGE)
+  const faqSchema = cfg.faqs?.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": cfg.faqs.map((f) => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": f.a
+      }
+    }))
+  } : null;
+
   return (
     <div className="mj">
       <Seo
         title={`${exam} Mentorship by IITians — 1-on-1 Guidance | CollegeParichay`}
         description="1-on-1 JEE & NEET mentorship by IIT alumni — daily targets, weekly test analysis, live tracking and parent reports. Limited seats. Start at ₹2,499 on CollegeParichay."
         path={`/mentorship/${variant}`}
+        jsonLd={faqSchema}
       />
       <Hero variant={variant} cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
       <Qualifier cfg={cfg} />
