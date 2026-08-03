@@ -148,7 +148,7 @@ export default function BlogPost() {
     publisher: {
       "@type": "Organization",
       name: "CollegeParichay",
-      logo: { "@type": "ImageObject", url: "https://collegeparichay.in/cplogo3.jpeg" },
+      logo: { "@type": "ImageObject", url: "https://collegeparichay.in/cplogo.svg" },
     },
     mainEntityOfPage: `https://collegeparichay.in/blog/${post.slug}`,
     ...(post.date ? { datePublished: post.date, dateModified: post.date } : {}),

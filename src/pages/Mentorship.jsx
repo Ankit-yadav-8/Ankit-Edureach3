@@ -449,7 +449,7 @@ function TestAnalysis({ cfg }) {
         <div className="mj-ta-topbar">
           <div className="mj-ta-topbar-l">
             <span className="mj-ta-topbar-badge" style={{ padding: 0, overflow: "hidden" }}>
-              <img src="/cplogo3.jpeg" alt="CP" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src="/cplogo.svg" alt="CP" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </span>
             <div>
               <strong>{exam} · Test Tracker</strong>
@@ -467,7 +467,7 @@ function TestAnalysis({ cfg }) {
           <div className="mj-ta-form">
             <div className="mj-ta-formtop">
               <span className="mj-ta-formbadge" style={{ padding: 0, overflow: "hidden" }}>
-                <img src="/cplogo3.jpeg" alt="CP" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src="/cplogo.svg" alt="CP" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </span>
               <div className="mj-ta-formtop-tx">
                 <strong>Add a test result</strong>
@@ -1120,21 +1120,21 @@ function TopMentors() {
       college: "IIT Roorkee",
       branch: "Civil Engineering",
       thought: "Consistency is more important than perfection. A dedicated effort every day builds the foundation for cracking JEE.",
-      img: "/images/saneh.jpg"
+      img: "/assets/team/saneh.jpg"
     },
     {
       name: "Saket Choudhary",
       college: "IIT Roorkee",
       branch: "BSBE",
       thought: "Hi, I'm Saket Choudhary, a B.Tech student at IIT Roorkee. Despite scoring a very low percentile in JEE Main, I stayed consistent, changed my strategy, and cracked JEE Advanced to earn my place here. I've been through the same struggles and uncertainty that many aspirants face, and as a mentor, I'm here to help you overcome those challenges and achieve your goals together.",
-      img: "/images/saket.jpg"
+      img: "/assets/team/saket.jpg"
     },
     {
       name: "Mayank Singh",
       college: "IIT Roorkee",
       branch: "Mechanical Engineering",
       thought: "Hi, I am Mayank Singh from iitr mechanical engineering. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. I am all thankful to my mentors and myself. So I'm now here at College Parichay to mentor young minds and pass them what I have earned.",
-      img: "/images/mayank.jpg"
+      img: "/assets/team/mayank.jpg"
     }
   ];
 

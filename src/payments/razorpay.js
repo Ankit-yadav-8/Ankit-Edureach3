@@ -53,7 +53,7 @@ export async function startPayment(details, token) {
       order_id: order.orderId,
       name: "College Parichay",
       description: order.planLabel,
-      image: `${window.location.origin}/cp-pay-logo.png`,
+      image: `${window.location.origin}/cplogo.svg`,
       prefill: {
         name: details.name || "",
         email: details.email || "",

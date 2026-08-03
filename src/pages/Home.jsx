@@ -44,7 +44,7 @@ export default function Home({ onSearch }) {
         "@id": "https://collegeparichay.in/#organization",
         "name": "CollegeParichay",
         "url": "https://collegeparichay.in/",
-        "logo": "https://collegeparichay.in/cplogo3.jpeg"
+        "logo": "https://collegeparichay.in/cplogo.svg"
       },
       {
         "@type": "ItemList",
