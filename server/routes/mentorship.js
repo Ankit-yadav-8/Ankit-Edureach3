@@ -241,6 +241,13 @@ export function buildDailyHtml(studentName, r, link) {
   }
 
   // ── Normal daily report (student updated) ─────────────────────────────────
+  const cardWrap = (title, content, icon = "") => `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;background:#ffffff;border-radius:14px;border:1px solid #e2e8f0;box-shadow:0 4px 14px rgba(15,23,42,0.03);overflow:hidden">
+      ${title ? `<tr><td style="background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:12px 18px;font-size:12px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:0.8px">${icon} ${title}</td></tr>` : ""}
+      <tr><td style="padding:18px">${content}</td></tr>
+    </table>
+  `;
+
   // Subject breakdown as a clean table
   const subTableRows = subs.map((x) => `<tr>
     <td style="padding:10px 12px;border-bottom:1px solid ${BRAND.line};font-size:13px;font-weight:700;color:${BRAND.ink}">${esc(x.name)}</td>
@@ -276,7 +283,6 @@ export function buildDailyHtml(studentName, r, link) {
     const scoreColor = scorePct >= 75 ? "#16a34a" : scorePct >= 50 ? "#6366f1" : scorePct >= 30 ? "#f59e0b" : "#dc2626";
     const scoreGrade = scorePct >= 75 ? "Excellent" : scorePct >= 50 ? "Good" : scorePct >= 30 ? "Needs Improvement" : "Needs Attention";
 
-    // Improvement badge
     let improvementBadge = "";
     if (imp != null) {
       const isUp = imp >= 0;
@@ -288,7 +294,6 @@ export function buildDailyHtml(studentName, r, link) {
       </div>`;
     }
 
-    // Latest test hero card
     const testHero = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0">
       <tr><td style="background:linear-gradient(135deg,#312e81,#4338ca);border-radius:14px;padding:20px 22px" align="center">
         <div style="font-size:11px;font-weight:700;color:#fff;opacity:.72;text-transform:uppercase;letter-spacing:1.4px">Latest test · ${esc(lt.name)}</div>
@@ -298,7 +303,6 @@ export function buildDailyHtml(studentName, r, link) {
       </td></tr>
     </table>`;
 
-    // Score progress bar
     const scoreBar = `<div style="margin:8px 0 4px">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
         <td style="font-size:12px;font-weight:600;color:${BRAND.sub}">Score</td>
@@ -310,14 +314,12 @@ export function buildDailyHtml(studentName, r, link) {
       </tr></table>
     </div>`;
 
-    // Correct / Wrong / Skipped tiles
     const testTiles = tiles([
       { label: "Correct", value: lt.correct, color: "#16a34a" },
       { label: "Wrong", value: lt.wrong, color: "#dc2626" },
       { label: "Skipped", value: lt.skipped, color: "#94a3b8" },
     ]);
 
-    // Comparison table (latest vs previous)
     let comparisonTable = "";
     if (pt) {
       comparisonTable = `<div style="margin:14px 0 4px">
@@ -345,7 +347,6 @@ export function buildDailyHtml(studentName, r, link) {
       </div>`;
     }
 
-    // Improvement advice for parents
     let testAdvice = "";
     if (imp != null) {
       testAdvice = imp >= 0
@@ -357,33 +358,41 @@ export function buildDailyHtml(studentName, r, link) {
           </div>`;
     }
 
-    testAnalysisHtml = `
-      ${heading("🏆 Test Analysis & Improvement")}
+    testAnalysisHtml = cardWrap("Test Analysis", `
       ${testHero}
       ${improvementBadge}
       ${scoreBar}
       ${testTiles}
       ${comparisonTable}
-      ${testAdvice}`;
+      ${testAdvice}
+    `, "🏆");
   }
 
-  return shell(`
-    ${intro(`Namaste — here is today's daily study report for <b style="color:${BRAND.ink}">${esc(studentName)}</b>.`)}
-    ${infoBar}
-    ${hero("Total hours studied today", d.hours ?? 0, "h", null, BRAND.navy)}
-    <div style="text-align:center;margin:6px 0 16px">${routineBadge}</div>
+  const overviewCard = cardWrap("Today's Overview", `
+    ${hero("Total hours studied", d.hours ?? 0, "h", null, BRAND.navy)}
+    <div style="text-align:center;margin:12px 0 16px">${routineBadge}</div>
     ${tiles([
       { label: "Tasks done", value: `${d.tasksDone ?? 0}/${d.tasksTotal ?? 0}`, color: BRAND.coral },
       { label: "Routine", value: d.routine ? "✓ Kept" : "✗ Missed", color: d.routine ? "#16a34a" : "#dc2626" },
       d.todayTest ? { label: "Test today", value: "Yes", color: "#6d28d9" } : { label: "Subjects", value: subs.length, color: "#0ea5e9" },
     ])}
-    ${d.tasksTotal ? `${heading("Task completion")}${bar("Tasks", taskPct, BRAND.coral, `${d.tasksDone ?? 0} / ${d.tasksTotal}`)}` : ""}
-    ${d.todayTest ? `${heading("Test taken today", "#6d28d9")}<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:#faf5ff;border:1px solid #e6d8fb;border-radius:12px;padding:14px 16px;font-size:14px;font-weight:700;color:#6d28d9;text-align:center">${esc(d.todayTest)}</td></tr></table>` : ""}
-    ${heading("📊 Subject-wise breakdown")}
-    ${subHtml}
+  `, "📊");
+
+  const tasksCard = d.tasksTotal ? cardWrap("Task Completion", bar("Tasks", taskPct, BRAND.coral, `${d.tasksDone ?? 0} / ${d.tasksTotal}`), "📋") : "";
+  const testCard = d.todayTest ? cardWrap("Test Taken Today", `<div style="background:#faf5ff;border:1px solid #e6d8fb;border-radius:10px;padding:14px 16px;font-size:14px;font-weight:700;color:#6d28d9;text-align:center">${esc(d.todayTest)}</div>`, "✍️") : "";
+  const subjectsCard = cardWrap("Subject Breakdown", subHtml, "📚");
+  const rankCard = r.rank ? rankBlock(r.rank) : "";
+
+  return shell(`
+    ${intro(`Namaste — here is today's daily study report for <b style="color:${BRAND.ink}">${esc(studentName)}</b>.`)}
+    ${infoBar}
+    ${overviewCard}
+    ${tasksCard}
+    ${testCard}
+    ${subjectsCard}
     ${testAnalysisHtml}
-    ${rankBlock(r.rank)}
-    <div style="margin:20px 0 6px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:14px 16px">
+    ${rankCard}
+    <div style="margin:20px 0 16px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:14px 16px">
       <div style="font-size:12px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">💡 For parents</div>
       <div style="font-size:13px;color:#0c4a6e;line-height:1.65">
         ${Number(d.hours) >= 6 ? "Your child is putting in great effort today! Encourage them to keep up this consistency." : Number(d.hours) >= 3 ? "A decent study day. Encourage them to aim for 6+ hours for competitive exam readiness." : "Study hours are on the lower side today. A gentle nudge can help maintain the routine."}
