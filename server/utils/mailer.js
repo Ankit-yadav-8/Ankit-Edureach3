@@ -96,8 +96,8 @@ const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">"
 
 // CP logo as an HTML table — renders perfectly in all email clients without image blocking.
 const CP_LOGO_HTML = `
-<table role="presentation" width="36" height="36" cellpadding="0" cellspacing="0" style="background:#FF5A36;border-radius:50%">
-  <tr><td align="center" valign="middle" style="color:#ffffff;font-size:14px;font-weight:900;font-family:Arial,sans-serif;line-height:1">CP</td></tr>
+<table role="presentation" width="36" height="36" cellpadding="0" cellspacing="0" style="background:#FF5A36;border-radius:50%;text-align:center;table-layout:fixed;min-width:36px;min-height:36px">
+  <tr><td width="36" height="36" align="center" valign="middle" style="color:#ffffff;font-size:14px;font-weight:900;font-family:Arial,sans-serif;line-height:36px;padding:0;margin:0">CP</td></tr>
 </table>
 `;
 
@@ -110,8 +110,8 @@ function emailShell(inner, { preheader = "", eyebrow = "", accent = "#FF5A36", f
         <tr><td style="background:#0d1b3e;background-image:linear-gradient(135deg,#0d1b3e 0%,#1a2f63 100%);padding:22px 28px">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
             <td width="36" style="padding-right:12px">${CP_LOGO_HTML}</td>
-            <td style="font-size:20px;font-weight:800;color:#FF5A36;letter-spacing:.3px">CollegeParichay</td>
-            ${eyebrow ? `<td align="right" style="font-size:11px;font-weight:700;color:#c8d0e4;text-transform:uppercase;letter-spacing:1.2px">${esc(eyebrow)}</td>` : ""}
+            <td width="100%" style="font-size:20px;font-weight:800;color:#FF5A36;letter-spacing:.3px">CollegeParichay</td>
+            ${eyebrow ? `<td align="right" style="white-space:nowrap;font-size:11px;font-weight:700;color:#c8d0e4;text-transform:uppercase;letter-spacing:1.2px">${esc(eyebrow)}</td>` : ""}
           </tr></table>
           <div style="height:3px;width:54px;background:${accent};border-radius:3px;margin-top:12px"></div>
         </td></tr>
