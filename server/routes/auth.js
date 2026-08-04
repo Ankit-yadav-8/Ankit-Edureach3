@@ -67,7 +67,8 @@ router.post("/signup", async (req, res) => {
     // Single round-trip duplicate check (email + phone) instead of two sequential queries
     const dup = await User.findOne({ $or: [{ email }, { phone: String(phone) }] }).select("email phone");
     if (dup) return res.status(409).json({ error: dup.email === email ? "Email already registered" : "Phone number already registered" });
-    const passwordHash = await bcrypt.hash(String(password), 12);
+    // Cost 10 is secure for this application and is ~3-4x faster than 12
+    const passwordHash = await bcrypt.hash(String(password), 10);
     const user = await User.create({
       name: String(name).trim(), email, phone: String(phone),
       coaching: String(coaching || "").trim(),
@@ -91,7 +92,18 @@ router.post("/login", async (req, res) => {
     if (!ok) return res.status(401).json({ error: "Invalid email or password" });
     // Respond immediately; update lastLogin in the background (don't block the response)
     res.json({ token: sign(user), user: pub(user) });
-    User.updateOne({ _id: user._id }, { lastLogin: new Date() }).catch(() => {});
+    
+    // Background tasks: Update lastLogin and perform rolling hash downgrade for speed.
+    // If an existing user has a slow cost-12 hash ($2b$12$ or $2a$12$), rehash
+    // to cost 10 asynchronously so their *next* login is fast.
+    const tasks = { lastLogin: new Date() };
+    if (user.passwordHash.includes("$12$")) {
+      bcrypt.hash(String(password || ""), 10).then((newHash) => {
+        User.updateOne({ _id: user._id }, { $set: { ...tasks, passwordHash: newHash } }).catch(() => {});
+      }).catch(() => {});
+    } else {
+      User.updateOne({ _id: user._id }, { $set: tasks }).catch(() => {});
+    }
   } catch (e) { console.error("[auth/login]", e.message); res.status(500).json({ error: "Could not log in. Please try again." }); }
 });
 
@@ -321,8 +333,8 @@ router.post("/reset", resetLimiter, async (req, res) => {
       return res.status(400).json({ error: "Invalid or expired reset link" });
     }
 
-    // Cost 12 to match signup
-    user.passwordHash = await bcrypt.hash(String(password), 12);
+    // Cost 10 for faster logins
+    user.passwordHash = await bcrypt.hash(String(password), 10);
     
     // Retire every token already issued for it, so the reset actually evicts them.
     user.tokenVersion = (user.tokenVersion || 0) + 1;
