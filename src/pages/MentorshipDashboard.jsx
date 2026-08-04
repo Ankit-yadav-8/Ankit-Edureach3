@@ -833,29 +833,69 @@ function DashboardBody({ urlPlan = "" }) {
     return has(testForm.total) && has(testForm.scored);
   };
 
+  const getLiveRank = () => {
+    if (!rankEnabled) return null;
+    const has = (v) => String(v ?? "").trim() !== "";
+    
+    if (testForm.type === "mock" && has(testForm.scored)) {
+      const total = Number(testForm.total) || 300;
+      const scored = Number(testForm.scored);
+      if (Number.isFinite(scored)) {
+        const scaled = total > 0 ? Math.round((scored / total) * 300) : scored;
+        const r = predictRank({ physics: scaled, chemistry: 0, maths: 0, category: testForm.category || "General", advanced: false });
+        return { name: testForm.name || "Live preview", rank: { ...r, type: "mock", total: scaled } };
+      }
+    }
+    if (testForm.type === "main" && (has(testForm.mp) || has(testForm.mc) || has(testForm.mm))) {
+      const p = Number(testForm.mp) || 0, c = Number(testForm.mc) || 0, m = Number(testForm.mm) || 0;
+      const r = predictRank({ physics: p, chemistry: c, maths: m, category: testForm.category || "General", advanced: false });
+      return { name: testForm.name || "Live preview", rank: { ...r, type: "main", total: p + c + m } };
+    }
+    if (isAdv(testForm.type) && (has(testForm.mp) || has(testForm.mp2))) {
+      const p = Number(testForm.mp) || 0, c = Number(testForm.mc) || 0, m = Number(testForm.mm) || 0;
+      const p2 = Number(testForm.mp2) || 0, c2 = Number(testForm.mc2) || 0, m2 = Number(testForm.mm2) || 0;
+      const total = p + p2 + c + c2 + m + m2;
+      const r = predictRank({ physics: p + p2, chemistry: c + c2, maths: m + m2, category: testForm.category || "General", advanced: true });
+      return { name: testForm.name || "Live preview", rank: { ...r, type: testForm.type, total, examMax: Number(testForm.advTotal) || ADV_FULL_TOTAL, paper1: p+c+m, paper2: p2+c2+m2 } };
+    }
+    return null;
+  };
+
   function addTest(e) {
     e.preventDefault();
     if (!testFormComplete()) return; // block until every field is filled
     const advPaper = isAdv(testForm.type);
-    const isRankTest = rankEnabled && (testForm.type === "main" || advPaper);
     let total, scored, rank = null;
-    if (isRankTest) {
+
+    if (rankEnabled && testForm.type === "mock") {
+      total = Number(testForm.total) || 300;
+      scored = Number(testForm.scored);
+      if (!Number.isFinite(scored)) return;
+      const scaledScore = total > 0 ? Math.round((scored / total) * 300) : scored;
+      const r = predictRank({ physics: scaledScore, chemistry: 0, maths: 0, category: testForm.category || "General", advanced: false });
+      rank = {
+        type: testForm.type, advanced: false, category: testForm.category || "General", total: scaledScore,
+        ranked: r.ranked, crl: r.crl, crlLo: r.crlLo ?? null, crlHi: r.crlHi ?? null,
+        rank: r.rank, low: r.low, high: r.high,
+        percentile: r.percentile, categoryRank: r.categoryRank, isGeneral: r.isGeneral,
+        branches: (r.branches || []).slice(0, 3), advice: r.advice || "",
+        cutoffNeeded: r.cutoffNeeded ?? null,
+      };
+    } else if (rankEnabled && (testForm.type === "main" || advPaper)) {
       const p = Number(testForm.mp) || 0, c = Number(testForm.mc) || 0, m = Number(testForm.mm) || 0;
       const aggregate = p + c + m;
       if (advPaper) {
-        // JEE Advanced = both papers logged together. Combine Paper 1 + Paper 2
-        // section marks (each capped at 120 combined) for an accurate full rank.
         const p2 = Number(testForm.mp2) || 0, c2 = Number(testForm.mc2) || 0, m2 = Number(testForm.mm2) || 0;
         const combPhy = p + p2, combChem = c + c2, combMath = m + m2;
         const combTotal = combPhy + combChem + combMath;
-        total = Number(testForm.advTotal) || ADV_FULL_TOTAL;  // exam max (varies by year)
-        scored = combTotal;                                    // marks across both papers
-        const r = predictRank({ physics: combPhy, chemistry: combChem, maths: combMath, category: testForm.category, advanced: true });
+        total = Number(testForm.advTotal) || ADV_FULL_TOTAL;
+        scored = combTotal;
+        const r = predictRank({ physics: combPhy, chemistry: combChem, maths: combMath, category: testForm.category || "General", advanced: true });
         rank = {
           type: testForm.type, advanced: true,
           questions: Number(testForm.advQuestions) || null, examMax: total,
           paper1: aggregate, paper2: p2 + c2 + m2,
-          category: testForm.category, total: combTotal,
+          category: testForm.category || "General", total: combTotal,
           ranked: r.ranked, crl: r.crl, crlLo: r.crlLo ?? null, crlHi: r.crlHi ?? null,
           rank: r.rank, low: r.low, high: r.high,
           percentile: r.percentile, categoryRank: r.categoryRank, isGeneral: r.isGeneral,
@@ -865,9 +905,9 @@ function DashboardBody({ urlPlan = "" }) {
       } else {
         total = maxTotal(false); // 300 — JEE Main
         scored = aggregate;
-        const r = predictRank({ physics: p, chemistry: c, maths: m, category: testForm.category, advanced: false });
+        const r = predictRank({ physics: p, chemistry: c, maths: m, category: testForm.category || "General", advanced: false });
         rank = {
-          type: testForm.type, advanced: false, category: testForm.category, total: aggregate,
+          type: testForm.type, advanced: false, category: testForm.category || "General", total: aggregate,
           ranked: r.ranked, crl: r.crl, crlLo: r.crlLo ?? null, crlHi: r.crlHi ?? null,
           rank: r.rank, low: r.low, high: r.high,
           percentile: r.percentile, categoryRank: r.categoryRank, isGeneral: r.isGeneral,
@@ -1612,7 +1652,13 @@ function DashboardBody({ urlPlan = "" }) {
               )}
 
               {/* rank prediction (JEE only) */}
-              {rankEnabled && latestRankTest?.rank && <RankCard r={latestRankTest.rank} name={latestRankTest.name} />}
+              {rankEnabled && (() => {
+                const live = getLiveRank();
+                if (live && testForm.name) {
+                  return <RankCard r={live.rank} name={live.name} />;
+                }
+                return latestRankTest?.rank ? <RankCard r={latestRankTest.rank} name={latestRankTest.name} /> : null;
+              })()}
             </div>
 
             {/* right — charts + strategies */}
