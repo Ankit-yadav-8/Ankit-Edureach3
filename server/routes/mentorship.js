@@ -487,21 +487,10 @@ router.post("/parent-report", requireAuth, async (req, res) => {
     if (!enr) return res.status(404).json({ error: "No active mentorship enrolment found." });
     if (!enr.parentEmail) return res.status(400).json({ error: "No parent email is on file for your enrolment yet — please contact us to add one." });
 
-    // ── SERVER-SIDE DEDUPLICATION: only send ONE daily email per calendar day ──
-    // Uses IST (UTC+5:30) to define "today" so the cutoff aligns with Indian
-    // midnight, not UTC midnight. Prevents duplicate emails from multiple
-    // logins, cache clears, or multi-device usage.
-    if (kind === "daily" && enr.lastDailyReportAt) {
-      const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
-      const nowIST = new Date(Date.now() + IST_OFFSET_MS);
-      const lastIST = new Date(enr.lastDailyReportAt.getTime() + IST_OFFSET_MS);
-      const todayIST = nowIST.toISOString().slice(0, 10);
-      const lastDay = lastIST.toISOString().slice(0, 10);
-      if (todayIST === lastDay) {
-        return res.json({ sent: false, alreadySent: true, kind, to: enr.parentEmail,
-          message: "Today's daily report has already been sent to your parent." });
-      }
-    }
+    // ── SERVER-SIDE DEDUPLICATION REMOVED ──
+    // Manual clicks from the dashboard should always successfully send the report.
+    // The automatic 11 PM cron job has its own deduplication to ensure it only
+    // sends if a report hasn't already been sent today.
 
     const report = req.body?.report || {};
     const studentName = enr.name || user.name || "your child";

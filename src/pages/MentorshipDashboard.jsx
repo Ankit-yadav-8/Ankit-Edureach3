@@ -1070,18 +1070,16 @@ function DashboardBody({ urlPlan = "" }) {
     }
   }
 
-  // Auto-send (always on, can't be turned off): weekly every Sunday, daily each
-  // day — the daily report fires whether or not the student logged anything (it
-  // just shows 0h). Plus a backlog alert (≤ once/week) when chapters are overdue
+  // Auto-send: weekly every Sunday. Plus a backlog alert (≤ once/week) when chapters are overdue
   // or study is irregular. Each fires once per period, when the dashboard opens.
+  // Daily auto-send is handled entirely by the server cron job at 11 PM.
   useEffect(() => {
     if (!token) return;
     const isSunday = new Date().getDay() === 0;
     if (isSunday && lastAuto.weekly !== wk) sendReport("weekly", true);
-    if (lastAuto.daily !== todayIso) sendReport("daily", true);
     if (reportPrefs.autoBacklogAlert && lastAuto.backlog !== wk && (overdueBacklog.length > 0 || (backlogPct < 100 && studyIrregular))) sendReport("backlog", true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, reportPrefs.autoBacklogAlert, lastAuto.weekly, lastAuto.daily, lastAuto.backlog, overdueBacklog.length, backlogPct, studyIrregular]);
+  }, [token, reportPrefs.autoBacklogAlert, lastAuto.weekly, lastAuto.backlog, overdueBacklog.length, backlogPct, studyIrregular]);
 
   const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
   const initial = (user?.name || user?.email || "U").charAt(0).toUpperCase();
