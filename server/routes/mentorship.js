@@ -53,7 +53,7 @@ const shell = (inner, { preheader = "", eyebrow = "Mentorship report", accent = 
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#eef1f7;font-size:1px;line-height:1px">${esc(preheader)}</div>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f7;padding:24px 12px">
     <tr><td align="center">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 10px 40px rgba(13,27,62,.10);font-family:Arial,Helvetica,sans-serif">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 10px 40px rgba(13,27,62,.10);font-family:Arial,Helvetica,sans-serif">
         <tr><td style="background:${BRAND.navy};background-image:linear-gradient(135deg,#0d1b3e 0%,#1a2f63 100%);padding:22px 28px">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
             <td width="36" style="padding-right:12px">${CP_LOGO_HTML}</td>
@@ -82,7 +82,7 @@ const heading = (title, color = BRAND.navy) =>
   `<div style="margin:22px 0 10px"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${color};vertical-align:middle;margin-right:8px"></span><span style="font-size:15px;font-weight:800;color:${BRAND.ink};vertical-align:middle">${esc(title)}</span></div>`;
 
 // A single big highlighted hero number (the headline metric of the email).
-const hero = (label, value, unit, sub, color = BRAND.navy) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 4px">
+const hero = (label, value, unit, sub, color = BRAND.navy) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;margin:6px 0 4px">
   <tr><td style="background:${color};background-image:linear-gradient(135deg,${color} 0%,rgba(0,0,0,.14) 220%);border-radius:14px;padding:20px 22px" align="center">
     <div style="font-size:11px;font-weight:700;color:#ffffff;opacity:.72;text-transform:uppercase;letter-spacing:1.4px">${esc(label)}</div>
     <div style="font-size:40px;font-weight:800;color:#ffffff;line-height:1.1;margin-top:4px">${esc(value)}${unit ? `<span style="font-size:17px;font-weight:700;opacity:.6"> ${esc(unit)}</span>` : ""}</div>
@@ -97,18 +97,18 @@ const tiles = (items) => {
         <div style="font-size:22px;font-weight:800;color:${t.color};line-height:1.15">${esc(t.value)}</div>
         <div style="font-size:11px;font-weight:600;color:${BRAND.sub};margin-top:3px">${esc(t.label)}</div>
       </div></td>`).join("");
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0"><tr>${cells}</tr></table>`;
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;margin:4px 0"><tr>${cells}</tr></table>`;
 };
 
 // A labelled progress bar (table-based so it renders everywhere).
 const bar = (label, pct, color = BRAND.orange, valueText) => {
   const p = clampPct(pct);
   return `<div style="margin:11px 0">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td style="font-size:13px;font-weight:600;color:${BRAND.sub}">${esc(label)}</td>
-      <td align="right" style="font-size:13px;font-weight:800;color:${BRAND.ink}">${esc(valueText ?? `${p}%`)}</td>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;"><tr>
+      <td style="font-size:13px;font-weight:600;color:${BRAND.sub};padding-right:8px">${esc(label)}</td>
+      <td align="right" style="font-size:13px;font-weight:800;color:${BRAND.ink};white-space:nowrap">${esc(valueText ?? `${p}%`)}</td>
     </tr></table>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:5px;background:#eef1f7;border-radius:8px"><tr>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;margin-top:5px;background:#eef1f7;border-radius:8px"><tr>
       <td style="height:9px;background:${color};border-radius:8px;width:${p}%;font-size:0;line-height:0">&nbsp;</td>
       ${p < 100 ? `<td style="height:9px;font-size:0;line-height:0">&nbsp;</td>` : ""}
     </tr></table>
@@ -132,7 +132,7 @@ const chapterBlock = (title, color, items) => {
 
 // Reusable card container for report sections
 const cardWrap = (title, content, icon = "") => `
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;background:#ffffff;border-radius:14px;border:1px solid #e2e8f0;box-shadow:0 4px 14px rgba(15,23,42,0.03);overflow:hidden">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;margin-bottom:16px;background:#ffffff;border-radius:14px;border:1px solid #e2e8f0;box-shadow:0 4px 14px rgba(15,23,42,0.03);overflow:hidden">
     ${title ? `<tr><td style="background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:12px 18px;font-size:12px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:0.8px">${icon} ${title}</td></tr>` : ""}
     <tr><td style="padding:18px">${content}</td></tr>
   </table>
@@ -400,7 +400,7 @@ export function buildDailyHtml(studentName, r, link) {
   `, "📊");
 
   const tasksCard = d.tasksTotal ? cardWrap("Task Completion", bar("Tasks", taskPct, BRAND.coral, `${d.tasksDone ?? 0} / ${d.tasksTotal}`), "📋") : "";
-  const testCard = d.todayTest ? cardWrap("Test Taken Today", `<div style="background:#faf5ff;border:1px solid #e6d8fb;border-radius:10px;padding:14px 16px;font-size:14px;font-weight:700;color:#6d28d9;text-align:center">${esc(d.todayTest)}</div>`, "✍️") : "";
+  const testCard = d.todayTest ? cardWrap("Test Taken Today", `<div style="display:block;width:100%;box-sizing:border-box;background:#faf5ff;border:1px solid #e6d8fb;border-radius:10px;padding:14px 16px;font-size:14px;font-weight:700;color:#6d28d9;text-align:center">${esc(d.todayTest)}</div>`, "✍️") : "";
   const subjectsCard = cardWrap("Subject Breakdown", subHtml, "📚");
   const rankCard = r.rank ? rankBlock(r.rank) : "";
 
