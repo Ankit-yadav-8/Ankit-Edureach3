@@ -997,6 +997,15 @@ function DashboardBody({ urlPlan = "" }) {
     };
   }
   function buildDailyReport() {
+    const latestTestData = latest ? {
+      name: latest.name || "Test", scored: Number(latest.scored) || 0, total: Number(latest.total) || 0,
+      pct: pct(latest), accuracy: acc(latest), date: fmtDay(latest.date),
+      correct: Number(latest.correct || 0), wrong: Number(latest.wrong || 0), skipped: Number(latest.skipped || 0),
+    } : null;
+    const prevTestData = prev ? {
+      name: prev.name || "Test", scored: Number(prev.scored) || 0, total: Number(prev.total) || 0,
+      pct: pct(prev), accuracy: acc(prev),
+    } : null;
     return {
       date: fmtDay(todayIso),
       daily: {
@@ -1007,6 +1016,9 @@ function DashboardBody({ urlPlan = "" }) {
         routine: !!todayEntry?.routine,
         todayTest: todayTest ? `${todayTest.name}: ${todayTest.scored}/${todayTest.total}` : null,
       },
+      latestTest: latestTestData,
+      prevTest: prevTestData,
+      improvement,
       rank: buildRankSummary(),
     };
   }

@@ -30,24 +30,32 @@ const clampPct = (n) => Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
 // consistent, strongly-branded look. Rules kept email-client-safe: table
 // layouts (no flexbox), all styling inline, a 600px card on a tinted backdrop,
 // and a hidden preheader that controls the inbox preview line.
-const BRAND = { orange: "#F47B20", navy: "#0d1b3e", ink: "#1c1c28", sub: "#5b6472", line: "#eceff5", faint: "#9aa0aa" };
+//
+// BRAND uses coral (#FF5A36) for "Parichay" to match the CP logo.
+const BRAND = { coral: "#FF5A36", navy: "#0d1b3e", ink: "#1c1c28", sub: "#5b6472", line: "#eceff5", faint: "#9aa0aa", orange: "#F47B20" };
+
+// CP logo as a compact inline base64 data URI — always renders without
+// needing the user to "load images" in their email client.
+const CP_LOGO_URI = `data:image/svg+xml;base64,${Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#FF5A36"/><text x="50%" y="50%" text-anchor="middle" dy=".35em" font-family="Arial,sans-serif" font-weight="900" font-size="48" fill="#fff">CP</text></svg>').toString('base64')}`;
 
 // Bulletproof CTA button (renders in Outlook via padded anchor + line-height).
 const button = (label, link) =>
-  !link ? "" : `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:22px 0 4px"><tr><td style="border-radius:12px;background:${BRAND.orange};box-shadow:0 6px 18px rgba(244,123,32,.32)">
+  !link ? "" : `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:22px 0 4px"><tr><td style="border-radius:12px;background:${BRAND.coral};box-shadow:0 6px 18px rgba(255,90,54,.32)">
     <a href="${esc(link)}" style="display:inline-block;padding:13px 26px;font-family:Arial,sans-serif;font-size:15px;font-weight:800;color:#ffffff;text-decoration:none;border-radius:12px">${esc(label)} &nbsp;→</a>
   </td></tr></table>`;
 
-// Full email document — branded header band, body card, footer. `preheader`
-// is the (hidden) inbox preview text; `accent`/`eyebrow` tune the header strip.
-const shell = (inner, { preheader = "", eyebrow = "Mentorship report", accent = BRAND.orange } = {}) => `<div style="margin:0;padding:0;background:#eef1f7">
+// Full email document — branded header with CP logo, body card, footer.
+// `preheader` is the (hidden) inbox preview text; `accent`/`eyebrow` tune
+// the header strip. "Parichay" is rendered in coral color to match the logo.
+const shell = (inner, { preheader = "", eyebrow = "Mentorship report", accent = BRAND.coral } = {}) => `<div style="margin:0;padding:0;background:#eef1f7">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#eef1f7;font-size:1px;line-height:1px">${esc(preheader)}</div>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f7;padding:24px 12px">
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 10px 40px rgba(13,27,62,.10);font-family:Arial,Helvetica,sans-serif">
         <tr><td style="background:${BRAND.navy};background-image:linear-gradient(135deg,#0d1b3e 0%,#1a2f63 100%);padding:22px 28px">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-            <td style="font-size:19px;font-weight:800;color:#ffffff;letter-spacing:.2px">College<span style="color:${BRAND.orange}">Parichay</span></td>
+            <td width="36" style="padding-right:12px"><img src="${CP_LOGO_URI}" width="36" height="36" alt="CP" style="display:block;border-radius:50%;width:36px;height:36px" /></td>
+            <td style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:.3px">College<span style="color:${BRAND.coral}">Parichay</span></td>
             <td align="right" style="font-size:11px;font-weight:700;color:#c8d0e4;text-transform:uppercase;letter-spacing:1.2px">${esc(eyebrow)}</td>
           </tr></table>
           <div style="height:3px;width:54px;background:${accent};border-radius:3px;margin-top:12px"></div>
@@ -182,25 +190,207 @@ export function buildDailyHtml(studentName, r, link) {
   const d = r.daily || {};
   const subs = cap(d.subjects, 12);
   const maxH = Math.max(1, ...subs.map((x) => Number(x.h) || 0));
-  const subHtml = subs.length
-    ? subs.map((x) => bar(`${esc(x.name)}`, (Number(x.h) || 0) / maxH * 100, BRAND.navy, `${esc(x.h)}h · ${esc(x.t)} tasks`)).join("")
-    : `<div style="font-size:13px;color:${BRAND.sub}">No subjects logged today.</div>`;
   const taskPct = d.tasksTotal ? (Number(d.tasksDone) || 0) / Number(d.tasksTotal) * 100 : 0;
+  const notUpdated = r.notUpdated || ((d.hours ?? 0) === 0 && subs.length === 0 && (d.tasksDone ?? 0) === 0);
+
+  // ── Student info bar ──────────────────────────────────────────────────────
+  const infoBar = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;background:#f8fafc;border-radius:12px;border:1px solid ${BRAND.line}">
+    <tr><td style="padding:14px 18px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td><div style="font-size:11px;color:${BRAND.faint};font-weight:700;text-transform:uppercase;letter-spacing:1px">Student</div><div style="font-size:16px;font-weight:800;color:${BRAND.ink};margin-top:2px">${esc(studentName)}</div></td>
+        <td align="center"><div style="font-size:11px;color:${BRAND.faint};font-weight:700;text-transform:uppercase;letter-spacing:1px">Date</div><div style="font-size:15px;font-weight:700;color:${BRAND.ink};margin-top:2px">${esc(r.date || "")}</div></td>
+        <td align="right"><div style="font-size:11px;color:${BRAND.faint};font-weight:700;text-transform:uppercase;letter-spacing:1px">Status</div><div style="font-size:14px;font-weight:800;color:${notUpdated ? "#dc2626" : "#16a34a"};margin-top:2px">${notUpdated ? "⚠️ Not Updated" : "✅ Updated"}</div></td>
+      </tr></table>
+    </td></tr>
+  </table>`;
+
+  // ── Not-updated / irregularity warning ─────────────────────────────────────
+  if (notUpdated) {
+    const warningBlock = `
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 16px">
+        <tr><td style="background:linear-gradient(135deg,#fef2f2,#fff7ed);border:2px solid #fca5a5;border-radius:16px;padding:24px 22px">
+          <div style="text-align:center;margin-bottom:14px"><span style="font-size:38px">⚠️</span></div>
+          <div style="font-size:18px;font-weight:800;color:#dc2626;text-align:center;margin-bottom:8px">Study Progress Not Updated</div>
+          <div style="font-size:14px;color:#7c2d12;line-height:1.7;text-align:center">
+            <b style="color:#991b1b">${esc(studentName)}</b> did not update their study progress today.
+            This indicates <b>irregularity</b> in their daily study routine.
+          </div>
+          <div style="margin-top:16px;background:#fff;border:1px solid #fde68a;border-radius:12px;padding:14px 16px">
+            <div style="font-size:12px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">👨‍👩‍👧 What parents can do</div>
+            <div style="font-size:13px;color:#78350f;line-height:1.7">
+              • Ask your child about today's study — sometimes they study but forget to log it<br>
+              • Encourage them to open the dashboard and log their hours daily<br>
+              • Consistent tracking builds discipline and helps the mentor guide better
+            </div>
+          </div>
+        </td></tr>
+      </table>`;
+
+    return shell(`
+      ${intro(`Namaste — here is today's report for <b style="color:${BRAND.ink}">${esc(studentName)}</b>.`)}
+      ${infoBar}
+      ${warningBlock}
+      ${rankBlock(r.rank)}
+      ${button("Open the dashboard", link)}
+      <div style="margin-top:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px 16px">
+        <div style="font-size:13px;color:#166534;line-height:1.65">
+          💡 <b>Tip:</b> Regular daily logging — even if just 30 minutes — helps your child build accountability and gives you a clear picture of their preparation.
+        </div>
+      </div>`,
+      { preheader: `⚠️ ${studentName} did not update study progress today — irregularity detected`, eyebrow: "Daily update", accent: "#dc2626" });
+  }
+
+  // ── Normal daily report (student updated) ─────────────────────────────────
+  // Subject breakdown as a clean table
+  const subTableRows = subs.map((x) => `<tr>
+    <td style="padding:10px 12px;border-bottom:1px solid ${BRAND.line};font-size:13px;font-weight:700;color:${BRAND.ink}">${esc(x.name)}</td>
+    <td style="padding:10px 12px;border-bottom:1px solid ${BRAND.line};text-align:center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td style="background:#eef1f7;border-radius:6px;height:8px"><div style="background:${BRAND.coral};border-radius:6px;height:8px;width:${clampPct((Number(x.h) || 0) / maxH * 100)}%"></div></td>
+      </tr></table>
+    </td>
+    <td style="padding:10px 12px;border-bottom:1px solid ${BRAND.line};text-align:right;font-size:13px;font-weight:800;color:${BRAND.navy}">${esc(x.h)}h</td>
+    <td style="padding:10px 12px;border-bottom:1px solid ${BRAND.line};text-align:right;font-size:12px;color:${BRAND.sub}">${esc(x.t)} tasks</td>
+  </tr>`).join("");
+
+  const subHtml = subs.length
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+        <thead><tr style="text-align:left;color:${BRAND.faint};font-size:11px;text-transform:uppercase;letter-spacing:.5px">
+          <th style="padding:8px 12px">Subject</th><th style="padding:8px 12px;text-align:center">Progress</th><th style="padding:8px 12px;text-align:right">Hours</th><th style="padding:8px 12px;text-align:right">Tasks</th>
+        </tr></thead><tbody>${subTableRows}</tbody></table>`
+    : `<div style="font-size:13px;color:${BRAND.sub};text-align:center;padding:16px">No individual subjects logged today.</div>`;
+
+  // Routine status badge
+  const routineBadge = d.routine
+    ? `<div style="display:inline-block;background:#dcfce7;border:1px solid #86efac;color:#166534;font-size:12px;font-weight:700;padding:5px 14px;border-radius:50px">✅ Daily routine followed</div>`
+    : `<div style="display:inline-block;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;font-size:12px;font-weight:700;padding:5px 14px;border-radius:50px">❌ Routine missed today</div>`;
+
+  // ── Test Analysis & Improvement section ────────────────────────────────────
+  const lt = r.latestTest;
+  const pt = r.prevTest;
+  const imp = r.improvement;
+  let testAnalysisHtml = "";
+
+  if (lt) {
+    const scorePct = lt.pct != null ? lt.pct : 0;
+    const scoreColor = scorePct >= 75 ? "#16a34a" : scorePct >= 50 ? "#6366f1" : scorePct >= 30 ? "#f59e0b" : "#dc2626";
+    const scoreGrade = scorePct >= 75 ? "Excellent" : scorePct >= 50 ? "Good" : scorePct >= 30 ? "Needs Improvement" : "Needs Attention";
+
+    // Improvement badge
+    let improvementBadge = "";
+    if (imp != null) {
+      const isUp = imp >= 0;
+      improvementBadge = `<div style="text-align:center;margin:12px 0">
+        <div style="display:inline-block;background:${isUp ? "#dcfce7" : "#fef2f2"};border:1px solid ${isUp ? "#86efac" : "#fca5a5"};border-radius:50px;padding:6px 18px">
+          <span style="font-size:16px;font-weight:800;color:${isUp ? "#16a34a" : "#dc2626"}">${isUp ? "📈 +" : "📉 "}${imp}%</span>
+          <span style="font-size:12px;color:${isUp ? "#166534" : "#991b1b"};margin-left:6px;font-weight:600">${isUp ? "Improvement" : "Decline"} vs ${esc(pt?.name || "previous test")}</span>
+        </div>
+      </div>`;
+    }
+
+    // Latest test hero card
+    const testHero = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0">
+      <tr><td style="background:linear-gradient(135deg,#312e81,#4338ca);border-radius:14px;padding:20px 22px" align="center">
+        <div style="font-size:11px;font-weight:700;color:#fff;opacity:.72;text-transform:uppercase;letter-spacing:1.4px">Latest test · ${esc(lt.name)}</div>
+        <div style="font-size:40px;font-weight:800;color:#fff;line-height:1.1;margin-top:4px">${esc(lt.scored)}<span style="font-size:17px;font-weight:700;opacity:.6"> / ${esc(lt.total)}</span></div>
+        <div style="font-size:13px;color:#fff;opacity:.9;margin-top:4px">${esc(scorePct)}% score${lt.accuracy != null ? ` · ${esc(lt.accuracy)}% accuracy` : ""}</div>
+        <div style="display:inline-block;margin-top:10px;background:${scoreColor};color:#fff;font-size:11px;font-weight:800;padding:4px 14px;border-radius:50px">${esc(scoreGrade)}</div>
+      </td></tr>
+    </table>`;
+
+    // Score progress bar
+    const scoreBar = `<div style="margin:8px 0 4px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td style="font-size:12px;font-weight:600;color:${BRAND.sub}">Score</td>
+        <td align="right" style="font-size:13px;font-weight:800;color:${BRAND.ink}">${scorePct}%</td>
+      </tr></table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:4px;background:#eef1f7;border-radius:8px"><tr>
+        <td style="height:9px;background:${scoreColor};border-radius:8px;width:${clampPct(scorePct)}%;font-size:0;line-height:0">&nbsp;</td>
+        ${scorePct < 100 ? `<td style="height:9px;font-size:0;line-height:0">&nbsp;</td>` : ""}
+      </tr></table>
+    </div>`;
+
+    // Correct / Wrong / Skipped tiles
+    const testTiles = tiles([
+      { label: "Correct", value: lt.correct, color: "#16a34a" },
+      { label: "Wrong", value: lt.wrong, color: "#dc2626" },
+      { label: "Skipped", value: lt.skipped, color: "#94a3b8" },
+    ]);
+
+    // Comparison table (latest vs previous)
+    let comparisonTable = "";
+    if (pt) {
+      comparisonTable = `<div style="margin:14px 0 4px">
+        <div style="font-size:12px;font-weight:700;color:${BRAND.faint};text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Comparison with previous test</div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#f8fafc;border-radius:12px;border:1px solid ${BRAND.line};overflow:hidden">
+          <thead><tr style="background:#eef1f7">
+            <th style="padding:10px 12px;text-align:left;font-size:11px;color:${BRAND.faint};text-transform:uppercase;letter-spacing:.5px">Metric</th>
+            <th style="padding:10px 12px;text-align:center;font-size:11px;color:#6366f1;font-weight:700;text-transform:uppercase;letter-spacing:.5px">${esc(lt.name)}</th>
+            <th style="padding:10px 12px;text-align:center;font-size:11px;color:${BRAND.faint};text-transform:uppercase;letter-spacing:.5px">${esc(pt.name)}</th>
+          </tr></thead>
+          <tbody>
+            <tr><td style="padding:9px 12px;border-top:1px solid ${BRAND.line};font-size:13px;color:${BRAND.sub}">Score</td>
+                <td style="padding:9px 12px;border-top:1px solid ${BRAND.line};text-align:center;font-weight:800;color:${BRAND.ink};font-size:13px">${esc(lt.scored)}/${esc(lt.total)}</td>
+                <td style="padding:9px 12px;border-top:1px solid ${BRAND.line};text-align:center;color:${BRAND.sub};font-size:13px">${esc(pt.scored)}/${esc(pt.total)}</td></tr>
+            <tr><td style="padding:9px 12px;border-top:1px solid ${BRAND.line};font-size:13px;color:${BRAND.sub}">Percentage</td>
+                <td style="padding:9px 12px;border-top:1px solid ${BRAND.line};text-align:center;font-weight:800;color:${BRAND.ink};font-size:13px">${lt.pct != null ? esc(lt.pct) + "%" : "—"}</td>
+                <td style="padding:9px 12px;border-top:1px solid ${BRAND.line};text-align:center;color:${BRAND.sub};font-size:13px">${pt.pct != null ? esc(pt.pct) + "%" : "—"}</td></tr>
+            <tr><td style="padding:9px 12px;border-top:1px solid ${BRAND.line};font-size:13px;color:${BRAND.sub}">Accuracy</td>
+                <td style="padding:9px 12px;border-top:1px solid ${BRAND.line};text-align:center;font-weight:800;color:${BRAND.ink};font-size:13px">${lt.accuracy != null ? esc(lt.accuracy) + "%" : "—"}</td>
+                <td style="padding:9px 12px;border-top:1px solid ${BRAND.line};text-align:center;color:${BRAND.sub};font-size:13px">${pt.accuracy != null ? esc(pt.accuracy) + "%" : "—"}</td></tr>
+            <tr><td style="padding:9px 12px;border-top:1px solid ${BRAND.line};font-size:13px;color:${BRAND.sub};font-weight:700">Change</td>
+                <td colspan="2" style="padding:9px 12px;border-top:1px solid ${BRAND.line};text-align:center;font-weight:800;font-size:14px;color:${imp != null && imp >= 0 ? "#16a34a" : "#dc2626"}">${imp != null ? (imp >= 0 ? "↑ +" : "↓ ") + imp + "%" : "—"}</td></tr>
+          </tbody>
+        </table>
+      </div>`;
+    }
+
+    // Improvement advice for parents
+    let testAdvice = "";
+    if (imp != null) {
+      testAdvice = imp >= 0
+        ? `<div style="margin:10px 0 4px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
+            <div style="font-size:13px;color:#166534;line-height:1.65">📈 <b>Great progress!</b> Your child's score improved by ${imp}% compared to their previous test (${esc(pt?.name || "earlier")}). Encourage them to keep up this momentum.</div>
+          </div>`
+        : `<div style="margin:10px 0 4px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px 14px">
+            <div style="font-size:13px;color:#991b1b;line-height:1.65">📉 <b>Score dropped ${Math.abs(imp)}%</b> compared to ${esc(pt?.name || "the previous test")}. Encourage your child to review weak topics with their mentor and focus on accuracy over speed.</div>
+          </div>`;
+    }
+
+    testAnalysisHtml = `
+      ${heading("🏆 Test Analysis & Improvement")}
+      ${testHero}
+      ${improvementBadge}
+      ${scoreBar}
+      ${testTiles}
+      ${comparisonTable}
+      ${testAdvice}`;
+  }
+
   return shell(`
-    ${intro(`Namaste — here is today's report (${esc(r.date || "")}) for <b style="color:${BRAND.ink}">${esc(studentName)}</b>.`)}
-    ${hero("Total hours studied today", d.hours ?? 0, "h", d.routine ? "Daily routine followed ✓" : "Routine missed today", BRAND.navy)}
+    ${intro(`Namaste — here is today's daily study report for <b style="color:${BRAND.ink}">${esc(studentName)}</b>.`)}
+    ${infoBar}
+    ${hero("Total hours studied today", d.hours ?? 0, "h", null, BRAND.navy)}
+    <div style="text-align:center;margin:6px 0 16px">${routineBadge}</div>
     ${tiles([
-      { label: "Tasks done", value: `${d.tasksDone ?? 0}/${d.tasksTotal ?? 0}`, color: BRAND.orange },
-      { label: "Routine", value: d.routine ? "✓" : "✗", color: d.routine ? "#16a34a" : "#dc2626" },
+      { label: "Tasks done", value: `${d.tasksDone ?? 0}/${d.tasksTotal ?? 0}`, color: BRAND.coral },
+      { label: "Routine", value: d.routine ? "✓ Kept" : "✗ Missed", color: d.routine ? "#16a34a" : "#dc2626" },
       d.todayTest ? { label: "Test today", value: "Yes", color: "#6d28d9" } : { label: "Subjects", value: subs.length, color: "#0ea5e9" },
     ])}
-    ${d.tasksTotal ? bar("Task completion", taskPct, BRAND.orange, `${d.tasksDone ?? 0} / ${d.tasksTotal}`) : ""}
-    ${d.todayTest ? `${heading("Test taken today", "#6d28d9")}<div style="background:#faf5ff;border:1px solid #e6d8fb;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:700;color:#6d28d9">${esc(d.todayTest)}</div>` : ""}
-    ${heading("Subject-wise study today")}
+    ${d.tasksTotal ? `${heading("Task completion")}${bar("Tasks", taskPct, BRAND.coral, `${d.tasksDone ?? 0} / ${d.tasksTotal}`)}` : ""}
+    ${d.todayTest ? `${heading("Test taken today", "#6d28d9")}<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:#faf5ff;border:1px solid #e6d8fb;border-radius:12px;padding:14px 16px;font-size:14px;font-weight:700;color:#6d28d9;text-align:center">${esc(d.todayTest)}</td></tr></table>` : ""}
+    ${heading("📊 Subject-wise breakdown")}
     ${subHtml}
+    ${testAnalysisHtml}
     ${rankBlock(r.rank)}
+    <div style="margin:20px 0 6px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:14px 16px">
+      <div style="font-size:12px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">💡 For parents</div>
+      <div style="font-size:13px;color:#0c4a6e;line-height:1.65">
+        ${Number(d.hours) >= 6 ? "Your child is putting in great effort today! Encourage them to keep up this consistency." : Number(d.hours) >= 3 ? "A decent study day. Encourage them to aim for 6+ hours for competitive exam readiness." : "Study hours are on the lower side today. A gentle nudge can help maintain the routine."}
+      </div>
+    </div>
     ${button("Open the dashboard", link)}`,
-    { preheader: `${studentName} studied ${d.hours ?? 0}h today · ${d.tasksDone ?? 0}/${d.tasksTotal ?? 0} tasks done`, eyebrow: "Daily update" });
+    { preheader: `${studentName} studied ${d.hours ?? 0}h today · ${d.tasksDone ?? 0}/${d.tasksTotal ?? 0} tasks done${lt ? ` · Latest test: ${lt.scored}/${lt.total}` : ""}`, eyebrow: "Daily update" });
 }
 
 // Backlog alert — sent when chapters pass their target date unfinished or study
@@ -259,18 +449,34 @@ router.post("/parent-report", requireAuth, async (req, res) => {
     const requested = String(req.body?.plan || "").trim();
     let enr = null;
     if (/^mentor-/.test(requested)) {
-      enr = await Enrollment.findOne({ status: "paid", email, plan: requested }).sort({ createdAt: -1 }).lean();
+      enr = await Enrollment.findOne({ status: "paid", email, plan: requested }).sort({ createdAt: -1 });
     }
     if (!enr) {
       enr = await Enrollment.findOne({
         status: "paid",
         email,
         plan: { $regex: /^mentor-/ },
-      }).sort({ createdAt: -1 }).lean();
+      }).sort({ createdAt: -1 });
     }
 
     if (!enr) return res.status(404).json({ error: "No active mentorship enrolment found." });
     if (!enr.parentEmail) return res.status(400).json({ error: "No parent email is on file for your enrolment yet — please contact us to add one." });
+
+    // ── SERVER-SIDE DEDUPLICATION: only send ONE daily email per calendar day ──
+    // Uses IST (UTC+5:30) to define "today" so the cutoff aligns with Indian
+    // midnight, not UTC midnight. Prevents duplicate emails from multiple
+    // logins, cache clears, or multi-device usage.
+    if (kind === "daily" && enr.lastDailyReportAt) {
+      const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
+      const nowIST = new Date(Date.now() + IST_OFFSET_MS);
+      const lastIST = new Date(enr.lastDailyReportAt.getTime() + IST_OFFSET_MS);
+      const todayIST = nowIST.toISOString().slice(0, 10);
+      const lastDay = lastIST.toISOString().slice(0, 10);
+      if (todayIST === lastDay) {
+        return res.json({ sent: false, alreadySent: true, kind, to: enr.parentEmail,
+          message: "Today's daily report has already been sent to your parent." });
+      }
+    }
 
     const report = req.body?.report || {};
     const studentName = enr.name || user.name || "your child";

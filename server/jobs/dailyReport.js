@@ -71,8 +71,34 @@ function buildDailyR(data) {
     return { name: shortName(name), h, t };
   });
   const todayTest = tests.find((t) => t.date === iso);
+
+  // If the student has no entry for today, or hours=0 with no subjects/tasks,
+  // mark the report as "not updated" so the email shows an irregularity warning.
+  const notUpdated = !today || ((today.hours ?? 0) === 0 && names.length === 0 && (today.tasksDone ?? 0) === 0);
+
+  // ── Latest test analysis with improvement vs previous test ──────────────
+  const sortedTests = [...tests].sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+  const latestT = sortedTests[sortedTests.length - 1] || null;
+  const prevT = sortedTests[sortedTests.length - 2] || null;
+  const pctOf = (t) => t && Number(t.total) > 0 ? Math.round((Number(t.scored) / Number(t.total)) * 100) : null;
+  const accOf = (t) => { const att = Number(t?.correct || 0) + Number(t?.wrong || 0); return att ? Math.round((Number(t.correct) / att) * 100) : null; };
+  const improvementPct = latestT && prevT && Number(prevT.scored) > 0
+    ? Math.round(((Number(latestT.scored) - Number(prevT.scored)) / Number(prevT.scored)) * 100)
+    : null;
+
+  const latestTest = latestT ? {
+    name: latestT.name || "Test", scored: Number(latestT.scored) || 0, total: Number(latestT.total) || 0,
+    pct: pctOf(latestT), accuracy: accOf(latestT), date: fmtDay(latestT.date),
+    correct: Number(latestT.correct || 0), wrong: Number(latestT.wrong || 0), skipped: Number(latestT.skipped || 0),
+  } : null;
+  const prevTest = prevT ? {
+    name: prevT.name || "Test", scored: Number(prevT.scored) || 0, total: Number(prevT.total) || 0,
+    pct: pctOf(prevT), accuracy: accOf(prevT),
+  } : null;
+
   return {
     date: fmtDay(iso),
+    notUpdated,
     daily: {
       hours: today?.hours ?? 0,
       subjects,
@@ -81,15 +107,18 @@ function buildDailyR(data) {
       routine: !!today?.routine,
       todayTest: todayTest ? `${todayTest.name}: ${todayTest.scored}/${todayTest.total}` : null,
     },
+    latestTest,
+    prevTest,
+    improvement: improvementPct,
     rank: buildRankSummary(tests),
   };
 }
 
 async function runOnce() {
-  // Send in the evening so the report reflects most of the day. The server
-  // clock is UTC; ~13:00 UTC ≈ 18:30 IST. (Runs are cheap before then — they
-  // just return early.)
-  if (new Date().getUTCHours() < 13) return;
+  // Send late at night so the report reflects the full day. The server clock
+  // is UTC; 17:00 UTC ≈ 22:30 IST (10:30 PM). Reports send between ~10:30 PM
+  // and ~12:30 AM IST. (Runs are cheap before then — they just return early.)
+  if (new Date().getUTCHours() < 17) return;
 
   const startOfDay = new Date(`${todayIsoUTC()}T00:00:00.000Z`);
   const due = await Enrollment.find({
@@ -130,5 +159,5 @@ async function runOnce() {
 export function startDailyReportJob() {
   const tick = () => runOnce().catch((e) => console.error("[dailyReport]", e.message));
   setTimeout(tick, 90 * 1000);            // first pass ~1.5 min after boot
-  setInterval(tick, 3 * 60 * 60 * 1000);  // then every 3 hours; each enrolment fires ≤ once/day
+  setInterval(tick, 60 * 60 * 1000);      // then every hour for precise 11 PM IST window; each enrolment fires ≤ once/day
 }

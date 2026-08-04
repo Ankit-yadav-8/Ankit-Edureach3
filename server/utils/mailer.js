@@ -89,11 +89,15 @@ export async function sendMail({ to, subject, html, text }) {
 
 // ── Shared branded email shell ──────────────────────────────────────────────
 // Same look as the mentorship reports: 600px card on a tinted backdrop, navy
-// gradient header with wordmark, hidden preheader for the inbox preview, and a
-// consistent footer. Email-client-safe: table layouts + inline styles only.
+// gradient header with CP logo + wordmark (Parichay in coral), hidden
+// preheader for the inbox preview, and a consistent footer. Email-client-safe:
+// table layouts + inline styles only.
 const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
 
-function emailShell(inner, { preheader = "", eyebrow = "", accent = "#F47B20", footer = "" } = {}) {
+// CP logo as inline base64 data URI — always renders without "load images".
+const CP_LOGO_URI = `data:image/svg+xml;base64,${Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#FF5A36"/><text x="50%" y="50%" text-anchor="middle" dy=".35em" font-family="Arial,sans-serif" font-weight="900" font-size="48" fill="#fff">CP</text></svg>').toString('base64')}`;
+
+function emailShell(inner, { preheader = "", eyebrow = "", accent = "#FF5A36", footer = "" } = {}) {
   return `<div style="margin:0;padding:0;background:#eef1f7">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#eef1f7;font-size:1px;line-height:1px">${esc(preheader)}</div>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f7;padding:24px 12px">
@@ -101,7 +105,8 @@ function emailShell(inner, { preheader = "", eyebrow = "", accent = "#F47B20", f
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 10px 40px rgba(13,27,62,.10);font-family:Arial,Helvetica,sans-serif">
         <tr><td style="background:#0d1b3e;background-image:linear-gradient(135deg,#0d1b3e 0%,#1a2f63 100%);padding:22px 28px">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-            <td style="font-size:19px;font-weight:800;color:#ffffff;letter-spacing:.2px">College<span style="color:#F47B20">Parichay</span></td>
+            <td width="36" style="padding-right:12px"><img src="${CP_LOGO_URI}" width="36" height="36" alt="CP" style="display:block;border-radius:50%;width:36px;height:36px" /></td>
+            <td style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:.3px">College<span style="color:#FF5A36">Parichay</span></td>
             ${eyebrow ? `<td align="right" style="font-size:11px;font-weight:700;color:#c8d0e4;text-transform:uppercase;letter-spacing:1.2px">${esc(eyebrow)}</td>` : ""}
           </tr></table>
           <div style="height:3px;width:54px;background:${accent};border-radius:3px;margin-top:12px"></div>

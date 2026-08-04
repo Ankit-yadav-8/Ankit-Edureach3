@@ -83,7 +83,9 @@ router.post("/login", async (req, res) => {
   try {
     let { email, password } = req.body || {};
     email = String(email || "").toLowerCase().trim();
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email })
+      .select("_id name email phone coaching homeState studentClass passwordHash tokenVersion")
+      .lean();
     if (!user || !user.passwordHash) return res.status(401).json({ error: "Invalid email or password" });
     const ok = await bcrypt.compare(String(password || ""), user.passwordHash);
     if (!ok) return res.status(401).json({ error: "Invalid email or password" });
