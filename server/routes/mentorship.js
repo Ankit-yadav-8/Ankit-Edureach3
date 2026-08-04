@@ -130,6 +130,14 @@ const chapterBlock = (title, color, items) => {
   </div>`;
 };
 
+// Reusable card container for report sections
+const cardWrap = (title, content, icon = "") => `
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;background:#ffffff;border-radius:14px;border:1px solid #e2e8f0;box-shadow:0 4px 14px rgba(15,23,42,0.03);overflow:hidden">
+    ${title ? `<tr><td style="background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:12px 18px;font-size:12px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:0.8px">${icon} ${title}</td></tr>` : ""}
+    <tr><td style="padding:18px">${content}</td></tr>
+  </table>
+`;
+
 // Predicted JEE rank block — included in both daily & weekly reports when the
 // student has logged a JEE Main/Advanced test (so parents see the live standing).
 const rankBlock = (rank) => {
@@ -155,35 +163,46 @@ function buildWeeklyHtml(studentName, r, link) {
   const ch = r.chapters || {};
   const tasks = cap(r.weeklyTasks, 30);
   const doneTasks = tasks.filter((t) => t.done).length;
+  
   const taskHtml = tasks.length
-    ? `${heading("This week's task list", BRAND.orange)}${bar("Tasks completed", (doneTasks / tasks.length) * 100, BRAND.orange, `${doneTasks} / ${tasks.length}`)}
-       <div style="margin-top:6px">${tasks.map((t) => `<div style="font-size:13.5px;color:${t.done ? "#94a3b8" : BRAND.ink};padding:5px 0;border-bottom:1px solid ${BRAND.line};${t.done ? "text-decoration:line-through" : ""}">${t.done ? "✅" : "⬜"} ${esc(t.text)}</div>`).join("")}</div>`
-    : "";
+    ? `<div style="margin-bottom:12px">${bar("Tasks completed", (doneTasks / tasks.length) * 100, BRAND.orange, `${doneTasks} / ${tasks.length}`)}</div>
+       <div>${tasks.map((t) => `<div style="font-size:13.5px;color:${t.done ? "#94a3b8" : BRAND.ink};padding:7px 0;border-bottom:1px solid ${BRAND.line};${t.done ? "text-decoration:line-through" : ""}">${t.done ? "✅" : "⬜"} ${esc(t.text)}</div>`).join("")}</div>`
+    : `<div style="font-size:13px;color:${BRAND.sub};text-align:center">No weekly tasks assigned.</div>`;
+    
   const hasChapters = cap(ch.weak).length || cap(ch.medium).length || cap(ch.strong).length;
-  return shell(`
+  
+  const overviewHtml = `
     ${intro(`Namaste — here is this week's complete progress report for <b style="color:${BRAND.ink}">${esc(studentName)}</b>.`)}
-    ${hero("Study hours this week", s.hours ?? "—", "h", s.streak != null ? `🔥 ${esc(s.streak)}-day streak` : null, BRAND.navy)}
+    <div style="margin-top:16px;margin-bottom:16px">${hero("Study hours this week", s.hours ?? "—", "h", s.streak != null ? `🔥 ${esc(s.streak)}-day streak` : null, BRAND.navy)}</div>
     ${tiles([
       { label: "Routine kept", value: `${s.routinePct ?? "—"}%`, color: "#16a34a" },
       { label: "Weekly tasks", value: s.weeklyTasksDone ?? "—", color: BRAND.orange },
       { label: "Backlog cleared", value: s.backlog ?? "—", color: "#0ea5e9" },
     ])}
-    ${heading("Performance summary")}
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-      ${row("Study hours this week", `${s.hours ?? "—"} h`)}
-      ${row("Day streak", `${s.streak ?? "—"} days`)}
-      ${row("Routine kept", `${s.routinePct ?? "—"}%`)}
-      ${row("Tasks (latest day)", s.tasks ?? "—")}
-      ${row("Latest test", s.latestTest ?? "—")}
-      ${row("Change vs last test", s.improvement ?? "—", /^-|down|drop/i.test(String(s.improvement)) ? "#dc2626" : "#16a34a")}
-    </table>
-    ${heading("Chapter strength report")}
+    <div style="margin-top:16px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        ${row("Study hours this week", `${s.hours ?? "—"} h`)}
+        ${row("Day streak", `${s.streak ?? "—"} days`)}
+        ${row("Routine kept", `${s.routinePct ?? "—"}%`)}
+        ${row("Tasks (latest day)", s.tasks ?? "—")}
+        ${row("Latest test", s.latestTest ?? "—")}
+        ${row("Change vs last test", s.improvement ?? "—", /^-|down|drop/i.test(String(s.improvement)) ? "#dc2626" : "#16a34a")}
+      </table>
+    </div>
+  `;
+
+  const chapterHtml = `
     ${chapterBlock("Needs work", "#dc2626", ch.weak)}
     ${chapterBlock("Getting there", "#d97706", ch.medium)}
     ${chapterBlock("Strong", "#16a34a", ch.strong)}
-    ${hasChapters ? "" : `<div style="font-size:13px;color:${BRAND.sub}">No chapters logged yet.</div>`}
+    ${hasChapters ? "" : `<div style="font-size:13px;color:${BRAND.sub};text-align:center">No chapters logged yet.</div>`}
+  `;
+
+  return shell(`
+    ${cardWrap("📈 Weekly Overview", overviewHtml)}
+    ${cardWrap("📖 Chapter Strength", chapterHtml)}
+    ${cardWrap("🎯 Task Completion", taskHtml)}
     ${rankBlock(r.rank)}
-    ${taskHtml}
     ${button("Open the dashboard", link)}`,
     { preheader: `${studentName}: ${s.hours ?? "—"}h studied this week, ${s.routinePct ?? "—"}% routine kept`, eyebrow: "Weekly report" });
 }
@@ -243,12 +262,7 @@ export function buildDailyHtml(studentName, r, link) {
   }
 
   // ── Normal daily report (student updated) ─────────────────────────────────
-  const cardWrap = (title, content, icon = "") => `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;background:#ffffff;border-radius:14px;border:1px solid #e2e8f0;box-shadow:0 4px 14px rgba(15,23,42,0.03);overflow:hidden">
-      ${title ? `<tr><td style="background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:12px 18px;font-size:12px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:0.8px">${icon} ${title}</td></tr>` : ""}
-      <tr><td style="padding:18px">${content}</td></tr>
-    </table>
-  `;
+
 
   // Subject breakdown as a clean table
   const subTableRows = subs.map((x) => `<tr>
