@@ -402,7 +402,7 @@ function DashboardBody({ urlPlan = "" }) {
 
   const [logForm, setLogForm] = useState({ subjects: {}, tasksTotal: "", routine: true });
   const [editingLog, setEditingLog] = useState(false); // re-open today's log to update it
-  const [testForm, setTestForm] = useState({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", mp2: "", mc2: "", mm2: "", advTotal: String(ADV_FULL_TOTAL), advQuestions: String(ADV_FULL_QUESTIONS), category: "General", times: {} });
+  const [testForm, setTestForm] = useState({ name: "", type: "main", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", mp2: "", mc2: "", mm2: "", advTotal: String(ADV_FULL_TOTAL), advQuestions: String(ADV_FULL_QUESTIONS), category: "General", times: {} });
   const [blForm, setBlForm] = useState({ subject: "", topic: "", strength: "weak", targetDate: "" });
   const [wtInput, setWtInput] = useState("");
   const [wtEdit, setWtEdit] = useState({ id: null, text: "" });
@@ -837,15 +837,6 @@ function DashboardBody({ urlPlan = "" }) {
     if (!rankEnabled) return null;
     const has = (v) => String(v ?? "").trim() !== "";
     
-    if (testForm.type === "mock" && has(testForm.scored)) {
-      const total = Number(testForm.total) || 300;
-      const scored = Number(testForm.scored);
-      if (Number.isFinite(scored)) {
-        const scaled = total > 0 ? Math.round((scored / total) * 300) : scored;
-        const r = predictRank({ physics: scaled, chemistry: 0, maths: 0, category: testForm.category || "General", advanced: false });
-        return { name: testForm.name || "Live preview", rank: { ...r, type: "mock", total: scaled } };
-      }
-    }
     if (testForm.type === "main" && (has(testForm.mp) || has(testForm.mc) || has(testForm.mm))) {
       const p = Number(testForm.mp) || 0, c = Number(testForm.mc) || 0, m = Number(testForm.mm) || 0;
       const r = predictRank({ physics: p, chemistry: c, maths: m, category: testForm.category || "General", advanced: false });
@@ -867,21 +858,7 @@ function DashboardBody({ urlPlan = "" }) {
     const advPaper = isAdv(testForm.type);
     let total, scored, rank = null;
 
-    if (rankEnabled && testForm.type === "mock") {
-      total = Number(testForm.total) || 300;
-      scored = Number(testForm.scored);
-      if (!Number.isFinite(scored)) return;
-      const scaledScore = total > 0 ? Math.round((scored / total) * 300) : scored;
-      const r = predictRank({ physics: scaledScore, chemistry: 0, maths: 0, category: testForm.category || "General", advanced: false });
-      rank = {
-        type: testForm.type, advanced: false, category: testForm.category || "General", total: scaledScore,
-        ranked: r.ranked, crl: r.crl, crlLo: r.crlLo ?? null, crlHi: r.crlHi ?? null,
-        rank: r.rank, low: r.low, high: r.high,
-        percentile: r.percentile, categoryRank: r.categoryRank, isGeneral: r.isGeneral,
-        branches: (r.branches || []).slice(0, 3), advice: r.advice || "",
-        cutoffNeeded: r.cutoffNeeded ?? null,
-      };
-    } else if (rankEnabled && (testForm.type === "main" || advPaper)) {
+    if (rankEnabled && (testForm.type === "main" || advPaper)) {
       const p = Number(testForm.mp) || 0, c = Number(testForm.mc) || 0, m = Number(testForm.mm) || 0;
       const aggregate = p + c + m;
       if (advPaper) {
@@ -937,7 +914,7 @@ function DashboardBody({ urlPlan = "" }) {
       rank,
     };
     setTests((prevT) => [...prevT, t]);
-    setTestForm({ name: "", type: "mock", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", mp2: "", mc2: "", mm2: "", advTotal: String(ADV_FULL_TOTAL), advQuestions: String(ADV_FULL_QUESTIONS), category: "General", times: {} });
+    setTestForm({ name: "", type: "main", total: "300", scored: "", correct: "", wrong: "", skipped: "", silly: "", sillyTopic: "", overspent: "", weak: "", mp: "", mc: "", mm: "", mp2: "", mc2: "", mm2: "", advTotal: String(ADV_FULL_TOTAL), advQuestions: String(ADV_FULL_QUESTIONS), category: "General", times: {} });
   }
   function setTestType(type) {
     const autoName = { main: "JEE Mains", adv: "JEE Advanced (Paper 1 + 2)" };
@@ -1547,10 +1524,10 @@ function DashboardBody({ urlPlan = "" }) {
               {/* JEE-only test type toggle — Advanced logs both papers together */}
               {rankEnabled && (
                 <div style={{ display: "flex", gap: 7, marginBottom: 14, flexWrap: "wrap" }}>
-                  {[["mock", "Mock / Other"], ["main", "JEE Mains"], ["adv", "JEE Advanced"]].map(([val, lbl]) => (
+                  {[["main", "JEE Mains"], ["adv", "JEE Advanced"]].map(([val, lbl]) => (
                     <button type="button" key={val} onClick={() => setTestType(val)}
                       style={{ flex: "1 1 96px", padding: "9px 8px", borderRadius: 10, border: `1.5px solid ${testForm.type === val ? "#FF693D" : "#e5e7eb"}`, background: testForm.type === val ? "#FF693D10" : "#fff", color: testForm.type === val ? "#E0421F" : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
-                      {val !== "mock" && <Trophy size={13} />}{lbl}
+                      <Trophy size={13} /> {lbl}
                     </button>
                   ))}
                 </div>
