@@ -316,27 +316,34 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
   const dirty = draft.map((t) => t.text.trim()).filter(Boolean).join("\n") !== serverText;
   const doneCount = draft.filter((t) => done.has(t.text)).length;
 
-  const add = (e) => {
-    e?.preventDefault();
-    const text = newTask.trim();
-    if (!text) return;
-    setDraft((p) => [...p, { id: `mt-${Date.now()}`, text }]);
-    setNewTask("");
-  };
-  // Edits/removes are refused for a completed task — the student already finished it.
-  const edit = (id, text) => setDraft((p) => p.map((t) => (t.id === id && !done.has(t.text) ? { ...t, text } : t)));
-  const remove = (id) => setDraft((p) => p.filter((t) => t.id !== id || done.has(t.text)));
-
-  const save = async () => {
+  const save = async (listToSave) => {
     if (!onSave) return;
     setBusy(true); setMsg({ type: "", text: "" });
     try {
-      const texts = draft.map((t) => t.text.trim()).filter(Boolean);
+      const texts = (listToSave || draft).map((t) => t.text.trim()).filter(Boolean);
       await onSave(texts);
       setMsg({ type: "ok", text: texts.length ? `Assigned ${texts.length} task${texts.length === 1 ? "" : "s"}.` : "Cleared this student's task list." });
+      setTimeout(() => setMsg({ type: "", text: "" }), 3000);
     } catch (e) {
       setMsg({ type: "err", text: e.message || "Could not save. Try again." });
     } finally { setBusy(false); }
+  };
+
+  const add = async (e) => {
+    e?.preventDefault();
+    const text = newTask.trim();
+    if (!text) return;
+    const newDraft = [...draft, { id: `mt-${Date.now()}`, text }];
+    setDraft(newDraft);
+    setNewTask("");
+    await save(newDraft);
+  };
+  // Edits/removes are refused for a completed task — the student already finished it.
+  const edit = (id, text) => setDraft((p) => p.map((t) => (t.id === id && !done.has(t.text) ? { ...t, text } : t)));
+  const remove = async (id) => {
+    const newDraft = draft.filter((t) => t.id !== id || done.has(t.text));
+    setDraft(newDraft);
+    await save(newDraft);
   };
 
   const inputStyle = {
@@ -396,7 +403,7 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
                   fontSize: 10, fontWeight: 800,
                   background: isDone ? "#16a34a" : `${ACCENT}18`, color: isDone ? "#fff" : ACCENT,
                 }}>{isDone ? <CheckCircle2 size={13} /> : i + 1}</span>
-                <input value={t.text} onChange={(e) => edit(t.id, e.target.value)} readOnly={isDone}
+                <input value={t.text} onChange={(e) => edit(t.id, e.target.value)} onBlur={() => dirty && save()} readOnly={isDone}
                   title={isDone ? "Completed by the student — locked" : undefined}
                   style={{ flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent", fontSize: 13,
                     color: isDone ? "#15803d" : "var(--navy)", fontFamily: "inherit", cursor: isDone ? "default" : "text" }} />
@@ -431,17 +438,6 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
           {msg.text}
         </div>
       )}
-
-      <button onClick={save} disabled={busy || !dirty}
-        style={{
-          display: "inline-flex", alignItems: "center", gap: 8, border: "none", borderRadius: 10,
-          padding: "0 20px", height: 44, fontFamily: SORA, fontWeight: 800, fontSize: 13.5,
-          background: busy || !dirty ? `${ACCENT}66` : ACCENT, color: "#fff",
-          cursor: busy || !dirty ? "not-allowed" : "pointer",
-        }}>
-        {busy ? <Loader2 size={15} className="cp-spin" /> : <Save size={15} />}
-        {dirty ? "Save task list" : "Saved"}
-      </button>
 
       {/* student's own tasks — extra work they set themselves (read-only) */}
       {Array.isArray(studentTasks) && studentTasks.length > 0 && (
