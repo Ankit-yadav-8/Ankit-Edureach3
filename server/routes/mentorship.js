@@ -216,12 +216,17 @@ export function buildDailyHtml(studentName, r, link) {
 
   // ── Student info bar ──────────────────────────────────────────────────────
   const infoBar = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;background:#f8fafc;border-radius:12px;border:1px solid ${BRAND.line}">
-    <tr><td style="padding:14px 18px">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-        <td><div style="font-size:11px;color:${BRAND.faint};font-weight:700;text-transform:uppercase;letter-spacing:1px">Student</div><div style="font-size:16px;font-weight:800;color:${BRAND.ink};margin-top:2px">${esc(studentName)}</div></td>
-        <td align="center"><div style="font-size:11px;color:${BRAND.faint};font-weight:700;text-transform:uppercase;letter-spacing:1px">Date</div><div style="font-size:15px;font-weight:700;color:${BRAND.ink};margin-top:2px">${esc(r.date || "")}</div></td>
-        <td align="right"><div style="font-size:11px;color:${BRAND.faint};font-weight:700;text-transform:uppercase;letter-spacing:1px">Status</div><div style="font-size:14px;font-weight:800;color:${notUpdated ? "#dc2626" : "#16a34a"};margin-top:2px">${notUpdated ? "⚠️ Not Updated" : "✅ Updated"}</div></td>
-      </tr></table>
+    <tr><td style="padding:12px 16px;border-bottom:1px solid ${BRAND.line}">
+      <div style="font-size:11px;color:${BRAND.faint};font-weight:700;text-transform:uppercase;letter-spacing:1px">Student</div>
+      <div style="font-size:16px;font-weight:800;color:${BRAND.ink};margin-top:2px">${esc(studentName)}</div>
+    </td></tr>
+    <tr><td style="padding:12px 16px;border-bottom:1px solid ${BRAND.line}">
+      <div style="font-size:11px;color:${BRAND.faint};font-weight:700;text-transform:uppercase;letter-spacing:1px">Date</div>
+      <div style="font-size:15px;font-weight:700;color:${BRAND.ink};margin-top:2px">${esc(r.date || "")}</div>
+    </td></tr>
+    <tr><td style="padding:12px 16px">
+      <div style="font-size:11px;color:${BRAND.faint};font-weight:700;text-transform:uppercase;letter-spacing:1px">Status</div>
+      <div style="font-size:14px;font-weight:800;color:${notUpdated ? "#dc2626" : "#16a34a"};margin-top:2px">${notUpdated ? "⚠️ Not Updated" : "✅ Updated"}</div>
     </td></tr>
   </table>`;
 
