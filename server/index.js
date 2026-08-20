@@ -125,7 +125,7 @@ app.use("/api/tests", apiLimiter, testRoutes);
 
 connectDB()
   .then(() => {
-    app.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`));
+    app.listen(PORT, "0.0.0.0", () => console.log(`🚀 Server on http://0.0.0.0:${PORT}`));
     startWeeklyReportJob(); // weekly parent progress emails (best-effort, dev-safe)
     startDailyReportJob();  // daily parent progress emails from synced data (dev-safe)
     backfillPhone10();      // one-time; no-op once every enrolment has the field
