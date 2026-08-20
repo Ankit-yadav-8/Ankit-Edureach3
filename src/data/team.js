@@ -12,7 +12,7 @@ export const TEAM = [
     initials: "AY",
     photo: "/assets/team/ankit2.webp",
     name: "Ankit Yadav",
-    role: "Founder & CEO",
+    role: "Co-Founder",
     accent: "#FF693D",
     tagline: "Students need clarity, not confusion. Building products to make college guidance accessible for everyone.",
     location: "IIT Roorkee, Uttarakhand",
@@ -20,7 +20,7 @@ export const TEAM = [
     exam: "JEE Advanced",
     email: "collegeparichay@gmail.com",
     phone: "8118826194",
-    bio: `Hi, I'm Ankit Yadav, an IIT Roorkee graduate and the founder of College Parichay — a platform built to make college guidance simpler, clearer, and more accessible for students across India. During my own journey, I saw how confusing the college and career decision process can be for students. That experience inspired me to create College Parichay with one simple belief: "Students need clarity, not confusion." Through authentic insights, relatable experiences, and a community-driven approach, we aim to help students make informed decisions with confidence.`,
+    bio: `Hi, I'm Ankit Yadav, an IIT Roorkee graduate and the co-founder of College Parichay — a platform built to make college guidance simpler, clearer, and more accessible for students across India. During my own journey, I saw how confusing the college and career decision process can be for students. That experience inspired me to create College Parichay with one simple belief: "Students need clarity, not confusion." Through authentic insights, relatable experiences, and a community-driven approach, we aim to help students make informed decisions with confidence.`,
     skills: [
       "Product Strategy", "React", "Node.js", "MongoDB", "Express",
       "System Design", "Data Modelling", "Vite", "REST APIs", "UX Design",
@@ -29,7 +29,7 @@ export const TEAM = [
       {
         name: "Collegeparichay Portal",
         desc: "End-to-end JEE college discovery platform covering 850+ institutes — IITs, NITs, IIITs, GFTIs and private — with filters, maps and comparisons.",
-        tag: "Founder",
+        tag: "Co-Founder",
       },
       {
         name: "JEE Rank Predictor",

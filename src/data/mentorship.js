@@ -492,7 +492,7 @@ export const MENTORSHIP = {
     qualifierMentors: [
       {
         name: "Ankit Yadav",
-        role: "Founder, IIT Roorkee",
+        role: "Co-Founder, IIT Roorkee",
         img: "/assets/team/ankit2.webp",
         thought: "Starting early is an advantage only if the direction is right. For Foundation students, we focus on building a resilient mindset and an unbreakable conceptual base that makes clearing future competitive exams a natural outcome."
       },

@@ -38,10 +38,10 @@ const FOUNDERS = [
     name: "Ankit Yadav",
     initials: "AY",
     photo: "/assets/team/ankit2.webp",
-    role: "Founder & CEO",
+    role: "Co-Founder",
     accent: "#FF693D",
     edu: "B.Tech, IIT Roorkee",
-   bio: "Hi, I'm Ankit Yadav, an IIT Roorkee graduate and the founder of College Parichay — a platform built to make college guidance simpler, clearer, and more accessible for students across India. During my own journey, I saw how confusing the college and career decision process can be. That experience inspired me to create College Parichay with one simple belief: \"Students need clarity, not confusion.\" Through authentic insights, relatable experiences, and a community-driven approach, we aim to help students make informed decisions with confidence.",
+   bio: "Hi, I'm Ankit Yadav, an IIT Roorkee graduate and the co-founder of College Parichay — a platform built to make college guidance simpler, clearer, and more accessible for students across India. During my own journey, I saw how confusing the college and career decision process can be. That experience inspired me to create College Parichay with one simple belief: \"Students need clarity, not confusion.\" Through authentic insights, relatable experiences, and a community-driven approach, we aim to help students make informed decisions with confidence.",
     skills: ["Product Strategy", "React", "Leadership", "Data Analysis", "UX"],
     socials: { linkedin: LK, instagram: IG, whatsapp: WA },
   },
@@ -372,7 +372,7 @@ export default function About() {
           <SectionHead icon={Trophy} eyebrow="The Founders" title="Who's behind College Parichay" sub="Two engineers from IIT Roorkee, building the tool every JEE aspirant deserves" />
           <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
             {FOUNDERS.map((f, idx) => (
-              <TeamCard key={f.name} f={f} idx={idx} badgeIcon={Trophy} badgeLabel={idx === 0 ? "Founder" : "Co-Founder"} />
+              <TeamCard key={f.name} f={f} idx={idx} badgeIcon={Trophy} badgeLabel="Co-Founder" />
             ))}
           </div>
         </div>
@@ -393,7 +393,7 @@ export default function About() {
           <Reveal>
             <p style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.65rem)", lineHeight: 1.6, fontWeight: 600, color: "var(--navy)", margin: "0 0 34px", maxWidth: 1040 }}>
               College Parichay was founded by two <strong>IIT Roorkee</strong> alumni —{" "}
-              <strong>Ankit Yadav</strong> (Founder &amp; CEO) and <strong>Ankit Kumar</strong> (Co-Founder &amp; CTO).
+              <strong>Ankit Yadav</strong> (Co-Founder) and <strong>Ankit Kumar</strong> (Co-Founder &amp; CTO).
               Two students from the
               same campus, building the platform we wished existed when we were the ones staring at rank lists and cutoffs.
             </p>
@@ -430,7 +430,7 @@ export default function About() {
           <Reveal>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, marginBottom: 64 }}>
               {[
-                ["Ankit Yadav", "Founder & CEO"],
+                ["Ankit Yadav", "Co-Founder"],
                 ["Ankit Kumar", "Co-Founder & CTO"],
               ].map(([name, role]) => (
                 <div key={name} style={{

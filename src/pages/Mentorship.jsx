@@ -134,7 +134,7 @@ const ASPIRANT_POINTS = [
 const QUALIFIER_MENTORS = [
   {
     name: "Ankit Yadav",
-    role: "Founder, IIT Roorkee",
+    role: "Co-Founder, IIT Roorkee",
     img: "/assets/team/ankit2.webp",
     thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank. We've built this system from our own experiences of cracking IIT, focusing purely on high-yield output rather than just mindless hard work."
   },
