@@ -20,7 +20,6 @@ import testRoutes from "./routes/tests.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 import { startDailyReportJob } from "./jobs/dailyReport.js";
 import { backfillPhone10 } from "./jobs/backfillPhone10.js";
-import { startKeepAliveJob } from "./jobs/keepAlive.js";
 
 dotenv.config();
 const app = express();
@@ -130,6 +129,5 @@ connectDB()
     startWeeklyReportJob(); // weekly parent progress emails (best-effort, dev-safe)
     startDailyReportJob();  // daily parent progress emails from synced data (dev-safe)
     backfillPhone10();      // one-time; no-op once every enrolment has the field
-    startKeepAliveJob();    // prevent Render free-tier cold-start (pings every 14 min)
   })
   .catch((e) => { console.error("❌ DB error:", e.message); process.exit(1); });
