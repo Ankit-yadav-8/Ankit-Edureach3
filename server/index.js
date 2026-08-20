@@ -102,6 +102,10 @@ const authLimiter    = rl({ windowMs: 15 * 60 * 1000, max: 30 });
 const apiLimiter     = rl({ windowMs: 60 * 1000, max: 120 });
 
 app.get("/", (_req, res) => res.send("EduReach API ✅"));
+
+// ── Health-check (used by Render keep-alive \u0026 external monitors) ─────────────
+app.get("/health", (_req, res) => res.json({ status: "ok", uptime: process.uptime() }));
+
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/otp", authLimiter, otpRoutes);
 // Mounted BEFORE /api/admin: Express matches prefixes in order, so the broader

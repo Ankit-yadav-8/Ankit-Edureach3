@@ -5,7 +5,16 @@ import App from "./App.jsx";
 import { ShortlistProvider } from "./context/Shortlist.jsx";
 import { AuthProvider } from "./auth/AuthContext.jsx";
 import { EnrolProvider } from "./components/EnrolModal.jsx";
+import { API_BASE } from "./auth/api.js";
 import "./styles/index.css";
+
+// ── Warm-up ping ────────────────────────────────────────────────────────────
+// Render's free tier can take 30–50 s to cold-start. Fire a no-op request the
+// moment the JS bundle executes — the server wakes up in the background while
+// the user is still reading the page, so it's warm by the time they interact.
+if (API_BASE.includes("onrender.com")) {
+  fetch(`${API_BASE}/health`, { method: "GET", keepalive: true }).catch(() => {});
+}
 // strategy.css is namespaced under .strategy-wrapper and only used by the
 // JEE/NEET strategy pages — imported there so it stays off the global (home)
 // critical-CSS path and loads lazily with those routes.
