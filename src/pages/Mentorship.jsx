@@ -52,7 +52,7 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
   const isNeet = p.exam === "NEET";
   const ifaceLabel = isNeet ? "NEET" : p.exam === "JEE" ? "JEE Main" : "exam";
   const dream = isNeet ? "medical-college" : "IIT / NIT";
-  const bullets = [`Real ${ifaceLabel} interface`, "One-time payment", "7-day money-back"];
+  const bullets = [`Real ${ifaceLabel} interface`, "One-time payment"];
   return (
     <section className="mj-hero">
       <div className="mj-hero-bg" aria-hidden="true">
@@ -1014,7 +1014,7 @@ function Pricing({ plan, exam, openEnrol }) {
             <span className="mj-price-plan">{exam}</span>
             <div className="mj-price-amt">₹{p.amount}</div>
             <div className="mj-price-old">₹{p.old?.toLocaleString("en-IN")}</div>
-            <div className="mj-price-terms">7-DAY TRIAL · THEN ₹{p.old?.toLocaleString("en-IN")}/YR</div>
+
             <span className="mj-price-seats">⚡ {SEATS_LEFT} SEATS LEFT</span>
           </div>
           <div className="mj-price-right">
@@ -1025,7 +1025,7 @@ function Pricing({ plan, exam, openEnrol }) {
               ))}
             </div>
             <button className="mj-btn-dark mj-btn-block" onClick={() => openEnrol(plan)}>Claim your seat <ArrowRight size={17} /></button>
-            <div className="mj-price-foot"><span>◈ RAZORPAY</span><span>⟲ 7-DAY REFUND</span></div>
+            <div className="mj-price-foot"><span>◈ RAZORPAY</span><span>🔒 SECURE PAYMENT</span></div>
           </div>
         </Reveal>
       </div>
