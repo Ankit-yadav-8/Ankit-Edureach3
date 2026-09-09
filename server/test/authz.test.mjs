@@ -57,7 +57,7 @@ const check = (label, cond, extra = "") => {
 };
 
 const seedStudent = async (sid, email, name) => {
-  await Enrollment.create({ studentId: sid, plan: "mentor-jee-2027", amount: 2499, name, email, status: "paid" });
+  await Enrollment.create({ studentId: sid, plan: "mentor-jee-2027", amount: 13999, name, email, status: "paid" });
   await MentorProgress.create({
     email, plan: "mentor-jee-2027",
     data: { entries: [{ date: "2026-07-16", hours: 5 }], tests: [], backlog: [] },

@@ -48,7 +48,7 @@ function Label({ children, dark }) {
 
 /* ═══════════════ HERO — glassmorphic performance engine ═══════════════ */
 function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
-  const p = MENTOR_PLANS[plan] || { amount: 2499, exam: "JEE" };
+  const p = MENTOR_PLANS[plan] || { amount: 13999, exam: "JEE" };
   const isNeet = p.exam === "NEET";
   const ifaceLabel = isNeet ? "NEET" : p.exam === "JEE" ? "JEE Main" : "exam";
   const dream = isNeet ? "medical-college" : "IIT / NIT";
@@ -1001,7 +1001,7 @@ const INCLUDED = [
   "Full mock marathon in final phase", "Rank prediction + college shortlist",
 ];
 function Pricing({ plan, exam, openEnrol }) {
-  const p = MENTOR_PLANS[plan] || { amount: 2499, old: 7999 };
+  const p = MENTOR_PLANS[plan] || { amount: 13999, old: 24999 };
   return (
     <section id="enrol" className="mj-section">
       <div className="mj-wrap">
