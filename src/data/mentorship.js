@@ -18,9 +18,9 @@ export const SEATS_LEFT = 37; // shown as "X of 120 seats left"
    All mentorship plans are now a flat ₹13,999 (cascade shown for marketing). */
 export const MENTOR_PLANS = {
   "mentor-jee-2027":  { amount: 13999, old: 24999, drops: [24999, 17999, 13999], exam: "JEE",        year: 2027 },
-  "mentor-neet-2027": { amount: 13999, old: 24999, drops: [24999, 17999, 13999], exam: "NEET",       year: 2027 },
+  "mentor-neet-2027": { amount: 1, old: 1, drops: [1], exam: "NEET",       year: 2027 },
   "mentor-jee-2028":  { amount: 13999, old: 24999, drops: [24999, 17999, 13999], exam: "JEE",        year: 2028 },
-  "mentor-neet-2028": { amount: 13999, old: 24999, drops: [24999, 17999, 13999], exam: "NEET",       year: 2028 },
+  "mentor-neet-2028": { amount: 1, old: 1, drops: [1], exam: "NEET",       year: 2028 },
   "mentor-foundation":{ amount: 13999, old: 24999, drops: [24999, 13999],        exam: "Foundation", year: null },
 };
 
@@ -28,7 +28,7 @@ export const MENTOR_PLANS = {
 export const MENTOR_LINKS = [
   { slug: "jee-2027", label: "JEE 2027", to: "/mentorship/jee-2027", price: 13999, tag: "Class 12 / Droppers" },
   { slug: "jee-2028", label: "JEE 2028", to: "/mentorship/jee-2028", price: 13999, tag: "Class 11 · 2-Year Plan" },
-  { slug: "neet",     label: "NEET",     to: "/mentorship/neet",     price: 13999, tag: "Medical Aspirants" },
+  { slug: "neet",     label: "NEET",     to: "/mentorship/neet",     price: 1, tag: "Medical Aspirants" },
   { slug: "foundation", label: "Foundation", to: "/mentorship/foundation", price: 13999, tag: "Class 9 & 10" },
 ];
 
