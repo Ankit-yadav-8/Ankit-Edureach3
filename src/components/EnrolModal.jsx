@@ -4,9 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, User, Mail, Phone, MapPin, Hash, ShieldCheck, Check, Loader2,
   ArrowRight, Sparkles, BadgeCheck, PartyPopper, GraduationCap,
+  Globe, Tag,
 } from "lucide-react";
 import { startPayment } from "../payments/razorpay.js";
 import { useAuth } from "../auth/AuthContext.jsx";
+import { API_BASE } from "../auth/api.js";
 
 /* ─────────────────────────────────────────────────────────
    Plan catalogue (must match server/routes/payment.js)
@@ -24,31 +26,101 @@ const PLAN_META = {
     title: "All Colleges Counselling",
     band: "Any rank · State / Private / Deemed + NITs",
   },
-  // ── Mentorship plans ──
+
+  // ── Indian · 6 months ──
+  "mentor-jee-2027-6m": {
+    amount: 2599, old: 5999, kind: "mentorship", targetExam: "JEE 2027",
+    title: "JEE 2027 Mentorship (6 Months)",
+    band: "Indian Students · 6 Months · 1-on-1 IITian mentor",
+    region: "indian", duration: "6 months",
+  },
+  "mentor-neet-2027-6m": {
+    amount: 2599, old: 5999, kind: "mentorship", targetExam: "NEET 2027",
+    title: "NEET 2027 Mentorship (6 Months)",
+    band: "Indian Students · 6 Months · 1-on-1 doctor mentor",
+    region: "indian", duration: "6 months",
+  },
+  "mentor-jee-2028-6m": {
+    amount: 2599, old: 5999, kind: "mentorship", targetExam: "JEE 2028",
+    title: "JEE 2028 Mentorship (6 Months)",
+    band: "Indian Students · 6 Months · Class 11",
+    region: "indian", duration: "6 months",
+  },
+  "mentor-neet-2028-6m": {
+    amount: 2599, old: 5999, kind: "mentorship", targetExam: "NEET 2028",
+    title: "NEET 2028 Mentorship (6 Months)",
+    band: "Indian Students · 6 Months · Class 11",
+    region: "indian", duration: "6 months",
+  },
+  "mentor-foundation-6m": {
+    amount: 2599, old: 5999, kind: "mentorship", targetExam: "Foundation (JEE/NEET)",
+    title: "Foundation Mentorship 6 Months (Class 9–10)",
+    band: "Indian Students · 6 Months · Class 9 & 10",
+    region: "indian", duration: "6 months",
+  },
+
+  // ── Indian · 1 year ──
   "mentor-jee-2027": {
-    amount: 13999, old: 24999, kind: "mentorship", targetExam: "JEE 2027",
-    title: "JEE 2027 Mentorship Program",
-    band: "1-on-1 IITian mentor · Class 12 / Droppers",
+    amount: 4999, old: 9999, kind: "mentorship", targetExam: "JEE 2027",
+    title: "JEE 2027 Mentorship (1 Year)",
+    band: "Indian Students · 1 Year · Class 12 / Droppers",
+    region: "indian", duration: "1 year",
   },
   "mentor-neet-2027": {
-    amount: 1, old: 1, kind: "mentorship", targetExam: "NEET 2027",
-    title: "NEET 2027 Mentorship Program",
-    band: "1-on-1 doctor mentor · Class 12 / Droppers",
+    amount: 4999, old: 9999, kind: "mentorship", targetExam: "NEET 2027",
+    title: "NEET 2027 Mentorship (1 Year)",
+    band: "Indian Students · 1 Year · Class 12 / Droppers",
+    region: "indian", duration: "1 year",
   },
   "mentor-jee-2028": {
-    amount: 13999, old: 24999, kind: "mentorship", targetExam: "JEE 2028",
-    title: "JEE 2028 Mentorship (2-Year)",
-    band: "2-year IITian mentorship · Class 11",
+    amount: 4999, old: 9999, kind: "mentorship", targetExam: "JEE 2028",
+    title: "JEE 2028 Mentorship (1 Year, 2-Year Plan)",
+    band: "Indian Students · 1 Year · Class 11",
+    region: "indian", duration: "1 year",
   },
   "mentor-neet-2028": {
-    amount: 1, old: 1, kind: "mentorship", targetExam: "NEET 2028",
-    title: "NEET 2028 Mentorship (2-Year)",
-    band: "2-year doctor mentorship · Class 11",
+    amount: 4999, old: 9999, kind: "mentorship", targetExam: "NEET 2028",
+    title: "NEET 2028 Mentorship (1 Year, 2-Year Plan)",
+    band: "Indian Students · 1 Year · Class 11",
+    region: "indian", duration: "1 year",
   },
   "mentor-foundation": {
-    amount: 13999, old: 24999, kind: "mentorship", targetExam: "Foundation (JEE/NEET)",
-    title: "Foundation Mentorship (Class 9–10)",
-    band: "1-on-1 mentor · Shared JEE + NEET base",
+    amount: 4999, old: 9999, kind: "mentorship", targetExam: "Foundation (JEE/NEET)",
+    title: "Foundation Mentorship 1 Year (Class 9–10)",
+    band: "Indian Students · 1 Year · Class 9 & 10",
+    region: "indian", duration: "1 year",
+  },
+
+  // ── International · 1 year ──
+  "mentor-jee-2027-intl": {
+    amount: 14999, old: 24999, kind: "mentorship", targetExam: "JEE 2027",
+    title: "JEE 2027 Mentorship – International (1 Year)",
+    band: "International Students · 1 Year · 1-on-1 IITian mentor",
+    region: "international", duration: "1 year",
+  },
+  "mentor-neet-2027-intl": {
+    amount: 14999, old: 24999, kind: "mentorship", targetExam: "NEET 2027",
+    title: "NEET 2027 Mentorship – International (1 Year)",
+    band: "International Students · 1 Year · 1-on-1 doctor mentor",
+    region: "international", duration: "1 year",
+  },
+  "mentor-jee-2028-intl": {
+    amount: 14999, old: 24999, kind: "mentorship", targetExam: "JEE 2028",
+    title: "JEE 2028 Mentorship – International (1 Year)",
+    band: "International Students · 1 Year · Class 11",
+    region: "international", duration: "1 year",
+  },
+  "mentor-neet-2028-intl": {
+    amount: 14999, old: 24999, kind: "mentorship", targetExam: "NEET 2028",
+    title: "NEET 2028 Mentorship – International (1 Year)",
+    band: "International Students · 1 Year · Class 11",
+    region: "international", duration: "1 year",
+  },
+  "mentor-foundation-intl": {
+    amount: 14999, old: 24999, kind: "mentorship", targetExam: "Foundation (JEE/NEET)",
+    title: "Foundation Mentorship – International (1 Year)",
+    band: "International Students · 1 Year · Class 9 & 10",
+    region: "international", duration: "1 year",
   },
 };
 
@@ -117,10 +189,61 @@ function EnrolModal({ plan, onClose }) {
   const [topError, setTopError] = useState("");
   const [done, setDone] = useState(null); // { paymentId }
 
+  // ── Coupon code state ──
+  const [couponCode, setCouponCode] = useState("");
+  const [couponMsg, setCouponMsg] = useState("");
+  const [couponValid, setCouponValid] = useState(false);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponBusy, setCouponBusy] = useState(false);
+
+  // Final displayed price after any coupon discount
+  const displayAmount = couponValid ? Math.max(meta.amount - couponDiscount, 1) : meta.amount;
+
   const set = (k) => (e) => {
     setF((s) => ({ ...s, [k]: e.target.value }));
     setErrors((s) => ({ ...s, [k]: undefined }));
   };
+
+  // ── Coupon validation ──
+  async function validateCoupon() {
+    if (!couponCode.trim()) return;
+    setCouponBusy(true);
+    setCouponMsg("");
+    try {
+      const res = await fetch(API_BASE + "/api/payment/validate-coupon", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: couponCode.trim(),
+          plan,
+          region: meta.region || "indian",
+        }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setCouponValid(true);
+        setCouponDiscount(data.discountAmount);
+        setCouponMsg(data.message || `₹${data.discountAmount} OFF applied!`);
+      } else {
+        setCouponValid(false);
+        setCouponDiscount(0);
+        setCouponMsg(data.message || "Invalid coupon code.");
+      }
+    } catch {
+      setCouponValid(false);
+      setCouponDiscount(0);
+      setCouponMsg("Could not validate. Try again.");
+    } finally {
+      setCouponBusy(false);
+    }
+  }
+
+  function removeCoupon() {
+    setCouponCode("");
+    setCouponValid(false);
+    setCouponDiscount(0);
+    setCouponMsg("");
+  }
 
   function validate() {
     const er = {};
@@ -144,7 +267,12 @@ function EnrolModal({ plan, onClose }) {
     if (!validate()) return;
     setBusy(true);
     try {
-      const { paymentId } = await startPayment({ plan, targetExam: meta.targetExam || "", ...f }, token);
+      const { paymentId } = await startPayment({
+        plan,
+        targetExam: meta.targetExam || "",
+        couponCode: couponValid ? couponCode.trim().toUpperCase() : "",
+        ...f,
+      }, token);
       setDone({ paymentId });
     } catch (e) {
       if (e.message !== "CANCELLED")
@@ -185,25 +313,35 @@ function EnrolModal({ plan, onClose }) {
         </button>
 
         {done ? (
-          <SuccessView meta={meta} plan={plan} paymentId={done.paymentId} onClose={onClose} />
+          <SuccessView meta={meta} plan={plan} paymentId={done.paymentId} onClose={onClose} displayAmount={displayAmount} />
         ) : (
           <>
             {/* ── Header with price ── */}
             <div style={{
-              background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff",
+              background: meta.region === "international"
+                ? "linear-gradient(135deg,#1a1d42,#3c2a66)"
+                : "linear-gradient(135deg,#FF693D,#E0421F)",
+              color: "#fff",
               padding: "26px 28px 24px", position: "relative", overflow: "hidden",
             }}>
               <div style={{ position: "absolute", top: -30, right: -10, width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle,rgba(255,255,255,.18),transparent 70%)" }} />
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, background: "rgba(255,255,255,.18)", padding: "5px 12px", borderRadius: 50 }}>
-                <Sparkles size={13} /> {meta.band}
+                {meta.region === "international" ? <Globe size={13} /> : <Sparkles size={13} />} {meta.band}
               </span>
               <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "1.35rem", margin: "12px 0 4px", position: "relative" }}>
                 {meta.title}
               </h2>
               <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginTop: 8 }}>
                 <span style={{ fontSize: 16, opacity: .7, textDecoration: "line-through" }}>₹{meta.old}</span>
-                <span style={{ fontSize: 34, fontWeight: 800, fontFamily: "'Space Grotesk',sans-serif" }}>₹{meta.amount}</span>
-                <span style={{ fontSize: 13, opacity: .9 }}>one-time · all rounds</span>
+                <span style={{ fontSize: 34, fontWeight: 800, fontFamily: "'Space Grotesk',sans-serif" }}>
+                  ₹{displayAmount}
+                </span>
+                {couponValid && (
+                  <span style={{ fontSize: 13, background: "#22c55e", color: "#fff", padding: "3px 8px", borderRadius: 6, fontWeight: 700 }}>
+                    -₹{couponDiscount}
+                  </span>
+                )}
+                <span style={{ fontSize: 13, opacity: .9 }}>one-time · {meta.duration || "all rounds"}</span>
               </div>
             </div>
 
@@ -249,6 +387,54 @@ function EnrolModal({ plan, onClose }) {
                   <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--page-bg)", border: "1px solid #fed7aa", borderRadius: 10, padding: "10px 12px", fontSize: 12.5, color: "#9a3412", fontWeight: 600 }}>
                     <BadgeCheck size={15} color="#FF693D" /> Target: {meta.targetExam}
                   </div>
+
+                  {/* ── Coupon Code (optional) ── */}
+                  <Divider label="Coupon code" hint="(optional)" />
+                  <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
+                    <span style={{ position: "relative", display: "block", flex: 1 }}>
+                      <Tag size={16} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#9ca3af" }} />
+                      <input
+                        value={couponCode}
+                        onChange={(e) => { setCouponCode(e.target.value); if (couponValid) removeCoupon(); }}
+                        placeholder="Enter coupon code"
+                        disabled={couponValid}
+                        style={{
+                          width: "100%", padding: "11px 12px 11px 36px", fontSize: 14.5,
+                          borderRadius: 10, border: `1.5px solid ${couponValid ? "#bbf7d0" : "rgba(0,0,0,.13)"}`,
+                          outline: "none", background: couponValid ? "#f0fdf4" : "#fff", color: "#1a1a2e",
+                          textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 700,
+                        }}
+                      />
+                    </span>
+                    {couponValid ? (
+                      <button onClick={removeCoupon}
+                        style={{ padding: "0 16px", borderRadius: 10, border: "1.5px solid #fca5a5", background: "#fef2f2", color: "#dc2626", fontWeight: 700, fontSize: 13, cursor: "pointer", whiteSpace: "nowrap" }}>
+                        Remove
+                      </button>
+                    ) : (
+                      <button onClick={validateCoupon} disabled={couponBusy || !couponCode.trim()}
+                        style={{
+                          padding: "0 18px", borderRadius: 10, border: "none",
+                          background: couponBusy || !couponCode.trim() ? "#f9a25e" : "#FF693D",
+                          color: "#fff", fontWeight: 700, fontSize: 13,
+                          cursor: couponBusy || !couponCode.trim() ? "not-allowed" : "pointer",
+                          whiteSpace: "nowrap", opacity: !couponCode.trim() ? 0.5 : 1,
+                        }}>
+                        {couponBusy ? "…" : "Apply"}
+                      </button>
+                    )}
+                  </div>
+                  {couponMsg && (
+                    <div style={{
+                      fontSize: 12.5, fontWeight: 700, marginBottom: 10, padding: "7px 10px", borderRadius: 8,
+                      color: couponValid ? "#15803d" : "#dc2626",
+                      background: couponValid ? "#f0fdf4" : "#fef2f2",
+                      border: `1px solid ${couponValid ? "#bbf7d0" : "#fecaca"}`,
+                      display: "flex", alignItems: "center", gap: 6,
+                    }}>
+                      {couponValid ? <Check size={14} strokeWidth={3} /> : <X size={14} />} {couponMsg}
+                    </div>
+                  )}
                 </>
               ) : (
                 <>
@@ -275,7 +461,7 @@ function EnrolModal({ plan, onClose }) {
                   boxShadow: "0 10px 26px rgba(255, 105, 61,.4)",
                 }}>
                 {busy ? <><Loader2 size={18} className="enrol-spin" /> Processing…</>
-                      : <>Pay ₹{meta.amount} & Enrol <ArrowRight size={18} /></>}
+                      : <>Pay ₹{displayAmount} & Enrol <ArrowRight size={18} /></>}
               </button>
 
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginTop: 14, flexWrap: "wrap" }}>
@@ -298,9 +484,9 @@ function EnrolModal({ plan, onClose }) {
 }
 
 /* ── Success screen ── */
-function SuccessView({ meta, plan, paymentId, onClose }) {
+function SuccessView({ meta, plan, paymentId, onClose, displayAmount }) {
   const wa = `https://wa.me/917877596464?text=` + encodeURIComponent(
-    `Hi! I just enrolled in the ₹${meta.amount} ${meta.title} plan. Payment ID: ${paymentId}`
+    `Hi! I just enrolled in the ₹${displayAmount} ${meta.title} plan. Payment ID: ${paymentId}`
   );
   return (
     <div style={{ padding: "44px 30px 34px", textAlign: "center" }}>

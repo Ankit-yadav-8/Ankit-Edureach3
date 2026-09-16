@@ -13,23 +13,38 @@ export const SEATS_LIMIT = 120;
 export const SEATS_LEFT = 37; // shown as "X of 120 seats left"
 
 /* Pricing (server is the source of truth — these are display only).
-   `drops` is the cascading price-drop shown on the cards: every value
-   except the last is struck through, the last is the final price.
-   All mentorship plans are now a flat ₹13,999 (cascade shown for marketing). */
+   Indian students: ₹2,599 / 6 months, ₹4,999 / 1 year.
+   International students: ₹14,999 / 1 year.
+   NEET plans are ₹1 for testing. */
 export const MENTOR_PLANS = {
-  "mentor-jee-2027":  { amount: 13999, old: 24999, drops: [24999, 17999, 13999], exam: "JEE",        year: 2027 },
-  "mentor-neet-2027": { amount: 1, old: 1, drops: [1], exam: "NEET",       year: 2027 },
-  "mentor-jee-2028":  { amount: 13999, old: 24999, drops: [24999, 17999, 13999], exam: "JEE",        year: 2028 },
-  "mentor-neet-2028": { amount: 1, old: 1, drops: [1], exam: "NEET",       year: 2028 },
-  "mentor-foundation":{ amount: 13999, old: 24999, drops: [24999, 13999],        exam: "Foundation", year: null },
+  // ── Indian · 6 months ──
+  "mentor-jee-2027-6m":    { amount: 2599,  old: 5999,  drops: [5999, 2599],  exam: "JEE",        year: 2027, duration: "6 months", region: "indian" },
+  "mentor-neet-2027-6m":   { amount: 2599,  old: 5999,  drops: [5999, 2599],  exam: "NEET",       year: 2027, duration: "6 months", region: "indian" },
+  "mentor-jee-2028-6m":    { amount: 2599,  old: 5999,  drops: [5999, 2599],  exam: "JEE",        year: 2028, duration: "6 months", region: "indian" },
+  "mentor-neet-2028-6m":   { amount: 2599,  old: 5999,  drops: [5999, 2599],  exam: "NEET",       year: 2028, duration: "6 months", region: "indian" },
+  "mentor-foundation-6m":  { amount: 2599,  old: 5999,  drops: [5999, 2599],  exam: "Foundation", year: null, duration: "6 months", region: "indian" },
+
+  // ── Indian · 1 year ──
+  "mentor-jee-2027":       { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "JEE",        year: 2027, duration: "1 year", region: "indian" },
+  "mentor-neet-2027":      { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "NEET",       year: 2027, duration: "1 year", region: "indian" },
+  "mentor-jee-2028":       { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "JEE",        year: 2028, duration: "1 year", region: "indian" },
+  "mentor-neet-2028":      { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "NEET",       year: 2028, duration: "1 year", region: "indian" },
+  "mentor-foundation":     { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "Foundation", year: null, duration: "1 year", region: "indian" },
+
+  // ── International · 1 year ──
+  "mentor-jee-2027-intl":      { amount: 14999, old: 24999, drops: [24999, 14999], exam: "JEE",        year: 2027, duration: "1 year", region: "international" },
+  "mentor-neet-2027-intl":     { amount: 14999, old: 24999, drops: [24999, 14999], exam: "NEET",       year: 2027, duration: "1 year", region: "international" },
+  "mentor-jee-2028-intl":      { amount: 14999, old: 24999, drops: [24999, 14999], exam: "JEE",        year: 2028, duration: "1 year", region: "international" },
+  "mentor-neet-2028-intl":     { amount: 14999, old: 24999, drops: [24999, 14999], exam: "NEET",       year: 2028, duration: "1 year", region: "international" },
+  "mentor-foundation-intl":    { amount: 14999, old: 24999, drops: [24999, 14999], exam: "Foundation", year: null, duration: "1 year", region: "international" },
 };
 
 /* ── Quick summary used by navbar + hero card ───────────────────── */
 export const MENTOR_LINKS = [
-  { slug: "jee-2027", label: "JEE 2027", to: "/mentorship/jee-2027", price: 13999, tag: "Class 12 / Droppers" },
-  { slug: "jee-2028", label: "JEE 2028", to: "/mentorship/jee-2028", price: 13999, tag: "Class 11 · 2-Year Plan" },
-  { slug: "neet",     label: "NEET",     to: "/mentorship/neet",     price: 1, tag: "Medical Aspirants" },
-  { slug: "foundation", label: "Foundation", to: "/mentorship/foundation", price: 13999, tag: "Class 9 & 10" },
+  { slug: "jee-2027", label: "JEE 2027", to: "/mentorship/jee-2027", price: 2599, tag: "Class 12 / Droppers" },
+  { slug: "jee-2028", label: "JEE 2028", to: "/mentorship/jee-2028", price: 2599, tag: "Class 11 · 2-Year Plan" },
+  { slug: "neet",     label: "NEET",     to: "/mentorship/neet",     price: 2599, tag: "Medical Aspirants" },
+  { slug: "foundation", label: "Foundation", to: "/mentorship/foundation", price: 2599, tag: "Class 9 & 10" },
 ];
 
 /* ════════════════════════════════════════════════════════════════

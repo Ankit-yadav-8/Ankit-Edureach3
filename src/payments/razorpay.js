@@ -59,7 +59,7 @@ export async function startPayment(details, token) {
         email: details.email || "",
         contact: details.phone || "",
       },
-      notes: { plan: details.plan },
+      notes: { plan: details.plan, couponCode: details.couponCode || "" },
       theme: {
         color: "#FF693D",
         backdrop_color: "#1c1c28",

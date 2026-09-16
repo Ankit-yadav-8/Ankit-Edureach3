@@ -16,13 +16,27 @@ const enrollmentSchema = new mongoose.Schema(
       type: String,
       enum: [
         "josaa", "all-colleges",
+        // Indian 6-month plans
+        "mentor-jee-2027-6m", "mentor-neet-2027-6m", "mentor-jee-2028-6m", "mentor-neet-2028-6m", "mentor-foundation-6m",
+        // Indian 1-year plans (original keys)
         "mentor-jee-2027", "mentor-neet-2027",
         "mentor-jee-2028", "mentor-neet-2028",
         "mentor-foundation",
+        // International 1-year plans
+        "mentor-jee-2027-intl", "mentor-neet-2027-intl", "mentor-jee-2028-intl", "mentor-neet-2028-intl", "mentor-foundation-intl",
       ],
       required: true,
     },
-    amount: { type: Number, required: true }, // in rupees
+    amount: { type: Number, required: true }, // in rupees (final charged amount, after discount)
+
+    // Price before any coupon discount was applied (null when no coupon used).
+    originalAmount: { type: Number, default: null },
+
+    // "indian" or "international" — tracks which pricing tier the student chose.
+    region: { type: String, enum: ["indian", "international", ""], default: "" },
+
+    // The coupon code redeemed at checkout (empty if none).
+    couponCode: { type: String, trim: true, uppercase: true, default: "" },
 
     // Student details
     name:      { type: String, trim: true, required: true },

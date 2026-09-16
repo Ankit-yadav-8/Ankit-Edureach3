@@ -8,6 +8,7 @@ import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
 import TestUpload from "../components/admin/TestUpload.jsx";
 import Mentors from "../components/admin/Mentors.jsx";
+import CouponManager from "../components/admin/CouponManager.jsx";
 
 const TOKEN_STORAGE = "edureach:adminToken";
 const ORANGE = "#FF693D";
@@ -16,7 +17,7 @@ const ORANGE = "#FF693D";
 // no stat cards, no CSV export, no shared search/table. Named rather than
 // spelled out per site, so adding a tab doesn't mean finding every
 // `tab !== "x" && tab !== "y"` chain and appending to it.
-const SELF_CONTAINED_TABS = new Set(["community", "tests", "mentors"]);
+const SELF_CONTAINED_TABS = new Set(["community", "tests", "mentors", "coupons"]);
 
 const fmtDate = (iso) => {
   if (!iso) return "—";
@@ -457,6 +458,7 @@ export default function Admin() {
             { k: "community", label: "Community", icon: MessagesSquare },
             { k: "tests", label: "Tests", icon: FileText },
             { k: "mentors", label: "Mentors", icon: GraduationCap },
+            { k: "coupons", label: "Coupons", icon: Tag },
           ].map(({ k, label, icon: Icon, count }) => {
             const active = tab === k;
             return (
@@ -572,6 +574,8 @@ export default function Admin() {
           <TestUpload token={token} />
         ) : tab === "mentors" ? (
           <Mentors token={token} />
+        ) : tab === "coupons" ? (
+          <CouponManager token={token} />
         ) : tab === "users" ? (
         <div className="adm-card" style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 8px 30px rgba(13,27,62,.06)" }}>
 

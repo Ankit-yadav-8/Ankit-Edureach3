@@ -48,7 +48,7 @@ function Label({ children, dark }) {
 
 /* ═══════════════ HERO — glassmorphic performance engine ═══════════════ */
 function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
-  const p = MENTOR_PLANS[plan] || { amount: 13999, exam: "JEE" };
+  const p = MENTOR_PLANS[plan] || { amount: 2599, exam: "JEE" };
   const isNeet = p.exam === "NEET";
   const ifaceLabel = isNeet ? "NEET" : p.exam === "JEE" ? "JEE Main" : "exam";
   const dream = isNeet ? "medical-college" : "IIT / NIT";
@@ -993,41 +993,105 @@ function WhatsApp() {
   );
 }
 
-/* ═══════════════ PRICING ═══════════════ */
+/* ═══════════════ PRICING — Three-Card (Indian 6m / Indian 1yr / International) ═══════════════ */
 const INCLUDED = [
-  "1-on-1 IITian mentor for 12 months", "Weekly personalised study plan",
+  "1-on-1 IITian mentor", "Weekly personalised study plan",
   "Weekly test analysis + priority checklist", "Live study tracking dashboard",
   "Parent weekly booklet", "24/7 WhatsApp doubt support",
   "Full mock marathon in final phase", "Rank prediction + college shortlist",
 ];
+
+/* Build the three plan keys for any batch.
+   e.g. base="mentor-jee-2027" → 6m="mentor-jee-2027-6m", intl="mentor-jee-2027-intl" */
+function buildPricingPlans(basePlan) {
+  // strip any existing suffix to get the family
+  const family = basePlan.replace(/-(6m|intl)$/, "");
+  return {
+    sixMonth: family + "-6m",
+    oneYear: family,
+    intl: family + "-intl",
+  };
+}
+
 function Pricing({ plan, exam, openEnrol }) {
-  const p = MENTOR_PLANS[plan] || { amount: 13999, old: 24999 };
+  const keys = buildPricingPlans(plan);
+  const p6 = MENTOR_PLANS[keys.sixMonth];
+  const p1 = MENTOR_PLANS[keys.oneYear] || { amount: 4999, old: 9999 };
+  const pi = MENTOR_PLANS[keys.intl];
+  // NEET now uses the same 3-card layout as JEE
+
+  const cards = [
+    {
+      key: keys.sixMonth,
+      label: "INDIAN STUDENTS",
+      sublabel: "6 Months",
+      flag: "🇮🇳",
+      amount: p6?.amount || 2599,
+      old: p6?.old || 5999,
+      accent: "#FF693D",
+      bg: "linear-gradient(135deg,#FF7A3C,#F1531F)",
+      highlight: false,
+    },
+    {
+      key: keys.oneYear,
+      label: "INDIAN STUDENTS",
+      sublabel: "1 Year · Best Value",
+      flag: "🇮🇳",
+      amount: p1.amount || 4999,
+      old: p1.old || 9999,
+      accent: "#FF693D",
+      bg: "linear-gradient(135deg,#FF693D,#E0421F)",
+      highlight: true,
+      badge: "⭐ RECOMMENDED",
+    },
+    {
+      key: keys.intl,
+      label: "INTERNATIONAL STUDENTS",
+      sublabel: "1 Year",
+      flag: "🌍",
+      amount: pi?.amount || 14999,
+      old: pi?.old || 24999,
+      accent: "#6366f1",
+      bg: "linear-gradient(135deg,#1a1d42,#3c2a66)",
+      highlight: true,
+      badge: "🌏 INTERNATIONAL",
+    },
+  ];
+
   return (
     <section id="enrol" className="mj-section">
       <div className="mj-wrap">
         <Reveal style={{ textAlign: "center" }}>
-          <h2 className="mj-display mj-display-xl">One plan. Everything.<br />Start at <em>₹{p.amount}.</em></h2>
+          <h2 className="mj-display mj-display-xl">Choose your plan.<br />Start at <em>₹2,599.</em></h2>
+          <p className="mj-sec-sub" style={{ maxWidth: 540, margin: "16px auto 0" }}>Same mentorship, same IITian mentors. Pick the duration and region that suits you.</p>
         </Reveal>
-        <Reveal delay={0.1} className="mj-price-card">
-          <div className="mj-price-left">
-            <span className="mj-price-kicker">ADMISSION PASS</span>
-            <span className="mj-price-plan">{exam}</span>
-            <div className="mj-price-amt">₹{p.amount}</div>
-            <div className="mj-price-old">₹{p.old?.toLocaleString("en-IN")}</div>
 
-            <span className="mj-price-seats">⚡ {SEATS_LEFT} SEATS LEFT</span>
-          </div>
-          <div className="mj-price-right">
-            <span className="mj-inc-lbl">EVERYTHING INCLUDED</span>
-            <div className="mj-inc-grid">
-              {INCLUDED.map((f) => (
-                <div key={f} className="mj-inc-item"><Check size={15} strokeWidth={3} color={T.coral} /> {f}</div>
-              ))}
-            </div>
-            <button className="mj-btn-dark mj-btn-block" onClick={() => openEnrol(plan)}>Claim your seat <ArrowRight size={17} /></button>
-            <div className="mj-price-foot"><span>◈ RAZORPAY</span><span>🔒 SECURE PAYMENT</span></div>
-          </div>
-        </Reveal>
+        <div className="mj-pricing-grid">
+          {cards.map((c, i) => (
+            <Reveal key={c.key} delay={0.06 * i} className={`mj-pricing-tier ${c.highlight ? "mj-pricing-tier-hl" : ""}`}>
+              {c.badge && <span className="mj-tier-badge" style={{ background: c.bg, color: "#fff" }}>{c.badge}</span>}
+              <div className="mj-tier-left" style={{ background: c.bg }}>
+                <span className="mj-tier-flag">{c.flag}</span>
+                <span className="mj-tier-kicker">{c.label}</span>
+                <span className="mj-tier-sub">{c.sublabel}</span>
+                <span className="mj-tier-plan">{exam}</span>
+                <div className="mj-tier-amt">₹{c.amount.toLocaleString("en-IN")}</div>
+                <div className="mj-tier-old">₹{c.old.toLocaleString("en-IN")}</div>
+                <span className="mj-price-seats">⚡ {SEATS_LEFT} SEATS LEFT</span>
+              </div>
+              <div className="mj-tier-right">
+                <span className="mj-inc-lbl">EVERYTHING INCLUDED</span>
+                <div className="mj-inc-list">
+                  {INCLUDED.map((f) => (
+                    <div key={f} className="mj-inc-item"><Check size={14} strokeWidth={3} color={c.accent} /> {f}</div>
+                  ))}
+                </div>
+                <button className="mj-btn-dark mj-btn-block" onClick={() => openEnrol(c.key)}>Claim your seat <ArrowRight size={17} /></button>
+                <div className="mj-price-foot"><span>◈ RAZORPAY</span><span>🔒 SECURE PAYMENT</span></div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -1642,21 +1706,28 @@ const CSS = `
 .mj-proof-verified-c { justify-content:center; padding-top:0; margin-top:26px; }
 .mj-proof-vic { display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:${T.coral}; color:#fff; flex-shrink:0; }
 
-/* pricing */
-.mj-price-card { display:grid; grid-template-columns:.85fr 1.15fr; margin:44px auto 0; max-width:960px; border-radius:22px; overflow:hidden; border:1px solid ${T.line}; box-shadow:0 40px 80px -50px rgba(0,0,0,.4); }
-.mj-price-left { background:${T.coral}; color:#fff; padding:36px 30px; display:flex; flex-direction:column; }
-.mj-price-kicker { font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; opacity:.9; }
-.mj-price-plan { font:800 1.6rem/1.1 'Sora',sans-serif; margin-top:8px; }
-.mj-price-amt { font:800 3.6rem/1 'Sora',sans-serif; margin-top:auto; }
-.mj-price-old { font:600 1rem/1 'Space Grotesk',sans-serif; text-decoration:line-through; opacity:.75; margin-top:4px; }
-.mj-price-terms { font:700 .66rem/1.3 'Space Grotesk',sans-serif; letter-spacing:.08em; opacity:.9; margin-top:12px; text-transform:uppercase; }
-.mj-price-seats { align-self:flex-start; margin-top:20px; padding:8px 14px; border-radius:50px; background:rgba(0,0,0,.18); font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; }
-.mj-price-right { background:${T.card}; padding:36px 32px; }
-.mj-inc-lbl { font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.muted}; }
-.mj-inc-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 20px; margin:20px 0 8px; }
-.mj-inc-item { display:flex; align-items:flex-start; gap:8px; font:500 .9rem/1.4 'DM Sans',sans-serif; color:${T.ink}; }
+/* pricing — 3 card grid */
+.mj-pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin:44px auto 0; max-width:1040px; align-items:stretch; }
+.mj-pricing-tier { display:flex; flex-direction:column; border-radius:24px; overflow:hidden; border:1px solid ${T.line}; background:${T.card}; box-shadow:0 12px 30px -16px rgba(0,0,0,.15); transition:transform .3s, box-shadow .3s; position:relative; }
+.mj-pricing-tier:hover { transform:translateY(-6px); box-shadow:0 24px 60px -20px rgba(0,0,0,.25); }
+.mj-pricing-tier-hl { border-color:#FFB59A; box-shadow:0 20px 50px -16px rgba(255,105,61,.25); transform:translateY(-4px); z-index:2; }
+.mj-pricing-tier-hl:hover { transform:translateY(-10px); box-shadow:0 30px 70px -20px rgba(255,105,61,.3); }
+.mj-tier-badge { position:absolute; top:0; left:0; right:0; text-align:center; padding:7px 0; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; z-index:5; }
+.mj-tier-left { padding:36px 26px 30px; display:flex; flex-direction:column; color:#fff; position:relative; overflow:hidden; }
+.mj-tier-badge ~ .mj-tier-left { padding-top:46px; }
+.mj-tier-flag { position:absolute; top:-10px; right:-14px; font-size:110px; opacity:.15; filter:grayscale(100%); mix-blend-mode:overlay; pointer-events:none; }
+.mj-tier-kicker { font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; opacity:.85; }
+.mj-tier-sub { font:600 .86rem/1.3 'DM Sans',sans-serif; opacity:.95; margin-top:6px; }
+.mj-tier-plan { font:800 1.4rem/1.1 'Sora',sans-serif; margin:16px 0 auto; }
+.mj-tier-amt { font:800 2.8rem/1 'Sora',sans-serif; margin-top:20px; }
+.mj-tier-old { font:600 .9rem/1 'Space Grotesk',sans-serif; text-decoration:line-through; opacity:.75; margin-top:4px; }
+.mj-price-seats { align-self:flex-start; margin-top:16px; padding:6px 12px; border-radius:50px; background:rgba(0,0,0,.16); font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; }
+.mj-tier-right { padding:28px 24px 30px; display:flex; flex-direction:column; flex:1; }
+.mj-inc-lbl { font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.muted}; }
+.mj-inc-list { display:flex; flex-direction:column; gap:12px; margin:16px 0 24px; flex:1; }
+.mj-inc-item { display:flex; align-items:flex-start; gap:8px; font:500 .86rem/1.35 'DM Sans',sans-serif; color:${T.ink}; }
 .mj-inc-item svg { flex-shrink:0; margin-top:2px; }
-.mj-price-foot { display:flex; justify-content:space-between; margin-top:16px; font:700 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.muted}; }
+.mj-price-foot { display:flex; justify-content:space-between; margin-top:16px; font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; color:${T.muted}; }
 
 /* faq */
 .mj-faq-head { display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; margin-bottom:36px; }
@@ -1702,8 +1773,18 @@ const CSS = `
 
 /* responsive */
 @media (max-width:940px) {
-  .mj-parent-card, .mj-talk-grid, .mj-price-card, .mj-dash-body, .mj-weekly-body, .mj-ta-grid, .mj-faqs, .mj-mentors-list { grid-template-columns:1fr; }
+  .mj-hero { padding:130px 0 60px; } .mj-orb { filter:blur(60px); }
+  .mj-display-xl { font-size:2.8rem; }
+  .mj-price-card { grid-template-columns:1fr; }
+  .mj-pricing-grid { grid-template-columns:1fr; gap:24px; max-width:440px; margin-top:34px; }
+  .mj-parent-card, .mj-talk-grid, .mj-dash-body, .mj-weekly-body, .mj-ta-grid, .mj-faqs, .mj-mentors-list { grid-template-columns:1fr; }
   .mj-bento { grid-template-columns:1fr; } .mj-bento-feat { grid-column:auto; }
+  .mj-faq-q { padding:16px 18px; } .mj-faq-a p { padding:0 18px 18px; }
+  .mj-booklet, .mj-weekly, .mj-talk-booklet, .mj-talk-form-wrap { padding:30px; }
+  .mj-dash-main { border-right:none; border-bottom:1px solid ${T.line}; padding:22px; }
+  .mj-dash-feed { padding:22px; }
+  .mj-dash-stats { grid-template-columns:1fr 1fr; }
+  .mj-dash-stat:last-child { grid-column:span 2; }
   .mj-proof-top { align-items:flex-start; }
   .mj-ta-form { position:static; top:auto; }
   .mj-ta-step:not(:last-child)::after { display:none; }
@@ -1713,7 +1794,6 @@ const CSS = `
   .mj-sec-head, .mj-dark-head { flex-direction:column; align-items:center; }
   .mj-prog-grid { grid-template-columns:1fr 1fr; } .mj-navy-card { grid-row:auto; grid-column:span 2; }
   .mj-phones { justify-content:flex-start; }
-  .mj-dash-main { border-right:none; border-bottom:1px solid #262b38; }
 }
 @media (max-width:560px) {
   .mj-stat-row { grid-template-columns:1fr 1fr; } .mj-stat { border-left:none; padding-left:0; }
