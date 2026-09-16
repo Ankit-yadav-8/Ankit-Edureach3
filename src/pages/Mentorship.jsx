@@ -1706,8 +1706,8 @@ const CSS = `
 .mj-proof-verified-c { justify-content:center; padding-top:0; margin-top:26px; }
 .mj-proof-vic { display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:${T.coral}; color:#fff; flex-shrink:0; }
 
-/* pricing — 3 card grid */
-.mj-pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin:44px auto 0; max-width:1040px; align-items:stretch; }
+/* pricing — 2 card grid */
+.mj-pricing-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:30px; margin:44px auto 0; max-width:760px; align-items:stretch; }
 .mj-pricing-tier { display:flex; flex-direction:column; border-radius:24px; overflow:hidden; border:1px solid ${T.line}; background:${T.card}; box-shadow:0 12px 30px -16px rgba(0,0,0,.15); transition:transform .3s, box-shadow .3s; position:relative; }
 .mj-pricing-tier:hover { transform:translateY(-6px); box-shadow:0 24px 60px -20px rgba(0,0,0,.25); }
 .mj-pricing-tier-hl { border-color:#FFB59A; box-shadow:0 20px 50px -16px rgba(255,105,61,.25); transform:translateY(-4px); z-index:2; }
@@ -1774,7 +1774,7 @@ const CSS = `
   .mj-hero { padding:130px 0 60px; } .mj-orb { filter:blur(60px); }
   .mj-display-xl { font-size:2.8rem; }
   .mj-price-card { grid-template-columns:1fr; }
-  .mj-pricing-grid { grid-template-columns:1fr; gap:24px; max-width:440px; margin-top:34px; }
+  .mj-pricing-grid { grid-template-columns:repeat(2,1fr); gap:24px; max-width:700px; margin-top:34px; }
   .mj-parent-card, .mj-talk-grid, .mj-dash-body, .mj-weekly-body, .mj-ta-grid, .mj-faqs, .mj-mentors-list { grid-template-columns:1fr; }
   .mj-bento { grid-template-columns:1fr; } .mj-bento-feat { grid-column:auto; }
   .mj-faq-q { padding:16px 18px; } .mj-faq-a p { padding:0 18px 18px; }
@@ -1798,10 +1798,11 @@ const CSS = `
   .mj-prog-grid, .mj-form-row, .mj-inc-grid { grid-template-columns:1fr; } .mj-navy-card { grid-column:auto; }
   .mj-phones { gap:16px; }
   .mj-weekly-featured { border-right:none; padding-right:0; }
+  .mj-pricing-grid { grid-template-columns:repeat(2,1fr); gap:16px; margin:24px auto 0; }
   .mj-vstep { grid-template-columns:48px 1fr; gap:16px; } .mj-vstep-mark { width:48px; height:48px; } .mj-vsteps-rail { left:23px; }
   .mj-dash-two { grid-template-columns:1fr; }
   .mj-dash-chart { gap:6px; } .mj-dash-barval { font-size:.56rem; }
   .mj-check-right { align-self:stretch; }
   .mj-watermark { font-size:64vw; }
 }
-`;
+;
