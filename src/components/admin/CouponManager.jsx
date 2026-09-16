@@ -22,7 +22,7 @@ export default function CouponManager({ adminKey }) {
   const [code, setCode] = useState("");
   const [discount, setDiscount] = useState("");
   const [region, setRegion] = useState("both"); // indian, international, both
-  const [validForPlans, setValidForPlans] = useState([]);
+  const [applicablePlans, setApplicablePlans] = useState([]);
   const [maxUses, setMaxUses] = useState("");
 
   // Auth modal state for replacing window.prompt
