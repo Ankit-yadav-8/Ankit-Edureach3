@@ -32,11 +32,11 @@ export const MENTOR_PLANS = {
   "mentor-foundation":     { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "Foundation", year: null, duration: "1 year", region: "indian" },
 
   // ── International · 1 year ──
-  "mentor-jee-2027-intl":      { amount: 14999, old: 24999, drops: [24999, 14999], exam: "JEE",        year: 2027, duration: "1 year", region: "international" },
-  "mentor-neet-2027-intl":     { amount: 14999, old: 24999, drops: [24999, 14999], exam: "NEET",       year: 2027, duration: "1 year", region: "international" },
-  "mentor-jee-2028-intl":      { amount: 14999, old: 24999, drops: [24999, 14999], exam: "JEE",        year: 2028, duration: "1 year", region: "international" },
-  "mentor-neet-2028-intl":     { amount: 14999, old: 24999, drops: [24999, 14999], exam: "NEET",       year: 2028, duration: "1 year", region: "international" },
-  "mentor-foundation-intl":    { amount: 14999, old: 24999, drops: [24999, 14999], exam: "Foundation", year: null, duration: "1 year", region: "international" },
+  "mentor-jee-2027-intl":      { amount: 13999, old: 24999, drops: [24999, 13999], exam: "JEE",        year: 2027, duration: "1 year", region: "international" },
+  "mentor-neet-2027-intl":     { amount: 13999, old: 24999, drops: [24999, 13999], exam: "NEET",       year: 2027, duration: "1 year", region: "international" },
+  "mentor-jee-2028-intl":      { amount: 13999, old: 24999, drops: [24999, 13999], exam: "JEE",        year: 2028, duration: "1 year", region: "international" },
+  "mentor-neet-2028-intl":     { amount: 13999, old: 24999, drops: [24999, 13999], exam: "NEET",       year: 2028, duration: "1 year", region: "international" },
+  "mentor-foundation-intl":    { amount: 13999, old: 24999, drops: [24999, 13999], exam: "Foundation", year: null, duration: "1 year", region: "international" },
 };
 
 /* ── Quick summary used by navbar + hero card ───────────────────── */

@@ -34,11 +34,11 @@ const PLANS = {
   "mentor-foundation":     { amount: 4999,  label: "Foundation Mentorship 1 Year (Class 9–10)" },
 
   // ── International · 1 year ──
-  "mentor-jee-2027-intl":      { amount: 14999, label: "JEE 2027 Mentorship – International (1 Year)" },
-  "mentor-neet-2027-intl":     { amount: 14999, label: "NEET 2027 Mentorship – International (1 Year)" },
-  "mentor-jee-2028-intl":      { amount: 14999, label: "JEE 2028 Mentorship – International (1 Year)" },
-  "mentor-neet-2028-intl":     { amount: 14999, label: "NEET 2028 Mentorship – International (1 Year)" },
-  "mentor-foundation-intl":    { amount: 14999, label: "Foundation Mentorship – International (1 Year)" },
+  "mentor-jee-2027-intl":      { amount: 13999, label: "JEE 2027 Mentorship – International (1 Year)" },
+  "mentor-neet-2027-intl":     { amount: 13999, label: "NEET 2027 Mentorship – International (1 Year)" },
+  "mentor-jee-2028-intl":      { amount: 13999, label: "JEE 2028 Mentorship – International (1 Year)" },
+  "mentor-neet-2028-intl":     { amount: 13999, label: "NEET 2028 Mentorship – International (1 Year)" },
+  "mentor-foundation-intl":    { amount: 13999, label: "Foundation Mentorship – International (1 Year)" },
 };
 
 /* Map any plan key to its "family" (base batch name) for coupon matching.

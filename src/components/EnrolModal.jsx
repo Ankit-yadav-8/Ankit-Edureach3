@@ -93,31 +93,31 @@ const PLAN_META = {
 
   // ── International · 1 year ──
   "mentor-jee-2027-intl": {
-    amount: 14999, old: 24999, kind: "mentorship", targetExam: "JEE 2027",
+    amount: 13999, old: 24999, kind: "mentorship", targetExam: "JEE 2027",
     title: "JEE 2027 Mentorship – International (1 Year)",
     band: "International Students · 1 Year · 1-on-1 IITian mentor",
     region: "international", duration: "1 year",
   },
   "mentor-neet-2027-intl": {
-    amount: 14999, old: 24999, kind: "mentorship", targetExam: "NEET 2027",
+    amount: 13999, old: 24999, kind: "mentorship", targetExam: "NEET 2027",
     title: "NEET 2027 Mentorship – International (1 Year)",
     band: "International Students · 1 Year · 1-on-1 doctor mentor",
     region: "international", duration: "1 year",
   },
   "mentor-jee-2028-intl": {
-    amount: 14999, old: 24999, kind: "mentorship", targetExam: "JEE 2028",
+    amount: 13999, old: 24999, kind: "mentorship", targetExam: "JEE 2028",
     title: "JEE 2028 Mentorship – International (1 Year)",
     band: "International Students · 1 Year · Class 11",
     region: "international", duration: "1 year",
   },
   "mentor-neet-2028-intl": {
-    amount: 14999, old: 24999, kind: "mentorship", targetExam: "NEET 2028",
+    amount: 13999, old: 24999, kind: "mentorship", targetExam: "NEET 2028",
     title: "NEET 2028 Mentorship – International (1 Year)",
     band: "International Students · 1 Year · Class 11",
     region: "international", duration: "1 year",
   },
   "mentor-foundation-intl": {
-    amount: 14999, old: 24999, kind: "mentorship", targetExam: "Foundation (JEE/NEET)",
+    amount: 13999, old: 24999, kind: "mentorship", targetExam: "Foundation (JEE/NEET)",
     title: "Foundation Mentorship – International (1 Year)",
     band: "International Students · 1 Year · Class 9 & 10",
     region: "international", duration: "1 year",
