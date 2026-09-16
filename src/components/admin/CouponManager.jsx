@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, Tag, Trash2, CheckCircle2, Loader2, Sparkles, Globe, CreditCard } from "lucide-react";
+import { Plus, Tag, Trash2, CheckCircle2, Loader2, Sparkles, Globe, CreditCard, KeyRound, X } from "lucide-react";
 import { API_BASE } from "../../auth/api.js";
 
 const ORANGE = "#FF693D";
@@ -22,8 +22,18 @@ export default function CouponManager({ adminKey }) {
   const [code, setCode] = useState("");
   const [discount, setDiscount] = useState("");
   const [region, setRegion] = useState("both"); // indian, international, both
-  const [applicablePlans, setApplicablePlans] = useState([]);
+  const [validForPlans, setValidForPlans] = useState([]);
   const [maxUses, setMaxUses] = useState("");
+
+  // Auth modal state for replacing window.prompt
+  const [authReq, setAuthReq] = useState(null);
+  const [authKey, setAuthKey] = useState("");
+
+  const requestAdminKey = (title) => {
+    return new Promise((resolve) => {
+      setAuthReq({ title, resolve });
+    });
+  };
 
   const loadCoupons = async () => {
     setBusy(true);
@@ -63,7 +73,7 @@ export default function CouponManager({ adminKey }) {
     }
     
     // Prompt for admin key (step 2) to authorize
-    const enteredKey = window.prompt("Enter Admin Key to authorize creating this coupon:");
+    const enteredKey = await requestAdminKey("Authorize Coupon Creation");
     if (!enteredKey) return; // user cancelled
 
     setBusy(true);
@@ -103,7 +113,7 @@ export default function CouponManager({ adminKey }) {
   };
 
   const handleDelete = async (couponId, couponCode) => {
-    const enteredKey = window.prompt(`Enter Admin Key to authorize DELETING coupon ${couponCode}:`);
+    const enteredKey = await requestAdminKey(`Authorize Deleting Coupon ${couponCode}`);
     if (!enteredKey) return;
     
     setBusy(true);
@@ -129,7 +139,7 @@ export default function CouponManager({ adminKey }) {
   };
 
   const toggleStatus = async (couponId, currentStatus, couponCode) => {
-    const enteredKey = window.prompt(`Enter Admin Key to authorize ${currentStatus ? "deactivating" : "activating"} coupon ${couponCode}:`);
+    const enteredKey = await requestAdminKey(`Authorize ${currentStatus ? "Deactivating" : "Activating"} Coupon ${couponCode}`);
     if (!enteredKey) return;
 
     setBusy(true);
@@ -333,6 +343,68 @@ export default function CouponManager({ adminKey }) {
           </table>
         )}
       </div>
+
+      {/* Auth Modal */}
+      {authReq && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(13,27,62,0.6)", zIndex: 9999, display: "grid", placeItems: "center", padding: 20, backdropFilter: "blur(4px)" }}>
+          <div style={{ background: "#fff", borderRadius: 20, width: "100%", maxWidth: 400, padding: 32, boxShadow: "0 24px 60px rgba(0,0,0,0.2)", position: "relative", animation: "admUp 0.3s cubic-bezier(0.4, 0, 0.2, 1)" }}>
+            <button 
+              onClick={() => { authReq.resolve(null); setAuthReq(null); setAuthKey(""); }}
+              style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: "#9ca3af", cursor: "pointer", padding: 4 }}
+            >
+              <X size={20} />
+            </button>
+            <div style={{ width: 48, height: 48, background: "#fef3c7", borderRadius: "50%", display: "grid", placeItems: "center", marginBottom: 16 }}>
+              <KeyRound size={24} color="#d97706" />
+            </div>
+            <h3 style={{ margin: "0 0 8px", fontSize: "1.2rem", fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0d1b3e" }}>
+              {authReq.title}
+            </h3>
+            <p style={{ margin: "0 0 24px", color: "#6b7280", fontSize: 13, lineHeight: 1.5 }}>
+              Enter your master admin key to confirm this highly sensitive action.
+            </p>
+            <input 
+              type="password"
+              placeholder="Enter Admin Key..." 
+              value={authKey}
+              onChange={(e) => setAuthKey(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && authKey.trim()) {
+                  authReq.resolve(authKey);
+                  setAuthReq(null);
+                  setAuthKey("");
+                }
+              }}
+              autoFocus
+              style={{ width: "100%", padding: "12px 16px", borderRadius: 10, border: "2px solid #e5e7eb", fontSize: 14, outline: "none", fontWeight: 600, color: "#111827", transition: "border-color 0.2s", marginBottom: 20 }} 
+              onFocus={(e) => e.target.style.borderColor = "#d97706"} 
+              onBlur={(e) => e.target.style.borderColor = "#e5e7eb"} 
+            />
+            <div style={{ display: "flex", gap: 12 }}>
+              <button 
+                onClick={() => { authReq.resolve(null); setAuthReq(null); setAuthKey(""); }} 
+                style={{ flex: 1, background: "#f3f4f6", border: "none", color: "#4b5563", padding: "12px", borderRadius: 10, fontWeight: 700, cursor: "pointer", fontSize: 13 }}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  if (authKey.trim()) {
+                    authReq.resolve(authKey);
+                    setAuthReq(null);
+                    setAuthKey("");
+                  }
+                }} 
+                disabled={!authKey.trim()}
+                style={{ flex: 1, background: "#d97706", border: "none", color: "#fff", padding: "12px", borderRadius: 10, fontWeight: 700, cursor: !authKey.trim() ? "not-allowed" : "pointer", fontSize: 13, opacity: !authKey.trim() ? 0.5 : 1 }}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
         .spin { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
