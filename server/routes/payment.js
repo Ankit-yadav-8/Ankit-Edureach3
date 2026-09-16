@@ -409,6 +409,9 @@ router.post("/coupons", requireAdmin, async (req, res) => {
 /* ── Admin: toggle active / edit a coupon ─────────────────────────── */
 router.patch("/coupons/:id", requireAdmin, async (req, res) => {
   try {
+    if (!verifyAdminKey(req.body.adminKey)) {
+      return res.status(403).json({ error: "Invalid admin key. Action requires key confirmation." });
+    }
     const update = {};
     if (req.body.isActive !== undefined) update.isActive = Boolean(req.body.isActive);
     if (req.body.discountAmount !== undefined) update.discountAmount = Number(req.body.discountAmount);
@@ -428,6 +431,9 @@ router.patch("/coupons/:id", requireAdmin, async (req, res) => {
 /* ── Admin: delete a coupon ───────────────────────────────────────── */
 router.delete("/coupons/:id", requireAdmin, async (req, res) => {
   try {
+    if (!verifyAdminKey(req.body.adminKey)) {
+      return res.status(403).json({ error: "Invalid admin key. Action requires key confirmation." });
+    }
     const coupon = await Coupon.findByIdAndDelete(req.params.id);
     if (!coupon) return res.status(404).json({ error: "Coupon not found." });
     res.json({ ok: true });
