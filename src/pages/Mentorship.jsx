@@ -13,7 +13,7 @@ import {
   BookOpen, CircleDot, Zap, Target, Clock,
   Brain, PlayCircle, Activity, LineChart, ShieldCheck,
 } from "lucide-react";
-import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, SEATS_LEFT, MENTOR_LINKS } from "../data/mentorship.js";
+import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, MENTOR_LINKS } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
 import Seo from "../components/Seo.jsx";
 import imgSaneh from "../images/team/saneh.jpg";
@@ -1031,6 +1031,7 @@ function Pricing({ plan, exam, openEnrol }) {
       accent: "#FF693D",
       bg: "linear-gradient(135deg,#FF7A3C,#F1531F)",
       highlight: false,
+      note: "For Indian residents only. International enrollments will be cancelled.",
     },
     {
       key: keys.oneYear,
@@ -1043,6 +1044,7 @@ function Pricing({ plan, exam, openEnrol }) {
       bg: "linear-gradient(135deg,#FF693D,#E0421F)",
       highlight: true,
       badge: "⭐ RECOMMENDED",
+      note: "For Indian residents only. International enrollments will be cancelled.",
     },
     {
       key: keys.intl,
@@ -1077,7 +1079,7 @@ function Pricing({ plan, exam, openEnrol }) {
                 <span className="mj-tier-plan">{exam}</span>
                 <div className="mj-tier-amt">₹{c.amount.toLocaleString("en-IN")}</div>
                 <div className="mj-tier-old">₹{c.old.toLocaleString("en-IN")}</div>
-                <span className="mj-price-seats">⚡ {SEATS_LEFT} SEATS LEFT</span>
+                {c.note && <div style={{ marginTop: "16px", padding: "8px 12px", background: "rgba(0,0,0,0.15)", borderRadius: "8px", fontSize: "0.75rem", lineHeight: 1.4, fontWeight: 600, color: "rgba(255,255,255,0.9)", border: "1px solid rgba(255,255,255,0.1)" }}>{c.note}</div>}
               </div>
               <div className="mj-tier-right">
                 <span className="mj-inc-lbl">EVERYTHING INCLUDED</span>
@@ -1712,16 +1714,14 @@ const CSS = `
 .mj-pricing-tier:hover { transform:translateY(-6px); box-shadow:0 24px 60px -20px rgba(0,0,0,.25); }
 .mj-pricing-tier-hl { border-color:#FFB59A; box-shadow:0 20px 50px -16px rgba(255,105,61,.25); transform:translateY(-4px); z-index:2; }
 .mj-pricing-tier-hl:hover { transform:translateY(-10px); box-shadow:0 30px 70px -20px rgba(255,105,61,.3); }
-.mj-tier-badge { position:absolute; top:0; left:0; right:0; text-align:center; padding:7px 0; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; z-index:5; }
+.mj-tier-badge { position:absolute; top:16px; right:16px; padding:6px 14px; border-radius:50px; font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; z-index:5; box-shadow:0 8px 16px -6px rgba(0,0,0,.4); border:1px solid rgba(255,255,255,.25); text-shadow:0 1px 2px rgba(0,0,0,.3); background-image:linear-gradient(rgba(255,255,255,.15), transparent); }
 .mj-tier-left { padding:36px 26px 30px; display:flex; flex-direction:column; color:#fff; position:relative; overflow:hidden; }
-.mj-tier-badge ~ .mj-tier-left { padding-top:46px; }
 .mj-tier-flag { position:absolute; top:-10px; right:-14px; font-size:110px; opacity:.15; filter:grayscale(100%); mix-blend-mode:overlay; pointer-events:none; }
 .mj-tier-kicker { font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; opacity:.85; }
 .mj-tier-sub { font:600 .86rem/1.3 'DM Sans',sans-serif; opacity:.95; margin-top:6px; }
 .mj-tier-plan { font:800 1.4rem/1.1 'Sora',sans-serif; margin:16px 0 auto; }
 .mj-tier-amt { font:800 2.8rem/1 'Sora',sans-serif; margin-top:20px; }
 .mj-tier-old { font:600 .9rem/1 'Space Grotesk',sans-serif; text-decoration:line-through; opacity:.75; margin-top:4px; }
-.mj-price-seats { align-self:flex-start; margin-top:16px; padding:6px 12px; border-radius:50px; background:rgba(0,0,0,.16); font:800 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.08em; }
 .mj-tier-right { padding:28px 24px 30px; display:flex; flex-direction:column; flex:1; }
 .mj-inc-lbl { font:800 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.12em; color:${T.muted}; }
 .mj-inc-list { display:flex; flex-direction:column; gap:12px; margin:16px 0 24px; flex:1; }
