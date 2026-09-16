@@ -1095,7 +1095,7 @@ function Pricing({ plan, exam, openEnrol }) {
                   ))}
                   {c.extraFeatures && c.extraFeatures.map((f) => (
                     <div key={f} className="mj-inc-item" style={{ color: "#111827", fontWeight: 700, marginTop: 4 }}>
-                      <Sparkles size={14} strokeWidth={3} color={c.accent} style={{ flexShrink: 0 }} /> {f}
+                      <Check size={14} strokeWidth={3} color={c.accent} style={{ flexShrink: 0 }} /> {f}
                     </div>
                   ))}
                 </div>
