@@ -1057,6 +1057,12 @@ function Pricing({ plan, exam, openEnrol }) {
       bg: "linear-gradient(135deg,#1a1d42,#3c2a66)",
       highlight: true,
       badge: "🌏 INTERNATIONAL",
+      extraFeatures: [
+        "Dedicated timezone scheduling",
+        "NRI admission guidance (DASA/CIWG)",
+        "Priority 1-on-1 mentor access",
+        "Exclusive career path counseling"
+      ]
     },
   ];
 
@@ -1086,6 +1092,11 @@ function Pricing({ plan, exam, openEnrol }) {
                 <div className="mj-inc-list">
                   {INCLUDED.map((f) => (
                     <div key={f} className="mj-inc-item"><Check size={14} strokeWidth={3} color={c.accent} /> {f}</div>
+                  ))}
+                  {c.extraFeatures && c.extraFeatures.map((f) => (
+                    <div key={f} className="mj-inc-item" style={{ color: "#111827", fontWeight: 700, marginTop: 4 }}>
+                      <Sparkles size={14} strokeWidth={3} color={c.accent} style={{ flexShrink: 0 }} /> {f}
+                    </div>
                   ))}
                 </div>
                 <button className="mj-btn-dark mj-btn-block" onClick={() => openEnrol(c.key)}>Claim your seat <ArrowRight size={17} /></button>
