@@ -1040,8 +1040,8 @@ function Pricing({ plan, exam, openEnrol }) {
       flag: "🌍",
       amount: pi?.amount || 13999,
       old: pi?.old || 24999,
-      accent: "#6366f1",
-      bg: "linear-gradient(135deg,#1a1d42,#3c2a66)",
+      accent: "#FF693D",
+      bg: "linear-gradient(135deg,#FF693D,#E0421F)",
       highlight: true,
       badge: "🌏 INTERNATIONAL",
       extraFeatures: [
