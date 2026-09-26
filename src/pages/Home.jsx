@@ -5,9 +5,10 @@
 import React, { lazy, Suspense } from "react";
 import Seo from "../components/Seo.jsx";
 import Hero from "../components/home/Hero.jsx";
-import MentorshipBanner from "../components/home/MentorshipBanner.jsx";
-import ToolsGrid from "../components/home/ToolsGrid.jsx";
 import Defer from "../components/Defer.jsx";
+
+const MentorshipBanner = lazy(() => import("../components/home/MentorshipBanner.jsx"));
+const ToolsGrid = lazy(() => import("../components/home/ToolsGrid.jsx"));
 
 const BranchCatalog = lazy(() => import("../components/home/BranchCatalog.jsx"));
 const AdvancedPredictorHome = lazy(() => import("../components/home/AdvancedPredictorHome.jsx"));
@@ -112,10 +113,10 @@ export default function Home({ onSearch }) {
       <Hero onSearch={onSearch} />
 
       {/* ── Mentorship Banner ── */}
-      <MentorshipBanner />
+      <Defer minHeight={300} rootMargin="800px"><MentorshipBanner /></Defer>
 
       {/* ── Smart tools (LIVE-card grid) ── */}
-      <ToolsGrid />
+      <Defer minHeight={400} rootMargin="800px"><ToolsGrid /></Defer>
 
       {/* Every section below the fold is gated on approaching the viewport.
           They were lazy() but rendered immediately, which splits the code
