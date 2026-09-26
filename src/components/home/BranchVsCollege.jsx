@@ -1,9 +1,9 @@
-/* BranchVsCollege — original Campus Path "AI Trade-off Analyzer".
+/* BranchVsCollege — original Campus Point "AI Trade-off Analyzer".
    Ten in-house scenario questions score toward branch (negative) or college
    (positive); a live compass strip tracks the lean, an animated AI analysis
    interstitial reads the answers, and the verdict renders as a semicircular
    dial with pointers and next steps. Used both as a home section and on
-   /branch-vs-college. Design & copy are original to Campus Path. */
+   /branch-vs-college. Design & copy are original to Campus Point. */
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";

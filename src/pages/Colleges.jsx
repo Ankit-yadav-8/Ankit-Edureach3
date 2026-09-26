@@ -69,7 +69,7 @@ export default function Colleges() {
     <div className="page">
       <Seo
         title="All IIT, NIT & IIIT Colleges — Cutoffs, Reviews & Placements"
-        description="Browse and compare every IIT, NIT and IIIT in India. Filter by JEE rank, branch, state and category to find JoSAA cutoffs, placements, fees and student reviews on CampusPath."
+        description="Browse and compare every IIT, NIT and IIIT in India. Filter by JEE rank, branch, state and category to find JoSAA cutoffs, placements, fees and student reviews on CampusPoint."
         path="/colleges"
       />
 

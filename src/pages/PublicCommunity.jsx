@@ -77,7 +77,7 @@ export default function PublicCommunity() {
   useEffect(() => () => { mounted.current = false; }, []);
   useEffect(() => {
     const prev = document.title;
-    document.title = "Public Community · Campus Path";
+    document.title = "Public Community · Campus Point";
     return () => { document.title = prev; };
   }, []);
 
@@ -140,7 +140,7 @@ export default function PublicCommunity() {
       <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "130px 16px 60px", background: "var(--page-bg)" }}>
         <Seo
           title="Student Community — Ask Doubts & Discuss with JEE / NEET Aspirants"
-          description="Join the CampusPath student community — a public forum where JEE & NEET aspirants, students and mentors discuss doubts, colleges, branches and campus life."
+          description="Join the CampusPoint student community — a public forum where JEE & NEET aspirants, students and mentors discuss doubts, colleges, branches and campus life."
           path="/community"
           breadcrumbs={[{ name: "Home", path: "/" }, { name: "Community", path: "/community" }]}
         />
@@ -312,7 +312,7 @@ export default function PublicCommunity() {
                 <div style={{ width: 46, height: 46, borderRadius: 14, background: `linear-gradient(135deg, ${CYAN}, #6d28d9)`, display: "grid", placeItems: "center", marginBottom: 12, boxShadow: `0 8px 20px -8px ${CYAN}` }}>
                   <Bot size={24} color="#fff" />
                 </div>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: NAVY, letterSpacing: "-0.3px" }}>Campus Path AI</div>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: NAVY, letterSpacing: "-0.3px" }}>Campus Point AI</div>
                 <div style={{ fontSize: 12.5, color: MUTE, lineHeight: 1.55, margin: "6px 0 14px" }}>
                   Stuck on a question? Get a clear, step-by-step solution instantly — Physics, Chemistry, Maths or Biology.
                 </div>

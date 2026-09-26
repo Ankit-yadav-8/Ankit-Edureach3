@@ -259,7 +259,7 @@ export default function Josaa2026() {
     <div className="page">
       <Seo
         title="JoSAA 2026 Counselling — Schedule, Choice Filling & Cutoffs"
-        description="Complete JoSAA 2026 counselling guide: registration, choice filling, round-wise schedule, seat allotment and IIT NIT IIIT cutoffs. Track every deadline on CampusPath."
+        description="Complete JoSAA 2026 counselling guide: registration, choice filling, round-wise schedule, seat allotment and IIT NIT IIIT cutoffs. Track every deadline on CampusPoint."
         path="/josaa-2026"
       />
       {/* HERO */}

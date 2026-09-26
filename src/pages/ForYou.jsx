@@ -84,7 +84,7 @@ export default function ForYou() {
   const downloadMyList = () => {
     if (!myList.length) return;
     const head =
-      `Campus Path — My Choice List (my preference order)\n` +
+      `Campus Point — My Choice List (my preference order)\n` +
       `Rank: ${rank || "-"}   Category: ${category}\n` +
       `Total choices: ${myList.length}\n` +
       `Generated on ${new Date().toLocaleDateString("en-IN")}\n` +
@@ -146,7 +146,7 @@ export default function ForYou() {
   function downloadList() {
     if (!hasResults) return;
     const head =
-      `Campus Path — Colleges For You\n` +
+      `Campus Point — Colleges For You\n` +
       `Exam: ${profile.title} (${profile.sub})\n` +
       `Rank: ${rank || "-"}   Category: ${category}\n` +
       `Generated on ${new Date().toLocaleDateString("en-IN")}\n` +

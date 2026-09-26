@@ -190,7 +190,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const prev = document.title;
-    document.title = "My Dashboard · Campus Path";
+    document.title = "My Dashboard · Campus Point";
     return () => { document.title = prev; };
   }, []);
 
@@ -434,7 +434,7 @@ export default function Dashboard() {
 
         {/* footer line */}
         <div style={{ textAlign: "center", fontSize: 12, color: "var(--text-soft)", marginTop: 24, fontWeight: 500 }}>
-          Campus Path · Built for JEE aspirants who play the long game.
+          Campus Point · Built for JEE aspirants who play the long game.
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 /* BranchVsCollegePage — standalone page for the Branch vs College check.
-   Original Campus Path design: a split hero (headline + live dial
+   Original Campus Point design: a split hero (headline + live dial
    preview) over a three-step "how it works" strip, followed by the full
    seven-scenario quiz section. */
 import { useEffect, useState } from "react";
@@ -106,7 +106,7 @@ function Hero() {
 }
 
 export default function BranchVsCollegePage() {
-  useEffect(() => { document.title = "Branch vs College — should the institute or the branch win? · Campus Path"; }, []);
+  useEffect(() => { document.title = "Branch vs College — should the institute or the branch win? · Campus Point"; }, []);
   return (
     <>
       <Seo path="/branch-vs-college" />

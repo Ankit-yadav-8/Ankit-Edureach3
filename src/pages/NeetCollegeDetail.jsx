@@ -50,7 +50,7 @@ export default function NeetCollegeDetail() {
     (college.year ? `, established ${college.year}` : "") +
     `, with ${fmt(college.seats)} MBBS seats` +
     (college.university ? `, affiliated to ${college.university}` : "") +
-    `. NEET UG admission, counselling and college details on CampusPath.`;
+    `. NEET UG admission, counselling and college details on CampusPoint.`;
 
   const jsonLd = {
     "@context": "https://schema.org",

@@ -48,7 +48,7 @@ export default function Scholarships() {
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="Engineering & JEE Scholarships 2026 — Eligibility & How to Apply"
-        description="Top scholarships for engineering and JEE aspirants — eligibility, amount, deadlines and how to apply — plus an education-loan EMI and ROI calculator on CampusPath."
+        description="Top scholarships for engineering and JEE aspirants — eligibility, amount, deadlines and how to apply — plus an education-loan EMI and ROI calculator on CampusPoint."
         path="/scholarships"
       />
       <section className="warm-page-header" style={{ padding: "40px 0" }}>

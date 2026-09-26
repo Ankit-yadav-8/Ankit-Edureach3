@@ -98,7 +98,7 @@ export default function Admin() {
 
   useEffect(() => {
     const prev = document.title;
-    document.title = "Admin · Campus Path";
+    document.title = "Admin · Campus Point";
     return () => { document.title = prev; };
   }, []);
 
@@ -203,7 +203,7 @@ export default function Admin() {
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url; a.download = "CampusPath-users.csv";
+      a.href = url; a.download = "CampusPoint-users.csv";
       document.body.appendChild(a); a.click(); a.remove();
       URL.revokeObjectURL(url);
     } catch (e) { setErr(e.message); }
@@ -217,7 +217,7 @@ export default function Admin() {
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url; a.download = "CampusPath-payments.csv";
+      a.href = url; a.download = "CampusPoint-payments.csv";
       document.body.appendChild(a); a.click(); a.remove();
       URL.revokeObjectURL(url);
     } catch (e) { setErr(e.message); }
@@ -428,7 +428,7 @@ export default function Admin() {
               </h1>
             </div>
             <p style={{ color: "#888", fontSize: 13, margin: 0, paddingLeft: 46 }}>
-              Campus Path · Live signups from MongoDB Atlas
+              Campus Point · Live signups from MongoDB Atlas
             </p>
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>

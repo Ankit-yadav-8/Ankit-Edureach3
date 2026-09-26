@@ -69,7 +69,7 @@ const BranchVsCollegePage = lazyRetry(() => import("./pages/BranchVsCollegePage.
 const Blog = lazyRetry(() => import("./pages/Blog.jsx"));
 const BlogPost = lazyRetry(() => import("./pages/BlogPost.jsx"));
 const CampusNotes = lazyRetry(() => import("./pages/CampusNotes.jsx"));
-const CampusPathAI = lazyRetry(() => import("./pages/CampusPathAI.jsx"));
+const CampusPointAI = lazyRetry(() => import("./pages/CampusPointAI.jsx"));
 const CampusFests = lazyRetry(() => import("./pages/CampusFests.jsx"));
 const Class11 = lazyRetry(() => import("./pages/Class11.jsx"));
 const Class12 = lazyRetry(() => import("./pages/Class12.jsx"));
@@ -158,7 +158,7 @@ export default function App() {
     );
   }
 
-  // Campus Path AI is a full-screen Claude-style app — render it on its own
+  // Campus Point AI is a full-screen Claude-style app — render it on its own
   // (no public navbar / footer / floating widgets). Open to guests; the login
   // modal is still available on demand via the account button.
   if (pathname === "/ai") {
@@ -167,7 +167,7 @@ export default function App() {
         <ScrollManager />
         <Suspense fallback={<RouteFallback />}>
           <Routes>
-            <Route path="/ai" element={<CampusPathAI />} />
+            <Route path="/ai" element={<CampusPointAI />} />
           </Routes>
         </Suspense>
         <AuthModal />

@@ -1,4 +1,4 @@
-/* clTheme — Campus Path palette + shared style tokens.
+/* clTheme — Campus Point palette + shared style tokens.
    Warm cream surfaces, coral-red accent, green = high / amber = medium.
    Imported by the new home sections and branch pages so every surface
    stays visually consistent. */

@@ -1,4 +1,4 @@
-/* Blog — Campus Path blog index. Hero with floating preview cards, then a
+/* Blog — Campus Point blog index. Hero with floating preview cards, then a
    category-filtered grid of article cards that link to /blog/:slug. */
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -103,20 +103,20 @@ function HeroPreview() {
 
 export default function Blog() {
   const [cat, setCat] = useState("All");
-  useEffect(() => { document.title = "Blog — JEE, counselling & college insights · Campus Path"; }, []);
+  useEffect(() => { document.title = "Blog — JEE, counselling & college insights · Campus Point"; }, []);
   const shown = cat === "All" ? BLOG_POSTS : BLOG_POSTS.filter((p) => p.category === cat);
 
   return (
     <div style={{ background: CL.cream, minHeight: "100vh" }}>
-      <Seo title="Blog — JEE, counselling & college insights · Campus Path"
-        description="Guides and insights on JEE, JoSAA & CSAB counselling, branch choice and college selection — written by IIT Roorkee alumni at Campus Path."
+      <Seo title="Blog — JEE, counselling & college insights · Campus Point"
+        description="Guides and insights on JEE, JoSAA & CSAB counselling, branch choice and college selection — written by IIT Roorkee alumni at Campus Point."
         path="/blog" />
 
       <section style={{ paddingTop: 128, paddingBottom: 40, position: "relative", overflow: "hidden" }}>
         <div className="container">
           <div className="blog-hero-grid" style={{ display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: 36, alignItems: "center" }}>
             <div>
-              <span style={clEyebrow}><Sparkles size={13} /> Campus Path Blog</span>
+              <span style={clEyebrow}><Sparkles size={13} /> Campus Point Blog</span>
               <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2.1rem,5vw,3.3rem)", color: CL.ink, letterSpacing: "-1.4px", lineHeight: 1.07, margin: "18px 0 16px" }}>
                 Crack JEE with <span style={{ color: CL.amber }}>better insights.</span><br />
                 <span style={{ color: CL.coral }}>Decisions, sorted.</span>

@@ -109,7 +109,7 @@ export default function BlogPost() {
   const post = getBlogPost(slug);
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = post ? `${post.title} · Campus Path Blog` : "Blog · Campus Path";
+    document.title = post ? `${post.title} · Campus Point Blog` : "Blog · Campus Point";
   }, [slug, post]);
 
   // Result cards (Round 1/2/3) live on dedicated pages via `link` and have no
@@ -144,10 +144,10 @@ export default function BlogPost() {
     "@type": "Article",
     headline: post.title,
     description: desc,
-    author: { "@type": "Organization", name: post.author || "Campus Path" },
+    author: { "@type": "Organization", name: post.author || "Campus Point" },
     publisher: {
       "@type": "Organization",
-      name: "CampusPath",
+      name: "CampusPoint",
       logo: { "@type": "ImageObject", url: "https://collegeparichay.in/cplogo.svg" },
     },
     mainEntityOfPage: `https://collegeparichay.in/blog/${post.slug}`,

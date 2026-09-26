@@ -20,7 +20,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Counselling",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-17",
     "read": "14 min read",
     "iconName": "Trophy",
@@ -43,7 +43,7 @@ export const NEET_BLOG_POSTS = [
         "type": "p",
         "s": [
           {
-            "i": "Reviewed by the Campus Path counselling desk — updated 17 July 2026."
+            "i": "Reviewed by the Campus Point counselling desk — updated 17 July 2026."
           }
         ]
       },
@@ -2177,7 +2177,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Counselling",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-17",
     "read": "14 min read",
     "iconName": "ListChecks",
@@ -2200,7 +2200,7 @@ export const NEET_BLOG_POSTS = [
         "type": "p",
         "s": [
           {
-            "i": "Reviewed by the Campus Path counselling desk — updated 17 July 2026."
+            "i": "Reviewed by the Campus Point counselling desk — updated 17 July 2026."
           }
         ]
       },
@@ -4234,7 +4234,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Counselling",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-17",
     "read": "15 min read",
     "iconName": "Gauge",
@@ -4257,7 +4257,7 @@ export const NEET_BLOG_POSTS = [
         "type": "p",
         "s": [
           {
-            "i": "Reviewed by the Campus Path counselling desk — updated 17 July 2026. Rank estimates are derived from NTA's official NEET UG 2026 score distribution and previous years' MCC closing ranks."
+            "i": "Reviewed by the Campus Point counselling desk — updated 17 July 2026. Rank estimates are derived from NTA's official NEET UG 2026 score distribution and previous years' MCC closing ranks."
           }
         ]
       },
@@ -7112,7 +7112,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Counselling",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-17",
     "read": "16 min read",
     "iconName": "Building2",
@@ -7135,7 +7135,7 @@ export const NEET_BLOG_POSTS = [
         "type": "p",
         "s": [
           {
-            "i": "Reviewed by the Campus Path counselling desk — updated 17 July 2026. Fees, seats and closing ranks are indicative; verify against the NMC seat matrix and MCC's published data before locking choices."
+            "i": "Reviewed by the Campus Point counselling desk — updated 17 July 2026. Fees, seats and closing ranks are indicative; verify against the NMC seat matrix and MCC's published data before locking choices."
           }
         ]
       },
@@ -9971,7 +9971,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Counselling",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-17",
     "read": "18 min read",
     "iconName": "Layers",
@@ -9994,7 +9994,7 @@ export const NEET_BLOG_POSTS = [
         "type": "p",
         "s": [
           {
-            "i": "Reviewed by the Campus Path counselling desk — updated 17 July 2026. Round rules change between years and between rounds; the information bulletin for each round is the only authority on that round."
+            "i": "Reviewed by the Campus Point counselling desk — updated 17 July 2026. Round rules change between years and between rounds; the information bulletin for each round is the only authority on that round."
           }
         ]
       },
@@ -13296,7 +13296,7 @@ export const NEET_BLOG_POSTS = [
             "b": "And a word about us:"
           },
           {
-            "t": " legitimate counselling guidance — including Campus Path's — helps you understand your options, read the seat matrix, and build a good choice list. It does not, and cannot, get you a seat your rank does not earn. "
+            "t": " legitimate counselling guidance — including Campus Point's — helps you understand your options, read the seat matrix, and build a good choice list. It does not, and cannot, get you a seat your rank does not earn. "
           },
           {
             "b": "Anyone telling you otherwise, including anyone claiming to be us, is lying to you."
@@ -13307,7 +13307,7 @@ export const NEET_BLOG_POSTS = [
         "type": "p",
         "s": [
           {
-            "l": "Get counselling support from Campus Path →",
+            "l": "Get counselling support from Campus Point →",
             "h": "/mentorship"
           }
         ]
@@ -13556,7 +13556,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Counseling",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-01",
     "read": "11 min read",
     "iconName": "Gauge",
@@ -14046,7 +14046,7 @@ export const NEET_BLOG_POSTS = [
             "b": "Not sure what your score can get you this year?"
           },
           {
-            "t": " Run your exact NEET marks, category, and state through the Campus Path "
+            "t": " Run your exact NEET marks, category, and state through the Campus Point "
           },
           {
             "l": "College Predictor",
@@ -14088,7 +14088,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Counseling",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-01",
     "read": "13 min read",
     "iconName": "ListChecks",
@@ -14693,7 +14693,7 @@ export const NEET_BLOG_POSTS = [
             "b": "Feeling lost in the counseling maze?"
           },
           {
-            "t": " That's normal — it's genuinely confusing by design. Get a clear, personalised plan for AIQ, state quota, and choice filling from the Campus Path "
+            "t": " That's normal — it's genuinely confusing by design. Get a clear, personalised plan for AIQ, state quota, and choice filling from the Campus Point "
           },
           {
             "l": "NEET Counseling desk",
@@ -14735,7 +14735,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Guidance",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-01",
     "read": "12 min read",
     "iconName": "GitCompareArrows",
@@ -15206,7 +15206,7 @@ export const NEET_BLOG_POSTS = [
             "b": "Trying to figure out if government is within reach for you?"
           },
           {
-            "t": " Run your NEET score, category, and state through the Campus Path "
+            "t": " Run your NEET score, category, and state through the Campus Point "
           },
           {
             "l": "College Predictor",
@@ -15248,7 +15248,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Guidance",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-01",
     "read": "12 min read",
     "iconName": "Brain",
@@ -15739,7 +15739,7 @@ export const NEET_BLOG_POSTS = [
             "b": "Not sure whether to drop or take a seat this cycle?"
           },
           {
-            "t": " Get the full picture before you commit a year of your life. See what your current score can realistically reach with the Campus Path "
+            "t": " Get the full picture before you commit a year of your life. See what your current score can realistically reach with the Campus Point "
           },
           {
             "l": "College Predictor",
@@ -15781,7 +15781,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Counseling",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-01",
     "read": "11 min read",
     "iconName": "Layers",
@@ -16289,7 +16289,7 @@ export const NEET_BLOG_POSTS = [
             "h": "/neet"
           },
           {
-            "t": " can. Or get personalised help sorting your quota strategy and documents through the Campus Path "
+            "t": " can. Or get personalised help sorting your quota strategy and documents through the Campus Point "
           },
           {
             "l": "NEET Counseling desk",
@@ -16324,7 +16324,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Guidance",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-01",
     "read": "13 min read",
     "iconName": "TrendingUp",
@@ -16812,7 +16812,7 @@ export const NEET_BLOG_POSTS = [
             "b": "Feeling like the door has closed? Let's find the ones that are open."
           },
           {
-            "t": " Start by seeing your real options with the Campus Path "
+            "t": " Start by seeing your real options with the Campus Point "
           },
           {
             "l": "College Predictor",
@@ -16860,7 +16860,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Counseling",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-01",
     "read": "12 min read",
     "iconName": "ShieldCheck",
@@ -17498,7 +17498,7 @@ export const NEET_BLOG_POSTS = [
             "b": "Don't let a process mistake undo months of hard work."
           },
           {
-            "t": " Go into counseling prepared: see your realistic options first with the Campus Path "
+            "t": " Go into counseling prepared: see your realistic options first with the Campus Point "
           },
           {
             "l": "College Predictor",
@@ -17540,7 +17540,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "Medical Life",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-01",
     "read": "12 min read",
     "iconName": "BookOpen",
@@ -17959,7 +17959,7 @@ export const NEET_BLOG_POSTS = [
             "b": "Choosing where you'll spend these formative years?"
           },
           {
-            "t": " The right college shapes everything this article describes. See which colleges your NEET score can reach — weighing clinical exposure, not just rank — with the Campus Path "
+            "t": " The right college shapes everything this article describes. See which colleges your NEET score can reach — weighing clinical exposure, not just rank — with the Campus Point "
           },
           {
             "l": "College Predictor",
@@ -18007,7 +18007,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Guidance",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-01",
     "read": "11 min read",
     "iconName": "Building2",
@@ -18453,7 +18453,7 @@ export const NEET_BLOG_POSTS = [
             "b": "Chasing an affordable government seat? Strategy is everything."
           },
           {
-            "t": " See your realistic state-quota and category-adjusted options with the Campus Path "
+            "t": " See your realistic state-quota and category-adjusted options with the Campus Point "
           },
           {
             "l": "College Predictor",
@@ -18495,7 +18495,7 @@ export const NEET_BLOG_POSTS = [
     ],
     "category": "NEET",
     "categoryLabel": "NEET Tools",
-    "author": "Campus Path Counselling Desk",
+    "author": "Campus Point Counselling Desk",
     "date": "2026-07-01",
     "read": "10 min read",
     "iconName": "Gauge",
@@ -18689,7 +18689,7 @@ export const NEET_BLOG_POSTS = [
             "t": "The "
           },
           {
-            "l": "Campus Path College Predictor",
+            "l": "Campus Point College Predictor",
             "h": "/neet"
           },
           {
@@ -19086,7 +19086,7 @@ export const NEET_BLOG_POSTS = [
             "b": "Turn your score into a real plan — right now."
           },
           {
-            "t": " Enter your exact NEET marks, category, and home state into the Campus Path "
+            "t": " Enter your exact NEET marks, category, and home state into the Campus Point "
           },
           {
             "l": "College Predictor",

@@ -6,7 +6,7 @@ import { Search, Target, Users } from "lucide-react";
 /* ════════════════════════════════════════════════
    HERO — simple, editorial. Warm cream canvas with a
    dotted grid, faint dashed orbits and a giant faint
-   "Campus Path" watermark. Word-by-word headline
+   "Campus Point" watermark. Word-by-word headline
    reveal ending in a coral script word. No cards / images.
 ════════════════════════════════════════════════ */
 

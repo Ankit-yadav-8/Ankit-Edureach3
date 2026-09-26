@@ -1,5 +1,5 @@
 /* ExamCard — one rich card per entrance exam for the /other-exams page.
-   Built in the Campus Path design language (CL theme): warm surfaces,
+   Built in the Campus Point design language (CL theme): warm surfaces,
    coral accent, a category-tinted monogram badge, key facts up top and a
    tap-to-expand "Details" drawer with the full pattern + an editorial read.
 

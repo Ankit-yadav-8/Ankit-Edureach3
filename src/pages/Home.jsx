@@ -27,7 +27,7 @@ export default function Home({ onSearch }) {
         "@type": "WebSite",
         "@id": "https://collegeparichay.in/#website",
         "url": "https://collegeparichay.in/",
-        "name": "CampusPath",
+        "name": "CampusPoint",
         "description": "JEE Rank Predictor & IIT NIT IIIT College Reviews",
         "potentialAction": [
           {
@@ -43,7 +43,7 @@ export default function Home({ onSearch }) {
       {
         "@type": "Organization",
         "@id": "https://collegeparichay.in/#organization",
-        "name": "CampusPath",
+        "name": "CampusPoint",
         "url": "https://collegeparichay.in/",
         "logo": "https://collegeparichay.in/cplogo.svg"
       },

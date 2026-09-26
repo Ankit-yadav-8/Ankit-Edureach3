@@ -1,4 +1,4 @@
-/* blog.js — Campus Path blog posts. Each post has display metadata for the
+/* blog.js — Campus Point blog posts. Each post has display metadata for the
    card grid plus a `body` rendered on /blog/:slug. Legacy posts use simple
    { h?, p } blocks; the NEET cluster (generated in neetBlogs.js) uses rich
    { type, ... } blocks. Both are rendered by BlogPost.jsx. */

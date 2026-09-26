@@ -50,7 +50,7 @@ export default function Shortlist() {
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="Shortlist Your College"
-        description="Build and share your personalised college shortlist on CampusPath — save IITs, NITs and IIITs, compare them side by side, and plan your JoSAA choices. Free by IIT Roorkee alumni."
+        description="Build and share your personalised college shortlist on CampusPoint — save IITs, NITs and IIITs, compare them side by side, and plan your JoSAA choices. Free by IIT Roorkee alumni."
         path="/shortlist"
         robots="noindex, follow"
       />

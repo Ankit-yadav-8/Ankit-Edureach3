@@ -143,7 +143,7 @@ export default function MentorshipDashboard() {
 
   useEffect(() => {
     const prev = document.title;
-    document.title = "Mentorship Dashboard · Campus Path";
+    document.title = "Mentorship Dashboard · Campus Point";
     return () => { document.title = prev; };
   }, []);
 
@@ -1966,7 +1966,7 @@ function DashboardBody({ urlPlan = "" }) {
             title="Weekly Progress Booklet"
             subtitle="A clear, jargon-free summary of your child's week — effort, tests, improvement and what's next."
             studentName={user?.name || "Student"}
-            studentSub={`${planExam} · CampusPath Mentorship`}
+            studentSub={`${planExam} · CampusPoint Mentorship`}
             heroPoints={["Study hours, streak & routine", "Test scores & predicted rank", "Weak / medium / strong chapters", "Weekly task progress"]}
             heroNote="Auto-emailed to your parent every Sunday — and any time you press send. No jargon, just this week's real progress."
             rows={[
@@ -2024,7 +2024,7 @@ function DashboardBody({ urlPlan = "" }) {
               title="Daily Progress Booklet"
               subtitle="Today's effort at a glance — hours, tasks, routine and any test, auto-built from the daily log."
               studentName={user?.name || "Student"}
-              studentSub={`${fmtFull(new Date())} · CampusPath Mentorship`}
+              studentSub={`${fmtFull(new Date())} · CampusPoint Mentorship`}
               heroPoints={["Hours studied per subject", "Tasks completed & routine", "Any test taken today", "Predicted rank (if tested)"]}
               heroNote="Auto-emailed to your parent every day — a quick daily snapshot so they always know how today went."
               rows={[

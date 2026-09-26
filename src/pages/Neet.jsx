@@ -617,7 +617,7 @@ export default function Neet() {
     <div className="page">
       <Seo
         title="NEET UG Rank Predictor, College Predictor, Cutoffs, Toppers & Syllabus"
-        description="NEET UG hub — interactive rank & medical college predictors, 5-year difficulty analysis, cut-off trends, toppers, full 720-mark syllabus, exam pattern, 12-month roadmap and best coaching. Built for NEET aspirants on CampusPath."
+        description="NEET UG hub — interactive rank & medical college predictors, 5-year difficulty analysis, cut-off trends, toppers, full 720-mark syllabus, exam pattern, 12-month roadmap and best coaching. Built for NEET aspirants on CampusPoint."
         path="/neet"
       />
 

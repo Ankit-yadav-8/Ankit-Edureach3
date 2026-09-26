@@ -8,7 +8,7 @@ import BranchCatalog from "../components/home/BranchCatalog.jsx";
 
 export default function Branches() {
   const nav = useNavigate();
-  useEffect(() => { document.title = "Branch Explorer — 220+ engineering branches · Campus Path"; }, []);
+  useEffect(() => { document.title = "Branch Explorer — 220+ engineering branches · Campus Point"; }, []);
 
   const goHome = () => nav("/");
 

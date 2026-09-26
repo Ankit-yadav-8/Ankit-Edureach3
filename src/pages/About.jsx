@@ -44,7 +44,7 @@ const FOUNDERS = [
     accent: "#FF693D",
     badge: "Visionary behind the Platform",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
-    bio: "Hi, I’m Ankit Kumar, Founder & CEO of Campus Path and an IIT Roorkee alumnus. I lead the technical vision and execution of our platform, architecting everything from intuitive user interfaces to scalable data pipelines and backend infrastructure. I know firsthand how chaotic the college admission process is—because I’ve been there. Building Campus Path is my way of using technology to solve a massive real-world problem. My mission is simple: to turn complex admission data into clear, actionable insights so every student can make confident decisions.",
+    bio: "Hi, I’m Ankit Kumar, Founder & CEO of Campus Point and an IIT Roorkee alumnus. I lead the technical vision and execution of our platform, architecting everything from intuitive user interfaces to scalable data pipelines and backend infrastructure. I know firsthand how chaotic the college admission process is—because I’ve been there. Building Campus Point is my way of using technology to solve a massive real-world problem. My mission is simple: to turn complex admission data into clear, actionable insights so every student can make confident decisions.",
     skills: ["Founder & CEO", "Tech Head", "Full Stack Developer", "System Design", "Node.js", "Express", "Python", "REST APIs"],
     socials: { linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387", instagram: "https://www.instagram.com/ankit_1_7_/", whatsapp: WA },
   },
@@ -56,7 +56,7 @@ const FOUNDERS = [
     accent: "#0EA5A4",
     badge: "Growth & Marketing",
     edu: "B.Tech Mechanical Engineering, IIT Roorkee",
-    bio: "Hi, I am Mayank Singh. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. Now at Campus Path, I lead growth and marketing to ensure that every student gets the right guidance and resources.",
+    bio: "Hi, I am Mayank Singh. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. Now at Campus Point, I lead growth and marketing to ensure that every student gets the right guidance and resources.",
     skills: ["Co-Founder", "Marketing", "Growth Strategy", "Community Building"],
     socials: { linkedin: "#", instagram: "#", whatsapp: WA },
   },
@@ -89,12 +89,12 @@ const TIMELINE = [
   {
     year: "May 2026", icon: "💡", color: "#FF693D",
     title: "The Frustration That Started It All",
-    content: "Sitting in a hostel room at IIT Roorkee right after JoSAA Round 1, we watched a batchmate nearly lose his preferred branch to bad information — outdated cutoff PDFs, contradictory WhatsApp forwards and no clear way to compare options. That single moment became the spark for Campus Path.",
+    content: "Sitting in a hostel room at IIT Roorkee right after JoSAA Round 1, we watched a batchmate nearly lose his preferred branch to bad information — outdated cutoff PDFs, contradictory WhatsApp forwards and no clear way to compare options. That single moment became the spark for Campus Point.",
   },
   {
     year: "Jun 2026", icon: "🏗️", color: "#7C3AED",
     title: "Building in the Hostel Room",
-    content: "We started coding Campus Path late into the night between classes and exams. The first version was a simple rank-to-college matcher we shared in JEE WhatsApp groups — it crossed 500+ users in the very first week, and the feedback never stopped coming.",
+    content: "We started coding Campus Point late into the night between classes and exams. The first version was a simple rank-to-college matcher we shared in JEE WhatsApp groups — it crossed 500+ users in the very first week, and the feedback never stopped coming.",
   },
   {
     year: "Jul 2026", icon: "📊", color: "#0EA5A4",
@@ -104,7 +104,7 @@ const TIMELINE = [
   {
     year: "Aug 2026", icon: "🚀", color: "#EC4899",
     title: "Official Launch & Student Impact",
-    content: "Campus Path launched with JEE Main & Advanced rank predictors, a college explorer, a JoSAA counselling planner and a side-by-side comparison tool. Thousands of students used it for choice-filling, and messages poured in from those who avoided costly mistakes thanks to our data.",
+    content: "Campus Point launched with JEE Main & Advanced rank predictors, a college explorer, a JoSAA counselling planner and a side-by-side comparison tool. Thousands of students used it for choice-filling, and messages poured in from those who avoided costly mistakes thanks to our data.",
   },
   {
     year: "Sep 2026", icon: "🤝", color: "#F59E0B",
@@ -313,8 +313,8 @@ export default function About() {
   return (
     <div className="page">
       <Seo
-        title="About CampusPath — Built by IIT Roorkee Alumni"
-        description="CampusPath is a free student platform built by IIT Roorkee alumni Ankit Kumar, Mayank Singh, and Saket Kumar to help JEE aspirants predict ranks, shortlist colleges and navigate JoSAA counselling."
+        title="About CampusPoint — Built by IIT Roorkee Alumni"
+        description="CampusPoint is a free student platform built by IIT Roorkee alumni Ankit Kumar, Mayank Singh, and Saket Kumar to help JEE aspirants predict ranks, shortlist colleges and navigate JoSAA counselling."
         path="/about"
       />
       <style>{`
@@ -355,7 +355,7 @@ export default function About() {
             <span style={{ width: 26, height: 26, borderRadius: "50%", background: "#FF693D", display: "grid", placeItems: "center", flexShrink: 0 }}>
               <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: "11px", letterSpacing: "-0.5px", lineHeight: 1 }}>CP</span>
             </span>
-            About Campus Path
+            About Campus Point
           </span>
 
           <h1 style={{
@@ -369,7 +369,7 @@ export default function About() {
           </h1>
 
           <p style={{ color: "#334155", maxWidth: 640, margin: "0 auto 36px", fontSize: "1.08rem", lineHeight: 1.75, fontWeight: 500, textShadow: "0 1px 6px rgba(255,255,255,.92)" }}>
-            Two engineers from IIT Roorkee who cracked JEE Advanced, lived through the chaos of JoSAA counselling, and built the platform they wished existed. Campus Path brings rank prediction, college discovery and counselling guidance into one clean, student-first platform — completely free.
+            Two engineers from IIT Roorkee who cracked JEE Advanced, lived through the chaos of JoSAA counselling, and built the platform they wished existed. Campus Point brings rank prediction, college discovery and counselling guidance into one clean, student-first platform — completely free.
           </p>
 
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
@@ -384,7 +384,7 @@ export default function About() {
       {/* ── FOUNDERS ── */}
       <section style={{ background: "var(--page-bg)", padding: "76px 0" }}>
         <div className="container">
-          <SectionHead icon={Trophy} eyebrow="The Founders" title="Who's behind Campus Path" sub="Two engineers from IIT Roorkee, building the tool every JEE aspirant deserves" />
+          <SectionHead icon={Trophy} eyebrow="The Founders" title="Who's behind Campus Point" sub="Two engineers from IIT Roorkee, building the tool every JEE aspirant deserves" />
           <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
             {FOUNDERS.map((f, idx) => (
               <TeamCard key={f.name} f={f} idx={idx} badgeIcon={Trophy} badgeLabel="Co-Founder" />
@@ -407,7 +407,7 @@ export default function About() {
 
           <Reveal>
             <p style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.65rem)", lineHeight: 1.6, fontWeight: 600, color: "var(--navy)", margin: "0 0 34px", maxWidth: 1040 }}>
-              Campus Path was founded by <strong>IIT Roorkee</strong> alumni —{" "}
+              Campus Point was founded by <strong>IIT Roorkee</strong> alumni —{" "}
               <strong>Ankit Kumar</strong>, <strong>Mayank Singh</strong>, and <strong>Saket Kumar</strong>.
               Three students from the
               same campus, building the platform we wished existed when we were the ones staring at rank lists and cutoffs.
@@ -419,7 +419,7 @@ export default function About() {
               `A few years ago, sitting in a hostel room at IIT Roorkee, we were remembering how stressful our own JEE counselling had been. Endless browser tabs, outdated cutoff PDFs, WhatsApp forwards full of conflicting information, and a constant fear: "what if I fill my choices wrong and lose a seat I deserved?"`,
               `We watched batchmates — bright students who had cracked one of the toughest exams in the world — stumble at the last hurdle simply because the right information wasn't available. Students from small towns without seniors to guide them were at a real disadvantage. That didn't sit right with us.`,
               `<strong>IIT Roorkee</strong> gave us the technical foundation and the peer environment that pushes you to build real things. We had access to years of JoSAA data, the engineering coursework to build prediction models, and most importantly — the lived experience of going through this process. We decided to use all of it to build something meaningful.`,
-              `Today, Campus Path is used by thousands of students every counselling season. We've structured 7+ years of JoSAA data, built rank predictors for JEE Main and Advanced, a college explorer, a JoSAA planner, and a comparison engine — all from that same <strong>IIT Roorkee</strong> hostel-room drive to make this process less chaotic for the next student.`,
+              `Today, Campus Point is used by thousands of students every counselling season. We've structured 7+ years of JoSAA data, built rank predictors for JEE Main and Advanced, a college explorer, a JoSAA planner, and a comparison engine — all from that same <strong>IIT Roorkee</strong> hostel-room drive to make this process less chaotic for the next student.`,
             ].map((text, i) => (
               <Reveal key={i} delay={i * 0.06}>
                 <p style={{ fontSize: "1.2rem", lineHeight: 1.9, color: "var(--ink)", margin: 0, maxWidth: 1040 }}
@@ -436,7 +436,7 @@ export default function About() {
             }}>
               <Quote size={38} color="#FF693D" style={{ flexShrink: 0, marginTop: 4 }} />
               <p style={{ fontStyle: "italic", color: "var(--navy)", fontSize: "1.32rem", lineHeight: 1.62, fontWeight: 500, margin: 0 }}>
-                "We're not a faceless portal. We're <strong>IIT&nbsp;Roorkee</strong> engineers who lived this chaos and decided to fix it for the next student. Every feature on Campus Path answers a question one of us once had — and found no good answer to."
+                "We're not a faceless portal. We're <strong>IIT&nbsp;Roorkee</strong> engineers who lived this chaos and decided to fix it for the next student. Every feature on Campus Point answers a question one of us once had — and found no good answer to."
               </p>
             </div>
           </Reveal>

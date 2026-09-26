@@ -126,7 +126,7 @@ export default function Developer() {
   return (
     <div className="page">
       <Seo
-        title={`${dev.name} — ${dev.role} at CampusPath`}
+        title={`${dev.name} — ${dev.role} at CampusPoint`}
         description={seoDesc}
         path={`/team/${dev.id}`}
         type="profile"
@@ -159,7 +159,7 @@ export default function Developer() {
               transition={{ duration: 0.55 }}
             >
               <span className="eyebrow" style={{ marginBottom: 16, background: "#f3f4f6", color: "#6b7280", border: "1px solid #e5e7eb" }}>
-                <Sparkles size={12} /> Team Campus Path · {dev.role.split("&")[0].trim()}
+                <Sparkles size={12} /> Team Campus Point · {dev.role.split("&")[0].trim()}
               </span>
 
               <h1 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(2rem,4.5vw,3rem)", margin: "0 0 8px", letterSpacing: "-0.5px", color: "#1c1c28" }}>

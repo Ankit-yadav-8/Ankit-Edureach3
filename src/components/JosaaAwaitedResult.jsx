@@ -1,7 +1,7 @@
 /* JosaaAwaitedResult — shared layout for JoSAA seat-allotment result pages
    whose result is not yet declared. Round 2 & 3 render this with their own
    round number and expected window; the live cutoff table is filled in once
-   JoSAA publishes that round. Styled with the Campus Path warm theme. */
+   JoSAA publishes that round. Styled with the Campus Point warm theme. */
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Share2, Clock, ExternalLink, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";

@@ -264,7 +264,7 @@ export default function MentorDashboard() {
   if (!token || !mentor) {
     return (
       <>
-        <Seo title="Mentor sign in · Campus Path" robots="noindex, nofollow" />
+        <Seo title="Mentor sign in · Campus Point" robots="noindex, nofollow" />
         <Login onDone={(t, m) => { setToken(t); setMentor(m); }} />
       </>
     );
@@ -273,7 +273,7 @@ export default function MentorDashboard() {
   if (mentor.mustChangePassword) {
     return (
       <>
-        <Seo title="Set your password · Campus Path" robots="noindex, nofollow" />
+        <Seo title="Set your password · Campus Point" robots="noindex, nofollow" />
         <SetPassword token={token} onDone={(t, m) => { setToken(t); setMentor(m); }} />
       </>
     );
@@ -281,7 +281,7 @@ export default function MentorDashboard() {
 
   return (
     <>
-      <Seo title="Mentor dashboard · Campus Path" robots="noindex, nofollow" />
+      <Seo title="Mentor dashboard · Campus Point" robots="noindex, nofollow" />
       <div className="container" style={{ padding: "120px 0 60px" }}>
         <MentorHero mentor={mentor} students={students} activeId={activeId} onPick={setActiveId} />
 

@@ -27,7 +27,7 @@ const GUIDE = [
     title: "Create Your Free Account",
     to: null,
     tag: "Start here",
-    what: "Sign up takes under a minute and unlocks every tool on Campus Path — predictors, planners and saved shortlists.",
+    what: "Sign up takes under a minute and unlocks every tool on Campus Point — predictors, planners and saved shortlists.",
     steps: [
       "Click the orange Sign Up button at the top-right of any page.",
       "Enter your name, email, 10-digit mobile number and coaching.",
@@ -56,7 +56,7 @@ const GUIDE = [
     title: "College Predictor",
     to: "/jee-main#college",
     tag: "The core tool",
-    what: "The heart of Campus Path. Enter your rank and instantly see which IITs, NITs, IIITs and GFTIs you can realistically get.",
+    what: "The heart of Campus Point. Enter your rank and instantly see which IITs, NITs, IIITs and GFTIs you can realistically get.",
     steps: [
       "Open the College Predictor from the JEE menu or the navbar button.",
       "Enter your rank, category, gender and home state.",
@@ -339,8 +339,8 @@ export default function HowToUse() {
   return (
     <div className="page" style={{ paddingTop: 0 }}>
       <Seo
-        title="How to Use CampusPath — Rank, Shortlist & Counselling"
-        description="A quick guide to using CampusPath — predict your JEE rank, build a college shortlist, compare options and plan JoSAA/CSAB counselling, all free and built by IIT Roorkee alumni."
+        title="How to Use CampusPoint — Rank, Shortlist & Counselling"
+        description="A quick guide to using CampusPoint — predict your JEE rank, build a college shortlist, compare options and plan JoSAA/CSAB counselling, all free and built by IIT Roorkee alumni."
         path="/how-to-use"
       />
       {/* ── HERO ── */}
@@ -369,7 +369,7 @@ export default function HowToUse() {
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                 }}
               >
-                Campus Path
+                Campus Point
               </span>
             </h1>
             <p style={{ maxWidth: 640, margin: "0 auto", color: "var(--gray)", fontSize: "1.06rem", lineHeight: 1.6 }}>
@@ -455,7 +455,7 @@ export default function HowToUse() {
               Handy shortcuts
             </h2>
             <p style={{ textAlign: "center", color: "var(--gray)", marginBottom: 34 }}>
-              Little things that make Campus Path faster to use.
+              Little things that make Campus Point faster to use.
             </p>
           </Reveal>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(250px, 100%), 1fr))", gap: 18 }}>

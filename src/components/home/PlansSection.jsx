@@ -63,7 +63,7 @@ export default function PlansSection() {
               A topper's mentor — mapped onto your prep.
             </div>
             <p style={{ color: CL.body, fontSize: 14, lineHeight: 1.65, marginBottom: 22 }}>
-              Coaching teaches the whole class the same thing. Your CampusPath mentor works only on <strong style={{ color: CL.ink }}>you</strong> — what to study today, what's slipping, and exactly how to fix it before the exam. Here's what that looks like week to week:
+              Coaching teaches the whole class the same thing. Your CampusPoint mentor works only on <strong style={{ color: CL.ink }}>you</strong> — what to study today, what's slipping, and exactly how to fix it before the exam. Here's what that looks like week to week:
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24 }}>
               {FEATURES.map(({ icon: Icon, title, desc }) => (
