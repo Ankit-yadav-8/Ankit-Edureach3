@@ -190,7 +190,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const prev = document.title;
-    document.title = "My Dashboard · College Parichay";
+    document.title = "My Dashboard · Campus Path";
     return () => { document.title = prev; };
   }, []);
 
@@ -434,7 +434,7 @@ export default function Dashboard() {
 
         {/* footer line */}
         <div style={{ textAlign: "center", fontSize: 12, color: "var(--text-soft)", marginTop: 24, fontWeight: 500 }}>
-          College Parichay · Built for JEE aspirants who play the long game.
+          Campus Path · Built for JEE aspirants who play the long game.
         </div>
       </div>
 

@@ -51,7 +51,7 @@ export async function startPayment(details, token) {
       amount: order.amount,
       currency: order.currency,
       order_id: order.orderId,
-      name: "College Parichay",
+      name: "Campus Path",
       description: order.planLabel,
       image: `${window.location.origin}/cplogo.svg`,
       prefill: {

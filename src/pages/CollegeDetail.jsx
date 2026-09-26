@@ -120,7 +120,7 @@ export default function CollegeDetail() {
     `${college.name} review ${seoYear}${college.location ? ` (${college.location})` : ""} — ` +
     `is it worth it? See NIRF ranking, JoSAA cutoffs, branch-wise placements, average package, ` +
     `fees, hostel details and honest student reviews. Check your admission chances free with the ` +
-    `CollegeParichay JEE rank predictor — built by IIT Roorkee alumni.`;
+    `CampusPath JEE rank predictor — built by IIT Roorkee alumni.`;
   const seoImage = college.heroImage
     ? SITE_URL + encodeURI(college.heroImage)
     : undefined;

@@ -20,7 +20,7 @@ export default function Reviews() {
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="Give & Read College Reviews — Hostel & Mess Ratings"
-        description="Know and give honest college reviews — read and write student-written hostel & mess reviews for IITs, NITs, IIITs and more. Ratings, quick tags and real comments about campus life on College Parichay."
+        description="Know and give honest college reviews — read and write student-written hostel & mess reviews for IITs, NITs, IIITs and more. Ratings, quick tags and real comments about campus life on Campus Path."
         path="/reviews"
         keywords={[
           "college reviews", "hostel reviews", "mess reviews",

@@ -23,7 +23,7 @@ export default function PrivateDetail() {
   const seoDesc =
     `${u.name} review ${seoYear}${u.state ? ` (${u.state})` : ""} — is it worth it? ` +
     `Fees ${u.fees}, branch-wise placements (avg & highest package), ${u.exam} admission, ` +
-    `courses and an honest breakdown. Compare with IITs/NITs/IIITs free on CollegeParichay.`;
+    `courses and an honest breakdown. Compare with IITs/NITs/IIITs free on CampusPath.`;
   const seoJsonLd = {
     "@context": "https://schema.org",
     "@graph": [

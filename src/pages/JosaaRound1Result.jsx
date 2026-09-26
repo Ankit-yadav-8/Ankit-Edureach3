@@ -97,7 +97,7 @@ export default function JosaaRound1Result() {
     <div className="josr-page">
       <Seo
         title="JoSAA 2026 Round 1 Seat Allotment Result"
-        description="JoSAA 2026 Round 1 seat allotment result, opening & closing ranks and what to do next (float/slide/freeze) — explained by IIT Roorkee alumni on CollegeParichay."
+        description="JoSAA 2026 Round 1 seat allotment result, opening & closing ranks and what to do next (float/slide/freeze) — explained by IIT Roorkee alumni on CampusPath."
         path="/josaa-round-1-result-2026"
       />
       <style>{CSS}</style>

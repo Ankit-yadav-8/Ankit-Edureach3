@@ -8,7 +8,7 @@ export default function PrivateUnis() {
     <div className="page">
       <Seo
         title="Top Private Universities in India — Fees, Placements & Admission"
-        description="Compare 13+ leading private universities — VIT, SRM, Manipal, BITS, KIIT, LPU and more — by fees, placements, cutoffs and admission, and apply directly. By CollegeParichay."
+        description="Compare 13+ leading private universities — VIT, SRM, Manipal, BITS, KIIT, LPU and more — by fees, placements, cutoffs and admission, and apply directly. By CampusPath."
         path="/private-universities"
       />
       <PrivateUniversities />

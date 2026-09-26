@@ -327,7 +327,7 @@ export default function JeeResources() {
     <div className="page" style={{ minHeight: "100vh", background: CL.cream }}>
       <Seo
         title="JEE Mind Maps — Chapter-wise Revision Sheets for Physics, Chemistry & Maths"
-        description={`${totals.ch} chapter-wise JEE Main & Advanced mind maps across Physics, Chemistry and Mathematics — ${totals.pg} high-yield revision sheets to memorise every formula fast, free on College Parichay.`}
+        description={`${totals.ch} chapter-wise JEE Main & Advanced mind maps across Physics, Chemistry and Mathematics — ${totals.pg} high-yield revision sheets to memorise every formula fast, free on Campus Path.`}
         path="/jee-resources"
       />
 

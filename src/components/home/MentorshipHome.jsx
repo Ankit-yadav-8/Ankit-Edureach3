@@ -79,7 +79,7 @@ export default function MentorshipHome() {
               <span style={{ background: "linear-gradient(90deg,#FF693D,#FF693D)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Own Your Future.</span>
             </h2>
             <p style={{ color: "#4b5563", fontSize: "1.05rem", lineHeight: 1.75, maxWidth: 660, margin: "0 auto" }}>
-              CollegeParichay's 1-on-1 mentorship helps serious JEE &amp; NEET aspirants cut through the confusion — a personal IITian / doctor mentor, daily accountability, and a plan that actually works. Pick the program that fits where you are.
+              CampusPath's 1-on-1 mentorship helps serious JEE &amp; NEET aspirants cut through the confusion — a personal IITian / doctor mentor, daily accountability, and a plan that actually works. Pick the program that fits where you are.
             </p>
           </div>
         </Reveal>

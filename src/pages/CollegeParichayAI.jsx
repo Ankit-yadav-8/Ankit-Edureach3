@@ -1,4 +1,4 @@
-/* College Parichay AI — our own Claude-style study & admissions assistant,
+/* Campus Path AI — our own Claude-style study & admissions assistant,
    powered by Groq (the key lives only on the server). Clean left sidebar with
    chat history + New Chat, a large centered prompt on a fresh chat, streaming
    responses with a live mode badge (web search / reasoning / coding / image),
@@ -70,9 +70,9 @@ function buildContext(profile, memory) {
 
 /* download the whole conversation as a Markdown file */
 function exportChat(chat) {
-  const lines = [`# ${chat.title || "College Parichay AI chat"}`, ""];
+  const lines = [`# ${chat.title || "Campus Path AI chat"}`, ""];
   for (const m of chat.messages) {
-    const who = m.role === "user" ? "🧑 You" : "🤖 College Parichay AI";
+    const who = m.role === "user" ? "🧑 You" : "🤖 Campus Path AI";
     lines.push(`## ${who}`, "", m.content.split("\n\n--- Attached:")[0].trim(), "");
   }
   const blob = new Blob([lines.join("\n")], { type: "text/markdown" });
@@ -94,7 +94,7 @@ const QUICK = [
   { icon: ImageIcon,   label: "Generate image",  prompt: "Generate an image of " },
 ];
 
-export default function CollegeParichayAI() {
+export default function CampusPathAI() {
   const { user, token } = useAuth();
   const t = THEMES.light;
 
@@ -137,7 +137,7 @@ export default function CollegeParichayAI() {
   /* autoscroll on new content */
   useEffect(() => { scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" }); }, [active?.messages, streaming]);
   /* page title */
-  useEffect(() => { const p = document.title; document.title = "College Parichay AI"; return () => { document.title = p; }; }, []);
+  useEffect(() => { const p = document.title; document.title = "Campus Path AI"; return () => { document.title = p; }; }, []);
   /* auto-grow textarea */
   useEffect(() => {
     const el = taRef.current; if (!el) return;
@@ -412,7 +412,7 @@ export default function CollegeParichayAI() {
 
   return (
     <div style={{ position: "fixed", inset: 0, top: 0, display: "flex", background: t.bg, color: t.text, fontFamily: "'DM Sans',system-ui,sans-serif", zIndex: 1, overflow: "hidden", colorScheme: "light" }}>
-      <Seo path="/ai" title="College Parichay AI — your free study & admissions assistant" description="A Claude-style AI tutor for JEE, NEET & counselling. Solve doubts, generate notes, quizzes and code — free." />
+      <Seo path="/ai" title="Campus Path AI — your free study & admissions assistant" description="A Claude-style AI tutor for JEE, NEET & counselling. Solve doubts, generate notes, quizzes and code — free." />
       {/* ambient background */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `radial-gradient(${t.bgGrid} 1px, transparent 1px)`, backgroundSize: "30px 30px", opacity: .8 }} />
       <div style={{ position: "absolute", top: "-12%", left: "12%", width: 460, height: 460, borderRadius: "50%", background: t.glow1, filter: "blur(120px)", pointerEvents: "none" }} />
@@ -430,7 +430,7 @@ export default function CollegeParichayAI() {
               <span style={{ width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg,#FF693D,#E0421F)", display: "grid", placeItems: "center", flexShrink: 0 }}>
                 <Bot size={17} color="#fff" />
               </span>
-              <div style={{ fontFamily: t.display, fontWeight: 800, fontSize: 15.5, letterSpacing: "-.3px" }}>College Parichay <span style={{ color: t.accent }}>AI</span></div>
+              <div style={{ fontFamily: t.display, fontWeight: 800, fontSize: 15.5, letterSpacing: "-.3px" }}>Campus Path <span style={{ color: t.accent }}>AI</span></div>
               <button onClick={() => setSidebarOpen(false)} className="cpai-only-mobile" style={iconBtn(t, true)} aria-label="Close"><X size={18} /></button>
             </div>
 
@@ -549,7 +549,7 @@ export default function CollegeParichayAI() {
                   </span>
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <div style={{ fontSize: 12.5, fontWeight: 700, color: t.textDim, marginBottom: 3, fontFamily: t.display }}>
-                      {m.role === "user" ? (user?.name?.split(" ")[0] || "You") : "College Parichay AI"}
+                      {m.role === "user" ? (user?.name?.split(" ")[0] || "You") : "Campus Path AI"}
                     </div>
                     {m.role === "user" ? (
                       <div style={{ whiteSpace: "pre-wrap", color: t.body, lineHeight: 1.65, fontSize: 14.5 }}>
@@ -612,7 +612,7 @@ export default function CollegeParichayAI() {
                 taRef={taRef} attach={attach} setAttach={setAttach} fileRef={fileRef} onFile={onFile}
                 toggleMic={toggleMic} listening={listening} />
               <p style={{ textAlign: "center", fontSize: 11, color: t.textMute, marginTop: 8 }}>
-                College Parichay AI can make mistakes — verify important cutoffs & dates on official sites.
+                Campus Path AI can make mistakes — verify important cutoffs & dates on official sites.
               </p>
             </div>
           </div>
@@ -675,7 +675,7 @@ function Composer({ t, input, setInput, send, streaming, stop, taRef, attach, se
           ref={taRef} className="cpai-ta" value={input} rows={1}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-          placeholder={big ? "Ask anything — a doubt, a chapter, code, or “generate an image of…”" : "Reply to College Parichay AI…"}
+          placeholder={big ? "Ask anything — a doubt, a chapter, code, or “generate an image of…”" : "Reply to Campus Path AI…"}
           style={{ flex: 1, minWidth: 0, resize: "none", border: "none", outline: "none", background: "transparent", color: t.text, fontSize: 15, lineHeight: 1.5, fontFamily: "inherit", maxHeight: 200, padding: "7px 0" }}
         />
         <button onClick={toggleMic} style={{ ...iconBtn(t), color: listening ? t.accent : t.textDim }} aria-label="Voice input" title="Speak">
@@ -718,7 +718,7 @@ function ProfilePanel({ t, user, chats, profile, setProfile, memory, setMemory, 
           </span>
           <div>
             <div style={{ fontWeight: 800, fontSize: 17, fontFamily: t.display }}>{user?.name || "Student"}</div>
-            <div style={{ fontSize: 13, color: t.textDim }}>{user?.email || "College Parichay"}</div>
+            <div style={{ fontSize: 13, color: t.textDim }}>{user?.email || "Campus Path"}</div>
           </div>
         </div>
 

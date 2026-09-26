@@ -1,5 +1,5 @@
 /* ============================================================
-   team.js — Collegeparichay developer profiles + portfolio data.
+   team.js — CampusPath developer profiles + portfolio data.
    ============================================================ */
 
 const LK = "https://www.linkedin.com/in/ankityadavpm/";
@@ -21,10 +21,10 @@ export const TEAM = [
     jeeRank: "AIR 3846",
     exam: "JEE Advanced",
     email: "collegeparichay@gmail.com",
-    bio: `Hi, I'm Ankit Kumar — IIT Roorkee engineer, and the Founder & CEO of College Parichay.
+    bio: `Hi, I'm Ankit Kumar — IIT Roorkee engineer, and the Founder & CEO of Campus Path.
          I don't just build the platform. I am the kind of student it was built for.
-        Like thousands of students who use College Parichay today, I once sat staring at rank lists, cutoffs, and counselling rounds — unsure what any of it meant for my future. That experience never left me. It drives every line of code I write.
-        At College Parichay, I lead everything technical — from the React frontend and data pipelines to backend APIs and cloud deployment — with one goal in mind: make the technology invisible, so students only see clarity.
+        Like thousands of students who use Campus Path today, I once sat staring at rank lists, cutoffs, and counselling rounds — unsure what any of it meant for my future. That experience never left me. It drives every line of code I write.
+        At Campus Path, I lead everything technical — from the React frontend and data pipelines to backend APIs and cloud deployment — with one goal in mind: make the technology invisible, so students only see clarity.
 
         "Great engineering isn't about complexity. It's about making hard things feel simple."
 
@@ -32,7 +32,7 @@ export const TEAM = [
     skills: ["Tech Head", "Management", "Full Stack Developer", "Node.js", "MongoDB", "Express", "Tailwind CSS", "Python", "REST APIs", "Vite"],
     projects: [
       {
-        name: "Collegeparichay Portal",
+        name: "CampusPath Portal",
         desc: "End-to-end JEE college discovery platform covering 850+ institutes — IITs, NITs, IIITs, GFTIs and private — with filters, maps and comparisons.",
         tag: "Founder",
       },
@@ -46,7 +46,7 @@ export const TEAM = [
         desc: "Step-by-step counselling guide with choice-filling strategy, lock/float decisions, document checklist and round timelines.",
         tag: "Counselling",
       },
-      { name: "Full-Stack Platform", desc: "React frontend + Node.js backend powering all tools on College Parichay.", tag: "Full-Stack" },
+      { name: "Full-Stack Platform", desc: "React frontend + Node.js backend powering all tools on Campus Path.", tag: "Full-Stack" },
       { name: "College Explorer UI", desc: "Filterable, searchable college directory with detail tabs and comparison.", tag: "UI" },
       { name: "Data Pipelines", desc: "Structured 7 years of JoSAA cutoff data across 800+ colleges.", tag: "Backend" },
     ],
@@ -71,11 +71,11 @@ export const TEAM = [
     branch: "B.Tech Mechanical Engineering",
     exam: "JEE Advanced",
     email: "collegeparichay@gmail.com",
-    bio: `Hi, I am Mayank Singh. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. Now at College Parichay, I lead growth and marketing to ensure that every student gets the right guidance and resources.`,
+    bio: `Hi, I am Mayank Singh. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. Now at Campus Path, I lead growth and marketing to ensure that every student gets the right guidance and resources.`,
     skills: ["Marketing", "Growth Strategy", "Community Building"],
     projects: [
       {
-        name: "Collegeparichay Portal",
+        name: "CampusPath Portal",
         desc: "End-to-end JEE college discovery platform covering 850+ institutes — IITs, NITs, IIITs, GFTIs and private — with filters, maps and comparisons.",
         tag: "Marketing",
       },
@@ -104,7 +104,7 @@ export const TEAM = [
     skills: ["Operations", "Strategy", "Execution"],
     projects: [
       {
-        name: "Collegeparichay Portal",
+        name: "CampusPath Portal",
         desc: "End-to-end JEE college discovery platform covering 850+ institutes — IITs, NITs, IIITs, GFTIs and private — with filters, maps and comparisons.",
         tag: "Operations",
       },

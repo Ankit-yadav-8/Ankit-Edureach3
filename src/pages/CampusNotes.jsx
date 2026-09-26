@@ -231,7 +231,7 @@ export default function CampusNotes() {
     <div style={{ minHeight: "100vh", background: "var(--page-bg)", fontFamily: "'Inter', sans-serif" }}>
       <Seo
         title="Campus Notes — Free Branch-wise Study Notes & Resources for College Students"
-        description="Download free semester-wise, branch-wise study notes and resources shared by students. Find notes by branch, subject and semester on CollegeParichay Campus Notes."
+        description="Download free semester-wise, branch-wise study notes and resources shared by students. Find notes by branch, subject and semester on CampusPath Campus Notes."
         path="/campus-notes"
         breadcrumbs={[{ name: "Home", path: "/" }, { name: "Campus Notes", path: "/campus-notes" }]}
       />

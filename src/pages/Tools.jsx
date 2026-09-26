@@ -26,9 +26,9 @@ export default function Tools() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "College Parichay Smart Tools for JEE 2026",
+    name: "Campus Path Smart Tools for JEE 2026",
     description:
-      "Every College Parichay tool for JEE 2026 — rank & college predictor, cutoff analysis, branch insights, trade-off analyzer, campus map and choice-list planner.",
+      "Every Campus Path tool for JEE 2026 — rank & college predictor, cutoff analysis, branch insights, trade-off analyzer, campus map and choice-list planner.",
     itemListElement: TOOL_LINKS.map(([name, path], i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -42,7 +42,7 @@ export default function Tools() {
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="Smart Tools for JEE 2026 — Rank & College Predictor, Cutoffs, Planner"
-        description="Every College Parichay tool in one place — free JEE rank predictor, JoSAA college predictor, official cutoff analysis, branch insights, trade-off analyzer, campus map and choice-list planner. Built for JEE 2026."
+        description="Every Campus Path tool in one place — free JEE rank predictor, JoSAA college predictor, official cutoff analysis, branch insights, trade-off analyzer, campus map and choice-list planner. Built for JEE 2026."
         path="/tools"
         keywords={[
           "JEE 2026 tools", "JEE rank predictor", "JoSAA college predictor",

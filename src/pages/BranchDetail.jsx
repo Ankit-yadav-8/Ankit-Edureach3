@@ -636,7 +636,7 @@ export default function BranchDetail() {
   const [tab, setTab] = useState("academics");
 
   useEffect(() => { setTab("academics"); }, [slug]);
-  useEffect(() => { if (b) document.title = `${b.name} — Branch Guide · College Parichay`; }, [b?.name]);
+  useEffect(() => { if (b) document.title = `${b.name} — Branch Guide · Campus Path`; }, [b?.name]);
 
   if (!b || !extra) {
     return (

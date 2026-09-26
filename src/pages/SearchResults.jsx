@@ -28,7 +28,7 @@ export default function SearchResults() {
         <div className="container">
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Smart Search</span>
           <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.6rem,4vw,2.2rem)", margin: "8px 0 4px" }}>
-            {q ? <>Results for &ldquo;{q}&rdquo;</> : "Search College Parichay"}
+            {q ? <>Results for &ldquo;{q}&rdquo;</> : "Search Campus Path"}
           </h1>
           <p style={{ color: "var(--muted)" }}>{results.length} matches across colleges, tools and reviews.</p>
         </div>

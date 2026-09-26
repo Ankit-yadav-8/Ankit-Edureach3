@@ -67,7 +67,7 @@ export default function NeetColleges() {
     <div className="page">
       <Seo
         title="All NEET / MBBS Medical Colleges in India — State-wise List & Seats"
-        description="Browse all 780 MBBS medical colleges in India (incl. AIIMS & JIPMER) from the NMC 2024-25 seat matrix. Filter state-wise by government/private, MBBS seats, affiliating university and year — built for NEET UG aspirants on CollegeParichay."
+        description="Browse all 780 MBBS medical colleges in India (incl. AIIMS & JIPMER) from the NMC 2024-25 seat matrix. Filter state-wise by government/private, MBBS seats, affiliating university and year — built for NEET UG aspirants on CampusPath."
         path="/neet-colleges"
       />
 

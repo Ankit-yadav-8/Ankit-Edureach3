@@ -23,12 +23,12 @@
 import { useEffect } from "react";
 
 export const SITE_URL = "https://collegeparichay.in";
-export const BRAND = "CollegeParichay";
+export const BRAND = "CampusPath";
 
 const DEFAULT_TITLE =
-  "CollegeParichay — JEE Rank Predictor & IIT NIT IIIT College Reviews | By IIT Roorkee Alumni";
+  "CampusPath — JEE Rank Predictor & IIT NIT IIIT College Reviews | By IIT Roorkee Alumni";
 const DEFAULT_DESC =
-  "CollegeParichay is a student-built platform by IIT Roorkee alumni — get free JEE Main & Advanced rank predictions, compare IIT NIT IIIT cutoffs, read college reviews, shortlist colleges, and track JoSAA / CSAB counselling deadlines.";
+  "CampusPath is a student-built platform by IIT Roorkee alumni — get free JEE Main & Advanced rank predictions, compare IIT NIT IIIT cutoffs, read college reviews, shortlist colleges, and track JoSAA / CSAB counselling deadlines.";
 const DEFAULT_IMAGE = `${SITE_URL}/cplogo.svg`;
 
 /** Create or update a <meta> tag, returning a restore fn. */

@@ -185,7 +185,7 @@ export default function JeeAdvancedResult() {
     <div className="jadv-page">
       <Seo
         title="JEE Advanced 2026 Result & Rank List"
-        description="JEE Advanced 2026 result, rank list and cutoffs — see what your AIR means and which IITs and branches you can get with the free CollegeParichay rank predictor."
+        description="JEE Advanced 2026 result, rank list and cutoffs — see what your AIR means and which IITs and branches you can get with the free CampusPath rank predictor."
         path="/jee-advanced-result-2026"
       />
       <style>{CSS}</style>

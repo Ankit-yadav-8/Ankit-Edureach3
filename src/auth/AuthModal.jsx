@@ -239,8 +239,8 @@ function FeaturePills() {
    SHOWCASE PANEL — animated left side (desktop only)
 ════════════════════════════════════════════════════════════ */
 const SHOWCASE = {
-  login:  { title: "Welcome back to",     accent: "College Parichay" },
-  signup: { title: "Start your journey with", accent: "College Parichay" },
+  login:  { title: "Welcome back to",     accent: "Campus Path" },
+  signup: { title: "Start your journey with", accent: "Campus Path" },
 };
 const SHOW_STATS = [
   { icon: Trophy,  label: "8 years of JoSAA closing ranks" },
@@ -686,7 +686,7 @@ export default function AuthModal() {
                           Login with Email OTP
                         </button>
                         
-                        <p className="switch-line">New to CollegeParichay? <button type="button" onClick={() => go("signup")}>Create an account</button></p>
+                        <p className="switch-line">New to CampusPath? <button type="button" onClick={() => go("signup")}>Create an account</button></p>
                      </div>)}
 
                      {/* signup */}

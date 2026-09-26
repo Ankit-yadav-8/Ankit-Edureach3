@@ -1,4 +1,4 @@
-/* Mentorship — the "CollegeParichay Mentorship Journal".
+/* Mentorship — the "CampusPath Mentorship Journal".
    An editorial, magazine-style landing page for 1-on-1 IITian mentorship:
    cream paper, Playfair display serif with coral-italic emphasis, dark navy
    feature sections, §0X·LABEL micro-headers. Config-driven per variant
@@ -767,7 +767,7 @@ function ForParents({ cfg }) {
             <div className="mj-booklet-div" />
             <span className="mj-booklet-lbl">STUDENT</span>
             <strong className="mj-booklet-name">{st.name || "Your child"}</strong>
-            <span className="mj-booklet-meta">{exam} · CollegeParichay Mentorship</span>
+            <span className="mj-booklet-meta">{exam} · CampusPath Mentorship</span>
             <span className="mj-booklet-lbl mj-booklet-lbl2">WHAT&rsquo;S INSIDE</span>
             <ul className="mj-booklet-list">
               {BOOKLET_INSIDE.map((it, i) => (
@@ -1148,7 +1148,7 @@ function TalkToUs({ exam }) {
             <p className="mj-body">A 15-minute call, no pressure. We&rsquo;ll listen to where you are,
               share what the year could look like, and let you decide.</p>
             <div className="mj-reach">
-              <span>REACH US · HELLO@COLLEGEPARICHAY.IN</span>
+              <span>REACH US · HELLO@collegeparichay.in</span>
               <span>CALL · +91 81188 26194</span>
             </div>
           </div>
@@ -1200,7 +1200,7 @@ function TopMentors() {
       name: "Mayank Singh",
       college: "IIT Roorkee",
       branch: "Mechanical Engineering",
-      thought: "Hi, I am Mayank Singh from iitr mechanical engineering. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. I am all thankful to my mentors and myself. So I'm now here at College Parichay to mentor young minds and pass them what I have earned.",
+      thought: "Hi, I am Mayank Singh from iitr mechanical engineering. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. I am all thankful to my mentors and myself. So I'm now here at Campus Path to mentor young minds and pass them what I have earned.",
       img: imgMayank
     }
   ];
@@ -1262,8 +1262,8 @@ export default function Mentorship() {
   return (
     <div className="mj">
       <Seo
-        title={`${exam} Mentorship by IITians — 1-on-1 Guidance | CollegeParichay`}
-        description="1-on-1 JEE & NEET mentorship by IIT alumni — daily targets, weekly test analysis, live tracking and parent reports. Limited seats. Start at ₹2,499 on CollegeParichay."
+        title={`${exam} Mentorship by IITians — 1-on-1 Guidance | CampusPath`}
+        description="1-on-1 JEE & NEET mentorship by IIT alumni — daily targets, weekly test analysis, live tracking and parent reports. Limited seats. Start at ₹2,499 on CampusPath."
         path={`/mentorship/${variant}`}
         jsonLd={faqSchema}
       />

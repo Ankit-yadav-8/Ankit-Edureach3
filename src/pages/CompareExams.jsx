@@ -84,7 +84,7 @@ export default function CompareExams() {
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="Compare Engineering Exams — JEE Main vs Advanced vs BITSAT (AI read)"
-        description="Side-by-side comparison of JEE Main, JEE Advanced, BITSAT and state exams with an AI read — difficulty, reach, competition, 5-year cutoff trends, pattern and eligibility on CollegeParichay."
+        description="Side-by-side comparison of JEE Main, JEE Advanced, BITSAT and state exams with an AI read — difficulty, reach, competition, 5-year cutoff trends, pattern and eligibility on CampusPath."
         path="/compare-exams"
       />
 

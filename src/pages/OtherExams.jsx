@@ -4,7 +4,7 @@
      2. Timeline    — the home AdmissionTimeline, reused verbatim
      3. Directory   — Total / Ongoing / Upcoming / Concluded + category + search
                       filters over one rich card per exam (ExamCard).
-   The hero copy and its badge-wall animation are original to College Parichay. */
+   The hero copy and its badge-wall animation are original to Campus Path. */
 import { useMemo, useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -194,7 +194,7 @@ export default function OtherExams() {
     <div className="page">
       <Seo
         title="Other Engineering Entrance Exams 2026 — BITSAT, VITEEE, State CETs & More"
-        description="Explore every engineering entrance exam beyond JEE — national, state and private-university tests. Fees, dates, pattern, eligibility and a plain-English read for BITSAT, VITEEE, MHT CET, KCET, COMEDK, SRMJEEE and 30+ more on College Parichay."
+        description="Explore every engineering entrance exam beyond JEE — national, state and private-university tests. Fees, dates, pattern, eligibility and a plain-English read for BITSAT, VITEEE, MHT CET, KCET, COMEDK, SRMJEEE and 30+ more on Campus Path."
         path="/other-exams"
       />
 

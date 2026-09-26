@@ -115,7 +115,7 @@ export default function Compare() {
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="Compare Colleges — IIT vs NIT vs IIIT with an AI verdict"
-        description="Compare IITs, NITs and IIITs side by side with an AI verdict — JoSAA cutoffs, placements, average package, fees and a scored recommendation on CollegeParichay."
+        description="Compare IITs, NITs and IIITs side by side with an AI verdict — JoSAA cutoffs, placements, average package, fees and a scored recommendation on CampusPath."
         path="/compare"
       />
 

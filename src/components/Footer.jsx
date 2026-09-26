@@ -292,7 +292,7 @@ export default function Footer() {
                   fontSize: "1.4rem",
                 }}
               >
-                Collegeparichay
+                CampusPath
               </span>
             </Link>
             <p
@@ -310,7 +310,7 @@ export default function Footer() {
               student-first JEE rank predictor &amp; college discovery platform,
               headquartered in Jaipur, Rajasthan.
             </p>
-            <Col title="College Parichay" links={COLLEGE_LINKS} />
+            <Col title="Campus Path" links={COLLEGE_LINKS} />
           </div>
           <Col title="Other Exams" links={EXAM_LINKS} />
           <Col title="Tools" links={TOOL_LINKS} />
@@ -381,7 +381,7 @@ export default function Footer() {
               color="var(--coral)"
               style={{ margin: "0 2px" }}
             />{" "}
-            by the Collegeparichay Team
+            by the CampusPath Team
           </motion.p>
 
           {/* Team cards grid */}
@@ -428,8 +428,8 @@ export default function Footer() {
           <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
             {[
               { Icon: Linkedin, url: "https://www.linkedin.com/company/college-parichay/", label: "LinkedIn" },
-              { Icon: Instagram, url: "https://www.instagram.com/collegeparichay", label: "Instagram" },
-              { Icon: Youtube, url: "https://www.youtube.com/@CollegeParichay-2626", label: "YouTube" },
+              { Icon: Instagram, url: "https://www.instagram.com/CampusPath", label: "Instagram" },
+              { Icon: Youtube, url: "https://www.youtube.com/@CampusPath-2626", label: "YouTube" },
               { Icon: MessageCircle, url: "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t", label: "WhatsApp" },
             ].map(({ Icon, url, label }) => (
               <a
@@ -480,7 +480,7 @@ export default function Footer() {
       {/* giant CampusLoom-style wordmark — ghosted brand at the base */}
       <div aria-hidden style={{ position: "absolute", left: 0, right: 0, bottom: 26, textAlign: "center", overflow: "hidden", pointerEvents: "none", zIndex: 0, lineHeight: 1.12 }}>
         <span style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(2.8rem, 12.5vw, 12.5rem)", color: "rgba(255,255,255,.055)", whiteSpace: "nowrap", letterSpacing: "-0.03em", display: "inline-block", textShadow: "0 6px 50px rgba(255,90,54,.18), 0 2px 3px rgba(0,0,0,.5)" }}>
-          College Parichay
+          Campus Path
         </span>
       </div>
     </footer>

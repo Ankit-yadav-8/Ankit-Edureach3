@@ -65,7 +65,7 @@ const NEET_MEGA = [
 // Pulled out of the JEE mega-menu into its own top-level tab so study material
 // isn't buried under an exam-specific menu.
 const RESOURCES_NAV = [
-  { label: "College Parichay AI", to: "/ai", icon: Sparkles, tag: "Solve doubts, get notes & quizzes" },
+  { label: "Campus Path AI", to: "/ai", icon: Sparkles, tag: "Solve doubts, get notes & quizzes" },
   { label: "Class 11 Syllabus & Mind Maps", to: "/class-11", icon: BookOpen, tag: "Chapter-wise notes + mind maps" },
   { label: "Class 12 Syllabus & Mind Maps", to: "/class-12", icon: Edit3, tag: "Boards + competitive prep" },
   { label: "Exam Strategy — JEE", to: "/jee-strategy", icon: Zap, tag: "Toppers' roadmap, tips & tricks" },
@@ -238,7 +238,7 @@ export default function Navbar({ onSearch }) {
 
           {/* Brand text — clamps down on narrow phones so the bar never overflows */}
           <span id="cp-wordmark" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "clamp(1.1rem, 4.4vw, 1.4rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap", color: "#1a1a2e" }}>
-            College Parichay
+            Campus Path
           </span>
         </Link>
 
@@ -626,7 +626,7 @@ export default function Navbar({ onSearch }) {
                   fontWeight: 700, fontSize: "0.95rem", textDecoration: "none",
                 }}
               >
-                <HelpCircle size={16} /> How to use College Parichay
+                <HelpCircle size={16} /> How to use Campus Path
               </Link>
 
               {isLoggedIn ? (

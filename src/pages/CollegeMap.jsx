@@ -68,7 +68,7 @@ export default function CollegeMap() {
     <div className="page">
       <Seo
         title="College Map — Explore IITs, NITs & IIITs Across India"
-        description="Interactive map of every IIT, NIT and IIIT in India — explore colleges by location, type and rank, then open full cutoffs, placements and reviews on CollegeParichay."
+        description="Interactive map of every IIT, NIT and IIIT in India — explore colleges by location, type and rank, then open full cutoffs, placements and reviews on CampusPath."
         path="/map"
       />
       <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "44px 0" }}>

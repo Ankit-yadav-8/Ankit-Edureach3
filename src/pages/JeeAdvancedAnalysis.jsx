@@ -266,7 +266,7 @@ export default function JeeAdvancedAnalysis() {
     <div className="jaa">
       <Seo
         title="JEE Advanced Chapter-wise Analysis 2026 — Weightage, Priority & Marks"
-        description="All 80 NCERT chapters for JEE Advanced ranked chapter-by-chapter by weightage, marks at stake, difficulty, average questions and priority — with sub-topic breakdowns, class/difficulty/trend filters, a 200-hour study budget and the marking scheme on College Parichay."
+        description="All 80 NCERT chapters for JEE Advanced ranked chapter-by-chapter by weightage, marks at stake, difficulty, average questions and priority — with sub-topic breakdowns, class/difficulty/trend filters, a 200-hour study budget and the marking scheme on Campus Path."
         path="/jee-advanced-analysis"
       />
 

@@ -110,7 +110,7 @@ export default function AiDoubtSolver({ token, exam = "JEE", subjects = [] }) {
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.02rem", display: "flex", alignItems: "center", gap: 7 }}>
-            College Parichay AI
+            Campus Path AI
             <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 800, color: ORANGE, background: "#fff", padding: "2px 8px", borderRadius: 50 }}>
               <Sparkles size={10} /> DOUBT SOLVER
             </span>
@@ -151,7 +151,7 @@ export default function AiDoubtSolver({ token, exam = "JEE", subjects = [] }) {
             </div>
             <h3 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: "1.15rem", margin: "0 0 6px" }}>Stuck on a question?</h3>
             <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.6, margin: "0 0 18px" }}>
-              Ask College Parichay AI for a clean, step-by-step solution — then discuss it with your batch below.
+              Ask Campus Path AI for a clean, step-by-step solution — then discuss it with your batch below.
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {STARTERS.map((s) => (

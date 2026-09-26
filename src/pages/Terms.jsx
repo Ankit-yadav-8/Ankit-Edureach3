@@ -8,13 +8,13 @@ const SECTIONS = [
   {
     h: "1. Acceptance of terms",
     p: [
-      "These Terms of Use govern your access to and use of collegeparichay.in (the “Platform”) operated by College Parichay. By using the Platform you agree to these Terms. If you do not agree, please do not use the Platform.",
+      "These Terms of Use govern your access to and use of collegeparichay.in (the “Platform”) operated by Campus Path. By using the Platform you agree to these Terms. If you do not agree, please do not use the Platform.",
     ],
   },
   {
     h: "2. What we provide",
     p: [
-      "College Parichay offers informational tools — including rank prediction, college discovery, cutoff trends and counselling guidance — to help students make admission decisions. All outputs are indicative estimates intended for guidance only.",
+      "Campus Path offers informational tools — including rank prediction, college discovery, cutoff trends and counselling guidance — to help students make admission decisions. All outputs are indicative estimates intended for guidance only.",
     ],
   },
   {
@@ -48,13 +48,13 @@ const SECTIONS = [
   {
     h: "7. Intellectual property",
     p: [
-      "All content, design, branding and software on the Platform are owned by College Parichay or its licensors and are protected by applicable laws. You may not use them without prior written consent.",
+      "All content, design, branding and software on the Platform are owned by Campus Path or its licensors and are protected by applicable laws. You may not use them without prior written consent.",
     ],
   },
   {
     h: "8. Limitation of liability",
     p: [
-      "To the maximum extent permitted by law, College Parichay is not liable for any indirect, incidental or consequential damages arising from your use of, or reliance on, the Platform or its estimates.",
+      "To the maximum extent permitted by law, Campus Path is not liable for any indirect, incidental or consequential damages arising from your use of, or reliance on, the Platform or its estimates.",
     ],
   },
   {
@@ -75,8 +75,8 @@ export default function Terms() {
   return (
     <div className="page">
       <Seo
-        title="Terms of Use — College Parichay"
-        description="The terms governing your use of College Parichay's rank predictor, college discovery and counselling tools, including accuracy disclaimers and acceptable use."
+        title="Terms of Use — Campus Path"
+        description="The terms governing your use of Campus Path's rank predictor, college discovery and counselling tools, including accuracy disclaimers and acceptable use."
         path="/terms"
       />
       <section className="warm-page-header" style={{ padding: "48px 0", position: "relative", overflow: "hidden" }}>
