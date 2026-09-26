@@ -160,6 +160,31 @@ export default function Navbar({ onSearch }) {
     setMobileOpen(false);
   }, [location]);
 
+  // Preload chunks on hover to eliminate loading delay when clicked
+  const preloadChunk = (to) => {
+    if (!to) return;
+    try {
+      if (to.startsWith("/colleges")) import("../pages/Colleges.jsx");
+      else if (to.startsWith("/jee-main")) import("../pages/JeeMain.jsx");
+      else if (to.startsWith("/jee-advanced")) import("../pages/JeeAdvanced.jsx");
+      else if (to.startsWith("/neet")) import("../pages/Neet.jsx");
+      else if (to.startsWith("/planner")) import("../pages/CounsellingPlanner.jsx");
+      else if (to.startsWith("/compare")) import("../pages/Compare.jsx");
+      else if (to.startsWith("/cutoffs")) import("../pages/OfficialCutoffs.jsx");
+      else if (to.startsWith("/for-you")) import("../pages/ForYou.jsx");
+      else if (to.startsWith("/branches")) import("../pages/Branches.jsx");
+      else if (to.startsWith("/private-universities")) import("../pages/PrivateUnis.jsx");
+      else if (to.startsWith("/blog")) import("../pages/Blog.jsx");
+      else if (to.startsWith("/mentorship")) import("../pages/Mentorship.jsx");
+      else if (to.startsWith("/tools")) import("../pages/Tools.jsx");
+      else if (to.startsWith("/map")) import("../pages/CollegeMap.jsx");
+      else if (to.startsWith("/community")) import("../pages/PublicCommunity.jsx");
+      else if (to.startsWith("/campus-notes")) import("../pages/CampusNotes.jsx");
+      else if (to.startsWith("/jee-strategy")) import("../pages/JeeStrategy.jsx");
+      else if (to.startsWith("/neet-strategy")) import("../pages/NeetStrategy.jsx");
+    } catch (e) { /* ignore prefetch errors */ }
+  };
+
   const goHash = (to) => {
     if (GATE_TABS && !isLoggedIn) { openLogin(); return; }
     setOpen(null);
@@ -259,7 +284,10 @@ export default function Navbar({ onSearch }) {
             <li
               key={item.label}
               style={{ position: item.mega && item.label === "Tools" ? "static" : "relative" }}
-              onMouseEnter={() => (item.drop || item.mega) && setOpen(item.label)}
+              onMouseEnter={() => {
+                if (item.drop || item.mega) setOpen(item.label);
+                preloadChunk(item.to || item.base);
+              }}
               onMouseLeave={() => setOpen(null)}
             >
               {item.mega ? (
@@ -313,6 +341,7 @@ export default function Navbar({ onSearch }) {
                                 return (
                                   <button
                                     key={d.label}
+                                    onMouseEnter={() => preloadChunk(d.to)}
                                     onClick={() => goHash(d.to)}
                                     className="mega-item"
                                     style={{ ...megaItemStyle, alignItems: d.desc ? "flex-start" : "center", "--mega-accent": col.color }}
@@ -365,7 +394,7 @@ export default function Navbar({ onSearch }) {
                           const Ic = d.icon;
                           const theme = TILE_COLORS[i % TILE_COLORS.length];
                           return (
-                            <button key={d.label} onClick={() => goHash(d.to)} className="mega-item" style={{ ...megaItemStyle, alignItems: "flex-start", "--mega-accent": "#FF693D" }}>
+                            <button key={d.label} onMouseEnter={() => preloadChunk(d.to)} onClick={() => goHash(d.to)} className="mega-item" style={{ ...megaItemStyle, alignItems: "flex-start", "--mega-accent": "#FF693D" }}>
                               <span style={{ width: 40, height: 40, borderRadius: 12, background: d.iconBg || theme.bg, display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
                                 <Ic size={18} color={d.iconColor || theme.color} style={{ strokeWidth: 1.85 }} />
                               </span>
@@ -385,6 +414,7 @@ export default function Navbar({ onSearch }) {
                 </>
               ) : item.feature ? (
                 <button
+                  onMouseEnter={() => preloadChunk(item.to)}
                   onClick={() => goHash(item.to)}
                   className="nav-feature-btn"
                   style={navFeatureStyle}
@@ -393,7 +423,7 @@ export default function Navbar({ onSearch }) {
                   {item.label}
                 </button>
               ) : (
-                <button onClick={() => goHash(item.to)} className="nav-link-btn" style={navLinkStyle(isActive(item))}>
+                <button onMouseEnter={() => preloadChunk(item.to)} onClick={() => goHash(item.to)} className="nav-link-btn" style={navLinkStyle(isActive(item))}>
                   {item.label}
                 </button>
               )}
