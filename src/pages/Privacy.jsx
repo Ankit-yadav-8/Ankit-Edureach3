@@ -15,10 +15,10 @@ const SECTIONS = [
   {
     h: "2. Information we collect",
     list: [
-      "Account details you provide — name, email, phone number, home state, exam ranks and coaching, when you sign up or enrol.",
-      "Inputs you enter into tools — expected marks, rank, category and preferences used by the rank and college predictors.",
-      "Usage data — pages visited, features used, device and browser type, collected to improve the Platform.",
-      "Communications — messages you send us via WhatsApp, email or contact forms.",
+      "Account details you provide - name, email, phone number, home state, exam ranks and coaching, when you sign up or enrol.",
+      "Inputs you enter into tools - expected marks, rank, category and preferences used by the rank and college predictors.",
+      "Usage data - pages visited, features used, device and browser type, collected to improve the Platform.",
+      "Communications - messages you send us via WhatsApp, email or contact forms.",
     ],
   },
   {
@@ -67,7 +67,7 @@ export default function Privacy() {
   return (
     <div className="page">
       <Seo
-        title="Privacy Policy — Campus Point"
+        title="Privacy Policy - Campus Point"
         description="How Campus Point collects, uses and protects your personal information when you use our rank predictor, college discovery and counselling tools."
         path="/privacy"
       />

@@ -1,4 +1,4 @@
-/* PremiumColleges — "Premium colleges that take your JEE rank" home section.
+/* PremiumColleges - "Premium colleges that take your JEE rank" home section.
    Top institutes outside JoSAA you can apply to directly with a JEE score,
    shown as a clean responsive table (rows stack into cards on mobile). */
 import { motion } from "framer-motion";
@@ -84,7 +84,7 @@ export default function PremiumColleges() {
             Top-Tier Institutions Accepting Your <span style={{ color: CL.coral }}>JEE Rank</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.02rem", lineHeight: 1.6 }}>
-            Independent of JoSAA — use your JEE score to apply directly on their official websites.
+            Independent of JoSAA - use your JEE score to apply directly on their official websites.
           </p>
         </div>
 

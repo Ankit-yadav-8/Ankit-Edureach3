@@ -39,7 +39,7 @@ const DIFFICULTY_DATA = {
     p2Label: "Very Hard",
     toughest: "Mathematics",
     keyTrend:
-      "One of the toughest years overall — Paper 2 Mathematics had multi-correct questions requiring deep calculus. Chemistry was the easiest subject. Physics had tricky Electrostatics and Modern Physics problems that hit hardest in Paper 2.",
+      "One of the toughest years overall - Paper 2 Mathematics had multi-correct questions requiring deep calculus. Chemistry was the easiest subject. Physics had tricky Electrostatics and Modern Physics problems that hit hardest in Paper 2.",
     tags: ["Paper 2 tougher", "Maths multi-correct hard", "Chemistry easiest"],
   },
   2023: {
@@ -59,7 +59,7 @@ const DIFFICULTY_DATA = {
     p2Label: "Very Hard",
     toughest: "Mathematics",
     keyTrend:
-      "Physics was the hardest in years — Modern Physics and Electromagnetic Induction dominated Paper 2. Maths remained very tough across both papers. Chemistry was the most scoring subject, and Paper 2 was clearly the harder half.",
+      "Physics was the hardest in years - Modern Physics and Electromagnetic Induction dominated Paper 2. Maths remained very tough across both papers. Chemistry was the most scoring subject, and Paper 2 was clearly the harder half.",
     tags: ["Paper 2 tougher", "Physics hardest in years", "Maths very hard"],
   },
   2025: {
@@ -79,13 +79,13 @@ const DIFFICULTY_DATA = {
     p2Label: "Moderate-Hard",
     toughest: "Mathematics",
     keyTrend:
-      "A clear relief from 2025 — IIT Roorkee set a more balanced paper. Paper 1 was Easy to Moderate with straightforward, concept-first questions, while Paper 2 was Moderate to Hard but leaned more towards the moderate side. Overall easier than 2025, yet a notch tougher than the relatively easy 2024 paper — reflected in the CRL qualifying cutoff rising to 92 marks (between 2025's 74 and 2024's 109). Chemistry stayed the most scoring subject and Mathematics remained the toughest, though noticeably more approachable than 2025.",
+      "A clear relief from 2025 - IIT Roorkee set a more balanced paper. Paper 1 was Easy to Moderate with straightforward, concept-first questions, while Paper 2 was Moderate to Hard but leaned more towards the moderate side. Overall easier than 2025, yet a notch tougher than the relatively easy 2024 paper - reflected in the CRL qualifying cutoff rising to 92 marks (between 2025's 74 and 2024's 109). Chemistry stayed the most scoring subject and Mathematics remained the toughest, though noticeably more approachable than 2025.",
     tags: ["Easier than 2025", "Paper 1 easy-moderate", "Paper 2 leans moderate", "CRL cutoff 92"],
   },
 };
 
 /* ═══════════════════════════════════════════════════════════
-   ORGANISING IIT — which IIT designed & conducted the paper.
+   ORGANISING IIT - which IIT designed & conducted the paper.
    JEE Advanced rotates between 7 zonal IITs under the Joint
    Admission Board (JAB). History verified against jeeadv.ac.in
    & Wikipedia. Each setter IIT lends the paper its own flavour.
@@ -95,15 +95,15 @@ const ORGANISING_IITS = {
   2019: { iit: "IIT Roorkee",   short: "IITR",   city: "Roorkee, UK",     color: "#2563EB", setterNote: "Balanced across subjects; Maths on the lengthier side." },
   2020: { iit: "IIT Delhi",     short: "IITD",   city: "New Delhi",       color: "#DC2626", setterNote: "COVID-year paper; moderate overall with tricky Physics." },
   2021: { iit: "IIT Kharagpur", short: "IITKgp", city: "Kharagpur, WB",   color: "#7C3AED", setterNote: "Pushed more non-negative numerical-answer questions; Maths very lengthy." },
-  2022: { iit: "IIT Bombay",    short: "IITB",   city: "Mumbai, MH",      color: "#0891B2", setterNote: "Set a brutal multi-correct Maths section — one of the toughest years." },
+  2022: { iit: "IIT Bombay",    short: "IITB",   city: "Mumbai, MH",      color: "#0891B2", setterNote: "Set a brutal multi-correct Maths section - one of the toughest years." },
   2023: { iit: "IIT Guwahati",  short: "IITG",   city: "Guwahati, AS",    color: "#16A34A", setterNote: "Unconventional Maths problem types drove difficulty to a multi-year high." },
   2024: { iit: "IIT Madras",    short: "IITM",   city: "Chennai, TN",     color: "#E0421F", setterNote: "Physics turned unusually demanding; rich application-based framing." },
   2025: { iit: "IIT Kanpur",    short: "IITK",   city: "Kanpur, UP",      color: "#0EA5A4", setterNote: "Lengthy, unconventional Maths peaking in Paper 2; Chemistry stayed the scoring section." },
-  2026: { iit: "IIT Roorkee",   short: "IITR",   city: "Roorkee, UK",     color: "#2563EB", setterNote: "Set a more balanced paper — Paper 1 Easy-Moderate and Paper 2 leaning moderate; easier than 2025 but tougher than 2024." },
+  2026: { iit: "IIT Roorkee",   short: "IITR",   city: "Roorkee, UK",     color: "#2563EB", setterNote: "Set a more balanced paper - Paper 1 Easy-Moderate and Paper 2 leaning moderate; easier than 2025 but tougher than 2024." },
 };
 
 /* ═══════════════════════════════════════════════════════════
-   PAPER CHARACTER — how Paper 1 vs Paper 2 differ in nature,
+   PAPER CHARACTER - how Paper 1 vs Paper 2 differ in nature,
    question types and the strategy each demands. Independent of
    the year-wise difficulty index above.
 ═══════════════════════════════════════════════════════════ */
@@ -119,7 +119,7 @@ const PAPER_CHARACTER = [
     points: [
       "Balanced mix of conceptual & application problems",
       "More non-negative numerical / integer-type questions",
-      "Reward for accuracy — attempt every numerical (no negative marking on those)",
+      "Reward for accuracy - attempt every numerical (no negative marking on those)",
       "A good Paper 1 score builds the cushion before the tougher Paper 2",
     ],
   },
@@ -130,12 +130,12 @@ const PAPER_CHARACTER = [
     color: "#7C3AED",
     bg: "#f3e8ff",
     summary:
-      "Consistently rated Difficult. It heavily features multi-correct MCQs, paragraph-type questions and significantly lengthier calculations — designed to test stamina and time management in the second half of a long exam day.",
+      "Consistently rated Difficult. It heavily features multi-correct MCQs, paragraph-type questions and significantly lengthier calculations - designed to test stamina and time management in the second half of a long exam day.",
     points: [
-      "Heavy on multi-correct MCQs — partial & negative marking traps",
+      "Heavy on multi-correct MCQs - partial & negative marking traps",
       "Paragraph / comprehension-linked question sets",
       "Significantly lengthier, calculation-heavy problems",
-      "A true test of stamina & time management — pace yourself",
+      "A true test of stamina & time management - pace yourself",
     ],
   },
 ];
@@ -174,38 +174,38 @@ const SYLLABUS = {
   Physics: {
     color: "#FF693D", icon: Atom,
     topics: [
-      "Mechanics — Kinematics, Laws of Motion, Work & Energy",
-      "Rotational Motion — Moment of Inertia, Angular Momentum",
-      "Gravitation — Kepler's Laws, Orbital Velocity",
+      "Mechanics - Kinematics, Laws of Motion, Work & Energy",
+      "Rotational Motion - Moment of Inertia, Angular Momentum",
+      "Gravitation - Kepler's Laws, Orbital Velocity",
       "Fluid Mechanics & Thermal Physics",
-      "Waves & Optics — Diffraction, Interference, Polarisation",
-      "Electricity & Magnetism — Gauss Law, Biot-Savart",
-      "Modern Physics — Photoelectric Effect, Nuclear Physics",
-      "Electronics — Logic Gates, Semiconductors",
+      "Waves & Optics - Diffraction, Interference, Polarisation",
+      "Electricity & Magnetism - Gauss Law, Biot-Savart",
+      "Modern Physics - Photoelectric Effect, Nuclear Physics",
+      "Electronics - Logic Gates, Semiconductors",
     ],
   },
   Chemistry: {
     color: "#0EA5A4", icon: FlaskConical,
     topics: [
-      "Physical Chemistry — Thermodynamics, Equilibrium, Kinetics",
+      "Physical Chemistry - Thermodynamics, Equilibrium, Kinetics",
       "Atomic Structure & Chemical Bonding",
-      "States of Matter — Solid, Liquid, Gas",
+      "States of Matter - Solid, Liquid, Gas",
       "Electrochemistry & Solutions",
-      "Organic Chemistry — IUPAC, Isomerism, Reaction Mechanisms",
-      "Named Reactions — Aldol, Cannizzaro, Grignard",
-      "Inorganic Chemistry — d-block, Coordination Compounds",
-      "Biomolecules — Carbohydrates, Proteins, Polymers",
+      "Organic Chemistry - IUPAC, Isomerism, Reaction Mechanisms",
+      "Named Reactions - Aldol, Cannizzaro, Grignard",
+      "Inorganic Chemistry - d-block, Coordination Compounds",
+      "Biomolecules - Carbohydrates, Proteins, Polymers",
     ],
   },
   Mathematics: {
     color: "#7C3AED", icon: Calculator,
     topics: [
-      "Algebra — Complex Numbers, Matrices, Determinants",
-      "Sequences & Series — AP, GP, Binomial Theorem",
-      "Trigonometry — Multiple Angles, Inverse Functions",
-      "Coordinate Geometry — Circles, Conics, 3D",
-      "Calculus — Limits, Derivatives, Definite Integrals",
-      "Differential Equations — Variable Separable, Linear",
+      "Algebra - Complex Numbers, Matrices, Determinants",
+      "Sequences & Series - AP, GP, Binomial Theorem",
+      "Trigonometry - Multiple Angles, Inverse Functions",
+      "Coordinate Geometry - Circles, Conics, 3D",
+      "Calculus - Limits, Derivatives, Definite Integrals",
+      "Differential Equations - Variable Separable, Linear",
       "Vectors & 3D Geometry",
       "Probability & Statistics",
     ],
@@ -248,7 +248,7 @@ const COACHING = [
     name: "Narayana", city: "Hyderabad + Pan India", color: "#EC4899", badge: "📍 Pan-India Network",
     highlights: [
       "500+ centres across India",
-      "Strong in South India — excellent SC/ST results",
+      "Strong in South India - excellent SC/ST results",
       "Integrated school + coaching model",
       "Affordable fee structure with scholarships",
     ],
@@ -269,7 +269,7 @@ const COACHING = [
     highlights: [
       "Best residential/hostel JEE coaching in South India",
       "Pinnacle & Super 30 batches for top rankers",
-      "Strong Chemistry faculty — best for Organic",
+      "Strong Chemistry faculty - best for Organic",
       "Scholarship-based admission for merit students",
     ],
     website: "https://srichaitanya.net", fee: "₹1L – ₹2.2L/year", mode: "Offline / Residential",
@@ -355,7 +355,7 @@ function SubjectBar({ label, p1, p2, animate }) {
   );
 }
 
-/* ── Animated "Organising IIT" banner — shows which IIT designed
+/* ── Animated "Organising IIT" banner - shows which IIT designed
       and conducted the paper for the selected year. ── */
 function OrganiserBanner({ year }) {
   const org = ORGANISING_IITS[year];
@@ -461,7 +461,7 @@ export default function JeeAdvanced() {
   return (
     <div className="page">
       <Seo
-        title="JEE Advanced Rank Predictor — Marks to Rank & IIT College Predictor"
+        title="JEE Advanced Rank Predictor - Marks to Rank & IIT College Predictor"
         description="Free JEE Advanced rank predictor. Enter your marks to get your expected rank and the IITs and branches you can get, category-wise. Built by IIT Roorkee alumni."
         path="/jee-advanced"
       />
@@ -548,7 +548,7 @@ export default function JeeAdvanced() {
       {/* ── Hero (blog-style) ── */}
       <PageHero
         eyebrow="JEE Advanced 2026" eyebrowIcon={Building2} accent="#7C3AED"
-        titleLead="JEE Advanced —" highlight="IIT rank & seat" titleTail="" highlightTail="predictor hub."
+        titleLead="JEE Advanced -" highlight="IIT rank & seat" titleTail="" highlightTail="predictor hub."
         sub="Estimate your IIT rank, find which IIT branches you qualify for, analyse Paper 1 & 2 difficulty subject-wise, and explore the syllabus, roadmap & coaching."
         cta={{ label: "Estimate my IIT rank", to: "#rank" }}
         cards={[
@@ -578,7 +578,7 @@ export default function JeeAdvanced() {
           }}>
             <span style={{ fontSize: 18 }}>⏳</span>
             <span>
-              <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a "Page Unresponsive" pop-up, click <strong>"Wait"</strong> — do <em>not</em> click "Exit Page".
+              <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a "Page Unresponsive" pop-up, click <strong>"Wait"</strong> - do <em>not</em> click "Exit Page".
             </span>
           </div>
           <div className="predictor-layout" style={{ display: "block" }}>
@@ -605,7 +605,7 @@ export default function JeeAdvanced() {
             </p>
           </div>
 
-          {/* ── Paper 1 vs Paper 2 — Character & Strategy ── */}
+          {/* ── Paper 1 vs Paper 2 - Character & Strategy ── */}
           <div className="paper-char-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 34 }}>
             {PAPER_CHARACTER.map((p) => (
               <div key={p.paper}
@@ -751,7 +751,7 @@ export default function JeeAdvanced() {
           <div className="card" style={{ marginBottom: 20 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
               <h4 style={{ fontFamily: "Sora", fontWeight: 700 }}>
-                Paper 1 vs Paper 2 — All Subjects · {selectedYear}
+                Paper 1 vs Paper 2 - All Subjects · {selectedYear}
               </h4>
               <span style={{ fontSize: 11, color: "var(--muted)" }}>Higher bar = more difficult</span>
             </div>
@@ -772,7 +772,7 @@ export default function JeeAdvanced() {
               <span style={{ fontSize: 28, flexShrink: 0 }}>💡</span>
               <div style={{ flex: 1 }}>
                 <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, marginBottom: 8 }}>
-                  Key Trends — JEE Advanced {selectedYear}
+                  Key Trends - JEE Advanced {selectedYear}
                 </h4>
                 <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.7, marginBottom: 12 }}>{d.keyTrend}</p>
                 <div>
@@ -853,7 +853,7 @@ export default function JeeAdvanced() {
           {/* ── Paper-setting IITs Over the Years (clickable timeline) ── */}
           <div style={{ marginTop: 30 }}>
             <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, marginBottom: 4 }}>
-              🏛️ Which IIT Sets the Paper — Rotation Timeline
+              🏛️ Which IIT Sets the Paper - Rotation Timeline
             </h4>
             <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>
               JEE Advanced rotates between the 7 zonal IITs under the Joint Admission Board.
@@ -876,7 +876,7 @@ export default function JeeAdvanced() {
                       cursor: hasData ? "pointer" : "default",
                       opacity: hasData ? 1 : 0.62,
                     }}
-                    title={hasData ? `View ${y} analysis` : `${org.iit} — ${y}`}
+                    title={hasData ? `View ${y} analysis` : `${org.iit} - ${y}`}
                   >
                     <span style={{
                       width: 34, height: 34, borderRadius: 9, display: "grid", placeItems: "center",
@@ -912,9 +912,9 @@ export default function JeeAdvanced() {
 
           <div className="grid-3" style={{ gap: 22, marginBottom: 22 }}>
             {[
-              { label: "Physics",   data: TREND_PHYSICS,   c1: "#FF693D", c2: "#fdba74", note: "Rising steadily — application-based Modern Physics and EMI problems increasing" },
-              { label: "Chemistry", data: TREND_CHEMISTRY, c1: "#0EA5A4", c2: "#5eead4", note: "Most scoring subject consistently — Named reactions and Physical Chemistry key" },
-              { label: "Maths",     data: TREND_MATHS,     c1: "#7C3AED", c2: "#c084fc", note: "Toughest every year — multi-correct calculus and 3D Geometry dominate" },
+              { label: "Physics",   data: TREND_PHYSICS,   c1: "#FF693D", c2: "#fdba74", note: "Rising steadily - application-based Modern Physics and EMI problems increasing" },
+              { label: "Chemistry", data: TREND_CHEMISTRY, c1: "#0EA5A4", c2: "#5eead4", note: "Most scoring subject consistently - Named reactions and Physical Chemistry key" },
+              { label: "Maths",     data: TREND_MATHS,     c1: "#7C3AED", c2: "#c084fc", note: "Toughest every year - multi-correct calculus and 3D Geometry dominate" },
             ].map(({ label, data, c1, c2, note }) => (
               <div key={label} className="card card-hover">
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
@@ -945,8 +945,8 @@ export default function JeeAdvanced() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }}>
             {[
               { icon: "⚛", color: "#FF693D", title: "Physics",   stat: "↓ eased in 2026", sub: "Climbed to a ~83 (2025 P2) peak, then eased to ~74 in 2026 as Roorkee set a more application-friendly paper" },
-              { icon: "⚗", color: "#0EA5A4", title: "Chemistry", stat: "Most scoring",    sub: "Stayed the most scoring subject — 2026 a touch easier than 2025; focus on Named Reactions and Physical Chem" },
-              { icon: "∑",  color: "#7C3AED", title: "Maths",    stat: "Still #1 hardest", sub: "Toughest every year incl. 2026, though noticeably more approachable than 2025's peak — calculus & 3D geometry still decisive" },
+              { icon: "⚗", color: "#0EA5A4", title: "Chemistry", stat: "Most scoring",    sub: "Stayed the most scoring subject - 2026 a touch easier than 2025; focus on Named Reactions and Physical Chem" },
+              { icon: "∑",  color: "#7C3AED", title: "Maths",    stat: "Still #1 hardest", sub: "Toughest every year incl. 2026, though noticeably more approachable than 2025's peak - calculus & 3D geometry still decisive" },
             ].map(({ icon, color, title, stat, sub }) => (
               <div key={title} className="card" style={{ borderLeft: `4px solid ${color}`, padding: "14px 18px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
@@ -970,7 +970,7 @@ export default function JeeAdvanced() {
         <div className="container">
           <div className="title-bar">
             <span className="eyebrow">Cutoff Trends · 2021–2026</span>
-            <h2 className="section-title">JEE Advanced — 6-Year Aggregate Qualifying Cutoff</h2>
+            <h2 className="section-title">JEE Advanced - 6-Year Aggregate Qualifying Cutoff</h2>
             <p className="section-sub">
               Official minimum aggregate marks (out of 360, Paper 1 + Paper 2 combined) required to secure a rank in the JEE Advanced merit list.
               <strong> Source: jeeadv.ac.in official cutoff notifications.</strong>
@@ -1034,7 +1034,7 @@ export default function JeeAdvanced() {
             {/* Per-category mini bars for latest year */}
             <div style={{ marginBottom: 20, padding: "16px 20px", background: "var(--sky)", borderRadius: 12, border: "1px solid var(--line)" }}>
               <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, marginBottom: 14, color: "var(--navy)" }}>
-                📊 2026 Qualifying Marks — Category Visual (out of 360)
+                📊 2026 Qualifying Marks - Category Visual (out of 360)
               </div>
               <MarksBar label="CRL (General)"  value={92} color="#7C3AED" maxValue={180} />
               <MarksBar label="OBC-NCL / EWS"  value={82} color="#FF693D" maxValue={180} />
@@ -1056,19 +1056,19 @@ export default function JeeAdvanced() {
               <div style={{ padding: "12px 16px", background: "#fef2f2", borderRadius: 10, border: "1px solid #fca5a5" }}>
                 <div style={{ fontWeight: 700, fontSize: 12, color: "#EF4444", marginBottom: 4 }}>📈 2024 peak cutoff</div>
                 <div style={{ fontSize: 12, color: "#7f1d1d", lineHeight: 1.5 }}>
-                  CRL cutoff reached 109 marks in 2024 — the highest in 6 years, reflecting an easier paper that year.
+                  CRL cutoff reached 109 marks in 2024 - the highest in 6 years, reflecting an easier paper that year.
                 </div>
               </div>
               <div style={{ padding: "12px 16px", background: "#f0fdf4", borderRadius: 10, border: "1px solid #86efac" }}>
                 <div style={{ fontWeight: 700, fontSize: 12, color: "#15A06E", marginBottom: 4 }}>📉 2025 sharp drop</div>
                 <div style={{ fontSize: 12, color: "#14532d", lineHeight: 1.5 }}>
-                  2025 saw a significant dip to 74 marks (CRL) — a ~32% drop from 2024 due to markedly harder papers.
+                  2025 saw a significant dip to 74 marks (CRL) - a ~32% drop from 2024 due to markedly harder papers.
                 </div>
               </div>
               <div style={{ padding: "12px 16px", background: "#faf5ff", borderRadius: 10, border: "1px solid #c4b5fd" }}>
                 <div style={{ fontWeight: 700, fontSize: 12, color: "#7C3AED", marginBottom: 4 }}>📊 2026 moderate rebound</div>
                 <div style={{ fontSize: 12, color: "#4c1d95", lineHeight: 1.5 }}>
-                  2026 recovered to 92 marks (CRL) as IIT Roorkee set an easier-than-2025 paper — sitting between 2024 (109) and 2025 (74).
+                  2026 recovered to 92 marks (CRL) as IIT Roorkee set an easier-than-2025 paper - sitting between 2024 (109) and 2025 (74).
                 </div>
               </div>
             </div>
@@ -1091,7 +1091,7 @@ export default function JeeAdvanced() {
           <div className="title-bar">
             <span className="eyebrow">Syllabus</span>
             <h2 className="section-title">Complete JEE Advanced Syllabus</h2>
-            <p className="section-sub">Both papers test the same syllabus with different question types — multi-correct MCQs, numerical answer, match-the-column &amp; paragraph questions.</p>
+            <p className="section-sub">Both papers test the same syllabus with different question types - multi-correct MCQs, numerical answer, match-the-column &amp; paragraph questions.</p>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 28 }}>
@@ -1137,20 +1137,20 @@ export default function JeeAdvanced() {
           <div className="grid-2" style={{ gap: 20 }}>
             {[
               {
-                title: "Paper 1 — Question Types",
+                title: "Paper 1 - Question Types",
                 color: "#FF693D",
                 types: [
-                  "MCQ — Single Correct (3 marks, −1 penalty)",
-                  "MCQ — Multiple Correct (4 marks, partial credit)",
+                  "MCQ - Single Correct (3 marks, −1 penalty)",
+                  "MCQ - Multiple Correct (4 marks, partial credit)",
                   "Numerical Answer Type (4 marks, no negative marking)",
                 ],
               },
               {
-                title: "Paper 2 — Question Types",
+                title: "Paper 2 - Question Types",
                 color: "#7C3AED",
                 types: [
-                  "MCQ — Single Correct (3 marks, −1 penalty)",
-                  "MCQ — Multiple Correct (4 marks, partial credit)",
+                  "MCQ - Single Correct (3 marks, −1 penalty)",
+                  "MCQ - Multiple Correct (4 marks, partial credit)",
                   "Match the Column (3–4 marks, partial marking)",
                   "Paragraph / Comprehension based questions",
                 ],
@@ -1179,7 +1179,7 @@ export default function JeeAdvanced() {
           <div className="title-bar">
             <span className="eyebrow">Top Coaching</span>
             <h2 className="section-title">Best Coaching Institutes for JEE Advanced</h2>
-            <p className="section-sub">India's top coaching options — offline Kota institutes, pan-India centres &amp; online platforms. Choose based on your city, budget &amp; learning style.</p>
+            <p className="section-sub">India's top coaching options - offline Kota institutes, pan-India centres &amp; online platforms. Choose based on your city, budget &amp; learning style.</p>
           </div>
           <div className="grid-3" style={{ gap: 22 }}>
             {COACHING.map((c) => (
@@ -1217,7 +1217,7 @@ export default function JeeAdvanced() {
             <div className="grid-2" style={{ gap: 12 }}>
               {[
                 { title: "For Kota (Offline)",       tip: "Allen or Resonance if you can relocate. Best peer environment, highly structured. Go for dropper batch after Class 12 if needed." },
-                { title: "For Home City (Offline)",  tip: "FIITJEE, Narayana, Sri Chaitanya have centres in most metros. Choose based on batch size — smaller = more attention." },
+                { title: "For Home City (Offline)",  tip: "FIITJEE, Narayana, Sri Chaitanya have centres in most metros. Choose based on batch size - smaller = more attention." },
                 { title: "For Online (Budget)",      tip: "Vedantu / Unacademy offer top faculty at a fraction of cost. Requires strong self-discipline. Best combined with test series." },
                 { title: "Self Study + Test Series", tip: "Viable for disciplined students. Use Allen/Resonance test series (₹8K–15K) + YouTube (Etoos, PW) + PYQ books." },
               ].map(({ title, tip }) => (

@@ -1,4 +1,4 @@
-/* PageHero — the blog-style hero reused across JEE Main / Advanced / NEET (and
+/* PageHero - the blog-style hero reused across JEE Main / Advanced / NEET (and
    anywhere else). Left: eyebrow + headline (with a highlighted phrase) + sub +
    CTA. Right: three floating preview cards. Only the content differs per page. */
 import { useNavigate } from "react-router-dom";

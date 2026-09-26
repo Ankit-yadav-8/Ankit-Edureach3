@@ -23,7 +23,7 @@ export { NotesBlock };
    module-level loadPredictorDB() fetched josaa_2025.csv (~12 MB) on every visit
    before the user touched anything. The cutoff DB is only ever read inside the
    predictor worker (rank prediction itself is pure math), so the main thread
-   never loads the CSV at all now — we just spin the worker up on the first
+   never loads the CSV at all now - we just spin the worker up on the first
    keystroke, seconds before "Predict" is clicked. */
 
 const CATS_MAIN = ["General", "EWS", "OBC-NCL", "SC", "ST"];
@@ -53,7 +53,7 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
   const totalMax = maxTotal(advanced);
   const cats     = advanced ? CATS_ADV : CATS_MAIN;
 
-  // Input mode — JEE Main lets students predict from raw marks OR from their
+  // Input mode - JEE Main lets students predict from raw marks OR from their
   // NTA percentile (which is what the result card actually shows them). JEE
   // Advanced is marks-only.
   const [mode, setMode] = useState("marks"); // "marks" | "percentile"
@@ -63,12 +63,12 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
   const [res,  setRes]  = useState(null);
   const nav = useNavigate();
 
-  // Inline college preview — predicted from the CATEGORY rank (CRL for General)
+  // Inline college preview - predicted from the CATEGORY rank (CRL for General)
   const { predict: predictColleges, reset: resetColleges, warmWorker, results: colleges, loading: collegesLoading } =
     useCollegePredictor();
 
   // Boot the predictor worker (which fetches the 2025 cutoff CSV) on the user's
-  // first keystroke — see the note at the top of this file.
+  // first keystroke - see the note at the top of this file.
   const warmed = useRef(false);
   const warm = () => {
     if (warmed.current) return;
@@ -122,7 +122,7 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
   };
 
   // Whenever a rank is predicted, fetch matching colleges using the CATEGORY
-  // rank (res.rank already holds the category rank — CRL only for General),
+  // rank (res.rank already holds the category rank - CRL only for General),
   // matched directly against JoSAA category closing ranks (rankType "category").
   useEffect(() => {
     if (!res || !res.ranked || !res.rank) { resetColleges(); return; }
@@ -283,7 +283,7 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
               <AlertCircle size={15} style={{ flexShrink: 0, marginTop: 1 }} />
               <span>
                 Each subject is out of <strong>{cap}</strong> marks. Please fix{" "}
-                <strong>{overSubjects.map((s) => s.label).join(", ")}</strong> —
+                <strong>{overSubjects.map((s) => s.label).join(", ")}</strong> -
                 a single subject can&apos;t exceed {cap}.
               </span>
             </motion.div>
@@ -324,7 +324,7 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
             variants={EMPTY_WRAP} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }}
           >
             <div>
-              {/* animated gauge badge — slowly rotating dashed ring + gently pulsing icon */}
+              {/* animated gauge badge - slowly rotating dashed ring + gently pulsing icon */}
               <motion.div variants={EMPTY_ITEM} style={{ position: "relative", width: 76, height: 76, margin: "0 auto" }}>
                 <motion.span aria-hidden
                   style={{ position: "absolute", inset: 0, borderRadius: "50%", border: `2px dashed ${accent}40` }}
@@ -373,7 +373,7 @@ export default function RankPredictorTool({ accent = "#FF693D", advanced = false
 function RankPredictorNotes({ accent, advanced }) {
   /* The illustrations differ between Main and Advanced (subject split, IIT vs
      NIT tiles). Memoise the bound wrappers so their component identity is stable
-     across the parent's re-renders — a fresh identity every keystroke would
+     across the parent's re-renders - a fresh identity every keystroke would
      remount the visuals and restart every loop. */
   const [Estimate, Colleges] = useMemo(() => [
     (p) => <RankEstimateVisual {...p} advanced={advanced} />,
@@ -393,7 +393,7 @@ function RankPredictorNotes({ accent, advanced }) {
       icon: Trophy,
       visual: CategoryRankVisual,
       title: "CRL + your category rank",
-      body: "You get both the All-India (CRL) rank and your reserved-category rank. For SC/ST/OBC-NCL/EWS, the category rank is what actually drives counselling — so that's what we predict colleges with.",
+      body: "You get both the All-India (CRL) rank and your reserved-category rank. For SC/ST/OBC-NCL/EWS, the category rank is what actually drives counselling - so that's what we predict colleges with.",
     },
     {
       icon: Target,
@@ -413,12 +413,12 @@ function RankPredictorNotes({ accent, advanced }) {
   return <NotesBlock accent={accent} eyebrow="About this tool" heading="How the Rank Predictor works"
     highlight="Rank Predictor" points={points}
     note={advanced
-      ? "Estimates use 2025 actuals + 2026 projections — expect ±5–10% variance. Not an official prediction; verify on jeeadv.ac.in."
-      : "Estimates model past marks-vs-rank trends — actual ranks vary by session & shift normalisation. Not an official prediction; verify on jeemain.nta.nic.in."} />;
+      ? "Estimates use 2025 actuals + 2026 projections - expect ±5–10% variance. Not an official prediction; verify on jeeadv.ac.in."
+      : "Estimates model past marks-vs-rank trends - actual ranks vary by session & shift normalisation. Not an official prediction; verify on jeemain.nta.nic.in."} />;
 }
 
 /* ══════════════════════════════════════════════
-   Animated count-up number — eases from 0 to `value`
+   Animated count-up number - eases from 0 to `value`
    on mount / whenever the value changes.
 ══════════════════════════════════════════════ */
 function CountUp({ value, format = (n) => n, duration = 850 }) {
@@ -521,8 +521,8 @@ function MainResult({ res, scorePct, totalMax, accent, nav, colleges, collegesLo
    Build "likely branches" from REAL JoSAA category-cutoff
    matches (the same data the college preview uses), so
    reserved-category candidates see branches that actually
-   close at their CATEGORY rank — not the General/CRL table.
-   Returns distinct "College — Branch (closing ~X)" lines.
+   close at their CATEGORY rank - not the General/CRL table.
+   Returns distinct "College - Branch (closing ~X)" lines.
 ══════════════════════════════════════════════ */
 function branchesFromColleges(colleges, limit = 5) {
   if (!colleges || !colleges.length) return null;
@@ -540,7 +540,7 @@ function branchesFromColleges(colleges, limit = 5) {
 }
 
 /* ══════════════════════════════════════════════
-   JEE ADVANCED result — full 8-point output
+   JEE ADVANCED result - full 8-point output
 ══════════════════════════════════════════════ */
 function AdvancedResult({ res, scorePct, accent, nav, colleges, collegesLoading }) {
   const OR = accent;
@@ -552,7 +552,7 @@ function AdvancedResult({ res, scorePct, accent, nav, colleges, collegesLoading 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, padding: "28px 8px", textAlign: "center" }}>
           <AlertCircle size={48} color="#ef4444" />
           <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.25rem", color: "#ef4444" }}>
-            Below Cutoff — Not Ranked
+            Below Cutoff - Not Ranked
           </div>
           <p style={{ color: "var(--muted)", fontSize: 13.5, maxWidth: 340, lineHeight: 1.65 }}>
             Your score of <strong>{res.total}/360</strong> is below the minimum required for the{" "}
@@ -641,7 +641,7 @@ function AdvancedResult({ res, scorePct, accent, nav, colleges, collegesLoading 
         <strong style={{ color: "var(--navy)", fontSize: 14, whiteSpace: "nowrap" }}>{effDisplay}</strong>
       </div>
 
-      {/* 6. Likely branches — for reserved categories, derive from REAL JoSAA
+      {/* 6. Likely branches - for reserved categories, derive from REAL JoSAA
             CATEGORY closing ranks (res.branches/BRANCH_TABLE is General/CRL-only). */}
       {(() => {
         const realBranches = res.isGeneral ? null : branchesFromColleges(colleges);
@@ -732,7 +732,7 @@ function AdvancedResult({ res, scorePct, accent, nav, colleges, collegesLoading 
 }
 
 /* ══════════════════════════════════════════════
-   Inline college preview — driven by the CATEGORY rank
+   Inline college preview - driven by the CATEGORY rank
    (CRL only for General). Matched against JoSAA category
    closing ranks so reserved candidates see colleges at the
    right place for their category rank.
@@ -757,7 +757,7 @@ function CollegePreview({ colleges, loading, accent, category, isGeneral, rankUs
         </div>
       ) : !colleges ? null : colleges.length === 0 ? (
         <div style={{ fontSize: 12.5, color: "var(--muted)", padding: "8px 2px" }}>
-          No close college-branch matches at this rank — try the full College Predictor below for wider options.
+          No close college-branch matches at this rank - try the full College Predictor below for wider options.
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>

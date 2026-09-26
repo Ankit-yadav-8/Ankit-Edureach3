@@ -62,7 +62,7 @@ export default function Compare() {
   const cols = compare.map((s) => COLLEGE_BY_SLUG[s]).filter(Boolean);
   const colsKey = cols.map((c) => c.slug).join("|");
 
-  /* The analyze animation plays once — when a comparison first becomes valid
+  /* The analyze animation plays once - when a comparison first becomes valid
      (2+ colleges). Adding or removing colleges after that just re-renders the
      results instantly (no replay), saving the user's time. It only re-arms if
      the selection drops back below 2. */
@@ -114,8 +114,8 @@ export default function Compare() {
     <div className="page">
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
-        title="Compare Colleges — IIT vs NIT vs IIIT with an AI verdict"
-        description="Compare IITs, NITs and IIITs side by side with an AI verdict — JoSAA cutoffs, placements, average package, fees and a scored recommendation on CampusPoint."
+        title="Compare Colleges - IIT vs NIT vs IIIT with an AI verdict"
+        description="Compare IITs, NITs and IIITs side by side with an AI verdict - JoSAA cutoffs, placements, average package, fees and a scored recommendation on CampusPoint."
         path="/compare"
       />
 
@@ -127,7 +127,7 @@ export default function Compare() {
             Compare colleges, get an <span style={{ color: CL.coral }}>AI verdict</span>
           </h1>
           <p style={{ color: CL.body, maxWidth: 620 }}>
-            Add as many colleges as you like. Our engine scores each on placements, ranking, selectivity and value — then tells you which one to protect in your JoSAA list.
+            Add as many colleges as you like. Our engine scores each on placements, ranking, selectivity and value - then tells you which one to protect in your JoSAA list.
           </p>
         </div>
       </section>
@@ -300,10 +300,10 @@ function VerdictCard({ analysis, cols }) {
       </span>
       <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.4rem,3.4vw,2rem)", letterSpacing: "-0.5px", margin: "14px 0 6px", position: "relative" }}>
         <Crown size={22} style={{ verticalAlign: "-3px", marginRight: 8 }} color={CL.amber} />
-        {w.short} takes it — {analysis.score[analysis.winnerIdx]}/100
+        {w.short} takes it - {analysis.score[analysis.winnerIdx]}/100
       </h2>
       <p style={{ color: "rgba(255,255,255,.82)", maxWidth: 640, fontSize: 14.5, lineHeight: 1.55, position: "relative" }}>
-        Across {cols.length} colleges, <b style={{ color: "#fff" }}>{w.name}</b> comes out ahead{leadTxt ? <> — leading on {leadTxt}</> : ""}. It’s the pick to protect at the top of your JoSAA choice list, with the others as strong backups.
+        Across {cols.length} colleges, <b style={{ color: "#fff" }}>{w.name}</b> comes out ahead{leadTxt ? <> - leading on {leadTxt}</> : ""}. It’s the pick to protect at the top of your JoSAA choice list, with the others as strong backups.
       </p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14, position: "relative" }}>
         {cols.map((c, i) => (

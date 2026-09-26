@@ -1,5 +1,5 @@
-/* RankToCutoff — "See what your rank can reach" JoSAA-engine section.
-   Left: pitch + what-you-get bullets. Right: a live rank console — type a
+/* RankToCutoff - "See what your rank can reach" JoSAA-engine section.
+   Left: pitch + what-you-get bullets. Right: a live rank console - type a
    JEE Advanced CRL and instantly see IIT + branch matches with a Safe / Fair
    / Reach call and a confidence bar against indicative closing ranks.
    Indicative cutoffs, not official. */
@@ -32,7 +32,7 @@ const CUTOFFS = [
 ];
 
 const FEATURES = [
-  "Matched live against real JoSAA closing ranks — IITs, NITs, IIITs & GFTIs",
+  "Matched live against real JoSAA closing ranks - IITs, NITs, IIITs & GFTIs",
   "A plain Safe / Fair / Reach call on every branch, not just a number",
   "Turn the matches into a saved, ready-to-fill JoSAA choice list",
 ];
@@ -81,7 +81,7 @@ export default function RankToCutoff() {
               See the seats your rank can <span style={{ color: CL.coral }}>actually reach.</span>
             </h2>
             <p style={{ color: CL.body, fontSize: "1.05rem", lineHeight: 1.75, marginBottom: 24, maxWidth: 450 }}>
-              Drop in a mock rank or your final JEE Advanced result and watch matching IITs and branches surface in real time — each one weighed against the ranks it actually closed at.
+              Drop in a mock rank or your final JEE Advanced result and watch matching IITs and branches surface in real time - each one weighed against the ranks it actually closed at.
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 13, marginBottom: 28 }}>
               {FEATURES.map((f) => (

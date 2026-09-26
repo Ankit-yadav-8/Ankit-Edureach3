@@ -1,5 +1,5 @@
 /* ============================================================
-   collegeFlexibility.js — academic-flexibility metadata
+   collegeFlexibility.js - academic-flexibility metadata
    ------------------------------------------------------------
    Which institutes are known to offer branch change, integrated
    dual degrees (B.Tech + M.Tech), and minor / second-major
@@ -7,7 +7,7 @@
    IIITs generally do NOT permit free branch change.
 
    Keys are the college `slug`s used in data/colleges.js.
-   Treat these as indicative — always confirm on the official
+   Treat these as indicative - always confirm on the official
    institute brochure before relying on them.
    ============================================================ */
 
@@ -24,7 +24,7 @@ export const BRANCH_CHANGE = new Set([
   "nit-hamirpur", "mnit-jaipur", "nit-nagpur", "manit-bhopal", "svnit-surat",
   "nit-raipur", "nit-patna", "nit-jamshedpur", "nit-agartala", "nit-goa",
   "nit-meghalaya",
-  // IIITs — none (no free branch change)
+  // IIITs - none (no free branch change)
 ]);
 
 // ── Integrated dual degree (B.Tech + M.Tech, 5-year) offered ──
@@ -66,7 +66,7 @@ export const FLEX_FLAGS = {
   openElectives: OPEN_ELECTIVES,
 };
 
-/* ── Branch buckets — group fine-grained branch codes into the
+/* ── Branch buckets - group fine-grained branch codes into the
    broad checkbox categories shown in the filter sidebar. ── */
 export const BRANCH_BUCKETS = [
   { id: "cs",      label: "CS & IT",                 codes: ["cse", "it"] },
@@ -136,7 +136,7 @@ export function domainOf(url) {
 /* One source of truth for a college's logo, used everywhere emblems show.
    IITs use their official local emblem (high-res); every other institute
    (NITs · IIITs · GFTIs · private) resolves to its own site favicon from the
-   official website domain — so NIT/IIIT logos appear just like the IITs. */
+   official website domain - so NIT/IIIT logos appear just like the IITs. */
 export function collegeLogo(college) {
   if (!college) return null;
   if (IIT_LOGOS[college.slug]) return IIT_LOGOS[college.slug];

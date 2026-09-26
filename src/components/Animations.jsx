@@ -1,12 +1,12 @@
 /**
- * Animations.jsx — Reusable dynamic animation components
+ * Animations.jsx - Reusable dynamic animation components
  * Uses framer-motion + CSS custom animations
  */
 import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, useMotionValue, useTransform, useSpring, useScroll } from "framer-motion";
 
 /* ─────────────────────────────────────────────────────────
-   1. FLOATING ORBS — animated background glow blobs
+   1. FLOATING ORBS - animated background glow blobs
 ───────────────────────────────────────────────────────── */
 export function FloatingOrbs({ count = 5, colors = ["#FF693D", "#6366f1", "#0ea5a4", "#fbbf24", "#8b5cf6"], style = {} }) {
   const orbs = Array.from({ length: count }, (_, i) => ({
@@ -94,7 +94,7 @@ export function TypewriterText({ words, interval = 2400, style = {}, cursorColor
 }
 
 /* ─────────────────────────────────────────────────────────
-   3. 3D TILT CARD — perspective tilt on mouse move
+   3. 3D TILT CARD - perspective tilt on mouse move
 ───────────────────────────────────────────────────────── */
 export function TiltCard({ children, style = {}, intensity = 12 }) {
   const ref = useRef(null);
@@ -178,7 +178,7 @@ export function RippleButton({ children, onClick, style = {}, className = "", co
 }
 
 /* ─────────────────────────────────────────────────────────
-   5. STAGGER CONTAINER — animate children with stagger
+   5. STAGGER CONTAINER - animate children with stagger
 ───────────────────────────────────────────────────────── */
 export function StaggerReveal({ children, stagger = 0.08, delay = 0, className = "", style = {} }) {
   return (
@@ -213,7 +213,7 @@ export function StaggerItem({ children, y = 24, style = {} }) {
 }
 
 /* ─────────────────────────────────────────────────────────
-   6. GRADIENT TEXT — animated shifting gradient
+   6. GRADIENT TEXT - animated shifting gradient
 ───────────────────────────────────────────────────────── */
 export function GradientText({ children, from = "#FF693D", via = "#fbbf24", to = "#FF693D", style = {}, animate = true }) {
   return (
@@ -233,7 +233,7 @@ export function GradientText({ children, from = "#FF693D", via = "#fbbf24", to =
 }
 
 /* ─────────────────────────────────────────────────────────
-   7. GLOW BORDER CARD — animated rotating gradient border
+   7. GLOW BORDER CARD - animated rotating gradient border
 ───────────────────────────────────────────────────────── */
 export function GlowBorderCard({ children, color = "#FF693D", radius = 16, style = {} }) {
   return (
@@ -253,7 +253,7 @@ export function GlowBorderCard({ children, color = "#FF693D", radius = 16, style
 }
 
 /* ─────────────────────────────────────────────────────────
-   8. COUNTER BADGE — animated number with flash
+   8. COUNTER BADGE - animated number with flash
 ───────────────────────────────────────────────────────── */
 export function CounterBadge({ value, label, color = "#FF693D", style = {} }) {
   const [triggered, setTriggered] = useState(false);
@@ -302,7 +302,7 @@ export function WaveSeparator({ fillTop = "#fff", fillBottom = "#fff7ef", flip =
 }
 
 /* ─────────────────────────────────────────────────────────
-   10. ANIMATED NUMBER — smooth count-up on view
+   10. ANIMATED NUMBER - smooth count-up on view
 ───────────────────────────────────────────────────────── */
 export function AnimatedNumber({ target, suffix = "", prefix = "", duration = 1.8, style = {} }) {
   const [val, setVal] = useState(0);
@@ -335,7 +335,7 @@ export function AnimatedNumber({ target, suffix = "", prefix = "", duration = 1.
 }
 
 /* ─────────────────────────────────────────────────────────
-   11. MAGNETIC BUTTON — subtle magnetic pull on hover
+   11. MAGNETIC BUTTON - subtle magnetic pull on hover
 ───────────────────────────────────────────────────────── */
 export function MagneticButton({ children, style = {}, className = "", onClick }) {
   const ref = useRef(null);

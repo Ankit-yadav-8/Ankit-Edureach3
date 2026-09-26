@@ -19,7 +19,7 @@ const SUBJECT_COLOR = { Physics: "#FF693D", Chemistry: "#0EA5A4", Maths: "#7C3AE
 
 // The CBT runs as a full-screen overlay (position:fixed). The mentorship
 // dashboard wraps its content in a framer-motion <motion.div> whose `transform`
-// makes `position:fixed` resolve against IT, not the viewport — which let the
+// makes `position:fixed` resolve against IT, not the viewport - which let the
 // dashboard bleed through behind the player. Rendering the overlay in a portal to
 // <body> escapes that transformed ancestor so it always covers the whole screen.
 const Portal = ({ children }) => createPortal(children, document.body);
@@ -64,7 +64,7 @@ const fmtDate = (iso) => (iso ? new Date(iso).toLocaleDateString("en-IN", { day:
 const mmss = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
 /* ═══════════════════════════════════════════════════════════════════
-   IMAGE VIEWER — click-to-zoom lightbox for question / option images
+   IMAGE VIEWER - click-to-zoom lightbox for question / option images
    ═══════════════════════════════════════════════════════════════════ */
 function QuestionImage({ src, alt = "Diagram", maxH = 280, style: extraStyle }) {
   const [zoom, setZoom] = useState(false);
@@ -74,7 +74,7 @@ function QuestionImage({ src, alt = "Diagram", maxH = 280, style: extraStyle }) 
   if (broken) {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 10, padding: "10px 14px", color: "#92400e", fontSize: 12.5, marginBottom: 12, ...extraStyle }}>
-        <ImageIcon size={16} /> Diagram could not be loaded — refer to the question paper.
+        <ImageIcon size={16} /> Diagram could not be loaded - refer to the question paper.
       </div>
     );
   }
@@ -111,7 +111,7 @@ function QuestionImage({ src, alt = "Diagram", maxH = 280, style: extraStyle }) 
   );
 }
 
-/* OptionImage — variant for option figures (graphs/structures to choose between).
+/* OptionImage - variant for option figures (graphs/structures to choose between).
    maxH was 90px, which made four-graph options unreadable; bigger by default and
    still click-to-zoom for a full-size look. */
 function OptionImage({ src, alt = "Option", maxH = 170 }) {
@@ -144,7 +144,7 @@ function OptionImage({ src, alt = "Option", maxH = 170 }) {
 }
 
 /* ════════════════════════════════════════════════════════════════
-   TEST SERIES — list of tests for the batch + CBT launcher
+   TEST SERIES - list of tests for the batch + CBT launcher
    ════════════════════════════════════════════════════════════════ */
 export default function TestSeries({ plan }) {
   const { token } = useAuth();
@@ -178,7 +178,7 @@ export default function TestSeries({ plan }) {
 
   return (
     <div>
-      {/* performance summary — fed by graded CBT attempts */}
+      {/* performance summary - fed by graded CBT attempts */}
       {perf && perf.testsAttempted > 0 && <PerfStrip perf={perf} />}
 
       {/* category filter */}
@@ -194,7 +194,7 @@ export default function TestSeries({ plan }) {
         })}
       </div>
 
-      {/* JEE exam-pattern filter — only when the batch has JEE Mains/Advanced tests */}
+      {/* JEE exam-pattern filter - only when the batch has JEE Mains/Advanced tests */}
       {showExamFilter && (
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
           {[{ k: "", l: "All patterns" }, { k: "mains", l: "JEE Mains" }, { k: "advanced", l: "JEE Advanced" }].map((e) => {
@@ -244,7 +244,7 @@ export default function TestSeries({ plan }) {
   );
 }
 
-/* Aggregate CBT performance — the "test record auto-uploaded to performance". */
+/* Aggregate CBT performance - the "test record auto-uploaded to performance". */
 function PerfStrip({ perf }) {
   const cells = [
     { label: "Tests taken", value: perf.testsAttempted, color: INDIGO, icon: <ListChecks size={15} color={INDIGO} /> },
@@ -326,7 +326,7 @@ function TestCard({ t, onStart }) {
 }
 
 /* ════════════════════════════════════════════════════════════════
-   CBT PLAYER — NTA-style: question pane on the left, palette +
+   CBT PLAYER - NTA-style: question pane on the left, palette +
    answers on the right, live timer with progress bar, auto-grade
    on submit, then solutions review.
    ════════════════════════════════════════════════════════════════ */
@@ -402,7 +402,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
   const curSec = sections[curSecIdx] || sections[0];
   const posInSec = curSec ? curSec.items.findIndex((it) => it.gi === idx) : 0;
 
-  // countdown — only while actually taking the test; auto-submits at zero.
+  // countdown - only while actually taking the test; auto-submits at zero.
   useEffect(() => {
     if (stage !== "test" || result || !test) return;
     if (left <= 0) { doSubmit(); return; }
@@ -534,7 +534,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
     <Portal>
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#eef0f4", display: "flex", flexDirection: "column" }}>
-      {/* top bar — title + candidate + timer + progress bar */}
+      {/* top bar - title + candidate + timer + progress bar */}
       <div style={{ background: NAVY, color: "#fff", flexShrink: 0 }}>
         <div style={{ padding: "9px 16px", display: "flex", alignItems: "center", gap: 14 }}>
           <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{test?.title}</div>
@@ -701,7 +701,7 @@ function CbtPlayer({ token, plan, testId, onClose, onSubmitted }) {
                             )}
                             {isEmpty && (
                               <span style={{ fontSize: 13, color: "#9ca3af", fontStyle: "italic" }}>
-                                Option {opt.label} — refer to the question paper
+                                Option {opt.label} - refer to the question paper
                               </span>
                             )}
                           </div>
@@ -929,7 +929,7 @@ function InstructionsScreen({ test, sections, candidate, left, onProceed, onClos
               <li><b style={{ color: NAVY }}>Sections:</b> you can attempt the sections in any order and move freely between questions using the palette.</li>
             </ol>
             <div style={{ marginTop: 14, background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "10px 14px", fontSize: 12.5, color: "#9a3412" }}>
-              <b>Important:</b> Make sure you click <b>Save &amp; Next</b> to record answers — questions only marked for review (without an answer) are not scored.
+              <b>Important:</b> Make sure you click <b>Save &amp; Next</b> to record answers - questions only marked for review (without an answer) are not scored.
             </div>
           </div>
 
@@ -1017,7 +1017,7 @@ function ResultView({ token, plan, testId, result, onClose }) {
   // Classify sections by *absolute* accuracy so the labels stay honest: a
   // section is a "strength" only if it's genuinely high, and "needs work" only
   // if it's genuinely low. (Previously the top-2 by rank were always shown as
-  // strong — so a lone 38% section wrongly appeared as a strength while
+  // strong - so a lone 38% section wrongly appeared as a strength while
   // "Needs Work" claimed there was no weak section.)
   const graded = [...subjects].filter((s) => s.total > 0);
   const strong = graded
@@ -1045,18 +1045,18 @@ function ResultView({ token, plan, testId, result, onClose }) {
     if (marksLost > 0 && marksLost >= marksGained * 0.35)
       out.push({ tone: "warn", text: `Negative marking cost you ${marksLost} marks. Skip questions you're genuinely unsure about instead of guessing.` });
     if (attemptRate < 60)
-      out.push({ tone: "warn", text: `You attempted only ${attemptRate}% of the paper — work on pace so you reach more questions.` });
+      out.push({ tone: "warn", text: `You attempted only ${attemptRate}% of the paper - work on pace so you reach more questions.` });
     if (r.accuracy >= 80 && attemptRate < 85)
-      out.push({ tone: "good", text: `Excellent ${r.accuracy}% accuracy — you can safely attempt more questions to lift your score.` });
+      out.push({ tone: "good", text: `Excellent ${r.accuracy}% accuracy - you can safely attempt more questions to lift your score.` });
     const weakTopic = [...topics].sort((a, b) => a.accuracy - b.accuracy)[0];
     if (weakTopic && weakTopic.accuracy < 50)
-      out.push({ tone: "warn", text: `Revise the chapter "${weakTopic.topic}" (${weakTopic.subject}) — ${weakTopic.accuracy}% accuracy there.` });
+      out.push({ tone: "warn", text: `Revise the chapter "${weakTopic.topic}" (${weakTopic.subject}) - ${weakTopic.accuracy}% accuracy there.` });
     else if (weakSet[0])
       out.push({ tone: "warn", text: `Give ${weakSet[0].name} extra revision time (${weakSet[0].accuracy}% accuracy).` });
     if (strong[0] && strong[0].accuracy >= 70)
-      out.push({ tone: "good", text: `${strong[0].name} is a clear strength (${strong[0].accuracy}% accuracy) — keep it sharp.` });
+      out.push({ tone: "good", text: `${strong[0].name} is a clear strength (${strong[0].accuracy}% accuracy) - keep it sharp.` });
     if (r.skippedCount > r.totalQuestions * 0.4)
-      out.push({ tone: "warn", text: `You left ${r.skippedCount} questions unattempted — even a few educated attempts add marks.` });
+      out.push({ tone: "warn", text: `You left ${r.skippedCount} questions unattempted - even a few educated attempts add marks.` });
     return out.slice(0, 5);
   }, [r, topics, weakSet, strong, marksLost, marksGained, attemptRate]);
 
@@ -1108,7 +1108,7 @@ function ResultView({ token, plan, testId, result, onClose }) {
           )}
           {rank && rank.ranked === false && (
             <div style={{ ...card, gridColumn: "span 2", display: "flex", alignItems: "center", gap: 10, color: RED }}>
-              <AlertTriangle size={18} /> <span style={{ fontSize: 13, color: NAVY }}>Below the JEE Advanced qualifying cutoff — no AIR. Keep practising!</span>
+              <AlertTriangle size={18} /> <span style={{ fontSize: 13, color: NAVY }}>Below the JEE Advanced qualifying cutoff - no AIR. Keep practising!</span>
             </div>
           )}
         </div>
@@ -1210,8 +1210,8 @@ function ResultView({ token, plan, testId, result, onClose }) {
             {head(<Timer size={16} color={INDIGO} />, "Pace & Efficiency")}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, textAlign: "center" }}>
               <DistCell n={`${attemptRate}%`} label="Attempted" color={INDIGO} />
-              <DistCell n={avgSecPerQ ? `${avgSecPerQ}s` : "—"} label="Avg / question" color="#0EA5A4" />
-              <DistCell n={marksPerMin || "—"} label="Marks / min" color={ORANGE} />
+              <DistCell n={avgSecPerQ ? `${avgSecPerQ}s` : "-"} label="Avg / question" color="#0EA5A4" />
+              <DistCell n={marksPerMin || "-"} label="Marks / min" color={ORANGE} />
             </div>
             <div style={{ marginTop: 10, fontSize: 12, color: MUTE, textAlign: "center" }}>
               Attempted <b style={{ color: NAVY }}>{attempted}</b> of {r.totalQuestions} in {mmToHM(r.durationSec)}.
@@ -1242,14 +1242,14 @@ function ResultView({ token, plan, testId, result, onClose }) {
             <div style={{ ...card, borderLeft: `3px solid ${GREEN}` }}>
               {head(<Flame size={16} color={GREEN} />, "Strong Areas")}
               {strong.length ? strong.map((s) => (
-                <div key={s.name} style={{ fontSize: 13, color: NAVY, marginBottom: 6 }}><b>{s.name}</b> — {s.accuracy}% accuracy ({s.correct}/{s.total})</div>
-              )) : <div style={{ fontSize: 12.5, color: MUTE }}>No standout strength yet — keep practising to build one.</div>}
+                <div key={s.name} style={{ fontSize: 13, color: NAVY, marginBottom: 6 }}><b>{s.name}</b> - {s.accuracy}% accuracy ({s.correct}/{s.total})</div>
+              )) : <div style={{ fontSize: 12.5, color: MUTE }}>No standout strength yet - keep practising to build one.</div>}
             </div>
             <div style={{ ...card, borderLeft: `3px solid ${AMBER}` }}>
               {head(<TrendingDown size={16} color={AMBER} />, "Needs Work")}
               {weakSet.length ? weakSet.map((s) => (
-                <div key={s.name} style={{ fontSize: 13, color: NAVY, marginBottom: 6 }}><b>{s.name}</b> — {s.accuracy}% accuracy ({s.correct}/{s.total})</div>
-              )) : <div style={{ fontSize: 12.5, color: MUTE }}>Great — no weak section!</div>}
+                <div key={s.name} style={{ fontSize: 13, color: NAVY, marginBottom: 6 }}><b>{s.name}</b> - {s.accuracy}% accuracy ({s.correct}/{s.total})</div>
+              )) : <div style={{ fontSize: 12.5, color: MUTE }}>Great - no weak section!</div>}
             </div>
           </div>
         )}
@@ -1343,8 +1343,8 @@ function SolutionCard({ a }) {
 
       {a.type === "integer" ? (
         <div style={{ display: "flex", gap: 18, fontSize: 13, marginBottom: a.explanation ? 10 : 0, flexWrap: "wrap" }}>
-          <span style={{ color: MUTE }}>Your answer: <b style={{ color: a.status === "wrong" ? RED : NAVY }}>{a.answer || "—"}</b></span>
-          <span style={{ color: MUTE }}>Correct: <b style={{ color: GREEN }}>{a.correct || "—"}</b></span>
+          <span style={{ color: MUTE }}>Your answer: <b style={{ color: a.status === "wrong" ? RED : NAVY }}>{a.answer || "-"}</b></span>
+          <span style={{ color: MUTE }}>Correct: <b style={{ color: GREEN }}>{a.correct || "-"}</b></span>
         </div>
       ) : options.length ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: a.explanation ? 10 : 0 }}>
@@ -1370,8 +1370,8 @@ function SolutionCard({ a }) {
         </div>
       ) : (
         <div style={{ display: "flex", gap: 18, fontSize: 13, marginBottom: a.explanation ? 10 : 0 }}>
-          <span style={{ color: MUTE }}>You: <b style={{ color: a.status === "wrong" ? RED : NAVY }}>{a.answer || "—"}</b></span>
-          <span style={{ color: MUTE }}>Key: <b style={{ color: GREEN }}>{a.correct || "—"}</b></span>
+          <span style={{ color: MUTE }}>You: <b style={{ color: a.status === "wrong" ? RED : NAVY }}>{a.answer || "-"}</b></span>
+          <span style={{ color: MUTE }}>Key: <b style={{ color: GREEN }}>{a.correct || "-"}</b></span>
         </div>
       )}
 

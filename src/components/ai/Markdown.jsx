@@ -1,4 +1,4 @@
-/* Markdown — a small, dependency-free renderer tuned for LLM output.
+/* Markdown - a small, dependency-free renderer tuned for LLM output.
    Handles fenced code blocks (with a copy button + language tag, Claude-style),
    headings, bold / italic / inline code / links, ordered & unordered lists,
    blockquotes, GitHub-style tables and horizontal rules. Inline text is parsed

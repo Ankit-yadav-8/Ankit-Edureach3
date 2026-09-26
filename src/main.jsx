@@ -10,13 +10,13 @@ import "./styles/index.css";
 
 // ── Warm-up ping ────────────────────────────────────────────────────────────
 // Render's free tier can take 30–50 s to cold-start. Fire a no-op request the
-// moment the JS bundle executes — the server wakes up in the background while
+// moment the JS bundle executes - the server wakes up in the background while
 // the user is still reading the page, so it's warm by the time they interact.
 if (API_BASE.includes("onrender.com")) {
   fetch(`${API_BASE}/health`, { method: "GET", keepalive: true }).catch(() => {});
 }
 // strategy.css is namespaced under .strategy-wrapper and only used by the
-// JEE/NEET strategy pages — imported there so it stays off the global (home)
+// JEE/NEET strategy pages - imported there so it stays off the global (home)
 // critical-CSS path and loads lazily with those routes.
 
 /**
@@ -25,7 +25,7 @@ if (API_BASE.includes("onrender.com")) {
  *
  * This was an inline onload="this.media='all'" in index.html. CSP blocks inline
  * event handlers, so under the tightened policy the flip never ran and the site
- * stayed on fallback fonts — silently, since nothing errors.
+ * stayed on fallback fonts - silently, since nothing errors.
  */
 for (const link of document.querySelectorAll('link[data-async-css]')) {
   if (link.media !== "all") link.media = "all";
@@ -36,7 +36,7 @@ for (const link of document.querySelectorAll('link[data-async-css]')) {
  * refresh on a deep link survives; this turns it back into a real URL.
  *
  * This used to be an inline <script> in index.html, and it was the sole reason
- * the CSP had to allow 'unsafe-inline' on script-src — which also allowed any
+ * the CSP had to allow 'unsafe-inline' on script-src - which also allowed any
  * injected inline script to run. Living here instead means script-src can be
  * 'self' with no inline escape hatch at all.
  *

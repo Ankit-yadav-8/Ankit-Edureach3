@@ -1,5 +1,5 @@
 /* ============================================================
-   collegePredictor.js — Real-data College Predictor (v5)
+   collegePredictor.js - Real-data College Predictor (v5)
    ------------------------------------------------------------
    • Cutoffs sourced EXCLUSIVELY from josaa_2025.csv.
      Modelled/illustrative fallback is disabled in the predictor
@@ -26,7 +26,7 @@ import { forecastClosing } from "./cutoffEngine.js";
 // JoSAA-spec 3-bucket classification (by % of final-round closing rank):
 //   Safe       → rank ≤ 80% of closing
 //   Moderate   → rank is 80%–100% of closing
-//   Ambitious  → rank is 100%–115% of closing (stretch — try in earlier rounds)
+//   Ambitious  → rank is 100%–115% of closing (stretch - try in earlier rounds)
 export const TIER_COLOR = {
   Safe:      "var(--green)",
   Moderate:  "var(--orange)",
@@ -38,9 +38,9 @@ export const TIER_BG = {
   Ambitious: "rgba(239,68,68,.13)",
 };
 export const TIER_DESC = {
-  Safe:      "Your rank is comfortably within the closing rank (≤ 80%) — admission almost certain.",
-  Moderate:  "Your rank is near the final closing rank (80%–100%) — likely, may need later rounds.",
-  Ambitious: "Your rank slightly exceeds the closing rank (up to 115%) — worth trying in earlier rounds.",
+  Safe:      "Your rank is comfortably within the closing rank (≤ 80%) - admission almost certain.",
+  Moderate:  "Your rank is near the final closing rank (80%–100%) - likely, may need later rounds.",
+  Ambitious: "Your rank slightly exceeds the closing rank (up to 115%) - worth trying in earlier rounds.",
 };
 export function rankGapLabel(rankGap) {
   if (rankGap >= 0) return `${rankGap.toLocaleString()} ranks inside`;
@@ -86,7 +86,7 @@ const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 // ── Map a CSV program name → internal branch code ─────────────────────────────
 // Checked in order; first match wins. More-specific patterns come first.
 const PROG_BRANCH_MAP = [
-  // CSE with specialisation — map to "cse" so they appear under CSE row
+  // CSE with specialisation - map to "cse" so they appear under CSE row
   [["computer science and engineering (artificial", "computer science and engineering ( artificial",
     "cse ( data science", "computer science and engineering (data",
     "computer science and engineering with major in artificial",
@@ -114,12 +114,12 @@ const PROG_BRANCH_MAP = [
     "b.tech / b. tech (hons.) mechanical", "(me) -", "(me)-"], "me"],
   // Civil (incl. IIT-Patna's "B. Tech in CE. - M. Tech." dual degrees)
   [["civil engineering", "civil and environmental engineering", "in ce. -"], "ce"],
-  // Bio / Pharma — checked BEFORE chemical so "Biotechnology and Biochemical
+  // Bio / Pharma - checked BEFORE chemical so "Biotechnology and Biochemical
   // Engineering" (IIT-KGP) isn't swallowed by the "chemical engineering" substring.
   [["biotechnology", "bio-technology", "bio technology", "biochemical engineering",
     "biosciences and bioengineering", "biosciences", "bioengineering",
     "biological sciences", "biological engineering", "pharmaceutical"], "bio"],
-  // Chemical sciences (B.Tech/dual) — distinct from Chemical Engineering, so checked first
+  // Chemical sciences (B.Tech/dual) - distinct from Chemical Engineering, so checked first
   [["chemical sciences", "chemical science and technology", "chemical science"], "chemsci"],
   [["chemical engineering"], "che"],
   // Materials / Metallurgy (incl. ISM's "Mineral and Metallurgical")
@@ -127,7 +127,7 @@ const PROG_BRANCH_MAP = [
     "materials science", "materials engineering"], "mme"],
   // Aerospace
   [["aerospace engineering", "aeronautical engineering"], "aero"],
-  // Ocean / Naval — checked BEFORE Architecture so "Naval Architecture and
+  // Ocean / Naval - checked BEFORE Architecture so "Naval Architecture and
   // Ocean Engineering" isn't swallowed by the bare "architecture" substring.
   [["ocean engineering", "naval architecture"], "ocean"],
   // Architecture / Planning
@@ -236,10 +236,10 @@ function estimateAdmitRound(rounds, candidateRank, relaxedClosing) {
 
 /**
  * Returns a flat sorted array of college-branch matches for a given rank.
- * Uses ONLY josaa_2025.csv data — no modelled/illustrative fallback.
+ * Uses ONLY josaa_2025.csv data - no modelled/illustrative fallback.
  *
  * @param {Object}   opts
- * @param {number}   opts.rank       Your rank — interpreted per `rankType`
+ * @param {number}   opts.rank       Your rank - interpreted per `rankType`
  * @param {string}   opts.category   "OPEN" | "OBC-NCL" | "EWS" | "SC" | "ST"
  * @param {string}  [opts.rankType]  "category" (default) or "crl". When "crl"
  *                                   and a reserved category is chosen, the CRL
@@ -282,7 +282,7 @@ export function predictColleges({
 
     // ── Get real programs from the CSV for this college ──────────────────────
     const realProgs = getRealPrograms(college);
-    if (!realProgs.length) return; // college not in JoSAA 2025 CSV — skip
+    if (!realProgs.length) return; // college not in JoSAA 2025 CSV - skip
 
     // Map each program to a branch code; deduplicate per college per code
     const seenCodes  = new Set();
@@ -290,7 +290,7 @@ export function predictColleges({
 
     for (const progName of realProgs) {
       const code = progToBranchCode(progName);
-      if (!code) continue;                   // unknown program type — skip
+      if (!code) continue;                   // unknown program type - skip
 
       // ── Branch filter (user picked a specific branch) ────────────────────
       if (branch && code !== branch) continue;
@@ -315,7 +315,7 @@ export function predictColleges({
         rounds = fetchRealRounds(college, progName, category, "FO");
         if (rounds.length) {
           usedFemale = true;
-          totalRelax = homeRelax; // FO cutoffs are already relaxed — no extra multiplier
+          totalRelax = homeRelax; // FO cutoffs are already relaxed - no extra multiplier
         }
       }
 
@@ -327,7 +327,7 @@ export function predictColleges({
         }
       }
 
-      if (!rounds.length) return; // no CSV data for this college+program+category — skip
+      if (!rounds.length) return; // no CSV data for this college+program+category - skip
 
       const r1Opening      = rounds[0].opening  ?? rounds[0].closing;
       const r1Closing      = rounds[0].closing;
@@ -369,7 +369,7 @@ export function predictColleges({
       // Round-by-round data the UI shows when a result row is expanded. Built
       // from the SAME rounds used to score this row (exact CSV program, correct
       // gender pool, same relaxation) so the detail table always matches the
-      // row's closing rank — and works for niche/dual-degree programs that the
+      // row's closing rank - and works for niche/dual-degree programs that the
       // old branch-code re-lookup couldn't resolve.
       const roundData = rounds.map((rd) => ({
         round:   rd.round,

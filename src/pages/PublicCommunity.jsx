@@ -42,12 +42,12 @@ const CATEGORIES = [
 ];
 
 const CATEGORY_PLACEHOLDER = {
-  doubt:      "Ask a doubt — the community will help you solve it…",
+  doubt:      "Ask a doubt - the community will help you solve it…",
   discussion: "Start a discussion with the whole community…",
   trick:      "Share a trick or shortcut you swear by…",
-  strategy:   "Share a strategy — how you plan, revise or attempt papers…",
+  strategy:   "Share a strategy - how you plan, revise or attempt papers…",
   notes:      "Share notes or a quick summary of a topic…",
-  resource:   "Share a resource — a book, video or PDF that helped you…",
+  resource:   "Share a resource - a book, video or PDF that helped you…",
 };
 
 export default function PublicCommunity() {
@@ -139,8 +139,8 @@ export default function PublicCommunity() {
     return (
       <section style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "130px 16px 60px", background: "var(--page-bg)" }}>
         <Seo
-          title="Student Community — Ask Doubts & Discuss with JEE / NEET Aspirants"
-          description="Join the CampusPoint student community — a public forum where JEE & NEET aspirants, students and mentors discuss doubts, colleges, branches and campus life."
+          title="Student Community - Ask Doubts & Discuss with JEE / NEET Aspirants"
+          description="Join the CampusPoint student community - a public forum where JEE & NEET aspirants, students and mentors discuss doubts, colleges, branches and campus life."
           path="/community"
           breadcrumbs={[{ name: "Home", path: "/" }, { name: "Community", path: "/community" }]}
         />
@@ -167,7 +167,7 @@ export default function PublicCommunity() {
     <section style={{ background: "var(--page-bg)", minHeight: "100vh", padding: "110px 0 70px" }}>
       <div style={{ maxWidth: 1140, margin: "0 auto", padding: "0 18px" }}>
 
-        {/* hero — light */}
+        {/* hero - light */}
         <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", background: "var(--page-bg)", color: NAVY, borderRadius: 22, padding: "22px 24px", marginBottom: 18, position: "relative", overflow: "hidden", border: "1px solid #eef1f6", boxShadow: "0 8px 30px -18px rgba(13,27,62,.18)" }}>
           <div style={{ position: "absolute", top: -50, right: -30, width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, ${CYAN}18, transparent 70%)` }} />
           <div style={{ width: 54, height: 54, borderRadius: 16, background: `${CYAN}14`, display: "grid", placeItems: "center", flexShrink: 0 }}>
@@ -176,7 +176,7 @@ export default function PublicCommunity() {
           <div style={{ flex: 1, minWidth: 200, position: "relative" }}>
             <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.4rem", letterSpacing: "-0.4px", color: NAVY }}>Public Community</div>
             <div style={{ fontSize: 13.5, color: MUTE, marginTop: 2 }}>
-              Open to <strong style={{ color: NAVY }}>everyone</strong> — free members, mentorship students & aspirants. Ask anything, help anyone.
+              Open to <strong style={{ color: NAVY }}>everyone</strong> - free members, mentorship students & aspirants. Ask anything, help anyone.
             </div>
             {me && (
               <div style={{ display: "flex", gap: 14, marginTop: 10, flexWrap: "wrap" }}>
@@ -222,7 +222,7 @@ export default function PublicCommunity() {
               {me && !me.cloudinaryReady && (
                 <div style={{ fontSize: 12, color: "#b45309", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginTop: 8, lineHeight: 1.55 }}>
                   Photo / video uploads aren't configured on this server
-                  (<code style={{ fontFamily: "monospace", background: "#fef3c7", padding: "1px 6px", borderRadius: 5, color: "#92400e" }}>{API_HOST}</code>) yet — text posts work fine.
+                  (<code style={{ fontFamily: "monospace", background: "#fef3c7", padding: "1px 6px", borderRadius: 5, color: "#92400e" }}>{API_HOST}</code>) yet - text posts work fine.
                 </div>
               )}
             </div>
@@ -306,7 +306,7 @@ export default function PublicCommunity() {
             )}
             </div>
 
-            {/* AI Doubt Solver — right sidebar card */}
+            {/* AI Doubt Solver - right sidebar card */}
             <aside className="community-aside" style={{ position: "sticky", top: 96 }}>
               <div style={{ background: `linear-gradient(150deg, ${CYAN}0f, #fff 60%)`, border: `1px solid ${CYAN}22`, borderRadius: 20, padding: "20px 18px", boxShadow: "0 10px 34px -20px rgba(13,27,62,.25)" }}>
                 <div style={{ width: 46, height: 46, borderRadius: 14, background: `linear-gradient(135deg, ${CYAN}, #6d28d9)`, display: "grid", placeItems: "center", marginBottom: 12, boxShadow: `0 8px 20px -8px ${CYAN}` }}>
@@ -314,7 +314,7 @@ export default function PublicCommunity() {
                 </div>
                 <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: NAVY, letterSpacing: "-0.3px" }}>Campus Point AI</div>
                 <div style={{ fontSize: 12.5, color: MUTE, lineHeight: 1.55, margin: "6px 0 14px" }}>
-                  Stuck on a question? Get a clear, step-by-step solution instantly — Physics, Chemistry, Maths or Biology.
+                  Stuck on a question? Get a clear, step-by-step solution instantly - Physics, Chemistry, Maths or Biology.
                 </div>
                 <button onClick={() => setTab(tab === "ai" ? "all" : "ai")}
                   style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", padding: "11px 14px", borderRadius: 12, border: "none", cursor: "pointer", background: tab === "ai" ? NAVY : CYAN, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, boxShadow: `0 10px 22px -10px ${CYAN}` }}>

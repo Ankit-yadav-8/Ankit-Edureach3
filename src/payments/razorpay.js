@@ -66,7 +66,7 @@ export async function startPayment(details, token) {
       },
       handler: async (response) => {
         try {
-          // Send the student details too — the enrolment row is created here,
+          // Send the student details too - the enrolment row is created here,
           // server-side, only after the signature is verified as genuine.
           await post("/api/payment/verify", {
             razorpay_order_id: response.razorpay_order_id,

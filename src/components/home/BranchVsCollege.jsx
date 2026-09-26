@@ -1,4 +1,4 @@
-/* BranchVsCollege — original Campus Point "AI Trade-off Analyzer".
+/* BranchVsCollege - original Campus Point "AI Trade-off Analyzer".
    Ten in-house scenario questions score toward branch (negative) or college
    (positive); a live compass strip tracks the lean, an animated AI analysis
    interstitial reads the answers, and the verdict renders as a semicircular
@@ -14,114 +14,114 @@ import {
 import { CL, clEyebrow } from "./clTheme.js";
 
 /* ════════════════════════════════════════════════════════════════
-   QUIZ 1 — Branch vs College. Fact-grounded scenarios; each option
+   QUIZ 1 - Branch vs College. Fact-grounded scenarios; each option
    is worth 1–5 marks. Higher total (10–50) = stronger branch-fit lean.
    ════════════════════════════════════════════════════════════════ */
 const BVC_QUESTIONS = [
-  { fact: "A B.Tech is 160+ credits over four years, and branch-core subjects are the majority — you'll spend most classroom hours on your branch, not on general 'college experience.'",
+  { fact: "A B.Tech is 160+ credits over four years, and branch-core subjects are the majority - you'll spend most classroom hours on your branch, not on general 'college experience.'",
     q: "How much does the subject itself weigh in your decision?",
     options: [
-      { label: "Barely — I'd take any subject if the campus and name are good enough", mark: 1 },
-      { label: "A little — subjects matter, but the college's vibe matters more day-to-day", mark: 2 },
-      { label: "I'm not sure yet — I haven't seriously looked at branch syllabi", mark: 3 },
-      { label: "Quite a bit — I'd want to at least like the core subjects I'll study for 4 years", mark: 4 },
-      { label: "A lot — since most of my time goes to branch subjects, enjoying them beats the campus name", mark: 5 },
+      { label: "Barely - I'd take any subject if the campus and name are good enough", mark: 1 },
+      { label: "A little - subjects matter, but the college's vibe matters more day-to-day", mark: 2 },
+      { label: "I'm not sure yet - I haven't seriously looked at branch syllabi", mark: 3 },
+      { label: "Quite a bit - I'd want to at least like the core subjects I'll study for 4 years", mark: 4 },
+      { label: "A lot - since most of my time goes to branch subjects, enjoying them beats the campus name", mark: 5 },
     ] },
-  { fact: "Hiring reports increasingly cite project portfolios, internships and demonstrated skills for shortlisting — alongside, not instead of, the college name.",
-    q: "A branch you're excited to build in vs a 'prestigious' branch you're neutral about — how do you weigh it?",
+  { fact: "Hiring reports increasingly cite project portfolios, internships and demonstrated skills for shortlisting - alongside, not instead of, the college name.",
+    q: "A branch you're excited to build in vs a 'prestigious' branch you're neutral about - how do you weigh it?",
     options: [
-      { label: "The prestigious branch — a strong name opens the first door regardless of my work", mark: 1 },
+      { label: "The prestigious branch - a strong name opens the first door regardless of my work", mark: 1 },
       { label: "The prestigious branch, though I'd still build some side projects too", mark: 2 },
-      { label: "Unsure — I'd want more data before deciding this matters", mark: 3 },
-      { label: "The branch I'm excited about — I know I'll actually build things in it", mark: 4 },
-      { label: "The branch I'm excited about — real portfolios come from genuine interest, which matters as much as the name now", mark: 5 },
+      { label: "Unsure - I'd want more data before deciding this matters", mark: 3 },
+      { label: "The branch I'm excited about - I know I'll actually build things in it", mark: 4 },
+      { label: "The branch I'm excited about - real portfolios come from genuine interest, which matters as much as the name now", mark: 5 },
     ] },
   { fact: "Alumni networks matter most within your own branch/department circle, not the whole college.",
     q: "A less 'famous' college has a small but active alumni base in your branch. How does that change your view?",
     options: [
-      { label: "Doesn't matter — a bigger name means a bigger network, full stop", mark: 1 },
+      { label: "Doesn't matter - a bigger name means a bigger network, full stop", mark: 1 },
       { label: "I'd still prefer the bigger college's reputation over a smaller branch network", mark: 2 },
       { label: "I'd want to verify how active that smaller network really is first", mark: 3 },
       { label: "A genuinely active branch network sounds more useful than a vague big-name one", mark: 4 },
       { label: "A small but active branch alumni base beats a large, generic name I'd rarely tap", mark: 5 },
     ] },
-  { fact: "GATE & PSU eligibility exists across most core branches — 'keeping government-job options open' isn't a strong reason to avoid a branch you like.",
+  { fact: "GATE & PSU eligibility exists across most core branches - 'keeping government-job options open' isn't a strong reason to avoid a branch you like.",
     q: "Does this change how you think about 'safe' branches?",
     options: [
-      { label: "Not really — I'd still pick whatever sounds most broadly 'employable' on paper", mark: 1 },
-      { label: "Somewhat — but I'd lean toward branches with an obvious PSU reputation", mark: 2 },
+      { label: "Not really - I'd still pick whatever sounds most broadly 'employable' on paper", mark: 1 },
+      { label: "Somewhat - but I'd lean toward branches with an obvious PSU reputation", mark: 2 },
       { label: "I'd check GATE branch-wise cutoffs before trusting this", mark: 3 },
-      { label: "Yes — it removes one worry, so I'd lean toward the branch I actually like", mark: 4 },
-      { label: "Clearly — GATE/PSU doors stay open across branches, so I'd choose on genuine interest", mark: 5 },
+      { label: "Yes - it removes one worry, so I'd lean toward the branch I actually like", mark: 4 },
+      { label: "Clearly - GATE/PSU doors stay open across branches, so I'd choose on genuine interest", mark: 5 },
     ] },
   { fact: "MS/PhD committees weigh research exposure, coursework and recommendation letters more than the undergrad college's brand.",
     q: "If you might pursue higher studies, how does this affect your branch-vs-college thinking?",
     options: [
-      { label: "Doesn't change anything — a known undergrad name carries weight anywhere", mark: 1 },
-      { label: "Slightly — but I'd still bank mostly on the college's reputation", mark: 2 },
+      { label: "Doesn't change anything - a known undergrad name carries weight anywhere", mark: 1 },
+      { label: "Slightly - but I'd still bank mostly on the college's reputation", mark: 2 },
       { label: "I'd research this further before it changes my choice", mark: 3 },
       { label: "It nudges me toward a branch where I can build real research exposure", mark: 4 },
-      { label: "Strongly — research depth matters more, so I'd pick a branch I'll go deep in", mark: 5 },
+      { label: "Strongly - research depth matters more, so I'd pick a branch I'll go deep in", mark: 5 },
     ] },
-  { fact: "Placement-brochure 'average package' is often skewed up by a few high offers in specific branches — the average doesn't tell you what YOUR branch earns.",
-    q: "A headline 'great average' college vs verified branch-wise data elsewhere — how do you evaluate?",
+  { fact: "Placement-brochure 'average package' is often skewed up by a few high offers in specific branches - the average doesn't tell you what YOUR branch earns.",
+    q: "A headline 'great average' college vs verified branch-wise data elsewhere - how do you evaluate?",
     options: [
       { label: "I'd trust the headline average number as the deciding factor", mark: 1 },
       { label: "I'd mostly trust the headline but skim branch data briefly", mark: 2 },
       { label: "I wouldn't know how to find branch-wise data, so I'd just guess", mark: 3 },
       { label: "I'd actively find branch-wise placement data before trusting any headline", mark: 4 },
-      { label: "I'd only trust branch-specific data — headline averages are skewed by outliers", mark: 5 },
+      { label: "I'd only trust branch-specific data - headline averages are skewed by outliers", mark: 5 },
     ] },
-  { fact: "Even less-famous colleges run active clubs, hackathons and branch societies — sometimes MORE accessible than at big campuses where they're oversubscribed.",
+  { fact: "Even less-famous colleges run active clubs, hackathons and branch societies - sometimes MORE accessible than at big campuses where they're oversubscribed.",
     q: "Does this change how much 'college fame' matters for your hands-on growth?",
     options: [
-      { label: "Not at all — a famous college's clubs are inherently better, regardless of access", mark: 1 },
-      { label: "Mostly — I'd still assume the famous college offers more overall", mark: 2 },
+      { label: "Not at all - a famous college's clubs are inherently better, regardless of access", mark: 1 },
+      { label: "Mostly - I'd still assume the famous college offers more overall", mark: 2 },
       { label: "I'd check both colleges' club activity before deciding", mark: 3 },
-      { label: "Somewhat — easier access to real hands-on work beats prestige alone", mark: 4 },
-      { label: "Clearly — real hands-on access in my branch beats a famous campus I can't get into", mark: 5 },
+      { label: "Somewhat - easier access to real hands-on work beats prestige alone", mark: 4 },
+      { label: "Clearly - real hands-on access in my branch beats a famous campus I can't get into", mark: 5 },
     ] },
-  { fact: "Many engineers eventually work in roles unrelated to their branch (management, business, other tech) — via skills they built themselves, not the branch name on the degree.",
+  { fact: "Many engineers eventually work in roles unrelated to their branch (management, business, other tech) - via skills they built themselves, not the branch name on the degree.",
     q: "Given this, how much should today's branch choice weigh on you?",
     options: [
-      { label: "A lot less — I might switch anyway, so the college name should matter more now", mark: 1 },
-      { label: "Somewhat less — I'd deprioritise branch fit a bit given the uncertainty", mark: 2 },
+      { label: "A lot less - I might switch anyway, so the college name should matter more now", mark: 1 },
+      { label: "Somewhat less - I'd deprioritise branch fit a bit given the uncertainty", mark: 2 },
       { label: "I'm not sure how to weigh this either way", mark: 3 },
-      { label: "Still meaningfully — I'd rather enjoy what I study these 4 years, whatever comes after", mark: 4 },
-      { label: "It doesn't reduce branch importance — skills from genuine interest carry me anyway", mark: 5 },
+      { label: "Still meaningfully - I'd rather enjoy what I study these 4 years, whatever comes after", mark: 4 },
+      { label: "It doesn't reduce branch importance - skills from genuine interest carry me anyway", mark: 5 },
     ] },
-  { fact: "Faculty research and lab facilities vary a lot by department — a college can be famous overall while your department has limited research, or vice versa.",
+  { fact: "Faculty research and lab facilities vary a lot by department - a college can be famous overall while your department has limited research, or vice versa.",
     q: "If you looked up faculty & labs for your branch at two colleges, how much would that influence you?",
     options: [
-      { label: "Not much — the overall name would override anything at department level", mark: 1 },
-      { label: "A little — but I probably wouldn't spend time checking this", mark: 2 },
+      { label: "Not much - the overall name would override anything at department level", mark: 1 },
+      { label: "A little - but I probably wouldn't spend time checking this", mark: 2 },
       { label: "I'd want to check, but I'm unsure where to find reliable department info", mark: 3 },
-      { label: "Quite a bit — I'd actively compare department research strength", mark: 4 },
-      { label: "Heavily — department faculty & labs matter more to my 4 years than the college's national name", mark: 5 },
+      { label: "Quite a bit - I'd actively compare department research strength", mark: 4 },
+      { label: "Heavily - department faculty & labs matter more to my 4 years than the college's national name", mark: 5 },
     ] },
-  { fact: "In graduate regret surveys, 'picked a branch I wasn't interested in' is a top regret — cited more often than 'picked a less famous college.'",
+  { fact: "In graduate regret surveys, 'picked a branch I wasn't interested in' is a top regret - cited more often than 'picked a less famous college.'",
     q: "Which regret would you actively try harder to avoid?",
     options: [
       { label: "I'd still risk the branch regret to secure the more famous college name", mark: 1 },
       { label: "I'd lean toward avoiding the college-name regret, but not with full confidence", mark: 2 },
       { label: "I'd want more sources before trusting this pattern", mark: 3 },
       { label: "I'd actively avoid the branch regret, since it's reported more often", mark: 4 },
-      { label: "Clearly avoid the branch regret — data says it's the more common long-term regret", mark: 5 },
+      { label: "Clearly avoid the branch regret - data says it's the more common long-term regret", mark: 5 },
     ] },
 ];
 
 /* ════════════════════════════════════════════════════════════════
-   QUIZ 2 — Which Branch is for me? 8 branches; each answer gives +3
+   QUIZ 2 - Which Branch is for me? 8 branches; each answer gives +3
    to a branch; the highest total wins.
    ════════════════════════════════════════════════════════════════ */
 const BRANCHES = [
-  { id: "mech",  name: "Mechanical Engineering",   short: "Mechanical", emoji: "⚙️", color: "#FF693D", blurb: "Machines, engines, design & manufacturing — how physical things move and work." },
+  { id: "mech",  name: "Mechanical Engineering",   short: "Mechanical", emoji: "⚙️", color: "#FF693D", blurb: "Machines, engines, design & manufacturing - how physical things move and work." },
   { id: "elec",  name: "Electrical & Electronics", short: "Electrical", emoji: "⚡", color: "#3A86FF", blurb: "Circuits, chips, power systems & electronics that run modern devices." },
   { id: "civil", name: "Civil Engineering",        short: "Civil",      emoji: "🏗️", color: "#0EA5A4", blurb: "Buildings, bridges, roads & infrastructure that shape how cities grow." },
   { id: "chem",  name: "Chemical Engineering",     short: "Chemical",   emoji: "⚗️", color: "#7C3AED", blurb: "Materials, fuels, medicines & large-scale processes in labs and plants." },
   { id: "cs",    name: "Computer Science / IT",    short: "CS / IT",    emoji: "💻", color: "#6366f1", blurb: "Software, apps & systems used by millions every day." },
   { id: "ai",    name: "AI & Machine Learning",    short: "AI / ML",    emoji: "🤖", color: "#EC4899", blurb: "Systems that learn, predict and automate decisions from data." },
-  { id: "aero",  name: "Aerospace Engineering",    short: "Aerospace",  emoji: "✈️", color: "#0d1b3e", blurb: "Aircraft, satellites & spacecraft — flight, propulsion and space." },
+  { id: "aero",  name: "Aerospace Engineering",    short: "Aerospace",  emoji: "✈️", color: "#0d1b3e", blurb: "Aircraft, satellites & spacecraft - flight, propulsion and space." },
   { id: "bio",   name: "Biotechnology",            short: "Biotech",    emoji: "🧬", color: "#15a06e", blurb: "Genetics, materials & processes where biology meets engineering." },
 ];
 
@@ -129,7 +129,7 @@ const BS_QUESTIONS = [
   { q: "You're stuck on a mechanics numerical for 30+ minutes. What genuinely keeps you going?",
     options: [
       { label: "The satisfaction of visualising exactly how forces and motion interact once it clicks", branch: "mech" },
-      { label: "You'd rather switch to the electricity/magnetism chapter — that logic feels more natural", branch: "elec" },
+      { label: "You'd rather switch to the electricity/magnetism chapter - that logic feels more natural", branch: "elec" },
       { label: "You think about how this same load logic applies to real structures like bridges", branch: "civil" },
       { label: "You'd happily spend the time on a chemistry reaction mechanism instead", branch: "chem" },
       { label: "You start thinking about writing code to simulate and verify the answer", branch: "cs" },
@@ -161,7 +161,7 @@ const BS_QUESTIONS = [
     ] },
   { q: "It's 11 PM, target done, 20 minutes before sleep. Which video do you actually watch?",
     options: [
-      { label: "\"Inside an F1 pit stop — how the engine is built\"", branch: "mech" },
+      { label: "\"Inside an F1 pit stop - how the engine is built\"", branch: "mech" },
       { label: "\"How mobile towers send signals to your phone instantly\"", branch: "elec" },
       { label: "\"How the Atal Setu bridge was actually constructed\"", branch: "civil" },
       { label: "\"How your toothpaste or shampoo is manufactured at scale\"", branch: "chem" },
@@ -172,14 +172,14 @@ const BS_QUESTIONS = [
     ] },
   { q: "A friend says \"sirf CS/AI rakhna, baaki branch mein future nahi.\" Your honest reaction?",
     options: [
-      { label: "Disagree — I'd rather work on real machines than a screen all day", branch: "mech" },
-      { label: "Disagree — core electronics & power systems interest me more", branch: "elec" },
-      { label: "Disagree — infrastructure will always be needed, whatever happens in tech", branch: "civil" },
-      { label: "Disagree — chemical & process industries have their own stable path", branch: "chem" },
-      { label: "Partly agree — software genuinely excites me more than most things", branch: "cs" },
-      { label: "Fully agree — I think AI is where all future careers are headed", branch: "ai" },
-      { label: "Disagree — space & aviation will always need dedicated specialists", branch: "aero" },
-      { label: "Disagree — healthcare & biotech will always be essential, tech or not", branch: "bio" },
+      { label: "Disagree - I'd rather work on real machines than a screen all day", branch: "mech" },
+      { label: "Disagree - core electronics & power systems interest me more", branch: "elec" },
+      { label: "Disagree - infrastructure will always be needed, whatever happens in tech", branch: "civil" },
+      { label: "Disagree - chemical & process industries have their own stable path", branch: "chem" },
+      { label: "Partly agree - software genuinely excites me more than most things", branch: "cs" },
+      { label: "Fully agree - I think AI is where all future careers are headed", branch: "ai" },
+      { label: "Disagree - space & aviation will always need dedicated specialists", branch: "aero" },
+      { label: "Disagree - healthcare & biotech will always be essential, tech or not", branch: "bio" },
     ] },
   { q: "On a family trip you see something impressive (a dam, plant, airport or hospital). First thought?",
     options: [
@@ -194,25 +194,25 @@ const BS_QUESTIONS = [
     ] },
   { q: "Your mock result surprises you. Which score are you secretly most proud of?",
     options: [
-      { label: "Physics — especially mechanics and energy-based numericals", branch: "mech" },
-      { label: "Physics — especially current electricity and electromagnetism", branch: "elec" },
-      { label: "Math — especially geometry, mensuration and structural calculations", branch: "civil" },
-      { label: "Chemistry — especially organic reactions and processes", branch: "chem" },
+      { label: "Physics - especially mechanics and energy-based numericals", branch: "mech" },
+      { label: "Physics - especially current electricity and electromagnetism", branch: "elec" },
+      { label: "Math - especially geometry, mensuration and structural calculations", branch: "civil" },
+      { label: "Chemistry - especially organic reactions and processes", branch: "chem" },
       { label: "Overall problem-solving speed, similar to coding logic", branch: "cs" },
-      { label: "Math — especially probability, statistics and pattern-based questions", branch: "ai" },
-      { label: "Physics — especially fluid dynamics and motion in three dimensions", branch: "aero" },
+      { label: "Math - especially probability, statistics and pattern-based questions", branch: "ai" },
+      { label: "Physics - especially fluid dynamics and motion in three dimensions", branch: "aero" },
       { label: "Biology/Chemistry sections dealing with living systems", branch: "bio" },
     ] },
   { q: "Assume rank & package are exactly equal across all branches. Which do you pick, and why?",
     options: [
-      { label: "Mechanical — I'd enjoy working with machines regardless of package", branch: "mech" },
-      { label: "Electrical — circuits and power systems interest me either way", branch: "elec" },
-      { label: "Civil — I'd still want to design and build physical structures", branch: "civil" },
-      { label: "Chemical — materials and reactions would still pull me in", branch: "chem" },
-      { label: "CS/IT — I'd code and build software even as a hobby", branch: "cs" },
-      { label: "AI/ML — I'd study how machines learn even without a job attached", branch: "ai" },
-      { label: "Aerospace — flight and space would fascinate me regardless of pay", branch: "aero" },
-      { label: "Biotechnology — biology and health research would still draw me", branch: "bio" },
+      { label: "Mechanical - I'd enjoy working with machines regardless of package", branch: "mech" },
+      { label: "Electrical - circuits and power systems interest me either way", branch: "elec" },
+      { label: "Civil - I'd still want to design and build physical structures", branch: "civil" },
+      { label: "Chemical - materials and reactions would still pull me in", branch: "chem" },
+      { label: "CS/IT - I'd code and build software even as a hobby", branch: "cs" },
+      { label: "AI/ML - I'd study how machines learn even without a job attached", branch: "ai" },
+      { label: "Aerospace - flight and space would fascinate me regardless of pay", branch: "aero" },
+      { label: "Biotechnology - biology and health research would still draw me", branch: "bio" },
     ] },
 ];
 
@@ -229,15 +229,15 @@ function scoreState(answers) {
 const BVC_BANDS = [
   { max: 20, side: "college", eyebrow: "STRONG COLLEGE-BRAND LEAN",
     title: "Protect the college name first.",
-    blurb: "Even against patterns that favour branch fit, you default to prestige — the campus, brand and network are what you'd most regret losing. Build your JoSAA list around the strongest institute you can realistically reach.",
+    blurb: "Even against patterns that favour branch fit, you default to prestige - the campus, brand and network are what you'd most regret losing. Build your JoSAA list around the strongest institute you can realistically reach.",
     pointers: [
       "Order your list by institute tier before branch preference.",
       "Inside each college, still rank branches you'd genuinely accept.",
-      "Check branch-change rules — many institutes allow a switch after year one.",
+      "Check branch-change rules - many institutes allow a switch after year one.",
     ] },
   { max: 32, side: "college", eyebrow: "MODERATE COLLEGE LEAN",
-    title: "You weigh both — but the name usually tips it.",
-    blurb: "You see the case for subject fit, yet reputation still wins most of your close calls. That's fine — just make sure the branches you'd accept at a top college are ones you can live with for four years.",
+    title: "You weigh both - but the name usually tips it.",
+    blurb: "You see the case for subject fit, yet reputation still wins most of your close calls. That's fine - just make sure the branches you'd accept at a top college are ones you can live with for four years.",
     pointers: [
       "Shortlist top colleges first, then cut branches you'd truly resent.",
       "Compare branch-wise placement data, not just the headline average.",
@@ -245,7 +245,7 @@ const BVC_BANDS = [
     ] },
   { max: 42, side: "branch", eyebrow: "MODERATE BRANCH LEAN",
     title: "Real-world patterns are tilting you to the subject.",
-    blurb: "Skills, portfolios, research exposure and regret data are nudging you toward branch fit — you'd rather study something you like than chase a name. You still value a good college, so balance both.",
+    blurb: "Skills, portfolios, research exposure and regret data are nudging you toward branch fit - you'd rather study something you like than chase a name. You still value a good college, so balance both.",
     pointers: [
       "Order by branch first, then by the best college that offers it.",
       "Add your branch at a tier-below college as a safety net.",
@@ -253,7 +253,7 @@ const BVC_BANDS = [
     ] },
   { max: 50, side: "branch", eyebrow: "STRONG BRANCH-FIT LEAN",
     title: "Put the branch you'll enjoy first.",
-    blurb: "You consistently prioritise genuine interest — backed by how hiring, higher studies and long-term regret actually play out. Protect the field you want, even if it means a less famous campus.",
+    blurb: "You consistently prioritise genuine interest - backed by how hiring, higher studies and long-term regret actually play out. Protect the field you want, even if it means a less famous campus.",
     pointers: [
       "Order your list by branch, then college within it.",
       "Skip 'better' colleges offering branches you'd resent studying.",
@@ -299,7 +299,7 @@ function useCountUp(target, dur = 650) {
   return n;
 }
 
-/* ── DirectionDial — semicircular gauge whose needle swings between
+/* ── DirectionDial - semicircular gauge whose needle swings between
    Branch (left) and College (right). Original SVG, exported for the
    /branch-vs-college hero too. ── */
 export function DirectionDial({ norm = 0, size = 240, label = true }) {
@@ -345,7 +345,7 @@ export function DirectionDial({ norm = 0, size = 240, label = true }) {
   );
 }
 
-/* ── CompassStrip — slim live meter under the question card. A dot slides
+/* ── CompassStrip - slim live meter under the question card. A dot slides
    along a branch→college track as answers come in. ── */
 function CompassStrip({ answers }) {
   const { sum, norm } = scoreState(answers);
@@ -422,7 +422,7 @@ function VerdictCard({ verdict, onReset }) {
 
       <div style={{ display: "flex", justifyContent: "center", marginTop: 26 }}>
         <button onClick={onReset} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", border: `1.5px solid ${CL.line}`, borderRadius: 50, padding: "11px 22px", fontFamily: CL.display, fontWeight: 700, fontSize: 13.5, color: CL.ink, cursor: "pointer" }}>
-          <RotateCcw size={15} /> Retake — nothing is saved
+          <RotateCcw size={15} /> Retake - nothing is saved
         </button>
       </div>
 
@@ -453,7 +453,7 @@ function NextTile({ to, icon: Icon, title, sub, primary }) {
   );
 }
 
-/* ── AiAnalyzing — animated "AI is reading your answers" interstitial.
+/* ── AiAnalyzing - animated "AI is reading your answers" interstitial.
    Pulsing orb + rotating conic ring + a checklist of analysis steps that
    tick off in sequence, then hands over to the verdict. ── */
 const AI_STEPS = [
@@ -541,7 +541,7 @@ function AiAnalyzing({ onDone }) {
 const LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
 const MODES = [
-  { id: "bvc",    label: "Branch vs College", icon: GitCompareArrows, sub: "Institute or branch — pick your side" },
+  { id: "bvc",    label: "Branch vs College", icon: GitCompareArrows, sub: "Institute or branch - pick your side" },
   { id: "branch", label: "Which Branch?",     icon: Compass,          sub: "Find your best-fit engineering branch" },
 ];
 
@@ -595,7 +595,7 @@ function BranchVerdict({ result, onReset }) {
 
       <div style={{ display: "flex", justifyContent: "center", marginTop: 26 }}>
         <button onClick={onReset} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", border: `1.5px solid ${CL.line}`, borderRadius: 50, padding: "11px 22px", fontFamily: CL.display, fontWeight: 700, fontSize: 13.5, color: CL.ink, cursor: "pointer" }}>
-          <RotateCcw size={15} /> Retake — nothing is saved
+          <RotateCcw size={15} /> Retake - nothing is saved
         </button>
       </div>
     </motion.div>
@@ -645,10 +645,10 @@ export default function BranchVsCollege({ asPage = false }) {
   const H = mode === "bvc"
     ? { eyebrow: "AI Trade-off Analyzer",
         title: <>Your rank will force a trade-off.<br /><span style={{ color: CL.coral }}>Know your side</span> before you fill a single choice.</>,
-        sub: "10 fact-based scenarios · no wrong answers — see whether real hiring, research and regret patterns put you on the branch or the college side." }
+        sub: "10 fact-based scenarios · no wrong answers - see whether real hiring, research and regret patterns put you on the branch or the college side." }
     : { eyebrow: "AI Branch Finder",
         title: <>Not sure which branch?<br /><span style={{ color: CL.coral }}>Find the field</span> that actually fits you.</>,
-        sub: "8 quick scenarios from an aspirant's real life — we match your instincts to one of 8 engineering branches." };
+        sub: "8 quick scenarios from an aspirant's real life - we match your instincts to one of 8 engineering branches." };
 
   return (
     <section id="branch-vs-college" style={{ background: CL.cream, padding: asPage ? "104px 0 80px" : "84px 0", scrollMarginTop: 80, position: "relative", overflow: "hidden" }}>
@@ -668,7 +668,7 @@ export default function BranchVsCollege({ asPage = false }) {
           )}
         </div>
 
-        {/* mode selector — two option-style cards on desktop, a compact toggle on phones */}
+        {/* mode selector - two option-style cards on desktop, a compact toggle on phones */}
         <div className="bvc-mode-select" style={{ maxWidth: 640, margin: "0 auto 30px" }}>
           {/* desktop / tablet: two side-by-side cards, styled like the quiz options */}
           <div className="bvc-mode-cards">
@@ -702,7 +702,7 @@ export default function BranchVsCollege({ asPage = false }) {
             })}
           </div>
 
-          {/* phones: compact two-button toggle — tap one or the other */}
+          {/* phones: compact two-button toggle - tap one or the other */}
           <div className="bvc-mode-toggle">
             {MODES.map((m) => {
               const on = mode === m.id;
@@ -767,7 +767,7 @@ export default function BranchVsCollege({ asPage = false }) {
                 </div>
               )}
               <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.28rem", color: CL.ink, letterSpacing: "-0.4px", marginBottom: 6, lineHeight: 1.3 }}>{q.q}</h3>
-              <p style={{ fontSize: 12.5, color: CL.muted, marginBottom: 18 }}>Pick whatever feels most true — there's no wrong answer.</p>
+              <p style={{ fontSize: 12.5, color: CL.muted, marginBottom: 18 }}>Pick whatever feels most true - there's no wrong answer.</p>
 
               <motion.div variants={optContainer} initial="hidden" animate="show" style={{ display: "flex", flexDirection: "column", gap: 11 }}>
                 {q.options.map((opt, i) => {

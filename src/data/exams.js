@@ -1,5 +1,5 @@
 /* ============================================================
-   exams.js — Entrance exam catalogue + per-exam detail pages
+   exams.js - Entrance exam catalogue + per-exam detail pages
    ============================================================ */
 
 export const EXAMS = [
@@ -16,7 +16,7 @@ export const EXAMS = [
       "JEE Main is the national-level entrance test conducted by the NTA in two sessions, serving as the gateway to NITs, IIITs and GFTIs and as the qualifier for JEE Advanced.",
     eligibility: [
       "Passed 10+2 with Physics, Chemistry & Mathematics",
-      "No age limit (year-of-passing criteria applies — 2024/2025/2026)",
+      "No age limit (year-of-passing criteria applies - 2024/2025/2026)",
       "Maximum 3 consecutive years of attempts (2 sessions each year)",
     ],
     pattern: [

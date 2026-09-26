@@ -35,7 +35,7 @@ const PROB_META = {
   low:    { label: "Low",    color: "#dc2626", bg: "rgba(239,68,68,.12)" },
 };
 
-/* Circular institute mark — the college's own site icon (its logo), with a
+/* Circular institute mark - the college's own site icon (its logo), with a
    coral monogram fallback. Card avatar with a coral monogram. */
 function InstituteLogo({ slug, name, size = 44 }) {
   const [err, setErr] = useState(false);
@@ -61,7 +61,7 @@ function InstituteLogo({ slug, name, size = 44 }) {
   );
 }
 
-/* Custom click-to-open dropdown — no native <select> arrow. Click the field,
+/* Custom click-to-open dropdown - no native <select> arrow. Click the field,
    the options drop in; click an option to pick it. Closes on outside click. */
 function SelectMenu({ value, onChange, options, placeholder, ariaLabel }) {
   const [open, setOpen] = useState(false);
@@ -313,7 +313,7 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
         </div>
       </div>
 
-      {error && <div className="cf-error">⚠️ {error} — please try again.</div>}
+      {error && <div className="cf-error">⚠️ {error} - please try again.</div>}
 
       {/* ── Empty state ── */}
       {!results && !loading && !error && (
@@ -331,7 +331,7 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
             </motion.span>
           </motion.div>
           <motion.h4 variants={CF_EMPTY_ITEM}>Find your perfect institute</motion.h4>
-          <motion.p variants={CF_EMPTY_ITEM}>Enter your rank above to see every {allowedTypes.join(" / ")} you can get, with branch-change, dual-degree and minor-program flexibility — filter it all from the sidebar.</motion.p>
+          <motion.p variants={CF_EMPTY_ITEM}>Enter your rank above to see every {allowedTypes.join(" / ")} you can get, with branch-change, dual-degree and minor-program flexibility - filter it all from the sidebar.</motion.p>
         </motion.div>
       )}
 
@@ -407,7 +407,7 @@ export default function CollegeFinderTool({ basePath = "/jee-main" }) {
 
             <p className="cf-note">
               Cutoffs are based on official JoSAA 2025 data and are indicative for 2026.
-              Branch-change / dual / minor flexibility is indicative — confirm on the institute brochure
+              Branch-change / dual / minor flexibility is indicative - confirm on the institute brochure
               and josaa.nic.in before locking choices.
             </p>
           </div>
@@ -422,7 +422,7 @@ const CF_STYLES = `
 .cf-spin { animation: cf-spin .8s linear infinite; }
 @keyframes cf-spin { to { transform: rotate(360deg); } }
 
-/* rank bar — full-width grid: rank · category · home state · branch · button */
+/* rank bar - full-width grid: rank · category · home state · branch · button */
 .cf-rankbar { display:flex; flex-direction:column; align-items:stretch; gap:12px;
   background:#fff; border:1px solid var(--cf-line); border-radius:16px; padding:18px 20px; margin-bottom:18px; }
 .cf-rankbar-fields { display:grid; grid-template-columns:1.3fr 1fr 1.1fr 1.5fr auto; gap:14px; align-items:end; width:100%; }
@@ -528,7 +528,7 @@ const CF_STYLES = `
   padding:9px 15px; border:1.5px solid var(--cf-line); border-radius:10px; white-space:nowrap; transition:all .15s; background:#fff; }
 .cf-detailbtn:hover { color:var(--cf-coral); border-color:var(--cf-coral); }
 
-/* scrollable results — keeps the (sticky) filter rail in view beside a long list */
+/* scrollable results - keeps the (sticky) filter rail in view beside a long list */
 .cf-scrollwrap { position:relative; }
 .cf-scrollwrap::after { content:""; position:absolute; left:0; right:8px; bottom:0; height:34px; pointer-events:none;
   background:linear-gradient(to top, var(--cf-bg), transparent); border-radius:0 0 14px 14px; }

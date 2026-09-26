@@ -44,7 +44,7 @@ const FOUNDERS = [
     accent: "#FF693D",
     badge: "Visionary behind the Platform",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
-    bio: "Hi, I’m Ankit Kumar, Founder & CEO of Campus Point and an IIT Roorkee alumnus. I lead the technical vision and execution of our platform, architecting everything from intuitive user interfaces to scalable data pipelines and backend infrastructure. I know firsthand how chaotic the college admission process is—because I’ve been there. Building Campus Point is my way of using technology to solve a massive real-world problem. My mission is simple: to turn complex admission data into clear, actionable insights so every student can make confident decisions.",
+    bio: "Hi, I’m Ankit Kumar, Founder & CEO of Campus Point and an IIT Roorkee alumnus. I lead the technical vision and execution of our platform, architecting everything from intuitive user interfaces to scalable data pipelines and backend infrastructure. I know firsthand how chaotic the college admission process is-because I’ve been there. Building Campus Point is my way of using technology to solve a massive real-world problem. My mission is simple: to turn complex admission data into clear, actionable insights so every student can make confident decisions.",
     skills: ["Founder & CEO", "Tech Head", "Full Stack Developer", "System Design", "Node.js", "Express", "Python", "REST APIs"],
     socials: { linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387", instagram: "https://www.instagram.com/ankit_1_7_/", whatsapp: WA },
   },
@@ -76,7 +76,7 @@ const FOUNDERS = [
 
 /* ── Values ────────────────────────────────────────────────── */
 const VALUES = [
-  { icon: ShieldCheck, color: "#FF693D", t: "Honest, not hype",     d: "Real data and clear caveats. We tell you when a number is an estimate — never fake certainty." },
+  { icon: ShieldCheck, color: "#FF693D", t: "Honest, not hype",     d: "Real data and clear caveats. We tell you when a number is an estimate - never fake certainty." },
   { icon: Heart,       color: "#EC4899", t: "Student-first always", d: "Built by people who were students yesterday. Every feature answers a question we once had." },
   { icon: Lightbulb,   color: "#EAB308", t: "Clarity over clutter", d: "Clean, simple, fast. Counselling is stressful enough without a confusing website." },
   { icon: Code2,       color: "#7C3AED", t: "Data-driven",          d: "Every predictor and cutoff is backed by verified JoSAA & NTA data from 2019–2025." },
@@ -89,17 +89,17 @@ const TIMELINE = [
   {
     year: "May 2026", icon: "💡", color: "#FF693D",
     title: "The Frustration That Started It All",
-    content: "Sitting in a hostel room at IIT Roorkee right after JoSAA Round 1, we watched a batchmate nearly lose his preferred branch to bad information — outdated cutoff PDFs, contradictory WhatsApp forwards and no clear way to compare options. That single moment became the spark for Campus Point.",
+    content: "Sitting in a hostel room at IIT Roorkee right after JoSAA Round 1, we watched a batchmate nearly lose his preferred branch to bad information - outdated cutoff PDFs, contradictory WhatsApp forwards and no clear way to compare options. That single moment became the spark for Campus Point.",
   },
   {
     year: "Jun 2026", icon: "🏗️", color: "#7C3AED",
     title: "Building in the Hostel Room",
-    content: "We started coding Campus Point late into the night between classes and exams. The first version was a simple rank-to-college matcher we shared in JEE WhatsApp groups — it crossed 500+ users in the very first week, and the feedback never stopped coming.",
+    content: "We started coding Campus Point late into the night between classes and exams. The first version was a simple rank-to-college matcher we shared in JEE WhatsApp groups - it crossed 500+ users in the very first week, and the feedback never stopped coming.",
   },
   {
     year: "Jul 2026", icon: "📊", color: "#0EA5A4",
     title: "Solving the Data Problem",
-    content: "We scraped, cleaned and structured 7 years of JoSAA cutoff data across 800+ colleges, 5,000+ branches and 6 categories. The predictor engine was the hardest part — handling NTA percentile rounding, fresh vs. spot rounds, and edge cases for the newest IITs and IIITs.",
+    content: "We scraped, cleaned and structured 7 years of JoSAA cutoff data across 800+ colleges, 5,000+ branches and 6 categories. The predictor engine was the hardest part - handling NTA percentile rounding, fresh vs. spot rounds, and edge cases for the newest IITs and IIITs.",
   },
   {
     year: "Aug 2026", icon: "🚀", color: "#EC4899",
@@ -109,7 +109,7 @@ const TIMELINE = [
   {
     year: "Sep 2026", icon: "🤝", color: "#F59E0B",
     title: "Mentorship & 1-on-1 Guidance",
-    content: "We added 1-on-1 mentorship from IITians and doctors for JEE & NEET aspirants, plus an expert JoSAA + CSAB counselling plan — pairing our verified data with real human guidance through every single round of seat allotment.",
+    content: "We added 1-on-1 mentorship from IITians and doctors for JEE & NEET aspirants, plus an expert JoSAA + CSAB counselling plan - pairing our verified data with real human guidance through every single round of seat allotment.",
   },
   {
     year: "Oct 2026", icon: "🎯", color: "#15A06E",
@@ -175,9 +175,9 @@ function FounderPhoto({ founder }) {
   );
 }
 
-/* ── Social button — plain & neutral (no colour) ───────────────
+/* ── Social button - plain & neutral (no colour) ───────────────
    Used only by the three team-member cards. Deliberately uncoloured:
-   white face, grey border/text, and a subtle grey hover — no accent. */
+   white face, grey border/text, and a subtle grey hover - no accent. */
 function SocialBtn({ href, icon: Icon, label }) {
   return (
     <a
@@ -307,13 +307,13 @@ function TeamCard({ f, idx, badgeIcon: BadgeIcon, badgeLabel }) {
 }
 
 /* ════════════════════════════════════════════════════════════
-   Main About Page — flat white, no glow / background animations
+   Main About Page - flat white, no glow / background animations
 ════════════════════════════════════════════════════════════ */
 export default function About() {
   return (
     <div className="page">
       <Seo
-        title="About CampusPoint — Built by IIT Roorkee Alumni"
+        title="About CampusPoint - Built by IIT Roorkee Alumni"
         description="CampusPoint is a free student platform built by IIT Roorkee alumni Ankit Kumar, Mayank Singh, and Saket Kumar to help JEE aspirants predict ranks, shortlist colleges and navigate JoSAA counselling."
         path="/about"
       />
@@ -342,7 +342,7 @@ export default function About() {
             filter: "saturate(1.28) brightness(1.06) contrast(1.08)",
           }}
         />
-        {/* light scrim — keeps the photo fully visible while text stays legible */}
+        {/* light scrim - keeps the photo fully visible while text stays legible */}
         <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(180deg, rgba(255,255,255,.34) 0%, rgba(255,245,236,.16) 45%, rgba(255,255,255,.40) 100%)" }} />
         <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 0, background: "radial-gradient(ellipse 70% 65% at 50% 42%, rgba(255,255,255,.42) 0%, transparent 60%)" }} />
         <div className="container" style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
@@ -369,7 +369,7 @@ export default function About() {
           </h1>
 
           <p style={{ color: "#334155", maxWidth: 640, margin: "0 auto 36px", fontSize: "1.08rem", lineHeight: 1.75, fontWeight: 500, textShadow: "0 1px 6px rgba(255,255,255,.92)" }}>
-            Two engineers from IIT Roorkee who cracked JEE Advanced, lived through the chaos of JoSAA counselling, and built the platform they wished existed. Campus Point brings rank prediction, college discovery and counselling guidance into one clean, student-first platform — completely free.
+            Two engineers from IIT Roorkee who cracked JEE Advanced, lived through the chaos of JoSAA counselling, and built the platform they wished existed. Campus Point brings rank prediction, college discovery and counselling guidance into one clean, student-first platform - completely free.
           </p>
 
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
@@ -407,7 +407,7 @@ export default function About() {
 
           <Reveal>
             <p style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.65rem)", lineHeight: 1.6, fontWeight: 600, color: "var(--navy)", margin: "0 0 34px", maxWidth: 1040 }}>
-              Campus Point was founded by <strong>IIT Roorkee</strong> alumni —{" "}
+              Campus Point was founded by <strong>IIT Roorkee</strong> alumni -{" "}
               <strong>Ankit Kumar</strong>, <strong>Mayank Singh</strong>, and <strong>Saket Kumar</strong>.
               Three students from the
               same campus, building the platform we wished existed when we were the ones staring at rank lists and cutoffs.
@@ -417,9 +417,9 @@ export default function About() {
           <div style={{ display: "flex", flexDirection: "column", gap: 22, marginBottom: 48 }}>
             {[
               `A few years ago, sitting in a hostel room at IIT Roorkee, we were remembering how stressful our own JEE counselling had been. Endless browser tabs, outdated cutoff PDFs, WhatsApp forwards full of conflicting information, and a constant fear: "what if I fill my choices wrong and lose a seat I deserved?"`,
-              `We watched batchmates — bright students who had cracked one of the toughest exams in the world — stumble at the last hurdle simply because the right information wasn't available. Students from small towns without seniors to guide them were at a real disadvantage. That didn't sit right with us.`,
-              `<strong>IIT Roorkee</strong> gave us the technical foundation and the peer environment that pushes you to build real things. We had access to years of JoSAA data, the engineering coursework to build prediction models, and most importantly — the lived experience of going through this process. We decided to use all of it to build something meaningful.`,
-              `Today, Campus Point is used by thousands of students every counselling season. We've structured 7+ years of JoSAA data, built rank predictors for JEE Main and Advanced, a college explorer, a JoSAA planner, and a comparison engine — all from that same <strong>IIT Roorkee</strong> hostel-room drive to make this process less chaotic for the next student.`,
+              `We watched batchmates - bright students who had cracked one of the toughest exams in the world - stumble at the last hurdle simply because the right information wasn't available. Students from small towns without seniors to guide them were at a real disadvantage. That didn't sit right with us.`,
+              `<strong>IIT Roorkee</strong> gave us the technical foundation and the peer environment that pushes you to build real things. We had access to years of JoSAA data, the engineering coursework to build prediction models, and most importantly - the lived experience of going through this process. We decided to use all of it to build something meaningful.`,
+              `Today, Campus Point is used by thousands of students every counselling season. We've structured 7+ years of JoSAA data, built rank predictors for JEE Main and Advanced, a college explorer, a JoSAA planner, and a comparison engine - all from that same <strong>IIT Roorkee</strong> hostel-room drive to make this process less chaotic for the next student.`,
             ].map((text, i) => (
               <Reveal key={i} delay={i * 0.06}>
                 <p style={{ fontSize: "1.2rem", lineHeight: 1.9, color: "var(--ink)", margin: 0, maxWidth: 1040 }}
@@ -436,7 +436,7 @@ export default function About() {
             }}>
               <Quote size={38} color="#FF693D" style={{ flexShrink: 0, marginTop: 4 }} />
               <p style={{ fontStyle: "italic", color: "var(--navy)", fontSize: "1.32rem", lineHeight: 1.62, fontWeight: 500, margin: 0 }}>
-                "We're not a faceless portal. We're <strong>IIT&nbsp;Roorkee</strong> engineers who lived this chaos and decided to fix it for the next student. Every feature on Campus Point answers a question one of us once had — and found no good answer to."
+                "We're not a faceless portal. We're <strong>IIT&nbsp;Roorkee</strong> engineers who lived this chaos and decided to fix it for the next student. Every feature on Campus Point answers a question one of us once had - and found no good answer to."
               </p>
             </div>
           </Reveal>
@@ -466,7 +466,7 @@ export default function About() {
           </Reveal>
 
           <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 26, marginBottom: 32, color: "var(--navy)" }}>
-            How we built it — from IIT Roorkee hostel to live platform
+            How we built it - from IIT Roorkee hostel to live platform
           </h3>
 
           <div style={{ position: "relative" }}>
@@ -534,9 +534,9 @@ export default function About() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 16, marginTop: 44 }} className="about-highlight-grid">
             {[
-              { icon: "🏆", title: "AIR 3846", sub: "Co-Founder's JEE Advanced rank — built this from lived experience", color: "#FF693D" },
+              { icon: "🏆", title: "AIR 3846", sub: "Co-Founder's JEE Advanced rank - built this from lived experience", color: "#FF693D" },
               { icon: "📊", title: "7 Years of Data", sub: "JoSAA cutoffs from 2019–2025 across 800+ colleges structured & verified", color: "#a855f7" },
-              { icon: "🎓", title: "IIT Roorkee", sub: "Built by B.Tech students — the same IIT grind that shaped the platform", color: "#2EC4B6" },
+              { icon: "🎓", title: "IIT Roorkee", sub: "Built by B.Tech students - the same IIT grind that shaped the platform", color: "#2EC4B6" },
             ].map(({ icon, title, sub, color }, i) => (
               <Reveal key={title} delay={i * 0.08}>
                 <div style={{
@@ -593,7 +593,7 @@ export default function About() {
               Have a question? Talk to us.
             </h2>
             <p style={{ color: "var(--muted)", marginBottom: 30, fontSize: 15, lineHeight: 1.7 }}>
-              We reply personally — no call centres, no bots. Just two IIT engineers who built this and genuinely want to help every student navigate admissions better.
+              We reply personally - no call centres, no bots. Just two IIT engineers who built this and genuinely want to help every student navigate admissions better.
             </p>
 
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 22 }}>

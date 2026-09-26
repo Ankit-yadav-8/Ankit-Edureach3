@@ -18,7 +18,7 @@ function readCachedPlans() {
     if (!raw) return null;
     const { email, plans } = JSON.parse(raw);
     const me = JSON.parse(localStorage.getItem("edureach:user") || "null")?.email;
-    if (!me || email !== me) return null;   // different account — ignore it
+    if (!me || email !== me) return null;   // different account - ignore it
     return Array.isArray(plans) ? plans : null;
   } catch { return null; }
 }
@@ -28,12 +28,12 @@ function writeCachedPlans(plans) {
     const me = JSON.parse(localStorage.getItem("edureach:user") || "null")?.email;
     if (!me) return;
     localStorage.setItem(PLANS_CACHE, JSON.stringify({ email: me, plans }));
-  } catch { /* private mode / quota — the cache is optional */ }
+  } catch { /* private mode / quota - the cache is optional */ }
 }
 
 const isMentorshipPlan = (key) => String(key || "").startsWith("mentor-");
 const fmtDate = (iso) =>
-  iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
+  iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "-";
 
 /* ── A labelled input used inside the Edit-info modal ─────────────── */
 function LabeledInput({ label, value, onChange, type = "text", placeholder, inputMode, disabled }) {
@@ -48,7 +48,7 @@ function LabeledInput({ label, value, onChange, type = "text", placeholder, inpu
   );
 }
 
-/* ── Edit profile modal — name / email / phone ───────────────────── */
+/* ── Edit profile modal - name / email / phone ───────────────────── */
 function EditInfoModal({ user, token, onClose, onSaved }) {
   const [f, setF] = useState({
     name: user?.name || "",
@@ -333,11 +333,11 @@ export default function Dashboard() {
               
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
                 <DetailField label="Name" value={user?.name || "Student"} />
-                <DetailField label="Coaching" value={user?.coaching || "—"} />
-                <DetailField label="Email" value={user?.email || "—"} />
-                <DetailField label="State" value={user?.homeState || "—"} />
-                <DetailField label="Phone" value={user?.phone || "—"} />
-                <DetailField label="Class" value={user?.studentClass || "—"} />
+                <DetailField label="Coaching" value={user?.coaching || "-"} />
+                <DetailField label="Email" value={user?.email || "-"} />
+                <DetailField label="State" value={user?.homeState || "-"} />
+                <DetailField label="Phone" value={user?.phone || "-"} />
+                <DetailField label="Class" value={user?.studentClass || "-"} />
                 <div style={{ gridColumn: "1 / -1" }}>
                   <DetailField label="Member Since" value={fmtDate(user?.createdAt)} />
                 </div>

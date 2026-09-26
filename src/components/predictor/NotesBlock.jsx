@@ -6,7 +6,7 @@ import { AlertCircle } from "lucide-react";
    Predictor, the College Predictor and the NEET page.
    Renders a titled card with a responsive grid of points.
 
-   A point may supply a `visual` — a component rendered
+   A point may supply a `visual` - a component rendered
    above the title in place of the icon chip. Points
    without one keep the compact icon + text layout, so
    callers opt in per-tool.
@@ -32,7 +32,7 @@ function HeadingText({ heading, highlight, accent }) {
   return (
     <>
       {before}
-      {/* tint derived from `accent` alone — the block is also rendered in the
+      {/* tint derived from `accent` alone - the block is also rendered in the
           Advanced page's purple, where a hardcoded warm stop turned the word orange */}
       <span style={{ background: `linear-gradient(95deg, ${accent} 0%, ${accent}b0 100%)`, WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
         {highlight}

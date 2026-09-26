@@ -1,4 +1,4 @@
-/* CollegeReviews — home section just below the rank predictor.
+/* CollegeReviews - home section just below the rank predictor.
    Two paths:
      • "Give a review"  → an animated form (name, college, overall + hostel +
         mess ratings, quick tags, free-text comment). Saved server-side.
@@ -239,7 +239,7 @@ function ReviewCard({ r, i }) {
   );
 }
 
-/* ── SEE REVIEWS — search + per-college list (server-backed) ───── */
+/* ── SEE REVIEWS - search + per-college list (server-backed) ───── */
 function Browse({ colleges, summary, initialCollege, onBack, onGiveFor }) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(initialCollege || null);
@@ -272,7 +272,7 @@ function Browse({ colleges, summary, initialCollege, onBack, onGiveFor }) {
             <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.35rem", color: CL.ink, margin: 0 }}>{selected}</h3>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
               <StarRow value={overallAvg} size={16} />
-              <span style={{ fontWeight: 800, color: CL.ink, fontSize: 14 }}>{overallAvg ? overallAvg.toFixed(1) : "—"}</span>
+              <span style={{ fontWeight: 800, color: CL.ink, fontSize: 14 }}>{overallAvg ? overallAvg.toFixed(1) : "-"}</span>
               <span style={{ color: CL.muted, fontSize: 13 }}>· {list.length} review{list.length !== 1 ? "s" : ""}</span>
             </div>
           </div>
@@ -303,7 +303,7 @@ function Browse({ colleges, summary, initialCollege, onBack, onGiveFor }) {
     <motion.div key="see" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }} style={panel}>
       <button onClick={onBack} className="cp-back-btn" style={{ marginBottom: 18 }}><ArrowLeft size={16} /> Back</button>
       <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.5rem", color: CL.ink, margin: "0 0 6px" }}>Browse college reviews</h3>
-      <p style={{ color: CL.body, fontSize: 14, margin: "0 0 16px" }}>{q ? "Pick a college to read its reviews." : summary.length ? "Most-reviewed colleges — or search any college below." : "No reviews yet. Search a college and be the first to review it."}</p>
+      <p style={{ color: CL.body, fontSize: 14, margin: "0 0 16px" }}>{q ? "Pick a college to read its reviews." : summary.length ? "Most-reviewed colleges - or search any college below." : "No reviews yet. Search a college and be the first to review it."}</p>
 
       {/* search bar */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, background: "var(--page-bg)", border: `1.5px solid ${CL.cream3}`, borderRadius: 14, padding: "11px 16px", marginBottom: 14, boxShadow: CL.shadow }}>

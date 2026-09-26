@@ -101,7 +101,7 @@ function useCountUp(to, { duration = 1.1, delay = 0.25 } = {}) {
   return val;
 }
 
-/* ─── Segmented gauge ring — original animated split visual ───
+/* ─── Segmented gauge ring - original animated split visual ───
    Gapped pill segments draw on in sequence, a faint accent ring rotates
    slowly, the centre value counts up, and the legend fills animated bars. */
 const DONUT_COLORS = ["#FF693D", "#0FAE6E", "#3A86FF", "#E29A2E", "#7B5EA7"];
@@ -636,7 +636,7 @@ export default function BranchDetail() {
   const [tab, setTab] = useState("academics");
 
   useEffect(() => { setTab("academics"); }, [slug]);
-  useEffect(() => { if (b) document.title = `${b.name} — Branch Guide · Campus Point`; }, [b?.name]);
+  useEffect(() => { if (b) document.title = `${b.name} - Branch Guide · Campus Point`; }, [b?.name]);
 
   if (!b || !extra) {
     return (
@@ -654,7 +654,7 @@ export default function BranchDetail() {
 
   return (
     <div style={{ background: "var(--page-bg)", minHeight: "100vh", paddingTop: 92, paddingBottom: 72 }}>
-      <Seo title={`${b.name} — Scope, Salary, Colleges & AI Risk`} description={seoDesc} path={`/branches/${slug}`}
+      <Seo title={`${b.name} - Scope, Salary, Colleges & AI Risk`} description={seoDesc} path={`/branches/${slug}`}
         breadcrumbs={[{ name: "Home", path: "/" }, { name: "Branches", path: "/branches" }, { name: b.name, path: `/branches/${slug}` }]} />
       <div className="container" style={{ maxWidth: 1040 }}>
         <Link to="/branches" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: F.sm, fontWeight: 700, color: CL.ink2, textDecoration: "none", background: "var(--page-bg)", padding: "8px 14px", borderRadius: 30, border: `1px solid ${CL.line}`, boxShadow: CL.shadow, marginBottom: 24, marginTop: 10 }}>

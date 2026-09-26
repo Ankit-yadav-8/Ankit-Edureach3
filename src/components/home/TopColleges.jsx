@@ -26,7 +26,7 @@ const TYPE_BG = {
   IIIT: "linear-gradient(135deg,#0f2e1e 0%,#1c5c38 60%,#0a2118 100%)",
 };
 
-/* Real campus photos per college slug — served from /public/assets/team/ */
+/* Real campus photos per college slug - served from /public/assets/team/ */
 const COLLEGE_IMG = {
   /* IITs */
   "iit-bombay":       "/assets/team/IITs/IITs/IIT BOMBAY.jpg",
@@ -315,7 +315,7 @@ export default function TopColleges() {
             Explore India's Premier <span className="accent">Engineering Institutes</span>
           </h2>
           <p className="section-sub" style={{ color: "#4b5563" }}>
-            Tap any tag to jump straight to that section — rankings, cutoffs, fees or placements.
+            Tap any tag to jump straight to that section - rankings, cutoffs, fees or placements.
           </p>
         </motion.div>
 

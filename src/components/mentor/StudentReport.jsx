@@ -11,7 +11,7 @@ import {
 
    The study log, tests and backlog render from the student's own
    progress blob { entries, tests, backlog } exactly as they saved
-   it — read-only, and the server has no write path for that data.
+   it - read-only, and the server has no write path for that data.
 
    The one thing the mentor OWNS is the task list: they assign it
    here and it lands in the student's mandatory "From your mentor"
@@ -21,7 +21,7 @@ import {
 const ACCENT = "#FF693D";
 const SORA = "Sora, system-ui, sans-serif";
 
-// Local calendar day (YYYY-MM-DD) — MUST match the student dashboard's isoDay,
+// Local calendar day (YYYY-MM-DD) - MUST match the student dashboard's isoDay,
 // which uses local (not UTC) time, so the day keys the student writes line up
 // with what the mentor reads here (no IST-past-midnight off-by-one).
 const isoDay = (d) => {
@@ -30,7 +30,7 @@ const isoDay = (d) => {
 };
 const round1 = (n) => Math.round(n * 10) / 10;
 
-/* ISO week key — MUST match the student dashboard's weekKey() so the completion
+/* ISO week key - MUST match the student dashboard's weekKey() so the completion
    the student ticks lines up with the week the mentor reads. */
 function weekKey(d = new Date()) {
   const dt = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -101,7 +101,7 @@ function HoursBars({ entries }) {
     <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 128, padding: "0 2px" }}>
       {days.map((d, i) => (
         <div key={d.iso} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 4 }}>
-          {/* hour value, right above its bar — so the number is readable, not just on hover */}
+          {/* hour value, right above its bar - so the number is readable, not just on hover */}
           {d.hours > 0 && (
             <motion.span
               initial={{ opacity: 0, y: 4 }}
@@ -113,7 +113,7 @@ function HoursBars({ entries }) {
             </motion.span>
           )}
           <motion.div
-            title={`${d.iso} — ${d.hours}h`}
+            title={`${d.iso} - ${d.hours}h`}
             initial={{ height: 0 }}
             animate={{ height: `${Math.max((d.hours / max) * 80, d.hours ? 4 : 2)}px` }}
             transition={{ duration: 0.45, delay: i * 0.02, ease: [0.22, 1, 0.36, 1] }}
@@ -129,7 +129,7 @@ function HoursBars({ entries }) {
   );
 }
 
-/* ── Section 1 — study log ──────────────────── */
+/* ── Section 1 - study log ──────────────────── */
 function StudyLog({ entries }) {
   if (!entries.length) return <Empty>No study logs yet. Nothing has been recorded for this student.</Empty>;
 
@@ -157,19 +157,19 @@ function StudyLog({ entries }) {
           sub={prev.length ? `${delta >= 0 ? "+" : ""}${delta}h vs last week` : "no prior week to compare"}
           tone={delta >= 0 ? "#16a34a" : "#ef4444"} />
         <Stat icon={TrendingUp} label="Daily average" value={`${avg}h`} sub={`across ${wk.length} logged day${wk.length === 1 ? "" : "s"}`} />
-        <Stat icon={ClipboardList} label="Tasks done" value={total ? `${Math.round((done / total) * 100)}%` : "—"}
+        <Stat icon={ClipboardList} label="Tasks done" value={total ? `${Math.round((done / total) * 100)}%` : "-"}
           sub={total ? `${done} of ${total} this week` : "none set"} />
       </div>
 
       <div style={{ background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 12, padding: "16px 16px 12px" }}>
-        <div style={{ fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 12 }}>Hours — last 14 days</div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 12 }}>Hours - last 14 days</div>
         <HoursBars entries={entries} />
       </div>
     </div>
   );
 }
 
-/* ── Section 2 — test analysis ──────────────── */
+/* ── Section 2 - test analysis ──────────────── */
 function TestAnalysis({ tests }) {
   if (!tests.length) return <Empty>No tests recorded yet for this student.</Empty>;
 
@@ -231,7 +231,7 @@ function TestAnalysis({ tests }) {
   );
 }
 
-/* ── Section 3 — backlog ────────────────────── */
+/* ── Section 3 - backlog ────────────────────── */
 function Backlog({ backlog }) {
   if (!backlog.length) return <Empty>No backlog items. Nothing pending for this student.</Empty>;
 
@@ -275,7 +275,7 @@ function Backlog({ backlog }) {
                 <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 1 }}>{b.subject}</div>
               </div>
               <div style={{ fontSize: 11, fontWeight: 600, color: late ? "#ef4444" : "var(--muted)", flexShrink: 0 }}>
-                {b.done ? "done" : late ? `overdue · ${b.targetDate}` : b.targetDate || "—"}
+                {b.done ? "done" : late ? `overdue · ${b.targetDate}` : b.targetDate || "-"}
               </div>
             </motion.div>
           );
@@ -285,13 +285,13 @@ function Backlog({ backlog }) {
   );
 }
 
-/* ── Section 4 — the tasks the mentor assigns this student ─────────────────────
+/* ── Section 4 - the tasks the mentor assigns this student ─────────────────────
    Editable: add, rename, remove and save. Saving replaces the whole list, which
    is exactly what the student then sees as their mandatory "From your mentor"
    fix-list. A local draft is kept until Save so edits never half-apply.
 
    Completion is authoritative from the student: a task the student has ticked
-   THIS week (completedTexts) shows as done and is LOCKED — the mentor can't
+   THIS week (completedTexts) shows as done and is LOCKED - the mentor can't
    rename or remove it, so a finished task can't be quietly changed underneath
    them. `history` is the record of what was completed in earlier weeks, kept
    here even though the student's own view resets each week. `studentTasks` is
@@ -338,7 +338,7 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
     setNewTask("");
     await save(newDraft);
   };
-  // Edits/removes are refused for a completed task — the student already finished it.
+  // Edits/removes are refused for a completed task - the student already finished it.
   const edit = (id, text) => setDraft((p) => p.map((t) => (t.id === id && !done.has(t.text) ? { ...t, text } : t)));
   const remove = async (id) => {
     const newDraft = draft.filter((t) => t.id !== id || done.has(t.text));
@@ -371,7 +371,7 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
         <input
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          placeholder="Add a task — e.g. Finish Rotational Motion PYQs"
+          placeholder="Add a task - e.g. Finish Rotational Motion PYQs"
           style={inputStyle}
           onFocus={(e) => { e.target.style.borderColor = ACCENT; }}
           onBlur={(e) => { e.target.style.borderColor = "var(--line)"; }}
@@ -404,11 +404,11 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
                   background: isDone ? "#16a34a" : `${ACCENT}18`, color: isDone ? "#fff" : ACCENT,
                 }}>{isDone ? <CheckCircle2 size={13} /> : i + 1}</span>
                 <input value={t.text} onChange={(e) => edit(t.id, e.target.value)} onBlur={() => dirty && save()} readOnly={isDone}
-                  title={isDone ? "Completed by the student — locked" : undefined}
+                  title={isDone ? "Completed by the student - locked" : undefined}
                   style={{ flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent", fontSize: 13,
                     color: isDone ? "#15803d" : "var(--navy)", fontFamily: "inherit", cursor: isDone ? "default" : "text" }} />
                 {isDone ? (
-                  <span title="Completed — locked" aria-label="Completed and locked"
+                  <span title="Completed - locked" aria-label="Completed and locked"
                     style={{ display: "inline-flex", alignItems: "center", gap: 4, flexShrink: 0, fontSize: 10.5, fontWeight: 800, color: "#16a34a", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 50, padding: "4px 9px" }}>
                     <Lock size={11} /> Done
                   </span>
@@ -424,7 +424,7 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
         </div>
       ) : (
         <div style={{ padding: "22px 16px", textAlign: "center", color: "var(--muted)", fontSize: 12.5, marginBottom: 16 }}>
-          No tasks set yet — add the first one above.
+          No tasks set yet - add the first one above.
         </div>
       )}
 
@@ -439,7 +439,7 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
         </div>
       )}
 
-      {/* student's own tasks — extra work they set themselves (read-only) */}
+      {/* student's own tasks - extra work they set themselves (read-only) */}
       {Array.isArray(studentTasks) && studentTasks.length > 0 && (
         <div style={{ marginTop: 24, paddingTop: 18, borderTop: "1px solid var(--line)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
@@ -463,7 +463,7 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
         </div>
       )}
 
-      {/* completion record — kept even after the student's weekly reset */}
+      {/* completion record - kept even after the student's weekly reset */}
       {Array.isArray(history) && history.length > 0 && (
         <div style={{ marginTop: 24, paddingTop: 18, borderTop: "1px solid var(--line)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
@@ -491,17 +491,17 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
   );
 }
 
-/* ── The stepper shell — one section at a time ─── */
+/* ── The stepper shell - one section at a time ─── */
 const SECTIONS = [
   { key: "log",     label: "Study log",     icon: Clock,         blurb: "Daily hours, streak and task completion.", readOnly: true },
   { key: "tests",   label: "Test analysis", icon: TrendingUp,    blurb: "Scores, accuracy and recurring mistakes.", readOnly: true },
   { key: "backlog", label: "Backlog",       icon: Layers,        blurb: "Pending topics and what's slipping.", readOnly: true },
-  { key: "tasks",   label: "Assign tasks",  icon: ClipboardList, blurb: "The tasks you set this student — their mandatory fix-list." },
+  { key: "tasks",   label: "Assign tasks",  icon: ClipboardList, blurb: "The tasks you set this student - their mandatory fix-list." },
 ];
 
 /* How stale is what the mentor is looking at? The student's dashboard syncs to
    the server as they use it, so this is the honest answer to "am I seeing today's
-   work or last week's" — which a mentor checking in daily needs to know. */
+   work or last week's" - which a mentor checking in daily needs to know. */
 function freshness(updatedAt) {
   if (!updatedAt) return null;
   const mins = Math.floor((Date.now() - new Date(updatedAt)) / 60000);

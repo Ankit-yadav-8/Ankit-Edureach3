@@ -1,4 +1,4 @@
-/* BranchVsCollegePage — standalone page for the Branch vs College check.
+/* BranchVsCollegePage - standalone page for the Branch vs College check.
    Original Campus Point design: a split hero (headline + live dial
    preview) over a three-step "how it works" strip, followed by the full
    seven-scenario quiz section. */
@@ -10,7 +10,7 @@ import BranchVsCollege, { DirectionDial } from "../components/home/BranchVsColle
 import { CL, clEyebrow } from "../components/home/clTheme.js";
 
 const STEPS = [
-  { icon: ListChecks, title: "Answer 7 scenarios", sub: "Real trade-offs you'll face at the JoSAA screen — not abstract personality questions." },
+  { icon: ListChecks, title: "Answer 7 scenarios", sub: "Real trade-offs you'll face at the JoSAA screen - not abstract personality questions." },
   { icon: Gauge,      title: "Watch your needle move", sub: "Every answer nudges the dial toward branch or college, live and private." },
   { icon: Map,        title: "Get a filling strategy", sub: "A clear verdict plus exactly how to order your choice list around it." },
 ];
@@ -38,7 +38,7 @@ function Hero() {
         <div className="bvc-hero-grid" style={{
           display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 40, alignItems: "center",
         }}>
-          {/* left — copy */}
+          {/* left - copy */}
           <div>
             <span style={clEyebrow}><Sparkles size={13} /> Decide before counselling does</span>
             <h1 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(2.1rem,5vw,3.4rem)", color: CL.ink, letterSpacing: "-1.4px", lineHeight: 1.06, margin: "18px 0 18px" }}>
@@ -46,11 +46,11 @@ function Hero() {
               <span style={{ color: CL.amber }}>Find your side.</span>
             </h1>
             <p style={{ color: CL.body, fontSize: "1.08rem", lineHeight: 1.7, maxWidth: 470, marginBottom: 28 }}>
-              Seven counselling-day scenarios, two minutes, one clear verdict — and a strategy for ordering your JoSAA list around it.
+              Seven counselling-day scenarios, two minutes, one clear verdict - and a strategy for ordering your JoSAA list around it.
             </p>
           </div>
 
-          {/* right — live dial preview + trust line */}
+          {/* right - live dial preview + trust line */}
           <div style={{ display: "flex", flexDirection: "column", gap: 18, alignItems: "center" }}>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
               style={{ background: CL.card, border: `1px solid ${CL.line}`, borderRadius: 24, boxShadow: CL.shadow, padding: "30px 34px 22px", width: "100%", maxWidth: 420, display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -106,7 +106,7 @@ function Hero() {
 }
 
 export default function BranchVsCollegePage() {
-  useEffect(() => { document.title = "Branch vs College — should the institute or the branch win? · Campus Point"; }, []);
+  useEffect(() => { document.title = "Branch vs College - should the institute or the branch win? · Campus Point"; }, []);
   return (
     <>
       <Seo path="/branch-vs-college" />

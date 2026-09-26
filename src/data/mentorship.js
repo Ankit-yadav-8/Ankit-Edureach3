@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════════════════
-   MENTORSHIP — plan catalogue + page configs
+   MENTORSHIP - plan catalogue + page configs
    JEEsociety-style premium 1-on-1 mentorship for JEE & NEET.
 
    Plan keys MUST stay in sync with:
@@ -8,11 +8,11 @@
      • server/models/Enrollment.js     (plan enum)
    ════════════════════════════════════════════════════════════════ */
 
-/* Total mentorship seats per batch — drives the urgency messaging. */
+/* Total mentorship seats per batch - drives the urgency messaging. */
 export const SEATS_LIMIT = 120;
 export const SEATS_LEFT = 37; // shown as "X of 120 seats left"
 
-/* Pricing (server is the source of truth — these are display only).
+/* Pricing (server is the source of truth - these are display only).
    Indian students: ₹2,599 / 6 months, ₹4,999 / 1 year.
    International students: ₹14,999 / 1 year.
    NEET plans are ₹1 for testing. */
@@ -58,7 +58,7 @@ export const MENTORSHIP = {
     tagline: "Know Your Path. Own Your Future.",
     badge: "🔥 Limited spots · Serious aspirants only",
     title: ["Right Guidance.", "Real Results.", ""],
-    subtitle: "CampusPoint helps serious JEE 2027 aspirants cut through the confusion — with a personal IITian mentor, daily accountability and a plan that actually works. No noise, just the path to your highest potential.",
+    subtitle: "CampusPoint helps serious JEE 2027 aspirants cut through the confusion - with a personal IITian mentor, daily accountability and a plan that actually works. No noise, just the path to your highest potential.",
     videoNote: "Watch how the CampusPoint mentorship system works",
     heroImage: "/images/jee_2027_hero.png",
     analyticsImage: "/images/jee_2027_analytics.png",
@@ -72,7 +72,7 @@ export const MENTORSHIP = {
     metrics: {
       student: { name: "Aarav", klass: "Class 12 · Dropper", mentor: "Aman (IIT Delhi)", line: "Aarav Gupta · Class 12", exam: "JEE 2027" },
       growth: {
-        label: "Marks growth over 8 weeks", hint: "You vs batch average — out of 300",
+        label: "Marks growth over 8 weeks", hint: "You vs batch average - out of 300",
         you:   [84, 98, 92, 126, 150, 178, 196, 214],
         batch: [72, 78, 80, 88, 96, 104, 110, 118],
       },
@@ -103,7 +103,7 @@ export const MENTORSHIP = {
       parent: {
         week: "Week 6",
         issue: "VOL 14 · SUN 12 NOV",
-        headline: "Aarav closed his weakest chapter — Rotational Motion.",
+        headline: "Aarav closed his weakest chapter - Rotational Motion.",
         body: "After three focused sessions and a repeat mock, accuracy on Rotation jumped from 44% to 78%. Next week's plan pivots to Aldehydes and Modern Physics.",
         rows: [
           { l: "Study hours",   v: "45 / 42 hrs" },
@@ -128,10 +128,10 @@ export const MENTORSHIP = {
       { tag: "EVERY DAY", title: "Daily Micro-Capsules", desc: "Bite-sized daily targets pushed on WhatsApp so you always know the single most important thing to do today.",
         tasks: ["Your one priority target, pushed at 7 AM", "A 10-minute check-in so nothing slips", "Auto-tuned to your weakest chapter"],
         chips: ["WhatsApp targets", "Daily streak", "Smart priority"] },
-      { tag: "1-ON-1", title: "Personal IITian Mentor", desc: "A real topper assigned to you 1-on-1 — not a 500-student group. They know your name, your backlog, your goal.",
+      { tag: "1-ON-1", title: "Personal IITian Mentor", desc: "A real topper assigned to you 1-on-1 - not a 500-student group. They know your name, your backlog, your goal.",
         tasks: ["A dedicated IITian who knows your backlog", "Weekly 1-on-1 call to plan and unblock", "Reachable on WhatsApp between calls"],
         chips: ["Dedicated mentor", "Weekly call", "Doubt support"] },
-      { tag: "EVERY WEEK", title: "Weekly Test Analysis", desc: "Every test is dissected — silly mistakes, weak chapters, time management — into a one-page action plan.",
+      { tag: "EVERY WEEK", title: "Weekly Test Analysis", desc: "Every test is dissected - silly mistakes, weak chapters, time management - into a one-page action plan.",
         tasks: ["Each mock turned into a one-page plan", "Silly-mistake and weak-chapter tracking", "Per-section time-management fixes"],
         chips: ["Test tracker", "Rank predictor", "Action plan"] },
       { tag: "STAY CONSISTENT", title: "Gamified Accountability", desc: "Streaks, ranks and rewards keep you consistent even on the days you don't feel like studying.",
@@ -147,7 +147,7 @@ export const MENTORSHIP = {
 
     journey: [
       { title: "Intake call with your mentor", desc: "A 45-min 1-on-1 call to map your current level, backlog and target rank." },
-      { title: "Personalised study roadmap", desc: "A week-by-week plan built around YOUR syllabus gaps — not a generic timetable." },
+      { title: "Personalised study roadmap", desc: "A week-by-week plan built around YOUR syllabus gaps - not a generic timetable." },
       { title: "Daily targets via gamified system", desc: "Micro-capsules + streaks keep you moving every single day." },
       { title: "Weekly test analysis", desc: "Tests reviewed with your mentor; mistakes turned into a fix-list." },
       { title: "Backlog clearing sprint", desc: "Dedicated sprints to wipe out pending chapters before the final phase." },
@@ -162,11 +162,11 @@ export const MENTORSHIP = {
     ],
 
     faqs: [
-      { q: "I already have coaching. How will I manage mentorship?", a: "Mentorship sits on top of your coaching — it doesn't replace it. We make your existing classes actually count by fixing retention, backlog and consistency. Most students spend just 10–15 extra minutes a day on the system." },
-      { q: "I have a lot of backlog. Is this for me?", a: "Absolutely — backlog students are exactly who this is built for. Your mentor designs backlog-clearing sprints so you catch up in a structured, stress-free way instead of panicking." },
+      { q: "I already have coaching. How will I manage mentorship?", a: "Mentorship sits on top of your coaching - it doesn't replace it. We make your existing classes actually count by fixing retention, backlog and consistency. Most students spend just 10–15 extra minutes a day on the system." },
+      { q: "I have a lot of backlog. Is this for me?", a: "Absolutely - backlog students are exactly who this is built for. Your mentor designs backlog-clearing sprints so you catch up in a structured, stress-free way instead of panicking." },
       { q: "I struggle with consistency.", a: "That's the #1 problem we solve. Daily micro-capsules, streaks and a real human checking on you make consistency almost automatic." },
-      { q: "Can I get a discount?", a: "No. The price is already a fraction of what 1-on-1 mentorship costs — and serious aspirants don't negotiate their future." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
-      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy—whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
+      { q: "Can I get a discount?", a: "No. The price is already a fraction of what 1-on-1 mentorship costs - and serious aspirants don't negotiate their future." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
+      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy-whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
 
     tracks: [
@@ -179,9 +179,9 @@ export const MENTORSHIP = {
     slug: "jee-2028",
     eyebrow: "JEE 2028 Mentorship",
     tagline: "Know Your Path. Own Your Future.",
-    badge: "🐦 Early Bird Batch — Limited Seats",
+    badge: "🐦 Early Bird Batch - Limited Seats",
     title: ["You're Early.", "That's Your Edge.", ""],
-    subtitle: "CampusPoint mentors JEE 2028 aspirants from day one — a 2-year plan that builds deep concepts, daily discipline and an unbeatable head start. Start now, finish two full years ahead of everyone else.",
+    subtitle: "CampusPoint mentors JEE 2028 aspirants from day one - a 2-year plan that builds deep concepts, daily discipline and an unbeatable head start. Start now, finish two full years ahead of everyone else.",
     videoNote: "See how a 2-year head start builds an unbeatable lead",
     heroImage: "/images/jee_2028_hero.png",
     analyticsImage: "/images/jee_2028_analytics.png",
@@ -195,7 +195,7 @@ export const MENTORSHIP = {
     metrics: {
       student: { name: "Ishita", klass: "Class 11", mentor: "Sneha (IIT Bombay)", line: "Ishita Verma · Class 11", exam: "JEE 2028" },
       growth: {
-        label: "Concept mastery over 8 weeks", hint: "You vs batch average — concept mastery %",
+        label: "Concept mastery over 8 weeks", hint: "You vs batch average - concept mastery %",
         you:   [38, 46, 52, 58, 66, 74, 82, 88],
         batch: [30, 36, 40, 46, 50, 56, 60, 64],
       },
@@ -226,7 +226,7 @@ export const MENTORSHIP = {
       parent: {
         week: "Week 6",
         issue: "VOL 14 · SUN 12 NOV",
-        headline: "Ishita locked in her concept base — Kinematics.",
+        headline: "Ishita locked in her concept base - Kinematics.",
         body: "Two years out and already steady. Concept mastery on Kinematics moved from 66% to 88% this week; next week we begin the Mole Concept and graph-based problems.",
         rows: [
           { l: "Study hours",     v: "28 / 26 hrs" },
@@ -248,8 +248,8 @@ export const MENTORSHIP = {
     ],
 
     howWeGuide: [
-      { tag: "FOUNDATION", title: "Concept-First Capsules", desc: "Daily capsules that build deep understanding from the ground up — the foundation toppers are made of.",
-        tasks: ["Concepts built from first principles, daily", "Mapped across Class 11 + 12 together", "No rote — understanding that lasts two years"],
+      { tag: "FOUNDATION", title: "Concept-First Capsules", desc: "Daily capsules that build deep understanding from the ground up - the foundation toppers are made of.",
+        tasks: ["Concepts built from first principles, daily", "Mapped across Class 11 + 12 together", "No rote - understanding that lasts two years"],
         chips: ["Concept-first", "Daily capsules"] },
       { tag: "1-ON-1 · 2 YRS", title: "Personal Mentor for 2 Years", desc: "The same IITian mentor walks with you across both years, so nothing is ever restarted.",
         tasks: ["One IITian mentor for the full 2 years", "No lost context, nothing restarted", "Weekly 1-on-1 planning call"],
@@ -257,7 +257,7 @@ export const MENTORSHIP = {
       { tag: "REVISION-READY", title: "Formula & Theory Mastery", desc: "Structured formula sheets and theory checkpoints so revision in year two is effortless.",
         tasks: ["Chapter-wise formula sheets you keep", "Theory checkpoints you can revisit", "Year-2 revision becomes effortless"],
         chips: ["Formula sheets", "Theory checkpoints"] },
-      { tag: "HABITS", title: "Habit & Consistency Engine", desc: "We install study habits early — by year two, consistency is who you are, not what you force.",
+      { tag: "HABITS", title: "Habit & Consistency Engine", desc: "We install study habits early - by year two, consistency is who you are, not what you force.",
         tasks: ["Small daily systems over willpower", "Habits installed in year one", "By year two, consistency is automatic"],
         chips: ["Daily systems", "Streaks", "Rewards"] },
       { tag: "BUILD UP", title: "Progressive Test Practice", desc: "Tests scale in difficulty across two years so you peak exactly at exam time.",
@@ -291,11 +291,11 @@ export const MENTORSHIP = {
     ],
 
     faqs: [
-      { q: "Isn't Class 11 too early to start mentorship?", a: "No — it's the perfect time. The students who finish two years ahead are the ones who started right. Early mentorship prevents the backlog and panic droppers face." },
-      { q: "Will this clash with my school and coaching?", a: "No. The 2-year system is light daily — 10–15 minutes — and is designed to make your school and coaching far more effective, not add load." },
-      { q: "Why is the 2-year plan better?", a: "Because you get two full years of 1-on-1 mentorship instead of one — far more mentor time, more sprints and a longer roadmap. It's the highest-value plan we offer." },
+      { q: "Isn't Class 11 too early to start mentorship?", a: "No - it's the perfect time. The students who finish two years ahead are the ones who started right. Early mentorship prevents the backlog and panic droppers face." },
+      { q: "Will this clash with my school and coaching?", a: "No. The 2-year system is light daily - 10–15 minutes - and is designed to make your school and coaching far more effective, not add load." },
+      { q: "Why is the 2-year plan better?", a: "Because you get two full years of 1-on-1 mentorship instead of one - far more mentor time, more sprints and a longer roadmap. It's the highest-value plan we offer." },
       { q: "Can I get a discount?", a: "No. Early-bird pricing is already the lowest this plan will ever be." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
-      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy—whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
+      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy-whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
 
     tracks: [
@@ -310,7 +310,7 @@ export const MENTORSHIP = {
     tagline: "Know Your Path. Own Your Future.",
     badge: "⚕️ Doctor Mentors · Limited Seats",
     title: ["Biology First.", "Rank Guaranteed.", ""],
-    subtitle: "CampusPoint helps serious NEET aspirants cut through the confusion — with a personal Doctor / NEET topper mentor, daily accountability and a biology-first plan that actually works. Available for both 2027 and 2028.",
+    subtitle: "CampusPoint helps serious NEET aspirants cut through the confusion - with a personal Doctor / NEET topper mentor, daily accountability and a biology-first plan that actually works. Available for both 2027 and 2028.",
     videoNote: "Watch how the NEET mentorship system works",
     heroImage: "/images/neet_hero.png",
     analyticsImage: "/images/neet_analytics.png",
@@ -324,7 +324,7 @@ export const MENTORSHIP = {
     metrics: {
       student: { name: "Anjali", klass: "NEET Aspirant", mentor: "Dr. Rohan (AIIMS)", line: "Anjali Nair · NEET Prep", exam: "NEET" },
       growth: {
-        label: "Marks growth over 8 weeks", hint: "You vs batch average — out of 720",
+        label: "Marks growth over 8 weeks", hint: "You vs batch average - out of 720",
         you:   [240, 310, 390, 480, 520, 580, 610, 650],
         batch: [210, 240, 290, 330, 380, 420, 460, 490],
       },
@@ -383,7 +383,7 @@ export const MENTORSHIP = {
       { tag: "1-ON-1", title: "Personal Doctor / NEET Mentor", desc: "A real medical student/doctor assigned to you 1-on-1. They know what it takes to clear NEET.",
         tasks: ["A real medico who cleared NEET, 1-on-1", "Weekly call to plan and unblock", "Reachable on WhatsApp between calls"],
         chips: ["Doctor mentor", "Weekly call", "Doubt support"] },
-      { tag: "EVERY WEEK", title: "Weekly Test Analysis", desc: "Every mock is dissected — silly mistakes, weak chapters, time management — into an action plan.",
+      { tag: "EVERY WEEK", title: "Weekly Test Analysis", desc: "Every mock is dissected - silly mistakes, weak chapters, time management - into an action plan.",
         tasks: ["Each mock turned into an action plan", "Silly-mistake and weak-chapter tracking", "Section-wise time management fixes"],
         chips: ["Test tracker", "Rank predictor", "Action plan"] },
       { tag: "CONQUER PHYSICS", title: "Physics Demystification", desc: "Special approach to conquer Physics fear with formula sheets and high-yield numerical practice.",
@@ -399,7 +399,7 @@ export const MENTORSHIP = {
 
     journey: [
       { title: "Intake call with your mentor", desc: "A 45-min 1-on-1 call to map your current level and target Govt College." },
-      { title: "Personalised study roadmap", desc: "A week-by-week plan built around YOUR syllabus gaps — biology first." },
+      { title: "Personalised study roadmap", desc: "A week-by-week plan built around YOUR syllabus gaps - biology first." },
       { title: "Daily targets via gamified system", desc: "Micro-capsules + streaks keep you moving every single day." },
       { title: "Weekly test analysis", desc: "Tests reviewed with your mentor; mistakes turned into a fix-list." },
       { title: "Physics/Chemistry backlog sprint", desc: "Dedicated sprints to wipe out pending tricky chapters." },
@@ -417,7 +417,7 @@ export const MENTORSHIP = {
       { q: "Is Physics covered properly?", a: "Yes. Physics is the rank decider in NEET. Your mentor will provide specific strategies, formula sheets, and targeted practice for Physics." },
       { q: "I have a huge backlog in Class 11. Can I still clear NEET?", a: "Yes. Your mentor will design a specific backlog-clearing sprint alongside your current syllabus so you catch up." },
       { q: "Can I choose between 2027 and 2028 plans?", a: "Yes. You can select either the NEET 2027 or NEET 2028 plan from the tracks below." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
-      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy—whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
+      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy-whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
 
     tracks: [
@@ -543,7 +543,7 @@ export const MENTORSHIP = {
     ],
     faqs: [
       { q: "Is Class 9 too early?", a: "It's the perfect time to build concepts without the pressure of boards." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
-      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy—whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
+      { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy-whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
     tracks: [
       { plan: "mentor-foundation",  exam: "Foundation",  accent: "#FF693D", line: "IITian mentors · Class 9 & 10" },

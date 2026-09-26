@@ -1,4 +1,4 @@
-/* Mentorship — the "CampusPoint Mentorship Journal".
+/* Mentorship - the "CampusPoint Mentorship Journal".
    An editorial, magazine-style landing page for 1-on-1 IITian mentorship:
    cream paper, Playfair display serif with coral-italic emphasis, dark navy
    feature sections, §0X·LABEL micro-headers. Config-driven per variant
@@ -46,7 +46,7 @@ function Label({ children, dark }) {
   return <span className={dark ? "mj-label mj-label-dark" : "mj-label"}>{children}</span>;
 }
 
-/* ═══════════════ HERO — glassmorphic performance engine ═══════════════ */
+/* ═══════════════ HERO - glassmorphic performance engine ═══════════════ */
 function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
   const p = MENTOR_PLANS[plan] || { amount: 2599, exam: "JEE" };
   const isNeet = p.exam === "NEET";
@@ -80,7 +80,7 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mj-hero-sub">
-              Real-exam mocks, deep AI analysis, and 1-on-1 mentorship from 99%ilers —
+              Real-exam mocks, deep AI analysis, and 1-on-1 mentorship from 99%ilers -
               everything to turn your {dream} dream into a real rank.
             </p>
           </Reveal>
@@ -152,7 +152,7 @@ const QUALIFIER_MENTORS = [
   }
 ];
 
-/* ═══════════════ QUALIFIER — "is this you?" ═══════════════ */
+/* ═══════════════ QUALIFIER - "is this you?" ═══════════════ */
 function Qualifier({ cfg }) {
   const hurdles = cfg?.qualifierHurdles || ASPIRANT_POINTS;
   const mentors = cfg?.qualifierMentors || QUALIFIER_MENTORS;
@@ -274,7 +274,7 @@ function Method({ cfg }) {
     <section id="method" className="mj-section mj-method">
       <div className="mj-wrap">
         <div className="mj-dark-head">
-          <div>            <h2 className="mj-display mj-display-lg">A calm, connected system —<br /><em>Day 1 to Rank Day.</em></h2>
+          <div>            <h2 className="mj-display mj-display-lg">A calm, connected system -<br /><em>Day 1 to Rank Day.</em></h2>
           </div>
           <span className="mj-scrollhint">6 MOVING PARTS · ONE RHYTHM</span>
         </div>
@@ -424,10 +424,10 @@ function TestAnalysis({ cfg }) {
   const weak = m.test?.weak || ["Rotational Motion", "Thermodynamics", "p-Block"];
   const exam = cfg.tracks?.[0]?.exam || (isNeet ? "NEET 2027" : "JEE Main 2026");
   const strategies = [
-    { Ic: BookOpen, t: `Add 1 hr/day to ${weak[0]} — your weakest area this week.` },
-    { Ic: Zap, t: `Attack ${weak[1] || "Physics"}${weak[2] ? " & " + weak[2] : ""} first — the most recurring weak chapters.` },
-    { Ic: Clock, t: "Reserve the last 10 min per paper to recheck — silly errors cost ~5 marks." },
-    { Ic: Target, t: `Accuracy at ${accN}% — skip low-confidence questions to dodge negatives.` },
+    { Ic: BookOpen, t: `Add 1 hr/day to ${weak[0]} - your weakest area this week.` },
+    { Ic: Zap, t: `Attack ${weak[1] || "Physics"}${weak[2] ? " & " + weak[2] : ""} first - the most recurring weak chapters.` },
+    { Ic: Clock, t: "Reserve the last 10 min per paper to recheck - silly errors cost ~5 marks." },
+    { Ic: Target, t: `Accuracy at ${accN}% - skip low-confidence questions to dodge negatives.` },
   ];
   const slug = cfg.slug || (isNeet ? "neet" : "jee-2027");
   const RANKS = {
@@ -452,7 +452,7 @@ function TestAnalysis({ cfg }) {
         <Reveal className="mj-sec-head">
           <span className="mj-ta-pill"><span className="mj-dot mj-dot-live" /> LIVE PRODUCT PREVIEW</span>
           <div><h2 className="mj-display mj-display-lg">See how your test turns<br />into a <em>game plan.</em></h2></div>
-          <p className="mj-sec-sub">Enter your marks and the analyser spots the trend, predicts your rank, and hands you the next steps — automatically.</p>
+          <p className="mj-sec-sub">Enter your marks and the analyser spots the trend, predicts your rank, and hands you the next steps - automatically.</p>
         </Reveal>
 
         <div className="mj-ta-topbar">
@@ -480,7 +480,7 @@ function TestAnalysis({ cfg }) {
               </span>
               <div className="mj-ta-formtop-tx">
                 <strong>Add a test result</strong>
-                <span>Log every attempt — mocks count as much as the real thing.</span>
+                <span>Log every attempt - mocks count as much as the real thing.</span>
               </div>
               <span className="mj-ta-tabs"><i className="mj-ta-tab-on">Mock</i><i>{isNeet ? "Full" : "Mains"}</i><i>{isNeet ? "PCB" : "Adv"}</i></span>
             </div>
@@ -501,7 +501,7 @@ function TestAnalysis({ cfg }) {
             <label className="mj-ta-field"><span>Over-spent time on (quick pick)</span><div className="mj-ta-input mj-ta-input-ph mj-ta-input-sel">Select subject</div></label>
             <button className="mj-ta-btn mj-ta-btn-on">+ Analyse this test</button>
             <div className="mj-ta-banner">
-              <Check size={15} strokeWidth={3} /> Full test · {Math.round((scored / total) * 100)}% · {accN}% accuracy — up {pctUp}% on your last mock. Keep the streak.
+              <Check size={15} strokeWidth={3} /> Full test · {Math.round((scored / total) * 100)}% · {accN}% accuracy - up {pctUp}% on your last mock. Keep the streak.
             </div>
             <div className="mj-ta-rank">
               <span className="mj-ta-rank-l">🏆 PREDICTED {exam.toUpperCase()} RANK · {scored} MARKS</span>
@@ -509,7 +509,7 @@ function TestAnalysis({ cfg }) {
               <div className="mj-ta-rank-row">
                 {rank.map((r, i) => (<div key={i} className="mj-ta-rank-c"><strong>{r.v}</strong><span>{r.l}</span></div>))}
               </div>
-              <span className="mj-ta-rank-foot">Estimate only — actual rank depends on official normalisation &amp; shift difficulty.</span>
+              <span className="mj-ta-rank-foot">Estimate only - actual rank depends on official normalisation &amp; shift difficulty.</span>
             </div>
             {subs.length > 0 && (
               <div className="mj-ta-subs">
@@ -525,7 +525,7 @@ function TestAnalysis({ cfg }) {
             )}
             <div className="mj-ta-formfoot">
               <ShieldCheck size={13} strokeWidth={2.4} />
-              <span>Your marks stay private — used only to build your plan.</span>
+              <span>Your marks stay private - used only to build your plan.</span>
             </div>
           </div>
 
@@ -564,7 +564,7 @@ const DASH_FEED = [
   { time: "10:02", tag: "CHM",  c: "#6366f1", t: "Watched Aldehydes revision · 28 min" },
   { time: "11:30", tag: "MOCK", c: "#22c55e", t: "Mock test #14 submitted · 218/300" },
   { time: "12:05", tag: "MENT", c: "#0ea5a4", t: "Mentor call scheduled · 6 PM" },
-  { time: "13:45", tag: "MTH",  c: "#eab308", t: "3D Geometry — 20/25 attempted" },
+  { time: "13:45", tag: "MTH",  c: "#eab308", t: "3D Geometry - 20/25 attempted" },
 ];
 function DashArea({ data = [] }) {
   const max = Math.max(...data, 1), min = Math.min(...data, 0);
@@ -630,7 +630,7 @@ function LiveTracking({ cfg }) {
     <section className="mj-section">
       <div className="mj-wrap">
         <Reveal className="mj-sec-head">
-          <div>            <h2 className="mj-display mj-display-lg">A dashboard that feels<br /><em>alive — because it is.</em></h2>
+          <div>            <h2 className="mj-display mj-display-lg">A dashboard that feels<br /><em>alive - because it is.</em></h2>
           </div>
           <span className="mj-live-chip"><span className="mj-dot mj-dot-live" /> SESSION · LIVE</span>
         </Reveal>
@@ -762,14 +762,14 @@ function ForParents({ cfg }) {
       <div className="mj-wrap">
         <Reveal className="mj-sec-head">
           <div><h2 className="mj-display mj-display-lg">A window into <em>the week.</em></h2></div>
-          <p className="mj-sec-sub">Every Sunday a printable one-pager lands in your inbox — the real hours, tests, ranks and mentor notes your child heard that week.</p>
+          <p className="mj-sec-sub">Every Sunday a printable one-pager lands in your inbox - the real hours, tests, ranks and mentor notes your child heard that week.</p>
         </Reveal>
 
         <Reveal delay={0.1} className="mj-parent-card">
           <div className="mj-booklet">
             <span className="mj-booklet-pill"><BookOpen size={13} /> PARENT REPORT</span>
             <h2 className="mj-booklet-h">Weekly Progress<br />Booklet</h2>
-            <p className="mj-booklet-sub">A clear, jargon-free summary of your child&rsquo;s week — effort, tests, improvement and what&rsquo;s next.</p>
+            <p className="mj-booklet-sub">A clear, jargon-free summary of your child&rsquo;s week - effort, tests, improvement and what&rsquo;s next.</p>
             <div className="mj-booklet-div" />
             <span className="mj-booklet-lbl">STUDENT</span>
             <strong className="mj-booklet-name">{st.name || "Your child"}</strong>
@@ -793,7 +793,7 @@ function ForParents({ cfg }) {
           <div className="mj-weekly-body">
             <div className="mj-weekly-featured">
               <span className="mj-featured-lbl">FEATURED</span>
-              <h3 className="mj-featured-quote">{p.headline || p.remark || "Aarav closed his weakest chapter — Rotational Motion."}</h3>
+              <h3 className="mj-featured-quote">{p.headline || p.remark || "Aarav closed his weakest chapter - Rotational Motion."}</h3>
               {p.body && <p className="mj-featured-body">{p.body}</p>}
               <div className="mj-weekly-photo">
                 <span className="mj-photo-ic"><Sparkles size={15} /></span>
@@ -835,7 +835,7 @@ const PHONE_CHATS = [
       { me: 0, t: "Send me the question 📸 which PYQ?", time: "11:43" },
       { me: 1, t: "The pulley + inclined plane one from 2019", time: "11:44" },
       { me: 0, t: "Skip torque-heavy ones tonight. Do the 6 PYQs I marked 💪", time: "11:45" },
-      { me: 0, t: "Sleep by 12 — you've done enough today 🌙", time: "11:46" },
+      { me: 0, t: "Sleep by 12 - you've done enough today 🌙", time: "11:46" },
     ],
   },
   {
@@ -843,7 +843,7 @@ const PHONE_CHATS = [
     script: [
       { me: 1, t: "Sir, I can't finish Organic Chem in time 🤢", time: "9:32" },
       { me: 0, t: "Don't worry Aditi. Let's fix this today 💪", time: "9:33" },
-      { me: 0, t: "First — GOC done or pending?", time: "9:33" },
+      { me: 0, t: "First - GOC done or pending?", time: "9:33" },
       { me: 1, t: "GOC half done. Hydrocarbons not started 🤪", time: "9:34" },
       { me: 0, t: "Got it. Here's your new 7-day plan 👇\n📅 Mon–Tue → GOC\n📅 Wed–Fri → Hydrocarbons\n📅 Sat → Revision\n📅 Sun → Mock", time: "9:35" },
       { me: 1, t: "This actually feels doable 🥹", time: "9:36" },
@@ -857,7 +857,7 @@ const PHONE_CHATS = [
       { me: 0, t: "That's the jump we planned 👏", time: "6:11" },
       { me: 0, t: "Chemistry accuracy is your next 20 marks", time: "6:11" },
       { me: 1, t: "Yeah I lost 14 marks in silly errors 😔", time: "6:12" },
-      { me: 0, t: "Capsule at 7 am — 10 Qs, timed. Let's kill the silly mistakes 🎯", time: "6:13" },
+      { me: 0, t: "Capsule at 7 am - 10 Qs, timed. Let's kill the silly mistakes 🎯", time: "6:13" },
     ],
   },
   {
@@ -999,7 +999,7 @@ function WhatsApp() {
   );
 }
 
-/* ═══════════════ PRICING — Three-Card (Indian 6m / Indian 1yr / International) ═══════════════ */
+/* ═══════════════ PRICING - Three-Card (Indian 6m / Indian 1yr / International) ═══════════════ */
 const INCLUDED = [
   "1-on-1 IITian mentor", "Weekly personalised study plan",
   "Weekly test analysis + priority checklist", "Live study tracking dashboard",
@@ -1268,8 +1268,8 @@ export default function Mentorship() {
   return (
     <div className="mj">
       <Seo
-        title={`${exam} Mentorship by IITians — 1-on-1 Guidance | CampusPoint`}
-        description="1-on-1 JEE & NEET mentorship by IIT alumni — daily targets, weekly test analysis, live tracking and parent reports. Limited seats. Start at ₹2,499 on CampusPoint."
+        title={`${exam} Mentorship by IITians - 1-on-1 Guidance | CampusPoint`}
+        description="1-on-1 JEE & NEET mentorship by IIT alumni - daily targets, weekly test analysis, live tracking and parent reports. Limited seats. Start at ₹2,499 on CampusPoint."
         path={`/mentorship/${variant}`}
         jsonLd={faqSchema}
       />
@@ -1310,7 +1310,7 @@ const CSS = `
 .mj-tab:hover { border-color:${T.coral}; color:${T.coralDk}; }
 .mj-tab-on { background:${T.ink}; border-color:${T.ink}; color:#fff; }
 
-/* hero — glassmorphic performance engine (coral + cream) */
+/* hero - glassmorphic performance engine (coral + cream) */
 .mj-hero { position:relative; padding:clamp(110px,12vw,130px) 0 clamp(70px,8vw,104px); overflow:hidden; border-bottom:1px solid ${T.line}; background:var(--page-bg); }
 .mj-hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
 .mj-orb { position:absolute; border-radius:50%; filter:blur(90px); }
@@ -1388,7 +1388,7 @@ const CSS = `
 .mj-check-t { flex:1; font:600 1rem/1.4 'DM Sans',sans-serif; color:${T.ink}; }
 .mj-check-n { font:800 .8rem/1 'Space Grotesk',sans-serif; color:${T.muted}; }
 
-/* method — light vertical timeline */
+/* method - light vertical timeline */
 .mj-method { position:relative; overflow:hidden; }
 .mj-method::before { content:""; position:absolute; top:-14%; right:-8%; width:520px; height:520px; border-radius:50%; background:radial-gradient(circle, ${T.coralSoft}, transparent 68%); opacity:.55; pointer-events:none; }
 .mj-dark-head { display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px; margin-bottom:56px; position:relative; }
@@ -1530,7 +1530,7 @@ const CSS = `
 .mj-ta-strat-i { display:flex; align-items:flex-start; gap:11px; font:500 .84rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
 .mj-ta-strat-ic { display:grid; place-items:center; width:26px; height:26px; border-radius:8px; background:${T.coralSoft}; color:${T.coralDk}; flex-shrink:0; }
 
-/* live tracking — light coded dashboard */
+/* live tracking - light coded dashboard */
 .mj-dash { border-radius:22px; overflow:hidden; border:1px solid ${T.lineDk}; background:${T.card}; box-shadow:0 40px 80px -50px rgba(0,0,0,.4); }
 .mj-dash-bar { display:flex; align-items:center; gap:14px; padding:13px 20px; background:${T.ink}; }
 .mj-traffic { display:flex; gap:6px; } .mj-traffic i { width:11px; height:11px; border-radius:50%; background:#3a3f4d; } .mj-traffic i:first-child{background:#ff5f57;} .mj-traffic i:nth-child(2){background:#febc2e;} .mj-traffic i:nth-child(3){background:#28c840;}
@@ -1635,7 +1635,7 @@ const CSS = `
 .mj-glance-row strong { font:600 .98rem/1.25 'Sora',sans-serif; color:${T.ink}; text-align:right; }
 .mj-weekly-foot { display:flex; justify-content:space-between; margin-top:auto; padding-top:18px; border-top:1px solid ${T.line}; font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
 
-/* whatsapp — animated phones */
+/* whatsapp - animated phones */
 .mj-phones { display:flex; gap:22px; justify-content:center; overflow-x:auto; padding:8px 4px 16px; scroll-snap-type:x mandatory; scrollbar-width:none; }
 .mj-phones::-webkit-scrollbar { display:none; }
 .mj-phonewrap { flex:0 0 auto; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; }
@@ -1683,7 +1683,7 @@ const CSS = `
 .mj-wa-field span { flex:1; }
 .mj-wa-mic { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#FF8B48,#F1531F); color:#fff; flex-shrink:0; }
 
-/* proof — static bento wall */
+/* proof - static bento wall */
 .mj-proof-top { display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; margin-bottom:44px; }
 .mj-proof-intro { max-width:640px; }
 .mj-proof-intro h2 { margin:0; }
@@ -1712,7 +1712,7 @@ const CSS = `
 .mj-proof-verified-c { justify-content:center; padding-top:0; margin-top:26px; }
 .mj-proof-vic { display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:${T.coral}; color:#fff; flex-shrink:0; }
 
-/* pricing — 2 card grid */
+/* pricing - 2 card grid */
 .mj-pricing-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:30px; margin:44px auto 0; max-width:760px; align-items:stretch; }
 .mj-pricing-tier { display:flex; flex-direction:column; border-radius:24px; overflow:hidden; border:1px solid ${T.line}; background:${T.card}; box-shadow:0 12px 30px -16px rgba(0,0,0,.15); transition:transform .3s, box-shadow .3s; position:relative; }
 .mj-pricing-tier:hover { transform:translateY(-6px); box-shadow:0 24px 60px -20px rgba(0,0,0,.25); }
@@ -1830,7 +1830,7 @@ const CSS = `
 .mj-glance-row strong { font:600 .98rem/1.25 'Sora',sans-serif; color:${T.ink}; text-align:right; }
 .mj-weekly-foot { display:flex; justify-content:space-between; margin-top:auto; padding-top:18px; border-top:1px solid ${T.line}; font:700 .62rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
 
-/* whatsapp — animated phones */
+/* whatsapp - animated phones */
 .mj-phones { display:flex; gap:22px; justify-content:center; overflow-x:auto; padding:8px 4px 16px; scroll-snap-type:x mandatory; scrollbar-width:none; }
 .mj-phones::-webkit-scrollbar { display:none; }
 .mj-phonewrap { flex:0 0 auto; scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; }
@@ -1878,7 +1878,7 @@ const CSS = `
 .mj-wa-field span { flex:1; }
 .mj-wa-mic { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#FF8B48,#F1531F); color:#fff; flex-shrink:0; }
 
-/* proof — static bento wall */
+/* proof - static bento wall */
 .mj-proof-top { display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; margin-bottom:44px; }
 .mj-proof-intro { max-width:640px; }
 .mj-proof-intro h2 { margin:0; }
@@ -1907,7 +1907,7 @@ const CSS = `
 .mj-proof-verified-c { justify-content:center; padding-top:0; margin-top:26px; }
 .mj-proof-vic { display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:${T.coral}; color:#fff; flex-shrink:0; }
 
-/* pricing — 2 card grid */
+/* pricing - 2 card grid */
 .mj-pricing-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:30px; margin:44px auto 0; max-width:760px; align-items:stretch; }
 .mj-pricing-tier { display:flex; flex-direction:column; border-radius:24px; overflow:hidden; border:1px solid ${T.line}; background:${T.card}; box-shadow:0 12px 30px -16px rgba(0,0,0,.15); transition:transform .3s, box-shadow .3s; position:relative; }
 .mj-pricing-tier:hover { transform:translateY(-6px); box-shadow:0 24px 60px -20px rgba(0,0,0,.25); }

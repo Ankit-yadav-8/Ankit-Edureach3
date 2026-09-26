@@ -1,6 +1,6 @@
-/* CollegeDetail.jsx — full updated version with Seat Matrix
+/* CollegeDetail.jsx - full updated version with Seat Matrix
    Key changes vs original:
-   • cutoffBranch state — set when "View cutoffs" is clicked in Courses tab
+   • cutoffBranch state - set when "View cutoffs" is clicked in Courses tab
    • setTabQ("Cutoff") called simultaneously so the tab switches
    • <CutoffSection initialProgram={cutoffBranch} … /> passes the branch down
    • seatMatrix imported and added below the CutoffSection
@@ -29,7 +29,7 @@ const TABS = ["Overview", "Cutoff", "Fees", "Courses", "Placements", "Campus Lif
 const tabKey = (t) => t.toLowerCase().split(" ")[0];
 
 export default function CollegeDetail() {
-  // Kick off the 8-year cutoff DB load when this page mounts — NOT at module
+  // Kick off the 8-year cutoff DB load when this page mounts - NOT at module
   // scope: App.jsx imports every page, so a module-level call fetched ~85 MB
   // of JoSAA CSVs on every route, including the homepage.
   useEffect(() => { loadCutoffDB(); }, []);
@@ -117,10 +117,10 @@ export default function CollegeDetail() {
   const seoYear = new Date().getFullYear();
   const seoTitle = `${college.name} Review ${seoYear}: Cutoffs, Placements, Fees & Ranking`;
   const seoDesc =
-    `${college.name} review ${seoYear}${college.location ? ` (${college.location})` : ""} — ` +
+    `${college.name} review ${seoYear}${college.location ? ` (${college.location})` : ""} - ` +
     `is it worth it? See NIRF ranking, JoSAA cutoffs, branch-wise placements, average package, ` +
     `fees, hostel details and honest student reviews. Check your admission chances free with the ` +
-    `CampusPoint JEE rank predictor — built by IIT Roorkee alumni.`;
+    `CampusPoint JEE rank predictor - built by IIT Roorkee alumni.`;
   const seoImage = college.heroImage
     ? SITE_URL + encodeURI(college.heroImage)
     : undefined;
@@ -164,7 +164,7 @@ export default function CollegeDetail() {
         jsonLd={seoJsonLd}
       />
 
-      {/* ── Hero — clean: image + one readability gradient + a subtle accent ──── */}
+      {/* ── Hero - clean: image + one readability gradient + a subtle accent ──── */}
       <section style={{
         position: "relative", color: "#fff",
         padding: "108px 0 52px", overflow: "hidden",
@@ -557,7 +557,7 @@ export default function CollegeDetail() {
                 <Gallery slug={college.slug} accent={college.accent} />
               </div>
 
-              {/* ── Location — full-width premium card. The embedded map was
+              {/* ── Location - full-width premium card. The embedded map was
                      dropped; "Open in Maps" hands off to Google Maps instead. ── */}
               <div className="card" style={{ overflow: "hidden" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -591,7 +591,7 @@ export default function CollegeDetail() {
               </div>
 
               <div className="grid-2" style={{ gap: 22, alignItems: "start" }}>
-                {/* ── Virtual Tour & Videos — redesigned card ── */}
+                {/* ── Virtual Tour & Videos - redesigned card ── */}
                 <div className="card" style={{ overflow: "hidden", position: "relative" }}>
                   <div style={{
                     position: "absolute", top: 0, left: 0, right: 0, height: 3,
@@ -653,7 +653,7 @@ export default function CollegeDetail() {
                   </div>
                 </div>
 
-                {/* ── Campus Highlights — redesigned card ── */}
+                {/* ── Campus Highlights - redesigned card ── */}
                 <div className="card" style={{ overflow: "hidden", position: "relative" }}>
                   <div style={{
                     position: "absolute", top: 0, left: 0, right: 0, height: 3,

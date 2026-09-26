@@ -1,5 +1,5 @@
 /**
- * realCutoffEngine.js  (v4 — real JoSAA data, verified institute map)
+ * realCutoffEngine.js  (v4 - real JoSAA data, verified institute map)
  * Loads JoSAA cutoff CSVs (2018–2025) from /public/data/ and answers queries.
  * CSV columns: Institute | Academic Program Name | Quota | Seat Type | Gender |
  *              Opening Rank | Closing Rank | Round | Year
@@ -163,20 +163,20 @@ export const isDBReady = () => _loaded;
 
 // ── Predictor-only 2025 fast loader ─────────────────────────────────────────
 // Fetches ONLY josaa_2025.csv. Used by the college predictor worker so it
-// doesn't wait for all 8 years. Reuses the same DB map — if loadCutoffDB()
+// doesn't wait for all 8 years. Reuses the same DB map - if loadCutoffDB()
 // already ran, rows are already there and this resolves instantly.
 export function loadPredictorDB() {
   if (_predictorPromise) return _predictorPromise;
   _predictorPromise = fetchYear("2025")
     .then((rows) => {
       if (!DB.has("2025")) {
-        // Full DB hasn't loaded yet — insert 2025 rows now
+        // Full DB hasn't loaded yet - insert 2025 rows now
         for (const row of rows) {
           if (!DB.has(row.year)) DB.set(row.year, []);
           DB.get(row.year).push(row);
         }
       }
-      // If full DB already loaded, 2025 rows are already present — skip insert
+      // If full DB already loaded, 2025 rows are already present - skip insert
       _predictorReady = true;
       invalidateCaches();
     })
@@ -283,7 +283,7 @@ const INSTITUTE_ALIASES = {
 };
 
 function matchInstitute(row, college) {
-  // Cache the normalized institute name on the row — matchInstitute is called
+  // Cache the normalized institute name on the row - matchInstitute is called
   // millions of times while building the index, once per (row × college).
   const inst    = row._inst ?? (row._inst = norm(row.institute));
   const aliases = INSTITUTE_ALIASES[college.slug];
@@ -304,7 +304,7 @@ function normProg(p) {
 // Used by getRealRounds so a base branch (e.g. "Computer Science and Engineering")
 // never absorbs the rows of its specialisation variants ("…with Specialization in
 // Cyber Security", "…(Data Science)", dual-degree, MBA combos). Those have much
-// higher closing ranks, and getRealRounds aggregates with Math.max — so fuzzy
+// higher closing ranks, and getRealRounds aggregates with Math.max - so fuzzy
 // matching was inflating cutoffs (e.g. IIT Patna CSE showed ~16444 instead of
 // the real 3144). Every caller passes a verbatim CSV program string sourced from
 // getRealPrograms()/findProgramByBranch(), so exact matching always resolves.
@@ -352,7 +352,7 @@ export function getAvailableYears(college) {
 }
 
 // The all-India general pool is labelled "AI" in 2024/2025 JoSAA data but "OS"
-// (Other State — nationwide competition) in older years for NITs/IIITs.
+// (Other State - nationwide competition) in older years for NITs/IIITs.
 // The two never coexist for one institute in a single year, so they are
 // treated as one logical pool: requesting either matches both. Without this,
 // querying "AI" returns rows ONLY for 2024 and all other years appear empty.
@@ -427,14 +427,14 @@ export function getRealForecast(college, program, quota, seatType, gender = "GN"
 export function getDefaultQuota() { return "AI"; }
 
 const QUOTA_LABELS = {
-  AI: "AI — All India",
-  OS: "OS — Other State",
-  HS: "HS — Home State",
-  GO: "GO — Goa",
-  LA: "LA — Ladakh",
-  JK: "JK — J&K",
-  AP: "AP — Andhra Pradesh",
-  TL: "TL — Telangana",
+  AI: "AI - All India",
+  OS: "OS - Other State",
+  HS: "HS - Home State",
+  GO: "GO - Goa",
+  LA: "LA - Ladakh",
+  JK: "JK - J&K",
+  AP: "AP - Andhra Pradesh",
+  TL: "TL - Telangana",
 };
 
 export function getAvailableQuotas(college) {
@@ -443,9 +443,9 @@ export function getAvailableQuotas(college) {
   const out = [];
   // Collapse AI + OS into a single all-India general-pool option. They are
   // the same pool under different year-wise labels (AI in 2024/2025, OS in older years),
-  // and getRealRounds treats them as equivalent — so one option covers all years.
+  // and getRealRounds treats them as equivalent - so one option covers all years.
   if (seen.has("AI") || seen.has("OS")) {
-    out.push({ value: "AI", label: "AI/OS — All India (General)" });
+    out.push({ value: "AI", label: "AI/OS - All India (General)" });
   }
   // Remaining quotas (HS, GO, JK, …) kept as distinct options.
   for (const q of [...seen].filter((q) => q && q !== "AI" && q !== "OS").sort()) {
@@ -579,4 +579,4 @@ export function getProgramList(college) {
   return getRealPrograms(college).map((p) => ({ short: getProgramShortName(p), fullName: p }));
 }
 
-export function fmtR(v) { return v ? v.toLocaleString("en-IN") : "—"; }
+export function fmtR(v) { return v ? v.toLocaleString("en-IN") : "-"; }

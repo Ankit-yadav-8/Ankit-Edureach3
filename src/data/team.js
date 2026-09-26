@@ -1,5 +1,5 @@
 /* ============================================================
-   team.js — CampusPoint developer profiles + portfolio data.
+   team.js - CampusPoint developer profiles + portfolio data.
    ============================================================ */
 
 const LK = "https://www.linkedin.com/in/ankityadavpm/";
@@ -21,19 +21,19 @@ export const TEAM = [
     jeeRank: "AIR 3846",
     exam: "JEE Advanced",
     email: "campuspath6@gmail.com",
-    bio: `Hi, I'm Ankit Kumar — IIT Roorkee engineer, and the Founder & CEO of Campus Point.
+    bio: `Hi, I'm Ankit Kumar - IIT Roorkee engineer, and the Founder & CEO of Campus Point.
          I don't just build the platform. I am the kind of student it was built for.
-        Like thousands of students who use Campus Point today, I once sat staring at rank lists, cutoffs, and counselling rounds — unsure what any of it meant for my future. That experience never left me. It drives every line of code I write.
-        At Campus Point, I lead everything technical — from the React frontend and data pipelines to backend APIs and cloud deployment — with one goal in mind: make the technology invisible, so students only see clarity.
+        Like thousands of students who use Campus Point today, I once sat staring at rank lists, cutoffs, and counselling rounds - unsure what any of it meant for my future. That experience never left me. It drives every line of code I write.
+        At Campus Point, I lead everything technical - from the React frontend and data pipelines to backend APIs and cloud deployment - with one goal in mind: make the technology invisible, so students only see clarity.
 
         "Great engineering isn't about complexity. It's about making hard things feel simple."
 
-        Because behind every feature we ship is a real student trying to make one of the biggest decisions of their life — and they deserve tools that actually work for them.`,
+        Because behind every feature we ship is a real student trying to make one of the biggest decisions of their life - and they deserve tools that actually work for them.`,
     skills: ["Tech Head", "Management", "Full Stack Developer", "Node.js", "MongoDB", "Express", "Tailwind CSS", "Python", "REST APIs", "Vite"],
     projects: [
       {
         name: "CampusPoint Portal",
-        desc: "End-to-end JEE college discovery platform covering 850+ institutes — IITs, NITs, IIITs, GFTIs and private — with filters, maps and comparisons.",
+        desc: "End-to-end JEE college discovery platform covering 850+ institutes - IITs, NITs, IIITs, GFTIs and private - with filters, maps and comparisons.",
         tag: "Founder",
       },
       {
@@ -76,7 +76,7 @@ export const TEAM = [
     projects: [
       {
         name: "CampusPoint Portal",
-        desc: "End-to-end JEE college discovery platform covering 850+ institutes — IITs, NITs, IIITs, GFTIs and private — with filters, maps and comparisons.",
+        desc: "End-to-end JEE college discovery platform covering 850+ institutes - IITs, NITs, IIITs, GFTIs and private - with filters, maps and comparisons.",
         tag: "Marketing",
       },
     ],
@@ -105,7 +105,7 @@ export const TEAM = [
     projects: [
       {
         name: "CampusPoint Portal",
-        desc: "End-to-end JEE college discovery platform covering 850+ institutes — IITs, NITs, IIITs, GFTIs and private — with filters, maps and comparisons.",
+        desc: "End-to-end JEE college discovery platform covering 850+ institutes - IITs, NITs, IIITs, GFTIs and private - with filters, maps and comparisons.",
         tag: "Operations",
       },
     ],

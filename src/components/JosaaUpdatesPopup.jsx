@@ -8,7 +8,7 @@ import { useEnrol } from "./EnrolModal.jsx";
 import { useAuth } from "../auth/AuthContext.jsx";
 
 /* ═══════════════════════════════════════════════════════════
-   JosaaUpdatesPopup — a global "live counselling updates" card
+   JosaaUpdatesPopup - a global "live counselling updates" card
    that surfaces every 2.5 minutes on every page. It bundles the
    JoSAA Round 1 result link, the full list of quick links and
    an interactive Freeze / Float / Slide explainer.
@@ -17,7 +17,7 @@ import { useAuth } from "../auth/AuthContext.jsx";
 const POPUP_INTERVAL = 150000; // 2.5 minutes
 const WA =
   "https://wa.me/918118826194?text=" +
-  encodeURIComponent("Hi! I saw the JoSAA 2026 Round 1 update — I need counselling help.");
+  encodeURIComponent("Hi! I saw the JoSAA 2026 Round 1 update - I need counselling help.");
 
 export default function JosaaUpdatesPopup() {
   const [open, setOpen] = useState(false);
@@ -28,7 +28,7 @@ export default function JosaaUpdatesPopup() {
 
   // Re-surface the popup every 2.5 min. If it's already open, the tick is a
   // no-op, so it simply re-appears 2.5 min after the user closes it. Only runs
-  // once the user is logged in — otherwise it would cover the mandatory login gate.
+  // once the user is logged in - otherwise it would cover the mandatory login gate.
   useEffect(() => {
     if (!isLoggedIn) { setOpen(false); return; }
     const id = setInterval(() => setOpen(true), POPUP_INTERVAL);
@@ -76,7 +76,7 @@ export default function JosaaUpdatesPopup() {
             {/* header */}
             <div className="jpop-head">
               <span className="jpop-live"><span className="jpop-dot" /> LIVE</span>
-              <h2><Bell size={17} /> JoSAA 2026 — Live Counselling Updates</h2>
+              <h2><Bell size={17} /> JoSAA 2026 - Live Counselling Updates</h2>
               <p>Round 1 seat allotment is out. Don't miss your reporting window or your Freeze / Float / Slide decision.</p>
             </div>
 

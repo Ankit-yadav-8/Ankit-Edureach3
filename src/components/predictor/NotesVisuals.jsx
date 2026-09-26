@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 /* ══════════════════════════════════════════════
    Animated illustrations for the "How this tool
    works" cards. Each one is a self-contained,
-   decorative loop — purely presentational, so the
+   decorative loop - purely presentational, so the
    whole set is aria-hidden and collapses to a
    static frame under prefers-reduced-motion.
 ══════════════════════════════════════════════ */
@@ -39,7 +39,7 @@ export function RankEstimateVisual({ accent = "#FF693D", advanced = false }) {
     <Frame>
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 14, paddingBottom: 20 }}>
         <div style={{ position: "relative", width: 146, height: 94 }}>
-          {/* equalizer — the raw marks being crunched, tucked behind the card */}
+          {/* equalizer - the raw marks being crunched, tucked behind the card */}
           <div style={{ position: "absolute", left: 12, bottom: 0, display: "flex", alignItems: "flex-end", gap: 5, height: 56 }}>
             {bars.map((h, i) => (
               <motion.span
@@ -87,7 +87,7 @@ export function RankEstimateVisual({ accent = "#FF693D", advanced = false }) {
           </motion.div>
         </div>
 
-        {/* marching arrow — marks flowing out to a rank */}
+        {/* marching arrow - marks flowing out to a rank */}
         <svg width="70" height="18" viewBox="0 0 70 18" fill="none" style={{ marginTop: 4 }}>
           <motion.path
             d="M2 14 C 20 14, 32 5, 52 5"
@@ -121,7 +121,7 @@ export function CategoryRankVisual({ accent = "#FF693D" }) {
     <Frame>
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 16 }}>
         <div style={{ position: "relative", width: 232, height: 96 }}>
-          {/* the CRL sitting behind — real, but not what counselling uses */}
+          {/* the CRL sitting behind - real, but not what counselling uses */}
           <div
             style={{
               position: "absolute", right: 0, bottom: 0, width: 132, padding: "9px 12px",
@@ -133,7 +133,7 @@ export function CategoryRankVisual({ accent = "#FF693D" }) {
             <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 18, color: "var(--navy)", lineHeight: 1.25 }}>#2,481</div>
           </div>
 
-          {/* the category rank, front and centre — the one that actually matters */}
+          {/* the category rank, front and centre - the one that actually matters */}
           <motion.div
             style={{
               position: "absolute", left: 0, top: 0, width: 142, padding: "9px 12px 10px",
@@ -203,7 +203,7 @@ export function RangeBandVisual({ accent = "#FF693D" }) {
           <span style={{ position: "absolute", left: "18%", top: 6, width: 8, height: 8, marginLeft: -4, borderRadius: "50%", background: accent }} />
           <span style={{ position: "absolute", left: "76%", top: 6, width: 8, height: 8, marginLeft: -4, borderRadius: "50%", background: accent }} />
 
-          {/* the estimate itself — never quite settling on one number */}
+          {/* the estimate itself - never quite settling on one number */}
           <motion.div
             style={{ position: "absolute", top: 10, left: 0 }}
             initial={{ x: 0 }}
@@ -229,8 +229,8 @@ export function RangeBandVisual({ accent = "#FF693D" }) {
         </div>
 
         <div style={{ marginTop: 12, textAlign: "center", fontSize: 10.5, fontWeight: 700, color: "var(--navy)" }}>
-          low <span style={{ color: "var(--muted)", fontWeight: 400 }}>——</span> your estimate{" "}
-          <span style={{ color: "var(--muted)", fontWeight: 400 }}>——</span> high
+          low <span style={{ color: "var(--muted)", fontWeight: 400 }}>--</span> your estimate{" "}
+          <span style={{ color: "var(--muted)", fontWeight: 400 }}>--</span> high
         </div>
       </div>
     </Frame>

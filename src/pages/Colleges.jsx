@@ -42,7 +42,7 @@ export default function Colleges() {
 
   useEffect(() => { setType(sp.get("type") || "All"); }, [sp]);
 
-  // Defer the search term so typing stays snappy — the heavy grid re-render
+  // Defer the search term so typing stays snappy - the heavy grid re-render
   // runs at a lower priority instead of blocking every keystroke.
   const dq = useDeferredValue(q);
 
@@ -68,7 +68,7 @@ export default function Colleges() {
   return (
     <div className="page">
       <Seo
-        title="All IIT, NIT & IIIT Colleges — Cutoffs, Reviews & Placements"
+        title="All IIT, NIT & IIIT Colleges - Cutoffs, Reviews & Placements"
         description="Browse and compare every IIT, NIT and IIIT in India. Filter by JEE rank, branch, state and category to find JoSAA cutoffs, placements, fees and student reviews on CampusPoint."
         path="/colleges"
       />
@@ -104,7 +104,7 @@ export default function Colleges() {
               Discover {COLLEGES.length}+ Premier Institutes
             </h1>
             <p style={{ color: "rgba(28,28,40,.62)", fontSize: "1rem", maxWidth: 520, lineHeight: 1.65 }}>
-              Filter by type, state, package and fees — save favourites or add to compare.
+              Filter by type, state, package and fees - save favourites or add to compare.
             </p>
           </motion.div>
         </div>

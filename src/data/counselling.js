@@ -1,5 +1,5 @@
 /* ============================================================
-   counselling.js — Application Radar deadlines + Private Univs
+   counselling.js - Application Radar deadlines + Private Univs
    Keep `deadline` and `status` updated each cycle.
    ============================================================ */
 

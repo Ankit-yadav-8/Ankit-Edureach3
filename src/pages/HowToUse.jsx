@@ -27,12 +27,12 @@ const GUIDE = [
     title: "Create Your Free Account",
     to: null,
     tag: "Start here",
-    what: "Sign up takes under a minute and unlocks every tool on Campus Point — predictors, planners and saved shortlists.",
+    what: "Sign up takes under a minute and unlocks every tool on Campus Point - predictors, planners and saved shortlists.",
     steps: [
       "Click the orange Sign Up button at the top-right of any page.",
       "Enter your name, email, 10-digit mobile number and coaching.",
       "Add your JEE Main rank (JEE Advanced rank is optional).",
-      "Set a password — or use Email OTP to log in without one.",
+      "Set a password - or use Email OTP to log in without one.",
     ],
     help: "Your rank is remembered, so every predictor and recommendation is personalised to you the moment you log in.",
   },
@@ -48,7 +48,7 @@ const GUIDE = [
       "Enter your expected marks or percentile and your category.",
       "Get an estimated rank range built on 2019–2025 NTA trends.",
     ],
-    help: "Gives you a realistic rank to feed into the College Predictor — even before official results are out.",
+    help: "Gives you a realistic rank to feed into the College Predictor - even before official results are out.",
   },
   {
     n: 3,
@@ -60,10 +60,10 @@ const GUIDE = [
     steps: [
       "Open the College Predictor from the JEE menu or the navbar button.",
       "Enter your rank, category, gender and home state.",
-      "Browse colleges sorted by your chance — Safe, Moderate or Ambitious.",
+      "Browse colleges sorted by your chance - Safe, Moderate or Ambitious.",
       "Tap any college to see branch-wise opening & closing ranks.",
     ],
-    help: "Backed by verified JoSAA closing-rank data, so you target colleges you can actually get — not guesses.",
+    help: "Backed by verified JoSAA closing-rank data, so you target colleges you can actually get - not guesses.",
   },
   {
     n: 4,
@@ -71,13 +71,13 @@ const GUIDE = [
     title: "Colleges For You",
     to: "/for-you",
     tag: "Personalised",
-    what: "A smart, personalised feed of colleges matched to your rank, preferred branches and location — curated automatically.",
+    what: "A smart, personalised feed of colleges matched to your rank, preferred branches and location - curated automatically.",
     steps: [
       "Open Colleges For You from the navbar.",
-      "Set your preferences — branch, budget and location.",
+      "Set your preferences - branch, budget and location.",
       "Scroll a ranked list of best-fit colleges picked for your profile.",
     ],
-    help: "Removes the overwhelm of browsing hundreds of colleges — you see only the ones that fit you.",
+    help: "Removes the overwhelm of browsing hundreds of colleges - you see only the ones that fit you.",
   },
   {
     n: 5,
@@ -85,7 +85,7 @@ const GUIDE = [
     title: "JoSAA 2026 Counselling",
     to: "/josaa-2026",
     tag: "Admission roadmap",
-    what: "Your complete guide to the JoSAA counselling process — rounds, dates, seat allotment and choice-filling strategy.",
+    what: "Your complete guide to the JoSAA counselling process - rounds, dates, seat allotment and choice-filling strategy.",
     steps: [
       "Open JoSAA 2026 from the Tools menu.",
       "Follow the round-by-round timeline and what to do at each stage.",
@@ -105,7 +105,7 @@ const GUIDE = [
       "Track upcoming dates, documents and fee deadlines.",
       "Tick off tasks as you complete each step.",
     ],
-    help: "No more missed deadlines — everything you need to do, in the order you need to do it.",
+    help: "No more missed deadlines - everything you need to do, in the order you need to do it.",
   },
   {
     n: 7,
@@ -113,14 +113,14 @@ const GUIDE = [
     title: "Compare Colleges",
     to: "/compare",
     tag: "Decide confidently",
-    what: "Put up to 3 colleges side-by-side — each shown by name with its type badge — on every metric that matters: NIRF rank, location, year established, average & highest package, placement %, total fees per year, CSE (General) closing rank and counselling body.",
+    what: "Put up to 3 colleges side-by-side - each shown by name with its type badge - on every metric that matters: NIRF rank, location, year established, average & highest package, placement %, total fees per year, CSE (General) closing rank and counselling body.",
     steps: [
       "Add a college with the Compare (⚖) button on any college card, or open Compare and tap “Add colleges”.",
-      "Open Compare from the navbar — each college appears as its own column with full name and short code.",
+      "Open Compare from the navbar - each college appears as its own column with full name and short code.",
       "Read the row-by-row table: rankings, fees, placements and cutoffs line up neatly.",
       "Scroll to the Average package and Total fees / year bar charts for a quick visual verdict.",
     ],
-    help: "You compare a maximum of 3 colleges at a time, so the table never gets cramped — turning a tough decision into a clear, data-backed choice in seconds.",
+    help: "You compare a maximum of 3 colleges at a time, so the table never gets cramped - turning a tough decision into a clear, data-backed choice in seconds.",
   },
   {
     n: 8,
@@ -128,14 +128,14 @@ const GUIDE = [
     title: "Compare Exams",
     to: "/compare-exams",
     tag: "Plan your attempts",
-    what: "Compare up to 3 entrance exams side-by-side — JEE Main, JEE Advanced, BITSAT, VITEEE, MHT-CET, KCET, WBJEE and COMEDK UGET — on full name, conducting body, level, who accepts them, eligibility and exam pattern.",
+    what: "Compare up to 3 entrance exams side-by-side - JEE Main, JEE Advanced, BITSAT, VITEEE, MHT-CET, KCET, WBJEE and COMEDK UGET - on full name, conducting body, level, who accepts them, eligibility and exam pattern.",
     steps: [
       "Open Compare Exams from the Tools menu (it starts with JEE Main vs JEE Advanced).",
-      "Tap “Add” to pick another exam from the list — up to 3 columns at once.",
+      "Tap “Add” to pick another exam from the list - up to 3 columns at once.",
       "Read each row: conducting body, level, accepted-by colleges, eligibility and pattern.",
       "Tap an exam’s name or “Open” to jump to its full detail page.",
     ],
-    help: "Shows at a glance which exams unlock the colleges you want — so you only sit the ones worth your time and effort.",
+    help: "Shows at a glance which exams unlock the colleges you want - so you only sit the ones worth your time and effort.",
   },
   {
     n: 9,
@@ -149,7 +149,7 @@ const GUIDE = [
       "Open My Colleges from the heart icon in the navbar to see every saved college by name.",
       "Send any saved college straight into Compare, or tap the heart again to remove it.",
     ],
-    help: "Builds your personal, named wishlist that persists across visits — so you never lose track of a college you liked.",
+    help: "Builds your personal, named wishlist that persists across visits - so you never lose track of a college you liked.",
   },
   {
     n: 10,
@@ -163,7 +163,7 @@ const GUIDE = [
       "Filter by college, branch, category and counselling round.",
       "Read the exact ranks to benchmark your own.",
     ],
-    help: "The same verified data our predictors use — so you can cross-check any result yourself.",
+    help: "The same verified data our predictors use - so you can cross-check any result yourself.",
   },
   {
     n: 11,
@@ -174,11 +174,11 @@ const GUIDE = [
     what: "Every IIT, NIT and IIIT pinned on an interactive map of India. Pins are colour-coded by type (orange IIT, teal NIT, amber IIIT) and a legend keeps it clear, so you can explore colleges region by region.",
     steps: [
       "Open College Map from the Tools menu.",
-      "Use the All / IIT / NIT / IIIT filter tabs — each shows a live count of colleges.",
+      "Use the All / IIT / NIT / IIIT filter tabs - each shows a live count of colleges.",
       "Pan and zoom across India; hover a pin to see the college name, location and average package.",
-      "Tap a pin — or any card in the list below the map — to open that college’s full profile.",
+      "Tap a pin - or any card in the list below the map - to open that college’s full profile.",
     ],
-    help: "Perfect when location matters — instantly spot strong colleges close to home and see how they cluster across the country.",
+    help: "Perfect when location matters - instantly spot strong colleges close to home and see how they cluster across the country.",
   },
   {
     n: 12,
@@ -192,7 +192,7 @@ const GUIDE = [
       "Filter by category, income and course.",
       "Check eligibility and follow the application links.",
     ],
-    help: "Makes top colleges affordable — money should never stop a deserving student.",
+    help: "Makes top colleges affordable - money should never stop a deserving student.",
   },
 ];
 
@@ -200,7 +200,7 @@ const GUIDE = [
 const QUICK = [
   { icon: Search,        title: "Instant Search",  desc: "Press Ctrl + K (or ⌘ K) anywhere to search colleges, exams and tools in a flash." },
   { icon: MessageCircle, title: "AI Chatbot",      desc: "Tap the chat bubble at the bottom-right for instant answers to your counselling questions." },
-  { icon: Compass,       title: "Smart Navbar",    desc: "Every tool is one click away from the top menu — JEE, Colleges, Cutoffs and Tools." },
+  { icon: Compass,       title: "Smart Navbar",    desc: "Every tool is one click away from the top menu - JEE, Colleges, Cutoffs and Tools." },
 ];
 
 /* ══════════════════════════════════════════════════════════════
@@ -339,8 +339,8 @@ export default function HowToUse() {
   return (
     <div className="page" style={{ paddingTop: 0 }}>
       <Seo
-        title="How to Use CampusPoint — Rank, Shortlist & Counselling"
-        description="A quick guide to using CampusPoint — predict your JEE rank, build a college shortlist, compare options and plan JoSAA/CSAB counselling, all free and built by IIT Roorkee alumni."
+        title="How to Use CampusPoint - Rank, Shortlist & Counselling"
+        description="A quick guide to using CampusPoint - predict your JEE rank, build a college shortlist, compare options and plan JoSAA/CSAB counselling, all free and built by IIT Roorkee alumni."
         path="/how-to-use"
       />
       {/* ── HERO ── */}
@@ -373,7 +373,7 @@ export default function HowToUse() {
               </span>
             </h1>
             <p style={{ maxWidth: 640, margin: "0 auto", color: "var(--gray)", fontSize: "1.06rem", lineHeight: 1.6 }}>
-              From signing up to landing your dream seat — here's exactly how every tool works
+              From signing up to landing your dream seat - here's exactly how every tool works
               and how it helps you make a confident, data-backed decision.
             </p>
           </motion.div>
@@ -434,7 +434,7 @@ export default function HowToUse() {
                 Every tool, explained
               </h2>
               <p style={{ color: "var(--gray)", fontSize: "1rem" }}>
-                Follow the arrows top-to-bottom — or jump straight to the tool you need.
+                Follow the arrows top-to-bottom - or jump straight to the tool you need.
               </p>
             </div>
           </Reveal>
@@ -506,7 +506,7 @@ export default function HowToUse() {
                 Ready to find your college?
               </h2>
               <p style={{ color: "rgba(255,255,255,.92)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto 26px", lineHeight: 1.55 }}>
-                Put it all together — start with the College Predictor and let your rank do the talking.
+                Put it all together - start with the College Predictor and let your rank do the talking.
               </p>
               <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
                 <Link

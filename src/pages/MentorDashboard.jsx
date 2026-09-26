@@ -14,7 +14,7 @@ const ACCENT = "#FF693D";
 const SORA = "Sora, system-ui, sans-serif";
 
 // Mentor tokens are a different audience to student tokens and the server
-// refuses them on student routes — so they get their own storage key rather
+// refuses them on student routes - so they get their own storage key rather
 // than sharing the student session.
 const TOKEN_KEY = "cp:mentorToken";
 
@@ -111,7 +111,7 @@ function Login({ onDone }) {
   return (
     <AuthShell
       title="Mentor sign in"
-      sub="Use the email and password your admin gave you. This area is for mentors — students sign in from the mentorship dashboard."
+      sub="Use the email and password your admin gave you. This area is for mentors - students sign in from the mentorship dashboard."
     >
       <form onSubmit={submit}>
         <ErrorNote>{err}</ErrorNote>
@@ -140,7 +140,7 @@ function SetPassword({ token, onDone }) {
     setErr(""); setBusy(true);
     try {
       // The server retires every token issued against the old password,
-      // including the one we're holding — so adopt the fresh one it returns.
+      // including the one we're holding - so adopt the fresh one it returns.
       const r = await apiMentorSetPassword(token, { currentPassword: current, newPassword: next });
       writeToken(r.token);
       onDone(r.token, r.mentor);
@@ -152,7 +152,7 @@ function SetPassword({ token, onDone }) {
   return (
     <AuthShell
       title="Choose your own password"
-      sub="Your admin set a temporary password. Replace it before you can view any student data — nobody else should know the password you actually use."
+      sub="Your admin set a temporary password. Replace it before you can view any student data - nobody else should know the password you actually use."
     >
       <form onSubmit={submit}>
         <ErrorNote>{err}</ErrorNote>

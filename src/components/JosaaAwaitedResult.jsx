@@ -1,4 +1,4 @@
-/* JosaaAwaitedResult — shared layout for JoSAA seat-allotment result pages
+/* JosaaAwaitedResult - shared layout for JoSAA seat-allotment result pages
    whose result is not yet declared. Round 2 & 3 render this with their own
    round number and expected window; the live cutoff table is filled in once
    JoSAA publishes that round. Styled with the Campus Point warm theme. */
@@ -12,7 +12,7 @@ const STEPS = [
   ["Seat allotment is published", "Log in on josaa.nic.in with your JEE roll number & password to see the institute and branch allotted this round."],
   ["Accept, pay & report online", "Pay the seat-acceptance fee and complete online reporting within the window, then upload your documents for verification."],
   ["Choose Freeze, Float or Slide", "Freeze locks this seat, Float keeps you in for a better college/branch, Slide upgrades the branch within the same institute."],
-  ["Wait for the next round", "Float/Slide candidates are re-considered in the following round — fresh, often better, allotments are published each round."],
+  ["Wait for the next round", "Float/Slide candidates are re-considered in the following round - fresh, often better, allotments are published each round."],
 ];
 
 export default function JosaaAwaitedResult({ roundNo, expected, path, blurb }) {
@@ -20,7 +20,7 @@ export default function JosaaAwaitedResult({ roundNo, expected, path, blurb }) {
   return (
     <div style={{ background: CL.cream, minHeight: "100vh" }}>
       <Seo
-        title={`JoSAA 2026 Round ${roundNo} Seat Allotment Result — Date & Updates`}
+        title={`JoSAA 2026 Round ${roundNo} Seat Allotment Result - Date & Updates`}
         description={`JoSAA 2026 Round ${roundNo} seat allotment result date, reporting steps and Freeze/Float/Slide guidance. Live opening & closing ranks are updated here as soon as JoSAA declares Round ${roundNo}.`}
         path={path}
       />

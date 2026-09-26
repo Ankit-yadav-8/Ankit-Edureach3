@@ -1,5 +1,5 @@
 /* ============================================================
-   Shortlist.jsx — global context for "My Colleges" (saved) and
+   Shortlist.jsx - global context for "My Colleges" (saved) and
    the Compare tray. Persists to localStorage so it survives
    reloads. (localStorage works in a real Vite app.)
    ============================================================ */
@@ -7,7 +7,7 @@ import { createContext, useContext, useEffect, useState, useCallback } from "rea
 
 const KEY_SAVED = "edureach:saved";
 const KEY_COMPARE = "edureach:compare";
-/* No hard cap — users can compare as many colleges as they like.
+/* No hard cap - users can compare as many colleges as they like.
    Kept as a named constant (Infinity) so every `< MAX_COMPARE` guard and the
    toggle cap simply become no-ops rather than removing them everywhere. */
 const MAX_COMPARE = Infinity;

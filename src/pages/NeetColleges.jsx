@@ -17,7 +17,7 @@ const SORTS = [
   ["oldest", "Oldest"],
 ];
 const PAGE = 48;
-const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-IN"));
+const fmt = (n) => (n == null ? "-" : n.toLocaleString("en-IN"));
 
 const mgmtColor = (c) => (c.govt ? "#15a06e" : "#8b5cf6");
 
@@ -66,8 +66,8 @@ export default function NeetColleges() {
   return (
     <div className="page">
       <Seo
-        title="All NEET / MBBS Medical Colleges in India — State-wise List & Seats"
-        description="Browse all 780 MBBS medical colleges in India (incl. AIIMS & JIPMER) from the NMC 2024-25 seat matrix. Filter state-wise by government/private, MBBS seats, affiliating university and year — built for NEET UG aspirants on CampusPoint."
+        title="All NEET / MBBS Medical Colleges in India - State-wise List & Seats"
+        description="Browse all 780 MBBS medical colleges in India (incl. AIIMS & JIPMER) from the NMC 2024-25 seat matrix. Filter state-wise by government/private, MBBS seats, affiliating university and year - built for NEET UG aspirants on CampusPoint."
         path="/neet-colleges"
       />
 
@@ -94,7 +94,7 @@ export default function NeetColleges() {
               All {NEET_COLLEGES.length} MBBS Medical Colleges in India
             </h1>
             <p style={{ color: "rgba(28,28,40,.62)", fontSize: "1rem", maxWidth: 580, lineHeight: 1.65 }}>
-              Every MBBS college from the NMC 2024-25 seat matrix — AIIMS, JIPMER, government
+              Every MBBS college from the NMC 2024-25 seat matrix - AIIMS, JIPMER, government
               &amp; private. Filter by state, management and seats. <em>Source: official seat matrix.</em>
             </p>
             {/* quick stats */}

@@ -11,7 +11,7 @@ import { ScrollProgress, BackToTop } from "./components/ScrollUtils.jsx";
 const ScrollProgressBar = lazyRetry(() => import("./components/Animations.jsx").then(m => ({ default: m.ScrollProgressBar })));
 
 // Home (the landing page + hero) ships in the entry bundle so it paints the
-// instant the main JS runs — no extra lazy-chunk round-trip on first load. Its
+// instant the main JS runs - no extra lazy-chunk round-trip on first load. Its
 // own below-the-fold sections are still lazy/deferred inside Home.jsx.
 import Home from "./pages/Home.jsx";
 
@@ -87,7 +87,7 @@ function RouteFallback() {
   return <div style={{ minHeight: "100vh" }} aria-busy="true" />;
 }
 
-/* Scroll to top on path change — unless navigating to a hash anchor. */
+/* Scroll to top on path change - unless navigating to a hash anchor. */
 function ScrollManager() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
@@ -143,7 +143,7 @@ export default function App() {
     return () => cancel(id);
   }, []);
 
-  // Admin dashboard renders standalone — no public navbar, footer, chatbot,
+  // Admin dashboard renders standalone - no public navbar, footer, chatbot,
   // WhatsApp button, compare tray or auth modal bleeding into it.
   if (pathname.startsWith("/admin")) {
     return (
@@ -158,7 +158,7 @@ export default function App() {
     );
   }
 
-  // Campus Point AI is a full-screen Claude-style app — render it on its own
+  // Campus Point AI is a full-screen Claude-style app - render it on its own
   // (no public navbar / footer / floating widgets). Open to guests; the login
   // modal is still available on demand via the account button.
   if (pathname === "/ai") {
@@ -204,7 +204,7 @@ export default function App() {
           <Route path="/compare" element={<Compare />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/reviews" element={<Reviews />} />
-          {/* /jee-analysis retired — its weightage/difficulty content moved into the JEE strategy page */}
+          {/* /jee-analysis retired - its weightage/difficulty content moved into the JEE strategy page */}
           <Route path="/jee-analysis" element={<Navigate to="/jee-strategy" replace />} />
           <Route path="/shortlist" element={<Shortlist />} />
           <Route path="/for-you" element={<ForYou />} />

@@ -1,7 +1,7 @@
 import { BadgeCheck } from "lucide-react";
 
 /* ============================================================
-   TopBar — a slim, minimalist announcement strip pinned above
+   TopBar - a slim, minimalist announcement strip pinned above
    the navbar. Solid orange background with clean white trust
    text (no glow / animation).
    ============================================================ */

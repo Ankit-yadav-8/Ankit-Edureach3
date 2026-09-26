@@ -1,9 +1,9 @@
 /* ============================================================
-   CompareAI.jsx — shared building blocks for the AI-animated
+   CompareAI.jsx - shared building blocks for the AI-animated
    Compare Colleges / Compare Exams pages.
-   • AiAnalyzing  — pulsing orb + stepping checklist interstitial
-   • Sparkline    — tiny self-scaled trend line (own axis per series)
-   • MiniBar      — animated proportional bar used inside table cells
+   • AiAnalyzing  - pulsing orb + stepping checklist interstitial
+   • Sparkline    - tiny self-scaled trend line (own axis per series)
+   • MiniBar      - animated proportional bar used inside table cells
    ============================================================ */
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -20,7 +20,7 @@ export const rgba = (hex, a) => {
   return `rgba(${r},${g},${b},${a})`;
 };
 
-/* ── AiAnalyzing — animated "AI is crunching the numbers" interstitial ── */
+/* ── AiAnalyzing - animated "AI is crunching the numbers" interstitial ── */
 export function AiAnalyzing({ steps, title = "Crunching the numbers…", eyebrow = "AI COMPARISON ENGINE", onDone, accent = CL.coral }) {
   const [i, setI] = useState(0);
   const per = 420;
@@ -95,7 +95,7 @@ export function AiAnalyzing({ steps, title = "Crunching the numbers…", eyebrow
   );
 }
 
-/* ── Sparkline — self-scaled mini trend (each series on its own axis) ── */
+/* ── Sparkline - self-scaled mini trend (each series on its own axis) ── */
 export function Sparkline({ data = [], color = CL.coral, width = 128, height = 40, strokeWidth = 2 }) {
   if (!data.length) return null;
   const min = Math.min(...data), max = Math.max(...data);
@@ -127,7 +127,7 @@ export function Sparkline({ data = [], color = CL.coral, width = 128, height = 4
   );
 }
 
-/* ── MiniBar — animated proportional bar (0–1) used under a cell value ── */
+/* ── MiniBar - animated proportional bar (0–1) used under a cell value ── */
 export function MiniBar({ pct = 0, color = CL.coral, delay = 0 }) {
   return (
     <div style={{ height: 5, borderRadius: 50, background: CL.cream2, overflow: "hidden", marginTop: 6 }}>

@@ -10,7 +10,7 @@ import "../styles/strategy.css";
 
 export default function JeeStrategy() {
   const heroProps = {
-    badgeText: "EXAM MASTERY — JEE",
+    badgeText: "EXAM MASTERY - JEE",
     titlePart1: "The ultimate strategy.",
     titlePart2: "Study ",
     highlight1: "smart",
@@ -57,7 +57,7 @@ export default function JeeStrategy() {
         <StrategyReveal>
           <span className="section-kicker">Part 01</span>
           <h2 className="section-title">Understanding the exam at a structural level</h2>
-          <p className="section-intro">Main and Advanced are not the same exam wearing two names — they reward different skills, and your last two months of prep should look different depending on which one you're optimizing for.</p>
+          <p className="section-intro">Main and Advanced are not the same exam wearing two names - they reward different skills, and your last two months of prep should look different depending on which one you're optimizing for.</p>
         </StrategyReveal>
 
         <div className="compare-grid">
@@ -97,7 +97,7 @@ export default function JeeStrategy() {
         <StrategyReveal>
           <span className="section-kicker">Part 02</span>
           <h2 className="section-title">Chapter-wise weightage reality</h2>
-          <p className="section-intro">No official weightage is published, but multi-year PYQ analysis converges on the same high-yield zones year after year. Treat this as directional priority, not gospel — Advanced especially can still ask a hard question from a "minor" chapter.</p>
+          <p className="section-intro">No official weightage is published, but multi-year PYQ analysis converges on the same high-yield zones year after year. Treat this as directional priority, not gospel - Advanced especially can still ask a hard question from a "minor" chapter.</p>
         </StrategyReveal>
 
         <div className="weight-grid">
@@ -122,7 +122,7 @@ export default function JeeStrategy() {
         </div>
 
         <StrategyReveal delay={0.4} className="priority-strip">
-          <div className="ptitle">Marks per hour of revision — descending priority</div>
+          <div className="ptitle">Marks per hour of revision - descending priority</div>
           <div className="priority-flow">
             <span className="pnode">Inorganic Chem</span><span className="parrow">→</span>
             <span className="pnode">Coord. Geo / Algebra</span><span className="parrow">→</span>
@@ -137,7 +137,7 @@ export default function JeeStrategy() {
           <Link to="/jee-advanced-analysis" className="deep-cta">
             <span className="deep-cta-txt">
               <strong>Explore the full 80-chapter analysis</strong>
-              <span>Every chapter ranked by weightage, marks at stake, difficulty and priority — filter Physics, Chemistry &amp; Maths.</span>
+              <span>Every chapter ranked by weightage, marks at stake, difficulty and priority - filter Physics, Chemistry &amp; Maths.</span>
             </span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </Link>
@@ -152,11 +152,11 @@ export default function JeeStrategy() {
         </StrategyReveal>
 
         <div className="playbook-grid">
-          <StrategyReveal delay={0.1} className="habit-card"><div className="habit-num">01</div><h3>NCERT is non-negotiable</h3><p>Inorganic and parts of Physical Chemistry draw heavily, sometimes verbatim, from NCERT phrasing — including footnotes and exceptions. Top scorers read it cover to cover 5–8+ times, treating it as a document to memorize precisely, not just a textbook.</p></StrategyReveal>
-          <StrategyReveal delay={0.2} className="habit-card"><div className="habit-num">02</div><h3>One primary source, enforced</h3><p>"I collected too many books and finished none properly" is the most common regret. Pick one standard reference per subject, master it fully, and only supplement for a specific weak topic — never swap it wholesale mid-year.</p></StrategyReveal>
-          <StrategyReveal delay={0.3} className="habit-card"><div className="habit-num">03</div><h3>The error log</h3><p>After every test, log the <em>root cause</em> — conceptual gap, calculation slip, misread question, time pressure, or lucky/unlucky guess. Reviewed weekly, it becomes a personalized map of exactly where marks are lost.</p></StrategyReveal>
+          <StrategyReveal delay={0.1} className="habit-card"><div className="habit-num">01</div><h3>NCERT is non-negotiable</h3><p>Inorganic and parts of Physical Chemistry draw heavily, sometimes verbatim, from NCERT phrasing - including footnotes and exceptions. Top scorers read it cover to cover 5–8+ times, treating it as a document to memorize precisely, not just a textbook.</p></StrategyReveal>
+          <StrategyReveal delay={0.2} className="habit-card"><div className="habit-num">02</div><h3>One primary source, enforced</h3><p>"I collected too many books and finished none properly" is the most common regret. Pick one standard reference per subject, master it fully, and only supplement for a specific weak topic - never swap it wholesale mid-year.</p></StrategyReveal>
+          <StrategyReveal delay={0.3} className="habit-card"><div className="habit-num">03</div><h3>The error log</h3><p>After every test, log the <em>root cause</em> - conceptual gap, calculation slip, misread question, time pressure, or lucky/unlucky guess. Reviewed weekly, it becomes a personalized map of exactly where marks are lost.</p></StrategyReveal>
           <StrategyReveal delay={0.4} className="habit-card"><div className="habit-num">04</div><h3>Spaced revision cycles</h3><p>Learn → re-solve without the solution 30–45 days later, building one-page notes → in the final weeks, revise only those condensed notes and the error log. Spacing beats massed re-reading for long-term retention.</p></StrategyReveal>
-          <StrategyReveal delay={0.5} className="habit-card"><div className="habit-num">05</div><h3>Protected sleep</h3><p>Nearly every high-ranker interview mentions a fixed 6.5–7.5 hour sleep schedule as non-negotiable — working memory and calculation speed both degrade measurably under sleep debt. All-nighters are described as counterproductive, not heroic.</p></StrategyReveal>
+          <StrategyReveal delay={0.5} className="habit-card"><div className="habit-num">05</div><h3>Protected sleep</h3><p>Nearly every high-ranker interview mentions a fixed 6.5–7.5 hour sleep schedule as non-negotiable - working memory and calculation speed both degrade measurably under sleep debt. All-nighters are described as counterproductive, not heroic.</p></StrategyReveal>
         </div>
       </section>
 
@@ -173,10 +173,10 @@ export default function JeeStrategy() {
           </div>
           <div className="subj-body">
             <ul>
-              <li><strong>Derive, don't memorize</strong> — Advanced often twists a standard setup just enough that a memorized formula stops applying, but a student who knows the derivation adapts in real time.</li>
-              <li>Build strong <strong>dimensional analysis</strong> intuition — a fast way to sanity-check a derived formula or answer, catching a large share of silly errors instantly.</li>
+              <li><strong>Derive, don't memorize</strong> - Advanced often twists a standard setup just enough that a memorized formula stops applying, but a student who knows the derivation adapts in real time.</li>
+              <li>Build strong <strong>dimensional analysis</strong> intuition - a fast way to sanity-check a derived formula or answer, catching a large share of silly errors instantly.</li>
               <li>Numerical-value questions need different practice: since Main doesn't penalize them, aim for <strong>directionally close, fast</strong>; for Advanced, precision matters since they're graded fully right or wrong.</li>
-              <li>Deliberately practice <strong>multi-concept problems</strong> for Advanced — rotational dynamics plus energy conservation, or E&M plus mechanics, is the house style.</li>
+              <li>Deliberately practice <strong>multi-concept problems</strong> for Advanced - rotational dynamics plus energy conservation, or E&M plus mechanics, is the house style.</li>
             </ul>
           </div>
         </StrategyReveal>
@@ -188,10 +188,10 @@ export default function JeeStrategy() {
           </div>
           <div className="subj-body">
             <ul>
-              <li>Treat <strong>Physical Chemistry like Math</strong> — formula-driven and trainable through repetition. Mole Concept, Equilibrium, Thermodynamics, and Electrochemistry are the backbone.</li>
-              <li>Treat <strong>Inorganic Chemistry</strong> as memorization plus pattern recognition — periodic trends and their exceptions come up constantly; coordination compound theory leans more Advanced.</li>
-              <li>Treat <strong>Organic Chemistry</strong> as electron-movement logic, not isolated reaction memorization — understanding mechanism categories lets you predict outcomes of reactions you've never seen.</li>
-              <li>Chemistry is usually the <strong>fastest section to attempt</strong> in Main — many high scorers deliberately do it first to bank quick marks and settle nerves.</li>
+              <li>Treat <strong>Physical Chemistry like Math</strong> - formula-driven and trainable through repetition. Mole Concept, Equilibrium, Thermodynamics, and Electrochemistry are the backbone.</li>
+              <li>Treat <strong>Inorganic Chemistry</strong> as memorization plus pattern recognition - periodic trends and their exceptions come up constantly; coordination compound theory leans more Advanced.</li>
+              <li>Treat <strong>Organic Chemistry</strong> as electron-movement logic, not isolated reaction memorization - understanding mechanism categories lets you predict outcomes of reactions you've never seen.</li>
+              <li>Chemistry is usually the <strong>fastest section to attempt</strong> in Main - many high scorers deliberately do it first to bank quick marks and settle nerves.</li>
             </ul>
           </div>
         </StrategyReveal>
@@ -203,9 +203,9 @@ export default function JeeStrategy() {
           </div>
           <div className="subj-body">
             <ul>
-              <li><strong>Calculus and Algebra</strong> together typically make up more than half the Math weightage — prioritize mastery here over exotic, low-frequency topics.</li>
-              <li><strong>Coordinate Geometry and Vectors/3D</strong> are comparatively fast once internalized — good candidates to attempt early and build a time buffer.</li>
-              <li>Most lost marks aren't from lacking knowledge — they're <strong>sign errors and missed edge cases</strong>. Build a 10-second final sanity check: does the sign, magnitude, or domain make sense?</li>
+              <li><strong>Calculus and Algebra</strong> together typically make up more than half the Math weightage - prioritize mastery here over exotic, low-frequency topics.</li>
+              <li><strong>Coordinate Geometry and Vectors/3D</strong> are comparatively fast once internalized - good candidates to attempt early and build a time buffer.</li>
+              <li>Most lost marks aren't from lacking knowledge - they're <strong>sign errors and missed edge cases</strong>. Build a 10-second final sanity check: does the sign, magnitude, or domain make sense?</li>
             </ul>
           </div>
         </StrategyReveal>
@@ -214,9 +214,9 @@ export default function JeeStrategy() {
       <section id="time">
         <StrategyReveal>
           <span className="section-kicker">Part 05</span>
-          <h2 className="section-title">Time management — the full framework</h2>
+          <h2 className="section-title">Time management - the full framework</h2>
 
-          <p className="section-intro"><strong style={{color:"var(--ink)"}}>The 3-pass exam technique</strong> — split your exam time by difficulty, not by subject, so one stuck problem never costs you five easy ones.</p>
+          <p className="section-intro"><strong style={{color:"var(--ink)"}}>The 3-pass exam technique</strong> - split your exam time by difficulty, not by subject, so one stuck problem never costs you five easy ones.</p>
         </StrategyReveal>
         
         <div className="pass-bar">
@@ -226,7 +226,7 @@ export default function JeeStrategy() {
         </div>
 
         <StrategyReveal delay={0.1}>
-          <p className="section-intro" style={{marginTop:"34px"}}><strong style={{color:"var(--ink)"}}>Recommended subject attempt order for Main</strong> — bank the fastest, most confident marks first.</p>
+          <p className="section-intro" style={{marginTop:"34px"}}><strong style={{color:"var(--ink)"}}>Recommended subject attempt order for Main</strong> - bank the fastest, most confident marks first.</p>
           <div className="flow-row">
             <span className="flow-pill c1">Chemistry</span><span className="parrow">→</span>
             <span className="flow-pill c2">Mathematics</span><span className="parrow">→</span>
@@ -253,11 +253,11 @@ export default function JeeStrategy() {
         <div className="two-col-callout">
           <StrategyReveal delay={0.3} className="callout" style={{marginTop:0}}>
             <div className="icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
-            <p><strong>Pomodoro-style blocks:</strong> 45–50 minutes of focused study with 5–10 minute breaks — sustained focus tends to degrade noticeably after 60–90 minutes.</p>
+            <p><strong>Pomodoro-style blocks:</strong> 45–50 minutes of focused study with 5–10 minute breaks - sustained focus tends to degrade noticeably after 60–90 minutes.</p>
           </StrategyReveal>
           <StrategyReveal delay={0.4} className="callout" style={{marginTop:0}}>
             <div className="icon" style={{background:"var(--coral-tint)",color:"var(--coral-ink)"}}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-            <p><strong>The final 30 days:</strong> no new topics, ever. Pure revision of condensed notes and the error log, timed mocks, and sleep discipline — cramming new chapters tends to raise anxiety without raising score.</p>
+            <p><strong>The final 30 days:</strong> no new topics, ever. Pure revision of condensed notes and the error log, timed mocks, and sleep discipline - cramming new chapters tends to raise anxiety without raising score.</p>
           </StrategyReveal>
         </div>
       </section>
@@ -268,10 +268,10 @@ export default function JeeStrategy() {
           <h2 className="section-title">Psychology and exam-day management</h2>
         </StrategyReveal>
         <div className="psych-grid">
-          <StrategyReveal delay={0.1} className="psych-card"><p><strong>Anxiety is normal, even for toppers.</strong> The differentiator isn't calm nerves — it's a rehearsed routine, built through mocks, that the mind defaults to under pressure.</p></StrategyReveal>
+          <StrategyReveal delay={0.1} className="psych-card"><p><strong>Anxiety is normal, even for toppers.</strong> The differentiator isn't calm nerves - it's a rehearsed routine, built through mocks, that the mind defaults to under pressure.</p></StrategyReveal>
           <StrategyReveal delay={0.2} className="psych-card"><p><strong>Don't pace against your neighbor.</strong> Everyone attempts questions in a different order; someone finishing early is not useful information and can trigger unnecessary panic.</p></StrategyReveal>
           <StrategyReveal delay={0.3} className="psych-card"><p><strong>Stuck for 2–3 minutes past budget? Move on.</strong> Every extra minute on one problem is a minute stolen from two or three solvable ones elsewhere.</p></StrategyReveal>
-          <StrategyReveal delay={0.4} className="psych-card"><p><strong>Exam-day routine matters</strong> — a light, familiar breakfast, arriving with buffer time, and a few minutes of calm breathing before the exam starts.</p></StrategyReveal>
+          <StrategyReveal delay={0.4} className="psych-card"><p><strong>Exam-day routine matters</strong> - a light, familiar breakfast, arriving with buffer time, and a few minutes of calm breathing before the exam starts.</p></StrategyReveal>
         </div>
       </section>
 
@@ -281,12 +281,12 @@ export default function JeeStrategy() {
           <h2 className="section-title">Common mistakes that cost ranks</h2>
         </StrategyReveal>
         <div className="mistake-list">
-          <StrategyReveal delay={0.1} className="mistake-item"><div className="mistake-num">1</div><p>Guessing blindly on MCQs without eliminating at least one option first — ruling out even one wrong option meaningfully changes the expected value of a guess.</p></StrategyReveal>
-          <StrategyReveal delay={0.2} className="mistake-item"><div className="mistake-num">2</div><p>Dismissing NCERT as "too basic," especially for Chemistry — a large, avoidable chunk of Main-level marks is lost this way every year.</p></StrategyReveal>
-          <StrategyReveal delay={0.3} className="mistake-item"><div className="mistake-num">3</div><p>Repeatedly practicing favorite topics while avoiding weak chapters — the error log exists specifically to make this bias visible.</p></StrategyReveal>
+          <StrategyReveal delay={0.1} className="mistake-item"><div className="mistake-num">1</div><p>Guessing blindly on MCQs without eliminating at least one option first - ruling out even one wrong option meaningfully changes the expected value of a guess.</p></StrategyReveal>
+          <StrategyReveal delay={0.2} className="mistake-item"><div className="mistake-num">2</div><p>Dismissing NCERT as "too basic," especially for Chemistry - a large, avoidable chunk of Main-level marks is lost this way every year.</p></StrategyReveal>
+          <StrategyReveal delay={0.3} className="mistake-item"><div className="mistake-num">3</div><p>Repeatedly practicing favorite topics while avoiding weak chapters - the error log exists specifically to make this bias visible.</p></StrategyReveal>
           <StrategyReveal delay={0.4} className="mistake-item"><div className="mistake-num">4</div><p>Switching primary study material repeatedly in the final months, fragmenting revision and wasting time re-adapting to new formats.</p></StrategyReveal>
-          <StrategyReveal delay={0.5} className="mistake-item"><div className="mistake-num">5</div><p>Treating rest and sleep as wasted time — burnout in the final 60 days is one of the most cited reasons for underperforming your own mock average.</p></StrategyReveal>
-          <StrategyReveal delay={0.6} className="mistake-item"><div className="mistake-num">6</div><p>Leaving Advanced-specific formats (multiple-correct, matrix-match) until very late — these need dedicated, distinct practice from single-correct MCQs.</p></StrategyReveal>
+          <StrategyReveal delay={0.5} className="mistake-item"><div className="mistake-num">5</div><p>Treating rest and sleep as wasted time - burnout in the final 60 days is one of the most cited reasons for underperforming your own mock average.</p></StrategyReveal>
+          <StrategyReveal delay={0.6} className="mistake-item"><div className="mistake-num">6</div><p>Leaving Advanced-specific formats (multiple-correct, matrix-match) until very late - these need dedicated, distinct practice from single-correct MCQs.</p></StrategyReveal>
         </div>
       </section>
 
@@ -297,8 +297,8 @@ export default function JeeStrategy() {
 
       <section id="closing">
         <StrategyReveal className="closing">
-          <p className="quote">"Rank is very often a function of consistency compounded over 12–18 months — a narrow, well-mastered set of resources, honest self-correction through an error log, and protected sleep — more than any single hack discovered in the last month."</p>
-          <div className="sig">— Closing note</div>
+          <p className="quote">"Rank is very often a function of consistency compounded over 12–18 months - a narrow, well-mastered set of resources, honest self-correction through an error log, and protected sleep - more than any single hack discovered in the last month."</p>
+          <div className="sig">- Closing note</div>
         </StrategyReveal>
       </section>
 

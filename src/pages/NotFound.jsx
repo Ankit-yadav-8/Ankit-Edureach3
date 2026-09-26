@@ -8,7 +8,7 @@ export default function NotFound() {
       <Seo title="Page Not Found (404)" description="The page you're looking for doesn't exist or has moved." robots="noindex, follow" />
       <div>
         <Compass size={56} color="var(--coral)" />
-        <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "2.4rem", margin: "16px 0 6px" }}>404 — Page not found</h1>
+        <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "2.4rem", margin: "16px 0 6px" }}>404 - Page not found</h1>
         <p style={{ color: "var(--muted)", marginBottom: 20 }}>The page you're looking for doesn't exist or has moved.</p>
         <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
           <Link to="/" className="btn btn-coral">Go home</Link>

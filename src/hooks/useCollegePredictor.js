@@ -6,7 +6,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
  * Key change vs the old version: the worker is created ONCE and kept
  * alive for the component's lifetime. The previous code terminated
  * and recreated the worker on every predict() call, which threw away
- * the cached CSV DB and forced a full 8-year reload each time — that
+ * the cached CSV DB and forced a full 8-year reload each time - that
  * was the slow "Predicting…" wait.
  *
  * To still cancel an outdated prediction when the user changes inputs
@@ -22,7 +22,7 @@ export function useCollegePredictor() {
   const reqIdRef  = useRef(0);   // latest request id; stale responses are dropped
 
   /* The worker fetches josaa_2025.csv (~12 MB) as soon as it boots, so it is
-     created on demand rather than on mount — this hook is used by components
+     created on demand rather than on mount - this hook is used by components
      that render on the homepage, where that fetch is pure waste until the user
      actually engages with the predictor. Still created once and kept alive, so
      the CSV is parsed only once per session. */
@@ -51,7 +51,7 @@ export function useCollegePredictor() {
     return worker;
   }, []);
 
-  // Terminate on unmount only — never re-create mid-session.
+  // Terminate on unmount only - never re-create mid-session.
   useEffect(() => () => {
     workerRef.current?.terminate();
     workerRef.current = null;

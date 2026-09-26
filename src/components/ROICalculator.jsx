@@ -110,19 +110,19 @@ export default function ROICalculator({ college }) {
 
       {r.aid > 0 && (
         <p style={{ fontSize: 12, color: "var(--green)", marginTop: 12, fontWeight: 600 }}>
-          Scholarships cut the cost by {fmtINR(r.aid)} over {years} years — gross {fmtINR(r.grossCost)} → net {fmtINR(r.netCost)}.
+          Scholarships cut the cost by {fmtINR(r.aid)} over {years} years - gross {fmtINR(r.grossCost)} → net {fmtINR(r.netCost)}.
         </p>
       )}
 
       <div className="roi-results" style={{ marginTop: 14 }}>
         {metric("Net degree cost", fmtINR(r.netCost), "var(--navy)", Wallet, `over ${years} years`)}
-        {metric("Payback time", r.payback != null ? `${r.payback.toFixed(1)} yrs` : "—", "var(--green)", Clock, "to recover cost")}
+        {metric("Payback time", r.payback != null ? `${r.payback.toFixed(1)} yrs` : "-", "var(--green)", Clock, "to recover cost")}
         {metric(`${horizon}-yr take-home`, fmtINR(Math.round(r.horizonTakeHome)), "var(--coral)", TrendingUp, "post-tax earnings")}
-        {metric("Return on cost", r.roiMultiple != null ? `${r.roiMultiple.toFixed(1)}×` : "—", "var(--violet)", Trophy, `net gain ${fmtINR(Math.round(r.netGain))}`)}
+        {metric("Return on cost", r.roiMultiple != null ? `${r.roiMultiple.toFixed(1)}×` : "-", "var(--violet)", Trophy, `net gain ${fmtINR(Math.round(r.netGain))}`)}
       </div>
 
       <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 12 }}>
-        Assumes ~{Math.round(TAKE_HOME * 100)}% post-tax take-home and {growth}% yearly salary growth. These are rough projections — adjust the inputs for your situation. Loan interest, inflation and job switches will change the real numbers.
+        Assumes ~{Math.round(TAKE_HOME * 100)}% post-tax take-home and {growth}% yearly salary growth. These are rough projections - adjust the inputs for your situation. Loan interest, inflation and job switches will change the real numbers.
       </p>
     </div>
   );

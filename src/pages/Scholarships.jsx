@@ -37,7 +37,7 @@ function EMICalculator() {
           </div>
         ))}
       </div>
-      <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 12 }}>Many education loans offer a moratorium (no EMI during the course) and interest subsidies for eligible families — check the Vidya Lakshmi portal.</p>
+      <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 12 }}>Many education loans offer a moratorium (no EMI during the course) and interest subsidies for eligible families - check the Vidya Lakshmi portal.</p>
     </div>
   );
 }
@@ -47,8 +47,8 @@ export default function Scholarships() {
     <div className="page">
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
-        title="Engineering & JEE Scholarships 2026 — Eligibility & How to Apply"
-        description="Top scholarships for engineering and JEE aspirants — eligibility, amount, deadlines and how to apply — plus an education-loan EMI and ROI calculator on CampusPoint."
+        title="Engineering & JEE Scholarships 2026 - Eligibility & How to Apply"
+        description="Top scholarships for engineering and JEE aspirants - eligibility, amount, deadlines and how to apply - plus an education-loan EMI and ROI calculator on CampusPoint."
         path="/scholarships"
       />
       <section className="warm-page-header" style={{ padding: "40px 0" }}>
@@ -84,7 +84,7 @@ export default function Scholarships() {
               </Reveal>
             ))}
           </div>
-          <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 14 }}>Amounts &amp; eligibility are indicative — always confirm on the official scholarship portal before applying.</p>
+          <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 14 }}>Amounts &amp; eligibility are indicative - always confirm on the official scholarship portal before applying.</p>
         </div>
       </div>
     </div>

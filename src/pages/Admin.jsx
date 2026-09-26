@@ -20,7 +20,7 @@ const ORANGE = "#FF693D";
 const SELF_CONTAINED_TABS = new Set(["community", "tests", "mentors", "coupons"]);
 
 const fmtDate = (iso) => {
-  if (!iso) return "—";
+  if (!iso) return "-";
   const d = new Date(iso);
   return d.toLocaleString("en-IN", {
     day: "2-digit", month: "short", year: "numeric",
@@ -33,7 +33,7 @@ const avatar = (name, phone) => (name || phone || "U").charAt(0).toUpperCase();
 // Lowercase + strip spaces/punctuation so "Vit thal" and "vitthal" compare equal.
 const norm = (s) => (s || "").toLowerCase().replace(/[^a-z0-9@.]/g, "");
 
-// Levenshtein edit distance — lets a typo'd search ("vithal") still match "Vitthal".
+// Levenshtein edit distance - lets a typo'd search ("vithal") still match "Vitthal".
 const editDistance = (a, b) => {
   if (a === b) return 0;
   if (!a.length) return b.length;
@@ -76,7 +76,7 @@ export default function Admin() {
   const [authed, setAuthed] = useState(false);
   // two-step admin login: enter key → OTP emailed to the admin inbox → verify
   const [step, setStep] = useState("key");          // "key" | "otp"
-  // Which admin inbox gets the code. Chosen by INDEX — the real addresses never
+  // Which admin inbox gets the code. Chosen by INDEX - the real addresses never
   // leave the server, the picker only ever shows masked labels.
   const [inboxes, setInboxes] = useState([]);
   const [inbox, setInbox] = useState(0);
@@ -113,7 +113,7 @@ export default function Admin() {
     setBusy(true); setErr("");
     try {
       const res = await fetch(API_BASE + "/api/users", { headers: { "x-admin-token": t }, cache: "no-store" });
-      if (res.status === 401 || res.status === 403) throw new Error("Session expired — please log in again");
+      if (res.status === 401 || res.status === 403) throw new Error("Session expired - please log in again");
       if (!res.ok) throw new Error("Server error " + res.status);
       const data = await res.json();
       setUsers(data.users || []);
@@ -133,7 +133,7 @@ export default function Admin() {
     setBusy(true); setErr("");
     try {
       const res = await fetch(API_BASE + "/api/payment/enrollments", { headers: { "x-admin-token": t }, cache: "no-store" });
-      if (res.status === 401 || res.status === 403) throw new Error("Session expired — please log in again");
+      if (res.status === 401 || res.status === 403) throw new Error("Session expired - please log in again");
       if (!res.ok) throw new Error("Server error " + res.status);
       const data = await res.json();
       setPayments(data.enrollments || []);
@@ -161,7 +161,7 @@ export default function Admin() {
       .catch(() => setInboxes([]));  // picker just hides; the default inbox still works
   }, []);
 
-  // Step 1 — verify the admin key on the server, which emails an OTP to the
+  // Step 1 - verify the admin key on the server, which emails an OTP to the
   // admin inbox. We never advance to step 2 unless the key was correct.
   async function requestOtp(k) {
     setBusy(true); setErr("");
@@ -179,7 +179,7 @@ export default function Admin() {
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
   }
 
-  // Step 2 — verify key + OTP; on success the server returns a short-lived
+  // Step 2 - verify key + OTP; on success the server returns a short-lived
   // admin session token that gates every data request.
   async function verifyOtp(code) {
     setBusy(true); setErr("");
@@ -295,7 +295,7 @@ export default function Admin() {
 
               {/* Which inbox gets the code. Two owners share this panel, so each
                   sends the code to their own address instead of asking the other
-                  to read it out. Labels are masked — the server never sends the
+                  to read it out. Labels are masked - the server never sends the
                   real addresses to the browser, and the choice travels as an
                   index it validates against its own allowlist. */}
               {inboxes.length > 1 && (
@@ -364,7 +364,7 @@ export default function Admin() {
               </div>
               {devCode && (
                 <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginBottom: 14, color: "#92400e", fontSize: 13, textAlign: "center" }}>
-                  Dev mode — code: <strong>{devCode}</strong>
+                  Dev mode - code: <strong>{devCode}</strong>
                 </div>
               )}
               <button
@@ -644,27 +644,27 @@ export default function Admin() {
                             {avatar(u.name, u.phone)}
                           </div>
                           <span style={{ fontWeight: 600, color: "#0d1b3e", fontSize: 14 }}>
-                            {u.name || "—"}
+                            {u.name || "-"}
                           </span>
                         </div>
                       </td>
                       <td style={{ padding: "14px 20px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
                           <Mail size={13} color="#bbb" />
-                          {u.email || "—"}
+                          {u.email || "-"}
                         </div>
                       </td>
                       <td style={{ padding: "14px 20px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
                           <Phone size={13} color="#bbb" />
-                          {u.phone || "—"}
+                          {u.phone || "-"}
                         </div>
                       </td>
                       <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>
-                        {u.coaching || <span style={{ color: "#ddd" }}>—</span>}
+                        {u.coaching || <span style={{ color: "#ddd" }}>-</span>}
                       </td>
                       <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
-                        {u.studentClass || "—"}
+                        {u.studentClass || "-"}
                       </td>
                       <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888", whiteSpace: "nowrap" }}>
                         {fmtDate(u.createdAt)}
@@ -782,20 +782,20 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow }) {
                       }}>
                         {avatar(p.name, p.phone)}
                       </div>
-                      <span style={{ fontWeight: 600, color: "#0d1b3e", fontSize: 14 }}>{p.name || "—"}</span>
+                      <span style={{ fontWeight: 600, color: "#0d1b3e", fontSize: 14 }}>{p.name || "-"}</span>
                     </div>
                   </td>
                   <td style={{ padding: "14px 20px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
-                      <Mail size={13} color="#bbb" />{p.email || "—"}
+                      <Mail size={13} color="#bbb" />{p.email || "-"}
                     </div>
                   </td>
                   <td style={{ padding: "14px 20px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
-                      <Phone size={13} color="#bbb" />{p.phone || "—"}
+                      <Phone size={13} color="#bbb" />{p.phone || "-"}
                     </div>
                   </td>
-                  <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>{p.planLabel || p.plan || "—"}</td>
+                  <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>{p.planLabel || p.plan || "-"}</td>
                   <td style={{ padding: "14px 20px", fontSize: 13.5, color: "#0d1b3e", fontWeight: 700, whiteSpace: "nowrap" }}>
                     ₹{Number(p.amount || 0).toLocaleString("en-IN")}
                   </td>

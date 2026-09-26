@@ -9,7 +9,7 @@ import "../styles/strategy.css";
 
 export default function NeetStrategy() {
   const heroProps = {
-    badgeText: "EXAM MASTERY — NEET",
+    badgeText: "EXAM MASTERY - NEET",
     titlePart1: "The ultimate strategy.",
     titlePart2: "Study ",
     highlight1: "smart",
@@ -56,7 +56,7 @@ export default function NeetStrategy() {
         <StrategyReveal>
           <span className="section-kicker">Part 01</span>
           <h2 className="section-title">Understanding the exam at a structural level</h2>
-          <p className="section-intro">NEET-UG is a single-attempt-per-year exam conducted by NTA, 3 hours 20 minutes long, entirely MCQ-based — no numerical-value questions like JEE, which changes the risk calculus of guessing.</p>
+          <p className="section-intro">NEET-UG is a single-attempt-per-year exam conducted by NTA, 3 hours 20 minutes long, entirely MCQ-based - no numerical-value questions like JEE, which changes the risk calculus of guessing.</p>
         </StrategyReveal>
 
         <div className="compare-grid">
@@ -77,7 +77,7 @@ export default function NeetStrategy() {
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.9 4.9l2.8 2.8"/><path d="M16.3 16.3l2.8 2.8"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.9 19.1l2.8-2.8"/><path d="M16.3 7.7l2.8-2.8"/></svg>
               </div>
               <div>
-                <p><strong>Why NEET is fundamentally a Biology exam:</strong> A student who is excellent in Biology but only average in Physics and Chemistry has a realistic path to a strong rank. The reverse — excellent Physics/Chemistry but weak Biology — almost never produces a competitive score.</p>
+                <p><strong>Why NEET is fundamentally a Biology exam:</strong> A student who is excellent in Biology but only average in Physics and Chemistry has a realistic path to a strong rank. The reverse - excellent Physics/Chemistry but weak Biology - almost never produces a competitive score.</p>
               </div>
             </div>
             <div style={{display: "flex", gap: "16px", marginTop: "16px"}}>
@@ -121,7 +121,7 @@ export default function NeetStrategy() {
         </div>
 
         <StrategyReveal delay={0.4} className="priority-strip">
-          <div className="ptitle">Time allocation — a defensible default split</div>
+          <div className="ptitle">Time allocation - a defensible default split</div>
           <div className="priority-flow">
             <span className="pnode" style={{background: "var(--green-tint)", color: "var(--green-ink)"}}>Biology 45–50%</span><span className="parrow">+</span>
             <span className="pnode" style={{background: "var(--coral-tint)", color: "var(--coral-ink)"}}>Chemistry 25–30%</span><span className="parrow">+</span>
@@ -159,9 +159,9 @@ export default function NeetStrategy() {
           </div>
           <div className="subj-body">
             <ul>
-              <li><strong>Build one-page chapter summaries</strong> immediately after finishing each NCERT chapter — flowcharts work especially well for sequential physiological processes.</li>
-              <li>Don't let Botany lag behind Zoology or vice versa — both carry comparable weightage, but students often neglect the one they find less "interesting."</li>
-              <li>Treat <strong>Genetics numericals</strong> (cross ratios, pedigree analysis) as a distinct skill requiring practice, not just theory reading — these behave more like Math.</li>
+              <li><strong>Build one-page chapter summaries</strong> immediately after finishing each NCERT chapter - flowcharts work especially well for sequential physiological processes.</li>
+              <li>Don't let Botany lag behind Zoology or vice versa - both carry comparable weightage, but students often neglect the one they find less "interesting."</li>
+              <li>Treat <strong>Genetics numericals</strong> (cross ratios, pedigree analysis) as a distinct skill requiring practice, not just theory reading - these behave more like Math.</li>
               <li>Pay special attention to scientific names, years of discoveries, and plant families.</li>
             </ul>
           </div>
@@ -174,9 +174,9 @@ export default function NeetStrategy() {
           </div>
           <div className="subj-body">
             <ul>
-              <li>Treat <strong>Physical Chemistry like Math</strong> — formula-driven and trainable through repetition. NEET's numericals are generally more direct, formula-plug style.</li>
-              <li>Treat <strong>Inorganic Chemistry</strong> as memorization plus pattern recognition — periodic trends and their exceptions come up constantly.</li>
-              <li>Treat <strong>Organic Chemistry</strong> as electron-movement logic — pitched at a less complex depth than JEE Advanced, rarely demanding multi-step synthesis reasoning.</li>
+              <li>Treat <strong>Physical Chemistry like Math</strong> - formula-driven and trainable through repetition. NEET's numericals are generally more direct, formula-plug style.</li>
+              <li>Treat <strong>Inorganic Chemistry</strong> as memorization plus pattern recognition - periodic trends and their exceptions come up constantly.</li>
+              <li>Treat <strong>Organic Chemistry</strong> as electron-movement logic - pitched at a less complex depth than JEE Advanced, rarely demanding multi-step synthesis reasoning.</li>
             </ul>
           </div>
         </StrategyReveal>
@@ -190,7 +190,7 @@ export default function NeetStrategy() {
             <ul>
               <li>NEET Physics questions are generally <strong>more direct and single-concept</strong> than JEE.</li>
               <li>Once a formula is internalized, the main skill to build is <strong>fast, accurate recall</strong> rather than complex multi-step problem-solving.</li>
-              <li>Optics and Modern Physics are comparatively compact syllabus areas with strong scoring density — high return on focused revision time.</li>
+              <li>Optics and Modern Physics are comparatively compact syllabus areas with strong scoring density - high return on focused revision time.</li>
             </ul>
           </div>
         </StrategyReveal>
@@ -199,8 +199,8 @@ export default function NeetStrategy() {
       <section id="time">
         <StrategyReveal>
           <span className="section-kicker">Part 05</span>
-          <h2 className="section-title">Time management — the full framework</h2>
-          <p className="section-intro"><strong style={{color:"var(--ink)"}}>The 3-pass exam technique</strong> — split your exam time by difficulty, so one stuck problem never costs you five easy ones.</p>
+          <h2 className="section-title">Time management - the full framework</h2>
+          <p className="section-intro"><strong style={{color:"var(--ink)"}}>The 3-pass exam technique</strong> - split your exam time by difficulty, so one stuck problem never costs you five easy ones.</p>
         </StrategyReveal>
         
         <div className="pass-bar">
@@ -210,7 +210,7 @@ export default function NeetStrategy() {
         </div>
 
         <StrategyReveal delay={0.1}>
-          <p className="section-intro" style={{marginTop:"34px"}}><strong style={{color:"var(--ink)"}}>Recommended subject attempt order</strong> — bank the 50% weightage first.</p>
+          <p className="section-intro" style={{marginTop:"34px"}}><strong style={{color:"var(--ink)"}}>Recommended subject attempt order</strong> - bank the 50% weightage first.</p>
           <div className="flow-row">
             <span className="flow-pill c4">Biology</span><span className="parrow">→</span>
             <span className="flow-pill c1">Chemistry</span><span className="parrow">→</span>
@@ -254,7 +254,7 @@ export default function NeetStrategy() {
         <div className="psych-grid">
           <StrategyReveal delay={0.1} className="psych-card"><p><strong>The 2 PM Slump:</strong> NEET is conducted in the afternoon (2:00 PM - 5:20 PM). You must condition your body to be at peak alertness during this time. Stop taking afternoon naps at least 2 months before the exam.</p></StrategyReveal>
           <StrategyReveal delay={0.2} className="psych-card"><p><strong>Biology Panic:</strong> If the Biology section starts with a few tough bouncers, don't panic. The paper is designed to test your nerve. Skip them and find the easy NCERT-line questions to build momentum.</p></StrategyReveal>
-          <StrategyReveal delay={0.3} className="psych-card"><p><strong>Anxiety is normal, even for toppers.</strong> The differentiator isn't calm nerves — it's a rehearsed routine, built through mocks, that the mind defaults to under pressure.</p></StrategyReveal>
+          <StrategyReveal delay={0.3} className="psych-card"><p><strong>Anxiety is normal, even for toppers.</strong> The differentiator isn't calm nerves - it's a rehearsed routine, built through mocks, that the mind defaults to under pressure.</p></StrategyReveal>
           <StrategyReveal delay={0.4} className="psych-card"><p><strong>Stuck for 2 minutes? Move on.</strong> In NEET, speed is king. Every extra minute on a tough Physics numerical is a minute stolen from two easy Biology questions elsewhere.</p></StrategyReveal>
         </div>
       </section>
@@ -265,11 +265,11 @@ export default function NeetStrategy() {
           <h2 className="section-title">Common mistakes that cost ranks</h2>
         </StrategyReveal>
         <div className="mistake-list">
-          <StrategyReveal delay={0.1} className="mistake-item"><div className="mistake-num">1</div><p>Ignoring NCERT diagrams and summary texts in Biology — NTA frequently pulls tricky statements directly from the chapter summaries.</p></StrategyReveal>
+          <StrategyReveal delay={0.1} className="mistake-item"><div className="mistake-num">1</div><p>Ignoring NCERT diagrams and summary texts in Biology - NTA frequently pulls tricky statements directly from the chapter summaries.</p></StrategyReveal>
           <StrategyReveal delay={0.2} className="mistake-item"><div className="mistake-num">2</div><p>Spending 60% of study time on Physics despite it being only 25% of the weightage, simply because it feels harder.</p></StrategyReveal>
           <StrategyReveal delay={0.3} className="mistake-item"><div className="mistake-num">3</div><p>Not practicing OMR bubbling during mock tests at home, leading to time mismanagement on the actual exam day.</p></StrategyReveal>
-          <StrategyReveal delay={0.4} className="mistake-item"><div className="mistake-num">4</div><p>Guessing blindly on MCQs without eliminating at least one option first — ruling out even one wrong option meaningfully changes the expected value of a guess.</p></StrategyReveal>
-          <StrategyReveal delay={0.5} className="mistake-item"><div className="mistake-num">5</div><p>Treating rest and sleep as wasted time — burnout in the final 60 days is one of the most cited reasons for underperforming your own mock average.</p></StrategyReveal>
+          <StrategyReveal delay={0.4} className="mistake-item"><div className="mistake-num">4</div><p>Guessing blindly on MCQs without eliminating at least one option first - ruling out even one wrong option meaningfully changes the expected value of a guess.</p></StrategyReveal>
+          <StrategyReveal delay={0.5} className="mistake-item"><div className="mistake-num">5</div><p>Treating rest and sleep as wasted time - burnout in the final 60 days is one of the most cited reasons for underperforming your own mock average.</p></StrategyReveal>
         </div>
       </section>
 
@@ -280,7 +280,7 @@ export default function NeetStrategy() {
       <section id="closing">
         <StrategyReveal className="closing" style={{border: "1px solid var(--green-tint)"}}>
           <p className="quote">"NEET is an exam of discipline, not just intelligence. The rank goes to the student who reads NCERT one more time, takes one more mock test, and reviews one more mistake when everyone else is tired."</p>
-          <div className="sig">— Closing note</div>
+          <div className="sig">- Closing note</div>
         </StrategyReveal>
       </section>
 

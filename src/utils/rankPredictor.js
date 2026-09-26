@@ -1,5 +1,5 @@
 /* ============================================================
-   rankPredictor.js  —  marks → rank, for JEE Main & Advanced
+   rankPredictor.js  -  marks → rank, for JEE Main & Advanced
    ------------------------------------------------------------
    JEE Main:     interpolation from historical marks-vs-rank table
    JEE Advanced: band-based on 2025 actual data + 2026 projections
@@ -22,10 +22,10 @@ export const CATEGORY_POOLS_2026 = {
 };
 
 // ── JEE Main marks → CRL ──────────────────────────────────────
-// v2.2 — Recalibrated with 25–30 mark bands and an asymmetric curve:
-//   • Going UP (>120 marks): percentile gains slowly — each 30-mark step
+// v2.2 - Recalibrated with 25–30 mark bands and an asymmetric curve:
+//   • Going UP (>120 marks): percentile gains slowly - each 30-mark step
 //     adds only ~0.5–1.5 %ile because the top-score crowd is dense.
-//   • Going DOWN (<120 marks): percentile drops steeply — each 15-mark step
+//   • Going DOWN (<120 marks): percentile drops steeply - each 15-mark step
 //     loses 2–5 %ile as the bulk of the 14-lakh pool is in this range.
 //   • Qualifying threshold: ~93.0 %ile at 105 marks  (CRL ≈ 98,000).
 //
@@ -159,30 +159,30 @@ const BRANCH_TABLE = [
     ["Newer IITs core branches (Mechanical, Civil, Chemical)", "IIT Bhilai/Palakkad/Goa Electrical & ECE", "Newer IITs Metallurgy & Materials", "IIT Dharwad/Jammu Mechanical & Civil", "Older IIT interdisciplinary / dual-degree seats"],
     "Mid-tier IIT core branch (rank ≤5500)"],
   [9001,  15000,
-    ["Newer IITs non-core branches (Civil, Chemical, Metallurgy)", "IIT Bhilai/Goa/Jammu remaining branches", "Newer IITs — limited seats, difficult for General", "IIT Dharwad/Tirupati Engineering Science & interdisciplinary", "Strong NIT options via JEE Main as backup"],
+    ["Newer IITs non-core branches (Civil, Chemical, Metallurgy)", "IIT Bhilai/Goa/Jammu remaining branches", "Newer IITs - limited seats, difficult for General", "IIT Dharwad/Tirupati Engineering Science & interdisciplinary", "Strong NIT options via JEE Main as backup"],
     "Newer IIT non-core branch (rank ≤9000)"],
   [15001, 23000,
-    ["IIT seat very unlikely (General/EWS) — only last-round vacancies", "Top NITs via JEE Main — Trichy, Warangal, Surathkal", "IIIT Hyderabad / Allahabad via JEE Main", "Newer NITs CSE & core branches", "GFTIs and state colleges as backup"],
-    "Unlikely for IIT — NIT+ via JEE Main is the realistic path"],
+    ["IIT seat very unlikely (General/EWS) - only last-round vacancies", "Top NITs via JEE Main - Trichy, Warangal, Surathkal", "IIIT Hyderabad / Allahabad via JEE Main", "Newer NITs CSE & core branches", "GFTIs and state colleges as backup"],
+    "Unlikely for IIT - NIT+ via JEE Main is the realistic path"],
 ];
 
 function getBranches(effRank) {
   for (const [lo, hi, opts, stretch] of BRANCH_TABLE) {
     if (effRank >= lo && effRank <= hi) return { options: opts, stretch };
   }
-  return { options: ["Not in IIT rank list"], stretch: "—" };
+  return { options: ["Not in IIT rank list"], stretch: "-" };
 }
 
 function getAdviceAdv(effRank) {
-  if (effRank <= 200)   return "Excellent — all top IIT CS/EE seats at Bombay, Delhi, Madras are within reach.";
-  if (effRank <= 500)   return "Strong rank — top-5 IIT CS/EE/EP seats are realistic targets.";
-  if (effRank <= 1000)  return "Good rank — IIT Kanpur, Kharagpur, Roorkee CS/EE are achievable.";
-  if (effRank <= 2000)  return "Solid — older IIT core branches (EE, Mech) are likely; aim for Roorkee/Hyderabad.";
-  if (effRank <= 3500)  return "Moderate — newer IIT CSE is possible; explore older IIT non-core via careful JoSAA strategy.";
-  if (effRank <= 5500)  return "Below top-tier IIT cutoffs — mid/newer IIT non-core branches; NIT Trichy/Warangal are strong alternatives.";
-  if (effRank <= 9000)  return "Tight for any IIT — newer IIT limited branches only; JEE Main NIT options are strong alternatives.";
-  if (effRank <= 15000) return "Very limited IIT chances — focus on NIT Trichy, Warangal, Surathkal via your JEE Main rank.";
-  return "IIT seat is extremely unlikely at this rank — strong NIT/IIIT options via JEE Main are the realistic path.";
+  if (effRank <= 200)   return "Excellent - all top IIT CS/EE seats at Bombay, Delhi, Madras are within reach.";
+  if (effRank <= 500)   return "Strong rank - top-5 IIT CS/EE/EP seats are realistic targets.";
+  if (effRank <= 1000)  return "Good rank - IIT Kanpur, Kharagpur, Roorkee CS/EE are achievable.";
+  if (effRank <= 2000)  return "Solid - older IIT core branches (EE, Mech) are likely; aim for Roorkee/Hyderabad.";
+  if (effRank <= 3500)  return "Moderate - newer IIT CSE is possible; explore older IIT non-core via careful JoSAA strategy.";
+  if (effRank <= 5500)  return "Below top-tier IIT cutoffs - mid/newer IIT non-core branches; NIT Trichy/Warangal are strong alternatives.";
+  if (effRank <= 9000)  return "Tight for any IIT - newer IIT limited branches only; JEE Main NIT options are strong alternatives.";
+  if (effRank <= 15000) return "Very limited IIT chances - focus on NIT Trichy, Warangal, Surathkal via your JEE Main rank.";
+  return "IIT seat is extremely unlikely at this rank - strong NIT/IIIT options via JEE Main are the realistic path.";
 }
 
 // ── Helpers ───────────────────────────────────────────────────
@@ -245,7 +245,7 @@ const NEET_BANDS = [
   [399, 370,  200000,  300000],
   [369, 335,  300000,  400000],
   [334, 300,  400000,  500000],
-  // ── below the supplied table — extrapolated to the full pool ──
+  // ── below the supplied table - extrapolated to the full pool ──
   [299, 250,  500000,  720000],
   [249, 200,  720000,  950000],
   [199, 137,  950000, 1300000],
@@ -278,7 +278,7 @@ export function predictNeetRank({ total }) {
 
 // ── JEE Main 2026: PERCENTILE → RANK (exact 2026 formula) ─────
 // NTA hands every candidate a percentile (NTA score), not a raw rank, so this
-// path applies the 2026 formula straight from the candidate pools — no
+// path applies the 2026 formula straight from the candidate pools - no
 // marks-vs-rank interpolation in between:
 //
 //   CRL_rank      = ((100 − percentile) / 100) × 14,00,000

@@ -235,7 +235,7 @@ export default function PrivateUniversities() {
             Top Private Colleges <span className="accent">in India</span>
           </h2>
           <p className="section-sub" style={{ color: "#4b5563" }}>
-            Explore 13+ leading private universities — compare fees, placements &amp; apply directly.
+            Explore 13+ leading private universities - compare fees, placements &amp; apply directly.
           </p>
         </motion.div>
 

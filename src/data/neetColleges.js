@@ -1,5 +1,5 @@
 /* ============================================================
-   neetColleges.js — master NEET / MBBS medical-college dataset
+   neetColleges.js - master NEET / MBBS medical-college dataset
    ------------------------------------------------------------
    Source: NMC / MCI "Revised UG Seat Matrix 2024-25" (the
    state-wise list of MBBS medical colleges, incl. AIIMS & JIPMER),

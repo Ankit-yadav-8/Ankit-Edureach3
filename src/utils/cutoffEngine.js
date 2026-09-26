@@ -1,5 +1,5 @@
 /* ============================================================
-   cutoffEngine.js — REAL JoSAA cutoffs (2025) with modelled fallback
+   cutoffEngine.js - REAL JoSAA cutoffs (2025) with modelled fallback
    ------------------------------------------------------------
    expandRounds / cutoffHistory / forecastClosing return REAL
    JoSAA data from realCutoffEngine.js.  When a branch has no real
@@ -7,7 +7,7 @@
    the UI never breaks.
 
    Default predictor year  = 2025.
-   General pool quota      = AI (all-India) — standard for 2024/2025 JoSAA.
+   General pool quota      = AI (all-India) - standard for 2024/2025 JoSAA.
    seatMatrix()            uses the real SEAT_MATRIX (unchanged).
    ============================================================ */
 
@@ -111,7 +111,7 @@ function realRounds(college, branchCode, cat, year, gender = "GN") {
 
 // Multi-year history that handles the NIT quota-code switch
 // (older years use OS, 2024+ use AI) by trying both per year.
-// NOTE: this still gates on isDBReady() (full 8-year DB) — intentional.
+// NOTE: this still gates on isDBReady() (full 8-year DB) - intentional.
 function realHistoryMerged(college, branchCode, cat) {
   if (!isDBReady()) return [];
   const program = programForBranch(college, branchCode);
@@ -130,7 +130,7 @@ function realHistoryMerged(college, branchCode, cat) {
   return out;
 }
 
-// ── Modelled fallback — used only when no real row exists ─────────────────────
+// ── Modelled fallback - used only when no real row exists ─────────────────────
 function hashSeed(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
@@ -221,7 +221,7 @@ export function collegeBranches(college) {
   });
 }
 
-// ── expandRounds — real 2025 data, modelled fallback ─────────────────────────
+// ── expandRounds - real 2025 data, modelled fallback ─────────────────────────
 // realOnly=true: skip the modelled fallback; used by predictor to avoid fake results.
 // gender: "GN" (default) or "FO" (female-only supernumerary seats).
 export function expandRounds(college, branch, cat, year = DEFAULT_YEAR, realOnly = false, gender = "GN") {
@@ -231,16 +231,16 @@ export function expandRounds(college, branch, cat, year = DEFAULT_YEAR, realOnly
   return modelledRounds(college, branch, cat);
 }
 
-// ── cutoffHistory — real multi-year, modelled fallback ────────────────────────
-// Uses full 8-year DB (isDBReady) — unchanged, intentional.
+// ── cutoffHistory - real multi-year, modelled fallback ────────────────────────
+// Uses full 8-year DB (isDBReady) - unchanged, intentional.
 export function cutoffHistory(college, branch, cat) {
   const real = realHistoryMerged(college, branch, cat);
   if (real.length) return real;
   return modelledHistory(college, branch, cat);
 }
 
-// ── forecastClosing — real trend, modelled fallback ───────────────────────────
-// Uses full 8-year DB (isDBReady) — unchanged, intentional.
+// ── forecastClosing - real trend, modelled fallback ───────────────────────────
+// Uses full 8-year DB (isDBReady) - unchanged, intentional.
 export function forecastClosing(college, branch, cat) {
   const real = realHistoryMerged(college, branch, cat);
   const pts  = real.filter((h) => h.closing > 0).map((h) => [h.year, h.closing]);
@@ -261,7 +261,7 @@ export function forecastClosing(college, branch, cat) {
   return modelledForecast(college, branch, cat);
 }
 
-// ── seatMatrix — real SEAT_MATRIX, modelled fallback ─────────────────────────
+// ── seatMatrix - real SEAT_MATRIX, modelled fallback ─────────────────────────
 export function seatMatrix(college) {
   const data = SEAT_MATRIX[college?.slug];
   if (data?.programs?.length) {

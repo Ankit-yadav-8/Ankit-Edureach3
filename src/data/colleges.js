@@ -1,5 +1,5 @@
 /* ============================================================
-   colleges.js — master college dataset (IITs, NITs, IIITs)
+   colleges.js - master college dataset (IITs, NITs, IIITs)
    ------------------------------------------------------------
    ⚠️ ILLUSTRATIVE DATA. Generated with consistent, believable
    sample values scaled by ranking. Cutoffs are JoSAA Round-1-ish
@@ -64,7 +64,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT MADRAS.jpg",
     "website": "https://iitm.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Madras is an Indian Institute of Technology located in Chennai, Tamil Nadu. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Madras is an Indian Institute of Technology located in Chennai, Tamil Nadu. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -268,7 +268,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT DELHI.jpg",
     "website": "https://home.iitd.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Delhi is an Indian Institute of Technology located in Hauz Khas, New Delhi. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Delhi is an Indian Institute of Technology located in Hauz Khas, New Delhi. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -472,7 +472,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT BOMBAY.jpg",
     "website": "https://iitb.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Bombay is an Indian Institute of Technology located in Powai, Mumbai, Maharashtra. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Bombay is an Indian Institute of Technology located in Powai, Mumbai, Maharashtra. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 27000,
@@ -676,7 +676,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT KANPUR.jpg",
     "website": "https://iitk.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Kanpur is an Indian Institute of Technology located in Kanpur, Uttar Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Kanpur is an Indian Institute of Technology located in Kanpur, Uttar Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -880,7 +880,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT KHARAGPUR.jpg",
     "website": "https://iitkgp.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Kharagpur is an Indian Institute of Technology located in Kharagpur, West Bengal. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Kharagpur is an Indian Institute of Technology located in Kharagpur, West Bengal. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 27000,
@@ -1084,7 +1084,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT ROORKEE.jpg",
     "website": "https://iitr.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Roorkee is an Indian Institute of Technology located in Roorkee, Uttarakhand. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Roorkee is an Indian Institute of Technology located in Roorkee, Uttarakhand. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 31000,
@@ -1288,7 +1288,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT GUWAHATI.jpg",
     "website": "https://iitg.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Guwahati is an Indian Institute of Technology located in Guwahati, Assam. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Guwahati is an Indian Institute of Technology located in Guwahati, Assam. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -1492,7 +1492,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT HYDERABAD.jpg",
     "website": "https://iith.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Hyderabad is an Indian Institute of Technology located in Sangareddy, Telangana. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Hyderabad is an Indian Institute of Technology located in Sangareddy, Telangana. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 28000,
@@ -1696,7 +1696,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT BHU_VARANASI.jpg",
     "website": "https://iitbhu.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT (BHU) Varanasi is an Indian Institute of Technology located in Varanasi, Uttar Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT (BHU) Varanasi is an Indian Institute of Technology located in Varanasi, Uttar Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -1900,7 +1900,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT DHANBAD.jpeg",
     "website": "https://iitism.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT (ISM) Dhanbad is an Indian Institute of Technology located in Dhanbad, Jharkhand. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT (ISM) Dhanbad is an Indian Institute of Technology located in Dhanbad, Jharkhand. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 28000,
@@ -2104,7 +2104,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT INDORE.webp",
     "website": "https://iiti.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Indore is an Indian Institute of Technology located in Indore, Madhya Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Indore is an Indian Institute of Technology located in Indore, Madhya Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -2308,7 +2308,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT GANDHINAGAR.jpg",
     "website": "https://iitgn.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Gandhinagar is an Indian Institute of Technology located in Gandhinagar, Gujarat. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Gandhinagar is an Indian Institute of Technology located in Gandhinagar, Gujarat. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -2512,7 +2512,7 @@ export const COLLEGES = [
     "heroImage": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1600&q=75",
     "website": "https://iitrpr.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Ropar is an Indian Institute of Technology located in Rupnagar, Punjab. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Ropar is an Indian Institute of Technology located in Rupnagar, Punjab. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -2716,7 +2716,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT PATNA.jpeg",
     "website": "https://iitp.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Patna is an Indian Institute of Technology located in Patna, Bihar. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Patna is an Indian Institute of Technology located in Patna, Bihar. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -2920,7 +2920,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT MANDI.avif",
     "website": "https://iitmandi.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Mandi is an Indian Institute of Technology located in Mandi, Himachal Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Mandi is an Indian Institute of Technology located in Mandi, Himachal Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -3124,7 +3124,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT JODHPUR.jpg",
     "website": "https://iitj.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Jodhpur is an Indian Institute of Technology located in Jodhpur, Rajasthan. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Jodhpur is an Indian Institute of Technology located in Jodhpur, Rajasthan. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -3328,7 +3328,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT BHUBANESWAR.jpg",
     "website": "https://iitbbs.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Bhubaneswar is an Indian Institute of Technology located in Bhubaneswar, Odisha. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Bhubaneswar is an Indian Institute of Technology located in Bhubaneswar, Odisha. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 31000,
@@ -3532,7 +3532,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT TIRUPATI.jpeg",
     "website": "https://iittp.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Tirupati is an Indian Institute of Technology located in Tirupati, Andhra Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Tirupati is an Indian Institute of Technology located in Tirupati, Andhra Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -3736,7 +3736,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT PALAKKAD.jpg",
     "website": "https://iitpkd.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Palakkad is an Indian Institute of Technology located in Palakkad, Kerala. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Palakkad is an Indian Institute of Technology located in Palakkad, Kerala. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -3940,7 +3940,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT JAMMU.webp",
     "website": "https://iitjammu.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Jammu is an Indian Institute of Technology located in Jagti, Jammu, Jammu & Kashmir. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Jammu is an Indian Institute of Technology located in Jagti, Jammu, Jammu & Kashmir. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 33000,
@@ -4144,7 +4144,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT DHARWAD.jpg",
     "website": "https://iitdh.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Dharwad is an Indian Institute of Technology located in Dharwad, Karnataka. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Dharwad is an Indian Institute of Technology located in Dharwad, Karnataka. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -4348,7 +4348,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT BHILAI.jpg",
     "website": "https://iitbhilai.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Bhilai is an Indian Institute of Technology located in Bhilai, Chhattisgarh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Bhilai is an Indian Institute of Technology located in Bhilai, Chhattisgarh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 27000,
@@ -4552,7 +4552,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IITs/IITs/IIT GOA.webp",
     "website": "https://iitgoa.ac.in",
     "counsellingExam": "JEE Advanced (JoSAA)",
-    "about": "IIT Goa is an Indian Institute of Technology located in Ponda, Goa. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIT Goa is an Indian Institute of Technology located in Ponda, Goa. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 31000,
@@ -4756,7 +4756,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT TRICHY.jpg",
     "website": "https://nitt.edu",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Tiruchirappalli is an National Institute of Technology located in Tiruchirappalli, Tamil Nadu. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Tiruchirappalli is an National Institute of Technology located in Tiruchirappalli, Tamil Nadu. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 22000,
@@ -4937,7 +4937,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT ROURKELA.avif",
     "website": "https://nitrkl.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Rourkela is an National Institute of Technology located in Rourkela, Odisha. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Rourkela is an National Institute of Technology located in Rourkela, Odisha. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 22000,
@@ -5118,7 +5118,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT SURATKAL.jpg",
     "website": "https://nitk.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Karnataka, Surathkal is an National Institute of Technology located in Surathkal, Mangalore, Karnataka. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Karnataka, Surathkal is an National Institute of Technology located in Surathkal, Mangalore, Karnataka. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 22000,
@@ -5299,7 +5299,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT WARANGAL.jpg",
     "website": "https://nitw.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Warangal is an National Institute of Technology located in Warangal, Telangana. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Warangal is an National Institute of Technology located in Warangal, Telangana. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 23000,
@@ -5480,7 +5480,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT CALICUT.jpg",
     "website": "https://nitc.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Calicut is an National Institute of Technology located in Kozhikode, Kerala. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Calicut is an National Institute of Technology located in Kozhikode, Kerala. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 21000,
@@ -5661,7 +5661,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT NAGPUR.avif",
     "website": "https://vnit.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "VNIT Nagpur is an National Institute of Technology located in Nagpur, Maharashtra. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "VNIT Nagpur is an National Institute of Technology located in Nagpur, Maharashtra. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 21000,
@@ -5842,7 +5842,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT JAIPUR.jpeg",
     "website": "https://mnit.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "MNIT Jaipur is an National Institute of Technology located in Jaipur, Rajasthan. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "MNIT Jaipur is an National Institute of Technology located in Jaipur, Rajasthan. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 22000,
@@ -6023,7 +6023,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT ALLAHABAD.jpeg",
     "website": "https://mnnit.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "MNNIT Allahabad is an National Institute of Technology located in Prayagraj, Uttar Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "MNNIT Allahabad is an National Institute of Technology located in Prayagraj, Uttar Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 23000,
@@ -6204,7 +6204,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT KRUKSHETRA.jpg",
     "website": "https://nitkkr.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Kurukshetra is an National Institute of Technology located in Kurukshetra, Haryana. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Kurukshetra is an National Institute of Technology located in Kurukshetra, Haryana. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 21000,
@@ -6385,7 +6385,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT SURAT.JPG",
     "website": "https://svnit.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "SVNIT Surat is an National Institute of Technology located in Surat, Gujarat. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "SVNIT Surat is an National Institute of Technology located in Surat, Gujarat. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 21000,
@@ -6566,7 +6566,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT DURGAPUR.jpg",
     "website": "https://nitdgp.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Durgapur is an National Institute of Technology located in Durgapur, West Bengal. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Durgapur is an National Institute of Technology located in Durgapur, West Bengal. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 24000,
@@ -6747,7 +6747,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT BHOPAL.jpeg",
     "website": "https://manit.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "MANIT Bhopal is an National Institute of Technology located in Bhopal, Madhya Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "MANIT Bhopal is an National Institute of Technology located in Bhopal, Madhya Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 21000,
@@ -6928,7 +6928,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT SILCHAR.jpg",
     "website": "https://nits.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Silchar is an National Institute of Technology located in Silchar, Assam. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Silchar is an National Institute of Technology located in Silchar, Assam. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 22000,
@@ -7109,7 +7109,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT JHALANDAR.jpg",
     "website": "https://nitj.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "Dr B R Ambedkar NIT Jalandhar is an National Institute of Technology located in Jalandhar, Punjab. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "Dr B R Ambedkar NIT Jalandhar is an National Institute of Technology located in Jalandhar, Punjab. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 20000,
@@ -7290,7 +7290,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT JAMSHEDPUR.jpeg",
     "website": "https://nitjsr.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Jamshedpur is an National Institute of Technology located in Jamshedpur, Jharkhand. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Jamshedpur is an National Institute of Technology located in Jamshedpur, Jharkhand. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 21000,
@@ -7471,7 +7471,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT HAMIRPUR.jpg",
     "website": "https://nith.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Hamirpur is an National Institute of Technology located in Hamirpur, Himachal Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Hamirpur is an National Institute of Technology located in Hamirpur, Himachal Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 23000,
@@ -7652,7 +7652,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT RAIPUR.jpg",
     "website": "https://nitrr.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Raipur is an National Institute of Technology located in Raipur, Chhattisgarh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Raipur is an National Institute of Technology located in Raipur, Chhattisgarh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 23000,
@@ -7833,7 +7833,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT PATNA.jpg",
     "website": "https://nitp.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Patna is an National Institute of Technology located in Patna, Bihar. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Patna is an National Institute of Technology located in Patna, Bihar. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 23000,
@@ -8014,7 +8014,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT ANDHRAPRADESH.webp",
     "website": "https://nitandhra.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Andhra Pradesh is an National Institute of Technology located in Tadepalligudem, Andhra Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Andhra Pradesh is an National Institute of Technology located in Tadepalligudem, Andhra Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 23000,
@@ -8195,7 +8195,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT AGARTALA.jpg",
     "website": "https://nita.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Agartala is an National Institute of Technology located in Agartala, Tripura. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Agartala is an National Institute of Technology located in Agartala, Tripura. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 21000,
@@ -8376,7 +8376,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT SRINAGAR.jpg",
     "website": "https://nitsri.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Srinagar is an National Institute of Technology located in Srinagar, Jammu & Kashmir. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Srinagar is an National Institute of Technology located in Srinagar, Jammu & Kashmir. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 20000,
@@ -8557,7 +8557,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT GOA.jpeg",
     "website": "https://nitgoa.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Goa is an National Institute of Technology located in Cuncolim, Goa. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Goa is an National Institute of Technology located in Cuncolim, Goa. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 20000,
@@ -8738,7 +8738,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT DELHI.webp",
     "website": "https://nitdelhi.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Delhi is an National Institute of Technology located in Narela, Delhi. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Delhi is an National Institute of Technology located in Narela, Delhi. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 23000,
@@ -8919,7 +8919,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT PUDUCHERRY.webp",
     "website": "https://nitpy.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Puducherry is an National Institute of Technology located in Karaikal, Puducherry. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Puducherry is an National Institute of Technology located in Karaikal, Puducherry. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 24000,
@@ -9100,7 +9100,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT MEGHALAYA.jpeg",
     "website": "https://nitm.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Meghalaya is an National Institute of Technology located in Shillong, Meghalaya. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Meghalaya is an National Institute of Technology located in Shillong, Meghalaya. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 23000,
@@ -9281,7 +9281,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT ARRUNACHAL PRADESH.jpeg",
     "website": "https://nitap.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Arunachal Pradesh is an National Institute of Technology located in Jote, Arunachal Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Arunachal Pradesh is an National Institute of Technology located in Jote, Arunachal Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 23000,
@@ -9462,7 +9462,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT MANIPUR.jpeg",
     "website": "https://nitmanipur.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Manipur is an National Institute of Technology located in Imphal, Manipur. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Manipur is an National Institute of Technology located in Imphal, Manipur. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 23000,
@@ -9643,7 +9643,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT MIZORAM.jpeg",
     "website": "https://nitmz.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Mizoram is an National Institute of Technology located in Aizawl, Mizoram. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Mizoram is an National Institute of Technology located in Aizawl, Mizoram. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 24000,
@@ -9824,7 +9824,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT NAGALAND.jpeg",
     "website": "https://nitnagaland.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Nagaland is an National Institute of Technology located in Dimapur, Nagaland. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Nagaland is an National Institute of Technology located in Dimapur, Nagaland. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 22000,
@@ -10005,7 +10005,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT SIKKIM.jpg",
     "website": "https://nitsikkim.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Sikkim is an National Institute of Technology located in Ravangla, Sikkim. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Sikkim is an National Institute of Technology located in Ravangla, Sikkim. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 22000,
@@ -10186,7 +10186,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/NITs/NIT UTTARAKHAND.jpg",
     "website": "https://nituk.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "NIT Uttarakhand is an National Institute of Technology located in Srinagar, Uttarakhand. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "NIT Uttarakhand is an National Institute of Technology located in Srinagar, Uttarakhand. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 150000,
       "hostel": 21000,
@@ -10367,7 +10367,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT HYDERABAD.jpg",
     "website": "https://iiit.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Hyderabad is an Indian Institute of Information Technology located in Gachibowli, Hyderabad, Telangana. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Hyderabad is an Indian Institute of Information Technology located in Gachibowli, Hyderabad, Telangana. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 28000,
@@ -10479,7 +10479,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT ALLAHABHAD.jpg",
     "website": "https://iiita.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Allahabad is an Indian Institute of Information Technology located in Prayagraj, Uttar Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Allahabad is an Indian Institute of Information Technology located in Prayagraj, Uttar Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 31000,
@@ -10591,7 +10591,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT GWALIOR.jpeg",
     "website": "https://iiitm.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "ABV-IIITM Gwalior is an Indian Institute of Information Technology located in Gwalior, Madhya Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "ABV-IIITM Gwalior is an Indian Institute of Information Technology located in Gwalior, Madhya Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -10703,7 +10703,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT JABALPUR.jpeg",
     "website": "https://iiitdmj.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIITDM Jabalpur is an Indian Institute of Information Technology located in Jabalpur, Madhya Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIITDM Jabalpur is an Indian Institute of Information Technology located in Jabalpur, Madhya Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 28000,
@@ -10815,7 +10815,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT KANCHEPURAM.jpg",
     "website": "https://iiitdm.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIITDM Kancheepuram is an Indian Institute of Information Technology located in Chennai, Tamil Nadu. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIITDM Kancheepuram is an Indian Institute of Information Technology located in Chennai, Tamil Nadu. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -10927,7 +10927,7 @@ export const COLLEGES = [
     "heroImage": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1600&q=75",
     "website": "https://iiit-bh.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Bhubaneswar is an Indian Institute of Information Technology located in Bhubaneswar, Odisha. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Bhubaneswar is an Indian Institute of Information Technology located in Bhubaneswar, Odisha. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 31000,
@@ -11039,7 +11039,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT LUCKNOW.jpeg",
     "website": "https://iiitl.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Lucknow is an Indian Institute of Information Technology located in Lucknow, Uttar Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Lucknow is an Indian Institute of Information Technology located in Lucknow, Uttar Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -11151,7 +11151,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT NAGPUR.jpeg",
     "website": "https://iiitn.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Nagpur is an Indian Institute of Information Technology located in Nagpur, Maharashtra. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Nagpur is an Indian Institute of Information Technology located in Nagpur, Maharashtra. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -11263,7 +11263,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT PUNE.jpg",
     "website": "https://iiitp.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Pune is an Indian Institute of Information Technology located in Pune, Maharashtra. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Pune is an Indian Institute of Information Technology located in Pune, Maharashtra. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -11375,7 +11375,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT VADODARA.jpeg",
     "website": "https://iiitvadodara.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Vadodara is an Indian Institute of Information Technology located in Gandhinagar, Gujarat. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Vadodara is an Indian Institute of Information Technology located in Gandhinagar, Gujarat. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -11487,7 +11487,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT KOTA.jpg",
     "website": "https://iiitkota.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Kota is an Indian Institute of Information Technology located in Kota, Rajasthan. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Kota is an Indian Institute of Information Technology located in Kota, Rajasthan. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 28000,
@@ -11599,7 +11599,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT GUWAHATI.jpg",
     "website": "https://iiitg.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Guwahati is an Indian Institute of Information Technology located in Guwahati, Assam. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Guwahati is an Indian Institute of Information Technology located in Guwahati, Assam. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -11711,7 +11711,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT KALYANI.webp",
     "website": "https://iiitkalyani.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Kalyani is an Indian Institute of Information Technology located in Kalyani, West Bengal. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Kalyani is an Indian Institute of Information Technology located in Kalyani, West Bengal. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -11823,7 +11823,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT UNA.jpg",
     "website": "https://iiitu.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Una is an Indian Institute of Information Technology located in Una, Himachal Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Una is an Indian Institute of Information Technology located in Una, Himachal Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 32000,
@@ -11935,7 +11935,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT SONEPAT.jpeg",
     "website": "https://iiitsonepat.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Sonepat is an Indian Institute of Information Technology located in Sonepat, Haryana. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Sonepat is an Indian Institute of Information Technology located in Sonepat, Haryana. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -12047,7 +12047,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT SRI CITY.jpg",
     "website": "https://iiits.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Sri City is an Indian Institute of Information Technology located in Sri City, Andhra Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Sri City is an Indian Institute of Information Technology located in Sri City, Andhra Pradesh. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 32000,
@@ -12159,7 +12159,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT KOTTAYAM.jpeg",
     "website": "https://iiitkottayam.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Kottayam is an Indian Institute of Information Technology located in Kottayam, Kerala. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Kottayam is an Indian Institute of Information Technology located in Kottayam, Kerala. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -12271,7 +12271,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT DHARWAD.jpg",
     "website": "https://iiitdwd.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Dharwad is an Indian Institute of Information Technology located in Dharwad, Karnataka. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Dharwad is an Indian Institute of Information Technology located in Dharwad, Karnataka. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,
@@ -12383,7 +12383,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT RANCHI.jpeg",
     "website": "https://iiitranchi.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Ranchi is an Indian Institute of Information Technology located in Ranchi, Jharkhand. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Ranchi is an Indian Institute of Information Technology located in Ranchi, Jharkhand. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 33000,
@@ -12495,7 +12495,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT SURAT.webp",
     "website": "https://iiitsurat.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Surat is an Indian Institute of Information Technology located in Surat, Gujarat. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Surat is an Indian Institute of Information Technology located in Surat, Gujarat. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 31000,
@@ -12607,7 +12607,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT BHAGALPUR.avif",
     "website": "https://iiitbh.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Bhagalpur is an Indian Institute of Information Technology located in Bhagalpur, Bihar. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Bhagalpur is an Indian Institute of Information Technology located in Bhagalpur, Bihar. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 30000,
@@ -12719,7 +12719,7 @@ export const COLLEGES = [
     "heroImage": "/assets/team/IIITs/IIIT TRICHY.jpg",
     "website": "https://iiitt.ac.in",
     "counsellingExam": "JEE Main (JoSAA + CSAB)",
-    "about": "IIIT Tiruchirappalli is an Indian Institute of Information Technology located in Tiruchirappalli, Tamil Nadu. It offers competitive engineering programmes with strong placements. (Illustrative profile — replace fees, placement and cutoff figures with official data.)",
+    "about": "IIIT Tiruchirappalli is an Indian Institute of Information Technology located in Tiruchirappalli, Tamil Nadu. It offers competitive engineering programmes with strong placements. (Illustrative profile - replace fees, placement and cutoff figures with official data.)",
     "fees": {
       "tuition": 200000,
       "hostel": 29000,

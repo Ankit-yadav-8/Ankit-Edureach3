@@ -20,7 +20,7 @@ const TYPE_SETS = {
 
 // Map each confidence tier to a valid badge colour class. (Using
 // TIER_COLOR's `var(--…)` values for an inline translucent background is
-// invalid CSS — `var(--green)22` silently drops — so the pill rendered with
+// invalid CSS - `var(--green)22` silently drops - so the pill rendered with
 // no background and was nearly invisible, especially on mobile.)
 const TIER_BADGE = { Safe: "green", Moderate: "orange", Ambitious: "red" };
 
@@ -31,7 +31,7 @@ const LOADING_TIPS = [
   "Ranking results by NIRF & branch value…",
 ];
 
-/* College logo — official IIT emblem for IITs, the institute's own site logo
+/* College logo - official IIT emblem for IITs, the institute's own site logo
    (favicon) for NITs / IIITs / GFTIs, with a coral monogram fallback. */
 function CollegeLogo({ slug, name }) {
   const [err, setErr] = useState(false);
@@ -62,10 +62,10 @@ function RoundDetail({ row }) {
   const r1   = rounds[0];
   const last = rounds[rounds.length - 1];
   const statCards = [
-    { label: "Round 1 Opening", value: r1 ? fmtRank(r1.opening) : "—", color: "#0e9c90" },
-    { label: "Round 1 Closing", value: r1 ? fmtRank(r1.closing) : "—", color: "#FF693D" },
-    { label: "Final Closing",   value: last ? fmtRank(last.closing) : "—", color: "#6366f1" },
-    { label: "Avg Package",     value: row.avgPackage ? fmtINR(row.avgPackage) : "—", color: "#15a06e" },
+    { label: "Round 1 Opening", value: r1 ? fmtRank(r1.opening) : "-", color: "#0e9c90" },
+    { label: "Round 1 Closing", value: r1 ? fmtRank(r1.closing) : "-", color: "#FF693D" },
+    { label: "Final Closing",   value: last ? fmtRank(last.closing) : "-", color: "#6366f1" },
+    { label: "Avg Package",     value: row.avgPackage ? fmtINR(row.avgPackage) : "-", color: "#15a06e" },
   ];
 
   return (
@@ -118,12 +118,12 @@ function RoundDetail({ row }) {
           )}
           <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 8 }}>
             {estimated
-              ? "Closing ranks are estimated by relaxing JoSAA 2025 general-pool cutoffs for the selected quota — verify on josaa.nic.in / csab.nic.in."
-              : "Actual JoSAA 2025 opening & closing ranks for this program — verify on josaa.nic.in / csab.nic.in."}
+              ? "Closing ranks are estimated by relaxing JoSAA 2025 general-pool cutoffs for the selected quota - verify on josaa.nic.in / csab.nic.in."
+              : "Actual JoSAA 2025 opening & closing ranks for this program - verify on josaa.nic.in / csab.nic.in."}
           </p>
         </div>
 
-        {/* right column — wide chart with the action buttons filling the space
+        {/* right column - wide chart with the action buttons filling the space
             that used to be blank below the graph */}
         <div className="cp-cutoff-chart" style={{ display: "flex", flexDirection: "column" }}>
           {chart.length > 0 && (
@@ -237,7 +237,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
           <Crosshair size={20} color="#FF693D" /> Find every college within your reach
         </h3>
         <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 16, lineHeight: 1.5 }}>
-          Enter your rank below — the rest is optional. We'll instantly match it against real JoSAA&nbsp;2025 cutoffs and show you every college you can get.
+          Enter your rank below - the rest is optional. We'll instantly match it against real JoSAA&nbsp;2025 cutoffs and show you every college you can get.
         </p>
 
         <div className="grid-4" style={{ gap: 12 }}>
@@ -368,7 +368,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
         </div>
       )}
 
-      {/* ── Empty state — guides the user before the first prediction ── */}
+      {/* ── Empty state - guides the user before the first prediction ── */}
       {!results && !loading && !error && (
         <div className="cp-empty">
           <div className="cp-empty-icon"><Crosshair size={26} color="#FF693D" /></div>
@@ -379,7 +379,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
           <div className="cp-empty-steps">
             {[
               { n: "1", t: "Every eligible college", d: "All NIT / IIIT / GFTI (or IIT) branches your rank can reach." },
-              { n: "2", t: "Colour-coded confidence", d: "Safe, Moderate or Ambitious — so you know your real chances." },
+              { n: "2", t: "Colour-coded confidence", d: "Safe, Moderate or Ambitious - so you know your real chances." },
               { n: "3", t: "Round-by-round cutoffs", d: "Tap any result to see all JoSAA & CSAB opening/closing ranks." },
             ].map((s) => (
               <div className="cp-empty-step" key={s.n}>
@@ -414,7 +414,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
             {LOADING_TIPS[tipIdx]}
           </p>
           <p style={{ color: "var(--muted)", fontSize: 12, marginTop: 10 }}>
-            Runs in background — page stays responsive
+            Runs in background - page stays responsive
           </p>
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
@@ -427,18 +427,18 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
           borderRadius: 12, padding: "14px 18px", marginTop: 18,
           color: "#dc2626", fontSize: 13,
         }}>
-          ⚠️ {error} — please try again.
+          ⚠️ {error} - please try again.
         </div>
       )}
 
-      {/* ── At-a-glance result strip — instant read on how many options & how safe ── */}
+      {/* ── At-a-glance result strip - instant read on how many options & how safe ── */}
       {results && results.length > 0 && !loading && summary && (
         <div className="cp-glance-strip">
           {[
             { label: "Total options", value: summary.total, color: "#1a1a2e", bg: "rgba(26,26,46,.06)", hint: "college + branch matches" },
             { label: "Safe", value: summary.counts.Safe, color: "#0e9c90", bg: "rgba(46,196,182,.12)", hint: "rank clears comfortably" },
             { label: "Moderate", value: summary.counts.Moderate, color: "#d9641a", bg: "rgba(249,115,22,.12)", hint: "rank is near the cutoff" },
-            { label: "Ambitious", value: summary.counts.Ambitious, color: "#dc2626", bg: "rgba(239,68,68,.10)", hint: "a stretch — worth a shot" },
+            { label: "Ambitious", value: summary.counts.Ambitious, color: "#dc2626", bg: "rgba(239,68,68,.10)", hint: "a stretch - worth a shot" },
           ].map((s) => (
             <div key={s.label} className="cp-glance-card" style={{ borderTop: `3px solid ${s.color}` }}>
               <div className="cp-glance-val" style={{ color: s.color }}>{s.value}</div>
@@ -449,7 +449,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
         </div>
       )}
 
-      {/* ── Summary charts — side-by-side on desktop, stacked one-by-one on mobile ── */}
+      {/* ── Summary charts - side-by-side on desktop, stacked one-by-one on mobile ── */}
       {results && results.length > 0 && !loading && (
         <div className="grid-2 cp-results-summary" style={{ marginTop: 22, gap: 22 }}>
           <div className="card cp-summary-card">
@@ -507,7 +507,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
 
           {results.length === 0 ? (
             <div style={{ padding: 40, textAlign: "center", color: "var(--muted)" }}>
-              No matches — try widening the branch or category filters, or check your rank.
+              No matches - try widening the branch or category filters, or check your rank.
             </div>
           ) : (
             <>
@@ -603,7 +603,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
           {
             icon: Database,
             title: "Real JoSAA 2025 data only",
-            body: "Every match comes straight from official JoSAA 2025 opening & closing ranks — no modelled or made-up programs, so you never see branches a college doesn't actually offer.",
+            body: "Every match comes straight from official JoSAA 2025 opening & closing ranks - no modelled or made-up programs, so you never see branches a college doesn't actually offer.",
           },
           {
             icon: Layers,
@@ -623,7 +623,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
           {
             icon: BarChart3,
             title: "Smart, useful ordering",
-            body: "Results are sorted by home-state preference, then NIRF rank, branch value and closing rank — the strongest, most relevant options surface first.",
+            body: "Results are sorted by home-state preference, then NIRF rank, branch value and closing rank - the strongest, most relevant options surface first.",
           },
           {
             icon: MapPin,
@@ -631,7 +631,7 @@ export default function CollegePredictorTool({ basePath = "/jee-main" }) {
             body: "Tap any college to see round-by-round opening/closing cutoffs, seat counts, average package and a direct link to the full college profile.",
           },
         ]}
-        note="Cutoffs are based on JoSAA 2025 and are indicative for 2026 — always verify on josaa.nic.in / csab.nic.in before locking choices."
+        note="Cutoffs are based on JoSAA 2025 and are indicative for 2026 - always verify on josaa.nic.in / csab.nic.in before locking choices."
       />
     </div>
   );

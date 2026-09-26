@@ -9,7 +9,7 @@ import { NEET_BY_SLUG, neetByState } from "../data/neetColleges.js";
 import Seo, { SITE_URL } from "../components/Seo.jsx";
 import Reveal from "../components/Reveal.jsx";
 
-const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-IN"));
+const fmt = (n) => (n == null ? "-" : n.toLocaleString("en-IN"));
 
 export default function NeetCollegeDetail() {
   const { slug } = useParams();
@@ -42,11 +42,11 @@ export default function NeetCollegeDetail() {
     `offers an MBBS programme with an approved annual intake of ${fmt(college.seats)} seats` +
     (college.university ? `, and is affiliated to ${college.university}.` : ".") +
     ` Admission is through NEET UG followed by MCC / state counselling. ` +
-    `Figures are from the NMC 2024-25 seat matrix — verify the latest intake on the official MCC / NMC portals before counselling.`;
+    `Figures are from the NMC 2024-25 seat matrix - verify the latest intake on the official MCC / NMC portals before counselling.`;
 
-  const seoTitle = `${college.name} — MBBS Seats, NEET Cutoff, Fees & Admission ${new Date().getFullYear()}`;
+  const seoTitle = `${college.name} - MBBS Seats, NEET Cutoff, Fees & Admission ${new Date().getFullYear()}`;
   const seoDesc =
-    `${college.name} (${place}) — ${mgmtLabel} MBBS medical college` +
+    `${college.name} (${place}) - ${mgmtLabel} MBBS medical college` +
     (college.year ? `, established ${college.year}` : "") +
     `, with ${fmt(college.seats)} MBBS seats` +
     (college.university ? `, affiliated to ${college.university}` : "") +
@@ -78,7 +78,7 @@ export default function NeetCollegeDetail() {
   const stats = [
     ["MBBS seats", fmt(college.seats), accent],
     ["Management", mgmtLabel, "#1c1c28"],
-    ["Established", college.year || "—", "#FF693D"],
+    ["Established", college.year || "-", "#FF693D"],
     ["State", college.state, "#3b3b98"],
   ];
 
@@ -141,8 +141,8 @@ export default function NeetCollegeDetail() {
               {[
                 ["Management", mgmtLabel],
                 ["MBBS seats", fmt(college.seats)],
-                ["Established", college.year || "—"],
-                ["District", college.district || "—"],
+                ["Established", college.year || "-"],
+                ["District", college.district || "-"],
                 ["State / UT", college.state],
                 ["Admission via", "NEET UG"],
               ].map(([k, v]) => (

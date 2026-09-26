@@ -1,4 +1,4 @@
-/* FaqSection — accordion of frequently asked questions. */
+/* FaqSection - accordion of frequently asked questions. */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus, HelpCircle } from "lucide-react";
@@ -7,11 +7,11 @@ import { CL, clEyebrow } from "./clTheme.js";
 const FAQS = [
   {
     q: "How accurate is the rank & college predictor?",
-    a: "Our predictions are built on previous years' official JoSAA and CSAB closing ranks plus normalisation trends. They give a reliable Safe / Moderate / Reach picture, but actual cutoffs shift slightly each year — always keep a ±5% buffer when filling choices.",
+    a: "Our predictions are built on previous years' official JoSAA and CSAB closing ranks plus normalisation trends. They give a reliable Safe / Moderate / Reach picture, but actual cutoffs shift slightly each year - always keep a ±5% buffer when filling choices.",
   },
   {
     q: "What's the difference between Branch Explorer and Branch vs College?",
-    a: "The Branch Explorer is an encyclopaedia of 220+ branches across 10 paths — salaries, AI outlook, myths and where to study each. Branch vs College is a 6-question assessment that tells you whether the institute or the subject should win when the two conflict on your choice list.",
+    a: "The Branch Explorer is an encyclopaedia of 220+ branches across 10 paths - salaries, AI outlook, myths and where to study each. Branch vs College is a 6-question assessment that tells you whether the institute or the subject should win when the two conflict on your choice list.",
   },
   {
     q: "Is the ₹299 JoSAA counselling plan worth it over free tools?",
@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: "Where does the data come from?",
-    a: "Cutoffs and seat matrices are sourced from official JoSAA, CSAB and NIRF releases. Branch insights and salary arcs are indicative India-market estimates compiled from placement reports — they're directional, not official figures.",
+    a: "Cutoffs and seat matrices are sourced from official JoSAA, CSAB and NIRF releases. Branch insights and salary arcs are indicative India-market estimates compiled from placement reports - they're directional, not official figures.",
   },
 ];
 

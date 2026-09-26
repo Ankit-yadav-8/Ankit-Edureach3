@@ -5,7 +5,7 @@ import { BRANCHES, TOTAL_BRANCHES } from "../../data/branches.js";
 import { BRANCH_ICONS } from "./branchIcons.js";
 import { CL, clEyebrow } from "./clTheme.js";
 
-/* tinted chip palette — a tag always hashes to the same tone */
+/* tinted chip palette - a tag always hashes to the same tone */
 const CHIP_TONES = [
   { fg: "#C2410C", bg: "#FFF1EA" }, // orange
   { fg: "#6D28D9", bg: "#F3EEFB" }, // violet
@@ -48,7 +48,7 @@ function BranchRow({ b, nav }) {
       {/* per-branch accent bar on the left edge */}
       <span aria-hidden style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 5, background: b.color }} />
 
-      {/* arrow — absolutely positioned so layout reflows cleanly on mobile */}
+      {/* arrow - absolutely positioned so layout reflows cleanly on mobile */}
       <span className="cl-branch-row__arrow" style={{
         width: 42, height: 42, borderRadius: "50%",
         background: CL.coral, display: "grid", placeItems: "center",
@@ -76,7 +76,7 @@ function BranchRow({ b, nav }) {
         </div>
       </div>
 
-      {/* stats — labelled columns with dividers */}
+      {/* stats - labelled columns with dividers */}
       <div className="cl-branch-row__stats">
         <div className="cl-branch-row__stat">
           <div className="cl-branch-row__stat-label">Job Growth</div>
@@ -115,7 +115,7 @@ export default function BranchCatalog() {
             Distilled into <span style={{ color: CL.coral, fontStyle: "italic" }}>{BRANCHES.length} clear domains.</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.08rem", lineHeight: 1.7, fontStyle: "italic", maxWidth: 640, margin: "0 auto" }}>
-            We've carefully bucketed every engineering specialization into {BRANCHES.length} primary domains. Dive deep into exclusive data on <strong style={{ color: CL.ink }}>placements, 5-year salary arcs, real-world AI disruption risk</strong>, and the top recruiters hiring right now — ensuring absolutely nothing slips through the cracks as you plan your future.
+            We've carefully bucketed every engineering specialization into {BRANCHES.length} primary domains. Dive deep into exclusive data on <strong style={{ color: CL.ink }}>placements, 5-year salary arcs, real-world AI disruption risk</strong>, and the top recruiters hiring right now - ensuring absolutely nothing slips through the cracks as you plan your future.
           </p>
           <div style={{ marginTop: 24 }}>
             <Link to="/branches" style={{

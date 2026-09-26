@@ -1,4 +1,4 @@
-/* Blog — Campus Point blog index. Hero with floating preview cards, then a
+/* Blog - Campus Point blog index. Hero with floating preview cards, then a
    category-filtered grid of article cards that link to /blog/:slug. */
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -103,13 +103,13 @@ function HeroPreview() {
 
 export default function Blog() {
   const [cat, setCat] = useState("All");
-  useEffect(() => { document.title = "Blog — JEE, counselling & college insights · Campus Point"; }, []);
+  useEffect(() => { document.title = "Blog - JEE, counselling & college insights · Campus Point"; }, []);
   const shown = cat === "All" ? BLOG_POSTS : BLOG_POSTS.filter((p) => p.category === cat);
 
   return (
     <div style={{ background: CL.cream, minHeight: "100vh" }}>
-      <Seo title="Blog — JEE, counselling & college insights · Campus Point"
-        description="Guides and insights on JEE, JoSAA & CSAB counselling, branch choice and college selection — written by IIT Roorkee alumni at Campus Point."
+      <Seo title="Blog - JEE, counselling & college insights · Campus Point"
+        description="Guides and insights on JEE, JoSAA & CSAB counselling, branch choice and college selection - written by IIT Roorkee alumni at Campus Point."
         path="/blog" />
 
       <section style={{ paddingTop: 128, paddingBottom: 40, position: "relative", overflow: "hidden" }}>
@@ -122,7 +122,7 @@ export default function Blog() {
                 <span style={{ color: CL.coral }}>Decisions, sorted.</span>
               </h1>
               <p style={{ color: CL.body, fontSize: "1.06rem", lineHeight: 1.7, maxWidth: 460 }}>
-                Honest, data-backed guides on counselling, branch choice and college selection — written by IIT Roorkee alumni who've lived the JoSAA chaos.
+                Honest, data-backed guides on counselling, branch choice and college selection - written by IIT Roorkee alumni who've lived the JoSAA chaos.
               </p>
             </div>
             <HeroPreview />

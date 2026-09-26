@@ -12,7 +12,7 @@ export const MESS_TAGS = [
   "Repetitive menu", "Limited timings", "Needs improvement", "Special meals",
 ];
 
-/* Overall stars for a review — explicit `overall`, else the average of the
+/* Overall stars for a review - explicit `overall`, else the average of the
    hostel + mess ratings that were given. */
 export function reviewOverall(r) {
   if (r?.overall) return r.overall;

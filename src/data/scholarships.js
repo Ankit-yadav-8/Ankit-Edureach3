@@ -1,5 +1,5 @@
 /* Major scholarships & financial-aid schemes for engineering aspirants (India).
-   Illustrative summaries — verify amounts & eligibility on official portals. */
+   Illustrative summaries - verify amounts & eligibility on official portals. */
 export const SCHOLARSHIPS = [
   { name: "National Scholarship Portal (NSP)", body: "Govt. of India", amount: "Varies", who: "SC/ST/OBC/Minority & merit-cum-means", link: "https://scholarships.gov.in", note: "Single window for central & state scholarships." },
   { name: "INSPIRE Scholarship (SHE)", body: "DST", amount: "₹80,000 / year", who: "Top 1% in Class 12 pursuing science", link: "https://online-inspire.gov.in", note: "For natural & basic sciences." },

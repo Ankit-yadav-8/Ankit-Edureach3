@@ -15,7 +15,7 @@ export default function PremiumHero({
   highlight1 = "once",
   titlePart3 = ", walk in ",
   highlight2 = "ready twice.",
-  description = "Every chapter cross-tagged for overlap — so a night on Electrostatics counts for both, and nothing gets revised twice by accident.",
+  description = "Every chapter cross-tagged for overlap - so a night on Electrostatics counts for both, and nothing gets revised twice by accident.",
   stats = [
     { value: "184", label: "days left" },
     { value: "58", label: "chapters" },

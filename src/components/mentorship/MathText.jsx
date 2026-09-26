@@ -1,4 +1,4 @@
-/* MathText — a lightweight inline renderer for CBT question/option/solution
+/* MathText - a lightweight inline renderer for CBT question/option/solution
    text. Turns $inline$, $$display$$, \(inline\) and \[display\] into KaTeX,
    renders GitHub-style markdown tables (the vision model emits frequency/data
    tables that way), auto-detects common plain-text math (x^2, a_1, 1/2, Greek
@@ -11,7 +11,7 @@ import "katex/dist/katex.min.css";
 // Some converted papers lost the leading backslash on LaTeX commands that take a
 // braced argument (e.g. "vec{a}", "frac{1}{2}", "sqrt{2}"), so KaTeX rendered the
 // command name as literal italic letters ("veca" instead of an arrow over a).
-// Restore the backslash for a known, safe set of commands when one is missing —
+// Restore the backslash for a known, safe set of commands when one is missing -
 // fixes both already-saved questions and new conversions. A command already
 // preceded by a backslash (or letters, so it's mid-word) is left untouched.
 const BARE_CMD_RE = /(^|[^\\A-Za-z])(vec|hat|bar|tilde|widehat|widetilde|overrightarrow|overline|underline|dot|ddot|frac|dfrac|tfrac|binom|sqrt|operatorname|mathbb|mathbf|mathrm|mathcal|mathit|boldsymbol|text)(\s*\{)/g;
@@ -78,7 +78,7 @@ function autoWrapMath(src) {
   // Subscripts: a_1, x_{n+1}, C_p etc.
   out = out.replace(/([a-zA-Z)}\]])\_([\w]+|\{[^}]+\})/g, (_, base, sub) => `$${base}_${sub}$`);
 
-  // Simple fractions like 1/2, 3/4 (digit/digit) — but not dates like 25/06
+  // Simple fractions like 1/2, 3/4 (digit/digit) - but not dates like 25/06
   out = out.replace(/(?<!\d)\b(\d+)\/(\d+)\b(?!\/)/g, (_, n, d) => {
     if (Number(d) > 100 || Number(n) > 100) return `${n}/${d}`; // probably a date or ID
     return `$\\frac{${n}}{${d}}$`;
@@ -223,7 +223,7 @@ export default function MathText({ text = "", style }) {
     const line = lines[i];
     const next = lines[i + 1] ?? "";
     // A table starts on a pipe row followed by EITHER a markdown separator row
-    // (| --- | --- |) OR another pipe row — the vision model and coaching papers
+    // (| --- | --- |) OR another pipe row - the vision model and coaching papers
     // routinely emit data/frequency tables WITHOUT the separator, and the old
     // code rendered those as a wall of "|" text instead of a real table.
     if (isRow(line) && ((isSepRow(next) && next.includes("-")) || isRow(next))) {

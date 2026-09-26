@@ -1,4 +1,4 @@
-/* MentorChatPhone — an animated phone mock-up that plays a mentor↔student
+/* MentorChatPhone - an animated phone mock-up that plays a mentor↔student
    WhatsApp-style conversation on a loop. Replaces the static mentorship
    illustration in the home "1-on-1 Mentorship" band: bubbles reveal one by one
    with a typing indicator, the thread auto-scrolls, then restarts. Honours
@@ -16,14 +16,14 @@ import { CL } from "./clTheme.js";
 const SCRIPT = [
   { from: "me",     time: "9:32", text: "Sir, I can't finish Organic Chem in time 🤯" },
   { from: "mentor", time: "9:33", text: "Don't worry Aditi. Let's fix this today 💪" },
-  { from: "mentor", time: "9:33", text: "First, tell me — GOC done or pending?" },
+  { from: "mentor", time: "9:33", text: "First, tell me - GOC done or pending?" },
   { from: "me",     time: "9:34", text: "GOC half done. Hydrocarbons not started 🤪" },
   { from: "mentor", time: "9:35", text: "Got it. Here's your new 7-day plan 👇\n📅 Mon–Tue → GOC (finish + PYQs)\n📅 Wed–Fri → Hydrocarbons\n📅 Sat → Full revision\n📅 Sun → Mock test" },
   { from: "me",     time: "9:36", text: "And test on Sunday? 😨" },
   { from: "mentor", time: "9:36", text: "Booked ✅ Sunday 10 AM, 90 mins." },
   { from: "mentor", time: "9:37", text: "I'll personally review it with you Monday 8 PM on Zoom 🎥" },
   { from: "me",     time: "9:38", text: "Sir last month I scored only 42 in chem 😔" },
-  { from: "mentor", time: "9:39", text: "That's the past. Follow this plan — I'm targeting 75+ for you this time 🚀" },
+  { from: "mentor", time: "9:39", text: "That's the past. Follow this plan - I'm targeting 75+ for you this time 🚀" },
   { from: "me",     time: "9:40", text: "Thank you sir 🙌 feeling much better now" },
   { from: "mentor", time: "9:40", text: "That's what I'm here for. Now go crush GOC 🔥" },
 ];

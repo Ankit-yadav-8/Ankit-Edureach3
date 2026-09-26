@@ -37,7 +37,7 @@ export default function NewTools() {
         <div className="title-bar">
           <span className="eyebrow"><Rocket size={13} style={{ marginRight: 5, verticalAlign: "-2px" }} /> Just launched</span>
           <h2 className="section-title" style={{ color: "#1a1a2e" }}>Powerful new tools for <span className="accent">smarter decisions</span></h2>
-          <p className="section-sub" style={{ color: "#4b5563" }}>From financial planning to personalised college lists — new features to help you decide better.</p>
+          <p className="section-sub" style={{ color: "#4b5563" }}>From financial planning to personalised college lists - new features to help you decide better.</p>
         </div>
 
         <StaggerReveal stagger={0.09} className="grid-4" style={{ gap: 20 }}>

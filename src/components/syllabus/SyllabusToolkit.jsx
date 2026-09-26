@@ -125,7 +125,7 @@ function PremiumChapterCard({ chapter, idx, subjectColor, subjectIcon: Icon, sub
         <button
           onClick={mindmap ? () => onOpenMindMap({ subjectId: mindmap.subjectId, chapter: { name: mindmap.name, pages: mindmap.pages } }) : undefined}
           disabled={!mindmap}
-          title={mindmap ? `Open mind map — ${mindmap.pages.length} sheet${mindmap.pages.length > 1 ? "s" : ""}` : "Mind map coming soon"}
+          title={mindmap ? `Open mind map - ${mindmap.pages.length} sheet${mindmap.pages.length > 1 ? "s" : ""}` : "Mind map coming soon"}
           style={{
             flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
             background: mindmap ? `${subjectColor}12` : "#f4f4f5",

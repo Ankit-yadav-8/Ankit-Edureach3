@@ -14,20 +14,20 @@ import {
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════
-   NEET UG hub — mirrors the JEE Advanced page in layout & style.
+   NEET UG hub - mirrors the JEE Advanced page in layout & style.
    NEET is a single 720-mark paper (Physics 180 · Chemistry 180 ·
    Biology 360 = Botany + Zoology), conducted by the NTA.
 
    Historical data (difficulty, cut-offs, toppers) is the real
    2021–2025 record. The two predictor tools are interactive
-   design demos — they show illustrative estimates, not an
+   design demos - they show illustrative estimates, not an
    official prediction.
 ═══════════════════════════════════════════════════════════ */
 
 const ACCENT = "#15a06e";   // NEET green
-const C_PHY = "#FF693D";    // Physics — orange
-const C_CHEM = "#0EA5A4";   // Chemistry — teal
-const C_BIO = "#15a06e";    // Biology — green
+const C_PHY = "#FF693D";    // Physics - orange
+const C_CHEM = "#0EA5A4";   // Chemistry - teal
+const C_BIO = "#15a06e";    // Biology - green
 
 const YEARS = [2021, 2022, 2023, 2024, 2025];
 
@@ -81,7 +81,7 @@ const TREND_PHY = YEARS.map((y) => ({ year: y, value: DIFFICULTY[y].phy.idx }));
 const TREND_CHEM = YEARS.map((y) => ({ year: y, value: DIFFICULTY[y].chem.idx }));
 const TREND_BIO = YEARS.map((y) => ({ year: y, value: DIFFICULTY[y].bio.idx }));
 
-/* NEET UG past-5-year cut-off (qualifying marks range) — official grid. */
+/* NEET UG past-5-year cut-off (qualifying marks range) - official grid. */
 const CUTOFF_TABLE = {
   years: [2025, 2024, 2023, 2022, 2021],
   rows: [
@@ -105,7 +105,7 @@ const CUTOFF_TREND = [
   { year: 2025, ur: 165, res: 129, pwd: 148 },
 ];
 
-/* NEET toppers — past 5 years (official rank-1 record). */
+/* NEET toppers - past 5 years (official rank-1 record). */
 const TOPPERS = [
   { sno: 1, name: "Mahesh Kumar",       roll: "3923210013", marks: 686, pct: "99.9999547", rank: 1, state: "Rajasthan" },
   { sno: 2, name: "Mridul Manya Anand", roll: "4301010696", marks: 720, pct: "99.9999999", rank: 1, state: "Uttar Pradesh" },
@@ -134,7 +134,7 @@ const SYLLABUS = {
   Physics: {
     color: C_PHY, icon: Atom, q: "45 Q · 180 marks", chapters: 29,
     topics: [
-      "Mechanics — Kinematics, Laws of Motion, Work-Energy",
+      "Mechanics - Kinematics, Laws of Motion, Work-Energy",
       "Rotational Motion & Gravitation",
       "Thermodynamics & Kinetic Theory of Gases",
       "Oscillations & Waves",
@@ -147,13 +147,13 @@ const SYLLABUS = {
   Chemistry: {
     color: C_CHEM, icon: FlaskConical, q: "45 Q · 180 marks", chapters: 30,
     topics: [
-      "Physical — Mole Concept, Thermodynamics, Equilibrium",
+      "Physical - Mole Concept, Thermodynamics, Equilibrium",
       "Atomic Structure & Chemical Bonding",
       "Electrochemistry, Kinetics & Solutions",
-      "Organic — GOC, Hydrocarbons, Isomerism",
+      "Organic - GOC, Hydrocarbons, Isomerism",
       "Oxygen & Nitrogen Functional Groups",
       "Biomolecules, Polymers & Everyday Chemistry",
-      "Inorganic — Periodic Table, p / d / f-block",
+      "Inorganic - Periodic Table, p / d / f-block",
       "Coordination Compounds & Metallurgy",
     ],
   },
@@ -175,7 +175,7 @@ const SYLLABUS = {
 const PATTERN = [
   ["Mode", "Pen & paper (OMR sheet)"],
   ["Duration", "3 hours 20 minutes"],
-  ["Total questions", "200 — attempt any 180"],
+  ["Total questions", "200 - attempt any 180"],
   ["Total marks", "720"],
   ["Marking scheme", "+4 correct · −1 wrong · 0 unattempted"],
   ["Subjects", "Physics · Chemistry · Botany · Zoology"],
@@ -199,7 +199,7 @@ const COACHING = [
   { name: "Allen Career Institute", city: "Kota, Rajasthan", color: "#FF693D", badge: "⭐ Top Results", highlights: ["Legendary Kota ecosystem for NEET", "Strong Biology & Physical Chemistry faculty", "Dropper & 2-year integrated batches", "All-India test series for self-studiers"], website: "https://www.allen.ac.in", fee: "₹1.4L – ₹2.6L/year", mode: "Offline / Online" },
   { name: "Narayana / Sri Chaitanya", city: "Hyderabad + Pan-India", color: "#7C3AED", badge: "📍 Residential", highlights: ["Strongest in South India medical results", "Integrated school + residential model", "Pinnacle / Super-30 batches for toppers", "Affordable, scholarship-driven admissions"], website: "https://www.narayanagroup.com", fee: "₹90K – ₹2.0L/year", mode: "Offline / Residential" },
   { name: "Physics Wallah (PW)", city: "Online + Vidyapeeth", color: "#15A06E", badge: "💻 Best Value", highlights: ["Most affordable quality NEET coaching", "Arjuna / Yakeen NEET batches", "Live + recorded lectures, strong faculty", "Great with disciplined NCERT self-study"], website: "https://www.pw.live", fee: "₹4K – ₹40K/year", mode: "Online / Offline" },
-  { name: "Unacademy / Vedantu", city: "Online (Pan-India)", color: "#EC4899", badge: "🖥 Online Live", highlights: ["Live interactive classes with top educators", "Affordable vs offline Kota coaching", "Doubt sessions, test series & analytics", "Flexible — ideal for school-going aspirants"], website: "https://unacademy.com", fee: "₹25K – ₹1.0L/year", mode: "Online" },
+  { name: "Unacademy / Vedantu", city: "Online (Pan-India)", color: "#EC4899", badge: "🖥 Online Live", highlights: ["Live interactive classes with top educators", "Affordable vs offline Kota coaching", "Doubt sessions, test series & analytics", "Flexible - ideal for school-going aspirants"], website: "https://unacademy.com", fee: "₹25K – ₹1.0L/year", mode: "Online" },
   { name: "Self Study + NCERT", city: "Anywhere", color: "#EAB308", badge: "🌟 Topper Favourite", highlights: ["Many AIR <1000 are NCERT self-studiers", "NCERT (esp. Biology) + PYQs + 1 test series", "Lowest cost, fully flexible schedule", "Needs strong discipline & a fixed routine"], website: "https://neet.nta.nic.in", fee: "₹8K – ₹20K (tests + books)", mode: "Self-paced" },
 ];
 
@@ -225,9 +225,9 @@ function overallMeta(t) {
   if (s.includes("easy")) return { color: "#15A06E", bg: "#d1fae5" };
   return { color: "#EAB308", bg: "#fefce8" };
 }
-const fmtN = (n) => (n == null ? "—" : n.toLocaleString("en-IN"));
+const fmtN = (n) => (n == null ? "-" : n.toLocaleString("en-IN"));
 
-/* ── Anchor helper — invisible scroll target so navbar menu links land right ── */
+/* ── Anchor helper - invisible scroll target so navbar menu links land right ── */
 function Anchor({ id }) {
   return <div id={id} style={{ position: "relative", top: -84, height: 0 }} aria-hidden />;
 }
@@ -302,7 +302,7 @@ function MarksBar({ label, value, color, maxValue = 250 }) {
   );
 }
 
-/* ════════ TOOL 1 — NEET Rank Predictor (interactive demo) ════════ */
+/* ════════ TOOL 1 - NEET Rank Predictor (interactive demo) ════════ */
 function NeetRankPredictor() {
   const nav = useNavigate();
   const [form, setForm] = useState({ phy: "", chem: "", bio: "", category: "General" });
@@ -349,7 +349,7 @@ function NeetRankPredictor() {
               <span style={{ display: "grid", placeItems: "center", width: 32, height: 32, borderRadius: 9, background: `${ACCENT}18`, color: ACCENT }}><GaugeIcon size={18} /></span>
               Enter your expected marks
             </h3>
-            <p style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}>Physics & Chemistry out of 180, Biology out of 360 — total 720.</p>
+            <p style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}>Physics & Chemistry out of 180, Biology out of 360 - total 720.</p>
 
             <div className="grid-3" style={{ gap: 11 }}>
               {FIELDS.map(({ key, label, max, color, icon: Icon }) => {
@@ -447,7 +447,7 @@ function NeetRankPredictor() {
               </div>
 
               <button className="btn full" style={{ background: "var(--navy)", color: "#fff", justifyContent: "center", marginTop: 16 }} onClick={() => nav("/neet-colleges")}>See all medical colleges <ArrowRight size={16} /></button>
-              <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 10, textAlign: "center" }}>Illustrative demo from past marks-vs-rank trends. Not an official prediction — verify on neet.nta.nic.in.</p>
+              <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 10, textAlign: "center" }}>Illustrative demo from past marks-vs-rank trends. Not an official prediction - verify on neet.nta.nic.in.</p>
             </div>
           )}
         </div>
@@ -456,16 +456,16 @@ function NeetRankPredictor() {
       <NotesBlock accent={ACCENT} eyebrow="About this tool" heading="How the NEET Rank Predictor works"
         points={[
           { icon: GaugeIcon, title: "Marks → All-India Rank", body: "Your 720-mark total is mapped to an expected AIR band using historical NEET marks-vs-rank trends across the ~22–24 lakh candidate pool." },
-          { icon: Trophy, title: "Category rank too", body: "Along with the All-India Rank you get an indicative category rank — for OBC/SC/ST/EWS that's what actually drives MCC & state counselling." },
+          { icon: Trophy, title: "Category rank too", body: "Along with the All-India Rank you get an indicative category rank - for OBC/SC/ST/EWS that's what actually drives MCC & state counselling." },
           { icon: Target, title: "A band, not one number", body: "Real ranks shift with paper difficulty, normalisation and candidate count, so we show a realistic low–high band rather than a single figure." },
           { icon: Building2, title: "Colleges for your score", body: "We surface medical colleges to target. Open the full directory of 780 MBBS colleges to filter by state, seats & management." },
         ]}
-        note="This is an interactive demo using illustrative trends — not an official prediction. Verify on neet.nta.nic.in." />
+        note="This is an interactive demo using illustrative trends - not an official prediction. Verify on neet.nta.nic.in." />
     </>
   );
 }
 
-/* ════════ TOOL 2 — NEET College Predictor (filters real college data) ════════ */
+/* ════════ TOOL 2 - NEET College Predictor (filters real college data) ════════ */
 function NeetCollegePredictor() {
   const nav = useNavigate();
   const [score, setScore] = useState("");
@@ -574,12 +574,12 @@ function NeetCollegePredictor() {
 
       <NotesBlock accent={C_CHEM} eyebrow="About this tool" heading="How the College Predictor works"
         points={[
-          { icon: Landmark, title: "Real college database", body: `Results come from the full ${NEET_COLLEGES.length}-college NMC seat-matrix dataset — every MBBS college incl. AIIMS & JIPMER, with seats & management.` },
+          { icon: Landmark, title: "Real college database", body: `Results come from the full ${NEET_COLLEGES.length}-college NMC seat-matrix dataset - every MBBS college incl. AIIMS & JIPMER, with seats & management.` },
           { icon: Users, title: "Score, category & quota", body: "Pick your score, category, quota and state. NEET fills 15% seats via All-India Quota (MCC) and 85% via state counselling." },
           { icon: MapPin, title: "Filter state-wise", body: "Most MBBS seats are state-quota, so filtering by your home state surfaces the colleges you're most likely to get." },
-          { icon: Building2, title: "Open any college", body: "Tap a result to open its full page — seats, affiliating university, management, year and NEET admission details." },
+          { icon: Building2, title: "Open any college", body: "Tap a result to open its full page - seats, affiliating university, management, year and NEET admission details." },
         ]}
-        note="Interactive demo ordered by score against real college data — not official cut-off matching. Verify on mcc.nic.in & your state portal." />
+        note="Interactive demo ordered by score against real college data - not official cut-off matching. Verify on mcc.nic.in & your state portal." />
     </>
   );
 }
@@ -617,7 +617,7 @@ export default function Neet() {
     <div className="page">
       <Seo
         title="NEET UG Rank Predictor, College Predictor, Cutoffs, Toppers & Syllabus"
-        description="NEET UG hub — interactive rank & medical college predictors, 5-year difficulty analysis, cut-off trends, toppers, full 720-mark syllabus, exam pattern, 12-month roadmap and best coaching. Built for NEET aspirants on CampusPoint."
+        description="NEET UG hub - interactive rank & medical college predictors, 5-year difficulty analysis, cut-off trends, toppers, full 720-mark syllabus, exam pattern, 12-month roadmap and best coaching. Built for NEET aspirants on CampusPoint."
         path="/neet"
       />
 
@@ -650,7 +650,7 @@ export default function Neet() {
       {/* ── Hero (blog-style) ── */}
       <PageHero
         eyebrow="NEET UG 2026" eyebrowIcon={Stethoscope} accent="#15a06e"
-        titleLead="NEET —" highlight="rank & medical college" titleTail="" highlightTail="predictor hub."
+        titleLead="NEET -" highlight="rank & medical college" titleTail="" highlightTail="predictor hub."
         sub="Predict your NEET rank & the MBBS colleges you can get, analyse 5-year difficulty (Physics · Chemistry · Biology), track cut-off & topper trends, and explore the full 720-mark syllabus."
         cta={{ label: "Predict my NEET rank", to: "#rank" }}
         cards={[
@@ -660,14 +660,14 @@ export default function Neet() {
         ]}
       />
 
-      {/* ── Tool 1 — Rank Predictor ── */}
+      {/* ── Tool 1 - Rank Predictor ── */}
       <Anchor id="rank" />
       <Block id="predictor" eyebrow="Tool 1" title="NEET Rank Predictor"
         sub="Enter your Physics, Chemistry & Biology marks (out of 720) to see your expected All-India Rank, category rank, percentile & colleges to target.">
         <NeetRankPredictor />
       </Block>
 
-      {/* ── Tool 2 — College Predictor ── */}
+      {/* ── Tool 2 - College Predictor ── */}
       <div style={{ background: "var(--sky)" }}>
         <Block id="college" eyebrow="Tool 2" title="NEET Medical College Predictor"
           sub="Filter the full database of 780 MBBS colleges by your score, category, quota & state to see where you can land." bg="transparent">
@@ -731,7 +731,7 @@ export default function Neet() {
             <Bars key={`bars-${year}`} data={subjectBars} bars={[{ key: "value", label: "Difficulty index", color: ACCENT }]} height={260} />
           </div>
 
-          {/* Year-wise summary table — verbatim subject reads */}
+          {/* Year-wise summary table - verbatim subject reads */}
           <div style={{ marginTop: 10 }}>
             <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, marginBottom: 14 }}>📋 NEET UG Past 5 Years Difficulty Level Analysis (2021–2025)</h4>
             <div className="card" style={{ overflowX: "auto", padding: 0 }}>
@@ -768,9 +768,9 @@ export default function Neet() {
           </div>
           <div className="grid-3" style={{ gap: 22 }}>
             {[
-              { label: "Physics",   data: TREND_PHY,  color: C_PHY,  note: "The toughest, rank-deciding section — lengthy numericals every year." },
+              { label: "Physics",   data: TREND_PHY,  color: C_PHY,  note: "The toughest, rank-deciding section - lengthy numericals every year." },
               { label: "Chemistry", data: TREND_CHEM, color: C_CHEM, note: "NCERT-aligned, moderately scoring; can turn tricky & lengthy." },
-              { label: "Biology",   data: TREND_BIO,  color: C_BIO,  note: "Most scoring — 90 Q / 360 marks. Accuracy here makes the rank." },
+              { label: "Biology",   data: TREND_BIO,  color: C_BIO,  note: "Most scoring - 90 Q / 360 marks. Accuracy here makes the rank." },
             ].map(({ label, data, color, note }) => (
               <div key={label} className="card card-hover">
                 <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color, marginBottom: 4 }}>{label}</h4>
@@ -849,8 +849,8 @@ export default function Neet() {
         <div className="container">
           <div className="title-bar">
             <span className="eyebrow">Toppers · Past 5 Years</span>
-            <h2 className="section-title">Toppers Trends of NEET Exam — Past 5 Years</h2>
-            <p className="section-sub">The increasing competitiveness of NEET means top scorers now attain — or come very close to — full marks. Here are the rank-1 toppers of the last five years.</p>
+            <h2 className="section-title">Toppers Trends of NEET Exam - Past 5 Years</h2>
+            <p className="section-sub">The increasing competitiveness of NEET means top scorers now attain - or come very close to - full marks. Here are the rank-1 toppers of the last five years.</p>
           </div>
 
           <div className="card" style={{ overflowX: "auto", marginBottom: 20, padding: 0 }}>
@@ -874,9 +874,9 @@ export default function Neet() {
 
           <div className="grid-3" style={{ gap: 14 }}>
             {[
-              { icon: "🏆", title: "Perfect 720", stat: "3 of 5", sub: "toppers scored a perfect 720/720 — the ceiling effect makes tie-breakers decisive." },
+              { icon: "🏆", title: "Perfect 720", stat: "3 of 5", sub: "toppers scored a perfect 720/720 - the ceiling effect makes tie-breakers decisive." },
               { icon: "📈", title: "Percentile", stat: "99.9999+", sub: "top scorers sit in the 99.9999+ percentile band of ~22–24 lakh candidates." },
-              { icon: "🗺️", title: "Spread", stat: "5 states", sub: "Rajasthan, UP, Maharashtra & Delhi — talent is spread right across India." },
+              { icon: "🗺️", title: "Spread", stat: "5 states", sub: "Rajasthan, UP, Maharashtra & Delhi - talent is spread right across India." },
             ].map((c) => (
               <div key={c.title} className="card" style={{ borderLeft: `4px solid ${ACCENT}`, padding: "16px 18px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
@@ -955,8 +955,8 @@ export default function Neet() {
         <div className="container">
           <div className="title-bar">
             <span className="eyebrow">Exam Cycle 2026</span>
-            <h2 className="section-title">NEET UG 2026 — Key Dates</h2>
-            <p className="section-sub">Every milestone from notification to counselling. <em>Tentative — confirm on the official NTA portal.</em></p>
+            <h2 className="section-title">NEET UG 2026 - Key Dates</h2>
+            <p className="section-sub">Every milestone from notification to counselling. <em>Tentative - confirm on the official NTA portal.</em></p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(220px, 100%), 1fr))", gap: 14 }}>
             {EXAM_CYCLE.map((e, i) => (
@@ -981,7 +981,7 @@ export default function Neet() {
           <div className="title-bar">
             <span className="eyebrow">Top Coaching</span>
             <h2 className="section-title">Best Coaching Institutes for NEET</h2>
-            <p className="section-sub">From NEET-specialist brands to affordable online options — choose by city, budget &amp; learning style.</p>
+            <p className="section-sub">From NEET-specialist brands to affordable online options - choose by city, budget &amp; learning style.</p>
           </div>
           <div className="grid-3" style={{ gap: 22 }}>
             {COACHING.map((c) => (
@@ -1022,7 +1022,7 @@ export default function Neet() {
         <div className="container">
           <div className="title-bar">
             <span className="eyebrow"><MapPin size={12} style={{ display: "inline", marginRight: 4 }} /> Counselling &amp; Colleges</span>
-            <h2 className="section-title">All {NEET_COLLEGES.length} MBBS Colleges — State by State</h2>
+            <h2 className="section-title">All {NEET_COLLEGES.length} MBBS Colleges - State by State</h2>
             <p className="section-sub">NEET fills 15% seats via All-India Quota (MCC) and 85% via state counselling. Browse every MBBS college across {NEET_STATES.length} states &amp; UTs ({NEET_TOTAL_SEATS.toLocaleString("en-IN")} seats).</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(220px, 100%), 1fr))", gap: 14, marginBottom: 24 }}>

@@ -1,14 +1,14 @@
 /* ============================================================
-   collegeStats.js — REAL, verified fees & placement figures,
+   collegeStats.js - REAL, verified fees & placement figures,
    keyed by college slug. These OVERRIDE the illustrative values
    in colleges.js on the college detail page (/colleges/:slug).
 
    HOW TO USE
    ----------
-   • Fill ONE college at a time from OFFICIAL sources — the
+   • Fill ONE college at a time from OFFICIAL sources - the
      institute's own placement report + fee structure. Prefer the
      institute domain (e.g. placement.iitm.ac.in, nitt.edu).
-   • Omit any field you don't have yet — the page automatically
+   • Omit any field you don't have yet - the page automatically
      falls back to the existing value for just that field, so a
      half-filled entry is safe.
    • Set `verified: true` ONLY after every number in the entry has
@@ -34,13 +34,13 @@
      }
 
    ⚠️ The two worked examples below use figures compiled from
-   third-party placement aggregators. They are a STARTING POINT —
+   third-party placement aggregators. They are a STARTING POINT -
    cross-check each number against the official report and then set
    verified: true. Do not treat them as confirmed until you do.
    ============================================================ */
 
 export const COLLEGE_STATS = {
-  // ── IIT Madras — B.Tech placements 2024 (VERIFY vs official report) ──
+  // ── IIT Madras - B.Tech placements 2024 (VERIFY vs official report) ──
   "iit-madras": {
     year: 2024,
     source: "https://placement.iitm.ac.in/",
@@ -55,7 +55,7 @@ export const COLLEGE_STATS = {
     // fees: fill from the official IIT Madras fee structure
   },
 
-  // ── NIT Trichy — B.Tech placements 2024 (VERIFY vs official report) ──
+  // ── NIT Trichy - B.Tech placements 2024 (VERIFY vs official report) ──
   "nit-trichy": {
     year: 2024,
     source: "https://www.nitt.edu/",
@@ -65,7 +65,7 @@ export const COLLEGE_STATS = {
       placedPct: 89,      // 88.9% B.Tech overall
       recruiters: ["Amazon", "Google", "Microsoft", "Bosch", "Samsung", "Morgan Stanley"],
       // avg / median: fill the OVERALL B.Tech figures from the official report
-      // (CSE alone averaged ₹27.27 L in 2024 — not the overall number)
+      // (CSE alone averaged ₹27.27 L in 2024 - not the overall number)
     },
   },
 };

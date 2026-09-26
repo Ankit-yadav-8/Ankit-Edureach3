@@ -136,7 +136,7 @@ const INDIAN_STATES = [
 ];
 
 /* ─────────────────────────────────────────────────────────
-   Context — open the modal from anywhere
+   Context - open the modal from anywhere
    ───────────────────────────────────────────────────────── */
 const EnrolCtx = createContext(null);
 export const useEnrol = () => useContext(EnrolCtx);
@@ -174,7 +174,7 @@ const EMPTY = {
 function EnrolModal({ plan, onClose }) {
   const meta = PLAN_META[plan] || PLAN_META["josaa"];
   const isMentorship = meta.kind === "mentorship";
-  // Pre-fill contact details straight from the logged-in account — the student
+  // Pre-fill contact details straight from the logged-in account - the student
   // can still edit any of them before paying.
   const { user, token } = useAuth() || {};
   const [f, setF] = useState(() => ({
@@ -355,7 +355,7 @@ function EnrolModal({ plan, onClose }) {
 
               {user && (
                 <div style={{ display: "flex", alignItems: "center", gap: 7, background: "#f0faf4", border: "1px solid #bbf7d0", color: "#15803d", padding: "9px 12px", borderRadius: 10, fontSize: 12.5, fontWeight: 600, marginBottom: 14 }}>
-                  <BadgeCheck size={15} color="#16a34a" /> Auto-filled from your account — edit any field if needed.
+                  <BadgeCheck size={15} color="#16a34a" /> Auto-filled from your account - edit any field if needed.
                 </div>
               )}
 

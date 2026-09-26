@@ -1,5 +1,5 @@
 /* ============================================================
-   Charts.jsx — production-grade recharts wrappers
+   Charts.jsx - production-grade recharts wrappers
    ------------------------------------------------------------
    Components: CenterDonut · DonutLegend · PieWithLegend
                Bars · Trend · Gauge
@@ -583,7 +583,7 @@ export function Trend({ data, lines, height = 280, fmt }) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   Gauge — radial single-value indicator
+   Gauge - radial single-value indicator
    props: value (0–100), label, color, height
 ══════════════════════════════════════════════════════════════ */
 export function Gauge({ value, label, color = "#FF6B35", height = 200 }) {

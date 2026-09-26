@@ -1,4 +1,4 @@
-/* Campus Point AI — our own Claude-style study & admissions assistant,
+/* Campus Point AI - our own Claude-style study & admissions assistant,
    powered by Groq (the key lives only on the server). Clean left sidebar with
    chat history + New Chat, a large centered prompt on a fresh chat, streaming
    responses with a live mode badge (web search / reasoning / coding / image),
@@ -86,7 +86,7 @@ function exportChat(chat) {
 
 /* starter prompt chips on the empty screen */
 const QUICK = [
-  { icon: BookOpen,    label: "Solve a doubt",   prompt: "I'm stuck on this problem — solve it step by step:\n\n" },
+  { icon: BookOpen,    label: "Solve a doubt",   prompt: "I'm stuck on this problem - solve it step by step:\n\n" },
   { icon: Calculator,  label: "Maths solution",  prompt: "Give a clean step-by-step solution with the final answer for:\n\n" },
   { icon: Code2,       label: "Generate code",   prompt: "Write well-commented code for:\n\n" },
   { icon: ListChecks,  label: "Quiz me",         prompt: "Generate 10 MCQs (with an answer key at the end) on the topic: " },
@@ -225,7 +225,7 @@ export default function CampusPointAI() {
           else if (data) { try { const j = JSON.parse(data); if (j.delta) appendDelta(j.delta); } catch { /* */ } }
         }
       }
-      if (!acc) appendDelta("⚠️ No response — please try again.");
+      if (!acc) appendDelta("⚠️ No response - please try again.");
       else if (!acc.startsWith("⚠️")) {
         genFollowups(chatId, raw, acc);
         updateMemory([...baseMsgs, { role: "assistant", content: acc }]);
@@ -365,7 +365,7 @@ export default function CampusPointAI() {
         setAttach({ name: f.name, text: text.slice(0, 60000) });
       }
     } catch {
-      setAttach({ name: f.name, text: "(Could not read this file — please paste the text instead.)" });
+      setAttach({ name: f.name, text: "(Could not read this file - please paste the text instead.)" });
     }
   };
 
@@ -412,7 +412,7 @@ export default function CampusPointAI() {
 
   return (
     <div style={{ position: "fixed", inset: 0, top: 0, display: "flex", background: t.bg, color: t.text, fontFamily: "'DM Sans',system-ui,sans-serif", zIndex: 1, overflow: "hidden", colorScheme: "light" }}>
-      <Seo path="/ai" title="Campus Point AI — your free study & admissions assistant" description="A Claude-style AI tutor for JEE, NEET & counselling. Solve doubts, generate notes, quizzes and code — free." />
+      <Seo path="/ai" title="Campus Point AI - your free study & admissions assistant" description="A Claude-style AI tutor for JEE, NEET & counselling. Solve doubts, generate notes, quizzes and code - free." />
       {/* ambient background */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `radial-gradient(${t.bgGrid} 1px, transparent 1px)`, backgroundSize: "30px 30px", opacity: .8 }} />
       <div style={{ position: "absolute", top: "-12%", left: "12%", width: 460, height: 460, borderRadius: "50%", background: t.glow1, filter: "blur(120px)", pointerEvents: "none" }} />
@@ -519,7 +519,7 @@ export default function CampusPointAI() {
                   Hi {user?.name?.split(" ")[0] || "there"}, how can I help?
                 </h1>
                 <p style={{ color: t.textDim, marginTop: 8, fontSize: 15, fontStyle: "italic" }}>
-                  Doubts, derivations, code, notes, images — your free JEE / NEET study partner that remembers you.
+                  Doubts, derivations, code, notes, images - your free JEE / NEET study partner that remembers you.
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginTop: 14 }}>
                   {[MODES.search, MODES.math, MODES.code, MODES.image].map((m) => (
@@ -612,7 +612,7 @@ export default function CampusPointAI() {
                 taRef={taRef} attach={attach} setAttach={setAttach} fileRef={fileRef} onFile={onFile}
                 toggleMic={toggleMic} listening={listening} />
               <p style={{ textAlign: "center", fontSize: 11, color: t.textMute, marginTop: 8 }}>
-                Campus Point AI can make mistakes — verify important cutoffs & dates on official sites.
+                Campus Point AI can make mistakes - verify important cutoffs & dates on official sites.
               </p>
             </div>
           </div>
@@ -675,7 +675,7 @@ function Composer({ t, input, setInput, send, streaming, stop, taRef, attach, se
           ref={taRef} className="cpai-ta" value={input} rows={1}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-          placeholder={big ? "Ask anything — a doubt, a chapter, code, or “generate an image of…”" : "Reply to Campus Point AI…"}
+          placeholder={big ? "Ask anything - a doubt, a chapter, code, or “generate an image of…”" : "Reply to Campus Point AI…"}
           style={{ flex: 1, minWidth: 0, resize: "none", border: "none", outline: "none", background: "transparent", color: t.text, fontSize: 15, lineHeight: 1.5, fontFamily: "inherit", maxHeight: 200, padding: "7px 0" }}
         />
         <button onClick={toggleMic} style={{ ...iconBtn(t), color: listening ? t.accent : t.textDim }} aria-label="Voice input" title="Speak">
@@ -743,7 +743,7 @@ function ProfilePanel({ t, user, chats, profile, setProfile, memory, setMemory, 
             )}
           </div>
           <textarea value={draft} onChange={(e) => setDraft(e.target.value)} onBlur={() => setMemory(draft.slice(0, 1500))}
-            placeholder="Auto-fills as you chat — e.g. your target branches, weak topics, preferences. Edit freely."
+            placeholder="Auto-fills as you chat - e.g. your target branches, weak topics, preferences. Edit freely."
             style={{ ...inputStyle, minHeight: 110, resize: "vertical", lineHeight: 1.5 }} />
           <div style={{ fontSize: 11, color: t.textMute, marginTop: 6 }}>
             Carried into every chat so answers stay personal. Stored only in this browser.

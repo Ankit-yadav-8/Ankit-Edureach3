@@ -1,4 +1,4 @@
-/* Reviews — dedicated, shareable/indexable page for the "Campus Reviews"
+/* Reviews - dedicated, shareable/indexable page for the "Campus Reviews"
    section (hostel & mess reviews) that also appears on the home page.
    Gives it its own URL (/reviews) so the review hub can be linked and
    indexed independently. */
@@ -19,8 +19,8 @@ export default function Reviews() {
     <div className="page">
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
-        title="Give & Read College Reviews — Hostel & Mess Ratings"
-        description="Know and give honest college reviews — read and write student-written hostel & mess reviews for IITs, NITs, IIITs and more. Ratings, quick tags and real comments about campus life on Campus Point."
+        title="Give & Read College Reviews - Hostel & Mess Ratings"
+        description="Know and give honest college reviews - read and write student-written hostel & mess reviews for IITs, NITs, IIITs and more. Ratings, quick tags and real comments about campus life on Campus Point."
         path="/reviews"
         keywords={[
           "college reviews", "hostel reviews", "mess reviews",

@@ -1,4 +1,4 @@
-/* JeeAdvancedAnalysis — the JEE Advanced "Chapter Intelligence" console.
+/* JeeAdvancedAnalysis - the JEE Advanced "Chapter Intelligence" console.
    A Class 11/12-style hero over an analysis console: one card per chapter
    (all 80), each with weightage ring / avg-Qs / difficulty / priority and a
    sub-topic breakdown, plus three dropdown filters (class, difficulty, trend)
@@ -194,7 +194,7 @@ function SubjectSummary() {
       <div className="jaa-dir-head">
         <span className="jaa-kicker"><Clock size={13} /> Where your 200 hours go</span>
         <h2 className="jaa-h2">A subject-wise revision budget</h2>
-        <p className="jaa-dir-sub">Study hours modelled on each chapter's weightage and difficulty — Maths and Chemistry earn the biggest slices at Advanced.</p>
+        <p className="jaa-dir-sub">Study hours modelled on each chapter's weightage and difficulty - Maths and Chemistry earn the biggest slices at Advanced.</p>
       </div>
       <div className="jaa-sum-grid">
         {SUBJECT_SUMMARY.map((s) => {
@@ -265,8 +265,8 @@ export default function JeeAdvancedAnalysis() {
   return (
     <div className="jaa">
       <Seo
-        title="JEE Advanced Chapter-wise Analysis 2026 — Weightage, Priority & Marks"
-        description="All 80 NCERT chapters for JEE Advanced ranked chapter-by-chapter by weightage, marks at stake, difficulty, average questions and priority — with sub-topic breakdowns, class/difficulty/trend filters, a 200-hour study budget and the marking scheme on Campus Point."
+        title="JEE Advanced Chapter-wise Analysis 2026 - Weightage, Priority & Marks"
+        description="All 80 NCERT chapters for JEE Advanced ranked chapter-by-chapter by weightage, marks at stake, difficulty, average questions and priority - with sub-topic breakdowns, class/difficulty/trend filters, a 200-hour study budget and the marking scheme on Campus Point."
         path="/jee-advanced-analysis"
       />
 
@@ -277,7 +277,7 @@ export default function JeeAdvancedAnalysis() {
           <motion.div initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}>
             <motion.h1 className="jaa-title" variants={fade}>Every chapter,<br />ranked by <span className="jaa-hl">what it's worth.</span></motion.h1>
             <motion.p className="jaa-sub" variants={fade}>
-              All 80 NCERT chapters, one card each — tagged with weightage, marks at stake,
+              All 80 NCERT chapters, one card each - tagged with weightage, marks at stake,
               difficulty, average questions and priority, so you always know exactly what to open next.
             </motion.p>
             <motion.div className="jaa-stats" variants={fade}>
@@ -344,7 +344,7 @@ export default function JeeAdvancedAnalysis() {
         <div className="jaa-dir-head">
           <span className="jaa-kicker"><ShieldCheck size={13} /> Know the marking</span>
           <h2 className="jaa-h2">How the two papers are scored</h2>
-          <p className="jaa-dir-sub">Advanced mixes question types with different reward and penalty — attempt strategy should follow the marking, not just the syllabus.</p>
+          <p className="jaa-dir-sub">Advanced mixes question types with different reward and penalty - attempt strategy should follow the marking, not just the syllabus.</p>
         </div>
         <div className="jaa-mark-grid">
           {MARKING_SCHEME.map((m) => (

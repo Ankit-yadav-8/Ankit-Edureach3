@@ -1,4 +1,4 @@
-/* ExploreColleges — "Explore Colleges" section that sits just below the
+/* ExploreColleges - "Explore Colleges" section that sits just below the
    Counselling + Mentorship plans. Six flagship IITs shown as tool-style white
    cards (photo banner, NIRF badge, quick stats, CTA) on the same surface and
    card language as ToolsGrid. Tapping a card opens that college's page. */
@@ -132,7 +132,7 @@ export default function ExploreColleges() {
             Start with the <span style={{ color: CL.coral }}>flagship IITs.</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.04rem", lineHeight: 1.7 }}>
-            Real photos, verified cutoffs, placements and fees for every IIT, NIT and IIIT — here are six of the most-chosen institutes to begin your exploration.
+            Real photos, verified cutoffs, placements and fees for every IIT, NIT and IIIT - here are six of the most-chosen institutes to begin your exploration.
           </p>
         </div>
 

@@ -1,4 +1,4 @@
-/* BackButton — a small, consistent "Back" pill used across tool pages.
+/* BackButton - a small, consistent "Back" pill used across tool pages.
    Goes back in history when possible, otherwise falls back to `to` (default home). */
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";

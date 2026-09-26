@@ -1,5 +1,5 @@
 /**
- * CutoffSection.jsx — Enhanced JoSAA Cutoff tab for CollegeDetail
+ * CutoffSection.jsx - Enhanced JoSAA Cutoff tab for CollegeDetail
  * ─────────────────────────────────────────────────────────────────
  * • Uses realCutoffEngine.js (loads all CSVs 2018–2025)
  * • Shows all available years for both IITs and NITs
@@ -61,7 +61,7 @@ const YR_COLOR = {
   "2025": "#FF693D",
 };
 
-const fmt = (v) => (v ? fmtRank(v) : "—");
+const fmt = (v) => (v ? fmtRank(v) : "-");
 
 // ── Micro components ──────────────────────────────────────────────────────────
 
@@ -78,7 +78,7 @@ function Badge({ children, color = T.teal }) {
 }
 
 function TrendArrow({ delta }) {
-  if (delta === null || delta === undefined) return <span style={{ color: T.muted }}>—</span>;
+  if (delta === null || delta === undefined) return <span style={{ color: T.muted }}>-</span>;
   const up = delta > 0;   // higher rank number = more seats (relaxing = good for students)
   return (
     <span style={{
@@ -314,7 +314,7 @@ export default function CutoffSection({ college, initialProgram }) {
             <strong style={{ color: T.teal }}>
               {program.replace(/\s*\((?:B\.Tech|B\.E\.)[^)]*\)\s*/gi, " ").trim()}
             </strong>
-            {" "}— selected from Courses tab.
+            {" "}- selected from Courses tab.
           </span>
           <span style={{
             marginLeft: "auto", fontSize: 11, color: T.muted,
@@ -509,7 +509,7 @@ export default function CutoffSection({ college, initialProgram }) {
                     </td>
                     <td style={{ padding: "10px" }}>
                       {i === 0
-                        ? <span style={{ color: T.muted }}>—</span>
+                        ? <span style={{ color: T.muted }}>-</span>
                         : <TrendArrow delta={delta} />
                       }
                     </td>
@@ -539,7 +539,7 @@ export default function CutoffSection({ college, initialProgram }) {
     return (
       <div>
         <div style={{ fontFamily: "Sora,sans-serif", fontWeight: 700, marginBottom: 10, fontSize: 14 }}>
-          Opening vs Closing — {yr}
+          Opening vs Closing - {yr}
         </div>
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={chartData} margin={{ top: 4, right: 8, left: -10, bottom: 28 }}>
@@ -784,7 +784,7 @@ export default function CutoffSection({ college, initialProgram }) {
           borderRadius: 10, fontSize: 13, color: T.muted,
         }}>
           ⚠️ This college isn't in the JoSAA real-data index yet.
-          Showing illustrative estimates — add the institute name to{" "}
+          Showing illustrative estimates - add the institute name to{" "}
           <code>realCutoffEngine.js</code> INSTITUTE_ALIASES.
         </div>
       )}

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MapPin, Layers, ArrowRight } from "lucide-react";
 // Leaflet is imported rather than read off window.L from a CDN <script>.
 // The CDN tags used to live in index.html, which meant every page paid for
-// Leaflet just so this one route could use it — and when those tags were
+// Leaflet just so this one route could use it - and when those tags were
 // removed with the Campus Life map, this page silently rendered an empty box
 // (the old code did `if (!window.L) return`, so there was nothing to see and
 // no error). Importing it keeps it in this route's lazy chunk, and keeps
@@ -67,8 +67,8 @@ export default function CollegeMap() {
   return (
     <div className="page">
       <Seo
-        title="College Map — Explore IITs, NITs & IIITs Across India"
-        description="Interactive map of every IIT, NIT and IIIT in India — explore colleges by location, type and rank, then open full cutoffs, placements and reviews on CampusPoint."
+        title="College Map - Explore IITs, NITs & IIITs Across India"
+        description="Interactive map of every IIT, NIT and IIIT in India - explore colleges by location, type and rank, then open full cutoffs, placements and reviews on CampusPoint."
         path="/map"
       />
       <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "44px 0" }}>
@@ -76,7 +76,7 @@ export default function CollegeMap() {
           <BackButton style={{ marginBottom: 16 }} />
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Interactive Map</span>
           <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.5rem)", margin: "8px 0 4px" }}>Colleges on the map</h1>
-          <p style={{ color: "var(--muted)" }}>All {COLLEGES.length} engineering colleges — IITs, NITs &amp; IIITs pinned across India.</p>
+          <p style={{ color: "var(--muted)" }}>All {COLLEGES.length} engineering colleges - IITs, NITs &amp; IIITs pinned across India.</p>
         </div>
       </section>
 

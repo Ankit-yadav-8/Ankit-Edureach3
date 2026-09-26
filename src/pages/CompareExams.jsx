@@ -11,13 +11,13 @@ import BackButton from "../components/BackButton.jsx";
 import { CL, clEyebrow } from "../components/home/clTheme.js";
 import { AiAnalyzing, Sparkline, MiniBar, rgba } from "../components/CompareAI.jsx";
 
-/* Editorial "CP read" of each exam — difficulty (0-10), reach and
+/* Editorial "CP read" of each exam - difficulty (0-10), reach and
    competition (0-100). Indicative, used to drive the AI recommendation. */
 const META = {
-  "jee-main":     { d: 7.5, reach: 97, comp: 100, bestFor: "The widest net — NITs, IIITs, GFTIs and the gateway to JEE Advanced." },
+  "jee-main":     { d: 7.5, reach: 97, comp: 100, bestFor: "The widest net - NITs, IIITs, GFTIs and the gateway to JEE Advanced." },
   "jee-advanced": { d: 9.6, reach: 55, comp: 88,  bestFor: "The only route to the 23 IITs, and India's toughest UG paper." },
   "bitsat":       { d: 7.0, reach: 45, comp: 55,  bestFor: "A speed-and-accuracy test for the three elite BITS campuses." },
-  "viteee":       { d: 4.5, reach: 40, comp: 60,  bestFor: "Low-stress, no negative marking — a strong private backup." },
+  "viteee":       { d: 4.5, reach: 40, comp: 60,  bestFor: "Low-stress, no negative marking - a strong private backup." },
   "mht-cet":      { d: 5.5, reach: 62, comp: 70,  bestFor: "Best value across Maharashtra's govt & private engineering seats." },
   "kcet":         { d: 4.8, reach: 58, comp: 52,  bestFor: "A calm gateway to Karnataka's government colleges." },
   "wbjee":        { d: 5.2, reach: 55, comp: 50,  bestFor: "The state route to West Bengal's govt & private institutes." },
@@ -34,8 +34,8 @@ const ROWS = [
   ["Conducting body", (e) => e.body],
   ["Level", (e) => e.level],
   ["Accepted by", (e) => e.accepts],
-  ["Eligibility", (e) => e.eligibility?.[0] || "—"],
-  ["Pattern", (e) => e.pattern?.[0] || "—"],
+  ["Eligibility", (e) => e.eligibility?.[0] || "-"],
+  ["Pattern", (e) => e.pattern?.[0] || "-"],
 ];
 
 const STEPS = [
@@ -47,7 +47,7 @@ const STEPS = [
 ];
 
 export default function CompareExams() {
-  const [picked, setPicked] = useState([]); // start empty — user picks what to compare
+  const [picked, setPicked] = useState([]); // start empty - user picks what to compare
   const [showPicker, setShowPicker] = useState(false);
   const exams = picked.map((s) => EXAM_BY_SLUG[s]).filter(Boolean);
   const key = picked.join("|");
@@ -83,8 +83,8 @@ export default function CompareExams() {
     <div className="page">
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
-        title="Compare Engineering Exams — JEE Main vs Advanced vs BITSAT (AI read)"
-        description="Side-by-side comparison of JEE Main, JEE Advanced, BITSAT and state exams with an AI read — difficulty, reach, competition, 5-year cutoff trends, pattern and eligibility on CampusPoint."
+        title="Compare Engineering Exams - JEE Main vs Advanced vs BITSAT (AI read)"
+        description="Side-by-side comparison of JEE Main, JEE Advanced, BITSAT and state exams with an AI read - difficulty, reach, competition, 5-year cutoff trends, pattern and eligibility on CampusPoint."
         path="/compare-exams"
       />
 
@@ -96,7 +96,7 @@ export default function CompareExams() {
             Compare entrance exams, get an <span style={{ color: CL.coral }}>AI read</span>
           </h1>
           <p style={{ color: CL.body, maxWidth: 620 }}>
-            Pick as many exams as you like to see difficulty, college reach, competition and 5-year cutoff trends side by side — then a plain-English take on where to start.
+            Pick as many exams as you like to see difficulty, college reach, competition and 5-year cutoff trends side by side - then a plain-English take on where to start.
           </p>
         </div>
       </section>
@@ -181,7 +181,7 @@ export default function CompareExams() {
   );
 }
 
-/* ── Empty state — shown until 2+ exams are picked (mirrors college compare) ── */
+/* ── Empty state - shown until 2+ exams are picked (mirrors college compare) ── */
 function ExamEmptyState({ onAdd, count }) {
   return (
     <div style={{ textAlign: "center", padding: "48px 24px", background: CL.card, border: `1px dashed ${CL.cream3}`, borderRadius: 20 }}>
@@ -192,7 +192,7 @@ function ExamEmptyState({ onAdd, count }) {
         {count === 0 ? "Pick at least 2 exams" : "Add one more exam"}
       </h3>
       <p style={{ color: CL.body, maxWidth: 440, margin: "0 auto 18px" }}>
-        Choose the entrance exams you want to weigh up — difficulty, reach, competition and cutoff trends, side by side with an AI read.
+        Choose the entrance exams you want to weigh up - difficulty, reach, competition and cutoff trends, side by side with an AI read.
       </p>
       <button className="btn btn-coral" onClick={onAdd}><Plus size={16} /> Add exams</button>
     </div>

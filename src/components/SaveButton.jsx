@@ -1,7 +1,7 @@
 import { Heart, GitCompare, Check } from "lucide-react";
 import { useShortlist } from "../context/Shortlist.jsx";
 
-/* Heart button — saves a college to "My Colleges". */
+/* Heart button - saves a college to "My Colleges". */
 export function SaveButton({ slug, size = 18, label = false }) {
   const { isSaved, toggleSaved } = useShortlist();
   const active = isSaved(slug);
@@ -9,7 +9,7 @@ export function SaveButton({ slug, size = 18, label = false }) {
     <button
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSaved(slug); }}
       aria-label={active ? "Remove from shortlist" : "Save to shortlist"}
-      title={active ? "Saved — click to remove" : "Save to My Colleges"}
+      title={active ? "Saved - click to remove" : "Save to My Colleges"}
       className="icon-btn"
       style={{
         display: "inline-flex", alignItems: "center", gap: 6,
@@ -25,7 +25,7 @@ export function SaveButton({ slug, size = 18, label = false }) {
   );
 }
 
-/* Compare toggle — adds a college to the compare tray (max 3). */
+/* Compare toggle - adds a college to the compare tray (max 3). */
 export function CompareButton({ slug, label = true }) {
   const { inCompare, toggleCompare, compare, MAX_COMPARE } = useShortlist();
   const active = inCompare(slug);

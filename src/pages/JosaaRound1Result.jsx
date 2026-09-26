@@ -11,7 +11,7 @@ import { FFS_OPTIONS, QUICK_LINKS } from "../data/josaaRounds.js";
 import Seo from "../components/Seo.jsx";
 
 /* ═══════════════════════════════════════════════════════════
-   JoSAA 2026 — ROUND 1 SEAT ALLOTMENT RESULT
+   JoSAA 2026 - ROUND 1 SEAT ALLOTMENT RESULT
    A heavy, self-contained news/result page scoped under
    `.josr-page`. Warm-orange brand theme, rich cards, the
    Freeze / Float / Slide explainer, round-1 cutoffs and the
@@ -20,7 +20,7 @@ import Seo from "../components/Seo.jsx";
 
 const WA =
   "https://wa.me/918118826194?text=" +
-  encodeURIComponent("Hi! JoSAA 2026 Round 1 is out — I need help deciding Freeze / Float / Slide and filling Round 2.");
+  encodeURIComponent("Hi! JoSAA 2026 Round 1 is out - I need help deciding Freeze / Float / Slide and filling Round 2.");
 
 /* Headline statistics for the round-1 allotment. */
 const HEADER_STATS = [
@@ -42,26 +42,26 @@ const SNAPSHOT = [
 
 /* Round-1 closing-rank snapshot for popular branches (illustrative, AI/OPEN). */
 const CUTOFFS = [
-  ["IIT Bombay", "Computer Science & Engineering", "67", "—", "iit"],
-  ["IIT Delhi", "Computer Science & Engineering", "118", "—", "iit"],
-  ["IIT Madras", "Computer Science & Engineering", "171", "—", "iit"],
-  ["NIT Trichy", "Computer Science & Engineering", "—", "3,142", "nit"],
-  ["NIT Warangal", "Computer Science & Engineering", "—", "4,008", "nit"],
-  ["NIT Surathkal", "Computer Science & Engineering", "—", "4,371", "nit"],
-  ["IIIT Hyderabad", "Computer Science & Engineering", "—", "2,210", "iiit"],
-  ["IIIT Allahabad", "Information Technology", "—", "9,860", "iiit"],
-  ["NIT Trichy", "Electronics & Communication", "—", "7,540", "nit"],
-  ["IIT Roorkee", "Mechanical Engineering", "1,944", "—", "iit"],
+  ["IIT Bombay", "Computer Science & Engineering", "67", "-", "iit"],
+  ["IIT Delhi", "Computer Science & Engineering", "118", "-", "iit"],
+  ["IIT Madras", "Computer Science & Engineering", "171", "-", "iit"],
+  ["NIT Trichy", "Computer Science & Engineering", "-", "3,142", "nit"],
+  ["NIT Warangal", "Computer Science & Engineering", "-", "4,008", "nit"],
+  ["NIT Surathkal", "Computer Science & Engineering", "-", "4,371", "nit"],
+  ["IIIT Hyderabad", "Computer Science & Engineering", "-", "2,210", "iiit"],
+  ["IIIT Allahabad", "Information Technology", "-", "9,860", "iiit"],
+  ["NIT Trichy", "Electronics & Communication", "-", "7,540", "nit"],
+  ["IIT Roorkee", "Mechanical Engineering", "1,944", "-", "iit"],
 ];
 
 /* Round 1 → Round 2 roadmap. */
 const TIMELINE = [
   ["Round 1 result declared", "13 Jun 2026", "Seat-allotment list is live on josaa.nic.in. Log in with your JEE roll number and password to see your allotted institute & branch."],
-  ["Online reporting + fee", "13–17 Jun 2026", "Pay the seat-acceptance fee and upload documents. Then choose Freeze, Float or Slide for your seat — this decides your Round 2."],
+  ["Online reporting + fee", "13–17 Jun 2026", "Pay the seat-acceptance fee and upload documents. Then choose Freeze, Float or Slide for your seat - this decides your Round 2."],
   ["Document verification", "14–18 Jun 2026", "Your uploaded documents are verified online. Respond fast to any query raised, or the seat can be withdrawn."],
   ["Round 2 seat allotment", "19 Jun 2026", "Float/Slide candidates may be upgraded. Fresh allotment is published for everyone still in the pool."],
-  ["Rounds 3–5 + final round", "Jun–Jul 2026", "Allotment continues round by round. The final round seat is binding — withdrawal rules tighten as rounds progress."],
-  ["CSAB special rounds", "Jul 2026", "After JoSAA closes, CSAB fills the leftover NIT / IIIT / GFTI seats — often the biggest last-minute upgrades."],
+  ["Rounds 3–5 + final round", "Jun–Jul 2026", "Allotment continues round by round. The final round seat is binding - withdrawal rules tighten as rounds progress."],
+  ["CSAB special rounds", "Jul 2026", "After JoSAA closes, CSAB fills the leftover NIT / IIIT / GFTI seats - often the biggest last-minute upgrades."],
 ];
 
 const FFS_COLOR_BY_TIER = { iit: "#FF693D", nit: "#6366f1", iiit: "#0ea5a4" };
@@ -97,7 +97,7 @@ export default function JosaaRound1Result() {
     <div className="josr-page">
       <Seo
         title="JoSAA 2026 Round 1 Seat Allotment Result"
-        description="JoSAA 2026 Round 1 seat allotment result, opening & closing ranks and what to do next (float/slide/freeze) — explained by IIT Roorkee alumni on CampusPoint."
+        description="JoSAA 2026 Round 1 seat allotment result, opening & closing ranks and what to do next (float/slide/freeze) - explained by IIT Roorkee alumni on CampusPoint."
         path="/josaa-round-1-result-2026"
       />
       <style>{CSS}</style>
@@ -133,7 +133,7 @@ export default function JosaaRound1Result() {
           >
             <Megaphone size={12} /> LIVE · ROUND 1 RESULT OUT
           </motion.span>
-          <h1>JoSAA 2026 — Round 1 Seat Allotment Result</h1>
+          <h1>JoSAA 2026 - Round 1 Seat Allotment Result</h1>
           <p className="josr-hero__sub">
             The first round of JoSAA 2026 seat allotment for all IITs, NITs, IIITs and GFTIs has been declared on
             <strong> josaa.nic.in</strong>. Check your allotted institute &amp; branch, then decide <strong>Freeze</strong>, <strong>Float</strong> or <strong>Slide</strong> before the reporting deadline.
@@ -143,7 +143,7 @@ export default function JosaaRound1Result() {
               Check Round 1 result <ExternalLink size={16} />
             </a>
             <button className="josr-btn josr-btn--ghost" onClick={() => openEnrol("josaa")}>
-              Get Round 2 help — ₹299 <ArrowRight size={15} />
+              Get Round 2 help - ₹299 <ArrowRight size={15} />
             </button>
           </div>
           <div className="josr-hero__stats">
@@ -176,11 +176,11 @@ export default function JosaaRound1Result() {
           </div>
         </Section>
 
-        {/* ── FREEZE / FLOAT / SLIDE — the key decision ── */}
+        {/* ── FREEZE / FLOAT / SLIDE - the key decision ── */}
         <Section title="Got a seat? Now choose Freeze, Float or Slide" pill="Most important step">
           <p className="josr-lead">
             After Round 1, every allotted candidate must pick exactly <strong>one</strong> action for their seat before the
-            reporting deadline. This single choice decides whether you lock your seat or stay in the race for an upgrade —
+            reporting deadline. This single choice decides whether you lock your seat or stay in the race for an upgrade -
             pick the wrong one and you can lose an easy upgrade, or risk a confirmed seat. Tap each option to see exactly what it does.
           </p>
 
@@ -227,10 +227,10 @@ export default function JosaaRound1Result() {
         </Section>
 
         {/* ── ROUND 1 CUTOFFS ── */}
-        <Section title="Round 1 closing ranks — popular branches" pill="Indicative cutoffs">
+        <Section title="Round 1 closing ranks - popular branches" pill="Indicative cutoffs">
           <p className="josr-lead">
             A snapshot of where Round 1 closed for the most-chased branches (OPEN / All-India quota). Cutoffs ease in later
-            rounds as candidates float and slide — so a branch just out of reach now can still open up in Round 2 or 3.
+            rounds as candidates float and slide - so a branch just out of reach now can still open up in Round 2 or 3.
           </p>
           <Reveal>
             <div className="josr-table">
@@ -239,8 +239,8 @@ export default function JosaaRound1Result() {
                   <tr>
                     <th>Institute</th>
                     <th>Branch</th>
-                    <th className="right">IIT — CRL</th>
-                    <th className="right">NIT/IIIT — CRL</th>
+                    <th className="right">IIT - CRL</th>
+                    <th className="right">NIT/IIIT - CRL</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -318,9 +318,9 @@ export default function JosaaRound1Result() {
         <div className="josr-cta">
           <Sparkles size={22} color="#fff" />
           <h2>Don't gamble Round 2 on a guess.</h2>
-          <p>Get a mentor who tells you exactly when to Freeze, Float or Slide and re-orders your choices every round — for ₹299.</p>
+          <p>Get a mentor who tells you exactly when to Freeze, Float or Slide and re-orders your choices every round - for ₹299.</p>
           <div className="josr-cta__btns">
-            <button className="josr-btn josr-btn--light" onClick={() => openEnrol("josaa")}>Enrol now — ₹299 <ArrowRight size={16} /></button>
+            <button className="josr-btn josr-btn--light" onClick={() => openEnrol("josaa")}>Enrol now - ₹299 <ArrowRight size={16} /></button>
             <a href={WA} target="_blank" rel="noreferrer" className="josr-btn josr-btn--outline"><MessageCircle size={16} /> Ask on WhatsApp</a>
           </div>
         </div>
@@ -351,7 +351,7 @@ function Section({ title, pill, children }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SCOPED CSS — everything under `.josr-page`
+   SCOPED CSS - everything under `.josr-page`
 ═══════════════════════════════════════════════════════════ */
 const CSS = `
 .josr-page{

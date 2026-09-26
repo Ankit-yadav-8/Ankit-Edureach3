@@ -11,7 +11,7 @@ import Seo, { SITE_URL } from "../components/Seo.jsx";
 const ICON = { github: Github, linkedin: Linkedin, dribbble: Dribbble, website: Globe, instagram: Instagram, whatsapp: MessageCircle, email: Mail };
 const SOCIAL_LABEL = { website: "Website", email: "Email" };
 
-/* ── Square Photo Card — clean, no glow ─────────────────────────── */
+/* ── Square Photo Card - clean, no glow ─────────────────────────── */
 function SquarePhotoCard({ dev }) {
   return (
     <div style={{
@@ -38,7 +38,7 @@ function SquarePhotoCard({ dev }) {
   );
 }
 
-/* ── Initials avatar (fallback for non-photo devs) — clean, no glow ── */
+/* ── Initials avatar (fallback for non-photo devs) - clean, no glow ── */
 function DevGlowLogo({ initials, accent, size = 110 }) {
   return (
     <div style={{
@@ -126,7 +126,7 @@ export default function Developer() {
   return (
     <div className="page">
       <Seo
-        title={`${dev.name} — ${dev.role} at CampusPoint`}
+        title={`${dev.name} - ${dev.role} at CampusPoint`}
         description={seoDesc}
         path={`/team/${dev.id}`}
         type="profile"
@@ -220,7 +220,7 @@ export default function Developer() {
                 "{dev.tagline}"
               </p>
 
-              {/* All connect links in one simple card — uniform clickable buttons */}
+              {/* All connect links in one simple card - uniform clickable buttons */}
               <div style={{
                 background: "var(--page-bg)", border: "1px solid #ececec", borderRadius: 16,
                 padding: "16px 18px", boxShadow: "0 6px 20px rgba(13,27,62,.06)", maxWidth: 560,
@@ -401,7 +401,7 @@ export default function Developer() {
               Want to work together?
             </h3>
             <p style={{ color: "var(--muted)", marginBottom: 14 }}>
-              Reach out — always happy to chat about projects and ideas.
+              Reach out - always happy to chat about projects and ideas.
             </p>
             <div
               style={{

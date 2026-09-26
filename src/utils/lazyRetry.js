@@ -15,7 +15,7 @@ async function load(factory) {
   try {
     return await factory();
   } catch (err) {
-    // one silent retry — covers transient network/CDN hiccups
+    // one silent retry - covers transient network/CDN hiccups
     await new Promise((r) => setTimeout(r, 350));
     try {
       return await factory();
@@ -26,7 +26,7 @@ async function load(factory) {
           window.location.reload();
           return await new Promise(() => {}); // hold render; the page is reloading
         }
-      } catch { /* sessionStorage unavailable — fall through and surface the error */ }
+      } catch { /* sessionStorage unavailable - fall through and surface the error */ }
       throw err2;
     }
   }
@@ -34,7 +34,7 @@ async function load(factory) {
 
 export function lazyRetry(factory) {
   const Comp = lazy(() => load(factory));
-  // Warm the chunk ahead of navigation (hover / idle). Errors are ignored —
+  // Warm the chunk ahead of navigation (hover / idle). Errors are ignored -
   // this is best-effort prefetch, the real load still goes through load().
   Comp.preload = () => { try { factory(); } catch { /* ignore */ } };
   return Comp;

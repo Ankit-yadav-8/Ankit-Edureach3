@@ -7,7 +7,7 @@ import {
 import Reveal from "../Reveal.jsx";
 
 /* ════════════════════════════════════════════════
-   MENTORSHIP — home section (light, animated)
+   MENTORSHIP - home section (light, animated)
    Sits just below the three predictor cards.
 ════════════════════════════════════════════════ */
 const PROGRAMS = [
@@ -19,7 +19,7 @@ const PROGRAMS = [
     tag: "Class 12 · Droppers",
     price: "13999",
     old: "24999",
-    blurb: "For serious 2027 aspirants who want to fix backlog, build consistency and push their rank — fast.",
+    blurb: "For serious 2027 aspirants who want to fix backlog, build consistency and push their rank - fast.",
     points: ["1-on-1 IITian / doctor mentor", "Daily targets + weekly test analysis", "Backlog clearing sprints"],
     featured: false,
   },
@@ -79,7 +79,7 @@ export default function MentorshipHome() {
               <span style={{ background: "linear-gradient(90deg,#FF693D,#FF693D)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Own Your Future.</span>
             </h2>
             <p style={{ color: "#4b5563", fontSize: "1.05rem", lineHeight: 1.75, maxWidth: 660, margin: "0 auto" }}>
-              CampusPoint's 1-on-1 mentorship helps serious JEE &amp; NEET aspirants cut through the confusion — a personal IITian / doctor mentor, daily accountability, and a plan that actually works. Pick the program that fits where you are.
+              CampusPoint's 1-on-1 mentorship helps serious JEE &amp; NEET aspirants cut through the confusion - a personal IITian / doctor mentor, daily accountability, and a plan that actually works. Pick the program that fits where you are.
             </p>
           </div>
         </Reveal>
@@ -153,7 +153,7 @@ export default function MentorshipHome() {
                       boxShadow: `0 10px 24px -8px ${p.color}aa`,
                     }}
                   >
-                    Enrol — ₹{p.price} <ArrowRight size={16} />
+                    Enrol - ₹{p.price} <ArrowRight size={16} />
                   </Link>
                 </motion.div>
               </Reveal>

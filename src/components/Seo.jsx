@@ -1,5 +1,5 @@
 /* ============================================================
-   Seo.jsx — per-page SEO for the client-rendered SPA.
+   Seo.jsx - per-page SEO for the client-rendered SPA.
 
    Because this is a Vite SPA (no server rendering), every route
    otherwise serves the homepage <title> / description from
@@ -10,7 +10,7 @@
 
    Usage:
      <Seo
-       title="IIT Bombay — Cutoffs, Reviews & Placements"
+       title="IIT Bombay - Cutoffs, Reviews & Placements"
        description="..."
        path="/colleges/iit-bombay"
        jsonLd={ {...schema.org object...} }   // optional
@@ -26,9 +26,9 @@ export const SITE_URL = "https://campuspoint.in";
 export const BRAND = "CampusPoint";
 
 const DEFAULT_TITLE =
-  "CampusPoint — JEE Rank Predictor & IIT NIT IIIT College Reviews | By IIT Roorkee Alumni";
+  "CampusPoint - JEE Rank Predictor & IIT NIT IIIT College Reviews | By IIT Roorkee Alumni";
 const DEFAULT_DESC =
-  "CampusPoint is a student-built platform by IIT Roorkee alumni — get free JEE Main & Advanced rank predictions, compare IIT NIT IIIT cutoffs, read college reviews, shortlist colleges, and track JoSAA / CSAB counselling deadlines.";
+  "CampusPoint is a student-built platform by IIT Roorkee alumni - get free JEE Main & Advanced rank predictions, compare IIT NIT IIIT cutoffs, read college reviews, shortlist colleges, and track JoSAA / CSAB counselling deadlines.";
 const DEFAULT_IMAGE = `${SITE_URL}/cplogo.svg`;
 
 /** Create or update a <meta> tag, returning a restore fn. */
@@ -85,7 +85,7 @@ export default function Seo({
   const img = image || DEFAULT_IMAGE;
   const kw = Array.isArray(keywords) ? keywords.filter(Boolean).join(", ") : keywords || null;
 
-  // canonical / og:url — strip query + hash, normalise trailing slash
+  // canonical / og:url - strip query + hash, normalise trailing slash
   const cleanPath =
     path ||
     (typeof window !== "undefined" ? window.location.pathname : "/");
@@ -121,7 +121,7 @@ export default function Seo({
     setMeta("name", "twitter:description", desc);
     setMeta("name", "twitter:image", img);
 
-    // Per-page JSON-LD — one <script> per graph, marked for cleanup on unmount.
+    // Per-page JSON-LD - one <script> per graph, marked for cleanup on unmount.
     const scripts = [];
     if (graphsStr) {
       for (const g of JSON.parse(graphsStr)) {

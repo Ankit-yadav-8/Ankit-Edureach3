@@ -1,4 +1,4 @@
-/* BlogPost — full article page at /blog/:slug. Renders the post body, a back
+/* BlogPost - full article page at /blog/:slug. Renders the post body, a back
    control, and a few "read next" cards. */
 import { useEffect } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
@@ -30,7 +30,7 @@ function Spans({ spans, accent }) {
   });
 }
 
-/* Renders one body block — supports rich ({type}) and legacy ({h?,p}) shapes. */
+/* Renders one body block - supports rich ({type}) and legacy ({h?,p}) shapes. */
 function Block({ block, accent }) {
   const pStyle = { fontSize: "1.04rem", lineHeight: 1.85, color: CL.body, margin: "0 0 20px" };
   if (block.type === "h2")
@@ -113,7 +113,7 @@ export default function BlogPost() {
   }, [slug, post]);
 
   // Result cards (Round 1/2/3) live on dedicated pages via `link` and have no
-  // article body — redirect if someone lands on their /blog/:slug directly.
+  // article body - redirect if someone lands on their /blog/:slug directly.
   if (post?.link) return <Navigate to={post.link} replace />;
 
   if (!post || !post.body) {
@@ -131,7 +131,7 @@ export default function BlogPost() {
   const accent = ACCENTS[post.accent] || CL.coral;
   const isNeet = post.category === "NEET";
 
-  // "Read next" — prefer siblings in the same category, then fill from the rest
+  // "Read next" - prefer siblings in the same category, then fill from the rest
   const rest = BLOG_POSTS.filter((p) => p.slug !== post.slug);
   const more = [
     ...rest.filter((p) => p.category === post.category),
@@ -198,8 +198,8 @@ export default function BlogPost() {
 
           <div style={{ marginTop: 30, padding: "18px 20px", borderRadius: 14, background: CL.coralSoft + "66", border: `1px solid ${CL.coral}33`, fontSize: 13.5, color: CL.ink2, lineHeight: 1.6 }}>
             {isNeet
-              ? "These guides are indicative and student-written — cutoffs and fees vary every year, so always verify the latest figures on mcc.nic.in, your state counselling site and nta.ac.in before locking decisions."
-              : "These guides are indicative and student-written — always verify the latest rules on josaa.nic.in / csab.nic.in / nta.ac.in before locking decisions."}
+              ? "These guides are indicative and student-written - cutoffs and fees vary every year, so always verify the latest figures on mcc.nic.in, your state counselling site and nta.ac.in before locking decisions."
+              : "These guides are indicative and student-written - always verify the latest rules on josaa.nic.in / csab.nic.in / nta.ac.in before locking decisions."}
           </div>
 
           {/* read next */}

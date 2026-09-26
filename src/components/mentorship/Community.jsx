@@ -47,7 +47,7 @@ export default function Community({ plan, onSwitchBatch }) {
     signUpload: apiCommunitySignUpload,
   }), [plan]);
 
-  // identity / batch — reloads whenever the selected plan changes
+  // identity / batch - reloads whenever the selected plan changes
   useEffect(() => {
     if (!token) return;
     setLoading(true); setLocked(false); setMe(null);
@@ -108,7 +108,7 @@ export default function Community({ plan, onSwitchBatch }) {
         </div>
         <h3 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: "1.25rem", margin: "0 0 6px" }}>Community is for mentorship students</h3>
         <p style={{ color: MUTE, fontSize: 14.5, maxWidth: 420, margin: "0 auto 16px", lineHeight: 1.6 }}>
-          Join a mentorship batch to meet your batchmates and ask doubts with photos & videos — answered by peers and mentors.
+          Join a mentorship batch to meet your batchmates and ask doubts with photos & videos - answered by peers and mentors.
           Everyone is welcome in the open public community meanwhile.
         </p>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
@@ -149,7 +149,7 @@ export default function Community({ plan, onSwitchBatch }) {
         </span>
       </div>
 
-      {/* batch switcher — only when the student belongs to more than one batch */}
+      {/* batch switcher - only when the student belongs to more than one batch */}
       {otherBatches.length > 0 && (
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 14, background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 14, padding: "10px 14px" }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 800, color: NAVY }}>
@@ -173,7 +173,7 @@ export default function Community({ plan, onSwitchBatch }) {
         {!me.cloudinaryReady && (
           <div style={{ fontSize: 12, color: "#b45309", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginTop: 8, lineHeight: 1.55 }}>
             Photo / video uploads aren't configured on this server
-            (<code style={{ fontFamily: "monospace", background: "#fef3c7", padding: "1px 6px", borderRadius: 5, color: "#92400e" }}>{API_HOST}</code>) yet —
+            (<code style={{ fontFamily: "monospace", background: "#fef3c7", padding: "1px 6px", borderRadius: 5, color: "#92400e" }}>{API_HOST}</code>) yet -
             set the <strong>CLOUDINARY_*</strong> env vars there and redeploy. Text posts work fine.
           </div>
         )}

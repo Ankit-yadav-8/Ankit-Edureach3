@@ -24,7 +24,7 @@ export default function Gallery({ slug, accent = "#1c1c28" }) {
           </button>
         ))}
       </div>
-      <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 10 }}>Representative campus photos from Unsplash — replace with the institute's official images.</p>
+      <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 10 }}>Representative campus photos from Unsplash - replace with the institute's official images.</p>
 
       {open && (
         <div onClick={() => setOpen(null)} style={{ position: "fixed", inset: 0, background: "rgba(13,27,62,.8)", zIndex: 90, display: "grid", placeItems: "center", padding: 20 }}>

@@ -22,7 +22,7 @@ const isPhone = (v) => /^\d{10}$/.test(v);
 const isRank  = (v) => !v || (!isNaN(Number(v)) && Number(v) > 0);
 const EMAIL_ERR = "Use a @gmail.com or .in email address";
 
-/* Indian states & union territories — for the Home state dropdown */
+/* Indian states & union territories - for the Home state dropdown */
 const INDIAN_STATES = [
   "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
   "Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh",
@@ -77,7 +77,7 @@ function validate(mode, f) {
 }
 
 /* ══════════════════════════════════════════════════
-   FIELD — with focus glow, icon, eye-toggle, error
+   FIELD - with focus glow, icon, eye-toggle, error
 ══════════════════════════════════════════════════ */
 function Field({ icon: Icon, error, label, ...props }) {
   const [showPw,  setShowPw]  = useState(false);
@@ -116,7 +116,7 @@ function Field({ icon: Icon, error, label, ...props }) {
 }
 
 /* ══════════════════════════════════════════════════
-   SELECT FIELD — same styling as Field, native dropdown
+   SELECT FIELD - same styling as Field, native dropdown
 ══════════════════════════════════════════════════ */
 function SelectField({ icon: Icon, error, label, options, placeholder, value, ...props }) {
   return (
@@ -236,7 +236,7 @@ function FeaturePills() {
 }
 
 /* ════════════════════════════════════════════════════════════
-   SHOWCASE PANEL — animated left side (desktop only)
+   SHOWCASE PANEL - animated left side (desktop only)
 ════════════════════════════════════════════════════════════ */
 const SHOWCASE = {
   login:  { title: "Welcome back to",     accent: "Campus Point" },
@@ -379,7 +379,7 @@ function ResetStepIndicator({ currentStep }) {
 const HEADS = {
   login:         { emoji: "👋", title: "Welcome back!",        sub: "Continue your college discovery journey." },
   signup:        { emoji: "🚀", title: "Create your account",  sub: "Join 50,000+ JEE aspirants. Free forever." },
-  otpEmail:      { emoji: "✉️", title: "Login with OTP",       sub: "No password needed — we'll email you a code." },
+  otpEmail:      { emoji: "✉️", title: "Login with OTP",       sub: "No password needed - we'll email you a code." },
   forgot:        { emoji: "🔐", title: "Forgot password?",     sub: "Enter your email and we'll send a reset link." },
   resetOtp:      { emoji: "🔢", title: "Enter Reset Code",     sub: "Enter the 6-digit code from your email." },
   resetVerify:   { emoji: "🔑", title: "Verify Token",         sub: "Enter the verification token to continue." },
@@ -388,7 +388,7 @@ const HEADS = {
 
 export default function AuthModal() {
   const { loginOpen, closeLogin, login, signup, saveSession, loginMode } = useAuth();
-  // Login is optional — guests browse freely and open this modal on demand,
+  // Login is optional - guests browse freely and open this modal on demand,
   // so it is always dismissible (close X + "browse as guest" skip link).
   const mandatory = false;
   const [mode,    setMode]   = useState("login");
@@ -473,7 +473,7 @@ export default function AuthModal() {
     } catch (e) {
       const msg = e.message || "";
       const friendly = msg.includes("timed out") || msg.includes("AbortError")
-        ? "Server is taking too long. It may be waking up — try again in a few seconds."
+        ? "Server is taking too long. It may be waking up - try again in a few seconds."
         : msg.includes("fetch") || msg.includes("Failed") || msg.includes("network")
           ? "No connection. Check your internet and try again."
           : msg || "Something went wrong.";
@@ -508,7 +508,7 @@ export default function AuthModal() {
     }
   });
 
-  // ── STEP 1: Forgot password — send OTP email ──────────────────────────────
+  // ── STEP 1: Forgot password - send OTP email ──────────────────────────────
   const doForgot  = run(async () => {
     const r = await apiForgot({ email: f.email.trim() });
     if (r.ok && r.exists) {
@@ -537,7 +537,7 @@ export default function AuthModal() {
   }, "resetOtp");
 
   // ── STEP 3: User enters the verification token from their email ────────────
-  // No client-side comparison — the token goes directly to /reset for server validation
+  // No client-side comparison - the token goes directly to /reset for server validation
   const doVerifyToken = run(async () => {
     // Just move to the password screen, carrying the token forward.
     // The actual validation happens server-side when they submit the new password.
@@ -558,7 +558,7 @@ export default function AuthModal() {
   const BACK = ["otpEmail", "otpCode", "forgot", "resetOtp", "resetVerify", "resetPassword"];
   const H    = HEADS[mode] ?? HEADS.login;
 
-  const busyLabel = slowNet ? "Server starting up — please wait…"
+  const busyLabel = slowNet ? "Server starting up - please wait…"
     : mode === "login"    ? "Logging in…"
     : mode === "signup"   ? "Creating account…"
     : mode === "otpEmail" ? "Sending code…"
@@ -623,7 +623,7 @@ export default function AuthModal() {
 
               <div className="visual-copy">
                 <h1>Know your rank.<br/>Find your <span>dream college.</span></h1>
-                <p>Built by IIT Roorkee alumni — rank prediction, college shortlists and mentorship in one place.</p>
+                <p>Built by IIT Roorkee alumni - rank prediction, college shortlists and mentorship in one place.</p>
               </div>
             </div>
             )}
@@ -938,7 +938,7 @@ export default function AuthModal() {
                   )}
                 </AnimatePresence>
                 
-                {/* ── skip link — only when auth is optional (logged-in re-auth) ── */}
+                {/* ── skip link - only when auth is optional (logged-in re-auth) ── */}
                 {!mandatory && (mode === "login" || mode === "signup") && (
                   <div style={{ textAlign: "center", marginTop: 14 }}>
                     <button
@@ -954,7 +954,7 @@ export default function AuthModal() {
                       onMouseEnter={e => e.currentTarget.style.color = "#64748b"}
                       onMouseLeave={e => e.currentTarget.style.color = "#b0bac8"}
                     >
-                      Skip for now — browse as guest
+                      Skip for now - browse as guest
                     </button>
                   </div>
                 )}

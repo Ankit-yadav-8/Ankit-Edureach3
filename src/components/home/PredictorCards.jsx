@@ -17,7 +17,7 @@ const CARDS = [
   {
     icon: Crosshair, title: "College Predictor", accent: "#6366f1",
     gradient: "linear-gradient(135deg, #6366f1, #4f46e5)",
-    desc: "Turn your rank into a personalised list of colleges — across all JoSAA & CSAB rounds, with packages & placements.",
+    desc: "Turn your rank into a personalised list of colleges - across all JoSAA & CSAB rounds, with packages & placements.",
     to: "/jee-main#college", cta: "Find My Colleges",
     donut: { data: [{ name: "Safe", value: 40 }, { name: "Moderate", value: 35 }, { name: "Ambitious", value: 25 }], label: "6+2", sub: "JoSAA + CSAB" },
     colors: ["#2EC4B6", "#6366f1", "#FF693D"],
@@ -26,7 +26,7 @@ const CARDS = [
   {
     icon: Building2, title: "College Explorer", accent: "#0EA5A4",
     gradient: "linear-gradient(135deg, #0ea5a4, #0891b2)",
-    desc: "Deep-dive into IITs, NITs & IIITs — cutoffs, fees, branch-wise placements, recruiters and campus life.",
+    desc: "Deep-dive into IITs, NITs & IIITs - cutoffs, fees, branch-wise placements, recruiters and campus life.",
     to: "/colleges", cta: "Explore Colleges",
     donut: { data: [{ name: "IITs", value: 23 }, { name: "NITs", value: 31 }, { name: "IIITs", value: 26 } ], label: "80+", sub: "institutes" },
     colors: ["#FF693D", "#0EA5A4", "#6366f1"],

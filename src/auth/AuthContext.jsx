@@ -31,7 +31,7 @@ function clearCache() {
 // bouncing them to the login screen mid-task.
 const RENEW_WHEN_UNDER_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
 
-/* Reads `exp` out of the JWT body. This is a scheduling hint only — nothing is
+/* Reads `exp` out of the JWT body. This is a scheduling hint only - nothing is
    trusted from it, the server verifies every token on every request. */
 function msUntilExpiry(token) {
   try {
@@ -44,7 +44,7 @@ function msUntilExpiry(token) {
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || "");
 
-  // Only hydrate user from cache if a token also exists —
+  // Only hydrate user from cache if a token also exists -
   // prevents a brief isLoggedIn=true flash when token is gone but cache isn't.
   const [user, setUser] = useState(() => {
     const savedToken = localStorage.getItem(TOKEN_KEY);
@@ -58,7 +58,7 @@ export function AuthProvider({ children }) {
     if (!token) { setUser(null); return; }
     let cancelled = false;
 
-    // Background verify — update user silently; clear if the token is stale.
+    // Background verify - update user silently; clear if the token is stale.
     // This is also where a REVOKED session lands: the server now rejects a token
     // whose version no longer matches the account (password reset, log-out-
     // everywhere), and that 401 signs this device out for real.

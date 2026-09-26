@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Search, Target, Users } from "lucide-react";
 
 /* ════════════════════════════════════════════════
-   HERO — simple, editorial. Warm cream canvas with a
+   HERO - simple, editorial. Warm cream canvas with a
    dotted grid, faint dashed orbits and a giant faint
    "Campus Point" watermark. Word-by-word headline
    reveal ending in a coral script word. No cards / images.
@@ -47,7 +47,7 @@ function useBreakpoint() {
   return { isXs: bp === "xs", isMobile: bp === "mobile" || bp === "xs", isTablet: bp === "tablet" };
 }
 
-/* ── word reveal — black words blur-up, coral keywords spring-pop with a drawn underline ── */
+/* ── word reveal - black words blur-up, coral keywords spring-pop with a drawn underline ── */
 const headVariants = {};
 const blackWord = {};
 const coralWord = {};
@@ -169,10 +169,10 @@ export default function Hero({ onSearch }) {
               <motion.path d="M2 5 C 30 2, 90 2, 118 4" stroke={CORAL} strokeWidth="2.5" strokeLinecap="round" fill="none"
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6, delay: 1.5, ease: "easeInOut" }} />
             </svg>
-          </span> startup — built by IITians, trusted by aspirants
+          </span> startup - built by IITians, trusted by aspirants
         </p>
 
-        {/* CTAs — wide search bar + two action buttons */}
+        {/* CTAs - wide search bar + two action buttons */}
         <div
           style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24, marginTop: isMobile ? "2.4rem" : "2.8rem" }}
         >
@@ -241,7 +241,7 @@ export default function Hero({ onSearch }) {
           </div>
         </div>
 
-        {/* social proof — avatar cluster + count, framed by hairlines */}
+        {/* social proof - avatar cluster + count, framed by hairlines */}
         <div
           style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: isMobile ? 8 : 18, marginTop: isMobile ? "4.5rem" : "5.5rem", width: "100%" }}
         >

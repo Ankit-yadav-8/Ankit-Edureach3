@@ -53,7 +53,7 @@ const LOADING_TIPS = [
   "Scanning 1,000+ college-branch combinations…",
   "Matching your rank against 2025 JoSAA cutoffs…",
   "Calculating fit scores across all rounds…",
-  "Almost there — ranking results by NIRF & branch value…",
+  "Almost there - ranking results by NIRF & branch value…",
 ];
 
 export default function ForYou() {
@@ -84,7 +84,7 @@ export default function ForYou() {
   const downloadMyList = () => {
     if (!myList.length) return;
     const head =
-      `Campus Point — My Choice List (my preference order)\n` +
+      `Campus Point - My Choice List (my preference order)\n` +
       `Rank: ${rank || "-"}   Category: ${category}\n` +
       `Total choices: ${myList.length}\n` +
       `Generated on ${new Date().toLocaleDateString("en-IN")}\n` +
@@ -93,7 +93,7 @@ export default function ForYou() {
       .map((o, i) => {
         const c = COLLEGE_BY_SLUG[o.slug];
         const name = c?.short || o.college;
-        return `${String(i + 1).padStart(2, " ")}. ${name} — ${o.branch}\n` +
+        return `${String(i + 1).padStart(2, " ")}. ${name} - ${o.branch}\n` +
                `     Closing ${fmtRank(o.closing)}  |  Avg ${fmtINR(o.avgPackage)}  |  ${o.tier}`;
       })
       .join("\n\n");
@@ -132,7 +132,7 @@ export default function ForYou() {
       rank: Number(rank),
       category,
       types: profile.types,
-      limit: Infinity,      // no per-group cap — show every eligible option
+      limit: Infinity,      // no per-group cap - show every eligible option
       allBranches: true,    // include every eligible branch of each college
     }, true);
   }
@@ -146,7 +146,7 @@ export default function ForYou() {
   function downloadList() {
     if (!hasResults) return;
     const head =
-      `Campus Point — Colleges For You\n` +
+      `Campus Point - Colleges For You\n` +
       `Exam: ${profile.title} (${profile.sub})\n` +
       `Rank: ${rank || "-"}   Category: ${category}\n` +
       `Generated on ${new Date().toLocaleDateString("en-IN")}\n` +
@@ -159,14 +159,14 @@ export default function ForYou() {
       const lines = picks.map((m, i) => {
         const c = COLLEGE_BY_SLUG[m.slug];
         const name = c?.short || m.college;
-        return `${String(i + 1).padStart(2, " ")}. ${name} — ${m.branch}\n` +
+        return `${String(i + 1).padStart(2, " ")}. ${name} - ${m.branch}\n` +
                `     Closing ${fmtRank(m.closing)}  |  Avg ${fmtINR(m.avgPackage)}  |  ${m.tier}`;
       }).join("\n");
       return `\n${meta.label} (${picks.length})\n${"-".repeat(52)}\n${lines}\n`;
     }).filter(Boolean).join("\n");
 
     const blob = new Blob(
-      [head + sections + "\n(Illustrative — based on 2025 JoSAA cutoffs. Verify on josaa.nic.in)"],
+      [head + sections + "\n(Illustrative - based on 2025 JoSAA cutoffs. Verify on josaa.nic.in)"],
       { type: "text/plain" }
     );
     const url = URL.createObjectURL(blob);
@@ -181,7 +181,7 @@ export default function ForYou() {
     <div className="page">
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
-        title="College For You — Personalised IIT NIT IIIT Shortlist by JEE Rank"
+        title="College For You - Personalised IIT NIT IIIT Shortlist by JEE Rank"
         description="Get a personalised list of IITs, NITs and IIITs you can get with your JEE rank, category, home state and branch preference. Free college shortlist tool based on JoSAA cutoffs."
         path="/for-you"
       />
@@ -326,7 +326,7 @@ export default function ForYou() {
               {LOADING_TIPS[tipIdx]}
             </p>
             <p style={{ color: "var(--muted)", fontSize: 12, marginTop: 12 }}>
-              This runs in the background — feel free to scroll the page
+              This runs in the background - feel free to scroll the page
             </p>
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
@@ -339,7 +339,7 @@ export default function ForYou() {
             borderRadius: 12, padding: "16px 20px", marginBottom: 24,
             color: "#dc2626", fontSize: 14,
           }}>
-            ⚠️ {error} — please try again.
+            ⚠️ {error} - please try again.
           </div>
         )}
 
@@ -347,7 +347,7 @@ export default function ForYou() {
         {hasResults && !loading && (
           <div className="fy-layout">
 
-            {/* LEFT — predicted colleges */}
+            {/* LEFT - predicted colleges */}
             <div className="fy-main">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
                 <p style={{ color: "var(--muted)", fontSize: 14, margin: 0 }}>
@@ -447,7 +447,7 @@ export default function ForYou() {
               })}
             </div>
 
-            {/* RIGHT — your own ordered choice list */}
+            {/* RIGHT - your own ordered choice list */}
             <aside className="fy-aside">
               <div className="card fy-mylist-card">
                 <div className="fy-mylist-head">
@@ -461,7 +461,7 @@ export default function ForYou() {
                 {myList.length === 0 ? (
                   <div className="fy-mylist-empty">
                     <Plus size={26} color="var(--line)" />
-                    <p>Tap <strong>“Add to my list”</strong> on any college to start building your preference order — drag to rank them 1, 2, 3…</p>
+                    <p>Tap <strong>“Add to my list”</strong> on any college to start building your preference order - drag to rank them 1, 2, 3…</p>
                   </div>
                 ) : (
                   <>

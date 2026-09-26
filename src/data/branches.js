@@ -1,4 +1,4 @@
-/* branches.js — engineering branch families ("paths") for the Branch Explorer.
+/* branches.js - engineering branch families ("paths") for the Branch Explorer.
    Each family powers a catalog card + a full /branches/:slug detail page with
    Academics, Advanced Insights (gauge + 5-year salary arc), Colleges & Branches
    and Common Myths tabs. Numbers are indicative India-market estimates, not
@@ -10,7 +10,7 @@ export const BRANCHES = [
     name: "Artificial Intelligence & Data Science",
     icon: "Brain",
     color: "#7B5EA7",
-    desc: "Learn to build intelligent systems that learn from data — covering neural networks, NLP, computer vision, and large-scale analytics. The fastest-growing engineering discipline with roles across every industry vertical.",
+    desc: "Learn to build intelligent systems that learn from data - covering neural networks, NLP, computer vision, and large-scale analytics. The fastest-growing engineering discipline with roles across every industry vertical.",
     tags: ["Math-heavy", "High Tech Access", "New-age pivot"],
     branchCount: 18,
     stats: { jobGrowth: "Very High", medianSalary: "₹28 LPA", aiRisk: 45 },
@@ -26,7 +26,7 @@ export const BRANCHES = [
       tierMatters: 55,
       research: [{ label: "Academic Pubs", value: 92 }, { label: "Industry R&D", value: 88 }, { label: "Lab Funding", value: 78 }],
       researchNote:
-        "One of the fastest-funded areas in India — IndiaAI Mission, corporate AI labs and global remote roles make this a high-mobility field for strong builders.",
+        "One of the fastest-funded areas in India - IndiaAI Mission, corporate AI labs and global remote roles make this a high-mobility field for strong builders.",
       salaryArc: {
         median: { entry: 20, y3: 31, y5: 43 },
         top:    { entry: 46, y3: 67, y5: 92 },
@@ -54,14 +54,14 @@ export const BRANCHES = [
     name: "Computer Science & Information Technology",
     icon: "Monitor",
     color: "#3A86FF",
-    desc: "From algorithms and operating systems to full-stack development and cloud infrastructure — CSE graduates build the software that powers the digital world. One of the highest-demand engineering branches with global career mobility.",
+    desc: "From algorithms and operating systems to full-stack development and cloud infrastructure - CSE graduates build the software that powers the digital world. One of the highest-demand engineering branches with global career mobility.",
     tags: ["Coding-dominated", "Math-heavy", "Full Tech Access"],
     branchCount: 32,
     stats: { jobGrowth: "Very High", medianSalary: "₹30 LPA", aiRisk: 40 },
     aiRiskLabel: "MODERATE RISK",
     academics: {
       summary:
-        "A CSE degree is roughly 25% coding — the rest is computer theory, discrete mathematics, operating systems, networks and algorithms. You learn how machines think, not just how to write apps.",
+        "A CSE degree is roughly 25% coding - the rest is computer theory, discrete mathematics, operating systems, networks and algorithms. You learn how machines think, not just how to write apps.",
       coreSubjects: ["Data Structures & Algorithms", "Operating Systems", "DBMS", "Computer Networks", "Theory of Computation", "Discrete Mathematics"],
       outcomes: ["Software Engineer", "Backend / Full-stack Dev", "Data Engineer", "Product Engineer", "Research / Higher studies (MS)"],
     },
@@ -86,7 +86,7 @@ export const BRANCHES = [
     myths: [
       { myth: "CS is all about writing code.", reality: "Coding is only ~25% of the degree; the rest is computer theory, discrete mathematics, and algorithms." },
       { myth: "You need to be a coding genius beforehand.", reality: "Most IITians start coding from scratch in their first year; the curriculum assumes no prior programming knowledge." },
-      { myth: "Only top-tier colleges get placements.", reality: "Skill and projects matter more than brand for software roles — strong portfolios win across tiers." },
+      { myth: "Only top-tier colleges get placements.", reality: "Skill and projects matter more than brand for software roles - strong portfolios win across tiers." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
@@ -98,14 +98,14 @@ export const BRANCHES = [
     name: "Mathematics & Scientific Computing",
     icon: "Sigma",
     color: "#7B5EA7",
-    desc: "Rigorous training in pure and applied mathematics — probability, optimization, numerical methods, and algorithm design. Graduates dominate quant finance, data science, and research roles with some of the highest starting salaries in India.",
+    desc: "Rigorous training in pure and applied mathematics - probability, optimization, numerical methods, and algorithm design. Graduates dominate quant finance, data science, and research roles with some of the highest starting salaries in India.",
     tags: ["Math-heavy", "Quant / Fintech", "Full Tech Access"],
     branchCount: 11,
     stats: { jobGrowth: "Very High", medianSalary: "₹27 LPA", aiRisk: 42 },
     aiRiskLabel: "LOW–MODERATE RISK",
     academics: {
       summary:
-        "M&C combines deep mathematics with computer science — the standard gateway into quant finance, research and high-end software. Among the highest-paying branches at top IITs.",
+        "M&C combines deep mathematics with computer science - the standard gateway into quant finance, research and high-end software. Among the highest-paying branches at top IITs.",
       coreSubjects: ["Real & Complex Analysis", "Probability & Stochastics", "Numerical Methods", "Algorithms", "Optimization", "Mathematical Finance"],
       outcomes: ["Quant Analyst / Trader", "Software / ML Engineer", "Data Scientist", "Actuary", "Research / Academia"],
     },
@@ -142,14 +142,14 @@ export const BRANCHES = [
     name: "Electrical & Electronics Engineering",
     icon: "CircuitBoard",
     color: "#FF693D",
-    desc: "The backbone of modern electronics — from chip design (VLSI) and embedded systems to power grids and renewable energy. EE graduates drive hardware innovation at Intel, Qualcomm, ISRO, and the EV revolution.",
+    desc: "The backbone of modern electronics - from chip design (VLSI) and embedded systems to power grids and renewable energy. EE graduates drive hardware innovation at Intel, Qualcomm, ISRO, and the EV revolution.",
     tags: ["Math-heavy", "Core & Tech options", "Hardware focus"],
     branchCount: 26,
     stats: { jobGrowth: "Very High", medianSalary: "₹24 LPA", aiRisk: 40 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
-        "ECE/EE blends physics and math: circuits, signals, electromagnetics and control. It keeps both doors open — core electronics/VLSI roles and software/embedded roles.",
+        "ECE/EE blends physics and math: circuits, signals, electromagnetics and control. It keeps both doors open - core electronics/VLSI roles and software/embedded roles.",
       coreSubjects: ["Signals & Systems", "Digital Electronics", "Microprocessors", "VLSI Design", "Control Systems", "Electromagnetics"],
       outcomes: ["VLSI / Chip Design Engineer", "Embedded Systems Engineer", "Power Engineer", "Hardware Engineer", "Software (tech pivot)"],
     },
@@ -193,7 +193,7 @@ export const BRANCHES = [
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
-        "Applied-science branches (Engineering Physics, Engineering Chemistry, Earth Sciences) build deep fundamentals with engineering exposure — ideal launchpads for research, quantum/semiconductor work and tech pivots.",
+        "Applied-science branches (Engineering Physics, Engineering Chemistry, Earth Sciences) build deep fundamentals with engineering exposure - ideal launchpads for research, quantum/semiconductor work and tech pivots.",
       coreSubjects: ["Quantum Mechanics", "Electromagnetism", "Solid State Physics", "Applied Chemistry", "Computational Methods", "Photonics / Optics"],
       outcomes: ["Research Scientist", "Semiconductor / Photonics", "Software / Data pivot", "Higher studies (MS/PhD)", "Deep-tech startups"],
     },
@@ -230,14 +230,14 @@ export const BRANCHES = [
     name: "Chemical Engineering",
     icon: "FlaskConical",
     color: "#3A86FF",
-    desc: "Convert raw materials into fuels, pharmaceuticals, polymers, and specialty chemicals at industrial scale. Chemical engineers master reaction kinetics, process simulation, and plant design — essential to energy, pharma, and semiconductor manufacturing.",
+    desc: "Convert raw materials into fuels, pharmaceuticals, polymers, and specialty chemicals at industrial scale. Chemical engineers master reaction kinetics, process simulation, and plant design - essential to energy, pharma, and semiconductor manufacturing.",
     tags: ["Math + Chem", "Core-heavy", "Energy / Pharma"],
     branchCount: 12,
     stats: { jobGrowth: "Stable", medianSalary: "₹17 LPA", aiRisk: 33 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
-        "Chemical engineers turn raw materials into useful products at scale — fuels, polymers, pharma and food. Strong process, transport and thermodynamics fundamentals open energy and analytics careers too.",
+        "Chemical engineers turn raw materials into useful products at scale - fuels, polymers, pharma and food. Strong process, transport and thermodynamics fundamentals open energy and analytics careers too.",
       coreSubjects: ["Transport Phenomena", "Thermodynamics", "Reaction Engineering", "Process Control", "Mass Transfer", "Plant Design"],
       outcomes: ["Process Engineer", "Energy / Oil & Gas", "Pharma / FMCG", "Data / Analytics pivot", "Higher studies (MS)"],
     },
@@ -262,7 +262,7 @@ export const BRANCHES = [
     myths: [
       { myth: "Chemical = only oil refineries.", reality: "Pharma, FMCG, specialty chemicals and analytics absorb large numbers of grads." },
       { myth: "No software pivot possible.", reality: "Process-analytics and data roles are a common, well-paid transition." },
-      { myth: "It's the same as a chemistry degree.", reality: "It's design and scale engineering — very different from lab chemistry." },
+      { myth: "It's the same as a chemistry degree.", reality: "It's design and scale engineering - very different from lab chemistry." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
       { myth: "Only top-tier colleges get placements.", reality: "Skills, projects, and off-campus drives can level the playing field regardless of your college." }
@@ -274,14 +274,14 @@ export const BRANCHES = [
     name: "Mechanical Engineering",
     icon: "Cog",
     color: "#E29A2E",
-    desc: "The most versatile engineering degree — covering thermal systems, robotics, CAD/CAM, and manufacturing. Mechanical engineers work everywhere from automotive plants and aerospace labs to consulting firms and tech startups.",
+    desc: "The most versatile engineering degree - covering thermal systems, robotics, CAD/CAM, and manufacturing. Mechanical engineers work everywhere from automotive plants and aerospace labs to consulting firms and tech startups.",
     tags: ["Core-heavy", "Design-focused", "Robotics pivot"],
     branchCount: 22,
     stats: { jobGrowth: "Stable", medianSalary: "₹18 LPA", aiRisk: 32 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
-        "The broadest engineering branch — thermodynamics, mechanics, manufacturing and design. Modern Mech increasingly overlaps with robotics, mechatronics and EV systems.",
+        "The broadest engineering branch - thermodynamics, mechanics, manufacturing and design. Modern Mech increasingly overlaps with robotics, mechatronics and EV systems.",
       coreSubjects: ["Thermodynamics", "Strength of Materials", "Fluid Mechanics", "Machine Design", "Manufacturing", "Robotics & Control", "Kinematics", "Finite Element Analysis", "Heat Transfer"],
       outcomes: ["Design Engineer", "Robotics Engineer", "Manufacturing / Production", "Automotive / EV Engineer", "Higher studies (MS)", "Aerospace Engineer", "Systems Engineer", "HVAC Engineer"],
     },
@@ -324,14 +324,14 @@ export const BRANCHES = [
     name: "Aerospace Engineering & Avionics",
     icon: "Rocket",
     color: "#3A86FF",
-    desc: "Design aircraft, rockets, drones, and satellites — covering aerodynamics, propulsion, orbital mechanics, and composite structures. With India's booming space-tech and defence sectors, aerospace offers some of the most exciting career trajectories.",
+    desc: "Design aircraft, rockets, drones, and satellites - covering aerodynamics, propulsion, orbital mechanics, and composite structures. With India's booming space-tech and defence sectors, aerospace offers some of the most exciting career trajectories.",
     tags: ["Math-heavy", "Core-heavy", "Defence / Space"],
     branchCount: 9,
     stats: { jobGrowth: "Growing", medianSalary: "₹19 LPA", aiRisk: 34 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
-        "Aerospace engineers design and analyse aircraft, rockets and satellites — combining fluid dynamics, structures, propulsion and control. India's private-space surge (ISRO + NewSpace startups) has revived demand sharply.",
+        "Aerospace engineers design and analyse aircraft, rockets and satellites - combining fluid dynamics, structures, propulsion and control. India's private-space surge (ISRO + NewSpace startups) has revived demand sharply.",
       coreSubjects: ["Aerodynamics", "Propulsion", "Flight Mechanics", "Aerospace Structures", "Orbital Mechanics", "Control Systems"],
       outcomes: ["Aerospace / Avionics Engineer", "Propulsion Engineer", "ISRO / DRDO / HAL", "Space-tech Startups", "Higher studies (MS)"],
     },
@@ -355,7 +355,7 @@ export const BRANCHES = [
     ],
     myths: [
       { myth: "Only ISRO hires aerospace grads.", reality: "Private space, drones, defence and even auto-aero CFD roles now recruit widely." },
-      { myth: "You must clear NDA / be a pilot.", reality: "Aerospace is design and analysis engineering — entirely separate from flying." },
+      { myth: "You must clear NDA / be a pilot.", reality: "Aerospace is design and analysis engineering - entirely separate from flying." },
       { myth: "No scope in India.", reality: "NewSpace startups and ISRO commercialisation have made it one of the fastest-rising core fields." },
       { myth: "You need to be a topper to succeed.", reality: "Consistency and practical skills matter far more than just grades." },
       { myth: "It's impossible to switch fields later.", reality: "Engineering teaches problem-solving; graduates successfully pivot to finance, management, and design." },
@@ -368,14 +368,14 @@ export const BRANCHES = [
     name: "Civil Engineering & Architecture",
     icon: "Building2",
     color: "#0FAE6E",
-    desc: "Design bridges, skyscrapers, highways, and water systems that shape cities. Civil engineering combines structural analysis, geotechnical science, and urban planning — with massive growth in India's ₹111-lakh-crore infrastructure push.",
+    desc: "Design bridges, skyscrapers, highways, and water systems that shape cities. Civil engineering combines structural analysis, geotechnical science, and urban planning - with massive growth in India's ₹111-lakh-crore infrastructure push.",
     tags: ["Core-heavy", "Design-focused", "Infra growth"],
     branchCount: 16,
     stats: { jobGrowth: "Growing", medianSalary: "₹15 LPA", aiRisk: 31 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
-        "Civil shapes the physical world — structures, transportation, water and the environment. India's infrastructure spend keeps demand steady, with growth in smart-city and green-building work.",
+        "Civil shapes the physical world - structures, transportation, water and the environment. India's infrastructure spend keeps demand steady, with growth in smart-city and green-building work.",
       coreSubjects: ["Structural Analysis", "Geotechnical Engg", "Transportation Engg", "Fluid Mechanics", "Environmental Engg", "Construction Management"],
       outcomes: ["Structural Engineer", "Site / Project Engineer", "Urban Planner", "Construction Manager", "Govt / PSU roles"],
     },
@@ -412,14 +412,14 @@ export const BRANCHES = [
     name: "Materials Science & Metallurgical Engineering",
     icon: "Layers",
     color: "#E29A2E",
-    desc: "Engineer advanced alloys, nanomaterials, and composites that make aircraft lighter and phones tougher. Materials scientists work at the intersection of physics and chemistry — powering breakthroughs in semiconductors, batteries, and biomaterials.",
+    desc: "Engineer advanced alloys, nanomaterials, and composites that make aircraft lighter and phones tougher. Materials scientists work at the intersection of physics and chemistry - powering breakthroughs in semiconductors, batteries, and biomaterials.",
     tags: ["Core-heavy", "PSU-friendly", "Research depth"],
     branchCount: 14,
     stats: { jobGrowth: "Growing", medianSalary: "₹16 LPA", aiRisk: 29 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
-        "Materials & mining engineers design and extract the substances everything else is built from — alloys, semiconductors, batteries and minerals. Deep research scope with strong PSU routes.",
+        "Materials & mining engineers design and extract the substances everything else is built from - alloys, semiconductors, batteries and minerals. Deep research scope with strong PSU routes.",
       coreSubjects: ["Physical Metallurgy", "Materials Characterization", "Mineral Processing", "Mining Methods", "Nanomaterials", "Phase Transformations"],
       outcomes: ["Metallurgist", "Mining Engineer", "Materials Researcher", "PSU (SAIL, Coal India)", "Battery / Semiconductor R&D"],
     },
@@ -456,7 +456,7 @@ export const BRANCHES = [
     name: "Production & Industrial Engineering",
     icon: "Factory",
     color: "#7B5EA7",
-    desc: "Optimize factories, supply chains, and business operations using data-driven decision-making, operations research, and lean manufacturing. Industrial engineers are the bridge between engineering and management — highly valued in consulting, logistics, and tech.",
+    desc: "Optimize factories, supply chains, and business operations using data-driven decision-making, operations research, and lean manufacturing. Industrial engineers are the bridge between engineering and management - highly valued in consulting, logistics, and tech.",
     tags: ["Core + Ops", "Management pivot", "Analytics"],
     branchCount: 9,
     stats: { jobGrowth: "High", medianSalary: "₹18 LPA", aiRisk: 30 },
@@ -500,14 +500,14 @@ export const BRANCHES = [
     name: "Biotechnology & Bio-Sciences",
     icon: "Dna",
     color: "#0FAE6E",
-    desc: "Where biology meets engineering — from genetic engineering and drug discovery to biomedical devices and bioinformatics. A rapidly expanding field driven by the global biotech, pharma, and personalized-medicine revolution.",
+    desc: "Where biology meets engineering - from genetic engineering and drug discovery to biomedical devices and bioinformatics. A rapidly expanding field driven by the global biotech, pharma, and personalized-medicine revolution.",
     tags: ["Bio + Math", "Research-led", "Health-tech"],
     branchCount: 13,
     stats: { jobGrowth: "Emerging", medianSalary: "₹15 LPA", aiRisk: 35 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
-        "Biotech engineering applies engineering rigor to biology — bioprocessing, genomics and bioinformatics. The computational/bioinformatics crossover opens strong analytics careers.",
+        "Biotech engineering applies engineering rigor to biology - bioprocessing, genomics and bioinformatics. The computational/bioinformatics crossover opens strong analytics careers.",
       coreSubjects: ["Biochemistry", "Bioprocess Engineering", "Genetic Engineering", "Bioinformatics", "Cell Biology", "Immunology"],
       outcomes: ["Bioprocess Engineer", "Bioinformatics Analyst", "Pharma / R&D", "Health-tech Engineer", "Higher studies (MS/PhD)"],
     },
@@ -588,14 +588,14 @@ export const BRANCHES = [
     name: "Petroleum & Energy Studies",
     icon: "Fuel",
     color: "#0FAE6E",
-    desc: "Master subsurface fluid mechanics, drilling technologies, and reservoir simulation for oil, gas, and geothermal energy. Petroleum engineers are pivoting into hydrogen, carbon capture, and clean-energy storage — making this a transition-era powerhouse.",
+    desc: "Master subsurface fluid mechanics, drilling technologies, and reservoir simulation for oil, gas, and geothermal energy. Petroleum engineers are pivoting into hydrogen, carbon capture, and clean-energy storage - making this a transition-era powerhouse.",
     tags: ["Core-heavy", "Energy sector", "High pay"],
     branchCount: 8,
     stats: { jobGrowth: "Cyclical", medianSalary: "₹18 LPA", aiRisk: 35 },
     aiRiskLabel: "LOW RISK",
     academics: {
       summary:
-        "Petroleum & energy engineers handle exploration, drilling and reservoir management — and increasingly the transition to clean energy (hydrogen, CCUS, geothermal). Strong pay in oil & gas, with a widening green-energy door.",
+        "Petroleum & energy engineers handle exploration, drilling and reservoir management - and increasingly the transition to clean energy (hydrogen, CCUS, geothermal). Strong pay in oil & gas, with a widening green-energy door.",
       coreSubjects: ["Reservoir Engineering", "Drilling Technology", "Petroleum Geology", "Production Engineering", "Energy Systems", "Process Safety"],
       outcomes: ["Reservoir / Drilling Engineer", "Energy Analyst", "Oil & Gas (ONGC, Shell)", "Renewables / Hydrogen", "Higher studies (MS)"],
     },
@@ -632,7 +632,7 @@ export const BRANCHES = [
     name: "Naval Architecture & Ocean Engineering",
     icon: "Anchor",
     color: "#FF693D",
-    desc: "Design ships, submarines, offshore platforms, and ocean energy systems. Naval architecture combines fluid dynamics, structural engineering, and marine technology — with career paths spanning defence shipyards, shipping corporations, and offshore energy.",
+    desc: "Design ships, submarines, offshore platforms, and ocean energy systems. Naval architecture combines fluid dynamics, structural engineering, and marine technology - with career paths spanning defence shipyards, shipping corporations, and offshore energy.",
     tags: ["Core-heavy", "Niche", "Defence / Marine"],
     branchCount: 6,
     stats: { jobGrowth: "Niche", medianSalary: "₹17 LPA", aiRisk: 31 },
@@ -694,7 +694,7 @@ export const BRANCH_DEEP = {
   "ai-data-science": {
     studyMeters: [{ label: "Programming", level: "HEAVY" }, { label: "Concepts", level: "HEAVY" }, { label: "Quant", level: "HEAVY" }, { label: "Hands-on", level: "LIGHT" }],
     outcomeSplit: [{ label: "AI / ML roles", pct: 62 }, { label: "Software", pct: 19 }, { label: "Higher studies", pct: 14 }, { label: "Other paths", pct: 5 }],
-    placement: { headline: "Strong AI/ML demand", note: "Top labs and product teams recruit data-science cohorts early — strong project portfolios win." },
+    placement: { headline: "Strong AI/ML demand", note: "Top labs and product teams recruit data-science cohorts early - strong project portfolios win." },
     careerRoles: [
       { role: "AI Engineer", direct: true }, { role: "ML Engineer", direct: true },
       { role: "Data Scientist", direct: true }, { role: "Data Analyst", direct: true },

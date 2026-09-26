@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { CL } from "./home/clTheme.js";
 
-/* Subject accents — mirror the JEE mind-maps page */
+/* Subject accents - mirror the JEE mind-maps page */
 const SUBJECT_META = {
   physics:   { Icon: Atom,         accent: CL.coral },
   chemistry: { Icon: FlaskConical, accent: CL.green },
@@ -23,7 +23,7 @@ const download = (href, name) => {
 };
 
 /* ════════════════════════════════════════════════════════════════
-   MIND-MAP VIEWER — full-screen gallery for one chapter's pages
+   MIND-MAP VIEWER - full-screen gallery for one chapter's pages
    ════════════════════════════════════════════════════════════════ */
 export default function MindMapViewer({ open, subjectId, chapter, onClose }) {
   const meta = SUBJECT_META[subjectId] || SUBJECT_META.physics;

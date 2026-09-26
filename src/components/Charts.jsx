@@ -1,5 +1,5 @@
 /* ============================================================
-   Charts.jsx — lazy façade over ChartsImpl.jsx (recharts)
+   Charts.jsx - lazy façade over ChartsImpl.jsx (recharts)
    ------------------------------------------------------------
    Same exports, same props as before. The only change is WHEN
    recharts loads.
@@ -7,7 +7,7 @@
    Why this indirection exists:
    recharts is ~430KB and eight lazy routes import these charts.
    Because the module was shared by that many dynamic chunks, the
-   bundler hoisted it into their common ancestor — the entry —
+   bundler hoisted it into their common ancestor - the entry -
    so every page statically imported and preloaded all of recharts,
    including pages with no chart at all (/admin, /tools, /mentor).
    Manual chunking can't undo that: the edge is created by the
@@ -51,7 +51,7 @@ function Slot({ height }) {
   );
 }
 
-/* Defaults mirror ChartsImpl's own signatures — the placeholder must reserve
+/* Defaults mirror ChartsImpl's own signatures - the placeholder must reserve
    the same space the chart will occupy, or deferring it would shift layout. */
 export function CenterDonut(props) {
   return (
@@ -61,7 +61,7 @@ export function CenterDonut(props) {
   );
 }
 export function DonutLegend(props) {
-  // A text legend, not a chart — no meaningful height to reserve.
+  // A text legend, not a chart - no meaningful height to reserve.
   return <Suspense fallback={null}><DonutLegendImpl {...props} /></Suspense>;
 }
 export function PieWithLegend(props) {

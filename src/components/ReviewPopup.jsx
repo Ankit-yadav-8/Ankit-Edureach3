@@ -1,4 +1,4 @@
-/* ReviewPopup — a friendly hostel & mess review prompt that slides in
+/* ReviewPopup - a friendly hostel & mess review prompt that slides in
    after the visitor has spent ~2 minutes on the site. Collects their name,
    the college (searchable list of every college we track), and a star
    rating + quick tags + free text for both the hostel and the mess.
@@ -59,7 +59,7 @@ function Tags({ options, selected, onToggle, accent }) {
   );
 }
 
-/* One review block (hostel or mess) — icon header, stars, tags, textarea. */
+/* One review block (hostel or mess) - icon header, stars, tags, textarea. */
 function ReviewBlock({ icon: Icon, title, accent, rating, setRating, tags, allTags, toggleTag, text, setText, placeholder }) {
   return (
     <div style={{ background: "#faf9f7", border: "1px solid rgba(33,29,46,.08)", borderRadius: 14, padding: "14px 16px" }}>

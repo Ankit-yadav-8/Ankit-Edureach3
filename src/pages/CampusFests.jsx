@@ -159,8 +159,8 @@ export default function CampusFests() {
   return (
     <div style={{ background: "var(--page-bg)", minHeight: "100vh", paddingBottom: 100 }}>
       <Seo
-        title="Campus Fests 2026 — Tech, Cultural & Management Fests of IITs, NITs & More"
-        description="Discover 2026 college fests across India — tech, cultural and management festivals at IITs, NITs, IIITs and top universities. Dates, events, locations and how to participate."
+        title="Campus Fests 2026 - Tech, Cultural & Management Fests of IITs, NITs & More"
+        description="Discover 2026 college fests across India - tech, cultural and management festivals at IITs, NITs, IIITs and top universities. Dates, events, locations and how to participate."
         path="/campus-fests"
         breadcrumbs={[{ name: "Home", path: "/" }, { name: "Campus Fests", path: "/campus-fests" }]}
       />

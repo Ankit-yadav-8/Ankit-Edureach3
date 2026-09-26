@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 
 /* ════════════════════════════════════════════════════════════
-   Counselling 2026 — sticky sell card shown beside the
+   Counselling 2026 - sticky sell card shown beside the
    College Predictor on the JEE Main / JEE Advanced pages.
 ════════════════════════════════════════════════════════════ */
 
@@ -30,7 +30,7 @@ const FEATURES = [
   "1-on-1 expert guidance through every JoSAA round",
   "Personalised choice-filling order (college + branch)",
   "Real cutoff & seat-matrix analysis for your rank",
-  "Document & reporting checklist — zero mistakes",
+  "Document & reporting checklist - zero mistakes",
   "Dedicated WhatsApp support till seat allotment",
 ];
 
@@ -158,7 +158,7 @@ export default function CounsellingCard({ exam = "main", whatsapp = "91811882619
             className="cc-btn-primary"
             style={{ background: `linear-gradient(135deg, ${v.accent}, ${v.accentDark})`, boxShadow: `0 10px 26px ${v.accent}55` }}
           >
-            Enroll Now — ₹299 <ArrowRight size={17} />
+            Enroll Now - ₹299 <ArrowRight size={17} />
           </Link>
           <a
             href={`https://wa.me/${whatsapp}?text=${encodeURIComponent("Hi! I want to know more about Counselling 2026.")}`}

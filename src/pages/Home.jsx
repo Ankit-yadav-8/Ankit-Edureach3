@@ -1,4 +1,4 @@
-/* Home — rebuilt as a short, focused hub.
+/* Home - rebuilt as a short, focused hub.
    Hero → tools → branch catalog → rank-to-cutoff → branch vs college →
    plans → explore/premium colleges → admission timeline → FAQ. News, the
    application radar and top-colleges blocks now live on dedicated pages. */
@@ -120,31 +120,31 @@ export default function Home({ onSearch }) {
 
       {/* Every section below the fold is gated on approaching the viewport.
           They were lazy() but rendered immediately, which splits the code
-          without delaying it — all nine fetched and executed during load,
+          without delaying it - all nine fetched and executed during load,
           costing ~1.3s of blocking time for pixels nobody had scrolled to. */}
       
-      {/* ── Branch Explorer — 220+ branches, 10 paths ── */}
+      {/* ── Branch Explorer - 220+ branches, 10 paths ── */}
       <Defer minHeight={520}><BranchCatalog /></Defer>
 
       {/* ── JoSAA · JEE Advanced rank predictor (full tool) ── */}
       <Defer minHeight={640}><AdvancedPredictorHome /></Defer>
 
-      {/* ── College Reviews — give a review / browse by college ── */}
+      {/* ── College Reviews - give a review / browse by college ── */}
       <Defer minHeight={480}><CollegeReviews /></Defer>
 
-      {/* ── Branch vs College — 6-question assessment ── */}
+      {/* ── Branch vs College - 6-question assessment ── */}
       <Defer minHeight={480}><BranchVsCollege /></Defer>
 
       {/* ── 1-on-1 Mentorship plans ── */}
       <Defer minHeight={560}><PlansSection /></Defer>
 
-      {/* ── Explore Colleges — flagship IITs (tool-style cards) ── */}
+      {/* ── Explore Colleges - flagship IITs (tool-style cards) ── */}
       <Defer minHeight={520}><ExploreColleges /></Defer>
 
       {/* ── Premium colleges that take your JEE rank (outside JoSAA) ── */}
       <Defer minHeight={520}><PremiumColleges /></Defer>
 
-      {/* ── Admission timeline — wavy quarter rail, auto-advancing "NOW" ── */}
+      {/* ── Admission timeline - wavy quarter rail, auto-advancing "NOW" ── */}
       <Defer minHeight={520}><AdmissionTimeline /></Defer>
 
       {/* ── FAQ ── */}

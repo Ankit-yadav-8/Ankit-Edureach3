@@ -16,7 +16,7 @@ export function validateFile(file) {
 }
 
 // Downscale + re-encode large photos in the browser so uploads are fast and
-// light — a 5 MB phone photo becomes ~300–600 KB with no visible quality loss
+// light - a 5 MB phone photo becomes ~300–600 KB with no visible quality loss
 // for a doubt screenshot. Videos & GIFs pass through untouched.
 export async function compressImage(file, { maxDim = 1600, quality = 0.82 } = {}) {
   if (!file.type.startsWith("image/") || file.type === "image/gif") return file;
@@ -25,7 +25,7 @@ export async function compressImage(file, { maxDim = 1600, quality = 0.82 } = {}
     const bitmap = await createImageBitmap(file);
     const longest = Math.max(bitmap.width, bitmap.height);
     const scale = Math.min(1, maxDim / longest);
-    // Already small enough — don't waste time re-encoding.
+    // Already small enough - don't waste time re-encoding.
     if (scale === 1 && file.size < 700 * 1024) { bitmap.close?.(); return file; }
     const w = Math.round(bitmap.width * scale);
     const h = Math.round(bitmap.height * scale);
@@ -84,7 +84,7 @@ export async function uploadPdf(file, sig, onProgress) {
         else reject(new Error(data?.error?.message || "Upload failed"));
       } catch { reject(new Error("Upload failed")); }
     };
-    xhr.onerror = () => reject(new Error("Upload failed — check your connection."));
+    xhr.onerror = () => reject(new Error("Upload failed - check your connection."));
     xhr.send(form);
   });
   return res.secure_url;
@@ -119,7 +119,7 @@ export async function uploadToCloudinary(file, sig, onProgress) {
         reject(new Error("Upload failed"));
       }
     };
-    xhr.onerror = () => reject(new Error("Upload failed — check your connection."));
+    xhr.onerror = () => reject(new Error("Upload failed - check your connection."));
     xhr.send(form);
   });
 

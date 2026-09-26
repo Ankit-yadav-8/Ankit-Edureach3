@@ -1,4 +1,4 @@
-/* CollegeSnapshot — rich college info section for the home page */
+/* CollegeSnapshot - rich college info section for the home page */
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -143,7 +143,7 @@ export default function CollegeSnapshot() {
             Everything About <span className="accent">Top Institutes</span>
           </h2>
           <p className="section-sub" style={{ color: "#4b5563" }}>
-            NIRF rankings, avg placements, placed % and CSE cutoff ranges — updated for 2026.
+            NIRF rankings, avg placements, placed % and CSE cutoff ranges - updated for 2026.
           </p>
         </motion.div>
 

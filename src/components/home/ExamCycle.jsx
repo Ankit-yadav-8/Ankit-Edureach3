@@ -446,14 +446,14 @@ export default function ExamCycle() {
             Complete Exam Timeline <span className="accent">Sep 2025 → Dec 2026</span>
           </h2>
           <p className="section-sub" style={{ color: "#4b5563" }}>
-            Every major engineering entrance — dates, application fees, total seats, and exactly what you unlock by qualifying.
+            Every major engineering entrance - dates, application fees, total seats, and exactly what you unlock by qualifying.
           </p>
         </motion.div>
 
         {/* ── Phase-wise timeline: one-page rail (left) + complete details (right) ── */}
         <div className="exam-timeline-grid">
 
-          {/* LEFT — one-page phase timeline rail */}
+          {/* LEFT - one-page phase timeline rail */}
           <motion.div
             className="exam-timeline-rail"
             initial={{ opacity: 0, x: -16 }}
@@ -501,7 +501,7 @@ export default function ExamCycle() {
             </div>
           </motion.div>
 
-          {/* RIGHT — complete details for the selected phase */}
+          {/* RIGHT - complete details for the selected phase */}
           <div style={{ minWidth: 0 }}>
             <AnimatePresence mode="wait">
               <motion.div
@@ -532,7 +532,7 @@ export default function ExamCycle() {
                             {phase.phase}
                           </h3>
                           <p style={{ color: "#6b7280", fontSize: 13.5, lineHeight: 1.6, margin: "8px 0 0", maxWidth: 540 }}>
-                            {phase.exams.length} exam{phase.exams.length > 1 ? "s" : ""} in this window — dates, application fees, total seats and exactly what each one unlocks. Tap any card for the full breakdown.
+                            {phase.exams.length} exam{phase.exams.length > 1 ? "s" : ""} in this window - dates, application fees, total seats and exactly what each one unlocks. Tap any card for the full breakdown.
                           </p>
                         </div>
                       </div>

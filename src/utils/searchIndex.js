@@ -1,8 +1,8 @@
 /* ============================================================
-   searchIndex.js — a powerful, "AI-style" on-device search.
+   searchIndex.js - a powerful, "AI-style" on-device search.
    ------------------------------------------------------------
    • Indexes EVERY college (IIT/NIT/IIIT), private university,
-     exam, news item and tool — with rich, deep keywords
+     exam, news item and tool - with rich, deep keywords
      (placements, packages, branches, recruiters, location…).
    • Understands natural-language queries like:
        "top iits with package above 20 lakh"
@@ -12,7 +12,7 @@
    • Ranks results with field-weighting + prefix + fuzzy matching.
    • Produces a Gemini-style one-paragraph answer summary.
 
-   NOTE: This runs fully in the browser — no API key, works
+   NOTE: This runs fully in the browser - no API key, works
    offline, instant. To wire a remote LLM later, call your API
    inside `answerFor()` and keep this as the retrieval layer.
    ============================================================ */
@@ -246,7 +246,7 @@ export function answerFor(query, results) {
       if (m.nirf) parts.push(`NIRF #${m.nirf}`);
       if (m.avg) parts.push(`avg package ${fmtINR(m.avg)}`);
       if (m.placed) parts.push(`${m.placed}% placed`);
-      if (parts.length) bits.push(`Top match: ${top.title} — ${parts.join(", ")}.`);
+      if (parts.length) bits.push(`Top match: ${top.title} - ${parts.join(", ")}.`);
     }
   } else {
     bits.push(`Showing ${results.length} result${results.length > 1 ? "s" : ""} for "${raw}".`);

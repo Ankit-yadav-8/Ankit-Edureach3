@@ -8,7 +8,7 @@ const SUGGESTIONS = ["Top IITs by package", "CSE colleges in Tamil Nadu", "Best 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState([
-    { from: "bot", text: "Hi! I'm the Campus Point assistant. Ask me about colleges, packages, cutoffs or exams — e.g. \"top IITs with package above 20 lakh\"." },
+    { from: "bot", text: "Hi! I'm the Campus Point assistant. Ask me about colleges, packages, cutoffs or exams - e.g. \"top IITs with package above 20 lakh\"." },
   ]);
   const [input, setInput] = useState("");
   const nav = useNavigate();

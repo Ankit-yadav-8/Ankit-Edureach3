@@ -30,13 +30,13 @@ const load = (key, fallback) => {
 const save = (key, val) => { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} };
 
 // Local calendar day (YYYY-MM-DD). Deliberately NOT toISOString(), which is
-// UTC — past midnight in IST (UTC+5:30) that rolls the date back a day, so
+// UTC - past midnight in IST (UTC+5:30) that rolls the date back a day, so
 // "today" showed yesterday and the log/streak landed on the wrong date.
 const isoDay = (d) => {
   const x = new Date(d);
   return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
 };
-// `iso` is a local YYYY-MM-DD from isoDay — parse its parts as a local date so
+// `iso` is a local YYYY-MM-DD from isoDay - parse its parts as a local date so
 // the label matches the day exactly, never off by one from a UTC re-parse.
 const fmtDay = (iso) => {
   const [y, m, d] = String(iso).split("-").map(Number);
@@ -71,10 +71,10 @@ const SHORT = {
 };
 const shortName = (s) => SHORT[s] || s;
 // Recharts treats dots in a dataKey as a nested path, so chart keys must be
-// alphanumeric — labels can still be the pretty short names.
+// alphanumeric - labels can still be the pretty short names.
 const keyOf = (s) => String(s).replace(/[^a-zA-Z0-9]/g, "");
 
-/* subject hours/tasks for one day — tolerant of the old number-only shape */
+/* subject hours/tasks for one day - tolerant of the old number-only shape */
 const subVal = (entry, s) => {
   const v = entry?.subjects?.[s];
   if (v == null) return { h: 0, t: 0 };
@@ -94,17 +94,17 @@ const MAX_LOGS_PER_DAY = 3; // student may add/update today's log up to 3× a da
 
 // JEE Advanced runs as TWO 3-hour papers (P1 + P2), logged together in one
 // place. Each paper carries ~60 marks/subject (180/paper · 360 combined) and
-// runs 180 minutes — so the full exam is 6 hours (3h + 3h).
+// runs 180 minutes - so the full exam is 6 hours (3h + 3h).
 const isAdv = (type) => type === "adv";
 const ADV_PAPER_SUB_MAX = 60;    // marks per subject in one Advanced paper
 const ADV_PAPER_TOTAL   = 180;   // marks per Advanced paper
-const ADV_FULL_TOTAL    = 360;   // both papers combined (indicative — varies by year)
+const ADV_FULL_TOTAL    = 360;   // both papers combined (indicative - varies by year)
 const ADV_FULL_QUESTIONS = 102;  // typical total questions across both papers (varies by year)
 const ADV_PAPER_MINUTES = 180;   // each Advanced paper is 3 hours (6h total)
 
 /* No demo/seed data: an enrolled student's dashboard starts empty and fills in
    only as they log real work. (Earlier builds seeded the last 7 days, which then
-   got persisted to the server and showed as fake hours/tests — see the
+   got persisted to the server and showed as fake hours/tests - see the
    pre-enrolment purge in the body.) */
 
 function streakOf(entries) {
@@ -126,7 +126,7 @@ function weekKey(d = new Date()) {
 }
 
 /* ════════════════════════════════════════════════════════════════
-   DEFAULT EXPORT — auth + OTP security gate, then the dashboard
+   DEFAULT EXPORT - auth + OTP security gate, then the dashboard
    ════════════════════════════════════════════════════════════════ */
 export default function MentorshipDashboard() {
   const { user, isLoggedIn, openLogin } = useAuth();
@@ -199,7 +199,7 @@ function OtpGate({ email, name, onVerified }) {
     setBusy(true); setMsg({ type: "", text: "" });
     try {
       const r = await apiSendOtp({ email, name });
-      setMsg({ type: "ok", text: r.devCode ? `Dev OTP: ${r.devCode}` : "Code sent — check your inbox & spam folder." });
+      setMsg({ type: "ok", text: r.devCode ? `Dev OTP: ${r.devCode}` : "Code sent - check your inbox & spam folder." });
       setStep("code");
     } catch (e) {
       setMsg({ type: "err", text: e.message || "Couldn't send the code. Try again." });
@@ -220,7 +220,7 @@ function OtpGate({ email, name, onVerified }) {
   // Password is a second way to prove the same thing the OTP proves: that the
   // person at the keyboard is this account's owner, not just someone on a
   // logged-in device. It re-checks the sign-up password server-side against this
-  // account's own email — so it can't be used to open anyone else's dashboard.
+  // account's own email - so it can't be used to open anyone else's dashboard.
   const verifyPassword = async () => {
     if (!password) return;
     setBusy(true); setMsg({ type: "", text: "" });
@@ -232,7 +232,7 @@ function OtpGate({ email, name, onVerified }) {
     } finally { setBusy(false); }
   };
 
-  // The card is centred, so top padding only shifts it by half of what you add —
+  // The card is centred, so top padding only shifts it by half of what you add -
   // 120px sat it too close under the fixed header on short, wide viewports.
   // minHeight drops to 88vh so the extra headroom actually moves the card down
   // rather than just making the section taller than the screen.
@@ -250,7 +250,7 @@ function OtpGate({ email, name, onVerified }) {
         </h2>
         <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.6, textAlign: "center", margin: "10px 0 22px" }}>
           Your mentorship dashboard is private. {step === "intro"
-            ? <>We'll email a 6-digit code to <strong style={{ color: NAVY }}>{masked}</strong> — or just use your password.</>
+            ? <>We'll email a 6-digit code to <strong style={{ color: NAVY }}>{masked}</strong> - or just use your password.</>
             : step === "password"
               ? <>Enter the password you use to sign in to <strong style={{ color: NAVY }}>{masked}</strong>.</>
               : <>Enter the 6-digit code we sent to <strong style={{ color: NAVY }}>{masked}</strong>.</>}
@@ -296,7 +296,7 @@ function OtpGate({ email, name, onVerified }) {
         ) : (
           <>
             <input
-              inputMode="numeric" maxLength={6} placeholder="——————" value={code} autoFocus
+              inputMode="numeric" maxLength={6} placeholder="------" value={code} autoFocus
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
               onKeyDown={(e) => e.key === "Enter" && verify()}
               style={{ width: "100%", textAlign: "center", letterSpacing: "0.9em", fontSize: 32, fontWeight: 900, color: "#1e293b", height: 70, border: `2px solid ${code.length === 6 ? ORANGE : "#e2e8f0"}`, borderRadius: 16, background: code.length === 6 ? `${ORANGE}08` : "#f8fafc", outline: "none", fontFamily: "Sora, monospace", boxSizing: "border-box", marginBottom: 16 }}
@@ -393,7 +393,7 @@ function DashboardBody({ urlPlan = "" }) {
   const [backlog, setBacklog] = useState(() => loadScoped(BACKLOG_KEY, L_BACKLOG, []) || []);
   const [fixDone, setFixDone] = useState(() => loadScoped(FIX_KEY, L_FIX, {}));
   const [weeklyTasks, setWeeklyTasks] = useState(() => loadScoped(WTASK_KEY, L_WTASK, []));
-  // Chapter strength + this-week coverage — [{ id, subject, topic, strength, coverage }]
+  // Chapter strength + this-week coverage - [{ id, subject, topic, strength, coverage }]
   const [chapterLog, setChapterLog] = useState(() => load(CHAP_KEY, []));
   const [chapForm, setChapForm] = useState({ subject: "", topic: "", strength: "weak", coverage: "" });
 
@@ -417,14 +417,14 @@ function DashboardBody({ urlPlan = "" }) {
   const [testAskStage, setTestAskStage] = useState("ask"); // "ask" → "confirm"
   // Weekly tasks the mentor/admin assigned for this student (shown as suggested).
   const [mentorTasks, setMentorTasks] = useState([]);
-  // The mentor assigned to this student ID — { name, college } — for the header.
+  // The mentor assigned to this student ID - { name, college } - for the header.
   const [mentor, setMentor] = useState(null);
   // True once this batch's data has been pulled from the server, so the save
   // effect won't overwrite the server with local seed data before it loads.
   const [progressLoaded, setProgressLoaded] = useState(false);
 
   // Resolve the real plan for THIS dashboard. A student can own several
-  // mentorship batches — pick the one named in ?plan= (if they own it),
+  // mentorship batches - pick the one named in ?plan= (if they own it),
   // otherwise their most recent one. Also collect the full list for the switcher.
   useEffect(() => {
     if (!token) return;
@@ -464,7 +464,7 @@ function DashboardBody({ urlPlan = "" }) {
     return () => { alive = false; };
   }, [token, identity.studentId]);
 
-  // Who's mentoring this student ID — name + college for the tracking header.
+  // Who's mentoring this student ID - name + college for the tracking header.
   useEffect(() => {
     if (!token || !identity.studentId) { setMentor(null); return; }
     let alive = true;
@@ -474,7 +474,7 @@ function DashboardBody({ urlPlan = "" }) {
     return () => { alive = false; };
   }, [token, identity.studentId]);
 
-  // Cross-device sync — LOAD this batch's saved study data from the server so
+  // Cross-device sync - LOAD this batch's saved study data from the server so
   // every device shows the same logs/tests/backlog/tasks. The server copy wins
   // over local when present; if the server has none yet, the save effect below
   // seeds it from this device.
@@ -502,7 +502,7 @@ function DashboardBody({ urlPlan = "" }) {
     return () => { alive = false; };
   }, [token, selectedPlan]);
 
-  // Cross-device sync — SAVE the study data back to the server (debounced) on
+  // Cross-device sync - SAVE the study data back to the server (debounced) on
   // any change, but only after the initial load so we never clobber the server
   // copy with seed data. localStorage still acts as an offline cache.
   useEffect(() => {
@@ -516,7 +516,7 @@ function DashboardBody({ urlPlan = "" }) {
   // and persisted it, so a student who joined on (say) Thursday could show fake
   // Mon–Wed hours and old mock tests. You can't have logged study for a batch
   // before you enrolled in it, so anything dated before the enrolment day is not
-  // real — drop it. The debounced save above then writes the cleaned copy back.
+  // real - drop it. The debounced save above then writes the cleaned copy back.
   useEffect(() => {
     if (!progressLoaded || !identity.enrolledOn) return;
     const enrollDay = isoDay(identity.enrolledOn);
@@ -530,7 +530,7 @@ function DashboardBody({ urlPlan = "" }) {
     });
   }, [progressLoaded, identity.enrolledOn]);
 
-  // Switch to another of the student's batches — re-points the URL, which
+  // Switch to another of the student's batches - re-points the URL, which
   // remounts the body against that batch's data + community.
   const switchBatch = (plan) => {
     if (!plan || plan === selectedPlan) return;
@@ -552,7 +552,7 @@ function DashboardBody({ urlPlan = "" }) {
 
   // Build a CONTINUOUS run of the last N calendar days rather than the last N
   // *records*. If a day was never logged (student missed an update), it surfaces
-  // as a real 0-hour slot instead of being skipped — so the graph never drops a
+  // as a real 0-hour slot instead of being skipped - so the graph never drops a
   // day, and week totals count the miss as 0h (not "6 days only"). These
   // placeholders are display-only; we never write them back to `entries`, so a
   // missed day still correctly breaks the streak in streakOf().
@@ -574,7 +574,7 @@ function DashboardBody({ urlPlan = "" }) {
   const weekHours = last7.reduce((s, e) => s + Number(e.hours || 0), 0);
   const prevWeekHours = prevWeek.reduce((s, e) => s + Number(e.hours || 0), 0);
   const latestTrack = sorted[sorted.length - 1];
-  const tasksLabel = latestTrack ? `${latestTrack.tasksDone} / ${latestTrack.tasksTotal}` : "—";
+  const tasksLabel = latestTrack ? `${latestTrack.tasksDone} / ${latestTrack.tasksTotal}` : "-";
   const streak = streakOf(sorted);
   const goalPct = Math.min(100, Math.round((weekHours / WEEK_TARGET_HRS) * 100));
   const maxH = Math.max(1, ...last7.map((e) => Number(e.hours || 0)));
@@ -613,7 +613,7 @@ function DashboardBody({ urlPlan = "" }) {
   const latest = testsSorted[testsSorted.length - 1];
   const prev = testsSorted[testsSorted.length - 2];
 
-  // "Have you taken a test lately?" nudge — shows when no test has been logged
+  // "Have you taken a test lately?" nudge - shows when no test has been logged
   // in a week (or ever), unless it was already dismissed today.
   const daysSinceLastTest = latest ? Math.round((new Date(todayIso) - new Date(latest.date)) / 86400000) : Infinity;
   const showTestReminder = daysSinceLastTest >= 7 && testRemindSnooze !== todayIso;
@@ -703,7 +703,7 @@ function DashboardBody({ urlPlan = "" }) {
     ? [{ key: "you", label: "You (avg)", color: "#06b6d4" }, { key: "target", label: "Target", color: "#22c55e" }]
     : [{ key: "over", label: "Over-spent (tests)", color: "#06b6d4" }];
 
-  /* suggested pacing for the next paper — REAL data: target each section to its
+  /* suggested pacing for the next paper - REAL data: target each section to its
      ideal time; flag (CAP) the ones where the student's logged average over-runs. */
   const pacing = useMemo(() => examSections.map((sec) => {
     const ideal = idealPace[sec];
@@ -712,7 +712,7 @@ function DashboardBody({ urlPlan = "" }) {
     return { s: sec, min: ideal, base: ideal, spent, over, cap: over > 0 };
   }), [examSections, idealPace, avgTimePer]);
 
-  // "Better timings → better paper" — what reclaiming the over-run time buys you.
+  // "Better timings → better paper" - what reclaiming the over-run time buys you.
   const timeInsight = useMemo(() => {
     if (!avgTimePer) return null;
     const overrun = examSections.reduce((s, sec) => s + Math.max(0, avgTimePer[sec] - idealPace[sec]), 0);
@@ -753,13 +753,13 @@ function DashboardBody({ urlPlan = "" }) {
       const dS = Number(latest.scored) - Number(prev.scored);
       const pctTxt = improvement == null ? "" : ` (${improvement >= 0 ? "+" : ""}${improvement}%)`;
       out.push({ tone: dS >= 0 ? "up" : "down", text: dS >= 0
-        ? `Score up ${dS} marks${pctTxt} — ${latest.name} beat ${prev.name}. Momentum is building.`
+        ? `Score up ${dS} marks${pctTxt} - ${latest.name} beat ${prev.name}. Momentum is building.`
         : `Score dropped ${Math.abs(dS)} marks${pctTxt} vs ${prev.name}. Flag the weak chapters below with your mentor this week.` });
       const dA = acc(latest) - acc(prev);
       if (dA !== 0) out.push({ tone: dA > 0 ? "up" : "down", text: `${dA > 0 ? "Accuracy improved" : "Accuracy slipped"} ${Math.abs(dA)}% (${acc(prev)}% → ${acc(latest)}%).` });
       const dM = Number(prev.silly) - Number(latest.silly);
       if (Number(prev.silly) || Number(latest.silly)) out.push({ tone: dM >= 0 ? "up" : "down", text: dM >= 0
-        ? `Silly mistakes down from ${prev.silly} to ${latest.silly} — careful checking is paying off.`
+        ? `Silly mistakes down from ${prev.silly} to ${latest.silly} - careful checking is paying off.`
         : `Silly mistakes rose from ${prev.silly} to ${latest.silly}. Slow down on the last 10 minutes of every paper.` });
     }
     if (weekHours && prevWeekHours) {
@@ -774,11 +774,11 @@ function DashboardBody({ urlPlan = "" }) {
   /* ── strategies (fills the white space under the test form) ── */
   const strategies = useMemo(() => {
     const out = [];
-    if (lowestSubject) out.push({ icon: Target, color: subColor(lowestSubject), text: `Balance your effort: add ~1 hr/day to ${shortName(lowestSubject)} — it's your least-studied subject this week.` });
-    if (weakRanked[0]) out.push({ icon: Zap, color: "#FF693D", text: `Attack ${weakRanked[0][0]} first — your most recurring weak chapter. Aim for 30 PYQs this week.` });
-    if (latest && Number(latest.silly) >= 3) out.push({ icon: Crosshair, color: "#ef4444", text: `Reserve the last 10 min of every paper to recheck — you lost ~${latest.silly} marks to silly errors.` });
-    if (latest && acc(latest) < 80) out.push({ icon: ShieldCheck, color: "#0891b2", text: `Accuracy is ${acc(latest)}% — skip low-confidence questions to dodge negative marking.` });
-    out.push({ icon: RotateCw, color: GREEN, text: "Revise within 24 hrs, then again at 7 days — spaced revision beats re-reading." });
+    if (lowestSubject) out.push({ icon: Target, color: subColor(lowestSubject), text: `Balance your effort: add ~1 hr/day to ${shortName(lowestSubject)} - it's your least-studied subject this week.` });
+    if (weakRanked[0]) out.push({ icon: Zap, color: "#FF693D", text: `Attack ${weakRanked[0][0]} first - your most recurring weak chapter. Aim for 30 PYQs this week.` });
+    if (latest && Number(latest.silly) >= 3) out.push({ icon: Crosshair, color: "#ef4444", text: `Reserve the last 10 min of every paper to recheck - you lost ~${latest.silly} marks to silly errors.` });
+    if (latest && acc(latest) < 80) out.push({ icon: ShieldCheck, color: "#0891b2", text: `Accuracy is ${acc(latest)}% - skip low-confidence questions to dodge negative marking.` });
+    out.push({ icon: RotateCw, color: GREEN, text: "Revise within 24 hrs, then again at 7 days - spaced revision beats re-reading." });
     out.push({ icon: Hourglass, color: ORANGE, text: "Sit one full-length timed paper every week to build exam-day stamina & pacing." });
     return out.slice(0, 5);
   }, [lowestSubject, weakRanked, latest, thisWkH]);
@@ -822,7 +822,7 @@ function DashboardBody({ urlPlan = "" }) {
     setEditingLog(true);
   }
 
-  // Every field is required — a test is only analysed once all details are in.
+  // Every field is required - a test is only analysed once all details are in.
   const testFormComplete = () => {
     const has = (v) => String(v ?? "").trim() !== "";
     if (!has(testForm.name)) return false;
@@ -880,7 +880,7 @@ function DashboardBody({ urlPlan = "" }) {
           cutoffNeeded: r.cutoffNeeded != null ? r.cutoffNeeded : null,
         };
       } else {
-        total = maxTotal(false); // 300 — JEE Main
+        total = maxTotal(false); // 300 - JEE Main
         scored = aggregate;
         const r = predictRank({ physics: p, chemistry: c, maths: m, category: testForm.category || "General", advanced: false });
         rank = {
@@ -983,7 +983,7 @@ function DashboardBody({ urlPlan = "" }) {
 
   /* ── parent report builders + send (daily & weekly) ── */
   const todayTest = tests.find((t) => t.date === todayIso);
-  // Predicted JEE rank (latest Main/Advanced test) — shared by both reports so
+  // Predicted JEE rank (latest Main/Advanced test) - shared by both reports so
   // parents always see where their child currently stands.
   function buildRankSummary() {
     const r = latestRankTest?.rank;
@@ -1004,8 +1004,8 @@ function DashboardBody({ urlPlan = "" }) {
       stats: {
         hours: round1(weekHours), streak, routinePct, tasks: tasksLabel,
         weeklyTasksDone: `${weeklyDone}/${weeklyTasks.length}`,
-        latestTest: latest ? `${latest.name}: ${latest.scored}/${latest.total} (${pct(latest)}%)` : "—",
-        improvement: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%`,
+        latestTest: latest ? `${latest.name}: ${latest.scored}/${latest.total} (${pct(latest)}%)` : "-",
+        improvement: improvement == null ? "-" : `${improvement >= 0 ? "+" : ""}${improvement}%`,
         backlog: `${backlogDone}/${backlog.length}`,
       },
       chapters: chaptersByStrength,
@@ -1039,7 +1039,7 @@ function DashboardBody({ urlPlan = "" }) {
       rank: buildRankSummary(),
     };
   }
-  // Alert report — sent to the parent when backlog is falling behind / study is irregular.
+  // Alert report - sent to the parent when backlog is falling behind / study is irregular.
   function buildBacklogReport() {
     return {
       backlog: {
@@ -1062,8 +1062,8 @@ function DashboardBody({ urlPlan = "" }) {
       const r = await apiSendParentReport(token, { kind, report, plan: selectedPlan || undefined });
       const label = kind === "daily" ? "Daily report" : kind === "backlog" ? "Backlog alert" : "Weekly report";
       const text = r.dev
-        ? `${label} queued (dev mode — logged on the server).`
-        : `${label} ${isAuto ? "auto-sent" : "on its way"} to your parent (${r.to}) — arrives in a few seconds.`;
+        ? `${label} queued (dev mode - logged on the server).`
+        : `${label} ${isAuto ? "auto-sent" : "on its way"} to your parent (${r.to}) - arrives in a few seconds.`;
       setState({ sending: false, msg: { type: "ok", text } });
     } catch (e) {
       if (!isAuto) setState({ sending: false, msg: { type: "err", text: e.message || "Couldn't send the report. Try again." } });
@@ -1110,9 +1110,9 @@ function DashboardBody({ urlPlan = "" }) {
         </motion.h1>
       </div>
 
-      {/* ══ HERO — centered welcome ══ */}
+      {/* ══ HERO - centered welcome ══ */}
       <div style={{ position: "relative", overflow: "hidden" }}>
-        {/* decorative rising "trajectory" — faint dashed line + dots, top-right */}
+        {/* decorative rising "trajectory" - faint dashed line + dots, top-right */}
         <svg className="md-hero-line" width="380" height="170" viewBox="0 0 380 170" fill="none" aria-hidden="true"
           style={{ position: "absolute", top: 6, right: 0, pointerEvents: "none" }}>
           <path d="M8 150 C 100 140, 150 100, 215 78 S 320 26, 360 12" stroke={ORANGE} strokeWidth="2" strokeDasharray="4 7" strokeLinecap="round" opacity=".45" />
@@ -1147,7 +1147,7 @@ function DashboardBody({ urlPlan = "" }) {
           </h2>
 
           <p style={{ color: MUTE, fontSize: 15.5, lineHeight: 1.7, margin: "22px auto 0", maxWidth: 500 }}>
-            Log your day, track every test, and get a clean weekly report — everything to turn your prep into a real rank.
+            Log your day, track every test, and get a clean weekly report - everything to turn your prep into a real rank.
           </p>
 
           {/* actions */}
@@ -1160,7 +1160,7 @@ function DashboardBody({ urlPlan = "" }) {
             </button>
           </div>
 
-          {/* meta pills — batch, enrolment, validity, streak */}
+          {/* meta pills - batch, enrolment, validity, streak */}
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginTop: 26 }}>
             {[
               { icon: GraduationCap, text: identity.batchLabel || planLabel },
@@ -1176,7 +1176,7 @@ function DashboardBody({ urlPlan = "" }) {
         </motion.div>
       </div>
 
-      {/* ══ FEATURE GRID — what the dashboard gives you ══ */}
+      {/* ══ FEATURE GRID - what the dashboard gives you ══ */}
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 0" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .12 }}
           className="md-feature-grid"
@@ -1205,7 +1205,7 @@ function DashboardBody({ urlPlan = "" }) {
         {/* ── PERSONALISED OVERVIEW ── */}
         {/* ── LIVE STUDENT TRACKING ── */}
         <Section id="live-tracking" kicker={`Always on · up to ${MAX_LOGS_PER_DAY}× a day`} title="Live Student Tracking" tColor="#ef4444"
-          sub={`Log each subject's study hours and tasks — and update them up to ${MAX_LOGS_PER_DAY} times a day. The charts refresh instantly so nothing slips through the cracks.`}>
+          sub={`Log each subject's study hours and tasks - and update them up to ${MAX_LOGS_PER_DAY} times a day. The charts refresh instantly so nothing slips through the cracks.`}>
           <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},${ORANGE})` }} />
 
@@ -1243,7 +1243,7 @@ function DashboardBody({ urlPlan = "" }) {
               ))}
             </div>
 
-            {/* log today — up to 3 updates a day, then locked till tomorrow */}
+            {/* log today - up to 3 updates a day, then locked till tomorrow */}
             {todayEntry && !editingLog ? (
               <div style={{ background: "#f0faf4", border: "1px solid rgba(34,197,94,.3)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
@@ -1315,14 +1315,14 @@ function DashboardBody({ urlPlan = "" }) {
                   )}
                 </div>
                 <div style={{ fontSize: 11.5, color: MUTE, marginTop: 10, display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <RotateCw size={12} /> You can update today's log up to {MAX_LOGS_PER_DAY} times a day{editingLog ? ` — ${editsLeft} update${editsLeft === 1 ? "" : "s"} left after this` : ""}. It locks till tomorrow once used up.
+                  <RotateCw size={12} /> You can update today's log up to {MAX_LOGS_PER_DAY} times a day{editingLog ? ` - ${editsLeft} update${editsLeft === 1 ? "" : "s"} left after this` : ""}. It locks till tomorrow once used up.
                 </div>
               </form>
             )}
 
             {/* weekly hours bars + goal gauge */}
             <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 22, alignItems: "center" }} className="md-track-grid">
-              {/* weekly-hours bar chart — premium card with gridlines */}
+              {/* weekly-hours bar chart - premium card with gridlines */}
               <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 16, padding: "16px 16px 14px", boxShadow: "0 16px 40px -30px rgba(255, 105, 61,.8)" }}>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 14 }}>
                   <span style={{ fontSize: 12.5, fontWeight: 800, color: NAVY }}>Total study hours · last 7 days</span>
@@ -1356,7 +1356,7 @@ function DashboardBody({ urlPlan = "" }) {
                       const barPx = h > 0 ? Math.max(5, Math.round((h / maxH) * 132)) : 3;
 
                       return (
-                        <div key={e.date} title={isMissing ? `No study log for ${dow} — recorded as 0h` : `${h}h on ${dow}`}
+                        <div key={e.date} title={isMissing ? `No study log for ${dow} - recorded as 0h` : `${h}h on ${dow}`}
                           style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
 
                           <span style={{ fontSize: 11, fontWeight: 800, color: isMissing ? "#9aa0aa" : (isToday ? ORANGE : INK) }}>
@@ -1476,8 +1476,8 @@ function DashboardBody({ urlPlan = "" }) {
         {/* ── TEST ANALYSIS ── */}
         <Section id="test-analysis" kicker="Every test counts" title="Test Analysis" tColor="#FF693D"
           sub={rankEnabled
-            ? "Enter your marks, silly mistakes and weak chapters. Pick JEE Mains/Advanced to get a predicted rank — everything else is analysed automatically."
-            : "Enter your marks, silly mistakes and weak chapters — we analyse accuracy, score and week-on-week change automatically."}>
+            ? "Enter your marks, silly mistakes and weak chapters. Pick JEE Mains/Advanced to get a predicted rank - everything else is analysed automatically."
+            : "Enter your marks, silly mistakes and weak chapters - we analyse accuracy, score and week-on-week change automatically."}>
           {/* Nudge: no test logged in a week → ask if one was taken, then guide
               them to log it. "No" simply snoozes it for the day. */}
           {showTestReminder && (
@@ -1503,7 +1503,7 @@ function DashboardBody({ urlPlan = "" }) {
                 <>
                   <Sparkles size={18} color="#FF693D" style={{ flexShrink: 0 }} />
                   <span style={{ flex: 1, minWidth: 180, fontSize: 13.5, fontWeight: 700, color: NAVY }}>
-                    Great — add its marks below and we'll refresh your score, accuracy{rankEnabled ? " and rank" : ""} instantly.
+                    Great - add its marks below and we'll refresh your score, accuracy{rankEnabled ? " and rank" : ""} instantly.
                   </span>
                   <button type="button" onClick={() => scrollTo("add-test-form")}
                     style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#FF693D", color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontFamily: "Sora", fontWeight: 800, fontSize: 12.5, cursor: "pointer", boxShadow: "0 8px 18px -10px #FF693D" }}>
@@ -1514,12 +1514,12 @@ function DashboardBody({ urlPlan = "" }) {
             </div>
           )}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(330px, 100%), 1fr))", gap: 18 }}>
-            {/* left — input + reports + strategies */}
+            {/* left - input + reports + strategies */}
             <div id="add-test-form" style={{ background: "var(--page-bg)", border: "1px solid rgba(255,105,61,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${ORANGE},${GOLD})` }} />
               <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "0 0 14px" }}>Add a test result</h3>
 
-              {/* JEE-only test type toggle — Advanced logs both papers together */}
+              {/* JEE-only test type toggle - Advanced logs both papers together */}
               {rankEnabled && (
                 <div style={{ display: "flex", gap: 7, marginBottom: 14, flexWrap: "wrap" }}>
                   {[["main", "JEE Mains"], ["adv", "JEE Advanced"]].map(([val, lbl]) => (
@@ -1536,11 +1536,11 @@ function DashboardBody({ urlPlan = "" }) {
 
                 {rankEnabled && isAdv(testForm.type) ? (
                   <>
-                    {/* both papers logged together — full exam is 6 hours (3h + 3h) */}
+                    {/* both papers logged together - full exam is 6 hours (3h + 3h) */}
                     <div style={{ background: "#fff5f1", border: "1px solid #fecfbf", borderRadius: 12, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                       <Timer size={14} color="#E0421F" />
                       <span style={{ fontSize: 11.5, fontWeight: 800, color: "#E0421F" }}>Full exam · 6 hours total</span>
-                      <span style={{ fontSize: 11, color: "#FF693D" }}>Paper 1 · 3h + Paper 2 · 3h — enter both papers below</span>
+                      <span style={{ fontSize: 11, color: "#FF693D" }}>Paper 1 · 3h + Paper 2 · 3h - enter both papers below</span>
                     </div>
 
                     <div style={{ fontSize: 11.5, fontWeight: 700, color: "#E0421F" }}>Paper 1 · marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)</div>
@@ -1557,8 +1557,8 @@ function DashboardBody({ urlPlan = "" }) {
                       <NumField label="Maths" value={testForm.mm2} onChange={(v) => setTestForm((s) => ({ ...s, mm2: v }))} placeholder="0" full />
                     </div>
 
-                    {/* exam totals — editable because JEE Advanced's pattern changes every year */}
-                    <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.45 }}>JEE Advanced's total marks &amp; question count change every year — confirm yours below.</div>
+                    {/* exam totals - editable because JEE Advanced's pattern changes every year */}
+                    <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.45 }}>JEE Advanced's total marks &amp; question count change every year - confirm yours below.</div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                       <NumField label="Total marks of exam" value={testForm.advTotal} onChange={(v) => setTestForm((s) => ({ ...s, advTotal: v }))} placeholder={String(ADV_FULL_TOTAL)} full />
                       <NumField label="Total questions in exam" value={testForm.advQuestions} onChange={(v) => setTestForm((s) => ({ ...s, advQuestions: v }))} placeholder={String(ADV_FULL_QUESTIONS)} full />
@@ -1601,7 +1601,7 @@ function DashboardBody({ urlPlan = "" }) {
                 </button>
                 {!testFormComplete() && (
                   <div style={{ fontSize: 12, color: "#9a3412", background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", gap: 7, lineHeight: 1.45 }}>
-                    <AlertCircle size={14} color="#ea580c" style={{ flexShrink: 0 }} /> Fill in every field above — a test is only analysed once all details are entered.
+                    <AlertCircle size={14} color="#ea580c" style={{ flexShrink: 0 }} /> Fill in every field above - a test is only analysed once all details are entered.
                   </div>
                 )}
               </form>
@@ -1620,7 +1620,7 @@ function DashboardBody({ urlPlan = "" }) {
                     {improvement == null
                       ? "Add one more test and we'll show your improvement automatically."
                       : improvement >= 0
-                        ? `Great work — your score is up ${improvement}% vs ${prev.name}. Keep the momentum going.`
+                        ? `Great work - your score is up ${improvement}% vs ${prev.name}. Keep the momentum going.`
                         : `Your score dropped ${Math.abs(improvement)}% vs ${prev.name}. Review your weak topics with your mentor this week.`}
                   </div>
                 </div>
@@ -1636,7 +1636,7 @@ function DashboardBody({ urlPlan = "" }) {
               })()}
             </div>
 
-            {/* right — charts + strategies */}
+            {/* right - charts + strategies */}
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <ChartCard title="Score trend" hint="Your marks across every test (vs 75% target)" accent="#FF693D">
                 <Trend data={scoreTrend} lines={[{ key: "you", label: "You", color: ORANGE }, { key: "target", label: "Target (75%)", color: "#94a3b8" }]} height={200} />
@@ -1644,7 +1644,7 @@ function DashboardBody({ urlPlan = "" }) {
               <ChartCard title="Accuracy trend" hint="Correct ÷ attempted, test over test" accent="#22c55e">
                 <Trend data={accTrend} lines={[{ key: "accuracy", label: "Accuracy %", color: "#22c55e" }]} height={180} fmt={(v) => `${v}%`} />
               </ChartCard>
-              {/* strategies — grows to fill the column so the left (form + rank
+              {/* strategies - grows to fill the column so the left (form + rank
                   card) and right side finish at the same height */}
               <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 18, padding: "18px 20px", boxShadow: "0 16px 40px -30px rgba(245,166,35,.8)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
@@ -1668,7 +1668,7 @@ function DashboardBody({ urlPlan = "" }) {
 
         {/* ── MENTOR TOOLS ── */}
         <Section id="mentor-tools" kicker="Proof, not guesswork" title="What Your Mentor Breaks Down" tColor={GOLD}
-          sub="Every number you enter is automatically turned into the exact breakdowns your mentor reviews — and an action list for the week.">
+          sub="Every number you enter is automatically turned into the exact breakdowns your mentor reviews - and an action list for the week.">
 
           {/* AI insights banner */}
           <div style={{ background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 18, padding: "20px 22px", marginBottom: 18, boxShadow: "0 16px 40px -30px rgba(245,166,35,.8)" }}>
@@ -1693,7 +1693,7 @@ function DashboardBody({ urlPlan = "" }) {
 
           <div className="md-tools-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 16 }}>
             {/* Silly-mistake audit */}
-            <ToolCard icon={Crosshair} color="#ef4444" title="Silly-mistake audit" desc="Marks lost to silly errors — tracked, by topic, and killed.">
+            <ToolCard icon={Crosshair} color="#ef4444" title="Silly-mistake audit" desc="Marks lost to silly errors - tracked, by topic, and killed.">
               {sillyTrend.length ? (
                 <>
                   <Bars data={sillyTrend} bars={[{ key: "silly", label: "Silly mistakes", color: "#ef4444" }]} height={170} angle={-32} />
@@ -1714,8 +1714,8 @@ function DashboardBody({ urlPlan = "" }) {
               ) : <ChartHint text="Add tests with silly-mistake counts & topics." />}
             </ToolCard>
 
-            {/* Chapter strength & weekly coverage — feeds the parent chapter report */}
-            <ToolCard icon={BookOpen} color="#FF693D" title="Add a chapter" desc="Tag each chapter weak / medium / strong and how much you covered this week — it appears in your Chapter-strength report.">
+            {/* Chapter strength & weekly coverage - feeds the parent chapter report */}
+            <ToolCard icon={BookOpen} color="#FF693D" title="Add a chapter" desc="Tag each chapter weak / medium / strong and how much you covered this week - it appears in your Chapter-strength report.">
               <form onSubmit={addChapter} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   <SelectField label="Subject" value={chapForm.subject || subjects[0]} onChange={(v) => setChapForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
@@ -1741,14 +1741,14 @@ function DashboardBody({ urlPlan = "" }) {
                 </button>
               </form>
               <div style={{ marginTop: 12, fontSize: 12, color: MUTE, lineHeight: 1.5, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
-                Added chapters {chapterLog.length ? <><strong style={{ color: NAVY }}>({chapterLog.length})</strong> </> : ""}appear in your <strong style={{ color: "#E0421F" }}>Chapter-strength report</strong> — where you can review and remove them.
+                Added chapters {chapterLog.length ? <><strong style={{ color: NAVY }}>({chapterLog.length})</strong> </> : ""}appear in your <strong style={{ color: "#E0421F" }}>Chapter-strength report</strong> - where you can review and remove them.
               </div>
             </ToolCard>
 
 
-            {/* Weekly fix-list — the mentor's assigned tasks + the student's own
+            {/* Weekly fix-list - the mentor's assigned tasks + the student's own
                 tasks (both roll up into the weekly parent report). */}
-            <ToolCard icon={ListChecks} color={GREEN} title="Your weekly fix-list" desc="Your mentor's tasks plus your own — all summarised in the weekly parent report.">
+            <ToolCard icon={ListChecks} color={GREEN} title="Your weekly fix-list" desc="Your mentor's tasks plus your own - all summarised in the weekly parent report.">
               {/* tasks your mentor assigned for this student */}
               {mentorTasks.length > 0 ? (
                 <div style={{ marginBottom: 16 }}>
@@ -1771,7 +1771,7 @@ function DashboardBody({ urlPlan = "" }) {
                     })}
                   </div>
                   <div style={{ fontSize: 11.5, color: MUTE, marginTop: 8, lineHeight: 1.5 }}>
-                    Tick these off as you finish them — your mentor sees your progress live. They reset each week.
+                    Tick these off as you finish them - your mentor sees your progress live. They reset each week.
                   </div>
                 </div>
               ) : (
@@ -1780,14 +1780,14 @@ function DashboardBody({ urlPlan = "" }) {
                 </div>
               )}
 
-              {/* the student's own weekly tasks — add + edit + complete (no delete) */}
+              {/* the student's own weekly tasks - add + edit + complete (no delete) */}
               <div>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
                   <div style={{ fontSize: 11, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".05em" }}>Your tasks</div>
                   <span style={{ fontSize: 11.5, fontWeight: 800, color: GREEN, background: "#dcfce7", borderRadius: 50, padding: "3px 10px" }}>{weeklyDone}/{weeklyTasks.length} done</span>
                 </div>
                 <form onSubmit={addWeeklyTask} style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-                  <input value={wtInput} onChange={(e) => setWtInput(e.target.value)} placeholder="Add your own task — e.g. Finish Rotational Motion DPP"
+                  <input value={wtInput} onChange={(e) => setWtInput(e.target.value)} placeholder="Add your own task - e.g. Finish Rotational Motion DPP"
                     style={{ flex: 1, minWidth: 0, padding: "10px 12px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 13.5, color: NAVY, outline: "none", boxSizing: "border-box" }}
                     onFocus={(e) => { e.target.style.borderColor = GREEN; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
                   <button type="submit" style={{ flexShrink: 0, padding: "10px 15px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${GREEN},#22c55e)`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 }}>
@@ -1823,14 +1823,14 @@ function DashboardBody({ urlPlan = "" }) {
                     ))}
                   </div>
                 ) : (
-                  <div style={{ fontSize: 12.5, color: "#9ca3af", lineHeight: 1.5 }}>No tasks yet — add your first one above. Tasks stay for accountability and can't be deleted.</div>
+                  <div style={{ fontSize: 12.5, color: "#9ca3af", lineHeight: 1.5 }}>No tasks yet - add your first one above. Tasks stay for accountability and can't be deleted.</div>
                 )}
               </div>
             </ToolCard>
 
-            {/* Chapter-strength report — the live chapter list (add via the card
+            {/* Chapter-strength report - the live chapter list (add via the card
                 above); this is exactly what goes into the weekly parent email. */}
-            <ToolCard icon={BarChart3} color="#f59e0b" title="Chapter-strength report" desc="Your weak / medium / strong chapters and weekly coverage — this list is included in the weekly parent email.">
+            <ToolCard icon={BarChart3} color="#f59e0b" title="Chapter-strength report" desc="Your weak / medium / strong chapters and weekly coverage - this list is included in the weekly parent email.">
               {chapterLog.length ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   {["weak", "medium", "strong"].map((k) => {
@@ -1874,7 +1874,7 @@ function DashboardBody({ urlPlan = "" }) {
 
         {/* ── BACKLOG ── */}
         <Section id="backlog" kicker="Catch up without burning out" title="Backlog Clearing Sprints" tColor="#FF693D"
-          sub="A structured catch-up system that clears months of pending chapters — list them, rate your strength, and set a plan date.">
+          sub="A structured catch-up system that clears months of pending chapters - list them, rate your strength, and set a plan date.">
           <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255,105,61,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
 
@@ -1939,7 +1939,7 @@ function DashboardBody({ urlPlan = "" }) {
               </motion.div>
             ) : (
               <div style={{ textAlign: "center", padding: "26px 0", color: "#9ca3af", fontSize: 13.5 }}>
-                <BookOpen size={26} style={{ marginBottom: 8, opacity: .6 }} /><br />No backlog yet — add your pending chapters above.
+                <BookOpen size={26} style={{ marginBottom: 8, opacity: .6 }} /><br />No backlog yet - add your pending chapters above.
               </div>
             )}
           </div>
@@ -1953,30 +1953,30 @@ function DashboardBody({ urlPlan = "" }) {
 
         {/* ── BATCH COMMUNITY ── */}
         <Section id="community" kicker="Your batch, in one room" title="Batch Community" tColor="#FF693D"
-          sub="Meet your batchmates and post doubts with photos & videos — peers and mentors reply, and the best ones get highlighted.">
+          sub="Meet your batchmates and post doubts with photos & videos - peers and mentors reply, and the best ones get highlighted.">
           <Community plan={selectedPlan || urlPlan || undefined} onSwitchBatch={switchBatch} />
         </Section>
 
         {/* ── DAILY & WEEKLY REPORTS ── */}
         <Section id="parent-report" kicker="Parents stay in the loop" title="Daily & Weekly Reports" tColor={GREEN}
-          sub="A weekly report is auto-emailed to your parent every Sunday and a daily report every day — automatically, whether or not you log anything. You can also send either one now if you want an update in between.">
+          sub="A weekly report is auto-emailed to your parent every Sunday and a daily report every day - automatically, whether or not you log anything. You can also send either one now if you want an update in between.">
 
           {/* ── WEEKLY PROGRESS BOOKLET ── */}
           <ProgressBooklet
             title="Weekly Progress Booklet"
-            subtitle="A clear, jargon-free summary of your child's week — effort, tests, improvement and what's next."
+            subtitle="A clear, jargon-free summary of your child's week - effort, tests, improvement and what's next."
             studentName={user?.name || "Student"}
             studentSub={`${planExam} · CampusPoint Mentorship`}
             heroPoints={["Study hours, streak & routine", "Test scores & predicted rank", "Weak / medium / strong chapters", "Weekly task progress"]}
-            heroNote="Auto-emailed to your parent every Sunday — and any time you press send. No jargon, just this week's real progress."
+            heroNote="Auto-emailed to your parent every Sunday - and any time you press send. No jargon, just this week's real progress."
             rows={[
               { icon: Clock, color: ORANGE, label: "Study hours", sub: `${round1(weekHours - prevWeekHours) >= 0 ? "+" : ""}${round1(weekHours - prevWeekHours)}h vs last week`, value: `${round1(weekHours)} h` },
               { icon: Flame, color: "#ef4444", label: "Day streak", sub: `Active ${last7.filter((e) => Number(e.hours) > 0).length} of 7 days`, value: `${streak} day${streak === 1 ? "" : "s"}` },
               { icon: Target, color: "#FF693D", label: "Routine kept", sub: "Followed the plan", value: `${routinePct}%` },
               { icon: CheckCircle2, color: "#0891b2", label: "Tasks (latest day)", sub: "Done vs planned", value: tasksLabel },
               { icon: ListChecks, color: "#14b8a6", label: "Weekly tasks done", sub: `${weeklyTasks.length ? Math.round((weeklyDone / weeklyTasks.length) * 100) : 0}% complete`, value: `${weeklyDone} / ${weeklyTasks.length}` },
-              { icon: LineIcon, color: "#6366f1", label: "Latest test", sub: latest ? "Most recent result" : "None logged yet", value: latest ? `${latest.scored}/${latest.total} (${pct(latest)}%)` : "—" },
-              { icon: improvement != null && improvement < 0 ? TrendingDown : TrendingUp, color: improvement != null && improvement < 0 ? "#ef4444" : "#22c55e", label: "Change vs last test", sub: latest && prev ? `${prev.name} → ${latest.name}` : "Add another test", value: improvement == null ? "—" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
+              { icon: LineIcon, color: "#6366f1", label: "Latest test", sub: latest ? "Most recent result" : "None logged yet", value: latest ? `${latest.scored}/${latest.total} (${pct(latest)}%)` : "-" },
+              { icon: improvement != null && improvement < 0 ? TrendingDown : TrendingUp, color: improvement != null && improvement < 0 ? "#ef4444" : "#22c55e", label: "Change vs last test", sub: latest && prev ? `${prev.name} → ${latest.name}` : "Add another test", value: improvement == null ? "-" : `${improvement >= 0 ? "+" : ""}${improvement}%` },
               ...(rankEnabled && latestRankTest?.rank?.ranked ? [{
                 icon: Trophy, color: "#E0421F", label: "Predicted rank",
                 sub: `${latestRankTest.name} · included in report`,
@@ -1986,16 +1986,16 @@ function DashboardBody({ urlPlan = "" }) {
               }] : []),
               { icon: Rocket, color: "#FF693D", label: "Backlog cleared", sub: "Chapters done", value: `${backlogDone} / ${backlog.length}` },
             ]}
-            remark={insights[0]?.text || "Log your daily hours and tests through the week — this booklet fills in automatically and is emailed to your parent every Sunday."}
+            remark={insights[0]?.text || "Log your daily hours and tests through the week - this booklet fills in automatically and is emailed to your parent every Sunday."}
             remarkTitle="This week's highlight"
             footer={<SendControls color={GREEN} state={weeklyState} onSend={() => sendReport("weekly")} sendLabel="Send weekly report now"
               autoLocked autoLabel="Auto-emailed every Sunday" parentEmail={parentEmail} />}
           />
           <p style={{ fontSize: 12, color: MUTE, margin: "-6px 0 18px", textAlign: "center" }}>
-            Includes your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> (shown below) — auto-emailed every <strong style={{ color: NAVY }}>Sunday</strong>.
+            Includes your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> (shown below) - auto-emailed every <strong style={{ color: NAVY }}>Sunday</strong>.
           </p>
 
-          {/* ── BACKLOG ALERT strip — auto-emails the parent when chapters fall behind ── */}
+          {/* ── BACKLOG ALERT strip - auto-emails the parent when chapters fall behind ── */}
           <div style={{ background: overdueBacklog.length || studyIrregular ? "#fff7ed" : "#fff", border: `1px solid ${overdueBacklog.length || studyIrregular ? "#fdba74" : "#fde68a"}`, borderRadius: 20, padding: "22px 24px", boxShadow: "0 20px 46px -30px rgba(234,88,12,.6)", position: "relative", overflow: "hidden", marginBottom: 18 }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#f59e0b,#ef4444)" }} />
             <div style={{ display: "flex", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
@@ -2006,10 +2006,10 @@ function DashboardBody({ urlPlan = "" }) {
                   {overdueBacklog.length > 0 && <span style={{ fontSize: 11, fontWeight: 800, color: "#b91c1c", background: "#fee2e2", borderRadius: 50, padding: "3px 10px" }}>{overdueBacklog.length} overdue</span>}
                 </div>
                 <p style={{ color: MUTE, fontSize: 13.5, lineHeight: 1.6, margin: "4px 0 14px" }}>
-                  If chapters pass their <strong style={{ color: NAVY }}>target date</strong> unfinished or study turns irregular (low streak / routine), your parent is automatically emailed that the backlog isn't being cleared — so they can step in early.{" "}
+                  If chapters pass their <strong style={{ color: NAVY }}>target date</strong> unfinished or study turns irregular (low streak / routine), your parent is automatically emailed that the backlog isn't being cleared - so they can step in early.{" "}
                   {overdueBacklog.length || studyIrregular
                     ? <strong style={{ color: "#c2410c" }}>Currently flagged: {overdueBacklog.length ? `${overdueBacklog.length} overdue chapter${overdueBacklog.length === 1 ? "" : "s"}` : "irregular study"}.</strong>
-                    : <span style={{ color: "#15803d", fontWeight: 700 }}>All on track right now — nothing to flag.</span>}
+                    : <span style={{ color: "#15803d", fontWeight: 700 }}>All on track right now - nothing to flag.</span>}
                 </p>
                 <SendControls color="#E0421F" state={alertState} onSend={() => sendReport("backlog")} sendLabel="Send backlog alert now"
                   auto={reportPrefs.autoBacklogAlert} onToggle={() => setReportPrefs((p) => ({ ...p, autoBacklogAlert: !p.autoBacklogAlert }))}
@@ -2022,11 +2022,11 @@ function DashboardBody({ urlPlan = "" }) {
           {todayEntry ? (
             <ProgressBooklet
               title="Daily Progress Booklet"
-              subtitle="Today's effort at a glance — hours, tasks, routine and any test, auto-built from the daily log."
+              subtitle="Today's effort at a glance - hours, tasks, routine and any test, auto-built from the daily log."
               studentName={user?.name || "Student"}
               studentSub={`${fmtFull(new Date())} · CampusPoint Mentorship`}
               heroPoints={["Hours studied per subject", "Tasks completed & routine", "Any test taken today", "Predicted rank (if tested)"]}
-              heroNote="Auto-emailed to your parent every day — a quick daily snapshot so they always know how today went."
+              heroNote="Auto-emailed to your parent every day - a quick daily snapshot so they always know how today went."
               rows={[
                 { icon: Clock, color: ORANGE, label: "Study hours today", sub: `${subjects.length} subjects logged`, value: `${todayEntry.hours} h` },
                 { icon: CheckCircle2, color: "#14b8a6", label: "Tasks completed", sub: todayEntry.routine ? "Routine followed" : "Routine missed", value: `${todayEntry.tasksDone} / ${todayEntry.tasksTotal}` },
@@ -2055,7 +2055,7 @@ function DashboardBody({ urlPlan = "" }) {
           ) : (
             <div style={{ background: "var(--page-bg)", border: "1px solid rgba(8,145,178,.22)", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)", marginBottom: 18 }}>
               <div style={{ textAlign: "center", padding: "18px 0", color: "#9ca3af", fontSize: 13 }}>
-                <CalendarDays size={24} style={{ marginBottom: 6, opacity: .6 }} /><br />Nothing logged yet today — your parent still gets today's report (shown as 0h) automatically. Fill today's log to make it count.
+                <CalendarDays size={24} style={{ marginBottom: 6, opacity: .6 }} /><br />Nothing logged yet today - your parent still gets today's report (shown as 0h) automatically. Fill today's log to make it count.
               </div>
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>
                 <SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report"
@@ -2102,13 +2102,13 @@ function Section({ id, kicker, title, sub, tColor = ORANGE, children }) {
   );
 }
 
-/* Parent-facing "Progress Booklet" — orange hero panel + a clean stat readout.
+/* Parent-facing "Progress Booklet" - orange hero panel + a clean stat readout.
    Used for both the weekly and daily reports (same look, different data). */
 function ProgressBooklet({ title, subtitle, studentName, studentSub, rows, extra, remark, remarkTitle = "Highlight", heroPoints, heroNote, footer }) {
   const dark = "#E0421F";
   return (
     <div className="md-booklet" style={{ display: "grid", gridTemplateColumns: "minmax(0,0.92fr) minmax(0,1.08fr)", borderRadius: 22, overflow: "hidden", border: "1px solid #f0e9e0", boxShadow: "0 24px 54px -34px rgba(26,26,46,.5)", background: "var(--page-bg)", marginBottom: 18 }}>
-      {/* LEFT — hero */}
+      {/* LEFT - hero */}
       <div style={{ position: "relative", padding: "28px 28px 26px", color: "#fff", background: `linear-gradient(155deg, ${ORANGE} 0%, ${dark} 100%)`, overflow: "hidden", display: "flex", flexDirection: "column" }}>
         <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px)", backgroundSize: "26px 26px", opacity: .55, pointerEvents: "none" }} />
         <div style={{ position: "relative" }}>
@@ -2145,7 +2145,7 @@ function ProgressBooklet({ title, subtitle, studentName, studentSub, rows, extra
           </div>
         )}
       </div>
-      {/* RIGHT — stats */}
+      {/* RIGHT - stats */}
       <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column" }}>
         {rows.map((r, i) => {
           const Icon = r.icon;
@@ -2235,12 +2235,12 @@ function RankCard({ r, name }) {
       </div>
       {r.advanced && r.paper1 != null && (
         <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.5, marginBottom: 10 }}>
-          Both papers combined — Paper 1: {r.paper1}/{ADV_PAPER_TOTAL} · Paper 2: {r.paper2}/{ADV_PAPER_TOTAL}{r.questions ? ` · ${r.questions} questions` : ""} · 6-hour exam (3h + 3h).
+          Both papers combined - Paper 1: {r.paper1}/{ADV_PAPER_TOTAL} · Paper 2: {r.paper2}/{ADV_PAPER_TOTAL}{r.questions ? ` · ${r.questions} questions` : ""} · 6-hour exam (3h + 3h).
         </div>
       )}
       {r.projected && (
         <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.5, marginBottom: 10 }}>
-          Projected full-test rank from Paper {r.paper} ({r.paperMarks}/{ADV_PAPER_TOTAL}) — assumes a similar Paper {r.paper === 1 ? 2 : 1}. Log both papers for a sharper estimate.
+          Projected full-test rank from Paper {r.paper} ({r.paperMarks}/{ADV_PAPER_TOTAL}) - assumes a similar Paper {r.paper === 1 ? 2 : 1}. Log both papers for a sharper estimate.
         </div>
       )}
       <motion.div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(110px, 100%), 1fr))", gap: 10, marginBottom: 10 }}
@@ -2275,7 +2275,7 @@ function RankCard({ r, name }) {
         </div>
       )}
       {r.advice && <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 6 }}>{r.advice}</div>}
-      <div style={{ fontSize: 10.5, color: "#9ca3af", marginTop: 8 }}>Estimate only — actual rank depends on the official normalisation & shift difficulty.</div>
+      <div style={{ fontSize: 10.5, color: "#9ca3af", marginTop: 8 }}>Estimate only - actual rank depends on the official normalisation & shift difficulty.</div>
     </div>
   );
 }
@@ -2303,7 +2303,7 @@ function SendControls({ color, state, onSend, sendLabel, disabled, auto, onToggl
           {state.sending ? <><Loader2 size={16} style={{ animation: "spin .8s linear infinite" }} /> Sending…</> : <><Send size={15} /> {sendLabel}</>}
         </button>
         {autoLocked ? (
-          // Auto-send is always on and can't be turned off — just show the cadence.
+          // Auto-send is always on and can't be turned off - just show the cadence.
           <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 700, color: "#16a34a", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 50, padding: "6px 13px" }}>
             <CheckCircle2 size={14} /> {autoLabel}
           </span>

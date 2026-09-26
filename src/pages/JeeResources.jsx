@@ -10,7 +10,7 @@ import Seo from "../components/Seo.jsx";
 import { CL } from "../components/home/clTheme.js";
 import mindmaps from "../data/mindmaps.json";
 
-/* ── Subject accents — all drawn from the site's CL palette ── */
+/* ── Subject accents - all drawn from the site's CL palette ── */
 const SUBJECTS = [
   { id: "physics",   Icon: Atom,         accent: CL.coral,  soft: CL.coralSoft, dk: CL.coralDk, tint: "#FFF4F0" },
   { id: "chemistry", Icon: FlaskConical, accent: CL.green,  soft: CL.greenSoft, dk: "#0A8F5B",  tint: "#F0FBF6" },
@@ -27,7 +27,7 @@ const download = (href, name) => {
 };
 
 /* ════════════════════════════════════════════════════════════════
-   MIND-MAP VIEWER — full-screen gallery for one chapter's pages
+   MIND-MAP VIEWER - full-screen gallery for one chapter's pages
    ════════════════════════════════════════════════════════════════ */
 function MindMapViewer({ open, subjectId, chapter, onClose }) {
   const meta = SUBJECT_MAP[subjectId] || SUBJECTS[0];
@@ -326,8 +326,8 @@ export default function JeeResources() {
   return (
     <div className="page" style={{ minHeight: "100vh", background: CL.cream }}>
       <Seo
-        title="JEE Mind Maps — Chapter-wise Revision Sheets for Physics, Chemistry & Maths"
-        description={`${totals.ch} chapter-wise JEE Main & Advanced mind maps across Physics, Chemistry and Mathematics — ${totals.pg} high-yield revision sheets to memorise every formula fast, free on Campus Point.`}
+        title="JEE Mind Maps - Chapter-wise Revision Sheets for Physics, Chemistry & Maths"
+        description={`${totals.ch} chapter-wise JEE Main & Advanced mind maps across Physics, Chemistry and Mathematics - ${totals.pg} high-yield revision sheets to memorise every formula fast, free on Campus Point.`}
         path="/jee-resources"
       />
 
@@ -345,7 +345,7 @@ export default function JeeResources() {
               </span>
             </h1>
             <p style={{ color: CL.body, fontSize: "1.02rem", maxWidth: 560, lineHeight: 1.7, margin: "0 0 26px" }}>
-              High-yield, chapter-wise revision sheets for Physics, Chemistry &amp; Mathematics — every
+              High-yield, chapter-wise revision sheets for Physics, Chemistry &amp; Mathematics - every
               formula, reaction and result condensed into visual mind maps you can revise in minutes.
             </p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>

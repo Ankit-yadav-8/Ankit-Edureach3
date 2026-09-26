@@ -32,7 +32,7 @@ export default function Shortlist() {
     try { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch {}
   };
 
-  // "Colleges for you" — recommend by overlap of type/state with saved, excluding saved
+  // "Colleges for you" - recommend by overlap of type/state with saved, excluding saved
   const recommendations = useMemo(() => {
     if (!cols.length) return [];
     const types = new Set(cols.map((c) => c.type));
@@ -50,7 +50,7 @@ export default function Shortlist() {
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="Shortlist Your College"
-        description="Build and share your personalised college shortlist on CampusPoint — save IITs, NITs and IIITs, compare them side by side, and plan your JoSAA choices. Free by IIT Roorkee alumni."
+        description="Build and share your personalised college shortlist on CampusPoint - save IITs, NITs and IIITs, compare them side by side, and plan your JoSAA choices. Free by IIT Roorkee alumni."
         path="/shortlist"
         robots="noindex, follow"
       />

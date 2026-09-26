@@ -16,13 +16,13 @@ export default function CounsellingPlanner() {
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   // Run the prediction in a Web Worker so the heavy JoSAA cutoff scan never
-  // blocks the main thread — previously this ran synchronously here and froze
+  // blocks the main thread - previously this ran synchronously here and froze
   // the page for 7–10s, making it look unresponsive / broken.
   const { predict, reset: resetPredict, results, loading, error } = useCollegePredictor();
 
   // When the worker returns, turn the flat result list into a draggable order.
   // Include EVERY eligible college-branch option (no cap) so the choice list is
-  // complete — exactly the set of options the candidate can fill in JoSAA.
+  // complete - exactly the set of options the candidate can fill in JoSAA.
   useEffect(() => {
     if (!results) return;
     setOrder(results.map((o, i) => ({ ...o, _id: `${o.slug}-${o.branchCode}-${i}` })));
@@ -39,9 +39,9 @@ export default function CounsellingPlanner() {
 
   const download = () => {
     if (!order.length) return;
-    const head = `Campus Point — My JoSAA Choice List\nExam: ${form.exam === "advanced" ? "JEE Advanced (IITs)" : "JEE Main (NITs, IIITs & GFTIs)"}\nRank: ${form.rank || "-"}   Category: ${form.category}\nTotal options: ${order.length}\nGenerated on ${new Date().toLocaleDateString("en-IN")}\n${"=".repeat(50)}\n\n`;
-    const body = order.map((o, i) => `${String(i + 1).padStart(2, " ")}. ${o.college} — ${o.branch}\n     Closing rank: ${o.closing}   |   ${o.tier}`).join("\n\n");
-    const blob = new Blob([head + body + "\n\n(Illustrative — verify on josaa.nic.in)"], { type: "text/plain" });
+    const head = `Campus Point - My JoSAA Choice List\nExam: ${form.exam === "advanced" ? "JEE Advanced (IITs)" : "JEE Main (NITs, IIITs & GFTIs)"}\nRank: ${form.rank || "-"}   Category: ${form.category}\nTotal options: ${order.length}\nGenerated on ${new Date().toLocaleDateString("en-IN")}\n${"=".repeat(50)}\n\n`;
+    const body = order.map((o, i) => `${String(i + 1).padStart(2, " ")}. ${o.college} - ${o.branch}\n     Closing rank: ${o.closing}   |   ${o.tier}`).join("\n\n");
+    const blob = new Blob([head + body + "\n\n(Illustrative - verify on josaa.nic.in)"], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url; a.download = "my-josaa-choice-list.txt"; a.click();
@@ -57,8 +57,8 @@ export default function CounsellingPlanner() {
     <div className="page">
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
-        title="JoSAA Counselling Planner — Build Your Choice-Filling Order"
-        description="Free JoSAA 2026 counselling planner — arrange your IIT/NIT/IIIT choice list in the smartest order based on your rank, category and preferences, by IIT Roorkee alumni."
+        title="JoSAA Counselling Planner - Build Your Choice-Filling Order"
+        description="Free JoSAA 2026 counselling planner - arrange your IIT/NIT/IIIT choice list in the smartest order based on your rank, category and preferences, by IIT Roorkee alumni."
         path="/planner"
       />
 
@@ -82,12 +82,12 @@ export default function CounsellingPlanner() {
             <ListOrdered size={28} color="#FF693D" /> Plan your JoSAA choice order
           </h1>
           <p style={{ color: "rgba(28,28,40,.62)", maxWidth: 640, fontSize: "0.97rem", lineHeight: 1.7 }}>
-            Get your eligible options, drag them into your preferred order, and we'll show which seat you'd most likely be allotted — exactly how JoSAA fills choices.
+            Get your eligible options, drag them into your preferred order, and we'll show which seat you'd most likely be allotted - exactly how JoSAA fills choices.
           </p>
         </div>
       </section>
 
-      {/* ── Main content — warm gradient ── */}
+      {/* ── Main content - warm gradient ── */}
       <section style={{
         background: "linear-gradient(160deg, #fff7ef 0%, #fff3e6 40%, #fff 100%)",
         padding: "48px 0 72px",
@@ -176,7 +176,7 @@ export default function CounsellingPlanner() {
 
           {ran && !loading && !error && order.length === 0 && (
             <div className="card" style={{ textAlign: "center", padding: 40, color: "var(--muted)" }}>
-              No eligible options — try widening your filters or check your rank.
+              No eligible options - try widening your filters or check your rank.
             </div>
           )}
 
@@ -195,7 +195,7 @@ export default function CounsellingPlanner() {
                   </button>
                 </div>
                 <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>
-                  Every college-branch you're eligible for is listed below. Drag the handle to reorder — put your most-wanted seat at the top.
+                  Every college-branch you're eligible for is listed below. Drag the handle to reorder - put your most-wanted seat at the top.
                 </p>
                 <Reorder.Group axis="y" values={order} onReorder={setOrder} style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
                   {order.map((o, i) => (
@@ -289,7 +289,7 @@ export default function CounsellingPlanner() {
                           </Link>
                         </div>
                         <p style={{ fontSize: 12, color: "rgba(255,255,255,.40)", marginTop: 12 }}>
-                          You'd be allotted the <strong style={{ color: "rgba(255,255,255,.7)" }}>highest choice in your list you qualify for</strong>. Choices above #{allotIndex + 1} are currently a stretch — keep them on top only if you're willing to wait for later rounds.
+                          You'd be allotted the <strong style={{ color: "rgba(255,255,255,.7)" }}>highest choice in your list you qualify for</strong>. Choices above #{allotIndex + 1} are currently a stretch - keep them on top only if you're willing to wait for later rounds.
                         </p>
                       </>
                     ) : (
@@ -304,7 +304,7 @@ export default function CounsellingPlanner() {
                   <div style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 13 }}>
                     <CheckCircle2 size={16} color="var(--teal)" />
                     <span style={{ color: "var(--muted)" }}>
-                      Tip: list dream colleges first, then safe ones — JoSAA never drops you to a lower choice if a higher one is available.
+                      Tip: list dream colleges first, then safe ones - JoSAA never drops you to a lower choice if a higher one is available.
                     </span>
                   </div>
                 </div>

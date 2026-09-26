@@ -108,28 +108,28 @@ const SYLLABUS = {
   Physics: {
     color: "#FF693D", icon: Atom,
     topics: [
-      "Mechanics — Kinematics, Newton's Laws, Friction",
+      "Mechanics - Kinematics, Newton's Laws, Friction",
       "Work, Energy & Power",
       "Gravitation & Simple Harmonic Motion",
-      "Thermodynamics — Laws, Heat Transfer",
-      "Waves & Sound — Doppler Effect",
-      "Optics — Ray & Wave Optics, Lenses",
-      "Electricity — Ohm's Law, Kirchhoff's Laws",
+      "Thermodynamics - Laws, Heat Transfer",
+      "Waves & Sound - Doppler Effect",
+      "Optics - Ray & Wave Optics, Lenses",
+      "Electricity - Ohm's Law, Kirchhoff's Laws",
       "Magnetism & Electromagnetic Induction",
-      "Modern Physics — Photoelectric, Radioactivity",
+      "Modern Physics - Photoelectric, Radioactivity",
     ],
   },
   Chemistry: {
     color: "#0EA5A4", icon: FlaskConical,
     topics: [
-      "Physical Chemistry — Mole Concept, Stoichiometry",
+      "Physical Chemistry - Mole Concept, Stoichiometry",
       "Thermodynamics & Chemical Equilibrium",
       "Electrochemistry & Redox Reactions",
       "Atomic Structure & Periodic Table",
       "Chemical Bonding & Molecular Structure",
-      "Organic Chemistry — Hydrocarbons, Functional Groups",
-      "Reaction Mechanisms — SN1/SN2, Elimination",
-      "Inorganic Chemistry — s, p, d Block Elements",
+      "Organic Chemistry - Hydrocarbons, Functional Groups",
+      "Reaction Mechanisms - SN1/SN2, Elimination",
+      "Inorganic Chemistry - s, p, d Block Elements",
       "Biomolecules & Polymers",
     ],
   },
@@ -139,10 +139,10 @@ const SYLLABUS = {
       "Sets, Relations & Functions",
       "Complex Numbers & Quadratic Equations",
       "Permutation, Combination & Binomial Theorem",
-      "Sequences & Series — AP, GP",
-      "Trigonometry — Ratios, Equations, Inverse",
-      "Coordinate Geometry — Straight Lines, Circles, Conics",
-      "Calculus — Limits, Derivatives, Integrals",
+      "Sequences & Series - AP, GP",
+      "Trigonometry - Ratios, Equations, Inverse",
+      "Coordinate Geometry - Straight Lines, Circles, Conics",
+      "Calculus - Limits, Derivatives, Integrals",
       "3D Geometry & Vectors",
       "Statistics & Probability",
     ],
@@ -154,7 +154,7 @@ const COACHING = [
   {
     name: "Allen Career Institute", city: "Kota, Rajasthan", color: "#FF693D", badge: "🏆 #1 in India",
     highlights: [
-      "Largest coaching institute — 1.5 lakh+ students annually",
+      "Largest coaching institute - 1.5 lakh+ students annually",
       "JEE Main 100 percentile scorers every year from Allen",
       "Classroom, distance (DLPD) & online programs",
       "Leader Board batches for top-ranked students",
@@ -165,7 +165,7 @@ const COACHING = [
     name: "Resonance", city: "Kota, Rajasthan", color: "#7C3AED", badge: "⭐ Strong Maths Faculty",
     highlights: [
       "Excellent track record in JEE Main top 1000 ranks",
-      "ResoFAST scholarship exam — merit-based fee waivers",
+      "ResoFAST scholarship exam - merit-based fee waivers",
       "e-Resonance online platform with live + recorded classes",
       "Widely used All-India test series (even by self-studiers)",
     ],
@@ -184,7 +184,7 @@ const COACHING = [
   {
     name: "Narayana", city: "Hyderabad + Pan India", color: "#EC4899", badge: "📍 500+ Centres",
     highlights: [
-      "Best value for money — affordable fees + scholarships",
+      "Best value for money - affordable fees + scholarships",
       "Excellent NIT results from SC/ST/OBC categories",
       "Integrated residential school + coaching available",
       "Strong presence in South India and Tier-2 cities",
@@ -194,7 +194,7 @@ const COACHING = [
   {
     name: "Physics Wallah (PW)", city: "Online + Patna / Lucknow", color: "#15A06E", badge: "💸 Most Affordable",
     highlights: [
-      "Alakh Pandey's platform — most popular JEE YouTube content",
+      "Alakh Pandey's platform - most popular JEE YouTube content",
       "Batch fees under ₹10K–₹30K for full JEE Main prep",
       "PW Vidyapeeth offline centres in major cities",
       "Arjuna / Lakshya batches with DPPs and test series",
@@ -340,7 +340,7 @@ export default function JeeMain() {
   return (
     <div className="page">
       <Seo
-        title="JEE Main Rank Predictor — Percentile to Rank & College Predictor"
+        title="JEE Main Rank Predictor - Percentile to Rank & College Predictor"
         description="Free JEE Main rank predictor. Convert your NTA percentile to an expected rank and see which IITs, NITs and IIITs you can get, category-wise. Built by IIT Roorkee alumni."
         path="/jee-main"
       />
@@ -404,7 +404,7 @@ export default function JeeMain() {
       {/* ── Hero (blog-style) ── */}
       <PageHero
         eyebrow="JEE Main 2026" eyebrowIcon={Target} accent="#FF693D"
-        titleLead="JEE Main —" highlight="rank & college" titleTail="" highlightTail="predictor hub."
+        titleLead="JEE Main -" highlight="rank & college" titleTail="" highlightTail="predictor hub."
         sub="Predict your rank, find every NIT, IIIT & GFTI you qualify for, analyse session-wise difficulty, and follow the complete syllabus, roadmap & coaching options."
         cta={{ label: "Predict my rank", to: "#rank" }}
         cards={[
@@ -434,7 +434,7 @@ export default function JeeMain() {
           }}>
             <span style={{ fontSize: 18 }}>⏳</span>
             <span>
-              <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a "Page Unresponsive" pop-up, click <strong>"Wait"</strong> — do <em>not</em> click "Exit Page".
+              <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a "Page Unresponsive" pop-up, click <strong>"Wait"</strong> - do <em>not</em> click "Exit Page".
             </span>
           </div>
           <div className="predictor-layout" style={{ display: "block" }}>
@@ -453,7 +453,7 @@ export default function JeeMain() {
 
           <div className="title-bar">
             <span className="eyebrow">Session Analysis · 2021–2025</span>
-            <h2 className="section-title">Session-wise Difficulty — Subject Analysis</h2>
+            <h2 className="section-title">Session-wise Difficulty - Subject Analysis</h2>
             <p className="section-sub">
               Select a year to compare Physics, Chemistry &amp; Maths difficulty across both sessions.
               Qualitative labels from official paper analysis. Index: 0 = easiest · 100 = hardest.
@@ -558,7 +558,7 @@ export default function JeeMain() {
           <div className="card" style={{ marginBottom: 20 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
               <h4 style={{ fontFamily: "Sora", fontWeight: 700 }}>
-                Session 1 vs Session 2 — All Subjects · {selectedYear}
+                Session 1 vs Session 2 - All Subjects · {selectedYear}
               </h4>
               <span style={{ fontSize: 11, color: "var(--muted)" }}>Higher bar = more difficult</span>
             </div>
@@ -579,7 +579,7 @@ export default function JeeMain() {
               <span style={{ fontSize: 28, flexShrink: 0 }}>💡</span>
               <div style={{ flex: 1 }}>
                 <h4 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, marginBottom: 8 }}>
-                  Key Trends — JEE Main {selectedYear}
+                  Key Trends - JEE Main {selectedYear}
                 </h4>
                 <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.7, marginBottom: 12 }}>{d.keyTrend}</p>
                 <div>
@@ -660,9 +660,9 @@ export default function JeeMain() {
 
           <div className="grid-3" style={{ gap: 22, marginBottom: 22 }}>
             {[
-              { label: "Physics",   data: TREND_PHYSICS,   c1: "#FF693D", c2: "#fdba74", note: "Becoming harder each year — application-based questions rising" },
-              { label: "Chemistry", data: TREND_CHEMISTRY, c1: "#0EA5A4", c2: "#5eead4", note: "Most scoring subject consistently — NCERT-based prep sufficient" },
-              { label: "Maths",     data: TREND_MATHS,     c1: "#7C3AED", c2: "#c084fc", note: "Toughest every year — Calculus & 3D Geometry heavily weighted" },
+              { label: "Physics",   data: TREND_PHYSICS,   c1: "#FF693D", c2: "#fdba74", note: "Becoming harder each year - application-based questions rising" },
+              { label: "Chemistry", data: TREND_CHEMISTRY, c1: "#0EA5A4", c2: "#5eead4", note: "Most scoring subject consistently - NCERT-based prep sufficient" },
+              { label: "Maths",     data: TREND_MATHS,     c1: "#7C3AED", c2: "#c084fc", note: "Toughest every year - Calculus & 3D Geometry heavily weighted" },
             ].map(({ label, data, c1, c2, note }) => (
               <div key={label} className="card card-hover">
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
@@ -692,9 +692,9 @@ export default function JeeMain() {
           {/* Trend insight mini cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 14 }}>
             {[
-              { icon: "⚛", color: "#FF693D", title: "Physics",   stat: "↑ +14 pts", sub: "Index rose from ~60 (2021) to ~72 (2025 S2) — harder every year" },
-              { icon: "⚗", color: "#0EA5A4", title: "Chemistry", stat: "↑ +8 pts",  sub: "Mild increase overall — still the most scoring subject consistently" },
-              { icon: "∑",  color: "#7C3AED", title: "Maths",    stat: "↑ +17 pts", sub: "Steepest rise — from ~65 (2021) to ~82 (2025 S2). Calculus is key" },
+              { icon: "⚛", color: "#FF693D", title: "Physics",   stat: "↑ +14 pts", sub: "Index rose from ~60 (2021) to ~72 (2025 S2) - harder every year" },
+              { icon: "⚗", color: "#0EA5A4", title: "Chemistry", stat: "↑ +8 pts",  sub: "Mild increase overall - still the most scoring subject consistently" },
+              { icon: "∑",  color: "#7C3AED", title: "Maths",    stat: "↑ +17 pts", sub: "Steepest rise - from ~65 (2021) to ~82 (2025 S2). Calculus is key" },
             ].map(({ icon, color, title, stat, sub }) => (
               <div key={title} className="card" style={{ borderLeft: `4px solid ${color}`, padding: "14px 18px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
@@ -718,9 +718,9 @@ export default function JeeMain() {
         <div className="container">
           <div className="title-bar">
             <span className="eyebrow">Cutoff Trends · 2021–2025</span>
-            <h2 className="section-title">JEE Main — Qualifying Percentile Trend</h2>
+            <h2 className="section-title">JEE Main - Qualifying Percentile Trend</h2>
             <p className="section-sub">
-              Minimum NTA percentile to qualify JEE Main for NIT/IIIT/GFTI admission via JoSAA — category-wise.
+              Minimum NTA percentile to qualify JEE Main for NIT/IIIT/GFTI admission via JoSAA - category-wise.
               <strong> This is the JEE Main qualifying cutoff, not JEE Advanced eligibility.</strong>
             </p>
           </div>
@@ -788,7 +788,7 @@ export default function JeeMain() {
             {/* Per-category mini bars for latest year */}
             <div style={{ marginBottom: 20, padding: "16px 20px", background: "var(--sky)", borderRadius: 12, border: "1px solid var(--line)" }}>
               <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 13, marginBottom: 14, color: "var(--navy)" }}>
-                📊 2025 Qualifying Percentile — Category Visual
+                📊 2025 Qualifying Percentile - Category Visual
               </div>
               <PctBar label="General"  value={93.10} color="#1c4fa0" />
               <PctBar label="GEN-EWS"  value={80.38} color="#7C3AED" />
@@ -814,7 +814,7 @@ export default function JeeMain() {
               <div style={{ padding: "12px 16px", background: "#fef2f2", borderRadius: 10, border: "1px solid #fca5a5" }}>
                 <div style={{ fontWeight: 700, fontSize: 12, color: "#EF4444", marginBottom: 4 }}>📈 General cutoff rising</div>
                 <div style={{ fontSize: 12, color: "#7f1d1d", lineHeight: 1.5 }}>
-                  General category cutoff rose from 87.89 (2021) to 93.23 (2024) — an increase of ~5.3 percentile points in 4 years.
+                  General category cutoff rose from 87.89 (2021) to 93.23 (2024) - an increase of ~5.3 percentile points in 4 years.
                 </div>
               </div>
               <div style={{ padding: "12px 16px", background: "#f0fdf4", borderRadius: 10, border: "1px solid #86efac" }}>
@@ -898,7 +898,7 @@ export default function JeeMain() {
           <div className="title-bar">
             <span className="eyebrow">Top Coaching</span>
             <h2 className="section-title">Best Coaching Institutes for JEE Main</h2>
-            <p className="section-sub">From budget-friendly online platforms to Kota's top offline institutes — find the right fit for your budget and study style.</p>
+            <p className="section-sub">From budget-friendly online platforms to Kota's top offline institutes - find the right fit for your budget and study style.</p>
           </div>
           <div className="grid-3" style={{ gap: 22 }}>
             {COACHING.map((c) => (
@@ -937,7 +937,7 @@ export default function JeeMain() {
               {[
                 { title: "Tight Budget (under ₹10K)",  tip: "Physics Wallah (PW) YouTube is free and excellent. Spend ₹5K–10K on Arihant/Disha books + NTA free mocks. Self-discipline is the only requirement." },
                 { title: "Mid Budget (₹30K–60K)",      tip: "Vedantu / Unacademy online batches. Get doubt sessions + test series. Supplement with 3–4 standard books per subject." },
-                { title: "Standard Budget (₹1L–2L)",   tip: "Narayana or FIITJEE local centre. Good faculty, structured curriculum. Ask about batch sizes — under 40 students is ideal." },
+                { title: "Standard Budget (₹1L–2L)",   tip: "Narayana or FIITJEE local centre. Good faculty, structured curriculum. Ask about batch sizes - under 40 students is ideal." },
                 { title: "Premium / Kota Coaching",    tip: "Allen or Resonance Kota if you can relocate. Hostel + coaching is ₹2.5L–4L/year all-in. Best peer group, most competitive environment." },
               ].map(({ title, tip }) => (
                 <div key={title} style={{ display: "flex", gap: 10 }}>

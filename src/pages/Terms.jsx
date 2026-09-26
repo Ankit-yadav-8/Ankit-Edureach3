@@ -14,7 +14,7 @@ const SECTIONS = [
   {
     h: "2. What we provide",
     p: [
-      "Campus Point offers informational tools — including rank prediction, college discovery, cutoff trends and counselling guidance — to help students make admission decisions. All outputs are indicative estimates intended for guidance only.",
+      "Campus Point offers informational tools - including rank prediction, college discovery, cutoff trends and counselling guidance - to help students make admission decisions. All outputs are indicative estimates intended for guidance only.",
     ],
   },
   {
@@ -75,7 +75,7 @@ export default function Terms() {
   return (
     <div className="page">
       <Seo
-        title="Terms of Use — Campus Point"
+        title="Terms of Use - Campus Point"
         description="The terms governing your use of Campus Point's rank predictor, college discovery and counselling tools, including accuracy disclaimers and acceptable use."
         path="/terms"
       />

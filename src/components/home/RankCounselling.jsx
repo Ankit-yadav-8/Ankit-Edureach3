@@ -25,12 +25,12 @@ const WA_LINK =
    DATA
 ════════════════════════════════════════════════ */
 const STORIES = [
-  { name: "Rahul Sharma", city: "Patna, Bihar", rank: "1,42,000", category: "OBC-NCL", college: "GFTI — CSE", quote: "I thought my rank was too low for a good college. The counsellor found me a CSE seat I didn't even know existed.", note: "GFTI cut-off was relaxed for OBC-NCL — a branch most aggregators had marked 'out of reach'." },
-  { name: "Priya Mehta", city: "Indore, MP", rank: "3,10,000", category: "General", college: "State Govt. — IT", quote: "Home-state quota changed everything. Got into a government college close to home with great placements.", note: "Home-state quota dropped her effective cut-off by ~40% vs the all-India list." },
-  { name: "Aman Kumar", city: "Jaipur, Rajasthan", rank: "5,80,000", category: "EWS", college: "Top Private — AI/ML", quote: "Their list was honest and realistic. I joined a private college with a strong AI program and a scholarship.", note: "Bagged a merit scholarship that cut 30% off the fee — flagged by the counsellor during the call." },
-  { name: "Sneha Reddy", city: "Hyderabad, Telangana", rank: "2,05,000", category: "General", college: "IIIT — ECE", quote: "The CSAB round guidance got me an IIIT seat in the last round. Forever grateful for the deadline reminders!", note: "Seat allotted in the final CSAB special round — most students had already stopped checking." },
-  { name: "Vikram Singh", city: "Lucknow, UP", rank: "4,25,000", category: "SC", college: "State Govt. — Mechanical", quote: "I almost gave up after JoSAA. The team mapped my state counselling options and I got a core branch seat.", note: "Switched focus to state counselling (UPCET) after JoSAA — that's where his seat finally came through." },
-  { name: "Ananya Das", city: "Kolkata, WB", rank: "7,40,000", category: "General", college: "Deemed Univ. — Data Science", quote: "Even at 7.4 lakh I landed a future-proof branch. The Safe–Moderate–Reach list took all the panic away.", note: "Avoided two overpriced colleges the counsellor flagged for weak placement records." },
+  { name: "Rahul Sharma", city: "Patna, Bihar", rank: "1,42,000", category: "OBC-NCL", college: "GFTI - CSE", quote: "I thought my rank was too low for a good college. The counsellor found me a CSE seat I didn't even know existed.", note: "GFTI cut-off was relaxed for OBC-NCL - a branch most aggregators had marked 'out of reach'." },
+  { name: "Priya Mehta", city: "Indore, MP", rank: "3,10,000", category: "General", college: "State Govt. - IT", quote: "Home-state quota changed everything. Got into a government college close to home with great placements.", note: "Home-state quota dropped her effective cut-off by ~40% vs the all-India list." },
+  { name: "Aman Kumar", city: "Jaipur, Rajasthan", rank: "5,80,000", category: "EWS", college: "Top Private - AI/ML", quote: "Their list was honest and realistic. I joined a private college with a strong AI program and a scholarship.", note: "Bagged a merit scholarship that cut 30% off the fee - flagged by the counsellor during the call." },
+  { name: "Sneha Reddy", city: "Hyderabad, Telangana", rank: "2,05,000", category: "General", college: "IIIT - ECE", quote: "The CSAB round guidance got me an IIIT seat in the last round. Forever grateful for the deadline reminders!", note: "Seat allotted in the final CSAB special round - most students had already stopped checking." },
+  { name: "Vikram Singh", city: "Lucknow, UP", rank: "4,25,000", category: "SC", college: "State Govt. - Mechanical", quote: "I almost gave up after JoSAA. The team mapped my state counselling options and I got a core branch seat.", note: "Switched focus to state counselling (UPCET) after JoSAA - that's where his seat finally came through." },
+  { name: "Ananya Das", city: "Kolkata, WB", rank: "7,40,000", category: "General", college: "Deemed Univ. - Data Science", quote: "Even at 7.4 lakh I landed a future-proof branch. The Safe–Moderate–Reach list took all the panic away.", note: "Avoided two overpriced colleges the counsellor flagged for weak placement records." },
 ];
 
 /* ── The two counselling plans shown side-by-side ── */
@@ -45,16 +45,16 @@ const PLANS = [
     off: "85% OFF",
     save: "SAVE 85%",
     label: "one-time · all JoSAA + CSAB rounds",
-    blurb: "Best when your rank is strong — secure the best possible IIT, NIT, IIIT or GFTI seat through the official JoSAA & CSAB rounds.",
+    blurb: "Best when your rank is strong - secure the best possible IIT, NIT, IIIT or GFTI seat through the official JoSAA & CSAB rounds.",
     includes: [
       "Personalised choice list (your rank + category)",
-      "1-on-1 mentor call — 45 min",
+      "1-on-1 mentor call - 45 min",
       "Round-wise allotment prediction",
       "WhatsApp support till seat locked",
       "Document & deadline checklist",
       "Choice review before you lock",
     ],
-    cta: "Enrol Now — ₹299",
+    cta: "Enrol Now - ₹299",
     to: "/josaa-2026",
     external: false,
     featured: false,
@@ -74,23 +74,23 @@ const PLANS = [
       "Personalised college list for YOUR rank & category",
       "Covers NITs · IIITs · GFTIs · State · Private · Deemed",
       "1-on-1 expert counsellor call (45 min)",
-      "Choice-filling order — JoSAA + CSAB + State boards",
+      "Choice-filling order - JoSAA + CSAB + State boards",
       "Home-state & reservation quota optimisation",
       "Safe / Moderate / Reach list, mistake-proofed",
       "Document & deadline checklist",
       "WhatsApp support till your seat is locked",
     ],
-    cta: "Enrol Now — ₹499",
+    cta: "Enrol Now - ₹499",
     featured: true,
   },
 ];
 
 const FAQS = [
-  { q: "Can I get an NIT with rank 1.5 lakh?", a: "Yes — through home-state quota and reserved categories, several NITs admit students around the 1–1.5 lakh range, especially in core branches. We check both HS and OS cut-offs for your exact category before advising." },
+  { q: "Can I get an NIT with rank 1.5 lakh?", a: "Yes - through home-state quota and reserved categories, several NITs admit students around the 1–1.5 lakh range, especially in core branches. We check both HS and OS cut-offs for your exact category before advising." },
   { q: "Which private colleges are worth it?", a: "We only recommend private colleges with verified placement records, NAAC/NBA accreditation and reasonable fees. We match them to your budget and branch preference so you avoid overpriced options." },
-  { q: "How does home-state quota work?", a: "NITs and most state colleges reserve ~50% of seats for students from the home state, with significantly relaxed cut-offs. If you qualify, your effective rank is far stronger — we factor this into your list." },
+  { q: "How does home-state quota work?", a: "NITs and most state colleges reserve ~50% of seats for students from the home state, with significantly relaxed cut-offs. If you qualify, your effective rank is far stronger - we factor this into your list." },
   { q: "What documents do I need for counselling?", a: "Typically: JEE Main scorecard & rank card, Class 10 & 12 mark sheets, category/caste certificate (if applicable), domicile certificate, ID proof and passport photos. We give you a full personalised checklist." },
-  { q: "Is the first counselling session really free?", a: "Yes. Your first 1-on-1 session is completely free — you get a realistic college list and a clear plan with no obligation to continue." },
+  { q: "Is the first counselling session really free?", a: "Yes. Your first 1-on-1 session is completely free - you get a realistic college list and a clear plan with no obligation to continue." },
 ];
 
 const TRUST = [
@@ -134,7 +134,7 @@ export default function RankCounselling() {
               JEE Mains College Counselling
             </span>
             <h2 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, color: "#1a1a2e", fontSize: "clamp(1.7rem,4vw,2.7rem)", lineHeight: 1.12, letterSpacing: "-1px", margin: "16px 0 14px" }}>
-              Your Rank Is Not Your Limit —{" "}
+              Your Rank Is Not Your Limit -{" "}
               <span style={{ background: "linear-gradient(90deg,#FF693D,#E0421F)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 Find the Right College for You
               </span>
@@ -142,7 +142,7 @@ export default function RankCounselling() {
             <p style={{ color: "#4b5563", fontSize: "1.02rem", lineHeight: 1.7, maxWidth: 640, margin: "0 auto 26px" }}>
               Dedicated guidance for every JEE Mains rank holder. Whatever your rank, there are
               thousands of great seats in your reach across NITs, IIITs, GFTIs, state &amp; private
-              colleges — we help you find them.
+              colleges - we help you find them.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", alignItems: "center" }}>
               <a href={WA_LINK} target="_blank" rel="noreferrer" className="btn btn-coral"
@@ -169,7 +169,7 @@ export default function RankCounselling() {
         {/* ── 2 · COUNSELLING PLANS (₹299 + ₹499) ── */}
         <Reveal>
           <SectionHead eyebrow="Counselling Plans" title={<>One plan for <span className="accent">all colleges</span></>}
-            sub="Pick the plan that fits your rank — expert, data-backed counselling that turns your rank into a confirmed seat." />
+            sub="Pick the plan that fits your rank - expert, data-backed counselling that turns your rank into a confirmed seat." />
           <div className="counsel-plans" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 22, maxWidth: 760, margin: "36px auto 0", alignItems: "stretch" }}>
             {PLANS.map((p, i) => {
               const Icon = p.icon;
@@ -262,7 +262,7 @@ export default function RankCounselling() {
 
         {/* ── 7 · SUCCESS STORIES (left) + EXPLORE MENTORSHIP (right) on desktop ── */}
         <div className="cta-merge-grid-rev">
-          {/* Explore Mentorship — source first → right column on desktop, on top on mobile */}
+          {/* Explore Mentorship - source first → right column on desktop, on top on mobile */}
           <Reveal delay={0.1} style={{ display: "flex" }}>
             <motion.div
               whileHover={{ y: -4 }}
@@ -284,7 +284,7 @@ export default function RankCounselling() {
                 The earlier you start, the higher you rank.
               </h3>
               <p style={{ color: "#5b6472", fontSize: ".95rem", lineHeight: 1.7, margin: 0 }}>
-                1-on-1 mentorship from IITians &amp; doctors who&apos;ve cracked JEE and NEET — a personalised plan, daily accountability, and the strategy that actually moves your rank. Seats are limited each batch, because a mentor can only guide so many students well.
+                1-on-1 mentorship from IITians &amp; doctors who&apos;ve cracked JEE and NEET - a personalised plan, daily accountability, and the strategy that actually moves your rank. Seats are limited each batch, because a mentor can only guide so many students well.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 11, width: "100%", margin: "2px 0" }}>
                 {[
@@ -309,7 +309,7 @@ export default function RankCounselling() {
             </motion.div>
           </Reveal>
 
-          {/* Success stories — source last → left column on desktop */}
+          {/* Success stories - source last → left column on desktop */}
           <Reveal>
             <SectionHead eyebrow="Real results" title={<>Success <span className="accent">stories</span></>}
               sub="Students with ranks like yours who found the right college." />
@@ -418,10 +418,10 @@ export default function RankCounselling() {
                 <Sparkles size={13} /> Free first session
               </div>
               <h3 style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, color: "#1a1a2e", fontSize: "clamp(1.3rem,2.4vw,1.7rem)", lineHeight: 1.2, margin: 0 }}>
-                Don&apos;t miss your admission deadline — <span style={{ color: "#FF693D" }}>talk to a counsellor today</span>
+                Don&apos;t miss your admission deadline - <span style={{ color: "#FF693D" }}>talk to a counsellor today</span>
               </h3>
               <p style={{ color: "#5b6472", fontSize: ".95rem", lineHeight: 1.7, margin: 0 }}>
-                Get a personalised, rank-based college list and round-by-round guidance from advisors who&apos;ve navigated JoSAA, CSAB and state counselling hundreds of times — so you lock the best seat your rank can get.
+                Get a personalised, rank-based college list and round-by-round guidance from advisors who&apos;ve navigated JoSAA, CSAB and state counselling hundreds of times - so you lock the best seat your rank can get.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 11, width: "100%", margin: "2px 0" }}>
                 {[

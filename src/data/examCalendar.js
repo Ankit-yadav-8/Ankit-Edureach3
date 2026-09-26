@@ -1,4 +1,4 @@
-/* examCalendar — the engineering-entrance directory behind the home
+/* examCalendar - the engineering-entrance directory behind the home
    AdmissionTimeline. EXAM_DETAILS holds per-exam facts (level, conducting
    body, mode, duration, eligibility, accepted-by) so a student can tap any
    exam and explore it fully; EXAM_GROUPS is the National / State / Private
@@ -10,7 +10,7 @@ export const EXAM_DETAILS = {
   "JEE Main": {
     level: "National", body: "NTA (National Testing Agency)", mode: "Computer-based (CBT)",
     duration: "3 hours", eligibility: "Class 12 with PCM", courses: "B.E./B.Tech, B.Arch, B.Plan",
-    acceptedBy: "NITs, IIITs & GFTIs — also the qualifier for JEE Advanced",
+    acceptedBy: "NITs, IIITs & GFTIs - also the qualifier for JEE Advanced",
   },
   "JEE Advanced": {
     level: "National", body: "The IITs (rotating)", mode: "Computer-based (CBT)",
@@ -19,7 +19,7 @@ export const EXAM_DETAILS = {
   },
   "BITSAT": {
     level: "Private", body: "BITS Pilani", mode: "Computer-based (CBT)", duration: "3 hours",
-    eligibility: "Class 12 PCM — includes English proficiency & logical reasoning",
+    eligibility: "Class 12 PCM - includes English proficiency & logical reasoning",
     acceptedBy: "BITS Pilani, Goa & Hyderabad campuses",
   },
   "CUET UG (Engineering)": {
@@ -44,11 +44,11 @@ export const EXAM_DETAILS = {
   },
   "IMU CET": {
     level: "National", body: "Indian Maritime University",
-    acceptedBy: "IMU campuses — Marine Engineering & Naval Architecture",
+    acceptedBy: "IMU campuses - Marine Engineering & Naval Architecture",
   },
   "CIPET JEE": {
     level: "National", body: "CIPET",
-    acceptedBy: "CIPET institutes — plastics & polymer engineering",
+    acceptedBy: "CIPET institutes - plastics & polymer engineering",
   },
 
   /* ── State ── */
@@ -99,7 +99,7 @@ export const EXAM_DETAILS = {
   },
   "UPTAC (JEE Main-based)": {
     level: "State", body: "AKTU Uttar Pradesh", acceptedBy: "UP engineering colleges",
-    note: "Formerly UPSEE — now JEE Main-based",
+    note: "Formerly UPSEE - now JEE Main-based",
   },
   "JAC Delhi (JEE Main-based)": {
     level: "State", body: "Joint Admission Counselling Delhi",
@@ -114,7 +114,7 @@ export const EXAM_DETAILS = {
     acceptedBy: "Madhya Pradesh engineering colleges", note: "JEE Main-based",
   },
   "TNEA (Tamil Nadu)": {
-    level: "State", body: "Anna University / DoTE", mode: "No exam — Class 12 marks based",
+    level: "State", body: "Anna University / DoTE", mode: "No exam - Class 12 marks based",
     acceptedBy: "Tamil Nadu engineering colleges",
   },
 

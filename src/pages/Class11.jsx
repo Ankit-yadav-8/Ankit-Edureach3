@@ -9,7 +9,7 @@ export default function Class11() {
       [{ text: "Fundamentals.", accent: true }],
       [{ text: "Crack the " }, { text: "Future.", accent: true }],
     ],
-    description: "A premium chapter-wise toolkit for Physics, Chemistry, Mathematics and Biology — everything you need to build a rock-solid foundation for JEE & NEET.",
+    description: "A premium chapter-wise toolkit for Physics, Chemistry, Mathematics and Biology - everything you need to build a rock-solid foundation for JEE & NEET.",
     stats: [
       { value: "60+", label: "core chapters" },
       { value: "4", label: "subjects" },

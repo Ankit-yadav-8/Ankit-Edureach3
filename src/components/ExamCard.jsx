@@ -1,9 +1,9 @@
-/* ExamCard — one rich card per entrance exam for the /other-exams page.
+/* ExamCard - one rich card per entrance exam for the /other-exams page.
    Built in the Campus Point design language (CL theme): warm surfaces,
    coral accent, a category-tinted monogram badge, key facts up top and a
    tap-to-expand "Details" drawer with the full pattern + an editorial read.
 
-   The visual layout is our own — it is not lifted from any third-party card.
+   The visual layout is our own - it is not lifted from any third-party card.
    Each exam gets a monogram logo (code initials on a category-tinted badge);
    if a real logo file exists at `logo`, it is shown instead. */
 import { useState, useEffect } from "react";
@@ -15,7 +15,7 @@ import {
 import { CL } from "./home/clTheme.js";
 import { STATUS_META } from "../data/otherExams.js";
 
-/* Short monogram derived from the exam code — e.g. "JEE Main" → "JEE",
+/* Short monogram derived from the exam code - e.g. "JEE Main" → "JEE",
    "BITSAT" → "BIT", "AP EAPCET" → "AP". Keeps the badge legible at a glance. */
 function monogram(code) {
   const clean = code.replace(/\(.*?\)/g, "").trim();
@@ -33,7 +33,7 @@ export default function ExamCard({ exam, index = 0, defaultOpen = false }) {
   /* Deep-link target (e.g. from the footer): open + gently highlight. */
   useEffect(() => { if (defaultOpen) setOpen(true); }, [defaultOpen]);
 
-  /* A few soft, natural accent tints — used sparingly, only on the three
+  /* A few soft, natural accent tints - used sparingly, only on the three
      key-fact icons, so the card gains warmth without turning loud. */
   const facts = [
     { icon: IndianRupee, label: "Fee", value: exam.fee, fg: "#2E9E6B", bg: "#E8F5EE" },
@@ -94,7 +94,7 @@ export default function ExamCard({ exam, index = 0, defaultOpen = false }) {
             <span className="ex-fact-ic" style={{ background: f.bg, color: f.fg }}><f.icon size={15} /></span>
             <div style={{ minWidth: 0 }}>
               <span className="ex-fact-label">{f.label}</span>
-              <span className="ex-fact-value">{f.value || "—"}</span>
+              <span className="ex-fact-value">{f.value || "-"}</span>
             </div>
           </div>
         ))}

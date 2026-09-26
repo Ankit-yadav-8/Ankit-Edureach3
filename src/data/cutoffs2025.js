@@ -1,5 +1,5 @@
 /* ============================================================
-   cutoffs2025.js — AUTO-GENERATED from public/data/josaa_2025.csv
+   cutoffs2025.js - AUTO-GENERATED from public/data/josaa_2025.csv
    Real JoSAA 2025 opening/closing ranks per college · branch · category.
    Shape: slug -> branchCode -> CATEGORY -> [JR1 opening, JR1 closing, FINAL closing]
    Regenerate with: node scripts/genCutoffs2025.mjs

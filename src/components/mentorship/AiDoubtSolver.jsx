@@ -87,7 +87,7 @@ export default function AiDoubtSolver({ token, exam = "JEE", subjects = [] }) {
           else if (data && evt !== "meta") { try { const j = JSON.parse(data); if (j.delta) { acc += j.delta; setLast(acc); } } catch { /* */ } }
         }
       }
-      if (!acc) setLast("⚠️ No response — please try again.");
+      if (!acc) setLast("⚠️ No response - please try again.");
     } catch (err) {
       if (err.name !== "AbortError") {
         setMessages((prev) => {
@@ -115,7 +115,7 @@ export default function AiDoubtSolver({ token, exam = "JEE", subjects = [] }) {
               <Sparkles size={10} /> DOUBT SOLVER
             </span>
           </div>
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,.72)" }}>Instant step-by-step solutions — physics, chemistry &amp; maths.</div>
+          <div style={{ fontSize: 12, color: "rgba(255,255,255,.72)" }}>Instant step-by-step solutions - physics, chemistry &amp; maths.</div>
         </div>
         {messages.length > 0 && (
           <button onClick={() => { stop(); setMessages([]); }} title="New doubt"
@@ -151,7 +151,7 @@ export default function AiDoubtSolver({ token, exam = "JEE", subjects = [] }) {
             </div>
             <h3 style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: "1.15rem", margin: "0 0 6px" }}>Stuck on a question?</h3>
             <p style={{ color: MUTE, fontSize: 14, lineHeight: 1.6, margin: "0 0 18px" }}>
-              Ask Campus Point AI for a clean, step-by-step solution — then discuss it with your batch below.
+              Ask Campus Point AI for a clean, step-by-step solution - then discuss it with your batch below.
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {STARTERS.map((s) => (
@@ -205,7 +205,7 @@ export default function AiDoubtSolver({ token, exam = "JEE", subjects = [] }) {
           )}
         </div>
         <div style={{ fontSize: 11, color: "#94a3b8", textAlign: "center", marginTop: 7 }}>
-          AI can make mistakes — cross-check important results. For batch discussion, post your doubt in the Feed.
+          AI can make mistakes - cross-check important results. For batch discussion, post your doubt in the Feed.
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ const TOOLS = [
   {
     icon: Ticket,
     title: "Events & fest marketplace",
-    desc: "Book hackathons, cultural fests and seminars across colleges — discover what's happening near you.",
+    desc: "Book hackathons, cultural fests and seminars across colleges - discover what's happening near you.",
     badge: "NEW",
     badgeColor: "#FF693D",
     to: "/campus-fests",
@@ -199,7 +199,7 @@ export default function SmartToolsHub() {
             margin: "0 auto", 
             lineHeight: 1.6 
           }}>
-            From rank prediction to branch deep-dives and personalised college lists — every tool, consistent and built for JEE 2026.
+            From rank prediction to branch deep-dives and personalised college lists - every tool, consistent and built for JEE 2026.
           </p>
         </div>
 

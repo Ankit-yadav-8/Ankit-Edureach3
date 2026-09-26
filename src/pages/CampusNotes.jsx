@@ -230,7 +230,7 @@ export default function CampusNotes() {
   return (
     <div style={{ minHeight: "100vh", background: "var(--page-bg)", fontFamily: "'Inter', sans-serif" }}>
       <Seo
-        title="Campus Notes — Free Branch-wise Study Notes & Resources for College Students"
+        title="Campus Notes - Free Branch-wise Study Notes & Resources for College Students"
         description="Download free semester-wise, branch-wise study notes and resources shared by students. Find notes by branch, subject and semester on CampusPoint Campus Notes."
         path="/campus-notes"
         breadcrumbs={[{ name: "Home", path: "/" }, { name: "Campus Notes", path: "/campus-notes" }]}
@@ -253,7 +253,7 @@ export default function CampusNotes() {
             Share & Access Notes <span style={{ color: "#FF693D" }}>Across Campuses</span>
           </h1>
           <p style={{ fontSize: "1.05rem", color: "#64748b", maxWidth: 560, margin: "0 auto 28px", lineHeight: 1.6 }}>
-            Upload your study notes, access peer resources, and collaborate with students from top colleges — all in one place.
+            Upload your study notes, access peer resources, and collaborate with students from top colleges - all in one place.
           </p>
 
           {step === "browse" && (
@@ -365,7 +365,7 @@ export default function CampusNotes() {
             </motion.div>
           )}
 
-          {/* ═══ Step 3: Browse — Branches → Semesters → Subjects → Notes ═══ */}
+          {/* ═══ Step 3: Browse - Branches → Semesters → Subjects → Notes ═══ */}
           {step === "browse" && (
             <motion.div key="browse" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.35 }}>
               {/* Breadcrumb */}
@@ -436,7 +436,7 @@ export default function CampusNotes() {
               {selectedBranch && !selectedSem && (
                 <>
                   <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1a1a2e", marginBottom: 20 }}>
-                    <span style={{ color: selectedBranch.color }}>{selectedBranch.short}</span> — Select Semester
+                    <span style={{ color: selectedBranch.color }}>{selectedBranch.short}</span> - Select Semester
                   </h2>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 12 }}>
                     {SEMESTERS.slice(0, studentType === "pg" ? 4 : 8).map((sem, i) => (
@@ -467,7 +467,7 @@ export default function CampusNotes() {
               {selectedBranch && selectedSem && !selectedSubject && (
                 <>
                   <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1a1a2e", marginBottom: 20 }}>
-                    <span style={{ color: selectedBranch.color }}>{selectedBranch.short}</span> · {selectedSem} — Subjects
+                    <span style={{ color: selectedBranch.color }}>{selectedBranch.short}</span> · {selectedSem} - Subjects
                   </h2>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(260px, 100%), 1fr))", gap: 12 }}>
                     {(() => {
@@ -750,7 +750,7 @@ function UploadModal({ onClose, onUpload, subject, branch, semester, branches })
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <div>
               <label style={labelStyle}>Title *</label>
-              <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Operating Systems — Unit 3 Handwritten Notes" required style={inputStyle} />
+              <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Operating Systems - Unit 3 Handwritten Notes" required style={inputStyle} />
             </div>
             <div>
               <label style={labelStyle}>Description</label>

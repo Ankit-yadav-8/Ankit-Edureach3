@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * useCountUp — animates 0 -> target when element scrolls into view.
+ * useCountUp - animates 0 -> target when element scrolls into view.
  * Returns [ref, value].
  */
 export default function useCountUp(target, duration = 1600) {

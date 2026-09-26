@@ -1,8 +1,8 @@
-/* OtherExams — a single directory of every engineering entrance beyond JEE.
+/* OtherExams - a single directory of every engineering entrance beyond JEE.
    Structure:
-     1. Hero        — our own coral/cream intro + an animated exam-badge wall
-     2. Timeline    — the home AdmissionTimeline, reused verbatim
-     3. Directory   — Total / Ongoing / Upcoming / Concluded + category + search
+     1. Hero        - our own coral/cream intro + an animated exam-badge wall
+     2. Timeline    - the home AdmissionTimeline, reused verbatim
+     3. Directory   - Total / Ongoing / Upcoming / Concluded + category + search
                       filters over one rich card per exam (ExamCard).
    The hero copy and its badge-wall animation are original to Campus Point. */
 import { useMemo, useState, useEffect } from "react";
@@ -70,7 +70,7 @@ function FilterDropdown({ icon: Icon, label, value, options, counts, onSelect })
   );
 }
 
-/* Hero "route map" — a transit-style diagram: three track lines (National ·
+/* Hero "route map" - a transit-style diagram: three track lines (National ·
    State · Private) branch off a shared JEE interchange to a handful of exam
    "stations". Original composition + our own palette; label placement differs
    per line so text never sits on the rails. */
@@ -193,8 +193,8 @@ export default function OtherExams() {
   return (
     <div className="page">
       <Seo
-        title="Other Engineering Entrance Exams 2026 — BITSAT, VITEEE, State CETs & More"
-        description="Explore every engineering entrance exam beyond JEE — national, state and private-university tests. Fees, dates, pattern, eligibility and a plain-English read for BITSAT, VITEEE, MHT CET, KCET, COMEDK, SRMJEEE and 30+ more on Campus Point."
+        title="Other Engineering Entrance Exams 2026 - BITSAT, VITEEE, State CETs & More"
+        description="Explore every engineering entrance exam beyond JEE - national, state and private-university tests. Fees, dates, pattern, eligibility and a plain-English read for BITSAT, VITEEE, MHT CET, KCET, COMEDK, SRMJEEE and 30+ more on Campus Point."
         path="/other-exams"
       />
 
@@ -209,7 +209,7 @@ export default function OtherExams() {
               Every way in, on <span className="oe-circle">one map</span>.
             </h1>
             <p className="oe-hero-sub">
-              <strong>{counts.all} engineering entrances</strong> across three tracks — national,
+              <strong>{counts.all} engineering entrances</strong> across three tracks - national,
               state and private. Trace fees, dates and patterns before you commit to a single line.
             </p>
 
@@ -256,7 +256,7 @@ export default function OtherExams() {
             <p className="oe-dir-sub">Filter by where you are in the cycle, narrow by track, or search by name.</p>
           </div>
 
-          {/* filter bar — two condensed dropdown buttons + search */}
+          {/* filter bar - two condensed dropdown buttons + search */}
           <div className="oe-filters">
             <FilterDropdown
               icon={SlidersHorizontal}
@@ -312,7 +312,7 @@ export default function OtherExams() {
 }
 
 const CSS = `
-/* ── hero (soft dotted surface — matches the branch-page reference) ── */
+/* ── hero (soft dotted surface - matches the branch-page reference) ── */
 .oe-hero {
   position:relative; padding:44px 0 64px; background:var(--page-bg);
   background-image:radial-gradient(${CL.coral}22 1px, transparent 1px);
@@ -420,7 +420,7 @@ const CSS = `
 /* phones / small tablets: centre the whole hero, stats included */
 @media (max-width:760px) {
   .oe-hero-copy { text-align:center; }
-  /* drop the back-button row on mobile — global nav covers it */
+  /* drop the back-button row on mobile - global nav covers it */
   .oe-hero-top { display:none; }
   .oe-hero-sub { margin-left:auto; margin-right:auto; }
   .oe-hero-cta { justify-content:center; }
@@ -447,7 +447,7 @@ const CSS = `
   .oe-dd-menu { min-width:100%; }
   .oe-search { width:100%; }
 }
-/* on small phones the many station names crowd together — drop those, but keep
+/* on small phones the many station names crowd together - drop those, but keep
    the "JEE · start here" hub label and the legend so the map still reads. */
 @media (max-width:560px) {
   .oe-map-lbl { display:none; }

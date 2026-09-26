@@ -5,7 +5,7 @@ import { ArrowLeft, Trophy, Download, Share2, Sparkles } from "lucide-react";
 import Seo from "../components/Seo.jsx";
 
 /* ═══════════════════════════════════════════════════════════
-   JEE ADVANCED 2026 — RESULTS & RANK LIST
+   JEE ADVANCED 2026 - RESULTS & RANK LIST
    Self-contained, scoped under `.jadv-page`. Bright, light
    pastel theme with rich entrance + ambient animations.
 ═══════════════════════════════════════════════════════════ */
@@ -103,11 +103,11 @@ const CAT_SUMMARY = [
 ];
 
 const GENDER_STATS = [
-  { val: "1,39,131", lbl: "Male — Appeared", color: "var(--gold)" },
-  { val: "40,562", lbl: "Female — Appeared", color: "var(--rose)" },
-  { val: "46,773", lbl: "Male — Qualified", color: "var(--gold)" },
-  { val: "10,107", lbl: "Female — Qualified", color: "var(--rose)" },
-  { val: "887", lbl: "PwD — Qualified", color: "var(--teal)" },
+  { val: "1,39,131", lbl: "Male - Appeared", color: "var(--gold)" },
+  { val: "40,562", lbl: "Female - Appeared", color: "var(--rose)" },
+  { val: "46,773", lbl: "Male - Qualified", color: "var(--gold)" },
+  { val: "10,107", lbl: "Female - Qualified", color: "var(--rose)" },
+  { val: "887", lbl: "PwD - Qualified", color: "var(--teal)" },
   { val: "56,880", lbl: "Total Qualified", color: "var(--amber)" },
 ];
 
@@ -185,7 +185,7 @@ export default function JeeAdvancedResult() {
     <div className="jadv-page">
       <Seo
         title="JEE Advanced 2026 Result & Rank List"
-        description="JEE Advanced 2026 result, rank list and cutoffs — see what your AIR means and which IITs and branches you can get with the free CampusPoint rank predictor."
+        description="JEE Advanced 2026 result, rank list and cutoffs - see what your AIR means and which IITs and branches you can get with the free CampusPoint rank predictor."
         path="/jee-advanced-result-2026"
       />
       <style>{CSS}</style>
@@ -275,7 +275,7 @@ export default function JeeAdvancedResult() {
         </Reveal>
 
         {/* TOP 10 CRL */}
-        <SectionHead title="Top 10 — Common Rank List" pill="CRL" />
+        <SectionHead title="Top 10 - Common Rank List" pill="CRL" />
         <Reveal>
           <div className="table-wrap">
             <table>
@@ -297,7 +297,7 @@ export default function JeeAdvancedResult() {
         </Reveal>
 
         {/* CATEGORY RANK 1 */}
-        <SectionHead title="Rank 1 — Category-Wise" pill="All Categories" />
+        <SectionHead title="Rank 1 - Category-Wise" pill="All Categories" />
         <div className="cat-grid">
           {CATEGORY_RANK1.map((c, i) => (
             <Reveal key={c.badge + c.name} delay={(i % 3) * 0.05}>
@@ -336,7 +336,7 @@ export default function JeeAdvancedResult() {
         </div>
 
         {/* ZONE TOP 500 DISTRIBUTION */}
-        <SectionHead title="Zone-Wise Distribution — Top 500" pill="Statistics" />
+        <SectionHead title="Zone-Wise Distribution - Top 500" pill="Statistics" />
         <Reveal>
           <div className="table-wrap">
             <table>
@@ -367,7 +367,7 @@ export default function JeeAdvancedResult() {
         </Reveal>
 
         {/* QUALIFYING MARKS */}
-        <SectionHead title="Qualifying Marks — All Rank Lists" pill="Cutoffs" />
+        <SectionHead title="Qualifying Marks - All Rank Lists" pill="Cutoffs" />
         <Reveal>
           <div className="table-wrap">
             <table>
@@ -455,7 +455,7 @@ export default function JeeAdvancedResult() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SCOPED CSS — everything lives under `.jadv-page`
+   SCOPED CSS - everything lives under `.jadv-page`
 ═══════════════════════════════════════════════════════════ */
 const CSS = `
 .jadv-page {

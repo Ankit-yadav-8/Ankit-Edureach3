@@ -38,7 +38,7 @@ const SUBJECTS_BY_EXAM = {
   neet: ["Physics", "Chemistry", "Biology"],
 };
 
-const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "—");
+const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "-");
 
 const card = { background: "var(--page-bg)", borderRadius: 16, border: "1px solid #f0e9e0", boxShadow: "0 8px 30px rgba(13,27,62,.06)", minWidth: 0, maxWidth: "100%", boxSizing: "border-box" };
 const lbl = { fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 6, display: "block" };
@@ -57,7 +57,7 @@ export default function TestUpload({ token }) {
   const [mWrong, setMWrong] = useState(-1);
   // Which subject section the current upload belongs to. "" = full paper (the
   // model auto-detects subjects). Picking one tags every parsed question with it
-  // and APPENDS to the test — so you can upload Physics, then Chemistry, then Maths.
+  // and APPENDS to the test - so you can upload Physics, then Chemistry, then Maths.
   const [uploadSubject, setUploadSubject] = useState("");
 
   // Exam pattern is driven by the plan: NEET → neet, Foundation → standard,
@@ -140,8 +140,8 @@ export default function TestUpload({ token }) {
     setParsing(true); setErr(""); setNote("");
     setParseMsg("Reading the PDF…");
     try {
-      // Parsing is a background job — math papers go through vision OCR, which on
-      // the rate-limited free tier can take several minutes — so we start it and
+      // Parsing is a background job - math papers go through vision OCR, which on
+      // the rate-limited free tier can take several minutes - so we start it and
       // poll until it's done. If a previous attempt timed out the client but the
       // job is still running on the server, resume that same jobId instead of
       // kicking off a fresh (expensive) conversion.
@@ -182,11 +182,11 @@ export default function TestUpload({ token }) {
             }
             throw pollErr;
           }
-          continue; // transient network blip — keep polling
+          continue; // transient network blip - keep polling
         }
         if (s.status === "done") { d = s; break; }
       }
-      if (!d) throw new Error("Conversion is taking too long — click Auto-convert again to keep waiting (it's still running).");
+      if (!d) throw new Error("Conversion is taking too long - click Auto-convert again to keep waiting (it's still running).");
       jobRef.current = null; // consumed
       const parsed = d.questions || [];
       // A specific section → tag every question with it and APPEND to the test;
@@ -203,13 +203,13 @@ export default function TestUpload({ token }) {
       if (uploadSubject) { setTestPdfUrl(""); setKeyPdfUrl(""); setUp({ test: 0, key: 0 }); }
     } catch (ex) {
       setErr(ex.message || "Could not parse the PDF");
-      // A resumable timeout (jobRef still set) keeps running on the server — don't
+      // A resumable timeout (jobRef still set) keeps running on the server - don't
       // wipe to the manual grid; the admin can click Auto-convert again to resume.
       if (!jobRef.current) {
-        // Scanned/image PDFs or a failed job — fall back to a manual grid so the
+        // Scanned/image PDFs or a failed job - fall back to a manual grid so the
         // admin can still build the test (students read the paper from the PDF).
         setQuestions([]);
-        setNote("Couldn't read the PDF automatically. Add questions and answers manually below — students still see the uploaded paper.");
+        setNote("Couldn't read the PDF automatically. Add questions and answers manually below - students still see the uploaded paper.");
       }
     } finally { setParsing(false); setParseMsg(""); }
   }
@@ -233,7 +233,7 @@ export default function TestUpload({ token }) {
 
   const unanswered = (questions || []).filter((q) => !String(q.correct).trim()).length;
 
-  // Start a manual test with one blank question — no PDF needed. Students read
+  // Start a manual test with one blank question - no PDF needed. Students read
   // the question text/options/images straight from the CBT pane. The blank
   // question inherits the selected section so it lands in that subject tab.
   const blankQ = (qno) => ({
@@ -332,7 +332,7 @@ export default function TestUpload({ token }) {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(220px, 100%), 1fr))", gap: 14, marginBottom: 14 }}>
           <div style={{ gridColumn: "1 / -1" }}>
             <span style={lbl}>Test title</span>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Daily Test 12 — Kinematics" style={inp} />
+            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Daily Test 12 - Kinematics" style={inp} />
           </div>
           <div>
             <span style={lbl}>Duration (minutes)</span>
@@ -373,7 +373,7 @@ export default function TestUpload({ token }) {
             </div>
             {sections.length === 0 ? (
               <div style={{ fontSize: 12.5, color: MUTE, display: "flex", alignItems: "center", gap: 6 }}>
-                <Info size={14} /> JEE Advanced marks differ per section — add one section per question range, covering every question.
+                <Info size={14} /> JEE Advanced marks differ per section - add one section per question range, covering every question.
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -407,7 +407,7 @@ export default function TestUpload({ token }) {
           </div>
         )}
 
-        {/* Section picker — upload one paper per subject, or a full paper. */}
+        {/* Section picker - upload one paper per subject, or a full paper. */}
         {sectionSubjects.length > 0 && (
           <div style={{ marginBottom: 12 }}>
             <span style={lbl}>This upload is for</span>
@@ -424,7 +424,7 @@ export default function TestUpload({ token }) {
             </div>
             {uploadSubject && (
               <div style={{ fontSize: 12, color: MUTE, marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
-                <Info size={13} /> Questions from this PDF are tagged <b style={{ color: NAVY }}>{uploadSubject}</b> and added to the test — upload each section, then publish.
+                <Info size={13} /> Questions from this PDF are tagged <b style={{ color: NAVY }}>{uploadSubject}</b> and added to the test - upload each section, then publish.
               </div>
             )}
           </div>
@@ -436,7 +436,7 @@ export default function TestUpload({ token }) {
         </div>
         <div style={{ fontSize: 12, color: MUTE, display: "flex", alignItems: "flex-start", gap: 6, marginBottom: 16 }}>
           <Info size={13} style={{ flexShrink: 0, marginTop: 1 }} />
-          <span>One self-contained PDF works too — if each question has its answer inline (e.g. “Ans: B” / “Correct option: 2”), leave the answer-key box empty and we’ll detect it.</span>
+          <span>One self-contained PDF works too - if each question has its answer inline (e.g. “Ans: B” / “Correct option: 2”), leave the answer-key box empty and we’ll detect it.</span>
         </div>
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -460,7 +460,7 @@ export default function TestUpload({ token }) {
         {parsing && parseMsg && (
           <div style={{ marginTop: 12, background: "#f0f6ff", border: "1px solid #bfdbfe", borderRadius: 10, padding: "10px 14px", color: "#1e40af", fontSize: 13, display: "flex", alignItems: "center", gap: 8 }}>
             <Loader2 size={15} className="adm-spin" style={{ flexShrink: 0 }} />
-            <span>{parseMsg} <span style={{ color: "#60a5fa" }}>— large maths papers can take 2–3 minutes; keep this tab open.</span></span>
+            <span>{parseMsg} <span style={{ color: "#60a5fa" }}>- large maths papers can take 2–3 minutes; keep this tab open.</span></span>
           </div>
         )}
 
@@ -627,7 +627,7 @@ function QuestionCard({ q, onChange, onDelete, uploadImage, subjectOptions = [] 
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "#faf8f4", borderBottom: open ? "1px solid #f0e9e0" : "none" }}>
         <span style={{ width: 28, height: 28, borderRadius: 8, background: `${ORANGE}15`, color: ORANGE, fontWeight: 800, fontSize: 13, display: "grid", placeItems: "center", flexShrink: 0 }}>{q.qno}</span>
         <div style={{ flex: 1, minWidth: 0, fontSize: 13, color: NAVY, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {q.text ? <MathText text={q.text} /> : <span style={{ color: "#bbb", fontStyle: "italic" }}>Question {q.qno} — read from the paper</span>}
+          {q.text ? <MathText text={q.text} /> : <span style={{ color: "#bbb", fontStyle: "italic" }}>Question {q.qno} - read from the paper</span>}
         </div>
         {!correctOk && <span style={{ fontSize: 10.5, fontWeight: 800, color: "#b45309", background: "#fef3c7", borderRadius: 20, padding: "2px 8px", flexShrink: 0 }}>no answer</span>}
         {subjectOptions.length > 0 && (
@@ -650,7 +650,7 @@ function QuestionCard({ q, onChange, onDelete, uploadImage, subjectOptions = [] 
           <div>
             <span style={lbl}>Question</span>
             <textarea value={q.text || ""} onChange={(e) => onChange({ text: e.target.value })}
-              placeholder="Question text (optional — students can also read it from the PDF)"
+              placeholder="Question text (optional - students can also read it from the PDF)"
               rows={2} style={{ ...inp, height: "auto", minHeight: 56, padding: "9px 12px", resize: "vertical", lineHeight: 1.5 }} />
             <div style={{ marginTop: 8 }}><ImgCtl slot="q" url={q.image} onSet={(url) => onChange({ image: url })} /></div>
           </div>
@@ -664,7 +664,7 @@ function QuestionCard({ q, onChange, onDelete, uploadImage, subjectOptions = [] 
             </div>
           ) : (
             <div>
-              <span style={lbl}>Options — tap the circle to mark the correct one</span>
+              <span style={lbl}>Options - tap the circle to mark the correct one</span>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {options.map((o) => {
                   const on = String(q.correct) === String(o.key);

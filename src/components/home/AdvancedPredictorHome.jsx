@@ -1,8 +1,8 @@
-/* AdvancedPredictorHome — the JoSAA · JEE Advanced engine embedded on the home
+/* AdvancedPredictorHome - the JoSAA · JEE Advanced engine embedded on the home
    page. A coral pill toggle switches between the two tools the dedicated
    /jee-advanced page offers, without leaving home:
-     • Rank Predictor   — marks (Paper 1 + Paper 2) → All-India CRL + branches
-     • College Predictor — enter a rank → every IIT branch within reach
+     • Rank Predictor   - marks (Paper 1 + Paper 2) → All-India CRL + branches
+     • College Predictor - enter a rank → every IIT branch within reach
    Both render the exact same components used on /jee-advanced, so the style and
    behaviour stay identical. */
 import { useState } from "react";
@@ -11,7 +11,7 @@ import RankPredictorTool from "../predictor/RankPredictorTool.jsx";
 import CollegeFinderTool from "../predictor/CollegeFinderTool.jsx";
 import { CL, clEyebrow } from "./clTheme.js";
 
-const ADV = CL.coral; // coral accent — matches the site theme
+const ADV = CL.coral; // coral accent - matches the site theme
 
 const TABS = [
   {
@@ -22,7 +22,7 @@ const TABS = [
   {
     key: "college", label: "College Predictor", icon: GraduationCap,
     title: <>Find every <span style={{ color: ADV, fontStyle: "italic" }}>IIT branch</span> your rank can get.</>,
-    sub: "Enter your JEE Advanced rank and category to see which IITs and branches you can secure across all 6 JoSAA rounds — with opening & closing ranks, branch-change and dual-degree flexibility.",
+    sub: "Enter your JEE Advanced rank and category to see which IITs and branches you can secure across all 6 JoSAA rounds - with opening & closing ranks, branch-change and dual-degree flexibility.",
   },
 ];
 
@@ -81,7 +81,7 @@ export default function AdvancedPredictorHome() {
               <span style={{ fontSize: 18 }}>⏳</span>
               <span>
                 <strong>Please wait 1–2 minutes</strong> while colleges load. If your browser shows a
-                "Page Unresponsive" pop-up, click <strong>"Wait"</strong> — do <em>not</em> click "Exit Page".
+                "Page Unresponsive" pop-up, click <strong>"Wait"</strong> - do <em>not</em> click "Exit Page".
               </span>
             </div>
             <CollegeFinderTool basePath="/jee-advanced" />

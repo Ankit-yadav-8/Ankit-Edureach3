@@ -9,7 +9,7 @@
    every chapter card opens the correct sheet(s).
 
    Notes:
-   • Biology has no mind maps — those chapters simply won't show the button.
+   • Biology has no mind maps - those chapters simply won't show the button.
    • A chapter may map to several mind-map chapters; their pages are merged
      into one flip-through gallery.
    • Chapters with no sensible map are omitted (button hidden).

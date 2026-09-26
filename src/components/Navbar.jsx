@@ -61,16 +61,16 @@ const NEET_MEGA = [
   },
 ];
 
-// ── Resources dropdown: learning hub — syllabus, strategies & the AI tutor ────
+// ── Resources dropdown: learning hub - syllabus, strategies & the AI tutor ────
 // Pulled out of the JEE mega-menu into its own top-level tab so study material
 // isn't buried under an exam-specific menu.
 const RESOURCES_NAV = [
   { label: "Campus Point AI", to: "/ai", icon: Sparkles, tag: "Solve doubts, get notes & quizzes" },
   { label: "Class 11 Syllabus & Mind Maps", to: "/class-11", icon: BookOpen, tag: "Chapter-wise notes + mind maps" },
   { label: "Class 12 Syllabus & Mind Maps", to: "/class-12", icon: Edit3, tag: "Boards + competitive prep" },
-  { label: "Exam Strategy — JEE", to: "/jee-strategy", icon: Zap, tag: "Toppers' roadmap, tips & tricks" },
+  { label: "Exam Strategy - JEE", to: "/jee-strategy", icon: Zap, tag: "Toppers' roadmap, tips & tricks" },
   { label: "JEE Advanced Chapter Analysis", to: "/jee-advanced-analysis", icon: BarChart3, tag: "80 chapters ranked by weightage & priority" },
-  { label: "Exam Strategy — NEET", to: "/neet-strategy", icon: FlaskConical, tag: "Time-management & accuracy hacks" },
+  { label: "Exam Strategy - NEET", to: "/neet-strategy", icon: FlaskConical, tag: "Time-management & accuracy hacks" },
   { label: "Other Entrance Exams", to: "/other-exams", icon: Compass, tag: "BITSAT, VITEEE, state CETs & 30+ more" },
 ];
 
@@ -92,7 +92,7 @@ const COLLEGES = [
 
 // ── Tools mega-menu: every utility grouped under a common, colour-coded name ──
 // Each item carries a one-line `desc` so first-time visitors instantly know what
-// the tool does — they shouldn't have to click to find out.
+// the tool does - they shouldn't have to click to find out.
 const TOOLS_MEGA = [
   {
     title: "Plan & Apply", to: "/planner", color: "#FF693D", icon: CalendarDays,
@@ -101,7 +101,7 @@ const TOOLS_MEGA = [
       { label: "Branch Insights Hub",     to: "/branches",   icon: Landmark,     desc: "Explore 15+ engineering domains, scope & career paths" },
       { label: "Trade-off Analyzer",      to: "/branch-vs-college", icon: GitCompare, desc: "A quick 6-question quiz to settle college vs branch" },
       { label: "Counselling Planner",     to: "/planner",    icon: CalendarDays, desc: "Track every JoSAA & CSAB round date in one place" },
-      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert-guided choice filling — the ₹299 plan" },
+      { label: "JoSAA 2026 Counselling",  to: "/josaa-2026", icon: Award,        desc: "Expert-guided choice filling - the ₹299 plan" },
     ],
   },
   {
@@ -118,7 +118,7 @@ const TOOLS_MEGA = [
       { label: "Official Cutoffs",      to: "/cutoffs",      icon: FileText,    desc: "Real JoSAA opening & closing ranks, round by round" },
       { label: "Scholarships & Loans",  to: "/scholarships", icon: BadgeCheck,  desc: "Funding, scholarships & education loans for your seat" },
       // Admin Data is deliberately NOT listed. This menu is shown to every
-      // visitor, and the admin panel is for two people — signposting it to
+      // visitor, and the admin panel is for two people - signposting it to
       // everyone bought nothing. /admin still works when typed directly; this
       // removes the advertising, not the access, and the panel is gated by
       // key + OTP server-side regardless.
@@ -199,7 +199,7 @@ export default function Navbar({ onSearch }) {
   };
 
   // `match` decides when a nav item should render in its "active" (current-page)
-  // state — gives every one of the six parts a consistent highlight so users
+  // state - gives every one of the six parts a consistent highlight so users
   // always know where they are.
   const navItems = [
     { label: "JEE", icon: BookOpen, mega: JEE_MEGA, base: "/jee-main", match: (p) => p.startsWith("/jee") },
@@ -261,13 +261,13 @@ export default function Navbar({ onSearch }) {
             </span>
           </span>
 
-          {/* Brand text — clamps down on narrow phones so the bar never overflows */}
+          {/* Brand text - clamps down on narrow phones so the bar never overflows */}
           <span id="cp-wordmark" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "clamp(1.1rem, 4.4vw, 1.4rem)", letterSpacing: "-0.01em", whiteSpace: "nowrap", color: "#1a1a2e" }}>
             Campus Point
           </span>
         </Link>
 
-        {/* Desktop nav — the middle cell of the navbar's 3-column grid
+        {/* Desktop nav - the middle cell of the navbar's 3-column grid
             (1fr · auto · 1fr). The equal 1fr side columns hold the logo (left)
             and action cluster (right), so the JEE / Colleges / Tools links sit
             truly centred in the bar. The grid expands the side columns before
@@ -561,7 +561,7 @@ export default function Navbar({ onSearch }) {
 
                 return (
                   <div key={item.label} style={{ borderBottom: "1px solid var(--gray-light)" }}>
-                    {/* Top-level category row — taps toggle the section (or navigate if it has no children) */}
+                    {/* Top-level category row - taps toggle the section (or navigate if it has no children) */}
                     <button
                       onClick={() =>
                         hasChildren
@@ -858,7 +858,7 @@ const eyebrowStyle = {
   color: "#9aa3b2", padding: "0 6px 12px",
 };
 
-// Bright pastel tiles used by every dropdown item — matches the reference cards.
+// Bright pastel tiles used by every dropdown item - matches the reference cards.
 const TILE_COLORS = [
   { bg: "#EDE7FE", color: "#7C3AED" }, // purple
   { bg: "#FCE1EA", color: "#DB2777" }, // rose

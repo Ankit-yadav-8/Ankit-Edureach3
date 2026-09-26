@@ -7,8 +7,8 @@ export default function PrivateUnis() {
   return (
     <div className="page">
       <Seo
-        title="Top Private Universities in India — Fees, Placements & Admission"
-        description="Compare 13+ leading private universities — VIT, SRM, Manipal, BITS, KIIT, LPU and more — by fees, placements, cutoffs and admission, and apply directly. By CampusPoint."
+        title="Top Private Universities in India - Fees, Placements & Admission"
+        description="Compare 13+ leading private universities - VIT, SRM, Manipal, BITS, KIIT, LPU and more - by fees, placements, cutoffs and admission, and apply directly. By CampusPoint."
         path="/private-universities"
       />
       <PrivateUniversities />

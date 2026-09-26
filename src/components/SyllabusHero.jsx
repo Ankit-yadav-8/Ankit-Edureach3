@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 /*
- * SyllabusHero — centred "Syllabus Hub" hero used by Class 11 & Class 12.
+ * SyllabusHero - centred "Syllabus Hub" hero used by Class 11 & Class 12.
  * Big display headline with coral italic accents, a pulsing badge pill,
  * two CTAs, a centred stat row, and four subject cards floating at the
  * corners over a warm dot-grid + rotating dashed-ellipse backdrop.
@@ -25,7 +25,7 @@ export default function SyllabusHero({
     [{ text: "Fundamentals.", accent: true }],
     [{ text: "Crack the " }, { text: "Future.", accent: true }],
   ],
-  description = "A premium chapter-wise toolkit for Physics, Chemistry, Mathematics and Biology — everything you need to build a rock-solid foundation for JEE & NEET.",
+  description = "A premium chapter-wise toolkit for Physics, Chemistry, Mathematics and Biology - everything you need to build a rock-solid foundation for JEE & NEET.",
   primaryButton = { text: "Start Learning", onClick: () => {} },
   secondaryButton = { text: "Explore Full Syllabus", onClick: () => {} },
   stats = [],

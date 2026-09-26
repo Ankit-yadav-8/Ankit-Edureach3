@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Community kit — the shared presentational + data pieces used by BOTH the
+// Community kit - the shared presentational + data pieces used by BOTH the
 // per-batch mentorship community and the open public community. The data-bound
 // pieces (Composer, ReplyThread, PostCard) take an `api` object so the same UI
 // can talk to either backend (/api/community/* or /api/public-community/*).
@@ -314,7 +314,7 @@ export function ReplyThread({ api, token, post, exam, onReplied, canUpload, show
         </div>
       ))}
       {!busy && replies?.length === 0 && (
-        <div style={{ fontSize: 13, color: "#9ca3af", padding: "4px 0 8px" }}>No replies yet — be the first to help.</div>
+        <div style={{ fontSize: 13, color: "#9ca3af", padding: "4px 0 8px" }}>No replies yet - be the first to help.</div>
       )}
       <div style={{ marginTop: 8 }}>
         <Composer token={token} exam={exam} compact canUpload={canUpload} signUpload={api.signUpload} plan={api.plan} placeholder="Write a reply…" onSubmit={addReply} />

@@ -306,7 +306,7 @@ export default function Footer() {
               Founded by IIT Roorkee alumni{" "}
               <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Kumar</span>,{" "}
               <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Mayank Singh</span>, and{" "}
-              <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Saket Kumar</span>{" "}— a
+              <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Saket Kumar</span>{" "}- a
               student-first JEE rank predictor &amp; college discovery platform,
               headquartered in Jaipur, Rajasthan.
             </p>
@@ -477,7 +477,7 @@ export default function Footer() {
         </p>
       </div>
 
-      {/* giant CampusLoom-style wordmark — ghosted brand at the base */}
+      {/* giant CampusLoom-style wordmark - ghosted brand at the base */}
       <div aria-hidden style={{ position: "absolute", left: 0, right: 0, bottom: 26, textAlign: "center", overflow: "hidden", pointerEvents: "none", zIndex: 0, lineHeight: 1.12 }}>
         <span style={{ fontFamily: "'Space Grotesk','Sora',sans-serif", fontWeight: 800, fontSize: "clamp(2.8rem, 12.5vw, 12.5rem)", color: "rgba(255,255,255,.055)", whiteSpace: "nowrap", letterSpacing: "-0.03em", display: "inline-block", textShadow: "0 6px 50px rgba(255,90,54,.18), 0 2px 3px rgba(0,0,0,.5)" }}>
           Campus Point

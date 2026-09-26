@@ -1,7 +1,7 @@
-/* AdmissionTimeline — the home admission-season timeline.
+/* AdmissionTimeline - the home admission-season timeline.
    A wavy horizontal progress rail (DONE ✓ · NOW · upcoming) above six
    quarter cards spanning Jan 2026 → Jun 2027. The current quarter is
-   computed live from the date — (year-2026)*4 + floor(month/3) — so the
+   computed live from the date - (year-2026)*4 + floor(month/3) - so the
    "NOW" marker auto-advances every month across cycles with no manual
    edits. Cards expand to every event; the full exam directory is tappable
    for per-exam detail. */
@@ -13,7 +13,7 @@ import { CL, clEyebrow } from "./clTheme.js";
 import { EXAM_DETAILS, EXAM_GROUPS, levelTone } from "../../data/examCalendar.js";
 import { ALL_EXAMS, examSlug } from "../../data/otherExams.js";
 
-/* Which timeline chips have a full card on /other-exams — used to deep-link a
+/* Which timeline chips have a full card on /other-exams - used to deep-link a
    chip straight to its exam card instead of opening the inline modal. */
 const CARD_SLUGS = new Set(ALL_EXAMS.map((e) => e.slug));
 
@@ -202,7 +202,7 @@ export default function AdmissionTimeline() {
             The complete <span style={{ color: CL.coral }}>admission season.</span>
           </h2>
           <p style={{ color: CL.body, fontSize: "1.08rem", lineHeight: 1.6, margin: "16px auto 24px" }}>
-            Every major exam, result and counselling window from Jan 2026 to Jun 2027 — with a live marker that moves each month so you never miss a deadline.
+            Every major exam, result and counselling window from Jan 2026 to Jun 2027 - with a live marker that moves each month so you never miss a deadline.
           </p>
           <div className="at-legend">
             {Object.values(FAM).map((f) => (

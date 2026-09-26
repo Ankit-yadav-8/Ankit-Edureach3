@@ -5,9 +5,9 @@ import { ChevronDown, Eye, Users } from "lucide-react";
 /* ══════════════════════════════════════════════
    Mentor dashboard hero.
 
-   Speaks the mentorship page's visual language — cream paper, floating coral
+   Speaks the mentorship page's visual language - cream paper, floating coral
    orbs, masked grid, outlined watermark, a Sora headline with a gradient accent
-   and a hand-drawn underline — so the mentor side doesn't feel bolted on.
+   and a hand-drawn underline - so the mentor side doesn't feel bolted on.
 
    What's unique to this hero: the avatar is orbited by one dot per assigned
    student, and the dot for whoever is on screen is lit. The mentor's caseload
@@ -21,7 +21,7 @@ const T = {
 };
 
 /* One dot per assigned student, evenly spaced around the avatar. The active
-   student's dot is filled and haloed — a glanceable "which of mine is this". */
+   student's dot is filled and haloed - a glanceable "which of mine is this". */
 function Orbit({ count, activeIndex, still }) {
   const n = Math.max(count, 1);
   const R = 46;
@@ -56,7 +56,7 @@ function Orbit({ count, activeIndex, still }) {
   );
 }
 
-/* The switcher. Closes on outside click and on Escape — it covers content, so
+/* The switcher. Closes on outside click and on Escape - it covers content, so
    it must be dismissible without hunting for the trigger again. */
 function StudentSwitcher({ students, activeId, onPick }) {
   const [open, setOpen] = useState(false);
@@ -168,7 +168,7 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
             >
               {students.length === 0
                 ? "No students are assigned to you yet. Your admin assigns them by CP ID."
-                : `You're following ${students.length} student${students.length === 1 ? "" : "s"}. Everything here is theirs — you can see all of it, and change none of it.`}
+                : `You're following ${students.length} student${students.length === 1 ? "" : "s"}. Everything here is theirs - you can see all of it, and change none of it.`}
             </motion.p>
 
             <motion.div

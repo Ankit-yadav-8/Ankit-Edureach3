@@ -1,4 +1,4 @@
-/* JEE Advanced — supplementary reference data pulled from the Deep Analysis
+/* JEE Advanced - supplementary reference data pulled from the Deep Analysis
    sheet: per-subject study-time split, Class 11 vs 12 weightage split, and the
    official-style marking scheme. Directional estimates, not official stats. */
 
@@ -40,7 +40,7 @@ export const CLASS_SPLIT = [
 /* two-paper marking scheme */
 export const MARKING_SCHEME = [
   { type: "Single Correct MCQ",      correct: "+3",             negative: "−1",             partial: "No" },
-  { type: "Multiple Correct MCQ",    correct: "+4 (all right)", negative: "−2 (typical)",   partial: "Yes — partial sets" },
+  { type: "Multiple Correct MCQ",    correct: "+4 (all right)", negative: "−2 (typical)",   partial: "Yes - partial sets" },
   { type: "Numerical Value Answer",  correct: "+3 / +4",        negative: "None (usually)", partial: "No" },
   { type: "Match / Paragraph",       correct: "Varies",         negative: "Varies",         partial: "Sometimes" },
 ];

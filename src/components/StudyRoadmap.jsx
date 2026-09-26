@@ -1,5 +1,5 @@
 /* ============================================================
-   StudyRoadmap — animated study-roadmap timeline + complete book
+   StudyRoadmap - animated study-roadmap timeline + complete book
    list. Fully self-contained (inline styles), so it renders with
    the exact original exam-page design even inside the Strategy
    pages' scoped CSS. Data comes from data/roadmaps.js.

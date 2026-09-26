@@ -14,7 +14,7 @@ const RED = "#dc2626";
 
 // Admin tool: create mentor accounts and assign them students by CP ID.
 //
-// Mentors never self-register — the admin creates the account, hands over the
+// Mentors never self-register - the admin creates the account, hands over the
 // one-time password out of band, and the mentor is forced to replace it on
 // first sign-in. Assignment is what grants read access, so it only accepts a
 // CP ID backed by a real paid enrolment.
@@ -50,7 +50,7 @@ function Note({ type, children, onClose }) {
 }
 
 /* The one-time password. It is never stored in readable form and cannot be
-   fetched again — if the admin loses it the only path is a reset. */
+   fetched again - if the admin loses it the only path is a reset. */
 function PasswordHandoff({ mentor, password, onDone }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
@@ -58,7 +58,7 @@ function PasswordHandoff({ mentor, password, onDone }) {
       await navigator.clipboard.writeText(password);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
-    } catch { /* clipboard blocked — the password is on screen to copy by hand */ }
+    } catch { /* clipboard blocked - the password is on screen to copy by hand */ }
   };
   return (
     <div style={{
@@ -73,7 +73,7 @@ function PasswordHandoff({ mentor, password, onDone }) {
       </div>
       <p style={{ fontSize: 12.5, color: "#92400e", margin: "0 0 10px", lineHeight: 1.55 }}>
         Copy this now and send it to the mentor over a channel you trust. It can't be shown
-        again — if it's lost, use “Reset password”. They must change it on first sign-in.
+        again - if it's lost, use “Reset password”. They must change it on first sign-in.
       </p>
       <div style={{ display: "flex", gap: 8 }}>
         <code style={{
@@ -147,7 +147,7 @@ function CreateMentor({ token, onCreated }) {
         <input style={inputStyle} placeholder="Contact number" value={f.phone} onChange={set("phone")} />
       </div>
       <p style={{ fontSize: 12, color: "#7c7368", margin: "0 0 12px", lineHeight: 1.5 }}>
-        A one-time password is generated on save — you'll see it once, then hand it to the mentor.
+        A one-time password is generated on save - you'll see it once, then hand it to the mentor.
       </p>
       <div style={{ display: "flex", gap: 8 }}>
         <button type="submit" disabled={busy} style={{
@@ -299,7 +299,7 @@ function MentorRow({ token, mentor, onChange, onPassword }) {
           </div>
         ) : (
           <p style={{ fontSize: 12.5, color: "#9a9189", margin: "0 0 10px" }}>
-            None yet — this mentor sees nothing until a student is assigned.
+            None yet - this mentor sees nothing until a student is assigned.
           </p>
         )}
 

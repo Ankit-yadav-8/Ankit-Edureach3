@@ -9,7 +9,7 @@ export default function Class12() {
       [{ text: "Advanced.", accent: true }],
       [{ text: "Crack the " }, { text: "Competition.", accent: true }],
     ],
-    description: "A premium chapter-wise toolkit for Physics, Chemistry, Mathematics and Biology — cross-tagged for CBSE boards and JEE/NEET so every night of study counts twice.",
+    description: "A premium chapter-wise toolkit for Physics, Chemistry, Mathematics and Biology - cross-tagged for CBSE boards and JEE/NEET so every night of study counts twice.",
     stats: [
       { value: "56", label: "core chapters" },
       { value: "4", label: "subjects" },

@@ -2,7 +2,7 @@ export const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000"
 
 async function req(path, { method = "GET", body, token } = {}) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 60000); // 60 s — Render free tier can take 30–50 s to cold-start
+  const timeout = setTimeout(() => controller.abort(), 60000); // 60 s - Render free tier can take 30–50 s to cold-start
 
   try {
     const res = await fetch(API_BASE + path, {
@@ -25,7 +25,7 @@ async function req(path, { method = "GET", body, token } = {}) {
     return data;
   } catch (e) {
     clearTimeout(timeout);
-    if (e.name === "AbortError") throw new Error("Request timed out — server may be waking up, please try again");
+    if (e.name === "AbortError") throw new Error("Request timed out - server may be waking up, please try again");
     throw e;
   }
 }
@@ -34,7 +34,7 @@ export const apiSignup    = (b) => req("/api/auth/signup", { method: "POST", bod
 export const apiLogin     = (b) => req("/api/auth/login",  { method: "POST", body: b });
 export const apiMe        = (token) => req("/api/auth/me", { token });
 // Swap a still-valid token for a fresh one, so a short session TTL never
-// interrupts an active user. A revoked token can't renew — requireAuth kills it.
+// interrupts an active user. A revoked token can't renew - requireAuth kills it.
 export const apiRefresh   = (token) => req("/api/auth/refresh", { method: "POST", token });
 // Ends every session for the account (lost phone, shared computer) and returns a
 // fresh token so the device that asked stays signed in.
@@ -47,13 +47,13 @@ export const apiSendOtp   = (b) => req("/api/otp/send",    { method: "POST", bod
 export const apiVerifyOtp = (b) => req("/api/otp/verify",  { method: "POST", body: b });
 export const apiMyEnrollments = (token) => req("/api/payment/my-enrollments", { token });
 export const apiSendParentReport = (token, b) => req("/api/mentorship/parent-report", { method: "POST", body: b, token });
-// Mentor-assigned weekly tasks — student fetches the ones set for their batch.
+// Mentor-assigned weekly tasks - student fetches the ones set for their batch.
 export const apiMyMentorTasks = (token, studentId) =>
   req(`/api/mentorship/my-tasks${studentId ? `?studentId=${encodeURIComponent(studentId)}` : ""}`, { token });
-// The mentor assigned to this student ID — name + college, for the tracking header.
+// The mentor assigned to this student ID - name + college, for the tracking header.
 export const apiMyMentor = (token, studentId) =>
   req(`/api/mentorship/my-mentor${studentId ? `?studentId=${encodeURIComponent(studentId)}` : ""}`, { token });
-// Cross-device dashboard sync — load/save the study-data blob per account + plan.
+// Cross-device dashboard sync - load/save the study-data blob per account + plan.
 export const apiGetProgress = (token, plan) =>
   req(`/api/mentorship/progress${plan ? `?plan=${encodeURIComponent(plan)}` : ""}`, { token });
 export const apiSaveProgress = (token, plan, data) =>
@@ -61,7 +61,7 @@ export const apiSaveProgress = (token, plan, data) =>
 
 // ── Community (per-batch doubt forum) ───────────────────────────────────────
 // `plan` scopes the call to ONE of the student's batches (they may belong to
-// several). It's optional — the server falls back to the most recent batch —
+// several). It's optional - the server falls back to the most recent batch -
 // and is always re-verified server-side against what the user actually owns.
 const batchQ = (plan, extra = "") => {
   const parts = [];
@@ -121,7 +121,7 @@ export const apiAdminTestDelete     = (adminToken, id) => adminReq(`/api/tests/a
 
 // ── Mentor dashboard ────────────────────────────────────────────────────────
 // Mentors authenticate with their own credentials and carry a mentor-typed
-// token — the server refuses it on any student route, so it is kept in its own
+// token - the server refuses it on any student route, so it is kept in its own
 // storage key rather than reusing the student session.
 export const apiMentorLogin    = (b) => req("/api/mentor/login", { method: "POST", body: b });
 export const apiMentorMe       = (token) => req("/api/mentor/me", { token });
@@ -131,7 +131,7 @@ const mentorScoped = (sid, path) => `/api/mentor/students/${encodeURIComponent(s
 export const apiMentorStudentProgress = (token, sid) => req(mentorScoped(sid, "progress"), { token });
 export const apiMentorStudentTests    = (token, sid) => req(mentorScoped(sid, "tests"), { token });
 export const apiMentorStudentTasks    = (token, sid) => req(mentorScoped(sid, "tasks"), { token });
-// Assign / replace the student's mandatory task list — the one write a mentor has.
+// Assign / replace the student's mandatory task list - the one write a mentor has.
 export const apiMentorSetStudentTasks = (token, sid, tasks) =>
   req(mentorScoped(sid, "tasks"), { method: "PUT", body: { tasks }, token });
 
@@ -152,7 +152,7 @@ export const apiTestSubmit      = (token, id, b, plan) => req(`/api/tests/${id}/
 export const apiTestResult      = (token, id, plan) => req(`/api/tests/${id}/result${batchQ(plan)}`, { token });
 export const apiTestPerformance = (token, plan) => req(`/api/tests/performance${batchQ(plan)}`, { token });
 
-// ── College reviews (hostel & mess) — reading is public, writing needs auth ──
+// ── College reviews (hostel & mess) - reading is public, writing needs auth ──
 export const apiReviewColleges   = () => req("/api/reviews/colleges");
 export const apiReviewsForCollege = (college) => req(`/api/reviews?college=${encodeURIComponent(college)}`);
 export const apiCreateReview     = (token, b) => req("/api/reviews", { method: "POST", body: b, token });

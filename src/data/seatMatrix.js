@@ -1,5 +1,5 @@
 /* ============================================================
-   seatMatrix.js — REAL JoSAA seat matrix (official data)
+   seatMatrix.js - REAL JoSAA seat matrix (official data)
    ------------------------------------------------------------
    Source: josaa.admissions.nic.in seat-matrix page.
    Keyed by college slug (matches colleges.js). Each program has

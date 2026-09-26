@@ -3,7 +3,7 @@ import { Search, Database, FileSpreadsheet, AlertTriangle } from "lucide-react";
 import Seo from "../components/Seo";
 import BackButton from "../components/BackButton.jsx";
 
-/* Loads JoSAA cutoffs from public/data/ at runtime (static — works on GitHub Pages).
+/* Loads JoSAA cutoffs from public/data/ at runtime (static - works on GitHub Pages).
    Preferred: per-year files via a manifest:
      public/data/manifest.json  ->  { "years": [2025, 2024] }
      public/data/josaa_2025.csv , josaa_2024.csv , ...
@@ -108,15 +108,15 @@ export default function OfficialCutoffs() {
     <div className="page">
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
-        title="JoSAA Cutoffs 2018–2025 — Official IIT NIT IIIT Opening & Closing Ranks"
-        description="Official JoSAA opening and closing ranks for all IITs, NITs and IIITs from 2018 to 2025 — filter round-wise, category-wise and branch-wise. Free on CampusPoint, built by IIT Roorkee alumni."
+        title="JoSAA Cutoffs 2018–2025 - Official IIT NIT IIIT Opening & Closing Ranks"
+        description="Official JoSAA opening and closing ranks for all IITs, NITs and IIITs from 2018 to 2025 - filter round-wise, category-wise and branch-wise. Free on CampusPoint, built by IIT Roorkee alumni."
         path="/cutoffs"
       />
       <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "44px 0", textAlign: "center" }}>
         <div className="container">
           <span className="eyebrow" style={{ color: "var(--coral)" }}>Official Cutoffs</span>
           <h1 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.9rem,4.5vw,3rem)", margin: "8px 0 6px" }}>JoSAA Cutoffs <span style={{ color: "var(--coral)" }}>2018–2025</span></h1>
-          <p style={{ color: "var(--muted)", maxWidth: 640, margin: "0 auto" }}>Real opening &amp; closing ranks from official JoSAA data — all rounds, all categories.</p>
+          <p style={{ color: "var(--muted)", maxWidth: 640, margin: "0 auto" }}>Real opening &amp; closing ranks from official JoSAA data - all rounds, all categories.</p>
         </div>
       </section>
 
@@ -146,7 +146,7 @@ export default function OfficialCutoffs() {
               <AlertTriangle size={18} color="var(--gold)" /> No cutoff data loaded yet
             </div>
             <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.6 }}>
-              Add JoSAA data to <code>public/data/</code> — either per-year files (<code>josaa_2025.csv</code> + a <code>manifest.json</code> listing the years) or a single <code>josaa_cutoffs.csv</code>. Columns: Institute, Academic Program Name, Quota, Seat Type, Gender, Opening Rank, Closing Rank, Round, Year.
+              Add JoSAA data to <code>public/data/</code> - either per-year files (<code>josaa_2025.csv</code> + a <code>manifest.json</code> listing the years) or a single <code>josaa_cutoffs.csv</code>. Columns: Institute, Academic Program Name, Quota, Seat Type, Gender, Opening Rank, Closing Rank, Round, Year.
             </p>
           </div>
         )}

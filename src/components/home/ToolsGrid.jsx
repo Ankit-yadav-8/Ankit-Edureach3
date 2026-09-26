@@ -34,13 +34,13 @@ const TOOLS = [
   },
   {
     icon: Map, title: "Campus Map Explorer", accent: "#10B981", // Green
-    desc: "Explore every IIT, NIT and IIIT on an interactive map — filter by state, type and ranking.",
+    desc: "Explore every IIT, NIT and IIIT on an interactive map - filter by state, type and ranking.",
     bullets: ["80+ institutes mapped", "State & type filters", "Cutoff & placement drawers"],
     to: "/map", live: true,
   },
   {
     icon: GraduationCap, title: "JEE 2027 Mentorship", accent: "#F59E0B", // Amber
-    desc: "1-on-1 mentorship from IITians for JEE 2027 aspirants — daily targets, doubt solving and weekly test analysis.",
+    desc: "1-on-1 mentorship from IITians for JEE 2027 aspirants - daily targets, doubt solving and weekly test analysis.",
     bullets: ["1-on-1 IITian mentor", "Daily targets & doubt solving", "Weekly test analysis"],
     to: "/mentorship/jee-2027", live: true, hot: true,
   },
@@ -201,7 +201,7 @@ export default function ToolsGrid() {
           </h2>
         </div>
 
-        {/* Cards Grid — 3 per row, dropping to 2 then 1 on smaller screens */}
+        {/* Cards Grid - 3 per row, dropping to 2 then 1 on smaller screens */}
         <style>{`
           .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
           @media (max-width: 900px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
