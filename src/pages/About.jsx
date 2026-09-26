@@ -597,7 +597,7 @@ export default function About() {
             </p>
 
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 22 }}>
-              <a href="mailto:campuspath6@gmail.com" className="btn btn-coral"><Mail size={16} /> campuspoint6@gmail.com</a>
+              <a href="mailto:campuspath6@gmail.com" className="btn btn-coral"><Mail size={16} /> campuspath6@gmail.com</a>
               <a href="tel:+918118826194" className="btn btn-light"><Phone size={16} /> +91-8118826194</a>
             </div>
 

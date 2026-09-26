@@ -413,7 +413,7 @@ export default function Footer() {
               href="mailto:campuspath6@gmail.com"
               style={{ display: "flex", alignItems: "center", gap: 6 }}
             >
-              <Mail size={15} /> campuspoint6@gmail.com
+              <Mail size={15} /> campuspath6@gmail.com
             </a>
             <a
               href="tel:+918118826194"
