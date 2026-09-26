@@ -140,6 +140,17 @@ export default function Seo({
       document.title = DEFAULT_TITLE;
       setMeta("name", "description", DEFAULT_DESC);
       setLink("canonical", `${SITE_URL}/`);
+      
+      setMeta("property", "og:title", DEFAULT_TITLE);
+      setMeta("property", "og:description", DEFAULT_DESC);
+      setMeta("property", "og:url", `${SITE_URL}/`);
+      setMeta("property", "og:type", "website");
+      setMeta("property", "og:image", DEFAULT_IMAGE);
+      
+      setMeta("name", "twitter:title", DEFAULT_TITLE);
+      setMeta("name", "twitter:description", DEFAULT_DESC);
+      setMeta("name", "twitter:image", DEFAULT_IMAGE);
+      
       scripts.forEach((s) => s.parentNode && s.parentNode.removeChild(s));
     };
   }, [fullTitle, desc, url, img, type, robots, kw, graphsStr]);
