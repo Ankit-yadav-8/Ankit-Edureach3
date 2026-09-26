@@ -10,7 +10,7 @@ import {
 import Reveal from "../components/Reveal.jsx";
 import { useEnrol } from "../components/EnrolModal.jsx";
 
-const WA = "https://wa.me/917877596464?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹299 counselling plan.");
+const WA = "https://wa.me/918118826194?text=" + encodeURIComponent("Hi! I want to enrol in the JoSAA 2026 ₹299 counselling plan.");
 
 const INCLUDES = [
   { icon: Target, t: "Personalised choice list", d: "A ranked, college-by-college JoSAA choice-filling sheet built around your rank, category & preferences." },

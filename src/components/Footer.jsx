@@ -234,12 +234,12 @@ export default function Footer() {
         }
         .fteam-grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: 1.2rem;
-          max-width: 720px;
+          max-width: 1100px;
           margin: 0 auto;
         }
-        @media (max-width: 880px) {
+        @media (max-width: 960px) {
           .fteam-grid { grid-template-columns: 1fr; max-width: 460px; }
         }
         @keyframes cpFloatOrb1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(100px,80px) scale(1.15); } }
@@ -420,12 +420,6 @@ export default function Footer() {
               style={{ display: "flex", alignItems: "center", gap: 6 }}
             >
               <Phone size={15} /> +91-8118826194
-            </a>
-            <a
-              href="tel:+917877596464 "
-              style={{ display: "flex", alignItems: "center", gap: 6 }}
-            >
-              <Phone size={15} /> +91-7877596464 
             </a>
             <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <MapPin size={15} /> Jaipur, Rajasthan

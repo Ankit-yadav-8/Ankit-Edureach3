@@ -485,7 +485,7 @@ function EnrolModal({ plan, onClose }) {
 
 /* ── Success screen ── */
 function SuccessView({ meta, plan, paymentId, onClose, displayAmount }) {
-  const wa = `https://wa.me/917877596464?text=` + encodeURIComponent(
+  const wa = `https://wa.me/918118826194?text=` + encodeURIComponent(
     `Hi! I just enrolled in the ₹${displayAmount} ${meta.title} plan. Payment ID: ${paymentId}`
   );
   return (

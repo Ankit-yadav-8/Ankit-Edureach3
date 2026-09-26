@@ -20,7 +20,7 @@ import imgSaneh from "../images/team/saneh.jpg";
 import imgSaket from "../images/team/saket.jpg";
 import imgMayank from "../images/team/mayank.jpg";
 
-const WA_NUMBER = "917877596464";
+const WA_NUMBER = "918118826194";
 
 /* ── warm paper / coral / navy theme ── */
 const T = {
@@ -1149,7 +1149,7 @@ function TalkToUs({ exam }) {
               share what the year could look like, and let you decide.</p>
             <div className="mj-reach">
               <span>REACH US · HELLO@COLLEGEPARICHAY.IN</span>
-              <span>CALL · +91 78775 96464</span>
+              <span>CALL · +91 81188 26194</span>
             </div>
           </div>
           <div className="mj-talk-form-wrap">

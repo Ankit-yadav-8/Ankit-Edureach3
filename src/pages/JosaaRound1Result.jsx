@@ -19,7 +19,7 @@ import Seo from "../components/Seo.jsx";
 ═══════════════════════════════════════════════════════════ */
 
 const WA =
-  "https://wa.me/917877596464?text=" +
+  "https://wa.me/918118826194?text=" +
   encodeURIComponent("Hi! JoSAA 2026 Round 1 is out — I need help deciding Freeze / Float / Slide and filling Round 2.");
 
 /* Headline statistics for the round-1 allotment. */

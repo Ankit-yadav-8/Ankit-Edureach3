@@ -34,7 +34,7 @@ const FEATURES = [
   "Dedicated WhatsApp support till seat allotment",
 ];
 
-export default function CounsellingCard({ exam = "main", whatsapp = "917877596464" }) {
+export default function CounsellingCard({ exam = "main", whatsapp = "918118826194" }) {
   const v = VARIANTS[exam] || VARIANTS.main;
 
   return (

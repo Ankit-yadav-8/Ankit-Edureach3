@@ -13,9 +13,9 @@ import MentorshipHome from "./MentorshipHome.jsx";
 /* ════════════════════════════════════════════════
    CONTACT
 ════════════════════════════════════════════════ */
-const WA_NUMBER = "917877596464";
-const PHONE_DISPLAY = "+91 78775 96464";
-const PHONE_TEL = "+917877596464";
+const WA_NUMBER = "918118826194";
+const PHONE_DISPLAY = "+91 81188 26194";
+const PHONE_TEL = "+918118826194";
 const PRICE = "499";
 const WA_LINK =
   `https://wa.me/${WA_NUMBER}?text=` +

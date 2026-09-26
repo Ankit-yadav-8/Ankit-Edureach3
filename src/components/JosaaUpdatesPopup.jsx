@@ -16,7 +16,7 @@ import { useAuth } from "../auth/AuthContext.jsx";
 
 const POPUP_INTERVAL = 150000; // 2.5 minutes
 const WA =
-  "https://wa.me/917877596464?text=" +
+  "https://wa.me/918118826194?text=" +
   encodeURIComponent("Hi! I saw the JoSAA 2026 Round 1 update — I need counselling help.");
 
 export default function JosaaUpdatesPopup() {
