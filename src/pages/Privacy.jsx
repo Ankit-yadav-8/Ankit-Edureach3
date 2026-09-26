@@ -8,7 +8,7 @@ const SECTIONS = [
   {
     h: "1. Introduction",
     p: [
-      "Campus Point (“we”, “us”, “our”) operates the website collegeparichay.in (the “Platform”), which provides rank prediction, college discovery, cutoff insights and counselling guidance for engineering and medical aspirants in India.",
+      "Campus Point (“we”, “us”, “our”) operates the website campuspoint.in (the “Platform”), which provides rank prediction, college discovery, cutoff insights and counselling guidance for engineering and medical aspirants in India.",
       "This Privacy Policy explains what information we collect, how we use it, and the choices you have. By using the Platform you agree to the practices described here.",
     ],
   },

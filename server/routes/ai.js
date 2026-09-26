@@ -1,4 +1,4 @@
-/* AI proxy — College Parichay's own assistant, powered by Google Gemini.
+/* AI proxy — Campus Point's own assistant, powered by Google Gemini.
    The Gemini API key never leaves the server: the browser talks only to these
    endpoints. /chat streams tokens back as Server-Sent Events; /title returns a
    short auto-generated conversation title. Both require a logged-in user.
@@ -85,7 +85,7 @@ const MEMORY_NOTE =
   "or exam date as a confirmed fact. Instead give the official source to check, and only if you genuinely " +
   "know it, a clearly-labelled historical range. Never output a specific fabricated figure.";
 
-const SYSTEM_PROMPT = `You are College Parichay AI, an expert, highly advanced educational assistant and mentor. You specialize in engineering, science, programming, college admissions, placements, and career guidance.
+const SYSTEM_PROMPT = `You are Campus Point AI, an expert, highly advanced educational assistant and mentor. You specialize in engineering, science, programming, college admissions, placements, and career guidance.
 
 Your goal is to provide comprehensive, detailed, and deeply informative answers, similar to advanced AI models like ChatGPT, Claude, and Gemini. Do not give short or brief answers unless explicitly asked. Go deep into the subject matter.
 
@@ -132,7 +132,7 @@ Core Principles:
 function buildSearchSystemPrompt() {
   return (
     `Current date: ${todayIST()}. Treat any event on or before today as already happened.\n` +
-    "You are College Parichay AI with live web search. Search the web and answer the student comprehensively with highly detailed explanations. " +
+    "You are Campus Point AI with live web search. Search the web and answer the student comprehensively with highly detailed explanations. " +
     "Provide rich, long-form answers that deeply cover the topic. " +
     "Base every number, cutoff, rank and date on what you actually find, and cite the source with its year. " +
     "Never invent statistics; if the search finds nothing, say so. Use Markdown to structure your detailed answer, and write any maths in LaTeX ($...$)."
@@ -477,7 +477,7 @@ router.post("/tutor", async (req, res) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: `You are CollegeParichay, an AI Voice Tutor. A student asks: "${question}". 
+        contents: [{ role: 'user', parts: [{ text: `You are CampusPoint, an AI Voice Tutor. A student asks: "${question}". 
         
 Follow these academic guidelines for completeness:
 ${SYSTEM_PROMPT}

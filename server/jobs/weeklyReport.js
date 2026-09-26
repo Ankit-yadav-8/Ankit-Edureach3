@@ -18,7 +18,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const WEEK_MS = 7 * DAY_MS;
 
 const siteOrigin = () =>
-  (process.env.CLIENT_ORIGIN || "").split(",")[0].trim() || "https://collegeparichay.in";
+  (process.env.CLIENT_ORIGIN || "").split(",")[0].trim() || "https://campuspoint.in";
 
 const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
 
@@ -38,7 +38,7 @@ const shell = (inner, { preheader = "", eyebrow = "Weekly check-in" } = {}) => `
         <tr><td style="background:#0d1b3e;background-image:linear-gradient(135deg,#0d1b3e 0%,#1a2f63 100%);padding:22px 28px">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
             <td width="36" style="padding-right:12px">${CP_LOGO_HTML}</td>
-            <td width="100%" style="font-size:20px;font-weight:800;color:#FF5A36;letter-spacing:.3px">CollegeParichay</td>
+            <td width="100%" style="font-size:20px;font-weight:800;color:#FF5A36;letter-spacing:.3px">CampusPoint</td>
             <td align="right" style="white-space:nowrap;font-size:11px;font-weight:700;color:#c8d0e4;text-transform:uppercase;letter-spacing:1.2px">${esc(eyebrow)}</td>
           </tr></table>
           <div style="height:3px;width:54px;background:#FF5A36;border-radius:3px;margin-top:12px"></div>
@@ -46,8 +46,8 @@ const shell = (inner, { preheader = "", eyebrow = "Weekly check-in" } = {}) => `
         <tr><td style="padding:26px 28px 8px">${inner}</td></tr>
         <tr><td style="padding:18px 28px 26px">
           <div style="border-top:1px solid #eceff5;padding-top:16px;color:#9aa0aa;font-size:11.5px;line-height:1.6">
-            You're receiving this because of a mentorship enrolment on CollegeParichay.<br>
-            <span style="color:#b6bcc8">CollegeParichay · Personalised JEE &amp; NEET mentorship · collegeparichay.in</span>
+            You're receiving this because of a mentorship enrolment on CampusPoint.<br>
+            <span style="color:#b6bcc8">CampusPoint · Personalised JEE &amp; NEET mentorship · campuspoint.in</span>
           </div>
         </td></tr>
       </table>

@@ -16,7 +16,7 @@ const foundationConfig = `
     tagline: "Start Right. Build Deep.",
     badge: "🚀 Class 9 & 10 Aspirants",
     title: ["Start Early.", "Stay Ahead.", ""],
-    subtitle: "CollegeParichay Foundation program builds deep concepts and logical reasoning for Class 9 and 10 students. No burnout, just a rock-solid base for future competitive exams.",
+    subtitle: "CampusPoint Foundation program builds deep concepts and logical reasoning for Class 9 and 10 students. No burnout, just a rock-solid base for future competitive exams.",
     videoNote: "Watch how early preparation changes the game",
     heroImage: "/images/jee_2028_hero.png",
     analyticsImage: "/images/jee_2028_analytics.png",

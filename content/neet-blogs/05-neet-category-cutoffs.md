@@ -5,7 +5,7 @@ slug: "neet-category-cutoffs"
 focus_keyword: "neet category wise cutoff"
 secondary_keywords: ["neet cutoff for obc", "neet sc st cutoff", "neet ews cutoff", "neet qualifying percentile category"]
 category: "NEET Counseling"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "11 min"
 ---
 
@@ -91,6 +91,6 @@ Understand your position, protect your documents, and predict with your real det
 ---
 
 **Want to see your real, category-adjusted college options?**
-A generic cutoff chart can't account for your category, domicile, and this year's competition — but our [College Predictor](/neet-college-predictor) can. Or get personalised help sorting your quota strategy and documents through the College Parichay [NEET Counseling desk](/neet-counseling).
+A generic cutoff chart can't account for your category, domicile, and this year's competition — but our [College Predictor](/neet-college-predictor) can. Or get personalised help sorting your quota strategy and documents through the Campus Point [NEET Counseling desk](/neet-counseling).
 
 *Note: Qualifying percentiles, reservation rules, and certificate requirements are set by the authorities and can change. Always confirm current-year rules and certificate formats on the official MCC and your state counseling authority's website.*

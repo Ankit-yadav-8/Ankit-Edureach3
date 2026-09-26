@@ -5,7 +5,7 @@ slug: "low-neet-score-options"
 focus_keyword: "low neet score options"
 secondary_keywords: ["what to do after low neet score", "become doctor without mbbs", "neet alternative career", "bams bhms bds after neet"]
 category: "NEET Guidance"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "13 min"
 ---
 
@@ -107,6 +107,6 @@ The dream was never really "MBBS." The dream was *medicine* — the work, the ca
 ---
 
 **Feeling like the door has closed? Let's find the ones that are open.**
-Start by seeing your real options with the College Parichay [College Predictor](/neet-college-predictor), then talk through the path that fits *you* — score, budget, and passion — with our [NEET Counseling desk](/neet-counseling). You have more choices than today is letting you believe.
+Start by seeing your real options with the Campus Point [College Predictor](/neet-college-predictor), then talk through the path that fits *you* — score, budget, and passion — with our [NEET Counseling desk](/neet-counseling). You have more choices than today is letting you believe.
 
 *Note: Course availability, eligibility, and cutoffs vary by state, college, and year. Verify current-year specifics before applying. And if this result has left you struggling emotionally, please reach out to someone you trust or a qualified professional — your wellbeing matters more than any exam.*

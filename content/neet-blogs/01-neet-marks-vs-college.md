@@ -5,7 +5,7 @@ slug: "neet-marks-vs-college"
 focus_keyword: "neet marks vs college"
 secondary_keywords: ["neet marks required for mbbs", "neet score for government college", "neet 550 marks which college", "neet college by marks"]
 category: "NEET Counseling"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "11 min"
 ---
 
@@ -105,6 +105,6 @@ You've already done something most people never attempt. Now let's turn that num
 ---
 
 **Not sure what your score can get you this year?**
-Run your exact NEET marks, category, and state through the College Parichay [College Predictor](/neet-college-predictor) — built on real counseling data — or talk to a counselor who's guided thousands through this exact moment via our [NEET Counseling desk](/neet-counseling).
+Run your exact NEET marks, category, and state through the Campus Point [College Predictor](/neet-college-predictor) — built on real counseling data — or talk to a counselor who's guided thousands through this exact moment via our [NEET Counseling desk](/neet-counseling).
 
 *Note: All score bands above are indicative and based on recent counseling trends for illustration. Actual cutoffs change every year with paper difficulty, seat matrix, and competition. Always verify against current-year official data before making decisions.*

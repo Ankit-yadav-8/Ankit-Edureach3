@@ -5,14 +5,14 @@ slug: "neet-counselling-2026-guide"
 focus_keyword: "NEET counselling 2026"
 secondary_keywords: ["MCC counselling", "AIQ counselling", "state counselling", "choice filling", "seat allotment", "documents required for NEET counselling"]
 category: "NEET Counselling"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "18 min"
 ---
 
 # NEET Counselling 2026: Complete MCC & State Guide
 > **NEET counselling 2026 runs through two separate processes: MCC All India Quota counselling at mcc.nic.in covering 15% of state government seats plus all central institutions, and state counselling covering the remaining 85%.** Both require separate registration, separate fees and separate deadlines. Candidates must register for both.
 
-*Reviewed by the College Parichay counselling desk — updated 17 July 2026. Round rules change between years and between rounds; the information bulletin for each round is the only authority on that round.*
+*Reviewed by the Campus Point counselling desk — updated 17 July 2026. Round rules change between years and between rounds; the information bulletin for each round is the only authority on that round.*
 
 ## How NEET Counselling Actually Works
 
@@ -482,9 +482,9 @@ NTA has issued an explicit warning about fraudulent calls, fake admission offers
 - **MCC and NTA do not call you asking for money.**
 - **Only trust:** `neet.nta.nic.in` · `mcc.nic.in` · `aaccc.gov.in` · your official state portal
 
-**And a word about us:** legitimate counselling guidance — including College Parichay's — helps you understand your options, read the seat matrix, and build a good choice list. It does not, and cannot, get you a seat your rank does not earn. **Anyone telling you otherwise, including anyone claiming to be us, is lying to you.**
+**And a word about us:** legitimate counselling guidance — including Campus Point's — helps you understand your options, read the seat matrix, and build a good choice list. It does not, and cannot, get you a seat your rank does not earn. **Anyone telling you otherwise, including anyone claiming to be us, is lying to you.**
 
-[Get counselling support from College Parichay →](/mentorship)
+[Get counselling support from Campus Point →](/mentorship)
 
 ### When will NEET counselling 2026 begin?
 MCC has not announced the Round 1 registration date. Monitor `mcc.nic.in` daily — there are no SMS reminders and the window is typically under a week without extension.

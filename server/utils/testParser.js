@@ -103,7 +103,7 @@ export function stripNoise(s) {
 export async function fetchPdfBuffer(url) {
   let res;
   try {
-    res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 CollegeParichay" }, redirect: "follow" });
+    res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 CampusPoint" }, redirect: "follow" });
   } catch (e) {
     const err = new Error(`Network error fetching the PDF: ${e.message}`);
     err.code = "FETCH";

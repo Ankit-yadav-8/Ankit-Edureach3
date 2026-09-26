@@ -8,7 +8,7 @@ const SECTIONS = [
   {
     h: "1. Acceptance of terms",
     p: [
-      "These Terms of Use govern your access to and use of collegeparichay.in (the “Platform”) operated by Campus Point. By using the Platform you agree to these Terms. If you do not agree, please do not use the Platform.",
+      "These Terms of Use govern your access to and use of campuspoint.in (the “Platform”) operated by Campus Point. By using the Platform you agree to these Terms. If you do not agree, please do not use the Platform.",
     ],
   },
   {

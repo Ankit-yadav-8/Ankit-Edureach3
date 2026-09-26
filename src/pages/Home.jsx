@@ -25,8 +25,8 @@ export default function Home({ onSearch }) {
     "@graph": [
       {
         "@type": "WebSite",
-        "@id": "https://collegeparichay.in/#website",
-        "url": "https://collegeparichay.in/",
+        "@id": "https://campuspoint.in/#website",
+        "url": "https://campuspoint.in/",
         "name": "CampusPoint",
         "description": "JEE Rank Predictor & IIT NIT IIIT College Reviews",
         "potentialAction": [
@@ -34,7 +34,7 @@ export default function Home({ onSearch }) {
             "@type": "SearchAction",
             "target": {
               "@type": "EntryPoint",
-              "urlTemplate": "https://collegeparichay.in/search?q={search_term_string}"
+              "urlTemplate": "https://campuspoint.in/search?q={search_term_string}"
             },
             "query-input": "required name=search_term_string"
           }
@@ -42,10 +42,10 @@ export default function Home({ onSearch }) {
       },
       {
         "@type": "Organization",
-        "@id": "https://collegeparichay.in/#organization",
+        "@id": "https://campuspoint.in/#organization",
         "name": "CampusPoint",
-        "url": "https://collegeparichay.in/",
-        "logo": "https://collegeparichay.in/cplogo.svg"
+        "url": "https://campuspoint.in/",
+        "logo": "https://campuspoint.in/cplogo.svg"
       },
       {
         "@type": "ItemList",
@@ -55,49 +55,49 @@ export default function Home({ onSearch }) {
             "@type": "SiteNavigationElement",
             "position": 1,
             "name": "JEE Main Rank Predictor",
-            "url": "https://collegeparichay.in/jee-main"
+            "url": "https://campuspoint.in/jee-main"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 2,
             "name": "JEE Advanced Rank Predictor",
-            "url": "https://collegeparichay.in/jee-advanced"
+            "url": "https://campuspoint.in/jee-advanced"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 3,
             "name": "College Explorer",
-            "url": "https://collegeparichay.in/colleges"
+            "url": "https://campuspoint.in/colleges"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 4,
             "name": "JoSAA Cutoffs",
-            "url": "https://collegeparichay.in/cutoffs"
+            "url": "https://campuspoint.in/cutoffs"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 5,
             "name": "Branch vs College",
-            "url": "https://collegeparichay.in/branch-vs-college"
+            "url": "https://campuspoint.in/branch-vs-college"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 6,
             "name": "NEET Rank Predictor",
-            "url": "https://collegeparichay.in/neet"
+            "url": "https://campuspoint.in/neet"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 7,
             "name": "Campus Fests",
-            "url": "https://collegeparichay.in/campus-fests"
+            "url": "https://campuspoint.in/campus-fests"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 8,
             "name": "Mentorship",
-            "url": "https://collegeparichay.in/mentorship"
+            "url": "https://campuspoint.in/mentorship"
           }
         ]
       }

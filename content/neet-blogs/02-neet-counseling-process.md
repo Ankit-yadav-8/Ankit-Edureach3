@@ -5,7 +5,7 @@ slug: "neet-counseling-process"
 focus_keyword: "neet counseling process"
 secondary_keywords: ["neet counselling explained", "aiq vs state quota", "mcc counselling rounds", "neet choice filling"]
 category: "NEET Counseling"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "13 min"
 ---
 
@@ -119,6 +119,6 @@ You've already cleared the hard exam. Don't let a process you *can* master be th
 ---
 
 **Feeling lost in the counseling maze?**
-That's normal — it's genuinely confusing by design. Get a clear, personalised plan for AIQ, state quota, and choice filling from the College Parichay [NEET Counseling desk](/neet-counseling), or start by seeing what your rank can reach with our [College Predictor](/neet-college-predictor).
+That's normal — it's genuinely confusing by design. Get a clear, personalised plan for AIQ, state quota, and choice filling from the Campus Point [NEET Counseling desk](/neet-counseling), or start by seeing what your rank can reach with our [College Predictor](/neet-college-predictor).
 
 *Note: Counseling structures, round names, deposit amounts, and deadlines vary by authority and change year to year. Always confirm the current-year rules on the official MCC and your state counseling authority's website.*

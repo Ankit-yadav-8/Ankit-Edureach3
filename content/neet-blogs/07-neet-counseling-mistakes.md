@@ -5,7 +5,7 @@ slug: "neet-counseling-mistakes"
 focus_keyword: "neet counseling mistakes"
 secondary_keywords: ["neet counselling errors", "neet choice filling mistakes", "lost neet seat", "neet counselling tips"]
 category: "NEET Counseling"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "12 min"
 ---
 
@@ -119,6 +119,6 @@ Counseling isn't a formality tacked onto the exam. It's a second exam of its own
 ---
 
 **Don't let a process mistake undo months of hard work.**
-Go into counseling prepared: see your realistic options first with the College Parichay [College Predictor](/neet-college-predictor), and get expert guidance on choice-filling and round strategy from our [NEET Counseling desk](/neet-counseling). The seat your marks earned should be the seat you get.
+Go into counseling prepared: see your realistic options first with the Campus Point [College Predictor](/neet-college-predictor), and get expert guidance on choice-filling and round strategy from our [NEET Counseling desk](/neet-counseling). The seat your marks earned should be the seat you get.
 
 *Note: Counseling rules, round structures, and exit provisions vary by authority and year. Always confirm current-year specifics on the official MCC and your state counseling authority's website.*

@@ -5,7 +5,7 @@ slug: "first-year-mbbs"
 focus_keyword: "first year of mbbs"
 secondary_keywords: ["mbbs first year subjects", "what is mbbs first year like", "mbbs anatomy physiology", "life of medical student india"]
 category: "Medical Life"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "12 min"
 ---
 
@@ -88,6 +88,6 @@ You're closer to this than you think. Choose your seat wisely, walk in with your
 ---
 
 **Choosing where you'll spend these formative years?**
-The right college shapes everything this article describes. See which colleges your NEET score can reach — weighing clinical exposure, not just rank — with the College Parichay [College Predictor](/neet-college-predictor), and get help choosing a seat you'll *thrive* in through our [NEET Counseling desk](/neet-counseling).
+The right college shapes everything this article describes. See which colleges your NEET score can reach — weighing clinical exposure, not just rank — with the Campus Point [College Predictor](/neet-college-predictor), and get help choosing a seat you'll *thrive* in through our [NEET Counseling desk](/neet-counseling).
 
 *Note: Curriculum structure and subject organisation can vary by university and evolve over time. This article describes the general experience for orientation, not an official syllabus. Verify specifics with your institution.*

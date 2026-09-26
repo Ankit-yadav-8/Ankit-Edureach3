@@ -5,7 +5,7 @@ slug: "govt-vs-private-medical-college"
 focus_keyword: "government vs private medical college"
 secondary_keywords: ["mbbs fees government vs private", "private medical college worth it", "deemed university mbbs fees", "mbbs bond government college"]
 category: "NEET Guidance"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "12 min"
 ---
 
@@ -96,6 +96,6 @@ What we'd genuinely urge: don't let the days right after results — the most em
 ---
 
 **Trying to figure out if government is within reach for you?**
-Run your NEET score, category, and state through the College Parichay [College Predictor](/neet-college-predictor) to see your realistic options on both sides — or talk through the government-vs-private call with someone who's seen thousands of these decisions at our [NEET Counseling desk](/neet-counseling).
+Run your NEET score, category, and state through the Campus Point [College Predictor](/neet-college-predictor) to see your realistic options on both sides — or talk through the government-vs-private call with someone who's seen thousands of these decisions at our [NEET Counseling desk](/neet-counseling).
 
 *Note: Fees, bond terms, and quota rules vary significantly by state, college, and year, and are not quoted as fixed figures here for that reason. Always verify current specifics with the official college and counseling authority before deciding.*

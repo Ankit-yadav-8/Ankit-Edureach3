@@ -315,7 +315,7 @@ router.get("/enrollments/export.csv", requireAdmin, async (_req, res) => {
       e.razorpayPaymentId, e.razorpayOrderId, e.createdAt?.toISOString(),
     ].map(esc).join(",")).join("\n");
     res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", "attachment; filename=collegeparichay-payments.csv");
+    res.setHeader("Content-Disposition", "attachment; filename=campuspoint-payments.csv");
     res.send(head + rows);
   } catch (e) {
     console.error("[payment/enrollments/export]", e?.message || e);

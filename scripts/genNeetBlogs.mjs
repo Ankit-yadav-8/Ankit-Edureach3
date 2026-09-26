@@ -195,7 +195,7 @@ for (const file of files) {
     secondaryKeywords: fm.secondary_keywords || [],
     category: "NEET",
     categoryLabel: fm.category || "NEET Counseling",
-    author: fm.author || "College Parichay Counselling Desk",
+    author: fm.author || "Campus Point Counselling Desk",
     date: meta.date || PUBLISH_DATE,
     read: fm.read_time ? `${fm.read_time} read` : "8 min read",
     iconName: meta.icon,

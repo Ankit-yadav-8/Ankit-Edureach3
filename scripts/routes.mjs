@@ -11,7 +11,7 @@ import { BLOG_POSTS } from "../src/data/blog.js";
 import { PRIVATE_UNIS } from "../src/data/counselling.js";
 import { TEAM } from "../src/data/team.js";
 
-export const SITE = "https://collegeparichay.in";
+export const SITE = "https://campuspoint.in";
 
 // Static routes: [path, priority, changefreq]
 export const STATIC_ROUTES = [

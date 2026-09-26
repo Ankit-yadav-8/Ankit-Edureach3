@@ -399,7 +399,7 @@ router.post("/admin/announcement", requireAdmin, async (req, res) => {
     const doc = await CommunityPost.create({
       plan,
       authorId: "admin",
-      authorName: "College Parichay Team",
+      authorName: "Campus Point Team",
       studentId: "",
       text,
       tag: "announcement",

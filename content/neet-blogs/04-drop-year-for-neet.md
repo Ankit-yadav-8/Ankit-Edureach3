@@ -5,7 +5,7 @@ slug: "drop-year-for-neet"
 focus_keyword: "drop a year for neet"
 secondary_keywords: ["neet dropper", "should i take a drop for neet", "neet second attempt", "neet repeat year worth it"]
 category: "NEET Guidance"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "12 min"
 ---
 
@@ -100,6 +100,6 @@ Give this the calm, informed thought it deserves. You've got more options than t
 ---
 
 **Not sure whether to drop or take a seat this cycle?**
-Get the full picture before you commit a year of your life. See what your current score can realistically reach with the College Parichay [College Predictor](/neet-college-predictor), or talk the decision through — family pressures and all — with our [NEET Counseling desk](/neet-counseling).
+Get the full picture before you commit a year of your life. See what your current score can realistically reach with the Campus Point [College Predictor](/neet-college-predictor), or talk the decision through — family pressures and all — with our [NEET Counseling desk](/neet-counseling).
 
 *Note: This article is guidance, not a directive. Every student's situation is unique. If exam stress is affecting your wellbeing, please reach out to someone you trust or a qualified professional — your health comes before any exam.*

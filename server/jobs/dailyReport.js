@@ -20,7 +20,7 @@ import { sendMail } from "../utils/mailer.js";
 import { buildDailyHtml } from "../routes/mentorship.js";
 
 const siteOrigin = () =>
-  (process.env.CLIENT_ORIGIN || "").split(",")[0].trim() || "https://collegeparichay.in";
+  (process.env.CLIENT_ORIGIN || "").split(",")[0].trim() || "https://campuspoint.in";
 
 // Match the client's isoDay (UTC date) so the "today" lookup and the dedupe
 // stamp line up across the browser and this job.

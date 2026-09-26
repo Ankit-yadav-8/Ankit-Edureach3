@@ -22,7 +22,7 @@
 
 import { useEffect } from "react";
 
-export const SITE_URL = "https://collegeparichay.in";
+export const SITE_URL = "https://campuspoint.in";
 export const BRAND = "CampusPoint";
 
 const DEFAULT_TITLE =

@@ -1,6 +1,6 @@
-# CollegeParichay — SEO & Digital Growth Strategy
+# CampusPoint — SEO & Digital Growth Strategy
 
-> Domain: **https://collegeparichay.in** · Brand: **CollegeParichay** (alt: "College Parichay")
+> Domain: **https://campuspoint.in** · Brand: **CampusPoint** (alt: "Campus Point")
 > Positioning: *An IIT Roorkee alumni startup — free JEE/JoSAA/CSAB counselling, rank prediction & college discovery.*
 > White-hat only. Last updated: 2026-06-14.
 
@@ -8,13 +8,13 @@
 
 ## 0. The #1 problem to fix first: brand-entity confusion
 
-Searching "college parichay" today mixes you with: college **"Parichay" orientation fests**, the Hindi word *parichay*, and a stale **`.com`** listing on LinkedIn. Google can't see one clean entity. Everything below feeds Google a single, consistent identity. **Do these 3 off-site fixes before anything else — they are higher impact than any on-page tweak:**
+Searching "campus point" today mixes you with: college **"Parichay" orientation fests**, the Hindi word *parichay*, and a stale **`.com`** listing on LinkedIn. Google can't see one clean entity. Everything below feeds Google a single, consistent identity. **Do these 3 off-site fixes before anything else — they are higher impact than any on-page tweak:**
 
-1. **LinkedIn company page** → Website = `collegeparichay.in`; About = the positioning line above (remove "New Generation college review website"); logo = the CP mark (not Innovatech).
+1. **LinkedIn company page** → Website = `campuspoint.in`; About = the positioning line above (remove "New Generation college review website"); logo = the CP mark (not Innovatech).
 2. **Google Search Console** → submit sitemap, URL-Inspect the homepage + each feature page → **Request Indexing**.
-3. **Vercel dashboard** → set apex `collegeparichay.in` as the **Primary** domain (so `www` 301-redirects to apex). Today apex 307-redirects to www, splitting the entity. Do NOT add the redirect in `vercel.json` (it caused an outage before).
+3. **Vercel dashboard** → set apex `campuspoint.in` as the **Primary** domain (so `www` 301-redirects to apex). Today apex 307-redirects to www, splitting the entity. Do NOT add the redirect in `vercel.json` (it caused an outage before).
 
-**Consistency rule (NAP):** every profile must use the *exact* same name "College Parichay", URL `collegeparichay.in`, logo, and one-line description. Inconsistency is the single biggest reason Google won't build your knowledge panel.
+**Consistency rule (NAP):** every profile must use the *exact* same name "Campus Point", URL `campuspoint.in`, logo, and one-line description. Inconsistency is the single biggest reason Google won't build your knowledge panel.
 
 ---
 
@@ -33,7 +33,7 @@ Go after **long-tail counselling keywords** first — big sites under-serve thes
 - "josaa choice filling order for [branch]", "csab special round cutoff 2026", "jee main rank from percentile [score]"
 - "iit [name] [branch] average package 2025", "nit vs iiit for cse", "home state quota nit benefit"
 - "jee advanced marks vs rank 2026", "josaa 2026 schedule", "how many rounds in josaa"
-- Brand: "collegeparichay", "college parichay jee", "college parichay rank predictor"
+- Brand: "campuspoint", "campus point jee", "campus point rank predictor"
 
 Avoid head terms ("jee college predictor") early — owned by Careers360/Collegedunia. Win the specific questions, then climb.
 
@@ -42,9 +42,9 @@ Pattern: **Title ≤ 60 chars, Meta ≤ 155 chars, one H1, descriptive H2s, FAQ 
 
 | Page | H1 | Title tag |
 |---|---|---|
-| Home | Know Your Rank. Find Your College. | CollegeParichay — JEE Rank Predictor & IIT NIT IIIT Reviews \| IIT Roorkee Alumni |
-| About | About CollegeParichay — Built by IIT Roorkee Alumni | About CollegeParichay — An IIT Roorkee Startup |
-| Contact | Contact CollegeParichay | Contact CollegeParichay — Counselling Help & Support |
+| Home | Know Your Rank. Find Your College. | CampusPoint — JEE Rank Predictor & IIT NIT IIIT Reviews \| IIT Roorkee Alumni |
+| About | About CampusPoint — Built by IIT Roorkee Alumni | About CampusPoint — An IIT Roorkee Startup |
+| Contact | Contact CampusPoint | Contact CampusPoint — Counselling Help & Support |
 | College Predictor (`/jee-main`,`/jee-advanced`) | JEE Main/Advanced Rank Predictor | JEE Main Rank Predictor — Percentile to Rank & College Predictor |
 | JoSAA Guide (`/josaa-2026`) | JoSAA 2026 Counselling Guide | JoSAA 2026 Counselling — Schedule, Choice Filling & Cutoffs |
 | CSAB Guide (new) | CSAB 2026 Special Round Guide | CSAB 2026 — Special Round Process, Dates & Vacant Seats |
@@ -52,23 +52,23 @@ Pattern: **Title ≤ 60 chars, Meta ≤ 155 chars, one H1, descriptive H2s, FAQ 
 | Branch Comparison (`/compare`) | Compare Branches & Colleges | CSE vs ECE vs Mech — Branch Comparison by Placements |
 | Cut-off Analysis (`/cutoffs`) | JoSAA Cutoffs 2018–2025 | JoSAA Cutoffs 2018–2025 — IIT NIT IIIT Opening & Closing Ranks |
 | Mentorship (`/mentorship`) | 1-on-1 JEE & NEET Mentorship | JEE & NEET Mentorship by IITians — 1-on-1 Guidance |
-| Blogs | CollegeParichay Blog | JEE & JoSAA Counselling Blog — Tips by IIT Roorkee Alumni |
-| Testimonials | What Students Say | CollegeParichay Reviews — Real Student Testimonials |
-| FAQ | Frequently Asked Questions | CollegeParichay FAQ — JEE Rank, JoSAA & Counselling |
+| Blogs | CampusPoint Blog | JEE & JoSAA Counselling Blog — Tips by IIT Roorkee Alumni |
+| Testimonials | What Students Say | CampusPoint Reviews — Real Student Testimonials |
+| FAQ | Frequently Asked Questions | CampusPoint FAQ — JEE Rank, JoSAA & Counselling |
 | Privacy / Terms | Privacy Policy / Terms | (robots: index, follow — keep thin but present) |
 
 > **Fix the stat inconsistency:** the site shows "2.4L+ students", "50K+ students", and the prompt says "3,200+". Pick ONE true number and use it everywhere. Inflated/contradictory stats hurt trust and risk a review-snippet penalty.
 
 ---
 
-## 2. Google visibility & branding (show all profiles for "CollegeParichay")
+## 2. Google visibility & branding (show all profiles for "CampusPoint")
 
 Google shows your official profiles under a brand search when it can link them to one entity. The mechanism:
 
 - **`sameAs` in Organization schema** (already in `index.html`) lists LinkedIn, Instagram, YouTube — **add Facebook, X, WhatsApp/Telegram once created.** This is the strongest on-site signal.
-- **Each profile links back** to `collegeparichay.in` and uses the identical name/logo.
+- **Each profile links back** to `campuspoint.in` and uses the identical name/logo.
 - **Knowledge panel**: build the entity (consistent NAP + a few authoritative mentions), then at search time use **"Claim this knowledge panel"** to verify ownership and control links.
-- **Google Business Profile**: create one for "College Parichay" (category: Educational consultant) with website + logo — this often surfaces the brand box on the right.
+- **Google Business Profile**: create one for "Campus Point" (category: Educational consultant) with website + logo — this often surfaces the brand box on the right.
 
 Checklist for "every profile appears": Website ✓, LinkedIn, YouTube, Instagram, Facebook, X, GitHub (optional, dev brand), GBP — each created, named identically, linking to site, and added to `sameAs`.
 
@@ -76,30 +76,30 @@ Checklist for "every profile appears": Website ✓, LinkedIn, YouTube, Instagram
 
 ## 3. Social media SEO
 
-Universal: **username `collegeparichay` everywhere**; bio = positioning line + `collegeparichay.in`; same logo; pinned post linking to the rank predictor.
+Universal: **username `campuspoint` everywhere**; bio = positioning line + `campuspoint.in`; same logo; pinned post linking to the rank predictor.
 
 | Platform | Handle | Bio / description | Cadence |
 |---|---|---|---|
 | LinkedIn | /company/college-parichay | "Free JEE/JoSAA counselling & rank prediction. An IIT Roorkee startup." | 3–5/week |
-| YouTube | @CollegeParichay | Keyword-rich channel desc (section 4) | 1–2/week |
-| Instagram | @collegeparichay | "JEE rank → dream college. Built by IITians 🎓 collegeparichay.in" | 4–7/week (Reels) |
-| Facebook | /collegeparichay | Same as LinkedIn | 3/week |
-| X (Twitter) | @CollegeParichay | Same + result-day live updates | daily in season |
-| WhatsApp Channel | College Parichay | Counselling alerts & deadlines | as needed |
-| Telegram | @collegeparichay | Cutoff PDFs, choice-list discussions | as needed |
+| YouTube | @CampusPoint | Keyword-rich channel desc (section 4) | 1–2/week |
+| Instagram | @campuspoint | "JEE rank → dream college. Built by IITians 🎓 campuspoint.in" | 4–7/week (Reels) |
+| Facebook | /campuspoint | Same as LinkedIn | 3/week |
+| X (Twitter) | @CampusPoint | Same + result-day live updates | daily in season |
+| WhatsApp Channel | Campus Point | Counselling alerts & deadlines | as needed |
+| Telegram | @campuspoint | Cutoff PDFs, choice-list discussions | as needed |
 
 **Cross-linking:** every bio links to the site; site footer links to every profile (done); pin a "follow us" post; put the WhatsApp/Telegram link on the homepage and in blog CTAs.
 
-**Hashtags (IG/X):** #JEE2026 #JoSAA #CSAB #JEEMains #JEEAdvanced #IIT #NIT #IIIT #CollegePredictor #EngineeringAdmission #CollegeParichay
+**Hashtags (IG/X):** #JEE2026 #JoSAA #CSAB #JEEMains #JEEAdvanced #IIT #NIT #IIIT #CollegePredictor #EngineeringAdmission #CampusPoint
 
 ---
 
 ## 4. YouTube growth
 
-**Channel setup:** name "College Parichay", handle `@CollegeParichay`, banner with "Free JEE Rank Predictor & Counselling — IIT Roorkee Alumni", link to site + socials, channel keywords: `JEE counselling, JoSAA, CSAB, college predictor, IIT NIT admission, JEE rank predictor`.
+**Channel setup:** name "Campus Point", handle `@CampusPoint`, banner with "Free JEE Rank Predictor & Counselling — IIT Roorkee Alumni", link to site + socials, channel keywords: `JEE counselling, JoSAA, CSAB, college predictor, IIT NIT admission, JEE rank predictor`.
 
 **Channel description (paste-ready):**
-> College Parichay is a free JEE rank prediction & college-counselling platform built by IIT Roorkee alumni. We make JoSAA & CSAB simple — rank from marks, college shortlists, real cutoffs, branch comparisons & 1-on-1 mentorship. Website: https://collegeparichay.in
+> Campus Point is a free JEE rank prediction & college-counselling platform built by IIT Roorkee alumni. We make JoSAA & CSAB simple — rank from marks, college shortlists, real cutoffs, branch comparisons & 1-on-1 mentorship. Website: https://campuspoint.in
 
 **Playlists:** JoSAA 2026 Masterclass · CSAB Special Round · College Reviews (IIT/NIT/IIIT) · Branch Comparisons · Rank Predictor How-To · Topper Interviews.
 
@@ -111,7 +111,7 @@ Universal: **username `collegeparichay` everywhere**; bio = positioning line + `
 3. CSAB special round explained in 10 min
 4. NIT home-state quota: how much it really helps
 5. IIT vs NIT vs IIIT for CSE — honest take
-6. How to use the CollegeParichay rank predictor
+6. How to use the CampusPoint rank predictor
 7. JEE Advanced marks vs rank 2026
 8. Which IITs can I get at rank 5000?
 9. Best branches in NITs by placement
@@ -155,14 +155,14 @@ Universal: **username `collegeparichay` everywhere**; bio = positioning line + `
 47. Scholarships at IITs/NITs
 48. Girl students: branches & quota strategy
 49. Foreign vs Indian undergrad for engineers
-50. Full CollegeParichay platform walkthrough
+50. Full CampusPoint platform walkthrough
 
 ---
 
 ## 5. LinkedIn growth
 
 - **Company page:** complete every field, post 3–5×/week, enable the "Free counselling" CTA, add the site as Website.
-- **Founder profiles** (Ankit Kumar, Mayank Singh, Saket Kumar): headline "Founder & CEO, College Parichay | IIT Roorkee | Helping JEE aspirants pick the right college"; feature the site; post personally — founder posts out-reach company posts 5–10×.
+- **Founder profiles** (Ankit Kumar, Mayank Singh, Saket Kumar): headline "Founder & CEO, Campus Point | IIT Roorkee | Helping JEE aspirants pick the right college"; feature the site; post personally — founder posts out-reach company posts 5–10×.
 - **Weekly calendar:** Mon data insight · Wed how-to/carousel · Fri student win/testimonial · Sun founder story. In season: live result-day posts.
 - **Viral formats:** "rank → college" carousels, cutoff data charts, "I'm an IITian, here's what I'd do with rank X" hooks, myth-busting.
 - **Keywords:** JEE counselling, JoSAA, CSAB, college predictor, IIT admission, engineering admission guidance.

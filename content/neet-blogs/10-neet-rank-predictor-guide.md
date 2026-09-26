@@ -5,7 +5,7 @@ slug: "neet-rank-predictor-guide"
 focus_keyword: "neet rank predictor"
 secondary_keywords: ["neet marks to rank", "how to predict neet college", "neet percentile calculator", "neet score to college"]
 category: "NEET Tools"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "10 min"
 ---
 
@@ -37,7 +37,7 @@ A quality NEET predictor takes your inputs and models your realistic outcome acr
 
 **3. Category & state adjustment.** This is the part cheap tools skip. Your realistic reach depends heavily on your **category** (General/OBC/SC/ST/EWS) and **home-state quota**. A predictor that ignores these is basically useless, because — as we cover in [category-wise cutoffs](/neet-category-cutoffs) — those factors dramatically shift your actual options.
 
-The [College Parichay College Predictor](/neet-college-predictor) is built on real counseling data with exactly these layers in mind, including the state-and-category adjustments generic charts ignore.
+The [Campus Point College Predictor](/neet-college-predictor) is built on real counseling data with exactly these layers in mind, including the state-and-category adjustments generic charts ignore.
 
 ## What a predictor can — and can't — tell you
 
@@ -101,6 +101,6 @@ So don't just glance at a number. Use it. Plan with it. And turn that score you'
 ---
 
 **Turn your score into a real plan — right now.**
-Enter your exact NEET marks, category, and home state into the College Parichay [College Predictor](/neet-college-predictor) — built on real counseling data with category and state adjustments — and get a realistic, layered view of your options. Then let our [NEET Counseling desk](/neet-counseling) help you build the choice list that lands you the seat.
+Enter your exact NEET marks, category, and home state into the Campus Point [College Predictor](/neet-college-predictor) — built on real counseling data with category and state adjustments — and get a realistic, layered view of your options. Then let our [NEET Counseling desk](/neet-counseling) help you build the choice list that lands you the seat.
 
 *Note: Any predictor provides data-informed estimates, not guarantees. Actual cutoffs depend on each year's paper difficulty, seat matrix, and counseling dynamics. Always verify against current-year official data before making final decisions.*

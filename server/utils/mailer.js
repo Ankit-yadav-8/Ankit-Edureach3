@@ -4,7 +4,7 @@
 // IMPORTANT — sender rules:
 //   Brevo only sends from a VERIFIED sender. SMTP_FROM_EMAIL must be an address
 //   on a domain you have authenticated in Brevo (SPF/DKIM), e.g.
-//     SMTP_FROM_EMAIL=noreply@collegeparichay.in
+//     SMTP_FROM_EMAIL=noreply@campuspoint.in
 //   Free webmail domains (gmail.com, yahoo.com, outlook.com, …) are REJECTED by
 //   Brevo because of DMARC — they can NOT be used as the "from" address. Use a
 //   gmail address only as the reply-to / contact (REPLY_TO_EMAIL) instead.
@@ -12,7 +12,7 @@
 // Env vars used:
 //   BREVO_API_KEY   — Brevo transactional API key (required to actually send)
 //   SMTP_FROM_EMAIL — verified domain sender (the "from")
-//   SMTP_FROM_NAME  — display name for the sender (default "CollegeParichay")
+//   SMTP_FROM_NAME  — display name for the sender (default "CampusPoint")
 //   REPLY_TO_EMAIL  — where replies go (default campuspath6@gmail.com)
 //   OTP_DEV_MODE    — "false" to actually send; anything else only logs the code
 // ─────────────────────────────────────────────────────────────────────────────
@@ -32,9 +32,9 @@ function isDevMode() {
 // Resolve the Brevo "from" address, falling back to the verified domain sender
 // when SMTP_FROM_EMAIL is missing or a free-webmail address Brevo won't send from.
 function resolveSender() {
-  const VERIFIED_SENDER = "hello@collegeparichay.in";
+  const VERIFIED_SENDER = "hello@campuspoint.in";
   let fromEmail  = String(process.env.SMTP_FROM_EMAIL || "").trim();
-  const fromName = (process.env.SMTP_FROM_NAME || "CollegeParichay").trim();
+  const fromName = (process.env.SMTP_FROM_NAME || "CampusPoint").trim();
   const replyTo  = String(process.env.REPLY_TO_EMAIL || "campuspath6@gmail.com").trim();
   if (!fromEmail || FREE_WEBMAIL.test(fromEmail)) fromEmail = VERIFIED_SENDER;
   return { fromEmail, fromName, replyTo };
@@ -110,7 +110,7 @@ function emailShell(inner, { preheader = "", eyebrow = "", accent = "#FF5A36", f
         <tr><td style="background:#0d1b3e;background-image:linear-gradient(135deg,#0d1b3e 0%,#1a2f63 100%);padding:22px 28px">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
             <td width="36" style="padding-right:12px">${CP_LOGO_HTML}</td>
-            <td width="100%" style="font-size:20px;font-weight:800;color:#FF5A36;letter-spacing:.3px">CollegeParichay</td>
+            <td width="100%" style="font-size:20px;font-weight:800;color:#FF5A36;letter-spacing:.3px">CampusPoint</td>
             ${eyebrow ? `<td align="right" style="white-space:nowrap;font-size:11px;font-weight:700;color:#c8d0e4;text-transform:uppercase;letter-spacing:1.2px">${esc(eyebrow)}</td>` : ""}
           </tr></table>
           <div style="height:3px;width:54px;background:${accent};border-radius:3px;margin-top:12px"></div>
@@ -118,8 +118,8 @@ function emailShell(inner, { preheader = "", eyebrow = "", accent = "#FF5A36", f
         <tr><td style="padding:26px 28px 8px">${inner}</td></tr>
         <tr><td style="padding:18px 28px 26px">
           <div style="border-top:1px solid #eceff5;padding-top:16px;color:#9aa0aa;font-size:11.5px;line-height:1.6">
-            ${footer || "You're receiving this from CollegeParichay."}<br>
-            <span style="color:#b6bcc8">CollegeParichay · Personalised JEE &amp; NEET mentorship · collegeparichay.in</span>
+            ${footer || "You're receiving this from CampusPoint."}<br>
+            <span style="color:#b6bcc8">CampusPoint · Personalised JEE &amp; NEET mentorship · campuspoint.in</span>
           </div>
         </td></tr>
       </table>
@@ -203,12 +203,12 @@ export async function sendOtpEmail(email, code) {
 
   // The verified Brevo sender to use when SMTP_FROM_EMAIL is missing or set to a
   // free-webmail address (gmail/yahoo/…) that Brevo refuses to send from. This
-  // domain (collegeparichay.in) is authenticated in Brevo, so OTP delivery keeps
+  // domain (campuspoint.in) is authenticated in Brevo, so OTP delivery keeps
   // working even if SMTP_FROM_EMAIL on Render is misconfigured.
-  const VERIFIED_SENDER = "hello@collegeparichay.in";
+  const VERIFIED_SENDER = "hello@campuspoint.in";
 
   let fromEmail   = String(process.env.SMTP_FROM_EMAIL || "").trim();
-  const fromName  = (process.env.SMTP_FROM_NAME || "CollegeParichay").trim();
+  const fromName  = (process.env.SMTP_FROM_NAME || "CampusPoint").trim();
   const replyTo   = String(process.env.REPLY_TO_EMAIL || "campuspath6@gmail.com").trim();
 
   // A free webmail "from" can never be sent through Brevo — fall back to the
@@ -231,10 +231,10 @@ export async function sendOtpEmail(email, code) {
       sender: { name: fromName, email: fromEmail },
       replyTo: { email: replyTo, name: fromName },
       to: [{ email }],
-      subject: "Your CollegeParichay verification code",
-      textContent: `Your CollegeParichay verification code is ${code}. Valid for 5 minutes.`,
+      subject: "Your CampusPoint verification code",
+      textContent: `Your CampusPoint verification code is ${code}. Valid for 5 minutes.`,
       htmlContent: emailShell(`
-        <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">Use this code to verify your email and sign in to CollegeParichay:</p>
+        <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">Use this code to verify your email and sign in to CampusPoint:</p>
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0"><tr>
           <td align="center" style="background:#f4f6fb;border:1px dashed #cbd3e4;border-radius:14px;padding:22px">
             <div style="font-size:11px;color:#8a93a6;font-weight:700;text-transform:uppercase;letter-spacing:1.4px">Verification code</div>
@@ -242,7 +242,7 @@ export async function sendOtpEmail(email, code) {
           </td>
         </tr></table>
         <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ Valid for <b>5 minutes</b>. If you didn't request this, you can safely ignore this email.</p>`,
-        { preheader: `Your CollegeParichay code is ${code} — valid for 5 minutes`, eyebrow: "Verify email", footer: "You're receiving this because someone requested a sign-in code for this email." }),
+        { preheader: `Your CampusPoint code is ${code} — valid for 5 minutes`, eyebrow: "Verify email", footer: "You're receiving this because someone requested a sign-in code for this email." }),
     });
   } catch (e) {
     console.error("Email send failed:", e.message);
@@ -256,9 +256,9 @@ export async function sendPasswordResetEmail(email, resetUrl, otp) {
     return { ok: true, dev: true };
   }
 
-  const VERIFIED_SENDER = "hello@collegeparichay.in";
+  const VERIFIED_SENDER = "hello@campuspoint.in";
   let fromEmail   = String(process.env.SMTP_FROM_EMAIL || "").trim();
-  const fromName  = (process.env.SMTP_FROM_NAME || "CollegeParichay").trim();
+  const fromName  = (process.env.SMTP_FROM_NAME || "CampusPoint").trim();
   const replyTo   = String(process.env.REPLY_TO_EMAIL || "campuspath6@gmail.com").trim();
 
   if (!fromEmail || FREE_WEBMAIL.test(fromEmail)) {
@@ -270,10 +270,10 @@ export async function sendPasswordResetEmail(email, resetUrl, otp) {
       sender: { name: fromName, email: fromEmail },
       replyTo: { email: replyTo, name: fromName },
       to: [{ email }],
-      subject: "Reset your CollegeParichay password",
-      textContent: `Reset your CollegeParichay password.\n\nClick this link to auto-fill your code: ${resetUrl}\n\nOr enter this 6-digit OTP manually: ${otp}\n\nThis code is unique and expires in 15 minutes. After entering the OTP, you'll receive a verification token to confirm your identity before setting a new password.\n\nIf you didn't request this, ignore this email.`,
+      subject: "Reset your CampusPoint password",
+      textContent: `Reset your CampusPoint password.\n\nClick this link to auto-fill your code: ${resetUrl}\n\nOr enter this 6-digit OTP manually: ${otp}\n\nThis code is unique and expires in 15 minutes. After entering the OTP, you'll receive a verification token to confirm your identity before setting a new password.\n\nIf you didn't request this, ignore this email.`,
       htmlContent: emailShell(`
-        <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">We received a request to reset your CollegeParichay password. Follow the steps below:</p>
+        <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">We received a request to reset your CampusPoint password. Follow the steps below:</p>
         
         <div style="margin:20px 0;text-align:center;">
           <p style="font-size:12px;color:#8a93a6;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 10px">Step 1 — Click to auto-fill OTP</p>
@@ -297,7 +297,7 @@ export async function sendPasswordResetEmail(email, resetUrl, otp) {
         </div>
         
         <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ This code expires in <b>15 minutes</b>. If you didn't request a password reset, you can safely ignore this email.</p>`,
-        { preheader: `Your CollegeParichay password reset code is ${otp} — valid for 15 minutes`, eyebrow: "Password Reset", footer: "You're receiving this because someone requested a password reset for this email." }),
+        { preheader: `Your CampusPoint password reset code is ${otp} — valid for 15 minutes`, eyebrow: "Password Reset", footer: "You're receiving this because someone requested a password reset for this email." }),
     });
   } catch (e) {
     console.error("Password reset email send failed:", e.message);
@@ -322,8 +322,8 @@ export async function sendVerificationTokenEmail(email, verificationToken) {
       sender: { name: fromName, email: fromEmail },
       replyTo: { email: replyTo, name: fromName },
       to: [{ email }],
-      subject: "Your CollegeParichay verification token",
-      textContent: `Your CollegeParichay verification token is: ${verificationToken}\n\nCopy and paste this token into the password reset form to set your new password.\n\nThis token is unique and expires in 15 minutes. If you didn't request this, you can safely ignore this email.`,
+      subject: "Your CampusPoint verification token",
+      textContent: `Your CampusPoint verification token is: ${verificationToken}\n\nCopy and paste this token into the password reset form to set your new password.\n\nThis token is unique and expires in 15 minutes. If you didn't request this, you can safely ignore this email.`,
       htmlContent: emailShell(`
         <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">Your OTP has been verified. Use the token below to complete your password reset:</p>
         
@@ -336,7 +336,7 @@ export async function sendVerificationTokenEmail(email, verificationToken) {
         
         <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;margin:16px 0">
           <p style="margin:0;font-size:12.5px;color:#1e40af;line-height:1.6;font-weight:600">
-            📋 Copy and paste the token above into the password reset form on CollegeParichay to set your new password.
+            📋 Copy and paste the token above into the password reset form on CampusPoint to set your new password.
           </p>
         </div>
         
@@ -347,7 +347,7 @@ export async function sendVerificationTokenEmail(email, verificationToken) {
         </div>
         
         <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ This token expires in <b>15 minutes</b>. If you didn't request a password reset, you can safely ignore this email.</p>`,
-        { preheader: "Your CollegeParichay verification token for password reset", eyebrow: "Step 2 · Verify", footer: "You're receiving this because you verified your OTP for a password reset." }),
+        { preheader: "Your CampusPoint verification token for password reset", eyebrow: "Step 2 · Verify", footer: "You're receiving this because you verified your OTP for a password reset." }),
     });
   } catch (e) {
     console.error("Verification token email send failed:", e.message);

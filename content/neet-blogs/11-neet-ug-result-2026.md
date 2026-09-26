@@ -5,14 +5,14 @@ slug: "neet-ug-result-2026"
 focus_keyword: "NEET Result 2026"
 secondary_keywords: ["NEET scorecard 2026", "NEET cutoff 2026", "NEET result link", "NEET counselling 2026", "NEET rank 2026", "neet.nta.nic.in result"]
 category: "NEET Counselling"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "14 min"
 ---
 
 # NEET UG Result 2026 Out: Scorecard, Cutoff & Rank
 > **NEET UG Result 2026 was declared by the National Testing Agency on 16 July 2026 at neet.nta.nic.in.** Around 20 lakh candidates appeared and 11.21 lakh qualified. Aryan Gupta (Punjab) and Panshul Bansal (Haryana) jointly topped with 715/720. Candidates can download the scorecard using their application number and date of birth.
 
-*Reviewed by the College Parichay counselling desk — updated 17 July 2026.*
+*Reviewed by the Campus Point counselling desk — updated 17 July 2026.*
 
 ## NEET UG Result 2026: What Was Announced
 

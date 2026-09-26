@@ -148,9 +148,9 @@ export default function BlogPost() {
     publisher: {
       "@type": "Organization",
       name: "CampusPoint",
-      logo: { "@type": "ImageObject", url: "https://collegeparichay.in/cplogo.svg" },
+      logo: { "@type": "ImageObject", url: "https://campuspoint.in/cplogo.svg" },
     },
-    mainEntityOfPage: `https://collegeparichay.in/blog/${post.slug}`,
+    mainEntityOfPage: `https://campuspoint.in/blog/${post.slug}`,
     ...(post.date ? { datePublished: post.date, dateModified: post.date } : {}),
     ...(post.focusKeyword
       ? { keywords: [post.focusKeyword, ...(post.secondaryKeywords || [])].join(", ") }

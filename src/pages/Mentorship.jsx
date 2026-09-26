@@ -1154,7 +1154,7 @@ function TalkToUs({ exam }) {
             <p className="mj-body">A 15-minute call, no pressure. We&rsquo;ll listen to where you are,
               share what the year could look like, and let you decide.</p>
             <div className="mj-reach">
-              <span>REACH US · HELLO@collegeparichay.in</span>
+              <span>REACH US · HELLO@campuspoint.in</span>
               <span>CALL · +91 81188 26194</span>
             </div>
           </div>

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Google Gemini client — powers the College Parichay AI chat assistant
+// Google Gemini client — powers the Campus Point AI chat assistant
 // (server/routes/ai.js) for its short non-streaming helper calls (title,
 // follow-ups, memory distillation, image-prompt refinement). The streaming chat
 // itself lives in ai.js (streamGenerateContent + google_search grounding).

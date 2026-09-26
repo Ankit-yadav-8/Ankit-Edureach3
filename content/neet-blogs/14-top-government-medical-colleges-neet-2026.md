@@ -5,14 +5,14 @@ slug: "top-government-medical-colleges-neet-2026"
 focus_keyword: "best medical colleges"
 secondary_keywords: ["government medical colleges", "AIIMS colleges", "top MBBS colleges India", "government medical college fees", "MBBS seats"]
 category: "NEET Counselling"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "16 min"
 ---
 
 # Top Government Medical Colleges Accepting NEET 2026
 > **The top government medical colleges accepting NEET 2026 are AIIMS Delhi, Maulana Azad Medical College, JIPMER Puducherry, AIIMS Jodhpur, Seth GS Medical College Mumbai and IMS BHU.** Government MBBS costs between ₹6,000 and ₹5 lakh for the full course, against ₹60 lakh to ₹1.2 crore at private colleges.
 
-*Reviewed by the College Parichay counselling desk — updated 17 July 2026. Fees, seats and closing ranks are indicative; verify against the NMC seat matrix and MCC's published data before locking choices.*
+*Reviewed by the Campus Point counselling desk — updated 17 July 2026. Fees, seats and closing ranks are indicative; verify against the NMC seat matrix and MCC's published data before locking choices.*
 
 ## Why Government Medical Colleges Win
 

@@ -1,4 +1,4 @@
-# College Parichay — NEET Blog Cluster (10 posts)
+# Campus Point — NEET Blog Cluster (10 posts)
 
 A topical-authority cluster for the NEET / medical-admissions vertical. Every post is written in a humanized counselor voice, interlinks with its siblings, and drives to two conversion targets: the **College Predictor** (`/neet-college-predictor`) and the **NEET Counseling** desk (`/neet-counseling`).
 

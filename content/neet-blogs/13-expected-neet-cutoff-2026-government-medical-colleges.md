@@ -5,14 +5,14 @@ slug: "expected-neet-cutoff-2026-government-medical-colleges"
 focus_keyword: "NEET cutoff 2026"
 secondary_keywords: ["expected NEET cutoff 2026", "AIIMS cutoff 2026", "government medical college cutoff", "NEET closing rank 2026", "NEET category wise cutoff"]
 category: "NEET Counselling"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "15 min"
 ---
 
 # Expected NEET Cutoff 2026 for Government Medical Colleges
 > **The NEET 2026 qualifying cutoff is the 50th percentile for General/EWS, 45th for General-PwD and 40th for OBC-NCL, SC and ST.** The admission cutoff is different and much higher: government MBBS through All India Quota typically closes around AIR 10,000–15,000 for General, based on previous years' MCC closing ranks.
 
-*Reviewed by the College Parichay counselling desk — updated 17 July 2026. Rank estimates are derived from NTA's official NEET UG 2026 score distribution and previous years' MCC closing ranks.*
+*Reviewed by the Campus Point counselling desk — updated 17 July 2026. Rank estimates are derived from NTA's official NEET UG 2026 score distribution and previous years' MCC closing ranks.*
 
 ## The Two Cutoffs Everyone Confuses
 

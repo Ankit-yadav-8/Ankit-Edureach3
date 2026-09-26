@@ -5,7 +5,7 @@ slug: "cheapest-mbbs-colleges"
 focus_keyword: "cheapest government medical colleges india"
 secondary_keywords: ["low fee mbbs colleges", "affordable mbbs india", "budget mbbs government seat", "mbbs without high fees"]
 category: "NEET Guidance"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "11 min"
 ---
 
@@ -87,6 +87,6 @@ If your family is worried about fees, channel that worry into *preparation* inst
 ---
 
 **Chasing an affordable government seat? Strategy is everything.**
-See your realistic state-quota and category-adjusted options with the College Parichay [College Predictor](/neet-college-predictor), and get personalised help building a budget-smart choice list from our [NEET Counseling desk](/neet-counseling). Money shouldn't decide your future — let's make sure it doesn't.
+See your realistic state-quota and category-adjusted options with the Campus Point [College Predictor](/neet-college-predictor), and get personalised help building a budget-smart choice list from our [NEET Counseling desk](/neet-counseling). Money shouldn't decide your future — let's make sure it doesn't.
 
 *Note: Fees, quotas, domicile rules, and college lists vary by state and change year to year, so specific figures aren't quoted here. Always verify current-year details through official MCC and state counseling sources, and never transact outside official channels.*

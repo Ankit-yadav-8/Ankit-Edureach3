@@ -54,7 +54,7 @@ export const TEAM = [
       linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387",
       instagram:"https://www.instagram.com/ankit_1_7_/",
       whatsapp: WA,
-      website: "https://collegeparichay.in",
+      website: "https://campuspoint.in",
       github:"https://github.com/Ankit-yadav-8/Ankit-7"
     },
   },
@@ -84,7 +84,7 @@ export const TEAM = [
       linkedin: "#",
       instagram: "#",
       whatsapp: WA,
-      website: "https://collegeparichay.in",
+      website: "https://campuspoint.in",
     },
   },
   {
@@ -113,7 +113,7 @@ export const TEAM = [
       linkedin: "#",
       instagram: "#",
       whatsapp: WA,
-      website: "https://collegeparichay.in",
+      website: "https://campuspoint.in",
     },
   },
 ];

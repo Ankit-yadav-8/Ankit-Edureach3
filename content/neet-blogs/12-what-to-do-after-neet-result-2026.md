@@ -5,14 +5,14 @@ slug: "what-to-do-after-neet-result-2026"
 focus_keyword: "after NEET result"
 secondary_keywords: ["NEET counselling process", "MBBS admission 2026", "BDS admission", "MCC counselling", "state quota counselling", "NEET choice filling"]
 category: "NEET Counselling"
-author: "College Parichay Counselling Desk"
+author: "Campus Point Counselling Desk"
 read_time: "14 min"
 ---
 
 # What To Do After NEET Result 2026: Admission Roadmap
 > **After the NEET UG 2026 result, complete these steps in order:** download your scorecard, confirm your All India Rank and category rank, run a college prediction, assemble your document set, register separately for both MCC AIQ counselling at mcc.nic.in and your state counselling portal, fill and lock choices, then attend seat allotment rounds and report to your allotted college.
 
-*Reviewed by the College Parichay counselling desk — updated 17 July 2026.*
+*Reviewed by the Campus Point counselling desk — updated 17 July 2026.*
 
 ## The 48-Hour Checklist
 

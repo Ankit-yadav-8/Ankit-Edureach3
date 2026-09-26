@@ -36,7 +36,7 @@ router.get("/export.csv", requireAdmin, async (_req, res) => {
       u.createdAt?.toISOString(), u.lastLogin?.toISOString(),
     ].map(esc).join(",")).join("\n");
     res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", "attachment; filename=collegeparichay-users.csv");
+    res.setHeader("Content-Disposition", "attachment; filename=campuspoint-users.csv");
     res.send(head + rows);
   } catch (e) { console.error("[users/export]", e.message); res.status(500).json({ error: "Server error" }); }
 });
