@@ -1,13 +1,13 @@
 {
-  "name": "CollegeParichay — JEE Rank Predictor & College Reviews",
-  "short_name": "CollegeParichay",
+  "name": "CampusPath — JEE Rank Predictor & College Reviews",
+  "short_name": "CampusPath",
   "description": "Predict your JEE Main & Advanced rank, discover IIT/NIT/IIIT colleges, compare cutoffs, read reviews and track JoSAA counselling — all free.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#ffffff",
-  "theme_color": "#F47B20",
+  "background_color": "#FF693D",
+  "theme_color": "#FF693D",
   "icons": [
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
