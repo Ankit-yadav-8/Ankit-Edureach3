@@ -8,6 +8,8 @@ import { COLLEGES } from "../data/colleges.js";
 import { EXAMS } from "../data/exams.js";
 import useCountUp from "../utils/useCountUp.js";
 import Reveal from "../components/Reveal.jsx";
+import imgMayank from "../images/team/mayank.jpg";
+import imgSaket from "../images/team/saket.jpg";
 
 /* ── Social constants ──────────────────────────────────────── */
 const LK = "https://www.linkedin.com/in/ankityadavpm/";
@@ -35,27 +37,40 @@ function WaIcon({ size = 14 }) {
 /* ── Founders data ─────────────────────────────────────────── */
 const FOUNDERS = [
   {
-    name: "Ankit Yadav",
-    initials: "AY",
-    photo: "/assets/team/ankit2.webp",
-    role: "Co-Founder",
-    accent: "#FF693D",
-    edu: "B.Tech, IIT Roorkee",
-   bio: "Hi, I'm Ankit Yadav, an IIT Roorkee graduate and the co-founder of College Parichay — a platform built to make college guidance simpler, clearer, and more accessible for students across India. During my own journey, I saw how confusing the college and career decision process can be. That experience inspired me to create College Parichay with one simple belief: \"Students need clarity, not confusion.\" Through authentic insights, relatable experiences, and a community-driven approach, we aim to help students make informed decisions with confidence.",
-    skills: ["Product Strategy", "React", "Leadership", "Data Analysis", "UX"],
-    socials: { linkedin: LK, instagram: IG, whatsapp: WA },
-  },
-  {
     name: "Ankit Kumar",
     initials: "AK",
     photo: "/assets/team/ankit.webp",
-    role: "Co-Founder & CTO",
+    role: "Founder & CEO",
     accent: "#FF693D",
     badge: "Visionary behind the Platform",
     edu: "B.Tech Electrical Engineering, IIT Roorkee",
-    bio: "Hi,I’m Ankit Kumar, Co-Founder & CTO of College Parichay and an IIT Roorkee alumnus. I lead the technical vision and execution of our platform, architecting everything from intuitive user interfaces to scalable data pipelines and backend infrastructure. I know firsthand how chaotic the college admission process is—because I’ve been there. Building College Parichay is my way of using technology to solve a massive real-world problem. My mission is simple: to turn complex admission data into clear, actionable insights so every student can make confident decisions.",
-    skills: ["Co-Founder", "Tech Head", "Full Stack Developer", "System Design", "Node.js", "Express", "Python", "REST APIs"],
-    socials: { linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/ankit_1_7_/", whatsapp: WA },
+    bio: "Hi, I’m Ankit Kumar, Founder & CEO of College Parichay and an IIT Roorkee alumnus. I lead the technical vision and execution of our platform, architecting everything from intuitive user interfaces to scalable data pipelines and backend infrastructure. I know firsthand how chaotic the college admission process is—because I’ve been there. Building College Parichay is my way of using technology to solve a massive real-world problem. My mission is simple: to turn complex admission data into clear, actionable insights so every student can make confident decisions.",
+    skills: ["Founder & CEO", "Tech Head", "Full Stack Developer", "System Design", "Node.js", "Express", "Python", "REST APIs"],
+    socials: { linkedin: "https://www.linkedin.com/in/ankit-kumar-1b9a64387", instagram: "https://www.instagram.com/ankit_1_7_/", whatsapp: WA },
+  },
+  {
+    name: "Mayank Singh",
+    initials: "MS",
+    photo: imgMayank,
+    role: "Co-Founder & Marketing Head",
+    accent: "#0EA5A4",
+    badge: "Growth & Marketing",
+    edu: "B.Tech Mechanical Engineering, IIT Roorkee",
+    bio: "Hi, I am Mayank Singh. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. Now at College Parichay, I lead growth and marketing to ensure that every student gets the right guidance and resources.",
+    skills: ["Co-Founder", "Marketing", "Growth Strategy", "Community Building"],
+    socials: { linkedin: "#", instagram: "#", whatsapp: WA },
+  },
+  {
+    name: "Saket Kumar",
+    initials: "SK",
+    photo: imgSaket,
+    role: "Co-Founder & Operations Head",
+    accent: "#7C3AED",
+    badge: "Operations & Strategy",
+    edu: "B.Tech, IIT Roorkee",
+    bio: "Hi, I'm Saket Kumar, a B.Tech student at IIT Roorkee. Despite scoring a very low percentile in JEE Main, I stayed consistent, changed my strategy, and cracked JEE Advanced to earn my place here. As the Operations Head, I ensure the smooth execution of our platform and mentorship programs to help students overcome challenges.",
+    skills: ["Co-Founder", "Operations", "Strategy", "Execution"],
+    socials: { linkedin: "#", instagram: "#", whatsapp: WA },
   },
 ];
 
@@ -299,7 +314,7 @@ export default function About() {
     <div className="page">
       <Seo
         title="About CollegeParichay — Built by IIT Roorkee Alumni"
-        description="CollegeParichay is a free student platform built by IIT Roorkee alumni Ankit Yadav and Ankit Kumar to help JEE aspirants predict ranks, shortlist colleges and navigate JoSAA counselling."
+        description="CollegeParichay is a free student platform built by IIT Roorkee alumni Ankit Kumar, Mayank Singh, and Saket Kumar to help JEE aspirants predict ranks, shortlist colleges and navigate JoSAA counselling."
         path="/about"
       />
       <style>{`
@@ -392,9 +407,9 @@ export default function About() {
 
           <Reveal>
             <p style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.65rem)", lineHeight: 1.6, fontWeight: 600, color: "var(--navy)", margin: "0 0 34px", maxWidth: 1040 }}>
-              College Parichay was founded by two <strong>IIT Roorkee</strong> alumni —{" "}
-              <strong>Ankit Yadav</strong> (Co-Founder) and <strong>Ankit Kumar</strong> (Co-Founder &amp; CTO).
-              Two students from the
+              College Parichay was founded by <strong>IIT Roorkee</strong> alumni —{" "}
+              <strong>Ankit Kumar</strong>, <strong>Mayank Singh</strong>, and <strong>Saket Kumar</strong>.
+              Three students from the
               same campus, building the platform we wished existed when we were the ones staring at rank lists and cutoffs.
             </p>
           </Reveal>
@@ -430,8 +445,9 @@ export default function About() {
           <Reveal>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, marginBottom: 64 }}>
               {[
-                ["Ankit Yadav", "Co-Founder"],
-                ["Ankit Kumar", "Co-Founder & CTO"],
+                ["Ankit Kumar", "Founder & CEO"],
+                ["Mayank Singh", "Co-Founder & Marketing Head"],
+                ["Saket Kumar", "Co-Founder & Operations Head"],
               ].map(([name, role]) => (
                 <div key={name} style={{
                   display: "flex", flexDirection: "column", gap: 3,

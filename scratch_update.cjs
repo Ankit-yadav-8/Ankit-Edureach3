@@ -89,7 +89,7 @@ const foundationConfig = `
     ],
     qualifierMentors: [
       {
-        name: "Ankit Yadav",
+        name: "Mayank Singh",
         role: "Founder, IIT Roorkee",
         img: "/assets/team/ankit2.PNG",
         thought: "Starting early is an advantage only if the direction is right. For Foundation students, we focus on building a resilient mindset and an unbreakable conceptual base that makes clearing future competitive exams a natural outcome."
@@ -139,7 +139,7 @@ const jee2027Hurdles = `qualifierHurdles: [
     ],
     qualifierMentors: [
       {
-        name: "Ankit Yadav",
+        name: "Mayank Singh",
         role: "Founder, IIT Roorkee",
         img: "/assets/team/ankit2.PNG",
         thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank. We've built this system from our own experiences of cracking IIT, focusing purely on high-yield output rather than just mindless hard work."
@@ -164,7 +164,7 @@ const jee2028Hurdles = `qualifierHurdles: [
     ],
     qualifierMentors: [
       {
-        name: "Ankit Yadav",
+        name: "Mayank Singh",
         role: "Founder, IIT Roorkee",
         img: "/assets/team/ankit2.PNG",
         thought: "A 2-year head start is your biggest unfair advantage, provided you don't waste it. We built this mentorship to ensure Class 11 students build deep concepts early, avoiding the panic most aspirants face in Class 12."
@@ -189,7 +189,7 @@ const neetHurdles = `qualifierHurdles: [
     ],
     qualifierMentors: [
       {
-        name: "Ankit Yadav",
+        name: "Mayank Singh",
         role: "Founder, IIT Roorkee",
         img: "/assets/team/ankit2.PNG",
         thought: "In NEET, knowing the answer isn't enough; speed and accuracy are everything. Our mentorship ensures you don't just read NCERT, but you master the art of applying it flawlessly under time pressure."

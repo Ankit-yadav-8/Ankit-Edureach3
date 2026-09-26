@@ -304,8 +304,9 @@ export default function Footer() {
               }}
             >
               Founded by IIT Roorkee alumni{" "}
-              <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Yadav</span>{" "}&amp;{" "}
-              <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Kumar</span>{" "}— a
+              <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Kumar</span>,{" "}
+              <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Mayank Singh</span>, and{" "}
+              <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Saket Kumar</span>{" "}— a
               student-first JEE rank predictor &amp; college discovery platform,
               headquartered in Jaipur, Rajasthan.
             </p>

@@ -162,7 +162,7 @@ Universal: **username `collegeparichay` everywhere**; bio = positioning line + `
 ## 5. LinkedIn growth
 
 - **Company page:** complete every field, post 3–5×/week, enable the "Free counselling" CTA, add the site as Website.
-- **Founder profiles** (Ankit Yadav, Ankit Kumar): headline "Co-founder, College Parichay | IIT Roorkee | Helping JEE aspirants pick the right college"; feature the site; post personally — founder posts out-reach company posts 5–10×.
+- **Founder profiles** (Ankit Kumar, Mayank Singh, Saket Kumar): headline "Founder & CEO, College Parichay | IIT Roorkee | Helping JEE aspirants pick the right college"; feature the site; post personally — founder posts out-reach company posts 5–10×.
 - **Weekly calendar:** Mon data insight · Wed how-to/carousel · Fri student win/testimonial · Sun founder story. In season: live result-day posts.
 - **Viral formats:** "rank → college" carousels, cutoff data charts, "I'm an IITian, here's what I'd do with rank X" hooks, myth-busting.
 - **Keywords:** JEE counselling, JoSAA, CSAB, college predictor, IIT admission, engineering admission guidance.
