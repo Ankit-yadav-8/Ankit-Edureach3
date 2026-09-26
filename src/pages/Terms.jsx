@@ -66,7 +66,7 @@ const SECTIONS = [
   {
     h: "10. Contact",
     p: [
-      "Questions about these Terms? Email us at aycollegeparichay@gmail.com.",
+      "Questions about these Terms? Email us at campuspath6@gmail.com.",
     ],
   },
 ];

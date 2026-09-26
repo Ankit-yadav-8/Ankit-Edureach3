@@ -20,7 +20,7 @@ export const TEAM = [
     branch: "B.Tech Electrical Engineering",
     jeeRank: "AIR 3846",
     exam: "JEE Advanced",
-    email: "collegeparichay@gmail.com",
+    email: "campuspath6@gmail.com",
     bio: `Hi, I'm Ankit Kumar — IIT Roorkee engineer, and the Founder & CEO of Campus Path.
          I don't just build the platform. I am the kind of student it was built for.
         Like thousands of students who use Campus Path today, I once sat staring at rank lists, cutoffs, and counselling rounds — unsure what any of it meant for my future. That experience never left me. It drives every line of code I write.
@@ -70,7 +70,7 @@ export const TEAM = [
     location: "IIT Roorkee, Uttarakhand",
     branch: "B.Tech Mechanical Engineering",
     exam: "JEE Advanced",
-    email: "collegeparichay@gmail.com",
+    email: "campuspath6@gmail.com",
     bio: `Hi, I am Mayank Singh. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. Now at Campus Path, I lead growth and marketing to ensure that every student gets the right guidance and resources.`,
     skills: ["Marketing", "Growth Strategy", "Community Building"],
     projects: [
@@ -99,7 +99,7 @@ export const TEAM = [
     location: "IIT Roorkee, Uttarakhand",
     branch: "B.Tech",
     exam: "JEE Advanced",
-    email: "collegeparichay@gmail.com",
+    email: "campuspath6@gmail.com",
     bio: `Hi, I'm Saket Kumar, a B.Tech student at IIT Roorkee. Despite scoring a very low percentile in JEE Main, I stayed consistent, changed my strategy, and cracked JEE Advanced to earn my place here. As the Operations Head, I ensure the smooth execution of our platform and mentorship programs to help students overcome challenges.`,
     skills: ["Operations", "Strategy", "Execution"],
     projects: [

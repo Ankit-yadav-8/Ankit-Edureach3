@@ -13,7 +13,7 @@
 //   BREVO_API_KEY   — Brevo transactional API key (required to actually send)
 //   SMTP_FROM_EMAIL — verified domain sender (the "from")
 //   SMTP_FROM_NAME  — display name for the sender (default "CollegeParichay")
-//   REPLY_TO_EMAIL  — where replies go (default collegeparichay@gmail.com)
+//   REPLY_TO_EMAIL  — where replies go (default campuspath6@gmail.com)
 //   OTP_DEV_MODE    — "false" to actually send; anything else only logs the code
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -35,7 +35,7 @@ function resolveSender() {
   const VERIFIED_SENDER = "hello@collegeparichay.in";
   let fromEmail  = String(process.env.SMTP_FROM_EMAIL || "").trim();
   const fromName = (process.env.SMTP_FROM_NAME || "CollegeParichay").trim();
-  const replyTo  = String(process.env.REPLY_TO_EMAIL || "collegeparichay@gmail.com").trim();
+  const replyTo  = String(process.env.REPLY_TO_EMAIL || "campuspath6@gmail.com").trim();
   if (!fromEmail || FREE_WEBMAIL.test(fromEmail)) fromEmail = VERIFIED_SENDER;
   return { fromEmail, fromName, replyTo };
 }
@@ -209,7 +209,7 @@ export async function sendOtpEmail(email, code) {
 
   let fromEmail   = String(process.env.SMTP_FROM_EMAIL || "").trim();
   const fromName  = (process.env.SMTP_FROM_NAME || "CollegeParichay").trim();
-  const replyTo   = String(process.env.REPLY_TO_EMAIL || "collegeparichay@gmail.com").trim();
+  const replyTo   = String(process.env.REPLY_TO_EMAIL || "campuspath6@gmail.com").trim();
 
   // A free webmail "from" can never be sent through Brevo — fall back to the
   // verified domain sender (and keep the gmail as reply-to) instead of failing.
@@ -259,7 +259,7 @@ export async function sendPasswordResetEmail(email, resetUrl, otp) {
   const VERIFIED_SENDER = "hello@collegeparichay.in";
   let fromEmail   = String(process.env.SMTP_FROM_EMAIL || "").trim();
   const fromName  = (process.env.SMTP_FROM_NAME || "CollegeParichay").trim();
-  const replyTo   = String(process.env.REPLY_TO_EMAIL || "collegeparichay@gmail.com").trim();
+  const replyTo   = String(process.env.REPLY_TO_EMAIL || "campuspath6@gmail.com").trim();
 
   if (!fromEmail || FREE_WEBMAIL.test(fromEmail)) {
     fromEmail = VERIFIED_SENDER;
