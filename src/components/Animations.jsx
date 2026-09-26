@@ -3,7 +3,7 @@
  * Uses framer-motion + CSS custom animations
  */
 import { useRef, useEffect, useState, useCallback } from "react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { motion, useMotionValue, useTransform, useSpring, useScroll } from "framer-motion";
 
 /* ─────────────────────────────────────────────────────────
    1. FLOATING ORBS — animated background glow blobs
@@ -372,23 +372,20 @@ export function MagneticButton({ children, style = {}, className = "", onClick }
    12. SCROLL PROGRESS LINE (top of page)
 ───────────────────────────────────────────────────────── */
 export function ScrollProgressBar({ color = "#FF693D" }) {
-  const [progress, setProgress] = useState(0);
-  useEffect(() => {
-    const update = () => {
-      const doc = document.documentElement;
-      const scrolled = doc.scrollTop || document.body.scrollTop;
-      const total = doc.scrollHeight - doc.clientHeight;
-      setProgress(total > 0 ? (scrolled / total) * 100 : 0);
-    };
-    window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
-  }, []);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   return (
     <motion.div
       style={{
         position: "fixed", top: 0, left: 0, height: 3,
         background: color, zIndex: 9999,
-        width: `${progress}%`,
+        width: "100%",
+        scaleX,
         transformOrigin: "left",
         boxShadow: "0 0 8px rgba(255, 105, 61,.6)",
       }}
