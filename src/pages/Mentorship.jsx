@@ -133,16 +133,22 @@ const ASPIRANT_POINTS = [
 
 const QUALIFIER_MENTORS = [
   {
-    name: "Mayank Singh",
-    role: "Co-Founder, IIT Roorkee",
-    img: imgMayank,
-    thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank. We've built this system from our own experiences of cracking IIT, focusing purely on high-yield output rather than just mindless hard work."
-  },
-  {
     name: "Ankit Kumar",
     role: "Founder & CEO, IIT Roorkee (AIR 3846 CRL, 938 OBC)",
     img: "/assets/team/ankit.webp",
     thought: "Every aspirant hits a wall where effort stops working. Our goal is to break that wall by showing you the strategic blindspots you can't see yourself. Having navigated this journey to secure AIR 3846, I know exactly where students lose their confidence and how to rebuild it. I believe that JEE preparation is not just about the number of hours you put in, but how effectively you utilize that time. Through our personalized mentorship, we aim to transform your struggles into strengths, providing you with the very tools and mindsets that helped us conquer one of the toughest exams in the world. Your success is our mission, and we are here to guide you every step of the way."
+  },
+  {
+    name: "Saket Kumar",
+    role: "Co-Founder & Operations Head, IIT Roorkee",
+    img: imgSaket,
+    thought: "Execution turns plans into reality. Through strategic operations, we ensure every student gets the precise mentorship needed to overcome obstacles."
+  },
+  {
+    name: "Mayank Singh",
+    role: "Co-Founder & Marketing Head, IIT Roorkee",
+    img: imgMayank,
+    thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank. We've built this system from our own experiences of cracking IIT, focusing purely on high-yield output rather than just mindless hard work."
   }
 ];
 

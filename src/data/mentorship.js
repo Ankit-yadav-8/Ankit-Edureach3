@@ -512,16 +512,16 @@ export const MENTORSHIP = {
         thought: "We don't want Class 9 and 10 students to burn out. Our Foundation mentorship is designed to spark curiosity, build logical reasoning, and slowly ramp up the intensity without compromising their school life."
       },
       {
-        name: "Mayank Singh",
-        role: "Co-Founder & Marketing Head, IIT Roorkee",
-        img: "/assets/team/mayank.jpg",
-        thought: "Starting early is an advantage only if the direction is right. For Foundation students, we focus on building a resilient mindset and an unbreakable conceptual base that makes clearing future competitive exams a natural outcome."
-      },
-      {
         name: "Saket Kumar",
         role: "Co-Founder & Operations Head, IIT Roorkee",
         img: "/assets/team/saket.jpg",
         thought: "Execution turns plans into reality. Through strategic operations, we ensure every student gets the precise mentorship needed to overcome obstacles."
+      },
+      {
+        name: "Mayank Singh",
+        role: "Co-Founder & Marketing Head, IIT Roorkee",
+        img: "/assets/team/mayank.jpg",
+        thought: "Starting early is an advantage only if the direction is right. For Foundation students, we focus on building a resilient mindset and an unbreakable conceptual base that makes clearing future competitive exams a natural outcome."
       }
     ],
     howWeGuide: [
