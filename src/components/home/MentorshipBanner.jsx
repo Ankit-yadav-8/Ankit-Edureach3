@@ -97,7 +97,7 @@ export default function MentorshipBanner() {
               zIndex: 1
             }}>
               <img 
-                src="/images/mentor_illustration.png" 
+                src="/images/mentor_illustration.webp" 
                 alt="Expert Mentorship"
                 loading="lazy"
                 decoding="async"
