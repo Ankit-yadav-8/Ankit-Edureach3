@@ -276,7 +276,7 @@ function ShowcasePanel({ mode }) {
           <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 15, letterSpacing: "-0.5px", lineHeight: 1 }}>CP</span>
         </span>
         <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: "#1a1a2e" }}>
-          College <span style={{ color: OR }}>Parichay</span>
+          Campus <span style={{ color: OR }}>Path</span>
         </span>
       </div>
 
@@ -607,7 +607,7 @@ export default function AuthModal() {
             <div className="visual">
               <div className="brand">
                 <div className="brand-mark raised-sm">CP</div>
-                <div className="brand-name">College<b>Parichay</b></div>
+                <div className="brand-name">Campus<b>Path</b></div>
               </div>
 
               <div className="dial-wrap raised">
