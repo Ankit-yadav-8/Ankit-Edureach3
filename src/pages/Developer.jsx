@@ -412,7 +412,7 @@ export default function Developer() {
               }}
             >
               <a href={`mailto:${dev.email}`} className="btn btn-coral">
-                <Mail size={15} /> {dev.email}
+                <Mail size={15} /> {dev.email === "campuspath6@gmail.com" ? "campuspoint6@gmail.com" : dev.email}
               </a>
               {dev.socials.website && (
                 <a
