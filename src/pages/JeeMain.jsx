@@ -213,10 +213,26 @@ const COACHING = [
   },
 ];
 
+const MARKS_VS_PERCENTILE = [
+  { marks: "280 - 300", percentile: "99.99+", rank: "1 - 100",    safe: "Top NIT CSE" },
+  { marks: "250 - 279", percentile: "99.9+",  rank: "100 - 1K",   safe: "Top NIT CSE" },
+  { marks: "200 - 249", percentile: "99.5+",  rank: "1K - 6K",    safe: "Top NIT Core / Mid NIT CSE" },
+  { marks: "180 - 199", percentile: "99.0+",  rank: "6K - 15K",   safe: "Mid NIT Core / IIIT CSE" },
+  { marks: "150 - 179", percentile: "98.0+",  rank: "15K - 30K",  safe: "Lower NITs / GFTIs" },
+  { marks: "130 - 149", percentile: "97.0+",  rank: "30K - 45K",  safe: "Lower GFTIs" },
+  { marks: "110 - 129", percentile: "95.0+",  rank: "45K - 75K",  safe: "Private Colleges / State" },
+  { marks: "90 - 109",  percentile: "93.0+",  rank: "75K - 1.1L", safe: "Qualifies for Advanced" },
+  { marks: "70 - 89",   percentile: "90.0+",  rank: "1.1L - 1.5L",safe: "Borderline Qualifying" },
+];
+
 const FAQ_DATA = [
   {
     q: "How does the JEE Main College Predictor work?",
     a: "The CampusPoint JEE Main College predictor uses your expected rank (or percentile), category, and home state to predict your admission chances. It matches your rank against official past JoSAA and CSAB opening and closing ranks for all NITs, IIITs, and GFTIs."
+  },
+  {
+    q: "What is the Marks vs Percentile for JEE Main 2026?",
+    a: "For JEE Main 2026, scoring 200+ marks is expected to yield a 99.5+ percentile (Top 6,000 rank). A score of 180 generally translates to 99 percentile (15,000 rank), while 130-150 marks will likely secure a 97-98 percentile. This varies slightly per session based on difficulty."
   },
   {
     q: "What is a good percentile in JEE Main for NITs?",
@@ -225,6 +241,10 @@ const FAQ_DATA = [
   {
     q: "Is 120 a good score in JEE Mains?",
     a: "A score of 120 in JEE Main usually translates to a percentile between 93 to 95, depending on the paper's difficulty. This is typically enough to clear the JEE Advanced cutoff and secure a seat in newer IIITs or lower branches in mid-tier NITs."
+  },
+  {
+    q: "How many marks are required for 99 percentile in JEE Main?",
+    a: "Historically, scoring between 175 to 190 marks out of 300 is required to achieve the 99 percentile in JEE Main. However, in easier shifts, the requirement can jump to 200+ marks."
   },
   {
     q: "What is the difference between JEE Main qualifying cutoff and admission cutoff?",
@@ -460,6 +480,35 @@ export default function JeeMain() {
       />
       {/* #cutoffs anchor kept for the "Top Cutoffs" sub-nav pill */}
       <div id="cutoffs" style={{ scrollMarginTop: 90 }} />
+
+      {/* ── Marks vs Percentile Table ── */}
+      <div style={{ background: "transparent", paddingBottom: 40 }}>
+        <Block id="marks-vs-percentile" eyebrow="Analysis" title="JEE Main Marks vs Percentile vs Rank (Expected 2026)"
+          sub="Understand what NTA percentile and All-India Rank (CRL) you can expect based on your raw JEE Main score.">
+          <div style={{ overflowX: "auto", background: "#fff", borderRadius: 12, border: "1px solid var(--line)" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+              <thead>
+                <tr style={{ background: "var(--sky)", borderBottom: "1px solid var(--line)", textAlign: "left" }}>
+                  <th style={{ padding: "14px 16px", fontWeight: 700, color: "var(--navy)" }}>Marks (Out of 300)</th>
+                  <th style={{ padding: "14px 16px", fontWeight: 700, color: "var(--navy)" }}>Percentile</th>
+                  <th style={{ padding: "14px 16px", fontWeight: 700, color: "var(--navy)" }}>Expected Rank (CRL)</th>
+                  <th style={{ padding: "14px 16px", fontWeight: 700, color: "var(--navy)" }}>Target Category</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MARKS_VS_PERCENTILE.map((row, i) => (
+                  <tr key={i} className="yr-row" style={{ borderBottom: i === MARKS_VS_PERCENTILE.length - 1 ? "none" : "1px solid var(--line)", transition: "background .15s" }}>
+                    <td style={{ padding: "14px 16px", fontWeight: 700, color: "var(--navy)" }}>{row.marks}</td>
+                    <td style={{ padding: "14px 16px", fontWeight: 600, color: "#FF693D" }}>{row.percentile}</td>
+                    <td style={{ padding: "14px 16px", fontWeight: 600, color: "var(--ink)" }}>{row.rank}</td>
+                    <td style={{ padding: "14px 16px", color: "var(--muted)" }}>{row.safe}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Block>
+      </div>
 
       {/* ── Rank Predictor ── */}
       <Block id="rank" eyebrow="Tool 1" title="JEE Main Rank Predictor"

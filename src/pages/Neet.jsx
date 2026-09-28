@@ -212,6 +212,29 @@ const ELIGIBILITY = [
   ["Seats via NEET", "MBBS, BDS, AYUSH, BVSc, Nursing & all medical UG seats in India."],
 ];
 
+const NEET_FAQ_DATA = [
+  {
+    q: "What is a good score in NEET 2026 for a government college?",
+    a: "For General category (AIQ), a safe score for a government MBBS seat is typically 650+ out of 720, translating to a rank under 25,000. State quota cutoffs may be lower depending on your domicile."
+  },
+  {
+    q: "What is the Marks vs Rank for NEET 2026?",
+    a: "Based on recent trends, 700+ marks yield a Top 1000 rank. 650 marks usually secure a rank around 25,000. 600 marks land you near 75,000 rank. The competition is intense, so every mark drastically shifts the rank."
+  },
+  {
+    q: "How many hours should I study for NEET?",
+    a: "Consistency matters more than hours. A solid 8-10 hours of focused daily study, properly split between Biology, Chemistry, and Physics, along with daily mock practice, is the standard among top rankers."
+  },
+  {
+    q: "Is NCERT enough for NEET Biology?",
+    a: "Yes, NCERT is the Bible for NEET Biology. Over 95% of questions are directly from or derived from NCERT lines. Read it thoroughly, including diagrams, summaries, and scientist intro pages."
+  },
+  {
+    q: "How does the NEET College Predictor work?",
+    a: "The CampusPoint NEET predictor maps your expected NEET score to historical closing ranks (AIQ and State Quota) to show which MBBS/BDS/AYUSH colleges you are eligible for, considering your category."
+  }
+];
+
 /* ── Helpers ── */
 function diffIndex(val) {
   if (val >= 80) return { label: "Very Hard", color: "#EF4444", bg: "#fee2e2" };
@@ -619,6 +642,28 @@ export default function Neet() {
         title="NEET UG Rank Predictor, College Predictor, Cutoffs, Toppers & Syllabus"
         description="NEET UG hub - interactive rank & medical college predictors, 5-year difficulty analysis, cut-off trends, toppers, full 720-mark syllabus, exam pattern, 12-month roadmap and best coaching. Built for NEET aspirants on CampusPoint."
         path="/neet"
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "NEET UG Predictor Hub 2026",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "All",
+            "offers": { "@type": "Offer", "price": "0" }
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": NEET_FAQ_DATA.map(f => ({
+              "@type": "Question",
+              "name": f.q,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f.a
+              }
+            }))
+          }
+        ]}
       />
 
       <style>{`
@@ -659,6 +704,31 @@ export default function Neet() {
           { icon: TrendingUp, accent: "#6366f1", category: "Trends", title: "Cut-off & Topper Trends", meta: "Category-wise closing ranks" },
         ]}
       />
+
+      {/* ── Marks vs Rank Table ── */}
+      <div style={{ background: "transparent", paddingBottom: 40 }}>
+        <Block id="marks-vs-rank" eyebrow="Analysis" title="NEET Marks vs Rank (Expected 2026)"
+          sub="Understand the highly competitive NEET landscape. See what All-India Rank you can expect for a given score.">
+          <div style={{ overflowX: "auto", background: "#fff", borderRadius: 12, border: "1px solid var(--line)" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+              <thead>
+                <tr style={{ background: "var(--sky)", borderBottom: "1px solid var(--line)", textAlign: "left" }}>
+                  <th style={{ padding: "14px 16px", fontWeight: 700, color: "var(--navy)" }}>Marks (Out of 720)</th>
+                  <th style={{ padding: "14px 16px", fontWeight: 700, color: "var(--navy)" }}>Expected AIR Rank</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MARKS_VS_RANK.map((row, i) => (
+                  <tr key={i} className="yr-row-neet" style={{ borderBottom: i === MARKS_VS_RANK.length - 1 ? "none" : "1px solid var(--line)", transition: "background .15s" }}>
+                    <td style={{ padding: "14px 16px", fontWeight: 700, color: "var(--navy)" }}>{row.label}</td>
+                    <td style={{ padding: "14px 16px", fontWeight: 600, color: row.color }}>{row.rank}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Block>
+      </div>
 
       {/* ── Tool 1 - Rank Predictor ── */}
       <Anchor id="rank" />
@@ -1047,6 +1117,28 @@ export default function Neet() {
           </div>
         </div>
       </section>
+      {/* ════════ FAQ Section (SEO/AEO) ════════ */}
+      <section id="faq" className="section" style={{ scrollMarginTop: 90 }}>
+        <div className="container">
+          <div className="title-bar">
+            <span className="eyebrow">FAQ</span>
+            <h2 className="section-title">Frequently Asked Questions</h2>
+          </div>
+          <div style={{ maxWidth: 800, margin: "0 auto", display: "flex", flexDirection: "column", gap: 16 }}>
+            {NEET_FAQ_DATA.map((faq, i) => (
+              <div key={i} className="card" style={{ padding: "20px 24px" }}>
+                <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 16, color: "var(--navy)", marginBottom: 8 }}>
+                  {faq.q}
+                </h3>
+                <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.6 }}>
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
