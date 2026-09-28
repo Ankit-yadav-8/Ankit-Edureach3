@@ -276,6 +276,25 @@ const COACHING = [
   },
 ];
 
+const FAQ_DATA = [
+  {
+    q: "How accurate is the JEE Advanced College Predictor?",
+    a: "The CampusPoint JEE Advanced College Predictor uses the exact JoSAA opening and closing ranks from previous years. By mapping your category and CRL, it accurately predicts which IITs and branches you are most likely to convert during counselling."
+  },
+  {
+    q: "What rank is required for IIT Bombay CSE?",
+    a: "For the General category, securing Computer Science at IIT Bombay typically requires a Common Rank List (CRL) rank under 65. Competition is extremely high, demanding top-tier performance in both Paper 1 and Paper 2."
+  },
+  {
+    q: "How many students qualify for JEE Advanced?",
+    a: "Out of the top 2.5 lakh candidates who clear JEE Main, usually around 40,000 to 50,000 students actually qualify in JEE Advanced by clearing the subject-wise and aggregate cutoff marks."
+  },
+  {
+    q: "What makes JEE Advanced tougher than JEE Main?",
+    a: "Unlike JEE Main, JEE Advanced features unpredictable question patterns, including multiple-correct MCQs with partial and negative marking, paragraph-based questions, and deep multi-concept application problems across two rigorous 3-hour papers."
+  }
+];
+
 /* ── Helpers ── */
 function diffIndex(val) {
   if (val >= 80) return { label: "Very Hard", color: "#EF4444", bg: "#fee2e2" };
@@ -461,9 +480,35 @@ export default function JeeAdvanced() {
   return (
     <div className="page">
       <Seo
-        title="JEE Advanced Rank Predictor - Marks to Rank & IIT College Predictor"
-        description="Free JEE Advanced rank predictor. Enter your marks to get your expected rank and the IITs and branches you can get, category-wise. Built by IIT Roorkee alumni."
+        title="JEE Advanced College Predictor 2026 | Predict Your IIT Rank & Admission"
+        description="Free JEE Advanced college predictor and rank predictor. Use your rank or expected marks to see which IITs and branches you qualify for during JoSAA counselling."
         path="/jee-advanced"
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "JEE Advanced", path: "/jee-advanced" }
+        ]}
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JEE Advanced College Predictor 2026",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "All",
+            "offers": { "@type": "Offer", "price": "0" }
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": FAQ_DATA.map(f => ({
+              "@type": "Question",
+              "name": f.q,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f.a
+              }
+            }))
+          }
+        ]}
       />
 
       {/* ── Global Styles ── */}
@@ -548,8 +593,8 @@ export default function JeeAdvanced() {
       {/* ── Hero (blog-style) ── */}
       <PageHero
         eyebrow="JEE Advanced 2026" eyebrowIcon={Building2} accent="#7C3AED"
-        titleLead="JEE Advanced -" highlight="IIT rank & seat" titleTail="" highlightTail="predictor hub."
-        sub="Estimate your IIT rank, find which IIT branches you qualify for, analyse Paper 1 & 2 difficulty subject-wise, and explore the syllabus, roadmap & coaching."
+        titleLead="JEE Advanced 2026 -" highlight="IIT Predictor" titleTail="&" highlightTail="Cutoffs."
+        sub="Use the free JEE Advanced College Predictor to know your admission chances for IITs via JoSAA. Analyze category-wise cutoffs, Paper 1 vs Paper 2 difficulty trends, and expert-recommended coaching."
         cta={{ label: "Estimate my IIT rank", to: "#rank" }}
         cards={[
           { icon: Calculator, accent: "#7C3AED", category: "Tool", title: "JEE Advanced Rank Predictor", meta: "Marks → All-India Rank", badge: "LIVE" },
@@ -1249,6 +1294,29 @@ export default function JeeAdvanced() {
           <RankingsTable type="IIT" />
         </Block>
       </div>
+
+      {/* ── FAQ Section (SEO/AEO) ── */}
+      <section id="faq" className="section" style={{ scrollMarginTop: 90 }}>
+        <div className="container">
+          <div className="title-bar">
+            <span className="eyebrow">FAQ</span>
+            <h2 className="section-title">Frequently Asked Questions</h2>
+          </div>
+          <div style={{ maxWidth: 800, margin: "0 auto", display: "flex", flexDirection: "column", gap: 16 }}>
+            {FAQ_DATA.map((faq, i) => (
+              <div key={i} className="card" style={{ padding: "20px 24px" }}>
+                <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 16, color: "var(--navy)", marginBottom: 8 }}>
+                  {faq.q}
+                </h3>
+                <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.6 }}>
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

@@ -213,6 +213,25 @@ const COACHING = [
   },
 ];
 
+const FAQ_DATA = [
+  {
+    q: "How does the JEE Main College Predictor work?",
+    a: "The CampusPoint JEE Main College predictor uses your expected rank (or percentile), category, and home state to predict your admission chances. It matches your rank against official past JoSAA and CSAB opening and closing ranks for all NITs, IIITs, and GFTIs."
+  },
+  {
+    q: "What is a good percentile in JEE Main for NITs?",
+    a: "For General category students, a JEE Main percentile above 96 (approximately 50,000 rank or better) is usually required to secure a decent branch in mid-tier to top NITs. For CSE in top NITs like NIT Trichy, a percentile of 99+ is needed."
+  },
+  {
+    q: "Is 120 a good score in JEE Mains?",
+    a: "A score of 120 in JEE Main usually translates to a percentile between 93 to 95, depending on the paper's difficulty. This is typically enough to clear the JEE Advanced cutoff and secure a seat in newer IIITs or lower branches in mid-tier NITs."
+  },
+  {
+    q: "What is the difference between JEE Main qualifying cutoff and admission cutoff?",
+    a: "The qualifying cutoff is the minimum NTA percentile required to be eligible for JEE Advanced. The admission cutoff is the actual closing rank for a specific college and branch during JoSAA counselling. Qualifying JEE Main does not guarantee an NIT/IIIT seat."
+  }
+];
+
 /* ── Helpers ── */
 function diffIndex(val) {
   if (val >= 75) return { label: "Hard",   color: "#EF4444", bg: "#fee2e2" };
@@ -340,9 +359,35 @@ export default function JeeMain() {
   return (
     <div className="page">
       <Seo
-        title="JEE Main Rank Predictor - Percentile to Rank & College Predictor"
-        description="Free JEE Main rank predictor. Convert your NTA percentile to an expected rank and see which IITs, NITs and IIITs you can get, category-wise. Built by IIT Roorkee alumni."
+        title="JEE Main College Predictor 2026 | Free Rank Predictor & Cutoffs"
+        description="Free JEE Main college predictor and rank predictor. Convert your NTA percentile to rank and see which NITs, IIITs, and GFTIs you can get. Built by IIT Roorkee alumni."
         path="/jee-main"
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "JEE Main", path: "/jee-main" }
+        ]}
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JEE Main College Predictor 2026",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "All",
+            "offers": { "@type": "Offer", "price": "0" }
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": FAQ_DATA.map(f => ({
+              "@type": "Question",
+              "name": f.q,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f.a
+              }
+            }))
+          }
+        ]}
       />
 
       {/* ── Global Styles ── */}
@@ -404,8 +449,8 @@ export default function JeeMain() {
       {/* ── Hero (blog-style) ── */}
       <PageHero
         eyebrow="JEE Main 2026" eyebrowIcon={Target} accent="#FF693D"
-        titleLead="JEE Main -" highlight="rank & college" titleTail="" highlightTail="predictor hub."
-        sub="Predict your rank, find every NIT, IIIT & GFTI you qualify for, analyse session-wise difficulty, and follow the complete syllabus, roadmap & coaching options."
+        titleLead="JEE Main 2026 -" highlight="College Predictor" titleTail="&" highlightTail="Cutoffs."
+        sub="Use the free JEE Main College Predictor to know your admission chances in NITs, IIITs, and GFTIs. Convert your percentile to rank, analyze category-wise cutoffs, and explore paper difficulty trends."
         cta={{ label: "Predict my rank", to: "#rank" }}
         cards={[
           { icon: Calculator, accent: "#FF693D", category: "Tool", title: "JEE Main Rank Predictor", meta: "Marks → percentile → CRL", badge: "LIVE" },
@@ -967,6 +1012,28 @@ export default function JeeMain() {
           <RankingsTable type="NIT" />
         </Block>
       </div>
+
+      {/* ── FAQ Section (SEO/AEO) ── */}
+      <section id="faq" className="section" style={{ scrollMarginTop: 90 }}>
+        <div className="container">
+          <div className="title-bar">
+            <span className="eyebrow">FAQ</span>
+            <h2 className="section-title">Frequently Asked Questions</h2>
+          </div>
+          <div style={{ maxWidth: 800, margin: "0 auto", display: "flex", flexDirection: "column", gap: 16 }}>
+            {FAQ_DATA.map((faq, i) => (
+              <div key={i} className="card" style={{ padding: "20px 24px" }}>
+                <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 16, color: "var(--navy)", marginBottom: 8 }}>
+                  {faq.q}
+                </h3>
+                <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.6 }}>
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
     </div>
   );

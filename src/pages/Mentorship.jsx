@@ -1215,9 +1215,9 @@ function TopMentors() {
     <section className="mj-section">
       <div className="mj-wrap">
         <div className="mj-sec-head">
-          <div className="mj-label">GUIDANCE FROM THE BEST</div>
-          <h2 className="mj-display mj-display-lg">Meet Your <em>Mentors</em></h2>
-          <p className="mj-sec-sub">Learn directly from IITians who have walked the path and conquered the challenges.</p>
+          <div className="mj-label">GUIDANCE FROM IITians & NITians</div>
+          <h2 className="mj-display mj-display-lg">Meet Your <em>IITian Mentors</em></h2>
+          <p className="mj-sec-sub">Learn directly from top IITians and NITians who have walked the path and conquered the challenges.</p>
         </div>
         
         <div className="mj-mentors-list">

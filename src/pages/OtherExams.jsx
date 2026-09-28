@@ -16,6 +16,21 @@ import ExamCard from "../components/ExamCard.jsx";
 import { CL, clEyebrow } from "../components/home/clTheme.js";
 import { ALL_EXAMS, CATEGORIES } from "../data/otherExams.js";
 
+const FAQ_DATA = [
+  {
+    q: "Which are the best engineering entrance exams other than JEE Main?",
+    a: "The top alternatives to JEE Main include BITSAT (for BITS Pilani), VITEEE (for Vellore Institute of Technology), MHT CET (for Maharashtra state colleges), and COMEDK UGET (for Karnataka private colleges)."
+  },
+  {
+    q: "Can I get into a good engineering college without JEE?",
+    a: "Yes. Many top-tier private universities and state government colleges conduct their own entrance exams. Exams like BITSAT, SRMJEEE, and state CETs offer pathways to excellent engineering programs without requiring a JEE score."
+  },
+  {
+    q: "Are state-level engineering exams open to students from other states?",
+    a: "Many state-level exams, such as MHT CET and WBJEE, allow All-India candidates to participate, though they usually have a limited percentage of seats reserved for non-domicile students compared to home-state students."
+  }
+];
+
 const STATUS_FILTERS = [
   { key: "all",      label: "All exams" },
   { key: "current",  label: "Ongoing" },
@@ -196,6 +211,35 @@ export default function OtherExams() {
         title="Other Engineering Entrance Exams 2026 - BITSAT, VITEEE, State CETs & More"
         description="Explore every engineering entrance exam beyond JEE - national, state and private-university tests. Fees, dates, pattern, eligibility and a plain-English read for BITSAT, VITEEE, MHT CET, KCET, COMEDK, SRMJEEE and 30+ more on Campus Point."
         path="/other-exams"
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Other Exams", path: "/other-exams" }
+        ]}
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Engineering Entrance Exams in India 2026",
+            "description": "List of top engineering entrance exams other than JEE in India, including BITSAT, VITEEE, and MHT CET.",
+            "itemListElement": ALL_EXAMS.slice(0, 10).map((e, i) => ({
+              "@type": "ListItem",
+              "position": i + 1,
+              "name": e.full || e.code
+            }))
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": FAQ_DATA.map(f => ({
+              "@type": "Question",
+              "name": f.q,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f.a
+              }
+            }))
+          }
+        ]}
       />
 
       {/* ── 1. HERO (route-map concept, flat home-style background) ── */}
@@ -206,11 +250,11 @@ export default function OtherExams() {
               <BackButton />
             </div>
             <h1 className="oe-hero-title">
-              Every way in, on <span className="oe-circle">one map</span>.
+              Engineering Exams 2026: <span className="oe-circle">Beyond JEE</span>
             </h1>
             <p className="oe-hero-sub">
-              <strong>{counts.all} engineering entrances</strong> across three tracks - national,
-              state and private. Trace fees, dates and patterns before you commit to a single line.
+              <strong>{counts.all} engineering entrances</strong> mapped across three tracks - national (like BITSAT),
+              state (like MHT CET), and private (like VITEEE). Compare fees, dates, and patterns for top engineering exams in India other than JEE.
             </p>
 
             <div className="oe-hero-cta">
@@ -252,8 +296,8 @@ export default function OtherExams() {
         <div className="container">
           <div style={{ textAlign: "center", maxWidth: 680, margin: "0 auto 34px" }}>
             <span style={clEyebrow}><Compass size={13} /> The full directory</span>
-            <h2 className="oe-dir-title">Every exam, one card at a time</h2>
-            <p className="oe-dir-sub">Filter by where you are in the cycle, narrow by track, or search by name.</p>
+            <h2 className="oe-dir-title">Comprehensive Directory of Engineering Entrance Exams 2026</h2>
+            <p className="oe-dir-sub">Browse state-level CETs, national tests, and private university entrances. Filter by ongoing registrations, upcoming deadlines, or search for your target college exam.</p>
           </div>
 
           {/* filter bar - two condensed dropdown buttons + search */}
@@ -303,6 +347,21 @@ export default function OtherExams() {
               <button onClick={() => { setStatus("all"); setCat("all"); setQ(""); }}>Reset filters</button>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* ── 4. FAQ (AEO & SEO) ── */}
+      <section className="oe-faq">
+        <div className="container">
+          <h2 className="oe-faq-title">Frequently Asked Questions</h2>
+          <div className="oe-faq-list">
+            {FAQ_DATA.map((faq, i) => (
+              <div key={i} className="oe-faq-item">
+                <h3 className="oe-faq-q">{faq.q}</h3>
+                <p className="oe-faq-a">{faq.a}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -457,4 +516,12 @@ const CSS = `
 @media (prefers-reduced-motion: reduce) {
   .ex-card--target { animation:none; }
 }
+
+/* ── faq ── */
+.oe-faq { padding: 40px 0 80px; background: #fff; border-top: 1px solid ${CL.cream3}; }
+.oe-faq-title { font: 800 1.8rem/1.2 ${CL.display}; color: ${CL.ink}; text-align: center; margin-bottom: 30px; letter-spacing: -0.5px; }
+.oe-faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.oe-faq-item { background: var(--page-bg); padding: 20px 24px; border-radius: 12px; border: 1px solid ${CL.cream3}; }
+.oe-faq-q { font: 700 1.05rem/1.3 sans-serif; color: ${CL.ink}; margin: 0 0 8px; }
+.oe-faq-a { font: 500 0.95rem/1.5 sans-serif; color: ${CL.body}; margin: 0; }
 `;
