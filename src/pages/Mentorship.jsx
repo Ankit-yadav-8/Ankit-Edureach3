@@ -50,6 +50,7 @@ function Label({ children, dark }) {
 function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
   const p = MENTOR_PLANS[plan] || { amount: 2599, exam: "JEE" };
   const isNeet = p.exam === "NEET";
+  const mentorType = isNeet ? "top Doctors and medical alumni" : "IIT/NIT alumni";
   const ifaceLabel = isNeet ? "NEET" : p.exam === "JEE" ? "JEE Main" : "exam";
   const dream = isNeet ? "medical-college" : "IIT / NIT";
   const bullets = [`Real ${ifaceLabel} interface`, "One-time payment"];
@@ -80,7 +81,7 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mj-hero-sub">
-              Manage study schedules, clear backlogs, and get dedicated 1-on-1 guidance from IIT/NIT alumni to turn your {dream} dream into a real rank.
+              Manage study schedules, clear backlogs, and get dedicated 1-on-1 guidance from {mentorType} to turn your {dream} dream into a real rank.
             </p>
           </Reveal>
           <Reveal delay={0.24} className="mj-hero-cta">

@@ -417,10 +417,12 @@ export const MENTORSHIP = {
     ],
 
     faqs: [
+      { q: "What is the CampusPoint NEET Mentorship Program?", a: "The CampusPoint NEET Mentorship Program is a premium 1-on-1 guidance platform where top Doctors and medical students help you manage study schedules, clear backlogs, and master NCERT. It provides dedicated accountability to secure your Govt Medical College seat." },
       { q: "I have joined a famous offline coaching. Why need this?", a: "Offline coaching teaches 500 students at once. We tell YOU exactly what to do when you go home. Mentorship fixes retention and consistency." },
       { q: "Is Physics covered properly?", a: "Yes. Physics is the rank decider in NEET. Your mentor will provide specific strategies, formula sheets, and targeted practice for Physics." },
       { q: "I have a huge backlog in Class 11. Can I still clear NEET?", a: "Yes. Your mentor will design a specific backlog-clearing sprint alongside your current syllabus so you catch up." },
-      { q: "Can I choose between 2027 and 2028 plans?", a: "Yes. You can select either the NEET 2027 or NEET 2028 plan from the tracks below." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
+      { q: "Can I choose between 2027 and 2028 plans?", a: "Yes. You can select either the NEET 2027 or NEET 2028 plan from the tracks below." },
+      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
       { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy-whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
 
@@ -546,7 +548,9 @@ export const MENTORSHIP = {
       { name: "Rahul S.",  batch: "Foundation", improvement: "NTSE Stage 1 Cleared", quote: "Mentorship helped me balance school and NTSE perfectly." },
     ],
     faqs: [
-      { q: "Is Class 9 too early?", a: "It's the perfect time to build concepts without the pressure of boards." },      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
+      { q: "What is the CampusPoint Foundation Mentorship Program?", a: "The CampusPoint Foundation Mentorship Program is an exclusive guidance plan for Class 9 and 10 students. It pairs you with an elite mentor to manage study schedules, clear early backlogs, and build a powerful foundation for future competitive exams like JEE and NEET." },
+      { q: "Is Class 9 too early?", a: "It's the perfect time to build concepts without the pressure of boards." },
+      { q: "How do I connect with my mentor?", a: "Your mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
       { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy-whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
     tracks: [
