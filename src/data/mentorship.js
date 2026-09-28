@@ -162,10 +162,12 @@ export const MENTORSHIP = {
     ],
 
     faqs: [
+      { q: "What is the CampusPoint JEE 2027 Mentorship Program?", a: "The CampusPoint JEE 2027 Mentorship Program is a premium 1-on-1 guidance platform designed to manage study schedules, clear backlogs, and provide a personalized roadmap by top IIT/NIT alumni. Unlike group classes, this is dedicated accountability to ensure your IIT dream becomes a reality." },
       { q: "I already have coaching. How will I manage mentorship?", a: "Mentorship sits on top of your coaching - it doesn't replace it. Our IITian and NITian mentors make your existing classes actually count by fixing retention, backlog and consistency. Most students spend just 10–15 extra minutes a day on the system." },
       { q: "I have a lot of backlog. Is this for me?", a: "Absolutely - backlog students are exactly who this is built for. Your dedicated IITian mentor designs backlog-clearing sprints so you catch up in a structured, stress-free way instead of panicking." },
       { q: "I struggle with consistency.", a: "That's the #1 problem we solve. Daily targets, streaks, and a real IITian checking on you make consistency almost automatic." },
-      { q: "Can I get a discount?", a: "No. The price is already a fraction of what traditional 1-on-1 mentorship costs - and getting guided directly by IITians and NITians is an investment in your future." },      { q: "How do I connect with my mentor?", a: "Your IITian mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
+      { q: "Can I get a discount?", a: "No. The price is already a fraction of what traditional 1-on-1 mentorship costs - and getting guided directly by IITians and NITians is an investment in your future." },
+      { q: "How do I connect with my mentor?", a: "Your IITian mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
       { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your IITian mentor will instantly pivot your strategy—whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
 
@@ -291,10 +293,12 @@ export const MENTORSHIP = {
     ],
 
     faqs: [
+      { q: "What is the CampusPoint JEE 2028 Mentorship Program?", a: "The CampusPoint JEE 2028 Mentorship Program is an exclusive 2-year guidance platform designed to manage study schedules, clear early backlogs, and provide a roadmap from IIT/NIT alumni. We help Class 11 students avoid common mistakes and secure top ranks." },
       { q: "Isn't Class 11 too early to start mentorship?", a: "No - it's the perfect time. The students who finish two years ahead are the ones who started right. Early IITian mentorship prevents the backlog and panic droppers face." },
       { q: "Will this clash with my school and coaching?", a: "No. The 2-year system is light daily - 10–15 minutes - and is designed to make your school and coaching far more effective, not add load." },
       { q: "Why is the 2-year plan better?", a: "Because you get two full years of 1-on-1 IITian mentorship instead of one - far more mentor time, more sprints and a longer roadmap. It's the highest-value plan we offer." },
-      { q: "Can I get a discount?", a: "No. Early-bird pricing is already the lowest this plan will ever be." },      { q: "How do I connect with my mentor?", a: "Your IITian mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
+      { q: "Can I get a discount?", a: "No. Early-bird pricing is already the lowest this plan will ever be." },
+      { q: "How do I connect with my mentor?", a: "Your IITian mentor is just a WhatsApp message away. You'll also have a scheduled weekly video call to review progress, unblock doubts, and plan the week." },
       { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your IITian mentor will instantly pivot your strategy-whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
 

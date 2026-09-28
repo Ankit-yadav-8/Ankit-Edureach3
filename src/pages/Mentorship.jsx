@@ -80,8 +80,7 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mj-hero-sub">
-              Real-exam mocks, deep AI analysis, and 1-on-1 mentorship from 99%ilers -
-              everything to turn your {dream} dream into a real rank.
+              Manage study schedules, clear backlogs, and get dedicated 1-on-1 guidance from IIT/NIT alumni to turn your {dream} dream into a real rank.
             </p>
           </Reveal>
           <Reveal delay={0.24} className="mj-hero-cta">
@@ -1268,8 +1267,8 @@ export default function Mentorship() {
   return (
     <div className="mj">
       <Seo
-        title={`${exam} Mentorship by IITians - 1-on-1 Guidance | CampusPoint`}
-        description="1-on-1 JEE & NEET mentorship by IIT alumni - daily targets, weekly test analysis, live tracking and parent reports. Limited seats. Start at ₹2,499 on CampusPoint."
+        title={`Best ${exam} Mentorship Program by IITians & NITians | CampusPoint`}
+        description={`Join the best ${exam} Mentorship Program. Get a dedicated IIT/NIT alumni mentor, manage daily study schedules, clear backlogs, and crack the exam.`}
         path={`/mentorship/${variant}`}
         jsonLd={faqSchema}
       />
