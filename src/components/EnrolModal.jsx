@@ -29,13 +29,13 @@ const PLAN_META = {
 
   // ── Indian · 6 months ──
   "mentor-jee-2027-6m": {
-    amount: 1, old: 5999, kind: "mentorship", targetExam: "JEE 2027",
+    amount: 2599, old: 5999, kind: "mentorship", targetExam: "JEE 2027",
     title: "JEE 2027 Mentorship (6 Months)",
     band: "Indian Students · 6 Months · 1-on-1 IITian mentor",
     region: "indian", duration: "6 months",
   },
   "mentor-neet-2027-6m": {
-    amount: 1, old: 5999, kind: "mentorship", targetExam: "NEET 2027",
+    amount: 2599, old: 5999, kind: "mentorship", targetExam: "NEET 2027",
     title: "NEET 2027 Mentorship (6 Months)",
     band: "Indian Students · 6 Months · 1-on-1 doctor mentor",
     region: "indian", duration: "6 months",
@@ -47,7 +47,7 @@ const PLAN_META = {
     region: "indian", duration: "6 months",
   },
   "mentor-neet-2028-6m": {
-    amount: 1, old: 5999, kind: "mentorship", targetExam: "NEET 2028",
+    amount: 2599, old: 5999, kind: "mentorship", targetExam: "NEET 2028",
     title: "NEET 2028 Mentorship (6 Months)",
     band: "Indian Students · 6 Months · Class 11",
     region: "indian", duration: "6 months",
@@ -61,13 +61,13 @@ const PLAN_META = {
 
   // ── Indian · 1 year ──
   "mentor-jee-2027": {
-    amount: 1, old: 9999, kind: "mentorship", targetExam: "JEE 2027",
+    amount: 4999, old: 9999, kind: "mentorship", targetExam: "JEE 2027",
     title: "JEE 2027 Mentorship (1 Year)",
     band: "Indian Students · 1 Year · Class 12 / Droppers",
     region: "indian", duration: "1 year",
   },
   "mentor-neet-2027": {
-    amount: 1, old: 9999, kind: "mentorship", targetExam: "NEET 2027",
+    amount: 4999, old: 9999, kind: "mentorship", targetExam: "NEET 2027",
     title: "NEET 2027 Mentorship (1 Year)",
     band: "Indian Students · 1 Year · Class 12 / Droppers",
     region: "indian", duration: "1 year",
@@ -79,7 +79,7 @@ const PLAN_META = {
     region: "indian", duration: "1 year",
   },
   "mentor-neet-2028": {
-    amount: 1, old: 9999, kind: "mentorship", targetExam: "NEET 2028",
+    amount: 4999, old: 9999, kind: "mentorship", targetExam: "NEET 2028",
     title: "NEET 2028 Mentorship (1 Year, 2-Year Plan)",
     band: "Indian Students · 1 Year · Class 11",
     region: "indian", duration: "1 year",
