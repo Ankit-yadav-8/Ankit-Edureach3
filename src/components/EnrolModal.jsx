@@ -29,7 +29,7 @@ const PLAN_META = {
 
   // ── Indian · 6 months ──
   "mentor-jee-2027-6m": {
-    amount: 2599, old: 5999, kind: "mentorship", targetExam: "JEE 2027",
+    amount: 1, old: 5999, kind: "mentorship", targetExam: "JEE 2027",
     title: "JEE 2027 Mentorship (6 Months)",
     band: "Indian Students · 6 Months · 1-on-1 IITian mentor",
     region: "indian", duration: "6 months",
@@ -61,7 +61,7 @@ const PLAN_META = {
 
   // ── Indian · 1 year ──
   "mentor-jee-2027": {
-    amount: 4999, old: 9999, kind: "mentorship", targetExam: "JEE 2027",
+    amount: 1, old: 9999, kind: "mentorship", targetExam: "JEE 2027",
     title: "JEE 2027 Mentorship (1 Year)",
     band: "Indian Students · 1 Year · Class 12 / Droppers",
     region: "indian", duration: "1 year",

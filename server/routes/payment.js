@@ -21,14 +21,14 @@ const PLANS = {
   "all-colleges":  { amount: 499,  label: "All Colleges Counselling (Any Rank)" },
 
   // ── Indian · 6 months ──
-  "mentor-jee-2027-6m":    { amount: 2599,  label: "JEE 2027 Mentorship (6 Months)" },
+  "mentor-jee-2027-6m":    { amount: 1,     label: "JEE 2027 Mentorship (6 Months)" },
   "mentor-neet-2027-6m":   { amount: 1,     label: "NEET 2027 Mentorship (6 Months)" },
   "mentor-jee-2028-6m":    { amount: 2599,  label: "JEE 2028 Mentorship (6 Months)" },
   "mentor-neet-2028-6m":   { amount: 1,     label: "NEET 2028 Mentorship (6 Months)" },
   "mentor-foundation-6m":  { amount: 2599,  label: "Foundation Mentorship 6 Months (Class 9–10)" },
 
   // ── Indian · 1 year ──
-  "mentor-jee-2027":       { amount: 4999,  label: "JEE 2027 Mentorship (1 Year)" },
+  "mentor-jee-2027":       { amount: 1,     label: "JEE 2027 Mentorship (1 Year)" },
   "mentor-neet-2027":      { amount: 1,     label: "NEET 2027 Mentorship (1 Year)" },
   "mentor-jee-2028":       { amount: 4999,  label: "JEE 2028 Mentorship (1 Year, 2-Year Plan)" },
   "mentor-neet-2028":      { amount: 1,     label: "NEET 2028 Mentorship (1 Year, 2-Year Plan)" },
