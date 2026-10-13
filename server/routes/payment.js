@@ -9,6 +9,7 @@ import { verifyAdminKey } from "../middleware/admin.js";
 import { requireAuth, optionalAuth } from "../middleware/auth.js";
 import { ensureStudentId, nextStudentId } from "../utils/studentId.js";
 import { batchLabelFor, validUntilFor } from "../utils/plans.js";
+import { sendPaymentReceiptEmail } from "../utils/mailer.js";
 
 const router = express.Router();
 
@@ -232,6 +233,33 @@ router.post("/verify", optionalAuth, async (req, res) => {
       // Increment the coupon usage counter after a successful paid enrolment.
       if (couponCode && discount > 0) {
         await Coupon.updateOne({ code: couponCode }, { $inc: { usageCount: 1 } }).catch(() => {});
+      }
+
+      // Send automated payment confirmation & enrollment welcome email
+      const recipientEmail = String(req.body.email || "").trim().toLowerCase();
+      const studentAssignedId = enr?.studentId || null;
+      if (recipientEmail) {
+        sendPaymentReceiptEmail({
+          to: recipientEmail,
+          name: String(req.body.name || "Student").trim(),
+          planLabel: planMeta.label || plan,
+          amount: finalAmount,
+          orderId: razorpay_order_id,
+          paymentId: razorpay_payment_id,
+          studentId: studentAssignedId,
+        }).catch((err) => console.error("[PAYMENT RECEIPT EMAIL ERROR]", err?.message || err));
+      }
+      const parentEmail = String(req.body.parentEmail || "").trim().toLowerCase();
+      if (parentEmail && parentEmail !== recipientEmail) {
+        sendPaymentReceiptEmail({
+          to: parentEmail,
+          name: String(req.body.name || "Student").trim(),
+          planLabel: planMeta.label || plan,
+          amount: finalAmount,
+          orderId: razorpay_order_id,
+          paymentId: razorpay_payment_id,
+          studentId: studentAssignedId,
+        }).catch((err) => console.error("[PAYMENT RECEIPT PARENT EMAIL ERROR]", err?.message || err));
       }
     } catch (e) { console.error("enrollment persist (paid) error:", e?.message || e); }
 

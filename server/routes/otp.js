@@ -36,7 +36,7 @@ router.post("/send", async (req, res) => {
     const sendP = sendOtpEmail(email, code);
     const persistP = Otp.findOneAndUpdate(
       { email },
-      { codeHash, name, attempts: 0, expiresAt: new Date(Date.now() + 5 * 60 * 1000) },
+      { codeHash, name, attempts: 0, expiresAt: new Date(Date.now() + 10 * 60 * 1000) },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
     const [r] = await Promise.all([sendP, persistP]);

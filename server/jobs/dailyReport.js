@@ -22,9 +22,9 @@ import { buildDailyHtml } from "../routes/mentorship.js";
 const siteOrigin = () =>
   (process.env.CLIENT_ORIGIN || "").split(",")[0].trim() || "https://campuspoint.in";
 
-// Match the client's isoDay (UTC date) so the "today" lookup and the dedupe
-// stamp line up across the browser and this job.
-const todayIsoUTC = () => new Date().toISOString().slice(0, 10);
+// Local calendar day in Indian Standard Time (YYYY-MM-DD), matching the student's dashboard
+const todayIsoIST = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
+const todayIsoUTC = todayIsoIST; // Backward compatibility alias
 const fmtDay = (iso) => new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
 const inr = (n) => Number(n || 0).toLocaleString("en-IN");
 
@@ -115,12 +115,13 @@ function buildDailyR(data) {
 }
 
 async function runOnce() {
-  // Send late at night so the report reflects the full day. The server clock
-  // is UTC; 17:00 UTC ≈ 22:30 IST (10:30 PM). Reports send between ~10:30 PM
-  // and ~12:30 AM IST. (Runs are cheap before then — they just return early.)
-  if (new Date().getUTCHours() < 17) return;
+  // Check the current hour in Indian Standard Time (Asia/Kolkata).
+  // Send late at night between 10:30 PM (22) and 1:30 AM (1) IST so the full day's work is included.
+  const istHour = Number(new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", hour12: false }).format(new Date()));
+  if (istHour < 22 && istHour > 1) return;
 
-  const startOfDay = new Date(`${todayIsoUTC()}T00:00:00.000Z`);
+  const todayIso = todayIsoIST();
+  const startOfDay = new Date(`${todayIso}T00:00:00+05:30`);
   const due = await Enrollment.find({
     status: "paid",
     plan: { $regex: /^mentor-/ },

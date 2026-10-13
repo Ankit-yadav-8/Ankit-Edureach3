@@ -73,11 +73,9 @@ const studentHtml = (name, link) => shell(`
   { preheader: "Log this week's hours, tasks and test results", eyebrow: "Action needed" });
 
 async function runOnce() {
-  // Weekly cadence is anchored to Sunday: the job is checked daily but only
-  // sends on Sundays. (If a student opens the dashboard on Sunday, the client
-  // sends the real data report and stamps lastParentReportAt, so the nudge
-  // below is skipped for them — no duplicate.)
-  if (new Date().getDay() !== 0) return;
+  // Weekly cadence is anchored to Sunday in Indian Standard Time (Asia/Kolkata):
+  const istDay = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", weekday: "short" }).format(new Date());
+  if (istDay !== "Sun") return;
   const cutoff = new Date(Date.now() - WEEK_MS);
   const due = await Enrollment.find({
     status: "paid",

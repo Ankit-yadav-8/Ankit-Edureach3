@@ -44,7 +44,7 @@ function resolveSender() {
 // request can't keep the user waiting (they get a fast "try again" instead).
 async function postToBrevo(body) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 12000);
+  const timer = setTimeout(() => controller.abort(), 25000);
   try {
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
@@ -232,7 +232,7 @@ export async function sendOtpEmail(email, code) {
       replyTo: { email: replyTo, name: fromName },
       to: [{ email }],
       subject: "Your CampusPoint verification code",
-      textContent: `Your CampusPoint verification code is ${code}. Valid for 5 minutes.`,
+      textContent: `Your CampusPoint verification code is ${code}. Valid for 10 minutes.`,
       htmlContent: emailShell(`
         <p style="margin:0 0 8px;font-size:15px;color:#5b6472;line-height:1.6">Use this code to verify your email and sign in to CampusPoint:</p>
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0"><tr>
@@ -241,8 +241,8 @@ export async function sendOtpEmail(email, code) {
             <div style="font-size:38px;font-weight:800;letter-spacing:10px;color:#0d1b3e;margin-top:6px">${esc(code)}</div>
           </td>
         </tr></table>
-        <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ Valid for <b>5 minutes</b>. If you didn't request this, you can safely ignore this email.</p>`,
-        { preheader: `Your CampusPoint code is ${code} — valid for 5 minutes`, eyebrow: "Verify email", footer: "You're receiving this because someone requested a sign-in code for this email." }),
+        <p style="color:#8a93a6;font-size:13px;line-height:1.6;margin:12px 0 0">⏱ Valid for <b>10 minutes</b>. If you didn't request this, you can safely ignore this email.</p>`,
+        { preheader: `Your CampusPoint code is ${code} — valid for 10 minutes`, eyebrow: "Verify email", footer: "You're receiving this because someone requested a sign-in code for this email." }),
     });
   } catch (e) {
     console.error("Email send failed:", e.message);
@@ -351,6 +351,58 @@ export async function sendVerificationTokenEmail(email, verificationToken) {
     });
   } catch (e) {
     console.error("Verification token email send failed:", e.message);
+    return { ok: false, dev: false, error: e.message };
+  }
+}
+
+// ── Payment Receipt & Enrollment Welcome Email ─────────────────────────────
+export async function sendPaymentReceiptEmail({ to, name, planLabel, amount, orderId, paymentId, studentId, dateStr }) {
+  if (isDevMode()) {
+    console.log(`\n[DEV EMAIL] Payment receipt to ${to}\n  Plan: ${planLabel}, Amount: ₹${amount}, PaymentID: ${paymentId}\n`);
+    return { ok: true, dev: true };
+  }
+  const { fromEmail, fromName, replyTo } = resolveSender();
+  const dateFormatted = dateStr || new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" }) + " IST";
+  
+  const inner = `
+    <p style="margin:0 0 6px;font-size:13px;color:#15a06e;font-weight:700;text-transform:uppercase;letter-spacing:.6px">Payment Confirmed · Enrollment Active</p>
+    <p style="font-size:15px;color:#5b6472;line-height:1.6;margin:0 0 16px">Dear <b style="color:#1c1c28">${esc(name)}</b>, thank you for enrolling in <b>${esc(planLabel)}</b>. Your payment has been successfully verified.</p>
+    
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
+      <tr><td style="padding:14px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Plan</td><td align="right" style="padding:14px 18px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700">${esc(planLabel)}</td></tr>
+      <tr><td style="padding:14px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Amount Paid</td><td align="right" style="padding:14px 18px;border-bottom:1px solid #e2e8f0;font-size:18px;color:#15a06e;font-weight:800">₹${Number(amount).toLocaleString("en-IN")}</td></tr>
+      ${studentId ? `<tr><td style="padding:14px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Student ID</td><td align="right" style="padding:14px 18px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700;font-family:monospace">${esc(studentId)}</td></tr>` : ""}
+      <tr><td style="padding:14px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Payment ID</td><td align="right" style="padding:14px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#334155;font-family:monospace">${esc(paymentId)}</td></tr>
+      <tr><td style="padding:14px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Order ID</td><td align="right" style="padding:14px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#334155;font-family:monospace">${esc(orderId)}</td></tr>
+      <tr><td style="padding:14px 18px;font-size:13px;color:#64748b;font-weight:600">Date &amp; Time</td><td align="right" style="padding:14px 18px;font-size:13px;color:#334155">${esc(dateFormatted)}</td></tr>
+    </table>
+
+    <div style="margin:20px 0 8px;text-align:center">
+      <a href="https://campuspoint.in/mentorship-dashboard" style="display:inline-block;padding:12px 28px;background:#FF5A36;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;border-radius:10px;box-shadow:0 4px 14px rgba(255,90,54,.3)">Open Mentorship Dashboard →</a>
+    </div>
+    <p style="font-size:12.5px;color:#8a93a6;line-height:1.6;margin:16px 0 0;text-align:center">Need help? Reply directly to this email or contact us at <a href="mailto:campuspath6@gmail.com" style="color:#FF5A36">campuspath6@gmail.com</a>.</p>
+  `;
+
+  const html = emailShell(inner, {
+    preheader: `Payment confirmation for ${planLabel} — ₹${amount}`,
+    eyebrow: "Receipt & Enrollment",
+    accent: "#15a06e",
+    footer: "You're receiving this because you completed a payment on CampusPoint.",
+  });
+
+  const text = `Payment Confirmed!\nPlan: ${planLabel}\nAmount: ₹${amount}\nPayment ID: ${paymentId}\nOrder ID: ${orderId}\n${studentId ? `Student ID: ${studentId}\n` : ""}Date: ${dateFormatted}\n\nAccess dashboard: https://campuspoint.in/mentorship-dashboard`;
+
+  try {
+    return await postToBrevo({
+      sender: { name: fromName, email: fromEmail },
+      replyTo: { email: replyTo, name: fromName },
+      to: [{ email: to }],
+      subject: `Payment Successful: ${planLabel} — CampusPoint`,
+      textContent: text,
+      htmlContent: html,
+    });
+  } catch (e) {
+    console.error("Payment receipt email send failed:", e.message);
     return { ok: false, dev: false, error: e.message };
   }
 }
