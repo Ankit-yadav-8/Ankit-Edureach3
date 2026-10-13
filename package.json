@@ -13,7 +13,7 @@
     "prebuild": "node scripts/genSitemap.mjs",
     "build": "vite build",
     "prerender": "node scripts/prerender.mjs",
-    "build:prod": "node scripts/genSitemap.mjs && vite build && node scripts/prerender.mjs",
+    "build:prod": "vite build && node scripts/prerender.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

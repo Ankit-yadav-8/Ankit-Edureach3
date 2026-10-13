@@ -1026,13 +1026,14 @@ function Pricing({ plan, exam, openEnrol }) {
   const pi = MENTOR_PLANS[keys.intl];
   // NEET now uses the same 3-card layout as JEE
 
+  const isNeet = exam === "NEET" || /neet/i.test(plan);
   const cards = [
     {
       key: keys.sixMonth,
       label: "INDIAN STUDENTS",
       sublabel: "6 Months",
       flag: "🇮🇳",
-      amount: p6?.amount || 2599,
+      amount: p6?.amount ?? (isNeet ? 1 : 2599),
       old: p6?.old || 5999,
       accent: "#FF693D",
       bg: "linear-gradient(135deg,#FF7A3C,#F1531F)",
@@ -1063,8 +1064,8 @@ function Pricing({ plan, exam, openEnrol }) {
     <section id="enrol" className="mj-section">
       <div className="mj-wrap">
         <Reveal style={{ textAlign: "center" }}>
-          <h2 className="mj-display mj-display-xl">Choose your plan.<br />Start at <em>₹2,599.</em></h2>
-          <p className="mj-sec-sub" style={{ maxWidth: 540, margin: "16px auto 0" }}>Same mentorship, same IITian mentors. Pick the duration and region that suits you.</p>
+          <h2 className="mj-display mj-display-xl">Choose your plan.<br />Start at <em>{isNeet ? "₹1." : "₹2,599."}</em></h2>
+          <p className="mj-sec-sub" style={{ maxWidth: 540, margin: "16px auto 0" }}>{isNeet ? "Comprehensive 1-on-1 mentorship by top Doctor mentors. Pick your region." : "Same mentorship, same IITian mentors. Pick the duration and region that suits you."}</p>
         </Reveal>
 
         <div className="mj-pricing-grid">
