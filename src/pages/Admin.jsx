@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, Fragment } from "react";
 import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
   ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText,
-  GraduationCap, Tag,
+  GraduationCap, Tag, Send,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
@@ -222,7 +222,29 @@ export default function Admin() {
       URL.revokeObjectURL(url);
     } catch (e) { setErr(e.message); }
   }
-  const exportActive = () => (tab === "users" ? downloadCsv() : downloadPaymentsCsv());
+  const [approvingId, setApprovingId] = useState("");
+
+  async function handleApproveEmail(id) {
+    if (!window.confirm("Approve and send payment confirmation email to this student now?")) return;
+    setApprovingId(id);
+    setErr("");
+    try {
+      const res = await fetch(`${API_BASE}/api/payment/enrollments/${id}/approve-email`, {
+        method: "POST",
+        headers: { "x-admin-token": token },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Failed to approve email");
+      setPayments((prev) =>
+        prev.map((p) => (p._id === id ? { ...p, confirmationEmailSent: true, emailApproved: true } : p))
+      );
+      alert(data.message || "Payment confirmation email sent successfully!");
+    } catch (e) {
+      alert(e.message || "Approval failed");
+    } finally {
+      setApprovingId("");
+    }
+  }
 
   function logout() {
     sessionStorage.removeItem(TOKEN_STORAGE);
@@ -558,6 +580,17 @@ export default function Admin() {
               <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Paid today</div>
             </div>
           </div>
+          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fff7ed)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #fed7aa", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#ffedd5", display: "grid", placeItems: "center" }}>
+              <Mail size={22} color="#ea580c" />
+            </div>
+            <div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#ea580c" }}>
+                {payments.filter(p => !p.confirmationEmailSent).length}
+              </div>
+              <div style={{ fontSize: 12, color: "#9a3412", marginTop: 4, fontWeight: 600 }}>Awaiting email approval</div>
+            </div>
+          </div>
         </div>
         )}
 
@@ -709,6 +742,8 @@ export default function Admin() {
             setSearch={setSearch}
             expanded={expanded}
             toggleRow={toggleRow}
+            onApproveEmail={handleApproveEmail}
+            approvingId={approvingId}
           />
         )}
 
@@ -719,7 +754,7 @@ export default function Admin() {
 }
 
 /* ── Payments tab: successful enrolments only ─────────────────────── */
-function PaymentsTable({ payments, search, setSearch, expanded, toggleRow }) {
+function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApproveEmail, approvingId }) {
   return (
     <div style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #eee", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
 
@@ -745,10 +780,10 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow }) {
         </div>
       ) : (
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", minWidth: 1000, borderCollapse: "collapse" }}>
+          <table style={{ width: "100%", minWidth: 1050, borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ background: "#fafafa" }}>
-                {["#", "", "Customer", "Email", "Phone", "Plan", "Amount", "Status", "Paid On"].map((h, hi) => (
+                {["#", "", "Customer", "Email", "Phone", "Plan", "Amount", "Email Approval", "Status", "Paid On"].map((h, hi) => (
                   <th key={hi} style={{
                     padding: "12px 20px", textAlign: "left", fontSize: 11,
                     fontWeight: 700, color: "#999", letterSpacing: ".06em",
@@ -799,6 +834,42 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow }) {
                   <td style={{ padding: "14px 20px", fontSize: 13.5, color: "#0d1b3e", fontWeight: 700, whiteSpace: "nowrap" }}>
                     ₹{Number(p.amount || 0).toLocaleString("en-IN")}
                   </td>
+                  <td style={{ padding: "14px 20px" }} onClick={(e) => e.stopPropagation()}>
+                    {p.confirmationEmailSent ? (
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "4px 11px", whiteSpace: "nowrap" }}>
+                        <CheckCircle2 size={13} /> Sent to User
+                      </span>
+                    ) : (
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11.5, fontWeight: 700, color: "#b45309", background: "#fef3c7", borderRadius: 20, padding: "3px 9px", whiteSpace: "nowrap" }}>
+                          <Clock size={11} /> Pending
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => onApproveEmail(p._id)}
+                          disabled={approvingId === p._id}
+                          style={{
+                            background: ORANGE,
+                            color: "#fff",
+                            border: "none",
+                            padding: "4px 10px",
+                            borderRadius: 8,
+                            fontSize: 11.5,
+                            fontWeight: 700,
+                            cursor: approvingId === p._id ? "not-allowed" : "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 4,
+                            whiteSpace: "nowrap",
+                            boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
+                          }}
+                        >
+                          <Send size={11} />
+                          {approvingId === p._id ? "Sending…" : "Approve"}
+                        </button>
+                      </div>
+                    )}
+                  </td>
                   <td style={{ padding: "14px 20px" }}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "4px 11px", whiteSpace: "nowrap" }}>
                       <CheckCircle2 size={13} /> Success
@@ -808,7 +879,41 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow }) {
                 </tr>
                 {isOpen && (
                   <tr style={{ borderBottom: "1px solid #f0f0f0", background: "#fafafa" }}>
-                    <td colSpan={9} style={{ padding: "0 20px 18px 52px" }}>
+                    <td colSpan={10} style={{ padding: "0 20px 18px 52px" }}>
+                      {!p.confirmationEmailSent && (
+                        <div style={{ background: "#fff7ed", border: "1.5px solid #fed7aa", borderRadius: 12, padding: "14px 18px", marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+                          <div>
+                            <div style={{ fontSize: 13.5, fontWeight: 700, color: "#9a3412" }}>
+                              ⚠️ Student Confirmation Email Pending Approval
+                            </div>
+                            <div style={{ fontSize: 12.5, color: "#b45309", marginTop: 2 }}>
+                              The payment confirmation and welcome email has not been dispatched to <strong>{p.name}</strong> ({p.email}) yet. Click Approve to dispatch it.
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); onApproveEmail(p._id); }}
+                            disabled={approvingId === p._id}
+                            style={{
+                              background: "#16a34a",
+                              color: "#fff",
+                              border: "none",
+                              padding: "7px 16px",
+                              borderRadius: 8,
+                              fontSize: 12.5,
+                              fontWeight: 700,
+                              cursor: approvingId === p._id ? "not-allowed" : "pointer",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 6,
+                              boxShadow: "0 2px 10px rgba(22,163,74,0.3)",
+                            }}
+                          >
+                            <Send size={13} />
+                            {approvingId === p._id ? "Sending Email…" : "Approve & Send Email Now"}
+                          </button>
+                        </div>
+                      )}
                       <div style={{ fontSize: 11, fontWeight: 700, color: "#999", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: 8 }}>
                         Full document (MongoDB Atlas · enrollments)
                       </div>

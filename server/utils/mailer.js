@@ -406,3 +406,85 @@ export async function sendPaymentReceiptEmail({ to, name, planLabel, amount, ord
     return { ok: false, dev: false, error: e.message };
   }
 }
+
+// ── Admin Payment Notification & Email Approval ───────────────────────────
+export const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ||
+  process.env.ADMIN_EMAIL ||
+  "ankityadav08022008@gmail.com,ankit26august@gmail.com")
+  .split(",").map((s) => s.toLowerCase().trim()).filter(Boolean);
+
+export async function sendAdminPaymentApprovalEmail({
+  enrollmentId,
+  approvalToken,
+  name,
+  email,
+  phone,
+  planLabel,
+  amount,
+  orderId,
+  paymentId,
+  studentId,
+  dateStr,
+}) {
+  if (isDevMode()) {
+    console.log(`\n[DEV EMAIL] Admin Payment Approval Notification:\n  Student: ${name} (${email}), Plan: ${planLabel}, Amount: ₹${amount}\n  Approval Token: ${approvalToken}\n`);
+    return { ok: true, dev: true };
+  }
+
+  const { fromEmail, fromName, replyTo } = resolveSender();
+  const dateFormatted = dateStr || new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" }) + " IST";
+  const approvalLink = `https://ankit-edureach3.onrender.com/api/payment/approve-email?id=${enrollmentId}&token=${approvalToken}`;
+
+  const inner = `
+    <div style="background:#fff7ed;border:1.5px solid #fed7aa;border-radius:12px;padding:14px 18px;margin-bottom:16px">
+      <div style="font-size:12px;font-weight:800;color:#c2410c;text-transform:uppercase;letter-spacing:.5px">⚠️ Admin Approval Required</div>
+      <div style="font-size:13.5px;color:#9a3412;margin-top:4px;font-weight:600">
+        A new payment was received. Please review the details below and click <strong>Approve</strong> to dispatch the official confirmation and welcome email to the user.
+      </div>
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
+      <tr><td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Student Name</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700">${esc(name)}</td></tr>
+      <tr><td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Student Email</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13.5px;color:#0f172a;font-weight:600">${esc(email)}</td></tr>
+      <tr><td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Student Phone</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13.5px;color:#0f172a;font-weight:600">${esc(phone || "-")}</td></tr>
+      <tr><td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Enrolled Plan</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700">${esc(planLabel)}</td></tr>
+      <tr><td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Amount Paid</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:18px;color:#15a06e;font-weight:800">₹${Number(amount).toLocaleString("en-IN")}</td></tr>
+      ${studentId ? `<tr><td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Assigned Student ID</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700;font-family:monospace">${esc(studentId)}</td></tr>` : ""}
+      <tr><td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Razorpay Payment ID</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:12.5px;color:#334155;font-family:monospace">${esc(paymentId)}</td></tr>
+      <tr><td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600">Razorpay Order ID</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:12.5px;color:#334155;font-family:monospace">${esc(orderId)}</td></tr>
+      <tr><td style="padding:12px 18px;font-size:13px;color:#64748b;font-weight:600">Payment Timestamp</td><td align="right" style="padding:12px 18px;font-size:13px;color:#334155">${esc(dateFormatted)}</td></tr>
+    </table>
+
+    <div style="margin:26px 0 16px;text-align:center">
+      <a href="${esc(approvalLink)}" style="display:inline-block;padding:15px 34px;background:#16a34a;color:#ffffff;text-decoration:none;font-weight:800;font-size:15px;border-radius:12px;box-shadow:0 6px 20px rgba(22,163,74,.35)">
+        ✓ Approve &amp; Send Confirmation Email to User
+      </a>
+    </div>
+
+    <p style="font-size:12px;color:#64748b;line-height:1.6;margin:12px 0 0;text-align:center">
+      Or manage from the web dashboard: <a href="https://campuspoint.in/admin" style="color:#FF5A36;font-weight:600">campuspoint.in/admin</a>
+    </p>
+  `;
+
+  const html = emailShell(inner, {
+    preheader: `[ACTION REQUIRED] New payment from ${name} for ${planLabel} (₹${amount})`,
+    eyebrow: "Admin Payment Review",
+    accent: "#ea580c",
+    footer: "You're receiving this administrative alert because you are a CampusPoint project owner.",
+  });
+
+  const text = `New Payment Received!\nStudent: ${name} (${email})\nPhone: ${phone}\nPlan: ${planLabel}\nAmount: ₹${amount}\nPayment ID: ${paymentId}\nOrder ID: ${orderId}\n\nCLICK TO APPROVE AND SEND USER EMAIL:\n${approvalLink}\n\nAdmin Portal: https://campuspoint.in/admin`;
+
+  const promises = ADMIN_EMAILS.map((adminEmail) =>
+    postToBrevo({
+      sender: { name: fromName, email: fromEmail },
+      replyTo: { email: replyTo, name: fromName },
+      to: [{ email: adminEmail }],
+      subject: `[Payment Alert] ₹${amount} received from ${name} — Approval Needed`,
+      textContent: text,
+      htmlContent: html,
+    }).catch((err) => console.error(`[ADMIN APPROVAL EMAIL ERROR to ${adminEmail}]`, err?.message || err))
+  );
+
+  return Promise.all(promises);
+}

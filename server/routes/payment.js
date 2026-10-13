@@ -9,7 +9,7 @@ import { verifyAdminKey } from "../middleware/admin.js";
 import { requireAuth, optionalAuth } from "../middleware/auth.js";
 import { ensureStudentId, nextStudentId } from "../utils/studentId.js";
 import { batchLabelFor, validUntilFor } from "../utils/plans.js";
-import { sendPaymentReceiptEmail } from "../utils/mailer.js";
+import { sendPaymentReceiptEmail, sendAdminPaymentApprovalEmail } from "../utils/mailer.js";
 
 const router = express.Router();
 
@@ -194,6 +194,7 @@ router.post("/verify", optionalAuth, async (req, res) => {
     // Best-effort: the money has already moved, so a DB hiccup must not fail
     // the response to the customer.
     try {
+      const approvalToken = crypto.randomBytes(32).toString("hex");
       const enr = await Enrollment.findOneAndUpdate(
         { razorpayOrderId: razorpay_order_id },
         {
@@ -219,15 +220,19 @@ router.post("/verify", optionalAuth, async (req, res) => {
           razorpayOrderId:   razorpay_order_id,
           razorpayPaymentId: razorpay_payment_id,
           status: "paid",
+          emailApproved: false,
+          confirmationEmailSent: false,
+          approvalToken,
         },
         { upsert: true, new: true, setDefaultsOnInsert: true }
       );
       // Mentorship students get a clean global ID (CP-2026-00042) on enrolment.
+      let studentAssignedId = enr?.studentId || null;
       if (enr && /^mentor-/.test(enr.plan) && !enr.studentId) {
-        const id = await nextStudentId(new Date(enr.createdAt || Date.now()).getFullYear());
+        studentAssignedId = await nextStudentId(new Date(enr.createdAt || Date.now()).getFullYear());
         await Enrollment.updateOne(
           { _id: enr._id, $or: [{ studentId: null }, { studentId: "" }, { studentId: { $exists: false } }] },
-          { $set: { studentId: id } }
+          { $set: { studentId: studentAssignedId } }
         );
       }
       // Increment the coupon usage counter after a successful paid enrolment.
@@ -235,32 +240,19 @@ router.post("/verify", optionalAuth, async (req, res) => {
         await Coupon.updateOne({ code: couponCode }, { $inc: { usageCount: 1 } }).catch(() => {});
       }
 
-      // Send automated payment confirmation & enrollment welcome email
-      const recipientEmail = String(req.body.email || "").trim().toLowerCase();
-      const studentAssignedId = enr?.studentId || null;
-      if (recipientEmail) {
-        sendPaymentReceiptEmail({
-          to: recipientEmail,
-          name: String(req.body.name || "Student").trim(),
-          planLabel: planMeta.label || plan,
-          amount: finalAmount,
-          orderId: razorpay_order_id,
-          paymentId: razorpay_payment_id,
-          studentId: studentAssignedId,
-        }).catch((err) => console.error("[PAYMENT RECEIPT EMAIL ERROR]", err?.message || err));
-      }
-      const parentEmail = String(req.body.parentEmail || "").trim().toLowerCase();
-      if (parentEmail && parentEmail !== recipientEmail) {
-        sendPaymentReceiptEmail({
-          to: parentEmail,
-          name: String(req.body.name || "Student").trim(),
-          planLabel: planMeta.label || plan,
-          amount: finalAmount,
-          orderId: razorpay_order_id,
-          paymentId: razorpay_payment_id,
-          studentId: studentAssignedId,
-        }).catch((err) => console.error("[PAYMENT RECEIPT PARENT EMAIL ERROR]", err?.message || err));
-      }
+      // Workflow: Send email to ADMIN first for review & approval before sending user receipt
+      sendAdminPaymentApprovalEmail({
+        enrollmentId: enr._id,
+        approvalToken,
+        name: enr.name,
+        email: enr.email,
+        phone: enr.phone,
+        planLabel: planMeta.label || plan,
+        amount: finalAmount,
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        studentId: studentAssignedId,
+      }).catch((err) => console.error("[ADMIN PAYMENT APPROVAL ALERT ERROR]", err?.message || err));
     } catch (e) { console.error("enrollment persist (paid) error:", e?.message || e); }
 
     res.json({ ok: true, paymentId: razorpay_payment_id });
@@ -336,17 +328,150 @@ router.get("/enrollments/export.csv", requireAdmin, async (_req, res) => {
   try {
     const items = await Enrollment.find({ status: "paid" }).sort({ createdAt: -1 }).lean();
     const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-    const head = "Name,Email,Phone,Plan,Amount,Home State,Class,Target Exam,Payment ID,Order ID,Paid On\n";
+    const head = "Name,Email,Phone,Plan,Amount,Home State,Class,Target Exam,Payment ID,Order ID,Email Approved,Paid On\n";
     const rows = items.map((e) => [
       e.name, e.email, e.phone, PLANS[e.plan]?.label || e.plan, e.amount,
       e.homeState, e.currentClass, e.targetExam,
-      e.razorpayPaymentId, e.razorpayOrderId, e.createdAt?.toISOString(),
+      e.razorpayPaymentId, e.razorpayOrderId, e.confirmationEmailSent ? "Yes" : "No", e.createdAt?.toISOString(),
     ].map(esc).join(",")).join("\n");
     res.setHeader("Content-Type", "text/csv");
     res.setHeader("Content-Disposition", "attachment; filename=campuspoint-payments.csv");
     res.send(head + rows);
   } catch (e) {
     console.error("[payment/enrollments/export]", e?.message || e);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* ── Admin: One-Click Email Approval Link (From Admin Inbox) ─────── */
+router.get("/approve-email", async (req, res) => {
+  const { id, token } = req.query;
+  if (!id || !token) {
+    return res.status(400).send(`
+      <!DOCTYPE html><html><body style="font-family:Arial,sans-serif;text-align:center;padding:50px">
+        <h2 style="color:#dc2626">Invalid Approval Link</h2>
+        <p>Missing enrollment ID or approval token.</p>
+      </body></html>
+    `);
+  }
+
+  try {
+    const enr = await Enrollment.findById(id);
+    if (!enr || enr.approvalToken !== token) {
+      return res.status(403).send(`
+        <!DOCTYPE html><html><body style="font-family:Arial,sans-serif;text-align:center;padding:50px">
+          <h2 style="color:#dc2626">Unauthorized / Invalid Token</h2>
+          <p>This approval link is invalid or has expired.</p>
+        </body></html>
+      `);
+    }
+
+    if (enr.confirmationEmailSent) {
+      return res.send(`
+        <!DOCTYPE html><html><body style="font-family:Arial,sans-serif;text-align:center;padding:60px 20px;background:#f8fafc">
+          <div style="max-width:500px;margin:0 auto;background:#fff;padding:36px;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.06);border:1px solid #e2e8f0">
+            <div style="font-size:36px;margin-bottom:12px">ℹ️</div>
+            <h2 style="color:#0f172a;margin:0 0 10px">Already Approved</h2>
+            <p style="color:#64748b;line-height:1.6">The payment confirmation email for <strong>${enr.name}</strong> (${enr.email}) was already dispatched.</p>
+            <a href="https://campuspoint.in/admin" style="display:inline-block;margin-top:18px;padding:10px 22px;background:#0f172a;color:#fff;text-decoration:none;border-radius:8px;font-weight:700;font-size:14px">Open Admin Panel →</a>
+          </div>
+        </body></html>
+      `);
+    }
+
+    // Mark as approved and sent
+    enr.emailApproved = true;
+    enr.confirmationEmailSent = true;
+    await enr.save();
+
+    // Dispatch the official receipt email to student and parent
+    const planMeta = PLANS[enr.plan];
+    const planLabel = planMeta?.label || enr.plan;
+    if (enr.email) {
+      await sendPaymentReceiptEmail({
+        to: enr.email,
+        name: enr.name,
+        planLabel,
+        amount: enr.amount,
+        orderId: enr.razorpayOrderId,
+        paymentId: enr.razorpayPaymentId,
+        studentId: enr.studentId,
+      }).catch((e) => console.error("[APPROVE EMAIL SEND TO STUDENT ERROR]", e?.message || e));
+    }
+    if (enr.parentEmail && enr.parentEmail !== enr.email) {
+      await sendPaymentReceiptEmail({
+        to: enr.parentEmail,
+        name: enr.name,
+        planLabel,
+        amount: enr.amount,
+        orderId: enr.razorpayOrderId,
+        paymentId: enr.razorpayPaymentId,
+        studentId: enr.studentId,
+      }).catch((e) => console.error("[APPROVE EMAIL SEND TO PARENT ERROR]", e?.message || e));
+    }
+
+    return res.send(`
+      <!DOCTYPE html><html><body style="font-family:Arial,sans-serif;text-align:center;padding:60px 20px;background:#f8fafc">
+        <div style="max-width:520px;margin:0 auto;background:#fff;padding:40px;border-radius:18px;box-shadow:0 10px 40px rgba(0,0,0,0.08);border:1px solid #e2e8f0">
+          <div style="width:60px;height:60px;background:#dcfce7;color:#16a34a;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;margin-bottom:16px">✓</div>
+          <h2 style="color:#0f172a;margin:0 0 10px">Confirmation Email Approved &amp; Sent!</h2>
+          <p style="color:#64748b;line-height:1.6;font-size:15px;margin:0 0 20px">
+            The official payment confirmation and enrollment welcome email has been sent to <strong>${enr.name}</strong> (<em>${enr.email}</em>)${enr.parentEmail ? ` and parent (<em>${enr.parentEmail}</em>)` : ""}.
+          </p>
+          <div style="background:#f1f5f9;border-radius:10px;padding:14px;font-size:13px;color:#334155;text-align:left;line-height:1.7;margin-bottom:24px">
+            <div><strong>Plan:</strong> ${planLabel}</div>
+            <div><strong>Amount:</strong> ₹${enr.amount}</div>
+            <div><strong>Payment ID:</strong> ${enr.razorpayPaymentId}</div>
+            ${enr.studentId ? `<div><strong>Student ID:</strong> ${enr.studentId}</div>` : ""}
+          </div>
+          <a href="https://campuspoint.in/admin" style="display:inline-block;padding:12px 26px;background:#FF5A36;color:#fff;text-decoration:none;border-radius:10px;font-weight:700;font-size:14px;box-shadow:0 4px 14px rgba(255,90,54,.3)">Open Admin Dashboard →</a>
+        </div>
+      </body></html>
+    `);
+  } catch (err) {
+    console.error("[approve-email endpoint error]", err);
+    res.status(500).send(`Server error: ${err.message}`);
+  }
+});
+
+/* ── Admin: Manual Approval via Web Dashboard ────────────────────── */
+router.post("/enrollments/:id/approve-email", requireAdmin, async (req, res) => {
+  try {
+    const enr = await Enrollment.findById(req.params.id);
+    if (!enr) return res.status(404).json({ error: "Enrollment not found" });
+
+    enr.emailApproved = true;
+    enr.confirmationEmailSent = true;
+    await enr.save();
+
+    const planMeta = PLANS[enr.plan];
+    const planLabel = planMeta?.label || enr.plan;
+    if (enr.email) {
+      await sendPaymentReceiptEmail({
+        to: enr.email,
+        name: enr.name,
+        planLabel,
+        amount: enr.amount,
+        orderId: enr.razorpayOrderId,
+        paymentId: enr.razorpayPaymentId,
+        studentId: enr.studentId,
+      }).catch((e) => console.error("[ADMIN MANUAL APPROVE EMAIL SEND ERROR]", e?.message || e));
+    }
+    if (enr.parentEmail && enr.parentEmail !== enr.email) {
+      await sendPaymentReceiptEmail({
+        to: enr.parentEmail,
+        name: enr.name,
+        planLabel,
+        amount: enr.amount,
+        orderId: enr.razorpayOrderId,
+        paymentId: enr.razorpayPaymentId,
+        studentId: enr.studentId,
+      }).catch((e) => console.error("[ADMIN MANUAL APPROVE PARENT EMAIL ERROR]", e?.message || e));
+    }
+
+    res.json({ ok: true, message: `Confirmation email sent to ${enr.email}` });
+  } catch (e) {
+    console.error("[payment/enrollments/:id/approve-email]", e?.message || e);
     res.status(500).json({ error: "Server error" });
   }
 });

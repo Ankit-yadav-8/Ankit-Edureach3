@@ -69,6 +69,11 @@ const enrollmentSchema = new mongoose.Schema(
     razorpayOrderId:   { type: String, index: true },
     razorpayPaymentId: { type: String, default: "" },
     status: { type: String, enum: ["created", "paid", "failed"], default: "created" },
+
+    // Admin approval workflow for sending confirmation email to user
+    emailApproved:          { type: Boolean, default: false },
+    confirmationEmailSent:  { type: Boolean, default: false },
+    approvalToken:          { type: String, default: "", index: true },
   },
   { timestamps: true }
 );
