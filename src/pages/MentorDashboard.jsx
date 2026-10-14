@@ -282,7 +282,7 @@ export default function MentorDashboard() {
   return (
     <>
       <Seo title="Mentor dashboard · Campus Point" robots="noindex, nofollow" />
-      <div className="container" style={{ padding: "120px 0 60px" }}>
+      <div className="container" style={{ padding: "120px 0 60px", overflow: "visible" }}>
         <MentorHero mentor={mentor} students={students} activeId={activeId} onPick={setActiveId} />
 
         {err && (
@@ -315,7 +315,7 @@ export default function MentorDashboard() {
         )}
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginTop: 22, flexWrap: "wrap" }}>
-          <p style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11.5, color: "var(--muted)", margin: 0 }}>
+          <p style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11.5, color: "var(--muted)", margin: 0, flex: "1 1 240px" }}>
             <Lock size={12} color={ACCENT} />
             You can view your students' study data (never change it) and set the tasks they must complete. They keep full control of their own dashboard.
           </p>
@@ -324,7 +324,7 @@ export default function MentorDashboard() {
             style={{
               display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9,
               border: "1px solid var(--line)", background: "#fff", cursor: "pointer",
-              fontSize: 12.5, fontWeight: 600, color: "var(--navy)",
+              fontSize: 12.5, fontWeight: 600, color: "var(--navy)", flexShrink: 0,
             }}
           >
             <LogOut size={13} /> Sign out
@@ -336,6 +336,9 @@ export default function MentorDashboard() {
         .cp-spin { animation: cp-spin 0.9s linear infinite; }
         @keyframes cp-spin { to { transform: rotate(360deg); } }
         @media (prefers-reduced-motion: reduce) { .cp-spin { animation-duration: 2.4s; } }
+        @media (max-width: 720px) {
+          .container { overflow: visible !important; }
+        }
       `}</style>
     </>
   );

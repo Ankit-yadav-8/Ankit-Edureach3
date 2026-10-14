@@ -222,6 +222,7 @@ export default function Admin() {
       URL.revokeObjectURL(url);
     } catch (e) { setErr(e.message); }
   }
+  const exportActive = () => (tab === "users" ? downloadCsv() : tab === "payments" ? downloadPaymentsCsv() : undefined);
   const [approvingId, setApprovingId] = useState("");
 
   async function handleApproveEmail(id) {

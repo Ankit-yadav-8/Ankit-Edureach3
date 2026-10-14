@@ -221,7 +221,7 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
           box-shadow:0 0 0 0 rgba(255,105,61,.5); animation:mhpulse 2.4s ease-out infinite; }
         @keyframes mhpulse { 0%{box-shadow:0 0 0 0 rgba(255,105,61,.5);} 100%{box-shadow:0 0 0 8px rgba(255,105,61,0);} }
 
-        .mh-row { display:flex; align-items:center; gap:22px; margin-top:20px; flex-wrap:wrap; }
+        .mh-row { display:flex; align-items:flex-start; gap:22px; margin-top:20px; flex-wrap:wrap; }
         .mh-avatar-wrap { position:relative; flex-shrink:0; }
         .mh-avatar { width:64px; height:64px; border-radius:18px; display:grid; place-items:center;
           background:linear-gradient(135deg, ${T.coral}, ${T.coralDk}); color:#fff;
@@ -252,9 +252,9 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
           text-transform:uppercase; color:${T.coralDk}; margin-bottom:3px; }
         .mh-switch-name { display:block; font:700 .86rem/1.3 'Sora',sans-serif; color:${T.ink};
           white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .mh-menu { position:absolute; top:calc(100% + 8px); right:0; z-index:30; min-width:250px;
+        .mh-menu { position:absolute; top:calc(100% + 8px); right:0; z-index:30; min-width:250px; max-width:360px;
           background:#fff; border:1px solid ${T.line}; border-radius:14px; overflow:hidden;
-          box-shadow:0 18px 44px -12px rgba(27,27,36,.28); }
+          box-shadow:0 18px 44px -12px rgba(27,27,36,.28); max-height:340px; overflow-y:auto; }
         .mh-menu-item { display:block; width:100%; text-align:left; padding:11px 14px; border:none;
           background:#fff; cursor:pointer; transition:background .14s; }
         .mh-menu-item:hover { background:${T.coralSoft}; }
@@ -263,11 +263,14 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
         .mh-menu-meta { display:block; font:500 .7rem/1.4 'DM Sans',sans-serif; color:${T.body}; margin-top:1px; }
 
         @media (max-width:720px) {
-          .mh-inner { padding:24px 20px 26px; }
+          .mh-inner { padding:24px 16px 26px; }
+          .mh-row { flex-direction:column; align-items:stretch; }
           .mh-switch-wrap { width:100%; }
           .mh-switch { width:100%; }
-          .mh-menu { left:0; right:0; min-width:0; width:100%; }
-          .mh-watermark { font-size:34vw; }
+          .mh-menu { left:0; right:0; min-width:0; width:100%; max-height:260px; }
+          .mh-watermark { font-size:22vw; top:-6%; right:0; }
+          .mh-h1 { font-size:clamp(1.3rem, 5vw, 2rem); }
+          .mh-copy { min-width:0; }
         }
         @media (prefers-reduced-motion: reduce) {
           .mh-orb-a, .mh-orb-b, .mh-dot { animation:none; }
