@@ -75,7 +75,7 @@ function StudentSwitcher({ students, activeId, onPick }) {
   if (!students.length) return null;
 
   return (
-    <div ref={ref} style={{ position: "relative" }}>
+    <div ref={ref} style={{ position: "relative", zIndex: 120 }}>
       <button className="mh-switch" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-haspopup="listbox">
         <span className="mh-switch-text">
           <span className="mh-switch-label">Viewing</span>
@@ -114,7 +114,7 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
   const initials = (mentor.name || "?").trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 
   return (
-    <section className="mh-hero">
+    <div className="mh-hero">
       <div className="mh-bg" aria-hidden="true">
         <span className="mh-orb mh-orb-a" />
         <span className="mh-orb mh-orb-b" />
@@ -193,8 +193,11 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
       </div>
 
       <style>{`
-        .mh-hero { position:relative; z-index:20; border-radius:24px; margin-bottom:24px;
-          border:1px solid ${T.line}; background:var(--page-bg); }
+        .mh-hero {
+          position:relative; z-index:100; border-radius:24px; margin-bottom:24px;
+          border:1px solid ${T.line}; background:var(--page-bg);
+          overflow:visible !important; contain:none !important; content-visibility:visible !important;
+        }
         .mh-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; border-radius:24px; }
         .mh-orb { position:absolute; border-radius:50%; filter:blur(80px); }
         .mh-orb-a { width:420px; height:420px; top:-190px; left:-120px;
@@ -213,7 +216,7 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
           font-size:min(19vw,190px); line-height:1; color:transparent; -webkit-text-stroke:1.5px ${T.lineDk};
           opacity:.2; user-select:none; }
 
-        .mh-inner { position:relative; z-index:2; padding:30px 30px 32px; }
+        .mh-inner { position:relative; z-index:2; padding:30px 30px 32px; overflow:visible !important; }
         .mh-pill { display:inline-flex; align-items:center; gap:9px; padding:7px 16px; border-radius:50px;
           background:${T.coralSoft}; border:1px solid #F6CDBE; color:${T.coralDk};
           font:700 .78rem/1 'Sora',sans-serif; box-shadow:0 10px 26px -16px rgba(255,105,61,.6); }
@@ -221,7 +224,7 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
           box-shadow:0 0 0 0 rgba(255,105,61,.5); animation:mhpulse 2.4s ease-out infinite; }
         @keyframes mhpulse { 0%{box-shadow:0 0 0 0 rgba(255,105,61,.5);} 100%{box-shadow:0 0 0 8px rgba(255,105,61,0);} }
 
-        .mh-row { display:flex; align-items:flex-start; gap:22px; margin-top:20px; flex-wrap:wrap; }
+        .mh-row { display:flex; align-items:flex-start; gap:22px; margin-top:20px; flex-wrap:wrap; overflow:visible !important; }
         .mh-avatar-wrap { position:relative; flex-shrink:0; }
         .mh-avatar { width:64px; height:64px; border-radius:18px; display:grid; place-items:center;
           background:linear-gradient(135deg, ${T.coral}, ${T.coralDk}); color:#fff;
@@ -242,9 +245,9 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
           background:rgba(255,255,255,.6); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
           border:1px solid ${T.line}; color:${T.body}; font:600 .74rem/1 'Space Grotesk',sans-serif; }
 
-        .mh-switch-wrap { flex-shrink:0; }
+        .mh-switch-wrap { flex-shrink:0; position:relative; z-index:120; overflow:visible !important; }
         .mh-switch { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:14px;
-          background:rgba(255,255,255,.72); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+          background:rgba(255,255,255,.9); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
           border:1px solid ${T.lineDk}; cursor:pointer; min-width:200px; text-align:left; transition:.16s; }
         .mh-switch:hover { border-color:${T.coral}; transform:translateY(-1px); }
         .mh-switch-text { flex:1; min-width:0; }
@@ -252,22 +255,28 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
           text-transform:uppercase; color:${T.coralDk}; margin-bottom:3px; }
         .mh-switch-name { display:block; font:700 .86rem/1.3 'Sora',sans-serif; color:${T.ink};
           white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .mh-menu { position:absolute; top:calc(100% + 8px); right:0; z-index:30; min-width:250px; max-width:360px;
-          background:#fff; border:1px solid ${T.line}; border-radius:14px; overflow:hidden;
-          box-shadow:0 18px 44px -12px rgba(27,27,36,.28); max-height:340px; overflow-y:auto; }
-        .mh-menu-item { display:block; width:100%; text-align:left; padding:11px 14px; border:none;
-          background:#fff; cursor:pointer; transition:background .14s; }
+        .mh-menu { position:absolute; top:calc(100% + 8px); right:0; z-index:99999 !important; min-width:260px; max-width:380px;
+          background:#fff; border:1px solid ${T.lineDk}; border-radius:14px;
+          box-shadow:0 24px 60px -8px rgba(15,23,42,.35), 0 4px 16px rgba(0,0,0,.08);
+          max-height:360px; overflow-y:auto; }
+        .mh-menu::-webkit-scrollbar { width:6px; }
+        .mh-menu::-webkit-scrollbar-track { background:#faf8f5; border-radius:8px; }
+        .mh-menu::-webkit-scrollbar-thumb { background:#d8d0c5; border-radius:8px; }
+        .mh-menu::-webkit-scrollbar-thumb:hover { background:#bfb5a6; }
+        .mh-menu-item { display:block; width:100%; text-align:left; padding:12px 15px; border:none;
+          border-bottom:1px solid #f5ede6; background:#fff; cursor:pointer; transition:background .14s; }
+        .mh-menu-item:last-child { border-bottom:none; }
         .mh-menu-item:hover { background:${T.coralSoft}; }
         .mh-menu-on { background:${T.coralSoft}; }
-        .mh-menu-name { display:block; font:700 .82rem/1.3 'Sora',sans-serif; color:${T.ink}; }
-        .mh-menu-meta { display:block; font:500 .7rem/1.4 'DM Sans',sans-serif; color:${T.body}; margin-top:1px; }
+        .mh-menu-name { display:block; font:700 .84rem/1.3 'Sora',sans-serif; color:${T.ink}; }
+        .mh-menu-meta { display:block; font:500 .72rem/1.4 'DM Sans',sans-serif; color:${T.body}; margin-top:2px; }
 
         @media (max-width:720px) {
           .mh-inner { padding:24px 16px 26px; }
           .mh-row { flex-direction:column; align-items:stretch; }
-          .mh-switch-wrap { width:100%; }
+          .mh-switch-wrap { width:100%; position:relative; z-index:120; }
           .mh-switch { width:100%; }
-          .mh-menu { left:0; right:0; min-width:0; width:100%; max-height:260px; }
+          .mh-menu { left:0; right:0; min-width:0; width:100%; max-height:280px; z-index:99999 !important; }
           .mh-watermark { font-size:22vw; top:-6%; right:0; }
           .mh-h1 { font-size:clamp(1.3rem, 5vw, 2rem); }
           .mh-copy { min-width:0; }
@@ -276,6 +285,6 @@ export default function MentorHero({ mentor, students, activeId, onPick }) {
           .mh-orb-a, .mh-orb-b, .mh-dot { animation:none; }
         }
       `}</style>
-    </section>
+    </div>
   );
 }

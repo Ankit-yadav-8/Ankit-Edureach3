@@ -282,7 +282,7 @@ export default function MentorDashboard() {
   return (
     <>
       <Seo title="Mentor dashboard · Campus Point" robots="noindex, nofollow" />
-      <div className="container" style={{ padding: "120px 0 60px", overflow: "visible" }}>
+      <div className="container mentor-dashboard-container" style={{ padding: "120px 0 60px", overflow: "visible", position: "relative", zIndex: 10 }}>
         <MentorHero mentor={mentor} students={students} activeId={activeId} onPick={setActiveId} />
 
         {err && (
@@ -336,8 +336,11 @@ export default function MentorDashboard() {
         .cp-spin { animation: cp-spin 0.9s linear infinite; }
         @keyframes cp-spin { to { transform: rotate(360deg); } }
         @media (prefers-reduced-motion: reduce) { .cp-spin { animation-duration: 2.4s; } }
+        .mentor-dashboard-container { overflow: visible !important; }
+        .mh-hero { overflow: visible !important; contain: none !important; }
         @media (max-width: 720px) {
           .container { overflow: visible !important; }
+          .mentor-dashboard-container { overflow: visible !important; }
         }
       `}</style>
     </>

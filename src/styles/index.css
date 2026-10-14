@@ -126,9 +126,8 @@ body {
   position:relative;
   background: var(--page-bg);
 }
-main { background: var(--page-bg); }
-section { content-visibility: auto; contain-intrinsic-size: auto 600px; }
-
+section:not(.mh-hero) { content-visibility: auto; contain-intrinsic-size: auto 600px; }
+.mh-hero { contain: none !important; content-visibility: visible !important; overflow: visible !important; }
 /* Branch-vs-College mode selector — two option-style cards on desktop,
    a compact two-button toggle on phones (tap one or the other). */
 .bvc-mode-cards  { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
