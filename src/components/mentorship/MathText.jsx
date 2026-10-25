@@ -138,6 +138,7 @@ const splitRow = (line) => {
 // A separator row: cells of dashes (with optional alignment colons), e.g.
 // "--- | :--: | ---".
 const isSepRow = (line) => /^\s*\|?\s*:?-{2,}:?\s*(?:\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(line);
+const isRow = (line) => line.includes("|");
 const tableWrapperStyle = {
   width: "100%",
   overflowX: "auto",
@@ -231,77 +232,82 @@ function renderFormattedInline(src, keyBase = 0) {
 }
 
 export default function MathText({ text = "", style }) {
-  let src = String(text);
-  if (!src.trim()) return null;
+  try {
+    let src = String(text ?? "");
+    if (!src.trim()) return null;
 
-  // Un-flatten inline markdown tables (vision model output without newlines)
-  src = src.replace(/\|\s+\|/g, "|\n|");
-  const rawLines = src.split("\n");
-  for (let i = 0; i < rawLines.length; i++) {
-    const line = rawLines[i];
-    if (isRow(line)) {
-      const next = rawLines[i + 1] ?? "";
-      if (isSepRow(next)) {
-        // This is a header row. Extract leading text.
-        const trimmed = line.trim();
-        if (!trimmed.startsWith("|")) {
-          const firstPipe = line.indexOf("|");
-          if (firstPipe > 0) {
-            rawLines.splice(i, 1, line.slice(0, firstPipe).trim(), line.slice(firstPipe).trim());
-            i++;
+    // Un-flatten inline markdown tables (vision model output without newlines)
+    src = src.replace(/\|\s+\|/g, "|\n|");
+    const rawLines = src.split("\n");
+    for (let i = 0; i < rawLines.length; i++) {
+      const line = rawLines[i];
+      if (isRow(line)) {
+        const next = rawLines[i + 1] ?? "";
+        if (isSepRow(next)) {
+          // This is a header row. Extract leading text.
+          const trimmed = line.trim();
+          if (!trimmed.startsWith("|")) {
+            const firstPipe = line.indexOf("|");
+            if (firstPipe > 0) {
+              rawLines.splice(i, 1, line.slice(0, firstPipe).trim(), line.slice(firstPipe).trim());
+              i++;
+            }
           }
-        }
-      } else if (i > 0 && (isSepRow(rawLines[i - 1]) || (isRow(rawLines[i - 1]) && rawLines[i - 1].trim().startsWith("|")))) {
-        // This is a body row. Extract trailing text.
-        const trimmed = line.trim();
-        if (!trimmed.endsWith("|")) {
-          const lastPipe = line.lastIndexOf("|");
-          if (lastPipe !== -1 && lastPipe !== line.length - 1) {
-            rawLines.splice(i, 1, line.slice(0, lastPipe + 1).trim(), line.slice(lastPipe + 1).trim());
+        } else if (i > 0 && (isSepRow(rawLines[i - 1]) || (isRow(rawLines[i - 1]) && rawLines[i - 1].trim().startsWith("|")))) {
+          // This is a body row. Extract trailing text.
+          const trimmed = line.trim();
+          if (!trimmed.endsWith("|")) {
+            const lastPipe = line.lastIndexOf("|");
+            if (lastPipe !== -1 && lastPipe !== line.length - 1) {
+              rawLines.splice(i, 1, line.slice(0, lastPipe + 1).trim(), line.slice(lastPipe + 1).trim());
+            }
           }
         }
       }
     }
-  }
 
-  const lines = rawLines;
-  const blocks = [];
-  let buf = [];
-  const flushText = () => { if (buf.length) { blocks.push({ type: "text", text: buf.join("\n") }); buf = []; } };
+    const lines = rawLines;
+    const blocks = [];
+    let buf = [];
+    const flushText = () => { if (buf.length) { blocks.push({ type: "text", text: buf.join("\n") }); buf = []; } };
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const next = lines[i + 1] ?? "";
-    // A table starts on a pipe row followed by EITHER a markdown separator row
-    // (| --- | --- |) OR another pipe row - the vision model and coaching papers
-    // routinely emit data/frequency tables WITHOUT the separator, and the old
-    // code rendered those as a wall of "|" text instead of a real table.
-    if (isRow(line) && ((isSepRow(next) && next.includes("-")) || isRow(next))) {
-      flushText();
-      const rows = [splitRow(line)];
-      let j = i + 1;
-      if (isSepRow(lines[j])) j++; // skip the optional separator row
-      while (j < lines.length && isRow(lines[j])) {
-        if (!isSepRow(lines[j])) rows.push(splitRow(lines[j]));
-        j++;
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const next = lines[i + 1] ?? "";
+      // A table starts on a pipe row followed by EITHER a markdown separator row
+      // (| --- | --- |) OR another pipe row - the vision model and coaching papers
+      // routinely emit data/frequency tables WITHOUT the separator, and the old
+      // code rendered those as a wall of "|" text instead of a real table.
+      if (isRow(line) && ((isSepRow(next) && next.includes("-")) || isRow(next))) {
+        flushText();
+        const rows = [splitRow(line)];
+        let j = i + 1;
+        if (isSepRow(lines[j])) j++; // skip the optional separator row
+        while (j < lines.length && isRow(lines[j])) {
+          if (!isSepRow(lines[j])) rows.push(splitRow(lines[j]));
+          j++;
+        }
+        blocks.push({ type: "table", rows });
+        i = j - 1; // the for-loop will re-increment
+      } else {
+        buf.push(line);
       }
-      blocks.push({ type: "table", rows });
-      i = j - 1; // the for-loop will re-increment
-    } else {
-      buf.push(line);
     }
-  }
-  flushText();
+    flushText();
 
-  // No tables → behave exactly like the original lightweight inline renderer.
-  if (blocks.length === 1 && blocks[0].type === "text") {
-    return <span style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", ...style }}>{renderFormattedInline(blocks[0].text)}</span>;
+    // No tables → behave exactly like the original lightweight inline renderer.
+    if (blocks.length === 1 && blocks[0].type === "text") {
+      return <span style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", ...style }}>{renderFormattedInline(blocks[0].text)}</span>;
+    }
+    return (
+      <span style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", ...style }}>
+        {blocks.map((b, i) => b.type === "table"
+          ? <MdTable key={`t${i}`} rows={b.rows} kb={i * 1000} />
+          : <span key={`x${i}`}>{renderFormattedInline(b.text, i * 1000)}</span>)}
+      </span>
+    );
+  } catch (err) {
+    console.error("MathText fallback:", err);
+    return <span style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", ...style }}>{String(text ?? "")}</span>;
   }
-  return (
-    <span style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", ...style }}>
-      {blocks.map((b, i) => b.type === "table"
-        ? <MdTable key={`t${i}`} rows={b.rows} kb={i * 1000} />
-        : <span key={`x${i}`}>{renderFormattedInline(b.text, i * 1000)}</span>)}
-    </span>
-  );
 }

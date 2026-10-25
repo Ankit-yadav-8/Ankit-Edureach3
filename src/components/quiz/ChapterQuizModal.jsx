@@ -922,7 +922,7 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
 
                     {/* Options */}
                     {(() => {
-                      const isMatchQ = !!parseMatchListQuestion(currentQ.statement) || currentQ.options.some((o) => !!parseMatchOption(o.text));
+                      const isMatchQ = !!parseMatchListQuestion(currentQ.statement) || (currentQ.options || []).some((o) => !!parseMatchOption(o?.text));
                       return (
                         <div style={{
                           display: "grid",
@@ -930,9 +930,9 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                           gap: 10,
                           marginBottom: 20,
                         }}>
-                          {currentQ.options.map((opt) => {
+                          {(currentQ.options || []).map((opt) => {
                             const isSelected = chosenOption === opt.key;
-                            const matchPairs = parseMatchOption(opt.text);
+                            const matchPairs = parseMatchOption(opt?.text);
                             return (
                               <div
                                 key={opt.key}
@@ -1172,7 +1172,7 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                       <QuestionStatementViewer statement={q.statement} />
 
                       {(() => {
-                        const isMatchQ = !!parseMatchListQuestion(q.statement) || q.options.some((o) => !!parseMatchOption(o.text));
+                        const isMatchQ = !!parseMatchListQuestion(q.statement) || (q.options || []).some((o) => !!parseMatchOption(o?.text));
                         return (
                           <div style={{
                             display: "grid",
@@ -1180,10 +1180,10 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                             gap: 8,
                             marginBottom: 12,
                           }}>
-                            {q.options.map((opt) => {
+                            {(q.options || []).map((opt) => {
                               const isKey = opt.key === q.correct;
                               const isStudentPick = opt.key === q.studentAnswer;
-                              const matchPairs = parseMatchOption(opt.text);
+                              const matchPairs = parseMatchOption(opt?.text);
                               let borderCol = "#e2e8f0";
                               let bgCol = "#ffffff";
                               if (isKey) {
@@ -1297,8 +1297,8 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                             gap: 8,
                             marginBottom: 10,
                           }}>
-                            {fullQ.options.map((opt) => {
-                              const matchPairs = parseMatchOption(opt.text);
+                            {(fullQ.options || []).map((opt) => {
+                              const matchPairs = parseMatchOption(opt?.text);
                               const isCorrectOpt = opt.key === fullQ.correct;
                               return (
                                 <div
