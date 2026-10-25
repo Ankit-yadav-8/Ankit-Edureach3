@@ -12,8 +12,206 @@ const __dirname = path.dirname(__filename);
 const EXCEL_PATH = path.resolve(__dirname, "../../public/data/JEE_Units_Measurements_Complete_Readable.xlsx");
 const JSON_CACHE_PATH = path.resolve(__dirname, "../../src/data/unitsAndMeasurementsQuestions.json");
 
+// ── Dimensional Formula Cleaner ──────────────────────────────────────────────
+function cleanDimensionString(raw) {
+  let s = String(raw).trim();
+  s = s.replace(/\^\(([^)]+)\)/g, "^{$1}");
+  if (s.startsWith("[") && s.endsWith("]")) s = s.slice(1, -1).trim();
+
+  // Normalize braces
+  s = s.replace(/\{M\s*L\s*T\}/g, "M L T");
+  s = s.replace(/\{M\s*L\}/g, "M L");
+  s = s.replace(/\{L\s*T\}/g, "L T");
+  s = s.replace(/\{([A-Za-z])\}/g, "$1");
+
+  // Separate adjacent letters: MLT -> M L T, hTLM -> h T L M
+  s = s.replace(/([hMLTKA])(?=[hMLTKA])/g, "$1 ");
+  s = s.replace(/(\}[hMLTKA])/g, (m) => m[0] + " " + m[1]);
+
+  const tokens = s.split(/\s+/).filter(Boolean);
+  const formattedTokens = tokens.map((t) => {
+    const m = t.match(/^([hMLTKA])(?:\^\{?([^}]+)\}?)?$/);
+    if (m) {
+      const base = m[1];
+      const exp = m[2];
+      if (!exp || exp === "1") return base;
+      return `${base}^{${exp}}`;
+    }
+    return t;
+  });
+
+  return `$[${formattedTokens.join("\\ ")}]$`;
+}
+
+function formatDimensionCell(raw) {
+  let s = String(raw).trim();
+  // Q7 List II has roots like √{((hc) / (G))}
+  if (s.includes("√") || s.includes("((hc)")) {
+    s = s.replace(/√\{\(\(hc\)\s*\/\s*\(G\)\)\}/g, "$\\sqrt{\\frac{h c}{G}}$");
+    s = s.replace(/√\{\(\(Gh\)\s*\/\s*\(c\^\(?5\)?\)\)\}/g, "$\\sqrt{\\frac{G h}{c^5}}$");
+    s = s.replace(/√\{\(\(hc\^\(?5\)?\)\s*\/\s*\(Gk\^\(?2\)?\)\)\}/g, "$\\sqrt{\\frac{h c^5}{G k^2}}$");
+    s = s.replace(/√\{\(\(Gh\)\s*\/\s*\(c\^\(?3\)?\)\)\}/g, "$\\sqrt{\\frac{G h}{c^3}}$");
+    return s;
+  }
+  return cleanDimensionString(s);
+}
+
+function cleanTextFormulas(raw) {
+  let s = String(raw).trim();
+  s = s.replace(/____+\s*\(m\)\s*m/g, "____ mm");
+  s = s.replace(/____+\s*\(m\)\s*\/\s*s/g, "____ m/s");
+  s = s.replace(/____+\s*\(r\)espectively/g, "____, respectively");
+  s = s.replace(/\\\s*\{g\}/g, " g");
+  s = s.replace(/\\\s*\{cm\}/g, " cm");
+  s = s.replace(/\\\s*\{mm\}/g, " mm");
+  s = s.replace(/(\d+)\s*\\%/g, "$1%");
+  s = s.replace(/(\d+)\^\(\s*(st|nd|rd|th)\s*\)/gi, "$1$2");
+  s = s.replace(/(\d+)\^\{\s*(st|nd|rd|th)\s*\}/gi, "$1$2");
+  s = s.replace(/\{N\/m\}/g, "\\text{ N/m}");
+  s = s.replace(/\{N\/m\^\(?2\)?\}/g, "\\text{ N/m}^2");
+  s = s.replace(/\{A\/m\}/g, "\\text{A/m}");
+  s = s.replace(/\{A\/m\^\(?2\)?\}/g, "\\text{A/m}^2");
+  s = s.replace(/\{Am\^\(?2\)?\}/g, "\\text{A}\\cdot\\text{m}^2");
+  return s;
+}
+
+// ── Match List Formatter (Markdown Table) ───────────────────────────────────
+function formatMatchListTable(text) {
+  const introMatch = text.match(/^(?:Match\s+(?:the\s+)?List\s*[-–]?\s*I\s+with\s+List\s*[-–]?\s*II\s*[:.]?\s*)/i);
+  const body = introMatch ? text.slice(introMatch[0].length) : text;
+
+  const list1Match = body.match(/List\s*[-–]?\s*I\s*[:.]?\s*([\s\S]+?)\s*List\s*[-–]?\s*II/i);
+  const list2Match = body.match(/List\s*[-–]?\s*II\s*[:.]?\s*([\s\S]+?)(?:\s*(?:where\b|Choose the correct answer|\bwhere\s+h|\n|$))/i);
+
+  if (!list1Match || !list2Match) return text;
+
+  const rawList1 = list1Match[1].trim();
+  const rawList2 = list2Match[1].trim();
+
+  const l1Items = [];
+  const l1Regex = /(?:^|\s+)(?:\(?([A-D])\)?\.?|\b([A-D])\.)\s+([\s\S]+?)(?=(?:\s+(?:\(?([A-D])\)?\.?|\b([A-D])\.)\s+)|$)/g;
+  let m1;
+  while ((m1 = l1Regex.exec(rawList1)) !== null) {
+    l1Items.push({ letter: m1[1] || m1[2], val: m1[3].trim() });
+  }
+
+  const l2Items = [];
+  const l2Regex = /(?:^|\s+)(?:\(?([IVX]+)\)?\.?|\b([IVX]+)\.)\s+([\s\S]+?)(?=(?:\s+(?:\(?([IVX]+)\)?\.?|\b([IVX]+)\.)\s+)|$)/g;
+  let m2;
+  while ((m2 = l2Regex.exec(rawList2)) !== null) {
+    l2Items.push({ roman: m2[1] || m2[2], val: m2[3].trim() });
+  }
+
+  if (l1Items.length === 4 && l2Items.length === 4) {
+    const header = "| List - I | List - II |\n| :--- | :--- |";
+    const rows = l1Items.map((item, idx) => {
+      const it2 = l2Items[idx];
+      return `| **(${item.letter})** ${cleanTextFormulas(item.val)} | **(${it2.roman})** ${formatDimensionCell(it2.val)} |`;
+    });
+
+    let trailing = "";
+    const trailMatch = body.match(/List\s*[-–]?\s*II\s*[:.]?[\s\S]+?((?:where\s+h|Choose the correct answer)[\s\S]*)$/i);
+    if (trailMatch) {
+      trailing = "\n\n" + trailMatch[1].trim();
+    } else {
+      trailing = "\n\nChoose the correct answer from the options given below:";
+    }
+
+    return `Match List - I with List - II:\n\n${header}\n${rows.join("\n")}${trailing}`;
+  }
+
+  return text;
+}
+
+// ── Question Statement Math Formatter ────────────────────────────────────────
+function formatStatementMath(stmt) {
+  let s = cleanTextFormulas(stmt);
+
+  // Match List Table check
+  if (/Match\s+(?:the\s+)?List\s*[-–]?\s*I\s+with\s+List\s*[-–]?\s*II/i.test(s)) {
+    s = formatMatchListTable(s);
+  }
+
+  // Specific question statements formatting:
+  s = s.replace(/H=\(\(x\^\(?p\)?ε\^\(?q\)?E\^\(?r\)?\)\s*\/\s*\(t\^\(?s\)?\)\)/g, "$H = \\frac{x^p \\varepsilon^q E^r}{t^s}$");
+  s = s.replace(/V=\(\(A√\{x\}\)\s*\/\s*\(x\+B\)\)/g, "$V = \\frac{A\\sqrt{x}}{x + B}$");
+  s = s.replace(/\{ML\}\^\(?2\)?\{T\}\^\(?-4\)?\{A\}\^\(?-2\)?/g, "$[M\\ L^2\\ T^{-4}\\ A^{-2}]$");
+  s = s.replace(/\(\(1\)\s*\/\s*\(2\)\)ε₀E\^\(?2\)?/g, "$\\frac{1}{2}\\varepsilon_0 E^2$");
+  s = s.replace(/M\^\(?a\)?L\^\(?b\)?T\^\(?c\)?/g, "$[M^a L^b T^c]$");
+  s = s.replace(/2a-b\+c=\s*_{3,}/g, "$2a - b + c =$ ________");
+  s = s.replace(/α×10\^\(?9\)?\s*\\?text\{\s*N\/m\^2\s*\}/g, "$\\alpha \\times 10^9\\text{ N/m}^2$");
+  s = s.replace(/α×10\^\(?9\)?\s*\{N\/m\^\(?2\)?\}/g, "$\\alpha \\times 10^9\\text{ N/m}^2$");
+  s = s.replace(/T=2π√\{\(\(m\)\s*\/\s*\(k\)\)\}/g, "$T = 2\\pi\\sqrt{\\frac{m}{k}}$");
+  s = s.replace(/\(\(ε\s*E\)\s*\/\s*\(t\)\)/g, "$\\frac{\\varepsilon E}{t}$");
+  s = s.replace(/k_\(1\)=\(10±0\.2\)(?:\\text\{\s*N\/m\s*\}|\{N\/m\})/g, "$k_1 = (10 \\pm 0.2)\\text{ N/m}$");
+  s = s.replace(/k_\(2\)=\(20±0\.3\)(?:\\text\{\s*N\/m\s*\}|\{N\/m\})/g, "$k_2 = (20 \\pm 0.3)\\text{ N/m}$");
+  s = s.replace(/\(\{P\}\s*\+\s*\(\(A\)\s*\/\s*\(Bt\^\(?2\)?\)\)\)\s*\+\s*ρ\s*g\(h\s*\+\s*Bt\)\s*\+\s*\(\(1\)\s*\/\s*\(2\)\)ρ\s*V\^\(?2\)?\s*=\s*constant/g,
+    "$\\left(P + \\frac{A}{B t^2}\\right) + \\rho g(h + B t) + \\frac{1}{2}\\rho V^2 = \\text{constant}$");
+  s = s.replace(/X\^\(-2\)\s*Y\^\(\+\(\(3\)\s*\/\s*\(2\)\)\)\s*Z\^\(-\(\(2\)\s*\/\s*\(5\)\)\)/g,
+    "$X^{-2} Y^{3/2} Z^{-2/5}$");
+  s = s.replace(/√\{\(\(μ₀\)\s*\/\s*\(ε₀\)\)\}/g, "$\\sqrt{\\frac{\\mu_0}{\\varepsilon_0}}$");
+  s = s.replace(/\[\{M\}\^\(?P\)?\{L\}\^\(?Q\)?\{T\}\^\(?R\)?A\^\(?S\)?\]/g, "$[M^P\\ L^Q\\ T^R\\ A^S]$");
+  s = s.replace(/M\^\(?P\)?L\^\(?Q\)?T\^\(?R\)?A\^\(?S\)?/g, "$[M^P\\ L^Q\\ T^R\\ A^S]$");
+  s = s.replace(/\(\(\(1\)\s*\/\s*\(μ₀ε₀\)\)\)/g, "$\\frac{1}{\\mu_0 \\varepsilon_0}$");
+  s = s.replace(/\(\{P\}\s*\+\s*\(\(\{a\}\)\s*\/\s*\(\{V\}\^\(?2\)?\)\)\)\s*\(\{V\}\s*-\s*\{b\}\)\s*=\s*\{RT\}/g,
+    "$\\left(P + \\frac{a}{V^2}\\right)(V - b) = RT$");
+  s = s.replace(/\{ab\}\^\(?-2\)?/g, "$a b^{-2}$");
+  s = s.replace(/v=\{At\}\^\(?2\)?\s*\+\s*\(\(\{Bt\}\)\s*\/\s*\(\{C\}\s*\+\s*\{t\}\)\)/g,
+    "$v = A t^2 + \\frac{B t}{C + t}$");
+
+  s = s.replace(/\(μ₀\s*=/g, "($\\mu_0$ =");
+  s = s.replace(/and\s*ε₀\s*=/g, "and $\\varepsilon_0$ =");
+  s = s.replace(/\bμ₀\s+and\s+ε₀\b/g, "$\\mu_0$ and $\\varepsilon_0$");
+
+  return s;
+}
+
+// ── Option Math Formatter ────────────────────────────────────────────────────
+function formatOptionMath(optText) {
+  let s = cleanTextFormulas(optText);
+
+  // Q10 options (inductance, capacitance, resistance):
+  s = s.replace(/^\(\(R\)\s*\/\s*\(√\{LC\}\)\)$/, "$\\frac{R}{\\sqrt{LC}}$");
+  s = s.replace(/^\(\(R\)\s*\/\s*\(LC\)\)$/, "$\\frac{R}{LC}$");
+  s = s.replace(/^\(\(C\)\s*\/\s*\(√\{LR\}\)\)$/, "$\\frac{C}{\\sqrt{LR}}$");
+  s = s.replace(/^\(\(1\)\s*\/\s*\(R\)\)√\{\(\(L\)\s*\/\s*\(C\)\)\}$/, "$\\frac{1}{R}\\sqrt{\\frac{L}{C}}$");
+
+  // Q28 options (viscosity error):
+  s = s.replace(/^2\[\(\(Δ\s*r\)\s*\/\s*\(r\)\)-\(\(Δ\s*v_\(0\)\)\s*\/\s*\(v_\(0\)\)\)\]$/,
+    "$2\\left[\\frac{\\Delta r}{r} - \\frac{\\Delta v_0}{v_0}\\right]$");
+  s = s.replace(/^2\[\(\(Δ\s*r\)\s*\/\s*\(r\)\)\+\(\(Δ\s*v_\(0\)\)\s*\/\s*\(v_\(0\)\)\)\]$/,
+    "$2\\left[\\frac{\\Delta r}{r} + \\frac{\\Delta v_0}{v_0}\\right]$");
+  s = s.replace(/^\(\(2Δ\s*r\)\s*\/\s*\(r\)\)\+\(\(Δ\s*v_\(0\)\)\s*\/\s*\(v_\(0\)\)\)$/,
+    "$\\frac{2\\Delta r}{r} + \\frac{\\Delta v_0}{v_0}$");
+  s = s.replace(/^2\(\(Δ\s*r\)\s*\/\s*\(r\)\)-\(\(Δ\s*v_\(0\)\)\s*\/\s*\(v_\(0\)\)\)$/,
+    "$2\\left(\\frac{\\Delta r}{r}\\right) - \\frac{\\Delta v_0}{v_0}$");
+
+  // Q41 options:
+  s = s.replace(/^\{?T\}?\^\(?2\)?\s*\/\s*\{?L\}?$/, "$\\frac{T^2}{L}$");
+  s = s.replace(/^\{?L\}?\^\(?2\)?\s*\/\s*\{?T\}?\^\(?2\)?$/, "$\\frac{L^2}{T^2}$");
+  s = s.replace(/^\{?T\}?\^\(?2\)?\s*\/\s*\{?L\}?\^\(?2\)?$/, "$\\frac{T^2}{L^2}$");
+  s = s.replace(/^\{?L\}?\s*\/\s*\{?T\}?\^\(?2\)?$/, "$\\frac{L}{T^2}$");
+
+  // Q42 options:
+  s = s.replace(/^qI\/μ₀$/, "$\\frac{q I}{\\mu_0}$");
+  s = s.replace(/^q\^\(?2\)?μ₀I$/, "$q^2 \\mu_0 I$");
+  s = s.replace(/^qμ₀\/I$/, "$\\frac{q \\mu_0}{I}$");
+  s = s.replace(/^\{?q\}?μ₀\{?I\}?$/, "$q \\mu_0 I$");
+
+  // Generic dimensional options e.g. [{ML}^(0){T}^(-1)] and [{M}^(0){LT}]
+  s = s.replace(/\[\s*\{?[hMLTKA][^\]]+\]/g, (m) => cleanDimensionString(m));
+
+  // Scientific notation options: e.g. 1×10^(-2) -> $1 \times 10^{-2}$
+  s = s.replace(/^(\d+)\s*×\s*10\^\(?(-?\d+)\)?$/, "$$1 \\times 10^{$2}$");
+
+  // Alpha options: 200α -> $200\alpha$
+  s = s.replace(/^(\d+)α$/, "$$1\\alpha$");
+
+  return s;
+}
+
 /**
- * Normalizes and extracts all 47 questions from the Excel workbook.
+ * Normalizes and extracts all 47 questions from the Excel workbook with clean math formatting.
  * @returns {Array} List of standardized question objects.
  */
 export function loadAllQuestions() {
@@ -37,9 +235,10 @@ export function loadAllQuestions() {
     ["A", "B", "C", "D"].forEach((key) => {
       const optVal = row[`Option ${key}`];
       if (optVal !== undefined && optVal !== null && String(optVal).trim() !== "") {
+        const rawOptText = String(optVal).trim();
         options.push({
           key,
-          text: String(optVal).trim(),
+          text: formatOptionMath(rawOptText),
         });
       }
     });
@@ -47,12 +246,18 @@ export function loadAllQuestions() {
     const correct = String(row["Answer (source workbook)"] || "A").trim().toUpperCase();
     const rationale = row["Difficulty rationale"] ? String(row["Difficulty rationale"]).trim() : "";
     const mathNote = row["Math / answer review note"] ? String(row["Math / answer review note"]).trim() : "";
-    const explanation = [rationale, mathNote].filter(Boolean).join("\n\n");
+    const rawExplanation = [rationale, mathNote].filter(Boolean).join("\n\n");
+    const explanation = rawExplanation
+      ? formatStatementMath(rawExplanation)
+      : `Correct answer is Option (${correct}).`;
+
+    const rawStatement = String(row["Question (readable math)"] || "").trim();
+    const statement = formatStatementMath(rawStatement);
 
     return {
       id: `units-q-${String(qno).padStart(3, "0")}`,
       qno,
-      statement: String(row["Question (readable math)"] || "").trim(),
+      statement,
       options,
       correct,
       type: "single",
@@ -61,7 +266,7 @@ export function loadAllQuestions() {
       topic: String(row["Topic"] || "Units and Dimensions").trim(),
       difficulty, // 'easy' | 'moderate' | 'hard'
       difficultyRationale: rationale,
-      explanation: explanation || `Correct answer is Option (${correct}).`,
+      explanation,
       source: "JEE Units & Measurements Question Bank",
     };
   });

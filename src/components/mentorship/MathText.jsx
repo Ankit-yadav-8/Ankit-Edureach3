@@ -89,6 +89,13 @@ function autoWrapMath(src) {
   out = out.replace(/(?<!=)<=(?!=)/g, "$\\leq$");
   out = out.replace(/!=(?!=)/g, "$\\neq$");
 
+  // Convert double-parenthesis divisions like ((A) / (B)) -> \frac{A}{B}
+  out = out.replace(/\(\(\s*([^()]+?)\s*\)\s*\/\s*\(\s*([^()]+?)\s*\)\)/g, (_, n, d) => `\\frac{${n.trim()}}{${d.trim()}}`);
+  out = out.replace(/\(\s*([^()]+?)\s*\)\s*\/\s*\(\s*([^()]+?)\s*\)/g, (_, n, d) => `\\frac{${n.trim()}}{${d.trim()}}`);
+
+  // Handle bare LaTeX commands (e.g. \frac{...}{...}, \sqrt{...}, \times) by wrapping in $ delimiters
+  out = out.replace(/(\\(?:frac|sqrt|left|right|times|pm|mp|div|leq|geq|neq|alpha|beta|gamma|delta|epsilon|varepsilon|mu|eta|rho|sigma|tau|omega|pi|Delta|Omega)\b(?:\{[^}]*\}|[^{}\$\n])+(?:\{[^}]*\})*)/g, (m) => `$${m.trim()}$`);
+
   // Merge adjacent $ delimiters: $x$$y$ → $xy$
   out = out.replace(/\$\$/g, " ");
 
@@ -131,30 +138,73 @@ const splitRow = (line) => {
 // A separator row: cells of dashes (with optional alignment colons), e.g.
 // "--- | :--: | ---".
 const isSepRow = (line) => /^\s*\|?\s*:?-{2,}:?\s*(?:\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(line);
-const isRow = (line) => line.includes("|");
-
-const tableStyle = { display: "inline-table", borderCollapse: "collapse", margin: "8px 0", fontSize: "0.95em", maxWidth: "100%", borderRadius: 8, overflow: "hidden" };
-const cellStyle = { border: "1px solid #e2e8f0", padding: "6px 11px", textAlign: "left", verticalAlign: "middle", whiteSpace: "normal" };
+const tableWrapperStyle = {
+  width: "100%",
+  overflowX: "auto",
+  WebkitOverflowScrolling: "touch",
+  margin: "12px 0",
+  borderRadius: 12,
+  border: "1px solid #e2e8f0",
+  boxShadow: "0 1px 4px rgba(0,0,0,0.03)",
+  background: "#ffffff",
+};
+const tableStyle = {
+  width: "100%",
+  minWidth: "480px",
+  borderCollapse: "separate",
+  borderSpacing: 0,
+  fontSize: "0.93em",
+  tableLayout: "fixed",
+};
+const thStyle = {
+  background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
+  padding: "10px 14px",
+  fontWeight: 700,
+  color: "#1e293b",
+  borderBottom: "2px solid #cbd5e1",
+  textAlign: "left",
+  letterSpacing: "0.3px",
+};
+const tdStyle = {
+  borderBottom: "1px solid #f1f5f9",
+  padding: "10px 14px",
+  textAlign: "left",
+  verticalAlign: "middle",
+  color: "#334155",
+  lineHeight: 1.5,
+};
 
 function MdTable({ rows, kb }) {
   const [head, ...body] = rows;
   const cols = Math.max(head.length, ...body.map((r) => r.length));
   const cell = (r, n) => (r[n] ?? "");
   return (
-    <table style={tableStyle}>
-      <thead>
-        <tr>{Array.from({ length: cols }, (_, j) => (
-          <th key={j} style={{ ...cellStyle, background: "#f1f5f9", fontWeight: 700, color: "#0d1b3e" }}>{renderInline(cell(head, j), kb + j * 7)}</th>
-        ))}</tr>
-      </thead>
-      <tbody>
-        {body.map((r, i) => (
-          <tr key={i} style={{ background: i % 2 ? "#f8fafc" : "#fff" }}>{Array.from({ length: cols }, (_, j) => (
-            <td key={j} style={cellStyle}>{renderInline(cell(r, j), kb + (i + 1) * 113 + j * 7)}</td>
+    <div style={tableWrapperStyle}>
+      <table style={tableStyle}>
+        <thead>
+          <tr>{Array.from({ length: cols }, (_, j) => (
+            <th key={j} style={{ ...thStyle, borderRight: j < cols - 1 ? "1px solid #e2e8f0" : "none" }}>
+              {renderInline(cell(head, j), kb + j * 7)}
+            </th>
           ))}</tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {body.map((r, i) => (
+            <tr key={i} style={{ background: i % 2 ? "#fafafa" : "#ffffff" }}>
+              {Array.from({ length: cols }, (_, j) => (
+                <td key={j} style={{
+                  ...tdStyle,
+                  borderRight: j < cols - 1 ? "1px solid #f1f5f9" : "none",
+                  borderBottom: i === body.length - 1 ? "none" : "1px solid #f1f5f9"
+                }}>
+                  {renderInline(cell(r, j), kb + (i + 1) * 113 + j * 7)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

@@ -48,6 +48,315 @@ const DIFFICULTIES = [
 
 const QUESTION_COUNTS = [5, 10, 15];
 
+// ── Match List Question Parser ───────────────────────────────────────────────
+function parseMatchListQuestion(statement) {
+  if (!statement) return null;
+  const isMatch = /Match\s+(?:the\s+)?(?:following\s+columns|List\s*[-–]?\s*I\s+with\s+List\s*[-–]?\s*II)/i.test(statement);
+  if (!isMatch) return null;
+
+  // Case 1: Formatted Markdown Table
+  if (statement.includes("| List - I | List - II |") || (statement.includes("|") && statement.includes("List - I"))) {
+    const lines = statement.split("\n").map((l) => l.trim()).filter(Boolean);
+    const tableRows = lines.filter((l) => l.startsWith("|") && !l.includes(":---") && !l.includes("List - I | List - II"));
+
+    if (tableRows.length >= 4) {
+      const itemsI = [];
+      const itemsII = [];
+      tableRows.forEach((row) => {
+        const cells = row.split("|").map((c) => c.trim()).filter(Boolean);
+        if (cells.length >= 2) {
+          const m1 = cells[0].match(/^(?:\*\*\(([A-D])\)\*\*|\(([A-D])\))\s*([\s\S]+)$/);
+          const letter = m1 ? (m1[1] || m1[2]) : "";
+          const text1 = m1 ? m1[3].trim() : cells[0];
+
+          const m2 = cells[1].match(/^(?:\*\*\(([IVX]+)\)\*\*|\(([IVX]+)\))\s*([\s\S]+)$/);
+          const roman = m2 ? (m2[1] || m2[2]) : "";
+          const text2 = m2 ? m2[3].trim() : cells[1];
+
+          itemsI.push({ label: letter || String.fromCharCode(65 + itemsI.length), text: text1 });
+          itemsII.push({ label: roman || ["I", "II", "III", "IV"][itemsII.length], text: text2 });
+        }
+      });
+
+      return {
+        instruction: "Match List - I with List - II:",
+        col1Header: "Column - A (List - I)",
+        col2Header: "Column - B (List - II)",
+        list1: itemsI,
+        list2: itemsII,
+        trailing: "Choose the correct answer from the options given below:",
+      };
+    }
+  }
+
+  // Case 2: Raw paragraph string format (e.g. from user screenshot or raw bank)
+  const introMatch = statement.match(/^(?:Match\s+(?:the\s+)?List\s*[-–]?\s*I\s+with\s+List\s*[-–]?\s*II\s*[:.]?\s*)/i);
+  const body = introMatch ? statement.slice(introMatch[0].length) : statement;
+
+  const list1Match = body.match(/List\s*[-–]?\s*I\s*[:.]?\s*([\s\S]+?)\s*List\s*[-–]?\s*II/i);
+  const list2Match = body.match(/List\s*[-–]?\s*II\s*[:.]?\s*([\s\S]+?)(?:\s*(?:where\b|Choose the correct answer|\bwhere\s+h|\n|$))/i);
+
+  if (list1Match && list2Match) {
+    const rawList1 = list1Match[1].trim();
+    const rawList2 = list2Match[1].trim();
+
+    const itemsI = [];
+    const l1Regex = /(?:^|\s+)(?:\(?([A-D])\)?\.?|\b([A-D])\.)\s+([\s\S]+?)(?=(?:\s+(?:\(?([A-D])\)?\.?|\b([A-D])\.)\s+)|$)/g;
+    let m1;
+    while ((m1 = l1Regex.exec(rawList1)) !== null) {
+      itemsI.push({ label: m1[1] || m1[2], text: m1[3].trim() });
+    }
+
+    const itemsII = [];
+    const l2Regex = /(?:^|\s+)(?:\(?([IVX]+)\)?\.?|\b([IVX]+)\.)\s+([\s\S]+?)(?=(?:\s+(?:\(?([IVX]+)\)?\.?|\b([IVX]+)\.)\s+)|$)/g;
+    let m2;
+    while ((m2 = l2Regex.exec(rawList2)) !== null) {
+      let t = m2[3].trim();
+      t = t.replace(/\^\(([^)]+)\)/g, "^{$1}");
+      t = t.replace(/\{([A-Za-z])\}/g, "$1");
+      if (t.includes("[") && !t.includes("$")) t = `$${t}$`;
+      itemsII.push({ label: m2[1] || m2[2], text: t });
+    }
+
+    if (itemsI.length === 4 && itemsII.length === 4) {
+      return {
+        instruction: "Match List - I with List - II:",
+        col1Header: "Column - A (List - I)",
+        col2Header: "Column - B (List - II)",
+        list1: itemsI,
+        list2: itemsII,
+        trailing: "Choose the correct answer from the options given below:",
+      };
+    }
+  }
+
+  return null;
+}
+
+// ── Match Option Parser ──────────────────────────────────────────────────────
+function parseMatchOption(text) {
+  if (!text) return null;
+  const pairRegex = /(?:\(?([A-D])\)?\s*[-–]\s*\(?([IVX]+)\)?)/g;
+  const pairs = [];
+  let m;
+  while ((m = pairRegex.exec(text)) !== null) {
+    pairs.push({ l1: m[1], l2: m[2] });
+  }
+  if (pairs.length === 4) return pairs;
+  return null;
+}
+
+// ── Match Option Pill Component ──────────────────────────────────────────────
+function MatchOptionPill({ pairs, isSelected }) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 7, alignItems: "center" }}>
+      {pairs.map(({ l1, l2 }, idx) => (
+        <span
+          key={idx}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "4px 9px",
+            borderRadius: 7,
+            background: isSelected ? "#dbeafe" : "#f1f5f9",
+            border: `1px solid ${isSelected ? "#93c5fd" : "#cbd5e1"}`,
+            fontSize: 12.5,
+            fontWeight: 700,
+            transition: "all 0.15s ease",
+            boxShadow: isSelected ? "0 1px 3px rgba(37,99,235,0.15)" : "none",
+          }}
+        >
+          <span style={{ color: isSelected ? "#1e40af" : "#2563eb", fontWeight: 800 }}>{l1}</span>
+          <span style={{ color: "#94a3b8", fontSize: 10, fontWeight: 800 }}>➔</span>
+          <span style={{ color: isSelected ? "#5b21b6" : "#7c3aed", fontWeight: 800 }}>{l2}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// ── Match Table Viewer Component ─────────────────────────────────────────────
+function MatchTableViewer({ matchData, qNumber }) {
+  const { instruction, col1Header, col2Header, list1, list2, trailing } = matchData;
+
+  return (
+    <div style={{ marginBottom: 18 }}>
+      {/* Header Banner */}
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        marginBottom: 12, flexWrap: "wrap", gap: 8,
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {qNumber !== undefined && (
+            <span style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginRight: 4 }}>
+              Q{qNumber}.
+            </span>
+          )}
+          <span style={{
+            fontSize: 13.5, fontWeight: 700, color: "#1e40af",
+            background: "#eff6ff", border: "1px solid #bfdbfe",
+            padding: "4px 10px", borderRadius: 8,
+            display: "inline-flex", alignItems: "center", gap: 6,
+          }}>
+            <Layers size={14} /> {instruction || "Match List - I with List - II"}
+          </span>
+        </div>
+        <span style={{
+          fontSize: 11, fontWeight: 700, color: "#64748b",
+          background: "#f8fafc", border: "1px solid #e2e8f0",
+          padding: "3px 8px", borderRadius: 6,
+        }}>
+          Dual-Column Matching Grid
+        </span>
+      </div>
+
+      {/* Modern 2-Column Responsive Matching Table */}
+      <div style={{
+        width: "100%",
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch",
+        borderRadius: 14,
+        border: "1.5px solid #cbd5e1",
+        boxShadow: "0 2px 10px rgba(15, 23, 42, 0.05)",
+        background: "#ffffff",
+        marginBottom: 12,
+      }}>
+        <table style={{
+          width: "100%",
+          minWidth: "480px",
+          borderCollapse: "separate",
+          borderSpacing: 0,
+          tableLayout: "fixed",
+        }}>
+          <thead>
+            <tr>
+              <th style={{
+                width: "50%",
+                background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+                borderBottom: "2px solid #93c5fd",
+                borderRight: "1px solid #bfdbfe",
+                padding: "12px 16px",
+                textAlign: "left",
+                fontSize: 13,
+                fontWeight: 800,
+                color: "#1e40af",
+                letterSpacing: "0.4px",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#2563eb" }} />
+                  {col1Header || "Column - A (List - I)"}
+                </div>
+              </th>
+              <th style={{
+                width: "50%",
+                background: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)",
+                borderBottom: "2px solid #c4b5fd",
+                padding: "12px 16px",
+                textAlign: "left",
+                fontSize: 13,
+                fontWeight: 800,
+                color: "#6d28d9",
+                letterSpacing: "0.4px",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#7c3aed" }} />
+                  {col2Header || "Column - B (List - II)"}
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {list1.map((item1, idx) => {
+              const item2 = list2[idx] || { label: "", text: "" };
+              const isEven = idx % 2 === 0;
+              const isLast = idx === list1.length - 1;
+              return (
+                <tr
+                  key={idx}
+                  style={{
+                    background: isEven ? "#ffffff" : "#f8fafc",
+                    transition: "background 0.15s ease",
+                  }}
+                >
+                  {/* Left Column (List - I) */}
+                  <td style={{
+                    padding: "12px 16px",
+                    borderBottom: isLast ? "none" : "1px solid #e2e8f0",
+                    borderRight: "1px solid #e2e8f0",
+                    verticalAlign: "middle",
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{
+                        width: 28, height: 28, borderRadius: 8,
+                        background: "#eff6ff", border: "1.5px solid #bfdbfe",
+                        color: "#1d4ed8", fontWeight: 800, fontSize: 13,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0,
+                        boxShadow: "0 1px 2px rgba(37,99,235,0.1)",
+                      }}>
+                        {item1.label}
+                      </span>
+                      <span style={{ fontSize: 13.5, fontWeight: 600, color: "#1e293b", lineHeight: 1.45 }}>
+                        <MathText text={item1.text} />
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* Right Column (List - II) */}
+                  <td style={{
+                    padding: "12px 16px",
+                    borderBottom: isLast ? "none" : "1px solid #e2e8f0",
+                    verticalAlign: "middle",
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{
+                        width: 28, height: 28, borderRadius: 8,
+                        background: "#f5f3ff", border: "1.5px solid #ddd6fe",
+                        color: "#6d28d9", fontWeight: 800, fontSize: 12.5,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0,
+                        boxShadow: "0 1px 2px rgba(109,40,217,0.1)",
+                      }}>
+                        {item2.label}
+                      </span>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: "#1e293b", lineHeight: 1.45 }}>
+                        <MathText text={item2.text} />
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Trailing prompt */}
+      {trailing && (
+        <div style={{ fontSize: 13, fontWeight: 600, color: "#475569", marginTop: 8 }}>
+          {trailing}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Smart Question Statement Viewer ──────────────────────────────────────────
+function QuestionStatementViewer({ statement, qNumber }) {
+  const matchData = parseMatchListQuestion(statement);
+  if (matchData) {
+    return <MatchTableViewer matchData={matchData} qNumber={qNumber} />;
+  }
+
+  return (
+    <div style={{ fontSize: 15, fontWeight: 600, color: "#1e293b", lineHeight: 1.6, marginBottom: 20 }}>
+      {qNumber !== undefined && <span style={{ fontWeight: 800, marginRight: 8 }}>Q{qNumber}.</span>}
+      <MathText text={statement} />
+    </div>
+  );
+}
+
 export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units and Measurements" }) {
   // Mode: 'configure' | 'active' | 'result' | 'mentor_paper'
   const [mode, setMode] = useState("configure");
@@ -286,18 +595,19 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
       background: "rgba(15, 23, 42, 0.75)",
       backdropFilter: "blur(6px)",
       display: "flex", alignItems: "center", justifyContent: "center",
-      padding: 16,
+      padding: "clamp(6px, 2vw, 16px)",
     }}>
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.96 }}
         style={{
-          width: "100%", maxWidth: mode === "active" ? 980 : 860,
-          maxHeight: "92vh",
+          width: "100%", maxWidth: mode === "active" ? 1000 : 860,
+          height: mode === "active" ? "min(94vh, 900px)" : "auto",
+          maxHeight: "96vh",
           background: "#ffffff",
-          borderRadius: 20,
-          boxShadow: "0 25px 60px -15px rgba(0,0,0,0.3)",
+          borderRadius: "clamp(14px, 2vw, 20px)",
+          boxShadow: "0 25px 60px -15px rgba(0,0,0,0.35)",
           display: "flex", flexDirection: "column",
           overflow: "hidden",
           border: "1px solid #e2e8f0",
@@ -305,10 +615,11 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
       >
         {/* Modal Header */}
         <div style={{
-          padding: "16px 24px",
+          padding: "clamp(12px, 2vw, 16px) clamp(16px, 3vw, 24px)",
           background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
           color: "#ffffff",
           display: "flex", alignItems: "center", justifyContent: "space-between",
+          flexWrap: "wrap", gap: 10,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div style={{
@@ -607,45 +918,59 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                       </span>
                     </div>
 
-                    <div style={{ fontSize: 15, fontWeight: 600, color: "#1e293b", lineHeight: 1.6, marginBottom: 20 }}>
-                      <span style={{ fontWeight: 800, marginRight: 8 }}>Q{currentIdx + 1}.</span>
-                      <MathText text={currentQ.statement} />
-                    </div>
+                    <QuestionStatementViewer statement={currentQ.statement} qNumber={currentIdx + 1} />
 
                     {/* Options */}
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10, marginBottom: 20 }}>
-                      {currentQ.options.map((opt) => {
-                        const isSelected = chosenOption === opt.key;
-                        return (
-                          <div
-                            key={opt.key}
-                            onClick={() => {
-                              setAnswers((prev) => ({ ...prev, [currentQ.id]: opt.key }));
-                            }}
-                            style={{
-                              display: "flex", alignItems: "center", gap: 12,
-                              padding: "12px 16px", borderRadius: 10,
-                              border: `2px solid ${isSelected ? "#2563eb" : "#e2e8f0"}`,
-                              background: isSelected ? "#eff6ff" : "#ffffff",
-                              cursor: "pointer", transition: "all 0.15s ease"
-                            }}
-                          >
-                            <span style={{
-                              width: 26, height: 26, borderRadius: "50%",
-                              background: isSelected ? "#2563eb" : "#f1f5f9",
-                              color: isSelected ? "#ffffff" : "#475569",
-                              fontWeight: 700, fontSize: 12, display: "flex",
-                              alignItems: "center", justifyContent: "center"
-                            }}>
-                              {opt.key}
-                            </span>
-                            <div style={{ fontSize: 14, color: "#334155", flex: 1 }}>
-                              <MathText text={opt.text} />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                    {(() => {
+                      const isMatchQ = !!parseMatchListQuestion(currentQ.statement) || currentQ.options.some((o) => !!parseMatchOption(o.text));
+                      return (
+                        <div style={{
+                          display: "grid",
+                          gridTemplateColumns: isMatchQ ? "repeat(auto-fit, minmax(280px, 1fr))" : "1fr",
+                          gap: 10,
+                          marginBottom: 20,
+                        }}>
+                          {currentQ.options.map((opt) => {
+                            const isSelected = chosenOption === opt.key;
+                            const matchPairs = parseMatchOption(opt.text);
+                            return (
+                              <div
+                                key={opt.key}
+                                onClick={() => {
+                                  setAnswers((prev) => ({ ...prev, [currentQ.id]: opt.key }));
+                                }}
+                                style={{
+                                  display: "flex", alignItems: "center", gap: 12,
+                                  padding: "12px 16px", borderRadius: 10,
+                                  border: `2px solid ${isSelected ? "#2563eb" : "#e2e8f0"}`,
+                                  background: isSelected ? "#eff6ff" : "#ffffff",
+                                  cursor: "pointer", transition: "all 0.15s ease",
+                                  boxShadow: isSelected ? "0 4px 12px rgba(37,99,235,0.12)" : "none",
+                                }}
+                              >
+                                <span style={{
+                                  width: 28, height: 28, borderRadius: "50%",
+                                  background: isSelected ? "#2563eb" : "#f1f5f9",
+                                  color: isSelected ? "#ffffff" : "#475569",
+                                  fontWeight: 800, fontSize: 13, display: "flex",
+                                  alignItems: "center", justifyContent: "center",
+                                  flexShrink: 0,
+                                }}>
+                                  {opt.key}
+                                </span>
+                                <div style={{ fontSize: 14, color: "#334155", flex: 1 }}>
+                                  {matchPairs ? (
+                                    <MatchOptionPill pairs={matchPairs} isSelected={isSelected} />
+                                  ) : (
+                                    <MathText text={opt.text} />
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
 
                     {/* Question Actions */}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f1f5f9", paddingTop: 14 }}>
@@ -844,39 +1169,54 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                         </span>
                       </div>
 
-                      <div style={{ fontSize: 14, color: "#1e293b", fontWeight: 600, marginBottom: 12, lineHeight: 1.5 }}>
-                        <MathText text={q.statement} />
-                      </div>
+                      <QuestionStatementViewer statement={q.statement} />
 
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
-                        {q.options.map((opt) => {
-                          const isKey = opt.key === q.correct;
-                          const isStudentPick = opt.key === q.studentAnswer;
-                          let borderCol = "#e2e8f0";
-                          let bgCol = "#ffffff";
-                          if (isKey) {
-                            borderCol = "#22c55e"; bgCol = "#dcfce7";
-                          } else if (isStudentPick && !isKey) {
-                            borderCol = "#ef4444"; bgCol = "#fee2e2";
-                          }
+                      {(() => {
+                        const isMatchQ = !!parseMatchListQuestion(q.statement) || q.options.some((o) => !!parseMatchOption(o.text));
+                        return (
+                          <div style={{
+                            display: "grid",
+                            gridTemplateColumns: isMatchQ ? "repeat(auto-fit, minmax(280px, 1fr))" : "1fr 1fr",
+                            gap: 8,
+                            marginBottom: 12,
+                          }}>
+                            {q.options.map((opt) => {
+                              const isKey = opt.key === q.correct;
+                              const isStudentPick = opt.key === q.studentAnswer;
+                              const matchPairs = parseMatchOption(opt.text);
+                              let borderCol = "#e2e8f0";
+                              let bgCol = "#ffffff";
+                              if (isKey) {
+                                borderCol = "#22c55e"; bgCol = "#dcfce7";
+                              } else if (isStudentPick && !isKey) {
+                                borderCol = "#ef4444"; bgCol = "#fee2e2";
+                              }
 
-                          return (
-                            <div
-                              key={opt.key}
-                              style={{
-                                padding: "8px 12px", borderRadius: 8,
-                                border: `1.5px solid ${borderCol}`, background: bgCol,
-                                fontSize: 13, display: "flex", alignItems: "center", gap: 8
-                              }}
-                            >
-                              <strong>({opt.key})</strong>
-                              <MathText text={opt.text} />
-                              {isKey && <span style={{ marginLeft: "auto", fontSize: 11, color: "#16a34a", fontWeight: 700 }}>✓ Key</span>}
-                              {isStudentPick && !isKey && <span style={{ marginLeft: "auto", fontSize: 11, color: "#dc2626", fontWeight: 700 }}>✗ Your Choice</span>}
-                            </div>
-                          );
-                        })}
-                      </div>
+                              return (
+                                <div
+                                  key={opt.key}
+                                  style={{
+                                    padding: "10px 14px", borderRadius: 8,
+                                    border: `1.5px solid ${borderCol}`, background: bgCol,
+                                    fontSize: 13, display: "flex", alignItems: "center", gap: 8,
+                                  }}
+                                >
+                                  <strong>({opt.key})</strong>
+                                  <div style={{ flex: 1 }}>
+                                    {matchPairs ? (
+                                      <MatchOptionPill pairs={matchPairs} isSelected={isKey || isStudentPick} />
+                                    ) : (
+                                      <MathText text={opt.text} />
+                                    )}
+                                  </div>
+                                  {isKey && <span style={{ marginLeft: "auto", fontSize: 11, color: "#16a34a", fontWeight: 700, flexShrink: 0 }}>✓ Key</span>}
+                                  {isStudentPick && !isKey && <span style={{ marginLeft: "auto", fontSize: 11, color: "#dc2626", fontWeight: 700, flexShrink: 0 }}>✗ Your Choice</span>}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })()}
 
                       {q.explanation && (
                         <div style={{
@@ -945,16 +1285,49 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                           {fullQ.difficulty} · {fullQ.topic}
                         </span>
                       </div>
-                      <div style={{ fontSize: 14, color: "#1e293b", marginBottom: 10 }}>
-                        <MathText text={fullQ.statement} />
+                      <div style={{ marginBottom: 12 }}>
+                        <QuestionStatementViewer statement={fullQ.statement} />
                       </div>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 10 }}>
-                        {fullQ.options.map((opt) => (
-                          <div key={opt.key} style={{ fontSize: 13, color: opt.key === fullQ.correct ? "#16a34a" : "#475569", fontWeight: opt.key === fullQ.correct ? 700 : 400 }}>
-                            ({opt.key}) <MathText text={opt.text} /> {opt.key === fullQ.correct && "✓ (Answer Key)"}
+                      {(() => {
+                        const isMatchQ = !!parseMatchListQuestion(fullQ.statement) || fullQ.options.some((o) => !!parseMatchOption(o.text));
+                        return (
+                          <div style={{
+                            display: "grid",
+                            gridTemplateColumns: isMatchQ ? "repeat(auto-fit, minmax(280px, 1fr))" : "1fr 1fr",
+                            gap: 8,
+                            marginBottom: 10,
+                          }}>
+                            {fullQ.options.map((opt) => {
+                              const matchPairs = parseMatchOption(opt.text);
+                              const isCorrectOpt = opt.key === fullQ.correct;
+                              return (
+                                <div
+                                  key={opt.key}
+                                  style={{
+                                    fontSize: 13,
+                                    color: isCorrectOpt ? "#16a34a" : "#475569",
+                                    fontWeight: isCorrectOpt ? 700 : 400,
+                                    display: "flex", alignItems: "center", gap: 8,
+                                    padding: "8px 12px", borderRadius: 8,
+                                    border: `1px solid ${isCorrectOpt ? "#86efac" : "#e2e8f0"}`,
+                                    background: isCorrectOpt ? "#f0fdf4" : "#ffffff",
+                                  }}
+                                >
+                                  <strong>({opt.key})</strong>
+                                  <div style={{ flex: 1 }}>
+                                    {matchPairs ? (
+                                      <MatchOptionPill pairs={matchPairs} isSelected={isCorrectOpt} />
+                                    ) : (
+                                      <MathText text={opt.text} />
+                                    )}
+                                  </div>
+                                  {isCorrectOpt && <span style={{ marginLeft: "auto", fontSize: 11, color: "#16a34a", fontWeight: 700, flexShrink: 0 }}>✓ (Answer Key)</span>}
+                                </div>
+                              );
+                            })}
                           </div>
-                        ))}
-                      </div>
+                        );
+                      })()}
                       {fullQ.explanation && (
                         <div style={{ fontSize: 12, color: "#64748b", background: "#f8fafc", padding: 8, borderRadius: 6 }}>
                           <strong>Answer Key: ({fullQ.correct})</strong> — {fullQ.explanation}

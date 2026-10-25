@@ -6,19 +6,19 @@
     "options": [
       {
         "key": "A",
-        "text": "200α"
+        "text": "$1\\alpha$"
       },
       {
         "key": "B",
-        "text": "400α"
+        "text": "$1\\alpha$"
       },
       {
         "key": "C",
-        "text": "300α"
+        "text": "$1\\alpha$"
       },
       {
         "key": "D",
-        "text": "500α"
+        "text": "$1\\alpha$"
       }
     ],
     "correct": "B",
@@ -34,7 +34,7 @@
   {
     "id": "units-q-002",
     "qno": 2,
-    "statement": "Consider the equation H=((x^(p)ε^(q)E^(r)) / (t^(s))) Where H = magnetic field intensity, E = electric field, ε = permittivity, x = distance, t = time. The values of p, q, r and s respectively are :",
+    "statement": "Consider the equation $H = \\frac{x^p \\varepsilon^q E^r}{t^s}$ Where H = magnetic field intensity, E = electric field, ε = permittivity, x = distance, t = time. The values of p, q, r and s respectively are :",
     "options": [
       {
         "key": "A",
@@ -66,7 +66,7 @@
   {
     "id": "units-q-003",
     "qno": 3,
-    "statement": "The percentage error in the calculated volume of a sphere, if there is 2\\% error in its diameter measurement, is ____ .",
+    "statement": "The percentage error in the calculated volume of a sphere, if there is 2% error in its diameter measurement, is ____ .",
     "options": [
       {
         "key": "A",
@@ -98,7 +98,7 @@
   {
     "id": "units-q-004",
     "qno": 4,
-    "statement": "Match List - I with List - II. List - I A. Boltzmann constant B. Stefan's constant C. Planck's constant D. Gravitational constant List - II I. [{M}^(-1){L}^(3){T}^(-2)] II. [{M L}^(2){T}^(-1)] III. [{ML}^(2){T}^(-2){K}^(-1)] IV. [{M L}^(0){T}^(-3){K}^(-4)] Choose the correct answer from the options given below :",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Boltzmann constant | **(I)** $[M^{-1}\\ L^{3}\\ T^{-2}]$ |\n| **(B)** Stefan's constant | **(II)** $[M\\ L^{2}\\ T^{-1}]$ |\n| **(C)** Planck's constant | **(III)** $[M\\ L^{2}\\ T^{-2}\\ K^{-1}]$ |\n| **(D)** Gravitational constant | **(IV)** $[M\\ L^{0}\\ T^{-3}\\ K^{-4}]$ |\n\nChoose the correct answer from the options given below :",
     "options": [
       {
         "key": "A",
@@ -162,23 +162,23 @@
   {
     "id": "units-q-006",
     "qno": 6,
-    "statement": "The potential energy of a particle changes with distance x from a fixed origin as V=((A√{x}) / (x+B)), where A and B are constants with appropriate dimensions. The dimensions of AB are ____",
+    "statement": "The potential energy of a particle changes with distance x from a fixed origin as $V = \\frac{A\\sqrt{x}}{x + B}$, where A and B are constants with appropriate dimensions. The dimensions of AB are ____",
     "options": [
       {
         "key": "A",
-        "text": "[{M}^(1){L}^(5/2){T}^(-2)]"
+        "text": "$[M\\ L^{5/2}\\ T^{-2}]$"
       },
       {
         "key": "B",
-        "text": "[{M}^(3/2){L}^(5/2){T}^(-2)]"
+        "text": "$[M^{3/2}\\ L^{5/2}\\ T^{-2}]$"
       },
       {
         "key": "C",
-        "text": "[{M}^(1){L}^(2){T}^(-2)]"
+        "text": "$[M\\ L^{2}\\ T^{-2}]$"
       },
       {
         "key": "D",
-        "text": "[{M}^(1){L}^(7/2){T}^(-2)]"
+        "text": "$[M\\ L^{7/2}\\ T^{-2}]$"
       }
     ],
     "correct": "D",
@@ -194,7 +194,7 @@
   {
     "id": "units-q-007",
     "qno": 7,
-    "statement": "Match List - I with List - II. List - I A. Meter (L) B. Second (S) C. Kilogram (M) D. Kelvin (K) List - II I. √{((hc) / (G))} II. √{((Gh) / (c^(5)))} III. √{((hc^(5)) / (Gk^(2)))} IV. √{((Gh) / (c^(3)))} where h (Planck's constant), G (gravitational constant) and c (speed of light in vacuum) as fundamental units. Choose the correct answer from the options given below :",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Meter (L) | **(I)** $\\sqrt{\\frac{h c}{G}}$ |\n| **(B)** Second (S) | **(II)** $\\sqrt{\\frac{G h}{c^5}}$ |\n| **(C)** Kilogram (M) | **(III)** $\\sqrt{\\frac{h c^5}{G k^2}}$ |\n| **(D)** Kelvin (K) | **(IV)** $\\sqrt{\\frac{G h}{c^3}}$ |\n\nwhere h (Planck's constant), G (gravitational constant) and c (speed of light in vacuum) as fundamental units. Choose the correct answer from the options given below :",
     "options": [
       {
         "key": "A",
@@ -258,7 +258,7 @@
   {
     "id": "units-q-009",
     "qno": 9,
-    "statement": "In a Vernier calipers, when both jaws touch each other, zero of the Vernier scale is shifted to the right of zero of the main scale and 7^(th) Vernier division coincides with a main scale reading. If the value of 1 main scale division is 1 mm and there are 10 Vernier scale divisions, then the Vernier caliper has",
+    "statement": "In a Vernier calipers, when both jaws touch each other, zero of the Vernier scale is shifted to the right of zero of the main scale and 7th Vernier division coincides with a main scale reading. If the value of 1 main scale division is 1 mm and there are 10 Vernier scale divisions, then the Vernier caliper has",
     "options": [
       {
         "key": "A",
@@ -290,23 +290,23 @@
   {
     "id": "units-q-010",
     "qno": 10,
-    "statement": "L, C and R represents physical quantities inductance, capacitance and resistance respectively. The dimensional formula {ML}^(2){T}^(-4){A}^(-2) corresponds to ____ .",
+    "statement": "L, C and R represents physical quantities inductance, capacitance and resistance respectively. The dimensional formula $[M\\ L^2\\ T^{-4}\\ A^{-2}]$ corresponds to ____ .",
     "options": [
       {
         "key": "A",
-        "text": "((R) / (√{LC}))"
+        "text": "$\\frac{R}{\\sqrt{LC}}$"
       },
       {
         "key": "B",
-        "text": "((R) / (LC))"
+        "text": "$\\frac{R}{LC}$"
       },
       {
         "key": "C",
-        "text": "((C) / (√{LR}))"
+        "text": "$\\frac{C}{\\sqrt{LR}}$"
       },
       {
         "key": "D",
-        "text": "((1) / (R))√{((L) / (C))}"
+        "text": "$\\frac{1}{R}\\sqrt{\\frac{L}{C}}$"
       }
     ],
     "correct": "A",
@@ -322,7 +322,7 @@
   {
     "id": "units-q-011",
     "qno": 11,
-    "statement": "Match the LIST-I with LIST-II List - I A. Planck's constant B. Stopping potential C. Work function D. Threshold frequency List - II I. {ML}^(2){T}^(-2) II. {T}^(-1) III. {ML}^(2){T}^(-1) IV. {ML}^(2){T}^(-3){A}^(-1) Choose the correct answer from the options given below:",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Planck's constant | **(I)** $[M\\ L^{2}\\ T^{-2}]$ |\n| **(B)** Stopping potential | **(II)** $[T^{-1}]$ |\n| **(C)** Work function | **(III)** $[M\\ L^{2}\\ T^{-1}]$ |\n| **(D)** Threshold frequency | **(IV)** $[M\\ L^{2}\\ T^{-3}\\ A^{-1}]$ |\n\nChoose the correct answer from the options given below:",
     "options": [
       {
         "key": "A",
@@ -354,23 +354,23 @@
   {
     "id": "units-q-012",
     "qno": 12,
-    "statement": "In a screw gauge when the circular scale is given five complete rotations it moves linearly by 2.5 mm. If the circular scale has 100 divisions, the least count of screw gauge is ____(m)m.",
+    "statement": "In a screw gauge when the circular scale is given five complete rotations it moves linearly by 2.5 mm. If the circular scale has 100 divisions, the least count of screw gauge is ____ mm.",
     "options": [
       {
         "key": "A",
-        "text": "1×10^(-2)"
+        "text": "$1 \\times 10^{-2}$"
       },
       {
         "key": "B",
-        "text": "1×10^(-3)"
+        "text": "$1 \\times 10^{-3}$"
       },
       {
         "key": "C",
-        "text": "5×10^(-2)"
+        "text": "$1 \\times 10^{-2}$"
       },
       {
         "key": "D",
-        "text": "5×10^(-3)"
+        "text": "$1 \\times 10^{-3}$"
       }
     ],
     "correct": "D",
@@ -390,19 +390,19 @@
     "options": [
       {
         "key": "A",
-        "text": "[hTLM^(-2)]"
+        "text": "$[h\\ T\\ L\\ M^{-2}]$"
       },
       {
         "key": "B",
-        "text": "[hT^(-1)LM^(-2)]"
+        "text": "$[h\\ T^{-1}\\ L\\ M^{-2}]$"
       },
       {
         "key": "C",
-        "text": "[hTL^(2)M^(-2)]"
+        "text": "$[h\\ T\\ L^{2}\\ M^{-2}]$"
       },
       {
         "key": "D",
-        "text": "[h^(-1)T^(-1)LM^(-2)]"
+        "text": "$[h^{-1}\\ T^{-1}\\ L\\ M^{-2}]$"
       }
     ],
     "correct": "B",
@@ -418,7 +418,7 @@
   {
     "id": "units-q-014",
     "qno": 14,
-    "statement": "In a screw gauge the zero of main scale reference line coincides with the fifth division of the circular scale when two studs are in contact. There are 100 divisions in circular scale and pitch of screw gauge is 0.1 mm. When diameter of a sphere is measured, the reading of main scale is 5 mm and 50^(th) division of circular scale coincides with the reference line of main scale. The diameter of sphere is ______(m)m.",
+    "statement": "In a screw gauge the zero of main scale reference line coincides with the fifth division of the circular scale when two studs are in contact. There are 100 divisions in circular scale and pitch of screw gauge is 0.1 mm. When diameter of a sphere is measured, the reading of main scale is 5 mm and 50th division of circular scale coincides with the reference line of main scale. The diameter of sphere is ____ mm.",
     "options": [
       {
         "key": "A",
@@ -450,7 +450,7 @@
   {
     "id": "units-q-015",
     "qno": 15,
-    "statement": "The dimensional formula of ((1) / (2))ε₀E^(2) (ε₀ = permittivity of vacuum and E = electric field) is M^(a)L^(b)T^(c). The value of 2a-b+c= ________.",
+    "statement": "The dimensional formula of $\\frac{1}{2}\\varepsilon_0 E^2$ (ε₀ = permittivity of vacuum and E = electric field) is $[M^a L^b T^c]$. The value of $2a - b + c =$ ________.",
     "options": [
       {
         "key": "A",
@@ -482,7 +482,7 @@
   {
     "id": "units-q-016",
     "qno": 16,
-    "statement": "The diameter of a wire measured by a screw gauge of least count 0.001 cm is 0.08 cm. The length measured by a scale of least count 0.1 cm is 150 cm. When a weight of 100 N is applied to the wire, the extension in length is 0.5 cm, measured by a micrometer of least count 0.001 cm. The error in the measured Young's modulus is α×10^(9) {N/m^(2)}. The value of α is ________. (Ignore the contribution of the load to Young's modulus error calculation)",
+    "statement": "The diameter of a wire measured by a screw gauge of least count 0.001 cm is 0.08 cm. The length measured by a scale of least count 0.1 cm is 150 cm. When a weight of 100 N is applied to the wire, the extension in length is 0.5 cm, measured by a micrometer of least count 0.001 cm. The error in the measured Young's modulus is α×10^(9) \\text{ N/m}^2. The value of α is ________. (Ignore the contribution of the load to Young's modulus error calculation)",
     "options": [
       {
         "key": "A",
@@ -514,7 +514,7 @@
   {
     "id": "units-q-017",
     "qno": 17,
-    "statement": "The time period of a simple harmonic oscillator is T=2π√{((m) / (k))}. Measured value of mass (m) of the object is 10 g with an accuracy of 10 mg and time for 50 oscillations of the spring is found to be 60 s using a watch of 2 s resolution. Percentage error in determination of spring constant (k) is ________%.",
+    "statement": "The time period of a simple harmonic oscillator is $T = 2\\pi\\sqrt{\\frac{m}{k}}$. Measured value of mass (m) of the object is 10 g with an accuracy of 10 mg and time for 50 oscillations of the spring is found to be 60 s using a watch of 2 s resolution. Percentage error in determination of spring constant (k) is ________%.",
     "options": [
       {
         "key": "A",
@@ -546,7 +546,7 @@
   {
     "id": "units-q-018",
     "qno": 18,
-    "statement": "The speed of a longitudinal wave in a metallic bar is 400 m/s. If the density and Young's modulus of the bar material are increased by 0.5% and 1%, respectively then the speed of the wave is changed approximately to ______(m)/s.",
+    "statement": "The speed of a longitudinal wave in a metallic bar is 400 m/s. If the density and Young's modulus of the bar material are increased by 0.5% and 1%, respectively then the speed of the wave is changed approximately to ____ m/s.",
     "options": [
       {
         "key": "A",
@@ -578,7 +578,7 @@
   {
     "id": "units-q-019",
     "qno": 19,
-    "statement": "Match List - I with List - II. List - I A. Coefficient of viscosity B. Surface tension C. Pressure D. Surface energy List - II I. [ML^(-1)T^(-2)] II. [ML^(2)T^(-2)] III. [ML^(0)T^(-2)] IV. [ML^(-1)T^(-1)] Choose the correct answer from the options given below :",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Coefficient of viscosity | **(I)** $[M\\ L^{-1}\\ T^{-2}]$ |\n| **(B)** Surface tension | **(II)** $[M\\ L^{2}\\ T^{-2}]$ |\n| **(C)** Pressure | **(III)** $[M\\ L^{0}\\ T^{-2}]$ |\n| **(D)** Surface energy | **(IV)** $[M\\ L^{-1}\\ T^{-1}]$ |\n\nChoose the correct answer from the options given below :",
     "options": [
       {
         "key": "A",
@@ -610,7 +610,7 @@
   {
     "id": "units-q-020",
     "qno": 20,
-    "statement": "In an experiment, a set of readings are obtained as follows: 1.24 mm, 1.25 mm, 1.23 mm, 1.21 mm. The expected least count of the instrument used in recording these readings is _______(m)m.",
+    "statement": "In an experiment, a set of readings are obtained as follows: 1.24 mm, 1.25 mm, 1.23 mm, 1.21 mm. The expected least count of the instrument used in recording these readings is ____ mm.",
     "options": [
       {
         "key": "A",
@@ -642,7 +642,7 @@
   {
     "id": "units-q-021",
     "qno": 21,
-    "statement": "When both jaws of vernier callipers touch each other, zero mark of the vernier scale is right to zero mark of main scale, 4^(th) mark on vernier scale coincides with certain mark on the main scale. While measuring the length of a cylinder, observer observes 15 divisions on main scale and 5^(th) division of vernier scale coincides with a main scale division. Measured length of cylinder is ____(m)m. (Least count of Vernier calliper = 0.1\\ {mm})",
+    "statement": "When both jaws of vernier callipers touch each other, zero mark of the vernier scale is right to zero mark of main scale, 4th mark on vernier scale coincides with certain mark on the main scale. While measuring the length of a cylinder, observer observes 15 divisions on main scale and 5th division of vernier scale coincides with a main scale division. Measured length of cylinder is ____ mm. (Least count of Vernier calliper = 0.1 mm)",
     "options": [
       {
         "key": "A",
@@ -674,7 +674,7 @@
   {
     "id": "units-q-022",
     "qno": 22,
-    "statement": "In a vernier callipers, 50 vernier scale divisions are equal to 48 main scale divisions. If one main scale division = 0.05\\ {mm}, then the least count of the vernier callipers is ____(m)m.",
+    "statement": "In a vernier callipers, 50 vernier scale divisions are equal to 48 main scale divisions. If one main scale division = 0.05 mm, then the least count of the vernier callipers is ____ mm.",
     "options": [
       {
         "key": "A",
@@ -706,7 +706,7 @@
   {
     "id": "units-q-023",
     "qno": 23,
-    "statement": "Match the LIST-I with LIST-II List-I A. Magnetic induction B. Magnetic flux C. Magnetic permeability D. Self inductance List-II I. MLT^(-2)A^(-2) II. ML^(2)T^(-2)A^(-2) III. ML^(0)T^(-2)A^(-1) IV. ML^(2)T^(-2)A^(-1) Choose the correct answer from the options given below:",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Magnetic induction | **(I)** $[M\\ L\\ T^{-2}\\ A^{-2}]$ |\n| **(B)** Magnetic flux | **(II)** $[M\\ L^{2}\\ T^{-2}\\ A^{-2}]$ |\n| **(C)** Magnetic permeability | **(III)** $[M\\ L^{0}\\ T^{-2}\\ A^{-1}]$ |\n| **(D)** Self inductance | **(IV)** $[M\\ L^{2}\\ T^{-2}\\ A^{-1}]$ |\n\nChoose the correct answer from the options given below:",
     "options": [
       {
         "key": "A",
@@ -738,7 +738,7 @@
   {
     "id": "units-q-024",
     "qno": 24,
-    "statement": "In a screw gauge, the zero of the circular scale lies 3 divisions above the horizontal pitch line when their metallic studs are brought in contact. Using this instrument thickness of a sheet is measured. If pitch scale reading is 1 mm and the circular scale reading is 51 then the correct thickness of the sheet is ____(m)m. [Assume least count is 0.01 mm]",
+    "statement": "In a screw gauge, the zero of the circular scale lies 3 divisions above the horizontal pitch line when their metallic studs are brought in contact. Using this instrument thickness of a sheet is measured. If pitch scale reading is 1 mm and the circular scale reading is 51 then the correct thickness of the sheet is ____ mm. [Assume least count is 0.01 mm]",
     "options": [
       {
         "key": "A",
@@ -770,7 +770,7 @@
   {
     "id": "units-q-025",
     "qno": 25,
-    "statement": "Four persons measure the length of a rod as 20.00\\ {cm}, 19.75\\ {cm}, 17.01\\ {cm} and 18.25 cm. The relative error in the measurement of average length of the rod is :",
+    "statement": "Four persons measure the length of a rod as 20.00 cm, 19.75 cm, 17.01 cm and 18.25 cm. The relative error in the measurement of average length of the rod is :",
     "options": [
       {
         "key": "A",
@@ -802,7 +802,7 @@
   {
     "id": "units-q-026",
     "qno": 26,
-    "statement": "If ε, E and t represent the free space permittivity, electric field and time respectively, then the unit of ((ε E) / (t)) will be :",
+    "statement": "If ε, E and t represent the free space permittivity, electric field and time respectively, then the unit of $\\frac{\\varepsilon E}{t}$ will be :",
     "options": [
       {
         "key": "A",
@@ -810,15 +810,15 @@
       },
       {
         "key": "B",
-        "text": "{A/m}"
+        "text": "\\text{A/m}"
       },
       {
         "key": "C",
-        "text": "{A/m^(2)}"
+        "text": "\\text{A/m}^2"
       },
       {
         "key": "D",
-        "text": "{Am^(2)}"
+        "text": "\\text{A}\\cdot\\text{m}^2"
       }
     ],
     "correct": "C",
@@ -834,7 +834,7 @@
   {
     "id": "units-q-027",
     "qno": 27,
-    "statement": "Match the LIST-I with LIST-II List-I A. Spring constant B. Thermal conductivity C. Boltzmann constant D. Inductive reactance List-II I. ML^(2)T^(-2)K^(-1) II. ML^(0)T^(-2) III. ML^(2)T^(-3)A^(-2) IV. MLT^(-3)K^(-1) Choose the correct answer from the options given below:",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Spring constant | **(I)** $[M\\ L^{2}\\ T^{-2}\\ K^{-1}]$ |\n| **(B)** Thermal conductivity | **(II)** $[M\\ L^{0}\\ T^{-2}]$ |\n| **(C)** Boltzmann constant | **(III)** $[M\\ L^{2}\\ T^{-3}\\ A^{-2}]$ |\n| **(D)** Inductive reactance | **(IV)** $[M\\ L\\ T^{-3}\\ K^{-1}]$ |\n\nChoose the correct answer from the options given below:",
     "options": [
       {
         "key": "A",
@@ -870,19 +870,19 @@
     "options": [
       {
         "key": "A",
-        "text": "2[((Δ r) / (r))-((Δ v_(0)) / (v_(0)))]"
+        "text": "$2\\left[\\frac{\\Delta r}{r} - \\frac{\\Delta v_0}{v_0}\\right]$"
       },
       {
         "key": "B",
-        "text": "2[((Δ r) / (r))+((Δ v_(0)) / (v_(0)))]"
+        "text": "$2\\left[\\frac{\\Delta r}{r} + \\frac{\\Delta v_0}{v_0}\\right]$"
       },
       {
         "key": "C",
-        "text": "((2Δ r) / (r))+((Δ v_(0)) / (v_(0)))"
+        "text": "$\\frac{2\\Delta r}{r} + \\frac{\\Delta v_0}{v_0}$"
       },
       {
         "key": "D",
-        "text": "2((Δ r) / (r))-((Δ v_(0)) / (v_(0)))"
+        "text": "$2\\left(\\frac{\\Delta r}{r}\\right) - \\frac{\\Delta v_0}{v_0}$"
       }
     ],
     "correct": "C",
@@ -930,7 +930,7 @@
   {
     "id": "units-q-030",
     "qno": 30,
-    "statement": "In an experiment the values of two spring constants were measured as k_(1)=(10±0.2){N/m} and k_(2)=(20±0.3){N/m}. If these springs are connected in parallel, then the percentage error in equivalent spring constant is :",
+    "statement": "In an experiment the values of two spring constants were measured as $k_1 = (10 \\pm 0.2)\\text{ N/m}$ and $k_2 = (20 \\pm 0.3)\\text{ N/m}$. If these springs are connected in parallel, then the percentage error in equivalent spring constant is :",
     "options": [
       {
         "key": "A",
@@ -938,7 +938,7 @@
       },
       {
         "key": "B",
-        "text": "2.67\\%"
+        "text": "2.67%"
       },
       {
         "key": "C",
@@ -946,7 +946,7 @@
       },
       {
         "key": "D",
-        "text": "2.33\\%"
+        "text": "2.33%"
       }
     ],
     "correct": "C",
@@ -962,23 +962,23 @@
   {
     "id": "units-q-031",
     "qno": 31,
-    "statement": "Consider a modified Bernoulli equation. ({P}+((A) / (Bt^(2))))+ρ g(h+Bt)+((1) / (2))ρ V^(2)= constant If t has the dimension of time then the dimensions of A and B are ____ , ____(r)espectively.",
+    "statement": "Consider a modified Bernoulli equation. $\\left(P + \\frac{A}{B t^2}\\right) + \\rho g(h + B t) + \\frac{1}{2}\\rho V^2 = \\text{constant}$ If t has the dimension of time then the dimensions of A and B are ____ , ____, respectively.",
     "options": [
       {
         "key": "A",
-        "text": "[{ML}^(0){T}^(-1)] and [{M}^(0){LT}]"
+        "text": "$[M\\ L^{0}\\ T^{-1}]$ and $[M^{0}\\ L\\ T]$"
       },
       {
         "key": "B",
-        "text": "[{ML}^(0){T}^(-2)] and [{M}^(0){LT}^(-1)]"
+        "text": "$[M\\ L^{0}\\ T^{-2}]$ and $[M^{0}\\ L\\ T^{-1}]$"
       },
       {
         "key": "C",
-        "text": "[{ML}^(0){T}^(-2)] and [{M}^(0){LT}^(-2)]"
+        "text": "$[M\\ L^{0}\\ T^{-2}]$ and $[M^{0}\\ L\\ T^{-2}]$"
       },
       {
         "key": "D",
-        "text": "[{ML}^(0){T}^(-1)] and [{M}^(0){LT}^(-1)]"
+        "text": "$[M\\ L^{0}\\ T^{-1}]$ and $[M^{0}\\ L\\ T^{-1}]$"
       }
     ],
     "correct": "D",
@@ -994,7 +994,7 @@
   {
     "id": "units-q-032",
     "qno": 32,
-    "statement": "A quantity Q is formulated as X^(-2)Y^(+((3) / (2)))Z^(-((2) / (5))). X, Y, and Z are independent parameters which have fractional errors of 0.1, 0.2, and 0.5, respectively in measurement. The maximum fractional error of Q is",
+    "statement": "A quantity Q is formulated as $X^{-2} Y^{3/2} Z^{-2/5}$. X, Y, and Z are independent parameters which have fractional errors of 0.1, 0.2, and 0.5, respectively in measurement. The maximum fractional error of Q is",
     "options": [
       {
         "key": "A",
@@ -1026,7 +1026,7 @@
   {
     "id": "units-q-033",
     "qno": 33,
-    "statement": "The dimension of √{((μ₀) / (ε₀))} is equal to that of: (μ₀ = Vacuum permeability and ε₀ = Vacuum permittivity)",
+    "statement": "The dimension of $\\sqrt{\\frac{\\mu_0}{\\varepsilon_0}}$ is equal to that of: ($\\mu_0$ = Vacuum permeability and $\\varepsilon_0$ = Vacuum permittivity)",
     "options": [
       {
         "key": "A",
@@ -1058,7 +1058,7 @@
   {
     "id": "units-q-034",
     "qno": 34,
-    "statement": "Match List - I with List - II. List - I (A) Mass density (B) Impulse (C) Power (D) Moment of inertia List - II (I) [ML^(2)T^(-3)] (II) [MLT^(-1)] (III) [ML^(2)T^(0)] (IV) [ML^(-3)T^(0)] Choose the correct answer from the options given below :",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Mass density | **(I)** $[M\\ L^{2}\\ T^{-3}]$ |\n| **(B)** Impulse | **(II)** $[M\\ L\\ T^{-1}]$ |\n| **(C)** Power | **(III)** $[M\\ L^{2}\\ T^{0}]$ |\n| **(D)** Moment of inertia | **(IV)** $[M\\ L^{-3}\\ T^{0}]$ |\n\nChoose the correct answer from the options given below :",
     "options": [
       {
         "key": "A",
@@ -1090,7 +1090,7 @@
   {
     "id": "units-q-035",
     "qno": 35,
-    "statement": "In an electromagnetic system, a quantity defined as the ratio of electric dipole moment and magnetic dipole moment has dimension of [{M}^(P){L}^(Q){T}^(R)A^(S)]. The value of P and Q are :",
+    "statement": "In an electromagnetic system, a quantity defined as the ratio of electric dipole moment and magnetic dipole moment has dimension of $[M^P\\ L^Q\\ T^R\\ A^S]$. The value of P and Q are :",
     "options": [
       {
         "key": "A",
@@ -1154,7 +1154,7 @@
   {
     "id": "units-q-037",
     "qno": 37,
-    "statement": "In an electromagnetic system, the quantity representing the ratio of electric flux and magnetic flux has dimension of M^(P)L^(Q)T^(R)A^(S), where value of 'Q' and 'R' are",
+    "statement": "In an electromagnetic system, the quantity representing the ratio of electric flux and magnetic flux has dimension of $[M^P\\ L^Q\\ T^R\\ A^S]$, where value of 'Q' and 'R' are",
     "options": [
       {
         "key": "A",
@@ -1186,7 +1186,7 @@
   {
     "id": "units-q-038",
     "qno": 38,
-    "statement": "Match the LIST-I with LIST-II LIST-I A. Boltzmann constant B. Coefficient of viscosity C. Planck's constant D. Thermal conductivity LIST-II I. {ML}^(2){T}^(-1) II. {MLT}^(-3){K}^(-1) III. {ML}^(2){T}^(-2){K}^(-1) IV. {ML}^(-1){T}^(-1) Choose the correct answer from the options given below:",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Boltzmann constant | **(I)** $[M\\ L^{2}\\ T^{-1}]$ |\n| **(B)** Coefficient of viscosity | **(II)** $[M\\ L\\ T^{-3}\\ K^{-1}]$ |\n| **(C)** Planck's constant | **(III)** $[M\\ L^{2}\\ T^{-2}\\ K^{-1}]$ |\n| **(D)** Thermal conductivity | **(IV)** $[M\\ L^{-1}\\ T^{-1}]$ |\n\nChoose the correct answer from the options given below:",
     "options": [
       {
         "key": "A",
@@ -1218,7 +1218,7 @@
   {
     "id": "units-q-039",
     "qno": 39,
-    "statement": "A person measures mass of 3 different particles as 435.42\\ {g}, 226.3\\ {g} and 0.125 g. According to the rules for arithmetic operations with significant figures, the addition of the masses of 3 particles will be.",
+    "statement": "A person measures mass of 3 different particles as 435.42 g, 226.3 g and 0.125 g. According to the rules for arithmetic operations with significant figures, the addition of the masses of 3 particles will be.",
     "options": [
       {
         "key": "A",
@@ -1250,7 +1250,7 @@
   {
     "id": "units-q-040",
     "qno": 40,
-    "statement": "Match the LIST-I with LIST-II List - I A. Gravitational constant B. Gravitational potential energy C. Gravitational potential D. Acceleration due to gravity List - II I. [{LT}^(-2)] II. [{L}^(2){T}^(-2)] III. [{ML}^(2){T}^(-2)] IV. [{M}^(-1){L}^(3){T}^(-2)] Choose the correct answer from the options given below:",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Gravitational constant | **(I)** $[L\\ T^{-2}]$ |\n| **(B)** Gravitational potential energy | **(II)** $[L^{2}\\ T^{-2}]$ |\n| **(C)** Gravitational potential | **(III)** $[M\\ L^{2}\\ T^{-2}]$ |\n| **(D)** Acceleration due to gravity | **(IV)** $[M^{-1}\\ L^{3}\\ T^{-2}]$ |\n\nChoose the correct answer from the options given below:",
     "options": [
       {
         "key": "A",
@@ -1282,23 +1282,23 @@
   {
     "id": "units-q-041",
     "qno": 41,
-    "statement": "If μ₀ and ε₀ are the permeability and permittivity of free space, respectively, then the dimension of (((1) / (μ₀ε₀))) is :",
+    "statement": "If μ₀ and ε₀ are the permeability and permittivity of free space, respectively, then the dimension of $\\frac{1}{\\mu_0 \\varepsilon_0}$ is :",
     "options": [
       {
         "key": "A",
-        "text": "{T}^(2)/{L}"
+        "text": "$\\frac{T^2}{L}$"
       },
       {
         "key": "B",
-        "text": "{L}^(2)/{T}^(2)"
+        "text": "$\\frac{L^2}{T^2}$"
       },
       {
         "key": "C",
-        "text": "{T}^(2)/{L}^(2)"
+        "text": "$\\frac{T^2}{L^2}$"
       },
       {
         "key": "D",
-        "text": "{L}/{T}^(2)"
+        "text": "$\\frac{L}{T^2}$"
       }
     ],
     "correct": "B",
@@ -1318,19 +1318,19 @@
     "options": [
       {
         "key": "A",
-        "text": "qI/μ₀"
+        "text": "$\\frac{q I}{\\mu_0}$"
       },
       {
         "key": "B",
-        "text": "q^(2)μ₀I"
+        "text": "$q^2 \\mu_0 I$"
       },
       {
         "key": "C",
-        "text": "qμ₀/I"
+        "text": "$\\frac{q \\mu_0}{I}$"
       },
       {
         "key": "D",
-        "text": "{q}μ₀{I}"
+        "text": "$q \\mu_0 I$"
       }
     ],
     "correct": "D",
@@ -1346,7 +1346,7 @@
   {
     "id": "units-q-043",
     "qno": 43,
-    "statement": "Match List I with List II. List - I (A) Coefficient of viscosity (B) Intensity of wave (C) Pressure gradient (D) Compressibility List - II (I) [{ML}^(0){T}^(-3)] (II) [{ML}^(-2){T}^(-2)] (III) [{M}^(-1){LT}^(2)] (IV) [{ML}^(-1){T}^(-1)] Choose the correct answer from the options given below:",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Coefficient of viscosity | **(I)** $[M\\ L^{0}\\ T^{-3}]$ |\n| **(B)** Intensity of wave | **(II)** $[M\\ L^{-2}\\ T^{-2}]$ |\n| **(C)** Pressure gradient | **(III)** $[M^{-1}\\ L\\ T^{2}]$ |\n| **(D)** Compressibility | **(IV)** $[M\\ L^{-1}\\ T^{-1}]$ |\n\nChoose the correct answer from the options given below:",
     "options": [
       {
         "key": "A",
@@ -1378,7 +1378,7 @@
   {
     "id": "units-q-044",
     "qno": 44,
-    "statement": "The equation for real gas is given by ({P}+(({a}) / ({V}^(2))))({V}-{b})={RT}, where P, V, T and R are the pressure, volume, temperature and gas constant, respectively. The dimension of {ab}^(-2) is equivalent to that of :",
+    "statement": "The equation for real gas is given by $\\left(P + \\frac{a}{V^2}\\right)(V - b) = RT$, where P, V, T and R are the pressure, volume, temperature and gas constant, respectively. The dimension of $a b^{-2}$ is equivalent to that of :",
     "options": [
       {
         "key": "A",
@@ -1410,7 +1410,7 @@
   {
     "id": "units-q-045",
     "qno": 45,
-    "statement": "Match List - I with List - II. List - I (A) Young's Modulus (B) Torque (C) Coefficient of Viscosity (D) Gravitational Constant List - II (I) M L^(-1) T^(-1) (II) M L^(-1) T^(-2) (III) M^(-1) L^(3) T^(-2) (IV) M L^(2) T^(-2) Choose the correct answer from the options given below :",
+    "statement": "Match List - I with List - II:\n\n| List - I | List - II |\n| :--- | :--- |\n| **(A)** Young's Modulus | **(I)** $[M\\ L^{-1}\\ T^{-1}]$ |\n| **(B)** Torque | **(II)** $[M\\ L^{-1}\\ T^{-2}]$ |\n| **(C)** Coefficient of Viscosity | **(III)** $[M^{-1}\\ L^{3}\\ T^{-2}]$ |\n| **(D)** Gravitational Constant | **(IV)** $[M\\ L^{2}\\ T^{-2}]$ |\n\nChoose the correct answer from the options given below :",
     "options": [
       {
         "key": "A",
@@ -1474,23 +1474,23 @@
   {
     "id": "units-q-047",
     "qno": 47,
-    "statement": "The expression given below shows the variation of velocity (v) with time (t), v={At}^(2)+(({Bt}) / ({C}+{t})). The dimension of ABC is :",
+    "statement": "The expression given below shows the variation of velocity (v) with time (t), $v = A t^2 + \\frac{B t}{C + t}$. The dimension of ABC is :",
     "options": [
       {
         "key": "A",
-        "text": "[{M}^(0){L}^(1){T}^(-2)]"
+        "text": "$[M^{0}\\ L\\ T^{-2}]$"
       },
       {
         "key": "B",
-        "text": "[{M}^(0){L}^(2){T}^(-3)]"
+        "text": "$[M^{0}\\ L^{2}\\ T^{-3}]$"
       },
       {
         "key": "C",
-        "text": "[{M}^(0){L}^(2){T}^(-2)]"
+        "text": "$[M^{0}\\ L^{2}\\ T^{-2}]$"
       },
       {
         "key": "D",
-        "text": "[{M}^(0){L}^(1){T}^(-3)]"
+        "text": "$[M^{0}\\ L\\ T^{-3}]$"
       }
     ],
     "correct": "B",
