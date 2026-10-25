@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Map, Zap, Atom, FlaskConical, Calculator, Dna, Sparkles } from "lucide-react";
 import Seo from "../Seo.jsx";
 import MindMapViewer from "../MindMapViewer.jsx";
+import ChapterQuizModal from "../quiz/ChapterQuizModal.jsx";
 import { getChapterMindmap } from "../../data/chapterMindmaps.js";
 
 const SUBJECT_ICONS = {
@@ -19,11 +20,12 @@ const SUBJECT_COLORS = {
   Biology: "#15A06E"
 };
 
-function PremiumChapterCard({ chapter, idx, subjectColor, subjectIcon: Icon, subjectName, classLevel, onOpenMindMap }) {
+function PremiumChapterCard({ chapter, idx, subjectColor, subjectIcon: Icon, subjectName, classLevel, onOpenMindMap, onOpenQuiz }) {
   const [isHovered, setIsHovered] = useState(false);
   const isString = typeof chapter === 'string';
   const title = isString ? chapter : chapter.title;
   const mindmap = getChapterMindmap(classLevel, subjectName, title);
+  const isUnitsChapter = title.toLowerCase().includes("units");
 
   return (
     <motion.div
@@ -135,12 +137,19 @@ function PremiumChapterCard({ chapter, idx, subjectColor, subjectIcon: Icon, sub
           }}>
           <Map size={14} /> {mindmap ? "Mind Map" : "Mind Map (Soon)"}
         </button>
-        <button style={{
-          flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
-          background: "#f4f4f5", color: "#a1a1aa", border: "none", padding: "8px 12px",
-          borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: "not-allowed",
-        }}>
-          <Zap size={14} /> Quiz (Soon)
+        <button
+          onClick={() => onOpenQuiz(title)}
+          title={isUnitsChapter ? "Create / Start Units & Dimensions Quiz (47 Verified JEE Questions)" : "Create Quiz"}
+          style={{
+            flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
+            background: isUnitsChapter ? "linear-gradient(135deg, #FF693D 0%, #F47E20 100%)" : `${subjectColor}15`,
+            color: isUnitsChapter ? "#ffffff" : subjectColor,
+            border: "none", padding: "8px 12px",
+            borderRadius: 10, fontSize: 12, fontWeight: 700,
+            cursor: "pointer", transition: "all 0.2s ease",
+            boxShadow: isUnitsChapter ? "0 4px 12px rgba(244, 126, 32, 0.25)" : "none",
+          }}>
+          <Zap size={14} /> {isUnitsChapter ? "Start Quiz (47 Qs)" : "Quiz"}
         </button>
       </div>
     </motion.div>
@@ -153,6 +162,7 @@ export default function SyllabusToolkit({ data, heroProps, seoTitle, seoDesc, se
   const subjects = Object.keys(data);
   const [activeTab, setActiveTab] = useState(subjects[0]);
   const [viewer, setViewer] = useState(null); // { subjectId, chapter }
+  const [quizChapter, setQuizChapter] = useState(null);
 
   return (
     <div className="page" style={{ background: "var(--page-bg)", minHeight: "100vh" }}>
@@ -217,6 +227,7 @@ export default function SyllabusToolkit({ data, heroProps, seoTitle, seoDesc, se
                   subjectName={activeTab}
                   classLevel={classLevel}
                   onOpenMindMap={setViewer}
+                  onOpenQuiz={setQuizChapter}
                 />
               ))}
             </motion.div>
@@ -230,6 +241,12 @@ export default function SyllabusToolkit({ data, heroProps, seoTitle, seoDesc, se
         subjectId={viewer?.subjectId}
         chapter={viewer?.chapter}
         onClose={() => setViewer(null)}
+      />
+
+      <ChapterQuizModal
+        isOpen={!!quizChapter}
+        chapterName={quizChapter}
+        onClose={() => setQuizChapter(null)}
       />
     </div>
   );

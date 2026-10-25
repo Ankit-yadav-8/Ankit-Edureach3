@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Users, LogOut, Lock, Loader2, ShieldCheck, AlertCircle } from "lucide-react";
+import { Users, LogOut, Lock, Loader2, ShieldCheck, AlertCircle, Zap } from "lucide-react";
 import Seo from "../components/Seo.jsx";
 import StudentReport from "../components/mentor/StudentReport.jsx";
 import MentorHero from "../components/mentor/MentorHero.jsx";
+import ChapterQuizModal from "../components/quiz/ChapterQuizModal.jsx";
 import {
   apiMentorLogin, apiMentorMe, apiMentorSetPassword, apiMentorStudents,
   apiMentorStudentProgress, apiMentorStudentTests, apiMentorStudentTasks,
@@ -179,6 +180,7 @@ export default function MentorDashboard() {
   const [report, setReport] = useState({ progress: null, tests: [], tasks: [], updatedAt: null });
   const [loadingStudent, setLoadingStudent] = useState(false);
   const [err, setErr] = useState("");
+  const [quizOpen, setQuizOpen] = useState(false);
 
   const signOut = useCallback(() => {
     writeToken(""); setToken(""); setMentor(null);
@@ -285,6 +287,35 @@ export default function MentorDashboard() {
       <div className="container mentor-dashboard-container" style={{ padding: "120px 0 60px", overflow: "visible", position: "relative", zIndex: 10 }}>
         <MentorHero mentor={mentor} students={students} activeId={activeId} onPick={setActiveId} />
 
+        <div style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          background: "linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%)",
+          color: "#ffffff", padding: "14px 22px", borderRadius: 14,
+          margin: "18px 0 22px 0", boxShadow: "0 4px 18px rgba(15, 23, 42, 0.12)",
+          flexWrap: "wrap", gap: 12
+        }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: 0.5 }}>
+              ⚡ Examination & Test Generator · Physics
+            </div>
+            <h4 style={{ margin: "2px 0 0 0", fontSize: 15, fontWeight: 800, color: "#ffffff" }}>
+              Units & Dimensions Question Bank (47 Verified Questions)
+            </h4>
+          </div>
+          <button
+            onClick={() => setQuizOpen(true)}
+            style={{
+              display: "flex", alignItems: "center", gap: 8, padding: "9px 18px",
+              borderRadius: 10, background: "linear-gradient(135deg, #FF693D 0%, #F47E20 100%)",
+              color: "#ffffff", border: "none", fontWeight: 700, fontSize: 13,
+              cursor: "pointer", boxShadow: "0 2px 8px rgba(255, 105, 61, 0.3)",
+              transition: "transform 0.15s ease"
+            }}
+          >
+            <Zap size={16} /> Create Exam Paper / Quiz
+          </button>
+        </div>
+
         {err && (
           <div style={{
             display: "flex", alignItems: "center", gap: 8, marginBottom: 16,
@@ -330,6 +361,12 @@ export default function MentorDashboard() {
             <LogOut size={13} /> Sign out
           </button>
         </div>
+
+        <ChapterQuizModal
+          isOpen={quizOpen}
+          onClose={() => setQuizOpen(false)}
+          chapterName="Units and Measurements"
+        />
       </div>
 
       <style>{`

@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
+    "db:migrate": "node sql/migrate.js",
+    "db:seed": "node sql/seedUnitsQuestions.js",
     "test:authz": "node test/authz.test.mjs",
     "test:session": "node test/session.test.mjs",
     "test": "node test/authz.test.mjs && node test/session.test.mjs"
@@ -21,7 +23,9 @@
     "nodemailer": "^8.0.9",
     "pdf-parse": "^1.1.1",
     "pdf-to-img": "^6.2.0",
-    "razorpay": "^2.9.6"
+    "pg": "^8.23.1",
+    "razorpay": "^2.9.6",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "mongodb-memory-server": "^11.2.0"

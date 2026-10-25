@@ -17,6 +17,8 @@ import adminMentorRoutes from "./routes/adminMentors.js";
 import mentorRoutes from "./routes/mentor.js";
 import aiRoutes from "./routes/ai.js";
 import testRoutes from "./routes/tests.js";
+import quizRoutes from "./routes/quiz.js";
+import { testPostgresConnection } from "./sql/db.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 import { startDailyReportJob } from "./jobs/dailyReport.js";
 import { backfillPhone10 } from "./jobs/backfillPhone10.js";
@@ -126,9 +128,11 @@ app.use("/api/reviews", apiLimiter, reviewRoutes);
 const aiLimiter = rl({ windowMs: 60 * 1000, max: 30 });
 app.use("/api/ai", aiLimiter, aiRoutes);
 app.use("/api/tests", apiLimiter, testRoutes);
+app.use("/api/quiz", apiLimiter, quizRoutes);
 
 connectDB()
   .then(() => {
+    testPostgresConnection(); // Test PostgreSQL connectivity alongside MongoDB
     app.listen(PORT, "0.0.0.0", () => console.log(`🚀 Server on http://0.0.0.0:${PORT}`));
     startWeeklyReportJob(); // weekly parent progress emails (best-effort, dev-safe)
     startDailyReportJob();  // daily parent progress emails from synced data (dev-safe)
