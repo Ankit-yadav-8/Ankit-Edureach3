@@ -14,7 +14,12 @@ function safeEqual(a, b) {
 // Step 1 of admin 2FA — constant-time check of the raw admin key. Used only by
 // the OTP routes; on its own the key does NOT grant access to any data.
 export function verifyAdminKey(key) {
-  return safeEqual(key, process.env.ADMIN_KEY || "Campuspoint-admin-2026-Ankit@123");
+  const adminKey = process.env.ADMIN_KEY;
+  if (!adminKey) {
+    console.error("[auth/admin] ADMIN_KEY environment variable is not configured — access denied.");
+    return false;
+  }
+  return safeEqual(key, adminKey);
 }
 
 // Step 2 — short-lived session token, issued only after the OTP is verified.

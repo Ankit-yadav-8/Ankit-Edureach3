@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, Fragment } from "react";
 import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
   ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText,
-  GraduationCap, Tag, Send,
+  GraduationCap, Tag, Send, Eye, EyeOff, Lock, AlertTriangle, ArrowRight, ShieldAlert,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
@@ -82,6 +82,7 @@ export default function Admin() {
   const [inbox, setInbox] = useState(0);
   const [adminKey, setAdminKey] = useState("");     // verified key, kept for step 2
   const [enteringKey, setEnteringKey] = useState("");
+  const [showKey, setShowKey] = useState(false);
   const [enteringOtp, setEnteringOtp] = useState("");
   const [otpSentTo, setOtpSentTo] = useState("");
   const [devCode, setDevCode] = useState("");
@@ -274,152 +275,327 @@ export default function Admin() {
   const revenue = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 
   // ── TWO-STEP LOGIN GATE (key → OTP) ───────────────────────────
+  // ── TWO-STEP LOGIN GATE (key → OTP) ───────────────────────────
   if (!authed) {
     const onKey = step === "key";
+    const primaryAdminEmail = inboxes[0]?.email || "ankityadav08022008@gmail.com";
+
     return (
-      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: "60px 16px", background: "var(--page-bg)" }}>
-        <div style={{ maxWidth: 440, width: "100%", background: "var(--page-bg)", borderRadius: 20, padding: "40px 36px", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", border: "1px solid #eee" }}>
+      <div style={{
+        minHeight: "100vh",
+        display: "grid",
+        placeItems: "center",
+        padding: "40px 16px",
+        background: "radial-gradient(ellipse at 50% 15%, rgba(255, 105, 61, 0.08) 0%, transparent 60%), #f8fafc",
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      }}>
+        <div style={{
+          maxWidth: 460,
+          width: "100%",
+          background: "#ffffff",
+          borderRadius: 24,
+          padding: "40px 36px 32px",
+          boxShadow: "0 20px 50px -12px rgba(15, 23, 42, 0.09), 0 0 0 1px rgba(15, 23, 42, 0.06)",
+          position: "relative",
+          zIndex: 1,
+        }}>
+          {/* Header Security Status Badge */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+            <span style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              background: "#f1f5f9",
+              padding: "5px 12px",
+              borderRadius: 20,
+              fontSize: 11,
+              fontWeight: 800,
+              letterSpacing: 0.6,
+              color: "#334155",
+              textTransform: "uppercase",
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block", boxShadow: "0 0 6px #10b981" }} />
+              Active Defense · 256-Bit SSL
+            </span>
+          </div>
+
+          {/* Icon and Title */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 22 }}>
-            <div style={{ width: 64, height: 64, borderRadius: 20, background: `${ORANGE}15`, display: "grid", placeItems: "center", marginBottom: 16 }}>
-              {onKey ? <ShieldCheck size={30} color={ORANGE} /> : <Mail size={30} color={ORANGE} />}
+            <div style={{
+              width: 68,
+              height: 68,
+              borderRadius: 20,
+              background: onKey ? "linear-gradient(135deg, rgba(255,105,61,0.12), rgba(249,115,22,0.06))" : "linear-gradient(135deg, rgba(37,99,235,0.12), rgba(59,130,246,0.06))",
+              display: "grid",
+              placeItems: "center",
+              marginBottom: 16,
+              border: `1.5px solid ${onKey ? "rgba(255,105,61,0.2)" : "rgba(37,99,235,0.2)"}`,
+              boxShadow: "0 8px 20px rgba(0,0,0,0.04)",
+            }}>
+              {onKey ? <ShieldCheck size={32} color={ORANGE} /> : <Mail size={32} color="#2563eb" />}
             </div>
-            <h2 style={{ fontFamily: "Sora", fontWeight: 800, color: "#0d1b3e", fontSize: "1.6rem", margin: 0 }}>
-              {onKey ? "Admin Access" : "Verify it's you"}
+            <h2 style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0f172a", fontSize: "1.7rem", margin: 0, letterSpacing: -0.5 }}>
+              {onKey ? "CampusPoint Admin" : "Security Verification"}
             </h2>
-            <p style={{ color: "#888", fontSize: 14, marginTop: 8 }}>
+            <p style={{ color: "#64748b", fontSize: 13.5, marginTop: 6, marginBottom: 0, lineHeight: 1.4 }}>
               {onKey
-                ? "Step 1 of 2 · Enter your secret key"
-                : <>Step 2 of 2 · Enter the 6-digit code sent to <strong>{otpSentTo}</strong></>}
+                ? "Enter your secret authorization key to proceed"
+                : <>6-digit one-time passcode sent to <strong>{otpSentTo || primaryAdminEmail}</strong></>}
             </p>
           </div>
 
-          {/* progress bars */}
-          <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 22 }}>
-            <span style={{ width: 28, height: 6, borderRadius: 6, background: ORANGE }} />
-            <span style={{ width: 28, height: 6, borderRadius: 6, background: onKey ? "#e5e7eb" : ORANGE, transition: "background .2s" }} />
+          {/* Stepper Progress Indicator */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 24 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{
+                width: 20, height: 20, borderRadius: "50%",
+                background: onKey ? ORANGE : "#10b981",
+                color: "#fff", fontSize: 11, fontWeight: 800,
+                display: "grid", placeItems: "center",
+              }}>
+                {onKey ? "1" : "✓"}
+              </span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: onKey ? "#0f172a" : "#10b981" }}>Key</span>
+            </div>
+            <div style={{ width: 36, height: 2, background: onKey ? "#e2e8f0" : "#10b981", borderRadius: 2 }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{
+                width: 20, height: 20, borderRadius: "50%",
+                background: !onKey ? ORANGE : "#e2e8f0",
+                color: !onKey ? "#fff" : "#94a3b8", fontSize: 11, fontWeight: 800,
+                display: "grid", placeItems: "center",
+              }}>
+                2
+              </span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: !onKey ? "#0f172a" : "#94a3b8" }}>2FA OTP</span>
+            </div>
+          </div>
+
+          {/* Verified Admin 2FA Destination Badge */}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "10px 14px",
+            borderRadius: 12,
+            background: "#f8fafc",
+            border: "1px solid #e2e8f0",
+            marginBottom: 20,
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 28, height: 28, borderRadius: 8, background: "#eff6ff", display: "grid", placeItems: "center" }}>
+                <Mail size={14} color="#2563eb" />
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>2FA Inbox</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>{primaryAdminEmail}</div>
+              </div>
+            </div>
+            <span style={{
+              fontSize: 11,
+              fontWeight: 800,
+              padding: "3px 8px",
+              borderRadius: 6,
+              background: "#ecfdf5",
+              color: "#059669",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+            }}>
+              <CheckCircle2 size={12} /> Verified
+            </span>
           </div>
 
           {onKey ? (
             <>
-              <div style={{ position: "relative", marginBottom: 16 }}>
-                <KeyRound size={17} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#bbb", pointerEvents: "none" }} />
+              {/* Step 1: Secret Key Input with Eye Toggle */}
+              <div style={{ position: "relative", marginBottom: 18 }}>
+                <KeyRound size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }} />
                 <input
-                  type="password" placeholder="Enter ADMIN_KEY"
-                  value={enteringKey} onChange={(e) => setEnteringKey(e.target.value)}
+                  type={showKey ? "text" : "password"}
+                  placeholder="Enter secret ADMIN_KEY"
+                  value={enteringKey}
+                  onChange={(e) => setEnteringKey(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter" && enteringKey && !busy) requestOtp(enteringKey); }}
                   autoFocus
                   style={{
-                    width: "100%", paddingLeft: 44, paddingRight: 16, height: 50,
-                    borderRadius: 12, border: "1.5px solid #e5e7eb", fontSize: 15,
-                    outline: "none", boxSizing: "border-box", fontFamily: "inherit", transition: "border .2s",
+                    width: "100%", paddingLeft: 46, paddingRight: 46, height: 52,
+                    borderRadius: 14, border: "1.5px solid #e2e8f0", fontSize: 15,
+                    outline: "none", boxSizing: "border-box", fontFamily: "inherit",
+                    transition: "all .2s ease",
+                    background: "#ffffff",
+                    color: "#0f172a",
                   }}
+                  onFocus={(e) => { e.target.style.borderColor = ORANGE; e.target.style.boxShadow = "0 0 0 3px rgba(255,105,61,0.15)"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; e.target.style.boxShadow = "none"; }}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowKey(!showKey)}
+                  tabIndex={-1}
+                  style={{
+                    position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
+                    background: "none", border: "none", color: "#94a3b8", cursor: "pointer",
+                    padding: 4, display: "flex", alignItems: "center", justifyContent: "center",
+                  }}
+                  title={showKey ? "Hide key" : "Show key"}
+                >
+                  {showKey ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
 
-              {/* Which inbox gets the code. Two owners share this panel, so each
-                  sends the code to their own address instead of asking the other
-                  to read it out. Labels are masked - the server never sends the
-                  real addresses to the browser, and the choice travels as an
-                  index it validates against its own allowlist. */}
-              {inboxes.length > 1 && (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#7c7368", marginBottom: 7 }}>
-                    Send the code to
-                  </div>
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                    {inboxes.map((ib) => {
-                      const on = inbox === ib.id;
-                      return (
-                        <button
-                          key={ib.id} type="button" onClick={() => setInbox(ib.id)}
-                          style={{
-                            flex: "1 1 auto", minWidth: 150, padding: "10px 12px", borderRadius: 10,
-                            border: `1.5px solid ${on ? ORANGE : "#e5e7eb"}`,
-                            background: on ? `${ORANGE}0f` : "#fff",
-                            color: on ? ORANGE : "#7c7368",
-                            fontWeight: on ? 800 : 600, fontSize: 12.5, cursor: "pointer",
-                            display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7,
-                          }}
-                        >
-                          <Mail size={13} /> {ib.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {inbox !== 0 && (
-                    <p style={{ fontSize: 11.5, color: "#92400e", background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 8, padding: "7px 10px", margin: "8px 0 0", lineHeight: 1.5 }}>
-                      The owner is notified whenever a code goes to this inbox.
-                    </p>
-                  )}
-                </div>
-              )}
-
+              {/* Submit Button */}
               <button
                 disabled={busy || !enteringKey}
                 onClick={() => requestOtp(enteringKey)}
                 style={{
-                  background: ORANGE, color: "#fff", width: "100%", border: "none",
-                  height: 50, borderRadius: 12, fontWeight: 700, fontSize: 16,
+                  background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                  color: "#fff", width: "100%", border: "none",
+                  height: 52, borderRadius: 14, fontWeight: 700, fontSize: 15,
                   cursor: busy || !enteringKey ? "not-allowed" : "pointer",
-                  opacity: busy || !enteringKey ? 0.6 : 1, transition: "opacity .2s",
+                  opacity: busy || !enteringKey ? 0.6 : 1, transition: "all .2s ease",
+                  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  boxShadow: "0 6px 18px rgba(255,105,61,0.28)",
                 }}
               >
-                {busy ? "Sending code…" : "Send verification code →"}
+                {busy ? (
+                  <>
+                    <RefreshCw size={17} style={{ animation: "admSpin 1s linear infinite" }} />
+                    Verifying & Sending OTP...
+                  </>
+                ) : (
+                  <>
+                    Send Verification Code <ArrowRight size={17} />
+                  </>
+                )}
               </button>
             </>
           ) : (
             <>
-              <div style={{ position: "relative", marginBottom: 16 }}>
-                <KeyRound size={17} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#bbb", pointerEvents: "none" }} />
+              {/* Step 2: 6-Digit OTP Input */}
+              <div style={{ position: "relative", marginBottom: 18 }}>
                 <input
-                  inputMode="numeric" maxLength={6} placeholder="6-digit code"
+                  inputMode="numeric"
+                  maxLength={6}
+                  placeholder="••••••"
                   value={enteringOtp}
                   onChange={(e) => setEnteringOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   onKeyDown={(e) => { if (e.key === "Enter" && enteringOtp.length === 6 && !busy) verifyOtp(enteringOtp); }}
                   autoFocus
                   style={{
-                    width: "100%", paddingLeft: 44, paddingRight: 16, height: 50,
-                    borderRadius: 12, border: "1.5px solid #e5e7eb", fontSize: 22,
-                    letterSpacing: 6, fontWeight: 700, outline: "none", boxSizing: "border-box",
-                    fontFamily: "inherit", transition: "border .2s",
+                    width: "100%", height: 56, textAlign: "center",
+                    borderRadius: 14, border: "1.5px solid #e2e8f0", fontSize: 26,
+                    letterSpacing: 10, fontWeight: 800, outline: "none", boxSizing: "border-box",
+                    fontFamily: "monospace", transition: "all .2s ease",
+                    background: "#ffffff", color: "#0f172a",
                   }}
+                  onFocus={(e) => { e.target.style.borderColor = "#2563eb"; e.target.style.boxShadow = "0 0 0 3px rgba(37,99,235,0.15)"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; e.target.style.boxShadow = "none"; }}
                 />
               </div>
+
               {devCode && (
                 <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginBottom: 14, color: "#92400e", fontSize: 13, textAlign: "center" }}>
-                  Dev mode - code: <strong>{devCode}</strong>
+                  Dev mode code: <strong>{devCode}</strong>
                 </div>
               )}
+
+              {/* Verify Button */}
               <button
                 disabled={busy || enteringOtp.length !== 6}
                 onClick={() => verifyOtp(enteringOtp)}
                 style={{
-                  background: ORANGE, color: "#fff", width: "100%", border: "none",
-                  height: 50, borderRadius: 12, fontWeight: 700, fontSize: 16,
+                  background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                  color: "#fff", width: "100%", border: "none",
+                  height: 52, borderRadius: 14, fontWeight: 700, fontSize: 15,
                   cursor: busy || enteringOtp.length !== 6 ? "not-allowed" : "pointer",
-                  opacity: busy || enteringOtp.length !== 6 ? 0.6 : 1, transition: "opacity .2s",
+                  opacity: busy || enteringOtp.length !== 6 ? 0.6 : 1, transition: "all .2s ease",
+                  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  boxShadow: "0 6px 18px rgba(5,150,105,0.28)",
                 }}
               >
-                {busy ? "Verifying…" : "🔓 Verify & Unlock"}
+                {busy ? (
+                  <>
+                    <RefreshCw size={17} style={{ animation: "admSpin 1s linear infinite" }} />
+                    Verifying Code...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 size={18} /> Verify & Unlock Console
+                  </>
+                )}
               </button>
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14 }}>
-                <button onClick={() => { setStep("key"); setErr(""); setDevCode(""); }} disabled={busy}
-                  style={{ background: "none", border: "none", color: "#888", fontSize: 13, cursor: "pointer", fontWeight: 600 }}>
-                  ← Back
+
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={() => { setStep("key"); setErr(""); setDevCode(""); }}
+                  disabled={busy}
+                  style={{ background: "none", border: "none", color: "#64748b", fontSize: 13, cursor: "pointer", fontWeight: 600 }}
+                >
+                  ← Back to Key
                 </button>
-                <button onClick={() => requestOtp(adminKey)} disabled={busy}
-                  style={{ background: "none", border: "none", color: ORANGE, fontSize: 13, cursor: "pointer", fontWeight: 700 }}>
-                  Resend code
+                <button
+                  type="button"
+                  onClick={() => requestOtp(adminKey)}
+                  disabled={busy}
+                  style={{ background: "none", border: "none", color: ORANGE, fontSize: 13, cursor: "pointer", fontWeight: 700 }}
+                >
+                  Resend Code
                 </button>
               </div>
             </>
           )}
 
+          {/* Security Alert / Error Box */}
           {err && (
-            <div style={{ background: "#fff0f0", border: "1px solid #fca5a5", borderRadius: 10, padding: "10px 14px", marginTop: 14, color: "#dc2626", fontSize: 13, textAlign: "center" }}>
-              {err}
+            <div style={{
+              background: "#fef2f2",
+              border: "1px solid #fecaca",
+              borderRadius: 12,
+              padding: "12px 14px",
+              marginTop: 18,
+              color: "#991b1b",
+              fontSize: 13,
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 10,
+              textAlign: "left",
+              lineHeight: 1.45,
+            }}>
+              <AlertTriangle size={18} style={{ flexShrink: 0, marginTop: 1 }} color="#dc2626" />
+              <div>
+                <div style={{ fontWeight: 800, marginBottom: 2 }}>Access Denied</div>
+                <div>{err}</div>
+              </div>
             </div>
           )}
+
+          {/* Footer Security Badges */}
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 12,
+            marginTop: 24,
+            paddingTop: 18,
+            borderTop: "1px solid #f1f5f9",
+            fontSize: 11.5,
+            color: "#64748b",
+            fontWeight: 600,
+          }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+              <ShieldAlert size={13} color="#f97316" /> 5-Strike Lockout
+            </span>
+            <span>•</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+              <Lock size={13} color="#2563eb" /> 2FA Active
+            </span>
+            <span>•</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+              <ShieldCheck size={13} color="#059669" /> Auto-Alerted
+            </span>
+          </div>
         </div>
       </div>
     );

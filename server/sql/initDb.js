@@ -9,7 +9,10 @@ dotenv.config();
 const { Client } = pg;
 
 async function init() {
-  const password = process.env.PGPASSWORD || "Ankit@123";
+  const password = process.env.PGPASSWORD;
+  if (!password) {
+    throw new Error("PGPASSWORD environment variable is missing.");
+  }
   const client = new Client({
     host: process.env.PGHOST || "127.0.0.1",
     port: Number(process.env.PGPORT || 5432),

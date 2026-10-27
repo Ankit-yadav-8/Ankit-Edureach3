@@ -448,7 +448,7 @@ export async function sendPaymentReceiptEmail({ to, name, planLabel, amount, ord
 // ── Admin Payment Notification & Email Approval ───────────────────────────
 export const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ||
   process.env.ADMIN_EMAIL ||
-  "ankityadav08022008@gmail.com,ankit26august@gmail.com")
+  "ankityadav08022008@gmail.com")
   .split(",").map((s) => s.toLowerCase().trim()).filter(Boolean);
 
 export async function sendAdminPaymentApprovalEmail({

@@ -22,8 +22,23 @@ import { testPostgresConnection } from "./sql/db.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 import { startDailyReportJob } from "./jobs/dailyReport.js";
 import { backfillPhone10 } from "./jobs/backfillPhone10.js";
+import { sanitizeNoSql } from "./middleware/sanitize.js";
 
 dotenv.config();
+
+// ── Startup Security Assertions ──────────────────────────────────────────
+const REQUIRED_SECRETS = ["JWT_SECRET", "ADMIN_KEY"];
+for (const secret of REQUIRED_SECRETS) {
+  if (!process.env[secret]) {
+    if (process.env.NODE_ENV === "production") {
+      console.error(`❌ FATAL: Missing required security environment variable: ${secret}`);
+      process.exit(1);
+    } else {
+      console.warn(`⚠️  SECURITY WARNING: Missing environment variable: ${secret}. Set this in server/.env`);
+    }
+  }
+}
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -60,6 +75,9 @@ app.use("/api/mentorship", express.json({ limit: "512kb" }));
 
 // Reject oversized payloads early — these endpoints only ever take small JSON.
 app.use(express.json({ limit: "16kb" }));
+
+// Sanitize all request payloads to prevent NoSQL query operator injection
+app.use(sanitizeNoSql);
 
 // Build allowed origins list: always include localhost for development
 const envOrigins = (process.env.CLIENT_ORIGIN || "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -98,10 +116,12 @@ const rl = (opts) => rateLimit({
 });
 
 // Tight limit on credential/code endpoints to blunt brute-force & abuse.
-const authLimiter    = rl({ windowMs: 15 * 60 * 1000, max: 30 });
+const authLimiter      = rl({ windowMs: 15 * 60 * 1000, max: 30 });
+// Strict general gate for admin routes to stop automated scanning
+const adminGateLimiter = rl({ windowMs: 15 * 60 * 1000, max: 20, message: { error: "Admin access rate limit reached — please wait a moment." } });
 // Generous per-minute limit for read/payment traffic — enough for normal use,
 // low enough to stop scraping or admin-key guessing.
-const apiLimiter     = rl({ windowMs: 60 * 1000, max: 120 });
+const apiLimiter       = rl({ windowMs: 60 * 1000, max: 120 });
 
 app.get("/", (_req, res) => res.send("EduReach API ✅"));
 
@@ -114,7 +134,7 @@ app.use("/api/otp", authLimiter, otpRoutes);
 // /api/admin mount would otherwise catch these first and subject mentor
 // management (ordinary data traffic) to the strict login rate limit.
 app.use("/api/admin/mentors", apiLimiter, adminMentorRoutes);
-app.use("/api/admin", authLimiter, adminRoutes);
+app.use("/api/admin", adminGateLimiter, adminRoutes);
 // Mentor login is a credential endpoint, so it takes the strict auth limiter.
 app.use("/api/mentor", authLimiter, mentorRoutes);
 app.use("/api/users", apiLimiter, userRoutes);

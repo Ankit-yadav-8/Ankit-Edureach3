@@ -192,9 +192,16 @@ router.post("/forgot", forgotLimiter, async (req, res) => {
     if (!isEmail(email)) return res.status(400).json({ error: "Please enter a valid email address" });
 
     const user = await User.findOne({ email });
+    const genericMsg = "If an account exists with this email, a password reset link has been sent to your email. Please check your inbox and spam folder.";
+
     if (!user) {
-      // Tell the user clearly that this email is not in our database
-      return res.status(404).json({ error: "This email is not registered with us. Please sign up first.", exists: false });
+      // OWASP Anti-Enumeration: Always respond with a generic success message so
+      // attackers cannot probe whether an email address is registered in the database.
+      return res.json({
+        ok: true,
+        exists: true,
+        message: genericMsg,
+      });
     }
 
     // Invalidate any previously unused tokens for this user
@@ -217,17 +224,20 @@ router.post("/forgot", forgotLimiter, async (req, res) => {
     });
 
     // Build the reset link with OTP embedded in the URL
-    const clientOrigin = (process.env.CLIENT_ORIGIN || "").split(",")[0];
+    const clientOrigin = (process.env.CLIENT_ORIGIN || "").split(",")[0] || "http://localhost:5173";
     const resetLink = `${clientOrigin}/?reset=${otp}`;
     
     // Send email using Brevo
     await sendPasswordResetEmail(email, resetLink, otp);
 
+    const isDev = process.env.NODE_ENV !== "production" &&
+      (String(process.env.OTP_DEV_MODE || "").toLowerCase() === "true" || !process.env.BREVO_API_KEY);
+
     res.json({
       ok: true,
       exists: true,
-      message: "A password reset link has been sent to your email. Please check your inbox and spam folder.",
-      ...(process.env.OTP_DEV_MODE !== "false" ? { devOtp: otp, devLink: resetLink } : {}),
+      message: genericMsg,
+      ...(isDev ? { devOtp: otp, devLink: resetLink } : {}),
     });
   } catch (e) {
     console.error("[auth/forgot]", e.message);
