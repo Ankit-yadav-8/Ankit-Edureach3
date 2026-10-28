@@ -644,7 +644,17 @@ export default function Admin() {
   };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#f8fafc", position: "relative", fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+    <div
+      className="adm-suite-root"
+      style={{
+        display: "flex",
+        height: "100vh",
+        overflow: "hidden",
+        background: "#f8fafc",
+        position: "relative",
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      }}
+    >
       <style>{`
         @keyframes admUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: none; } }
         @keyframes admSpin { to { transform: rotate(360deg); } }
@@ -743,7 +753,7 @@ export default function Admin() {
 
       {/* ── SLEEK SIDE PANEL (SIDEBAR) ─────────────────────────── */}
       <aside
-        className={`adm-sidebar ${sidebarOpen ? "open" : ""}`}
+        className={`adm-sidebar cp-custom-scroll ${sidebarOpen ? "open" : ""}`}
         style={{
           width: 260,
           background: "#ffffff",
@@ -753,10 +763,10 @@ export default function Admin() {
           justifyContent: "space-between",
           flexShrink: 0,
           height: "100vh",
-          position: "sticky",
-          top: 0,
+          position: "relative",
           zIndex: 50,
           boxSizing: "border-box",
+          overflowY: "auto",
         }}
       >
         {/* Top Logo / Brand */}
@@ -949,7 +959,18 @@ export default function Admin() {
       </aside>
 
       {/* ── MAIN CONTENT AREA ───────────────────────────────────── */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100vh" }}>
+      <div
+        className="adm-main-scroll cp-custom-scroll"
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
+          height: "100vh",
+          overflowY: "auto",
+          boxSizing: "border-box",
+        }}
+      >
         {/* Top Navigation Bar */}
         <header style={{
           height: 64,
@@ -962,6 +983,7 @@ export default function Admin() {
           position: "sticky",
           top: 0,
           zIndex: 40,
+          flexShrink: 0,
         }}>
           {/* Breadcrumb / Title */}
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -1099,74 +1121,77 @@ export default function Admin() {
             ) : tab === "users" ? (
               <>
                 {/* Users Stat Cards */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
-                      <Users size={22} color={ORANGE} />
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 14, marginBottom: 20 }}>
+                  <div style={{ background: "#ffffff", borderRadius: 14, padding: "16px 20px", display: "flex", alignItems: "center", gap: 14, border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(15,23,42,.03)" }}>
+                    <div style={{ width: 42, height: 42, borderRadius: 10, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}>
+                      <Users size={20} color={ORANGE} />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{total}</div>
-                      <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Total signups</div>
+                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 22, color: "#0f172a", lineHeight: 1 }}>{total}</div>
+                      <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 4, fontWeight: 500 }}>Total Student Signups</div>
                     </div>
                   </div>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-                      <Calendar size={22} color="#16a34a" />
+
+                  <div style={{ background: "#ffffff", borderRadius: 14, padding: "16px 20px", display: "flex", alignItems: "center", gap: 14, border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(15,23,42,.03)" }}>
+                    <div style={{ width: 42, height: 42, borderRadius: 10, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <Calendar size={20} color="#16a34a" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 22, lineHeight: 1, color: "#0f172a" }}>
                         {users.filter(u => {
                           const d = new Date(u.createdAt);
                           const now = new Date();
                           return d.toDateString() === now.toDateString();
                         }).length}
                       </div>
-                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Joined today</div>
+                      <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 4, fontWeight: 500 }}>Joined Today</div>
                     </div>
                   </div>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}14`, display: "grid", placeItems: "center" }}>
-                      <Clock size={22} color={ORANGE} />
+
+                  <div style={{ background: "#ffffff", borderRadius: 14, padding: "16px 20px", display: "flex", alignItems: "center", gap: 14, border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(15,23,42,.03)" }}>
+                    <div style={{ width: 42, height: 42, borderRadius: 10, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}>
+                      <Clock size={20} color={ORANGE} />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 22, lineHeight: 1, color: "#0f172a" }}>
                         {users.filter(u => {
                           const d = new Date(u.lastLogin);
                           const now = new Date();
                           return (now - d) < 24 * 60 * 60 * 1000;
                         }).length}
                       </div>
-                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Active today</div>
+                      <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 4, fontWeight: 500 }}>Active in Last 24h</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Users Table */}
-                <div className="adm-card" style={{ background: "#ffffff", borderRadius: 20, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 4px 20px rgba(13,27,62,.04)" }}>
-                  <div style={{ padding: "16px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                    <span style={{ fontWeight: 700, color: "#0d1b3e", fontSize: 15 }}>
-                      Registered Students
-                      <span style={{ marginLeft: 8, background: "#f3f4f6", borderRadius: 20, padding: "2px 10px", fontSize: 12, color: "#666", fontWeight: 600 }}>
+                <div style={{ background: "#ffffff", borderRadius: 16, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 2px 10px rgba(15,23,42,.03)" }}>
+                  <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontWeight: 800, color: "#0f172a", fontSize: 14, fontFamily: "Sora, sans-serif" }}>
+                        Registered Students Directory
+                      </span>
+                      <span style={{ background: "#f1f5f9", borderRadius: 12, padding: "2px 8px", fontSize: 11, color: "#475569", fontWeight: 700 }}>
                         {filtered.length}
                       </span>
-                    </span>
+                    </div>
                   </div>
 
                   {filtered.length === 0 ? (
-                    <div style={{ padding: "60px 20px", textAlign: "center", color: "#aaa", fontSize: 14 }}>
+                    <div style={{ padding: "50px 20px", textAlign: "center", color: "#94a3b8", fontSize: 13 }}>
                       {search ? "No students match your search." : "No signups yet."}
                     </div>
                   ) : (
-                    <div style={{ overflowX: "auto" }}>
-                      <table style={{ width: "100%", minWidth: 1100, borderCollapse: "collapse" }}>
+                    <div className="cp-custom-scroll" style={{ overflowX: "auto" }}>
+                      <table style={{ width: "100%", minWidth: 950, borderCollapse: "collapse", fontSize: 12 }}>
                         <thead>
-                          <tr style={{ background: "#fafafa" }}>
-                            {["#", "", "User", "Email", "Phone", "Coaching", "Class", "Joined", "Last Login"].map((h, hi) => (
+                          <tr style={{ background: "#f8fafc", borderBottom: "1.5px solid #e2e8f0" }}>
+                            {["#", "", "Student", "Email", "Phone", "Coaching", "Class", "Joined", "Last Login"].map((h, hi) => (
                               <th key={hi} style={{
-                                padding: "12px 20px", textAlign: "left", fontSize: 11,
-                                fontWeight: 700, color: "#999", letterSpacing: ".06em",
-                                textTransform: "uppercase", borderBottom: "1px solid #f0f0f0",
-                                whiteSpace: "nowrap",
+                                padding: "10px 14px", textAlign: "left", fontSize: 10.5,
+                                fontWeight: 800, color: "#64748b", letterSpacing: ".05em",
+                                textTransform: "uppercase", whiteSpace: "nowrap",
                               }}>{h}</th>
                             ))}
                           </tr>
@@ -1176,58 +1201,60 @@ export default function Admin() {
                             const isOpen = expanded.has(u._id);
                             return (
                               <Fragment key={u._id}>
-                                <tr style={{ borderBottom: isOpen ? "none" : "1px solid #f8f8f8", transition: "background .15s", cursor: "pointer", background: isOpen ? "#fafafa" : "transparent" }}
+                                <tr style={{ borderBottom: isOpen ? "none" : "1px solid #f1f5f9", transition: "background .12s", cursor: "pointer", background: isOpen ? "#f8fafc" : "transparent" }}
                                   onClick={() => toggleRow(u._id)}
-                                  onMouseEnter={e => e.currentTarget.style.background = "#fafafa"}
-                                  onMouseLeave={e => e.currentTarget.style.background = isOpen ? "#fafafa" : "transparent"}
+                                  onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+                                  onMouseLeave={e => e.currentTarget.style.background = isOpen ? "#f8fafc" : "transparent"}
                                 >
-                                  <td style={{ padding: "14px 20px", fontSize: 12, color: "#ccc", fontFamily: "monospace", width: 40 }}>
+                                  <td style={{ padding: "11px 14px", fontSize: 11, color: "#94a3b8", fontFamily: "monospace", width: 36 }}>
                                     {i + 1}
                                   </td>
-                                  <td style={{ padding: "14px 8px", width: 24, color: "#bbb" }}>
-                                    {isOpen ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
+                                  <td style={{ padding: "11px 6px", width: 22, color: "#94a3b8" }}>
+                                    {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                                   </td>
-                                  <td style={{ padding: "14px 20px" }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                  <td style={{ padding: "11px 14px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
                                       <div style={{
-                                        width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
+                                        width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
                                         background: avatarColor(u.name || u.phone),
                                         color: "#fff", display: "grid", placeItems: "center",
-                                        fontSize: 13, fontWeight: 800,
+                                        fontSize: 12, fontWeight: 800,
                                       }}>
                                         {avatar(u.name, u.phone)}
                                       </div>
-                                      <span style={{ fontWeight: 600, color: "#0d1b3e", fontSize: 14 }}>
+                                      <span style={{ fontWeight: 700, color: "#0f172a", fontSize: 12.5 }}>
                                         {u.name || "-"}
                                       </span>
                                     </div>
                                   </td>
-                                  <td style={{ padding: "14px 20px" }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
-                                      <Mail size={13} color="#bbb" />
+                                  <td style={{ padding: "11px 14px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 12 }}>
+                                      <Mail size={12} color="#94a3b8" />
                                       {u.email || "-"}
                                     </div>
                                   </td>
-                                  <td style={{ padding: "14px 20px" }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
-                                      <Phone size={13} color="#bbb" />
+                                  <td style={{ padding: "11px 14px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 12 }}>
+                                      <Phone size={12} color="#94a3b8" />
                                       {u.phone || "-"}
                                     </div>
                                   </td>
-                                  <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>
-                                    {u.coaching || <span style={{ color: "#ddd" }}>-</span>}
+                                  <td style={{ padding: "11px 14px", fontSize: 12, color: "#475569" }}>
+                                    {u.coaching || <span style={{ color: "#cbd5e1" }}>-</span>}
                                   </td>
-                                  <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
-                                    {u.studentClass || "-"}
+                                  <td style={{ padding: "11px 14px", fontSize: 11.5, color: "#0f172a", fontWeight: 700 }}>
+                                    <span style={{ background: "#f1f5f9", padding: "2px 7px", borderRadius: 5 }}>
+                                      {u.studentClass || "-"}
+                                    </span>
                                   </td>
-                                  <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888", whiteSpace: "nowrap" }}>
+                                  <td style={{ padding: "11px 14px", fontSize: 11.5, color: "#64748b", whiteSpace: "nowrap" }}>
                                     {fmtDate(u.createdAt)}
                                   </td>
-                                  <td style={{ padding: "14px 20px" }}>
+                                  <td style={{ padding: "11px 14px" }}>
                                     <span style={{
-                                      fontSize: 12, color: "#555",
-                                      background: "#f3f4f6", borderRadius: 6,
-                                      padding: "4px 8px", whiteSpace: "nowrap",
+                                      fontSize: 11, color: "#334155",
+                                      background: "#f1f5f9", borderRadius: 6,
+                                      padding: "3px 7px", whiteSpace: "nowrap", fontWeight: 600,
                                     }}>
                                       {fmtDate(u.lastLogin)}
                                     </span>
@@ -1326,184 +1353,218 @@ export default function Admin() {
 
 /* ── Payments tab: successful enrolments only ─────────────────────── */
 function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApproveEmail, approvingId }) {
-  return (
-    <div style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #eee", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+  const totalAmount = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+  const approvedCount = payments.filter((p) => p.confirmationEmailSent).length;
+  const pendingCount = payments.length - approvedCount;
 
-      {/* Search bar */}
-      <div style={{ padding: "16px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-        <span style={{ fontWeight: 700, color: "#0d1b3e", fontSize: 15 }}>
-          Successful Payments
-          <span style={{ marginLeft: 8, background: "#f3f4f6", borderRadius: 20, padding: "2px 10px", fontSize: 12, color: "#666", fontWeight: 600 }}>
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      {/* Payments Metric Strip */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))", gap: 12 }}>
+        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
+          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Total Collected</span>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
+            ₹{totalAmount.toLocaleString("en-IN")}
+          </div>
+        </div>
+        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
+          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Paid Enrollments</span>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
             {payments.length}
-          </span>
-        </span>
-        <input
-          placeholder="Search name, email, phone or plan…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ height: 38, padding: "0 14px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 13, outline: "none", minWidth: 240, fontFamily: "inherit" }}
-        />
+          </div>
+        </div>
+        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
+          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Emails Approved</span>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#16a34a", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
+            {approvedCount}
+          </div>
+        </div>
+        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
+          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Approval Pending</span>
+          <div style={{ fontSize: 20, fontWeight: 800, color: pendingCount > 0 ? "#ea580c" : "#64748b", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
+            {pendingCount}
+          </div>
+        </div>
       </div>
 
-      {payments.length === 0 ? (
-        <div style={{ padding: "60px 20px", textAlign: "center", color: "#aaa", fontSize: 14 }}>
-          {search ? "No payments match your search." : "No successful payments yet."}
+      <div style={{ background: "#ffffff", borderRadius: 16, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 2px 10px rgba(15,23,42,0.03)" }}>
+        {/* Search bar */}
+        <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontWeight: 800, color: "#0f172a", fontSize: 14, fontFamily: "Sora, sans-serif" }}>
+              Successful Enrollments & Payments
+            </span>
+            <span style={{ background: "#f1f5f9", borderRadius: 12, padding: "2px 8px", fontSize: 11, color: "#475569", fontWeight: 700 }}>
+              {payments.length}
+            </span>
+          </div>
+          <input
+            placeholder="Search student, email, phone or plan…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ height: 34, padding: "0 12px", borderRadius: 8, border: "1.5px solid #cbd5e1", fontSize: 12, outline: "none", minWidth: 240, fontFamily: "inherit" }}
+          />
         </div>
-      ) : (
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", minWidth: 1050, borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: "#fafafa" }}>
-                {["#", "", "Customer", "Email", "Phone", "Plan", "Amount", "Email Approval", "Status", "Paid On"].map((h, hi) => (
-                  <th key={hi} style={{
-                    padding: "12px 20px", textAlign: "left", fontSize: 11,
-                    fontWeight: 700, color: "#999", letterSpacing: ".06em",
-                    textTransform: "uppercase", borderBottom: "1px solid #f0f0f0",
-                    whiteSpace: "nowrap",
-                  }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {payments.map((p, i) => {
-                const isOpen = expanded.has(p._id);
-                return (
-                <Fragment key={p._id}>
-                <tr style={{ borderBottom: isOpen ? "none" : "1px solid #f8f8f8", transition: "background .15s", cursor: "pointer", background: isOpen ? "#fafafa" : "transparent" }}
-                  onClick={() => toggleRow(p._id)}
-                  onMouseEnter={e => e.currentTarget.style.background = "#fafafa"}
-                  onMouseLeave={e => e.currentTarget.style.background = isOpen ? "#fafafa" : "transparent"}
-                >
-                  <td style={{ padding: "14px 20px", fontSize: 12, color: "#ccc", fontFamily: "monospace", width: 40 }}>{i + 1}</td>
-                  <td style={{ padding: "14px 8px", width: 24, color: "#bbb" }}>
-                    {isOpen ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
-                  </td>
-                  <td style={{ padding: "14px 20px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{
-                        width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
-                        background: avatarColor(p.name || p.phone),
-                        color: "#fff", display: "grid", placeItems: "center",
-                        fontSize: 13, fontWeight: 800,
-                      }}>
-                        {avatar(p.name, p.phone)}
-                      </div>
-                      <span style={{ fontWeight: 600, color: "#0d1b3e", fontSize: 14 }}>{p.name || "-"}</span>
-                    </div>
-                  </td>
-                  <td style={{ padding: "14px 20px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
-                      <Mail size={13} color="#bbb" />{p.email || "-"}
-                    </div>
-                  </td>
-                  <td style={{ padding: "14px 20px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
-                      <Phone size={13} color="#bbb" />{p.phone || "-"}
-                    </div>
-                  </td>
-                  <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>{p.planLabel || p.plan || "-"}</td>
-                  <td style={{ padding: "14px 20px", fontSize: 13.5, color: "#0d1b3e", fontWeight: 700, whiteSpace: "nowrap" }}>
-                    ₹{Number(p.amount || 0).toLocaleString("en-IN")}
-                  </td>
-                  <td style={{ padding: "14px 20px" }} onClick={(e) => e.stopPropagation()}>
-                    {p.confirmationEmailSent ? (
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "4px 11px", whiteSpace: "nowrap" }}>
-                        <CheckCircle2 size={13} /> Sent to User
-                      </span>
-                    ) : (
-                      <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11.5, fontWeight: 700, color: "#b45309", background: "#fef3c7", borderRadius: 20, padding: "3px 9px", whiteSpace: "nowrap" }}>
-                          <Clock size={11} /> Pending
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => onApproveEmail(p._id)}
-                          disabled={approvingId === p._id}
-                          style={{
-                            background: ORANGE,
-                            color: "#fff",
-                            border: "none",
-                            padding: "4px 10px",
-                            borderRadius: 8,
-                            fontSize: 11.5,
-                            fontWeight: 700,
-                            cursor: approvingId === p._id ? "not-allowed" : "pointer",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 4,
-                            whiteSpace: "nowrap",
-                            boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
-                          }}
-                        >
-                          <Send size={11} />
-                          {approvingId === p._id ? "Sending…" : "Approve"}
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                  <td style={{ padding: "14px 20px" }}>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 20, padding: "4px 11px", whiteSpace: "nowrap" }}>
-                      <CheckCircle2 size={13} /> Success
-                    </span>
-                  </td>
-                  <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888", whiteSpace: "nowrap" }}>{fmtDate(p.createdAt)}</td>
+
+        {payments.length === 0 ? (
+          <div style={{ padding: "50px 20px", textAlign: "center", color: "#94a3b8", fontSize: 13 }}>
+            {search ? "No payments match your search." : "No successful payments recorded yet."}
+          </div>
+        ) : (
+          <div className="cp-custom-scroll" style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", minWidth: 980, borderCollapse: "collapse", fontSize: 12 }}>
+              <thead>
+                <tr style={{ background: "#f8fafc", borderBottom: "1.5px solid #e2e8f0" }}>
+                  {["#", "", "Customer", "Email", "Phone", "Plan", "Amount", "Email Approval", "Status", "Paid On"].map((h, hi) => (
+                    <th key={hi} style={{
+                      padding: "10px 14px", textAlign: "left", fontSize: 10.5,
+                      fontWeight: 800, color: "#64748b", letterSpacing: ".05em",
+                      textTransform: "uppercase", whiteSpace: "nowrap",
+                    }}>{h}</th>
+                  ))}
                 </tr>
-                {isOpen && (
-                  <tr style={{ borderBottom: "1px solid #f0f0f0", background: "#fafafa" }}>
-                    <td colSpan={10} style={{ padding: "0 20px 18px 52px" }}>
-                      {!p.confirmationEmailSent && (
-                        <div style={{ background: "#fff7ed", border: "1.5px solid #fed7aa", borderRadius: 12, padding: "14px 18px", marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-                          <div>
-                            <div style={{ fontSize: 13.5, fontWeight: 700, color: "#9a3412" }}>
-                              ⚠️ Student Confirmation Email Pending Approval
+              </thead>
+              <tbody>
+                {payments.map((p, i) => {
+                  const isOpen = expanded.has(p._id);
+                  return (
+                    <Fragment key={p._id}>
+                      <tr
+                        style={{ borderBottom: isOpen ? "none" : "1px solid #f1f5f9", transition: "background .12s", cursor: "pointer", background: isOpen ? "#f8fafc" : "transparent" }}
+                        onClick={() => toggleRow(p._id)}
+                        onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+                        onMouseLeave={e => e.currentTarget.style.background = isOpen ? "#f8fafc" : "transparent"}
+                      >
+                        <td style={{ padding: "11px 14px", fontSize: 11, color: "#94a3b8", fontFamily: "monospace", width: 36 }}>{i + 1}</td>
+                        <td style={{ padding: "11px 6px", width: 22, color: "#94a3b8" }}>
+                          {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                        </td>
+                        <td style={{ padding: "11px 14px" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                            <div style={{
+                              width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
+                              background: avatarColor(p.name || p.phone),
+                              color: "#fff", display: "grid", placeItems: "center",
+                              fontSize: 12, fontWeight: 800,
+                            }}>
+                              {avatar(p.name, p.phone)}
                             </div>
-                            <div style={{ fontSize: 12.5, color: "#b45309", marginTop: 2 }}>
-                              The payment confirmation and welcome email has not been dispatched to <strong>{p.name}</strong> ({p.email}) yet. Click Approve to dispatch it.
-                            </div>
+                            <span style={{ fontWeight: 700, color: "#0f172a", fontSize: 12.5 }}>{p.name || "-"}</span>
                           </div>
-                          <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); onApproveEmail(p._id); }}
-                            disabled={approvingId === p._id}
-                            style={{
-                              background: "#16a34a",
-                              color: "#fff",
-                              border: "none",
-                              padding: "7px 16px",
-                              borderRadius: 8,
-                              fontSize: 12.5,
-                              fontWeight: 700,
-                              cursor: approvingId === p._id ? "not-allowed" : "pointer",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 6,
-                              boxShadow: "0 2px 10px rgba(22,163,74,0.3)",
-                            }}
-                          >
-                            <Send size={13} />
-                            {approvingId === p._id ? "Sending Email…" : "Approve & Send Email Now"}
-                          </button>
-                        </div>
+                        </td>
+                        <td style={{ padding: "11px 14px" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 12 }}>
+                            <Mail size={12} color="#94a3b8" />{p.email || "-"}
+                          </div>
+                        </td>
+                        <td style={{ padding: "11px 14px" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 12 }}>
+                            <Phone size={12} color="#94a3b8" />{p.phone || "-"}
+                          </div>
+                        </td>
+                        <td style={{ padding: "11px 14px", fontSize: 11.5, color: "#475569" }}>{p.planLabel || p.plan || "-"}</td>
+                        <td style={{ padding: "11px 14px", fontSize: 12.5, color: "#0f172a", fontWeight: 800, whiteSpace: "nowrap" }}>
+                          ₹{Number(p.amount || 0).toLocaleString("en-IN")}
+                        </td>
+                        <td style={{ padding: "11px 14px" }} onClick={(e) => e.stopPropagation()}>
+                          {p.confirmationEmailSent ? (
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 6, padding: "3px 8px", whiteSpace: "nowrap" }}>
+                              <CheckCircle2 size={12} /> Approved
+                            </span>
+                          ) : (
+                            <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                              <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10.5, fontWeight: 700, color: "#b45309", background: "#fef3c7", borderRadius: 6, padding: "2px 7px", whiteSpace: "nowrap" }}>
+                                <Clock size={10} /> Pending
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => onApproveEmail(p._id)}
+                                disabled={approvingId === p._id}
+                                style={{
+                                  background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                                  color: "#fff",
+                                  border: "none",
+                                  padding: "3px 9px",
+                                  borderRadius: 6,
+                                  fontSize: 11,
+                                  fontWeight: 700,
+                                  cursor: approvingId === p._id ? "not-allowed" : "pointer",
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: 4,
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                <Send size={10} />
+                                {approvingId === p._id ? "Sending…" : "Approve"}
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: "11px 14px" }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 6, padding: "3px 8px", whiteSpace: "nowrap" }}>
+                            <CheckCircle2 size={12} /> Paid
+                          </span>
+                        </td>
+                        <td style={{ padding: "11px 14px", fontSize: 11.5, color: "#64748b", whiteSpace: "nowrap" }}>{fmtDate(p.createdAt)}</td>
+                      </tr>
+                      {isOpen && (
+                        <tr style={{ borderBottom: "1px solid #f1f5f9", background: "#f8fafc" }}>
+                          <td colSpan={10} style={{ padding: "0 18px 16px 48px" }}>
+                            {!p.confirmationEmailSent && (
+                              <div style={{ background: "#fff7ed", border: "1.5px solid #fed7aa", borderRadius: 10, padding: "10px 14px", marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
+                                <div>
+                                  <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412" }}>
+                                    Student Confirmation Email Pending Approval
+                                  </div>
+                                  <div style={{ fontSize: 11.5, color: "#b45309", marginTop: 2 }}>
+                                    Dispatch confirmation and welcome mail to <strong>{p.name}</strong> ({p.email}).
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); onApproveEmail(p._id); }}
+                                  disabled={approvingId === p._id}
+                                  style={{
+                                    background: "#16a34a",
+                                    color: "#fff",
+                                    border: "none",
+                                    padding: "6px 14px",
+                                    borderRadius: 7,
+                                    fontSize: 11.5,
+                                    fontWeight: 700,
+                                    cursor: approvingId === p._id ? "not-allowed" : "pointer",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: 5,
+                                  }}
+                                >
+                                  <Send size={12} />
+                                  {approvingId === p._id ? "Sending…" : "Approve Now"}
+                                </button>
+                              </div>
+                            )}
+                            <div style={{ fontSize: 10.5, fontWeight: 800, color: "#64748b", letterSpacing: ".05em", textTransform: "uppercase", marginBottom: 6 }}>
+                              Enrollment Data Document
+                            </div>
+                            <pre style={{
+                              margin: 0, padding: "10px 14px", background: "#0f172a", color: "#f8fafc",
+                              borderRadius: 8, fontSize: 11.5, lineHeight: 1.5, overflowX: "auto",
+                              fontFamily: "ui-monospace, monospace",
+                            }}>
+                              {JSON.stringify(p, null, 2)}
+                            </pre>
+                          </td>
+                        </tr>
                       )}
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#999", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: 8 }}>
-                        Full document (MongoDB Atlas · enrollments)
-                      </div>
-                      <pre style={{
-                        margin: 0, padding: "14px 16px", background: "#0d1b3e", color: "#cdd6f4",
-                        borderRadius: 10, fontSize: 12.5, lineHeight: 1.6, overflowX: "auto",
-                        fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-                      }}>
-                        {JSON.stringify(p, null, 2)}
-                      </pre>
-                    </td>
-                  </tr>
-                )}
-                </Fragment>
-              );})}
-            </tbody>
-          </table>
-        </div>
-      )}
+                    </Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

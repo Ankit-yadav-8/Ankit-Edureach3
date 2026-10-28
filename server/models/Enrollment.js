@@ -58,6 +58,7 @@ const enrollmentSchema = new mongoose.Schema(
     // Mentorship context (optional)
     currentClass: { type: String, trim: true, default: "" },
     targetExam:   { type: String, trim: true, default: "" },
+    studentGroup: { type: String, trim: true, default: "" }, // e.g. Campus-Point-1, Campus-Point-2
 
     // Ranks
     jeeMainCrlRank:      { type: Number, default: null },

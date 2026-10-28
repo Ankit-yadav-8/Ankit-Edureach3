@@ -685,6 +685,7 @@ export default function StudentLoginTracking({ token, onSelectStudent }) {
 
               {/* Interactive Legend */}
               <div
+                className="cp-custom-scroll"
                 style={{
                   flex: 1,
                   minWidth: 160,
@@ -807,6 +808,7 @@ export default function StudentLoginTracking({ token, onSelectStudent }) {
           </div>
 
           <div
+            className="cp-custom-scroll"
             style={{
               flex: 1,
               maxHeight: 220,
@@ -814,6 +816,7 @@ export default function StudentLoginTracking({ token, onSelectStudent }) {
               display: "flex",
               flexDirection: "column",
               gap: 8,
+              paddingRight: 4,
             }}
           >
             {data?.historyTimeline && data.historyTimeline.length > 0 ? (
@@ -1015,7 +1018,7 @@ export default function StudentLoginTracking({ token, onSelectStudent }) {
         </div>
 
         {/* Responsive Table */}
-        <div style={{ overflowX: "auto" }}>
+        <div className="cp-custom-scroll" style={{ overflowX: "auto" }}>
           <table
             style={{
               width: "100%",

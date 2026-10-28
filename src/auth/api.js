@@ -149,8 +149,16 @@ export const apiAdminMentorAssign = (adminToken, id, studentId) =>
   adminReq(`/api/admin/mentors/${id}/students`, adminToken, { method: "POST", body: { studentId } });
 export const apiAdminMentorUnassign = (adminToken, id, studentId) =>
   adminReq(`/api/admin/mentors/${id}/students/${encodeURIComponent(studentId)}`, adminToken, { method: "DELETE" });
+export const apiAdminMentorDelete = (adminToken, id) =>
+  adminReq(`/api/admin/mentors/${id}`, adminToken, { method: "DELETE" });
 export const apiAdminMentorResetPassword = (adminToken, id) =>
   adminReq(`/api/admin/mentors/${id}/reset-password`, adminToken, { method: "POST" });
+export const apiAdminEligibleStudents = (adminToken) =>
+  adminReq("/api/admin/mentors/eligible-students", adminToken);
+export const apiAdminSetStudentGroup = (adminToken, studentId, studentGroup) =>
+  adminReq("/api/admin/mentors/student-group", adminToken, { method: "POST", body: { studentId, studentGroup } });
+export const apiAdminAllStudentsOverview = (adminToken) =>
+  adminReq("/api/admin/mentors/all-students-overview", adminToken);
 export const apiAdminAnalyticsOverview = (adminToken, range = "30d", startDate, endDate) => {
   const p = new URLSearchParams();
   if (range) p.append("range", range);

@@ -140,19 +140,53 @@ router.get("/tracking-analytics", async (req, res) => {
       let tasksAssigned = 0;
       let tasksCompleted = 0;
       let tasksOverdue = 0;
+      const tasksByStudentList = [];
+      const mentorAssignedTasks = [];
 
       assignedStudents.forEach((sid) => {
+        const enr = enrollments.find((e) => String(e.studentId || "").toUpperCase() === sid);
+        const sName = enr?.name || sid;
         const studentTasks = tasksByStudent.get(sid) || [];
+        let sCompleted = 0;
+
         studentTasks.forEach((t) => {
           tasksAssigned++;
           if (t.completed) {
             tasksCompleted++;
+            sCompleted++;
           } else {
             const created = t.createdAt ? new Date(t.createdAt).getTime() : 0;
             if (created && (now.getTime() - created > 7 * 24 * 60 * 60 * 1000)) {
               tasksOverdue++;
             }
           }
+          mentorAssignedTasks.push({
+            id: t.id || t._id,
+            text: t.text,
+            studentId: sid,
+            studentName: sName,
+            mentorId: mId,
+            mentorName: m.name,
+            completed: !!t.completed,
+            completedAt: t.completedAt || null,
+            createdAt: t.createdAt || null,
+          });
+        });
+
+        tasksByStudentList.push({
+          studentId: sid,
+          studentName: sName,
+          studentEmail: enr?.email || "",
+          tasksAssigned: studentTasks.length,
+          tasksCompleted: sCompleted,
+          completionRate: studentTasks.length > 0 ? Math.round((sCompleted / studentTasks.length) * 100) : 0,
+          tasks: studentTasks.map((t) => ({
+            id: t.id || t._id,
+            text: t.text,
+            completed: !!t.completed,
+            completedAt: t.completedAt,
+            createdAt: t.createdAt,
+          })),
         });
       });
 
@@ -207,6 +241,8 @@ router.get("/tracking-analytics", async (req, res) => {
         tasksPending,
         tasksOverdue,
         completionRate,
+        tasksByStudentList,
+        assignedTasksList: mentorAssignedTasks,
         lastActivity,
         activityStatus,
       };
@@ -476,6 +512,173 @@ router.post("/:id/reset-password", async (req, res) => {
     res.json({ password });
   } catch (e) {
     console.error("[admin/mentors reset]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* ── Delete a mentor ──────────────────────────────────────────────────────── */
+router.delete("/:id", async (req, res) => {
+  try {
+    const mentor = await Mentor.findByIdAndDelete(req.params.id);
+    if (!mentor) return res.status(404).json({ error: "Mentor not found" });
+    res.json({ ok: true, deletedId: req.params.id, name: mentor.name });
+  } catch (e) {
+    console.error("[admin/mentors DELETE]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* ── Eligible paid students directory for assignment & lookup ──────────────── */
+router.get("/eligible-students", async (_req, res) => {
+  try {
+    const enrollments = await Enrollment.find({ status: "paid" })
+      .select("studentId name email phone currentClass targetExam studentGroup plan createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const mentors = await Mentor.find().select("name email students").lean();
+    const mentorByStudent = new Map();
+    mentors.forEach((m) => {
+      (m.students || []).forEach((sid) => {
+        mentorByStudent.set(String(sid).toUpperCase(), { id: String(m._id), name: m.name, email: m.email });
+      });
+    });
+
+    const list = enrollments
+      .filter((e) => e.studentId)
+      .map((e) => {
+        const sid = String(e.studentId).toUpperCase();
+        return {
+          studentId: sid,
+          name: e.name || "Student",
+          email: e.email || "",
+          phone: e.phone || "",
+          currentClass: e.currentClass || "",
+          targetExam: e.targetExam || "",
+          studentGroup: e.studentGroup || "",
+          plan: e.plan || "",
+          assignedMentor: mentorByStudent.get(sid) || null,
+          createdAt: e.createdAt,
+        };
+      });
+
+    res.json({ students: list });
+  } catch (e) {
+    console.error("[admin/mentors eligible-students]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* ── Assign/update student group like Campus-Point-Number ───────────────────── */
+router.post("/student-group", async (req, res) => {
+  try {
+    const studentId = String(req.body?.studentId || "").trim().toUpperCase();
+    const studentGroup = String(req.body?.studentGroup || "").trim();
+    if (!studentId) return res.status(400).json({ error: "studentId is required" });
+
+    await Enrollment.updateMany(
+      { studentId },
+      { $set: { studentGroup } }
+    );
+    res.json({ ok: true, studentId, studentGroup });
+  } catch (e) {
+    console.error("[admin/mentors student-group]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* ── All students overview: grouped by common mentor + group tags + tasks ──── */
+router.get("/all-students-overview", async (_req, res) => {
+  try {
+    const [mentors, enrollments, allTasksDocs] = await Promise.all([
+      Mentor.find().select("-passwordHash").lean(),
+      Enrollment.find({ status: "paid" })
+        .select("studentId name email phone currentClass targetExam studentGroup plan createdAt")
+        .sort({ createdAt: -1 })
+        .lean(),
+      MentorTask.find().lean(),
+    ]);
+
+    const tasksByStudent = new Map();
+    allTasksDocs.forEach((doc) => {
+      tasksByStudent.set(String(doc.studentId).toUpperCase(), doc.tasks || []);
+    });
+
+    const enrByStudentId = new Map();
+    enrollments.forEach((e) => {
+      if (e.studentId) enrByStudentId.set(String(e.studentId).toUpperCase(), e);
+    });
+
+    const assignedStudentIds = new Set();
+    const mentorGroups = mentors.map((m, idx) => {
+      const assignedIds = (m.students || []).map((s) => String(s).toUpperCase());
+      const studentsList = assignedIds.map((sid) => {
+        assignedStudentIds.add(sid);
+        const enr = enrByStudentId.get(sid);
+        const tasks = tasksByStudent.get(sid) || [];
+        const completedTasks = tasks.filter((t) => t.completed);
+        return {
+          studentId: sid,
+          name: enr?.name || "Student",
+          email: enr?.email || "",
+          phone: enr?.phone || "",
+          currentClass: enr?.currentClass || "",
+          targetExam: enr?.targetExam || "",
+          studentGroup: enr?.studentGroup || `Campus-Point-${idx + 1}`,
+          plan: enr?.plan || "",
+          tasksAssigned: tasks.length,
+          tasksCompleted: completedTasks.length,
+          tasks,
+          createdAt: enr?.createdAt || null,
+        };
+      });
+
+      return {
+        mentorId: String(m._id),
+        mentorName: m.name,
+        mentorEmail: m.email,
+        mentorCollege: m.college || "",
+        mentorPhone: m.phone || "",
+        active: m.active,
+        defaultGroupLabel: `Campus-Point-${idx + 1}`,
+        studentCount: studentsList.length,
+        students: studentsList,
+      };
+    });
+
+    // Unassigned students
+    const unassignedStudents = [];
+    enrollments.forEach((e) => {
+      if (e.studentId && !assignedStudentIds.has(String(e.studentId).toUpperCase())) {
+        const sid = String(e.studentId).toUpperCase();
+        const tasks = tasksByStudent.get(sid) || [];
+        unassignedStudents.push({
+          studentId: sid,
+          name: e.name || "Student",
+          email: e.email || "",
+          phone: e.phone || "",
+          currentClass: e.currentClass || "",
+          targetExam: e.targetExam || "",
+          studentGroup: e.studentGroup || "Unassigned",
+          plan: e.plan || "",
+          tasksAssigned: tasks.length,
+          tasksCompleted: tasks.filter((t) => t.completed).length,
+          tasks,
+          createdAt: e.createdAt,
+        });
+      }
+    });
+
+    res.json({
+      mentorGroups,
+      unassigned: {
+        studentCount: unassignedStudents.length,
+        students: unassignedStudents,
+      },
+      totalPaidStudents: enrollments.filter((e) => e.studentId).length,
+    });
+  } catch (e) {
+    console.error("[admin/mentors all-students-overview]", e.message);
     res.status(500).json({ error: "Server error" });
   }
 });

@@ -491,8 +491,16 @@ export default function AllMenteesMatrix({ token, onSelectStudent }) {
                     >
                       {/* Name & ID */}
                       <td style={{ padding: "12px" }}>
-                        <div style={{ fontWeight: 800, color: "#0f172a" }}>
-                          {s.name}
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                          <span style={{ fontWeight: 800, color: "#0f172a" }}>{s.name}</span>
+                          {s.studentGroup && (
+                            <span style={{
+                              fontSize: 9.5, fontWeight: 700, color: "#2563eb", background: "#eff6ff",
+                              border: "1px solid #dbeafe", padding: "1px 5px", borderRadius: 4,
+                            }}>
+                              {s.studentGroup}
+                            </span>
+                          )}
                         </div>
                         <div style={{ fontSize: 11, color: "#64748b" }}>
                           {s.studentId} · <span style={{ textTransform: "capitalize" }}>{s.plan?.replace("mentor-", "")}</span>

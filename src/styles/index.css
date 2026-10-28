@@ -1963,9 +1963,76 @@ a.section-link:hover { color:var(--coral); transform:translateX(2px); display:in
 /* ════════════════════════════════════════════════
    CUSTOM SCROLLBAR
 ════════════════════════════════════════════════ */
-::-webkit-scrollbar             { width:10px; height:10px; }
-::-webkit-scrollbar-track       { background:#f9f3ee; }
-::-webkit-scrollbar-thumb       { background:linear-gradient(var(--coral),var(--gold)); border-radius:10px; box-shadow: 0 0 8px rgba(255, 105, 61,.4); }
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #FF693D #f1f5f9;
+}
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #FF693D;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e5532b;
+}
+
+/* Dedicated custom scroll utility classes */
+.cp-custom-scroll,
+.adm-main-scroll,
+.mentor-main-scroll,
+.adm-sidebar,
+.sidebar-desktop,
+.table-responsive,
+.custom-scroll-y {
+  scrollbar-width: thin;
+  scrollbar-color: #FF693D #f1f5f9;
+}
+.cp-custom-scroll::-webkit-scrollbar,
+.adm-main-scroll::-webkit-scrollbar,
+.mentor-main-scroll::-webkit-scrollbar,
+.adm-sidebar::-webkit-scrollbar,
+.sidebar-desktop::-webkit-scrollbar,
+.table-responsive::-webkit-scrollbar,
+.custom-scroll-y::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+.cp-custom-scroll::-webkit-scrollbar-track,
+.adm-main-scroll::-webkit-scrollbar-track,
+.mentor-main-scroll::-webkit-scrollbar-track,
+.adm-sidebar::-webkit-scrollbar-track,
+.sidebar-desktop::-webkit-scrollbar-track,
+.table-responsive::-webkit-scrollbar-track,
+.custom-scroll-y::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+.cp-custom-scroll::-webkit-scrollbar-thumb,
+.adm-main-scroll::-webkit-scrollbar-thumb,
+.mentor-main-scroll::-webkit-scrollbar-thumb,
+.adm-sidebar::-webkit-scrollbar-thumb,
+.sidebar-desktop::-webkit-scrollbar-thumb,
+.table-responsive::-webkit-scrollbar-thumb,
+.custom-scroll-y::-webkit-scrollbar-thumb {
+  background: #FF693D;
+  border-radius: 6px;
+}
+.cp-custom-scroll::-webkit-scrollbar-thumb:hover,
+.adm-main-scroll::-webkit-scrollbar-thumb:hover,
+.mentor-main-scroll::-webkit-scrollbar-thumb:hover,
+.adm-sidebar::-webkit-scrollbar-thumb:hover,
+.sidebar-desktop::-webkit-scrollbar-thumb:hover,
+.table-responsive::-webkit-scrollbar-thumb:hover,
+.custom-scroll-y::-webkit-scrollbar-thumb:hover {
+  background: #e5532b;
+}
 
 /* ════════════════════════════════════════════════
    TOOL CARDS

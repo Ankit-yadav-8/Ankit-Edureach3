@@ -563,7 +563,7 @@ router.get("/students-overview", requireMentor, requirePasswordChanged, async (r
     const enrollments = await Enrollment.find({
       studentId: { $in: assignedIds },
       status: "paid",
-    }).select("studentId name email plan createdAt").lean();
+    }).select("studentId name email phone plan studentGroup createdAt").lean();
 
     const enrMap = new Map(enrollments.map((e) => [e.studentId.toUpperCase(), e]));
     const emails = enrollments.map((e) => e.email).filter(Boolean);
@@ -633,7 +633,9 @@ router.get("/students-overview", requireMentor, requirePasswordChanged, async (r
         studentId: sid,
         name: enr.name,
         email: enr.email,
+        phone: enr.phone || "",
         plan: enr.plan,
+        studentGroup: enr.studentGroup || "Campus-Point-1",
         enrolledSince: enr.createdAt,
         lastLogin: user?.lastLogin || null,
         testStats: {
@@ -652,6 +654,13 @@ router.get("/students-overview", requireMentor, requirePasswordChanged, async (r
           assigned: allTasks.length,
           completed: completedTasks.length,
           pending: allTasks.length - completedTasks.length,
+          tasks: allTasks.map((t) => ({
+            id: t.id || t._id,
+            text: t.text,
+            completed: !!t.completed,
+            completedAt: t.completedAt || null,
+            createdAt: t.createdAt || null,
+          })),
         },
         studyStats: {
           weekHours,

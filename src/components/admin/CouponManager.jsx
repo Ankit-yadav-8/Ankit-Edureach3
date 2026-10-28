@@ -257,7 +257,7 @@ export default function CouponManager({ adminKey }) {
       )}
 
       {/* Coupons List */}
-      <div style={{ background: "#fff", border: "1px solid #f0e9e0", borderRadius: 16, overflow: "hidden", boxShadow: "0 10px 30px -10px rgba(13,27,62,.06)" }}>
+      <div className="cp-custom-scroll" style={{ background: "#fff", border: "1.5px solid #e2e8f0", borderRadius: 16, overflowX: "auto", boxShadow: "0 2px 10px rgba(15,23,42,0.03)" }}>
         {busy && coupons.length === 0 ? (
           <div style={{ padding: 40, textAlign: "center", color: "#6b7280" }}>
             <Loader2 size={24} className="spin" style={{ margin: "0 auto 10px", display: "block" }} />

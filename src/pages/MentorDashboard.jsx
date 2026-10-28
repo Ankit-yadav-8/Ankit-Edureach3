@@ -4,7 +4,7 @@ import {
   Users, LogOut, Lock, Loader2, ShieldCheck, AlertCircle, Zap,
   Activity, BookOpen, Trophy, ClipboardList, CheckCircle2, Menu,
   X, ArrowRight, Eye, EyeOff, Mail, RefreshCw, ChevronRight,
-  Sparkles, UserCheck, Flame, Target, Award,
+  Sparkles, UserCheck, Flame, Target, Award, Trash2, Plus, Tag, Search,
 } from "lucide-react";
 import Seo from "../components/Seo.jsx";
 import StudentReport from "../components/mentor/StudentReport.jsx";
@@ -14,7 +14,7 @@ import ChapterQuizModal from "../components/quiz/ChapterQuizModal.jsx";
 import {
   apiMentorLogin, apiMentorMe, apiMentorSetPassword, apiMentorStudents,
   apiMentorStudentProgress, apiMentorStudentTests, apiMentorStudentTasks,
-  apiMentorSetStudentTasks,
+  apiMentorSetStudentTasks, apiMentorStudentsOverview,
 } from "../auth/api.js";
 
 const ACCENT = "#FF693D";
@@ -631,6 +631,74 @@ export default function MentorDashboard() {
     [token, activeId]
   );
 
+  // Task Studio state
+  const [taskStudioTab, setTaskStudioTab] = useState("mentee"); // "mentee" | "all-roster"
+  const [newTaskInput, setNewTaskInput] = useState("");
+  const [taskSaving, setTaskSaving] = useState(false);
+  const [allMenteesTasks, setAllMenteesTasks] = useState([]);
+  const [loadingAllTasks, setLoadingAllTasks] = useState(false);
+  const [rosterSearch, setRosterSearch] = useState("");
+  const [rosterStatusFilter, setRosterStatusFilter] = useState("all");
+
+  const fetchAllMenteesTasks = useCallback(async () => {
+    if (!token) return;
+    setLoadingAllTasks(true);
+    try {
+      const res = await apiMentorStudentsOverview(token);
+      const roster = [];
+      (res.students || []).forEach((st) => {
+        (st.taskStats?.tasks || []).forEach((t) => {
+          roster.push({
+            ...t,
+            studentId: st.studentId,
+            studentName: st.name,
+            studentEmail: st.email,
+            studentGroup: st.studentGroup || "Campus-Point-1",
+            plan: st.plan,
+          });
+        });
+      });
+      setAllMenteesTasks(roster);
+    } catch (e) {
+      console.error("Failed to fetch all mentees tasks:", e);
+    } finally {
+      setLoadingAllTasks(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (activeTab === "assign") {
+      fetchAllMenteesTasks();
+    }
+  }, [activeTab, fetchAllMenteesTasks]);
+
+  const handleAddTask = async (e) => {
+    e?.preventDefault();
+    if (!newTaskInput.trim() || !activeId) return;
+    setTaskSaving(true);
+    try {
+      const currentTexts = (report.tasks || []).map((t) => t.text);
+      await saveTasks([...currentTexts, newTaskInput.trim()]);
+      setNewTaskInput("");
+      fetchAllMenteesTasks();
+    } catch (err) {
+      alert("Failed to assign task: " + (err.message || err));
+    } finally {
+      setTaskSaving(false);
+    }
+  };
+
+  const handleDeleteTask = async (taskIdx) => {
+    if (!window.confirm("Remove this assigned task?")) return;
+    try {
+      const remaining = (report.tasks || []).filter((_, i) => i !== taskIdx).map((t) => t.text);
+      await saveTasks(remaining);
+      fetchAllMenteesTasks();
+    } catch (err) {
+      alert("Failed to delete task: " + (err.message || err));
+    }
+  };
+
   const activeStudent = students.find((s) => s.studentId === activeId) || students[0];
 
   if (booting) {
@@ -674,12 +742,14 @@ export default function MentorDashboard() {
         className="mentor-console-root"
         style={{
           display: "flex",
-          minHeight: "calc(100vh - 98px)",
-          paddingTop: 98,
+          height: "calc(100vh - 98px)",
+          marginTop: 98,
+          overflow: "hidden",
           background: "#f8fafc",
           fontFamily: "Inter, system-ui, sans-serif",
           color: "#0f172a",
           boxSizing: "border-box",
+          position: "relative",
         }}
       >
         {/* Mobile Navigation Drawer Backdrop */}
@@ -704,18 +774,20 @@ export default function MentorDashboard() {
             borderRight: "1px solid #e2e8f0",
             display: "flex",
             flexDirection: "column",
-            zIndex: mobileMenuOpen ? 999 : 95,
-            position: mobileMenuOpen ? "fixed" : "sticky",
-            top: mobileMenuOpen ? 0 : 98,
+            zIndex: mobileMenuOpen ? 999 : 50,
+            position: mobileMenuOpen ? "fixed" : "relative",
+            top: mobileMenuOpen ? 0 : "auto",
             left: 0,
             bottom: 0,
-            height: mobileMenuOpen ? "100vh" : "calc(100vh - 98px)",
+            height: mobileMenuOpen ? "100vh" : "100%",
+            flexShrink: 0,
             overflowY: "auto",
             transform: mobileMenuOpen ? "translateX(0)" : "translateX(0)",
             boxShadow: mobileMenuOpen ? "4px 0 24px rgba(0,0,0,0.15)" : "none",
             transition: "transform 0.25s ease",
+            boxSizing: "border-box",
           }}
-          className={mobileMenuOpen ? "sidebar-mobile-open" : "sidebar-desktop"}
+          className={`cp-custom-scroll ${mobileMenuOpen ? "sidebar-mobile-open" : "sidebar-desktop"}`}
         >
           {/* Sidebar Header / Brand */}
           <div
@@ -953,13 +1025,24 @@ export default function MentorDashboard() {
         </aside>
 
         {/* ── Main Content Area with Sticky Header ── */}
-        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <div
+          className="mentor-main-scroll cp-custom-scroll"
+          style={{
+            flex: 1,
+            minWidth: 0,
+            height: "100%",
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            boxSizing: "border-box",
+          }}
+        >
           {/* Top Sticky Navigation Bar */}
           <header
             style={{
               position: "sticky",
-              top: 98,
-              zIndex: 90,
+              top: 0,
+              zIndex: 80,
               background: "#ffffff",
               borderBottom: "1px solid #e2e8f0",
               height: 52,
@@ -969,6 +1052,7 @@ export default function MentorDashboard() {
               justifyContent: "space-between",
               gap: 12,
               boxShadow: "0 1px 4px rgba(0,0,0,0.02)",
+              flexShrink: 0,
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -1355,79 +1439,348 @@ export default function MentorDashboard() {
                       borderRadius: 16,
                       padding: "20px",
                       boxShadow: "0 2px 8px rgba(15,23,42,0.03)",
+                      display: "flex",
+                      flexDirection: "column",
                     }}
                   >
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                    {/* Header with Sub-tabs */}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 10 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <ClipboardList size={16} color={ACCENT} />
                         <h4 style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14.5, color: "#0f172a", margin: 0 }}>
-                          Task Manager for {activeStudent?.name || "Mentee"}
+                          Task Studio &amp; Assignment
                         </h4>
                       </div>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b" }}>
-                        {report.tasks?.length || 0} active
-                      </span>
+
+                      {/* Sub-tab Switcher */}
+                      <div style={{ display: "flex", background: "#f1f5f9", padding: 3, borderRadius: 8, gap: 2 }}>
+                        <button
+                          type="button"
+                          onClick={() => setTaskStudioTab("mentee")}
+                          style={{
+                            padding: "4px 10px",
+                            borderRadius: 6,
+                            border: "none",
+                            background: taskStudioTab === "mentee" ? "#ffffff" : "transparent",
+                            color: taskStudioTab === "mentee" ? ACCENT : "#64748b",
+                            fontWeight: taskStudioTab === "mentee" ? 700 : 500,
+                            fontSize: 11.5,
+                            cursor: "pointer",
+                            boxShadow: taskStudioTab === "mentee" ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
+                          }}
+                        >
+                          {activeStudent?.name || "Mentee"} ({report.tasks?.length || 0})
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setTaskStudioTab("all-roster");
+                            fetchAllMenteesTasks();
+                          }}
+                          style={{
+                            padding: "4px 10px",
+                            borderRadius: 6,
+                            border: "none",
+                            background: taskStudioTab === "all-roster" ? "#ffffff" : "transparent",
+                            color: taskStudioTab === "all-roster" ? ACCENT : "#64748b",
+                            fontWeight: taskStudioTab === "all-roster" ? 700 : 500,
+                            fontSize: 11.5,
+                            cursor: "pointer",
+                            boxShadow: taskStudioTab === "all-roster" ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
+                          }}
+                        >
+                          All Assigned Tasks ({allMenteesTasks.length})
+                        </button>
+                      </div>
                     </div>
 
-                    <p style={{ fontSize: 11.5, color: "#64748b", margin: "0 0 14px", lineHeight: 1.45 }}>
-                      Tasks assigned here immediately sync to {activeStudent?.name}'s mandatory "From your mentor" fix-list on their dashboard.
-                    </p>
+                    {/* VIEW A: Current Active Mentee Task Studio */}
+                    {taskStudioTab === "mentee" ? (
+                      <div>
+                        {/* Quick Mentee Switcher in Studio */}
+                        <div style={{
+                          display: "flex", alignItems: "center", justifyContent: "space-between",
+                          padding: "8px 12px", background: "#f8fafc", borderRadius: 10,
+                          border: "1px solid #e2e8f0", marginBottom: 14, flexWrap: "wrap", gap: 8,
+                        }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b" }}>Target Mentee:</span>
+                            <select
+                              value={activeId}
+                              onChange={(e) => setActiveId(e.target.value)}
+                              style={{
+                                height: 30, padding: "0 8px", borderRadius: 6,
+                                border: "1px solid #cbd5e1", fontSize: 12, fontWeight: 700,
+                                color: "#0f172a", outline: "none", cursor: "pointer", background: "#fff",
+                              }}
+                            >
+                              {students.map((s) => (
+                                <option key={s.studentId} value={s.studentId}>
+                                  {s.name} ({s.studentId})
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <span style={{ fontSize: 11, color: "#64748b" }}>
+                            Direct syncs to student dashboard
+                          </span>
+                        </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                      {report.tasks && report.tasks.length > 0 ? (
-                        report.tasks.map((t, idx) => (
-                          <div
-                            key={t.id || idx}
+                        {/* Inline Task Assign Form */}
+                        <form onSubmit={handleAddTask} style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+                          <input
+                            type="text"
+                            placeholder={`Assign new task to ${activeStudent?.name || "student"}...`}
+                            value={newTaskInput}
+                            onChange={(e) => setNewTaskInput(e.target.value)}
                             style={{
-                              display: "flex",
+                              flex: 1,
+                              height: 36,
+                              padding: "0 12px",
+                              borderRadius: 8,
+                              border: "1.5px solid #cbd5e1",
+                              fontSize: 12,
+                              outline: "none",
+                              boxSizing: "border-box",
+                            }}
+                          />
+                          <button
+                            type="submit"
+                            disabled={taskSaving || !newTaskInput.trim()}
+                            style={{
+                              display: "inline-flex",
                               alignItems: "center",
-                              gap: 10,
-                              background: t.completed ? "#f0fdf4" : "#f8fafc",
-                              border: `1px solid ${t.completed ? "#bbf7d0" : "#e2e8f0"}`,
-                              borderRadius: 10,
-                              padding: "10px 12px",
-                              fontSize: 12.5,
+                              gap: 6,
+                              padding: "0 14px",
+                              borderRadius: 8,
+                              border: "none",
+                              background: newTaskInput.trim() ? "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)" : "#e2e8f0",
+                              color: newTaskInput.trim() ? "#fff" : "#94a3b8",
+                              fontSize: 12,
+                              fontWeight: 700,
+                              cursor: newTaskInput.trim() ? "pointer" : "not-allowed",
+                              height: 36,
+                              flexShrink: 0,
                             }}
                           >
-                            <span
-                              style={{
-                                width: 18,
-                                height: 18,
-                                borderRadius: "50%",
-                                display: "grid",
-                                placeItems: "center",
-                                background: t.completed ? "#16a34a" : "#fff",
-                                border: `1.5px solid ${t.completed ? "#16a34a" : "#cbd5e1"}`,
-                                color: "#fff",
-                                fontSize: 10,
-                                flexShrink: 0,
-                              }}
-                            >
-                              {t.completed && "✓"}
-                            </span>
-                            <span
-                              style={{
-                                flex: 1,
-                                color: t.completed ? "#166534" : "#0f172a",
-                                textDecoration: t.completed ? "line-through" : "none",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {t.text}
-                            </span>
-                            {t.completed && (
-                              <span style={{ fontSize: 10, fontWeight: 800, color: "#16a34a", background: "#dcfce7", padding: "1px 6px", borderRadius: 4 }}>
-                                Completed
-                              </span>
-                            )}
-                          </div>
-                        ))
-                      ) : (
-                        <div style={{ padding: "30px 10px", textAlign: "center", color: "#94a3b8", fontSize: 12.5 }}>
-                          No tasks assigned to {activeStudent?.name} yet. Switch to Workspace to add tasks.
+                            {taskSaving ? <RefreshCw size={12} style={{ animation: "cp-spin 1s linear infinite" }} /> : <Plus size={13} />} Assign
+                          </button>
+                        </form>
+
+                        {/* Tasks List */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 320, overflowY: "auto" }}>
+                          {report.tasks && report.tasks.length > 0 ? (
+                            report.tasks.map((t, idx) => (
+                              <div
+                                key={t.id || idx}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 10,
+                                  background: t.completed ? "#f0fdf4" : "#f8fafc",
+                                  border: `1px solid ${t.completed ? "#bbf7d0" : "#e2e8f0"}`,
+                                  borderRadius: 10,
+                                  padding: "9px 12px",
+                                  fontSize: 12,
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    width: 18,
+                                    height: 18,
+                                    borderRadius: "50%",
+                                    display: "grid",
+                                    placeItems: "center",
+                                    background: t.completed ? "#16a34a" : "#fff",
+                                    border: `1.5px solid ${t.completed ? "#16a34a" : "#cbd5e1"}`,
+                                    color: "#fff",
+                                    fontSize: 10,
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {t.completed ? "✓" : (idx + 1)}
+                                </span>
+
+                                <span
+                                  style={{
+                                    flex: 1,
+                                    color: t.completed ? "#166534" : "#0f172a",
+                                    textDecoration: t.completed ? "line-through" : "none",
+                                    fontWeight: 500,
+                                  }}
+                                >
+                                  {t.text}
+                                </span>
+
+                                {t.completed ? (
+                                  <span style={{ fontSize: 10, fontWeight: 800, color: "#16a34a", background: "#dcfce7", padding: "1px 6px", borderRadius: 4, flexShrink: 0 }}>
+                                    Completed
+                                  </span>
+                                ) : (
+                                  <span style={{ fontSize: 10, fontWeight: 700, color: "#ea580c", background: "#fff7ed", padding: "1px 6px", borderRadius: 4, flexShrink: 0 }}>
+                                    Pending
+                                  </span>
+                                )}
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteTask(idx)}
+                                  title="Remove task"
+                                  style={{
+                                    border: "none",
+                                    background: "transparent",
+                                    cursor: "pointer",
+                                    color: "#94a3b8",
+                                    padding: 3,
+                                    display: "grid",
+                                    placeItems: "center",
+                                  }}
+                                  onMouseEnter={(e) => { e.currentTarget.style.color = "#dc2626"; }}
+                                  onMouseLeave={(e) => { e.currentTarget.style.color = "#94a3b8"; }}
+                                >
+                                  <Trash2 size={13} />
+                                </button>
+                              </div>
+                            ))
+                          ) : (
+                            <div style={{ padding: "26px 10px", textAlign: "center", color: "#94a3b8", fontSize: 12 }}>
+                              No tasks assigned to {activeStudent?.name} yet. Use the input box above to assign one.
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      /* VIEW B: All Mentees Assigned Tasks Roster */
+                      <div>
+                        {/* Search & Filter Bar */}
+                        <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+                          <div style={{ position: "relative", flex: 1, minWidth: 160 }}>
+                            <Search size={13} style={{ position: "absolute", left: 9, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+                            <input
+                              type="text"
+                              placeholder="Filter by student name, CP ID, task..."
+                              value={rosterSearch}
+                              onChange={(e) => setRosterSearch(e.target.value)}
+                              style={{
+                                width: "100%",
+                                height: 32,
+                                paddingLeft: 28,
+                                paddingRight: 8,
+                                borderRadius: 7,
+                                border: "1px solid #cbd5e1",
+                                fontSize: 11.5,
+                                outline: "none",
+                                boxSizing: "border-box",
+                              }}
+                            />
+                          </div>
+
+                          <select
+                            value={rosterStatusFilter}
+                            onChange={(e) => setRosterStatusFilter(e.target.value)}
+                            style={{
+                              height: 32, padding: "0 8px", borderRadius: 7,
+                              border: "1px solid #cbd5e1", fontSize: 11.5, outline: "none",
+                              background: "#fff", cursor: "pointer",
+                            }}
+                          >
+                            <option value="all">All Statuses</option>
+                            <option value="completed">Completed Only</option>
+                            <option value="pending">Pending Only</option>
+                          </select>
+                        </div>
+
+                        {/* Roster Items */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: 7, maxHeight: 360, overflowY: "auto" }}>
+                          {loadingAllTasks ? (
+                            <div style={{ padding: "30px 0", textAlign: "center", color: "#94a3b8", fontSize: 12 }}>
+                              <RefreshCw size={15} style={{ animation: "cp-spin 1s linear infinite", margin: "0 auto 6px" }} />
+                              Loading all mentees tasks...
+                            </div>
+                          ) : allMenteesTasks.length === 0 ? (
+                            <div style={{ padding: "26px 10px", textAlign: "center", color: "#94a3b8", fontSize: 12 }}>
+                              No assigned tasks found across any of your mentees.
+                            </div>
+                          ) : (
+                            allMenteesTasks
+                              .filter((t) => {
+                                if (rosterStatusFilter === "completed" && !t.completed) return false;
+                                if (rosterStatusFilter === "pending" && t.completed) return false;
+                                if (rosterSearch.trim()) {
+                                  const q = rosterSearch.toLowerCase().trim();
+                                  return (
+                                    t.studentName?.toLowerCase().includes(q) ||
+                                    t.studentId?.toLowerCase().includes(q) ||
+                                    t.text?.toLowerCase().includes(q)
+                                  );
+                                }
+                                return true;
+                              })
+                              .map((t, idx) => (
+                                <div
+                                  key={t.id || idx}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    padding: "9px 12px",
+                                    borderRadius: 9,
+                                    background: t.completed ? "#f0fdf4" : "#ffffff",
+                                    border: `1px solid ${t.completed ? "#bbf7d0" : "#e2e8f0"}`,
+                                    gap: 10,
+                                    fontSize: 11.5,
+                                  }}
+                                >
+                                  <div style={{ minWidth: 0, flex: 1 }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: 3 }}>
+                                      <span style={{ fontWeight: 800, color: "#0f172a" }}>{t.studentName}</span>
+                                      <span style={{ fontFamily: "monospace", color: "#64748b", fontSize: 10.5 }}>({t.studentId})</span>
+                                      <span style={{ fontSize: 9.5, fontWeight: 700, color: "#2563eb", background: "#eff6ff", padding: "1px 5px", borderRadius: 4 }}>
+                                        {t.studentGroup}
+                                      </span>
+                                    </div>
+                                    <div style={{ color: t.completed ? "#166534" : "#334155", fontWeight: 500, lineHeight: 1.4 }}>
+                                      {t.text}
+                                    </div>
+                                  </div>
+
+                                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                                    {t.completed ? (
+                                      <span style={{ fontSize: 10, fontWeight: 800, color: "#16a34a", background: "#dcfce7", padding: "2px 7px", borderRadius: 4 }}>
+                                        Completed
+                                      </span>
+                                    ) : (
+                                      <span style={{ fontSize: 10, fontWeight: 700, color: "#ea580c", background: "#fff7ed", padding: "2px 7px", borderRadius: 4 }}>
+                                        Pending
+                                      </span>
+                                    )}
+
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setActiveId(t.studentId);
+                                        setTaskStudioTab("mentee");
+                                      }}
+                                      style={{
+                                        padding: "4px 8px",
+                                        borderRadius: 6,
+                                        border: "1px solid #e2e8f0",
+                                        background: "#fff",
+                                        color: ACCENT,
+                                        fontWeight: 700,
+                                        fontSize: 10.5,
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      Open →
+                                    </button>
+                                  </div>
+                                </div>
+                              ))
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

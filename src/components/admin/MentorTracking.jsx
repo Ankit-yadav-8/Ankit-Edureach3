@@ -3,9 +3,16 @@ import {
   Users, UserCheck, Calendar, Clock, Download, RefreshCw, Search,
   ChevronDown, ChevronUp, ArrowUpDown, ChevronRight, X, CheckCircle2,
   AlertTriangle, PieChart as PieIcon, Activity, Layers, CheckSquare,
-  FileSpreadsheet, ExternalLink, Mail, Phone, Building2, Shield, Eye
+  FileSpreadsheet, ExternalLink, Mail, Phone, Building2, Shield, Eye,
+  Tag, Edit2, Plus, Check, ClipboardCheck, FolderGit2
 } from "lucide-react";
-import { apiAdminMentorTracking, apiAdminMentorTrackingDetail } from "../../auth/api.js";
+import {
+  apiAdminMentorTracking, apiAdminMentorTrackingDetail,
+  apiAdminAllStudentsOverview, apiAdminSetStudentGroup
+} from "../../auth/api.js";
+import {
+  TaskCompletedSection, StudentGroupsSection, AssignedTasksRosterSection
+} from "./MentorTrackingSections.jsx";
 
 const ORANGE = "#FF693D";
 
@@ -61,6 +68,19 @@ export default function MentorTracking({ adminToken }) {
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailTab, setDetailTab] = useState("timeline"); // "timeline" | "students" | "tasks"
 
+  // Section view state
+  const [viewSection, setViewSection] = useState("telemetry"); // "telemetry" | "tasks-breakdown" | "groups" | "assigned-tasks"
+  const [taskMentorFilter, setTaskMentorFilter] = useState("all");
+  const [taskStatusFilter, setTaskStatusFilter] = useState("all");
+  const [taskSearch, setTaskSearch] = useState("");
+  const [expandedStudentTasks, setExpandedStudentTasks] = useState(new Set());
+
+  // Groups data state
+  const [groupsData, setGroupsData] = useState(null);
+  const [groupsLoading, setGroupsLoading] = useState(false);
+  const [editingGroupId, setEditingGroupId] = useState(null);
+  const [editingGroupText, setEditingGroupText] = useState("");
+
   const loadData = useCallback(async (r, start, end) => {
     setLoading(true);
     setErr("");
@@ -75,9 +95,64 @@ export default function MentorTracking({ adminToken }) {
     }
   }, [adminToken]);
 
+  const loadGroupsData = useCallback(async () => {
+    setGroupsLoading(true);
+    try {
+      const res = await apiAdminAllStudentsOverview(adminToken);
+      setGroupsData(res);
+    } catch (e) {
+      console.error("Failed to load groups overview:", e);
+    } finally {
+      setGroupsLoading(false);
+    }
+  }, [adminToken]);
+
   useEffect(() => {
     loadData(selectedRange, customStart, customEnd);
   }, [loadData, selectedRange, customStart, customEnd]);
+
+  useEffect(() => {
+    if (viewSection === "groups" && !groupsData) {
+      loadGroupsData();
+    }
+  }, [viewSection, groupsData, loadGroupsData]);
+
+  const toggleStudentTasksExpand = (sid) => {
+    setExpandedStudentTasks((prev) => {
+      const next = new Set(prev);
+      if (next.has(sid)) next.delete(sid);
+      else next.add(sid);
+      return next;
+    });
+  };
+
+  const saveGroupTag = async (studentId, tag) => {
+    if (!tag.trim()) {
+      setEditingGroupId(null);
+      return;
+    }
+    try {
+      await apiAdminSetStudentGroup(adminToken, studentId, tag.trim());
+      if (groupsData) {
+        setGroupsData((prev) => {
+          if (!prev) return prev;
+          const nextGroups = (prev.mentorGroups || []).map((g) => ({
+            ...g,
+            students: (g.students || []).map((s) => s.studentId === studentId ? { ...s, studentGroup: tag.trim() } : s),
+          }));
+          const nextUnassigned = {
+            ...prev.unassigned,
+            students: (prev.unassigned?.students || []).map((s) => s.studentId === studentId ? { ...s, studentGroup: tag.trim() } : s),
+          };
+          return { ...prev, mentorGroups: nextGroups, unassigned: nextUnassigned };
+        });
+      }
+      setEditingGroupId(null);
+      setEditingGroupText("");
+    } catch (e) {
+      alert("Failed to update student group: " + e.message);
+    }
+  };
 
   // Load drilldown details when mentor is selected
   const openMentorDetail = async (mentor) => {
@@ -241,11 +316,43 @@ export default function MentorTracking({ adminToken }) {
     link.setAttribute("download", `CampusPoint-Mentor-Analytics-${selectedRange}.csv`);
     document.body.appendChild(link);
     link.click();
-    link.remove();
+    document.body.removeChild(link);
   };
 
+  // All students with tasks flattened
+  const allStudentsWithTasks = useMemo(() => {
+    const list = [];
+    mentors.forEach((m) => {
+      (m.tasksByStudentList || []).forEach((st) => {
+        list.push({
+          ...st,
+          mentorId: m.id,
+          mentorName: m.name,
+          mentorEmail: m.email,
+          mentorColor: m.color,
+          mentorCollege: m.college,
+        });
+      });
+    });
+    return list;
+  }, [mentors]);
+
+  // All assigned tasks flattened
+  const allAssignedTasks = useMemo(() => {
+    const list = [];
+    mentors.forEach((m) => {
+      (m.assignedTasksList || []).forEach((t) => {
+        list.push({
+          ...t,
+          mentorColor: m.color,
+        });
+      });
+    });
+    return list;
+  }, [mentors]);
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, width: "100%" }}>
       {/* Top Header & Range Filter Bar */}
       <div style={{
         display: "flex",
@@ -392,8 +499,164 @@ export default function MentorTracking({ adminToken }) {
         </div>
       )}
 
-      {/* Summary KPI Strip */}
-      {summary && (
+      {/* SECTION TABS SWITCHER */}
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        padding: "4px",
+        background: "#f1f5f9",
+        borderRadius: 12,
+        width: "fit-content",
+        flexWrap: "wrap",
+      }}>
+        <button
+          onClick={() => setViewSection("telemetry")}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 7,
+            padding: "8px 16px",
+            borderRadius: 9,
+            border: "none",
+            background: viewSection === "telemetry" ? "#ffffff" : "transparent",
+            color: viewSection === "telemetry" ? ORANGE : "#475569",
+            fontWeight: viewSection === "telemetry" ? 800 : 600,
+            fontSize: 12.5,
+            cursor: "pointer",
+            boxShadow: viewSection === "telemetry" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+            transition: "all 0.15s ease",
+          }}
+        >
+          <Activity size={14} color={viewSection === "telemetry" ? ORANGE : "#64748b"} />
+          Telemetry & Distribution
+        </button>
+
+        <button
+          onClick={() => setViewSection("tasks-breakdown")}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 7,
+            padding: "8px 16px",
+            borderRadius: 9,
+            border: "none",
+            background: viewSection === "tasks-breakdown" ? "#ffffff" : "transparent",
+            color: viewSection === "tasks-breakdown" ? ORANGE : "#475569",
+            fontWeight: viewSection === "tasks-breakdown" ? 800 : 600,
+            fontSize: 12.5,
+            cursor: "pointer",
+            boxShadow: viewSection === "tasks-breakdown" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+            transition: "all 0.15s ease",
+          }}
+        >
+          <CheckSquare size={14} color={viewSection === "tasks-breakdown" ? ORANGE : "#64748b"} />
+          Tasks Completed (By Student)
+          {summary?.totalTasksCompletedSum != null && (
+            <span style={{
+              background: viewSection === "tasks-breakdown" ? `${ORANGE}15` : "#e2e8f0",
+              color: viewSection === "tasks-breakdown" ? ORANGE : "#475569",
+              padding: "1px 6px",
+              borderRadius: 10,
+              fontSize: 11,
+              fontWeight: 800,
+            }}>
+              {summary.totalTasksCompletedSum}/{summary.totalTasksAssignedSum}
+            </span>
+          )}
+        </button>
+
+        <button
+          onClick={() => {
+            setViewSection("groups");
+            if (!groupsData) loadGroupsData();
+          }}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 7,
+            padding: "8px 16px",
+            borderRadius: 9,
+            border: "none",
+            background: viewSection === "groups" ? "#ffffff" : "transparent",
+            color: viewSection === "groups" ? ORANGE : "#475569",
+            fontWeight: viewSection === "groups" ? 800 : 600,
+            fontSize: 12.5,
+            cursor: "pointer",
+            boxShadow: viewSection === "groups" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+            transition: "all 0.15s ease",
+          }}
+        >
+          <FolderGit2 size={14} color={viewSection === "groups" ? ORANGE : "#64748b"} />
+          Student Groups (Campus-Point-X)
+        </button>
+
+        <button
+          onClick={() => setViewSection("assigned-tasks")}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 7,
+            padding: "8px 16px",
+            borderRadius: 9,
+            border: "none",
+            background: viewSection === "assigned-tasks" ? "#ffffff" : "transparent",
+            color: viewSection === "assigned-tasks" ? ORANGE : "#475569",
+            fontWeight: viewSection === "assigned-tasks" ? 800 : 600,
+            fontSize: 12.5,
+            cursor: "pointer",
+            boxShadow: viewSection === "assigned-tasks" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+            transition: "all 0.15s ease",
+          }}
+        >
+          <Layers size={14} color={viewSection === "assigned-tasks" ? ORANGE : "#64748b"} />
+          All Assigned Tasks Roster
+        </button>
+      </div>
+
+      {/* ── SUB-SECTIONS RENDERING ── */}
+      {viewSection === "tasks-breakdown" && (
+        <TaskCompletedSection
+          studentsWithTasks={allStudentsWithTasks}
+          mentors={mentors}
+          mentorFilter={taskMentorFilter}
+          setMentorFilter={setTaskMentorFilter}
+          statusFilter={taskStatusFilter}
+          setStatusFilter={setTaskStatusFilter}
+          search={taskSearch}
+          setSearch={setTaskSearch}
+          expanded={expandedStudentTasks}
+          onToggleExpand={toggleStudentTasksExpand}
+        />
+      )}
+
+      {viewSection === "groups" && (
+        <StudentGroupsSection
+          groupsData={groupsData}
+          loading={groupsLoading}
+          onSaveGroupTag={saveGroupTag}
+          onRefresh={loadGroupsData}
+        />
+      )}
+
+      {viewSection === "assigned-tasks" && (
+        <AssignedTasksRosterSection
+          tasks={allAssignedTasks}
+          mentors={mentors}
+          mentorFilter={taskMentorFilter}
+          setMentorFilter={setTaskMentorFilter}
+          statusFilter={taskStatusFilter}
+          setStatusFilter={setTaskStatusFilter}
+          search={taskSearch}
+          setSearch={setTaskSearch}
+        />
+      )}
+
+      {/* Primary Telemetry View */}
+      {viewSection === "telemetry" && (
+        <>
+          {/* Summary KPI Strip */}
+          {summary && (
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
@@ -688,7 +951,7 @@ export default function MentorTracking({ adminToken }) {
               />
             </div>
 
-            <div style={{ overflowY: "auto", display: "flex", flexDirection: "column", gap: 6, paddingRight: 4 }}>
+            <div className="cp-custom-scroll" style={{ overflowY: "auto", display: "flex", flexDirection: "column", gap: 6, paddingRight: 4 }}>
               {filteredLegendMentors.length === 0 ? (
                 <div style={{ color: "#94a3b8", fontSize: 12, textAlign: "center", padding: 20 }}>
                   No mentors match "{legendSearch}"
@@ -814,7 +1077,7 @@ export default function MentorTracking({ adminToken }) {
         </div>
 
         {/* Responsive Table Container */}
-        <div style={{ overflowX: "auto" }}>
+        <div className="cp-custom-scroll" style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: 12.5 }}>
             <thead>
               <tr style={{ background: "#f8fafc", borderBottom: "1.5px solid #e2e8f0", color: "#64748b", fontWeight: 700 }}>
@@ -1066,6 +1329,8 @@ export default function MentorTracking({ adminToken }) {
           </div>
         )}
       </div>
+      </>
+      )}
 
       {/* SECTION 6: Sleek Slide-Over Mentor Inspector Drawer */}
       {selectedMentor && (
