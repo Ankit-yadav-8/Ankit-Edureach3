@@ -13,6 +13,9 @@ const mentorTaskSchema = new mongoose.Schema(
         id: { type: String },
         text: { type: String, trim: true },
         createdAt: { type: Date, default: Date.now },
+        completed: { type: Boolean, default: false },
+        completedAt: { type: Date, default: null },
+        updatedAt: { type: Date, default: null },
       },
     ],
     // Who last set this list — stamped so a student's report can name the mentor

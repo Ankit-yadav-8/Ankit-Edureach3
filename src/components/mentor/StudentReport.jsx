@@ -4,7 +4,9 @@ import {
   Flame, Clock, ClipboardList, Layers, TrendingUp, TrendingDown,
   ChevronLeft, ChevronRight, AlertTriangle, CheckCircle2, Eye,
   Plus, Trash2, Save, Loader2, Pencil, Lock, History, UserCheck,
+  Target, Award, Zap, BarChart2, BookOpen, Percent, Search,
 } from "lucide-react";
+import { normalizeTestScore } from "../../utils/testScoring.js";
 
 /* ══════════════════════════════════════════════
    The mentor's view of one student.
@@ -169,63 +171,289 @@ function StudyLog({ entries }) {
   );
 }
 
-/* ── Section 2 - test analysis ──────────────── */
+/* ── Section 2 - test analysis (Allen-inspired academic analytics) ── */
 function TestAnalysis({ tests }) {
+  const [filterType, setFilterType] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+
   if (!tests.length) return <Empty>No tests recorded yet for this student.</Empty>;
 
-  const sorted = [...tests].sort((a, b) => new Date(b.date) - new Date(a.date));
-  const pct = (t) => (t.total ? Math.round((t.scored / t.total) * 100) : 0);
-  const avg = Math.round(sorted.reduce((s, t) => s + pct(t), 0) / sorted.length);
-  const best = sorted.reduce((m, t) => (pct(t) > pct(m) ? t : m), sorted[0]);
-  const silly = sorted.reduce((s, t) => s + (t.silly || 0), 0);
+  // Normalize each test through the canonical testScoring formula
+  const normalized = tests.map((t, idx) => {
+    const norm = normalizeTestScore({
+      score: t.scored ?? t.score,
+      maxMarks: t.total ?? t.maxMarks,
+      totalQuestions: t.totalQuestions || ((Number(t.correct) || 0) + (Number(t.wrong) || 0) + (Number(t.skipped) || 0)),
+      examType: t.type,
+      correctCount: t.correct ?? t.correctCount,
+      wrongCount: t.wrong ?? t.wrongCount,
+      skippedCount: t.skipped ?? t.skippedCount,
+    });
+    return {
+      ...t,
+      id: t.id || `test-${idx}`,
+      score: norm.score,
+      maxMarks: norm.maxMarks,
+      percent: norm.percent,
+      accuracy: norm.accuracy,
+      correct: norm.correctCount,
+      wrong: norm.wrongCount,
+      skipped: norm.skippedCount,
+      totalQuestions: norm.totalQuestions,
+    };
+  });
+
+  const sorted = [...normalized].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // Cumulative metrics across all tests
+  let totalScore = 0, totalMaxMarks = 0, totalCorrect = 0, totalWrong = 0, totalSkipped = 0;
+  sorted.forEach((t) => {
+    totalScore += t.score;
+    totalMaxMarks += t.maxMarks;
+    totalCorrect += t.correct;
+    totalWrong += t.wrong;
+    totalSkipped += t.skipped;
+  });
+
+  const overallPercent = totalMaxMarks > 0 ? Math.round((totalScore / totalMaxMarks) * 1000) / 10 : 0;
+  const bestTest = sorted.reduce((m, t) => (t.percent > m.percent ? t : m), sorted[0]);
+  const totalAttempted = totalCorrect + totalWrong;
+  const overallAccuracy = totalAttempted > 0 ? Math.round((totalCorrect / totalAttempted) * 100) : 0;
+  const totalSilly = sorted.reduce((s, t) => s + (Number(t.silly) || 0), 0);
+
+  // Filtered list
+  const filtered = sorted.filter((t) => {
+    if (filterType !== "all") {
+      const typeStr = String(t.type || "").toLowerCase();
+      if (!typeStr.includes(filterType)) return false;
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      return (t.name || "").toLowerCase().includes(q) || (t.type || "").toLowerCase().includes(q);
+    }
+    return true;
+  });
 
   return (
-    <div>
-      <div className="mentor-stats" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, marginBottom: 18 }}>
-        <Stat icon={ClipboardList} label="Tests taken" value={sorted.length} />
-        <Stat icon={TrendingUp} label="Average score" value={`${avg}%`} />
-        <Stat icon={CheckCircle2} label="Best" value={`${pct(best)}%`} sub={best.name} tone="#16a34a" />
-        <Stat icon={AlertTriangle} label="Silly mistakes" value={silly} sub="across all tests" tone={silly > 0 ? "#f59e0b" : ACCENT} />
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {/* Allen-style KPI Overview Banner */}
+      <div className="mentor-stats" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+        <Stat
+          icon={ClipboardList}
+          label="Tests Evaluated"
+          value={sorted.length}
+          sub={`${totalAttempted} Qs attempted`}
+        />
+        <Stat
+          icon={TrendingUp}
+          label="Cumulative Average"
+          value={`${overallPercent}%`}
+          sub={`Avg ~${Math.round(totalScore / sorted.length)}/${Math.round(totalMaxMarks / sorted.length)} marks`}
+          tone={overallPercent >= 60 ? "#16a34a" : overallPercent >= 40 ? "#f59e0b" : ACCENT}
+        />
+        <Stat
+          icon={Award}
+          label="Peak Performance"
+          value={`${bestTest.score}/${bestTest.maxMarks}`}
+          sub={`${bestTest.percent}% · ${bestTest.name}`}
+          tone="#16a34a"
+        />
+        <Stat
+          icon={Target}
+          label="Overall Accuracy"
+          value={`${overallAccuracy}%`}
+          sub={`${totalSilly} silly mistakes recorded`}
+          tone={overallAccuracy >= 75 ? "#16a34a" : overallAccuracy >= 60 ? "#f59e0b" : "#ef4444"}
+        />
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-        {sorted.slice(0, 8).map((t, i) => {
-          const p = pct(t);
-          const tone = p >= 70 ? "#16a34a" : p >= 45 ? "#f59e0b" : "#ef4444";
-          return (
-            <motion.div
-              key={t.id || `${t.name}-${t.date}`}
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: i * 0.04 }}
+      {/* Filter and Search Bar */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", background: "var(--sky)", padding: "10px 14px", borderRadius: 11, border: "1px solid var(--line)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          {["all", "full", "weekly", "daily"].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilterType(f)}
               style={{
-                display: "flex", alignItems: "center", gap: 12, padding: "12px 14px",
-                background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 11,
+                border: "none",
+                borderRadius: 7,
+                padding: "5px 11px",
+                fontSize: 11.5,
+                fontWeight: filterType === f ? 800 : 600,
+                cursor: "pointer",
+                background: filterType === f ? ACCENT : "#fff",
+                color: filterType === f ? "#fff" : "var(--muted)",
+                boxShadow: filterType === f ? "0 2px 6px rgba(255,105,61,0.25)" : "none",
+                transition: "all .15s",
               }}
             >
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: SORA, fontWeight: 700, fontSize: 13, color: "var(--navy)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                  {t.name}
+              {f === "all" ? "All Tests" : f === "full" ? "Full Exam" : f === "weekly" ? "Weekly" : "Daily"}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ position: "relative", minWidth: 160 }}>
+          <Search size={13} style={{ position: "absolute", left: 9, top: "50%", transform: "translateY(-50%)", color: "var(--muted)" }} />
+          <input
+            type="text"
+            placeholder="Search tests..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              padding: "6px 8px 6px 28px",
+              borderRadius: 8,
+              border: "1px solid var(--line)",
+              fontSize: 12,
+              outline: "none",
+              background: "#fff",
+              width: "100%",
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Detailed Allen-Style Test Performance Cards */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {filtered.map((t, i) => {
+          const p = t.percent;
+          const tone = p >= 70 ? "#16a34a" : p >= 45 ? "#f59e0b" : "#ef4444";
+          const toneBg = p >= 70 ? "#ecfdf5" : p >= 45 ? "#fffbeb" : "#fef2f2";
+          const toneBorder = p >= 70 ? "#a7f3d0" : p >= 45 ? "#fde68a" : "#fecaca";
+
+          // Segmented progress bar widths
+          const qTotal = Math.max(t.totalQuestions, t.correct + t.wrong + t.skipped, 1);
+          const correctPct = Math.round((t.correct / qTotal) * 100);
+          const wrongPct = Math.round((t.wrong / qTotal) * 100);
+          const skippedPct = Math.max(0, 100 - correctPct - wrongPct);
+
+          return (
+            <motion.div
+              key={t.id || `${t.name}-${t.date}-${i}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, delay: i * 0.03 }}
+              style={{
+                background: "#ffffff",
+                border: "1.5px solid var(--line)",
+                borderRadius: 14,
+                padding: "14px 16px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+                boxShadow: "0 2px 6px rgba(15,23,42,0.02)",
+              }}
+            >
+              {/* Card Header: Title + Complete Score + Percentage Pill */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14.5, color: "var(--navy)" }}>
+                      {t.name}
+                    </span>
+                    <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", background: "var(--sky)", color: "var(--muted)", padding: "2px 6px", borderRadius: 4 }}>
+                      {t.type || "Mock"}
+                    </span>
+                    {t.source === "cbt" && (
+                      <span style={{ fontSize: 10, fontWeight: 800, background: "#ede9fe", color: "#6d28d9", padding: "2px 6px", borderRadius: 4 }}>
+                        ⚡ CBT Exam
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>
+                    Attempted on {t.date} · {t.totalQuestions} Questions Paper
+                  </div>
                 </div>
-                <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>
-                  {t.date} · {t.type} · {t.correct ?? 0}✓ {t.wrong ?? 0}✗ {t.skipped ?? 0}–
-                  {t.weak ? ` · weak: ${t.weak}` : ""}
+
+                {/* Prominent Complete Score & Percentage */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 17, color: "var(--navy)", lineHeight: 1.1 }}>
+                      {t.score}
+                      <span style={{ fontSize: 12, fontWeight: 700, color: "var(--muted)" }}> / {t.maxMarks}</span>
+                    </div>
+                    <div style={{ fontSize: 10.5, fontWeight: 600, color: "var(--muted)", marginTop: 1 }}>
+                      Marks Scored
+                    </div>
+                  </div>
+
+                  <span style={{
+                    fontFamily: SORA,
+                    fontWeight: 900,
+                    fontSize: 14,
+                    color: tone,
+                    background: toneBg,
+                    border: `1px solid ${toneBorder}`,
+                    padding: "4px 10px",
+                    borderRadius: 8,
+                    minWidth: 48,
+                    textAlign: "center",
+                  }}>
+                    {p}%
+                  </span>
                 </div>
               </div>
-              <div style={{ width: 92, flexShrink: 0 }}>
-                <div style={{ height: 6, borderRadius: 4, background: "var(--line)", overflow: "hidden" }}>
-                  <motion.div
-                    initial={{ width: 0 }} animate={{ width: `${p}%` }}
-                    transition={{ duration: 0.6, delay: 0.1 + i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                    style={{ height: "100%", background: tone, borderRadius: 4 }}
-                  />
+
+              {/* Segmented Question Breakdown Bar (Correct vs Wrong vs Skipped) */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                <div style={{ height: 7, borderRadius: 5, background: "#e2e8f0", overflow: "hidden", display: "flex" }}>
+                  <div title={`Correct: ${t.correct} Qs`} style={{ width: `${correctPct}%`, background: "#16a34a", transition: "width .4s" }} />
+                  <div title={`Incorrect: ${t.wrong} Qs`} style={{ width: `${wrongPct}%`, background: "#ef4444", transition: "width .4s" }} />
+                  <div title={`Unattempted: ${t.skipped} Qs`} style={{ width: `${skippedPct}%`, background: "#cbd5e1", transition: "width .4s" }} />
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8, fontSize: 11, color: "var(--muted)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                    <span style={{ color: "#16a34a", fontWeight: 700 }}>
+                      ✓ {t.correct} Correct <span style={{ opacity: 0.75 }}>(+{t.correct * 4})</span>
+                    </span>
+                    <span style={{ color: "#ef4444", fontWeight: 700 }}>
+                      ✗ {t.wrong} Incorrect <span style={{ opacity: 0.75 }}>(-{t.wrong})</span>
+                    </span>
+                    <span style={{ color: "#64748b", fontWeight: 600 }}>
+                      — {t.skipped} Unanswered
+                    </span>
+                  </div>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontWeight: 700, color: t.accuracy >= 75 ? "#16a34a" : "#f59e0b" }}>
+                      Accuracy: {t.accuracy}%
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 15, color: tone, width: 44, textAlign: "right", flexShrink: 0 }}>
-                {p}%
-              </div>
+
+              {/* Badges / Diagnostics Strip (Silly mistakes, weak topics, predicted rank) */}
+              {(t.silly > 0 || (Array.isArray(t.weak) && t.weak.length > 0) || (typeof t.weak === "string" && t.weak) || t.rank) && (
+                <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", paddingTop: 4, borderTop: "1px dashed var(--line)" }}>
+                  {t.silly > 0 && (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 700, color: "#b45309", background: "#fef3c7", border: "1px solid #fde68a", padding: "2px 7px", borderRadius: 6 }}>
+                      <AlertTriangle size={11} /> {t.silly} Silly mistake{t.silly > 1 ? "s" : ""} {t.sillyTopic ? `(${t.sillyTopic})` : ""}
+                    </span>
+                  )}
+                  {((Array.isArray(t.weak) && t.weak.length > 0) || (typeof t.weak === "string" && t.weak)) && (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 700, color: "#b91c1c", background: "#fef2f2", border: "1px solid #fecaca", padding: "2px 7px", borderRadius: 6 }}>
+                      <BookOpen size={11} /> Focus: {Array.isArray(t.weak) ? t.weak.join(", ") : t.weak}
+                    </span>
+                  )}
+                  {t.rank && (t.rank.crl || t.rank.rank) && (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 700, color: "#4338ca", background: "#e0e7ff", border: "1px solid #c7d2fe", padding: "2px 7px", borderRadius: 6 }}>
+                      <Target size={11} /> Projected AIR ~{t.rank.crl || t.rank.rank} ({t.rank.percentile}%ile)
+                    </span>
+                  )}
+                </div>
+              )}
             </motion.div>
           );
         })}
+      </div>
+
+      {/* Allen Performance Diagnostic Note */}
+      <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "12px 14px", fontSize: 11.5, color: "#64748b", display: "flex", alignItems: "center", gap: 9 }}>
+        <CheckCircle2 size={15} color="#16a34a" style={{ flexShrink: 0 }} />
+        <span>
+          <strong>Academic Feedback:</strong> All scores are calculated from verified answers using <code>(Marks Obtained / Maximum Possible Marks) × 100</code> with standard negative marking. Both online CBT attempts and manual mock test logs are synced.
+        </span>
       </div>
     </div>
   );
@@ -519,15 +747,80 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
   const synced = freshness(updatedAt);
 
   const entries = Array.isArray(progress?.entries) ? progress.entries : [];
-  // Test data can come from the student's own blob or from server-graded
-  // attempts; prefer the blob (it's what the student sees) and fall back.
-  const testList = Array.isArray(progress?.tests) && progress.tests.length
-    ? progress.tests
-    : (tests || []).map((a) => ({
-        id: String(a._id), name: a.title || "Test", type: a.category || "test",
-        date: isoDay(a.createdAt), total: a.maxMarks, scored: a.score,
-        correct: a.correctCount, wrong: a.wrongCount, skipped: a.skippedCount,
-      }));
+  
+  // Combine, normalize, and deduplicate both online CBT attempts and student-logged mock tests
+  const testList = useMemo(() => {
+    const combined = [];
+    const seen = new Set();
+
+    // 1. CBT attempts
+    (tests || []).forEach((a) => {
+      const norm = normalizeTestScore({
+        score: a.score,
+        maxMarks: a.maxMarks,
+        totalQuestions: a.totalQuestions,
+        correctCount: a.correctCount,
+        wrongCount: a.wrongCount,
+        skippedCount: a.skippedCount,
+      });
+      const d = a.submittedAt ? isoDay(a.submittedAt) : (a.createdAt ? isoDay(a.createdAt) : isoDay(new Date()));
+      const key = `${a.title || a.name}-${d}`.toLowerCase();
+      seen.add(key);
+      combined.push({
+        id: String(a._id || a.id),
+        name: a.title || a.name || "Test",
+        type: a.category || a.type || "test",
+        date: d,
+        score: norm.score,
+        maxMarks: norm.maxMarks,
+        percent: norm.percent,
+        accuracy: norm.accuracy,
+        correct: norm.correctCount,
+        wrong: norm.wrongCount,
+        skipped: norm.skippedCount,
+        totalQuestions: norm.totalQuestions,
+        source: "cbt",
+      });
+    });
+
+    // 2. Manual tests from student progress blob
+    (Array.isArray(progress?.tests) ? progress.tests : []).forEach((t, idx) => {
+      const d = t.date || isoDay(new Date());
+      const key = `${t.name}-${d}`.toLowerCase();
+      if (!seen.has(key)) {
+        const norm = normalizeTestScore({
+          score: t.scored ?? t.score,
+          maxMarks: t.total ?? t.maxMarks,
+          examType: t.type,
+          correctCount: t.correct,
+          wrongCount: t.wrong,
+          skippedCount: t.skipped,
+        });
+        combined.push({
+          id: t.id || `manual-${idx}`,
+          name: t.name || `Mock Test ${idx + 1}`,
+          type: t.type || "test",
+          date: d,
+          score: norm.score,
+          maxMarks: norm.maxMarks,
+          percent: norm.percent,
+          accuracy: norm.accuracy,
+          correct: norm.correctCount,
+          wrong: norm.wrongCount,
+          skipped: norm.skippedCount,
+          totalQuestions: norm.totalQuestions,
+          silly: Number(t.silly) || 0,
+          sillyTopic: t.sillyTopic || "",
+          overspent: t.overspent || "",
+          weak: Array.isArray(t.weak) ? t.weak : (typeof t.weak === "string" ? [t.weak] : []),
+          rank: t.rank || null,
+          source: "manual",
+        });
+      }
+    });
+
+    return combined.sort((a, b) => new Date(b.date) - new Date(a.date));
+  }, [tests, progress?.tests]);
   const backlog = Array.isArray(progress?.backlog) ? progress.backlog : [];
 
   // Task completion the student ticks lives in their progress blob as

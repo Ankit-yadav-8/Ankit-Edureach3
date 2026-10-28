@@ -19,8 +19,8 @@ const DIFFICULTIES = [
     label: "Easy Level",
     badge: "Foundation",
     desc: "Easy + some Medium questions for solid basics",
-    color: "#10B981",
-    bg: "#ECFDF5",
+    color: "#059669",
+    bg: "#F4FBF7",
     border: "#A7F3D0",
     ratio: "Easy + Medium blend",
   },
@@ -29,8 +29,8 @@ const DIFFICULTIES = [
     label: "Moderate Level",
     badge: "JEE Standard",
     desc: "40% Easy, 40% Moderate, 20% Hard questions",
-    color: "#F59E0B",
-    bg: "#FFFBEB",
+    color: "#D97706",
+    bg: "#FFF9EF",
     border: "#FDE68A",
     ratio: "40% Easy · 40% Med · 20% Hard",
   },
@@ -39,7 +39,7 @@ const DIFFICULTIES = [
     label: "Difficult Level",
     badge: "Advanced Challenge",
     desc: "60% Moderate, 40% Hard questions",
-    color: "#EF4444",
+    color: "#DC2626",
     bg: "#FEF2F2",
     border: "#FECACA",
     ratio: "60% Moderate · 40% Hard",
@@ -149,27 +149,27 @@ function parseMatchOption(text) {
 // ── Match Option Pill Component ──────────────────────────────────────────────
 function MatchOptionPill({ pairs, isSelected }) {
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 7, alignItems: "center" }}>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
       {pairs.map(({ l1, l2 }, idx) => (
         <span
           key={idx}
           style={{
             display: "inline-flex",
             alignItems: "center",
-            gap: 6,
-            padding: "4px 9px",
-            borderRadius: 7,
-            background: isSelected ? "#dbeafe" : "#f1f5f9",
-            border: `1px solid ${isSelected ? "#93c5fd" : "#cbd5e1"}`,
-            fontSize: 12.5,
+            gap: 5,
+            padding: "3px 8px",
+            borderRadius: 6,
+            background: isSelected ? "#FFF3EB" : "#FAF5EE",
+            border: `1px solid ${isSelected ? "#FCD5C4" : "#EADBCC"}`,
+            fontSize: 11.5,
             fontWeight: 700,
             transition: "all 0.15s ease",
-            boxShadow: isSelected ? "0 1px 3px rgba(37,99,235,0.15)" : "none",
+            boxShadow: isSelected ? "0 1px 3px rgba(255,105,61,0.12)" : "none",
           }}
         >
-          <span style={{ color: isSelected ? "#1e40af" : "#2563eb", fontWeight: 800 }}>{l1}</span>
-          <span style={{ color: "#94a3b8", fontSize: 10, fontWeight: 800 }}>➔</span>
-          <span style={{ color: isSelected ? "#5b21b6" : "#7c3aed", fontWeight: 800 }}>{l2}</span>
+          <span style={{ color: isSelected ? "#D9481E" : "#8A4C1C", fontWeight: 800 }}>{l1}</span>
+          <span style={{ color: "#A89A8C", fontSize: 9.5, fontWeight: 800 }}>➔</span>
+          <span style={{ color: isSelected ? "#B43403" : "#5C4B3E", fontWeight: 800 }}>{l2}</span>
         </span>
       ))}
     </div>
@@ -181,31 +181,31 @@ function MatchTableViewer({ matchData, qNumber }) {
   const { instruction, col1Header, col2Header, list1, list2, trailing } = matchData;
 
   return (
-    <div style={{ marginBottom: 18 }}>
+    <div style={{ marginBottom: 14 }}>
       {/* Header Banner */}
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        marginBottom: 12, flexWrap: "wrap", gap: 8,
+        marginBottom: 10, flexWrap: "wrap", gap: 8,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {qNumber !== undefined && (
-            <span style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginRight: 4 }}>
+            <span style={{ fontSize: 14, fontWeight: 800, color: "#231C16", marginRight: 2 }}>
               Q{qNumber}.
             </span>
           )}
           <span style={{
-            fontSize: 13.5, fontWeight: 700, color: "#1e40af",
-            background: "#eff6ff", border: "1px solid #bfdbfe",
-            padding: "4px 10px", borderRadius: 8,
-            display: "inline-flex", alignItems: "center", gap: 6,
+            fontSize: 11.8, fontWeight: 700, color: "#C84E23",
+            background: "#FFF4EF", border: "1px solid #FCD5C4",
+            padding: "3px 9px", borderRadius: 7,
+            display: "inline-flex", alignItems: "center", gap: 5,
           }}>
-            <Layers size={14} /> {instruction || "Match List - I with List - II"}
+            <Layers size={13} /> {instruction || "Match List - I with List - II"}
           </span>
         </div>
         <span style={{
-          fontSize: 11, fontWeight: 700, color: "#64748b",
-          background: "#f8fafc", border: "1px solid #e2e8f0",
-          padding: "3px 8px", borderRadius: 6,
+          fontSize: 10.5, fontWeight: 700, color: "#7A6C5D",
+          background: "#FAF6F0", border: "1px solid #EADBCC",
+          padding: "2px 7px", borderRadius: 5,
         }}>
           Dual-Column Matching Grid
         </span>
@@ -216,15 +216,15 @@ function MatchTableViewer({ matchData, qNumber }) {
         width: "100%",
         overflowX: "auto",
         WebkitOverflowScrolling: "touch",
-        borderRadius: 14,
-        border: "1.5px solid #cbd5e1",
-        boxShadow: "0 2px 10px rgba(15, 23, 42, 0.05)",
+        borderRadius: 12,
+        border: "1px solid #EADBCC",
+        boxShadow: "0 2px 8px rgba(58, 38, 22, 0.04)",
         background: "#ffffff",
-        marginBottom: 12,
+        marginBottom: 10,
       }}>
         <table style={{
           width: "100%",
-          minWidth: "480px",
+          minWidth: "400px",
           borderCollapse: "separate",
           borderSpacing: 0,
           tableLayout: "fixed",
@@ -233,34 +233,34 @@ function MatchTableViewer({ matchData, qNumber }) {
             <tr>
               <th style={{
                 width: "50%",
-                background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
-                borderBottom: "2px solid #93c5fd",
-                borderRight: "1px solid #bfdbfe",
-                padding: "12px 16px",
+                background: "linear-gradient(135deg, #FAF4EB 0%, #F4ECE0 100%)",
+                borderBottom: "2px solid #E5D6C4",
+                borderRight: "1px solid #EADBCC",
+                padding: "10px 14px",
                 textAlign: "left",
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: 800,
-                color: "#1e40af",
-                letterSpacing: "0.4px",
+                color: "#78491C",
+                letterSpacing: "0.3px",
               }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#2563eb" }} />
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#FF693D" }} />
                   {col1Header || "Column - A (List - I)"}
                 </div>
               </th>
               <th style={{
                 width: "50%",
-                background: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)",
-                borderBottom: "2px solid #c4b5fd",
-                padding: "12px 16px",
+                background: "linear-gradient(135deg, #F6F1EA 0%, #F0E8DD 100%)",
+                borderBottom: "2px solid #E0D4C7",
+                padding: "10px 14px",
                 textAlign: "left",
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: 800,
-                color: "#6d28d9",
-                letterSpacing: "0.4px",
+                color: "#614B3E",
+                letterSpacing: "0.3px",
               }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#7c3aed" }} />
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#8C7E70" }} />
                   {col2Header || "Column - B (List - II)"}
                 </div>
               </th>
@@ -275,29 +275,28 @@ function MatchTableViewer({ matchData, qNumber }) {
                 <tr
                   key={idx}
                   style={{
-                    background: isEven ? "#ffffff" : "#f8fafc",
+                    background: isEven ? "#ffffff" : "#FAF7F2",
                     transition: "background 0.15s ease",
                   }}
                 >
                   {/* Left Column (List - I) */}
                   <td style={{
-                    padding: "12px 16px",
-                    borderBottom: isLast ? "none" : "1px solid #e2e8f0",
-                    borderRight: "1px solid #e2e8f0",
+                    padding: "10px 14px",
+                    borderBottom: isLast ? "none" : "1px solid #EADBCC",
+                    borderRight: "1px solid #EADBCC",
                     verticalAlign: "middle",
                   }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{
-                        width: 28, height: 28, borderRadius: 8,
-                        background: "#eff6ff", border: "1.5px solid #bfdbfe",
-                        color: "#1d4ed8", fontWeight: 800, fontSize: 13,
+                        width: 25, height: 25, borderRadius: 6,
+                        background: "#FFF4EF", border: "1px solid #FCD5C4",
+                        color: "#D9481E", fontWeight: 800, fontSize: 11.5,
                         display: "flex", alignItems: "center", justifyContent: "center",
                         flexShrink: 0,
-                        boxShadow: "0 1px 2px rgba(37,99,235,0.1)",
                       }}>
                         {item1.label}
                       </span>
-                      <span style={{ fontSize: 13.5, fontWeight: 600, color: "#1e293b", lineHeight: 1.45 }}>
+                      <span style={{ fontSize: 12.5, fontWeight: 600, color: "#2E241C", lineHeight: 1.45 }}>
                         <MathText text={item1.text} />
                       </span>
                     </div>
@@ -305,22 +304,21 @@ function MatchTableViewer({ matchData, qNumber }) {
 
                   {/* Right Column (List - II) */}
                   <td style={{
-                    padding: "12px 16px",
-                    borderBottom: isLast ? "none" : "1px solid #e2e8f0",
+                    padding: "10px 14px",
+                    borderBottom: isLast ? "none" : "1px solid #EADBCC",
                     verticalAlign: "middle",
                   }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{
-                        width: 28, height: 28, borderRadius: 8,
-                        background: "#f5f3ff", border: "1.5px solid #ddd6fe",
-                        color: "#6d28d9", fontWeight: 800, fontSize: 12.5,
+                        width: 25, height: 25, borderRadius: 6,
+                        background: "#F4EFEA", border: "1px solid #E0D4C9",
+                        color: "#614B3E", fontWeight: 800, fontSize: 11.5,
                         display: "flex", alignItems: "center", justifyContent: "center",
                         flexShrink: 0,
-                        boxShadow: "0 1px 2px rgba(109,40,217,0.1)",
                       }}>
                         {item2.label}
                       </span>
-                      <span style={{ fontSize: 14, fontWeight: 600, color: "#1e293b", lineHeight: 1.45 }}>
+                      <span style={{ fontSize: 12.5, fontWeight: 600, color: "#2E241C", lineHeight: 1.45 }}>
                         <MathText text={item2.text} />
                       </span>
                     </div>
@@ -334,7 +332,7 @@ function MatchTableViewer({ matchData, qNumber }) {
 
       {/* Trailing prompt */}
       {trailing && (
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#475569", marginTop: 8 }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "#615447", marginTop: 6 }}>
           {trailing}
         </div>
       )}
@@ -350,8 +348,8 @@ function QuestionStatementViewer({ statement, qNumber }) {
   }
 
   return (
-    <div style={{ fontSize: 15, fontWeight: 600, color: "#1e293b", lineHeight: 1.6, marginBottom: 20 }}>
-      {qNumber !== undefined && <span style={{ fontWeight: 800, marginRight: 8 }}>Q{qNumber}.</span>}
+    <div style={{ fontSize: 13.5, fontWeight: 600, color: "#231C16", lineHeight: 1.55, marginBottom: 16 }}>
+      {qNumber !== undefined && <span style={{ fontWeight: 800, marginRight: 6, color: "#D9481E" }}>Q{qNumber}.</span>}
       <MathText text={statement} />
     </div>
   );
@@ -592,8 +590,9 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 9999,
-      background: "rgba(15, 23, 42, 0.75)",
-      backdropFilter: "blur(6px)",
+      background: "rgba(32, 26, 22, 0.55)",
+      backdropFilter: "blur(8px)",
+      WebkitBackdropFilter: "blur(8px)",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: "clamp(6px, 2vw, 16px)",
     }}>
@@ -602,56 +601,57 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.96 }}
         style={{
-          width: "100%", maxWidth: mode === "active" ? 1000 : 860,
-          height: mode === "active" ? "min(94vh, 900px)" : "auto",
-          maxHeight: "96vh",
-          background: "#ffffff",
-          borderRadius: "clamp(14px, 2vw, 20px)",
-          boxShadow: "0 25px 60px -15px rgba(0,0,0,0.35)",
+          width: "100%", maxWidth: mode === "active" ? 960 : 820,
+          height: mode === "active" ? "min(94vh, 880px)" : "auto",
+          maxHeight: "95vh",
+          background: "#FDFBF7",
+          borderRadius: "clamp(12px, 2.5vw, 20px)",
+          boxShadow: "0 25px 70px -15px rgba(58, 38, 22, 0.22)",
           display: "flex", flexDirection: "column",
           overflow: "hidden",
-          border: "1px solid #e2e8f0",
+          border: "1px solid #EADBCC",
         }}
       >
         {/* Modal Header */}
         <div style={{
-          padding: "clamp(12px, 2vw, 16px) clamp(16px, 3vw, 24px)",
-          background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
-          color: "#ffffff",
+          padding: "clamp(10px, 2vw, 14px) clamp(14px, 3vw, 22px)",
+          background: "linear-gradient(135deg, #FAF6F0 0%, #F4EBE1 100%)",
+          borderBottom: "1px solid #EADBCC",
+          color: "#231C16",
           display: "flex", alignItems: "center", justifyContent: "space-between",
           flexWrap: "wrap", gap: 10,
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{
-              width: 36, height: 36, borderRadius: 10,
-              background: "rgba(59, 130, 246, 0.25)",
-              border: "1px solid rgba(59, 130, 246, 0.4)",
+              width: 34, height: 34, borderRadius: 9,
+              background: "#FFF2EC",
+              border: "1px solid #FCD5C4",
               display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#60a5fa"
+              color: "#FF693D", flexShrink: 0
             }}>
-              <Zap size={20} />
+              <Zap size={18} />
             </div>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: 1 }}>
+              <div style={{ fontSize: 10, fontWeight: 800, color: "#FF693D", textTransform: "uppercase", letterSpacing: "0.8px" }}>
                 Physics · Class 11 · Question Bank
               </div>
-              <h2 style={{ fontSize: 17, fontWeight: 800, margin: 0, color: "#ffffff" }}>
+              <h2 style={{ fontSize: "clamp(14px, 2.2vw, 16px)", fontWeight: 800, margin: 0, color: "#231C16" }}>
                 {mode === "active" ? quiz?.title : "Units and Measurements Quiz & Exam Maker"}
               </h2>
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {mode === "active" && (
               <div style={{
                 display: "flex", alignItems: "center", gap: 6,
-                background: secondsRemaining < 120 ? "#ef444425" : "rgba(255,255,255,0.12)",
-                border: `1px solid ${secondsRemaining < 120 ? "#ef4444" : "rgba(255,255,255,0.2)"}`,
-                padding: "6px 12px", borderRadius: 8,
-                color: secondsRemaining < 120 ? "#fca5a5" : "#ffffff",
-                fontFamily: "monospace", fontSize: 15, fontWeight: 700
+                background: secondsRemaining < 120 ? "#FEE2E2" : "#FFF7ED",
+                border: `1px solid ${secondsRemaining < 120 ? "#FCA5A5" : "#FED7AA"}`,
+                padding: "5px 10px", borderRadius: 8,
+                color: secondsRemaining < 120 ? "#DC2626" : "#C2410C",
+                fontFamily: "monospace", fontSize: 13.5, fontWeight: 700
               }}>
-                <Clock size={16} />
+                <Clock size={15} />
                 <span>{formatTimer(secondsRemaining)}</span>
               </div>
             )}
@@ -667,18 +667,21 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                 }
               }}
               style={{
-                background: "rgba(255,255,255,0.1)", border: "none", color: "#ffffff",
-                width: 32, height: 32, borderRadius: 8, display: "flex",
+                background: "#EFE6DA", border: "1px solid #EADBCC", color: "#4A3E33",
+                width: 30, height: 30, borderRadius: 8, display: "flex",
                 alignItems: "center", justifyContent: "center", cursor: "pointer",
+                transition: "background 0.15s ease",
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "#E5DDD0"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "#EFE6DA"; }}
             >
-              <X size={18} />
+              <X size={16} />
             </button>
           </div>
         </div>
 
         {/* Modal Body */}
-        <div style={{ flex: 1, overflowY: "auto", padding: mode === "active" ? 20 : 24 }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "clamp(14px, 2.5vw, 20px)" }}>
           {/* ══════════════════════════════════════════════════════════
               MODE 1: CONFIGURE QUIZ (STUDENT & MENTOR BUILDER)
           ══════════════════════════════════════════════════════════ */}
@@ -686,53 +689,54 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
             <div>
               <div style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
-                padding: "12px 16px", background: "#f8fafc", borderRadius: 12,
-                border: "1px solid #e2e8f0", marginBottom: 20
+                padding: "10px 14px", background: "#FAF6F0", borderRadius: 10,
+                border: "1px solid #EADBCC", marginBottom: 16, flexWrap: "wrap", gap: 8
               }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981" }} />
-                  <span style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#10b981", flexShrink: 0 }} />
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#4A3E33" }}>
                     Verified Question Bank Loaded: <strong>47 Questions</strong> (3 Easy, 28 Moderate, 16 Hard)
                   </span>
                 </div>
-                <span style={{ fontSize: 11, fontWeight: 700, color: "#2563eb", background: "#eff6ff", padding: "4px 10px", borderRadius: 20 }}>
+                <span style={{ fontSize: 10.5, fontWeight: 700, color: "#D9481E", background: "#FFF2EC", border: "1px solid #FCD5C4", padding: "3px 8px", borderRadius: 20 }}>
                   JEE Main & Adv Level
                 </span>
               </div>
 
               {/* 1. Question Count (Max 15) */}
-              <div style={{ marginBottom: 20 }}>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#1e293b", marginBottom: 8 }}>
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#231C16", marginBottom: 6 }}>
                   1. Question Count (Max 15 per Quiz)
                 </label>
-                <div style={{ display: "flex", gap: 10 }}>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   {QUESTION_COUNTS.map((cnt) => (
                     <button
                       key={cnt}
                       type="button"
                       onClick={() => setQuestionCount(cnt)}
                       style={{
-                        flex: 1, padding: "10px 14px", borderRadius: 10,
-                        border: `2px solid ${questionCount === cnt ? "#2563eb" : "#e2e8f0"}`,
-                        background: questionCount === cnt ? "#eff6ff" : "#ffffff",
-                        color: questionCount === cnt ? "#1d4ed8" : "#475569",
-                        fontWeight: 700, fontSize: 14, cursor: "pointer",
-                        display: "flex", alignItems: "center", justifyContent: "center", gap: 6
+                        flex: 1, minWidth: 90, padding: "8px 12px", borderRadius: 8,
+                        border: `2px solid ${questionCount === cnt ? "#FF693D" : "#EADBCC"}`,
+                        background: questionCount === cnt ? "#FFF4F0" : "#ffffff",
+                        color: questionCount === cnt ? "#D9481E" : "#5A4E42",
+                        fontWeight: 700, fontSize: 13, cursor: "pointer",
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                        transition: "all 0.15s ease"
                       }}
                     >
                       {cnt} Questions
-                      {questionCount === cnt && <Check size={16} />}
+                      {questionCount === cnt && <Check size={14} />}
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* 2. Difficulty Level */}
-              <div style={{ marginBottom: 22 }}>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#1e293b", marginBottom: 8 }}>
+              <div style={{ marginBottom: 18 }}>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#231C16", marginBottom: 6 }}>
                   2. Difficulty Calibration
                 </label>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 }}>
                   {DIFFICULTIES.map((d) => {
                     const isSelected = selectedDifficulty === d.key;
                     return (
@@ -740,24 +744,25 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                         key={d.key}
                         onClick={() => setSelectedDifficulty(d.key)}
                         style={{
-                          border: `2px solid ${isSelected ? d.color : "#e2e8f0"}`,
-                          borderRadius: 14, padding: 14, cursor: "pointer",
+                          border: `2px solid ${isSelected ? d.color : "#EADBCC"}`,
+                          borderRadius: 12, padding: 12, cursor: "pointer",
                           background: isSelected ? d.bg : "#ffffff",
                           transition: "all 0.2s ease",
+                          boxShadow: isSelected ? "0 2px 8px rgba(0,0,0,0.05)" : "none",
                         }}
                       >
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                          <span style={{ fontSize: 13.5, fontWeight: 800, color: isSelected ? d.color : "#1e293b" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
+                          <span style={{ fontSize: 12.5, fontWeight: 800, color: isSelected ? d.color : "#231C16" }}>
                             {d.label}
                           </span>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: d.color, background: "#ffffff", padding: "2px 6px", borderRadius: 4, border: `1px solid ${d.border}` }}>
+                          <span style={{ fontSize: 9.5, fontWeight: 700, color: d.color, background: "#ffffff", padding: "2px 6px", borderRadius: 4, border: `1px solid ${d.border}` }}>
                             {d.badge}
                           </span>
                         </div>
-                        <p style={{ fontSize: 11.5, color: "#64748b", margin: "0 0 8px 0", lineHeight: 1.4 }}>
+                        <p style={{ fontSize: 11, color: "#615447", margin: "0 0 6px 0", lineHeight: 1.4 }}>
                           {d.desc}
                         </p>
-                        <div style={{ fontSize: 10.5, fontWeight: 600, color: d.color }}>
+                        <div style={{ fontSize: 10, fontWeight: 600, color: d.color }}>
                           Formula: {d.ratio}
                         </div>
                       </div>
@@ -768,26 +773,27 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
 
               {/* 3. AI Optimization Switch */}
               <div style={{
-                padding: "14px 18px", borderRadius: 14,
-                background: useAI ? "linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)" : "#f8fafc",
-                border: `1.5px solid ${useAI ? "#86efac" : "#e2e8f0"}`,
+                padding: "12px 16px", borderRadius: 12,
+                background: useAI ? "linear-gradient(135deg, #FFF9F2 0%, #FAF3E6 100%)" : "#FAF6F0",
+                border: `1.5px solid ${useAI ? "#FCD5C4" : "#EADBCC"}`,
                 display: "flex", alignItems: "center", justifyContent: "space-between",
-                marginBottom: 22
+                marginBottom: 18, flexWrap: "wrap", gap: 10
               }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div style={{
-                    width: 38, height: 38, borderRadius: 10,
-                    background: useAI ? "#10b981" : "#cbd5e1",
-                    color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center"
+                    width: 34, height: 34, borderRadius: 8,
+                    background: useAI ? "#FF693D" : "#DDD2C4",
+                    color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center",
+                    flexShrink: 0
                   }}>
-                    <Sparkles size={20} />
+                    <Sparkles size={18} />
                   </div>
                   <div>
-                    <div style={{ fontSize: 13.5, fontWeight: 700, color: "#1e293b" }}>
+                    <div style={{ fontSize: 12.5, fontWeight: 700, color: "#231C16" }}>
                       AI Test Level Optimizer
                     </div>
-                    <div style={{ fontSize: 11.5, color: "#64748b" }}>
-                      Dynamically sequences questions by progressive cognitive difficulty and enforces subtopic diversity.
+                    <div style={{ fontSize: 11, color: "#615447" }}>
+                      Sequences questions by progressive difficulty and enforces subtopic diversity.
                     </div>
                   </div>
                 </div>
@@ -796,16 +802,16 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                   type="button"
                   onClick={() => setUseAI(!useAI)}
                   style={{
-                    width: 48, height: 26, borderRadius: 13,
-                    background: useAI ? "#10b981" : "#cbd5e1",
+                    width: 44, height: 24, borderRadius: 12,
+                    background: useAI ? "#FF693D" : "#DDD2C4",
                     border: "none", position: "relative", cursor: "pointer",
                     transition: "background 0.2s"
                   }}
                 >
                   <div style={{
-                    width: 20, height: 20, borderRadius: "50%",
+                    width: 18, height: 18, borderRadius: "50%",
                     background: "#ffffff", position: "absolute",
-                    top: 3, left: useAI ? 25 : 3,
+                    top: 3, left: useAI ? 23 : 3,
                     transition: "left 0.2s",
                     boxShadow: "0 1px 3px rgba(0,0,0,0.2)"
                   }} />
@@ -813,32 +819,38 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
               </div>
 
               {/* Action Buttons */}
-              <div style={{ display: "flex", gap: 12, marginTop: 10 }}>
+              <div style={{ display: "flex", gap: 10, marginTop: 10, flexWrap: "wrap" }}>
                 <button
                   onClick={() => handleGenerateAndStart(false)}
                   style={{
-                    flex: 1.5, padding: "14px 20px", borderRadius: 12,
-                    background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
-                    color: "#ffffff", border: "none", fontWeight: 700, fontSize: 15,
+                    flex: "1 1 240px", padding: "12px 18px", borderRadius: 10,
+                    background: "linear-gradient(135deg, #FF693D 0%, #EE5326 100%)",
+                    color: "#ffffff", border: "none", fontWeight: 700, fontSize: 13.5,
                     cursor: "pointer", display: "flex", alignItems: "center",
-                    justifyContent: "center", gap: 8,
-                    boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)"
+                    justifyContent: "center", gap: 7,
+                    boxShadow: "0 4px 14px rgba(255, 105, 61, 0.28)",
+                    transition: "filter 0.15s ease"
                   }}
+                  onMouseEnter={(e) => { e.currentTarget.style.filter = "brightness(1.06)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.filter = "none"; }}
                 >
-                  <Play size={18} /> Start Quiz ({questionCount} Qs · {questionCount * 2} mins)
+                  <Play size={16} /> Start Quiz ({questionCount} Qs · {questionCount * 2} mins)
                 </button>
 
                 <button
                   onClick={() => handleGenerateAndStart(true)}
                   style={{
-                    flex: 1, padding: "14px 18px", borderRadius: 12,
-                    background: "#ffffff", color: "#1e293b",
-                    border: "1.5px solid #cbd5e1", fontWeight: 700, fontSize: 14,
+                    flex: "1 1 180px", padding: "12px 16px", borderRadius: 10,
+                    background: "#ffffff", color: "#231C16",
+                    border: "1.5px solid #EADBCC", fontWeight: 700, fontSize: 12.5,
                     cursor: "pointer", display: "flex", alignItems: "center",
-                    justifyContent: "center", gap: 8,
+                    justifyContent: "center", gap: 6,
+                    transition: "background 0.15s ease"
                   }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "#FAF6F0"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; }}
                 >
-                  <FileText size={16} /> Mentor Exam Paper
+                  <FileText size={15} /> Mentor Exam Paper
                 </button>
               </div>
             </div>
@@ -852,23 +864,23 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
               {/* Question Navigation Palette */}
               <div style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
-                padding: "10px 14px", background: "#f8fafc", borderRadius: 10,
-                marginBottom: 16, border: "1px solid #e2e8f0"
+                padding: "8px 12px", background: "#FAF6F0", borderRadius: 8,
+                marginBottom: 14, border: "1px solid #EADBCC", flexWrap: "wrap", gap: 8
               }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
                   {quiz.questions.map((q, idx) => {
                     const isAnswered = !!answers[q.id];
                     const isMarked = markedForReview.has(q.id);
                     const isCurrent = currentIdx === idx;
 
-                    let bg = "#e2e8f0";
-                    let color = "#475569";
+                    let bg = "#EFE6DA";
+                    let color = "#5A4E42";
                     if (isAnswered && isMarked) {
-                      bg = "#8b5cf6"; color = "#fff";
+                      bg = "#9333EA"; color = "#fff";
                     } else if (isAnswered) {
-                      bg = "#22c55e"; color = "#fff";
+                      bg = "#10B981"; color = "#fff";
                     } else if (isMarked) {
-                      bg = "#a855f7"; color = "#fff";
+                      bg = "#D97706"; color = "#fff";
                     }
 
                     return (
@@ -876,11 +888,13 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                         key={q.id}
                         onClick={() => setCurrentIdx(idx)}
                         style={{
-                          width: 28, height: 28, borderRadius: 6,
-                          background: isCurrent ? "#1e3a8a" : bg,
+                          width: 26, height: 26, borderRadius: 6,
+                          background: isCurrent ? "#FF693D" : bg,
                           color: isCurrent ? "#ffffff" : color,
-                          border: isCurrent ? "2px solid #3b82f6" : "none",
-                          fontSize: 12, fontWeight: 700, cursor: "pointer",
+                          border: isCurrent ? "2px solid #E05326" : "none",
+                          fontSize: 11, fontWeight: 700, cursor: "pointer",
+                          boxShadow: isCurrent ? "0 2px 8px rgba(255,105,61,0.28)" : "none",
+                          transition: "all 0.15s ease"
                         }}
                       >
                         {idx + 1}
@@ -889,7 +903,7 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                   })}
                 </div>
 
-                <div style={{ fontSize: 12, fontWeight: 600, color: "#64748b" }}>
+                <div style={{ fontSize: 11.5, fontWeight: 600, color: "#7A6C5D" }}>
                   Question <strong>{currentIdx + 1}</strong> of {quiz.questions.length}
                 </div>
               </div>
@@ -902,17 +916,18 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
 
                 return (
                   <div style={{
-                    background: "#ffffff", border: "1px solid #e2e8f0",
-                    borderRadius: 14, padding: "20px 24px", marginBottom: 16
+                    background: "#ffffff", border: "1px solid #EADBCC",
+                    borderRadius: 12, padding: "clamp(14px, 2.5vw, 20px)", marginBottom: 14
                   }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
-                      <span style={{ fontSize: 11.5, fontWeight: 700, color: "#2563eb", background: "#eff6ff", padding: "4px 8px", borderRadius: 6 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, flexWrap: "wrap", gap: 6 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#D9481E", background: "#FFF4EF", border: "1px solid #FCD5C4", padding: "3px 8px", borderRadius: 5 }}>
                         Topic: {currentQ.topic}
                       </span>
                       <span style={{
-                        fontSize: 11, fontWeight: 700, textTransform: "uppercase", padding: "4px 8px", borderRadius: 6,
-                        background: currentQ.difficulty === "easy" ? "#ecfdf5" : currentQ.difficulty === "hard" ? "#fef2f2" : "#fffbeb",
-                        color: currentQ.difficulty === "easy" ? "#059669" : currentQ.difficulty === "hard" ? "#dc2626" : "#d97706"
+                        fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", padding: "3px 7px", borderRadius: 5,
+                        background: currentQ.difficulty === "easy" ? "#F4FBF7" : currentQ.difficulty === "hard" ? "#FEF2F2" : "#FFF9EF",
+                        color: currentQ.difficulty === "easy" ? "#059669" : currentQ.difficulty === "hard" ? "#DC2626" : "#D97706",
+                        border: `1px solid ${currentQ.difficulty === "easy" ? "#A7F3D0" : currentQ.difficulty === "hard" ? "#FECACA" : "#FDE68A"}`
                       }}>
                         {currentQ.difficulty} (+4 / -1)
                       </span>
@@ -926,9 +941,9 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                       return (
                         <div style={{
                           display: "grid",
-                          gridTemplateColumns: isMatchQ ? "repeat(auto-fit, minmax(280px, 1fr))" : "1fr",
-                          gap: 10,
-                          marginBottom: 20,
+                          gridTemplateColumns: isMatchQ ? "repeat(auto-fit, minmax(260px, 1fr))" : "1fr",
+                          gap: 8,
+                          marginBottom: 16,
                         }}>
                           {(currentQ.options || []).map((opt) => {
                             const isSelected = chosenOption === opt.key;
@@ -940,25 +955,25 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                                   setAnswers((prev) => ({ ...prev, [currentQ.id]: opt.key }));
                                 }}
                                 style={{
-                                  display: "flex", alignItems: "center", gap: 12,
-                                  padding: "12px 16px", borderRadius: 10,
-                                  border: `2px solid ${isSelected ? "#2563eb" : "#e2e8f0"}`,
-                                  background: isSelected ? "#eff6ff" : "#ffffff",
+                                  display: "flex", alignItems: "center", gap: 10,
+                                  padding: "10px 14px", borderRadius: 9,
+                                  border: `2px solid ${isSelected ? "#FF693D" : "#EADBCC"}`,
+                                  background: isSelected ? "#FFF7F3" : "#ffffff",
                                   cursor: "pointer", transition: "all 0.15s ease",
-                                  boxShadow: isSelected ? "0 4px 12px rgba(37,99,235,0.12)" : "none",
+                                  boxShadow: isSelected ? "0 2px 10px rgba(255,105,61,0.12)" : "none",
                                 }}
                               >
                                 <span style={{
-                                  width: 28, height: 28, borderRadius: "50%",
-                                  background: isSelected ? "#2563eb" : "#f1f5f9",
-                                  color: isSelected ? "#ffffff" : "#475569",
-                                  fontWeight: 800, fontSize: 13, display: "flex",
+                                  width: 25, height: 25, borderRadius: "50%",
+                                  background: isSelected ? "#FF693D" : "#F4ECE1",
+                                  color: isSelected ? "#ffffff" : "#5A4E42",
+                                  fontWeight: 800, fontSize: 11.5, display: "flex",
                                   alignItems: "center", justifyContent: "center",
                                   flexShrink: 0,
                                 }}>
                                   {opt.key}
                                 </span>
-                                <div style={{ fontSize: 14, color: "#334155", flex: 1 }}>
+                                <div style={{ fontSize: 13, color: "#2E241C", flex: 1 }}>
                                   {matchPairs ? (
                                     <MatchOptionPill pairs={matchPairs} isSelected={isSelected} />
                                   ) : (
@@ -973,8 +988,8 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                     })()}
 
                     {/* Question Actions */}
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f1f5f9", paddingTop: 14 }}>
-                      <div style={{ display: "flex", gap: 8 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #F0E7DC", paddingTop: 12, flexWrap: "wrap", gap: 8 }}>
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                         <button
                           onClick={() => {
                             setMarkedForReview((prev) => {
@@ -985,10 +1000,12 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                             });
                           }}
                           style={{
-                            padding: "8px 12px", borderRadius: 8,
-                            border: "1px solid #cbd5e1", background: markedForReview.has(currentQ.id) ? "#f3e8ff" : "#ffffff",
-                            color: markedForReview.has(currentQ.id) ? "#7c3aed" : "#475569",
-                            fontSize: 12, fontWeight: 600, cursor: "pointer"
+                            padding: "7px 11px", borderRadius: 7,
+                            border: `1px solid ${markedForReview.has(currentQ.id) ? "#FCD34D" : "#EADBCC"}`,
+                            background: markedForReview.has(currentQ.id) ? "#FEF3C7" : "#ffffff",
+                            color: markedForReview.has(currentQ.id) ? "#B45309" : "#5A4E42",
+                            fontSize: 11.5, fontWeight: 600, cursor: "pointer",
+                            transition: "all 0.15s ease"
                           }}
                         >
                           {markedForReview.has(currentQ.id) ? "Marked for Review" : "Mark Review"}
@@ -1002,53 +1019,55 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                             });
                           }}
                           style={{
-                            padding: "8px 12px", borderRadius: 8,
-                            border: "1px solid #e2e8f0", background: "#ffffff",
-                            color: "#64748b", fontSize: 12, fontWeight: 600, cursor: "pointer"
+                            padding: "7px 11px", borderRadius: 7,
+                            border: "1px solid #EADBCC", background: "#ffffff",
+                            color: "#7A6C5D", fontSize: 11.5, fontWeight: 600, cursor: "pointer"
                           }}
                         >
                           Clear
                         </button>
                       </div>
 
-                      <div style={{ display: "flex", gap: 10 }}>
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                         <button
                           disabled={currentIdx === 0}
                           onClick={() => setCurrentIdx((i) => i - 1)}
                           style={{
-                            padding: "8px 14px", borderRadius: 8,
-                            border: "1px solid #cbd5e1", background: "#ffffff",
-                            color: "#1e293b", fontSize: 13, fontWeight: 600,
+                            padding: "7px 12px", borderRadius: 7,
+                            border: "1px solid #EADBCC", background: "#ffffff",
+                            color: "#231C16", fontSize: 12, fontWeight: 600,
                             cursor: currentIdx === 0 ? "not-allowed" : "pointer",
-                            opacity: currentIdx === 0 ? 0.5 : 1
+                            opacity: currentIdx === 0 ? 0.45 : 1
                           }}
                         >
-                          <ChevronLeft size={16} /> Prev
+                          <ChevronLeft size={14} /> Prev
                         </button>
 
                         {currentIdx < quiz.questions.length - 1 ? (
                           <button
                             onClick={() => setCurrentIdx((i) => i + 1)}
                             style={{
-                              padding: "8px 18px", borderRadius: 8,
-                              background: "#2563eb", color: "#ffffff",
-                              border: "none", fontSize: 13, fontWeight: 700,
-                              cursor: "pointer", display: "flex", alignItems: "center", gap: 6
+                              padding: "7px 16px", borderRadius: 7,
+                              background: "linear-gradient(135deg, #FF693D 0%, #EE5326 100%)",
+                              color: "#ffffff", border: "none", fontSize: 12.5, fontWeight: 700,
+                              cursor: "pointer", display: "flex", alignItems: "center", gap: 5,
+                              boxShadow: "0 2px 8px rgba(255,105,61,0.22)"
                             }}
                           >
-                            Save & Next <ChevronRight size={16} />
+                            Save & Next <ChevronRight size={14} />
                           </button>
                         ) : (
                           <button
                             onClick={handleSubmitQuiz}
                             style={{
-                              padding: "8px 20px", borderRadius: 8,
-                              background: "#16a34a", color: "#ffffff",
-                              border: "none", fontSize: 13, fontWeight: 700,
-                              cursor: "pointer", display: "flex", alignItems: "center", gap: 6
+                              padding: "7px 18px", borderRadius: 7,
+                              background: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+                              color: "#ffffff", border: "none", fontSize: 12.5, fontWeight: 700,
+                              cursor: "pointer", display: "flex", alignItems: "center", gap: 5,
+                              boxShadow: "0 2px 8px rgba(16,185,129,0.22)"
                             }}
                           >
-                            Submit Quiz <Check size={16} />
+                            Submit Quiz <Check size={14} />
                           </button>
                         )}
                       </div>
@@ -1066,57 +1085,59 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
             <div>
               {/* Scorecard Banner */}
               <div style={{
-                background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
-                borderRadius: 14, padding: "20px 24px", color: "#ffffff",
-                marginBottom: 20
+                background: "linear-gradient(135deg, #FAF5ED 0%, #F3EAE0 100%)",
+                border: "1px solid #EADBCC",
+                borderRadius: 12, padding: "16px 20px", color: "#231C16",
+                marginBottom: 16
               }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
                   <div>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase" }}>
+                    <span style={{ fontSize: 10, fontWeight: 800, color: "#9C5B29", textTransform: "uppercase", letterSpacing: "0.6px" }}>
                       Quiz Scorecard · Diagnostic Summary
                     </span>
-                    <h3 style={{ fontSize: 20, fontWeight: 800, color: "#ffffff", margin: "4px 0 0 0" }}>
+                    <h3 style={{ fontSize: 16.5, fontWeight: 800, color: "#231C16", margin: "3px 0 0 0" }}>
                       Units & Dimensions Assessment
                     </h3>
                   </div>
                   <button
                     onClick={() => setMode("configure")}
                     style={{
-                      background: "rgba(255,255,255,0.15)", border: "none", color: "#ffffff",
-                      padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600,
-                      cursor: "pointer", display: "flex", alignItems: "center", gap: 6
+                      background: "#ffffff", border: "1px solid #EADBCC", color: "#4A3E33",
+                      padding: "5px 11px", borderRadius: 7, fontSize: 11.5, fontWeight: 600,
+                      cursor: "pointer", display: "flex", alignItems: "center", gap: 5,
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.04)"
                     }}
                   >
-                    <RotateCcw size={14} /> New Quiz
+                    <RotateCcw size={13} /> New Quiz
                   </button>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
-                  <div style={{ background: "rgba(255,255,255,0.08)", padding: 12, borderRadius: 10, textAlign: "center" }}>
-                    <div style={{ fontSize: 24, fontWeight: 800 }}>{result.netScore} / {result.maxMarks}</div>
-                    <div style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase" }}>Net Score</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(105px, 1fr))", gap: 8 }}>
+                  <div style={{ background: "#ffffff", border: "1px solid #EADBCC", padding: "10px 8px", borderRadius: 8, textAlign: "center" }}>
+                    <div style={{ fontSize: 19, fontWeight: 800, color: "#FF693D" }}>{result.netScore} / {result.maxMarks}</div>
+                    <div style={{ fontSize: 10, color: "#7A6C5D", textTransform: "uppercase", fontWeight: 700 }}>Net Score</div>
                   </div>
-                  <div style={{ background: "rgba(255,255,255,0.08)", padding: 12, borderRadius: 10, textAlign: "center" }}>
-                    <div style={{ fontSize: 24, fontWeight: 800, color: "#34d399" }}>{result.accuracy}%</div>
-                    <div style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase" }}>Accuracy</div>
+                  <div style={{ background: "#ffffff", border: "1px solid #EADBCC", padding: "10px 8px", borderRadius: 8, textAlign: "center" }}>
+                    <div style={{ fontSize: 19, fontWeight: 800, color: "#10B981" }}>{result.accuracy}%</div>
+                    <div style={{ fontSize: 10, color: "#7A6C5D", textTransform: "uppercase", fontWeight: 700 }}>Accuracy</div>
                   </div>
-                  <div style={{ background: "rgba(255,255,255,0.08)", padding: 12, borderRadius: 10, textAlign: "center" }}>
-                    <div style={{ fontSize: 24, fontWeight: 800 }}>{result.correctCount} / {result.totalQuestions}</div>
-                    <div style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase" }}>Correct</div>
+                  <div style={{ background: "#ffffff", border: "1px solid #EADBCC", padding: "10px 8px", borderRadius: 8, textAlign: "center" }}>
+                    <div style={{ fontSize: 19, fontWeight: 800, color: "#10B981" }}>{result.correctCount} / {result.totalQuestions}</div>
+                    <div style={{ fontSize: 10, color: "#7A6C5D", textTransform: "uppercase", fontWeight: 700 }}>Correct</div>
                   </div>
-                  <div style={{ background: "rgba(255,255,255,0.08)", padding: 12, borderRadius: 10, textAlign: "center" }}>
-                    <div style={{ fontSize: 24, fontWeight: 800, color: "#f87171" }}>{result.wrongCount}</div>
-                    <div style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase" }}>Incorrect (-{result.negativeMarks})</div>
+                  <div style={{ background: "#ffffff", border: "1px solid #EADBCC", padding: "10px 8px", borderRadius: 8, textAlign: "center" }}>
+                    <div style={{ fontSize: 19, fontWeight: 800, color: "#EF4444" }}>{result.wrongCount}</div>
+                    <div style={{ fontSize: 10, color: "#7A6C5D", textTransform: "uppercase", fontWeight: 700 }}>Incorrect (-{result.negativeMarks})</div>
                   </div>
                 </div>
               </div>
 
               {/* Filter tabs */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <h4 style={{ fontSize: 15, fontWeight: 800, margin: 0, color: "#1e293b" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
+                <h4 style={{ fontSize: 13.5, fontWeight: 800, margin: 0, color: "#231C16" }}>
                   Question-by-Question Solution Room
                 </h4>
-                <div style={{ display: "flex", gap: 6 }}>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                   {[
                     { key: "all", label: `All (${result.totalQuestions})` },
                     { key: "wrong", label: `Wrong (${result.wrongCount})` },
@@ -1126,11 +1147,11 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                       key={f.key}
                       onClick={() => setReviewFilter(f.key)}
                       style={{
-                        padding: "5px 10px", borderRadius: 6, fontSize: 12, fontWeight: 600,
-                        border: `1px solid ${reviewFilter === f.key ? "#2563eb" : "#e2e8f0"}`,
-                        background: reviewFilter === f.key ? "#eff6ff" : "#ffffff",
-                        color: reviewFilter === f.key ? "#1d4ed8" : "#64748b",
-                        cursor: "pointer"
+                        padding: "4px 9px", borderRadius: 6, fontSize: 11.5, fontWeight: 600,
+                        border: `1px solid ${reviewFilter === f.key ? "#FF693D" : "#EADBCC"}`,
+                        background: reviewFilter === f.key ? "#FFF4F0" : "#ffffff",
+                        color: reviewFilter === f.key ? "#D9481E" : "#615447",
+                        cursor: "pointer", transition: "all 0.15s ease"
                       }}
                     >
                       {f.label}
@@ -1140,7 +1161,7 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
               </div>
 
               {/* Solution List */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {result.evaluatedQuestions
                   .filter((q) => {
                     if (reviewFilter === "wrong") return q.status === "wrong";
@@ -1151,18 +1172,18 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                     <div
                       key={q.id}
                       style={{
-                        border: `1.5px solid ${q.status === "correct" ? "#86efac" : q.status === "wrong" ? "#fca5a5" : "#e2e8f0"}`,
-                        borderRadius: 12, padding: "16px 18px",
-                        background: q.status === "correct" ? "#f0fdf4" : q.status === "wrong" ? "#fef2f2" : "#f8fafc"
+                        border: `1px solid ${q.status === "correct" ? "#A7F3D0" : q.status === "wrong" ? "#FECACA" : "#EADBCC"}`,
+                        borderRadius: 10, padding: "14px 16px",
+                        background: q.status === "correct" ? "#F6FDF9" : q.status === "wrong" ? "#FFF8F8" : "#FAF7F2"
                       }}
                     >
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: "#475569" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 6 }}>
+                        <span style={{ fontSize: 11.5, fontWeight: 700, color: "#4A3E33" }}>
                           Question #{idx + 1} · {q.topic}
                         </span>
                         <span style={{
-                          fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 4,
-                          background: q.status === "correct" ? "#22c55e" : q.status === "wrong" ? "#ef4444" : "#94a3b8",
+                          fontSize: 10.5, fontWeight: 700, padding: "2px 7px", borderRadius: 4,
+                          background: q.status === "correct" ? "#10B981" : q.status === "wrong" ? "#EF4444" : "#8C7E70",
                           color: "#ffffff"
                         }}>
                           {q.status === "correct" ? "+4 Marks" : q.status === "wrong" ? "-1 Mark" : "Unattempted (0)"}
@@ -1176,29 +1197,29 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                         return (
                           <div style={{
                             display: "grid",
-                            gridTemplateColumns: isMatchQ ? "repeat(auto-fit, minmax(280px, 1fr))" : "1fr 1fr",
-                            gap: 8,
-                            marginBottom: 12,
+                            gridTemplateColumns: isMatchQ ? "repeat(auto-fit, minmax(260px, 1fr))" : "1fr 1fr",
+                            gap: 6,
+                            marginBottom: 10,
                           }}>
                             {(q.options || []).map((opt) => {
                               const isKey = opt.key === q.correct;
                               const isStudentPick = opt.key === q.studentAnswer;
                               const matchPairs = parseMatchOption(opt?.text);
-                              let borderCol = "#e2e8f0";
+                              let borderCol = "#EADBCC";
                               let bgCol = "#ffffff";
                               if (isKey) {
-                                borderCol = "#22c55e"; bgCol = "#dcfce7";
+                                borderCol = "#86EFAC"; bgCol = "#DCFCE7";
                               } else if (isStudentPick && !isKey) {
-                                borderCol = "#ef4444"; bgCol = "#fee2e2";
+                                borderCol = "#FECACA"; bgCol = "#FEE2E2";
                               }
 
                               return (
                                 <div
                                   key={opt.key}
                                   style={{
-                                    padding: "10px 14px", borderRadius: 8,
-                                    border: `1.5px solid ${borderCol}`, background: bgCol,
-                                    fontSize: 13, display: "flex", alignItems: "center", gap: 8,
+                                    padding: "8px 12px", borderRadius: 7,
+                                    border: `1px solid ${borderCol}`, background: bgCol,
+                                    fontSize: 12.5, display: "flex", alignItems: "center", gap: 7,
                                   }}
                                 >
                                   <strong>({opt.key})</strong>
@@ -1209,8 +1230,8 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                                       <MathText text={opt.text} />
                                     )}
                                   </div>
-                                  {isKey && <span style={{ marginLeft: "auto", fontSize: 11, color: "#16a34a", fontWeight: 700, flexShrink: 0 }}>✓ Key</span>}
-                                  {isStudentPick && !isKey && <span style={{ marginLeft: "auto", fontSize: 11, color: "#dc2626", fontWeight: 700, flexShrink: 0 }}>✗ Your Choice</span>}
+                                  {isKey && <span style={{ marginLeft: "auto", fontSize: 10.5, color: "#16A34A", fontWeight: 700, flexShrink: 0 }}>✓ Key</span>}
+                                  {isStudentPick && !isKey && <span style={{ marginLeft: "auto", fontSize: 10.5, color: "#DC2626", fontWeight: 700, flexShrink: 0 }}>✗ Your Choice</span>}
                                 </div>
                               );
                             })}
@@ -1220,11 +1241,11 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
 
                       {q.explanation && (
                         <div style={{
-                          fontSize: 12.5, color: "#334155", background: "rgba(255,255,255,0.7)",
-                          padding: 10, borderRadius: 8, border: "1px solid rgba(0,0,0,0.06)",
+                          fontSize: 11.8, color: "#4A3E33", background: "#ffffff",
+                          padding: "9px 12px", borderRadius: 7, border: "1px solid #EADBCC",
                           lineHeight: 1.5
                         }}>
-                          <strong>Solution & Rationale:</strong><br />
+                          <strong style={{ color: "#231C16" }}>Solution & Rationale:</strong><br />
                           <MathText text={q.explanation} />
                         </div>
                       )}
@@ -1241,14 +1262,14 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
             <div>
               <div style={{
                 display: "flex", justifyContent: "space-between", alignItems: "center",
-                padding: "12px 18px", background: "#f8fafc", borderRadius: 10,
-                border: "1px solid #e2e8f0", marginBottom: 18
+                padding: "10px 16px", background: "#FAF6F0", borderRadius: 8,
+                border: "1px solid #EADBCC", marginBottom: 16, flexWrap: "wrap", gap: 8
               }}>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>
+                  <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#231C16" }}>
                     {quiz.title} (Mentor Exam Copy)
                   </h3>
-                  <span style={{ fontSize: 12, color: "#64748b" }}>
+                  <span style={{ fontSize: 11.5, color: "#7A6C5D" }}>
                     Total Questions: {quiz.totalQuestions} · Marks: {quiz.maxMarks} · {quiz.aiInsight}
                   </span>
                 </div>
@@ -1256,8 +1277,8 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                   <button
                     onClick={() => window.print()}
                     style={{
-                      padding: "8px 14px", borderRadius: 8, background: "#0f172a",
-                      color: "#ffffff", border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer"
+                      padding: "7px 12px", borderRadius: 7, background: "#231C16",
+                      color: "#ffffff", border: "none", fontSize: 11.5, fontWeight: 700, cursor: "pointer"
                     }}
                   >
                     Print Paper
@@ -1265,8 +1286,8 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                   <button
                     onClick={() => setMode("configure")}
                     style={{
-                      padding: "8px 14px", borderRadius: 8, background: "#ffffff",
-                      color: "#475569", border: "1px solid #cbd5e1", fontSize: 12, fontWeight: 600, cursor: "pointer"
+                      padding: "7px 12px", borderRadius: 7, background: "#ffffff",
+                      color: "#4A3E33", border: "1px solid #EADBCC", fontSize: 11.5, fontWeight: 600, cursor: "pointer"
                     }}
                   >
                     Back
@@ -1274,18 +1295,18 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {quiz.questions.map((q, idx) => {
                   const fullQ = localQuestions.find((lq) => lq.id === q.id) || q;
                   return (
-                    <div key={q.id} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 16 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                        <strong style={{ color: "#1e3a8a" }}>Question {idx + 1}</strong>
-                        <span style={{ fontSize: 11, background: "#f1f5f9", padding: "2px 6px", borderRadius: 4, fontWeight: 600 }}>
+                    <div key={q.id} style={{ border: "1px solid #EADBCC", borderRadius: 8, padding: 14, background: "#ffffff" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 6 }}>
+                        <strong style={{ color: "#78491C", fontSize: 13 }}>Question {idx + 1}</strong>
+                        <span style={{ fontSize: 10.5, background: "#FAF6F0", border: "1px solid #EADBCC", padding: "2px 6px", borderRadius: 4, fontWeight: 600, color: "#615447" }}>
                           {fullQ.difficulty} · {fullQ.topic}
                         </span>
                       </div>
-                      <div style={{ marginBottom: 12 }}>
+                      <div style={{ marginBottom: 10 }}>
                         <QuestionStatementViewer statement={fullQ.statement} />
                       </div>
                       {(() => {
@@ -1293,9 +1314,9 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                         return (
                           <div style={{
                             display: "grid",
-                            gridTemplateColumns: isMatchQ ? "repeat(auto-fit, minmax(280px, 1fr))" : "1fr 1fr",
-                            gap: 8,
-                            marginBottom: 10,
+                            gridTemplateColumns: isMatchQ ? "repeat(auto-fit, minmax(260px, 1fr))" : "1fr 1fr",
+                            gap: 6,
+                            marginBottom: 8,
                           }}>
                             {(fullQ.options || []).map((opt) => {
                               const matchPairs = parseMatchOption(opt?.text);
@@ -1304,13 +1325,13 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                                 <div
                                   key={opt.key}
                                   style={{
-                                    fontSize: 13,
-                                    color: isCorrectOpt ? "#16a34a" : "#475569",
+                                    fontSize: 12.5,
+                                    color: isCorrectOpt ? "#16A34A" : "#4A3E33",
                                     fontWeight: isCorrectOpt ? 700 : 400,
-                                    display: "flex", alignItems: "center", gap: 8,
-                                    padding: "8px 12px", borderRadius: 8,
-                                    border: `1px solid ${isCorrectOpt ? "#86efac" : "#e2e8f0"}`,
-                                    background: isCorrectOpt ? "#f0fdf4" : "#ffffff",
+                                    display: "flex", alignItems: "center", gap: 6,
+                                    padding: "7px 10px", borderRadius: 6,
+                                    border: `1px solid ${isCorrectOpt ? "#86EFAC" : "#EADBCC"}`,
+                                    background: isCorrectOpt ? "#F0FDF4" : "#ffffff",
                                   }}
                                 >
                                   <strong>({opt.key})</strong>
@@ -1321,7 +1342,7 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                                       <MathText text={opt.text} />
                                     )}
                                   </div>
-                                  {isCorrectOpt && <span style={{ marginLeft: "auto", fontSize: 11, color: "#16a34a", fontWeight: 700, flexShrink: 0 }}>✓ (Answer Key)</span>}
+                                  {isCorrectOpt && <span style={{ marginLeft: "auto", fontSize: 10.5, color: "#16A34A", fontWeight: 700, flexShrink: 0 }}>✓ (Answer Key)</span>}
                                 </div>
                               );
                             })}
@@ -1329,8 +1350,8 @@ export default function ChapterQuizModal({ isOpen, onClose, chapterName = "Units
                         );
                       })()}
                       {fullQ.explanation && (
-                        <div style={{ fontSize: 12, color: "#64748b", background: "#f8fafc", padding: 8, borderRadius: 6 }}>
-                          <strong>Answer Key: ({fullQ.correct})</strong> — {fullQ.explanation}
+                        <div style={{ fontSize: 11.5, color: "#615447", background: "#FAF7F2", padding: 8, borderRadius: 6, border: "1px solid #EADBCC" }}>
+                          <strong style={{ color: "#231C16" }}>Answer Key: ({fullQ.correct})</strong> — {fullQ.explanation}
                         </div>
                       )}
                     </div>

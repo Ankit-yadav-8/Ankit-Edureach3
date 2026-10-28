@@ -135,6 +135,12 @@ export const apiMentorStudentTasks    = (token, sid) => req(mentorScoped(sid, "t
 export const apiMentorSetStudentTasks = (token, sid, tasks) =>
   req(mentorScoped(sid, "tasks"), { method: "PUT", body: { tasks }, token });
 
+export const apiMentorStudentLogins = (token, range = "7d") =>
+  req(`/api/mentor/student-logins?range=${encodeURIComponent(range)}`, { token });
+
+export const apiMentorStudentsOverview = (token) =>
+  req("/api/mentor/students-overview", { token });
+
 // ── Admin → mentor management ───────────────────────────────────────────────
 export const apiAdminMentorList   = (adminToken) => adminReq("/api/admin/mentors", adminToken);
 export const apiAdminMentorCreate = (adminToken, b) => adminReq("/api/admin/mentors", adminToken, { method: "POST", body: b });
@@ -145,6 +151,28 @@ export const apiAdminMentorUnassign = (adminToken, id, studentId) =>
   adminReq(`/api/admin/mentors/${id}/students/${encodeURIComponent(studentId)}`, adminToken, { method: "DELETE" });
 export const apiAdminMentorResetPassword = (adminToken, id) =>
   adminReq(`/api/admin/mentors/${id}/reset-password`, adminToken, { method: "POST" });
+export const apiAdminAnalyticsOverview = (adminToken, range = "30d", startDate, endDate) => {
+  const p = new URLSearchParams();
+  if (range) p.append("range", range);
+  if (startDate) p.append("startDate", startDate);
+  if (endDate) p.append("endDate", endDate);
+  return adminReq(`/api/admin/analytics/overview?${p.toString()}`, adminToken);
+};
+export const apiAdminMentorTracking = (adminToken, range = "30d", startDate, endDate, mentorId) => {
+  const p = new URLSearchParams();
+  if (range) p.append("range", range);
+  if (startDate) p.append("startDate", startDate);
+  if (endDate) p.append("endDate", endDate);
+  if (mentorId) p.append("mentorId", mentorId);
+  return adminReq(`/api/admin/mentors/tracking-analytics?${p.toString()}`, adminToken);
+};
+export const apiAdminMentorTrackingDetail = (adminToken, mentorId, range = "30d", startDate, endDate) => {
+  const p = new URLSearchParams();
+  if (range) p.append("range", range);
+  if (startDate) p.append("startDate", startDate);
+  if (endDate) p.append("endDate", endDate);
+  return adminReq(`/api/admin/mentors/${mentorId}/tracking-detail?${p.toString()}`, adminToken);
+};
 
 export const apiTestList        = (token, plan, category) => req(`/api/tests${batchQ(plan, category ? `category=${category}` : "")}`, { token });
 export const apiTestGet         = (token, id, plan) => req(`/api/tests/${id}${batchQ(plan)}`, { token });

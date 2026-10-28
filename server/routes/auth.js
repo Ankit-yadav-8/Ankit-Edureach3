@@ -5,6 +5,8 @@ import { rateLimit } from "express-rate-limit";
 import User from "../models/User.js";
 import PasswordResetToken from "../models/PasswordResetToken.js";
 import Enrollment from "../models/Enrollment.js";
+import Mentor from "../models/Mentor.js";
+import MentorActivityLog from "../models/MentorActivityLog.js";
 import { requireAuth } from "../middleware/auth.js";
 import { signStudentToken } from "../utils/tokens.js";
 import { sendPasswordResetEmail, sendVerificationTokenEmail } from "../utils/mailer.js";
@@ -104,6 +106,63 @@ router.post("/login", async (req, res) => {
     } else {
       User.updateOne({ _id: user._id }, { $set: tasks }).catch(() => {});
     }
+
+    // Authenticated activity tracking: record student login and attribute to assigned mentors
+    (async () => {
+      try {
+        const enrollments = await Enrollment.find({ email: user.email, status: "paid" })
+          .select("studentId plan name")
+          .lean();
+        const clientIp = req.ip || "";
+        const clientUa = String(req.headers["user-agent"] || "").slice(0, 300);
+
+        if (enrollments && enrollments.length > 0) {
+          for (const enr of enrollments) {
+            if (!enr.studentId) continue;
+            const mentors = await Mentor.find({ students: enr.studentId, active: true })
+              .select("_id name email")
+              .lean();
+            if (mentors.length > 0) {
+              for (const m of mentors) {
+                await MentorActivityLog.create({
+                  mentorId: m._id,
+                  mentorName: m.name,
+                  mentorEmail: m.email,
+                  studentId: enr.studentId,
+                  studentName: user.name || enr.name,
+                  userId: user._id,
+                  action: "student_login",
+                  details: { plan: enr.plan },
+                  ip: clientIp,
+                  userAgent: clientUa,
+                });
+              }
+            } else {
+              await MentorActivityLog.create({
+                studentId: enr.studentId,
+                studentName: user.name || enr.name,
+                userId: user._id,
+                action: "student_login",
+                details: { plan: enr.plan, unassigned: true },
+                ip: clientIp,
+                userAgent: clientUa,
+              });
+            }
+          }
+        } else {
+          await MentorActivityLog.create({
+            studentName: user.name,
+            userId: user._id,
+            action: "student_login",
+            details: { freeTier: true },
+            ip: clientIp,
+            userAgent: clientUa,
+          });
+        }
+      } catch (err) {
+        console.error("[auth/student-login-log]", err.message);
+      }
+    })();
   } catch (e) { console.error("[auth/login]", e.message); res.status(500).json({ error: "Could not log in. Please try again." }); }
 });
 

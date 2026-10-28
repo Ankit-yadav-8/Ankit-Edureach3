@@ -14,6 +14,7 @@ import publicCommunityRoutes from "./routes/publicCommunity.js";
 import reviewRoutes from "./routes/reviews.js";
 import adminRoutes from "./routes/admin.js";
 import adminMentorRoutes from "./routes/adminMentors.js";
+import adminAnalyticsRoutes from "./routes/adminAnalytics.js";
 import mentorRoutes from "./routes/mentor.js";
 import aiRoutes from "./routes/ai.js";
 import testRoutes from "./routes/tests.js";
@@ -134,6 +135,7 @@ app.use("/api/otp", authLimiter, otpRoutes);
 // /api/admin mount would otherwise catch these first and subject mentor
 // management (ordinary data traffic) to the strict login rate limit.
 app.use("/api/admin/mentors", apiLimiter, adminMentorRoutes);
+app.use("/api/admin/analytics", apiLimiter, adminAnalyticsRoutes);
 app.use("/api/admin", adminGateLimiter, adminRoutes);
 // Mentor login is a credential endpoint, so it takes the strict auth limiter.
 app.use("/api/mentor", authLimiter, mentorRoutes);

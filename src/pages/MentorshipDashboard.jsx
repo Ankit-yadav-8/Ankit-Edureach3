@@ -14,6 +14,7 @@ import Community from "../components/mentorship/Community.jsx";
 import TestSeries from "../components/mentorship/TestSeries.jsx";
 import { Trend, Gauge, CenterDonut, DonutLegend, Bars } from "../components/Charts.jsx";
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
+import { normalizeTestScore } from "../utils/testScoring.js";
 
 const ORANGE = "#FF693D";
 const GOLD = "#FF693D";
@@ -624,9 +625,9 @@ function DashboardBody({ urlPlan = "" }) {
     const att = Number(t.correct) + Number(t.wrong);
     return att ? Math.round((Number(t.correct) / att) * 100) : 0;
   };
-  const pct = (t) => Math.round((Number(t.scored) / Math.max(1, Number(t.total))) * 100);
-  const improvement = latest && prev && Number(prev.scored) > 0
-    ? Math.round(((Number(latest.scored) - Number(prev.scored)) / Number(prev.scored)) * 100)
+  const pct = (t) => normalizeTestScore(t).percent;
+  const improvement = latest && prev && Number(prev.scored ?? prev.score) > 0
+    ? Math.round(((Number(latest.scored ?? latest.score) - Number(prev.scored ?? prev.score)) / Number(prev.scored ?? prev.score)) * 100)
     : null;
   const scoreTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, you: Number(t.scored), target: Math.round(Number(t.total) * 0.75) }));
   const accTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, accuracy: acc(t) }));
@@ -898,19 +899,44 @@ function DashboardBody({ urlPlan = "" }) {
       if (!Number.isFinite(scored)) return;
     }
     if (!testForm.name.trim()) return;
+
+    // Run through universal normalization so question-count/mismatched-marks never produce > 100% bug
+    const norm = normalizeTestScore({
+      score: scored,
+      maxMarks: total,
+      totalQuestions: (Number(testForm.correct) || 0) + (Number(testForm.wrong) || 0) + (Number(testForm.skipped) || 0),
+      examType: testForm.type,
+      correctCount: Number(testForm.correct) || 0,
+      wrongCount: Number(testForm.wrong) || 0,
+      skippedCount: Number(testForm.skipped) || 0,
+    });
+    total = norm.maxMarks;
+    scored = norm.score;
+
     // per-section minutes spent (0 when the student didn't log it)
     const times = Object.fromEntries(examSections.map((sec) => [sec, Number(testForm.times?.[sec]) || 0]));
     const timeTotal = Object.values(times).reduce((s, v) => s + v, 0);
     const t = {
-      id: `${Date.now()}`, name: testForm.name.trim(), type: testForm.type, date: todayIso, total, scored,
+      id: `${Date.now()}`,
+      name: testForm.name.trim(),
+      type: testForm.type,
+      date: todayIso,
+      total,
+      maxMarks: total,
+      scored,
+      score: scored,
+      percent: norm.percent,
+      accuracy: norm.accuracy,
       correct: Number(testForm.correct) || 0,
       wrong: Number(testForm.wrong) || 0,
       skipped: Number(testForm.skipped) || 0,
+      totalQuestions: norm.totalQuestions,
       silly: Number(testForm.silly) || 0,
       sillyTopic: testForm.sillyTopic.trim(),
       overspent: testForm.overspent.trim(),
       weak: testForm.weak.split(",").map((x) => x.trim()).filter(Boolean),
-      times, timeTotal,
+      times,
+      timeTotal,
       rank,
     };
     setTests((prevT) => [...prevT, t]);
@@ -1613,7 +1639,7 @@ function DashboardBody({ urlPlan = "" }) {
                     {improvement == null ? <BarChart3 size={16} color="#64748b" />
                       : improvement >= 0 ? <TrendingUp size={16} color="#16a34a" /> : <TrendingDown size={16} color="#dc2626" />}
                     <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: INK }}>
-                      {latest.name} · {pct(latest)}% · {acc(latest)}% accuracy
+                      {latest.name} · {latest.scored ?? latest.score}/{latest.total ?? latest.maxMarks} marks ({pct(latest)}%) · {acc(latest)}% accuracy
                     </span>
                   </div>
                   <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.5 }}>

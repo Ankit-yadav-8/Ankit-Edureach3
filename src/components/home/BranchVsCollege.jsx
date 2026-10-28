@@ -657,12 +657,12 @@ export default function BranchVsCollege({ asPage = false }) {
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 24px" }}>
           <span style={clEyebrow}><GitCompareArrows size={13} /> {H.eyebrow}</span>
-          <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.9rem,4.2vw,2.8rem)", color: CL.ink, letterSpacing: "-1.2px", margin: "16px 0 12px", lineHeight: 1.1 }}>
+          <h2 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "clamp(1.4rem, 2.8vw, 2.05rem)", color: CL.ink, letterSpacing: "-0.8px", margin: "14px 0 10px", lineHeight: 1.15 }}>
             {H.title}
           </h2>
           {phase === "quiz" && (
             <motion.p key={mode} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-              style={{ color: CL.body, fontSize: "1.02rem", lineHeight: 1.65, maxWidth: 580, margin: "0 auto" }}>
+              style={{ color: CL.body, fontSize: "0.94rem", lineHeight: 1.6, maxWidth: 560, margin: "0 auto" }}>
               {H.sub}
             </motion.p>
           )}
@@ -761,26 +761,26 @@ export default function BranchVsCollege({ asPage = false }) {
               </div>
 
               {q.fact && (
-                <div style={{ display: "flex", gap: 9, background: CL.amberSoft, border: `1px solid ${CL.amber}44`, borderRadius: 12, padding: "10px 13px", marginBottom: 14 }}>
-                  <span style={{ fontSize: 13, flexShrink: 0 }}>💡</span>
-                  <span style={{ fontSize: 12.5, color: CL.body, lineHeight: 1.5 }}><b style={{ color: CL.ink2 }}>Fact:</b> {q.fact}</span>
+                <div style={{ display: "flex", gap: 9, background: CL.amberSoft, border: `1px solid ${CL.amber}44`, borderRadius: 12, padding: "9px 12px", marginBottom: 12 }}>
+                  <span style={{ fontSize: 12, flexShrink: 0 }}>💡</span>
+                  <span style={{ fontSize: 11.5, color: CL.body, lineHeight: 1.5 }}><b style={{ color: CL.ink2 }}>Fact:</b> {q.fact}</span>
                 </div>
               )}
-              <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.28rem", color: CL.ink, letterSpacing: "-0.4px", marginBottom: 6, lineHeight: 1.3 }}>{q.q}</h3>
-              <p style={{ fontSize: 12.5, color: CL.muted, marginBottom: 18 }}>Pick whatever feels most true - there's no wrong answer.</p>
+              <h3 style={{ fontFamily: CL.display, fontWeight: 800, fontSize: "1.08rem", color: CL.ink, letterSpacing: "-0.3px", marginBottom: 4, lineHeight: 1.3 }}>{q.q}</h3>
+              <p style={{ fontSize: 11.5, color: CL.muted, marginBottom: 14 }}>Pick whatever feels most true - there's no wrong answer.</p>
 
-              <motion.div variants={optContainer} initial="hidden" animate="show" style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+              <motion.div variants={optContainer} initial="hidden" animate="show" style={{ display: "flex", flexDirection: "column", gap: 9 }}>
                 {q.options.map((opt, i) => {
                   const active = answers[step]?.label === opt.label;
                   return (
                     <motion.button key={opt.label} variants={optItem} onClick={() => choose(opt)}
-                      whileHover={{ scale: active ? 1 : 1.015, x: active ? 0 : 3 }} whileTap={{ scale: 0.985 }}
+                      whileHover={{ scale: active ? 1 : 1.012, x: active ? 0 : 2 }} whileTap={{ scale: 0.985 }}
                       style={{
-                        textAlign: "left", padding: "14px 16px", borderRadius: 14, cursor: "pointer",
+                        textAlign: "left", padding: "12px 14px", borderRadius: 12, cursor: "pointer",
                         background: active ? CL.coralSoft : "#fff",
                         border: `1.5px solid ${active ? CL.coral : CL.cream3}`,
-                        color: CL.ink, fontSize: 14.5, fontWeight: 600,
-                        display: "flex", alignItems: "center", gap: 13,
+                        color: CL.ink, fontSize: 13.2, fontWeight: 600,
+                        display: "flex", alignItems: "center", gap: 11,
                         boxShadow: active ? `0 6px 20px ${CL.coral}22` : "none",
                         transition: "background .15s, border-color .15s, box-shadow .2s",
                       }}

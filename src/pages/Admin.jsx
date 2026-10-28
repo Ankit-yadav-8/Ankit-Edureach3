@@ -1,23 +1,23 @@
-import { useState, useEffect, useCallback, Fragment } from "react";
+import { useState, useEffect, useCallback, Fragment, useMemo } from "react";
 import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
   ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText,
   GraduationCap, Tag, Send, Eye, EyeOff, Lock, AlertTriangle, ArrowRight, ShieldAlert,
+  LayoutDashboard, LineChart, Menu, X, Search, Sparkles, Building2, UserCheck, Layers, ExternalLink,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
 import TestUpload from "../components/admin/TestUpload.jsx";
 import Mentors from "../components/admin/Mentors.jsx";
 import CouponManager from "../components/admin/CouponManager.jsx";
+import AdminOverview from "../components/admin/AdminOverview.jsx";
+import MentorTracking from "../components/admin/MentorTracking.jsx";
 
 const TOKEN_STORAGE = "edureach:adminToken";
 const ORANGE = "#FF693D";
 
 // Tabs that render one self-contained component and own their whole surface:
-// no stat cards, no CSV export, no shared search/table. Named rather than
-// spelled out per site, so adding a tab doesn't mean finding every
-// `tab !== "x" && tab !== "y"` chain and appending to it.
-const SELF_CONTAINED_TABS = new Set(["community", "tests", "mentors", "coupons"]);
+const SELF_CONTAINED_TABS = new Set(["overview", "mentor-tracking", "community", "tests", "mentors", "coupons"]);
 
 const fmtDate = (iso) => {
   if (!iso) return "-";
@@ -92,7 +92,8 @@ export default function Admin() {
   const [err, setErr] = useState("");
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState(() => new Set());
-  const [tab, setTab] = useState("users");          // "users" | "payments"
+  const [tab, setTab] = useState("overview");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [payments, setPayments] = useState([]);
   const [payTotal, setPayTotal] = useState(0);
   const [payLoaded, setPayLoaded] = useState(false);
@@ -146,10 +147,11 @@ export default function Admin() {
   }, []);
 
   const switchTab = (t) => {
-    setTab(t); setSearch(""); setExpanded(new Set()); setErr("");
+    setTab(t); setSearch(""); setExpanded(new Set()); setErr(""); setSidebarOpen(false);
     if (t === "payments" && !payLoaded) fetchPayments(token);
+    if (t === "users" && users.length === 0) fetchUsers(token);
   };
-  // Community moderation manages its own data/refresh, so the header Refresh is a no-op there.
+  // Community and self-contained sections manage their own refresh.
   const refreshActive = () => (tab === "users" ? fetchUsers(token) : tab === "payments" ? fetchPayments(token) : undefined);
 
   useEffect(() => { if (token) fetchUsers(token); /* eslint-disable-next-line */ }, []);
@@ -253,7 +255,7 @@ export default function Admin() {
     setToken(""); setAuthed(false);
     setStep("key"); setAdminKey(""); setEnteringKey(""); setEnteringOtp(""); setOtpSentTo(""); setDevCode("");
     setUsers([]); setTotal(0); setErr("");
-    setPayments([]); setPayTotal(0); setPayLoaded(false); setTab("users");
+    setPayments([]); setPayTotal(0); setPayLoaded(false); setTab("overview"); setSidebarOpen(false);
   }
 
   const q = norm(search);
@@ -602,330 +604,722 @@ export default function Admin() {
   }
 
   // ── DASHBOARD ─────────────────────────────────────────────────
-  return (
-    <div style={{ minHeight: "100vh", background: "var(--page-bg)", padding: "32px 0 60px", position: "relative" }}>
-      <style>{`
-        @keyframes admUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: none; } }
-        @keyframes admSpin { to { transform: rotate(360deg); } }
-        .adm-stat { animation: admUp .5s cubic-bezier(.4,0,.2,1) both; transition: transform .2s, box-shadow .22s; }
-        .adm-stat:hover { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(13,27,62,.12); }
-        .adm-stat:nth-child(2){ animation-delay:.07s } .adm-stat:nth-child(3){ animation-delay:.14s } .adm-stat:nth-child(4){ animation-delay:.21s }
-        .adm-card { animation: admUp .55s .12s cubic-bezier(.4,0,.2,1) both; }
-        .adm-tab { transition: background .18s, color .18s, box-shadow .18s; }
-      `}</style>
-      <div style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
+  const primaryAdminEmail = inboxes[0]?.email || "ankityadav08022008@gmail.com";
 
-        {/* Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}>
-                <ShieldCheck size={18} color={ORANGE} />
-              </div>
-              <h1 style={{ fontFamily: "Sora", fontWeight: 800, color: "#0d1b3e", fontSize: "1.5rem", margin: 0 }}>
-                Admin Dashboard
-              </h1>
+  const NAV_GROUPS = [
+    {
+      title: "Analytics & Telemetry",
+      items: [
+        { k: "overview", label: "Overview", icon: LayoutDashboard },
+        { k: "mentor-tracking", label: "Mentor Tracking", icon: LineChart, badge: "Live" },
+      ],
+    },
+    {
+      title: "Platform Management",
+      items: [
+        { k: "mentors", label: "Mentors", icon: GraduationCap },
+        { k: "users", label: "Students", icon: Users, count: total },
+        { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
+      ],
+    },
+    {
+      title: "Academics & Content",
+      items: [
+        { k: "tests", label: "Mock Tests", icon: FileText },
+        { k: "community", label: "Community", icon: MessagesSquare },
+        { k: "coupons", label: "Coupons", icon: Tag },
+      ],
+    },
+  ];
+
+  const TAB_LABELS = {
+    "overview": "Overview & Business Pulse",
+    "mentor-tracking": "Mentor Analytics & Tracking",
+    "mentors": "Mentor Accounts & Students",
+    "users": "Student User Directory",
+    "payments": "Payments & Approvals",
+    "tests": "Mock Test Questions",
+    "community": "Community Moderation",
+    "coupons": "Discount Coupons",
+  };
+
+  return (
+    <div style={{ display: "flex", minHeight: "100vh", background: "#f8fafc", position: "relative", fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+      <style>{`
+        @keyframes admUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: none; } }
+        @keyframes admSpin { to { transform: rotate(360deg); } }
+        .adm-fade { animation: admUp .35s cubic-bezier(.4,0,.2,1) both; }
+        .adm-nav-btn {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          gap: 10px;
+          padding: 10px 14px;
+          border-radius: 12px;
+          border: none;
+          background: transparent;
+          color: #475569;
+          font-family: inherit;
+          font-size: 13.5px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.16s ease;
+          text-align: left;
+          box-sizing: border-box;
+        }
+        .adm-nav-btn:hover {
+          background: #f1f5f9;
+          color: #0f172a;
+        }
+        .adm-nav-btn.active {
+          background: ${ORANGE} !important;
+          color: #ffffff !important;
+          box-shadow: 0 4px 14px rgba(255, 105, 61, 0.35);
+        }
+        .adm-stat {
+          animation: admUp .4s cubic-bezier(.4,0,.2,1) both;
+          transition: transform .2s, box-shadow .22s;
+        }
+        .adm-stat:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 14px 34px rgba(13,27,62,.09);
+        }
+        @media (max-width: 1024px) {
+          .adm-sidebar {
+            position: fixed !important;
+            z-index: 100 !important;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 270px !important;
+            transform: translateX(-100%);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: none;
+          }
+          .adm-sidebar.open {
+            transform: translateX(0) !important;
+            box-shadow: 0 0 50px rgba(0,0,0,0.3) !important;
+          }
+          .adm-mobile-overlay {
+            display: block !important;
+          }
+          .adm-menu-btn {
+            display: inline-flex !important;
+          }
+          .adm-mobile-close {
+            display: flex !important;
+          }
+          .adm-content-area {
+            padding: 16px 16px 40px !important;
+          }
+        }
+        @media (min-width: 1025px) {
+          .adm-mobile-overlay {
+            display: none !important;
+          }
+          .adm-menu-btn {
+            display: none !important;
+          }
+          .adm-mobile-close {
+            display: none !important;
+          }
+        }
+      `}</style>
+
+      {/* Mobile Drawer Overlay */}
+      {sidebarOpen && (
+        <div
+          className="adm-mobile-overlay"
+          onClick={() => setSidebarOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(15,23,42,0.45)",
+            backdropFilter: "blur(3px)",
+            zIndex: 95,
+          }}
+        />
+      )}
+
+      {/* ── SLEEK SIDE PANEL (SIDEBAR) ─────────────────────────── */}
+      <aside
+        className={`adm-sidebar ${sidebarOpen ? "open" : ""}`}
+        style={{
+          width: 260,
+          background: "#ffffff",
+          borderRight: "1px solid #f0e9e0",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          flexShrink: 0,
+          height: "100vh",
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+          boxSizing: "border-box",
+        }}
+      >
+        {/* Top Logo / Brand */}
+        <div style={{
+          padding: "20px 20px 18px",
+          borderBottom: "1px solid #f1f5f9",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{
+              width: 38,
+              height: 38,
+              borderRadius: 12,
+              background: `linear-gradient(135deg, ${ORANGE}, #e0421f)`,
+              display: "grid",
+              placeItems: "center",
+              color: "#ffffff",
+              fontWeight: 900,
+              fontFamily: "Sora, sans-serif",
+              fontSize: 15,
+              boxShadow: "0 4px 12px rgba(255,105,61,0.28)",
+            }}>
+              CP
             </div>
-            <p style={{ color: "#888", fontSize: 13, margin: 0, paddingLeft: 46 }}>
-              Campus Point · Live signups from MongoDB Atlas
-            </p>
+            <div>
+              <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0f172a", fontSize: 15, letterSpacing: -0.3 }}>
+                Campus Point
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 1 }}>
+                <span style={{
+                  fontSize: 10,
+                  fontWeight: 800,
+                  color: ORANGE,
+                  background: `${ORANGE}15`,
+                  padding: "1px 6px",
+                  borderRadius: 4,
+                  textTransform: "uppercase",
+                  letterSpacing: 0.5,
+                }}>
+                  Admin Suite
+                </span>
+              </div>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button onClick={refreshActive} disabled={busy}
-              style={{ background: "var(--page-bg)", color: ORANGE, border: `1.5px solid ${ORANGE}`, height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <RefreshCw size={14} style={{ animation: busy ? "spin 1s linear infinite" : "none" }} />
-              {busy ? "Refreshing…" : "Refresh"}
+
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="adm-mobile-close"
+            style={{
+              background: "none",
+              border: "none",
+              color: "#94a3b8",
+              cursor: "pointer",
+              padding: 4,
+              borderRadius: 8,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <X size={19} />
+          </button>
+        </div>
+
+        {/* Navigation Item Groups */}
+        <div style={{
+          flex: 1,
+          overflowY: "auto",
+          padding: "16px 14px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 20,
+        }}>
+          {NAV_GROUPS.map((group, gi) => (
+            <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <div style={{
+                fontSize: 10.5,
+                fontWeight: 800,
+                color: "#94a3b8",
+                textTransform: "uppercase",
+                letterSpacing: 0.6,
+                padding: "0 10px 4px",
+              }}>
+                {group.title}
+              </div>
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                const active = tab === item.k;
+                return (
+                  <button
+                    key={item.k}
+                    onClick={() => switchTab(item.k)}
+                    className={`adm-nav-btn ${active ? "active" : ""}`}
+                  >
+                    <Icon size={17} style={{ flexShrink: 0 }} />
+                    <span style={{ flex: 1 }}>{item.label}</span>
+
+                    {item.count !== undefined && (
+                      <span style={{
+                        background: active ? "rgba(255,255,255,0.25)" : "#f1f5f9",
+                        color: active ? "#ffffff" : "#64748b",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        padding: "2px 7px",
+                        borderRadius: 20,
+                      }}>
+                        {item.count}
+                      </span>
+                    )}
+
+                    {item.badge && (
+                      <span style={{
+                        background: active ? "rgba(255,255,255,0.25)" : "#ecfdf5",
+                        color: active ? "#ffffff" : "#059669",
+                        fontSize: 10,
+                        fontWeight: 800,
+                        padding: "1px 6px",
+                        borderRadius: 10,
+                        textTransform: "uppercase",
+                      }}>
+                        {item.badge}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Profile & Actions */}
+        <div style={{
+          padding: "16px 16px 20px",
+          borderTop: "1px solid #f1f5f9",
+          background: "#fafafa",
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
+        }}>
+          {/* Admin User Chip */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{
+              width: 34,
+              height: 34,
+              borderRadius: "50%",
+              background: "#0f172a",
+              color: "#ffffff",
+              display: "grid",
+              placeItems: "center",
+              fontSize: 12,
+              fontWeight: 800,
+            }}>
+              AD
+            </div>
+            <div style={{ overflow: "hidden" }}>
+              <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                Super Admin
+              </div>
+              <div style={{ fontSize: 11, color: "#64748b", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {primaryAdminEmail}
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={logout}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              width: "100%",
+              height: 36,
+              borderRadius: 10,
+              border: "1px solid #e2e8f0",
+              background: "#ffffff",
+              color: "#64748b",
+              fontSize: 12.5,
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#dc2626"; e.currentTarget.style.borderColor = "#fca5a5"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "#64748b"; e.currentTarget.style.borderColor = "#e2e8f0"; }}
+          >
+            <LogOut size={14} /> End Session
+          </button>
+        </div>
+      </aside>
+
+      {/* ── MAIN CONTENT AREA ───────────────────────────────────── */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100vh" }}>
+        {/* Top Navigation Bar */}
+        <header style={{
+          height: 64,
+          background: "#ffffff",
+          borderBottom: "1px solid #f0e9e0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 24px",
+          position: "sticky",
+          top: 0,
+          zIndex: 40,
+        }}>
+          {/* Breadcrumb / Title */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="adm-menu-btn"
+              title="Open Navigation"
+              style={{
+                display: "none",
+                background: "#f1f5f9",
+                border: "none",
+                borderRadius: 8,
+                padding: "7px",
+                cursor: "pointer",
+                color: "#334155",
+              }}
+            >
+              <Menu size={18} />
             </button>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}>
+              <span style={{ color: "#94a3b8" }}>Campus Point</span>
+              <ChevronRight size={13} color="#cbd5e1" />
+              <span style={{ color: "#0f172a", fontWeight: 800, fontFamily: "Sora, sans-serif" }}>
+                {TAB_LABELS[tab] || tab}
+              </span>
+            </div>
+          </div>
+
+          {/* Top Right Actions */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {/* Global search input on Users & Payments */}
+            {(tab === "users" || tab === "payments") && (
+              <div style={{ position: "relative" }}>
+                <Search size={14} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+                <input
+                  placeholder={tab === "users" ? "Search students…" : "Search payments…"}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  style={{
+                    height: 36,
+                    paddingLeft: 30,
+                    paddingRight: 10,
+                    borderRadius: 10,
+                    border: "1.5px solid #e2e8f0",
+                    fontSize: 12.5,
+                    outline: "none",
+                    minWidth: 200,
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Live System Indicator */}
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              background: "#f0fdf4",
+              border: "1px solid #bbf7d0",
+              padding: "5px 11px",
+              borderRadius: 20,
+              fontSize: 11.5,
+              fontWeight: 700,
+              color: "#166534",
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a", boxShadow: "0 0 6px #16a34a" }} />
+              Live Sync
+            </div>
+
+            {/* Refresh */}
+            <button
+              onClick={refreshActive}
+              disabled={busy}
+              style={{
+                background: "#ffffff",
+                color: "#475569",
+                border: "1px solid #e2e8f0",
+                height: 36,
+                padding: "0 12px",
+                borderRadius: 10,
+                fontWeight: 600,
+                fontSize: 12.5,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                cursor: busy ? "not-allowed" : "pointer",
+              }}
+            >
+              <RefreshCw size={13} style={{ animation: busy ? "admSpin 1s linear infinite" : "none" }} />
+              <span>{busy ? "Syncing…" : "Sync"}</span>
+            </button>
+
+            {/* CSV Export on Users / Payments */}
             {!SELF_CONTAINED_TABS.has(tab) && (
-              <button onClick={exportActive}
-                style={{ background: ORANGE, color: "#fff", border: "none", height: 40, padding: "0 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-                <Download size={14} /> Export CSV
+              <button
+                onClick={exportActive}
+                style={{
+                  background: ORANGE,
+                  color: "#ffffff",
+                  border: "none",
+                  height: 36,
+                  padding: "0 14px",
+                  borderRadius: 10,
+                  fontWeight: 700,
+                  fontSize: 12.5,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  cursor: "pointer",
+                  boxShadow: "0 3px 10px rgba(255,105,61,0.25)",
+                }}
+              >
+                <Download size={13} /> Export
               </button>
             )}
-            <button onClick={logout}
-              style={{ background: "var(--page-bg)", color: "#888", border: "1.5px solid #e5e7eb", height: 40, padding: "0 14px", borderRadius: 10, fontWeight: 600, fontSize: 13, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <LogOut size={14} /> Logout
-            </button>
           </div>
-        </div>
+        </header>
 
-        {/* Tabs */}
-        <div style={{ display: "inline-flex", gap: 6, marginBottom: 24, background: "var(--page-bg)", border: "1px solid #f0e9e0", borderRadius: 50, padding: 6, boxShadow: "0 4px 16px rgba(13,27,62,.05)", flexWrap: "wrap" }}>
-          {[
-            { k: "users", label: "Users", icon: Users, count: total },
-            { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
-            { k: "community", label: "Community", icon: MessagesSquare },
-            { k: "tests", label: "Tests", icon: FileText },
-            { k: "mentors", label: "Mentors", icon: GraduationCap },
-            { k: "coupons", label: "Coupons", icon: Tag },
-          ].map(({ k, label, icon: Icon, count }) => {
-            const active = tab === k;
-            return (
-              <button key={k} onClick={() => switchTab(k)} className="adm-tab"
-                style={{
-                  display: "flex", alignItems: "center", gap: 7, padding: "9px 18px",
-                  border: "none", cursor: "pointer", borderRadius: 50,
-                  fontFamily: "Sora", fontWeight: 700, fontSize: 14,
-                  color: active ? "#fff" : "#7c7368",
-                  background: active ? "linear-gradient(135deg,#FF693D,#E0421F)" : "transparent",
-                  boxShadow: active ? "0 6px 16px rgba(255, 105, 61,.32)" : "none",
-                }}>
-                <Icon size={16} /> {label}
-                {count !== undefined && (
-                  <span style={{ background: active ? "rgba(255,255,255,.25)" : "#f3f0eb", color: active ? "#fff" : "#9a9189", borderRadius: 20, padding: "1px 9px", fontSize: 12, fontWeight: 700 }}>
-                    {count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+        {/* Viewport Content */}
+        <main className="adm-content-area" style={{ flex: 1, padding: "28px 32px 60px", maxWidth: 1400, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
+          <div className="adm-fade">
+            {tab === "overview" ? (
+              <AdminOverview adminToken={token} onNavigateTab={switchTab} />
+            ) : tab === "mentor-tracking" ? (
+              <MentorTracking adminToken={token} />
+            ) : tab === "community" ? (
+              <CommunityModeration token={token} />
+            ) : tab === "tests" ? (
+              <TestUpload token={token} />
+            ) : tab === "mentors" ? (
+              <Mentors token={token} />
+            ) : tab === "coupons" ? (
+              <CouponManager token={token} />
+            ) : tab === "users" ? (
+              <>
+                {/* Users Stat Cards */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
+                      <Users size={22} color={ORANGE} />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{total}</div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Total signups</div>
+                    </div>
+                  </div>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <Calendar size={22} color="#16a34a" />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                        {users.filter(u => {
+                          const d = new Date(u.createdAt);
+                          const now = new Date();
+                          return d.toDateString() === now.toDateString();
+                        }).length}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Joined today</div>
+                    </div>
+                  </div>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}14`, display: "grid", placeItems: "center" }}>
+                      <Clock size={22} color={ORANGE} />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                        {users.filter(u => {
+                          const d = new Date(u.lastLogin);
+                          const now = new Date();
+                          return (now - d) < 24 * 60 * 60 * 1000;
+                        }).length}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Active today</div>
+                    </div>
+                  </div>
+                </div>
 
-        {/* Stat cards */}
-        {SELF_CONTAINED_TABS.has(tab) ? null : tab === "users" ? (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
-          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
-              <Users size={22} color={ORANGE} />
-            </div>
-            <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{total}</div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Total signups</div>
-            </div>
-          </div>
-          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-              <Calendar size={22} color="#16a34a" />
-            </div>
-            <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
-                {users.filter(u => {
-                  const d = new Date(u.createdAt);
-                  const now = new Date();
-                  return d.toDateString() === now.toDateString();
-                }).length}
-              </div>
-              <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Joined today</div>
-            </div>
-          </div>
-          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}14`, display: "grid", placeItems: "center" }}>
-              <Clock size={22} color={ORANGE} />
-            </div>
-            <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
-                {users.filter(u => {
-                  const d = new Date(u.lastLogin);
-                  const now = new Date();
-                  return (now - d) < 24 * 60 * 60 * 1000;
-                }).length}
-              </div>
-              <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Active today</div>
-            </div>
-          </div>
-        </div>
-        ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
-          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
-              <CreditCard size={22} color={ORANGE} />
-            </div>
-            <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{payTotal}</div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Successful payments</div>
-            </div>
-          </div>
-          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-              <IndianRupee size={22} color="#16a34a" />
-            </div>
-            <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
-                ₹{revenue.toLocaleString("en-IN")}
-              </div>
-              <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Total revenue</div>
-            </div>
-          </div>
-          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-              <Calendar size={22} color="#16a34a" />
-            </div>
-            <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
-                {payments.filter(p => new Date(p.createdAt).toDateString() === new Date().toDateString()).length}
-              </div>
-              <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Paid today</div>
-            </div>
-          </div>
-          <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fff7ed)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #fed7aa", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: "#ffedd5", display: "grid", placeItems: "center" }}>
-              <Mail size={22} color="#ea580c" />
-            </div>
-            <div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#ea580c" }}>
-                {payments.filter(p => !p.confirmationEmailSent).length}
-              </div>
-              <div style={{ fontSize: 12, color: "#9a3412", marginTop: 4, fontWeight: 600 }}>Awaiting email approval</div>
-            </div>
-          </div>
-        </div>
-        )}
+                {/* Users Table */}
+                <div className="adm-card" style={{ background: "#ffffff", borderRadius: 20, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 4px 20px rgba(13,27,62,.04)" }}>
+                  <div style={{ padding: "16px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                    <span style={{ fontWeight: 700, color: "#0d1b3e", fontSize: 15 }}>
+                      Registered Students
+                      <span style={{ marginLeft: 8, background: "#f3f4f6", borderRadius: 20, padding: "2px 10px", fontSize: 12, color: "#666", fontWeight: 600 }}>
+                        {filtered.length}
+                      </span>
+                    </span>
+                  </div>
 
-        {err && (
-          <div style={{ background: "#fff0f0", border: "1px solid #fca5a5", borderRadius: 10, padding: "12px 16px", marginBottom: 20, color: "#dc2626", fontSize: 13 }}>
-            {err}
+                  {filtered.length === 0 ? (
+                    <div style={{ padding: "60px 20px", textAlign: "center", color: "#aaa", fontSize: 14 }}>
+                      {search ? "No students match your search." : "No signups yet."}
+                    </div>
+                  ) : (
+                    <div style={{ overflowX: "auto" }}>
+                      <table style={{ width: "100%", minWidth: 1100, borderCollapse: "collapse" }}>
+                        <thead>
+                          <tr style={{ background: "#fafafa" }}>
+                            {["#", "", "User", "Email", "Phone", "Coaching", "Class", "Joined", "Last Login"].map((h, hi) => (
+                              <th key={hi} style={{
+                                padding: "12px 20px", textAlign: "left", fontSize: 11,
+                                fontWeight: 700, color: "#999", letterSpacing: ".06em",
+                                textTransform: "uppercase", borderBottom: "1px solid #f0f0f0",
+                                whiteSpace: "nowrap",
+                              }}>{h}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filtered.map((u, i) => {
+                            const isOpen = expanded.has(u._id);
+                            return (
+                              <Fragment key={u._id}>
+                                <tr style={{ borderBottom: isOpen ? "none" : "1px solid #f8f8f8", transition: "background .15s", cursor: "pointer", background: isOpen ? "#fafafa" : "transparent" }}
+                                  onClick={() => toggleRow(u._id)}
+                                  onMouseEnter={e => e.currentTarget.style.background = "#fafafa"}
+                                  onMouseLeave={e => e.currentTarget.style.background = isOpen ? "#fafafa" : "transparent"}
+                                >
+                                  <td style={{ padding: "14px 20px", fontSize: 12, color: "#ccc", fontFamily: "monospace", width: 40 }}>
+                                    {i + 1}
+                                  </td>
+                                  <td style={{ padding: "14px 8px", width: 24, color: "#bbb" }}>
+                                    {isOpen ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
+                                  </td>
+                                  <td style={{ padding: "14px 20px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                      <div style={{
+                                        width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
+                                        background: avatarColor(u.name || u.phone),
+                                        color: "#fff", display: "grid", placeItems: "center",
+                                        fontSize: 13, fontWeight: 800,
+                                      }}>
+                                        {avatar(u.name, u.phone)}
+                                      </div>
+                                      <span style={{ fontWeight: 600, color: "#0d1b3e", fontSize: 14 }}>
+                                        {u.name || "-"}
+                                      </span>
+                                    </div>
+                                  </td>
+                                  <td style={{ padding: "14px 20px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
+                                      <Mail size={13} color="#bbb" />
+                                      {u.email || "-"}
+                                    </div>
+                                  </td>
+                                  <td style={{ padding: "14px 20px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
+                                      <Phone size={13} color="#bbb" />
+                                      {u.phone || "-"}
+                                    </div>
+                                  </td>
+                                  <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>
+                                    {u.coaching || <span style={{ color: "#ddd" }}>-</span>}
+                                  </td>
+                                  <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
+                                    {u.studentClass || "-"}
+                                  </td>
+                                  <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888", whiteSpace: "nowrap" }}>
+                                    {fmtDate(u.createdAt)}
+                                  </td>
+                                  <td style={{ padding: "14px 20px" }}>
+                                    <span style={{
+                                      fontSize: 12, color: "#555",
+                                      background: "#f3f4f6", borderRadius: 6,
+                                      padding: "4px 8px", whiteSpace: "nowrap",
+                                    }}>
+                                      {fmtDate(u.lastLogin)}
+                                    </span>
+                                  </td>
+                                </tr>
+                                {isOpen && (
+                                  <tr style={{ borderBottom: "1px solid #f0f0f0", background: "#fafafa" }}>
+                                    <td colSpan={10} style={{ padding: "0 20px 18px 52px" }}>
+                                      <div style={{ fontSize: 11, fontWeight: 700, color: "#999", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: 8 }}>
+                                        Full document (MongoDB Atlas)
+                                      </div>
+                                      <pre style={{
+                                        margin: 0, padding: "14px 16px", background: "#0d1b3e", color: "#cdd6f4",
+                                        borderRadius: 10, fontSize: 12.5, lineHeight: 1.6, overflowX: "auto",
+                                        fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                                      }}>
+                                        {JSON.stringify(u, null, 2)}
+                                      </pre>
+                                    </td>
+                                  </tr>
+                                )}
+                              </Fragment>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Payments Stat Cards */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
+                      <CreditCard size={22} color={ORANGE} />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{payTotal}</div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Successful payments</div>
+                    </div>
+                  </div>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <IndianRupee size={22} color="#16a34a" />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                        ₹{revenue.toLocaleString("en-IN")}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Total revenue</div>
+                    </div>
+                  </div>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <Calendar size={22} color="#16a34a" />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                        {payments.filter(p => new Date(p.createdAt).toDateString() === new Date().toDateString()).length}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Paid today</div>
+                    </div>
+                  </div>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fff7ed)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #fed7aa", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#ffedd5", display: "grid", placeItems: "center" }}>
+                      <Mail size={22} color="#ea580c" />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#ea580c" }}>
+                        {payments.filter(p => !p.confirmationEmailSent).length}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#9a3412", marginTop: 4, fontWeight: 600 }}>Awaiting email approval</div>
+                    </div>
+                  </div>
+                </div>
+
+                <PaymentsTable
+                  payments={filteredPayments}
+                  search={search}
+                  setSearch={setSearch}
+                  expanded={expanded}
+                  toggleRow={toggleRow}
+                  onApproveEmail={handleApproveEmail}
+                  approvingId={approvingId}
+                />
+              </>
+            )}
           </div>
-        )}
-
-        {/* Search + Table */}
-        {tab === "community" ? (
-          <CommunityModeration token={token} />
-        ) : tab === "tests" ? (
-          <TestUpload token={token} />
-        ) : tab === "mentors" ? (
-          <Mentors token={token} />
-        ) : tab === "coupons" ? (
-          <CouponManager token={token} />
-        ) : tab === "users" ? (
-        <div className="adm-card" style={{ background: "var(--page-bg)", borderRadius: 20, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 8px 30px rgba(13,27,62,.06)" }}>
-
-          {/* Search bar */}
-          <div style={{ padding: "16px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-            <span style={{ fontWeight: 700, color: "#0d1b3e", fontSize: 15 }}>
-              All Users
-              <span style={{ marginLeft: 8, background: "#f3f4f6", borderRadius: 20, padding: "2px 10px", fontSize: 12, color: "#666", fontWeight: 600 }}>
-                {filtered.length}
-              </span>
-            </span>
-            <input
-              placeholder="Search name, email or phone…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{
-                height: 38, padding: "0 14px", borderRadius: 10, border: "1.5px solid #e5e7eb",
-                fontSize: 13, outline: "none", minWidth: 240, fontFamily: "inherit",
-              }}
-            />
-          </div>
-
-          {filtered.length === 0 ? (
-            <div style={{ padding: "60px 20px", textAlign: "center", color: "#aaa", fontSize: 14 }}>
-              {search ? "No users match your search." : "No signups yet."}
-            </div>
-          ) : (
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", minWidth: 1100, borderCollapse: "collapse" }}>
-                <thead>
-                  <tr style={{ background: "#fafafa" }}>
-                    {["#", "", "User", "Email", "Phone", "Coaching", "Class", "Joined", "Last Login"].map((h, hi) => (
-                      <th key={hi} style={{
-                        padding: "12px 20px", textAlign: "left", fontSize: 11,
-                        fontWeight: 700, color: "#999", letterSpacing: ".06em",
-                        textTransform: "uppercase", borderBottom: "1px solid #f0f0f0",
-                        whiteSpace: "nowrap",
-                      }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((u, i) => {
-                    const isOpen = expanded.has(u._id);
-                    return (
-                    <Fragment key={u._id}>
-                    <tr style={{ borderBottom: isOpen ? "none" : "1px solid #f8f8f8", transition: "background .15s", cursor: "pointer", background: isOpen ? "#fafafa" : "transparent" }}
-                      onClick={() => toggleRow(u._id)}
-                      onMouseEnter={e => e.currentTarget.style.background = "#fafafa"}
-                      onMouseLeave={e => e.currentTarget.style.background = isOpen ? "#fafafa" : "transparent"}
-                    >
-                      <td style={{ padding: "14px 20px", fontSize: 12, color: "#ccc", fontFamily: "monospace", width: 40 }}>
-                        {i + 1}
-                      </td>
-                      <td style={{ padding: "14px 8px", width: 24, color: "#bbb" }}>
-                        {isOpen ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
-                      </td>
-                      <td style={{ padding: "14px 20px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <div style={{
-                            width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
-                            background: avatarColor(u.name || u.phone),
-                            color: "#fff", display: "grid", placeItems: "center",
-                            fontSize: 13, fontWeight: 800,
-                          }}>
-                            {avatar(u.name, u.phone)}
-                          </div>
-                          <span style={{ fontWeight: 600, color: "#0d1b3e", fontSize: 14 }}>
-                            {u.name || "-"}
-                          </span>
-                        </div>
-                      </td>
-                      <td style={{ padding: "14px 20px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
-                          <Mail size={13} color="#bbb" />
-                          {u.email || "-"}
-                        </div>
-                      </td>
-                      <td style={{ padding: "14px 20px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
-                          <Phone size={13} color="#bbb" />
-                          {u.phone || "-"}
-                        </div>
-                      </td>
-                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#555" }}>
-                        {u.coaching || <span style={{ color: "#ddd" }}>-</span>}
-                      </td>
-                      <td style={{ padding: "14px 20px", fontSize: 13, color: "#555", fontWeight: 600 }}>
-                        {u.studentClass || "-"}
-                      </td>
-                      <td style={{ padding: "14px 20px", fontSize: 12.5, color: "#888", whiteSpace: "nowrap" }}>
-                        {fmtDate(u.createdAt)}
-                      </td>
-                      <td style={{ padding: "14px 20px" }}>
-                        <span style={{
-                          fontSize: 12, color: "#555",
-                          background: "#f3f4f6", borderRadius: 6,
-                          padding: "4px 8px", whiteSpace: "nowrap",
-                        }}>
-                          {fmtDate(u.lastLogin)}
-                        </span>
-                      </td>
-                    </tr>
-                    {isOpen && (
-                      <tr style={{ borderBottom: "1px solid #f0f0f0", background: "#fafafa" }}>
-                        <td colSpan={10} style={{ padding: "0 20px 18px 52px" }}>
-                          <div style={{ fontSize: 11, fontWeight: 700, color: "#999", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: 8 }}>
-                            Full document (MongoDB Atlas)
-                          </div>
-                          <pre style={{
-                            margin: 0, padding: "14px 16px", background: "#0d1b3e", color: "#cdd6f4",
-                            borderRadius: 10, fontSize: 12.5, lineHeight: 1.6, overflowX: "auto",
-                            fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-                          }}>
-                            {JSON.stringify(u, null, 2)}
-                          </pre>
-                        </td>
-                      </tr>
-                    )}
-                    </Fragment>
-                  );})}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-        ) : (
-          <PaymentsTable
-            payments={filteredPayments}
-            search={search}
-            setSearch={setSearch}
-            expanded={expanded}
-            toggleRow={toggleRow}
-            onApproveEmail={handleApproveEmail}
-            approvingId={approvingId}
-          />
-        )}
-
+        </main>
       </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
