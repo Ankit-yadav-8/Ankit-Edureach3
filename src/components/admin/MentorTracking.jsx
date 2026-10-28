@@ -83,7 +83,7 @@ export default function MentorTracking({ adminToken }) {
   const openMentorDetail = async (mentor) => {
     setSelectedMentor(mentor);
     setDetailLoading(true);
-    setDetailTab("timeline");
+    setDetailTab("students");
     try {
       const res = await apiAdminMentorTrackingDetail(adminToken, mentor.id, selectedRange, customStart, customEnd);
       setDetailData(res);
@@ -98,6 +98,16 @@ export default function MentorTracking({ adminToken }) {
     setSelectedMentor(null);
     setDetailData(null);
   };
+
+  // Close inspector on Escape key
+  useEffect(() => {
+    if (!selectedMentor) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") closeMentorDetail();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectedMentor]);
 
   // Metric configuration
   const currentMetricConfig = useMemo(
@@ -1057,276 +1067,463 @@ export default function MentorTracking({ adminToken }) {
         )}
       </div>
 
-      {/* SECTION 6: Individual Mentor Detail Modal */}
+      {/* SECTION 6: Sleek Slide-Over Mentor Inspector Drawer */}
       {selectedMentor && (
-        <div style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(15,23,42,0.6)",
-          backdropFilter: "blur(4px)",
-          display: "grid",
-          placeItems: "center",
-          zIndex: 1000,
-          padding: 16,
-        }}>
-          <div style={{
-            background: "#ffffff",
-            borderRadius: 20,
-            maxWidth: 760,
-            width: "100%",
-            maxHeight: "90vh",
-            overflow: "hidden",
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeMentorDetail();
+          }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(15,23,42,0.35)",
+            backdropFilter: "blur(2px)",
             display: "flex",
-            flexDirection: "column",
-            boxShadow: "0 25px 60px rgba(0,0,0,0.3)",
-            border: "1px solid #e2e8f0",
-          }}>
-            {/* Modal Header */}
-            <div style={{
-              padding: "20px 24px",
-              borderBottom: "1px solid #f1f5f9",
+            justifyContent: "flex-end",
+            zIndex: 1200,
+            animation: "admFadeIn 0.18s ease-out",
+          }}
+        >
+          <style>{`
+            @keyframes admDrawerSlideIn {
+              from { transform: translateX(100%); }
+              to { transform: translateX(0); }
+            }
+            @keyframes admFadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+          `}</style>
+
+          <div
+            style={{
+              background: "#ffffff",
+              width: "min(460px, 94vw)",
+              height: "100vh",
+              overflow: "hidden",
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              background: "#fafafa",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: 14,
-                  background: selectedMentor.color || ORANGE, color: "#ffffff",
-                  display: "grid", placeItems: "center", fontSize: 18, fontWeight: 800,
-                }}>
+              flexDirection: "column",
+              boxShadow: "-12px 0 40px rgba(15,23,42,0.18)",
+              borderLeft: "1px solid #e2e8f0",
+              animation: "admDrawerSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
+            {/* Drawer Header */}
+            <div
+              style={{
+                padding: "14px 18px",
+                borderBottom: "1px solid #f1f5f9",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                background: "#fafafa",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 10,
+                    background: selectedMentor.color || ORANGE,
+                    color: "#ffffff",
+                    display: "grid",
+                    placeItems: "center",
+                    fontSize: 15,
+                    fontWeight: 800,
+                    flexShrink: 0,
+                  }}
+                >
                   {selectedMentor.name.charAt(0).toUpperCase()}
                 </div>
-                <div>
-                  <h3 style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", margin: 0, fontFamily: "Sora, sans-serif" }}>
-                    {selectedMentor.name}
-                  </h3>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4, fontSize: 12, color: "#64748b" }}>
-                    <span>{selectedMentor.email}</span>
-                    <span>·</span>
-                    <span>{selectedMentor.college || "Mentor"}</span>
-                    <span>·</span>
-                    <span style={{
-                      padding: "2px 7px", borderRadius: 12, fontSize: 11, fontWeight: 700,
-                      background: selectedMentor.active ? "#ecfdf5" : "#fef2f2",
-                      color: selectedMentor.active ? "#059669" : "#dc2626",
-                    }}>
-                      {selectedMentor.active ? "Active Account" : "Deactivated"}
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                    <h3
+                      style={{
+                        fontSize: 14.5,
+                        fontWeight: 800,
+                        color: "#0f172a",
+                        margin: 0,
+                        fontFamily: "Sora, sans-serif",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {selectedMentor.name}
+                    </h3>
+                    <span
+                      style={{
+                        padding: "1.5px 6px",
+                        borderRadius: 10,
+                        fontSize: 10,
+                        fontWeight: 700,
+                        background: selectedMentor.active ? "#ecfdf5" : "#fef2f2",
+                        color: selectedMentor.active ? "#059669" : "#dc2626",
+                      }}
+                    >
+                      {selectedMentor.active ? "Active" : "Deactivated"}
                     </span>
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: "#64748b",
+                      marginTop: 2,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {selectedMentor.email} · {selectedMentor.college || "Mentor"}
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={closeMentorDetail}
+                title="Close drawer (Esc)"
                 style={{
-                  background: "none", border: "none", color: "#94a3b8", cursor: "pointer",
-                  padding: 4, display: "grid", placeItems: "center", borderRadius: 8,
+                  background: "#f1f5f9",
+                  border: "none",
+                  color: "#64748b",
+                  cursor: "pointer",
+                  width: 28,
+                  height: 28,
+                  display: "grid",
+                  placeItems: "center",
+                  borderRadius: 7,
+                  flexShrink: 0,
+                  transition: "background 0.15s ease",
                 }}
               >
-                <X size={20} />
+                <X size={16} />
               </button>
             </div>
 
-            {/* Modal Body */}
-            <div style={{ overflowY: "auto", padding: "20px 24px", display: "flex", flexDirection: "column", gap: 20 }}>
-              {/* Quick Stat Pill Cards */}
-              <div style={{
+            {/* Quick Stat Pill Cards (Compact 2x2 Grid) */}
+            <div
+              style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
-                gap: 10,
-              }}>
-                <div style={{ background: "#f8fafc", padding: "10px 14px", borderRadius: 10, border: "1px solid #e2e8f0" }}>
-                  <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Period Logins</div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginTop: 2 }}>
-                    {selectedMentor.totalLogins}
-                  </div>
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: 8,
+                padding: "12px 18px",
+                background: "#f8fafc",
+                borderBottom: "1px solid #eef2f6",
+              }}
+            >
+              <div
+                style={{
+                  background: "#ffffff",
+                  padding: "8px 12px",
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                }}
+              >
+                <div style={{ fontSize: 10.5, color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>
+                  Period Logins
                 </div>
-                <div style={{ background: "#f8fafc", padding: "10px 14px", borderRadius: 10, border: "1px solid #e2e8f0" }}>
-                  <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>All-Time Logins</div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginTop: 2 }}>
-                    {selectedMentor.allTimeLogins ?? selectedMentor.totalLogins}
-                  </div>
-                </div>
-                <div style={{ background: "#f8fafc", padding: "10px 14px", borderRadius: 10, border: "1px solid #e2e8f0" }}>
-                  <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Assigned Students</div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginTop: 2 }}>
-                    {selectedMentor.assignedStudentsCount}
-                  </div>
-                </div>
-                <div style={{ background: "#f8fafc", padding: "10px 14px", borderRadius: 10, border: "1px solid #e2e8f0" }}>
-                  <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Tasks Completed</div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: "#16a34a", marginTop: 2 }}>
-                    {selectedMentor.tasksCompleted} / {selectedMentor.tasksAssigned}
-                  </div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginTop: 2 }}>
+                  {selectedMentor.totalLogins}
                 </div>
               </div>
+              <div
+                style={{
+                  background: "#ffffff",
+                  padding: "8px 12px",
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                }}
+              >
+                <div style={{ fontSize: 10.5, color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>
+                  All-Time Logins
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginTop: 2 }}>
+                  {selectedMentor.allTimeLogins ?? selectedMentor.totalLogins}
+                </div>
+              </div>
+              <div
+                style={{
+                  background: "#ffffff",
+                  padding: "8px 12px",
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                }}
+              >
+                <div style={{ fontSize: 10.5, color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>
+                  Assigned Mentees
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginTop: 2 }}>
+                  {selectedMentor.assignedStudentsCount}
+                </div>
+              </div>
+              <div
+                style={{
+                  background: "#ffffff",
+                  padding: "8px 12px",
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                }}
+              >
+                <div style={{ fontSize: 10.5, color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>
+                  Tasks Completed
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: "#16a34a", marginTop: 2 }}>
+                  {selectedMentor.tasksCompleted} / {selectedMentor.tasksAssigned}
+                </div>
+              </div>
+            </div>
 
-              {/* Navigation Tabs Inside Modal */}
-              <div style={{
+            {/* Segmented Navigation Tabs */}
+            <div
+              style={{
                 display: "flex",
-                gap: 6,
-                borderBottom: "1.5px solid #f1f5f9",
-                paddingBottom: 2,
-              }}>
-                {[
-                  { id: "timeline", label: "Activity Timeline" },
-                  { id: "students", label: "Assigned Students" },
-                ].map((t) => {
-                  const active = detailTab === t.id;
-                  return (
-                    <button
-                      key={t.id}
-                      onClick={() => setDetailTab(t.id)}
+                background: "#f1f5f9",
+                margin: "10px 18px 4px",
+                padding: 3,
+                borderRadius: 9,
+                gap: 2,
+              }}
+            >
+              {[
+                {
+                  id: "students",
+                  label: `Assigned Students (${detailData?.students?.length ?? selectedMentor.assignedStudentsCount})`,
+                },
+                { id: "timeline", label: "Activity Timeline" },
+              ].map((t) => {
+                const active = detailTab === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setDetailTab(t.id)}
+                    style={{
+                      flex: 1,
+                      padding: "6px 10px",
+                      border: "none",
+                      background: active ? "#ffffff" : "transparent",
+                      cursor: "pointer",
+                      fontWeight: active ? 700 : 500,
+                      fontSize: 12,
+                      color: active ? ORANGE : "#64748b",
+                      borderRadius: 7,
+                      boxShadow: active ? "0 1px 4px rgba(0,0,0,0.06)" : "none",
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Scrollable Drawer Body */}
+            <div
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                padding: "10px 18px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
+              {detailLoading ? (
+                <div style={{ padding: "40px 0", textAlign: "center", color: "#94a3b8", fontSize: 13 }}>
+                  <RefreshCw
+                    size={16}
+                    style={{ animation: "admSpin 1s linear infinite", margin: "0 auto 8px" }}
+                  />
+                  <div>Loading mentor telemetry...</div>
+                </div>
+              ) : detailTab === "students" ? (
+                /* Assigned Students View */
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#0f172a", marginBottom: 2 }}>
+                    Assigned Mentees & Attendance
+                  </div>
+
+                  {!detailData?.students || detailData.students.length === 0 ? (
+                    <div
                       style={{
-                        padding: "8px 16px",
-                        border: "none",
-                        background: "transparent",
-                        cursor: "pointer",
-                        fontWeight: active ? 700 : 500,
-                        fontSize: 13,
-                        color: active ? ORANGE : "#64748b",
-                        borderBottom: active ? `2px solid ${ORANGE}` : "2px solid transparent",
-                        marginBottom: -2,
+                        color: "#94a3b8",
+                        fontSize: 12,
+                        padding: "30px 10px",
+                        textAlign: "center",
+                        background: "#f8fafc",
+                        borderRadius: 10,
+                        border: "1px dashed #cbd5e1",
                       }}
                     >
-                      {t.label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {detailLoading ? (
-                <div style={{ padding: 40, textAlign: "center", color: "#94a3b8" }}>
-                  Loading mentor details...
-                </div>
-              ) : detailTab === "timeline" ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>
-                    Verified Activity Stream
-                  </div>
-
-                  {(!detailData?.logs || detailData.logs.length === 0) ? (
-                    <div style={{ color: "#94a3b8", fontSize: 12.5, padding: "20px 0", textAlign: "center" }}>
-                      No recent activity events recorded in this period for this mentor.
-                    </div>
-                  ) : (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                      {detailData.logs.map((log) => {
-                        const d = new Date(log.createdAt);
-                        return (
-                          <div
-                            key={log.id}
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              padding: "10px 14px",
-                              borderRadius: 10,
-                              background: "#f8fafc",
-                              border: "1px solid #f1f5f9",
-                              fontSize: 12,
-                            }}
-                          >
-                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <span style={{
-                                padding: "2px 7px", borderRadius: 6, fontSize: 10.5, fontWeight: 800,
-                                background: log.action.includes("login") ? "#eff6ff" : "#f0fdf4",
-                                color: log.action.includes("login") ? "#2563eb" : "#16a34a",
-                              }}>
-                                {log.action.replace("_", " ").toUpperCase()}
-                              </span>
-                              <span style={{ color: "#1e293b" }}>
-                                {log.studentId ? `Student: ${log.studentId} (${log.studentName || ""})` : "Mentor session logged"}
-                              </span>
-                            </div>
-                            <span style={{ color: "#94a3b8", fontSize: 11 }}>
-                              {d.toLocaleString("en-IN", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                /* Assigned Students Tab */
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>
-                    Assigned Students & Login Status
-                  </div>
-
-                  {(!detailData?.students || detailData.students.length === 0) ? (
-                    <div style={{ color: "#94a3b8", fontSize: 12.5, padding: "20px 0", textAlign: "center" }}>
                       No students are currently assigned to this mentor.
                     </div>
                   ) : (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                      {detailData.students.map((st) => (
+                    detailData.students.map((st) => (
+                      <div
+                        key={st.studentId}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          padding: "10px 12px",
+                          borderRadius: 10,
+                          background: "#ffffff",
+                          border: "1px solid #eef2f6",
+                          boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+                          gap: 10,
+                        }}
+                      >
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                            <span style={{ fontWeight: 700, color: "#0f172a", fontSize: 12.5 }}>
+                              {st.name}
+                            </span>
+                            <span
+                              style={{
+                                color: "#64748b",
+                                background: "#f1f5f9",
+                                padding: "1px 5px",
+                                borderRadius: 4,
+                                fontSize: 10.5,
+                                fontWeight: 600,
+                              }}
+                            >
+                              {st.studentId}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: 11, color: "#64748b", marginTop: 3 }}>
+                            Plan: {st.plan || "Paid"} · Last login: {fmtDate(st.lastLogin)}
+                          </div>
+                        </div>
+
+                        <div style={{ textAlign: "right", flexShrink: 0 }}>
+                          <span
+                            style={{
+                              padding: "2px 7px",
+                              borderRadius: 10,
+                              fontSize: 10.5,
+                              fontWeight: 700,
+                              display: "inline-block",
+                              background: st.hasLoggedInInRange ? "#ecfdf5" : "#fef2f2",
+                              color: st.hasLoggedInInRange ? "#059669" : "#991b1b",
+                            }}
+                          >
+                            {st.hasLoggedInInRange ? `Active (${st.loginsCount} logins)` : "No Logins"}
+                          </span>
+                          <div style={{ fontSize: 10.5, color: "#64748b", marginTop: 3 }}>
+                            {st.tasksCompleted} / {st.tasksCount} tasks
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              ) : (
+                /* Activity Timeline View */
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#0f172a", marginBottom: 2 }}>
+                    Verified Activity Stream
+                  </div>
+
+                  {!detailData?.logs || detailData.logs.length === 0 ? (
+                    <div
+                      style={{
+                        color: "#94a3b8",
+                        fontSize: 12,
+                        padding: "30px 10px",
+                        textAlign: "center",
+                        background: "#f8fafc",
+                        borderRadius: 10,
+                        border: "1px dashed #cbd5e1",
+                      }}
+                    >
+                      No recent activity events recorded for this mentor in this period.
+                    </div>
+                  ) : (
+                    detailData.logs.map((log) => {
+                      const d = new Date(log.createdAt);
+                      return (
                         <div
-                          key={st.studentId}
+                          key={log.id}
                           style={{
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            padding: "12px 16px",
-                            borderRadius: 10,
+                            padding: "9px 12px",
+                            borderRadius: 8,
                             background: "#f8fafc",
-                            border: "1px solid #e2e8f0",
+                            border: "1px solid #f1f5f9",
+                            fontSize: 11.5,
+                            gap: 8,
                           }}
                         >
-                          <div>
-                            <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 13 }}>
-                              {st.name} <span style={{ color: "#64748b", fontWeight: 500 }}>({st.studentId})</span>
-                            </div>
-                            <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 2 }}>
-                              Plan: {st.plan || "Paid"} · Last login: {fmtDate(st.lastLogin)}
-                            </div>
-                          </div>
-
-                          <div style={{ textAlign: "right" }}>
-                            <span style={{
-                              padding: "3px 8px", borderRadius: 12, fontSize: 11, fontWeight: 700,
-                              background: st.hasLoggedInInRange ? "#ecfdf5" : "#fef2f2",
-                              color: st.hasLoggedInInRange ? "#059669" : "#991b1b",
-                            }}>
-                              {st.hasLoggedInInRange ? `Active (${st.loginsCount} logins)` : "No Logins in Period"}
+                          <div style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
+                            <span
+                              style={{
+                                padding: "2px 6px",
+                                borderRadius: 5,
+                                fontSize: 9.5,
+                                fontWeight: 800,
+                                background: log.action.includes("login") ? "#eff6ff" : "#f0fdf4",
+                                color: log.action.includes("login") ? "#2563eb" : "#16a34a",
+                                flexShrink: 0,
+                              }}
+                            >
+                              {log.action.replace("_", " ").toUpperCase()}
                             </span>
-                            <div style={{ fontSize: 11, color: "#64748b", marginTop: 4 }}>
-                              {st.tasksCompleted} / {st.tasksCount} tasks completed
-                            </div>
+                            <span
+                              style={{
+                                color: "#1e293b",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              {log.studentId
+                                ? `${log.studentId} (${log.studentName || ""})`
+                                : "Mentor session logged"}
+                            </span>
                           </div>
+                          <span style={{ color: "#94a3b8", fontSize: 10.5, flexShrink: 0 }}>
+                            {d.toLocaleString("en-IN", {
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
                         </div>
-                      ))}
-                    </div>
+                      );
+                    })
                   )}
                 </div>
               )}
             </div>
 
-            {/* Modal Footer */}
-            <div style={{
-              padding: "14px 24px",
-              borderTop: "1px solid #f1f5f9",
-              background: "#fafafa",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}>
+            {/* Drawer Footer */}
+            <div
+              style={{
+                padding: "12px 18px",
+                borderTop: "1px solid #f1f5f9",
+                background: "#fafafa",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
               <button
                 onClick={closeMentorDetail}
                 style={{
-                  padding: "8px 18px",
+                  padding: "7px 16px",
                   borderRadius: 8,
                   border: "1px solid #e2e8f0",
                   background: "#ffffff",
                   color: "#475569",
                   fontWeight: 600,
-                  fontSize: 13,
+                  fontSize: 12,
                   cursor: "pointer",
                 }}
               >
-                Close
+                Close Drawer
               </button>
             </div>
           </div>
