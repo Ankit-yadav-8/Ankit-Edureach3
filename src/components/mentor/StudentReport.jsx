@@ -843,7 +843,16 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
   return (
     <div>
       {/* section switcher */}
-      <div className="mentor-sections" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 16 }}>
+      <div
+        className="mentor-sections"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: 10,
+          marginTop: 4,
+          marginBottom: 20,
+        }}
+      >
         {SECTIONS.map((s, idx) => {
           const on = idx === i;
           const Ic = s.icon;
@@ -852,16 +861,23 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
               key={s.key}
               onClick={() => setI(idx)}
               style={{
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-                padding: "10px 8px", borderRadius: 10, cursor: "pointer",
-                border: `1px solid ${on ? ACCENT : "var(--line)"}`,
-                background: on ? `${ACCENT}0f` : "#fff",
-                color: on ? ACCENT : "var(--muted)",
-                fontWeight: on ? 800 : 600, fontSize: 12,
-                transition: "background .15s, border-color .15s, color .15s",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                padding: "11px 12px",
+                borderRadius: 11,
+                cursor: "pointer",
+                border: on ? "1.5px solid #FF693D" : "1px solid #e2e8f0",
+                background: on ? "#fff5f1" : "#ffffff",
+                color: on ? "#FF693D" : "#475569",
+                fontWeight: on ? 800 : 600,
+                fontSize: 12.5,
+                boxShadow: on ? "0 2px 8px rgba(255,105,61,0.14)" : "0 1px 3px rgba(0,0,0,0.02)",
+                transition: "all .18s ease",
               }}
             >
-              <Ic size={14} /> {s.label}
+              <Ic size={15} color={on ? "#FF693D" : "#64748b"} /> {s.label}
             </button>
           );
         })}

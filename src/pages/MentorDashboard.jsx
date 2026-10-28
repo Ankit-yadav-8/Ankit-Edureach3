@@ -55,7 +55,8 @@ function Login({ onDone }) {
         alignItems: "center",
         justifyContent: "center",
         background: "radial-gradient(ellipse at top, #fff5f1 0%, #f8fafc 50%, #f1f5f9 100%)",
-        padding: "24px 16px",
+        padding: "120px 16px 60px",
+        boxSizing: "border-box",
         fontFamily: "Inter, system-ui, sans-serif",
       }}
     >
@@ -369,7 +370,8 @@ function SetPassword({ token, onDone }) {
         alignItems: "center",
         justifyContent: "center",
         background: "radial-gradient(ellipse at top, #fff5f1 0%, #f8fafc 50%, #f1f5f9 100%)",
-        padding: "24px 16px",
+        padding: "120px 16px 60px",
+        boxSizing: "border-box",
       }}
     >
       <motion.div
@@ -669,12 +671,15 @@ export default function MentorDashboard() {
       <Seo title="Mentor Console · Campus Point" robots="noindex, nofollow" />
 
       <div
+        className="mentor-console-root"
         style={{
           display: "flex",
-          minHeight: "100vh",
+          minHeight: "calc(100vh - 98px)",
+          paddingTop: 98,
           background: "#f8fafc",
           fontFamily: "Inter, system-ui, sans-serif",
           color: "#0f172a",
+          boxSizing: "border-box",
         }}
       >
         {/* Mobile Navigation Drawer Backdrop */}
@@ -699,12 +704,13 @@ export default function MentorDashboard() {
             borderRight: "1px solid #e2e8f0",
             display: "flex",
             flexDirection: "column",
-            zIndex: 999,
+            zIndex: mobileMenuOpen ? 999 : 95,
             position: mobileMenuOpen ? "fixed" : "sticky",
-            top: 0,
+            top: mobileMenuOpen ? 0 : 98,
             left: 0,
             bottom: 0,
-            height: "100vh",
+            height: mobileMenuOpen ? "100vh" : "calc(100vh - 98px)",
+            overflowY: "auto",
             transform: mobileMenuOpen ? "translateX(0)" : "translateX(0)",
             boxShadow: mobileMenuOpen ? "4px 0 24px rgba(0,0,0,0.15)" : "none",
             transition: "transform 0.25s ease",
@@ -952,16 +958,17 @@ export default function MentorDashboard() {
           <header
             style={{
               position: "sticky",
-              top: 0,
+              top: 98,
               zIndex: 90,
               background: "#ffffff",
               borderBottom: "1px solid #e2e8f0",
-              height: 60,
+              height: 52,
               padding: "0 24px",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
               gap: 12,
+              boxShadow: "0 1px 4px rgba(0,0,0,0.02)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -1065,7 +1072,7 @@ export default function MentorDashboard() {
           </header>
 
           {/* Main Body Content Container */}
-          <main style={{ padding: "20px 24px 60px", flex: 1, maxWidth: 1280, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
+          <main style={{ padding: "24px 28px 80px", flex: 1, maxWidth: 1280, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
             {err && (
               <div
                 style={{
