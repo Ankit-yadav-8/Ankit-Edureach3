@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import {
   apiAdminMentorTracking, apiAdminMentorTrackingDetail,
-  apiAdminAllStudentsOverview, apiAdminSetStudentGroup
+  apiAdminAllStudentsOverview, apiAdminSetStudentGroup, apiAdminSendMentorEmail
 } from "../../auth/api.js";
 import {
   TaskCompletedSection, StudentGroupsSection, AssignedTasksRosterSection
@@ -78,6 +78,47 @@ export default function MentorTracking({ adminToken }) {
 
   // Groups data state
   const [groupsData, setGroupsData] = useState(null);
+
+  // Email Mentors Modal state
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [emailTarget, setEmailTarget] = useState("all");
+  const [emailSingleMentorId, setEmailSingleMentorId] = useState("");
+  const [emailSubject, setEmailSubject] = useState("Action Required: Please review daily student reports · Campus Point");
+  const [emailMessage, setEmailMessage] = useState(
+    "Please take 5 minutes today to open your mentor dashboard, review your assigned students' daily study progress, test accuracy, and update their tasks or 1-on-1 meeting links."
+  );
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailFeedback, setEmailFeedback] = useState({ type: "", text: "" });
+
+  const handleSendMentorEmail = async (e) => {
+    if (e) e.preventDefault();
+    setEmailSending(true);
+    setEmailFeedback({ type: "", text: "" });
+    try {
+      const res = await apiAdminSendMentorEmail(adminToken, {
+        target: emailTarget,
+        mentorId: emailTarget === "single" ? emailSingleMentorId : undefined,
+        subject: emailSubject,
+        message: emailMessage,
+      });
+      if (res?.ok) {
+        setEmailFeedback({
+          type: "success",
+          text: `Success! Sent ${res.sentCount || 1} email(s) to ${res.targetLabel || "mentors"}.`,
+        });
+        setTimeout(() => {
+          setEmailModalOpen(false);
+          setEmailFeedback({ type: "", text: "" });
+        }, 2200);
+      } else {
+        setEmailFeedback({ type: "error", text: res?.error || "Failed to send email." });
+      }
+    } catch (err) {
+      setEmailFeedback({ type: "error", text: err?.message || "Failed to deliver email." });
+    } finally {
+      setEmailSending(false);
+    }
+  };
   const [groupsLoading, setGroupsLoading] = useState(false);
   const [editingGroupId, setEditingGroupId] = useState(null);
   const [editingGroupText, setEditingGroupText] = useState("");
@@ -734,6 +775,7 @@ export default function MentorTracking({ adminToken }) {
           {/* Metric Selector Buttons */}
           <div style={{
             display: "inline-flex",
+            alignItems: "center",
             background: "#f1f5f9",
             borderRadius: 12,
             padding: 3,
@@ -767,6 +809,36 @@ export default function MentorTracking({ adminToken }) {
                 </button>
               );
             })}
+
+            {/* Added Email Mentors Action Option */}
+            <button
+              onClick={() => {
+                setEmailModalOpen(true);
+                setEmailFeedback({ type: "", text: "" });
+              }}
+              title="Compose and send email reminder or notice to mentors"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "7px 14px",
+                borderRadius: 9,
+                border: "none",
+                background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                color: "#ffffff",
+                fontWeight: 700,
+                fontSize: 12,
+                cursor: "pointer",
+                boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
+                transition: "all 0.15s ease",
+                marginLeft: 4,
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.92")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              <Mail size={14} color="#ffffff" />
+              Email Mentors
+            </button>
           </div>
         </div>
 
@@ -1802,6 +1874,334 @@ export default function MentorTracking({ adminToken }) {
         </div>,
         document.body
       )}
+
+      {/* ── Admin Email to Mentors Modal ────────────────────────────────────── */}
+      {emailModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(15, 23, 42, 0.65)",
+            backdropFilter: "blur(4px)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 16,
+          }}
+          onClick={() => !emailSending && setEmailModalOpen(false)}
+        >
+          <div
+            style={{
+              background: "#ffffff",
+              borderRadius: 16,
+              maxWidth: 560,
+              width: "100%",
+              boxShadow: "0 20px 40px rgba(15, 23, 42, 0.2)",
+              overflow: "hidden",
+              border: "1px solid #e2e8f0",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div
+              style={{
+                background: "linear-gradient(135deg, #FF693D 0%, #ee5326 100%)",
+                padding: "16px 20px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                color: "#ffffff",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 9,
+                    background: "rgba(255,255,255,0.2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Mail size={18} color="#ffffff" />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800 }}>Send Email to Mentors</h3>
+                  <p style={{ margin: "2px 0 0", fontSize: 11, opacity: 0.9 }}>
+                    Automated delivery with assigned students & direct mentor dashboard link
+                  </p>
+                </div>
+              </div>
+              <button
+                disabled={emailSending}
+                onClick={() => setEmailModalOpen(false)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "#ffffff",
+                  cursor: "pointer",
+                  padding: 4,
+                  borderRadius: 6,
+                }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <form onSubmit={handleSendMentorEmail} style={{ padding: 22 }}>
+              {/* Target Selector */}
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#1e293b", marginBottom: 6 }}>
+                  Target Recipient(s)
+                </label>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                  {[
+                    { id: "all", label: "All Active Mentors" },
+                    { id: "inactive_today", label: "Inactive Today (9 PM Lobby)" },
+                    { id: "single", label: "Single Mentor" },
+                  ].map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setEmailTarget(t.id)}
+                      style={{
+                        padding: "8px 10px",
+                        borderRadius: 8,
+                        border: emailTarget === t.id ? "2px solid #FF693D" : "1px solid #cbd5e1",
+                        background: emailTarget === t.id ? "#fff7ed" : "#ffffff",
+                        color: emailTarget === t.id ? "#c2410c" : "#475569",
+                        fontWeight: emailTarget === t.id ? 700 : 500,
+                        fontSize: 11.5,
+                        cursor: "pointer",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Single Mentor Dropdown */}
+              {emailTarget === "single" && (
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: "block", fontSize: 11.5, fontWeight: 700, color: "#475569", marginBottom: 4 }}>
+                    Select Mentor
+                  </label>
+                  <select
+                    value={emailSingleMentorId}
+                    onChange={(e) => setEmailSingleMentorId(e.target.value)}
+                    required
+                    style={{
+                      width: "100%",
+                      padding: "8px 12px",
+                      borderRadius: 8,
+                      border: "1px solid #cbd5e1",
+                      fontSize: 12,
+                      color: "#0f172a",
+                      background: "#ffffff",
+                    }}
+                  >
+                    <option value="">-- Choose a mentor --</option>
+                    {(data?.mentors || []).map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.name} ({m.email}) — {m.studentsCount || 0} students
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Quick Template Buttons */}
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 5 }}>
+                  Quick Templates
+                </label>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmailSubject("Action Required: Please review daily student reports · Campus Point");
+                      setEmailMessage(
+                        "Please take 5 minutes today to open your mentor dashboard, review your assigned students' daily study progress, test accuracy, and update their tasks or 1-on-1 meeting links."
+                      );
+                    }}
+                    style={{
+                      padding: "4px 9px",
+                      borderRadius: 6,
+                      border: "1px solid #e2e8f0",
+                      background: "#f8fafc",
+                      fontSize: 10.5,
+                      fontWeight: 600,
+                      color: "#475569",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Daily Reports Review
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmailSubject("Reminder: Update weekly tasks & schedule 1-on-1 meetings");
+                      setEmailMessage(
+                        "Hi Mentors, please make sure this week's study tasks are assigned and all upcoming 1-on-1 video sessions have active meeting links configured in your dashboard."
+                      );
+                    }}
+                    style={{
+                      padding: "4px 9px",
+                      borderRadius: 6,
+                      border: "1px solid #e2e8f0",
+                      background: "#f8fafc",
+                      fontSize: 10.5,
+                      fontWeight: 600,
+                      color: "#475569",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Tasks & Meetings Update
+                  </button>
+                </div>
+              </div>
+
+              {/* Subject */}
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#1e293b", marginBottom: 4 }}>
+                  Subject Line
+                </label>
+                <input
+                  type="text"
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  required
+                  placeholder="Subject line..."
+                  style={{
+                    width: "100%",
+                    padding: "9px 12px",
+                    borderRadius: 8,
+                    border: "1px solid #cbd5e1",
+                    fontSize: 12.5,
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              {/* Message */}
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#1e293b", marginBottom: 4 }}>
+                  Custom Message Note
+                </label>
+                <textarea
+                  value={emailMessage}
+                  onChange={(e) => setEmailMessage(e.target.value)}
+                  required
+                  rows={4}
+                  placeholder="Enter message for mentor..."
+                  style={{
+                    width: "100%",
+                    padding: "9px 12px",
+                    borderRadius: 8,
+                    border: "1px solid #cbd5e1",
+                    fontSize: 12,
+                    fontFamily: "inherit",
+                    resize: "vertical",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              {/* Automatic inclusions note */}
+              <div
+                style={{
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: 8,
+                  padding: "10px 12px",
+                  fontSize: 11,
+                  color: "#64748b",
+                  lineHeight: 1.5,
+                  marginBottom: 16,
+                }}
+              >
+                <strong style={{ color: "#0f172a" }}>✓ Auto-included in email:</strong> Assigned student names, target exams, student regions, and direct 1-click button to <code>https://campuspoint.in/mentor</code>.
+              </div>
+
+              {/* Feedback Alert */}
+              {emailFeedback.text && (
+                <div
+                  style={{
+                    padding: "9px 12px",
+                    borderRadius: 8,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    marginBottom: 14,
+                    background: emailFeedback.type === "success" ? "#ecfdf5" : "#fef2f2",
+                    color: emailFeedback.type === "success" ? "#065f46" : "#991b1b",
+                    border: `1px solid ${emailFeedback.type === "success" ? "#a7f3d0" : "#fecaca"}`,
+                  }}
+                >
+                  {emailFeedback.text}
+                </div>
+              )}
+
+              {/* Footer Buttons */}
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
+                <button
+                  type="button"
+                  disabled={emailSending}
+                  onClick={() => setEmailModalOpen(false)}
+                  style={{
+                    padding: "8px 16px",
+                    borderRadius: 8,
+                    border: "1px solid #cbd5e1",
+                    background: "#ffffff",
+                    color: "#475569",
+                    fontWeight: 600,
+                    fontSize: 12,
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={emailSending}
+                  style={{
+                    padding: "8px 20px",
+                    borderRadius: 8,
+                    border: "none",
+                    background: "linear-gradient(135deg, #FF693D 0%, #ee5326 100%)",
+                    color: "#ffffff",
+                    fontWeight: 700,
+                    fontSize: 12,
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px rgba(255,105,61,0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  {emailSending ? (
+                    <>
+                      <RefreshCw size={13} className="spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Mail size={13} />
+                      Send Email Now
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

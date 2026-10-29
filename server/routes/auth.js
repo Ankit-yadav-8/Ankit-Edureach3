@@ -130,6 +130,7 @@ router.post("/login", async (req, res) => {
 
             // Prefer enrolled student's name
             const studentName = enr.name || user.name || "Student";
+            const studentRegion = enr.region || user.region || "Indian";
 
             const mentors = await Mentor.find({ students: enr.studentId, active: true })
               .select("_id name email")
@@ -143,8 +144,9 @@ router.post("/login", async (req, res) => {
                   studentId: enr.studentId,
                   studentName,
                   userId: user._id,
+                  region: studentRegion,
                   action: "student_login",
-                  details: { plan: enr.plan },
+                  details: { plan: enr.plan, region: studentRegion },
                   ip: clientIp,
                   userAgent: clientUa,
                 });
@@ -154,8 +156,9 @@ router.post("/login", async (req, res) => {
                 studentId: enr.studentId,
                 studentName,
                 userId: user._id,
+                region: studentRegion,
                 action: "student_login",
-                details: { plan: enr.plan, unassigned: true },
+                details: { plan: enr.plan, region: studentRegion, unassigned: true },
                 ip: clientIp,
                 userAgent: clientUa,
               });

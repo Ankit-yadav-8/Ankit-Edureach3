@@ -138,7 +138,8 @@ router.post("/login", async (req, res) => {
       mentorEmail: mentor.email,
       mentorName: mentor.name,
       action: "mentor_login",
-      details: { role: "mentor", college: mentor.college || "" },
+      region: "Indian",
+      details: { role: "mentor", college: mentor.college || "", region: "Indian", studentsCount: (mentor.students || []).length },
       ip: req.ip || "",
       userAgent: String(req.headers["user-agent"] || "").slice(0, 300),
     }).catch((e) => console.error("[mentor/login-log]", e.message));
@@ -358,11 +359,15 @@ router.put("/students/:studentId/tasks", requireMentor, requirePasswordChanged, 
       mentorEmail: req.mentor.email,
       studentId: enr.studentId,
       studentName: enr.name,
+      region: enr.region || "Indian",
       action,
       details: {
         taskCount: tasks.length,
         completedCount: completedTasks.length,
         isUpdate: !isFirstAssign,
+        region: enr.region || "Indian",
+        studentName: enr.name,
+        plan: enr.plan || "",
       },
       ip: req.ip || "",
       userAgent: String(req.headers["user-agent"] || "").slice(0, 300),
@@ -376,8 +381,9 @@ router.put("/students/:studentId/tasks", requireMentor, requirePasswordChanged, 
         mentorEmail: req.mentor.email,
         studentId: enr.studentId,
         studentName: enr.name,
+        region: enr.region || "Indian",
         action: "task_complete",
-        details: { newlyCompleted: newlyCompletedCount, totalCompleted: completedTasks.length },
+        details: { newlyCompleted: newlyCompletedCount, totalCompleted: completedTasks.length, region: enr.region || "Indian", studentName: enr.name },
         ip: req.ip || "",
         userAgent: String(req.headers["user-agent"] || "").slice(0, 300),
       }).catch((e) => console.error("[mentor/task-complete-log]", e.message));
@@ -434,11 +440,18 @@ router.put("/students/:studentId/session", requireMentor, requirePasswordChanged
       mentorEmail: req.mentor.email,
       studentId: enr.studentId,
       studentName: enr.name,
+      region: enr.region || "Indian",
       action: "session_update",
-      details: sessionData,
+      details: {
+        ...sessionData,
+        studentName: enr.name,
+        studentId: enr.studentId,
+        region: enr.region || "Indian",
+        plan: enr.plan || "",
+      },
       ip: req.ip || "",
       userAgent: String(req.headers["user-agent"] || "").slice(0, 300),
-    }).catch(() => {});
+    }).catch((e) => console.error("[mentor/session-log]", e.message));
 
     res.json({ ok: true, session: doc.session });
   } catch (e) {

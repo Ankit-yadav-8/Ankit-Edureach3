@@ -4,8 +4,12 @@ import mongoose from "mongoose";
  * Audit and analytics log for mentor and student interactions:
  * - Mentor logins (success and failures)
  * - Mentor task operations (assign, update, complete)
+ * - 1-on-1 meeting links / session updates
+ * - Student test submissions and published test updates
+ * - Automated 9 PM inactivity alerts
+ * - Admin communications to mentors
  * - Assigned student logins attributed to mentors
- * - Administrative tracking events
+ * - Region-aware tracking (Indian, International, etc.)
  */
 const mentorActivityLogSchema = new mongoose.Schema(
   {
@@ -15,6 +19,7 @@ const mentorActivityLogSchema = new mongoose.Schema(
     studentId: { type: String, uppercase: true, trim: true, index: true },
     studentName: { type: String, trim: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
+    region: { type: String, trim: true, default: "Indian", index: true },
     action: {
       type: String,
       required: true,
@@ -24,6 +29,11 @@ const mentorActivityLogSchema = new mongoose.Schema(
         "task_assign",
         "task_update",
         "task_complete",
+        "session_update",
+        "test_submit",
+        "test_update",
+        "mentor_inactivity_alert",
+        "admin_email_to_mentor",
         "student_login",
         "admin_action",
       ],
@@ -39,6 +49,7 @@ const mentorActivityLogSchema = new mongoose.Schema(
 // Optimized compound indexes for fast date-range queries & aggregation
 mentorActivityLogSchema.index({ mentorId: 1, action: 1, createdAt: -1 });
 mentorActivityLogSchema.index({ studentId: 1, action: 1, createdAt: -1 });
+mentorActivityLogSchema.index({ region: 1, action: 1, createdAt: -1 });
 mentorActivityLogSchema.index({ createdAt: -1, action: 1 });
 mentorActivityLogSchema.index({ action: 1, createdAt: -1 });
 

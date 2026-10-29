@@ -35,6 +35,7 @@ const mentorSchema = new mongoose.Schema(
     failedLogins: { type: Number, default: 0 },
     lockedUntil:  { type: Date, default: null },
     lastLogin:    { type: Date, default: null },
+    lastInactivityEmailSentAt: { type: Date, default: null },
   },
   { timestamps: true }
 );

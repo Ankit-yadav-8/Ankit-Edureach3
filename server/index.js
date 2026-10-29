@@ -22,6 +22,7 @@ import quizRoutes from "./routes/quiz.js";
 import { testPostgresConnection } from "./sql/db.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 import { startDailyReportJob } from "./jobs/dailyReport.js";
+import { startMentorInactivityJob } from "./jobs/mentorInactivityJob.js";
 import { backfillPhone10 } from "./jobs/backfillPhone10.js";
 import { sanitizeNoSql } from "./middleware/sanitize.js";
 
@@ -214,6 +215,7 @@ connectDB()
     }
     startWeeklyReportJob(); // weekly parent progress emails (best-effort, dev-safe)
     startDailyReportJob();  // daily parent progress emails from synced data (dev-safe)
+    startMentorInactivityJob(); // automated 9 PM – 10 PM IST mentor daily check-in (dev-safe)
     backfillPhone10();      // one-time; no-op once every enrolment has the field
   })
   .catch((e) => { console.error("❌ DB error:", e.message); process.exit(1); });

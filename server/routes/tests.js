@@ -20,6 +20,8 @@ import mongoose from "mongoose";
 import { randomUUID } from "node:crypto";
 import Test from "../models/Test.js";
 import TestAttempt from "../models/TestAttempt.js";
+import Mentor from "../models/Mentor.js";
+import MentorActivityLog from "../models/MentorActivityLog.js";
 import { requireAuth } from "../middleware/auth.js";
 import { requireBatch } from "../middleware/batchGuard.js";
 import { requireAdmin } from "../middleware/admin.js";
@@ -240,6 +242,21 @@ router.post("/admin", requireAdmin, async (req, res) => {
     draft.maxMarks = maxMarksOf(draft);
     const doc = await Test.create(draft);
     res.status(201).json({ ok: true, id: String(doc._id) });
+
+    MentorActivityLog.create({
+      action: "test_update",
+      region: "Indian",
+      details: {
+        testId: doc._id,
+        testTitle: doc.title,
+        plan: doc.plan,
+        category: doc.category,
+        totalQuestions: doc.questions?.length,
+        region: "Indian",
+      },
+      ip: req.ip || "",
+      userAgent: String(req.headers["user-agent"] || "").slice(0, 300),
+    }).catch(() => {});
   } catch (e) {
     console.error("[tests/admin:create]", e?.message || e);
     res.status(500).json({ error: "Server error" });
@@ -468,6 +485,36 @@ router.post("/:id/submit", requireAuth, requireBatch, async (req, res) => {
       ok: true,
       result: { score, maxMarks, percent, accuracy, correctCount, wrongCount, skippedCount, totalQuestions, parentNotified },
     });
+
+    // Track test submission for mentor/student audit
+    Mentor.findOne({ students: req.batch.studentId, active: true })
+      .select("_id name email")
+      .lean()
+      .then((mentor) => {
+        return MentorActivityLog.create({
+          studentId: req.batch.studentId,
+          studentName: req.batch.name,
+          userId: req.batch.userId,
+          region: req.batch.region || "Indian",
+          action: "test_submit",
+          details: {
+            testId: t._id,
+            testTitle: t.title,
+            category: t.category,
+            plan: t.plan,
+            score,
+            maxMarks,
+            percent,
+            accuracy,
+            region: req.batch.region || "Indian",
+            studentName: req.batch.name,
+          },
+          ip: req.ip || "",
+          userAgent: String(req.headers["user-agent"] || "").slice(0, 300),
+          ...(mentor ? { mentorId: mentor._id, mentorName: mentor.name, mentorEmail: mentor.email } : {}),
+        });
+      })
+      .catch((e) => console.error("[tests:submit-log]", e?.message));
 
     // ── Parent progress email (fire-and-forget, after responding) ─────────────
     if (isFirstSubmit && req.batch.parentEmail) {

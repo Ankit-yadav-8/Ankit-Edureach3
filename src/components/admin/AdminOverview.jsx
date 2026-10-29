@@ -3,7 +3,7 @@ import {
   Users, UserCheck, CheckCircle2, Clock, Calendar, RefreshCw,
   Activity, ArrowUpRight, TrendingUp, Sparkles, Filter, ChevronRight,
   Layers, CreditCard, GraduationCap, Trophy, ChevronDown, CheckSquare,
-  Zap, ArrowRight, UserPlus, FileText, Check, ShieldCheck, Mail, Phone
+  Zap, ArrowRight, UserPlus, FileText, Check, ShieldCheck, Mail, Phone, Video, Award
 } from "lucide-react";
 import { apiAdminAnalyticsOverview, apiAdminMentorTracking } from "../../auth/api.js";
 
@@ -180,39 +180,107 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
         let statusColor = "#16a34a";
         let statusBg = "#ecfdf5";
 
+        const region = act.region || act.details?.region || "";
+        const regionTag = region ? ` · ${region}` : "";
+
         if (act.action === "mentor_login") {
           type = "Mentor Login";
           typeIcon = Users;
           typeColor = "#2563eb";
           typeBg = "#eff6ff";
-          details = "Logged in to mentor dashboard";
+          details = `Logged in to mentor dashboard${regionTag}`;
         } else if (act.action === "student_login") {
           type = "Student Login";
           typeIcon = UserCheck;
           typeColor = "#059669";
           typeBg = "#ecfdf5";
-          details = "Logged in to student portal";
+          const planTag = act.details?.plan ? ` (${act.details.plan})` : "";
+          details = `Logged in to student portal${planTag}${regionTag}`;
         } else if (act.action === "task_update" || act.action === "task_assign") {
-          type = "Task Updated";
+          type = act.action === "task_assign" ? "Task Assigned" : "Task Updated";
           typeIcon = CheckSquare;
           typeColor = "#ea580c";
           typeBg = "#fff7ed";
-          details = act.details?.taskTitle || `Updated task for student ${act.studentName || act.studentId}`;
+          const target = act.studentName || act.studentId || "Student";
+          details = act.details?.taskTitle || `Updated task for student ${target}${regionTag}`;
           status = "Completed";
           statusColor = "#2563eb";
           statusBg = "#eff6ff";
+        } else if (act.action === "task_complete") {
+          type = "Task Completed";
+          typeIcon = CheckCircle2;
+          typeColor = "#16a34a";
+          typeBg = "#f0fdf4";
+          const target = act.studentName || act.studentId || "Student";
+          details = `Completed tasks for student ${target}${regionTag}`;
+          status = "Verified";
+          statusColor = "#16a34a";
+          statusBg = "#ecfdf5";
+        } else if (act.action === "session_update") {
+          type = "Meeting Link Updated";
+          typeIcon = Video;
+          typeColor = "#0284c7";
+          typeBg = "#e0f2fe";
+          const target = act.studentName || act.studentId || "Student";
+          const topic = act.details?.topic || "1-on-1 Session";
+          const time = act.details?.time ? ` at ${act.details.time}` : "";
+          details = `Updated 1-on-1 meet link for ${target} (${topic}${time}${regionTag})`;
+          status = "Active";
+          statusColor = "#0284c7";
+          statusBg = "#e0f2fe";
+        } else if (act.action === "test_submit") {
+          type = "Test Submitted";
+          typeIcon = Award;
+          typeColor = "#8b5cf6";
+          typeBg = "#f5f3ff";
+          const target = act.studentName || act.studentId || "Student";
+          const testTitle = act.details?.testTitle || "Mock Test";
+          const score = act.details?.score !== undefined ? `${act.details.score}/${act.details.maxMarks || 0} marks` : "";
+          const acc = act.details?.accuracy !== undefined ? ` · ${act.details.accuracy}% acc` : "";
+          details = `${target} submitted ${testTitle} (${score}${acc}${regionTag})`;
+          status = "Graded";
+          statusColor = "#8b5cf6";
+          statusBg = "#f5f3ff";
+        } else if (act.action === "test_update") {
+          type = "Test Updated";
+          typeIcon = FileText;
+          typeColor = "#6366f1";
+          typeBg = "#eef2ff";
+          const testTitle = act.details?.testTitle || "Test Paper";
+          details = `Published/updated test ${testTitle} (${act.details?.category || "CBT"}${regionTag})`;
+          status = "Published";
+          statusColor = "#6366f1";
+          statusBg = "#eef2ff";
+        } else if (act.action === "mentor_inactivity_alert") {
+          type = "Inactivity Reminder";
+          typeIcon = Clock;
+          typeColor = "#f59e0b";
+          typeBg = "#fffbeb";
+          details = `9 PM lobby notice to review student reports sent to ${act.mentorName || "mentor"}`;
+          status = "Sent";
+          statusColor = "#f59e0b";
+          statusBg = "#fffbeb";
+        } else if (act.action === "admin_email_to_mentor") {
+          type = "Admin Email";
+          typeIcon = Mail;
+          typeColor = "#0d9488";
+          typeBg = "#f0fdfa";
+          details = `Email sent to ${act.mentorName || act.details?.target || "mentor"}: "${act.details?.subject || "Update"}"`;
+          status = "Delivered";
+          statusColor = "#0d9488";
+          statusBg = "#f0fdfa";
         } else if (act.action === "mentor_create") {
           type = "New Mentor";
           typeIcon = GraduationCap;
           typeColor = "#7c3aed";
           typeBg = "#f5f3ff";
-          details = "Registered as new mentor";
+          details = `Registered as new mentor${regionTag}`;
         } else if (act.action === "payment_received" || act.action === "enrollment") {
           type = "Payment Received";
           typeIcon = CreditCard;
           typeColor = "#db2777";
           typeBg = "#fdf2f8";
-          details = act.details?.amount ? `₹ ${act.details.amount} - Mentorship enrollment` : "Mentorship enrollment completed";
+          details = act.details?.amount ? `₹ ${act.details.amount} - Mentorship enrollment${regionTag}` : `Mentorship enrollment completed${regionTag}`;
         }
 
         const initials = (name || "U")

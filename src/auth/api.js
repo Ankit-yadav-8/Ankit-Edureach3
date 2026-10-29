@@ -188,6 +188,8 @@ export const apiAdminMentorTrackingDetail = (adminToken, mentorId, range = "30d"
   if (endDate) p.append("endDate", endDate);
   return adminReq(`/api/admin/mentors/${mentorId}/tracking-detail?${p.toString()}`, adminToken);
 };
+export const apiAdminSendMentorEmail = (adminToken, body) =>
+  adminReq("/api/admin/mentors/send-email", adminToken, { method: "POST", body });
 
 export const apiTestList        = (token, plan, category) => req(`/api/tests${batchQ(plan, category ? `category=${category}` : "")}`, { token });
 export const apiTestGet         = (token, id, plan) => req(`/api/tests/${id}${batchQ(plan)}`, { token });

@@ -13,7 +13,7 @@ import { ensureStudentId } from "../utils/studentId.js";
 // ─────────────────────────────────────────────────────────────────────────────
 export async function requireBatch(req, res, next) {
   try {
-    const user = await User.findById(req.user.id).select("email name").lean();
+    const user = await User.findById(req.user.id).select("email name region").lean();
     if (!user?.email) return res.status(403).json({ error: "No account found." });
     const email = user.email.toLowerCase();
 
@@ -53,6 +53,7 @@ export async function requireBatch(req, res, next) {
       plan: enr.plan,
       studentId,
       name: enr.name || user.name || "Student",
+      region: enr.region || user.region || "Indian",
       email: user.email.toLowerCase(),
       parentEmail: (enr.parentEmail || "").toLowerCase(),
       createdAt: enr.createdAt,

@@ -1,3 +1,5 @@
+import { sendMail } from "../utils/mailer.js";
+import { checkAndSendMentorInactivityAlerts } from "../jobs/mentorInactivityJob.js";
 import express from "express";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -684,6 +686,181 @@ router.get("/all-students-overview", async (_req, res) => {
   } catch (e) {
     console.error("[admin/mentors all-students-overview]", e.message);
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+
+
+/* ── Admin sends custom email to mentors ─────────────────────────────────────
+   targetType: "all" | "inactive_today" | "single"
+   mentorId: optional string if targetType === "single"
+   subject: string
+   message: string
+   includeDashboardLink: boolean
+   includeStudentsList: boolean
+*/
+router.post("/send-email", async (req, res) => {
+  try {
+    const {
+      targetType = "all",
+      mentorId = null,
+      subject,
+      message,
+      includeDashboardLink = true,
+      includeStudentsList = true,
+    } = req.body || {};
+
+    if (!subject || !message) {
+      return res.status(400).json({ error: "Subject and message are required" });
+    }
+
+    let mentors = [];
+    if (targetType === "single" && mentorId) {
+      const m = await Mentor.findById(mentorId);
+      if (m && m.active) mentors = [m];
+    } else if (targetType === "inactive_today") {
+      const todayIST = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
+      const allActive = await Mentor.find({ active: true });
+      mentors = allActive.filter((m) => {
+        if (!m.lastLogin) return true;
+        const lastLoginIST = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date(m.lastLogin));
+        return lastLoginIST !== todayIST;
+      });
+    } else {
+      mentors = await Mentor.find({ active: true });
+    }
+
+    if (mentors.length === 0) {
+      return res.status(404).json({ error: "No matching active mentors found to email." });
+    }
+
+    const results = [];
+    const clientBase = (process.env.CLIENT_ORIGIN || "").split(",")[0].trim() || "https://campuspoint.in";
+    const dashboardLink = `${clientBase}/mentor`;
+
+    for (const m of mentors) {
+      try {
+        let studentsList = [];
+        if (m.students && m.students.length > 0) {
+          studentsList = await Enrollment.find({ studentId: { $in: m.students } })
+            .select("studentId name targetExam plan region")
+            .lean();
+        }
+
+        const studentRows = studentsList.length > 0
+          ? studentsList.map((s) => `<tr>
+              <td style="padding:7px 10px;border-bottom:1px solid #f1f5f9;font-weight:700;color:#0f172a;font-size:12px">${esc(s.name || s.studentId)}</td>
+              <td style="padding:7px 10px;border-bottom:1px solid #f1f5f9;font-family:monospace;font-size:11px;color:#64748b">${esc(s.studentId)}</td>
+              <td style="padding:7px 10px;border-bottom:1px solid #f1f5f9;font-size:11.5px;color:#059669;font-weight:600">${esc(s.targetExam || s.plan || "")}</td>
+              <td style="padding:7px 10px;border-bottom:1px solid #f1f5f9;font-size:11px;color:#64748b">${esc(s.region || "Indian")}</td>
+            </tr>`).join("")
+          : `<tr><td colspan="4" style="padding:8px 10px;color:#94a3b8;font-size:11.5px">No students currently assigned</td></tr>`;
+
+        const emailContent = `
+          <div style="font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;max-width:580px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(15,23,42,0.06)">
+            <div style="background:#FF693D;background-image:linear-gradient(135deg,#FF693D 0%,#EE5326 100%);padding:16px 20px">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="30" style="padding-right:10px;vertical-align:middle">
+                    <table role="presentation" width="30" height="30" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:7px;text-align:center">
+                      <tr><td style="color:#FF693D;font-size:12px;font-weight:900;line-height:30px">CP</td></tr>
+                    </table>
+                  </td>
+                  <td style="font-size:15px;font-weight:800;color:#ffffff;vertical-align:middle">Campus Point · Mentor Notification</td>
+                </tr>
+              </table>
+            </div>
+
+            <div style="padding:22px 24px">
+              <h3 style="margin:0 0 10px;font-size:16px;color:#0f172a;font-weight:800">
+                Namaste ${esc(m.name)},
+              </h3>
+
+              <div style="font-size:13px;color:#475569;line-height:1.6;margin-bottom:18px">
+                ${esc(message).replace(/\n/g, "<br>")}
+              </div>
+
+              ${includeStudentsList && studentsList.length > 0 ? `
+                <div style="margin:16px 0 10px">
+                  <span style="font-size:10.5px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:0.8px">Your Assigned Students (${studentsList.length})</span>
+                </div>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:16px">
+                  <thead><tr style="background:#f8fafc;color:#64748b;font-size:10px;text-transform:uppercase;letter-spacing:0.5px">
+                    <th style="padding:7px 10px;text-align:left">Student</th>
+                    <th style="padding:7px 10px;text-align:left">ID</th>
+                    <th style="padding:7px 10px;text-align:left">Track</th>
+                    <th style="padding:7px 10px;text-align:left">Region</th>
+                  </tr></thead>
+                  <tbody>${studentRows}</tbody>
+                </table>
+              ` : ""}
+
+              ${includeDashboardLink ? `
+                <div style="text-align:center;margin:22px 0 14px">
+                  <a href="${dashboardLink}" style="display:inline-block;padding:12px 28px;background:#FF693D;color:#ffffff;text-decoration:none;font-weight:700;font-size:13.5px;border-radius:10px;box-shadow:0 4px 14px rgba(255,105,61,0.3)">Open Mentor Console &nbsp;→</a>
+                </div>
+              ` : ""}
+
+              <div style="border-top:1px solid #f1f5f9;padding-top:14px;color:#94a3b8;font-size:11px;line-height:1.5;text-align:center;margin-top:16px">
+                Official message sent by Campus Point Administration to ${esc(m.email)}.<br>
+                <a href="https://campuspoint.in" style="color:#FF693D;text-decoration:none">campuspoint.in</a>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const text = `Namaste ${m.name},\n\n${message}\n\nOpen Mentor Console: ${dashboardLink}`;
+
+        const sendRes = await sendMail({
+          to: m.email,
+          subject: `${subject} · Campus Point`,
+          html: emailContent,
+          text,
+          tags: ["admin-mentor-broadcast"],
+        });
+
+        results.push({ mentorId: m._id, name: m.name, email: m.email, sent: sendRes.ok });
+
+        MentorActivityLog.create({
+          mentorId: m._id,
+          mentorName: m.name,
+          mentorEmail: m.email,
+          action: "admin_email_to_mentor",
+          details: {
+            subject,
+            targetType,
+            sentBy: "Admin",
+          },
+          ip: req.ip || "",
+          userAgent: String(req.headers["user-agent"] || "").slice(0, 300),
+        }).catch(() => {});
+      } catch (err) {
+        console.error(`[adminMentors/send-email] Failed for ${m.email}:`, err.message);
+        results.push({ mentorId: m._id, name: m.name, email: m.email, sent: false, error: err.message });
+      }
+    }
+
+    res.json({
+      ok: true,
+      sentCount: results.filter((r) => r.sent).length,
+      totalTargeted: mentors.length,
+      results,
+    });
+  } catch (e) {
+    console.error("[adminMentors/send-email]", e.message);
+    res.status(500).json({ error: "Could not send emails to mentors." });
+  }
+});
+
+/* ── Admin manually triggers 9 PM inactivity check on demand ─────────────── */
+router.post("/trigger-inactivity-alerts", async (req, res) => {
+  try {
+    const out = await checkAndSendMentorInactivityAlerts({ force: true });
+    res.json(out);
+  } catch (e) {
+    console.error("[adminMentors/trigger-inactivity-alerts]", e.message);
+    res.status(500).json({ error: "Failed to trigger inactivity check" });
   }
 });
 

@@ -314,6 +314,7 @@ router.get("/overview", async (req, res) => {
         mentorName: l.mentorName || "",
         studentName: l.studentName || "",
         studentId: l.studentId || "",
+        region: l.region || l.details?.region || "Indian",
         details: l.details || {},
         createdAt: l.createdAt,
       })),
