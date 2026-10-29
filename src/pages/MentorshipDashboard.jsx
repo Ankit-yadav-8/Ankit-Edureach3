@@ -7,7 +7,7 @@ import {
   ShieldCheck, ArrowRight, Users, BarChart3, Rocket, Zap, Crosshair, Timer,
   ListChecks, Lock, Loader2, RotateCw, Pencil, Trash2, CalendarDays, Brain,
   BookOpen, Minus, Trophy, Send, Lightbulb, Hourglass, AlertCircle,
-  Video, Bell, Wifi, Battery, Signal, Check, ExternalLink,
+  Video, ExternalLink,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import {
@@ -18,7 +18,6 @@ import Community from "../components/mentorship/Community.jsx";
 import TestSeries from "../components/mentorship/TestSeries.jsx";
 import { Trend, Gauge, CenterDonut, DonutLegend, Bars } from "../components/Charts.jsx";
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
-import { normalizeTestScore } from "../utils/testScoring.js";
 
 const ORANGE = "#FF693D";
 const GOLD = "#FF693D";
@@ -167,22 +166,11 @@ export default function MentorshipDashboard() {
     );
   }
 
-  useEffect(() => {
-    if (user?.email) {
-      const key = `mdash:otpok:${user.email.toLowerCase()}`;
-      try {
-        if (sessionStorage.getItem(key) === "1") {
-          setOtpOk(true);
-        }
-      } catch {}
-    }
-  }, [user?.email]);
-
   if (!otpOk) {
     return (
       <OtpGate
-        email={user?.email || ""}
-        name={user?.name || ""}
+        email={user.email}
+        name={user.name}
         onVerified={() => { try { sessionStorage.setItem(OTP_OK_KEY, "1"); } catch {} setOtpOk(true); }}
       />
     );
@@ -435,10 +423,6 @@ function DashboardBody({ urlPlan = "" }) {
   const [mentorTasks, setMentorTasks] = useState([]);
   // The mentor assigned to this student ID - { name, college } - for the header.
   const [mentor, setMentor] = useState(null);
-  // True once this batch's data has been pulled from the server, so the save
-  // effect won't overwrite the server with local seed data before it loads.
-  const [progressLoaded, setProgressLoaded] = useState(false);
-
   // 1-on-1 session info (updated by mentor from mentor dashboard)
   const [session, setSession] = useState(() => {
     try {
@@ -455,103 +439,9 @@ function DashboardBody({ urlPlan = "" }) {
       dateLabel: "Tomorrow",
     };
   });
-
-  // Today's focus targets for the hero card
-  const [focusTargets, setFocusTargets] = useState(() => {
-    const saved = load(`mdash:focus:${emailKey}`, null);
-    if (saved && Array.isArray(saved)) return saved;
-    return [
-      { id: "ft-1", text: "Revise Rotational Dynamics Mechanics", done: true },
-      { id: "ft-2", text: "Solve 15 JEE Advanced Physics PYQs", done: false },
-      { id: "ft-3", text: "Submit Mock Test Diagnostic Log", done: false },
-    ];
-  });
-
-  const toggleFocusTarget = (id) => {
-    setFocusTargets((prev) => {
-      const next = prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t));
-      save(`mdash:focus:${emailKey}`, next);
-      return next;
-    });
-  };
-
-  const focusDoneCount = focusTargets.filter((t) => t.done).length;
-
-  // 3D tilt tracking for mobile view
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const handleHeroMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 14;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -14;
-    setTilt({ x: Math.max(-10, Math.min(10, x)), y: Math.max(-10, Math.min(10, y)) });
-  };
-  const handleHeroMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-  };
-
-  // Sync 1-on-1 session info
-  useEffect(() => {
-    const sid = identity.studentId || "CP-2026-00002";
-    try {
-      const cached =
-        localStorage.getItem(`cp:mentorSession:${sid.toUpperCase()}`) ||
-        localStorage.getItem("cp:mentorSession:ACTIVE");
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (parsed) setSession((prev) => ({ ...prev, ...parsed }));
-      }
-    } catch {}
-
-    if (token) {
-      apiMySession(token, identity.studentId)
-        .then((res) => {
-          if (res?.session) {
-            setSession((prev) => ({ ...prev, ...res.session }));
-            try {
-              localStorage.setItem(`cp:mentorSession:${sid.toUpperCase()}`, JSON.stringify(res.session));
-              localStorage.setItem("cp:mentorSession:ACTIVE", JSON.stringify(res.session));
-            } catch {}
-          }
-          if (res?.mentorName) {
-            setMentor((prev) => prev ? { ...prev, name: res.mentorName } : { name: res.mentorName, college: "Senior IITian · IIT Roorkee" });
-          }
-        })
-        .catch(() => {});
-    }
-
-    const handleSessionUpdate = (e) => {
-      if (e.detail?.session) {
-        setSession((prev) => ({ ...prev, ...e.detail.session }));
-      }
-    };
-    const handleStorage = (e) => {
-      if (e.key && e.key.startsWith("cp:mentorSession") && e.newValue) {
-        try {
-          const parsed = JSON.parse(e.newValue);
-          if (parsed) setSession((prev) => ({ ...prev, ...parsed }));
-        } catch {}
-      }
-    };
-    window.addEventListener("cp:sessionUpdated", handleSessionUpdate);
-    window.addEventListener("storage", handleStorage);
-    return () => {
-      window.removeEventListener("cp:sessionUpdated", handleSessionUpdate);
-      window.removeEventListener("storage", handleStorage);
-    };
-  }, [token, identity.studentId]);
-
-  const openMeetingRoom = () => {
-    const link = session?.meetLink ? session.meetLink.trim() : "";
-    if (link && (link.startsWith("http://") || link.startsWith("https://"))) {
-      window.open(link, "_blank", "noopener,noreferrer");
-    } else if (link) {
-      window.open(`https://${link}`, "_blank", "noopener,noreferrer");
-    } else {
-      window.open("https://meet.google.com/new", "_blank", "noopener,noreferrer");
-    }
-  };
-
-  const firstName = (user?.name || identity.studentName || "Ankit").trim().split(/\s+/)[0];
+  // True once this batch's data has been pulled from the server, so the save
+  // effect won't overwrite the server with local seed data before it loads.
+  const [progressLoaded, setProgressLoaded] = useState(false);
 
   // Resolve the real plan for THIS dashboard. A student can own several
   // mentorship batches - pick the one named in ?plan= (if they own it),
@@ -603,6 +493,54 @@ function DashboardBody({ urlPlan = "" }) {
       .catch(() => { if (alive) setMentor(null); });
     return () => { alive = false; };
   }, [token, identity.studentId]);
+
+  // Sync 1-on-1 session info scheduled by the mentor
+  useEffect(() => {
+    const sid = identity.studentId;
+    if (token && sid) {
+      apiMySession(token, sid)
+        .then((res) => {
+          if (res?.session) {
+            setSession((prev) => ({ ...prev, ...res.session }));
+            try {
+              localStorage.setItem(`cp:mentorSession:${sid.toUpperCase()}`, JSON.stringify(res.session));
+            } catch {}
+          }
+        })
+        .catch(() => {});
+    }
+
+    const handleSessionUpdate = (e) => {
+      if (e.detail?.session) {
+        setSession((prev) => ({ ...prev, ...e.detail.session }));
+      }
+    };
+    const handleStorage = (e) => {
+      if (e.key && e.key.startsWith("cp:mentorSession") && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          if (parsed) setSession((prev) => ({ ...prev, ...parsed }));
+        } catch {}
+      }
+    };
+    window.addEventListener("cp:sessionUpdated", handleSessionUpdate);
+    window.addEventListener("storage", handleStorage);
+    return () => {
+      window.removeEventListener("cp:sessionUpdated", handleSessionUpdate);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, [token, identity.studentId]);
+
+  const openMeetingRoom = () => {
+    const link = session?.meetLink ? session.meetLink.trim() : "";
+    if (link && (link.startsWith("http://") || link.startsWith("https://"))) {
+      window.open(link, "_blank", "noopener,noreferrer");
+    } else if (link) {
+      window.open(`https://${link}`, "_blank", "noopener,noreferrer");
+    } else {
+      window.open("https://meet.google.com/new", "_blank", "noopener,noreferrer");
+    }
+  };
 
   // Cross-device sync - LOAD this batch's saved study data from the server so
   // every device shows the same logs/tests/backlog/tasks. The server copy wins
@@ -754,27 +692,9 @@ function DashboardBody({ urlPlan = "" }) {
     const att = Number(t.correct) + Number(t.wrong);
     return att ? Math.round((Number(t.correct) / att) * 100) : 0;
   };
-  const pct = (t) => (t ? (normalizeTestScore(t)?.percent ?? 0) : 0);
-
-  const avgScoreDisplay = useMemo(() => {
-    if (testsSorted && testsSorted.length > 0) {
-      const totalPct = testsSorted.reduce((sum, t) => sum + (pct(t) || 0), 0);
-      return `${Math.round((totalPct / testsSorted.length) * 10) / 10}%`;
-    }
-    return "92.4%";
-  }, [testsSorted]);
-
-  const syllabusPctDisplay = useMemo(() => {
-    if (backlog && backlog.length > 0) {
-      const done = backlog.filter((b) => b && b.done).length;
-      return Math.min(100, Math.max(15, Math.round((done / backlog.length) * 100)));
-    }
-    return 68;
-  }, [backlog]);
-
-  const totalTestsDisplay = testsSorted?.length || 16;
-  const improvement = latest && prev && Number(prev.scored ?? prev.score) > 0
-    ? Math.round(((Number(latest.scored ?? latest.score) - Number(prev.scored ?? prev.score)) / Number(prev.scored ?? prev.score)) * 100)
+  const pct = (t) => Math.round((Number(t.scored) / Math.max(1, Number(t.total))) * 100);
+  const improvement = latest && prev && Number(prev.scored) > 0
+    ? Math.round(((Number(latest.scored) - Number(prev.scored)) / Number(prev.scored)) * 100)
     : null;
   const scoreTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, you: Number(t.scored), target: Math.round(Number(t.total) * 0.75) }));
   const accTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, accuracy: acc(t) }));
@@ -1046,44 +966,19 @@ function DashboardBody({ urlPlan = "" }) {
       if (!Number.isFinite(scored)) return;
     }
     if (!testForm.name.trim()) return;
-
-    // Run through universal normalization so question-count/mismatched-marks never produce > 100% bug
-    const norm = normalizeTestScore({
-      score: scored,
-      maxMarks: total,
-      totalQuestions: (Number(testForm.correct) || 0) + (Number(testForm.wrong) || 0) + (Number(testForm.skipped) || 0),
-      examType: testForm.type,
-      correctCount: Number(testForm.correct) || 0,
-      wrongCount: Number(testForm.wrong) || 0,
-      skippedCount: Number(testForm.skipped) || 0,
-    });
-    total = norm.maxMarks;
-    scored = norm.score;
-
     // per-section minutes spent (0 when the student didn't log it)
     const times = Object.fromEntries(examSections.map((sec) => [sec, Number(testForm.times?.[sec]) || 0]));
     const timeTotal = Object.values(times).reduce((s, v) => s + v, 0);
     const t = {
-      id: `${Date.now()}`,
-      name: testForm.name.trim(),
-      type: testForm.type,
-      date: todayIso,
-      total,
-      maxMarks: total,
-      scored,
-      score: scored,
-      percent: norm.percent,
-      accuracy: norm.accuracy,
+      id: `${Date.now()}`, name: testForm.name.trim(), type: testForm.type, date: todayIso, total, scored,
       correct: Number(testForm.correct) || 0,
       wrong: Number(testForm.wrong) || 0,
       skipped: Number(testForm.skipped) || 0,
-      totalQuestions: norm.totalQuestions,
       silly: Number(testForm.silly) || 0,
       sillyTopic: testForm.sillyTopic.trim(),
       overspent: testForm.overspent.trim(),
       weak: testForm.weak.split(",").map((x) => x.trim()).filter(Boolean),
-      times,
-      timeTotal,
+      times, timeTotal,
       rank,
     };
     setTests((prevT) => [...prevT, t]);
@@ -1268,843 +1163,166 @@ function DashboardBody({ urlPlan = "" }) {
 
   return (
     <section style={{ background: "var(--page-bg)", minHeight: "100vh", paddingBottom: 70 }}>
-      {/* ══ HERO — 2-Column Exact Design with 3D Mobile View ══ */}
-      <div
-        onMouseMove={handleHeroMouseMove}
-        onMouseLeave={handleHeroMouseLeave}
-        style={{
-          position: "relative",
-          paddingTop: 80,
-          paddingBottom: 20,
-          overflow: "hidden",
-          background: "radial-gradient(1100px circle at 80% 25%, rgba(255,105,61,0.08) 0%, rgba(255,248,244,0.6) 45%, var(--page-bg) 100%)",
-        }}
-      >
-        {/* Background Constellation Network Lines & Dots matching Image 1 */}
-        <svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 1440 680"
-          preserveAspectRatio="none"
-          fill="none"
-          aria-hidden="true"
-          style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, opacity: 0.55 }}
-        >
-          <line x1="80" y1="120" x2="280" y2="200" stroke={ORANGE} strokeWidth="1" strokeDasharray="3 5" strokeOpacity="0.3" />
-          <line x1="280" y1="200" x2="490" y2="110" stroke={ORANGE} strokeWidth="1" strokeDasharray="3 5" strokeOpacity="0.25" />
-          <line x1="840" y1="80" x2="1020" y2="160" stroke={ORANGE} strokeWidth="1" strokeDasharray="4 6" strokeOpacity="0.4" />
-          <line x1="1020" y1="160" x2="1280" y2="90" stroke={ORANGE} strokeWidth="1.2" strokeDasharray="4 6" strokeOpacity="0.5" />
-          <line x1="1280" y1="90" x2="1380" y2="260" stroke={ORANGE} strokeWidth="1" strokeDasharray="4 6" strokeOpacity="0.35" />
-          <line x1="940" y1="520" x2="1160" y2="440" stroke={ORANGE} strokeWidth="1" strokeDasharray="3 5" strokeOpacity="0.3" />
-          <line x1="1160" y1="440" x2="1340" y2="540" stroke={ORANGE} strokeWidth="1" strokeDasharray="3 5" strokeOpacity="0.25" />
+      {/* ── Title strip ── */}
+      {/* The fixed header is 98px tall (34px announcement + 64px nav); this
+          top padding clears it with real breathing room so the eyebrow doesn't
+          sit flush against the navbar. */}
+      <div style={{ paddingTop: 138, textAlign: "center" }}>
+        <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+          style={{ display: "inline-block", fontSize: 12, fontWeight: 800, letterSpacing: ".02em", color: ORANGE, background: "rgba(255,105,61,.1)", borderRadius: 50, padding: "6px 16px", marginBottom: 16 }}>
+          1-on-1 · personalised · verified
+        </motion.div>
+        <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .05 }}
+          style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.7rem,3.6vw,2.4rem)", color: NAVY, margin: 0, letterSpacing: "-0.5px", lineHeight: 1.1 }}>
+          Mentorship dashboard
+        </motion.h1>
+      </div>
 
-          <circle cx="80" cy="120" r="3" fill={ORANGE} fillOpacity="0.35" />
-          <circle cx="280" cy="200" r="4" fill={ORANGE} fillOpacity="0.4" />
-          <circle cx="490" cy="110" r="3" fill={ORANGE} fillOpacity="0.3" />
-          <circle cx="840" cy="80" r="3.5" fill={ORANGE} fillOpacity="0.45" />
-          <circle cx="1020" cy="160" r="5" fill={ORANGE} fillOpacity="0.75" />
-          <circle cx="1280" cy="90" r="6" fill={ORANGE} fillOpacity="0.85" />
-          <circle cx="1380" cy="260" r="3.5" fill={ORANGE} fillOpacity="0.5" />
-          <circle cx="940" cy="520" r="3.5" fill={ORANGE} fillOpacity="0.4" />
-          <circle cx="1160" cy="440" r="4.5" fill={ORANGE} fillOpacity="0.6" />
-          <circle cx="1340" cy="540" r="3.5" fill={ORANGE} fillOpacity="0.35" />
+      {/* ══ HERO - centered welcome ══ */}
+      <div style={{ position: "relative", overflow: "hidden" }}>
+        {/* decorative rising "trajectory" - faint dashed line + dots, top-right */}
+        <svg className="md-hero-line" width="380" height="170" viewBox="0 0 380 170" fill="none" aria-hidden="true"
+          style={{ position: "absolute", top: 6, right: 0, pointerEvents: "none" }}>
+          <path d="M8 150 C 100 140, 150 100, 215 78 S 320 26, 360 12" stroke={ORANGE} strokeWidth="2" strokeDasharray="4 7" strokeLinecap="round" opacity=".45" />
+          <circle cx="150" cy="102" r="4" fill={ORANGE} opacity=".4" />
+          <circle cx="256" cy="52" r="4.5" fill={ORANGE} opacity=".65" />
+          <circle cx="360" cy="12" r="5.5" fill={ORANGE} />
         </svg>
 
-        <div
-          className="hero-section-grid"
-          style={{
-            maxWidth: 1180,
-            margin: "0 auto",
-            padding: "0 24px",
-            position: "relative",
-            zIndex: 1,
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1.15fr) minmax(310px, 0.85fr)",
-            gap: 32,
-            alignItems: "center",
-          }}
-        >
-          {/* ── LEFT COLUMN: Mentorship Dashboard Hero Card ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            style={{
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .06 }}
+          style={{ position: "relative", maxWidth: 720, margin: "0 auto", padding: "48px 24px 8px", textAlign: "center" }}>
+
+          {/* status + student ID pill */}
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 800, borderRadius: 50, padding: "6px 15px",
+            color: identity.status === "expired" ? "#dc2626" : ORANGE,
+            background: identity.status === "expired" ? "rgba(220,38,38,.08)" : "rgba(255,105,61,.1)" }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: identity.status === "expired" ? "#dc2626" : ORANGE, display: "block" }} />
+            <span style={{ textTransform: "capitalize" }}>{identity.status || "Active"}</span>
+            {identity.studentId && <span style={{ opacity: .55 }}>·</span>}
+            {identity.studentId && <span style={{ fontFamily: "monospace", letterSpacing: ".02em" }}>{identity.studentId}</span>}
+          </span>
+
+          {/* welcome heading with hand-drawn coral underline on the name */}
+          <h2 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "clamp(1.5rem,3.6vw,2.1rem)", color: NAVY, lineHeight: 1.15, letterSpacing: "-0.5px", margin: "16px 0 0" }}>
+            Welcome back,<br />
+            <span style={{ position: "relative", display: "inline-block", color: ORANGE }}>
+              {(user?.name || "there").trim().split(/\s+/)[0]}.
+              <svg width="100%" height="12" viewBox="0 0 200 12" preserveAspectRatio="none" fill="none"
+                style={{ position: "absolute", left: 0, bottom: -5, width: "100%" }} aria-hidden="true">
+                <path d="M3 8 C 45 3, 100 3, 150 6 S 190 9, 197 5" stroke={ORANGE} strokeWidth="2.5" strokeLinecap="round" opacity=".8" />
+              </svg>
+            </span>
+          </h2>
+
+          <p style={{ color: MUTE, fontSize: 15.5, lineHeight: 1.7, margin: "22px auto 0", maxWidth: 500 }}>
+            Log your day, track every test, and get a clean weekly report - everything to turn your prep into a real rank.
+          </p>
+
+          {/* actions */}
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginTop: 26 }}>
+            <button onClick={() => scrollTo("live-tracking")} style={{ background: ORANGE, color: "#fff", border: "none", padding: "13px 24px", borderRadius: 50, fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, boxShadow: `0 12px 26px -12px ${ORANGE}` }}>
+              Log today <ArrowRight size={16} />
+            </button>
+            <button onClick={() => scrollTo("test-analysis")} style={{ background: "#fff", color: NAVY, border: "1px solid #ececec", padding: "13px 24px", borderRadius: 50, fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer" }}>
+              Add a test
+            </button>
+          </div>
+
+          {/* Live 1-on-1 Mentor Session Card with Google Meet Link */}
+          {session?.meetLink && (
+            <div style={{
+              margin: "24px auto 0",
               background: "#ffffff",
-              borderRadius: 24,
-              border: "1.5px solid rgba(255,105,61,0.16)",
-              padding: "28px 28px 24px",
-              boxShadow: "0 20px 50px -15px rgba(255,105,61,0.08), 0 8px 24px -8px rgba(15,23,42,0.05)",
-              position: "relative",
-            }}
-          >
-            {/* Top Status & Mode Pills */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
-              {/* Mentor Online Pill */}
-              <div
+              borderRadius: 16,
+              border: "1.5px solid rgba(255,105,61,0.28)",
+              padding: "14px 20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+              boxShadow: "0 10px 28px -12px rgba(255,105,61,0.22)",
+              maxWidth: 580,
+              textAlign: "left",
+              flexWrap: "wrap",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 200, flex: 1 }}>
+                <div style={{
+                  width: 42, height: 42, borderRadius: 12,
+                  background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                  display: "grid", placeItems: "center", color: "#fff", flexShrink: 0,
+                  boxShadow: "0 4px 12px rgba(255,105,61,0.3)",
+                }}>
+                  <Video size={20} />
+                </div>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: ORANGE, textTransform: "uppercase", letterSpacing: 0.5 }}>
+                      1-on-1 Mentor Session
+                    </span>
+                    {session.dateLabel && (
+                      <span style={{ fontSize: 10, fontWeight: 700, background: "#fff7ed", color: "#ea580c", padding: "1px 6px", borderRadius: 4, border: "1px solid #fed7aa" }}>
+                        {session.dateLabel}
+                      </span>
+                    )}
+                    {session.time && (
+                      <span style={{ fontSize: 11, color: "#64748b" }}>
+                        • {session.time}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ fontSize: 13.5, fontWeight: 700, color: NAVY, marginTop: 2 }}>
+                    {session.topic || "Physics Strategy & Mock Test Analysis"}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={openMeetingRoom}
                 style={{
+                  background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                  color: "#ffffff",
+                  border: "none",
+                  padding: "10px 20px",
+                  borderRadius: 50,
+                  fontFamily: "Sora, sans-serif",
+                  fontWeight: 800,
+                  fontSize: 13,
+                  cursor: "pointer",
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 7,
-                  fontSize: 11.5,
-                  fontWeight: 800,
-                  color: ORANGE,
-                  background: "rgba(255,105,61,0.08)",
-                  border: "1px solid rgba(255,105,61,0.22)",
-                  borderRadius: 50,
-                  padding: "5px 14px",
-                  letterSpacing: ".02em",
+                  whiteSpace: "nowrap",
+                  boxShadow: "0 4px 14px rgba(255,105,61,0.35)",
+                  transition: "transform 0.15s ease",
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.03)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
               >
-                <motion.span
-                  animate={{ scale: [1, 1.3, 1], opacity: [1, 0.6, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  style={{ width: 7, height: 7, borderRadius: "50%", background: ORANGE, display: "block" }}
-                />
-                <span>⚡ MENTOR ONLINE · {identity.studentId || "CP-2026-00002"}</span>
-              </div>
-
-              {/* Rank Surge Mode Pill */}
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  fontSize: 11.5,
-                  fontWeight: 800,
-                  color: ORANGE,
-                  background: "rgba(255,105,61,0.08)",
-                  border: "1px solid rgba(255,105,61,0.22)",
-                  borderRadius: 50,
-                  padding: "5px 14px",
-                  letterSpacing: ".02em",
-                }}
-              >
-                <Flame size={13} color={ORANGE} />
-                <span>Rank Surge Mode</span>
-              </div>
-            </div>
-
-            {/* AI-Guided Mentorship Eyebrow Tag */}
-            <div style={{ marginBottom: 12 }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  fontSize: 11,
-                  fontWeight: 800,
-                  letterSpacing: ".06em",
-                  textTransform: "uppercase",
-                  color: ORANGE,
-                  background: "rgba(255,105,61,0.11)",
-                  borderRadius: 50,
-                  padding: "4px 12px",
-                }}
-              >
-                AI-GUIDED MENTORSHIP
-              </span>
-            </div>
-
-            {/* Main Title: Mentorship dashboard */}
-            <h1
-              style={{
-                fontFamily: "Sora, system-ui, sans-serif",
-                fontWeight: 800,
-                fontSize: "clamp(2rem, 3.4vw, 2.7rem)",
-                color: NAVY,
-                margin: "0 0 10px",
-                letterSpacing: "-0.8px",
-                lineHeight: 1.15,
-              }}
-            >
-              Mentorship dashboard
-            </h1>
-
-            {/* Subtitle: Welcome back, {firstName}. with Coral Wave Underline */}
-            <h2
-              style={{
-                fontFamily: "Sora, system-ui, sans-serif",
-                fontWeight: 700,
-                fontSize: "clamp(1.35rem, 2.4vw, 1.85rem)",
-                color: NAVY,
-                margin: "0 0 16px",
-                lineHeight: 1.25,
-                letterSpacing: "-0.4px",
-              }}
-            >
-              Welcome back,{" "}
-              <span style={{ position: "relative", display: "inline-block", color: ORANGE }}>
-                {firstName}.
-                <svg
-                  width="100%"
-                  height="12"
-                  viewBox="0 0 180 12"
-                  preserveAspectRatio="none"
-                  fill="none"
-                  style={{ position: "absolute", left: 0, bottom: -5, width: "100%" }}
-                  aria-hidden="true"
-                >
-                  <path d="M3 8 C 40 3, 90 3, 135 6 S 170 9, 177 5" stroke={ORANGE} strokeWidth="3" strokeLinecap="round" opacity=".85" />
-                </svg>
-              </span>
-            </h2>
-
-            {/* Description Text */}
-            <p
-              style={{
-                color: MUTE,
-                fontSize: "14.5px",
-                lineHeight: 1.65,
-                margin: "0 0 24px",
-                maxWidth: 540,
-              }}
-            >
-              Log your day, track every test, and receive clean real-time weekly report diagnostics engineered to turn your preparation into a top rank.
-            </p>
-
-            {/* Inner Health & Focus Target Card (Dual Column inside Card) */}
-            <div
-              className="hero-inner-target-card"
-              style={{
-                background: "linear-gradient(135deg, rgba(255,249,245,0.95) 0%, rgba(255,255,255,0.95) 100%)",
-                border: "1.5px solid rgba(255,105,61,0.18)",
-                borderRadius: 20,
-                padding: "20px 22px",
-                marginBottom: 24,
-                display: "grid",
-                gridTemplateColumns: "140px 1fr",
-                gap: 20,
-                alignItems: "center",
-              }}
-            >
-              {/* Left Column: Prep Health Circular Progress Gauge */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", borderRight: "1px solid rgba(255,105,61,0.14)", paddingRight: 16 }}>
-                <div style={{ position: "relative", width: 72, height: 72, marginBottom: 8 }}>
-                  <svg width="72" height="72" viewBox="0 0 72 72" style={{ transform: "rotate(-90deg)" }}>
-                    <circle cx="36" cy="36" r="30" stroke="#fed7aa" strokeWidth="6" fill="none" opacity="0.45" />
-                    <circle
-                      cx="36"
-                      cy="36"
-                      r="30"
-                      stroke={ORANGE}
-                      strokeWidth="6"
-                      fill="none"
-                      strokeDasharray={188.5}
-                      strokeDashoffset={188.5 * (1 - 0.85)}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      display: "grid",
-                      placeItems: "center",
-                      fontFamily: "Sora, system-ui, sans-serif",
-                      fontWeight: 800,
-                      fontSize: 14.5,
-                      color: NAVY,
-                    }}
-                  >
-                    85%
-                  </div>
-                </div>
-
-                <div style={{ fontFamily: "Sora, system-ui, sans-serif", fontWeight: 800, fontSize: 13, color: NAVY, lineHeight: 1.2 }}>
-                  Prep Health
-                </div>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 700, color: "#16a34a", marginTop: 3 }}>
-                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#16a34a" }} />
-                  +12% this week
-                </div>
-              </div>
-
-              {/* Right Column: Today's Focus Target Checklist */}
-              <div
-                style={{
-                  background: "#ffffff",
-                  borderRadius: 14,
-                  border: "1px solid rgba(255,105,61,0.14)",
-                  padding: "14px 16px",
-                  boxShadow: "0 2px 10px rgba(0,0,0,0.02)",
-                }}
-              >
-                {/* Header row with badge */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 10 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 7, fontWeight: 800, fontSize: 13, color: NAVY }}>
-                    <Target size={15} color={ORANGE} />
-                    <span>Today's Focus Target</span>
-                  </div>
-                  <span
-                    style={{
-                      fontSize: 10.5,
-                      fontWeight: 800,
-                      color: ORANGE,
-                      background: "rgba(255,105,61,0.1)",
-                      border: "1px solid rgba(255,105,61,0.22)",
-                      borderRadius: 50,
-                      padding: "2px 9px",
-                    }}
-                  >
-                    {focusDoneCount}/{focusTargets.length} Done
-                  </span>
-                </div>
-
-                {/* Target Checkbox List */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  {focusTargets.map((item) => (
-                    <div
-                      key={item.id}
-                      onClick={() => toggleFocusTarget(item.id)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 9,
-                        padding: "6px 8px",
-                        borderRadius: 8,
-                        background: item.done ? "rgba(255,105,61,0.03)" : "#ffffff",
-                        border: `1px solid ${item.done ? "rgba(255,105,61,0.14)" : "#f1f5f9"}`,
-                        cursor: "pointer",
-                        transition: "all 0.15s ease",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 17,
-                          height: 17,
-                          borderRadius: 5,
-                          display: "grid",
-                          placeItems: "center",
-                          border: item.done ? "none" : "1.5px solid #cbd5e1",
-                          background: item.done ? "linear-gradient(135deg, #FF693D, #ea580c)" : "#fff",
-                          color: "#fff",
-                          flexShrink: 0,
-                          transition: "all 0.15s ease",
-                        }}
-                      >
-                        {item.done && <Check size={11} strokeWidth={3} />}
-                      </div>
-                      <span
-                        style={{
-                          fontSize: 12,
-                          fontWeight: item.done ? 600 : 700,
-                          color: item.done ? "#94a3b8" : "#1e293b",
-                          textDecoration: item.done ? "line-through" : "none",
-                          lineHeight: 1.35,
-                        }}
-                      >
-                        {item.text}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Action Buttons: Log Today & Add Test Result */}
-            <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
-              <button
-                id="hero-log-today-btn"
-                onClick={() => scrollTo("live-tracking")}
-                style={{
-                  background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
-                  color: "#fff",
-                  border: "none",
-                  padding: "13px 28px",
-                  borderRadius: 50,
-                  fontFamily: "Sora, system-ui, sans-serif",
-                  fontWeight: 800,
-                  fontSize: 14,
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  boxShadow: `0 12px 26px -10px ${ORANGE}`,
-                  transition: "transform 0.15s ease, box-shadow 0.15s ease",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
-              >
-                Log Today <ArrowRight size={16} />
-              </button>
-
-              <button
-                id="hero-add-test-btn"
-                onClick={() => scrollTo("test-analysis")}
-                style={{
-                  background: "#ffffff",
-                  color: NAVY,
-                  border: "1.5px solid #e2e8f0",
-                  padding: "13px 26px",
-                  borderRadius: 50,
-                  fontFamily: "Sora, system-ui, sans-serif",
-                  fontWeight: 800,
-                  fontSize: 14,
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  transition: "all 0.15s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = ORANGE;
-                  e.currentTarget.style.color = ORANGE;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "#e2e8f0";
-                  e.currentTarget.style.color = NAVY;
-                }}
-              >
-                + Add Test Result
+                <Video size={15} />
+                <span>Join Google Meet</span>
+                <ExternalLink size={13} />
               </button>
             </div>
-          </motion.div>
+          )}
 
-          {/* ── RIGHT COLUMN: Completely 3D Mobile View ── */}
-          <div
-            className="hero-3d-mobile-container"
-            style={{
-              perspective: 1200,
-              perspectiveOrigin: "50% 50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-              padding: "10px 0",
-            }}
-          >
-            {/* 3D Smartphone Body with Realistic 3D Tilt and Perspective */}
-            <motion.div
-              animate={{
-                y: [0, -8, 0],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              style={{
-                width: 310,
-                transform: `rotateY(${-12 + tilt.x}deg) rotateX(${5 + tilt.y}deg) rotateZ(-1deg)`,
-                transformStyle: "preserve-3d",
-                transition: "transform 0.18s ease-out",
-                position: "relative",
-              }}
-            >
-              {/* Physical Side Buttons on phone edges in 3D */}
-              {/* Volume Mute */}
-              <div style={{ position: "absolute", left: -4, top: 110, width: 4, height: 26, background: "#334155", borderRadius: "3px 0 0 3px", boxShadow: "-1px 0 3px rgba(0,0,0,0.4)" }} />
-              {/* Volume Up */}
-              <div style={{ position: "absolute", left: -4, top: 152, width: 4, height: 46, background: "#334155", borderRadius: "3px 0 0 3px", boxShadow: "-1px 0 3px rgba(0,0,0,0.4)" }} />
-              {/* Volume Down */}
-              <div style={{ position: "absolute", left: -4, top: 208, width: 4, height: 46, background: "#334155", borderRadius: "3px 0 0 3px", boxShadow: "-1px 0 3px rgba(0,0,0,0.4)" }} />
-              {/* Power / Lock Button */}
-              <div style={{ position: "absolute", right: -4, top: 160, width: 4, height: 68, background: "#334155", borderRadius: "0 3px 3px 0", boxShadow: "1px 0 3px rgba(0,0,0,0.4)" }} />
-
-              {/* iPhone Outer Titanium Chassis */}
-              <div
-                style={{
-                  width: "100%",
-                  background: "#18191d",
-                  borderRadius: 48,
-                  padding: 10,
-                  boxSizing: "border-box",
-                  boxShadow: "34px 48px 80px -15px rgba(15,23,42,0.32), 14px 22px 35px -10px rgba(255,105,61,0.12), inset 0 0 0 1.5px rgba(255,255,255,0.32), inset -3px -3px 0 2px rgba(0,0,0,0.5), inset 3px 3px 0 2px rgba(255,255,255,0.15)",
-                  position: "relative",
-                }}
-              >
-                {/* Glossy Tempered Glass Reflection Sweep */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 10,
-                    borderRadius: 38,
-                    pointerEvents: "none",
-                    zIndex: 25,
-                    background: "linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.05) 36%, transparent 55%)",
-                  }}
-                />
-
-                {/* Smartphone Display Screen Content */}
-                <div
-                  style={{
-                    background: "#ffffff",
-                    borderRadius: 38,
-                    overflow: "hidden",
-                    position: "relative",
-                    display: "flex",
-                    flexDirection: "column",
-                    boxShadow: "inset 0 0 0 1px #e2e8f0",
-                  }}
-                >
-                  {/* Dynamic Island Notch */}
-                  <div style={{ height: 32, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", zIndex: 10, paddingTop: 6 }}>
-                    <div
-                      style={{
-                        width: 88,
-                        height: 24,
-                        borderRadius: 20,
-                        background: "#000000",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "0 10px",
-                        boxSizing: "border-box",
-                      }}
-                    >
-                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#1e293b" }} />
-                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0f172a" }} />
-                    </div>
-                  </div>
-
-                  {/* Phone Status Bar (Time & Icons) */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "0 18px",
-                      marginTop: -16,
-                      marginBottom: 10,
-                      fontSize: 11,
-                      fontWeight: 800,
-                      color: "#0f172a",
-                      zIndex: 8,
-                    }}
-                  >
-                    <span>09:41</span>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                      <Signal size={12} color="#0f172a" />
-                      <Wifi size={12} color="#0f172a" />
-                      <Battery size={13} color="#0f172a" />
-                    </div>
-                  </div>
-
-                  {/* App Bar: Avatar, Mentorship Title, Bell */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "0 16px 12px",
-                      borderBottom: "1px solid #f8fafc",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                      <div
-                        style={{
-                          width: 30,
-                          height: 30,
-                          borderRadius: "50%",
-                          background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
-                          color: "#fff",
-                          display: "grid",
-                          placeItems: "center",
-                          fontFamily: "Sora, system-ui, sans-serif",
-                          fontWeight: 800,
-                          fontSize: 13,
-                        }}
-                      >
-                        {firstName.charAt(0) || "M"}
-                      </div>
-                      <div style={{ fontFamily: "Sora, system-ui, sans-serif", fontWeight: 800, fontSize: 15, color: NAVY }}>
-                        Mentorship
-                      </div>
-                    </div>
-
-                    <div
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: "50%",
-                        background: "#f8fafc",
-                        border: "1px solid #e2e8f0",
-                        display: "grid",
-                        placeItems: "center",
-                        color: "#64748b",
-                        position: "relative",
-                      }}
-                    >
-                      <Bell size={13} />
-                      <span style={{ position: "absolute", top: 5, right: 6, width: 5, height: 5, borderRadius: "50%", background: ORANGE }} />
-                    </div>
-                  </div>
-
-                  {/* Phone Screen Scrollable Body Area */}
-                  <div style={{ padding: "10px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
-                    {/* 1. ASSIGNED MENTOR Card */}
-                    <div
-                      style={{
-                        background: "#ffffff",
-                        border: "1px solid #f1f5f9",
-                        borderRadius: 16,
-                        padding: "12px 14px",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                        <span style={{ fontSize: 9.5, fontWeight: 800, color: "#64748b", letterSpacing: ".05em", textTransform: "uppercase" }}>
-                          ASSIGNED MENTOR
-                        </span>
-                        <span
-                          style={{
-                            fontSize: 10,
-                            fontWeight: 800,
-                            color: "#16a34a",
-                            background: "#dcfce7",
-                            borderRadius: 50,
-                            padding: "2px 8px",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 4,
-                          }}
-                        >
-                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#16a34a" }} />
-                          Online
-                        </span>
-                      </div>
-
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        {/* Mentor Avatar with 4.9 Star Badge */}
-                        <div style={{ position: "relative", flexShrink: 0 }}>
-                          <div
-                            style={{
-                              width: 44,
-                              height: 44,
-                              borderRadius: "50%",
-                              background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)",
-                              display: "grid",
-                              placeItems: "center",
-                              color: "#fff",
-                              fontWeight: 800,
-                              fontSize: 16,
-                              boxShadow: "0 2px 8px rgba(37,99,235,0.25)",
-                            }}
-                          >
-                            {(mentor?.name || "Dr. Rajesh Sharma").charAt(0)}
-                          </div>
-                          <span
-                            style={{
-                              position: "absolute",
-                              bottom: -4,
-                              left: "50%",
-                              transform: "translateX(-50%)",
-                              fontSize: 8.5,
-                              fontWeight: 800,
-                              color: "#0f172a",
-                              background: "#ffffff",
-                              border: "1px solid #e2e8f0",
-                              borderRadius: 50,
-                              padding: "1px 5px",
-                              whiteSpace: "nowrap",
-                              boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
-                            }}
-                          >
-                            4.9 ★
-                          </span>
-                        </div>
-
-                        <div>
-                          <div style={{ fontFamily: "Sora, system-ui, sans-serif", fontWeight: 800, fontSize: 13, color: NAVY }}>
-                            {mentor?.name || "Ankit Yadav"}
-                          </div>
-                          <div style={{ fontSize: 10.5, color: "#64748b" }}>
-                            {mentor?.college ? `Senior IITian · ${mentor.college}` : "Senior IITian · IIT Roorkee"}
-                          </div>
-                          <div style={{ fontSize: 10, fontWeight: 700, color: ORANGE, marginTop: 1 }}>
-                            {mentor?.college ? `${mentor.college} Mentor` : "IIT Roorkee Alumnus"}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 2. ACTIVE COHORT Card (Dark sleek card matching image) */}
-                    <div
-                      style={{
-                        background: "#1e293b",
-                        borderRadius: 16,
-                        padding: "13px 14px",
-                        color: "#ffffff",
-                        boxShadow: "0 4px 14px -3px rgba(15,23,42,0.3)",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                        <span style={{ fontSize: 9, fontWeight: 800, color: "#94a3b8", letterSpacing: ".05em", textTransform: "uppercase" }}>
-                          ACTIVE COHORT
-                        </span>
-                        <span
-                          style={{
-                            fontSize: 9.5,
-                            fontWeight: 800,
-                            color: "#cbd5e1",
-                            background: "rgba(255,255,255,0.1)",
-                            borderRadius: 6,
-                            padding: "2px 6px",
-                            fontFamily: "monospace",
-                          }}
-                        >
-                          {identity.studentId ? identity.studentId.slice(0, 7) : "CP-2026"}
-                        </span>
-                      </div>
-
-                      <div style={{ fontFamily: "Sora, system-ui, sans-serif", fontWeight: 800, fontSize: 14, color: "#fff", marginBottom: 10 }}>
-                        {identity.batchLabel || planLabel || "JEE 2026 Mentorship"}
-                      </div>
-
-                      {/* Syllabus Completion row */}
-                      <div>
-                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#cbd5e1", marginBottom: 5 }}>
-                          <span>Syllabus Completion</span>
-                          <span style={{ fontWeight: 800, color: "#fff" }}>{syllabusPctDisplay}%</span>
-                        </div>
-                        <div style={{ height: 6, background: "#334155", borderRadius: 6, overflow: "hidden" }}>
-                          <div
-                            style={{
-                              width: `${syllabusPctDisplay}%`,
-                              height: "100%",
-                              background: "linear-gradient(90deg, #FF693D 0%, #ea580c 100%)",
-                              borderRadius: 6,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 3. 1-on-1 Session Card with Live Meeting Room Button */}
-                    <div
-                      style={{
-                        background: "#ffffff",
-                        border: "1.5px solid #fed7aa",
-                        borderRadius: 16,
-                        padding: "12px 14px",
-                        boxShadow: "0 2px 8px rgba(255,105,61,0.06)",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 800, color: NAVY }}>
-                          <CalendarDays size={13} color={ORANGE} />
-                          <span>1-on-1 Session</span>
-                        </div>
-                        <span
-                          style={{
-                            fontSize: 10,
-                            fontWeight: 800,
-                            color: "#c2410c",
-                            background: "#ffedd5",
-                            borderRadius: 50,
-                            padding: "2px 8px",
-                          }}
-                        >
-                          {session.dateLabel || "Tomorrow"}
-                        </span>
-                      </div>
-
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 10.5, color: "#475569", marginBottom: 4 }}>
-                        <Clock size={11} color="#64748b" />
-                        <span>{session.time || "6:00 PM – 6:45 PM"}</span>
-                      </div>
-
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 10.5, color: "#475569", marginBottom: 11 }}>
-                        <Brain size={11} color="#64748b" />
-                        <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                          {session.topic || "Physics Strategy & Mock Test Analysis"}
-                        </span>
-                      </div>
-
-                      {/* The Meeting Button Updated By Mentor */}
-                      <button
-                        id="hero-mobile-enter-meeting-btn"
-                        onClick={openMeetingRoom}
-                        style={{
-                          width: "100%",
-                          padding: "10px 0",
-                          borderRadius: 10,
-                          border: "none",
-                          background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
-                          color: "#fff",
-                          fontFamily: "Sora, system-ui, sans-serif",
-                          fontWeight: 800,
-                          fontSize: 12,
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: 6,
-                          boxShadow: "0 4px 14px -3px rgba(255,105,61,0.45)",
-                          transition: "transform 0.15s ease",
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.02)"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
-                      >
-                        <Video size={13} /> Enter Meeting Room
-                      </button>
-                    </div>
-
-                    {/* Bottom Stats Peek: Total Tests & Avg Score */}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "6px 8px 2px",
-                      }}
-                    >
-                      <div>
-                        <div style={{ fontSize: 9, fontWeight: 800, color: "#64748b", textTransform: "uppercase" }}>
-                          TOTAL TESTS
-                        </div>
-                        <div style={{ fontFamily: "Sora, system-ui, sans-serif", fontWeight: 800, fontSize: 15, color: NAVY }}>
-                          {totalTestsDisplay}
-                        </div>
-                      </div>
-
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: 9, fontWeight: 800, color: "#64748b", textTransform: "uppercase" }}>
-                          AVG SCORE
-                        </div>
-                        <div style={{ fontFamily: "Sora, system-ui, sans-serif", fontWeight: 800, fontSize: 15, color: "#16a34a" }}>
-                          {avgScoreDisplay}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* iPhone Bottom Home Indicator Bar */}
-                    <div
-                      style={{
-                        width: 105,
-                        height: 4,
-                        background: "#0f172a",
-                        borderRadius: 10,
-                        margin: "8px auto 4px",
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+          {/* meta pills - batch, enrolment, validity, streak */}
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginTop: 26 }}>
+            {[
+              { icon: GraduationCap, text: identity.batchLabel || planLabel },
+              { icon: CalendarDays,  text: identity.enrolledOn ? `Enrolled ${fmtFull(identity.enrolledOn)}` : null },
+              { icon: ShieldCheck,   text: identity.validUntil ? `Valid until ${fmtFull(identity.validUntil)}` : null },
+              { icon: Flame,         text: `${streak} day${streak === 1 ? "" : "s"} streak` },
+            ].filter((p) => p.text).map(({ icon: Icon, text }) => (
+              <span key={text} style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 700, color: MUTE, background: "#fff", border: "1px solid #ececec", borderRadius: 50, padding: "7px 14px" }}>
+                <Icon size={14} color={ORANGE} /> {text}
+              </span>
+            ))}
           </div>
-        </div>
-
-        <style>{`
-          @media (max-width: 980px) {
-            .hero-section-grid {
-              grid-template-columns: 1fr !important;
-              gap: 32px !important;
-            }
-            .hero-3d-mobile-container {
-              order: 2;
-            }
-          }
-          @media (max-width: 600px) {
-            .hero-inner-target-card {
-              grid-template-columns: 1fr !important;
-              gap: 16px !important;
-            }
-          }
-        `}</style>
+        </motion.div>
       </div>
 
       {/* ══ FEATURE GRID - what the dashboard gives you ══ */}
-      <div style={{ maxWidth: 1180, margin: "0 auto", padding: "16px 24px 0" }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 0" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .12 }}
           className="md-feature-grid"
           style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1, background: "#ececec", border: "1px solid #ececec", borderRadius: 18, overflow: "hidden" }}>
@@ -2540,7 +1758,7 @@ function DashboardBody({ urlPlan = "" }) {
                     {improvement == null ? <BarChart3 size={16} color="#64748b" />
                       : improvement >= 0 ? <TrendingUp size={16} color="#16a34a" /> : <TrendingDown size={16} color="#dc2626" />}
                     <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: INK }}>
-                      {latest.name} · {latest.scored ?? latest.score}/{latest.total ?? latest.maxMarks} marks ({pct(latest)}%) · {acc(latest)}% accuracy
+                      {latest.name} · {pct(latest)}% · {acc(latest)}% accuracy
                     </span>
                   </div>
                   <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.5 }}>
