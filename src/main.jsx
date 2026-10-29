@@ -8,39 +8,31 @@ import { EnrolProvider } from "./components/EnrolModal.jsx";
 import { API_BASE } from "./auth/api.js";
 import "./styles/index.css";
 
+// ── Auto-recovery for stale-chunk errors after new production deployments ─────
+const handleChunkError = (err) => {
+  const msg = String(err?.message || err?.reason?.message || err?.reason || "");
+  if (/Failed to fetch dynamically imported module|Importing a module script failed/i.test(msg)) {
+    const lastReload = Number(sessionStorage.getItem("cp:chunk-reloaded") || 0);
+    if (Date.now() - lastReload > 8000) {
+      sessionStorage.setItem("cp:chunk-reloaded", String(Date.now()));
+      window.location.reload();
+    }
+  }
+};
+window.addEventListener("error", handleChunkError);
+window.addEventListener("unhandledrejection", handleChunkError);
+
 // ── Warm-up ping ────────────────────────────────────────────────────────────
-// Render's free tier can take 30–50 s to cold-start. Fire a no-op request the
-// moment the JS bundle executes - the server wakes up in the background while
-// the user is still reading the page, so it's warm by the time they interact.
 if (API_BASE.includes("onrender.com")) {
   fetch(`${API_BASE}/health`, { method: "GET", keepalive: true }).catch(() => {});
 }
-// strategy.css is namespaced under .strategy-wrapper and only used by the
-// JEE/NEET strategy pages - imported there so it stays off the global (home)
-// critical-CSS path and loads lazily with those routes.
 
-/**
- * Apply the async-loaded stylesheets. They ship as media="print" so they don't
- * block first paint; flipping to "all" is what actually applies them.
- *
- * This was an inline onload="this.media='all'" in index.html. CSP blocks inline
- * event handlers, so under the tightened policy the flip never ran and the site
- * stayed on fallback fonts - silently, since nothing errors.
- */
 for (const link of document.querySelectorAll('link[data-async-css]')) {
   if (link.media !== "all") link.media = "all";
 }
 
 /**
- * SPA deep-link fallback. 404.html bounces /some/path to /?/some/path so a
- * refresh on a deep link survives; this turns it back into a real URL.
- *
- * This used to be an inline <script> in index.html, and it was the sole reason
- * the CSP had to allow 'unsafe-inline' on script-src - which also allowed any
- * injected inline script to run. Living here instead means script-src can be
- * 'self' with no inline escape hatch at all.
- *
- * Must run before BrowserRouter reads window.location, i.e. before render().
+ * SPA deep-link fallback.
  */
 (function restoreDeepLink(l) {
   if (l.search[1] === "/") {

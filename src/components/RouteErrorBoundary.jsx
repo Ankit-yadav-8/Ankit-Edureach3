@@ -2,7 +2,7 @@ import { Component } from "react";
 
 /* Catches render/chunk-load errors in the routed page so a single failed
    page never white-screens the whole app. Stale-chunk errors (after a deploy)
-   trigger a one-time reload; anything else shows a friendly reload card.
+   trigger an auto-reload with debounce; anything else shows a friendly reload card.
    Reset per navigation by giving it a `key={pathname}` at the call site. */
 export default class RouteErrorBoundary extends Component {
   constructor(props) {
@@ -19,7 +19,8 @@ export default class RouteErrorBoundary extends Component {
     const stale = /dynamically imported module|Importing a module script failed|Failed to fetch|ChunkLoadError|error loading dynamically/i.test(msg);
     if (stale) {
       try {
-        if (!sessionStorage.getItem("cp:chunk-reloaded")) {
+        const lastReload = Number(sessionStorage.getItem("cp:chunk-reloaded") || 0);
+        if (Date.now() - lastReload > 8000) {
           sessionStorage.setItem("cp:chunk-reloaded", String(Date.now()));
           window.location.reload();
         }
@@ -36,10 +37,13 @@ export default class RouteErrorBoundary extends Component {
               This page didn’t load fully
             </div>
             <div style={{ color: "#6b6770", marginBottom: 18, fontFamily: "'Inter',system-ui,sans-serif" }}>
-              A quick reload usually fixes it.
+              A new version was deployed or your connection flickered. A quick reload fixes it.
             </div>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                try { sessionStorage.removeItem("cp:chunk-reloaded"); } catch {}
+                window.location.reload();
+              }}
               style={{ background: "#FF5A36", color: "#fff", border: "none", borderRadius: 9999, padding: "11px 26px", fontWeight: 700, fontFamily: "'Inter',system-ui,sans-serif", cursor: "pointer" }}
             >
               Reload

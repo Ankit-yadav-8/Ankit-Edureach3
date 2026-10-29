@@ -160,28 +160,32 @@ export default function Navbar({ onSearch }) {
     setMobileOpen(false);
   }, [location]);
 
-  // Preload chunks on hover to eliminate loading delay when clicked
+  // Preload chunks on hover with silent catch to eliminate console errors on stale chunk deploys
   const preloadChunk = (to) => {
     if (!to) return;
     try {
-      if (to.startsWith("/colleges")) import("../pages/Colleges.jsx");
-      else if (to.startsWith("/jee-main")) import("../pages/JeeMain.jsx");
-      else if (to.startsWith("/jee-advanced")) import("../pages/JeeAdvanced.jsx");
-      else if (to.startsWith("/neet")) import("../pages/Neet.jsx");
-      else if (to.startsWith("/planner")) import("../pages/CounsellingPlanner.jsx");
-      else if (to.startsWith("/compare")) import("../pages/Compare.jsx");
-      else if (to.startsWith("/cutoffs")) import("../pages/OfficialCutoffs.jsx");
-      else if (to.startsWith("/for-you")) import("../pages/ForYou.jsx");
-      else if (to.startsWith("/branches")) import("../pages/Branches.jsx");
-      else if (to.startsWith("/private-universities")) import("../pages/PrivateUnis.jsx");
-      else if (to.startsWith("/blog")) import("../pages/Blog.jsx");
-      else if (to.startsWith("/mentorship")) import("../pages/Mentorship.jsx");
-      else if (to.startsWith("/tools")) import("../pages/Tools.jsx");
-      else if (to.startsWith("/map")) import("../pages/CollegeMap.jsx");
-      else if (to.startsWith("/community")) import("../pages/PublicCommunity.jsx");
-      else if (to.startsWith("/campus-notes")) import("../pages/CampusNotes.jsx");
-      else if (to.startsWith("/jee-strategy")) import("../pages/JeeStrategy.jsx");
-      else if (to.startsWith("/neet-strategy")) import("../pages/NeetStrategy.jsx");
+      let p = null;
+      if (to.startsWith("/colleges")) p = import("../pages/Colleges.jsx");
+      else if (to.startsWith("/jee-main")) p = import("../pages/JeeMain.jsx");
+      else if (to.startsWith("/jee-advanced")) p = import("../pages/JeeAdvanced.jsx");
+      else if (to.startsWith("/neet")) p = import("../pages/Neet.jsx");
+      else if (to.startsWith("/planner")) p = import("../pages/CounsellingPlanner.jsx");
+      else if (to.startsWith("/compare")) p = import("../pages/Compare.jsx");
+      else if (to.startsWith("/cutoffs")) p = import("../pages/OfficialCutoffs.jsx");
+      else if (to.startsWith("/for-you")) p = import("../pages/ForYou.jsx");
+      else if (to.startsWith("/branches")) p = import("../pages/Branches.jsx");
+      else if (to.startsWith("/private-universities")) p = import("../pages/PrivateUnis.jsx");
+      else if (to.startsWith("/blog")) p = import("../pages/Blog.jsx");
+      else if (to.startsWith("/mentorship")) p = import("../pages/Mentorship.jsx");
+      else if (to.startsWith("/tools")) p = import("../pages/Tools.jsx");
+      else if (to.startsWith("/map")) p = import("../pages/CollegeMap.jsx");
+      else if (to.startsWith("/community")) p = import("../pages/PublicCommunity.jsx");
+      else if (to.startsWith("/campus-notes")) p = import("../pages/CampusNotes.jsx");
+      else if (to.startsWith("/jee-strategy")) p = import("../pages/JeeStrategy.jsx");
+      else if (to.startsWith("/neet-strategy")) p = import("../pages/NeetStrategy.jsx");
+      if (p && typeof p.catch === "function") {
+        p.catch(() => {});
+      }
     } catch (e) { /* ignore prefetch errors */ }
   };
 
