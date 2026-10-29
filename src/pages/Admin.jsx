@@ -1517,7 +1517,7 @@ export default function Admin() {
                       <Users size={20} color={ORANGE} />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 22, color: "#0f172a", lineHeight: 1 }}>{total}</div>
+                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 19, color: "#0f172a", lineHeight: 1 }}>{total}</div>
                       <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 4, fontWeight: 500 }}>Total Student Signups</div>
                     </div>
                   </div>
@@ -1527,7 +1527,7 @@ export default function Admin() {
                       <Calendar size={20} color="#16a34a" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 22, lineHeight: 1, color: "#0f172a" }}>
+                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 19, lineHeight: 1, color: "#0f172a" }}>
                         {users.filter(u => {
                           const d = new Date(u.createdAt);
                           const now = new Date();
@@ -1543,7 +1543,7 @@ export default function Admin() {
                       <Clock size={20} color={ORANGE} />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 22, lineHeight: 1, color: "#0f172a" }}>
+                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 19, lineHeight: 1, color: "#0f172a" }}>
                         {users.filter(u => {
                           const d = new Date(u.lastLogin);
                           const now = new Date();

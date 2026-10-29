@@ -69,6 +69,11 @@ router.get("/overview", async (req, res) => {
     const { from, to, range } = parseDateRange(req.query);
     const now = new Date();
 
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
     const [
       totalStudents,
       paidEnrollments,
@@ -76,12 +81,15 @@ router.get("/overview", async (req, res) => {
       allTasksDocs,
       studentLoginLogs,
       mentorLoginLogs,
+      todayStudentLogs,
+      todayMentorLogs,
+      todayUsersWithLastLogin,
       recentLogs,
     ] = await Promise.all([
       User.countDocuments(),
       Enrollment.find({ status: "paid" }).select("studentId email createdAt").lean(),
       Mentor.find().select("name email college students active lastLogin createdAt").lean(),
-      MentorTask.find().lean(),
+      MentorTask.find().select("studentId tasks").lean(),
       MentorActivityLog.find({
         action: "student_login",
         createdAt: { $gte: from, $lte: to },
@@ -90,8 +98,42 @@ router.get("/overview", async (req, res) => {
         action: "mentor_login",
         createdAt: { $gte: from, $lte: to },
       }).lean(),
+      MentorActivityLog.find({
+        action: "student_login",
+        createdAt: { $gte: todayStart, $lte: todayEnd },
+      }).lean(),
+      MentorActivityLog.find({
+        action: "mentor_login",
+        createdAt: { $gte: todayStart, $lte: todayEnd },
+      }).lean(),
+      User.countDocuments({
+        lastLogin: { $gte: todayStart, $lte: todayEnd },
+      }).catch(() => 0),
       MentorActivityLog.find().sort({ createdAt: -1 }).limit(25).lean(),
     ]);
+
+    // Compute Today's exact logins
+    const uniqueStudentsTodaySet = new Set();
+    todayStudentLogs.forEach((l) => {
+      if (l.studentId) uniqueStudentsTodaySet.add(String(l.studentId).toUpperCase());
+      else if (l.userId) uniqueStudentsTodaySet.add(String(l.userId));
+      else if (l.studentName) uniqueStudentsTodaySet.add(String(l.studentName));
+    });
+    const uniqueStudentsToday = Math.max(uniqueStudentsTodaySet.size, todayUsersWithLastLogin);
+    const studentLoginsToday = Math.max(todayStudentLogs.length, uniqueStudentsToday);
+
+    const uniqueMentorsTodaySet = new Set();
+    todayMentorLogs.forEach((l) => {
+      if (l.mentorId) uniqueMentorsTodaySet.add(String(l.mentorId));
+      else if (l.mentorName) uniqueMentorsTodaySet.add(String(l.mentorName));
+    });
+    mentors.forEach((m) => {
+      if (m.lastLogin && new Date(m.lastLogin) >= todayStart && new Date(m.lastLogin) <= todayEnd) {
+        uniqueMentorsTodaySet.add(String(m._id));
+      }
+    });
+    const uniqueMentorsToday = uniqueMentorsTodaySet.size;
+    const mentorLoginsToday = Math.max(todayMentorLogs.length, uniqueMentorsToday);
 
     const activeMentors = mentors.filter((m) => m.active);
     const inactiveMentors = mentors.filter((m) => !m.active);
@@ -193,8 +235,62 @@ router.get("/overview", async (req, res) => {
       });
     }
 
+    // Build mentor summary for fast single-roundtrip overview loading
+    const completedTasksByStudent = new Map();
+    allTasksDocs.forEach((doc) => {
+      const sid = String(doc.studentId || "").toUpperCase();
+      let completed = 0;
+      (doc.tasks || []).forEach((t) => {
+        if (t.completed) completed++;
+      });
+      completedTasksByStudent.set(sid, (completedTasksByStudent.get(sid) || 0) + completed);
+    });
+
+    const mentorLoginsMap = new Map();
+    mentorLoginLogs.forEach((l) => {
+      if (l.mentorId) {
+        const mid = String(l.mentorId);
+        mentorLoginsMap.set(mid, (mentorLoginsMap.get(mid) || 0) + 1);
+      }
+    });
+
+    const mentorsSummary = mentors.map((m) => {
+      const mId = String(m._id);
+      const studentIds = m.students || [];
+      let tasksCompleted = 0;
+      studentIds.forEach((sid) => {
+        tasksCompleted += completedTasksByStudent.get(String(sid).toUpperCase()) || 0;
+      });
+
+      let logins = mentorLoginsMap.get(mId) || 0;
+      if (logins === 0 && m.lastLogin && new Date(m.lastLogin) >= from && new Date(m.lastLogin) <= to) {
+        logins = 1;
+      }
+
+      return {
+        _id: mId,
+        id: mId,
+        name: m.name || "Mentor",
+        email: m.email || "",
+        college: m.college || "",
+        logins,
+        totalLogins: logins,
+        tasksCompleted,
+        assignedStudentsCount: studentIds.length,
+        active: !!m.active,
+      };
+    });
+
     res.json({
       period: { range, from, to },
+      todayStats: {
+        studentLoginsToday,
+        uniqueStudentsToday,
+        mentorLoginsToday,
+        uniqueMentorsToday,
+        studentsToday: uniqueStudentsToday,
+        mentorsToday: uniqueMentorsToday,
+      },
       metrics: {
         totalRegisteredStudents: totalStudents,
         totalPaidStudents: paidStudentsCount,
@@ -216,6 +312,7 @@ router.get("/overview", async (req, res) => {
         studentEngagementRate,
         mentorProductivity,
       },
+      mentorsSummary,
       dailyTrend,
       recentActivity: recentLogs.map((l) => ({
         id: l._id,

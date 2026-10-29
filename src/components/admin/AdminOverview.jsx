@@ -21,18 +21,6 @@ const DONUT_COLORS = [
   "#94A3B8", // Slate Gray (Others)
 ];
 
-// Fallback seed mentors if backend database has limited mentor activity logs yet
-const DEFAULT_MENTOR_PREVIEWS = [
-  { name: "Aarav Sharma", logins: 124, tasks: 48, students: 26 },
-  { name: "Priya Singh", logins: 98, tasks: 42, students: 22 },
-  { name: "Rohit Verma", logins: 87, tasks: 38, students: 19 },
-  { name: "Sneha Patel", logins: 76, tasks: 31, students: 16 },
-  { name: "Aditya Kumar", logins: 64, tasks: 27, students: 14 },
-  { name: "Neha Gupta", logins: 52, tasks: 21, students: 11 },
-  { name: "Karan Mehta", logins: 45, tasks: 18, students: 9 },
-  { name: "Others", logins: 36, tasks: 14, students: 8 },
-];
-
 export default function AdminOverview({ adminToken, dateRange = "30d", onNavigateTab }) {
   const [data, setData] = useState(null);
   const [mentorData, setMentorData] = useState([]);
@@ -48,17 +36,19 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
   const [hoveredChartPoint, setHoveredChartPoint] = useState(null);
   const [chartRange, setChartRange] = useState("30d"); // "7d" | "30d" | "custom"
 
-  // Fetch real analytics overview + mentor tracking telemetry
+  // Fast single-roundtrip analytics fetch
   const loadData = useCallback(async (r, start, end) => {
     setLoading(true);
     setErr("");
     try {
-      const [overviewRes, trackingRes] = await Promise.all([
-        apiAdminAnalyticsOverview(adminToken, r, start, end),
-        apiAdminMentorTracking(adminToken, r, start, end).catch(() => ({ mentors: [] })),
-      ]);
+      const overviewRes = await apiAdminAnalyticsOverview(adminToken, r, start, end);
       setData(overviewRes);
-      setMentorData(trackingRes?.mentors || []);
+      if (overviewRes?.mentorsSummary) {
+        setMentorData(overviewRes.mentorsSummary);
+      } else {
+        const trackingRes = await apiAdminMentorTracking(adminToken, r, start, end).catch(() => ({ mentors: [] }));
+        setMentorData(trackingRes?.mentors || []);
+      }
     } catch (e) {
       setErr(e.message || "Could not load overview analytics");
     } finally {
@@ -78,13 +68,14 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
   }, [dateRange]);
 
   const metrics = data?.metrics || {};
+  const todayStats = data?.todayStats || {};
   const rawDailyTrend = data?.dailyTrend || [];
   const recentActivity = data?.recentActivity || [];
 
   // Filter daily trend based on chartRange toggle ("7d", "30d", "custom")
   const filteredDailyTrend = useMemo(() => {
     if (!rawDailyTrend.length) {
-      // If server has no login records yet, generate graceful smooth time-series matching real date range
+      // Clean zero baseline if no events logged yet
       const days = chartRange === "7d" ? 7 : 30;
       const res = [];
       const now = new Date();
@@ -93,8 +84,8 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
         res.push({
           date: d.toISOString().split("T")[0],
           label: d.toLocaleDateString("en-IN", { day: "numeric", month: "short" }),
-          studentLogins: Math.round(180 + Math.sin(i * 0.8) * 80 + (i % 3) * 25),
-          mentorLogins: Math.round(75 + Math.cos(i * 0.7) * 35 + (i % 2) * 15),
+          studentLogins: 0,
+          mentorLogins: 0,
           totalLogins: 0,
         });
       }
@@ -108,20 +99,21 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
 
   // Max value for SVG area chart scaling
   const maxChartValue = useMemo(() => {
-    if (!filteredDailyTrend.length) return 400;
+    if (!filteredDailyTrend.length) return 200;
     const maxVal = Math.max(
-      ...filteredDailyTrend.map((d) => Math.max(d.studentLogins || 0, d.mentorLogins || 0))
+      ...filteredDailyTrend.map((d) => Math.max(d.studentLogins || 0, d.mentorLogins || 0)),
+      1
     );
-    return Math.max(Math.ceil(maxVal * 1.25 / 50) * 50, 200);
+    return Math.max(Math.ceil((maxVal * 1.3) / 10) * 10, 20);
   }, [filteredDailyTrend]);
 
-  // Prepare Mentor Analytics Donut Data
+  // Prepare Mentor Analytics Donut Data with real mentors only
   const donutBreakdown = useMemo(() => {
     let list = [];
     if (mentorData && mentorData.length > 0) {
       list = mentorData.map((m) => {
         let val = 0;
-        if (mentorMetric === "logins") val = m.totalLogins || m.allTimeLogins || 0;
+        if (mentorMetric === "logins") val = m.totalLogins || m.allTimeLogins || m.logins || 0;
         else if (mentorMetric === "tasks") val = m.tasksCompleted || 0;
         else if (mentorMetric === "students") val = m.assignedStudentsCount || m.assignedStudents?.length || 0;
         return {
@@ -133,14 +125,7 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
       list.sort((a, b) => b.value - a.value);
     }
 
-    // If real data has 0 values across the board in empty dev db, use preview distribution for elegance
-    const totalVal = list.reduce((s, it) => s + it.value, 0);
-    if (!list.length || totalVal === 0) {
-      list = DEFAULT_MENTOR_PREVIEWS.map((m) => ({
-        name: m.name,
-        value: mentorMetric === "logins" ? m.logins : mentorMetric === "tasks" ? m.tasks : m.students,
-      }));
-    }
+    if (!list.length) return [];
 
     // Keep top 7 mentors and group the rest into "Others"
     let top = list.slice(0, 7);
@@ -149,14 +134,14 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
       top.push({ name: "Others", value: othersVal });
     }
 
-    const sum = top.reduce((acc, it) => acc + (it.value || 0), 0) || 1;
+    const sum = top.reduce((acc, it) => acc + (it.value || 0), 0);
     let accumulatedAngle = 0;
 
     return top.map((item, idx) => {
-      const percentage = Math.round((item.value / sum) * 100);
+      const percentage = sum > 0 ? Math.round((item.value / sum) * 100) : Math.round(100 / top.length);
       const color = DONUT_COLORS[idx % DONUT_COLORS.length];
       const startAngle = accumulatedAngle;
-      accumulatedAngle += (item.value / sum) * 360;
+      accumulatedAngle += sum > 0 ? (item.value / sum) * 360 : (360 / top.length);
 
       return {
         ...item,
@@ -173,9 +158,9 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
   }, [donutBreakdown]);
 
   // Real mentors count
-  const mentorCount = metrics.activeMentors ?? (mentorData.length || 48);
+  const mentorCount = loading ? "..." : (metrics.activeMentors ?? (mentorData.length || 0));
 
-  // Recent activity list formatted matching reference design
+  // Recent activity list formatted matching real database activity
   const formattedActivities = useMemo(() => {
     if (recentActivity && recentActivity.length > 0) {
       return recentActivity.slice(0, 7).map((act, index) => {
@@ -254,18 +239,11 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
       });
     }
 
-    // Default clean seed activities matching the design if db is freshly initialized
-    return [
-      { id: 1, time: "28 Apr 2025, 10:32 AM", type: "Mentor Login", typeIcon: Users, typeColor: "#2563eb", typeBg: "#eff6ff", name: "Priya Singh", initials: "PS", details: "Logged in to mentor dashboard", status: "Success", statusColor: "#16a34a", statusBg: "#ecfdf5" },
-      { id: 2, time: "28 Apr 2025, 10:28 AM", type: "Student Login", typeIcon: UserCheck, typeColor: "#059669", typeBg: "#ecfdf5", name: "Ankit Kumar", initials: "AK", details: "Logged in to student portal", status: "Success", statusColor: "#16a34a", statusBg: "#ecfdf5" },
-      { id: 3, time: "28 Apr 2025, 10:15 AM", type: "Task Updated", typeIcon: CheckSquare, typeColor: "#ea580c", typeBg: "#fff7ed", name: "Rohit Verma", initials: "RV", details: "Updated task: ECE-102 Assignment", status: "Completed", statusColor: "#2563eb", statusBg: "#eff6ff" },
-      { id: 4, time: "28 Apr 2025, 09:47 AM", type: "New Mentor", typeIcon: GraduationCap, typeColor: "#7c3aed", typeBg: "#f5f3ff", name: "Neha Tiwari", initials: "NT", details: "Registered as new mentor", status: "Success", statusColor: "#16a34a", statusBg: "#ecfdf5" },
-      { id: 5, time: "28 Apr 2025, 09:32 AM", type: "Payment Received", typeIcon: CreditCard, typeColor: "#db2777", typeBg: "#fdf2f8", name: "Siddharth Pal", initials: "SP", details: "₹ 2,500 - Mentor subscription", status: "Success", statusColor: "#16a34a", statusBg: "#ecfdf5" },
-    ];
+    return [];
   }, [recentActivity]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, width: "100%" }}>
       {/* ── Page Greeting & Live Pulse Bar ── */}
       <div style={{
         display: "flex",
@@ -275,21 +253,21 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
         gap: 12,
       }}>
         <div>
-          <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ fontSize: 11.5, color: "#64748b", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
             <span>Welcome back, Admin</span>
             <span role="img" aria-label="wave">👋</span>
           </div>
           <h1 style={{
             fontFamily: "Sora, sans-serif",
-            fontSize: "clamp(20px, 2.4vw, 25px)",
+            fontSize: 18,
             fontWeight: 800,
             color: "#0f172a",
             margin: "4px 0 0",
-            letterSpacing: -0.4,
+            letterSpacing: -0.3,
           }}>
             Here&apos;s what&apos;s happening with Campus Point
           </h1>
-          <p style={{ fontSize: 13, color: "#64748b", margin: "4px 0 0" }}>
+          <p style={{ fontSize: 11.5, color: "#64748b", margin: "3px 0 0" }}>
             Track mentors, students, tasks and overall platform activity in one place.
           </p>
         </div>
@@ -298,26 +276,26 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
         <div style={{
           display: "flex",
           alignItems: "center",
-          gap: 10,
+          gap: 8,
           background: "#ffffff",
           border: "1px solid #e2e8f0",
-          padding: "6px 14px",
+          padding: "5px 12px",
           borderRadius: 20,
           boxShadow: "0 1px 3px rgba(15,23,42,0.03)",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{
-              width: 8,
-              height: 8,
+              width: 7,
+              height: 7,
               borderRadius: "50%",
               background: "#16a34a",
               boxShadow: "0 0 8px rgba(22,163,74,0.6)",
               display: "inline-block",
             }} />
-            <span style={{ fontSize: 12, fontWeight: 700, color: "#166534" }}>Live</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#166534" }}>Live</span>
           </div>
           <span style={{ color: "#cbd5e1" }}>|</span>
-          <span style={{ fontSize: 11.5, color: "#64748b" }}>
+          <span style={{ fontSize: 10.5, color: "#64748b" }}>
             Last updated: {new Date().toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
           </span>
         </div>
@@ -327,10 +305,10 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
         <div style={{
           background: "#fef2f2",
           border: "1px solid #fecaca",
-          padding: "12px 16px",
-          borderRadius: 12,
+          padding: "10px 14px",
+          borderRadius: 10,
           color: "#991b1b",
-          fontSize: 13,
+          fontSize: 12,
           display: "flex",
           alignItems: "center",
           gap: 10,
@@ -339,221 +317,225 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
         </div>
       )}
 
-      {/* ── KPI Metrics Cards (4 in a row, fully responsive) ── */}
+      {/* ── KPI Metrics Cards (4 in a row, fully responsive, compact typography) ── */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))",
-        gap: 16,
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))",
+        gap: 14,
       }}>
         {/* KPI 1: Total Students */}
         <div style={{
           background: "#ffffff",
-          borderRadius: 18,
-          padding: "20px 22px",
+          borderRadius: 14,
+          padding: "16px 18px",
           border: "1px solid #f1f5f9",
           boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          gap: 14,
+          gap: 10,
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div style={{
-              width: 44,
-              height: 44,
-              borderRadius: 12,
+              width: 38,
+              height: 38,
+              borderRadius: 10,
               background: "#fff7ed",
               color: "#ea580c",
               display: "grid",
               placeItems: "center",
               flexShrink: 0,
             }}>
-              <Users size={22} />
+              <Users size={19} />
             </div>
             <div>
-              <div style={{ fontSize: 12.5, fontWeight: 600, color: "#64748b" }}>Total Students</div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Total Students</div>
               <div style={{
                 fontFamily: "Sora, sans-serif",
-                fontSize: 26,
+                fontSize: 20,
                 fontWeight: 800,
                 color: "#0f172a",
                 lineHeight: 1.15,
                 marginTop: 2,
               }}>
-                {(metrics.totalRegisteredStudents ?? 12480).toLocaleString("en-IN")}
+                {loading ? "..." : (metrics.totalRegisteredStudents ?? 0).toLocaleString("en-IN")}
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
             <span style={{
               color: "#16a34a",
               fontWeight: 700,
               background: "#f0fdf4",
-              padding: "2px 6px",
-              borderRadius: 6,
+              padding: "1px 6px",
+              borderRadius: 5,
+              fontSize: 10.5,
             }}>
-              ↑ 12%
+              Registered
             </span>
-            <span style={{ color: "#94a3b8" }}>vs. last 30 days</span>
+            <span style={{ color: "#94a3b8" }}>All time accounts</span>
           </div>
         </div>
 
         {/* KPI 2: Active Mentors */}
         <div style={{
           background: "#ffffff",
-          borderRadius: 18,
-          padding: "20px 22px",
+          borderRadius: 14,
+          padding: "16px 18px",
           border: "1px solid #f1f5f9",
           boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          gap: 14,
+          gap: 10,
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div style={{
-              width: 44,
-              height: 44,
-              borderRadius: 12,
+              width: 38,
+              height: 38,
+              borderRadius: 10,
               background: "#eff6ff",
               color: "#2563eb",
               display: "grid",
               placeItems: "center",
               flexShrink: 0,
             }}>
-              <UserCheck size={22} />
+              <UserCheck size={19} />
             </div>
             <div>
-              <div style={{ fontSize: 12.5, fontWeight: 600, color: "#64748b" }}>Active Mentors</div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Active Mentors</div>
               <div style={{
                 fontFamily: "Sora, sans-serif",
-                fontSize: 26,
+                fontSize: 20,
                 fontWeight: 800,
                 color: "#0f172a",
                 lineHeight: 1.15,
                 marginTop: 2,
               }}>
-                {(metrics.activeMentors ?? 48).toLocaleString("en-IN")}
+                {loading ? "..." : (metrics.activeMentors ?? 0).toLocaleString("en-IN")}
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
             <span style={{
-              color: "#16a34a",
+              color: "#2563eb",
               fontWeight: 700,
-              background: "#f0fdf4",
-              padding: "2px 6px",
-              borderRadius: 6,
+              background: "#eff6ff",
+              padding: "1px 6px",
+              borderRadius: 5,
+              fontSize: 10.5,
             }}>
-              ↑ 8%
+              Verified
             </span>
-            <span style={{ color: "#94a3b8" }}>vs. last 30 days</span>
+            <span style={{ color: "#94a3b8" }}>Active on platform</span>
           </div>
         </div>
 
         {/* KPI 3: Assigned Students */}
         <div style={{
           background: "#ffffff",
-          borderRadius: 18,
-          padding: "20px 22px",
+          borderRadius: 14,
+          padding: "16px 18px",
           border: "1px solid #f1f5f9",
           boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          gap: 14,
+          gap: 10,
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div style={{
-              width: 44,
-              height: 44,
-              borderRadius: 12,
+              width: 38,
+              height: 38,
+              borderRadius: 10,
               background: "#ecfdf5",
               color: "#059669",
               display: "grid",
               placeItems: "center",
               flexShrink: 0,
             }}>
-              <Layers size={22} />
+              <Layers size={19} />
             </div>
             <div>
-              <div style={{ fontSize: 12.5, fontWeight: 600, color: "#64748b" }}>Assigned Students</div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Assigned Students</div>
               <div style={{
                 fontFamily: "Sora, sans-serif",
-                fontSize: 26,
+                fontSize: 20,
                 fontWeight: 800,
                 color: "#0f172a",
                 lineHeight: 1.15,
                 marginTop: 2,
               }}>
-                {(metrics.assignedStudents ?? 8932).toLocaleString("en-IN")}
+                {loading ? "..." : (metrics.assignedStudents ?? 0).toLocaleString("en-IN")}
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
             <span style={{
-              color: "#16a34a",
+              color: "#059669",
               fontWeight: 700,
-              background: "#f0fdf4",
-              padding: "2px 6px",
-              borderRadius: 6,
+              background: "#ecfdf5",
+              padding: "1px 6px",
+              borderRadius: 5,
+              fontSize: 10.5,
             }}>
-              ↑ 15%
+              Assigned
             </span>
-            <span style={{ color: "#94a3b8" }}>vs. last 30 days</span>
+            <span style={{ color: "#94a3b8" }}>Under active mentors</span>
           </div>
         </div>
 
         {/* KPI 4: Tasks Completed */}
         <div style={{
           background: "#ffffff",
-          borderRadius: 18,
-          padding: "20px 22px",
+          borderRadius: 14,
+          padding: "16px 18px",
           border: "1px solid #f1f5f9",
           boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          gap: 14,
+          gap: 10,
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div style={{
-              width: 44,
-              height: 44,
-              borderRadius: 12,
+              width: 38,
+              height: 38,
+              borderRadius: 10,
               background: "#f3e8ff",
               color: "#7c3aed",
               display: "grid",
               placeItems: "center",
               flexShrink: 0,
             }}>
-              <CheckCircle2 size={22} />
+              <CheckCircle2 size={19} />
             </div>
             <div>
-              <div style={{ fontSize: 12.5, fontWeight: 600, color: "#64748b" }}>Tasks Completed</div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Tasks Completed</div>
               <div style={{
                 fontFamily: "Sora, sans-serif",
-                fontSize: 26,
+                fontSize: 20,
                 fontWeight: 800,
                 color: "#0f172a",
                 lineHeight: 1.15,
                 marginTop: 2,
               }}>
-                {(metrics.totalTasksCompleted ?? 4821).toLocaleString("en-IN")}
+                {loading ? "..." : (metrics.totalTasksCompleted ?? 0).toLocaleString("en-IN")}
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
             <span style={{
-              color: "#16a34a",
+              color: "#7c3aed",
               fontWeight: 700,
-              background: "#f0fdf4",
-              padding: "2px 6px",
-              borderRadius: 6,
+              background: "#f5f3ff",
+              padding: "1px 6px",
+              borderRadius: 5,
+              fontSize: 10.5,
             }}>
-              ↑ 22%
+              Completed
             </span>
-            <span style={{ color: "#94a3b8" }}>vs. last 30 days</span>
+            <span style={{ color: "#94a3b8" }}>Student milestones</span>
           </div>
         </div>
       </div>
@@ -561,20 +543,20 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
       {/* ── Two-Column Analytics Layout (Mentor Doughnut + Login Trend) ── */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(min(450px, 100%), 1fr))",
-        gap: 20,
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(420px, 100%), 1fr))",
+        gap: 16,
       }}>
         {/* ── LEFT PANEL: Mentor Analytics Doughnut Chart ── */}
         <div style={{
           background: "#ffffff",
-          borderRadius: 20,
-          padding: "24px",
+          borderRadius: 16,
+          padding: "18px 20px",
           border: "1px solid #f1f5f9",
-          boxShadow: "0 2px 12px rgba(15,23,42,0.03)",
+          boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          minHeight: 380,
+          minHeight: 360,
         }}>
           {/* Header & Metric Picker */}
           <div style={{
@@ -582,32 +564,32 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
             alignItems: "flex-start",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: 12,
-            marginBottom: 16,
+            gap: 10,
+            marginBottom: 12,
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
               <div style={{
-                width: 32,
-                height: 32,
-                borderRadius: 9,
+                width: 28,
+                height: 28,
+                borderRadius: 8,
                 background: "#fff7ed",
                 color: "#ea580c",
                 display: "grid",
                 placeItems: "center",
               }}>
-                <FileText size={16} />
+                <FileText size={15} />
               </div>
               <div>
                 <h3 style={{
                   fontFamily: "Sora, sans-serif",
-                  fontSize: 16,
+                  fontSize: 13.5,
                   fontWeight: 800,
                   color: "#0f172a",
                   margin: 0,
                 }}>
                   Mentor Analytics
                 </h3>
-                <p style={{ fontSize: 12, color: "#64748b", margin: "2px 0 0" }}>
+                <p style={{ fontSize: 11, color: "#64748b", margin: "2px 0 0" }}>
                   Compare mentors by {mentorMetric === "logins" ? "total logins" : mentorMetric === "tasks" ? "tasks completed" : "assigned students"}
                 </p>
               </div>
@@ -619,12 +601,12 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
                 value={mentorMetric}
                 onChange={(e) => setMentorMetric(e.target.value)}
                 style={{
-                  height: 32,
-                  padding: "0 26px 0 10px",
-                  borderRadius: 8,
+                  height: 28,
+                  padding: "0 22px 0 8px",
+                  borderRadius: 6,
                   border: "1px solid #e2e8f0",
                   background: "#ffffff",
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: 600,
                   color: "#475569",
                   outline: "none",
@@ -637,10 +619,10 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
                 <option value="students">Assigned Students</option>
               </select>
               <ChevronDown
-                size={14}
+                size={13}
                 style={{
                   position: "absolute",
-                  right: 8,
+                  right: 6,
                   top: "50%",
                   transform: "translateY(-50%)",
                   pointerEvents: "none",
@@ -653,21 +635,21 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
           {/* Donut Chart & Ranked List Area */}
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-            gap: 20,
+            gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+            gap: 16,
             alignItems: "center",
-            padding: "8px 0",
+            padding: "4px 0",
           }}>
             {/* SVG Donut Chart with Interactive Segments & Center Label */}
             <div style={{
               position: "relative",
-              width: 190,
-              height: 190,
+              width: 175,
+              height: 175,
               margin: "0 auto",
               display: "grid",
               placeItems: "center",
             }}>
-              <svg width="190" height="190" viewBox="0 0 200 200">
+              <svg width="175" height="175" viewBox="0 0 200 200">
                 {/* Background Ring */}
                 <circle
                   cx="100"
@@ -675,38 +657,50 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
                   r="70"
                   fill="none"
                   stroke="#f8fafc"
-                  strokeWidth="24"
+                  strokeWidth="22"
                 />
 
                 {/* Slices */}
-                {donutBreakdown.map((slice, i) => {
-                  const circumference = 2 * Math.PI * 70; // ~439.82
-                  const strokeDasharray = `${(slice.percentage / 100) * circumference} ${circumference}`;
-                  const strokeDashoffset = -((slice.startAngle / 360) * circumference);
-                  const isHovered = hoveredSlice === slice.name;
+                {donutBreakdown.length > 0 ? (
+                  donutBreakdown.map((slice, i) => {
+                    const circumference = 2 * Math.PI * 70; // ~439.82
+                    const strokeDasharray = `${(slice.percentage / 100) * circumference} ${circumference}`;
+                    const strokeDashoffset = -((slice.startAngle / 360) * circumference);
+                    const isHovered = hoveredSlice === slice.name;
 
-                  return (
-                    <circle
-                      key={i}
-                      cx="100"
-                      cy="100"
-                      r="70"
-                      fill="none"
-                      stroke={slice.color}
-                      strokeWidth={isHovered ? "28" : "24"}
-                      strokeDasharray={strokeDasharray}
-                      strokeDashoffset={strokeDashoffset}
-                      style={{
-                        transition: "all 0.25s ease",
-                        cursor: "pointer",
-                        transform: "rotate(-90deg)",
-                        transformOrigin: "center",
-                      }}
-                      onMouseEnter={() => setHoveredSlice(slice.name)}
-                      onMouseLeave={() => setHoveredSlice(null)}
-                    />
-                  );
-                })}
+                    return (
+                      <circle
+                        key={i}
+                        cx="100"
+                        cy="100"
+                        r="70"
+                        fill="none"
+                        stroke={slice.color}
+                        strokeWidth={isHovered ? "26" : "22"}
+                        strokeDasharray={strokeDasharray}
+                        strokeDashoffset={strokeDashoffset}
+                        style={{
+                          transition: "all 0.25s ease",
+                          cursor: "pointer",
+                          transform: "rotate(-90deg)",
+                          transformOrigin: "center",
+                        }}
+                        onMouseEnter={() => setHoveredSlice(slice.name)}
+                        onMouseLeave={() => setHoveredSlice(null)}
+                      />
+                    );
+                  })
+                ) : (
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="70"
+                    fill="none"
+                    stroke="#e2e8f0"
+                    strokeWidth="10"
+                    strokeDasharray="4 4"
+                  />
+                )}
               </svg>
 
               {/* Center Donut Label */}
@@ -717,7 +711,7 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
               }}>
                 <div style={{
                   fontFamily: "Sora, sans-serif",
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: 800,
                   color: "#0f172a",
                   lineHeight: 1,
@@ -725,10 +719,10 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
                   {hoveredSlice ? donutBreakdown.find((d) => d.name === hoveredSlice)?.value : mentorCount}
                 </div>
                 <div style={{
-                  fontSize: 11.5,
+                  fontSize: 10.5,
                   fontWeight: 600,
                   color: "#64748b",
-                  marginTop: 2,
+                  marginTop: 3,
                 }}>
                   {hoveredSlice ? `${hoveredSlice.slice(0, 10)}` : "Mentors"}
                 </div>
@@ -739,60 +733,66 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
             <div style={{
               display: "flex",
               flexDirection: "column",
-              gap: 8,
-              maxHeight: 220,
+              gap: 6,
+              maxHeight: 200,
               overflowY: "auto",
               paddingRight: 4,
             }} className="cp-custom-scroll">
-              {donutBreakdown.map((item, idx) => {
-                const isHovered = hoveredSlice === item.name;
-                return (
-                  <div
-                    key={idx}
-                    onMouseEnter={() => setHoveredSlice(item.name)}
-                    onMouseLeave={() => setHoveredSlice(null)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "4px 8px",
-                      borderRadius: 8,
-                      background: isHovered ? "#f8fafc" : "transparent",
-                      transition: "background 0.15s ease",
-                      cursor: "pointer",
-                      fontSize: 12.5,
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+              {donutBreakdown.length > 0 ? (
+                donutBreakdown.map((item, idx) => {
+                  const isHovered = hoveredSlice === item.name;
+                  return (
+                    <div
+                      key={idx}
+                      onMouseEnter={() => setHoveredSlice(item.name)}
+                      onMouseLeave={() => setHoveredSlice(null)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "3px 6px",
+                        borderRadius: 6,
+                        background: isHovered ? "#f8fafc" : "transparent",
+                        transition: "background 0.15s ease",
+                        cursor: "pointer",
+                        fontSize: 11.5,
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
+                        <span style={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: "50%",
+                          background: item.color,
+                          flexShrink: 0,
+                        }} />
+                        <span style={{
+                          fontWeight: isHovered ? 700 : 500,
+                          color: isHovered ? "#0f172a" : "#334155",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}>
+                          {item.name}
+                        </span>
+                      </div>
                       <span style={{
-                        width: 9,
-                        height: 9,
-                        borderRadius: "50%",
-                        background: item.color,
-                        flexShrink: 0,
-                      }} />
-                      <span style={{
-                        fontWeight: isHovered ? 700 : 500,
-                        color: isHovered ? "#0f172a" : "#334155",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        fontWeight: 700,
+                        color: "#0f172a",
+                        fontFamily: "monospace",
+                        fontSize: 11,
+                        marginLeft: 10,
                       }}>
-                        {item.name}
+                        {item.value}
                       </span>
                     </div>
-                    <span style={{
-                      fontWeight: 700,
-                      color: "#0f172a",
-                      fontFamily: "monospace",
-                      fontSize: 12,
-                      marginLeft: 12,
-                    }}>
-                      {item.value}
-                    </span>
-                  </div>
-                );
-              })}
+                  );
+                })
+              ) : (
+                <div style={{ fontSize: 11, color: "#94a3b8", textAlign: "center", padding: "16px 0" }}>
+                  {loading ? "Loading mentors..." : "No mentors registered yet"}
+                </div>
+              )}
             </div>
           </div>
 
@@ -800,7 +800,7 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
           <div style={{
             display: "flex",
             justifyContent: "flex-end",
-            paddingTop: 12,
+            paddingTop: 10,
             borderTop: "1px solid #f1f5f9",
           }}>
             <button
@@ -809,13 +809,13 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 5,
-                fontSize: 12,
+                fontSize: 11.5,
                 fontWeight: 700,
                 color: "#2563eb",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                padding: "4px 6px",
+                padding: "3px 6px",
                 borderRadius: 6,
               }}
               onMouseEnter={(e) => e.currentTarget.style.color = ORANGE}
@@ -829,14 +829,14 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
         {/* ── RIGHT PANEL: Login Activity Trend Chart ── */}
         <div style={{
           background: "#ffffff",
-          borderRadius: 20,
-          padding: "24px",
+          borderRadius: 16,
+          padding: "18px 20px",
           border: "1px solid #f1f5f9",
-          boxShadow: "0 2px 12px rgba(15,23,42,0.03)",
+          boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          minHeight: 380,
+          minHeight: 360,
         }}>
           {/* Header & Range Selector Pills */}
           <div style={{
@@ -844,32 +844,32 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
             alignItems: "flex-start",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: 12,
-            marginBottom: 16,
+            gap: 10,
+            marginBottom: 10,
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
               <div style={{
-                width: 32,
-                height: 32,
-                borderRadius: 9,
+                width: 28,
+                height: 28,
+                borderRadius: 8,
                 background: "#fff7ed",
                 color: "#ea580c",
                 display: "grid",
                 placeItems: "center",
               }}>
-                <TrendingUp size={16} />
+                <TrendingUp size={15} />
               </div>
               <div>
                 <h3 style={{
                   fontFamily: "Sora, sans-serif",
-                  fontSize: 16,
+                  fontSize: 13.5,
                   fontWeight: 800,
                   color: "#0f172a",
                   margin: 0,
                 }}>
                   Login Activity
                 </h3>
-                <p style={{ fontSize: 12, color: "#64748b", margin: "2px 0 0" }}>
+                <p style={{ fontSize: 11, color: "#64748b", margin: "2px 0 0" }}>
                   Platform login trends (Students + Mentors)
                 </p>
               </div>
@@ -879,7 +879,7 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
             <div style={{
               display: "inline-flex",
               background: "#f8fafc",
-              borderRadius: 8,
+              borderRadius: 7,
               padding: 2,
               border: "1px solid #e2e8f0",
             }}>
@@ -894,15 +894,15 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
                     key={p.id}
                     onClick={() => setChartRange(p.id)}
                     style={{
-                      padding: "4px 10px",
-                      borderRadius: 6,
+                      padding: "3px 8px",
+                      borderRadius: 5,
                       border: "none",
                       background: active ? "#ffffff" : "transparent",
                       color: active ? ORANGE : "#64748b",
                       fontWeight: active ? 800 : 500,
-                      fontSize: 11.5,
+                      fontSize: 10.5,
                       cursor: "pointer",
-                      boxShadow: active ? "0 1px 4px rgba(0,0,0,0.06)" : "none",
+                      boxShadow: active ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
                       transition: "all 0.15s ease",
                     }}
                   >
@@ -913,28 +913,112 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
             </div>
           </div>
 
+          {/* Today's Logins Banner */}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "8px 12px",
+            borderRadius: 10,
+            background: "#f8fafc",
+            border: "1px solid #f1f5f9",
+            marginBottom: 8,
+            flexWrap: "wrap",
+            gap: 8,
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{
+                fontSize: 9.5,
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+                color: "#059669",
+                background: "#ecfdf5",
+                padding: "2px 6px",
+                borderRadius: 4,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+              }}>
+                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#10b981" }} />
+                Today
+              </span>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#334155" }}>Logins:</span>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              {/* Students logged in today */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                fontSize: 11,
+                color: "#475569",
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF693D" }} />
+                <span>Students:</span>
+                <span style={{
+                  fontFamily: "Sora, sans-serif",
+                  fontWeight: 800,
+                  fontSize: 12.5,
+                  color: "#ea580c",
+                  background: "#fff7ed",
+                  padding: "1px 7px",
+                  borderRadius: 5,
+                  border: "1px solid #fed7aa",
+                }}>
+                  {loading ? "..." : (todayStats.studentsToday ?? todayStats.studentLoginsToday ?? 0)}
+                </span>
+              </div>
+
+              {/* Mentors logged in today */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                fontSize: 11,
+                color: "#475569",
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#3B82F6" }} />
+                <span>Mentors:</span>
+                <span style={{
+                  fontFamily: "Sora, sans-serif",
+                  fontWeight: 800,
+                  fontSize: 12.5,
+                  color: "#2563eb",
+                  background: "#eff6ff",
+                  padding: "1px 7px",
+                  borderRadius: 5,
+                  border: "1px solid #bfdbfe",
+                }}>
+                  {loading ? "..." : (todayStats.mentorsToday ?? todayStats.mentorLoginsToday ?? 0)}
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Legend Strip */}
           <div style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-end",
-            gap: 16,
-            fontSize: 12,
+            gap: 14,
+            fontSize: 11,
             fontWeight: 600,
-            marginBottom: 8,
+            marginBottom: 6,
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#475569" }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF693D" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569" }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#FF693D" }} />
               <span>Students</span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#475569" }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#3B82F6" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569" }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#3B82F6" }} />
               <span>Mentors</span>
             </div>
           </div>
 
           {/* SVG Area & Smooth Line Chart */}
-          <div style={{ position: "relative", width: "100%", height: 210 }}>
+          <div style={{ position: "relative", width: "100%", height: 195 }}>
             <svg
               width="100%"
               height="100%"
@@ -954,32 +1038,36 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
               </defs>
 
               {/* Horizontal Gridlines & Y-Axis Labels */}
-              {[0, 100, 200, 300, 400].map((level, i) => {
-                const y = 175 - (level / 400) * 145;
-                return (
-                  <g key={i}>
-                    <line
-                      x1="35"
-                      y1={y}
-                      x2="530"
-                      y2={y}
-                      stroke="#f1f5f9"
-                      strokeWidth="1"
-                      strokeDasharray={level === 0 ? "none" : "3,3"}
-                    />
-                    <text
-                      x="25"
-                      y={y + 3.5}
-                      fontSize="10"
-                      fill="#94a3b8"
-                      textAnchor="end"
-                      fontFamily="monospace"
-                    >
-                      {level}
-                    </text>
-                  </g>
-                );
-              })}
+              {(() => {
+                const step = maxChartValue / 4;
+                const levels = [0, Math.round(step), Math.round(step * 2), Math.round(step * 3), maxChartValue];
+                return levels.map((level, i) => {
+                  const y = 175 - (level / maxChartValue) * 145;
+                  return (
+                    <g key={i}>
+                      <line
+                        x1="35"
+                        y1={y}
+                        x2="530"
+                        y2={y}
+                        stroke="#f1f5f9"
+                        strokeWidth="1"
+                        strokeDasharray={level === 0 ? "none" : "3,3"}
+                      />
+                      <text
+                        x="25"
+                        y={y + 3.5}
+                        fontSize="9.5"
+                        fill="#94a3b8"
+                        textAnchor="end"
+                        fontFamily="monospace"
+                      >
+                        {level}
+                      </text>
+                    </g>
+                  );
+                });
+              })()}
 
               {/* Data Curves Calculation */}
               {(() => {
@@ -990,7 +1078,7 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
                 const getCoords = (pt, idx, key) => {
                   const x = 35 + idx * stepX;
                   const val = pt[key] || 0;
-                  const y = 175 - (Math.min(val, 400) / 400) * 145;
+                  const y = 175 - (Math.min(val, maxChartValue) / maxChartValue) * 145;
                   return { x, y, val };
                 };
 
@@ -1120,44 +1208,44 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
       {/* ── Full-Width Recent Activity Table ── */}
       <div style={{
         background: "#ffffff",
-        borderRadius: 20,
+        borderRadius: 16,
         border: "1px solid #f1f5f9",
-        boxShadow: "0 2px 12px rgba(15,23,42,0.03)",
+        boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
         overflow: "hidden",
       }}>
         {/* Table Title Bar */}
         <div style={{
-          padding: "20px 24px",
+          padding: "16px 20px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           borderBottom: "1px solid #f1f5f9",
           flexWrap: "wrap",
-          gap: 12,
+          gap: 10,
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
             <div style={{
-              width: 32,
-              height: 32,
-              borderRadius: 9,
+              width: 28,
+              height: 28,
+              borderRadius: 8,
               background: "#fff7ed",
               color: "#ea580c",
               display: "grid",
               placeItems: "center",
             }}>
-              <Clock size={16} />
+              <Clock size={15} />
             </div>
             <div>
               <h3 style={{
                 fontFamily: "Sora, sans-serif",
-                fontSize: 16,
+                fontSize: 13.5,
                 fontWeight: 800,
                 color: "#0f172a",
                 margin: 0,
               }}>
                 Recent Activity
               </h3>
-              <p style={{ fontSize: 12, color: "#64748b", margin: "2px 0 0" }}>
+              <p style={{ fontSize: 11, color: "#64748b", margin: "2px 0 0" }}>
                 Latest platform activity across mentors, students and admins
               </p>
             </div>
@@ -1166,12 +1254,13 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
           <button
             onClick={() => onNavigateTab && onNavigateTab("mentor-tracking")}
             style={{
-              fontSize: 12.5,
+              fontSize: 11.5,
               fontWeight: 700,
               color: "#2563eb",
               background: "none",
               border: "none",
               cursor: "pointer",
+              padding: "4px 8px",
             }}
             onMouseEnter={(e) => e.currentTarget.style.color = ORANGE}
             onMouseLeave={(e) => e.currentTarget.style.color = "#2563eb"}
@@ -1186,95 +1275,103 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
             width: "100%",
             minWidth: 800,
             borderCollapse: "collapse",
-            fontSize: 12.5,
+            fontSize: 11.5,
             textAlign: "left",
           }}>
             <thead>
               <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
-                <th style={{ padding: "12px 24px", fontWeight: 700, color: "#64748b", fontSize: 11, textTransform: "uppercase" }}>Time</th>
-                <th style={{ padding: "12px 20px", fontWeight: 700, color: "#64748b", fontSize: 11, textTransform: "uppercase" }}>Type</th>
-                <th style={{ padding: "12px 20px", fontWeight: 700, color: "#64748b", fontSize: 11, textTransform: "uppercase" }}>Name</th>
-                <th style={{ padding: "12px 20px", fontWeight: 700, color: "#64748b", fontSize: 11, textTransform: "uppercase" }}>Details</th>
-                <th style={{ padding: "12px 24px", fontWeight: 700, color: "#64748b", fontSize: 11, textTransform: "uppercase", textAlign: "right" }}>Status</th>
+                <th style={{ padding: "10px 18px", fontWeight: 700, color: "#64748b", fontSize: 10.5, textTransform: "uppercase" }}>Time</th>
+                <th style={{ padding: "10px 16px", fontWeight: 700, color: "#64748b", fontSize: 10.5, textTransform: "uppercase" }}>Type</th>
+                <th style={{ padding: "10px 16px", fontWeight: 700, color: "#64748b", fontSize: 10.5, textTransform: "uppercase" }}>Name</th>
+                <th style={{ padding: "10px 16px", fontWeight: 700, color: "#64748b", fontSize: 10.5, textTransform: "uppercase" }}>Details</th>
+                <th style={{ padding: "10px 18px", fontWeight: 700, color: "#64748b", fontSize: 10.5, textTransform: "uppercase", textAlign: "right" }}>Status</th>
               </tr>
             </thead>
             <tbody>
-              {formattedActivities.map((row, idx) => {
-                const Icon = row.typeIcon;
-                return (
-                  <tr
-                    key={row.id || idx}
-                    style={{
-                      borderBottom: "1px solid #f8fafc",
-                      transition: "background 0.15s ease",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = "#f8fafc"}
-                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                  >
-                    {/* Timestamp */}
-                    <td style={{ padding: "14px 24px", color: "#64748b", fontSize: 12, whiteSpace: "nowrap" }}>
-                      {row.time}
-                    </td>
+              {formattedActivities.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ padding: "28px 18px", textAlign: "center", color: "#94a3b8", fontSize: 11.5 }}>
+                    {loading ? "Loading platform activity..." : "No recent activity recorded yet in this period."}
+                  </td>
+                </tr>
+              ) : (
+                formattedActivities.map((row, idx) => {
+                  const Icon = row.typeIcon;
+                  return (
+                    <tr
+                      key={row.id || idx}
+                      style={{
+                        borderBottom: "1px solid #f8fafc",
+                        transition: "background 0.15s ease",
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = "#f8fafc"}
+                      onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                    >
+                      {/* Timestamp */}
+                      <td style={{ padding: "11px 18px", color: "#64748b", fontSize: 11, whiteSpace: "nowrap" }}>
+                        {row.time}
+                      </td>
 
-                    {/* Event Type with Icon */}
-                    <td style={{ padding: "14px 20px", whiteSpace: "nowrap" }}>
-                      <span style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        color: row.typeColor,
-                        fontWeight: 600,
-                        fontSize: 12,
-                      }}>
-                        <Icon size={14} />
-                        {row.type}
-                      </span>
-                    </td>
-
-                    {/* Name with Round Initials Avatar */}
-                    <td style={{ padding: "14px 20px", whiteSpace: "nowrap" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                        <div style={{
-                          width: 28,
-                          height: 28,
-                          borderRadius: "50%",
-                          background: row.typeBg,
+                      {/* Event Type with Icon */}
+                      <td style={{ padding: "11px 16px", whiteSpace: "nowrap" }}>
+                        <span style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 5,
                           color: row.typeColor,
-                          display: "grid",
-                          placeItems: "center",
-                          fontSize: 10.5,
-                          fontWeight: 800,
+                          fontWeight: 600,
+                          fontSize: 11,
                         }}>
-                          {row.initials}
-                        </div>
-                        <span style={{ fontWeight: 700, color: "#0f172a" }}>
-                          {row.name}
+                          <Icon size={13} />
+                          {row.type}
                         </span>
-                      </div>
-                    </td>
+                      </td>
 
-                    {/* Action Details */}
-                    <td style={{ padding: "14px 20px", color: "#475569", fontSize: 12.5 }}>
-                      {row.details}
-                    </td>
+                      {/* Name with Round Initials Avatar */}
+                      <td style={{ padding: "11px 16px", whiteSpace: "nowrap" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: "50%",
+                            background: row.typeBg,
+                            color: row.typeColor,
+                            display: "grid",
+                            placeItems: "center",
+                            fontSize: 10,
+                            fontWeight: 800,
+                          }}>
+                            {row.initials}
+                          </div>
+                          <span style={{ fontWeight: 700, color: "#0f172a" }}>
+                            {row.name}
+                          </span>
+                        </div>
+                      </td>
 
-                    {/* Status Badge */}
-                    <td style={{ padding: "14px 24px", textAlign: "right", whiteSpace: "nowrap" }}>
-                      <span style={{
-                        padding: "3px 10px",
-                        borderRadius: 20,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        background: row.statusBg,
-                        color: row.statusColor,
-                        display: "inline-block",
-                      }}>
-                        {row.status}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
+                      {/* Action Details */}
+                      <td style={{ padding: "11px 16px", color: "#475569", fontSize: 11.5 }}>
+                        {row.details}
+                      </td>
+
+                      {/* Status Badge */}
+                      <td style={{ padding: "11px 18px", textAlign: "right", whiteSpace: "nowrap" }}>
+                        <span style={{
+                          padding: "2px 8px",
+                          borderRadius: 20,
+                          fontSize: 10.5,
+                          fontWeight: 700,
+                          background: row.statusBg,
+                          color: row.statusColor,
+                          display: "inline-block",
+                        }}>
+                          {row.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
