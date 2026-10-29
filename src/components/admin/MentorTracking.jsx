@@ -1584,6 +1584,7 @@ export default function MentorTracking({ adminToken }) {
 
             {/* Scrollable Drawer Body */}
             <div
+              className="cp-custom-scroll"
               style={{
                 flex: 1,
                 overflowY: "auto",

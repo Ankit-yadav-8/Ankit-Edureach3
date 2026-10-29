@@ -167,11 +167,22 @@ export default function MentorshipDashboard() {
     );
   }
 
+  useEffect(() => {
+    if (user?.email) {
+      const key = `mdash:otpok:${user.email.toLowerCase()}`;
+      try {
+        if (sessionStorage.getItem(key) === "1") {
+          setOtpOk(true);
+        }
+      } catch {}
+    }
+  }, [user?.email]);
+
   if (!otpOk) {
     return (
       <OtpGate
-        email={user.email}
-        name={user.name}
+        email={user?.email || ""}
+        name={user?.name || ""}
         onVerified={() => { try { sessionStorage.setItem(OTP_OK_KEY, "1"); } catch {} setOtpOk(true); }}
       />
     );
@@ -520,23 +531,6 @@ function DashboardBody({ urlPlan = "" }) {
     }
   };
 
-  const avgScoreDisplay = useMemo(() => {
-    if (testsSorted.length > 0) {
-      const totalPct = testsSorted.reduce((sum, t) => sum + pct(t), 0);
-      return `${Math.round((totalPct / testsSorted.length) * 10) / 10}%`;
-    }
-    return "92.4%";
-  }, [testsSorted]);
-
-  const syllabusPctDisplay = useMemo(() => {
-    if (backlog.length > 0) {
-      const done = backlog.filter((b) => b.done).length;
-      return Math.min(100, Math.max(15, Math.round((done / backlog.length) * 100)));
-    }
-    return 68;
-  }, [backlog]);
-
-  const totalTestsDisplay = testsSorted.length || 16;
   const firstName = (user?.name || identity.studentName || "Ankit").trim().split(/\s+/)[0];
 
   // Resolve the real plan for THIS dashboard. A student can own several
@@ -740,7 +734,25 @@ function DashboardBody({ urlPlan = "" }) {
     const att = Number(t.correct) + Number(t.wrong);
     return att ? Math.round((Number(t.correct) / att) * 100) : 0;
   };
-  const pct = (t) => normalizeTestScore(t).percent;
+  const pct = (t) => (t ? (normalizeTestScore(t)?.percent ?? 0) : 0);
+
+  const avgScoreDisplay = useMemo(() => {
+    if (testsSorted && testsSorted.length > 0) {
+      const totalPct = testsSorted.reduce((sum, t) => sum + (pct(t) || 0), 0);
+      return `${Math.round((totalPct / testsSorted.length) * 10) / 10}%`;
+    }
+    return "92.4%";
+  }, [testsSorted]);
+
+  const syllabusPctDisplay = useMemo(() => {
+    if (backlog && backlog.length > 0) {
+      const done = backlog.filter((b) => b && b.done).length;
+      return Math.min(100, Math.max(15, Math.round((done / backlog.length) * 100)));
+    }
+    return 68;
+  }, [backlog]);
+
+  const totalTestsDisplay = testsSorted?.length || 16;
   const improvement = latest && prev && Number(prev.scored ?? prev.score) > 0
     ? Math.round(((Number(latest.scored ?? latest.score) - Number(prev.scored ?? prev.score)) / Number(prev.scored ?? prev.score)) * 100)
     : null;

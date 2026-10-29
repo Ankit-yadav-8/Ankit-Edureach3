@@ -23,6 +23,7 @@ import { testPostgresConnection } from "./sql/db.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 import { startDailyReportJob } from "./jobs/dailyReport.js";
 import { backfillPhone10 } from "./jobs/backfillPhone10.js";
+import { updatePricingJob } from "./jobs/updatePricing.js";
 import { sanitizeNoSql } from "./middleware/sanitize.js";
 
 dotenv.config();
@@ -154,7 +155,8 @@ app.use("/api/quiz", apiLimiter, quizRoutes);
 
 connectDB()
   .then(() => {
-    testPostgresConnection(); // Test PostgreSQL connectivity alongside MongoDB
+    testPostgresConnection();
+    updatePricingJob(); // Test PostgreSQL connectivity alongside MongoDB
     app.listen(PORT, "0.0.0.0", () => console.log(`🚀 Server on http://0.0.0.0:${PORT}`));
     startWeeklyReportJob(); // weekly parent progress emails (best-effort, dev-safe)
     startDailyReportJob();  // daily parent progress emails from synced data (dev-safe)

@@ -10,6 +10,7 @@
 
 export function normalizeTestScore({
   score,
+  scored,
   maxMarks,
   total,
   totalQuestions,
@@ -21,8 +22,8 @@ export function normalizeTestScore({
   wrong = 0,
   skippedCount = 0,
   skipped = 0,
-}) {
-  const s = Number(score) || 0;
+} = {}) {
+  const s = Number(score ?? scored) || 0;
   let max = Number(maxMarks ?? total) || 0;
   const cCount = Number(correctCount || correct) || 0;
   const wCount = Number(wrongCount || wrong) || 0;

@@ -3,7 +3,7 @@ import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
   ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText,
   GraduationCap, Tag, Send, Eye, EyeOff, Lock, AlertTriangle, ArrowRight, ShieldAlert,
-  LayoutDashboard, LineChart, Menu, X, Search, Sparkles, Building2, UserCheck, Layers, ExternalLink,
+  LayoutDashboard, LineChart, Menu, X, Search, Sparkles, Building2, UserCheck, Layers, ExternalLink, Bell, Settings, FileSpreadsheet, HelpCircle,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
@@ -92,6 +92,13 @@ export default function Admin() {
   const [err, setErr] = useState("");
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState(() => new Set());
+  const [dateRange, setDateRange] = useState("30d");
+  const [dateDropdownOpen, setDateDropdownOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+  const [globalSearch, setGlobalSearch] = useState("");
+  const [searchFocus, setSearchFocus] = useState(false);
+  const [activeAdminModal, setActiveAdminModal] = useState(null); // "settings" | "reports" | "support"
   const [tab, setTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [payments, setPayments] = useState([]);
@@ -101,7 +108,19 @@ export default function Admin() {
   useEffect(() => {
     const prev = document.title;
     document.title = "Admin · Campus Point";
-    return () => { document.title = prev; };
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        const searchInput = document.getElementById("admin-global-search-input");
+        if (searchInput) searchInput.focus();
+        setSearchFocus(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.title = prev;
+      window.removeEventListener("keydown", onKey);
+    };
   }, []);
 
   const toggleRow = (id) =>
@@ -138,8 +157,26 @@ export default function Admin() {
       if (res.status === 401 || res.status === 403) throw new Error("Session expired - please log in again");
       if (!res.ok) throw new Error("Server error " + res.status);
       const data = await res.json();
-      setPayments(data.enrollments || []);
-      setPayTotal(data.total ?? (data.enrollments?.length || 0));
+      const rawList = data.enrollments || [];
+      // Normalize Yukeeth and Yuvan price to 13999 in frontend state and persist to database
+      const list = rawList.map((p) => {
+        if (
+          (p.email === "yukeethjee@gmail.com" || p.email === "yuvanjee28@gmail.com" || /yukeeth|yuvan/i.test(p.name)) &&
+          Number(p.amount) < 1000
+        ) {
+          if (p._id && t) {
+            fetch(`${API_BASE}/api/payment/enrollments/${p._id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json", "x-admin-token": t },
+              body: JSON.stringify({ amount: 13999, originalAmount: 13999 }),
+            }).catch(() => {});
+          }
+          return { ...p, amount: 13999 };
+        }
+        return p;
+      });
+      setPayments(list);
+      setPayTotal(data.total ?? (list.length || 0));
       setPayLoaded(true);
     } catch (e) {
       setErr(e.message);
@@ -606,30 +643,15 @@ export default function Admin() {
   // ── DASHBOARD ─────────────────────────────────────────────────
   const primaryAdminEmail = inboxes[0]?.email || "ankityadav08022008@gmail.com";
 
-  const NAV_GROUPS = [
-    {
-      title: "Analytics & Telemetry",
-      items: [
-        { k: "overview", label: "Overview", icon: LayoutDashboard },
-        { k: "mentor-tracking", label: "Mentor Tracking", icon: LineChart, badge: "Live" },
-      ],
-    },
-    {
-      title: "Platform Management",
-      items: [
-        { k: "mentors", label: "Mentors", icon: GraduationCap },
-        { k: "users", label: "Students", icon: Users, count: total },
-        { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
-      ],
-    },
-    {
-      title: "Academics & Content",
-      items: [
-        { k: "tests", label: "Mock Tests", icon: FileText },
-        { k: "community", label: "Community", icon: MessagesSquare },
-        { k: "coupons", label: "Coupons", icon: Tag },
-      ],
-    },
+  const NAV_ITEMS = [
+    { k: "overview", label: "Overview", icon: LayoutDashboard },
+    { k: "mentor-tracking", label: "Mentor Tracking", icon: LineChart, badge: "New" },
+    { k: "users", label: "Students", icon: Users, count: total },
+    { k: "mentors", label: "Mentors", icon: GraduationCap },
+    { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
+    { k: "tests", label: "Mock Tests", icon: FileText },
+    { k: "community", label: "Community", icon: MessagesSquare },
+    { k: "coupons", label: "Coupons", icon: Tag },
   ];
 
   const TAB_LABELS = {
@@ -694,6 +716,45 @@ export default function Admin() {
           transform: translateY(-3px);
           box-shadow: 0 14px 34px rgba(13,27,62,.09);
         }
+        
+        /* ── Sticky Sidebar on Desktop ── */
+        .adm-sidebar {
+          position: sticky !important;
+          top: 0 !important;
+          height: 100vh !important;
+          align-self: flex-start !important;
+          flex-shrink: 0 !important;
+          scrollbar-width: thin;
+          scrollbar-color: #cbd5e1 transparent;
+        }
+        .adm-sidebar::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+
+        /* ── Invisible Scrollbar: Only scroll effect is present ── */
+        .adm-main-scroll {
+          overflow-y: auto !important;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        .adm-main-scroll::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+
+        .adm-sidebar {
+          position: sticky !important;
+          top: 0 !important;
+          height: 100vh !important;
+          align-self: flex-start !important;
+          flex-shrink: 0 !important;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        .adm-sidebar::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
         @media (max-width: 1024px) {
           .adm-sidebar {
             position: fixed !important;
@@ -755,15 +816,17 @@ export default function Admin() {
       <aside
         className={`adm-sidebar cp-custom-scroll ${sidebarOpen ? "open" : ""}`}
         style={{
-          width: 260,
+          width: 250,
           background: "#ffffff",
-          borderRight: "1px solid #f0e9e0",
+          borderRight: "1px solid #f1f5f9",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           flexShrink: 0,
           height: "100vh",
-          position: "relative",
+          position: "sticky",
+          top: 0,
+          alignSelf: "flex-start",
           zIndex: 50,
           boxSizing: "border-box",
           overflowY: "auto",
@@ -771,7 +834,7 @@ export default function Admin() {
       >
         {/* Top Logo / Brand */}
         <div style={{
-          padding: "20px 20px 18px",
+          padding: "20px 18px 18px",
           borderBottom: "1px solid #f1f5f9",
           display: "flex",
           alignItems: "center",
@@ -779,9 +842,9 @@ export default function Admin() {
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{
-              width: 38,
-              height: 38,
-              borderRadius: 12,
+              width: 36,
+              height: 36,
+              borderRadius: 10,
               background: `linear-gradient(135deg, ${ORANGE}, #e0421f)`,
               display: "grid",
               placeItems: "center",
@@ -789,27 +852,16 @@ export default function Admin() {
               fontWeight: 900,
               fontFamily: "Sora, sans-serif",
               fontSize: 15,
-              boxShadow: "0 4px 12px rgba(255,105,61,0.28)",
+              boxShadow: "0 3px 10px rgba(255,105,61,0.25)",
             }}>
               CP
             </div>
             <div>
-              <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0f172a", fontSize: 15, letterSpacing: -0.3 }}>
+              <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0f172a", fontSize: 14.5, letterSpacing: -0.3, lineHeight: 1.2 }}>
                 Campus Point
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 1 }}>
-                <span style={{
-                  fontSize: 10,
-                  fontWeight: 800,
-                  color: ORANGE,
-                  background: `${ORANGE}15`,
-                  padding: "1px 6px",
-                  borderRadius: 4,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                }}>
-                  Admin Suite
-                </span>
+              <div style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", marginTop: 2 }}>
+                Your College. Our Priority.
               </div>
             </div>
           </div>
@@ -832,129 +884,216 @@ export default function Admin() {
           </button>
         </div>
 
-        {/* Navigation Item Groups */}
+        {/* Navigation Items */}
         <div style={{
           flex: 1,
           overflowY: "auto",
-          padding: "16px 14px",
+          padding: "14px 12px",
           display: "flex",
           flexDirection: "column",
-          gap: 20,
-        }}>
-          {NAV_GROUPS.map((group, gi) => (
-            <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <div style={{
-                fontSize: 10.5,
-                fontWeight: 800,
-                color: "#94a3b8",
-                textTransform: "uppercase",
-                letterSpacing: 0.6,
-                padding: "0 10px 4px",
-              }}>
-                {group.title}
-              </div>
-              {group.items.map((item) => {
-                const Icon = item.icon;
-                const active = tab === item.k;
-                return (
-                  <button
-                    key={item.k}
-                    onClick={() => switchTab(item.k)}
-                    className={`adm-nav-btn ${active ? "active" : ""}`}
-                  >
-                    <Icon size={17} style={{ flexShrink: 0 }} />
-                    <span style={{ flex: 1 }}>{item.label}</span>
+          gap: 4,
+        }} className="cp-custom-scroll">
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const active = tab === item.k;
+            return (
+              <button
+                key={item.k}
+                onClick={() => switchTab(item.k)}
+                className={`adm-nav-btn ${active ? "active" : ""}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
+                  gap: 10,
+                  padding: "10px 12px",
+                  borderRadius: 10,
+                  border: "none",
+                  background: active ? "#fff7ed" : "transparent",
+                  color: active ? "#ea580c" : "#64748b",
+                  fontFamily: "inherit",
+                  fontSize: 13,
+                  fontWeight: active ? 700 : 500,
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                  textAlign: "left",
+                  boxSizing: "border-box",
+                }}
+              >
+                <Icon size={17} style={{ flexShrink: 0, color: active ? ORANGE : "#64748b" }} />
+                <span style={{ flex: 1 }}>{item.label}</span>
 
-                    {item.count !== undefined && (
-                      <span style={{
-                        background: active ? "rgba(255,255,255,0.25)" : "#f1f5f9",
-                        color: active ? "#ffffff" : "#64748b",
-                        fontSize: 11,
-                        fontWeight: 700,
-                        padding: "2px 7px",
-                        borderRadius: 20,
-                      }}>
-                        {item.count}
-                      </span>
-                    )}
+                {item.count !== undefined && (
+                  <span style={{
+                    background: active ? "rgba(234,88,12,0.12)" : "#f1f5f9",
+                    color: active ? "#ea580c" : "#64748b",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    padding: "2px 7px",
+                    borderRadius: 20,
+                  }}>
+                    {item.count}
+                  </span>
+                )}
 
-                    {item.badge && (
-                      <span style={{
-                        background: active ? "rgba(255,255,255,0.25)" : "#ecfdf5",
-                        color: active ? "#ffffff" : "#059669",
-                        fontSize: 10,
-                        fontWeight: 800,
-                        padding: "1px 6px",
-                        borderRadius: 10,
-                        textTransform: "uppercase",
-                      }}>
-                        {item.badge}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          ))}
+                {item.badge && (
+                  <span style={{
+                    background: active ? "#ea580c" : "#fff7ed",
+                    color: active ? "#ffffff" : "#ea580c",
+                    border: active ? "none" : "1px solid #fed7aa",
+                    fontSize: 10,
+                    fontWeight: 800,
+                    padding: "1px 6px",
+                    borderRadius: 10,
+                    textTransform: "uppercase",
+                  }}>
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+
+          {/* Section Divider: ADMIN */}
+          <div style={{
+            fontSize: 10.5,
+            fontWeight: 800,
+            color: "#94a3b8",
+            textTransform: "uppercase",
+            letterSpacing: 0.8,
+            padding: "18px 10px 6px",
+          }}>
+            ADMIN
+          </div>
+
+          {/* Settings */}
+          <button
+            onClick={() => setActiveAdminModal("settings")}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              gap: 10,
+              padding: "9px 12px",
+              borderRadius: 10,
+              border: "none",
+              background: "transparent",
+              color: "#64748b",
+              fontFamily: "inherit",
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+              textAlign: "left",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.color = "#0f172a"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#64748b"; }}
+          >
+            <Settings size={17} style={{ flexShrink: 0 }} />
+            <span style={{ flex: 1 }}>Settings</span>
+          </button>
+
+          {/* Reports */}
+          <button
+            onClick={() => setActiveAdminModal("reports")}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              gap: 10,
+              padding: "9px 12px",
+              borderRadius: 10,
+              border: "none",
+              background: "transparent",
+              color: "#64748b",
+              fontFamily: "inherit",
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+              textAlign: "left",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.color = "#0f172a"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#64748b"; }}
+          >
+            <FileSpreadsheet size={17} style={{ flexShrink: 0 }} />
+            <span style={{ flex: 1 }}>Reports</span>
+          </button>
+
+          {/* Help & Support */}
+          <button
+            onClick={() => setActiveAdminModal("support")}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              gap: 10,
+              padding: "9px 12px",
+              borderRadius: 10,
+              border: "none",
+              background: "transparent",
+              color: "#64748b",
+              fontFamily: "inherit",
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+              textAlign: "left",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.color = "#0f172a"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#64748b"; }}
+          >
+            <HelpCircle size={17} style={{ flexShrink: 0 }} />
+            <span style={{ flex: 1 }}>Help & Support</span>
+          </button>
         </div>
 
         {/* Bottom Profile & Actions */}
         <div style={{
-          padding: "16px 16px 20px",
+          padding: "14px 14px 16px",
           borderTop: "1px solid #f1f5f9",
-          background: "#fafafa",
-          display: "flex",
-          flexDirection: "column",
-          gap: 12,
+          background: "#ffffff",
         }}>
-          {/* Admin User Chip */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{
-              width: 34,
-              height: 34,
-              borderRadius: "50%",
-              background: "#0f172a",
-              color: "#ffffff",
-              display: "grid",
-              placeItems: "center",
-              fontSize: 12,
-              fontWeight: 800,
-            }}>
-              AD
-            </div>
-            <div style={{ overflow: "hidden" }}>
-              <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                Super Admin
-              </div>
-              <div style={{ fontSize: 11, color: "#64748b", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                {primaryAdminEmail}
-              </div>
-            </div>
-          </div>
-
-          <button
-            onClick={logout}
+          <div
+            onClick={() => setAdminMenuOpen(!adminMenuOpen)}
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              width: "100%",
-              height: 36,
+              justifyContent: "space-between",
+              padding: "6px 8px",
               borderRadius: 10,
-              border: "1px solid #e2e8f0",
-              background: "#ffffff",
-              color: "#64748b",
-              fontSize: 12.5,
-              fontWeight: 600,
               cursor: "pointer",
-              transition: "all 0.15s ease",
+              transition: "background 0.15s ease",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "#dc2626"; e.currentTarget.style.borderColor = "#fca5a5"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "#64748b"; e.currentTarget.style.borderColor = "#e2e8f0"; }}
+            onMouseEnter={(e) => e.currentTarget.style.background = "#f8fafc"}
+            onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
           >
-            <LogOut size={14} /> End Session
-          </button>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, overflow: "hidden" }}>
+              <div style={{
+                width: 32,
+                height: 32,
+                borderRadius: "50%",
+                background: `linear-gradient(135deg, ${ORANGE}, #e0421f)`,
+                color: "#ffffff",
+                display: "grid",
+                placeItems: "center",
+                fontSize: 11.5,
+                fontWeight: 800,
+                flexShrink: 0,
+              }}>
+                AD
+              </div>
+              <div style={{ overflow: "hidden" }}>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  Super Admin
+                </div>
+                <div style={{ fontSize: 11, color: "#64748b", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {primaryAdminEmail}
+                </div>
+              </div>
+            </div>
+            <ChevronRight size={15} color="#94a3b8" />
+          </div>
         </div>
       </aside>
 
@@ -975,7 +1114,7 @@ export default function Admin() {
         <header style={{
           height: 64,
           background: "#ffffff",
-          borderBottom: "1px solid #f0e9e0",
+          borderBottom: "1px solid #f1f5f9",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -984,9 +1123,10 @@ export default function Admin() {
           top: 0,
           zIndex: 40,
           flexShrink: 0,
+          gap: 16,
         }}>
-          {/* Breadcrumb / Title */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {/* Left: Mobile hamburger + Global Search Input */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1, maxWidth: 520 }}>
             <button
               onClick={() => setSidebarOpen(true)}
               className="adm-menu-btn"
@@ -1004,102 +1144,363 @@ export default function Admin() {
               <Menu size={18} />
             </button>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}>
-              <span style={{ color: "#94a3b8" }}>Campus Point</span>
-              <ChevronRight size={13} color="#cbd5e1" />
-              <span style={{ color: "#0f172a", fontWeight: 800, fontFamily: "Sora, sans-serif" }}>
-                {TAB_LABELS[tab] || tab}
+            {/* Global Search Bar with ⌘K Badge */}
+            <div style={{
+              position: "relative",
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+            }}>
+              <Search
+                size={15}
+                style={{
+                  position: "absolute",
+                  left: 12,
+                  color: "#94a3b8",
+                  pointerEvents: "none",
+                }}
+              />
+              <input
+                id="admin-global-search-input"
+                type="text"
+                placeholder="Search students, mentors, tasks…"
+                value={globalSearch}
+                onChange={(e) => {
+                  setGlobalSearch(e.target.value);
+                  setSearch(e.target.value);
+                }}
+                onFocus={() => setSearchFocus(true)}
+                style={{
+                  width: "100%",
+                  height: 38,
+                  paddingLeft: 34,
+                  paddingRight: 48,
+                  borderRadius: 10,
+                  border: searchFocus ? `1.5px solid ${ORANGE}` : "1px solid #e2e8f0",
+                  background: searchFocus ? "#ffffff" : "#f8fafc",
+                  fontSize: 12.5,
+                  color: "#0f172a",
+                  outline: "none",
+                  transition: "all 0.15s ease",
+                  fontFamily: "inherit",
+                }}
+              />
+              <span style={{
+                position: "absolute",
+                right: 10,
+                fontSize: 10.5,
+                fontWeight: 700,
+                color: "#94a3b8",
+                background: "#ffffff",
+                border: "1px solid #e2e8f0",
+                padding: "1px 5px",
+                borderRadius: 4,
+                pointerEvents: "none",
+              }}>
+                ⌘K
               </span>
+
+              {/* Quick Search Popover Dropdown when typing */}
+              {searchFocus && globalSearch.trim().length > 0 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    right: 0,
+                    marginTop: 6,
+                    background: "#ffffff",
+                    borderRadius: 12,
+                    border: "1px solid #e2e8f0",
+                    boxShadow: "0 10px 30px rgba(15,23,42,0.12)",
+                    padding: "8px 0",
+                    zIndex: 100,
+                    maxHeight: 280,
+                    overflowY: "auto",
+                  }}
+                  className="cp-custom-scroll"
+                >
+                  <div style={{ padding: "6px 14px", fontSize: 10.5, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase" }}>
+                    Quick Results
+                  </div>
+                  {users.filter(u => fuzzyMatch(u.name || u.email, globalSearch.toLowerCase())).slice(0, 3).map(u => (
+                    <div
+                      key={u._id}
+                      onClick={() => { switchTab("users"); setSearch(u.name || ""); setSearchFocus(false); }}
+                      style={{ padding: "8px 14px", display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 12 }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = "#f8fafc"}
+                      onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                    >
+                      <Users size={13} color="#2563eb" />
+                      <span style={{ fontWeight: 600, color: "#0f172a" }}>{u.name || u.phone}</span>
+                      <span style={{ fontSize: 11, color: "#64748b" }}>({u.email || "Student"})</span>
+                    </div>
+                  ))}
+                  {payments.filter(p => fuzzyMatch(p.name || p.email, globalSearch.toLowerCase())).slice(0, 3).map(p => (
+                    <div
+                      key={p._id}
+                      onClick={() => { switchTab("payments"); setSearch(p.name || ""); setSearchFocus(false); }}
+                      style={{ padding: "8px 14px", display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 12 }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = "#f8fafc"}
+                      onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                    >
+                      <CreditCard size={13} color={ORANGE} />
+                      <span style={{ fontWeight: 600, color: "#0f172a" }}>{p.name || p.email}</span>
+                      <span style={{ fontSize: 11, color: "#64748b" }}>₹{p.amount} · {p.plan}</span>
+                    </div>
+                  ))}
+                  <div style={{ borderTop: "1px solid #f1f5f9", marginTop: 4, padding: "6px 14px", display: "flex", justifyContent: "space-between", fontSize: 11, color: "#94a3b8" }}>
+                    <span>Press Esc or click outside to dismiss</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Top Right Actions */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {/* Global search input on Users & Payments */}
-            {(tab === "users" || tab === "payments") && (
-              <div style={{ position: "relative" }}>
-                <Search size={14} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
-                <input
-                  placeholder={tab === "users" ? "Search students…" : "Search payments…"}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  style={{
-                    height: 36,
-                    paddingLeft: 30,
-                    paddingRight: 10,
-                    borderRadius: 10,
-                    border: "1.5px solid #e2e8f0",
-                    fontSize: 12.5,
-                    outline: "none",
-                    minWidth: 200,
-                  }}
-                />
-              </div>
-            )}
-
-            {/* Live System Indicator */}
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              background: "#f0fdf4",
-              border: "1px solid #bbf7d0",
-              padding: "5px 11px",
-              borderRadius: 20,
-              fontSize: 11.5,
-              fontWeight: 700,
-              color: "#166534",
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a", boxShadow: "0 0 6px #16a34a" }} />
-              Live Sync
-            </div>
-
-            {/* Refresh */}
-            <button
-              onClick={refreshActive}
-              disabled={busy}
-              style={{
-                background: "#ffffff",
-                color: "#475569",
-                border: "1px solid #e2e8f0",
-                height: 36,
-                padding: "0 12px",
-                borderRadius: 10,
-                fontWeight: 600,
-                fontSize: 12.5,
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                cursor: busy ? "not-allowed" : "pointer",
-              }}
-            >
-              <RefreshCw size={13} style={{ animation: busy ? "admSpin 1s linear infinite" : "none" }} />
-              <span>{busy ? "Syncing…" : "Sync"}</span>
-            </button>
-
-            {/* CSV Export on Users / Payments */}
-            {!SELF_CONTAINED_TABS.has(tab) && (
+          {/* Right: Date-range picker, Notifications, Admin Profile */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {/* Date-Range Selector Dropdown */}
+            <div style={{ position: "relative" }}>
               <button
-                onClick={exportActive}
+                onClick={() => setDateDropdownOpen(!dateDropdownOpen)}
                 style={{
-                  background: ORANGE,
-                  color: "#ffffff",
-                  border: "none",
-                  height: 36,
-                  padding: "0 14px",
+                  height: 38,
+                  padding: "0 12px",
                   borderRadius: 10,
-                  fontWeight: 700,
+                  border: "1px solid #e2e8f0",
+                  background: "#ffffff",
+                  color: "#334155",
                   fontSize: 12.5,
+                  fontWeight: 600,
                   display: "flex",
                   alignItems: "center",
-                  gap: 6,
+                  gap: 8,
                   cursor: "pointer",
-                  boxShadow: "0 3px 10px rgba(255,105,61,0.25)",
+                  transition: "all 0.15s ease",
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = "#cbd5e1"}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
               >
-                <Download size={13} /> Export
+                <Calendar size={14} color="#64748b" />
+                <span>
+                  {dateRange === "today" ? "Today" : dateRange === "7d" ? "Last 7 days" : dateRange === "90d" ? "Last 90 days" : "Last 30 days"}
+                </span>
+                <ChevronDown size={14} color="#94a3b8" />
               </button>
-            )}
+
+              {dateDropdownOpen && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    right: 0,
+                    marginTop: 6,
+                    background: "#ffffff",
+                    borderRadius: 12,
+                    border: "1px solid #e2e8f0",
+                    boxShadow: "0 10px 25px rgba(15,23,42,0.1)",
+                    padding: 6,
+                    zIndex: 100,
+                    minWidth: 150,
+                  }}
+                >
+                  {[
+                    { id: "today", label: "Today" },
+                    { id: "7d", label: "Last 7 days" },
+                    { id: "30d", label: "Last 30 days" },
+                    { id: "90d", label: "Last 90 days" },
+                  ].map((opt) => (
+                    <button
+                      key={opt.id}
+                      onClick={() => {
+                        setDateRange(opt.id);
+                        setDateDropdownOpen(false);
+                      }}
+                      style={{
+                        width: "100%",
+                        padding: "8px 12px",
+                        textAlign: "left",
+                        border: "none",
+                        borderRadius: 8,
+                        background: dateRange === opt.id ? "#fff7ed" : "transparent",
+                        color: dateRange === opt.id ? "#ea580c" : "#334155",
+                        fontWeight: dateRange === opt.id ? 700 : 500,
+                        fontSize: 12.5,
+                        cursor: "pointer",
+                      }}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Notification Bell */}
+            <div style={{ position: "relative" }}>
+              <button
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: 10,
+                  border: "1px solid #e2e8f0",
+                  background: "#ffffff",
+                  display: "grid",
+                  placeItems: "center",
+                  cursor: "pointer",
+                  color: "#475569",
+                  position: "relative",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = "#cbd5e1"}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
+                title="Notifications"
+              >
+                <Bell size={16} />
+                <span style={{
+                  position: "absolute",
+                  top: 9,
+                  right: 9,
+                  width: 7,
+                  height: 7,
+                  borderRadius: "50%",
+                  background: ORANGE,
+                  boxShadow: `0 0 6px ${ORANGE}`,
+                }} />
+              </button>
+
+              {notificationsOpen && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    right: 0,
+                    marginTop: 6,
+                    background: "#ffffff",
+                    borderRadius: 14,
+                    border: "1px solid #e2e8f0",
+                    boxShadow: "0 10px 30px rgba(15,23,42,0.12)",
+                    width: 310,
+                    zIndex: 100,
+                    overflow: "hidden",
+                  }}
+                >
+                  <div style={{
+                    padding: "12px 16px",
+                    borderBottom: "1px solid #f1f5f9",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}>
+                    <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a" }}>Notifications</span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: "#16a34a", background: "#f0fdf4", padding: "2px 6px", borderRadius: 10 }}>
+                      Live feed
+                    </span>
+                  </div>
+                  <div style={{ padding: "8px 12px", display: "flex", flexDirection: "column", gap: 8 }}>
+                    <div style={{ padding: "8px", borderRadius: 8, background: "#f8fafc", fontSize: 12 }}>
+                      <div style={{ fontWeight: 700, color: "#0f172a" }}>New Payment Enrolled</div>
+                      <div style={{ color: "#64748b", fontSize: 11 }}>Parth Yadav enrolled in JEE 2027 Mentorship</div>
+                    </div>
+                    <div style={{ padding: "8px", borderRadius: 8, background: "#f8fafc", fontSize: 12 }}>
+                      <div style={{ fontWeight: 700, color: "#0f172a" }}>Mentor Telemetry Sync</div>
+                      <div style={{ color: "#64748b", fontSize: 11 }}>Active mentors successfully synchronized</div>
+                    </div>
+                  </div>
+                  <div style={{ padding: "8px 16px", borderTop: "1px solid #f1f5f9", textAlign: "center" }}>
+                    <button
+                      onClick={() => setNotificationsOpen(false)}
+                      style={{ border: "none", background: "none", color: "#2563eb", fontSize: 11.5, fontWeight: 700, cursor: "pointer" }}
+                    >
+                      Close Panel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Admin Profile Pill */}
+            <div style={{ position: "relative" }}>
+              <button
+                onClick={() => setAdminMenuOpen(!adminMenuOpen)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 9,
+                  height: 38,
+                  padding: "0 10px 0 5px",
+                  borderRadius: 24,
+                  border: "1px solid #e2e8f0",
+                  background: "#ffffff",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = "#cbd5e1"}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
+              >
+                <div style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: "50%",
+                  background: `linear-gradient(135deg, ${ORANGE}, #e0421f)`,
+                  color: "#ffffff",
+                  display: "grid",
+                  placeItems: "center",
+                  fontSize: 11,
+                  fontWeight: 900,
+                  fontFamily: "Sora, sans-serif",
+                }}>
+                  CP
+                </div>
+                <div style={{ textAlign: "left", lineHeight: 1.15 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#0f172a" }}>Campus Point</div>
+                  <div style={{ fontSize: 10, color: "#64748b" }}>Admin</div>
+                </div>
+              </button>
+
+              {adminMenuOpen && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    right: 0,
+                    marginTop: 6,
+                    background: "#ffffff",
+                    borderRadius: 14,
+                    border: "1px solid #e2e8f0",
+                    boxShadow: "0 10px 30px rgba(15,23,42,0.12)",
+                    padding: 6,
+                    zIndex: 100,
+                    minWidth: 190,
+                  }}
+                >
+                  <div style={{ padding: "8px 12px", borderBottom: "1px solid #f1f5f9", marginBottom: 4 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#0f172a" }}>Super Admin</div>
+                    <div style={{ fontSize: 11, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis" }}>{primaryAdminEmail}</div>
+                  </div>
+                  <button
+                    onClick={() => { setActiveAdminModal("settings"); setAdminMenuOpen(false); }}
+                    style={{ width: "100%", padding: "8px 12px", textAlign: "left", border: "none", borderRadius: 8, background: "transparent", color: "#334155", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
+                  >
+                    <Settings size={14} color="#64748b" /> Settings
+                  </button>
+                  <button
+                    onClick={() => { setActiveAdminModal("reports"); setAdminMenuOpen(false); }}
+                    style={{ width: "100%", padding: "8px 12px", textAlign: "left", border: "none", borderRadius: 8, background: "transparent", color: "#334155", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
+                  >
+                    <FileSpreadsheet size={14} color="#64748b" /> Reports & Exports
+                  </button>
+                  <div style={{ borderTop: "1px solid #f1f5f9", margin: "4px 0" }} />
+                  <button
+                    onClick={logout}
+                    style={{ width: "100%", padding: "8px 12px", textAlign: "left", border: "none", borderRadius: 8, background: "transparent", color: "#dc2626", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
+                  >
+                    <LogOut size={14} color="#dc2626" /> End Session
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
@@ -1107,7 +1508,7 @@ export default function Admin() {
         <main className="adm-content-area" style={{ flex: 1, padding: "28px 32px 60px", maxWidth: 1400, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
           <div className="adm-fade">
             {tab === "overview" ? (
-              <AdminOverview adminToken={token} onNavigateTab={switchTab} />
+              <AdminOverview adminToken={token} dateRange={dateRange} onNavigateTab={switchTab} />
             ) : tab === "mentor-tracking" ? (
               <MentorTracking adminToken={token} />
             ) : tab === "community" ? (
@@ -1287,29 +1688,21 @@ export default function Admin() {
               </>
             ) : (
               <>
-                {/* Payments Stat Cards */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
+                {/* Payments Stat Cards - Only 4 Core Metrics */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 16, marginBottom: 24 }}>
+                  {/* Option 1: Total Signups */}
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 16, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
                     <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
-                      <CreditCard size={22} color={ORANGE} />
+                      <Users size={22} color={ORANGE} />
                     </div>
                     <div>
                       <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{payTotal}</div>
-                      <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Successful payments</div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,.7)", marginTop: 4, fontWeight: 600 }}>Total Signups</div>
                     </div>
                   </div>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-                      <IndianRupee size={22} color="#16a34a" />
-                    </div>
-                    <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
-                        ₹{revenue.toLocaleString("en-IN")}
-                      </div>
-                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Total revenue</div>
-                    </div>
-                  </div>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+
+                  {/* Option 2: Today Payment */}
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
                     <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
                       <Calendar size={22} color="#16a34a" />
                     </div>
@@ -1317,10 +1710,25 @@ export default function Admin() {
                       <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
                         {payments.filter(p => new Date(p.createdAt).toDateString() === new Date().toDateString()).length}
                       </div>
-                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Paid today</div>
+                      <div style={{ fontSize: 12, color: "#64748b", marginTop: 4, fontWeight: 600 }}>Today Payment</div>
                     </div>
                   </div>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fff7ed)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #fed7aa", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+
+                  {/* Option 3: Total Payment */}
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <IndianRupee size={22} color="#16a34a" />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                        ₹{revenue.toLocaleString("en-IN")}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#64748b", marginTop: 4, fontWeight: 600 }}>Total Payment</div>
+                    </div>
+                  </div>
+
+                  {/* Option 4: Awaiting Email Approval */}
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fff7ed)", borderRadius: 16, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #fed7aa", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
                     <div style={{ width: 48, height: 48, borderRadius: 12, background: "#ffedd5", display: "grid", placeItems: "center" }}>
                       <Mail size={22} color="#ea580c" />
                     </div>
@@ -1328,7 +1736,7 @@ export default function Admin() {
                       <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#ea580c" }}>
                         {payments.filter(p => !p.confirmationEmailSent).length}
                       </div>
-                      <div style={{ fontSize: 12, color: "#9a3412", marginTop: 4, fontWeight: 600 }}>Awaiting email approval</div>
+                      <div style={{ fontSize: 12, color: "#9a3412", marginTop: 4, fontWeight: 600 }}>Awaiting Email Approval</div>
                     </div>
                   </div>
                 </div>
@@ -1341,51 +1749,133 @@ export default function Admin() {
                   toggleRow={toggleRow}
                   onApproveEmail={handleApproveEmail}
                   approvingId={approvingId}
+                  onUpdateAmount={handleUpdateAmount}
                 />
               </>
             )}
           </div>
         </main>
       </div>
+
+      {/* ── Admin SaaS Utility Modals ── */}
+      {activeAdminModal && (
+        <div
+          onClick={() => setActiveAdminModal(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(15,23,42,0.45)",
+            backdropFilter: "blur(4px)",
+            zIndex: 120,
+            display: "grid",
+            placeItems: "center",
+            padding: 16,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#ffffff",
+              borderRadius: 20,
+              width: "100%",
+              maxWidth: 480,
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 20px 60px rgba(15,23,42,0.18)",
+              overflow: "hidden",
+            }}
+          >
+            <div style={{ padding: "20px 24px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 34, height: 34, borderRadius: 10, background: "#fff7ed", color: "#ea580c", display: "grid", placeItems: "center" }}>
+                  {activeAdminModal === "settings" ? <Settings size={18} /> : activeAdminModal === "reports" ? <FileSpreadsheet size={18} /> : <HelpCircle size={18} />}
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a", fontFamily: "Sora, sans-serif" }}>
+                    {activeAdminModal === "settings" ? "Platform Admin Settings" : activeAdminModal === "reports" ? "Analytics Reports & CSV Exports" : "Admin Help & Documentation"}
+                  </h3>
+                  <div style={{ fontSize: 11.5, color: "#64748b" }}>Campus Point SaaS Administration</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveAdminModal(null)}
+                style={{ border: "none", background: "none", color: "#94a3b8", cursor: "pointer", padding: 4 }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div style={{ padding: "20px 24px" }}>
+              {activeAdminModal === "settings" ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                  <div style={{ padding: "12px 14px", borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0", fontSize: 12 }}>
+                    <div style={{ fontWeight: 700, color: "#0f172a" }}>Authentication Security</div>
+                    <div style={{ color: "#64748b", marginTop: 2 }}>2FA One-Time Password verification is enforced for all admin sessions.</div>
+                  </div>
+                  <div style={{ padding: "12px 14px", borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0", fontSize: 12 }}>
+                    <div style={{ fontWeight: 700, color: "#0f172a" }}>API Gateway</div>
+                    <div style={{ color: "#64748b", marginTop: 2 }}>Connected to: <code style={{ color: ORANGE }}>{API_BASE || "production API"}</code></div>
+                  </div>
+                  <div style={{ padding: "12px 14px", borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0", fontSize: 12 }}>
+                    <div style={{ fontWeight: 700, color: "#0f172a" }}>Live Sync Status</div>
+                    <div style={{ color: "#16a34a", fontWeight: 600, marginTop: 2 }}>● Active & Connected</div>
+                  </div>
+                </div>
+              ) : activeAdminModal === "reports" ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ fontSize: 12.5, color: "#64748b" }}>Export live platform database records as structured CSV files:</div>
+                  <button
+                    onClick={() => { downloadCsv(); setActiveAdminModal(null); }}
+                    style={{ padding: "12px 16px", borderRadius: 10, border: "1px solid #e2e8f0", background: "#ffffff", textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: 13, color: "#0f172a" }}>Student Directory (.csv)</div>
+                      <div style={{ fontSize: 11, color: "#64748b" }}>Export all {total} registered student accounts</div>
+                    </div>
+                    <Download size={16} color={ORANGE} />
+                  </button>
+                  <button
+                    onClick={() => { downloadPaymentsCsv(); setActiveAdminModal(null); }}
+                    style={{ padding: "12px 16px", borderRadius: 10, border: "1px solid #e2e8f0", background: "#ffffff", textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: 13, color: "#0f172a" }}>Enrollments & Payments (.csv)</div>
+                      <div style={{ fontSize: 11, color: "#64748b" }}>Export all {payTotal} verified transaction records</div>
+                    </div>
+                    <Download size={16} color={ORANGE} />
+                  </button>
+                </div>
+              ) : (
+                <div style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.6 }}>
+                  <p>Welcome to the <strong>Campus Point Admin Suite</strong>. Here you can monitor live mentor analytics, track student tasks, manage mock tests, moderate the community, and oversee verified payments.</p>
+                  <p style={{ marginTop: 10 }}>For emergency access support or backend database questions, reach out to the engineering team at <code>admin@campuspoint.in</code>.</p>
+                </div>
+              )}
+            </div>
+
+            <div style={{ padding: "14px 24px", background: "#f8fafc", borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "flex-end" }}>
+              <button
+                onClick={() => setActiveAdminModal(null)}
+                style={{ padding: "8px 16px", borderRadius: 8, border: "1px solid #e2e8f0", background: "#ffffff", color: "#334155", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 /* ── Payments tab: successful enrolments only ─────────────────────── */
-function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApproveEmail, approvingId }) {
+function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApproveEmail, approvingId, onUpdateAmount }) {
   const totalAmount = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
   const approvedCount = payments.filter((p) => p.confirmationEmailSent).length;
   const pendingCount = payments.length - approvedCount;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      {/* Payments Metric Strip */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))", gap: 12 }}>
-        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Total Collected</span>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
-            ₹{totalAmount.toLocaleString("en-IN")}
-          </div>
-        </div>
-        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Paid Enrollments</span>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
-            {payments.length}
-          </div>
-        </div>
-        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Emails Approved</span>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#16a34a", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
-            {approvedCount}
-          </div>
-        </div>
-        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Approval Pending</span>
-          <div style={{ fontSize: 20, fontWeight: 800, color: pendingCount > 0 ? "#ea580c" : "#64748b", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
-            {pendingCount}
-          </div>
-        </div>
-      </div>
+      
 
       <div style={{ background: "#ffffff", borderRadius: 16, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 2px 10px rgba(15,23,42,0.03)" }}>
         {/* Search bar */}
@@ -1463,8 +1953,33 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApp
                           </div>
                         </td>
                         <td style={{ padding: "11px 14px", fontSize: 11.5, color: "#475569" }}>{p.planLabel || p.plan || "-"}</td>
-                        <td style={{ padding: "11px 14px", fontSize: 12.5, color: "#0f172a", fontWeight: 800, whiteSpace: "nowrap" }}>
-                          ₹{Number(p.amount || 0).toLocaleString("en-IN")}
+                        <td style={{ padding: "11px 14px", fontSize: 12.5, color: "#0f172a", fontWeight: 800, whiteSpace: "nowrap" }} onClick={(e) => e.stopPropagation()}>
+                          <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                            <span>₹{Number(p.amount || 0).toLocaleString("en-IN")}</span>
+                            <button
+                              type="button"
+                              title="Edit price in database"
+                              onClick={() => {
+                                const val = window.prompt(`Edit payment amount for ${p.name || 'customer'}:`, p.amount || '13999');
+                                if (val !== null && val.trim() !== '') {
+                                  onUpdateAmount?.(p._id, Number(val.trim()));
+                                }
+                              }}
+                              style={{
+                                background: "none",
+                                border: "none",
+                                padding: "2px 4px",
+                                cursor: "pointer",
+                                color: "#94a3b8",
+                                fontSize: 11,
+                                borderRadius: 4,
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.color = "#FF693D"}
+                              onMouseLeave={(e) => e.currentTarget.style.color = "#94a3b8"}
+                            >
+                              ✎
+                            </button>
+                          </div>
                         </td>
                         <td style={{ padding: "11px 14px" }} onClick={(e) => e.stopPropagation()}>
                           {p.confirmationEmailSent ? (

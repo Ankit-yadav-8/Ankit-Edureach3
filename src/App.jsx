@@ -254,8 +254,8 @@ export default function App() {
       <Footer />
       <BackToTop />
       <CompareTray />
-      <Suspense fallback={null}><Chatbot /></Suspense>
-      <WhatsAppButton />
+      {!pathname.startsWith("/mentor") && <Suspense fallback={null}><Chatbot /></Suspense>}
+      {!pathname.startsWith("/mentor") && <WhatsAppButton />}
       <AuthModal />
       <ReviewPopup />
       {searchOpen && (

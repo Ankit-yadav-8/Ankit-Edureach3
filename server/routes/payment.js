@@ -311,10 +311,44 @@ router.get("/my-enrollments", requireAuth, async (req, res) => {
   }
 });
 
+
+/* ── Admin: Update Enrollment Amount / Pricing in Database ───────── */
+router.patch("/enrollments/:id", requireAdmin, async (req, res) => {
+  try {
+    const { amount, originalAmount } = req.body;
+    const update = {};
+    if (typeof amount === "number") update.amount = amount;
+    if (typeof originalAmount === "number") update.originalAmount = originalAmount;
+
+    const updated = await Enrollment.findByIdAndUpdate(
+      req.params.id,
+      { $set: update },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ error: "Enrollment not found" });
+    res.json({ ok: true, enrollment: updated });
+  } catch (e) {
+    console.error("[payment/enrollments/:id update]", e?.message || e);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 /* ── Admin: list successful payments (paid enrolments only) ───────── */
 router.get("/enrollments", requireAdmin, async (_req, res) => {
   res.set("Cache-Control", "no-store, no-cache, must-revalidate");
   try {
+    // Auto-update Yukeeth & Yuvan pricing to 13999 in database if recorded as 1
+    await Enrollment.updateMany(
+      {
+        $or: [
+          { email: { $in: ["yukeethjee@gmail.com", "yuvanjee28@gmail.com"] } },
+          { name: { $regex: /yukeeth|yuvan/i } }
+        ],
+        amount: { $lt: 1000 }
+      },
+      { $set: { amount: 13999, originalAmount: 13999 } }
+    ).catch(() => {});
+
     const items = await Enrollment.find({ status: "paid" }).sort({ createdAt: -1 }).lean();
     const enrollments = items.map((e) => ({ ...e, planLabel: PLANS[e.plan]?.label || e.plan }));
     res.json({ total: enrollments.length, enrollments });
