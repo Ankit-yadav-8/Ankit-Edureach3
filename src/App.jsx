@@ -153,12 +153,14 @@ export default function App() {
     return (
       <>
         <ScrollManager />
-        <Suspense fallback={<RouteFallback />}>
-          <Routes>
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/admin/*" element={<Admin />} />
-          </Routes>
-        </Suspense>
+        <RouteErrorBoundary key={pathname}>
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/*" element={<Admin />} />
+            </Routes>
+          </Suspense>
+        </RouteErrorBoundary>
       </>
     );
   }
@@ -169,12 +171,14 @@ export default function App() {
     return (
       <>
         <ScrollManager />
-        <Suspense fallback={<RouteFallback />}>
-          <Routes>
-            <Route path="/mentor" element={<MentorDashboard />} />
-            <Route path="/mentor/*" element={<MentorDashboard />} />
-          </Routes>
-        </Suspense>
+        <RouteErrorBoundary key={pathname}>
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
+              <Route path="/mentor" element={<MentorDashboard />} />
+              <Route path="/mentor/*" element={<MentorDashboard />} />
+            </Routes>
+          </Suspense>
+        </RouteErrorBoundary>
       </>
     );
   }
@@ -186,11 +190,13 @@ export default function App() {
     return (
       <>
         <ScrollManager />
-        <Suspense fallback={<RouteFallback />}>
-          <Routes>
-            <Route path="/ai" element={<CampusPointAI />} />
-          </Routes>
-        </Suspense>
+        <RouteErrorBoundary key={pathname}>
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
+              <Route path="/ai" element={<CampusPointAI />} />
+            </Routes>
+          </Suspense>
+        </RouteErrorBoundary>
         <AuthModal />
       </>
     );

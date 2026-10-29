@@ -56,7 +56,10 @@ app.use((_req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
   res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  res.setHeader("X-Permitted-Cross-Domain-Policies", "none");
+  res.setHeader("Origin-Agent-Cluster", "?1");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(self)");
   res.setHeader("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; base-uri 'none'");
   next();
 });
@@ -181,6 +184,21 @@ const aiLimiter = rl({ windowMs: 60 * 1000, max: 30 });
 app.use("/api/ai", aiLimiter, aiRoutes);
 app.use("/api/tests", apiLimiter, testRoutes);
 app.use("/api/quiz", apiLimiter, quizRoutes);
+
+// Centralized 404 handler for unmatched API routes
+app.use((_req, res) => {
+  res.status(404).json({ error: "Endpoint not found" });
+});
+
+// Centralized production-safe error handler (no stack trace or internal leaks)
+app.use((err, _req, res, _next) => {
+  console.error("[server-error]", err?.message || err);
+  const status = Number(err.status || err.statusCode || 500);
+  const message = IS_PROD && status === 500
+    ? "An internal server error occurred"
+    : (err.message || "Something went wrong");
+  res.status(status).json({ error: message });
+});
 
 connectDB()
   .then(() => {
