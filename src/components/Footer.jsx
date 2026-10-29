@@ -114,13 +114,6 @@ function Col({ title, links, unclickable }) {
   );
 }
 
-/* ── Member image positioning for perfect uncropped headshot framing ──────── */
-const MEMBER_IMAGE_POS = {
-  "team-head": "center 36%",
-  "developer-1": "center 8%",
-  "developer-2": "center 12%",
-};
-
 /* ── Team member card ───────────────────────────────────────────── */
 function DevCard({ t, index = 0 }) {
   const roleParts = (t.role || "")
@@ -128,78 +121,80 @@ function DevCard({ t, index = 0 }) {
     .map((s) => s.trim())
     .filter(Boolean);
 
-  const imgPos = MEMBER_IMAGE_POS[t.id] || "center 30%";
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 22 }}
+      initial={{ opacity: 0, y: 26 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.45, delay: index * 0.1, ease: [0.22, 0.68, 0, 1.1] }}
-      whileHover={{ y: -5 }}
-      style={{ height: "100%" }}
+      transition={{ duration: 0.5, delay: index * 0.12, ease: [0.22, 0.68, 0, 1.1] }}
+      whileHover={{ y: -4 }}
     >
       <Link
         className="fdev-card"
         to={`/team/${t.id}`}
         title={`View ${t.name}'s portfolio`}
       >
-        {/* ── Member photo showcase (3x size: 216px tall, full width) ── */}
-        <div className="fdev-img-wrap">
-          {t.photo ? (
+        {/* ── Member photo (falls back to initials) ── */}
+        <span
+          className="fdev-initials"
+          style={{
+            position: "relative",
+            width: 72,
+            height: 72,
+            borderRadius: 14,
+            display: "grid",
+            placeItems: "center",
+            background: `linear-gradient(135deg, ${t.accent} 0%, #E0421F 100%)`,
+            fontFamily: "Sora, sans-serif",
+            fontWeight: 900,
+            fontSize: "1.25rem",
+            letterSpacing: "-0.5px",
+            color: "#fff",
+            flexShrink: 0,
+            border: `1.5px solid ${t.accent}cc`,
+            overflow: "hidden",
+            userSelect: "none",
+          }}
+        >
+          {t.initials}
+          {t.photo && (
             <img
               src={t.photo}
               alt={t.name}
               loading="lazy"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: imgPos,
-                display: "block",
-              }}
+              onError={(e) => { e.currentTarget.style.display = "none"; }}
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center" }}
             />
-          ) : (
-            <div className="fdev-fallback-initials">
-              {t.initials}
-            </div>
           )}
+        </span>
 
-          {/* Top arrow pill overlay */}
-          <div className="fdev-arrow-pill" title="View Portfolio">
-            <ArrowUpRight size={15} />
-          </div>
-        </div>
-
-        {/* ── Card Content Body ── */}
-        <div className="fdev-body">
-          <div>
-            <span className="fdev-name">{t.name}</span>
-            <div className="fdev-roles">
-              {roleParts.map((r) => (
-                <span key={r} className="frole-chip">
-                  {r}
-                </span>
-              ))}
-            </div>
-          </div>
-
+        {/* Name + highlighted role chips */}
+        <span style={{ flex: 1, minWidth: 0 }}>
+          <span className="fdev-name">{t.name}</span>
+          <span className="fdev-roles">
+            {roleParts.map((r) => (
+              <span
+                key={r}
+                className="frole-chip"
+                style={{ background: "rgba(255,255,255,.07)", border: "1px solid rgba(255, 105, 61,.45)", color: "#fb9b85" }}
+              >
+                {r}
+              </span>
+            ))}
+          </span>
           {t.tagline && (
-            <p className="fdev-quote">
+            <span style={{ display: "block", fontSize: "0.82rem", color: "rgba(255,255,255,.85)", marginTop: 12, fontStyle: "normal", lineHeight: 1.5 }}>
               "{t.tagline}"
-            </p>
+            </span>
           )}
-
           {t.college && (
-            <div className="fdev-college">
-              <MapPin size={11} />
-              <span>{t.college}</span>
-            </div>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.7rem", color: "#fb9b85", fontWeight: 700, marginTop: 8, letterSpacing: 0.5, textTransform: "uppercase" }}>
+              <MapPin size={10} />
+              {t.college}
+            </span>
           )}
-        </div>
+        </span>
+        <ArrowUpRight className="fdev-arrow" size={16} color="rgba(255,255,255,.55)" />
       </Link>
     </motion.div>
   );
@@ -208,147 +203,52 @@ function DevCard({ t, index = 0 }) {
 /* ── Footer ─────────────────────────────────────────────────────── */
 export default function Footer() {
   return (
-    <footer style={{ background: "#000000", color: "#fff", paddingTop: "3.5rem", position: "relative", overflow: "hidden" }}>
+    <footer style={{ background: "#0a0a0a", color: "#fff", paddingTop: "3.5rem", position: "relative", overflow: "hidden" }}>
       <style>{`
         .fdev-card {
-          display: flex;
-          flex-direction: column;
-          border-radius: 18px;
-          background: #0a0a0a;
-          border: 1px solid #1a1a1a;
-          color: #fff;
-          text-decoration: none;
-          position: relative;
-          overflow: hidden;
-          height: 100%;
-          transition: background .22s ease, border-color .22s ease, transform .22s ease;
+          display: flex; align-items: flex-start; gap: 14px;
+          padding: 14px 18px; border-radius: 16px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(249,115,22,0.25);
+          color: #fff; text-decoration: none;
+          position: relative; overflow: hidden;
+          backdrop-filter: blur(8px);
+          transition: background .25s, border-color .25s, box-shadow .25s;
         }
         .fdev-card:hover {
-          background: #111111;
-          border-color: #2e2e2e;
-          transform: translateY(-4px);
+          background: rgba(255,255,255,0.08);
+          border-color: rgba(249,115,22,0.5);
         }
-        .fdev-img-wrap {
-          position: relative;
-          width: 100%;
-          height: 285px;
-          background: #141414;
-          overflow: hidden;
-          border-bottom: 1px solid #171717;
-        }
-        .fdev-card:hover .fdev-img-wrap img {
-          transform: scale(1.02);
-        }
-        .fdev-img-wrap img {
-          transform-origin: center 25%;
-          transition: transform .35s ease;
-        }
-        .fdev-fallback-initials {
-          width: 100%;
-          height: 100%;
-          display: grid;
-          place-items: center;
-          background: #171717;
-          color: #fff;
-          font-family: 'Sora', sans-serif;
-          font-weight: 900;
-          font-size: 2.2rem;
-        }
-        .fdev-arrow-pill {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          width: 30px;
-          height: 30px;
-          border-radius: 8px;
-          background: rgba(0,0,0,0.7);
-          border: 1px solid rgba(255,255,255,0.12);
-          display: grid;
-          place-items: center;
-          color: rgba(255,255,255,0.7);
-          transition: background .2s, color .2s, transform .2s;
-        }
-        .fdev-card:hover .fdev-arrow-pill {
-          background: #ff693d;
-          color: #fff;
-          border-color: #ff693d;
-          transform: translate(2px, -2px);
-        }
-        .fdev-body {
-          padding: 16px 18px 18px;
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-          gap: 10px;
-        }
-        .fdev-name {
-          display: block;
-          font-family: 'Sora', sans-serif;
-          font-size: 1.08rem;
-          font-weight: 800;
-          color: #ffffff;
-          line-height: 1.25;
-        }
-        .fdev-roles {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 6px;
-          margin-top: 6px;
-        }
+        .fdev-initials { transition: transform .3s cubic-bezier(.22,.68,0,1.3); }
+        .fdev-card:hover .fdev-initials { transform: rotate(-5deg) scale(1.07); }
+        .fdev-arrow { transition: transform .25s ease, color .25s ease; }
+        .fdev-card:hover .fdev-arrow { transform: translate(3px,-3px); color: var(--coral-light); }
+        .fdev-name { display: block; font-size: .9rem; font-weight: 700; color: #fff; }
+        .fdev-roles { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
         .frole-chip {
-          display: inline-flex;
-          align-items: center;
-          padding: 3px 9px;
-          border-radius: 6px;
-          background: #141414;
-          border: 1px solid #242424;
-          font-family: 'Sora', sans-serif;
-          font-size: .62rem;
-          font-weight: 800;
-          letter-spacing: .5px;
-          text-transform: uppercase;
-          color: #ff7a50;
+          display: inline-flex; align-items: center;
+          padding: 2px 9px; border-radius: 50px;
+          font-family: "Sora", sans-serif; font-size: .6rem; font-weight: 800;
+          letter-spacing: .5px; text-transform: uppercase; color: #fff;
           white-space: nowrap;
-        }
-        .fdev-quote {
-          margin: 4px 0 0;
-          font-size: .84rem;
-          color: #a1a1aa;
-          line-height: 1.5;
-          font-style: italic;
-          flex: 1;
-        }
-        .fdev-college {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          font-size: .72rem;
-          color: #ff7a50;
-          font-weight: 800;
-          letter-spacing: .6px;
-          text-transform: uppercase;
-          padding-top: 10px;
-          margin-top: auto;
-          border-top: 1px solid #171717;
         }
         .fteam-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 1.3rem;
-          max-width: 1140px;
+          gap: 1.2rem;
+          max-width: 1100px;
           margin: 0 auto;
         }
         @media (max-width: 960px) {
-          .fteam-grid {
-            grid-template-columns: 1fr;
-            max-width: 440px;
-          }
-          .fdev-img-wrap {
-            height: 310px;
-          }
+          .fteam-grid { grid-template-columns: 1fr; max-width: 460px; }
         }
+        @keyframes cpFloatOrb1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(100px,80px) scale(1.15); } }
+        @keyframes cpFloatOrb2 { 0% { transform: translate(0,0) scale(1.1); } 100% { transform: translate(-80px,-60px) scale(0.9); } }
       `}</style>
 
+      {/* CampusLoom-style floating glow orbs behind the footer */}
+      <div aria-hidden style={{ position: "absolute", width: 600, height: 600, borderRadius: "50%", top: -220, left: -180, filter: "blur(140px)", opacity: 0.45, pointerEvents: "none", zIndex: 0, background: "radial-gradient(circle, rgba(255,90,54,0.30) 0%, transparent 70%)", animation: "cpFloatOrb1 25s infinite alternate ease-in-out" }} />
+      <div aria-hidden style={{ position: "absolute", width: 500, height: 500, borderRadius: "50%", bottom: -160, right: -120, filter: "blur(140px)", opacity: 0.5, pointerEvents: "none", zIndex: 0, background: "radial-gradient(circle, rgba(255,150,90,0.34) 0%, transparent 70%)", animation: "cpFloatOrb2 20s infinite alternate ease-in-out" }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
 
         {/* Main link grid */}
@@ -421,30 +321,31 @@ export default function Footer() {
         <div
           style={{
             marginTop: "2.8rem",
-            borderRadius: 22,
-            padding: "2.2rem 1.8rem 2rem",
+            borderRadius: 20,
+            padding: "2rem 1.8rem 1.8rem",
             position: "relative",
             overflow: "hidden",
-            border: "1px solid #1a1a1a",
-            background: "#050505",
+            border: "1px solid rgba(255,255,255,.08)",
+            background: "rgba(255,255,255,.03)",
           }}
         >
-          {/* "Built by IITians" badge */}
+          {/* "Built by developers" badge */}
           <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
             <span
+              className="fteam-badge"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 7,
-                padding: "6px 18px",
+                padding: "6px 20px",
                 borderRadius: 50,
-                background: "#0f0f0f",
-                border: "1px solid #222222",
-                fontSize: ".74rem",
+                background: "rgba(255,105,61,0.1)",
+                border: "1px solid rgba(255,105,61,0.3)",
+                fontSize: ".76rem",
                 fontWeight: 800,
                 letterSpacing: 1.2,
                 textTransform: "uppercase",
-                color: "#ff7a50",
+                color: "#FF693D",
               }}
             >
               <Code2 size={13} />
@@ -453,31 +354,35 @@ export default function Footer() {
           </div>
 
           {/* Sub-heading */}
-          <p
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             style={{
               textAlign: "center",
-              color: "#e4e4e7",
+              color: "var(--gold)",
               fontWeight: 700,
-              letterSpacing: 1,
+              letterSpacing: 1.2,
               textTransform: "uppercase",
-              fontSize: ".82rem",
+              fontSize: ".85rem",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: 8,
-              marginBottom: "1.8rem",
+              marginBottom: "1.5rem",
             }}
           >
-            <Sparkles size={14} color="#ff7a50" />
+            <Sparkles size={14} />
             Crafted with{" "}
             <Heart
               size={13}
-              fill="#ff693d"
-              color="#ff693d"
+              fill="var(--coral)"
+              color="var(--coral)"
               style={{ margin: "0 2px" }}
             />{" "}
             by the CampusPoint Team
-          </p>
+          </motion.p>
 
           {/* Team cards grid */}
           <div className="fteam-grid">
@@ -493,7 +398,7 @@ export default function Footer() {
             marginTop: "2rem",
             paddingTop: "1.4rem",
             paddingBottom: "1.6rem",
-            borderTop: "1px solid #1a1a1a",
+            borderTop: "1px solid rgba(255,255,255,.1)",
             display: "flex",
             flexWrap: "wrap",
             gap: "1.2rem",
@@ -541,18 +446,18 @@ export default function Footer() {
                   borderRadius: "50%",
                   display: "grid",
                   placeItems: "center",
-                  background: "#111111",
-                  border: "1px solid #222222",
+                  background: "rgba(255,255,255,.08)",
+                  border: "1px solid rgba(255,255,255,.15)",
                   color: "rgba(255,255,255,.8)",
-                  transition: "background .2s, border-color .2s",
+                  transition: "box-shadow .2s, border-color .2s",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#1a1a1a";
-                  e.currentTarget.style.borderColor = "#ff693d";
+                  e.currentTarget.style.background = "rgba(249,115,22,0.18)";
+                  e.currentTarget.style.borderColor = "rgba(249,115,22,0.5)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#111111";
-                  e.currentTarget.style.borderColor = "#222222";
+                  e.currentTarget.style.background = "rgba(255,255,255,.08)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,.15)";
                 }}
               >
                 <Icon size={16} />
