@@ -216,7 +216,12 @@ export default function Navbar({ onSearch }) {
   ];
 
   const pLower = (location.pathname || "").toLowerCase();
-  if (pLower.startsWith("/admin") || pLower.startsWith("/mentor") || pLower === "/ai") {
+  const isExcluded = (
+    pLower === "/admin" || pLower.startsWith("/admin/") ||
+    pLower === "/mentor" || pLower.startsWith("/mentor/") ||
+    pLower === "/ai"
+  );
+  if (isExcluded) {
     return null;
   }
 

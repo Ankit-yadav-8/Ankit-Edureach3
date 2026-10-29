@@ -9,7 +9,12 @@ import { useLocation } from "react-router-dom";
 export default function TopBar() {
   const { pathname } = useLocation();
   const p = (pathname || "").toLowerCase();
-  if (p.startsWith("/admin") || p.startsWith("/mentor") || p === "/ai") {
+  const isExcluded = (
+    p === "/admin" || p.startsWith("/admin/") ||
+    p === "/mentor" || p.startsWith("/mentor/") ||
+    p === "/ai"
+  );
+  if (isExcluded) {
     return null;
   }
 

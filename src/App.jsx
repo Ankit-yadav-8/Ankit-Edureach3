@@ -144,10 +144,12 @@ export default function App() {
   }, []);
 
   const pathLower = (pathname || "").toLowerCase();
+  const isAdminRoute = pathLower === "/admin" || pathLower.startsWith("/admin/");
+  const isMentorRoute = pathLower === "/mentor" || pathLower.startsWith("/mentor/");
 
   // Admin dashboard renders standalone - no public navbar, footer, chatbot,
   // WhatsApp button, compare tray or auth modal bleeding into it.
-  if (pathLower.startsWith("/admin")) {
+  if (isAdminRoute) {
     return (
       <>
         <ScrollManager />
@@ -163,7 +165,7 @@ export default function App() {
 
   // Mentor Console renders standalone - no public navbar, footer, chatbot,
   // WhatsApp button, compare tray or auth modal bleeding into it.
-  if (pathLower.startsWith("/mentor")) {
+  if (isMentorRoute) {
     return (
       <>
         <ScrollManager />
@@ -272,8 +274,8 @@ export default function App() {
       <Footer />
       <BackToTop />
       <CompareTray />
-      {!pathLower.startsWith("/mentor") && !pathLower.startsWith("/admin") && <Suspense fallback={null}><Chatbot /></Suspense>}
-      {!pathLower.startsWith("/mentor") && !pathLower.startsWith("/admin") && <WhatsAppButton />}
+      {!isMentorRoute && !isAdminRoute && <Suspense fallback={null}><Chatbot /></Suspense>}
+      {!isMentorRoute && !isAdminRoute && <WhatsAppButton />}
       <AuthModal />
       <ReviewPopup />
       {searchOpen && (
