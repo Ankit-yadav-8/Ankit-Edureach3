@@ -86,27 +86,56 @@ const DEV_ORIGINS = ["http://localhost:5173", "http://localhost:3000", "http://1
 const allowedOrigins = [...new Set([...envOrigins, ...DEV_ORIGINS])];
 
 // `credentials: true` means a permissive origin check lets ANY site make
-// authenticated cross-origin calls with a logged-in user's token. Previously an
-// unset CLIENT_ORIGIN (envOrigins.length === 0) fell back to allowing every
-// origin — the insecure default applied exactly when config was forgotten in
-// production. Outside development the allowlist is now required.
+// authenticated cross-origin calls with a logged-in user's token. Outside
+// development, we explicitly allow known trusted production domains (CampusPoint,
+// Vercel preview/production deployments) and origins configured in CLIENT_ORIGIN.
 const IS_PROD = process.env.NODE_ENV === "production";
 if (IS_PROD && envOrigins.length === 0) {
-  console.warn("[cors] CLIENT_ORIGIN is not set — cross-origin browser requests will be refused.");
+  console.log("[cors] CLIENT_ORIGIN not explicitly set — allowing trusted production domains (campuspoint.in, *.vercel.app).");
+}
+
+function isOriginAllowed(origin) {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+
+  try {
+    const parsed = new URL(origin);
+    const host = parsed.hostname.toLowerCase();
+    // Allow CampusPoint domains, Vercel deployments, Render hosts, and local dev
+    if (
+      host === "campuspoint.in" ||
+      host.endsWith(".campuspoint.in") ||
+      host === "vercel.app" ||
+      host.endsWith(".vercel.app") ||
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host.endsWith(".onrender.com")
+    ) {
+      return true;
+    }
+  } catch {
+    return false;
+  }
+
+  if (!IS_PROD && (envOrigins.includes("*") || envOrigins.length === 0)) {
+    return true;
+  }
+
+  return false;
 }
 
 app.use(cors({
   origin: (origin, cb) => {
     // No Origin header: curl, mobile apps, same-origin server calls. These
     // aren't browser cross-origin requests, so CORS isn't the control here.
-    if (!origin) return cb(null, true);
-    if (allowedOrigins.includes(origin)) return cb(null, true);
-    // "*" stays honoured as an explicit opt-in, but only outside production —
-    // a wildcard with credentials is exactly the combination to avoid.
-    if (!IS_PROD && (envOrigins.includes("*") || envOrigins.length === 0)) return cb(null, true);
-    cb(new Error(`CORS: origin ${origin} not allowed`));
+    if (isOriginAllowed(origin)) {
+      return cb(null, true);
+    }
+    console.warn(`[cors blocked] origin: ${origin}`);
+    cb(null, false);
   },
   credentials: true,
+  optionsSuccessStatus: 200,
 }));
 
 const rl = (opts) => rateLimit({
