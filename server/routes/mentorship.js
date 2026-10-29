@@ -577,6 +577,24 @@ router.get("/my-mentor", requireAuth, async (req, res) => {
   }
 });
 
+// Student — the 1-on-1 session and meeting link scheduled by their mentor.
+// Rendered directly inside the student's 3D Mobile phone button in their Mentorship Dashboard.
+router.get("/my-session", requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("email").lean();
+    const email = (user?.email || "").toLowerCase();
+    const studentId = String(req.query.studentId || "").trim().toUpperCase();
+    if (!email || !studentId) return res.json({ session: null });
+    const owns = await Enrollment.exists({ studentId, email, status: "paid" });
+    if (!owns) return res.json({ session: null });
+    const doc = await MentorTask.findOne({ studentId }).lean();
+    res.json({ session: doc?.session || null });
+  } catch (e) {
+    console.error("[mentorship/my-session]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Cross-device dashboard sync — the student's study data (daily logs, tests,
 // backlog, weekly tasks, prefs) is stored per account + plan so every device

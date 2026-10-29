@@ -53,6 +53,9 @@ export const apiMyMentorTasks = (token, studentId) =>
 // The mentor assigned to this student ID - name + college, for the tracking header.
 export const apiMyMentor = (token, studentId) =>
   req(`/api/mentorship/my-mentor${studentId ? `?studentId=${encodeURIComponent(studentId)}` : ""}`, { token });
+// Student 1-on-1 session details and meet link scheduled by the mentor.
+export const apiMySession = (token, studentId) =>
+  req(`/api/mentorship/my-session${studentId ? `?studentId=${encodeURIComponent(studentId)}` : ""}`, { token });
 // Cross-device dashboard sync - load/save the study-data blob per account + plan.
 export const apiGetProgress = (token, plan) =>
   req(`/api/mentorship/progress${plan ? `?plan=${encodeURIComponent(plan)}` : ""}`, { token });
@@ -134,6 +137,10 @@ export const apiMentorStudentTasks    = (token, sid) => req(mentorScoped(sid, "t
 // Assign / replace the student's mandatory task list - the one write a mentor has.
 export const apiMentorSetStudentTasks = (token, sid, tasks) =>
   req(mentorScoped(sid, "tasks"), { method: "PUT", body: { tasks }, token });
+// Get and set the student's 1-on-1 session details and meet link.
+export const apiMentorStudentSession = (token, sid) => req(mentorScoped(sid, "session"), { token });
+export const apiMentorSetStudentSession = (token, sid, sessionData) =>
+  req(mentorScoped(sid, "session"), { method: "PUT", body: sessionData, token });
 
 export const apiMentorStudentLogins = (token, range = "7d") =>
   req(`/api/mentor/student-logins?range=${encodeURIComponent(range)}`, { token });

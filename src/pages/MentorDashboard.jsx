@@ -14,7 +14,7 @@ import ChapterQuizModal from "../components/quiz/ChapterQuizModal.jsx";
 import {
   apiMentorLogin, apiMentorMe, apiMentorSetPassword, apiMentorStudents,
   apiMentorStudentProgress, apiMentorStudentTests, apiMentorStudentTasks,
-  apiMentorSetStudentTasks, apiMentorStudentsOverview,
+  apiMentorSetStudentTasks, apiMentorStudentsOverview, apiMentorSetStudentSession,
 } from "../auth/api.js";
 
 const ACCENT = "#FF693D";
@@ -631,6 +631,23 @@ export default function MentorDashboard() {
     [token, activeId]
   );
 
+  const saveSession = useCallback(
+    async (sessionData) => {
+      if (!token || !activeId) return;
+      try {
+        await apiMentorSetStudentSession(token, activeId, sessionData);
+      } catch (e) {
+        console.warn("apiMentorSetStudentSession fallback to local", e?.message);
+      }
+      try {
+        localStorage.setItem(`cp:mentorSession:${activeId.toUpperCase()}`, JSON.stringify(sessionData));
+        window.dispatchEvent(new CustomEvent("cp:sessionUpdated", { detail: { studentId: activeId, session: sessionData } }));
+      } catch {}
+      return sessionData;
+    },
+    [token, activeId]
+  );
+
   // Task Studio state
   const [taskStudioTab, setTaskStudioTab] = useState("mentee"); // "mentee" | "all-roster"
   const [newTaskInput, setNewTaskInput] = useState("");
@@ -1039,6 +1056,7 @@ export default function MentorDashboard() {
         >
           {/* Top Sticky Navigation Bar */}
           <header
+            className="mentor-top-header"
             style={{
               position: "sticky",
               top: 0,
@@ -1046,16 +1064,16 @@ export default function MentorDashboard() {
               background: "#ffffff",
               borderBottom: "1px solid #e2e8f0",
               height: 52,
-              padding: "0 24px",
+              padding: "0 20px",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              gap: 12,
+              gap: 10,
               boxShadow: "0 1px 4px rgba(0,0,0,0.02)",
               flexShrink: 0,
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, flex: 1 }}>
               {/* Mobile Menu Hamburger */}
               <button
                 onClick={() => setMobileMenuOpen(true)}
@@ -1070,33 +1088,46 @@ export default function MentorDashboard() {
                   placeItems: "center",
                   cursor: "pointer",
                   color: "#0f172a",
+                  flexShrink: 0,
                 }}
               >
                 <Menu size={18} />
               </button>
 
-              {/* Breadcrumb */}
-              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#64748b" }}>
-                <span>Mentor</span>
-                <span>/</span>
-                <span style={{ fontWeight: 700, color: "#0f172a" }}>
+              {/* Breadcrumb with guaranteed nowrap and clean truncation */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontSize: 13,
+                  color: "#64748b",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  minWidth: 0,
+                }}
+              >
+                <span className="breadcrumb-prefix" style={{ whiteSpace: "nowrap" }}>Mentor</span>
+                <span className="breadcrumb-prefix" style={{ color: "#cbd5e1" }}>/</span>
+                <span style={{ fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap" }}>
                   {NAV_ITEMS.find((n) => n.id === activeTab)?.label}
                 </span>
-                {activeStudent && activeTab === "workspace" && (
-                  <>
-                    <span>/</span>
-                    <span style={{ color: ACCENT, fontWeight: 700 }}>{activeStudent.name}</span>
-                  </>
+                {activeStudent && (activeTab === "workspace" || activeTab === "logins") && (
+                  <span className="breadcrumb-student" style={{ display: "inline-flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
+                    <span style={{ color: "#cbd5e1" }}>/</span>
+                    <span style={{ color: ACCENT, fontWeight: 700, whiteSpace: "nowrap" }}>{activeStudent.name}</span>
+                  </span>
                 )}
               </div>
             </div>
 
             {/* Right Header Controls */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
               {/* Student Switcher Dropdown */}
               {students.length > 0 && (
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ fontSize: 11.5, color: "#64748b", fontWeight: 600 }} className="desktop-only-txt">
+                <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                  <span style={{ fontSize: 11.5, color: "#64748b", fontWeight: 600, whiteSpace: "nowrap" }} className="desktop-only-txt">
                     Mentee:
                   </span>
                   <select
@@ -1104,7 +1135,7 @@ export default function MentorDashboard() {
                     onChange={(e) => setActiveId(e.target.value)}
                     style={{
                       height: 34,
-                      padding: "0 10px",
+                      padding: "0 8px",
                       borderRadius: 8,
                       border: "1px solid #e2e8f0",
                       background: "#fff",
@@ -1114,6 +1145,8 @@ export default function MentorDashboard() {
                       outline: "none",
                       cursor: "pointer",
                       maxWidth: 160,
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
                     }}
                   >
                     {students.map((s) => (
@@ -1217,6 +1250,10 @@ export default function MentorDashboard() {
                     tasks={report.tasks}
                     updatedAt={report.updatedAt}
                     onSaveTasks={saveTasks}
+                    studentId={activeId}
+                    student={activeStudent}
+                    token={token}
+                    onSaveSession={saveSession}
                   />
                 )}
               </div>
@@ -1226,7 +1263,12 @@ export default function MentorDashboard() {
             {activeTab === "logins" && (
               <StudentLoginTracking
                 token={token}
+                activeStudentId={activeId}
+                students={students}
                 onSelectStudent={(sid) => {
+                  setActiveId(sid);
+                }}
+                onOpenReport={(sid) => {
                   setActiveId(sid);
                   setActiveTab("workspace");
                 }}
@@ -1816,6 +1858,7 @@ export default function MentorDashboard() {
         .mobile-only-btn { display: none; }
         
         @media (max-width: 900px) {
+          .mentor-top-header { padding: 0 12px !important; }
           .mobile-hamburger-btn { display: grid !important; }
           .mobile-only-btn { display: block !important; }
           .desktop-only-txt { display: none !important; }
@@ -1826,6 +1869,10 @@ export default function MentorDashboard() {
           .sidebar-mobile-open {
             transform: translateX(0) !important;
           }
+        }
+        @media (max-width: 640px) {
+          .breadcrumb-prefix { display: none !important; }
+          .breadcrumb-student { display: none !important; }
         }
       `}</style>
     </>

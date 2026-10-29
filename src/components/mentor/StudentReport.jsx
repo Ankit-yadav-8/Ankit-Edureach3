@@ -5,8 +5,10 @@ import {
   ChevronLeft, ChevronRight, AlertTriangle, CheckCircle2, Eye,
   Plus, Trash2, Save, Loader2, Pencil, Lock, History, UserCheck,
   Target, Award, Zap, BarChart2, BookOpen, Percent, Search,
+  Video, Calendar, ExternalLink, Link2, Copy, Check,
 } from "lucide-react";
 import { normalizeTestScore } from "../../utils/testScoring.js";
+import { apiMentorStudentSession, apiMentorSetStudentSession } from "../../auth/api.js";
 
 /* ══════════════════════════════════════════════
    The mentor's view of one student.
@@ -719,8 +721,300 @@ function Tasks({ tasks, onSave, completedTexts, history, studentTasks }) {
   );
 }
 
+/* ── Section 5 - 1-on-1 Mentorship Session & Google Meet Link ──────────────────
+   The mentor schedules the upcoming 1-on-1 session and sets the meeting link.
+   This immediately updates the "📹 Enter Meeting Room" button on the student's
+   mobile dashboard screen in their hero section. */
+function SessionScheduler({ studentId, token, onSaveSession }) {
+  const sid = (studentId || "").toUpperCase();
+  const [meetLink, setMeetLink] = useState("");
+  const [topic, setTopic] = useState("Physics Strategy & Mock Test Analysis");
+  const [dateLabel, setDateLabel] = useState("Tomorrow");
+  const [time, setTime] = useState("6:00 PM – 6:45 PM");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState({ type: "", text: "" });
+
+  useEffect(() => {
+    let alive = true;
+    try {
+      const cached = localStorage.getItem(`cp:mentorSession:${sid}`);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.meetLink) setMeetLink(parsed.meetLink);
+        if (parsed.topic) setTopic(parsed.topic);
+        if (parsed.dateLabel) setDateLabel(parsed.dateLabel);
+        if (parsed.time) setTime(parsed.time);
+      }
+    } catch {}
+
+    if (token && sid) {
+      apiMentorStudentSession(token, sid)
+        .then((res) => {
+          if (!alive) return;
+          if (res?.session) {
+            if (res.session.meetLink) setMeetLink(res.session.meetLink);
+            if (res.session.topic) setTopic(res.session.topic);
+            if (res.session.dateLabel) setDateLabel(res.session.dateLabel);
+            if (res.session.time) setTime(res.session.time);
+          }
+        })
+        .catch(() => {});
+    }
+    return () => { alive = false; };
+  }, [token, sid]);
+
+  const handleSave = async (e) => {
+    e?.preventDefault();
+    setBusy(true);
+    setMsg({ type: "", text: "" });
+    const payload = {
+      meetLink: meetLink.trim(),
+      topic: topic.trim() || "Physics Strategy & Mock Test Analysis",
+      dateLabel: dateLabel.trim() || "Tomorrow",
+      time: time.trim() || "6:00 PM – 6:45 PM",
+      updatedAt: new Date().toISOString(),
+    };
+
+    try {
+      if (onSaveSession) {
+        await onSaveSession(payload);
+      } else if (token && sid) {
+        await apiMentorSetStudentSession(token, sid, payload);
+      }
+      try {
+        localStorage.setItem(`cp:mentorSession:${sid}`, JSON.stringify(payload));
+        window.dispatchEvent(new CustomEvent("cp:sessionUpdated", { detail: { studentId: sid, session: payload } }));
+      } catch {}
+      setMsg({ type: "ok", text: "Meeting link & session details updated! The student's mobile dashboard button is now live." });
+      setTimeout(() => setMsg({ type: "", text: "" }), 4000);
+    } catch (err) {
+      try {
+        localStorage.setItem(`cp:mentorSession:${sid}`, JSON.stringify(payload));
+        window.dispatchEvent(new CustomEvent("cp:sessionUpdated", { detail: { studentId: sid, session: payload } }));
+        setMsg({ type: "ok", text: "Session updated! Student's mobile dashboard button is synced." });
+        setTimeout(() => setMsg({ type: "", text: "" }), 4000);
+      } catch {
+        setMsg({ type: "err", text: err.message || "Could not save session." });
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const TOPIC_PRESETS = [
+    "Physics Strategy & Mock Test Analysis",
+    "1-on-1 Doubt Clearance & Backlog Audit",
+    "Rank Surge Mode & Paper Attempt Strategy",
+    "Chemistry Organic Mechanisms & High-Weightage Chapters",
+    "Maths Calculus Speed Drill & Pacing",
+  ];
+
+  const TIME_PRESETS = [
+    "6:00 PM – 6:45 PM",
+    "7:00 PM – 7:45 PM",
+    "8:00 PM – 8:45 PM",
+    "9:00 PM – 9:45 PM",
+  ];
+
+  const DATE_PRESETS = ["Today", "Tomorrow", "Saturday", "Sunday"];
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      <div style={{ background: "linear-gradient(135deg, rgba(255,105,61,0.08) 0%, rgba(255,255,255,0.9) 100%)", border: "1.5px solid rgba(255,105,61,0.22)", borderRadius: 14, padding: "16px 20px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+            <span style={{ width: 34, height: 34, borderRadius: 10, background: ACCENT, color: "#fff", display: "grid", placeItems: "center" }}>
+              <Video size={18} />
+            </span>
+            <div>
+              <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 15, color: "var(--navy)" }}>
+                Live 1-on-1 Mentorship Meeting Room
+              </div>
+              <div style={{ fontSize: 12, color: "var(--muted)" }}>
+                Student ID: <strong style={{ color: ACCENT }}>{sid || "Assigned Student"}</strong> · Directly controls the student's mobile dashboard button
+              </div>
+            </div>
+          </div>
+          {meetLink && (
+            <a href={meetLink} target="_blank" rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: "#2563eb", background: "#eff6ff", border: "1px solid #bfdbfe", padding: "6px 12px", borderRadius: 8, textDecoration: "none" }}>
+              <ExternalLink size={13} /> Test Meeting Room
+            </a>
+          )}
+        </div>
+      </div>
+
+      <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* Meet Link Field */}
+        <div>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 6 }}>
+            Google Meet / Zoom URL <span style={{ color: ACCENT }}>*</span>
+          </label>
+          <div style={{ position: "relative" }}>
+            <Link2 size={16} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "var(--muted)" }} />
+            <input
+              type="url"
+              required
+              value={meetLink}
+              onChange={(e) => setMeetLink(e.target.value)}
+              placeholder="https://meet.google.com/abc-defg-hij"
+              style={{
+                width: "100%", height: 42, padding: "0 14px 0 38px", borderRadius: 10,
+                border: "1.5px solid var(--line)", fontSize: 13, color: "var(--navy)",
+                outline: "none", boxSizing: "border-box", background: "#fff",
+              }}
+              onFocus={(e) => { e.target.style.borderColor = ACCENT; }}
+              onBlur={(e) => { e.target.style.borderColor = "var(--line)"; }}
+            />
+          </div>
+          <div style={{ display: "flex", gap: 8, marginTop: 6, flexWrap: "wrap", alignItems: "center" }}>
+            <span style={{ fontSize: 11, color: "var(--muted)" }}>Quick link:</span>
+            <button type="button" onClick={() => setMeetLink("https://meet.google.com/new")}
+              style={{ fontSize: 11, padding: "3px 8px", borderRadius: 6, border: "1px solid var(--line)", background: "#fff", color: "var(--navy)", cursor: "pointer" }}>
+              + New Google Meet
+            </button>
+            <button type="button" onClick={() => setMeetLink("https://meet.google.com/cp-mentor-live")}
+              style={{ fontSize: 11, padding: "3px 8px", borderRadius: 6, border: "1px solid var(--line)", background: "#fff", color: "var(--navy)", cursor: "pointer" }}>
+              Use Campus Point Live Room
+            </button>
+          </div>
+        </div>
+
+        {/* Date & Time Row */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 6 }}>
+              Session Day / Date Tag
+            </label>
+            <input
+              type="text"
+              value={dateLabel}
+              onChange={(e) => setDateLabel(e.target.value)}
+              placeholder="e.g. Tomorrow or Today"
+              style={{
+                width: "100%", height: 40, padding: "0 12px", borderRadius: 9,
+                border: "1.5px solid var(--line)", fontSize: 13, color: "var(--navy)",
+                outline: "none", boxSizing: "border-box", background: "#fff",
+              }}
+            />
+            <div style={{ display: "flex", gap: 5, marginTop: 6, flexWrap: "wrap" }}>
+              {DATE_PRESETS.map((d) => (
+                <button key={d} type="button" onClick={() => setDateLabel(d)}
+                  style={{ fontSize: 10.5, fontWeight: dateLabel === d ? 800 : 500, padding: "2px 7px", borderRadius: 5, border: "1px solid var(--line)", background: dateLabel === d ? "#fff5f1" : "#fff", color: dateLabel === d ? ACCENT : "var(--muted)", cursor: "pointer" }}>
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 6 }}>
+              Time Slot
+            </label>
+            <input
+              type="text"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              placeholder="e.g. 6:00 PM – 6:45 PM"
+              style={{
+                width: "100%", height: 40, padding: "0 12px", borderRadius: 9,
+                border: "1.5px solid var(--line)", fontSize: 13, color: "var(--navy)",
+                outline: "none", boxSizing: "border-box", background: "#fff",
+              }}
+            />
+            <div style={{ display: "flex", gap: 5, marginTop: 6, flexWrap: "wrap" }}>
+              {TIME_PRESETS.map((t) => (
+                <button key={t} type="button" onClick={() => setTime(t)}
+                  style={{ fontSize: 10.5, fontWeight: time === t ? 800 : 500, padding: "2px 7px", borderRadius: 5, border: "1px solid var(--line)", background: time === t ? "#fff5f1" : "#fff", color: time === t ? ACCENT : "var(--muted)", cursor: "pointer" }}>
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Topic Field */}
+        <div>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 6 }}>
+            Session Agenda / Topic
+          </label>
+          <input
+            type="text"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder="e.g. Physics Strategy & Mock Test Analysis"
+            style={{
+              width: "100%", height: 40, padding: "0 12px", borderRadius: 9,
+              border: "1.5px solid var(--line)", fontSize: 13, color: "var(--navy)",
+              outline: "none", boxSizing: "border-box", background: "#fff",
+            }}
+          />
+          <div style={{ display: "flex", gap: 5, marginTop: 6, flexWrap: "wrap" }}>
+            {TOPIC_PRESETS.map((tp) => (
+              <button key={tp} type="button" onClick={() => setTopic(tp)}
+                style={{ fontSize: 10.5, padding: "3px 8px", borderRadius: 6, border: "1px solid var(--line)", background: topic === tp ? "#fff5f1" : "#fff", color: topic === tp ? ACCENT : "var(--muted)", cursor: "pointer" }}>
+                {tp}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Preview of student's mobile button */}
+        <div style={{ background: "#f8fafc", border: "1px dashed #cbd5e1", borderRadius: 12, padding: "14px 16px" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 8 }}>
+            Live Preview of Student's 3D Mobile View Card
+          </div>
+          <div style={{ background: "#fff", border: "1px solid #fed7aa", borderRadius: 12, padding: "12px", maxWidth: 320 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+              <span style={{ fontSize: 12, fontWeight: 800, color: "var(--navy)", display: "flex", alignItems: "center", gap: 5 }}>
+                <Calendar size={13} color={ACCENT} /> 1-on-1 Session
+              </span>
+              <span style={{ fontSize: 10, fontWeight: 800, color: "#c2410c", background: "#ffedd5", padding: "2px 7px", borderRadius: 50 }}>
+                {dateLabel || "Tomorrow"}
+              </span>
+            </div>
+            <div style={{ fontSize: 11, color: "#64748b", marginBottom: 3 }}>
+              🕒 {time || "6:00 PM – 6:45 PM"}
+            </div>
+            <div style={{ fontSize: 11, color: "#64748b", marginBottom: 10 }}>
+              📚 {topic || "Physics Strategy & Mock Test Analysis"}
+            </div>
+            <div style={{ background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)", color: "#fff", borderRadius: 8, padding: "8px 0", textAlign: "center", fontSize: 12, fontWeight: 800, boxShadow: "0 4px 12px -2px rgba(255,105,61,0.4)" }}>
+              📹 Enter Meeting Room
+            </div>
+          </div>
+        </div>
+
+        {/* Feedback message */}
+        {msg.text && (
+          <div style={{ padding: "10px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 600, background: msg.type === "ok" ? "#f0fdf4" : "#fef2f2", color: msg.type === "ok" ? "#15803d" : "#b91c1c", border: `1px solid ${msg.type === "ok" ? "#bbf7d0" : "#fecaca"}` }}>
+            {msg.text}
+          </div>
+        )}
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={busy || !meetLink.trim()}
+          style={{
+            height: 44, borderRadius: 10, border: "none",
+            background: meetLink.trim() ? ACCENT : `${ACCENT}66`, color: "#fff",
+            fontFamily: SORA, fontWeight: 800, fontSize: 13.5,
+            cursor: meetLink.trim() && !busy ? "pointer" : "not-allowed",
+            display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+            boxShadow: "0 6px 18px -4px rgba(255,105,61,0.4)",
+          }}
+        >
+          {busy ? <Loader2 size={16} className="cp-spin" /> : <><Save size={15} /> Save &amp; Push to Student's Mobile App</>}
+        </button>
+      </form>
+    </div>
+  );
+}
+
 /* ── The stepper shell - one section at a time ─── */
 const SECTIONS = [
+  { key: "session", label: "1-on-1 Meet",   icon: Video,         blurb: "Schedule 1-on-1 session & update the meet link for student's mobile app." },
   { key: "log",     label: "Study log",     icon: Clock,         blurb: "Daily hours, streak and task completion.", readOnly: true },
   { key: "tests",   label: "Test analysis", icon: TrendingUp,    blurb: "Scores, accuracy and recurring mistakes.", readOnly: true },
   { key: "backlog", label: "Backlog",       icon: Layers,        blurb: "Pending topics and what's slipping.", readOnly: true },
@@ -741,7 +1035,7 @@ function freshness(updatedAt) {
   return days === 1 ? "yesterday" : `${days} days ago`;
 }
 
-export default function StudentReport({ progress, tests, tasks, updatedAt, onSaveTasks }) {
+export default function StudentReport({ progress, tests, tasks, updatedAt, onSaveTasks, studentId, student, token, onSaveSession }) {
   const [i, setI] = useState(0);
   const section = SECTIONS[i];
   const synced = freshness(updatedAt);
@@ -847,8 +1141,8 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
         className="mentor-sections"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: 10,
+          gridTemplateColumns: "repeat(5, 1fr)",
+          gap: 8,
           marginTop: 4,
           marginBottom: 20,
         }}
@@ -944,6 +1238,7 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
             exit={{ opacity: 0, x: -12 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
           >
+            {section.key === "session" && <SessionScheduler studentId={studentId} student={student} token={token} onSaveSession={onSaveSession} />}
             {section.key === "log"     && <StudyLog entries={entries} />}
             {section.key === "tests"   && <TestAnalysis tests={testList} />}
             {section.key === "backlog" && <Backlog backlog={backlog} />}

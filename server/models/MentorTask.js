@@ -18,6 +18,13 @@ const mentorTaskSchema = new mongoose.Schema(
         updatedAt: { type: Date, default: null },
       },
     ],
+    session: {
+      meetLink: { type: String, trim: true, default: "" },
+      topic: { type: String, trim: true, default: "Physics Strategy & Mock Test Analysis" },
+      time: { type: String, trim: true, default: "6:00 PM – 6:45 PM" },
+      dateLabel: { type: String, trim: true, default: "Tomorrow" },
+      updatedAt: { type: Date, default: Date.now },
+    },
     // Who last set this list — stamped so a student's report can name the mentor
     // and an admin can see which mentor is driving the plan. Optional: legacy
     // admin-set lists have neither.

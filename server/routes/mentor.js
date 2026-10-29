@@ -390,6 +390,63 @@ router.put("/students/:studentId/tasks", requireMentor, requirePasswordChanged, 
   }
 });
 
+/* ── The 1-on-1 session & meet link this student sees ─────────────────────── */
+router.get("/students/:studentId/session", requireMentor, requirePasswordChanged, async (req, res) => {
+  try {
+    const enr = await resolveAndAudit(req, "session");
+    if (!enr) return res.status(404).json({ error: "Student not found" });
+    const doc = await MentorTask.findOne({ studentId: enr.studentId }).lean();
+    res.json({ session: doc?.session || null });
+  } catch (e) {
+    console.error("[mentor/session GET]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* ── Schedule or update this student's 1-on-1 session & meet link ─────────── */
+router.put("/students/:studentId/session", requireMentor, requirePasswordChanged, async (req, res) => {
+  try {
+    const enr = await resolveAndAudit(req, "session:write");
+    if (!enr) return res.status(404).json({ error: "Student not found" });
+    const { meetLink, topic, time, dateLabel } = req.body || {};
+    const sessionData = {
+      meetLink: String(meetLink || "").trim(),
+      topic: String(topic || "Physics Strategy & Mock Test Analysis").trim(),
+      time: String(time || "6:00 PM – 6:45 PM").trim(),
+      dateLabel: String(dateLabel || "Tomorrow").trim(),
+      updatedAt: new Date(),
+    };
+
+    const doc = await MentorTask.findOneAndUpdate(
+      { studentId: enr.studentId },
+      {
+        studentId: enr.studentId,
+        session: sessionData,
+        assignedByMentorId: req.mentor._id,
+        assignedByName: req.mentor.name,
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ).lean();
+
+    MentorActivityLog.create({
+      mentorId: req.mentor._id,
+      mentorName: req.mentor.name,
+      mentorEmail: req.mentor.email,
+      studentId: enr.studentId,
+      studentName: enr.name,
+      action: "session_update",
+      details: sessionData,
+      ip: req.ip || "",
+      userAgent: String(req.headers["user-agent"] || "").slice(0, 300),
+    }).catch(() => {});
+
+    res.json({ ok: true, session: doc.session });
+  } catch (e) {
+    console.error("[mentor/session PUT]", e.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 /* ── Student Login Tracking & Analytics for this Mentor ──────────────────── */
 router.get("/student-logins", requireMentor, requirePasswordChanged, async (req, res) => {
   try {
