@@ -388,14 +388,18 @@ router.get("/:id/tracking-detail", async (req, res) => {
       period: { range, from, to },
       dailyTrend,
       students: studentList,
-      logs: allLogs.map((l) => ({
-        id: l._id,
-        action: l.action,
-        studentId: l.studentId || "",
-        studentName: l.studentName || "",
-        details: l.details || {},
-        createdAt: l.createdAt,
-      })),
+            logs: allLogs.map((l) => {
+        const sUpper = String(l.studentId || "").toUpperCase();
+        const enrName = enrMap.get(sUpper)?.name;
+        return {
+          id: l._id,
+          action: l.action,
+          studentId: l.studentId || "",
+          studentName: enrName || l.studentName || "",
+          details: l.details || {},
+          createdAt: l.createdAt,
+        };
+      }),
     });
   } catch (e) {
     console.error("[admin/mentors tracking-detail]", e.message);

@@ -106,21 +106,16 @@ router.get("/overview", async (req, res) => {
         action: "mentor_login",
         createdAt: { $gte: todayStart, $lte: todayEnd },
       }).lean(),
-      User.countDocuments({
-        lastLogin: { $gte: todayStart, $lte: todayEnd },
-      }).catch(() => 0),
       MentorActivityLog.find().sort({ createdAt: -1 }).limit(25).lean(),
     ]);
 
-    // Compute Today's exact logins
+    // Compute Today's exact logins for verified mentorship students only
     const uniqueStudentsTodaySet = new Set();
     todayStudentLogs.forEach((l) => {
       if (l.studentId) uniqueStudentsTodaySet.add(String(l.studentId).toUpperCase());
-      else if (l.userId) uniqueStudentsTodaySet.add(String(l.userId));
-      else if (l.studentName) uniqueStudentsTodaySet.add(String(l.studentName));
     });
-    const uniqueStudentsToday = Math.max(uniqueStudentsTodaySet.size, todayUsersWithLastLogin);
-    const studentLoginsToday = Math.max(todayStudentLogs.length, uniqueStudentsToday);
+    const uniqueStudentsToday = uniqueStudentsTodaySet.size;
+    const studentLoginsToday = todayStudentLogs.filter((l) => l.studentId).length;
 
     const uniqueMentorsTodaySet = new Set();
     todayMentorLogs.forEach((l) => {

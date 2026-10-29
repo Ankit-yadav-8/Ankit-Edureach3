@@ -119,6 +119,18 @@ router.post("/login", async (req, res) => {
         if (enrollments && enrollments.length > 0) {
           for (const enr of enrollments) {
             if (!enr.studentId) continue;
+
+            // De-duplicate: avoid spamming multiple login events within 5 minutes for the same student
+            const recentLog = await MentorActivityLog.findOne({
+              action: "student_login",
+              studentId: enr.studentId,
+              createdAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) },
+            });
+            if (recentLog) continue;
+
+            // Prefer enrolled student's name
+            const studentName = enr.name || user.name || "Student";
+
             const mentors = await Mentor.find({ students: enr.studentId, active: true })
               .select("_id name email")
               .lean();
@@ -129,7 +141,7 @@ router.post("/login", async (req, res) => {
                   mentorName: m.name,
                   mentorEmail: m.email,
                   studentId: enr.studentId,
-                  studentName: user.name || enr.name,
+                  studentName,
                   userId: user._id,
                   action: "student_login",
                   details: { plan: enr.plan },
@@ -140,7 +152,7 @@ router.post("/login", async (req, res) => {
             } else {
               await MentorActivityLog.create({
                 studentId: enr.studentId,
-                studentName: user.name || enr.name,
+                studentName,
                 userId: user._id,
                 action: "student_login",
                 details: { plan: enr.plan, unassigned: true },
@@ -149,16 +161,9 @@ router.post("/login", async (req, res) => {
               });
             }
           }
-        } else {
-          await MentorActivityLog.create({
-            studentName: user.name,
-            userId: user._id,
-            action: "student_login",
-            details: { freeTier: true },
-            ip: clientIp,
-            userAgent: clientUa,
-          });
         }
+        // Note: Free-tier users who are not enrolled in mentorship do NOT create
+        // MentorActivityLog entries, preventing phantom student login records.
       } catch (err) {
         console.error("[auth/student-login-log]", err.message);
       }

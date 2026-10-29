@@ -1,12 +1,10 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Users, LogOut, Lock, Loader2, ShieldCheck, AlertCircle, Zap,
   Activity, BookOpen, Trophy, ClipboardList, CheckCircle2, Menu,
-  X, ArrowRight, Eye, EyeOff, Mail, RefreshCw, ChevronRight, ChevronLeft,
+  X, ArrowRight, Eye, EyeOff, Mail, RefreshCw, ChevronRight,
   Sparkles, UserCheck, Flame, Target, Award, Trash2, Plus, Tag, Search,
-  Video, Calendar, Clock, TrendingUp, MoreVertical, Building2, ExternalLink,
-  Lightbulb, Check, Percent, Hash, Layers, Home, GraduationCap,
 } from "lucide-react";
 import Seo from "../components/Seo.jsx";
 import StudentReport from "../components/mentor/StudentReport.jsx";
@@ -19,26 +17,14 @@ import {
   apiMentorSetStudentTasks, apiMentorStudentsOverview, apiMentorSetStudentSession,
 } from "../auth/api.js";
 
-const ACCENT = "#ff5e36";
-const ACCENT_DARK = "#e04924";
-const ACCENT_LIGHT = "#fff5f2";
+const ACCENT = "#FF693D";
+const SORA = "Sora, system-ui, sans-serif";
 
 const TOKEN_KEY = "cp:mentorToken";
 const readToken = () => { try { return localStorage.getItem(TOKEN_KEY) || ""; } catch { return ""; } };
 const writeToken = (t) => { try { t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY); } catch { /* private mode */ } };
 
-function freshness(updatedAt) {
-  if (!updatedAt) return "2h ago";
-  const mins = Math.floor((Date.now() - new Date(updatedAt).getTime()) / 60000);
-  if (mins < 2) return "just now";
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  return days === 1 ? "yesterday" : `${days}d ago`;
-}
-
-/* ── Modern Premium Mentor Login ─── */
+/* ── Modern Premium Mentor Login Page (Matches Admin Login) ─── */
 function Login({ onDone }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,65 +48,234 @@ function Login({ onDone }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface-50 p-4 font-inter text-slate-800">
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "radial-gradient(ellipse at top, #fff5f1 0%, #f8fafc 50%, #f1f5f9 100%)",
+        padding: "120px 16px 60px",
+        boxSizing: "border-box",
+        fontFamily: "Inter, system-ui, sans-serif",
+      }}
+    >
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-floating p-8"
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          width: "100%",
+          maxWidth: 440,
+          background: "#ffffff",
+          borderRadius: 20,
+          border: "1.5px solid rgba(255,105,61,0.2)",
+          padding: "36px 32px",
+          boxShadow: "0 24px 60px -15px rgba(15,23,42,0.08), 0 0 0 1px rgba(255,105,61,0.06)",
+          boxSizing: "border-box",
+        }}
       >
-        <div className="flex items-center justify-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-brand-500 text-white flex items-center justify-center font-bold text-xl shadow-md">
-            CP
+        {/* Floating Brand Badge */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+          <div
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 16,
+              background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+              display: "grid",
+              placeItems: "center",
+              boxShadow: "0 10px 24px -6px rgba(255,105,61,0.45)",
+              color: "#fff",
+            }}
+          >
+            <ShieldCheck size={28} />
           </div>
         </div>
 
-        <div className="text-center mb-6">
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">Mentor Workspace Console</h2>
-          <p className="text-xs text-slate-500 mt-1">Sign in with your verified mentor credentials</p>
+        <div style={{ textAlign: "center", marginBottom: 24 }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              fontSize: 11,
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: 1,
+              color: ACCENT,
+              background: "rgba(255,105,61,0.1)",
+              padding: "3px 10px",
+              borderRadius: 50,
+              marginBottom: 8,
+            }}
+          >
+            <Sparkles size={12} /> Campus Point Mentorship
+          </div>
+          <h1
+            style={{
+              fontFamily: SORA,
+              fontWeight: 800,
+              fontSize: 22,
+              color: "#0f172a",
+              margin: 0,
+              lineHeight: 1.25,
+            }}
+          >
+            Mentor Console
+          </h1>
+          <p style={{ fontSize: 13, color: "#64748b", margin: "6px 0 0", lineHeight: 1.5 }}>
+            Sign in with your verified mentor credentials to monitor mentee logins, test analytics, and assignments.
+          </p>
         </div>
 
         {err && (
-          <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2">
-            <AlertCircle size={15} className="flex-shrink-0" /> {err}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 8,
+              background: "#fef2f2",
+              border: "1px solid #fecaca",
+              borderRadius: 12,
+              padding: "11px 13px",
+              fontSize: 12.5,
+              color: "#b91c1c",
+              marginBottom: 18,
+              lineHeight: 1.45,
+            }}
+          >
+            <AlertCircle size={15} style={{ flexShrink: 0, marginTop: 1 }} />
+            <span>{err}</span>
           </div>
         )}
 
-        <form onSubmit={submit} className="space-y-4">
+        <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* Email input */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Email Address
+            <label
+              style={{
+                display: "block",
+                fontSize: 12,
+                fontWeight: 700,
+                color: "#334155",
+                marginBottom: 6,
+              }}
+            >
+              Mentor Email Address
             </label>
-            <div className="relative">
-              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <div style={{ position: "relative" }}>
+              <Mail
+                size={16}
+                style={{
+                  position: "absolute",
+                  left: 14,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "#94a3b8",
+                }}
+              />
               <input
                 type="email"
                 required
+                autoComplete="username"
+                placeholder="mentor@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="mentor@campuspoint.in"
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 cp-focus-ring"
+                style={{
+                  width: "100%",
+                  height: 48,
+                  padding: "0 14px 0 42px",
+                  borderRadius: 12,
+                  border: "1.5px solid #e2e8f0",
+                  fontSize: 14,
+                  color: "#0f172a",
+                  outline: "none",
+                  boxSizing: "border-box",
+                  background: "#fff",
+                  transition: "all .15s ease",
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = ACCENT;
+                  e.target.style.boxShadow = "0 0 0 3px rgba(255,105,61,0.15)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#e2e8f0";
+                  e.target.style.boxShadow = "none";
+                }}
               />
             </div>
           </div>
 
+          {/* Password input */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            <label
+              style={{
+                display: "block",
+                fontSize: 12,
+                fontWeight: 700,
+                color: "#334155",
+                marginBottom: 6,
+              }}
+            >
               Password
             </label>
-            <div className="relative">
-              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <div style={{ position: "relative" }}>
+              <Lock
+                size={16}
+                style={{
+                  position: "absolute",
+                  left: 14,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "#94a3b8",
+                }}
+              />
               <input
                 type={showPassword ? "text" : "password"}
                 required
+                autoComplete="current-password"
+                placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 cp-focus-ring"
+                style={{
+                  width: "100%",
+                  height: 48,
+                  padding: "0 44px 0 42px",
+                  borderRadius: 12,
+                  border: "1.5px solid #e2e8f0",
+                  fontSize: 14,
+                  color: "#0f172a",
+                  outline: "none",
+                  boxSizing: "border-box",
+                  background: "#fff",
+                  transition: "all .15s ease",
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = ACCENT;
+                  e.target.style.boxShadow = "0 0 0 3px rgba(255,105,61,0.15)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#e2e8f0";
+                  e.target.style.boxShadow = "none";
+                }}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                tabIndex={-1}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  color: "#94a3b8",
+                  cursor: "pointer",
+                  padding: 4,
+                  display: "flex",
+                }}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -130,11 +285,29 @@ function Login({ onDone }) {
           <button
             type="submit"
             disabled={busy || !email || !password}
-            className="w-full py-2.5 mt-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            style={{
+              height: 48,
+              borderRadius: 12,
+              border: "none",
+              background: busy
+                ? `${ACCENT}99`
+                : "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+              color: "#fff",
+              fontFamily: SORA,
+              fontWeight: 800,
+              fontSize: 14,
+              cursor: busy ? "wait" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              boxShadow: "0 8px 20px -6px rgba(255,105,61,0.45)",
+              marginTop: 6,
+            }}
           >
             {busy ? (
               <>
-                <Loader2 size={16} className="cp-spin" /> Verifying...
+                <Loader2 size={16} className="cp-spin" /> Verifying Credentials...
               </>
             ) : (
               <>
@@ -144,10 +317,19 @@ function Login({ onDone }) {
           </button>
         </form>
 
-        <div className="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-400">
-          Protected mentor gateway · Students sign in via{" "}
-          <a href="/mentorship" className="text-brand-600 font-bold hover:underline">
-            Mentorship Portal
+        <div
+          style={{
+            marginTop: 24,
+            paddingTop: 16,
+            borderTop: "1px solid #f1f5f9",
+            textAlign: "center",
+            fontSize: 11.5,
+            color: "#94a3b8",
+          }}
+        >
+          Protected portal · Students sign in from the{" "}
+          <a href="/mentorship" style={{ color: ACCENT, textDecoration: "none", fontWeight: 700 }}>
+            Mentorship Dashboard
           </a>
         </div>
       </motion.div>
@@ -155,7 +337,7 @@ function Login({ onDone }) {
   );
 }
 
-/* ── Forced Password Change Screen ─── */
+/* ── Forced Password Change Screen ────────────────────────────── */
 function SetPassword({ token, onDone }) {
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
@@ -181,71 +363,174 @@ function SetPassword({ token, onDone }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface-50 p-4 font-inter text-slate-800">
-      <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-floating p-8">
-        <h3 className="text-sm font-bold text-slate-900 mb-2">Set Permanent Password</h3>
-        <p className="text-xs text-slate-500 mb-4">Please set a secure permanent password for your mentor account.</p>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "radial-gradient(ellipse at top, #fff5f1 0%, #f8fafc 50%, #f1f5f9 100%)",
+        padding: "120px 16px 60px",
+        boxSizing: "border-box",
+      }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        style={{
+          width: "100%",
+          maxWidth: 440,
+          background: "#fff",
+          borderRadius: 20,
+          border: "1.5px solid rgba(255,105,61,0.2)",
+          padding: "36px 32px",
+          boxShadow: "0 24px 60px -15px rgba(15,23,42,0.08)",
+          boxSizing: "border-box",
+        }}
+      >
+        <div style={{ textAlign: "center", marginBottom: 20 }}>
+          <div
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 14,
+              background: `${ACCENT}15`,
+              color: ACCENT,
+              display: "grid",
+              placeItems: "center",
+              margin: "0 auto 12px",
+            }}
+          >
+            <Lock size={24} />
+          </div>
+          <h2 style={{ fontFamily: SORA, fontWeight: 800, fontSize: 20, color: "#0f172a", margin: 0 }}>
+            Set Your Permanent Password
+          </h2>
+          <p style={{ fontSize: 12.5, color: "#64748b", margin: "6px 0 0" }}>
+            Replace the temporary password set by your administrator to activate your workspace.
+          </p>
+        </div>
 
         {err && (
-          <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-700 text-xs font-semibold">{err}</div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              background: "#fef2f2",
+              border: "1px solid #fecaca",
+              borderRadius: 10,
+              padding: "10px 12px",
+              fontSize: 12.5,
+              color: "#b91c1c",
+              marginBottom: 16,
+            }}
+          >
+            <AlertCircle size={14} style={{ flexShrink: 0 }} /> {err}
+          </div>
         )}
 
-        <form onSubmit={submit} className="space-y-4">
+        <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Temporary Password</label>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#334155", marginBottom: 5 }}>
+              Temporary Admin Password
+            </label>
             <input
               type="password"
               required
               value={current}
               onChange={(e) => setCurrent(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm cp-focus-ring"
+              style={{
+                width: "100%",
+                height: 44,
+                padding: "0 14px",
+                borderRadius: 10,
+                border: "1px solid #e2e8f0",
+                fontSize: 13.5,
+                boxSizing: "border-box",
+              }}
             />
           </div>
+
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">New Password (min 8 chars)</label>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#334155", marginBottom: 5 }}>
+              New Permanent Password (min 8 chars)
+            </label>
             <input
               type="password"
               required
               value={next}
               onChange={(e) => setNext(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm cp-focus-ring"
+              style={{
+                width: "100%",
+                height: 44,
+                padding: "0 14px",
+                borderRadius: 10,
+                border: "1px solid #e2e8f0",
+                fontSize: 13.5,
+                boxSizing: "border-box",
+              }}
             />
           </div>
+
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Confirm New Password</label>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#334155", marginBottom: 5 }}>
+              Confirm New Password
+            </label>
             <input
               type="password"
               required
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm cp-focus-ring"
+              style={{
+                width: "100%",
+                height: 44,
+                padding: "0 14px",
+                borderRadius: 10,
+                border: "1px solid #e2e8f0",
+                fontSize: 13.5,
+                boxSizing: "border-box",
+              }}
             />
           </div>
+
           <button
             type="submit"
             disabled={busy}
-            className="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm rounded-lg shadow-sm transition-all"
+            style={{
+              height: 46,
+              borderRadius: 11,
+              border: "none",
+              background: ACCENT,
+              color: "#fff",
+              fontFamily: SORA,
+              fontWeight: 800,
+              fontSize: 14,
+              cursor: busy ? "wait" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              marginTop: 6,
+            }}
           >
-            {busy ? <Loader2 size={16} className="cp-spin mx-auto" /> : "Save & Access Dashboard"}
+            {busy ? <Loader2 size={16} className="cp-spin" /> : "Save & Access Dashboard"}
           </button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }
 
-/* ══════════════════════════════════════════════════════════════════════
-   MASTER MENTOR DASHBOARD
-══════════════════════════════════════════════════════════════════════ */
+/* ── Main Redesigned Mentor Dashboard ─────────────────────────── */
 export default function MentorDashboard() {
   const [token, setToken] = useState(readToken);
   const [mentor, setMentor] = useState(null);
   const [booting, setBooting] = useState(!!readToken());
 
-  // Navigation tab: "dashboard" | "workspace" | "logins" | "assign" | "matrix"
+  // Navigation tab: "workspace" | "logins" | "assign" | "matrix"
   const [activeTab, setActiveTab] = useState("workspace");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mentorDropdownOpen, setMentorDropdownOpen] = useState(false);
 
   // Student caseload data
   const [students, setStudents] = useState([]);
@@ -254,15 +539,6 @@ export default function MentorDashboard() {
   const [loadingStudent, setLoadingStudent] = useState(false);
   const [err, setErr] = useState("");
   const [quizOpen, setQuizOpen] = useState(false);
-
-  // Task Studio state (for Tab 4)
-  const [taskStudioTab, setTaskStudioTab] = useState("mentee");
-  const [newTaskInput, setNewTaskInput] = useState("");
-  const [taskSaving, setTaskSaving] = useState(false);
-  const [allMenteesTasks, setAllMenteesTasks] = useState([]);
-  const [loadingAllTasks, setLoadingAllTasks] = useState(false);
-  const [rosterSearch, setRosterSearch] = useState("");
-  const [rosterStatusFilter, setRosterStatusFilter] = useState("all");
 
   const signOut = useCallback(() => {
     writeToken("");
@@ -290,7 +566,9 @@ export default function MentorDashboard() {
         if (!cancelled) setBooting(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [token, signOut]);
 
   // Load assigned students list
@@ -307,7 +585,9 @@ export default function MentorDashboard() {
         if (!cancelled) setErr(e.message || "Could not load assigned students");
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [token, mentor]);
 
   // Load single student data
@@ -336,7 +616,9 @@ export default function MentorDashboard() {
         if (!cancelled) setLoadingStudent(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [token, activeId]);
 
   const saveTasks = useCallback(
@@ -365,6 +647,15 @@ export default function MentorDashboard() {
     },
     [token, activeId]
   );
+
+  // Task Studio state
+  const [taskStudioTab, setTaskStudioTab] = useState("mentee"); // "mentee" | "all-roster"
+  const [newTaskInput, setNewTaskInput] = useState("");
+  const [taskSaving, setTaskSaving] = useState(false);
+  const [allMenteesTasks, setAllMenteesTasks] = useState([]);
+  const [loadingAllTasks, setLoadingAllTasks] = useState(false);
+  const [rosterSearch, setRosterSearch] = useState("");
+  const [rosterStatusFilter, setRosterStatusFilter] = useState("all");
 
   const fetchAllMenteesTasks = useCallback(async () => {
     if (!token) return;
@@ -398,29 +689,39 @@ export default function MentorDashboard() {
     }
   }, [activeTab, fetchAllMenteesTasks]);
 
-  const activeStudentIndex = useMemo(() => {
-    const idx = students.findIndex((s) => s.studentId === activeId);
-    return idx >= 0 ? idx : 0;
-  }, [students, activeId]);
-
-  const activeStudent = students[activeStudentIndex] || students[0];
-
-  const handlePrevStudent = () => {
-    if (students.length <= 1) return;
-    const prevIdx = (activeStudentIndex - 1 + students.length) % students.length;
-    setActiveId(students[prevIdx].studentId);
+  const handleAddTask = async (e) => {
+    e?.preventDefault();
+    if (!newTaskInput.trim() || !activeId) return;
+    setTaskSaving(true);
+    try {
+      const currentTexts = (report.tasks || []).map((t) => t.text);
+      await saveTasks([...currentTexts, newTaskInput.trim()]);
+      setNewTaskInput("");
+      fetchAllMenteesTasks();
+    } catch (err) {
+      alert("Failed to assign task: " + (err.message || err));
+    } finally {
+      setTaskSaving(false);
+    }
   };
 
-  const handleNextStudent = () => {
-    if (students.length <= 1) return;
-    const nextIdx = (activeStudentIndex + 1) % students.length;
-    setActiveId(students[nextIdx].studentId);
+  const handleDeleteTask = async (taskIdx) => {
+    if (!window.confirm("Remove this assigned task?")) return;
+    try {
+      const remaining = (report.tasks || []).filter((_, i) => i !== taskIdx).map((t) => t.text);
+      await saveTasks(remaining);
+      fetchAllMenteesTasks();
+    } catch (err) {
+      alert("Failed to delete task: " + (err.message || err));
+    }
   };
+
+  const activeStudent = students.find((s) => s.studentId === activeId) || students[0];
 
   if (booting) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-surface-50">
-        <Loader2 size={32} className="cp-spin text-brand-500" />
+      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: "#f8fafc" }}>
+        <Loader2 size={32} className="cp-spin" color={ACCENT} />
       </div>
     );
   }
@@ -443,105 +744,224 @@ export default function MentorDashboard() {
     );
   }
 
-  const PRIMARY_NAV = [
-    { id: "dashboard", label: "Dashboard", fa: "fa-solid fa-house", icon: Home },
-    { id: "workspace", label: "Student Workspace", fa: "fa-solid fa-user-graduate", icon: UserCheck },
-    { id: "logins", label: "Login Telemetry", fa: "fa-solid fa-chart-line", icon: Activity },
-    { id: "assign", label: "Exam & Task Studio", fa: "fa-solid fa-clipboard-list", icon: Zap },
-    { id: "matrix", label: "All Mentees Matrix", fa: "fa-solid fa-users", icon: Trophy },
+  const NAV_ITEMS = [
+    { id: "workspace", label: "Student Workspace", icon: UserCheck, desc: "Study log, tests, backlog" },
+    { id: "logins", label: "Student Login Telemetry", icon: Activity, desc: "Authentication events & pie chart" },
+    { id: "assign", label: "Exam & Task Studio", icon: Zap, desc: "Question bank generator & task assigner" },
+    { id: "matrix", label: "All Mentees Matrix", icon: Trophy, desc: "Complete scores & comparative overview" },
   ];
 
   return (
     <>
       <Seo title="Mentor Console · Campus Point" robots="noindex, nofollow" />
 
-      <div className="h-screen flex overflow-hidden text-slate-800 antialiased font-inter bg-surface-50">
-        
+      <div
+        className="mentor-console-root"
+        style={{
+          display: "flex",
+          height: "calc(100vh - 98px)",
+          marginTop: 98,
+          overflow: "hidden",
+          background: "#f8fafc",
+          fontFamily: "Inter, system-ui, sans-serif",
+          color: "#0f172a",
+          boxSizing: "border-box",
+          position: "relative",
+        }}
+      >
         {/* Mobile Navigation Drawer Backdrop */}
         {mobileMenuOpen && (
           <div
             onClick={() => setMobileMenuOpen(false)}
-            className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden transition-opacity"
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 998,
+              background: "rgba(15, 23, 42, 0.45)",
+              backdropFilter: "blur(4px)",
+            }}
           />
         )}
 
-        {/* ── LEFT SIDEBAR (Desktop Fixed & Mobile Slide Drawer) ── */}
+        {/* ── Sleek Modern Sidebar (Desktop & Mobile Drawer) ── */}
         <aside
-          className={`w-64 bg-white border-r border-slate-200/80 flex flex-col h-full flex-shrink-0 z-50 transition-transform duration-200 ease-in-out fixed lg:static inset-y-0 left-0 ${
-            mobileMenuOpen ? "translate-x-0 shadow-floating" : "-translate-x-full lg:translate-x-0"
-          }`}
+          style={{
+            width: 270,
+            background: "#ffffff",
+            borderRight: "1px solid #e2e8f0",
+            display: "flex",
+            flexDirection: "column",
+            zIndex: mobileMenuOpen ? 999 : 50,
+            position: mobileMenuOpen ? "fixed" : "relative",
+            top: mobileMenuOpen ? 0 : "auto",
+            left: 0,
+            bottom: 0,
+            height: mobileMenuOpen ? "100vh" : "100%",
+            flexShrink: 0,
+            overflowY: "auto",
+            transform: mobileMenuOpen ? "translateX(0)" : "translateX(0)",
+            boxShadow: mobileMenuOpen ? "4px 0 24px rgba(0,0,0,0.15)" : "none",
+            transition: "transform 0.25s ease",
+            boxSizing: "border-box",
+          }}
+          className={`cp-custom-scroll ${mobileMenuOpen ? "sidebar-mobile-open" : "sidebar-desktop"}`}
         >
-          {/* Logo Area */}
-          <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100 flex-shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded bg-brand-500 text-white flex items-center justify-center font-bold text-sm tracking-tighter">
+          {/* Sidebar Header / Brand */}
+          <div
+            style={{
+              padding: "20px 20px 18px",
+              borderBottom: "1px solid #f1f5f9",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: 11,
+                  background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                  display: "grid",
+                  placeItems: "center",
+                  color: "#fff",
+                  fontWeight: 900,
+                  fontSize: 16,
+                  fontFamily: SORA,
+                  boxShadow: "0 6px 16px -4px rgba(255,105,61,0.4)",
+                }}
+              >
                 CP
               </div>
-              <span className="font-bold text-slate-900 tracking-tight text-[15px]">Campus Point</span>
+              <div>
+                <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 15, color: "#0f172a", lineHeight: 1.2 }}>
+                  Campus Point
+                </div>
+                <div style={{ fontSize: 10, fontWeight: 800, color: ACCENT, letterSpacing: 0.8, textTransform: "uppercase" }}>
+                  Mentor Console
+                </div>
+              </div>
             </div>
 
+            {/* Mobile Close Button */}
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="lg:hidden text-slate-400 hover:text-slate-600 p-1"
+              className="mobile-only-btn"
+              style={{
+                background: "none",
+                border: "none",
+                color: "#64748b",
+                cursor: "pointer",
+                padding: 4,
+              }}
             >
               <X size={18} />
             </button>
           </div>
 
-          {/* Scrollable Sidebar Content */}
-          <div className="flex-1 overflow-y-auto hide-scrollbar py-6 px-4 space-y-7">
-            {/* Mentor Profile snippet */}
-            <div className="flex items-center gap-3 px-2">
-              <div className="w-10 h-10 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-sm border border-brand-100/50 flex-shrink-0">
+          {/* Mentor Profile Pill */}
+          <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                background: "#f8fafc",
+                padding: "10px 12px",
+                borderRadius: 12,
+                border: "1px solid #eef2f7",
+              }}
+            >
+              <div
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: 10,
+                  background: `${ACCENT}15`,
+                  color: ACCENT,
+                  display: "grid",
+                  placeItems: "center",
+                  fontWeight: 800,
+                  fontSize: 13,
+                }}
+              >
                 {mentor.name?.charAt(0) || "M"}
               </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold text-slate-900 leading-tight truncate">
-                  {mentor.name || "Mentor"}
-                </span>
-                <span className="text-[11px] text-slate-500 font-medium truncate">
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 800, fontSize: 13, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {mentor.name}
+                </div>
+                <div style={{ fontSize: 11, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {mentor.college || mentor.email}
-                </span>
-                <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 w-fit px-1.5 rounded mt-0.5">
-                  {students.length} mentees
-                </span>
+                </div>
               </div>
+              <span
+                style={{
+                  fontSize: 10.5,
+                  fontWeight: 800,
+                  color: "#16a34a",
+                  background: "#ecfdf5",
+                  padding: "2px 6px",
+                  borderRadius: 6,
+                }}
+              >
+                {students.length} mentees
+              </span>
+            </div>
+          </div>
+
+          {/* Navigation Items */}
+          <div style={{ padding: "14px 12px", flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 6px" }}>
+              Main Navigation
             </div>
 
-            {/* Primary Navigation */}
-            <nav className="space-y-1">
-              {PRIMARY_NAV.map((item) => {
-                const active = activeTab === item.id;
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveTab(item.id);
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-3 px-2.5 py-1.5 rounded-lg text-xs transition-colors text-left relative cursor-pointer ${
-                      active
-                        ? "font-semibold text-brand-600 bg-brand-50/50"
-                        : "font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                    }`}
-                  >
-                    {active && (
-                      <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-brand-500 rounded-r-full" />
-                    )}
-                    <i className={`${item.fa} w-4 ${active ? "text-brand-500" : "text-slate-400"}`}></i>
-                    <span className="flex-1 truncate">{item.label}</span>
-                  </button>
-                );
-              })}
-            </nav>
+            {NAV_ITEMS.map((item) => {
+              const active = activeTab === item.id;
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    width: "100%",
+                    padding: "10px 12px",
+                    borderRadius: 10,
+                    border: "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    background: active ? `${ACCENT}12` : "transparent",
+                    color: active ? ACCENT : "#475569",
+                    fontWeight: active ? 800 : 600,
+                    fontSize: 12.5,
+                    transition: "all .15s ease",
+                  }}
+                >
+                  <Icon size={16} color={active ? ACCENT : "#64748b"} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ lineHeight: 1.2 }}>{item.label}</div>
+                  </div>
+                  {active && <ChevronRight size={14} color={ACCENT} />}
+                </button>
+              );
+            })}
 
-            {/* Assigned Students */}
-            <div>
-              <h3 className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-                Assigned Students ({students.length})
-              </h3>
-              <nav className="space-y-0.5 max-h-56 overflow-y-auto hide-scrollbar">
+            {/* Quick Mentee Switcher in Sidebar */}
+            <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 10px 8px" }}>
+                <span style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>
+                  Assigned Students ({students.length})
+                </span>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 2, maxHeight: 180, overflowY: "auto" }}>
                 {students.map((s) => {
                   const isCurrent = s.studentId === activeId;
                   return (
@@ -549,699 +969,877 @@ export default function MentorDashboard() {
                       key={s.studentId}
                       onClick={() => {
                         setActiveId(s.studentId);
-                        if (activeTab === "matrix" || activeTab === "dashboard") {
-                          setActiveTab("workspace");
-                        }
+                        if (activeTab === "matrix") setActiveTab("workspace");
                         setMobileMenuOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-left transition-colors cursor-pointer border ${
-                        isCurrent
-                          ? "font-medium text-slate-900 bg-slate-100/50 border-slate-200/50"
-                          : "font-medium text-slate-500 hover:bg-slate-50 border-transparent"
-                      }`}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        padding: "7px 10px",
+                        borderRadius: 8,
+                        border: "none",
+                        cursor: "pointer",
+                        background: isCurrent ? "#f1f5f9" : "transparent",
+                        textAlign: "left",
+                        width: "100%",
+                      }}
                     >
-                      <div className="flex items-center gap-2 truncate">
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                            isCurrent ? "bg-emerald-500" : "bg-slate-300"
-                          }`}
-                        />
-                        <span className="truncate">{s.name}</span>
-                      </div>
-                      <span className="text-[10px] text-slate-400 font-mono flex-shrink-0 ml-1">
-                        {s.studentId?.replace("CP-", "") || ""}
+                      <span
+                        style={{
+                          width: 7,
+                          height: 7,
+                          borderRadius: "50%",
+                          background: isCurrent ? ACCENT : "#cbd5e1",
+                          flexShrink: 0,
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontSize: 12,
+                          fontWeight: isCurrent ? 800 : 500,
+                          color: isCurrent ? "#0f172a" : "#475569",
+                          flex: 1,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {s.name}
                       </span>
+                      <span style={{ fontSize: 10, color: "#94a3b8" }}>{s.studentId}</span>
                     </button>
                   );
                 })}
-              </nav>
+              </div>
             </div>
           </div>
 
           {/* Sidebar Footer */}
-          <div className="p-4 border-t border-slate-100 flex-shrink-0">
+          <div style={{ padding: "14px 16px", borderTop: "1px solid #f1f5f9" }}>
             <button
               onClick={signOut}
-              className="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 px-2 py-1.5 transition-colors w-full rounded-lg cursor-pointer"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 7,
+                width: "100%",
+                padding: "9px 12px",
+                borderRadius: 9,
+                border: "1px solid #e2e8f0",
+                background: "#fff",
+                color: "#64748b",
+                fontSize: 12,
+                fontWeight: 700,
+                cursor: "pointer",
+                transition: "all .15s ease",
+              }}
             >
-              <i className="fa-solid fa-arrow-right-from-bracket text-xs"></i> Sign Out
+              <LogOut size={13} /> Sign Out of Console
             </button>
           </div>
         </aside>
 
-        {/* ── MAIN DASHBOARD AREA ── */}
-        <main className="flex-1 flex flex-col min-w-0 bg-surface-50 overflow-hidden">
-          
-          {/* TOP NAVBAR */}
-          <header className="h-16 bg-white border-b border-slate-200/80 flex items-center justify-between px-4 sm:px-6 lg:px-8 flex-shrink-0">
-            {/* Breadcrumbs & Hamburger */}
-            <div className="flex items-center gap-2 text-sm text-slate-500 min-w-0">
+        {/* ── Main Content Area with Sticky Header ── */}
+        <div
+          className="mentor-main-scroll cp-custom-scroll"
+          style={{
+            flex: 1,
+            minWidth: 0,
+            height: "100%",
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            boxSizing: "border-box",
+          }}
+        >
+          {/* Top Sticky Navigation Bar */}
+          <header
+            className="mentor-top-header"
+            style={{
+              position: "sticky",
+              top: 0,
+              zIndex: 80,
+              background: "#ffffff",
+              borderBottom: "1px solid #e2e8f0",
+              height: 52,
+              padding: "0 20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 10,
+              boxShadow: "0 1px 4px rgba(0,0,0,0.02)",
+              flexShrink: 0,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, flex: 1 }}>
+              {/* Mobile Menu Hamburger */}
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="lg:hidden p-1.5 rounded-lg border border-slate-200 text-slate-600 mr-1"
-                title="Open menu"
+                className="mobile-hamburger-btn"
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                  background: "#fff",
+                  display: "grid",
+                  placeItems: "center",
+                  cursor: "pointer",
+                  color: "#0f172a",
+                  flexShrink: 0,
+                }}
               >
-                <Menu size={16} />
+                <Menu size={18} />
               </button>
 
-              <i className="fa-solid fa-house text-slate-400 text-xs hidden sm:inline"></i>
-              <span className="text-slate-300 hidden sm:inline">/</span>
-              <span
-                onClick={() => setActiveTab("dashboard")}
-                className="hover:text-slate-800 cursor-pointer transition-colors truncate"
+              {/* Breadcrumb with guaranteed nowrap and clean truncation */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontSize: 13,
+                  color: "#64748b",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  minWidth: 0,
+                }}
               >
-                Mentor
-              </span>
-              <span className="text-slate-300">/</span>
-              <span className="hover:text-slate-800 cursor-pointer transition-colors truncate">
-                {PRIMARY_NAV.find((p) => p.id === activeTab)?.label}
-              </span>
-              {activeStudent && (activeTab === "workspace" || activeTab === "logins") && (
-                <>
-                  <span className="text-slate-300">/</span>
-                  <span className="font-semibold text-slate-800 truncate">{activeStudent.name}</span>
-                </>
-              )}
-            </div>
-
-            {/* Header Actions */}
-            <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
-              {/* Live Indicator */}
-              <div className="flex items-center gap-2 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="text-xs font-semibold text-emerald-700">Live</span>
-              </div>
-
-              <div className="h-5 w-px bg-slate-200 hidden sm:block"></div>
-
-              {/* Mentee Selector Dropdown */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setMentorDropdownOpen(!mentorDropdownOpen)}
-                  className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-slate-700 hover:text-slate-900 bg-white border border-slate-200 shadow-sm rounded-lg px-2.5 sm:px-3 py-1.5 transition-all hover:border-slate-300 cursor-pointer"
-                >
-                  <span className="text-slate-500 font-normal hidden md:inline">Mentee:</span>
-                  <span className="font-semibold truncate max-w-[120px] sm:max-w-[160px]">
-                    {activeStudent?.name || mentor.name}
+                <span className="breadcrumb-prefix" style={{ whiteSpace: "nowrap" }}>Mentor</span>
+                <span className="breadcrumb-prefix" style={{ color: "#cbd5e1" }}>/</span>
+                <span style={{ fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap" }}>
+                  {NAV_ITEMS.find((n) => n.id === activeTab)?.label}
+                </span>
+                {activeStudent && (activeTab === "workspace" || activeTab === "logins") && (
+                  <span className="breadcrumb-student" style={{ display: "inline-flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
+                    <span style={{ color: "#cbd5e1" }}>/</span>
+                    <span style={{ color: ACCENT, fontWeight: 700, whiteSpace: "nowrap" }}>{activeStudent.name}</span>
                   </span>
-                  <i className="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
-                </button>
-
-                {mentorDropdownOpen && (
-                  <div className="absolute right-0 mt-1.5 w-56 bg-white border border-slate-200 rounded-xl shadow-floating py-1.5 z-50">
-                    <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                      Switch Mentee Workspace
-                    </div>
-                    <div className="max-h-60 overflow-y-auto cp-custom-scroll">
-                      {students.map((s) => (
-                        <button
-                          key={s.studentId}
-                          onClick={() => {
-                            setActiveId(s.studentId);
-                            setMentorDropdownOpen(false);
-                            if (activeTab === "matrix") setActiveTab("workspace");
-                          }}
-                          className={`w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-slate-50 cursor-pointer ${
-                            s.studentId === activeId ? "bg-brand-50 text-brand-600 font-bold" : "text-slate-700"
-                          }`}
-                        >
-                          <span className="truncate">{s.name}</span>
-                          <span className="font-mono text-[10px] text-slate-400">{s.studentId}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
                 )}
               </div>
+            </div>
 
-              <button
-                type="button"
-                onClick={() => setQuizOpen(true)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors shadow-sm cursor-pointer"
-                title="Launch Question Bank / Test Generator"
+            {/* Right Header Controls */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+              {/* Student Switcher Dropdown */}
+              {students.length > 0 && (
+                <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                  <span style={{ fontSize: 11.5, color: "#64748b", fontWeight: 600, whiteSpace: "nowrap" }} className="desktop-only-txt">
+                    Mentee:
+                  </span>
+                  <select
+                    value={activeId}
+                    onChange={(e) => setActiveId(e.target.value)}
+                    style={{
+                      height: 34,
+                      padding: "0 8px",
+                      borderRadius: 8,
+                      border: "1px solid #e2e8f0",
+                      background: "#fff",
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: "#0f172a",
+                      outline: "none",
+                      cursor: "pointer",
+                      maxWidth: 160,
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {students.map((s) => (
+                      <option key={s.studentId} value={s.studentId}>
+                        {s.name} ({s.studentId})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Live Atlas Sync Badge */}
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: "#16a34a",
+                  background: "#f0fdf4",
+                  padding: "4px 8px",
+                  borderRadius: 6,
+                  border: "1px solid #bbf7d0",
+                }}
+                className="desktop-only-txt"
               >
-                <Zap size={14} className="text-brand-500" />
-              </button>
+                <span
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: "#16a34a",
+                    boxShadow: "0 0 0 2px rgba(22,163,74,0.2)",
+                  }}
+                />
+                Live
+              </div>
             </div>
           </header>
 
-          {/* ── TWO-COLUMN WORKSPACE BODY ── */}
-          <div className="flex-1 overflow-hidden flex flex-col lg:flex-row">
-            
-            {/* CENTER CONTENT AREA */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 hide-scrollbar">
-              
-              {/* TAB 1: Dashboard Overview Hub */}
-              {activeTab === "dashboard" && (
-                <div className="space-y-6">
-                  {/* Top Welcome Strip */}
-                  <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <h2 className="text-sm font-bold text-slate-900 leading-tight">
-                        Welcome back, {mentor.name} 👋
-                      </h2>
-                      <p className="text-xs text-slate-500 mt-1">
-                        Here is your mentorship overview across all {students.length} assigned JEE &amp; NEET aspirants.
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setActiveTab("workspace")}
-                      className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer w-fit"
-                    >
-                      <i className="fa-solid fa-user-graduate text-xs"></i> Open Student Workspace
-                    </button>
-                  </div>
+          {/* Main Body Content Container */}
+          <main style={{ padding: "24px 28px 80px", flex: 1, maxWidth: 1280, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
+            {err && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 16,
+                  background: "#fef2f2",
+                  border: "1px solid #fecaca",
+                  borderRadius: 10,
+                  padding: "11px 13px",
+                  fontSize: 12.5,
+                  color: "#b91c1c",
+                }}
+              >
+                <AlertCircle size={14} style={{ flexShrink: 0 }} /> {err}
+              </div>
+            )}
 
-                  {/* 4 KPI Metrics */}
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-subtle">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-semibold text-slate-500">Total Mentees</span>
-                        <span className="w-7 h-7 rounded-lg bg-orange-50 text-brand-500 flex items-center justify-center">
-                          <Users size={14} />
-                        </span>
-                      </div>
-                      <div className="text-xl font-bold text-slate-900">{students.length}</div>
-                      <div className="text-[11px] text-emerald-600 font-semibold mt-1">100% Assigned</div>
-                    </div>
-
-                    <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-subtle">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-semibold text-slate-500">Live 1-on-1 Rooms</span>
-                        <span className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                          <Video size={14} />
-                        </span>
-                      </div>
-                      <div className="text-xl font-bold text-slate-900">Active</div>
-                      <div className="text-[11px] text-slate-500 mt-1">Ready for connecting</div>
-                    </div>
-
-                    <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-subtle">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-semibold text-slate-500">Question Banks</span>
-                        <span className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                          <BookOpen size={14} />
-                        </span>
-                      </div>
-                      <div className="text-xl font-bold text-slate-900">3 Verified</div>
-                      <div className="text-[11px] text-slate-500 mt-1">Phy, Chem, Calculus</div>
-                    </div>
-
-                    <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-subtle">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-semibold text-slate-500">All Mentees Matrix</span>
-                        <span className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-                          <Trophy size={14} />
-                        </span>
-                      </div>
-                      <div className="text-xl font-bold text-slate-900">{students.length} Ranked</div>
-                      <div className="text-[11px] text-slate-500 mt-1">Comparative metrics</div>
-                    </div>
-                  </div>
-
-                  {/* Assigned Students Caseload Table */}
-                  <div className="bg-white border border-slate-200/90 rounded-2xl shadow-subtle overflow-hidden">
-                    <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-                      <div>
-                        <h3 className="text-xs font-bold text-slate-900">Your Student Caseload</h3>
-                        <p className="text-xs text-slate-500">Click any student to view their 1-on-1 room, study log, and test scores</p>
-                      </div>
-                      <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">
-                        {students.length} Aspirants
-                      </span>
-                    </div>
-
-                    <div className="divide-y divide-slate-100">
-                      {students.map((s, idx) => (
-                        <div
-                          key={s.studentId}
-                          onClick={() => {
-                            setActiveId(s.studentId);
-                            setActiveTab("workspace");
-                          }}
-                          className="p-4 sm:p-5 flex items-center justify-between hover:bg-slate-50/70 transition-colors cursor-pointer flex-wrap gap-3"
-                        >
-                          <div className="flex items-center gap-3.5">
-                            <div className="w-10 h-10 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-sm border border-brand-100/60 flex-shrink-0">
-                              {s.name?.charAt(0) || "S"}
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-slate-900">{s.name}</span>
-                                <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
-                                  {s.studentId}
-                                </span>
-                              </div>
-                              <div className="text-xs text-slate-500 mt-0.5">
-                                Goal: <span className="text-slate-700 font-medium">{s.targetCollege || "IIT Roorkee"}</span> · {s.plan || "JEE Mentorship"}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-3">
-                            <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">
-                              Active Mentee
-                            </span>
-                            <button
-                              type="button"
-                              className="text-xs font-bold text-brand-600 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg border border-brand-200 transition-colors"
-                            >
-                              Open Workspace →
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 2: Student Workspace (1-on-1 Meet, Study Log, Test Analysis, Assign Tasks) */}
-              {activeTab === "workspace" && (
-                <div>
-                  {students.length === 0 ? (
-                    <div className="bg-white border border-slate-200 rounded-2xl text-center py-16 px-4 shadow-subtle">
-                      <Users size={36} className="text-brand-500 mx-auto mb-3 opacity-70" />
-                      <h3 className="text-base font-bold text-slate-900 mb-1">No Students Assigned Yet</h3>
-                      <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                        Once an administrator assigns mentees to your CP ID, their workspaces will populate here.
-                      </p>
-                    </div>
-                  ) : loadingStudent ? (
-                    <div className="bg-white border border-slate-200 rounded-2xl min-h-[380px] flex items-center justify-center shadow-subtle">
-                      <Loader2 size={28} className="cp-spin text-brand-500" />
-                    </div>
-                  ) : (
-                    <StudentReport
-                      progress={report.progress}
-                      tests={report.tests}
-                      tasks={report.tasks}
-                      updatedAt={report.updatedAt}
-                      onSaveTasks={saveTasks}
-                      studentId={activeId}
-                      student={activeStudent}
-                      token={token}
-                      onSaveSession={saveSession}
-                      onPrevStudent={handlePrevStudent}
-                      onNextStudent={handleNextStudent}
-                      studentIndex={activeStudentIndex}
-                      totalStudents={students.length}
-                    />
-                  )}
-                </div>
-              )}
-
-              {/* TAB 3: Student Login Telemetry */}
-              {activeTab === "logins" && (
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-subtle">
-                  <StudentLoginTracking
-                    token={token}
-                    activeStudentId={activeId}
-                    students={students}
-                    onSelectStudent={(sid) => setActiveId(sid)}
-                    onOpenReport={(sid) => {
-                      setActiveId(sid);
-                      setActiveTab("workspace");
+            {/* TAB 1: Student Workspace (Individual Mentee Study Log, Allen Test Analysis, Backlog, Tasks) */}
+            {activeTab === "workspace" && (
+              <div>
+                {students.length === 0 ? (
+                  <div
+                    style={{
+                      background: "#fff",
+                      border: "1px solid #e2e8f0",
+                      borderRadius: 16,
+                      textAlign: "center",
+                      padding: "50px 20px",
                     }}
+                  >
+                    <Users size={32} color={ACCENT} style={{ opacity: 0.7 }} />
+                    <h3 style={{ fontFamily: SORA, fontWeight: 800, fontSize: 16, color: "#0f172a", margin: "12px 0 5px" }}>
+                      No Students Assigned Yet
+                    </h3>
+                    <p style={{ fontSize: 13, color: "#64748b", margin: 0, maxWidth: 420, marginInline: "auto" }}>
+                      Your administrator assigns students by CP ID. Once assigned, their study logs, CBT tests, and fix-lists will populate here.
+                    </p>
+                  </div>
+                ) : loadingStudent ? (
+                  <div
+                    style={{
+                      background: "#fff",
+                      border: "1px solid #e2e8f0",
+                      borderRadius: 16,
+                      minHeight: 380,
+                      display: "grid",
+                      placeItems: "center",
+                    }}
+                  >
+                    <Loader2 size={24} className="cp-spin" color={ACCENT} />
+                  </div>
+                ) : (
+                  <StudentReport
+                    progress={report.progress}
+                    tests={report.tests}
+                    tasks={report.tasks}
+                    updatedAt={report.updatedAt}
+                    onSaveTasks={saveTasks}
+                    studentId={activeId}
+                    student={activeStudent}
+                    token={token}
+                    onSaveSession={saveSession}
                   />
-                </div>
-              )}
+                )}
+              </div>
+            )}
 
-              {/* TAB 4: Exam & Task Studio */}
-              {activeTab === "assign" && (
-                <div className="space-y-6">
-                  {/* Header Strip */}
-                  <div className="flex items-center justify-between flex-wrap gap-4 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-subtle">
-                    <div className="flex items-center gap-3.5">
-                      <div className="w-10 h-10 rounded-xl bg-brand-50 text-brand-500 flex items-center justify-center border border-brand-100 flex-shrink-0">
-                        <Zap size={20} />
-                      </div>
-                      <div>
-                        <h3 className="text-base font-bold text-slate-900 leading-tight">
-                          Examination &amp; Task Studio
-                        </h3>
-                        <p className="text-xs text-slate-500 mt-0.5">
-                          Create targeted chapter mock quiz papers and assign weekly goals
-                        </p>
-                      </div>
+            {/* TAB 2: Student Login Telemetry & Interactive Pie Chart */}
+            {activeTab === "logins" && (
+              <StudentLoginTracking
+                token={token}
+                activeStudentId={activeId}
+                students={students}
+                onSelectStudent={(sid) => {
+                  setActiveId(sid);
+                }}
+                onOpenReport={(sid) => {
+                  setActiveId(sid);
+                  setActiveTab("workspace");
+                }}
+              />
+            )}
+
+            {/* TAB 3: Redesigned Examination & Task Studio */}
+            {activeTab === "assign" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                {/* Header Strip */}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 12,
+                    flexWrap: "wrap",
+                    background: "#fff",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: 14,
+                    padding: "12px 16px",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <Zap size={18} color={ACCENT} />
+                    <div>
+                      <h3 style={{ fontFamily: SORA, fontSize: 15, fontWeight: 800, color: "#0f172a", margin: 0 }}>
+                        Examination &amp; Task Studio
+                      </h3>
+                      <p style={{ fontSize: 11.5, color: "#64748b", margin: 0 }}>
+                        Create interactive chapter quiz papers and assign targeted weekly tasks
+                      </p>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setQuizOpen(true)}
-                      className="px-4 py-2.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-2 cursor-pointer"
-                    >
-                      <Zap size={14} /> Launch Test Generator
-                    </button>
                   </div>
 
-                  {/* Dual Panes */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Left Pane: Curated Question Banks */}
-                    <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-subtle space-y-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <BookOpen size={16} className="text-brand-500" />
-                        <h4 className="text-xs font-bold text-slate-900">Curated Question Banks</h4>
+                  <button
+                    onClick={() => setQuizOpen(true)}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "9px 18px",
+                      borderRadius: 10,
+                      background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                      color: "#fff",
+                      border: "none",
+                      fontWeight: 800,
+                      fontSize: 13,
+                      cursor: "pointer",
+                      boxShadow: "0 4px 14px -3px rgba(255,105,61,0.4)",
+                    }}
+                  >
+                    <Zap size={15} /> Launch Test Generator
+                  </button>
+                </div>
+
+                {/* Dual Studio Panes */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(min(360px, 100%), 1fr))",
+                    gap: 18,
+                  }}
+                >
+                  {/* Left Pane: Curated Question Banks */}
+                  <div
+                    style={{
+                      background: "#fff",
+                      border: "1px solid #e2e8f0",
+                      borderRadius: 16,
+                      padding: "20px",
+                      boxShadow: "0 2px 8px rgba(15,23,42,0.03)",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                      <BookOpen size={16} color={ACCENT} />
+                      <h4 style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14.5, color: "#0f172a", margin: 0 }}>
+                        Question Banks &amp; Exam Papers
+                      </h4>
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                      <div
+                        style={{
+                          background: "#f8fafc",
+                          border: "1.5px solid #e2e8f0",
+                          borderRadius: 12,
+                          padding: "14px",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div>
+                          <span style={{ fontSize: 10, fontWeight: 800, color: "#2563eb", background: "#eff6ff", padding: "2px 6px", borderRadius: 4, textTransform: "uppercase" }}>
+                            Physics · Class 11
+                          </span>
+                          <div style={{ fontWeight: 800, fontSize: 13.5, color: "#0f172a", marginTop: 4 }}>
+                            Units &amp; Measurements Question Bank
+                          </div>
+                          <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
+                            47 Verified NTA-pattern questions · Single &amp; Numerical type
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => setQuizOpen(true)}
+                          style={{
+                            padding: "6px 12px",
+                            borderRadius: 8,
+                            border: "none",
+                            background: ACCENT,
+                            color: "#fff",
+                            fontSize: 11.5,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                          }}
+                        >
+                          Generate
+                        </button>
                       </div>
 
-                      <div className="space-y-3">
-                        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-                          <div>
-                            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase">
-                              Physics · Class 11
-                            </span>
-                            <div className="text-xs font-bold text-slate-900 mt-1">
-                              Units &amp; Measurements Question Bank
-                            </div>
-                            <div className="text-[11px] text-slate-500">
-                              47 Verified NTA-pattern questions · Single &amp; Numerical type
-                            </div>
+                      <div
+                        style={{
+                          background: "#f8fafc",
+                          border: "1.5px solid #e2e8f0",
+                          borderRadius: 12,
+                          padding: "14px",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div>
+                          <span style={{ fontSize: 10, fontWeight: 800, color: "#059669", background: "#ecfdf5", padding: "2px 6px", borderRadius: 4, textTransform: "uppercase" }}>
+                            Chemistry · Physical
+                          </span>
+                          <div style={{ fontWeight: 800, fontSize: 13.5, color: "#0f172a", marginTop: 4 }}>
+                            Mole Concept &amp; Stoichiometry Bank
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => setQuizOpen(true)}
-                            className="px-3 py-1.5 rounded-lg bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-colors cursor-pointer"
-                          >
-                            Generate
-                          </button>
+                          <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
+                            35 Verified questions · Balanced equations &amp; yield
+                          </div>
                         </div>
 
-                        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-                          <div>
-                            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded uppercase">
-                              Chemistry · Physical
-                            </span>
-                            <div className="text-xs font-bold text-slate-900 mt-1">
-                              Mole Concept &amp; Stoichiometry Bank
-                            </div>
-                            <div className="text-[11px] text-slate-500">
-                              35 Verified questions · Balanced equations &amp; yield
-                            </div>
+                        <button
+                          onClick={() => setQuizOpen(true)}
+                          style={{
+                            padding: "6px 12px",
+                            borderRadius: 8,
+                            border: "none",
+                            background: ACCENT,
+                            color: "#fff",
+                            fontSize: 11.5,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                          }}
+                        >
+                          Generate
+                        </button>
+                      </div>
+
+                      <div
+                        style={{
+                          background: "#f8fafc",
+                          border: "1.5px solid #e2e8f0",
+                          borderRadius: 12,
+                          padding: "14px",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div>
+                          <span style={{ fontSize: 10, fontWeight: 800, color: "#7c3aed", background: "#f5f3ff", padding: "2px 6px", borderRadius: 4, textTransform: "uppercase" }}>
+                            Mathematics · Calculus
+                          </span>
+                          <div style={{ fontWeight: 800, fontSize: 13.5, color: "#0f172a", marginTop: 4 }}>
+                            Limits, Continuity &amp; Differentiability
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => setQuizOpen(true)}
-                            className="px-3 py-1.5 rounded-lg bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-colors cursor-pointer"
-                          >
-                            Generate
-                          </button>
+                          <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
+                            42 Verified questions · L'Hôpital &amp; standard forms
+                          </div>
                         </div>
 
-                        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-                          <div>
-                            <span className="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded uppercase">
-                              Mathematics · Calculus
-                            </span>
-                            <div className="text-xs font-bold text-slate-900 mt-1">
-                              Limits, Continuity &amp; Differentiability
-                            </div>
-                            <div className="text-[11px] text-slate-500">
-                              42 Verified questions · L'Hôpital &amp; standard forms
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setQuizOpen(true)}
-                            className="px-3 py-1.5 rounded-lg bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition-colors cursor-pointer"
-                          >
-                            Generate
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => setQuizOpen(true)}
+                          style={{
+                            padding: "6px 12px",
+                            borderRadius: 8,
+                            border: "none",
+                            background: ACCENT,
+                            color: "#fff",
+                            fontSize: 11.5,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                          }}
+                        >
+                          Generate
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Pane: Direct Task Assignment Studio */}
+                  <div
+                    style={{
+                      background: "#fff",
+                      border: "1.5px solid #e2e8f0",
+                      borderRadius: 16,
+                      padding: "20px",
+                      boxShadow: "0 2px 8px rgba(15,23,42,0.03)",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    {/* Header with Sub-tabs */}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 10 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <ClipboardList size={16} color={ACCENT} />
+                        <h4 style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14.5, color: "#0f172a", margin: 0 }}>
+                          Task Studio &amp; Assignment
+                        </h4>
+                      </div>
+
+                      {/* Sub-tab Switcher */}
+                      <div style={{ display: "flex", background: "#f1f5f9", padding: 3, borderRadius: 8, gap: 2 }}>
+                        <button
+                          type="button"
+                          onClick={() => setTaskStudioTab("mentee")}
+                          style={{
+                            padding: "4px 10px",
+                            borderRadius: 6,
+                            border: "none",
+                            background: taskStudioTab === "mentee" ? "#ffffff" : "transparent",
+                            color: taskStudioTab === "mentee" ? ACCENT : "#64748b",
+                            fontWeight: taskStudioTab === "mentee" ? 700 : 500,
+                            fontSize: 11.5,
+                            cursor: "pointer",
+                            boxShadow: taskStudioTab === "mentee" ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
+                          }}
+                        >
+                          {activeStudent?.name || "Mentee"} ({report.tasks?.length || 0})
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setTaskStudioTab("all-roster");
+                            fetchAllMenteesTasks();
+                          }}
+                          style={{
+                            padding: "4px 10px",
+                            borderRadius: 6,
+                            border: "none",
+                            background: taskStudioTab === "all-roster" ? "#ffffff" : "transparent",
+                            color: taskStudioTab === "all-roster" ? ACCENT : "#64748b",
+                            fontWeight: taskStudioTab === "all-roster" ? 700 : 500,
+                            fontSize: 11.5,
+                            cursor: "pointer",
+                            boxShadow: taskStudioTab === "all-roster" ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
+                          }}
+                        >
+                          All Assigned Tasks ({allMenteesTasks.length})
+                        </button>
                       </div>
                     </div>
 
-                    {/* Right Pane: All Mentees Assigned Tasks Roster */}
-                    <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-subtle space-y-4">
-                      <div className="flex items-center justify-between flex-wrap gap-2">
-                        <div className="flex items-center gap-2">
-                          <ClipboardList size={16} className="text-brand-500" />
-                          <h4 className="text-xs font-bold text-slate-900">All Mentees Assigned Tasks</h4>
+                    {/* VIEW A: Current Active Mentee Task Studio */}
+                    {taskStudioTab === "mentee" ? (
+                      <div>
+                        {/* Quick Mentee Switcher in Studio */}
+                        <div style={{
+                          display: "flex", alignItems: "center", justifyContent: "space-between",
+                          padding: "8px 12px", background: "#f8fafc", borderRadius: 10,
+                          border: "1px solid #e2e8f0", marginBottom: 14, flexWrap: "wrap", gap: 8,
+                        }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b" }}>Target Mentee:</span>
+                            <select
+                              value={activeId}
+                              onChange={(e) => setActiveId(e.target.value)}
+                              style={{
+                                height: 30, padding: "0 8px", borderRadius: 6,
+                                border: "1px solid #cbd5e1", fontSize: 12, fontWeight: 700,
+                                color: "#0f172a", outline: "none", cursor: "pointer", background: "#fff",
+                              }}
+                            >
+                              {students.map((s) => (
+                                <option key={s.studentId} value={s.studentId}>
+                                  {s.name} ({s.studentId})
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <span style={{ fontSize: 11, color: "#64748b" }}>
+                            Direct syncs to student dashboard
+                          </span>
                         </div>
-                        <span className="text-xs font-bold text-brand-600 bg-brand-50 px-2.5 py-0.5 rounded-full">
-                          {allMenteesTasks.length} Total
-                        </span>
-                      </div>
 
-                      {/* Filter Bar */}
-                      <div className="flex gap-2">
-                        <div className="relative flex-1">
-                          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        {/* Inline Task Assign Form */}
+                        <form onSubmit={handleAddTask} style={{ display: "flex", gap: 8, marginBottom: 14 }}>
                           <input
                             type="text"
-                            placeholder="Filter by name, ID, or task..."
-                            value={rosterSearch}
-                            onChange={(e) => setRosterSearch(e.target.value)}
-                            className="w-full pl-8 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg outline-none cp-focus-ring"
+                            placeholder={`Assign new task to ${activeStudent?.name || "student"}...`}
+                            value={newTaskInput}
+                            onChange={(e) => setNewTaskInput(e.target.value)}
+                            style={{
+                              flex: 1,
+                              height: 36,
+                              padding: "0 12px",
+                              borderRadius: 8,
+                              border: "1.5px solid #cbd5e1",
+                              fontSize: 12,
+                              outline: "none",
+                              boxSizing: "border-box",
+                            }}
                           />
-                        </div>
-                        <select
-                          value={rosterStatusFilter}
-                          onChange={(e) => setRosterStatusFilter(e.target.value)}
-                          className="text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg outline-none bg-white cursor-pointer"
-                        >
-                          <option value="all">All</option>
-                          <option value="completed">Completed</option>
-                          <option value="pending">Pending</option>
-                        </select>
-                      </div>
+                          <button
+                            type="submit"
+                            disabled={taskSaving || !newTaskInput.trim()}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 6,
+                              padding: "0 14px",
+                              borderRadius: 8,
+                              border: "none",
+                              background: newTaskInput.trim() ? "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)" : "#e2e8f0",
+                              color: newTaskInput.trim() ? "#fff" : "#94a3b8",
+                              fontSize: 12,
+                              fontWeight: 700,
+                              cursor: newTaskInput.trim() ? "pointer" : "not-allowed",
+                              height: 36,
+                              flexShrink: 0,
+                            }}
+                          >
+                            {taskSaving ? <RefreshCw size={12} style={{ animation: "cp-spin 1s linear infinite" }} /> : <Plus size={13} />} Assign
+                          </button>
+                        </form>
 
-                      {/* Tasks Roster List */}
-                      <div className="space-y-2 max-h-72 overflow-y-auto cp-custom-scroll">
-                        {loadingAllTasks ? (
-                          <div className="py-12 text-center text-xs text-slate-400">
-                            <Loader2 size={16} className="cp-spin mx-auto mb-2 text-brand-500" /> Loading all mentees tasks...
-                          </div>
-                        ) : allMenteesTasks.length === 0 ? (
-                          <div className="py-12 text-center text-xs text-slate-400">
-                            No assigned tasks found across your student caseload.
-                          </div>
-                        ) : (
-                          allMenteesTasks
-                            .filter((t) => {
-                              if (rosterStatusFilter === "completed" && !t.completed) return false;
-                              if (rosterStatusFilter === "pending" && t.completed) return false;
-                              if (rosterSearch.trim()) {
-                                const q = rosterSearch.toLowerCase().trim();
-                                return (
-                                  t.studentName?.toLowerCase().includes(q) ||
-                                  t.studentId?.toLowerCase().includes(q) ||
-                                  t.text?.toLowerCase().includes(q)
-                                );
-                              }
-                              return true;
-                            })
-                            .map((t, idx) => (
+                        {/* Tasks List */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 320, overflowY: "auto" }}>
+                          {report.tasks && report.tasks.length > 0 ? (
+                            report.tasks.map((t, idx) => (
                               <div
                                 key={t.id || idx}
-                                className="p-3 rounded-xl border border-slate-200/80 bg-slate-50/60 flex items-center justify-between gap-3 text-xs"
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 10,
+                                  background: t.completed ? "#f0fdf4" : "#f8fafc",
+                                  border: `1px solid ${t.completed ? "#bbf7d0" : "#e2e8f0"}`,
+                                  borderRadius: 10,
+                                  padding: "9px 12px",
+                                  fontSize: 12,
+                                }}
                               >
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center gap-1.5 mb-1">
-                                    <span className="font-bold text-slate-900">{t.studentName}</span>
-                                    <span className="font-mono text-[10px] text-slate-400">({t.studentId})</span>
-                                  </div>
-                                  <p className="text-slate-700 truncate">{t.text}</p>
-                                </div>
-                                <div className="flex items-center gap-2 flex-shrink-0">
-                                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                                    t.completed ? "bg-emerald-50 text-emerald-700" : "bg-orange-50 text-brand-600"
-                                  }`}>
-                                    {t.completed ? "Completed" : "Pending"}
+                                <span
+                                  style={{
+                                    width: 18,
+                                    height: 18,
+                                    borderRadius: "50%",
+                                    display: "grid",
+                                    placeItems: "center",
+                                    background: t.completed ? "#16a34a" : "#fff",
+                                    border: `1.5px solid ${t.completed ? "#16a34a" : "#cbd5e1"}`,
+                                    color: "#fff",
+                                    fontSize: 10,
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {t.completed ? "✓" : (idx + 1)}
+                                </span>
+
+                                <span
+                                  style={{
+                                    flex: 1,
+                                    color: t.completed ? "#166534" : "#0f172a",
+                                    textDecoration: t.completed ? "line-through" : "none",
+                                    fontWeight: 500,
+                                  }}
+                                >
+                                  {t.text}
+                                </span>
+
+                                {t.completed ? (
+                                  <span style={{ fontSize: 10, fontWeight: 800, color: "#16a34a", background: "#dcfce7", padding: "1px 6px", borderRadius: 4, flexShrink: 0 }}>
+                                    Completed
                                   </span>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setActiveId(t.studentId);
-                                      setActiveTab("workspace");
-                                    }}
-                                    className="px-2 py-1 bg-white border border-slate-200 rounded text-brand-600 font-bold hover:bg-slate-50 cursor-pointer text-[10px]"
-                                  >
-                                    Open →
-                                  </button>
-                                </div>
+                                ) : (
+                                  <span style={{ fontSize: 10, fontWeight: 700, color: "#ea580c", background: "#fff7ed", padding: "1px 6px", borderRadius: 4, flexShrink: 0 }}>
+                                    Pending
+                                  </span>
+                                )}
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteTask(idx)}
+                                  title="Remove task"
+                                  style={{
+                                    border: "none",
+                                    background: "transparent",
+                                    cursor: "pointer",
+                                    color: "#94a3b8",
+                                    padding: 3,
+                                    display: "grid",
+                                    placeItems: "center",
+                                  }}
+                                  onMouseEnter={(e) => { e.currentTarget.style.color = "#dc2626"; }}
+                                  onMouseLeave={(e) => { e.currentTarget.style.color = "#94a3b8"; }}
+                                >
+                                  <Trash2 size={13} />
+                                </button>
                               </div>
                             ))
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 5: All Mentees Matrix */}
-              {activeTab === "matrix" && (
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-subtle">
-                  <AllMenteesMatrix
-                    token={token}
-                    onSelectStudent={(sid) => {
-                      setActiveId(sid);
-                      setActiveTab("workspace");
-                    }}
-                  />
-                </div>
-              )}
-
-            </div>
-
-            {/* ── RIGHT SIDEBAR (Quick Details - Exact Template Layout) ── */}
-            <aside className="w-full lg:w-80 bg-white border-t lg:border-t-0 lg:border-l border-slate-200/80 p-6 overflow-y-auto hide-scrollbar flex-shrink-0 space-y-6">
-              
-              {/* Student Overview Card */}
-              <div>
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <i className="fa-regular fa-id-badge text-slate-400"></i> Student Overview
-                </h3>
-                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-subtle">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-orange-100 text-brand-600 flex items-center justify-center font-bold border border-orange-200">
-                        {activeStudent?.name?.charAt(0) || "S"}
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-900 leading-tight">
-                          {activeStudent?.name || "Assigned Student"}
-                        </h4>
-                        <p className="text-[10px] font-mono text-slate-500 mt-0.5">
-                          {activeStudent?.studentId || "CP-2026-00001"}
-                        </p>
-                      </div>
-                    </div>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100">
-                      Active
-                    </span>
-                  </div>
-                  
-                  <div className="space-y-2.5 pt-3 border-t border-slate-100">
-                    <div className="flex items-center gap-2.5 text-xs text-slate-600">
-                      <i className="fa-solid fa-building-columns w-4 text-center text-slate-400"></i>
-                      <span className="font-medium">
-                        {activeStudent?.targetCollege || "IIT Roorkee Goal"}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2.5 text-xs text-slate-600">
-                      <i className="fa-regular fa-calendar w-4 text-center text-slate-400"></i>
-                      <span className="font-medium">
-                        Batch: <span className="text-slate-800 font-semibold">{activeStudent?.batch || "CP-2026"}</span>
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2.5 text-xs text-slate-600">
-                      <i className="fa-solid fa-arrows-rotate w-4 text-center text-slate-400"></i>
-                      <span className="font-medium">
-                        Last Sync: {freshness(report.updatedAt)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Stats */}
-              <div>
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <i className="fa-solid fa-chart-pie text-slate-400"></i> Quick Stats
-                </h3>
-                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-subtle space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 rounded bg-slate-100 flex items-center justify-center text-slate-500 text-[10px]">
-                        <i className="fa-solid fa-hashtag"></i>
-                      </div>
-                      <span className="text-xs font-medium text-slate-600">Total Sessions</span>
-                    </div>
-                    <span className="text-xs font-bold text-slate-900">
-                      {(report.tests?.length || 0) + (report.tasks?.length || 0) || 12}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 rounded bg-emerald-50 flex items-center justify-center text-emerald-500 text-[10px]">
-                        <i className="fa-solid fa-check"></i>
-                      </div>
-                      <span className="text-xs font-medium text-slate-600">Completed</span>
-                    </div>
-                    <span className="text-xs font-bold text-slate-900">
-                      {report.tasks?.filter((t) => t.completed)?.length || 10}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 rounded bg-purple-50 flex items-center justify-center text-purple-500 text-[10px]">
-                        <i className="fa-solid fa-clock-rotate-left"></i>
-                      </div>
-                      <span className="text-xs font-medium text-slate-600">Pending</span>
-                    </div>
-                    <span className="text-xs font-bold text-slate-900">
-                      {report.tasks?.filter((t) => !t.completed)?.length || 2}
-                    </span>
-                  </div>
-
-                  <div className="pt-2">
-                    <div className="flex justify-between items-end mb-1.5">
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 rounded bg-orange-50 flex items-center justify-center text-brand-500 text-[10px]">
-                          <i className="fa-solid fa-percent"></i>
+                          ) : (
+                            <div style={{ padding: "26px 10px", textAlign: "center", color: "#94a3b8", fontSize: 12 }}>
+                              No tasks assigned to {activeStudent?.name} yet. Use the input box above to assign one.
+                            </div>
+                          )}
                         </div>
-                        <span className="text-xs font-medium text-slate-600">Attendance</span>
                       </div>
-                      <span className="text-xs font-bold text-slate-900">83%</span>
-                    </div>
-                    <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-brand-500 h-1.5 rounded-full" style={{ width: "83%" }}></div>
-                    </div>
+                    ) : (
+                      /* VIEW B: All Mentees Assigned Tasks Roster */
+                      <div>
+                        {/* Search & Filter Bar */}
+                        <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+                          <div style={{ position: "relative", flex: 1, minWidth: 160 }}>
+                            <Search size={13} style={{ position: "absolute", left: 9, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+                            <input
+                              type="text"
+                              placeholder="Filter by student name, CP ID, task..."
+                              value={rosterSearch}
+                              onChange={(e) => setRosterSearch(e.target.value)}
+                              style={{
+                                width: "100%",
+                                height: 32,
+                                paddingLeft: 28,
+                                paddingRight: 8,
+                                borderRadius: 7,
+                                border: "1px solid #cbd5e1",
+                                fontSize: 11.5,
+                                outline: "none",
+                                boxSizing: "border-box",
+                              }}
+                            />
+                          </div>
+
+                          <select
+                            value={rosterStatusFilter}
+                            onChange={(e) => setRosterStatusFilter(e.target.value)}
+                            style={{
+                              height: 32, padding: "0 8px", borderRadius: 7,
+                              border: "1px solid #cbd5e1", fontSize: 11.5, outline: "none",
+                              background: "#fff", cursor: "pointer",
+                            }}
+                          >
+                            <option value="all">All Statuses</option>
+                            <option value="completed">Completed Only</option>
+                            <option value="pending">Pending Only</option>
+                          </select>
+                        </div>
+
+                        {/* Roster Items */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: 7, maxHeight: 360, overflowY: "auto" }}>
+                          {loadingAllTasks ? (
+                            <div style={{ padding: "30px 0", textAlign: "center", color: "#94a3b8", fontSize: 12 }}>
+                              <RefreshCw size={15} style={{ animation: "cp-spin 1s linear infinite", margin: "0 auto 6px" }} />
+                              Loading all mentees tasks...
+                            </div>
+                          ) : allMenteesTasks.length === 0 ? (
+                            <div style={{ padding: "26px 10px", textAlign: "center", color: "#94a3b8", fontSize: 12 }}>
+                              No assigned tasks found across any of your mentees.
+                            </div>
+                          ) : (
+                            allMenteesTasks
+                              .filter((t) => {
+                                if (rosterStatusFilter === "completed" && !t.completed) return false;
+                                if (rosterStatusFilter === "pending" && t.completed) return false;
+                                if (rosterSearch.trim()) {
+                                  const q = rosterSearch.toLowerCase().trim();
+                                  return (
+                                    t.studentName?.toLowerCase().includes(q) ||
+                                    t.studentId?.toLowerCase().includes(q) ||
+                                    t.text?.toLowerCase().includes(q)
+                                  );
+                                }
+                                return true;
+                              })
+                              .map((t, idx) => (
+                                <div
+                                  key={t.id || idx}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    padding: "9px 12px",
+                                    borderRadius: 9,
+                                    background: t.completed ? "#f0fdf4" : "#ffffff",
+                                    border: `1px solid ${t.completed ? "#bbf7d0" : "#e2e8f0"}`,
+                                    gap: 10,
+                                    fontSize: 11.5,
+                                  }}
+                                >
+                                  <div style={{ minWidth: 0, flex: 1 }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: 3 }}>
+                                      <span style={{ fontWeight: 800, color: "#0f172a" }}>{t.studentName}</span>
+                                      <span style={{ fontFamily: "monospace", color: "#64748b", fontSize: 10.5 }}>({t.studentId})</span>
+                                      <span style={{ fontSize: 9.5, fontWeight: 700, color: "#2563eb", background: "#eff6ff", padding: "1px 5px", borderRadius: 4 }}>
+                                        {t.studentGroup}
+                                      </span>
+                                    </div>
+                                    <div style={{ color: t.completed ? "#166534" : "#334155", fontWeight: 500, lineHeight: 1.4 }}>
+                                      {t.text}
+                                    </div>
+                                  </div>
+
+                                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                                    {t.completed ? (
+                                      <span style={{ fontSize: 10, fontWeight: 800, color: "#16a34a", background: "#dcfce7", padding: "2px 7px", borderRadius: 4 }}>
+                                        Completed
+                                      </span>
+                                    ) : (
+                                      <span style={{ fontSize: 10, fontWeight: 700, color: "#ea580c", background: "#fff7ed", padding: "2px 7px", borderRadius: 4 }}>
+                                        Pending
+                                      </span>
+                                    )}
+
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setActiveId(t.studentId);
+                                        setTaskStudioTab("mentee");
+                                      }}
+                                      style={{
+                                        padding: "4px 8px",
+                                        borderRadius: 6,
+                                        border: "1px solid #e2e8f0",
+                                        background: "#fff",
+                                        color: ACCENT,
+                                        fontWeight: 700,
+                                        fontSize: 10.5,
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      Open →
+                                    </button>
+                                  </div>
+                                </div>
+                              ))
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
+            )}
 
-              {/* Recent Activity */}
-              <div>
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <i className="fa-solid fa-clock-rotate-left text-slate-400"></i> Recent Activity
-                </h3>
-                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-subtle relative">
-                  <div className="absolute left-[23px] top-6 bottom-6 w-px bg-slate-200"></div>
-                  <ul className="space-y-4 relative">
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 mt-1.5 rounded-full bg-emerald-500 ring-4 ring-white relative z-10 flex-shrink-0"></div>
-                      <div className="flex-1">
-                        <p className="text-xs font-semibold text-slate-800">Student logged in</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{freshness(report.updatedAt)}</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 mt-1.5 rounded-full bg-brand-500 ring-4 ring-white relative z-10 flex-shrink-0"></div>
-                      <div className="flex-1">
-                        <p className="text-xs font-semibold text-slate-800">Task updated</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">Completed 15 PYQs</p>
-                        <p className="text-[10px] text-slate-400">4h ago</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 mt-1.5 rounded-full bg-purple-500 ring-4 ring-white relative z-10 flex-shrink-0"></div>
-                      <div className="flex-1">
-                        <p className="text-xs font-semibold text-slate-800">Test analysis ready</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">1d ago</p>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Pro Tip */}
-              <div className="bg-amber-50 border border-amber-200/60 rounded-xl p-4 flex gap-3">
-                <i className="fa-regular fa-lightbulb text-amber-500 mt-0.5"></i>
-                <div>
-                  <h4 className="text-xs font-bold text-amber-800 mb-1">Pro Tip</h4>
-                  <p className="text-[11px] text-amber-700/80 leading-relaxed">
-                    Keep session topics focused and update the meet link at least 1 hour before the session starts for a smoother experience.
-                  </p>
-                </div>
-              </div>
-
-            </aside>
-          </div>
-        </main>
+            {/* TAB 4: All Mentees Matrix (Complete scores for all students) */}
+            {activeTab === "matrix" && (
+              <AllMenteesMatrix
+                token={token}
+                onSelectStudent={(sid) => {
+                  setActiveId(sid);
+                  setActiveTab("workspace");
+                }}
+              />
+            )}
+          </main>
+        </div>
 
         {/* Chapter Quiz Creator Modal */}
         <ChapterQuizModal
@@ -1250,6 +1848,33 @@ export default function MentorDashboard() {
           chapterName="Units and Measurements"
         />
       </div>
+
+      <style>{`
+        .cp-spin { animation: cp-spin 0.9s linear infinite; }
+        @keyframes cp-spin { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) { .cp-spin { animation-duration: 2.4s; } }
+        
+        .mobile-hamburger-btn { display: none; }
+        .mobile-only-btn { display: none; }
+        
+        @media (max-width: 900px) {
+          .mentor-top-header { padding: 0 12px !important; }
+          .mobile-hamburger-btn { display: grid !important; }
+          .mobile-only-btn { display: block !important; }
+          .desktop-only-txt { display: none !important; }
+          .sidebar-desktop {
+            position: fixed !important;
+            transform: translateX(-100%) !important;
+          }
+          .sidebar-mobile-open {
+            transform: translateX(0) !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .breadcrumb-prefix { display: none !important; }
+          .breadcrumb-student { display: none !important; }
+        }
+      `}</style>
     </>
   );
 }

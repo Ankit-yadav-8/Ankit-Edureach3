@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import {
   Plus, Trash2, UserPlus, KeyRound, Copy, Check, Loader2, ShieldOff,
   ShieldCheck, GraduationCap, AlertTriangle, X, Search, ChevronDown,
@@ -656,6 +657,11 @@ export default function Mentors({ token }) {
   const [search, setSearch] = useState("");
   const [handoff, setHandoff] = useState(null);
 
+  // Unassigned Students Slide-Over Drawer state
+  const [unassignedDrawerOpen, setUnassignedDrawerOpen] = useState(false);
+  const [unassignedSearch, setUnassignedSearch] = useState("");
+  const [assigningSid, setAssigningSid] = useState("");
+
   const load = useCallback(async () => {
     setLoading(true); setErr("");
     try {
@@ -686,11 +692,29 @@ export default function Mentors({ token }) {
     );
   }, [mentors, search]);
 
-  const totalAssigned = useMemo(() => {
+  const assignedSet = useMemo(() => {
     const set = new Set();
-    mentors.forEach((m) => (m.students || []).forEach((s) => set.add(s.toUpperCase())));
-    return set.size;
+    mentors.forEach((m) => (m.students || []).forEach((s) => set.add(String(s).toUpperCase())));
+    return set;
   }, [mentors]);
+
+  const totalAssigned = assignedSet.size;
+
+  const unassignedStudents = useMemo(() => {
+    return eligibleStudents.filter((s) => !assignedSet.has(String(s.studentId || "").toUpperCase()));
+  }, [eligibleStudents, assignedSet]);
+
+  const filteredUnassignedStudents = useMemo(() => {
+    const q = unassignedSearch.trim().toLowerCase();
+    if (!q) return unassignedStudents;
+    return unassignedStudents.filter((s) =>
+      s.name?.toLowerCase().includes(q) ||
+      s.studentId?.toLowerCase().includes(q) ||
+      s.email?.toLowerCase().includes(q) ||
+      s.phone?.toLowerCase().includes(q) ||
+      s.plan?.toLowerCase().includes(q)
+    );
+  }, [unassignedStudents, unassignedSearch]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -773,12 +797,47 @@ export default function Mentors({ token }) {
         </div>
 
         <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0" }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Paid Students Pool</span>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginTop: 2 }}>
-            {eligibleStudents.length}
-            <span style={{ fontSize: 11.5, color: "#2563eb", marginLeft: 6, fontWeight: 600 }}>
-              ({Math.max(0, eligibleStudents.length - totalAssigned)} unassigned)
-            </span>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Paid Students Pool</span>
+            {unassignedStudents.length > 0 && (
+              <span style={{
+                fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 999,
+                background: "#eff6ff", color: "#2563eb", border: "1px solid #bfdbfe",
+              }}>
+                {unassignedStudents.length} awaiting
+              </span>
+            )}
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4, flexWrap: "wrap", gap: 8 }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a" }}>
+              {eligibleStudents.length}
+              <span style={{ fontSize: 11.5, color: "#2563eb", marginLeft: 6, fontWeight: 600 }}>
+                ({unassignedStudents.length} unassigned)
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setUnassignedDrawerOpen(true)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                background: unassignedStudents.length > 0 ? "#eff6ff" : "#f8fafc",
+                border: unassignedStudents.length > 0 ? "1px solid #bfdbfe" : "1px solid #e2e8f0",
+                color: unassignedStudents.length > 0 ? "#1d4ed8" : "#64748b",
+                fontSize: 11.5,
+                fontWeight: 700,
+                padding: "5px 10px",
+                borderRadius: 8,
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+              title="Click to view all unassigned students"
+            >
+              <Users size={12.5} />
+              <span>View Unassigned ({unassignedStudents.length})</span>
+              <ChevronRight size={13} />
+            </button>
           </div>
         </div>
       </div>
@@ -818,9 +877,272 @@ export default function Mentors({ token }) {
         </div>
       )}
 
+      {/* Slide-Over Unassigned Students Drawer */}
+      {unassignedDrawerOpen && typeof document !== "undefined" && createPortal(
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setUnassignedDrawerOpen(false);
+          }}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(15,23,42,0.45)",
+            backdropFilter: "blur(2px)",
+            display: "flex",
+            justifyContent: "flex-end",
+            zIndex: 9999,
+            animation: "admFadeIn 0.18s ease-out",
+          }}
+        >
+          <div
+            style={{
+              background: "#ffffff",
+              width: "min(500px, 94vw)",
+              height: "100vh",
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              boxShadow: "-12px 0 40px rgba(15,23,42,0.18)",
+              borderLeft: "1px solid #e2e8f0",
+              animation: "admDrawerSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
+            {/* Drawer Header */}
+            <div
+              style={{
+                padding: "16px 20px",
+                borderBottom: "1px solid #f1f5f9",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                background: "#fafafa",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 10,
+                    background: "#eff6ff",
+                    color: "#2563eb",
+                    display: "grid",
+                    placeItems: "center",
+                    fontWeight: 800,
+                  }}
+                >
+                  <Users size={18} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", margin: 0, fontFamily: "Sora, sans-serif" }}>
+                    Unassigned Students ({unassignedStudents.length})
+                  </h3>
+                  <p style={{ fontSize: 11.5, color: "#64748b", margin: "2px 0 0" }}>
+                    Paid students awaiting 1-on-1 mentor allocation
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setUnassignedDrawerOpen(false)}
+                style={{
+                  background: "#f1f5f9",
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "6px",
+                  cursor: "pointer",
+                  display: "grid",
+                  placeItems: "center",
+                  color: "#64748b",
+                }}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Search Filter Strip */}
+            <div style={{ padding: "12px 18px", borderBottom: "1px solid #f1f5f9", background: "#ffffff" }}>
+              <div style={{ position: "relative" }}>
+                <Search size={13} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+                <input
+                  value={unassignedSearch}
+                  onChange={(e) => setUnassignedSearch(e.target.value)}
+                  placeholder="Search by student name, CP ID, email, phone..."
+                  style={{
+                    ...inputStyle,
+                    paddingLeft: 30,
+                    height: 35,
+                    fontSize: 12,
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Student List */}
+            <div style={{ flex: 1, overflowY: "auto", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 10 }}>
+              {filteredUnassignedStudents.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "40px 16px", color: "#64748b" }}>
+                  <Users size={28} style={{ opacity: 0.4, margin: "0 auto 8px" }} />
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>
+                    {unassignedSearch ? "No unassigned students match your search" : "No Unassigned Students"}
+                  </div>
+                  <div style={{ fontSize: 11.5, marginTop: 4 }}>
+                    {unassignedSearch ? "Try searching with a different keyword" : "All enrolled students have been assigned to mentors."}
+                  </div>
+                </div>
+              ) : (
+                filteredUnassignedStudents.map((st) => (
+                  <div
+                    key={st.studentId}
+                    style={{
+                      border: "1px solid #e2e8f0",
+                      borderRadius: 12,
+                      padding: "12px 14px",
+                      background: "#ffffff",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                      <div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>{st.name}</span>
+                          <span style={{
+                            fontSize: 10.5, fontWeight: 700, padding: "2px 6px", borderRadius: 6,
+                            background: "#f1f5f9", color: "#475569", fontFamily: "monospace",
+                          }}>
+                            {st.studentId}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
+                          {st.email} {st.phone ? `• ${st.phone}` : ""}
+                        </div>
+                      </div>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 999,
+                        background: "#fff7ed", color: "#ea580c", border: "1px solid #fed7aa",
+                        whiteSpace: "nowrap", textTransform: "capitalize",
+                      }}>
+                        {st.plan || "Mentorship"}
+                      </span>
+                    </div>
+
+                    {/* Quick Assignment Dropdown */}
+                    <div style={{
+                      display: "flex", alignItems: "center", gap: 8, marginTop: 4,
+                      paddingTop: 8, borderTop: "1px dashed #f1f5f9",
+                    }}>
+                      <select
+                        id={`assign-select-${st.studentId}`}
+                        defaultValue=""
+                        style={{
+                          flex: 1,
+                          height: 32,
+                          fontSize: 11.5,
+                          borderRadius: 7,
+                          border: "1px solid #cbd5e1",
+                          padding: "0 8px",
+                          background: "#fff",
+                          outline: "none",
+                        }}
+                      >
+                        <option value="" disabled>Select mentor to assign...</option>
+                        {mentors.filter((m) => m.active).map((m) => (
+                          <option key={m.id} value={m.id}>
+                            {m.name} ({m.students?.length || 0} mentees)
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        disabled={assigningSid === st.studentId}
+                        onClick={async () => {
+                          const selectEl = document.getElementById(`assign-select-${st.studentId}`);
+                          const mentorId = selectEl?.value;
+                          if (!mentorId) {
+                            alert("Please select a mentor first.");
+                            return;
+                          }
+                          setAssigningSid(st.studentId);
+                          try {
+                            await apiAdminMentorAssign(token, mentorId, st.studentId);
+                            await load();
+                          } catch (err) {
+                            alert(err.message || "Failed to assign student");
+                          } finally {
+                            setAssigningSid("");
+                          }
+                        }}
+                        style={{
+                          height: 32,
+                          padding: "0 12px",
+                          borderRadius: 7,
+                          border: "none",
+                          background: assigningSid === st.studentId ? "#94a3b8" : ORANGE,
+                          color: "#fff",
+                          fontSize: 11.5,
+                          fontWeight: 700,
+                          cursor: assigningSid === st.studentId ? "wait" : "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 4,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {assigningSid === st.studentId ? (
+                          <Loader2 size={12} className="adm-spin" />
+                        ) : (
+                          <UserPlus size={12} />
+                        )}
+                        <span>Assign</span>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Drawer Footer */}
+            <div style={{ padding: "12px 18px", borderTop: "1px solid #f1f5f9", background: "#fafafa", display: "flex", justifyContent: "flex-end" }}>
+              <button
+                type="button"
+                onClick={() => setUnassignedDrawerOpen(false)}
+                style={{
+                  padding: "7px 16px",
+                  borderRadius: 8,
+                  border: "1px solid #cbd5e1",
+                  background: "#ffffff",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#475569",
+                  cursor: "pointer",
+                }}
+              >
+                Close Drawer
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
       <style>{`
         .adm-spin { animation: adm-spin .9s linear infinite; }
         @keyframes adm-spin { to { transform: rotate(360deg); } }
+        @keyframes admDrawerSlideIn {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        @keyframes admFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
       `}</style>
     </div>
   );

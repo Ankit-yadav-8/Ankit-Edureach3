@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import {
   Users, UserCheck, Calendar, Clock, Download, RefreshCw, Search,
   ChevronDown, ChevronUp, ArrowUpDown, ChevronRight, X, CheckCircle2,
@@ -1333,19 +1334,24 @@ export default function MentorTracking({ adminToken }) {
       )}
 
       {/* SECTION 6: Sleek Slide-Over Mentor Inspector Drawer */}
-      {selectedMentor && (
+      {selectedMentor && typeof document !== "undefined" && createPortal(
         <div
           onClick={(e) => {
             if (e.target === e.currentTarget) closeMentorDetail();
           }}
           style={{
             position: "fixed",
-            inset: 0,
-            background: "rgba(15,23,42,0.35)",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(15,23,42,0.45)",
             backdropFilter: "blur(2px)",
             display: "flex",
             justifyContent: "flex-end",
-            zIndex: 1200,
+            zIndex: 9999,
             animation: "admFadeIn 0.18s ease-out",
           }}
         >
@@ -1793,7 +1799,8 @@ export default function MentorTracking({ adminToken }) {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
