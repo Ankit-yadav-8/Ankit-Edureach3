@@ -158,6 +158,21 @@ export default function App() {
     );
   }
 
+  // Mentor Console renders standalone - no public navbar, footer, chatbot,
+  // WhatsApp button, compare tray or auth modal bleeding into it.
+  if (pathname.startsWith("/mentor")) {
+    return (
+      <>
+        <ScrollManager />
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/mentor" element={<MentorDashboard />} />
+          </Routes>
+        </Suspense>
+      </>
+    );
+  }
+
   // Campus Point AI is a full-screen Claude-style app - render it on its own
   // (no public navbar / footer / floating widgets). Open to guests; the login
   // modal is still available on demand via the account button.

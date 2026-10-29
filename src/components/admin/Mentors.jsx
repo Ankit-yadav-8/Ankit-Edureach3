@@ -263,7 +263,6 @@ function MentorRow({ token, mentor, eligibleStudents = [], onChange, onDelete, o
       if (target) target.studentGroup = groupInput.trim();
       setEditingGroupSid(null);
       setGroupInput("");
-      
     } catch (e) {
       setErr(e.message || "Failed to update group");
     } finally {

@@ -759,8 +759,8 @@ export default function MentorDashboard() {
         className="mentor-console-root"
         style={{
           display: "flex",
-          height: "calc(100vh - 98px)",
-          marginTop: 98,
+          flexDirection: "column",
+          height: "100vh",
           overflow: "hidden",
           background: "#f8fafc",
           fontFamily: "Inter, system-ui, sans-serif",
@@ -769,6 +769,164 @@ export default function MentorDashboard() {
           position: "relative",
         }}
       >
+        {/* ── TOP NAVBAR: Campus Point on left, Hamburger on right ── */}
+        <nav
+          style={{
+            height: 58,
+            background: "#ffffff",
+            borderBottom: "1px solid #e2e8f0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 20px",
+            position: "sticky",
+            top: 0,
+            zIndex: 100,
+            boxShadow: "0 1px 3px rgba(15,23,42,0.02)",
+            flexShrink: 0,
+          }}
+        >
+          {/* Left: Campus Point Logo + Wordmark */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                background: "#FF693D",
+                display: "grid",
+                placeItems: "center",
+                flexShrink: 0,
+                boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
+              }}
+            >
+              <span
+                style={{
+                  color: "#fff",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 700,
+                  fontSize: "14px",
+                  letterSpacing: "-0.5px",
+                  lineHeight: 1,
+                }}
+              >
+                CP
+              </span>
+            </span>
+            <span
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(1.1rem, 2.5vw, 1.25rem)",
+                letterSpacing: "-0.01em",
+                color: "#1a1a2e",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Campus Point
+            </span>
+            <span
+              style={{
+                fontSize: 10,
+                fontWeight: 800,
+                color: ACCENT,
+                background: "rgba(255,105,61,0.12)",
+                padding: "2px 8px",
+                borderRadius: 6,
+                letterSpacing: 0.5,
+                textTransform: "uppercase",
+                display: "inline-flex",
+                alignItems: "center",
+              }}
+            >
+              Mentor Console
+            </span>
+          </div>
+
+          {/* Center: Mentee Status */}
+          {activeStudent && (
+            <div
+              className="desktop-only-txt"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                background: "#f8fafc",
+                padding: "4px 12px",
+                borderRadius: 20,
+                border: "1px solid #e2e8f0",
+                fontSize: 12,
+              }}
+            >
+              <span style={{ color: "#64748b" }}>Mentee:</span>
+              <span style={{ fontWeight: 700, color: "#0f172a" }}>{activeStudent.name}</span>
+              <span style={{ fontSize: 10.5, color: "#94a3b8" }}>({activeStudent.id})</span>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a" }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#166534" }}>Live</span>
+            </div>
+          )}
+
+          {/* Right: Mentor Profile & Hamburger Button */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {mentor && (
+              <div
+                className="desktop-only-txt"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  padding: "3px 10px 3px 5px",
+                  borderRadius: 20,
+                }}
+              >
+                <div
+                  style={{
+                    width: 26,
+                    height: 26,
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                    color: "#fff",
+                    display: "grid",
+                    placeItems: "center",
+                    fontSize: 11,
+                    fontWeight: 800,
+                  }}
+                >
+                  {(mentor.name || "M").charAt(0).toUpperCase()}
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#0f172a" }}>
+                  {mentor.name?.split(" ")[0]}
+                </span>
+              </div>
+            )}
+
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                border: "1px solid #e2e8f0",
+                background: mobileMenuOpen ? "#f1f5f9" : "#ffffff",
+                display: "grid",
+                placeItems: "center",
+                cursor: "pointer",
+                color: "#0f172a",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                transition: "all 0.15s ease",
+              }}
+              title="Open Navigation Menu"
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </nav>
+
+        {/* ── WORKSPACE BODY: Sidebar + Main Area ── */}
+        <div style={{ display: "flex", flex: 1, overflow: "hidden", position: "relative" }}>
         {/* Mobile Navigation Drawer Backdrop */}
         {mobileMenuOpen && (
           <div
@@ -794,7 +952,8 @@ export default function MentorDashboard() {
             zIndex: mobileMenuOpen ? 999 : 50,
             position: mobileMenuOpen ? "fixed" : "relative",
             top: mobileMenuOpen ? 0 : "auto",
-            left: 0,
+            right: mobileMenuOpen ? 0 : "auto",
+            left: mobileMenuOpen ? "auto" : 0,
             bottom: 0,
             height: mobileMenuOpen ? "100vh" : "100%",
             flexShrink: 0,
@@ -1841,6 +2000,8 @@ export default function MentorDashboard() {
           </main>
         </div>
 
+        </div>
+
         {/* Chapter Quiz Creator Modal */}
         <ChapterQuizModal
           isOpen={quizOpen}
@@ -1864,7 +2025,9 @@ export default function MentorDashboard() {
           .desktop-only-txt { display: none !important; }
           .sidebar-desktop {
             position: fixed !important;
-            transform: translateX(-100%) !important;
+            right: 0 !important;
+            left: auto !important;
+            transform: translateX(100%) !important;
           }
           .sidebar-mobile-open {
             transform: translateX(0) !important;

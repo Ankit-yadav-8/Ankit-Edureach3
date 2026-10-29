@@ -648,6 +648,7 @@ export default function Admin() {
       className="adm-suite-root"
       style={{
         display: "flex",
+        flexDirection: "column",
         height: "100vh",
         overflow: "hidden",
         background: "#f8fafc",
@@ -656,9 +657,9 @@ export default function Admin() {
       }}
     >
       <style>{`
-        @keyframes admUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: none; } }
+        @keyframes admUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: none; } }
         @keyframes admSpin { to { transform: rotate(360deg); } }
-        .adm-fade { animation: admUp .35s cubic-bezier(.4,0,.2,1) both; }
+        .adm-fade { animation: admUp .3s cubic-bezier(.4,0,.2,1) both; }
         .adm-nav-btn {
           display: flex;
           align-items: center;
@@ -670,7 +671,7 @@ export default function Admin() {
           background: transparent;
           color: #475569;
           font-family: inherit;
-          font-size: 13.5px;
+          font-size: 13px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.16s ease;
@@ -686,170 +687,395 @@ export default function Admin() {
           color: #ffffff !important;
           box-shadow: 0 4px 14px rgba(255, 105, 61, 0.35);
         }
-        .adm-stat {
-          animation: admUp .4s cubic-bezier(.4,0,.2,1) both;
-          transition: transform .2s, box-shadow .22s;
+        .adm-desk-pill {
+          padding: 6px 14px;
+          border-radius: 8px;
+          border: none;
+          background: transparent;
+          color: #64748b;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.15s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          white-space: nowrap;
         }
-        .adm-stat:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 14px 34px rgba(13,27,62,.09);
+        .adm-desk-pill:hover {
+          background: #e2e8f0;
+          color: #0f172a;
         }
-        @media (max-width: 1024px) {
-          .adm-sidebar {
-            position: fixed !important;
-            z-index: 100 !important;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            width: 270px !important;
-            transform: translateX(-100%);
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            box-shadow: none;
-          }
-          .adm-sidebar.open {
-            transform: translateX(0) !important;
-            box-shadow: 0 0 50px rgba(0,0,0,0.3) !important;
-          }
-          .adm-mobile-overlay {
-            display: block !important;
-          }
-          .adm-menu-btn {
-            display: inline-flex !important;
-          }
-          .adm-mobile-close {
-            display: flex !important;
-          }
-          .adm-content-area {
-            padding: 16px 16px 40px !important;
-          }
+        .adm-desk-pill.active {
+          background: #ffffff;
+          color: ${ORANGE};
+          font-weight: 700;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
-        @media (min-width: 1025px) {
-          .adm-mobile-overlay {
-            display: none !important;
-          }
-          .adm-menu-btn {
-            display: none !important;
-          }
-          .adm-mobile-close {
-            display: none !important;
-          }
+        @media (max-width: 900px) {
+          .adm-desk-tab-bar { display: none !important; }
         }
       `}</style>
 
-      {/* Mobile Drawer Overlay */}
+      {/* ── TOP NAVBAR: Campus Point on left, Hamburger on right ── */}
+      <nav
+        style={{
+          height: 58,
+          background: "#ffffff",
+          borderBottom: "1px solid #f0e9e0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 20px",
+          position: "sticky",
+          top: 0,
+          zIndex: 100,
+          boxShadow: "0 1px 3px rgba(15,23,42,0.03)",
+          flexShrink: 0,
+        }}
+      >
+        {/* Left: Campus Point wordmark and logo (like home page navbar) */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              background: ORANGE,
+              display: "grid",
+              placeItems: "center",
+              flexShrink: 0,
+              boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
+            }}
+          >
+            <span
+              style={{
+                color: "#fff",
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 700,
+                fontSize: "14px",
+                letterSpacing: "-0.5px",
+                lineHeight: 1,
+              }}
+            >
+              CP
+            </span>
+          </span>
+          <span
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 700,
+              fontSize: "clamp(1.15rem, 2.5vw, 1.35rem)",
+              letterSpacing: "-0.01em",
+              color: "#1a1a2e",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Campus Point
+          </span>
+          <span
+            style={{
+              fontSize: 10,
+              fontWeight: 800,
+              color: ORANGE,
+              background: `${ORANGE}15`,
+              padding: "2px 8px",
+              borderRadius: 6,
+              letterSpacing: 0.5,
+              textTransform: "uppercase",
+            }}
+          >
+            Admin
+          </span>
+        </div>
+
+        {/* Center: Active tab breadcrumb & live status */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", fontFamily: "Sora, sans-serif" }}>
+            {TAB_LABELS[tab] || tab}
+          </span>
+          <span
+            style={{
+              fontSize: 10.5,
+              fontWeight: 700,
+              color: "#166534",
+              background: "#f0fdf4",
+              padding: "2px 8px",
+              borderRadius: 12,
+              border: "1px solid #bbf7d0",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a" }} />
+            Live
+          </span>
+        </div>
+
+        {/* Right: Search, Sync, and Hamburger Button */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {/* Quick Search on Users & Payments */}
+          {(tab === "users" || tab === "payments") && (
+            <div style={{ position: "relative" }}>
+              <Search size={13} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+              <input
+                placeholder={tab === "users" ? "Search..." : "Search..."}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                style={{
+                  height: 34,
+                  paddingLeft: 28,
+                  paddingRight: 8,
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                  fontSize: 12,
+                  outline: "none",
+                  width: 140,
+                }}
+              />
+            </div>
+          )}
+
+          {/* Sync */}
+          <button
+            onClick={refreshActive}
+            disabled={busy}
+            title="Sync latest data"
+            style={{
+              height: 36,
+              padding: "0 12px",
+              borderRadius: 8,
+              border: "1px solid #e2e8f0",
+              background: "#ffffff",
+              color: "#475569",
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: busy ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
+            }}
+          >
+            <RefreshCw size={13} style={{ animation: busy ? "admSpin 1s linear infinite" : "none" }} />
+            <span style={{ display: "none" }} className="desktop-sync-txt">Sync</span>
+          </button>
+
+          {/* CSV Export on Users / Payments */}
+          {!SELF_CONTAINED_TABS.has(tab) && (
+            <button
+              onClick={exportActive}
+              style={{
+                background: ORANGE,
+                color: "#ffffff",
+                border: "none",
+                height: 36,
+                padding: "0 12px",
+                borderRadius: 8,
+                fontWeight: 700,
+                fontSize: 12,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                cursor: "pointer",
+                boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
+              }}
+            >
+              <Download size={13} /> Export
+            </button>
+          )}
+
+          {/* Hamburger Menu Button (where all things are) */}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 10,
+              border: "1px solid #e2e8f0",
+              background: sidebarOpen ? "#f1f5f9" : "#ffffff",
+              display: "grid",
+              placeItems: "center",
+              cursor: "pointer",
+              color: "#0f172a",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+              transition: "all 0.15s ease",
+            }}
+            title="Open Admin Navigation"
+            aria-label="Menu"
+          >
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* ── DESKTOP TAB BAR: Fast 1-click tab switching ── */}
+      <div
+        className="adm-desk-tab-bar"
+        style={{
+          background: "#f1f5f9",
+          padding: "4px 20px",
+          borderBottom: "1px solid #e2e8f0",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          overflowX: "auto",
+          flexShrink: 0,
+        }}
+      >
+        {[
+          { k: "overview", label: "Overview", icon: LayoutDashboard },
+          { k: "mentor-tracking", label: "Mentor Tracking", icon: LineChart },
+          { k: "mentors", label: "Mentors", icon: GraduationCap },
+          { k: "users", label: `Students (${total})`, icon: Users },
+          { k: "payments", label: `Payments (${payTotal})`, icon: CreditCard },
+          { k: "tests", label: "Mock Tests", icon: FileText },
+          { k: "community", label: "Community", icon: MessagesSquare },
+          { k: "coupons", label: "Coupons", icon: Tag },
+        ].map((item) => {
+          const Icon = item.icon;
+          const active = tab === item.k;
+          return (
+            <button
+              key={item.k}
+              onClick={() => switchTab(item.k)}
+              className={`adm-desk-pill ${active ? "active" : ""}`}
+            >
+              <Icon size={14} color={active ? ORANGE : "#64748b"} />
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── SLIDE-IN DRAWER ON RIGHT (where all things are) ── */}
       {sidebarOpen && (
         <div
-          className="adm-mobile-overlay"
           onClick={() => setSidebarOpen(false)}
           style={{
             position: "fixed",
             inset: 0,
             background: "rgba(15,23,42,0.45)",
-            backdropFilter: "blur(3px)",
-            zIndex: 95,
+            backdropFilter: "blur(4px)",
+            zIndex: 1199,
           }}
         />
       )}
 
-      {/* ── SLEEK SIDE PANEL (SIDEBAR) ─────────────────────────── */}
       <aside
-        className={`adm-sidebar cp-custom-scroll ${sidebarOpen ? "open" : ""}`}
         style={{
-          width: 260,
+          position: "fixed",
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: "min(340px, 88vw)",
           background: "#ffffff",
-          borderRight: "1px solid #f0e9e0",
+          boxShadow: sidebarOpen ? "-4px 0 32px rgba(15,23,42,0.18)" : "none",
+          zIndex: 1200,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          flexShrink: 0,
-          height: "100vh",
-          position: "relative",
-          zIndex: 50,
+          transform: sidebarOpen ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.26s cubic-bezier(0.16, 1, 0.3, 1)",
           boxSizing: "border-box",
-          overflowY: "auto",
         }}
+        className="cp-custom-scroll"
       >
-        {/* Top Logo / Brand */}
-        <div style={{
-          padding: "20px 20px 18px",
-          borderBottom: "1px solid #f1f5f9",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}>
+        {/* Drawer Header */}
+        <div
+          style={{
+            padding: "16px 20px",
+            borderBottom: "1px solid #f0e9e0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{
-              width: 38,
-              height: 38,
-              borderRadius: 12,
-              background: `linear-gradient(135deg, ${ORANGE}, #e0421f)`,
-              display: "grid",
-              placeItems: "center",
-              color: "#ffffff",
-              fontWeight: 900,
-              fontFamily: "Sora, sans-serif",
-              fontSize: 15,
-              boxShadow: "0 4px 12px rgba(255,105,61,0.28)",
-            }}>
+            <span
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: "50%",
+                background: ORANGE,
+                display: "grid",
+                placeItems: "center",
+                color: "#ffffff",
+                fontSize: 13,
+                fontWeight: 700,
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
               CP
-            </div>
+            </span>
             <div>
-              <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0f172a", fontSize: 15, letterSpacing: -0.3 }}>
+              <div style={{ fontFamily: "Sora, sans-serif", fontSize: 15, fontWeight: 800, color: "#0f172a" }}>
                 Campus Point
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 1 }}>
-                <span style={{
-                  fontSize: 10,
-                  fontWeight: 800,
-                  color: ORANGE,
-                  background: `${ORANGE}15`,
-                  padding: "1px 6px",
-                  borderRadius: 4,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                }}>
-                  Admin Suite
-                </span>
+              <div style={{ fontSize: 9.5, fontWeight: 800, color: ORANGE, textTransform: "uppercase", letterSpacing: 0.5 }}>
+                Admin Console
               </div>
             </div>
           </div>
 
           <button
             onClick={() => setSidebarOpen(false)}
-            className="adm-mobile-close"
             style={{
               background: "none",
               border: "none",
-              color: "#94a3b8",
+              color: "#64748b",
               cursor: "pointer",
-              padding: 4,
+              padding: 6,
               borderRadius: 8,
-              alignItems: "center",
-              justifyContent: "center",
             }}
+            title="Close menu"
           >
             <X size={19} />
           </button>
         </div>
 
-        {/* Navigation Item Groups */}
-        <div style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "16px 14px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 20,
-        }}>
+        {/* Super Admin Profile Pill */}
+        <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", background: "#f8fafc" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: "50%",
+                background: "#0f172a",
+                color: "#ffffff",
+                display: "grid",
+                placeItems: "center",
+                fontSize: 12,
+                fontWeight: 800,
+              }}
+            >
+              AD
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                Super Admin
+              </div>
+              <div style={{ fontSize: 11, color: "#64748b", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {primaryAdminEmail}
+              </div>
+            </div>
+            <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: "#ecfdf5", color: "#166534" }}>
+              Verified
+            </span>
+          </div>
+        </div>
+
+        {/* Drawer Navigation List */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "14px 12px", display: "flex", flexDirection: "column", gap: 16 }}>
           {NAV_GROUPS.map((group, gi) => (
             <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
               <div style={{
-                fontSize: 10.5,
+                fontSize: 10,
                 fontWeight: 800,
                 color: "#94a3b8",
                 textTransform: "uppercase",
                 letterSpacing: 0.6,
-                padding: "0 10px 4px",
+                padding: "0 8px 4px",
               }}>
                 {group.title}
               </div>
@@ -862,7 +1088,7 @@ export default function Admin() {
                     onClick={() => switchTab(item.k)}
                     className={`adm-nav-btn ${active ? "active" : ""}`}
                   >
-                    <Icon size={17} style={{ flexShrink: 0 }} />
+                    <Icon size={16} style={{ flexShrink: 0 }} />
                     <span style={{ flex: 1 }}>{item.label}</span>
 
                     {item.count !== undefined && (
@@ -880,13 +1106,12 @@ export default function Admin() {
 
                     {item.badge && (
                       <span style={{
-                        background: active ? "rgba(255,255,255,0.25)" : "#ecfdf5",
-                        color: active ? "#ffffff" : "#059669",
+                        background: active ? "rgba(255,255,255,0.25)" : "#eff6ff",
+                        color: active ? "#ffffff" : "#2563eb",
                         fontSize: 10,
                         fontWeight: 800,
-                        padding: "1px 6px",
-                        borderRadius: 10,
-                        textTransform: "uppercase",
+                        padding: "2px 6px",
+                        borderRadius: 4,
                       }}>
                         {item.badge}
                       </span>
@@ -898,49 +1123,13 @@ export default function Admin() {
           ))}
         </div>
 
-        {/* Bottom Profile & Actions */}
-        <div style={{
-          padding: "16px 16px 20px",
-          borderTop: "1px solid #f1f5f9",
-          background: "#fafafa",
-          display: "flex",
-          flexDirection: "column",
-          gap: 12,
-        }}>
-          {/* Admin User Chip */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{
-              width: 34,
-              height: 34,
-              borderRadius: "50%",
-              background: "#0f172a",
-              color: "#ffffff",
-              display: "grid",
-              placeItems: "center",
-              fontSize: 12,
-              fontWeight: 800,
-            }}>
-              AD
-            </div>
-            <div style={{ overflow: "hidden" }}>
-              <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                Super Admin
-              </div>
-              <div style={{ fontSize: 11, color: "#64748b", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                {primaryAdminEmail}
-              </div>
-            </div>
-          </div>
-
+        {/* Drawer Footer / End Session */}
+        <div style={{ padding: "14px 16px", borderTop: "1px solid #f1f5f9", background: "#fafafa" }}>
           <button
             onClick={logout}
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
               width: "100%",
-              height: 36,
+              padding: "9px 14px",
               borderRadius: 10,
               border: "1px solid #e2e8f0",
               background: "#ffffff",
@@ -948,6 +1137,10 @@ export default function Admin() {
               fontSize: 12.5,
               fontWeight: 600,
               cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
               transition: "all 0.15s ease",
             }}
             onMouseEnter={(e) => { e.currentTarget.style.color = "#dc2626"; e.currentTarget.style.borderColor = "#fca5a5"; }}
@@ -958,7 +1151,7 @@ export default function Admin() {
         </div>
       </aside>
 
-      {/* ── MAIN CONTENT AREA ───────────────────────────────────── */}
+      {/* ── MAIN CONTENT AREA (FULL WIDTH) ─────────────────────────── */}
       <div
         className="adm-main-scroll cp-custom-scroll"
         style={{
@@ -966,143 +1159,10 @@ export default function Admin() {
           display: "flex",
           flexDirection: "column",
           minWidth: 0,
-          height: "100vh",
           overflowY: "auto",
           boxSizing: "border-box",
         }}
       >
-        {/* Top Navigation Bar */}
-        <header style={{
-          height: 64,
-          background: "#ffffff",
-          borderBottom: "1px solid #f0e9e0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 24px",
-          position: "sticky",
-          top: 0,
-          zIndex: 40,
-          flexShrink: 0,
-        }}>
-          {/* Breadcrumb / Title */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="adm-menu-btn"
-              title="Open Navigation"
-              style={{
-                display: "none",
-                background: "#f1f5f9",
-                border: "none",
-                borderRadius: 8,
-                padding: "7px",
-                cursor: "pointer",
-                color: "#334155",
-              }}
-            >
-              <Menu size={18} />
-            </button>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}>
-              <span style={{ color: "#94a3b8" }}>Campus Point</span>
-              <ChevronRight size={13} color="#cbd5e1" />
-              <span style={{ color: "#0f172a", fontWeight: 800, fontFamily: "Sora, sans-serif" }}>
-                {TAB_LABELS[tab] || tab}
-              </span>
-            </div>
-          </div>
-
-          {/* Top Right Actions */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {/* Global search input on Users & Payments */}
-            {(tab === "users" || tab === "payments") && (
-              <div style={{ position: "relative" }}>
-                <Search size={14} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
-                <input
-                  placeholder={tab === "users" ? "Search students…" : "Search payments…"}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  style={{
-                    height: 36,
-                    paddingLeft: 30,
-                    paddingRight: 10,
-                    borderRadius: 10,
-                    border: "1.5px solid #e2e8f0",
-                    fontSize: 12.5,
-                    outline: "none",
-                    minWidth: 200,
-                  }}
-                />
-              </div>
-            )}
-
-            {/* Live System Indicator */}
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              background: "#f0fdf4",
-              border: "1px solid #bbf7d0",
-              padding: "5px 11px",
-              borderRadius: 20,
-              fontSize: 11.5,
-              fontWeight: 700,
-              color: "#166534",
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a", boxShadow: "0 0 6px #16a34a" }} />
-              Live Sync
-            </div>
-
-            {/* Refresh */}
-            <button
-              onClick={refreshActive}
-              disabled={busy}
-              style={{
-                background: "#ffffff",
-                color: "#475569",
-                border: "1px solid #e2e8f0",
-                height: 36,
-                padding: "0 12px",
-                borderRadius: 10,
-                fontWeight: 600,
-                fontSize: 12.5,
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                cursor: busy ? "not-allowed" : "pointer",
-              }}
-            >
-              <RefreshCw size={13} style={{ animation: busy ? "admSpin 1s linear infinite" : "none" }} />
-              <span>{busy ? "Syncing…" : "Sync"}</span>
-            </button>
-
-            {/* CSV Export on Users / Payments */}
-            {!SELF_CONTAINED_TABS.has(tab) && (
-              <button
-                onClick={exportActive}
-                style={{
-                  background: ORANGE,
-                  color: "#ffffff",
-                  border: "none",
-                  height: 36,
-                  padding: "0 14px",
-                  borderRadius: 10,
-                  fontWeight: 700,
-                  fontSize: 12.5,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  cursor: "pointer",
-                  boxShadow: "0 3px 10px rgba(255,105,61,0.25)",
-                }}
-              >
-                <Download size={13} /> Export
-              </button>
-            )}
-          </div>
-        </header>
-
         {/* Viewport Content */}
         <main className="adm-content-area" style={{ flex: 1, padding: "28px 32px 60px", maxWidth: 1400, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
           <div className="adm-fade">
