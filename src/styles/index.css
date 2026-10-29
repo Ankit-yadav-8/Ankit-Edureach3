@@ -1968,6 +1968,47 @@ a.section-link:hover { color:var(--coral); transform:translateX(2px); display:in
 ::-webkit-scrollbar-thumb       { background:linear-gradient(var(--coral),var(--gold)); border-radius:10px; box-shadow: 0 0 8px rgba(255, 105, 61,.4); }
 
 /* ════════════════════════════════════════════════
+   ADMIN & MENTOR DASHBOARD: INVISIBLE SCROLLBARS
+   Scroll function works normally as an effect,
+   but the visible orange scrollbar is hidden.
+════════════════════════════════════════════════ */
+html.dashboard-invisible-scrollbar,
+html.dashboard-invisible-scrollbar body,
+html.dashboard-invisible-scrollbar *,
+.adm-suite-root,
+.adm-suite-root *,
+.mentor-console-root,
+.mentor-console-root *,
+body:has(.adm-suite-root),
+body:has(.adm-suite-root) *,
+body:has(.mentor-console-root),
+body:has(.mentor-console-root) *,
+html:has(.adm-suite-root),
+html:has(.mentor-console-root) {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+html.dashboard-invisible-scrollbar::-webkit-scrollbar,
+html.dashboard-invisible-scrollbar body::-webkit-scrollbar,
+html.dashboard-invisible-scrollbar *::-webkit-scrollbar,
+.adm-suite-root::-webkit-scrollbar,
+.adm-suite-root *::-webkit-scrollbar,
+.mentor-console-root::-webkit-scrollbar,
+.mentor-console-root *::-webkit-scrollbar,
+body:has(.adm-suite-root)::-webkit-scrollbar,
+body:has(.adm-suite-root) *::-webkit-scrollbar,
+body:has(.mentor-console-root)::-webkit-scrollbar,
+body:has(.mentor-console-root) *::-webkit-scrollbar,
+html:has(.adm-suite-root)::-webkit-scrollbar,
+html:has(.mentor-console-root)::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+/* ════════════════════════════════════════════════
    TOOL CARDS
 ════════════════════════════════════════════════ */
 .tool-card { transition:var(--transition); }

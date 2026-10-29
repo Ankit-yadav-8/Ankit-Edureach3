@@ -211,6 +211,11 @@ export default function Navbar({ onSearch }) {
     { label: "Blog", icon: FileText, to: "/blog", match: (p) => p.startsWith("/blog") },
   ];
 
+  const pLower = (location.pathname || "").toLowerCase();
+  if (pLower.startsWith("/admin") || pLower.startsWith("/mentor") || pLower === "/ai") {
+    return null;
+  }
+
   const isActive = (item) => (item.match ? item.match(location.pathname) : false);
 
   return (

@@ -101,7 +101,13 @@ export default function Admin() {
   useEffect(() => {
     const prev = document.title;
     document.title = "Admin · Campus Point";
-    return () => { document.title = prev; };
+    document.documentElement.classList.add("dashboard-invisible-scrollbar");
+    document.body.classList.add("dashboard-invisible-scrollbar");
+    return () => {
+      document.title = prev;
+      document.documentElement.classList.remove("dashboard-invisible-scrollbar");
+      document.body.classList.remove("dashboard-invisible-scrollbar");
+    };
   }, []);
 
   const toggleRow = (id) =>
@@ -283,7 +289,7 @@ export default function Admin() {
     const primaryAdminEmail = inboxes[0]?.email || "ankityadav08022008@gmail.com";
 
     return (
-      <div style={{
+      <div className="adm-suite-root" style={{
         minHeight: "100vh",
         display: "grid",
         placeItems: "center",
@@ -657,6 +663,26 @@ export default function Admin() {
       }}
     >
       <style>{`
+        /* Invisible scrollbar: keeps smooth scrolling effect without visible orange bar */
+        html.dashboard-invisible-scrollbar,
+        html.dashboard-invisible-scrollbar body,
+        html.dashboard-invisible-scrollbar *,
+        .adm-suite-root,
+        .adm-suite-root * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        html.dashboard-invisible-scrollbar::-webkit-scrollbar,
+        html.dashboard-invisible-scrollbar body::-webkit-scrollbar,
+        html.dashboard-invisible-scrollbar *::-webkit-scrollbar,
+        .adm-suite-root::-webkit-scrollbar,
+        .adm-suite-root *::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+          background: transparent !important;
+        }
+
         @keyframes admUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: none; } }
         @keyframes admSpin { to { transform: rotate(360deg); } }
         .adm-fade { animation: admUp .3s cubic-bezier(.4,0,.2,1) both; }

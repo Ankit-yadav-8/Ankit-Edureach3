@@ -1,4 +1,5 @@
 import { BadgeCheck } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 /* ============================================================
    TopBar - a slim, minimalist announcement strip pinned above
@@ -6,6 +7,12 @@ import { BadgeCheck } from "lucide-react";
    text (no glow / animation).
    ============================================================ */
 export default function TopBar() {
+  const { pathname } = useLocation();
+  const p = (pathname || "").toLowerCase();
+  if (p.startsWith("/admin") || p.startsWith("/mentor") || p === "/ai") {
+    return null;
+  }
+
   return (
     <div
       className="cp-topbar"

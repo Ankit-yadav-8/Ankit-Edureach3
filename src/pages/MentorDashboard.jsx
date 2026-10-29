@@ -49,6 +49,7 @@ function Login({ onDone }) {
 
   return (
     <div
+      className="mentor-console-root"
       style={{
         minHeight: "100vh",
         display: "flex",
@@ -364,6 +365,7 @@ function SetPassword({ token, onDone }) {
 
   return (
     <div
+      className="mentor-console-root"
       style={{
         minHeight: "100vh",
         display: "flex",
@@ -547,6 +549,15 @@ export default function MentorDashboard() {
     setStudents([]);
     setActiveId("");
     setReport({ progress: null, tests: [], tasks: [], updatedAt: null });
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.add("dashboard-invisible-scrollbar");
+    document.body.classList.add("dashboard-invisible-scrollbar");
+    return () => {
+      document.documentElement.classList.remove("dashboard-invisible-scrollbar");
+      document.body.classList.remove("dashboard-invisible-scrollbar");
+    };
   }, []);
 
   // Resume stored mentor session
@@ -769,6 +780,27 @@ export default function MentorDashboard() {
           position: "relative",
         }}
       >
+        <style>{`
+          /* Invisible scrollbar: keeps smooth scrolling effect without visible orange bar */
+          html.dashboard-invisible-scrollbar,
+          html.dashboard-invisible-scrollbar body,
+          html.dashboard-invisible-scrollbar *,
+          .mentor-console-root,
+          .mentor-console-root * {
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+          }
+          html.dashboard-invisible-scrollbar::-webkit-scrollbar,
+          html.dashboard-invisible-scrollbar body::-webkit-scrollbar,
+          html.dashboard-invisible-scrollbar *::-webkit-scrollbar,
+          .mentor-console-root::-webkit-scrollbar,
+          .mentor-console-root *::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+            background: transparent !important;
+          }
+        `}</style>
         {/* ── TOP NAVBAR: Campus Point on left, Hamburger on right ── */}
         <nav
           style={{

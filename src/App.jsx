@@ -143,15 +143,18 @@ export default function App() {
     return () => cancel(id);
   }, []);
 
+  const pathLower = (pathname || "").toLowerCase();
+
   // Admin dashboard renders standalone - no public navbar, footer, chatbot,
   // WhatsApp button, compare tray or auth modal bleeding into it.
-  if (pathname.startsWith("/admin")) {
+  if (pathLower.startsWith("/admin")) {
     return (
       <>
         <ScrollManager />
         <Suspense fallback={<RouteFallback />}>
           <Routes>
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/*" element={<Admin />} />
           </Routes>
         </Suspense>
       </>
@@ -160,13 +163,14 @@ export default function App() {
 
   // Mentor Console renders standalone - no public navbar, footer, chatbot,
   // WhatsApp button, compare tray or auth modal bleeding into it.
-  if (pathname.startsWith("/mentor")) {
+  if (pathLower.startsWith("/mentor")) {
     return (
       <>
         <ScrollManager />
         <Suspense fallback={<RouteFallback />}>
           <Routes>
             <Route path="/mentor" element={<MentorDashboard />} />
+            <Route path="/mentor/*" element={<MentorDashboard />} />
           </Routes>
         </Suspense>
       </>
@@ -245,8 +249,7 @@ export default function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mentorship-dashboard" element={<MentorshipDashboard />} />
-          {/* Mentor-facing, separate from the student dashboard above. */}
-          <Route path="/mentor" element={<MentorDashboard />} />
+
           <Route path="/community" element={<PublicCommunity />} />
           <Route path="/branches" element={<Branches />} />
           <Route path="/branches/:slug" element={<BranchDetail />} />
@@ -269,8 +272,8 @@ export default function App() {
       <Footer />
       <BackToTop />
       <CompareTray />
-      {!pathname.startsWith("/mentor") && <Suspense fallback={null}><Chatbot /></Suspense>}
-      {!pathname.startsWith("/mentor") && <WhatsAppButton />}
+      {!pathLower.startsWith("/mentor") && !pathLower.startsWith("/admin") && <Suspense fallback={null}><Chatbot /></Suspense>}
+      {!pathLower.startsWith("/mentor") && !pathLower.startsWith("/admin") && <WhatsAppButton />}
       <AuthModal />
       <ReviewPopup />
       {searchOpen && (
