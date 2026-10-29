@@ -186,6 +186,14 @@ connectDB()
   .then(() => {
     testPostgresConnection();
     app.listen(PORT, "0.0.0.0", () => console.log(`🚀 Server on http://0.0.0.0:${PORT}`));
+
+    // Keep Render container warm to eliminate 30–50s cold-start delays for OTP and API calls
+    const pingTarget = process.env.RENDER_EXTERNAL_URL || (IS_PROD ? "https://ankit-edureach3.onrender.com" : null);
+    if (pingTarget) {
+      setInterval(() => {
+        fetch(`${pingTarget}/health`, { method: "GET" }).catch(() => {});
+      }, 9 * 60 * 1000); // ping every 9 minutes
+    }
     startWeeklyReportJob(); // weekly parent progress emails (best-effort, dev-safe)
     startDailyReportJob();  // daily parent progress emails from synced data (dev-safe)
     backfillPhone10();      // one-time; no-op once every enrolment has the field

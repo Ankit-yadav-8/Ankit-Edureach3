@@ -1,3 +1,4 @@
+import nodemailer from "nodemailer";
 // ─────────────────────────────────────────────────────────────────────────────
 // OTP email via Brevo (Sendinblue) transactional API.
 //
@@ -19,17 +20,19 @@
 
 const FREE_WEBMAIL = /@(gmail|googlemail|yahoo|ymail|outlook|hotmail|live|msn|icloud|me|aol|proton|protonmail|zoho)\./i;
 
-// Log-only ("dev") mode vs. real sending. We send for real whenever a Brevo key
-// is configured; without a key there's nothing to send through, so we log. Set
-// OTP_DEV_MODE=true to force log-only even when a key is present (useful in
-// staging). The previous default required OTP_DEV_MODE=false to ever send, which
-// silently swallowed mail in production when that var wasn't set.
-function isDevMode() {
-  if (String(process.env.OTP_DEV_MODE || "").toLowerCase() === "true") return true;
-  return !process.env.BREVO_API_KEY;
+function hasSmtpConfig() {
+  return Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
 }
 
-// Resolve the Brevo "from" address, falling back to the verified domain sender
+// Log-only ("dev") mode vs. real sending. We send for real whenever a Brevo key
+// or SMTP credentials are configured; without either there's nothing to send through,
+// so we log. Set OTP_DEV_MODE=true to force log-only even when credentials are present.
+function isDevMode() {
+  if (String(process.env.OTP_DEV_MODE || "").toLowerCase() === "true") return true;
+  return !process.env.BREVO_API_KEY && !hasSmtpConfig();
+}
+
+// Resolve the "from" address, falling back to the verified domain sender
 // when SMTP_FROM_EMAIL is missing or a free-webmail address Brevo won't send from.
 function resolveSender() {
   const VERIFIED_SENDER = "hello@campuspoint.in";
@@ -40,26 +43,107 @@ function resolveSender() {
   return { fromEmail, fromName, replyTo };
 }
 
-// Single place that POSTs to Brevo, with a hard timeout so a slow/hung Brevo
-// request can't keep the user waiting (they get a fast "try again" instead).
-async function postToBrevo(body) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 25000);
-  try {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "api-key": process.env.BREVO_API_KEY },
-      body: JSON.stringify(body),
-      signal: controller.signal,
+// Singleton pooled SMTP transport for ultra-fast fallback delivery (<200ms)
+let pooledTransport = null;
+function getSmtpTransport() {
+  if (!pooledTransport && hasSmtpConfig()) {
+    pooledTransport = nodemailer.createTransport({
+      pool: true,
+      maxConnections: 3,
+      maxMessages: 100,
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT || 587),
+      secure: Number(process.env.SMTP_PORT) === 465,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+      connectionTimeout: 6000,
+      greetingTimeout: 5000,
+      socketTimeout: 10000,
     });
-    if (!res.ok) throw new Error(`Brevo API error (${res.status}): ${await res.text()}`);
-    return { ok: true, dev: false };
-  } catch (e) {
-    if (e.name === "AbortError") throw new Error("Brevo timed out");
-    throw e;
-  } finally {
-    clearTimeout(timer);
   }
+  return pooledTransport;
+}
+
+async function sendViaSmtp(body) {
+  const transport = getSmtpTransport();
+  if (!transport) throw new Error("SMTP is not configured");
+  const { fromEmail, fromName, replyTo } = resolveSender();
+  const to = Array.isArray(body.to) ? body.to.map((x) => x.email || x).join(", ") : body.to;
+  const info = await transport.sendMail({
+    from: `"${body.sender?.name || fromName}" <${body.sender?.email || fromEmail}>`,
+    to,
+    replyTo: body.replyTo?.email || replyTo,
+    subject: body.subject,
+    text: body.textContent || body.text || body.subject,
+    html: body.htmlContent || body.html || `<p>${body.textContent || body.subject}</p>`,
+    headers: {
+      "X-Priority": "1",
+      "Importance": "high",
+      "X-MSMail-Priority": "High",
+    },
+  });
+  return { ok: true, dev: false, messageId: info.messageId };
+}
+
+// Single place that POSTs to Brevo, with a fast 8s timeout and automatic SMTP fallback
+async function postToBrevo(body) {
+  if (isDevMode()) {
+    const to = Array.isArray(body.to) ? body.to.map((x) => x.email || x).join(", ") : JSON.stringify(body.to);
+    console.log(`\n[DEV EMAIL] to ${to}\n  Subject: ${body.subject}\n  (set BREVO_API_KEY or SMTP credentials to send for real; OTP_DEV_MODE=true forces this log-only mode)\n`);
+    return { ok: true, dev: true };
+  }
+
+  // 1. Try Brevo API first if key is present
+  if (process.env.BREVO_API_KEY) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000); // 8s fast timeout
+    try {
+      const enriched = {
+        ...body,
+        headers: {
+          "X-Mailin-Priority": "high",
+          "X-Priority": "1",
+          "Importance": "high",
+          ...(body.headers || {}),
+        },
+        tags: ["transactional", ...(body.tags || [])],
+      };
+      const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "api-key": process.env.BREVO_API_KEY },
+        body: JSON.stringify(enriched),
+        signal: controller.signal,
+      });
+      if (res.ok) return { ok: true, dev: false };
+      const errText = await res.text();
+      console.warn(`[mailer] Brevo returned ${res.status}: ${errText}`);
+      throw new Error(`Brevo API error (${res.status}): ${errText}`);
+    } catch (e) {
+      if (e.name === "AbortError") console.warn("[mailer] Brevo timed out after 8s");
+      // If SMTP is configured, seamlessly fallback to SMTP so mail is NEVER lost
+      if (hasSmtpConfig()) {
+        try {
+          console.log("[mailer] Brevo unavailable, attempting pooled SMTP fallback...");
+          return await sendViaSmtp(body);
+        } catch (smtpErr) {
+          console.error(`[mailer] SMTP fallback failed: ${smtpErr.message}`);
+          throw new Error(`${e.message} | SMTP: ${smtpErr.message}`);
+        }
+      }
+      throw e;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  // 2. Direct SMTP if Brevo key is not configured
+  if (hasSmtpConfig()) {
+    return await sendViaSmtp(body);
+  }
+
+  throw new Error("No mail service configured (missing BREVO_API_KEY and SMTP credentials)");
 }
 
 /**
