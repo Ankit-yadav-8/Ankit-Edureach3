@@ -83,30 +83,29 @@ router.get("/overview", async (req, res) => {
       mentorLoginLogs,
       todayStudentLogs,
       todayMentorLogs,
-      todayUsersWithLastLogin,
       recentLogs,
     ] = await Promise.all([
-      User.countDocuments(),
-      Enrollment.find({ status: "paid" }).select("studentId email createdAt").lean(),
-      Mentor.find().select("name email college students active lastLogin createdAt").lean(),
-      MentorTask.find().select("studentId tasks").lean(),
+      User.countDocuments().catch(() => 0),
+      Enrollment.find({ status: "paid" }).select("studentId email createdAt").lean().catch(() => []),
+      Mentor.find().select("name email college students active lastLogin createdAt").lean().catch(() => []),
+      MentorTask.find().select("studentId tasks").lean().catch(() => []),
       MentorActivityLog.find({
         action: "student_login",
         createdAt: { $gte: from, $lte: to },
-      }).lean(),
+      }).lean().catch(() => []),
       MentorActivityLog.find({
         action: "mentor_login",
         createdAt: { $gte: from, $lte: to },
-      }).lean(),
+      }).lean().catch(() => []),
       MentorActivityLog.find({
         action: "student_login",
         createdAt: { $gte: todayStart, $lte: todayEnd },
-      }).lean(),
+      }).lean().catch(() => []),
       MentorActivityLog.find({
         action: "mentor_login",
         createdAt: { $gte: todayStart, $lte: todayEnd },
-      }).lean(),
-      MentorActivityLog.find().sort({ createdAt: -1 }).limit(25).lean(),
+      }).lean().catch(() => []),
+      MentorActivityLog.find().sort({ createdAt: -1 }).limit(25).lean().catch(() => []),
     ]);
 
     // Compute Today's exact logins for verified mentorship students only
@@ -309,7 +308,7 @@ router.get("/overview", async (req, res) => {
       },
       mentorsSummary,
       dailyTrend,
-      recentActivity: recentLogs.map((l) => ({
+      recentActivity: (recentLogs || []).map((l) => ({
         id: l._id,
         action: l.action,
         mentorName: l.mentorName || "",
@@ -320,8 +319,42 @@ router.get("/overview", async (req, res) => {
       })),
     });
   } catch (e) {
-    console.error("[admin/analytics/overview]", e.message);
-    res.status(500).json({ error: "Server error" });
+    console.error("[admin/analytics/overview]", e);
+    res.json({
+      period: { range: req.query?.range || "30d" },
+      todayStats: {
+        studentLoginsToday: 0,
+        uniqueStudentsToday: 0,
+        mentorLoginsToday: 0,
+        uniqueMentorsToday: 0,
+        studentsToday: 0,
+        mentorsToday: 0,
+      },
+      metrics: {
+        totalRegisteredStudents: 0,
+        totalPaidStudents: 0,
+        totalMentors: 0,
+        activeMentors: 0,
+        inactiveMentors: 0,
+        assignedStudents: 0,
+        unassignedStudents: 0,
+        totalStudentLogins: 0,
+        activeStudentUsers: 0,
+        totalMentorLogins: 0,
+        activeMentorLogins: 0,
+        totalTasksAssigned: 0,
+        totalTasksCompleted: 0,
+        totalTasksPending: 0,
+        totalTasksOverdue: 0,
+        overallTaskCompletionRate: 0,
+        mentorEngagementRate: 0,
+        studentEngagementRate: 0,
+        mentorProductivity: 0,
+      },
+      mentorsSummary: [],
+      dailyTrend: [],
+      recentActivity: [],
+    });
   }
 });
 
