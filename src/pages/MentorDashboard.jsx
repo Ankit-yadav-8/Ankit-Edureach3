@@ -852,225 +852,232 @@ export default function MentorDashboard() {
             background: #e2e8f0;
             color: #0f172a;
           }
-          .adm-desk-pill.active {
-            background: #ffffff;
+          .mentor-nav-pill {
+            padding: 7px 14px;
+            border-radius: 9px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            white-space: nowrap;
+          }
+          .mentor-nav-pill:hover {
+            background: #f8fafc;
+            color: #0f172a;
+          }
+          .mentor-nav-pill.active {
+            background: #fff7ed;
             color: ${ACCENT};
+            border-color: rgba(255, 105, 61, 0.25);
             font-weight: 700;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            box-shadow: 0 1px 3px rgba(255, 105, 61, 0.08);
           }
           @media (max-width: 900px) {
-            .adm-desk-tab-bar { display: none !important; }
+            .navbar-middle-tabs { display: none !important; }
+            .navbar-desktop-controls { display: none !important; }
+            .console-badge-desktop { display: none !important; }
           }
         `}</style>
 
-        {/* ── TOP NAVBAR: Campus Point on left, Hamburger on right ── */}
+        {/* ── TOP NAVBAR: Always Sticky, Home-Page 3-Column Layout ── */}
         <nav
           style={{
-            height: 58,
-            background: "#ffffff",
-            borderBottom: "1px solid #f0e9e0",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "0 clamp(1.25rem, 3.5vw, 2.5rem)",
             position: "sticky",
             top: 0,
-            zIndex: 100,
+            zIndex: 1000,
+            background: "#ffffff",
+            borderBottom: "1px solid #f0e9e0",
+            height: 62,
+            width: "100%",
             boxShadow: "0 1px 3px rgba(15,23,42,0.03)",
             flexShrink: 0,
           }}
         >
-          {/* Left: Campus Point wordmark and logo */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                background: ACCENT,
-                display: "grid",
-                placeItems: "center",
-                flexShrink: 0,
-                boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
-              }}
-            >
+          <div
+            style={{
+              height: "100%",
+              display: "grid",
+              gridTemplateColumns: "auto 1fr auto",
+              alignItems: "center",
+              padding: "0 clamp(1.25rem, 3.5vw, 2.5rem)",
+              maxWidth: 1600,
+              margin: "0 auto",
+              boxSizing: "border-box",
+              gap: 16,
+            }}
+          >
+            {/* Left: Campus Point Logo + Wordmark */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "start", flexShrink: 0 }}>
               <span
                 style={{
-                  color: "#fff",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontWeight: 700,
-                  fontSize: "14px",
-                  letterSpacing: "-0.5px",
-                  lineHeight: 1,
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  background: ACCENT,
+                  display: "grid",
+                  placeItems: "center",
+                  flexShrink: 0,
+                  boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
                 }}
               >
-                CP
-              </span>
-            </span>
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontWeight: 700,
-                fontSize: "clamp(1.15rem, 2.5vw, 1.35rem)",
-                letterSpacing: "-0.01em",
-                color: "#1a1a2e",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Campus Point
-            </span>
-            <span
-              style={{
-                fontSize: 10,
-                fontWeight: 800,
-                color: ACCENT,
-                background: "rgba(255,105,61,0.12)",
-                padding: "2px 8px",
-                borderRadius: 6,
-                letterSpacing: 0.5,
-                textTransform: "uppercase",
-              }}
-            >
-              Mentor Console
-            </span>
-          </div>
-
-          {/* Center: Active tab breadcrumb & live status */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", fontFamily: SORA }}>
-              {NAV_ITEMS.find((n) => n.id === activeTab)?.label}
-            </span>
-            <span
-              style={{
-                fontSize: 10.5,
-                fontWeight: 700,
-                color: "#166534",
-                background: "#f0fdf4",
-                padding: "2px 8px",
-                borderRadius: 12,
-                border: "1px solid #bbf7d0",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 4,
-              }}
-            >
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a" }} />
-              Live
-            </span>
-          </div>
-
-          {/* Right: Quick Mentee Selector, Sync, and Hamburger Button */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {students.length > 0 && (activeTab === "workspace" || activeTab === "logins") && (
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ fontSize: 11.5, color: "#64748b", fontWeight: 600, display: "none" }} className="desktop-sync-txt">
-                  Mentee:
-                </span>
-                <select
-                  id="mentor-student-select"
-                  value={activeId}
-                  onChange={(e) => setActiveId(e.target.value)}
+                <span
                   style={{
-                    height: 36,
-                    padding: "0 10px",
-                    borderRadius: 8,
-                    border: "1.5px solid rgba(255,105,61,0.35)",
-                    background: "#ffffff",
-                    color: "#0f172a",
+                    color: "#fff",
+                    fontFamily: "'DM Sans', sans-serif",
                     fontWeight: 700,
-                    fontSize: 12,
-                    cursor: "pointer",
-                    outline: "none",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                    fontSize: "14px",
+                    letterSpacing: "-0.5px",
+                    lineHeight: 1,
                   }}
-                  title="Switch Active Mentee"
                 >
-                  {students.map((s) => (
-                    <option key={s.studentId} value={s.studentId}>
-                      {s.name} ({s.studentId})
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+                  CP
+                </span>
+              </span>
+              <span
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 700,
+                  fontSize: "clamp(1.15rem, 2.5vw, 1.35rem)",
+                  letterSpacing: "-0.01em",
+                  color: "#1a1a2e",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Campus Point
+              </span>
+              <span
+                className="console-badge-desktop"
+                style={{
+                  fontSize: 10,
+                  fontWeight: 800,
+                  color: ACCENT,
+                  background: "rgba(255,105,61,0.12)",
+                  padding: "2px 8px",
+                  borderRadius: 6,
+                  letterSpacing: 0.5,
+                  textTransform: "uppercase",
+                }}
+              >
+                Mentor Console
+              </span>
+            </div>
 
-            {/* Sync Button */}
-            <button
-              onClick={refreshData}
-              disabled={syncing}
-              title="Sync latest data"
+            {/* Middle: Mentor Options IN THE NAVBAR (Desktop Only, hidden on mobile) */}
+            <div
+              className="navbar-middle-tabs cp-custom-scroll"
               style={{
-                height: 36,
-                padding: "0 12px",
-                borderRadius: 8,
-                border: "1px solid #e2e8f0",
-                background: "#ffffff",
-                color: "#475569",
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: syncing ? "not-allowed" : "pointer",
                 display: "flex",
                 alignItems: "center",
-                gap: 5,
+                justifyContent: "center",
+                gap: 6,
+                overflowX: "auto",
+                minWidth: 0,
               }}
             >
-              <RefreshCw size={13} style={{ animation: syncing ? "admSpin 1s linear infinite" : "none" }} />
-              <span style={{ display: "none" }} className="desktop-sync-txt">Sync</span>
-            </button>
+              {NAV_ITEMS.map((item) => {
+                const Icon = item.icon;
+                const active = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`mentor-nav-pill ${active ? "active" : ""}`}
+                  >
+                    <Icon size={15} color={active ? ACCENT : "#64748b"} />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
 
-            {/* Hamburger Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 10,
-                border: "1px solid #e2e8f0",
-                background: mobileMenuOpen ? "#f1f5f9" : "#ffffff",
-                display: "grid",
-                placeItems: "center",
-                cursor: "pointer",
-                color: "#0f172a",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                transition: "all 0.15s ease",
-              }}
-              title="Open Mentor Navigation"
-              aria-label="Menu"
-            >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+            {/* Right: Actions on Desktop, ONLY Hamburger on Mobile */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end", flexShrink: 0 }}>
+              <div className="navbar-desktop-controls" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                {students.length > 0 && (activeTab === "workspace" || activeTab === "logins") && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <select
+                      id="mentor-student-select"
+                      value={activeId}
+                      onChange={(e) => setActiveId(e.target.value)}
+                      style={{
+                        height: 36,
+                        padding: "0 10px",
+                        borderRadius: 8,
+                        border: "1.5px solid rgba(255,105,61,0.35)",
+                        background: "#ffffff",
+                        color: "#0f172a",
+                        fontWeight: 700,
+                        fontSize: 12,
+                        cursor: "pointer",
+                        outline: "none",
+                        boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                      }}
+                      title="Switch Active Mentee"
+                    >
+                      {students.map((s) => (
+                        <option key={s.studentId} value={s.studentId}>
+                          {s.name} ({s.studentId})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* Sync Button */}
+                <button
+                  onClick={refreshData}
+                  disabled={syncing}
+                  title="Sync latest data"
+                  style={{
+                    height: 36,
+                    padding: "0 12px",
+                    borderRadius: 8,
+                    border: "1px solid #e2e8f0",
+                    background: "#ffffff",
+                    color: "#475569",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: syncing ? "not-allowed" : "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
+                  }}
+                >
+                  <RefreshCw size={13} style={{ animation: syncing ? "admSpin 1s linear infinite" : "none" }} />
+                  <span style={{ display: "none" }} className="desktop-sync-txt">Sync</span>
+                </button>
+              </div>
+
+              {/* Hamburger Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: 10,
+                  border: "1px solid #e2e8f0",
+                  background: mobileMenuOpen ? "#f1f5f9" : "#ffffff",
+                  display: "grid",
+                  placeItems: "center",
+                  cursor: "pointer",
+                  color: "#0f172a",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                  transition: "all 0.15s ease",
+                }}
+                title="Open Mentor Navigation"
+                aria-label="Menu"
+              >
+                {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
           </div>
         </nav>
-
-        {/* ── DESKTOP TAB BAR: Fast 1-click tab switching ── */}
-        <div
-          className="adm-desk-tab-bar"
-          style={{
-            background: "#f1f5f9",
-            padding: "4px clamp(1.25rem, 3.5vw, 2.5rem)",
-            borderBottom: "1px solid #e2e8f0",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            overflowX: "auto",
-            flexShrink: 0,
-          }}
-        >
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const active = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`adm-desk-pill ${active ? "active" : ""}`}
-              >
-                <Icon size={14} color={active ? ACCENT : "#64748b"} />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
 
         {/* ── SLIDE-IN DRAWER ON RIGHT (where all things are) ── */}
         {mobileMenuOpen && (

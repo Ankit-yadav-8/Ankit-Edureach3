@@ -732,247 +732,257 @@ export default function Admin() {
           background: #e2e8f0;
           color: #0f172a;
         }
-        .adm-desk-pill.active {
-          background: #ffffff;
+        .adm-nav-pill {
+          padding: 6px 12px;
+          border-radius: 8px;
+          border: 1px solid transparent;
+          background: transparent;
+          color: #64748b;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.15s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          white-space: nowrap;
+        }
+        .adm-nav-pill:hover {
+          background: #f8fafc;
+          color: #0f172a;
+        }
+        .adm-nav-pill.active {
+          background: #fff7ed;
           color: ${ORANGE};
+          border-color: rgba(255, 105, 61, 0.25);
           font-weight: 700;
-          box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+          box-shadow: 0 1px 3px rgba(255, 105, 61, 0.08);
         }
         @media (max-width: 900px) {
-          .adm-desk-tab-bar { display: none !important; }
+          .navbar-middle-tabs { display: none !important; }
+          .navbar-desktop-controls { display: none !important; }
+          .console-badge-desktop { display: none !important; }
         }
       `}</style>
 
-      {/* ── TOP NAVBAR: Campus Point on left, Hamburger on right ── */}
+      {/* ── TOP NAVBAR: Always Sticky, Home-Page 3-Column Layout ── */}
       <nav
         style={{
-          height: 58,
-          background: "#ffffff",
-          borderBottom: "1px solid #f0e9e0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 clamp(1.25rem, 3.5vw, 2.5rem)",
           position: "sticky",
           top: 0,
-          zIndex: 100,
+          zIndex: 1000,
+          background: "#ffffff",
+          borderBottom: "1px solid #f0e9e0",
+          height: 62,
+          width: "100%",
           boxShadow: "0 1px 3px rgba(15,23,42,0.03)",
           flexShrink: 0,
         }}
       >
-        {/* Left: Campus Point wordmark and logo (like home page navbar) */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-              background: ORANGE,
-              display: "grid",
-              placeItems: "center",
-              flexShrink: 0,
-              boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
-            }}
-          >
+        <div
+          style={{
+            height: "100%",
+            display: "grid",
+            gridTemplateColumns: "auto 1fr auto",
+            alignItems: "center",
+            padding: "0 clamp(1.25rem, 3.5vw, 2.5rem)",
+            maxWidth: 1600,
+            margin: "0 auto",
+            boxSizing: "border-box",
+            gap: 16,
+          }}
+        >
+          {/* Left: Campus Point Logo + Wordmark */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "start", flexShrink: 0 }}>
             <span
               style={{
-                color: "#fff",
-                fontFamily: "'DM Sans', sans-serif",
-                fontWeight: 700,
-                fontSize: "14px",
-                letterSpacing: "-0.5px",
-                lineHeight: 1,
-              }}
-            >
-              CP
-            </span>
-          </span>
-          <span
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontWeight: 700,
-              fontSize: "clamp(1.15rem, 2.5vw, 1.35rem)",
-              letterSpacing: "-0.01em",
-              color: "#1a1a2e",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Campus Point
-          </span>
-          <span
-            style={{
-              fontSize: 10,
-              fontWeight: 800,
-              color: ORANGE,
-              background: `${ORANGE}15`,
-              padding: "2px 8px",
-              borderRadius: 6,
-              letterSpacing: 0.5,
-              textTransform: "uppercase",
-            }}
-          >
-            Admin
-          </span>
-        </div>
-
-        {/* Center: Active tab breadcrumb & live status */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", fontFamily: "Sora, sans-serif" }}>
-            {TAB_LABELS[tab] || tab}
-          </span>
-          <span
-            style={{
-              fontSize: 10.5,
-              fontWeight: 700,
-              color: "#166534",
-              background: "#f0fdf4",
-              padding: "2px 8px",
-              borderRadius: 12,
-              border: "1px solid #bbf7d0",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-            }}
-          >
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a" }} />
-            Live
-          </span>
-        </div>
-
-        {/* Right: Search, Sync, and Hamburger Button */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {/* Quick Search on Users & Payments */}
-          {(tab === "users" || tab === "payments") && (
-            <div style={{ position: "relative" }}>
-              <Search size={13} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
-              <input
-                placeholder={tab === "users" ? "Search..." : "Search..."}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                style={{
-                  height: 34,
-                  paddingLeft: 28,
-                  paddingRight: 8,
-                  borderRadius: 8,
-                  border: "1px solid #e2e8f0",
-                  fontSize: 12,
-                  outline: "none",
-                  width: 140,
-                }}
-              />
-            </div>
-          )}
-
-          {/* Sync */}
-          <button
-            onClick={refreshActive}
-            disabled={busy}
-            title="Sync latest data"
-            style={{
-              height: 36,
-              padding: "0 12px",
-              borderRadius: 8,
-              border: "1px solid #e2e8f0",
-              background: "#ffffff",
-              color: "#475569",
-              fontSize: 12,
-              fontWeight: 600,
-              cursor: busy ? "not-allowed" : "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 5,
-            }}
-          >
-            <RefreshCw size={13} style={{ animation: busy ? "admSpin 1s linear infinite" : "none" }} />
-            <span style={{ display: "none" }} className="desktop-sync-txt">Sync</span>
-          </button>
-
-          {/* CSV Export on Users / Payments */}
-          {!SELF_CONTAINED_TABS.has(tab) && (
-            <button
-              onClick={exportActive}
-              style={{
-                background: ORANGE,
-                color: "#ffffff",
-                border: "none",
+                width: 36,
                 height: 36,
-                padding: "0 12px",
-                borderRadius: 8,
-                fontWeight: 700,
-                fontSize: 12,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                cursor: "pointer",
+                borderRadius: "50%",
+                background: ORANGE,
+                display: "grid",
+                placeItems: "center",
+                flexShrink: 0,
                 boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
               }}
             >
-              <Download size={13} /> Export
-            </button>
-          )}
+              <span
+                style={{
+                  color: "#fff",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 700,
+                  fontSize: "14px",
+                  letterSpacing: "-0.5px",
+                  lineHeight: 1,
+                }}
+              >
+                CP
+              </span>
+            </span>
+            <span
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(1.15rem, 2.5vw, 1.35rem)",
+                letterSpacing: "-0.01em",
+                color: "#1a1a2e",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Campus Point
+            </span>
+            <span
+              className="console-badge-desktop"
+              style={{
+                fontSize: 10,
+                fontWeight: 800,
+                color: ORANGE,
+                background: `${ORANGE}15`,
+                padding: "2px 8px",
+                borderRadius: 6,
+                letterSpacing: 0.5,
+                textTransform: "uppercase",
+              }}
+            >
+              Admin
+            </span>
+          </div>
 
-          {/* Hamburger Menu Button (where all things are) */}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+          {/* Middle: Admin Tabs (Desktop Only, hidden on mobile) */}
+          <div
+            className="navbar-middle-tabs cp-custom-scroll"
             style={{
-              width: 38,
-              height: 38,
-              borderRadius: 10,
-              border: "1px solid #e2e8f0",
-              background: sidebarOpen ? "#f1f5f9" : "#ffffff",
-              display: "grid",
-              placeItems: "center",
-              cursor: "pointer",
-              color: "#0f172a",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-              transition: "all 0.15s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 4,
+              overflowX: "auto",
+              minWidth: 0,
             }}
-            title="Open Admin Navigation"
-            aria-label="Menu"
           >
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+            {[
+              { k: "overview", label: "Overview", icon: LayoutDashboard },
+              { k: "mentor-tracking", label: "Mentor Tracking", icon: LineChart },
+              { k: "mentors", label: "Mentors", icon: GraduationCap },
+              { k: "users", label: `Students (${total})`, icon: Users },
+              { k: "payments", label: `Payments (${payTotal})`, icon: CreditCard },
+              { k: "tests", label: "Mock Tests", icon: FileText },
+              { k: "community", label: "Community", icon: MessagesSquare },
+              { k: "coupons", label: "Coupons", icon: Tag },
+            ].map((item) => {
+              const Icon = item.icon;
+              const active = tab === item.k;
+              return (
+                <button
+                  key={item.k}
+                  onClick={() => switchTab(item.k)}
+                  className={`adm-nav-pill ${active ? "active" : ""}`}
+                >
+                  <Icon size={14} color={active ? ORANGE : "#64748b"} />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right: Actions on Desktop, ONLY Hamburger on Mobile */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end", flexShrink: 0 }}>
+            <div className="navbar-desktop-controls" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {/* Quick Search on Users & Payments */}
+              {(tab === "users" || tab === "payments") && (
+                <div style={{ position: "relative" }}>
+                  <Search size={13} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+                  <input
+                    placeholder={tab === "users" ? "Search..." : "Search..."}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    style={{
+                      height: 34,
+                      paddingLeft: 28,
+                      paddingRight: 8,
+                      borderRadius: 8,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 12,
+                      outline: "none",
+                      width: 140,
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Sync */}
+              <button
+                onClick={refreshActive}
+                disabled={busy}
+                title="Sync latest data"
+                style={{
+                  height: 36,
+                  padding: "0 12px",
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                  background: "#ffffff",
+                  color: "#475569",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: busy ? "not-allowed" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              >
+                <RefreshCw size={13} style={{ animation: busy ? "admSpin 1s linear infinite" : "none" }} />
+                <span style={{ display: "none" }} className="desktop-sync-txt">Sync</span>
+              </button>
+
+              {/* CSV Export */}
+              {!SELF_CONTAINED_TABS.has(tab) && (
+                <button
+                  onClick={exportActive}
+                  style={{
+                    background: ORANGE,
+                    color: "#ffffff",
+                    border: "none",
+                    height: 36,
+                    padding: "0 12px",
+                    borderRadius: 8,
+                    fontWeight: 700,
+                    fontSize: 12,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
+                  }}
+                >
+                  <Download size={13} /> Export
+                </button>
+              )}
+            </div>
+
+            {/* Hamburger Menu Button */}
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                border: "1px solid #e2e8f0",
+                background: sidebarOpen ? "#f1f5f9" : "#ffffff",
+                display: "grid",
+                placeItems: "center",
+                cursor: "pointer",
+                color: "#0f172a",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                transition: "all 0.15s ease",
+              }}
+              title="Open Admin Navigation"
+              aria-label="Menu"
+            >
+              {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
       </nav>
-
-      {/* ── DESKTOP TAB BAR: Fast 1-click tab switching ── */}
-      <div
-        className="adm-desk-tab-bar"
-        style={{
-          background: "#f1f5f9",
-          padding: "4px clamp(1.25rem, 3.5vw, 2.5rem)",
-          borderBottom: "1px solid #e2e8f0",
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          overflowX: "auto",
-          flexShrink: 0,
-        }}
-      >
-        {[
-          { k: "overview", label: "Overview", icon: LayoutDashboard },
-          { k: "mentor-tracking", label: "Mentor Tracking", icon: LineChart },
-          { k: "mentors", label: "Mentors", icon: GraduationCap },
-          { k: "users", label: `Students (${total})`, icon: Users },
-          { k: "payments", label: `Payments (${payTotal})`, icon: CreditCard },
-          { k: "tests", label: "Mock Tests", icon: FileText },
-          { k: "community", label: "Community", icon: MessagesSquare },
-          { k: "coupons", label: "Coupons", icon: Tag },
-        ].map((item) => {
-          const Icon = item.icon;
-          const active = tab === item.k;
-          return (
-            <button
-              key={item.k}
-              onClick={() => switchTab(item.k)}
-              className={`adm-desk-pill ${active ? "active" : ""}`}
-            >
-              <Icon size={14} color={active ? ORANGE : "#64748b"} />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
 
       {/* ── SLIDE-IN DRAWER ON RIGHT (where all things are) ── */}
       {sidebarOpen && (
