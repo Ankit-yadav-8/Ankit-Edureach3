@@ -186,6 +186,7 @@ function SessionScheduler({
       }
       try {
         localStorage.setItem(`cp:mentorSession:${sid.toUpperCase()}`, JSON.stringify(payload));
+        localStorage.setItem("cp:mentorSession:ACTIVE", JSON.stringify(payload));
         window.dispatchEvent(new CustomEvent("cp:sessionUpdated", { detail: { studentId: sid, session: payload } }));
       } catch {}
       setMsg({ type: "ok", text: "Meeting link & session details updated! Synced to student's mobile dashboard button." });
@@ -193,6 +194,7 @@ function SessionScheduler({
     } catch (err) {
       try {
         localStorage.setItem(`cp:mentorSession:${sid.toUpperCase()}`, JSON.stringify(payload));
+        localStorage.setItem("cp:mentorSession:ACTIVE", JSON.stringify(payload));
         window.dispatchEvent(new CustomEvent("cp:sessionUpdated", { detail: { studentId: sid, session: payload } }));
         setMsg({ type: "ok", text: "Session updated locally! Student's mobile dashboard button is synced." });
         setTimeout(() => setMsg({ type: "", text: "" }), 4000);

@@ -442,7 +442,10 @@ function DashboardBody({ urlPlan = "" }) {
   // 1-on-1 session info (updated by mentor from mentor dashboard)
   const [session, setSession] = useState(() => {
     try {
-      const cached = localStorage.getItem(`cp:mentorSession:${identity.studentId || "CP-2026-00002"}`);
+      const sid = identity.studentId || "CP-2026-00002";
+      const cached =
+        localStorage.getItem(`cp:mentorSession:${sid.toUpperCase()}`) ||
+        localStorage.getItem("cp:mentorSession:ACTIVE");
       if (cached) return JSON.parse(cached);
     } catch {}
     return {
@@ -490,44 +493,61 @@ function DashboardBody({ urlPlan = "" }) {
   useEffect(() => {
     const sid = identity.studentId || "CP-2026-00002";
     try {
-      const cached = localStorage.getItem(`cp:mentorSession:${sid.toUpperCase()}`);
+      const cached =
+        localStorage.getItem(`cp:mentorSession:${sid.toUpperCase()}`) ||
+        localStorage.getItem("cp:mentorSession:ACTIVE");
       if (cached) {
         const parsed = JSON.parse(cached);
         if (parsed) setSession((prev) => ({ ...prev, ...parsed }));
       }
     } catch {}
 
-    if (token && identity.studentId) {
+    if (token) {
       apiMySession(token, identity.studentId)
         .then((res) => {
           if (res?.session) {
             setSession((prev) => ({ ...prev, ...res.session }));
             try {
               localStorage.setItem(`cp:mentorSession:${sid.toUpperCase()}`, JSON.stringify(res.session));
+              localStorage.setItem("cp:mentorSession:ACTIVE", JSON.stringify(res.session));
             } catch {}
+          }
+          if (res?.mentorName) {
+            setMentor((prev) => prev ? { ...prev, name: res.mentorName } : { name: res.mentorName, college: "Senior IITian · IIT Roorkee" });
           }
         })
         .catch(() => {});
     }
 
     const handleSessionUpdate = (e) => {
-      if (e.detail?.studentId && e.detail.studentId.toUpperCase() !== sid.toUpperCase()) return;
       if (e.detail?.session) {
         setSession((prev) => ({ ...prev, ...e.detail.session }));
       }
     };
+    const handleStorage = (e) => {
+      if (e.key && e.key.startsWith("cp:mentorSession") && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          if (parsed) setSession((prev) => ({ ...prev, ...parsed }));
+        } catch {}
+      }
+    };
     window.addEventListener("cp:sessionUpdated", handleSessionUpdate);
-    return () => window.removeEventListener("cp:sessionUpdated", handleSessionUpdate);
+    window.addEventListener("storage", handleStorage);
+    return () => {
+      window.removeEventListener("cp:sessionUpdated", handleSessionUpdate);
+      window.removeEventListener("storage", handleStorage);
+    };
   }, [token, identity.studentId]);
 
   const openMeetingRoom = () => {
-    const link = session.meetLink ? session.meetLink.trim() : "";
+    const link = session?.meetLink ? session.meetLink.trim() : "";
     if (link && (link.startsWith("http://") || link.startsWith("https://"))) {
       window.open(link, "_blank", "noopener,noreferrer");
     } else if (link) {
       window.open(`https://${link}`, "_blank", "noopener,noreferrer");
     } else {
-      window.open("https://meet.google.com/cp-mentor-live", "_blank", "noopener,noreferrer");
+      window.open("https://meet.google.com/new", "_blank", "noopener,noreferrer");
     }
   };
 
@@ -1254,8 +1274,8 @@ function DashboardBody({ urlPlan = "" }) {
         onMouseLeave={handleHeroMouseLeave}
         style={{
           position: "relative",
-          paddingTop: 110,
-          paddingBottom: 40,
+          paddingTop: 80,
+          paddingBottom: 20,
           overflow: "hidden",
           background: "radial-gradient(1100px circle at 80% 25%, rgba(255,105,61,0.08) 0%, rgba(255,248,244,0.6) 45%, var(--page-bg) 100%)",
         }}
@@ -1293,14 +1313,14 @@ function DashboardBody({ urlPlan = "" }) {
         <div
           className="hero-section-grid"
           style={{
-            maxWidth: 1260,
+            maxWidth: 1180,
             margin: "0 auto",
             padding: "0 24px",
             position: "relative",
             zIndex: 1,
             display: "grid",
-            gridTemplateColumns: "minmax(0, 1.12fr) minmax(340px, 0.88fr)",
-            gap: 40,
+            gridTemplateColumns: "minmax(0, 1.15fr) minmax(310px, 0.85fr)",
+            gap: 32,
             alignItems: "center",
           }}
         >
@@ -1311,10 +1331,10 @@ function DashboardBody({ urlPlan = "" }) {
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             style={{
               background: "#ffffff",
-              borderRadius: 32,
+              borderRadius: 24,
               border: "1.5px solid rgba(255,105,61,0.16)",
-              padding: "36px 36px 32px",
-              boxShadow: "0 24px 60px -15px rgba(255,105,61,0.09), 0 10px 28px -10px rgba(15,23,42,0.06)",
+              padding: "28px 28px 24px",
+              boxShadow: "0 20px 50px -15px rgba(255,105,61,0.08), 0 8px 24px -8px rgba(15,23,42,0.05)",
               position: "relative",
             }}
           >
@@ -1663,8 +1683,8 @@ function DashboardBody({ urlPlan = "" }) {
                 ease: "easeInOut",
               }}
               style={{
-                width: 325,
-                transform: `rotateY(${-13 + tilt.x}deg) rotateX(${6 + tilt.y}deg) rotateZ(-1.2deg)`,
+                width: 310,
+                transform: `rotateY(${-12 + tilt.x}deg) rotateX(${5 + tilt.y}deg) rotateZ(-1deg)`,
                 transformStyle: "preserve-3d",
                 transition: "transform 0.18s ease-out",
                 position: "relative",
@@ -1885,13 +1905,13 @@ function DashboardBody({ urlPlan = "" }) {
 
                         <div>
                           <div style={{ fontFamily: "Sora, system-ui, sans-serif", fontWeight: 800, fontSize: 13, color: NAVY }}>
-                            {mentor?.name || "Dr. Rajesh Sharma"}
+                            {mentor?.name || "Ankit Yadav"}
                           </div>
                           <div style={{ fontSize: 10.5, color: "#64748b" }}>
-                            {mentor?.college ? `Senior IITian & ${mentor.college}` : "Senior IITian & Physics"}
+                            {mentor?.college ? `Senior IITian · ${mentor.college}` : "Senior IITian · IIT Roorkee"}
                           </div>
                           <div style={{ fontSize: 10, fontWeight: 700, color: ORANGE, marginTop: 1 }}>
-                            IIT Bombay '18
+                            {mentor?.college ? `${mentor.college} Mentor` : "IIT Roorkee Alumnus"}
                           </div>
                         </div>
                       </div>
@@ -1927,7 +1947,7 @@ function DashboardBody({ urlPlan = "" }) {
                       </div>
 
                       <div style={{ fontFamily: "Sora, system-ui, sans-serif", fontWeight: 800, fontSize: 14, color: "#fff", marginBottom: 10 }}>
-                        {identity.batchLabel || planLabel || "JEE 2027 Super 30"}
+                        {identity.batchLabel || planLabel || "JEE 2026 Mentorship"}
                       </div>
 
                       {/* Syllabus Completion row */}
@@ -2084,7 +2104,7 @@ function DashboardBody({ urlPlan = "" }) {
       </div>
 
       {/* ══ FEATURE GRID - what the dashboard gives you ══ */}
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 0" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto", padding: "16px 24px 0" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .12 }}
           className="md-feature-grid"
           style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1, background: "#ececec", border: "1px solid #ececec", borderRadius: 18, overflow: "hidden" }}>

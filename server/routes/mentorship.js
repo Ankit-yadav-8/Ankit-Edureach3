@@ -564,13 +564,39 @@ router.get("/my-mentor", requireAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("email").lean();
     const email = (user?.email || "").toLowerCase();
-    const studentId = String(req.query.studentId || "").trim().toUpperCase();
-    if (!email || !studentId) return res.json({ mentor: null });
-    const owns = await Enrollment.exists({ studentId, email, status: "paid" });
-    if (!owns) return res.json({ mentor: null });
-    const mentor = await Mentor.findOne({ students: studentId, active: true })
-      .select("name college").lean();
-    res.json({ mentor: mentor ? { name: mentor.name, college: mentor.college || "" } : null });
+    let studentId = String(req.query.studentId || "").trim();
+    if (!email) return res.json({ mentor: null });
+
+    let enr = null;
+    if (studentId) {
+      enr = await Enrollment.findOne({
+        studentId: new RegExp("^" + studentId + "$", "i"),
+        email: new RegExp("^" + email + "$", "i"),
+        status: "paid",
+      }).lean();
+    }
+    if (!enr) {
+      enr = await Enrollment.findOne({
+        email: new RegExp("^" + email + "$", "i"),
+        status: "paid",
+      }).sort({ createdAt: -1 }).lean();
+    }
+    if (!enr) return res.json({ mentor: null });
+    studentId = enr.studentId || studentId;
+
+    let mentor = await Mentor.findOne({
+      students: { $in: [studentId, studentId.toUpperCase(), studentId.toLowerCase()] },
+      active: true,
+    }).select("name college").lean();
+
+    if (!mentor) {
+      const taskDoc = await MentorTask.findOne({ studentId: new RegExp("^" + studentId + "$", "i") }).lean();
+      if (taskDoc?.assignedByName) {
+        mentor = { name: taskDoc.assignedByName, college: "IIT Roorkee Mentor" };
+      }
+    }
+
+    res.json({ mentor: mentor ? { name: mentor.name, college: mentor.college || "Senior IITian · IIT Roorkee" } : null });
   } catch (e) {
     console.error("[mentorship/my-mentor]", e.message);
     res.status(500).json({ error: "Server error" });
@@ -583,12 +609,35 @@ router.get("/my-session", requireAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("email").lean();
     const email = (user?.email || "").toLowerCase();
-    const studentId = String(req.query.studentId || "").trim().toUpperCase();
-    if (!email || !studentId) return res.json({ session: null });
-    const owns = await Enrollment.exists({ studentId, email, status: "paid" });
-    if (!owns) return res.json({ session: null });
-    const doc = await MentorTask.findOne({ studentId }).lean();
-    res.json({ session: doc?.session || null });
+    let studentId = String(req.query.studentId || "").trim();
+    if (!email) return res.json({ session: null });
+
+    let enr = null;
+    if (studentId) {
+      enr = await Enrollment.findOne({
+        studentId: new RegExp("^" + studentId + "$", "i"),
+        email: new RegExp("^" + email + "$", "i"),
+        status: "paid",
+      }).lean();
+    }
+    if (!enr) {
+      enr = await Enrollment.findOne({
+        email: new RegExp("^" + email + "$", "i"),
+        status: "paid",
+      }).sort({ createdAt: -1 }).lean();
+    }
+    if (!enr) return res.json({ session: null });
+    studentId = enr.studentId || studentId;
+
+    let doc = await MentorTask.findOne({ studentId: new RegExp("^" + studentId + "$", "i") }).lean();
+    if (!doc) {
+      doc = await MentorTask.findOne({ studentId }).lean();
+    }
+
+    res.json({
+      session: doc?.session || null,
+      mentorName: doc?.assignedByName || null,
+    });
   } catch (e) {
     console.error("[mentorship/my-session]", e.message);
     res.status(500).json({ error: "Server error" });
