@@ -1,54 +1,28 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import {
-  Users, UserCheck, CheckCircle2, Clock, Calendar, RefreshCw,
-  Activity, ArrowUpRight, TrendingUp, Sparkles, Filter, ChevronRight,
-  Layers, CreditCard, GraduationCap, Trophy, ChevronDown, CheckSquare,
-  Zap, ArrowRight, UserPlus, FileText, Check, ShieldCheck, Mail, Phone
+  Users, UserCheck, UserX, CheckCircle2, Clock, AlertTriangle, ArrowUpRight,
+  TrendingUp, Calendar, RefreshCw, Activity, ShieldCheck, ChevronRight,
+  Sparkles, Filter, Award, Target, BookOpen, Layers
 } from "lucide-react";
-import { apiAdminAnalyticsOverview, apiAdminMentorTracking } from "../../auth/api.js";
+import { apiAdminAnalyticsOverview } from "../../auth/api.js";
 
 const ORANGE = "#FF693D";
 
-// Vibrant, accessible palette matching the SaaS analytics reference design
-const DONUT_COLORS = [
-  "#FF693D", // Orange (Campus Point primary)
-  "#3B82F6", // Royal Blue
-  "#10B981", // Emerald Green
-  "#8B5CF6", // Purple
-  "#EC4899", // Magenta Pink
-  "#F59E0B", // Amber Gold
-  "#06B6D4", // Electric Cyan
-  "#94A3B8", // Slate Gray (Others)
-];
-
 export default function AdminOverview({ adminToken, dateRange = "30d", onNavigateTab }) {
   const [data, setData] = useState(null);
-  const [mentorData, setMentorData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [selectedRange, setSelectedRange] = useState(dateRange);
   const [customStart, setCustomStart] = useState("");
   const [customEnd, setCustomEnd] = useState("");
+  const [mentorFilter, setMentorFilter] = useState("all");
 
-  // Middle panel controls
-  const [mentorMetric, setMentorMetric] = useState("logins"); // "logins" | "tasks" | "students"
-  const [hoveredSlice, setHoveredSlice] = useState(null);
-  const [hoveredChartPoint, setHoveredChartPoint] = useState(null);
-  const [chartRange, setChartRange] = useState("30d"); // "7d" | "30d" | "custom"
-
-  // Fast single-roundtrip analytics fetch
   const loadData = useCallback(async (r, start, end) => {
     setLoading(true);
     setErr("");
     try {
-      const overviewRes = await apiAdminAnalyticsOverview(adminToken, r, start, end);
-      setData(overviewRes);
-      if (overviewRes?.mentorsSummary) {
-        setMentorData(overviewRes.mentorsSummary);
-      } else {
-        const trackingRes = await apiAdminMentorTracking(adminToken, r, start, end).catch(() => ({ mentors: [] }));
-        setMentorData(trackingRes?.mentors || []);
-      }
+      const res = await apiAdminAnalyticsOverview(adminToken, r, start, end);
+      setData(res);
     } catch (e) {
       setErr(e.message || "Could not load overview analytics");
     } finally {
@@ -60,244 +34,139 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
     loadData(selectedRange, customStart, customEnd);
   }, [loadData, selectedRange, customStart, customEnd]);
 
-  // Sync prop changes
-  useEffect(() => {
-    if (dateRange && dateRange !== selectedRange) {
-      setSelectedRange(dateRange);
-    }
-  }, [dateRange]);
-
   const metrics = data?.metrics || {};
-  const todayStats = data?.todayStats || {};
-  const rawDailyTrend = data?.dailyTrend || [];
+  const dailyTrend = data?.dailyTrend || [];
   const recentActivity = data?.recentActivity || [];
 
-  // Filter daily trend based on chartRange toggle ("7d", "30d", "custom")
-  const filteredDailyTrend = useMemo(() => {
-    if (!rawDailyTrend.length) {
-      // Clean zero baseline if no events logged yet
-      const days = chartRange === "7d" ? 7 : 30;
-      const res = [];
-      const now = new Date();
-      for (let i = days - 1; i >= 0; i--) {
-        const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-        res.push({
-          date: d.toISOString().split("T")[0],
-          label: d.toLocaleDateString("en-IN", { day: "numeric", month: "short" }),
-          studentLogins: 0,
-          mentorLogins: 0,
-          totalLogins: 0,
-        });
-      }
-      return res;
-    }
-    if (chartRange === "7d") {
-      return rawDailyTrend.slice(-7);
-    }
-    return rawDailyTrend;
-  }, [rawDailyTrend, chartRange]);
+  // Filtered activity feed if mentor is selected
+  const filteredActivity = useMemo(() => {
+    if (mentorFilter === "all") return recentActivity;
+    return recentActivity.filter((a) => a.mentorName?.toLowerCase().includes(mentorFilter.toLowerCase()));
+  }, [recentActivity, mentorFilter]);
 
-  // Max value for SVG area chart scaling
-  const maxChartValue = useMemo(() => {
-    if (!filteredDailyTrend.length) return 200;
-    const maxVal = Math.max(
-      ...filteredDailyTrend.map((d) => Math.max(d.studentLogins || 0, d.mentorLogins || 0)),
-      1
-    );
-    return Math.max(Math.ceil((maxVal * 1.3) / 10) * 10, 20);
-  }, [filteredDailyTrend]);
-
-  // Prepare Mentor Analytics Donut Data with real mentors only
-  const donutBreakdown = useMemo(() => {
-    let list = [];
-    if (mentorData && mentorData.length > 0) {
-      list = mentorData.map((m) => {
-        let val = 0;
-        if (mentorMetric === "logins") val = m.totalLogins || m.allTimeLogins || m.logins || 0;
-        else if (mentorMetric === "tasks") val = m.tasksCompleted || 0;
-        else if (mentorMetric === "students") val = m.assignedStudentsCount || m.assignedStudents?.length || 0;
-        return {
-          name: m.name || "Mentor",
-          value: val,
-        };
-      });
-      // Sort descending
-      list.sort((a, b) => b.value - a.value);
-    }
-
-    if (!list.length) return [];
-
-    // Keep top 7 mentors and group the rest into "Others"
-    let top = list.slice(0, 7);
-    if (list.length > 7) {
-      const othersVal = list.slice(7).reduce((acc, curr) => acc + curr.value, 0);
-      top.push({ name: "Others", value: othersVal });
-    }
-
-    const sum = top.reduce((acc, it) => acc + (it.value || 0), 0);
-    let accumulatedAngle = 0;
-
-    return top.map((item, idx) => {
-      const percentage = sum > 0 ? Math.round((item.value / sum) * 100) : Math.round(100 / top.length);
-      const color = DONUT_COLORS[idx % DONUT_COLORS.length];
-      const startAngle = accumulatedAngle;
-      accumulatedAngle += sum > 0 ? (item.value / sum) * 360 : (360 / top.length);
-
-      return {
-        ...item,
-        percentage,
-        color,
-        startAngle,
-        endAngle: accumulatedAngle,
-      };
-    });
-  }, [mentorData, mentorMetric]);
-
-  const totalDonutValue = useMemo(() => {
-    return donutBreakdown.reduce((s, i) => s + i.value, 0);
-  }, [donutBreakdown]);
-
-  // Real mentors count
-  const mentorCount = loading ? "..." : (metrics.activeMentors ?? (mentorData.length || 0));
-
-  // Recent activity list formatted matching real database activity
-  const formattedActivities = useMemo(() => {
-    if (recentActivity && recentActivity.length > 0) {
-      return recentActivity.slice(0, 7).map((act, index) => {
-        const d = new Date(act.createdAt || Date.now());
-        const timeFormatted = d.toLocaleString("en-IN", {
-          day: "2-digit", month: "short", year: "numeric",
-          hour: "2-digit", minute: "2-digit"
-        });
-
-        let type = "Platform Event";
-        let typeIcon = Activity;
-        let typeColor = "#64748b";
-        let typeBg = "#f1f5f9";
-        let name = act.mentorName || act.studentName || "Administrator";
-        let details = "Activity logged in system";
-        let status = "Success";
-        let statusColor = "#16a34a";
-        let statusBg = "#ecfdf5";
-
-        if (act.action === "mentor_login") {
-          type = "Mentor Login";
-          typeIcon = Users;
-          typeColor = "#2563eb";
-          typeBg = "#eff6ff";
-          details = "Logged in to mentor dashboard";
-        } else if (act.action === "student_login") {
-          type = "Student Login";
-          typeIcon = UserCheck;
-          typeColor = "#059669";
-          typeBg = "#ecfdf5";
-          details = "Logged in to student portal";
-        } else if (act.action === "task_update" || act.action === "task_assign") {
-          type = "Task Updated";
-          typeIcon = CheckSquare;
-          typeColor = "#ea580c";
-          typeBg = "#fff7ed";
-          details = act.details?.taskTitle || `Updated task for student ${act.studentName || act.studentId}`;
-          status = "Completed";
-          statusColor = "#2563eb";
-          statusBg = "#eff6ff";
-        } else if (act.action === "mentor_create") {
-          type = "New Mentor";
-          typeIcon = GraduationCap;
-          typeColor = "#7c3aed";
-          typeBg = "#f5f3ff";
-          details = "Registered as new mentor";
-        } else if (act.action === "payment_received" || act.action === "enrollment") {
-          type = "Payment Received";
-          typeIcon = CreditCard;
-          typeColor = "#db2777";
-          typeBg = "#fdf2f8";
-          details = act.details?.amount ? `₹ ${act.details.amount} - Mentorship enrollment` : "Mentorship enrollment completed";
-        }
-
-        const initials = (name || "U")
-          .split(" ")
-          .map((n) => n[0])
-          .slice(0, 2)
-          .join("")
-          .toUpperCase();
-
-        return {
-          id: act.id || index,
-          time: timeFormatted,
-          type,
-          typeIcon,
-          typeColor,
-          typeBg,
-          name,
-          initials,
-          details,
-          status,
-          statusColor,
-          statusBg,
-        };
-      });
-    }
-
-    return [];
-  }, [recentActivity]);
+  // Max value for daily trend sparkline
+  const maxTrend = useMemo(() => {
+    if (!dailyTrend.length) return 10;
+    return Math.max(...dailyTrend.map((d) => Math.max(d.studentLogins || 0, d.mentorLogins || 0)), 5);
+  }, [dailyTrend]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20, width: "100%" }}>
-      {/* ── Page Greeting & Live Pulse Bar ── */}
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}>
+      {/* Top Filter Bar */}
       <div style={{
         display: "flex",
-        alignItems: "flex-start",
         justifyContent: "space-between",
+        alignItems: "center",
         flexWrap: "wrap",
-        gap: 12,
+        gap: 14,
+        background: "#ffffff",
+        padding: "16px 20px",
+        borderRadius: 16,
+        border: "1px solid #f0e9e0",
+        boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
       }}>
-        <div>
-          <div style={{ fontSize: 11.5, color: "#64748b", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
-            <span>Welcome back, Admin</span>
-            <span role="img" aria-label="wave">👋</span>
-          </div>
-          <h1 style={{
-            fontFamily: "Sora, sans-serif",
-            fontSize: 18,
-            fontWeight: 800,
-            color: "#0f172a",
-            margin: "4px 0 0",
-            letterSpacing: -0.3,
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{
+            width: 34, height: 34, borderRadius: 10,
+            background: `${ORANGE}15`, display: "grid", placeItems: "center",
           }}>
-            Here&apos;s what&apos;s happening with Campus Point
-          </h1>
-          <p style={{ fontSize: 11.5, color: "#64748b", margin: "3px 0 0" }}>
-            Track mentors, students, tasks and overall platform activity in one place.
-          </p>
+            <Activity size={17} color={ORANGE} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", margin: 0, fontFamily: "Sora, sans-serif" }}>
+              Mentorship Platform Pulse
+            </h2>
+            <p style={{ fontSize: 12, color: "#64748b", margin: 0 }}>
+              Real-time business telemetry and mentor engagement tracking
+            </p>
+          </div>
         </div>
 
-        {/* Live Status indicator */}
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          background: "#ffffff",
-          border: "1px solid #e2e8f0",
-          padding: "5px 12px",
-          borderRadius: 20,
-          boxShadow: "0 1px 3px rgba(15,23,42,0.03)",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{
-              width: 7,
-              height: 7,
-              borderRadius: "50%",
-              background: "#16a34a",
-              boxShadow: "0 0 8px rgba(22,163,74,0.6)",
-              display: "inline-block",
-            }} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#166534" }}>Live</span>
+        {/* Date Range Selector Pill */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <div style={{
+            display: "inline-flex",
+            background: "#f8fafc",
+            borderRadius: 10,
+            padding: 3,
+            border: "1px solid #e2e8f0",
+          }}>
+            {[
+              { id: "today", label: "Today" },
+              { id: "7d", label: "7 Days" },
+              { id: "30d", label: "30 Days" },
+              { id: "custom", label: "Custom" },
+            ].map((p) => {
+              const active = selectedRange === p.id;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => setSelectedRange(p.id)}
+                  style={{
+                    padding: "6px 12px",
+                    borderRadius: 8,
+                    border: "none",
+                    background: active ? "#ffffff" : "transparent",
+                    color: active ? ORANGE : "#64748b",
+                    fontWeight: active ? 700 : 500,
+                    fontSize: 12,
+                    cursor: "pointer",
+                    boxShadow: active ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
           </div>
-          <span style={{ color: "#cbd5e1" }}>|</span>
-          <span style={{ fontSize: 10.5, color: "#64748b" }}>
-            Last updated: {new Date().toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
-          </span>
+
+          {selectedRange === "custom" && (
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <input
+                type="date"
+                value={customStart}
+                onChange={(e) => setCustomStart(e.target.value)}
+                style={{
+                  height: 32, padding: "0 8px", borderRadius: 8,
+                  border: "1px solid #e2e8f0", fontSize: 11.5,
+                }}
+              />
+              <span style={{ fontSize: 11, color: "#94a3b8" }}>to</span>
+              <input
+                type="date"
+                value={customEnd}
+                onChange={(e) => setCustomEnd(e.target.value)}
+                style={{
+                  height: 32, padding: "0 8px", borderRadius: 8,
+                  border: "1px solid #e2e8f0", fontSize: 11.5,
+                }}
+              />
+            </div>
+          )}
+
+          <button
+            onClick={() => loadData(selectedRange, customStart, customEnd)}
+            disabled={loading}
+            title="Refresh analytics"
+            style={{
+              height: 34,
+              padding: "0 12px",
+              borderRadius: 9,
+              border: "1px solid #e2e8f0",
+              background: "#ffffff",
+              color: "#475569",
+              cursor: loading ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              fontSize: 12,
+              fontWeight: 600,
+            }}
+          >
+            <RefreshCw size={13} style={{ animation: loading ? "admSpin 1s linear infinite" : "none" }} />
+            <span>{loading ? "Syncing..." : "Sync"}</span>
+          </button>
         </div>
       </div>
 
@@ -305,1076 +174,476 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
         <div style={{
           background: "#fef2f2",
           border: "1px solid #fecaca",
-          padding: "10px 14px",
-          borderRadius: 10,
+          padding: "12px 16px",
+          borderRadius: 12,
           color: "#991b1b",
-          fontSize: 12,
+          fontSize: 13,
           display: "flex",
           alignItems: "center",
           gap: 10,
         }}>
+          <AlertTriangle size={16} />
           <span>{err}</span>
         </div>
       )}
 
-      {/* ── KPI Metrics Cards (4 in a row, fully responsive, compact typography) ── */}
+      {/* KPI Cards Grid */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))",
-        gap: 14,
-      }}>
-        {/* KPI 1: Total Students */}
-        <div style={{
-          background: "#ffffff",
-          borderRadius: 14,
-          padding: "16px 18px",
-          border: "1px solid #f1f5f9",
-          boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          gap: 10,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{
-              width: 38,
-              height: 38,
-              borderRadius: 10,
-              background: "#fff7ed",
-              color: "#ea580c",
-              display: "grid",
-              placeItems: "center",
-              flexShrink: 0,
-            }}>
-              <Users size={19} />
-            </div>
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Total Students</div>
-              <div style={{
-                fontFamily: "Sora, sans-serif",
-                fontSize: 20,
-                fontWeight: 800,
-                color: "#0f172a",
-                lineHeight: 1.15,
-                marginTop: 2,
-              }}>
-                {loading ? "..." : (metrics.totalRegisteredStudents ?? 0).toLocaleString("en-IN")}
-              </div>
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
-            <span style={{
-              color: "#16a34a",
-              fontWeight: 700,
-              background: "#f0fdf4",
-              padding: "1px 6px",
-              borderRadius: 5,
-              fontSize: 10.5,
-            }}>
-              Registered
-            </span>
-            <span style={{ color: "#94a3b8" }}>All time accounts</span>
-          </div>
-        </div>
-
-        {/* KPI 2: Active Mentors */}
-        <div style={{
-          background: "#ffffff",
-          borderRadius: 14,
-          padding: "16px 18px",
-          border: "1px solid #f1f5f9",
-          boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          gap: 10,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{
-              width: 38,
-              height: 38,
-              borderRadius: 10,
-              background: "#eff6ff",
-              color: "#2563eb",
-              display: "grid",
-              placeItems: "center",
-              flexShrink: 0,
-            }}>
-              <UserCheck size={19} />
-            </div>
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Active Mentors</div>
-              <div style={{
-                fontFamily: "Sora, sans-serif",
-                fontSize: 20,
-                fontWeight: 800,
-                color: "#0f172a",
-                lineHeight: 1.15,
-                marginTop: 2,
-              }}>
-                {loading ? "..." : (metrics.activeMentors ?? 0).toLocaleString("en-IN")}
-              </div>
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
-            <span style={{
-              color: "#2563eb",
-              fontWeight: 700,
-              background: "#eff6ff",
-              padding: "1px 6px",
-              borderRadius: 5,
-              fontSize: 10.5,
-            }}>
-              Verified
-            </span>
-            <span style={{ color: "#94a3b8" }}>Active on platform</span>
-          </div>
-        </div>
-
-        {/* KPI 3: Assigned Students */}
-        <div style={{
-          background: "#ffffff",
-          borderRadius: 14,
-          padding: "16px 18px",
-          border: "1px solid #f1f5f9",
-          boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          gap: 10,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{
-              width: 38,
-              height: 38,
-              borderRadius: 10,
-              background: "#ecfdf5",
-              color: "#059669",
-              display: "grid",
-              placeItems: "center",
-              flexShrink: 0,
-            }}>
-              <Layers size={19} />
-            </div>
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Assigned Students</div>
-              <div style={{
-                fontFamily: "Sora, sans-serif",
-                fontSize: 20,
-                fontWeight: 800,
-                color: "#0f172a",
-                lineHeight: 1.15,
-                marginTop: 2,
-              }}>
-                {loading ? "..." : (metrics.assignedStudents ?? 0).toLocaleString("en-IN")}
-              </div>
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
-            <span style={{
-              color: "#059669",
-              fontWeight: 700,
-              background: "#ecfdf5",
-              padding: "1px 6px",
-              borderRadius: 5,
-              fontSize: 10.5,
-            }}>
-              Assigned
-            </span>
-            <span style={{ color: "#94a3b8" }}>Under active mentors</span>
-          </div>
-        </div>
-
-        {/* KPI 4: Tasks Completed */}
-        <div style={{
-          background: "#ffffff",
-          borderRadius: 14,
-          padding: "16px 18px",
-          border: "1px solid #f1f5f9",
-          boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          gap: 10,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{
-              width: 38,
-              height: 38,
-              borderRadius: 10,
-              background: "#f3e8ff",
-              color: "#7c3aed",
-              display: "grid",
-              placeItems: "center",
-              flexShrink: 0,
-            }}>
-              <CheckCircle2 size={19} />
-            </div>
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Tasks Completed</div>
-              <div style={{
-                fontFamily: "Sora, sans-serif",
-                fontSize: 20,
-                fontWeight: 800,
-                color: "#0f172a",
-                lineHeight: 1.15,
-                marginTop: 2,
-              }}>
-                {loading ? "..." : (metrics.totalTasksCompleted ?? 0).toLocaleString("en-IN")}
-              </div>
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
-            <span style={{
-              color: "#7c3aed",
-              fontWeight: 700,
-              background: "#f5f3ff",
-              padding: "1px 6px",
-              borderRadius: 5,
-              fontSize: 10.5,
-            }}>
-              Completed
-            </span>
-            <span style={{ color: "#94a3b8" }}>Student milestones</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Two-Column Analytics Layout (Mentor Doughnut + Login Trend) ── */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(min(420px, 100%), 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
         gap: 16,
       }}>
-        {/* ── LEFT PANEL: Mentor Analytics Doughnut Chart ── */}
+        {/* Total Registered Students */}
         <div style={{
           background: "#ffffff",
           borderRadius: 16,
           padding: "18px 20px",
-          border: "1px solid #f1f5f9",
-          boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
+          border: "1px solid #f0e9e0",
+          boxShadow: "0 2px 12px rgba(15,23,42,0.03)",
+          position: "relative",
+          overflow: "hidden",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                Total Students
+              </span>
+              <div style={{ fontFamily: "Sora, sans-serif", fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 4 }}>
+                {metrics.totalRegisteredStudents ?? "—"}
+              </div>
+            </div>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(59,130,246,0.1)", display: "grid", placeItems: "center" }}>
+              <Users size={20} color="#2563eb" />
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 12, fontSize: 11.5, color: "#64748b" }}>
+            <span style={{ color: "#16a34a", fontWeight: 700, display: "inline-flex", alignItems: "center" }}>
+              {metrics.totalPaidStudents ?? 0} paid enrollments
+            </span>
+            <span>·</span>
+            <span>{metrics.unassignedStudents ?? 0} unassigned</span>
+          </div>
+        </div>
+
+        {/* Active Mentors */}
+        <div style={{
+          background: "#ffffff",
+          borderRadius: 16,
+          padding: "18px 20px",
+          border: "1px solid #f0e9e0",
+          boxShadow: "0 2px 12px rgba(15,23,42,0.03)",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                Active Mentors
+              </span>
+              <div style={{ fontFamily: "Sora, sans-serif", fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 4 }}>
+                {metrics.activeMentors ?? "—"}
+                <span style={{ fontSize: 15, fontWeight: 600, color: "#94a3b8", marginLeft: 4 }}>
+                  / {metrics.totalMentors ?? "—"}
+                </span>
+              </div>
+            </div>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(16,185,129,0.1)", display: "grid", placeItems: "center" }}>
+              <UserCheck size={20} color="#059669" />
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 12, fontSize: 11.5, color: "#64748b" }}>
+            <span style={{ color: metrics.inactiveMentors > 0 ? "#f59e0b" : "#64748b", fontWeight: 700 }}>
+              {metrics.inactiveMentors ?? 0} inactive
+            </span>
+            <span>·</span>
+            <span>{metrics.mentorEngagementRate ?? 0}% engagement</span>
+          </div>
+        </div>
+
+        {/* Assigned Students */}
+        <div style={{
+          background: "#ffffff",
+          borderRadius: 16,
+          padding: "18px 20px",
+          border: "1px solid #f0e9e0",
+          boxShadow: "0 2px 12px rgba(15,23,42,0.03)",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                Assigned Students
+              </span>
+              <div style={{ fontFamily: "Sora, sans-serif", fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 4 }}>
+                {metrics.assignedStudents ?? "—"}
+              </div>
+            </div>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}>
+              <Layers size={20} color={ORANGE} />
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 12, fontSize: 11.5, color: "#64748b" }}>
+            <span style={{ color: "#2563eb", fontWeight: 700 }}>
+              {metrics.activeStudentUsers ?? 0} active logins
+            </span>
+            <span>·</span>
+            <span>{metrics.studentEngagementRate ?? 0}% active</span>
+          </div>
+        </div>
+
+        {/* Task Completion Rate */}
+        <div style={{
+          background: "#ffffff",
+          borderRadius: 16,
+          padding: "18px 20px",
+          border: "1px solid #f0e9e0",
+          boxShadow: "0 2px 12px rgba(15,23,42,0.03)",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                Tasks Completed
+              </span>
+              <div style={{ fontFamily: "Sora, sans-serif", fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 4 }}>
+                {metrics.totalTasksCompleted ?? 0}
+                <span style={{ fontSize: 15, fontWeight: 600, color: "#94a3b8", marginLeft: 4 }}>
+                  / {metrics.totalTasksAssigned ?? 0}
+                </span>
+              </div>
+            </div>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(139,92,246,0.1)", display: "grid", placeItems: "center" }}>
+              <CheckCircle2 size={20} color="#7c3aed" />
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 12, fontSize: 11.5, color: "#64748b" }}>
+            <span style={{ color: "#16a34a", fontWeight: 700 }}>
+              {metrics.overallTaskCompletionRate ?? 0}% completed
+            </span>
+            <span>·</span>
+            <span style={{ color: metrics.totalTasksOverdue > 0 ? "#dc2626" : "#64748b" }}>
+              {metrics.totalTasksOverdue ?? 0} overdue
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Visual Analytics Grid: Login Chart + Quick Action Banner */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+        gap: 20,
+      }}>
+        {/* Interactive Login Activity Chart */}
+        <div style={{
+          background: "#ffffff",
+          borderRadius: 18,
+          padding: "22px 24px",
+          border: "1px solid #f0e9e0",
+          boxShadow: "0 2px 12px rgba(15,23,42,0.03)",
+          display: "flex",
+          flexDirection: "column",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+            <div>
+              <h3 style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", margin: 0, fontFamily: "Sora, sans-serif" }}>
+                Daily Login Activity & Sessions
+              </h3>
+              <p style={{ fontSize: 12, color: "#64748b", margin: "2px 0 0" }}>
+                Student vs Mentor logins over selected period
+              </p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 11.5, fontWeight: 600 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color: "#2563eb" }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#2563eb" }} /> Student
+              </span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color: ORANGE }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: ORANGE }} /> Mentor
+              </span>
+            </div>
+          </div>
+
+          {dailyTrend.length === 0 ? (
+            <div style={{ height: 180, display: "grid", placeItems: "center", color: "#94a3b8", fontSize: 13 }}>
+              No login logs recorded for this period yet
+            </div>
+          ) : (
+            <div style={{ position: "relative", width: "100%", height: 190, paddingTop: 10 }}>
+              {/* SVG Sparkline / Bar Chart */}
+              <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 150, width: "100%", paddingBottom: 20 }}>
+                {dailyTrend.map((d, i) => {
+                  const sHeight = Math.max(4, Math.round(((d.studentLogins || 0) / maxTrend) * 120));
+                  const mHeight = Math.max(4, Math.round(((d.mentorLogins || 0) / maxTrend) * 120));
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        height: "100%",
+                        justifyContent: "flex-end",
+                        position: "relative",
+                      }}
+                      title={`${d.label}: ${d.studentLogins || 0} students, ${d.mentorLogins || 0} mentors`}
+                    >
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: 2, width: "100%", justifyContent: "center" }}>
+                        <div
+                          style={{
+                            width: "45%",
+                            maxWidth: 10,
+                            height: sHeight,
+                            background: "linear-gradient(180deg, #3b82f6, #1d4ed8)",
+                            borderRadius: "3px 3px 0 0",
+                            transition: "height 0.3s ease",
+                          }}
+                        />
+                        <div
+                          style={{
+                            width: "45%",
+                            maxWidth: 10,
+                            height: mHeight,
+                            background: "linear-gradient(180deg, #ff8c69, #ff5722)",
+                            borderRadius: "3px 3px 0 0",
+                            transition: "height 0.3s ease",
+                          }}
+                        />
+                      </div>
+                      {/* Label every few items or on mobile */}
+                      {(i === 0 || i === Math.floor(dailyTrend.length / 2) || i === dailyTrend.length - 1) && (
+                        <span style={{ position: "absolute", bottom: 0, fontSize: 10, color: "#94a3b8", whiteSpace: "nowrap" }}>
+                          {d.label}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: 10,
+            paddingTop: 12,
+            borderTop: "1px solid #f1f5f9",
+            fontSize: 12,
+            color: "#64748b",
+          }}>
+            <span>Total student logins in range: <strong>{metrics.totalStudentLogins ?? 0}</strong></span>
+            <span>Total mentor logins: <strong>{metrics.totalMentorLogins ?? 0}</strong></span>
+          </div>
+        </div>
+
+        {/* Mentor Tracking CTA Card */}
+        <div style={{
+          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+          borderRadius: 18,
+          padding: "24px 26px",
+          color: "#ffffff",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          minHeight: 360,
+          boxShadow: "0 10px 30px rgba(15,23,42,0.14)",
+          position: "relative",
+          overflow: "hidden",
         }}>
-          {/* Header & Metric Picker */}
           <div style={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 10,
-            marginBottom: 12,
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-              <div style={{
-                width: 28,
-                height: 28,
-                borderRadius: 8,
-                background: "#fff7ed",
-                color: "#ea580c",
-                display: "grid",
-                placeItems: "center",
-              }}>
-                <FileText size={15} />
-              </div>
-              <div>
-                <h3 style={{
-                  fontFamily: "Sora, sans-serif",
-                  fontSize: 13.5,
-                  fontWeight: 800,
-                  color: "#0f172a",
-                  margin: 0,
-                }}>
-                  Mentor Analytics
-                </h3>
-                <p style={{ fontSize: 11, color: "#64748b", margin: "2px 0 0" }}>
-                  Compare mentors by {mentorMetric === "logins" ? "total logins" : mentorMetric === "tasks" ? "tasks completed" : "assigned students"}
-                </p>
-              </div>
-            </div>
+            position: "absolute",
+            right: -20,
+            bottom: -20,
+            width: 160,
+            height: 160,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(255,105,61,0.2) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
 
-            {/* Metric Dropdown selector */}
-            <div style={{ position: "relative" }}>
-              <select
-                value={mentorMetric}
-                onChange={(e) => setMentorMetric(e.target.value)}
-                style={{
-                  height: 28,
-                  padding: "0 22px 0 8px",
-                  borderRadius: 6,
-                  border: "1px solid #e2e8f0",
-                  background: "#ffffff",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: "#475569",
-                  outline: "none",
-                  cursor: "pointer",
-                  appearance: "none",
-                }}
-              >
-                <option value="logins">Total Logins</option>
-                <option value="tasks">Tasks Completed</option>
-                <option value="students">Assigned Students</option>
-              </select>
-              <ChevronDown
-                size={13}
-                style={{
-                  position: "absolute",
-                  right: 6,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  pointerEvents: "none",
-                  color: "#94a3b8",
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Donut Chart & Ranked List Area */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
-            gap: 16,
-            alignItems: "center",
-            padding: "4px 0",
-          }}>
-            {/* SVG Donut Chart with Interactive Segments & Center Label */}
+          <div>
             <div style={{
-              position: "relative",
-              width: 175,
-              height: 175,
-              margin: "0 auto",
-              display: "grid",
-              placeItems: "center",
-            }}>
-              <svg width="175" height="175" viewBox="0 0 200 200">
-                {/* Background Ring */}
-                <circle
-                  cx="100"
-                  cy="100"
-                  r="70"
-                  fill="none"
-                  stroke="#f8fafc"
-                  strokeWidth="22"
-                />
-
-                {/* Slices */}
-                {donutBreakdown.length > 0 ? (
-                  donutBreakdown.map((slice, i) => {
-                    const circumference = 2 * Math.PI * 70; // ~439.82
-                    const strokeDasharray = `${(slice.percentage / 100) * circumference} ${circumference}`;
-                    const strokeDashoffset = -((slice.startAngle / 360) * circumference);
-                    const isHovered = hoveredSlice === slice.name;
-
-                    return (
-                      <circle
-                        key={i}
-                        cx="100"
-                        cy="100"
-                        r="70"
-                        fill="none"
-                        stroke={slice.color}
-                        strokeWidth={isHovered ? "26" : "22"}
-                        strokeDasharray={strokeDasharray}
-                        strokeDashoffset={strokeDashoffset}
-                        style={{
-                          transition: "all 0.25s ease",
-                          cursor: "pointer",
-                          transform: "rotate(-90deg)",
-                          transformOrigin: "center",
-                        }}
-                        onMouseEnter={() => setHoveredSlice(slice.name)}
-                        onMouseLeave={() => setHoveredSlice(null)}
-                      />
-                    );
-                  })
-                ) : (
-                  <circle
-                    cx="100"
-                    cy="100"
-                    r="70"
-                    fill="none"
-                    stroke="#e2e8f0"
-                    strokeWidth="10"
-                    strokeDasharray="4 4"
-                  />
-                )}
-              </svg>
-
-              {/* Center Donut Label */}
-              <div style={{
-                position: "absolute",
-                textAlign: "center",
-                pointerEvents: "none",
-              }}>
-                <div style={{
-                  fontFamily: "Sora, sans-serif",
-                  fontSize: 20,
-                  fontWeight: 800,
-                  color: "#0f172a",
-                  lineHeight: 1,
-                }}>
-                  {hoveredSlice ? donutBreakdown.find((d) => d.name === hoveredSlice)?.value : mentorCount}
-                </div>
-                <div style={{
-                  fontSize: 10.5,
-                  fontWeight: 600,
-                  color: "#64748b",
-                  marginTop: 3,
-                }}>
-                  {hoveredSlice ? `${hoveredSlice.slice(0, 10)}` : "Mentors"}
-                </div>
-              </div>
-            </div>
-
-            {/* Ranked Mentor List with Counts */}
-            <div style={{
-              display: "flex",
-              flexDirection: "column",
+              display: "inline-flex",
+              alignItems: "center",
               gap: 6,
-              maxHeight: 200,
-              overflowY: "auto",
-              paddingRight: 4,
-            }} className="cp-custom-scroll">
-              {donutBreakdown.length > 0 ? (
-                donutBreakdown.map((item, idx) => {
-                  const isHovered = hoveredSlice === item.name;
-                  return (
-                    <div
-                      key={idx}
-                      onMouseEnter={() => setHoveredSlice(item.name)}
-                      onMouseLeave={() => setHoveredSlice(null)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "3px 6px",
-                        borderRadius: 6,
-                        background: isHovered ? "#f8fafc" : "transparent",
-                        transition: "background 0.15s ease",
-                        cursor: "pointer",
-                        fontSize: 11.5,
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
-                        <span style={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: "50%",
-                          background: item.color,
-                          flexShrink: 0,
-                        }} />
-                        <span style={{
-                          fontWeight: isHovered ? 700 : 500,
-                          color: isHovered ? "#0f172a" : "#334155",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}>
-                          {item.name}
-                        </span>
-                      </div>
-                      <span style={{
-                        fontWeight: 700,
-                        color: "#0f172a",
-                        fontFamily: "monospace",
-                        fontSize: 11,
-                        marginLeft: 10,
-                      }}>
-                        {item.value}
-                      </span>
-                    </div>
-                  );
-                })
-              ) : (
-                <div style={{ fontSize: 11, color: "#94a3b8", textAlign: "center", padding: "16px 0" }}>
-                  {loading ? "Loading mentors..." : "No mentors registered yet"}
-                </div>
-              )}
+              background: "rgba(255,105,61,0.2)",
+              color: "#ff8c69",
+              padding: "4px 10px",
+              borderRadius: 20,
+              fontSize: 11,
+              fontWeight: 800,
+              letterSpacing: 0.5,
+              textTransform: "uppercase",
+              marginBottom: 14,
+            }}>
+              <Sparkles size={12} /> Live Mentor Telemetry
             </div>
+
+            <h3 style={{ fontFamily: "Sora, sans-serif", fontSize: 20, fontWeight: 800, margin: "0 0 8px" }}>
+              Mentor Tracking & Comparisons
+            </h3>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.5, margin: 0 }}>
+              Deep-dive into mentor login histories, assigned student progress, task completions, and interactive multi-color comparative pie charts.
+            </p>
           </div>
 
-          {/* Footer Navigation Link */}
-          <div style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            paddingTop: 10,
-            borderTop: "1px solid #f1f5f9",
-          }}>
+          <div style={{ marginTop: 24, display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button
+              onClick={() => onNavigateTab && onNavigateTab("mentor-tracking")}
+              style={{
+                background: ORANGE,
+                color: "#ffffff",
+                border: "none",
+                borderRadius: 10,
+                padding: "10px 18px",
+                fontSize: 13,
+                fontWeight: 700,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                cursor: "pointer",
+                boxShadow: "0 4px 14px rgba(255,105,61,0.35)",
+              }}
+            >
+              Open Mentor Analytics <ArrowUpRight size={15} />
+            </button>
             <button
               onClick={() => onNavigateTab && onNavigateTab("mentors")}
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                fontSize: 11.5,
-                fontWeight: 700,
-                color: "#2563eb",
-                background: "none",
-                border: "none",
+                background: "rgba(255,255,255,0.1)",
+                color: "#ffffff",
+                border: "1px solid rgba(255,255,255,0.2)",
+                borderRadius: 10,
+                padding: "10px 16px",
+                fontSize: 13,
+                fontWeight: 600,
                 cursor: "pointer",
-                padding: "3px 6px",
-                borderRadius: 6,
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = ORANGE}
-              onMouseLeave={(e) => e.currentTarget.style.color = "#2563eb"}
             >
-              View All Mentors →
+              Manage Mentors
             </button>
-          </div>
-        </div>
-
-        {/* ── RIGHT PANEL: Login Activity Trend Chart ── */}
-        <div style={{
-          background: "#ffffff",
-          borderRadius: 16,
-          padding: "18px 20px",
-          border: "1px solid #f1f5f9",
-          boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          minHeight: 360,
-        }}>
-          {/* Header & Range Selector Pills */}
-          <div style={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 10,
-            marginBottom: 10,
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-              <div style={{
-                width: 28,
-                height: 28,
-                borderRadius: 8,
-                background: "#fff7ed",
-                color: "#ea580c",
-                display: "grid",
-                placeItems: "center",
-              }}>
-                <TrendingUp size={15} />
-              </div>
-              <div>
-                <h3 style={{
-                  fontFamily: "Sora, sans-serif",
-                  fontSize: 13.5,
-                  fontWeight: 800,
-                  color: "#0f172a",
-                  margin: 0,
-                }}>
-                  Login Activity
-                </h3>
-                <p style={{ fontSize: 11, color: "#64748b", margin: "2px 0 0" }}>
-                  Platform login trends (Students + Mentors)
-                </p>
-              </div>
-            </div>
-
-            {/* Range Toggle (7D / 30D / Custom) */}
-            <div style={{
-              display: "inline-flex",
-              background: "#f8fafc",
-              borderRadius: 7,
-              padding: 2,
-              border: "1px solid #e2e8f0",
-            }}>
-              {[
-                { id: "7d", label: "7D" },
-                { id: "30d", label: "30D" },
-                { id: "custom", label: "Custom" },
-              ].map((p) => {
-                const active = chartRange === p.id;
-                return (
-                  <button
-                    key={p.id}
-                    onClick={() => setChartRange(p.id)}
-                    style={{
-                      padding: "3px 8px",
-                      borderRadius: 5,
-                      border: "none",
-                      background: active ? "#ffffff" : "transparent",
-                      color: active ? ORANGE : "#64748b",
-                      fontWeight: active ? 800 : 500,
-                      fontSize: 10.5,
-                      cursor: "pointer",
-                      boxShadow: active ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    {p.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Today's Logins Banner */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "8px 12px",
-            borderRadius: 10,
-            background: "#f8fafc",
-            border: "1px solid #f1f5f9",
-            marginBottom: 8,
-            flexWrap: "wrap",
-            gap: 8,
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{
-                fontSize: 9.5,
-                fontWeight: 800,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-                color: "#059669",
-                background: "#ecfdf5",
-                padding: "2px 6px",
-                borderRadius: 4,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 4,
-              }}>
-                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#10b981" }} />
-                Today
-              </span>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#334155" }}>Logins:</span>
-            </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              {/* Students logged in today */}
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                fontSize: 11,
-                color: "#475569",
-              }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF693D" }} />
-                <span>Students:</span>
-                <span style={{
-                  fontFamily: "Sora, sans-serif",
-                  fontWeight: 800,
-                  fontSize: 12.5,
-                  color: "#ea580c",
-                  background: "#fff7ed",
-                  padding: "1px 7px",
-                  borderRadius: 5,
-                  border: "1px solid #fed7aa",
-                }}>
-                  {loading ? "..." : (todayStats.studentsToday ?? todayStats.studentLoginsToday ?? 0)}
-                </span>
-              </div>
-
-              {/* Mentors logged in today */}
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                fontSize: 11,
-                color: "#475569",
-              }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#3B82F6" }} />
-                <span>Mentors:</span>
-                <span style={{
-                  fontFamily: "Sora, sans-serif",
-                  fontWeight: 800,
-                  fontSize: 12.5,
-                  color: "#2563eb",
-                  background: "#eff6ff",
-                  padding: "1px 7px",
-                  borderRadius: 5,
-                  border: "1px solid #bfdbfe",
-                }}>
-                  {loading ? "..." : (todayStats.mentorsToday ?? todayStats.mentorLoginsToday ?? 0)}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Legend Strip */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            gap: 14,
-            fontSize: 11,
-            fontWeight: 600,
-            marginBottom: 6,
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569" }}>
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#FF693D" }} />
-              <span>Students</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569" }}>
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#3B82F6" }} />
-              <span>Mentors</span>
-            </div>
-          </div>
-
-          {/* SVG Area & Smooth Line Chart */}
-          <div style={{ position: "relative", width: "100%", height: 195 }}>
-            <svg
-              width="100%"
-              height="100%"
-              viewBox="0 0 540 210"
-              preserveAspectRatio="none"
-              style={{ overflow: "visible" }}
-            >
-              <defs>
-                <linearGradient id="studentGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#FF693D" stopOpacity="0.28" />
-                  <stop offset="100%" stopColor="#FF693D" stopOpacity="0.0" />
-                </linearGradient>
-                <linearGradient id="mentorGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.0" />
-                </linearGradient>
-              </defs>
-
-              {/* Horizontal Gridlines & Y-Axis Labels */}
-              {(() => {
-                const step = maxChartValue / 4;
-                const levels = [0, Math.round(step), Math.round(step * 2), Math.round(step * 3), maxChartValue];
-                return levels.map((level, i) => {
-                  const y = 175 - (level / maxChartValue) * 145;
-                  return (
-                    <g key={i}>
-                      <line
-                        x1="35"
-                        y1={y}
-                        x2="530"
-                        y2={y}
-                        stroke="#f1f5f9"
-                        strokeWidth="1"
-                        strokeDasharray={level === 0 ? "none" : "3,3"}
-                      />
-                      <text
-                        x="25"
-                        y={y + 3.5}
-                        fontSize="9.5"
-                        fill="#94a3b8"
-                        textAnchor="end"
-                        fontFamily="monospace"
-                      >
-                        {level}
-                      </text>
-                    </g>
-                  );
-                });
-              })()}
-
-              {/* Data Curves Calculation */}
-              {(() => {
-                const points = filteredDailyTrend;
-                if (!points.length) return null;
-
-                const stepX = (530 - 35) / Math.max(1, points.length - 1);
-                const getCoords = (pt, idx, key) => {
-                  const x = 35 + idx * stepX;
-                  const val = pt[key] || 0;
-                  const y = 175 - (Math.min(val, maxChartValue) / maxChartValue) * 145;
-                  return { x, y, val };
-                };
-
-                const studentCoords = points.map((p, i) => getCoords(p, i, "studentLogins"));
-                const mentorCoords = points.map((p, i) => getCoords(p, i, "mentorLogins"));
-
-                // Smooth Bezier path generator
-                const makePath = (coords) => {
-                  let d = `M ${coords[0].x} ${coords[0].y}`;
-                  for (let i = 0; i < coords.length - 1; i++) {
-                    const curr = coords[i];
-                    const next = coords[i + 1];
-                    const cpX1 = curr.x + (next.x - curr.x) / 2;
-                    const cpY1 = curr.y;
-                    const cpX2 = curr.x + (next.x - curr.x) / 2;
-                    const cpY2 = next.y;
-                    d += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${next.x} ${next.y}`;
-                  }
-                  return d;
-                };
-
-                const sPath = makePath(studentCoords);
-                const mPath = makePath(mentorCoords);
-
-                const sArea = `${sPath} L ${studentCoords[studentCoords.length - 1].x} 175 L ${studentCoords[0].x} 175 Z`;
-                const mArea = `${mPath} L ${mentorCoords[mentorCoords.length - 1].x} 175 L ${mentorCoords[0].x} 175 Z`;
-
-                return (
-                  <>
-                    {/* Area fills */}
-                    <path d={sArea} fill="url(#studentGrad)" />
-                    <path d={mArea} fill="url(#mentorGrad)" />
-
-                    {/* Smooth curve lines */}
-                    <path d={sPath} fill="none" stroke="#FF693D" strokeWidth="2.5" strokeLinecap="round" />
-                    <path d={mPath} fill="none" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round" />
-
-                    {/* Data dots */}
-                    {studentCoords.map((pt, i) => (
-                      <circle
-                        key={`s-${i}`}
-                        cx={pt.x}
-                        cy={pt.y}
-                        r={hoveredChartPoint?.idx === i ? "5.5" : "3.5"}
-                        fill="#FF693D"
-                        stroke="#ffffff"
-                        strokeWidth="2"
-                        style={{ cursor: "pointer", transition: "r 0.15s ease" }}
-                        onMouseEnter={() => setHoveredChartPoint({ idx: i, pt: points[i], x: pt.x, y: pt.y })}
-                      />
-                    ))}
-
-                    {mentorCoords.map((pt, i) => (
-                      <circle
-                        key={`m-${i}`}
-                        cx={pt.x}
-                        cy={pt.y}
-                        r={hoveredChartPoint?.idx === i ? "5.5" : "3.5"}
-                        fill="#3B82F6"
-                        stroke="#ffffff"
-                        strokeWidth="2"
-                        style={{ cursor: "pointer", transition: "r 0.15s ease" }}
-                        onMouseEnter={() => setHoveredChartPoint({ idx: i, pt: points[i], x: pt.x, y: pt.y })}
-                      />
-                    ))}
-
-                    {/* X-axis date labels */}
-                    {points.map((pt, i) => {
-                      // show every Nth label to prevent clutter on mobile
-                      const showLabel = points.length <= 8 || i % Math.ceil(points.length / 7) === 0 || i === points.length - 1;
-                      if (!showLabel) return null;
-                      const x = 35 + i * stepX;
-                      return (
-                        <text
-                          key={`lbl-${i}`}
-                          x={x}
-                          y="198"
-                          fontSize="10"
-                          fill="#94a3b8"
-                          textAnchor="middle"
-                        >
-                          {pt.label}
-                        </text>
-                      );
-                    })}
-                  </>
-                );
-              })()}
-            </svg>
-
-            {/* Interactive Tooltip on Chart Hover */}
-            {hoveredChartPoint && (
-              <div
-                style={{
-                  position: "absolute",
-                  left: `${(hoveredChartPoint.x / 540) * 100}%`,
-                  top: Math.max(0, hoveredChartPoint.y - 70),
-                  transform: "translateX(-50%)",
-                  background: "#0f172a",
-                  color: "#ffffff",
-                  padding: "8px 12px",
-                  borderRadius: 10,
-                  fontSize: 11.5,
-                  boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
-                  pointerEvents: "none",
-                  zIndex: 20,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <div style={{ fontWeight: 700, marginBottom: 4, color: "#e2e8f0", fontSize: 11 }}>
-                  {hoveredChartPoint.pt.label}
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#ff8c69" }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF693D" }} />
-                  <span>Students: <strong>{hoveredChartPoint.pt.studentLogins || 0}</strong></span>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#93c5fd" }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#3b82f6" }} />
-                  <span>Mentors: <strong>{hoveredChartPoint.pt.mentorLogins || 0}</strong></span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
 
-      {/* ── Full-Width Recent Activity Table ── */}
+      {/* Recent Activity Audit Feed */}
       <div style={{
         background: "#ffffff",
-        borderRadius: 16,
-        border: "1px solid #f1f5f9",
-        boxShadow: "0 2px 10px rgba(15,23,42,0.03)",
-        overflow: "hidden",
+        borderRadius: 18,
+        padding: "20px 24px",
+        border: "1px solid #f0e9e0",
+        boxShadow: "0 2px 12px rgba(15,23,42,0.03)",
       }}>
-        {/* Table Title Bar */}
-        <div style={{
-          padding: "16px 20px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderBottom: "1px solid #f1f5f9",
-          flexWrap: "wrap",
-          gap: 10,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-            <div style={{
-              width: 28,
-              height: 28,
-              borderRadius: 8,
-              background: "#fff7ed",
-              color: "#ea580c",
-              display: "grid",
-              placeItems: "center",
-            }}>
-              <Clock size={15} />
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: "#f1f5f9", display: "grid", placeItems: "center" }}>
+              <Clock size={16} color="#475569" />
             </div>
             <div>
-              <h3 style={{
-                fontFamily: "Sora, sans-serif",
-                fontSize: 13.5,
-                fontWeight: 800,
-                color: "#0f172a",
-                margin: 0,
-              }}>
-                Recent Activity
+              <h3 style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", margin: 0, fontFamily: "Sora, sans-serif" }}>
+                Recent Platform & Mentor Activity
               </h3>
-              <p style={{ fontSize: 11, color: "#64748b", margin: "2px 0 0" }}>
-                Latest platform activity across mentors, students and admins
-              </p>
+              <span style={{ fontSize: 11.5, color: "#64748b" }}>
+                Chronological event stream from verified database logs
+              </span>
             </div>
           </div>
 
-          <button
-            onClick={() => onNavigateTab && onNavigateTab("mentor-tracking")}
-            style={{
-              fontSize: 11.5,
-              fontWeight: 700,
-              color: "#2563eb",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: "4px 8px",
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.color = ORANGE}
-            onMouseLeave={(e) => e.currentTarget.style.color = "#2563eb"}
-          >
-            View All →
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Filter size={13} color="#94a3b8" />
+            <input
+              type="text"
+              placeholder="Filter by mentor..."
+              value={mentorFilter === "all" ? "" : mentorFilter}
+              onChange={(e) => setMentorFilter(e.target.value || "all")}
+              style={{
+                height: 30,
+                padding: "0 10px",
+                borderRadius: 8,
+                border: "1px solid #e2e8f0",
+                fontSize: 12,
+                outline: "none",
+                width: 150,
+              }}
+            />
+          </div>
         </div>
 
-        {/* Responsive Table Container */}
-        <div className="cp-custom-scroll" style={{ overflowX: "auto" }}>
-          <table style={{
-            width: "100%",
-            minWidth: 800,
-            borderCollapse: "collapse",
-            fontSize: 11.5,
-            textAlign: "left",
-          }}>
-            <thead>
-              <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
-                <th style={{ padding: "10px 18px", fontWeight: 700, color: "#64748b", fontSize: 10.5, textTransform: "uppercase" }}>Time</th>
-                <th style={{ padding: "10px 16px", fontWeight: 700, color: "#64748b", fontSize: 10.5, textTransform: "uppercase" }}>Type</th>
-                <th style={{ padding: "10px 16px", fontWeight: 700, color: "#64748b", fontSize: 10.5, textTransform: "uppercase" }}>Name</th>
-                <th style={{ padding: "10px 16px", fontWeight: 700, color: "#64748b", fontSize: 10.5, textTransform: "uppercase" }}>Details</th>
-                <th style={{ padding: "10px 18px", fontWeight: 700, color: "#64748b", fontSize: 10.5, textTransform: "uppercase", textAlign: "right" }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {formattedActivities.length === 0 ? (
-                <tr>
-                  <td colSpan={5} style={{ padding: "28px 18px", textAlign: "center", color: "#94a3b8", fontSize: 11.5 }}>
-                    {loading ? "Loading platform activity..." : "No recent activity recorded yet in this period."}
-                  </td>
-                </tr>
-              ) : (
-                formattedActivities.map((row, idx) => {
-                  const Icon = row.typeIcon;
-                  return (
-                    <tr
-                      key={row.id || idx}
-                      style={{
-                        borderBottom: "1px solid #f8fafc",
-                        transition: "background 0.15s ease",
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = "#f8fafc"}
-                      onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                    >
-                      {/* Timestamp */}
-                      <td style={{ padding: "11px 18px", color: "#64748b", fontSize: 11, whiteSpace: "nowrap" }}>
-                        {row.time}
-                      </td>
+        {filteredActivity.length === 0 ? (
+          <div style={{ padding: "32px 0", textAlign: "center", color: "#94a3b8", fontSize: 13 }}>
+            No activity events recorded yet. Logins and task actions will appear here in real-time.
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {filteredActivity.slice(0, 10).map((act) => {
+              const date = new Date(act.createdAt);
+              const timeStr = date.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+              const dateStr = date.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
 
-                      {/* Event Type with Icon */}
-                      <td style={{ padding: "11px 16px", whiteSpace: "nowrap" }}>
-                        <span style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 5,
-                          color: row.typeColor,
-                          fontWeight: 600,
-                          fontSize: 11,
-                        }}>
-                          <Icon size={13} />
-                          {row.type}
-                        </span>
-                      </td>
+              let label = "Activity recorded";
+              let badgeColor = "#64748b";
+              let badgeBg = "#f1f5f9";
 
-                      {/* Name with Round Initials Avatar */}
-                      <td style={{ padding: "11px 16px", whiteSpace: "nowrap" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <div style={{
-                            width: 24,
-                            height: 24,
-                            borderRadius: "50%",
-                            background: row.typeBg,
-                            color: row.typeColor,
-                            display: "grid",
-                            placeItems: "center",
-                            fontSize: 10,
-                            fontWeight: 800,
-                          }}>
-                            {row.initials}
-                          </div>
-                          <span style={{ fontWeight: 700, color: "#0f172a" }}>
-                            {row.name}
-                          </span>
-                        </div>
-                      </td>
+              if (act.action === "mentor_login") {
+                label = `Mentor ${act.mentorName || "Account"} logged in successfully`;
+                badgeColor = "#059669";
+                badgeBg = "#ecfdf5";
+              } else if (act.action === "mentor_login_failed") {
+                label = `Failed mentor login attempt (${act.details?.reason || "Credentials"})`;
+                badgeColor = "#dc2626";
+                badgeBg = "#fef2f2";
+              } else if (act.action === "task_assign") {
+                label = `Mentor ${act.mentorName || ""} assigned ${act.details?.taskCount || "new"} tasks to ${act.studentName || act.studentId}`;
+                badgeColor = "#2563eb";
+                badgeBg = "#eff6ff";
+              } else if (act.action === "task_update") {
+                label = `Mentor ${act.mentorName || ""} updated tasks for student ${act.studentName || act.studentId}`;
+                badgeColor = "#7c3aed";
+                badgeBg = "#f5f3ff";
+              } else if (act.action === "task_complete") {
+                label = `Tasks completed for student ${act.studentName || act.studentId}`;
+                badgeColor = "#16a34a";
+                badgeBg = "#f0fdf4";
+              } else if (act.action === "student_login") {
+                label = `Student ${act.studentName || act.studentId || "User"} signed in`;
+                badgeColor = "#0284c7";
+                badgeBg = "#f0f9ff";
+              }
 
-                      {/* Action Details */}
-                      <td style={{ padding: "11px 16px", color: "#475569", fontSize: 11.5 }}>
-                        {row.details}
-                      </td>
-
-                      {/* Status Badge */}
-                      <td style={{ padding: "11px 18px", textAlign: "right", whiteSpace: "nowrap" }}>
-                        <span style={{
-                          padding: "2px 8px",
-                          borderRadius: 20,
-                          fontSize: 10.5,
-                          fontWeight: 700,
-                          background: row.statusBg,
-                          color: row.statusColor,
-                          display: "inline-block",
-                        }}>
-                          {row.status}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+              return (
+                <div
+                  key={act.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    background: "#f8fafc",
+                    border: "1px solid #f1f5f9",
+                    fontSize: 12.5,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{
+                      padding: "3px 8px",
+                      borderRadius: 6,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      background: badgeBg,
+                      color: badgeColor,
+                    }}>
+                      {act.action.replace("_", " ").toUpperCase()}
+                    </span>
+                    <span style={{ color: "#1e293b", fontWeight: 500 }}>
+                      {label}
+                    </span>
+                  </div>
+                  <span style={{ fontSize: 11.5, color: "#94a3b8", whiteSpace: "nowrap" }}>
+                    {dateStr}, {timeStr}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

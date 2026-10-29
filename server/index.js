@@ -142,6 +142,7 @@ app.use("/api/mentor", authLimiter, mentorRoutes);
 app.use("/api/users", apiLimiter, userRoutes);
 app.use("/api/cutoffs", apiLimiter, cutoffRoutes);
 app.use("/api/payment", apiLimiter, paymentRoutes);
+app.use("/api/payments", apiLimiter, paymentRoutes);
 app.use("/api/mentorship", apiLimiter, mentorshipRoutes);
 app.use("/api/community", apiLimiter, communityRoutes);
 app.use("/api/public-community", apiLimiter, publicCommunityRoutes);

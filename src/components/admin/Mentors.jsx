@@ -263,6 +263,7 @@ function MentorRow({ token, mentor, eligibleStudents = [], onChange, onDelete, o
       if (target) target.studentGroup = groupInput.trim();
       setEditingGroupSid(null);
       setGroupInput("");
+      
     } catch (e) {
       setErr(e.message || "Failed to update group");
     } finally {
@@ -277,7 +278,7 @@ function MentorRow({ token, mentor, eligibleStudents = [], onChange, onDelete, o
       opacity: mentor.active ? 1 : 0.65, transition: "all .15s ease",
     }}>
       {/* Mentor Header Row */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
+      <div className="adm-mentor-header-row" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
         
         {/* Left Side: Identity */}
         <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 240, flex: 1 }}>
@@ -324,10 +325,10 @@ function MentorRow({ token, mentor, eligibleStudents = [], onChange, onDelete, o
         </div>
 
         {/* Right Side: Action Buttons & Assign Container */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end", minWidth: 280 }}>
+        <div className="adm-mentor-actions-col" style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end", minWidth: 280 }}>
           
           {/* Top Row: Reset Password, Deactivate/Reactivate, and Delete Mentor */}
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
+          <div className="adm-mentor-actions-top" style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
             <button
               onClick={resetPw}
               disabled={busy}
@@ -377,7 +378,7 @@ function MentorRow({ token, mentor, eligibleStudents = [], onChange, onDelete, o
           </div>
 
           {/* Just below the buttons: Quick Assign Bar covering combined width */}
-          <div style={{ position: "relative", width: "100%", maxWidth: 360 }}>
+          <div className="adm-assign-container" style={{ position: "relative", width: "100%", maxWidth: 360 }}>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -771,9 +772,9 @@ export default function Mentors({ token }) {
       </div>
 
       {/* KPI Summary Strip */}
-      <div style={{
+      <div className="adm-mentor-kpis" style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(160px, 100%), 1fr))",
         gap: 12,
       }}>
         <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0" }}>
@@ -1142,6 +1143,32 @@ export default function Mentors({ token }) {
         @keyframes admFadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
+        }
+        @media (max-width: 640px) {
+          .adm-mentor-header-row {
+            flex-direction: column !important;
+            gap: 10px !important;
+          }
+          .adm-mentor-actions-col {
+            width: 100% !important;
+            min-width: 0 !important;
+            align-items: stretch !important;
+          }
+          .adm-mentor-actions-top {
+            width: 100% !important;
+            justifyContent: flex-start !important;
+          }
+          .adm-assign-container {
+            max-width: 100% !important;
+            width: 100% !important;
+          }
+          .adm-mentor-kpis {
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+          }
+          .adm-mentor-kpis > div:last-child {
+            grid-column: span 2 !important;
+          }
         }
       `}</style>
     </div>
