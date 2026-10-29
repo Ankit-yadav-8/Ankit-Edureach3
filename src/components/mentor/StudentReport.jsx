@@ -51,7 +51,7 @@ function StatCard({ icon: Icon, faIcon, label, value, sub, tone = ACCENT, trend 
         </span>
       </div>
       <div>
-        <div className="text-xl font-bold text-slate-900 tracking-tight leading-none mb-1">{value}</div>
+        <div className="text-xs font-bold text-slate-900 tracking-tight leading-none mb-1">{value}</div>
         {sub && <div className="text-[11px] text-slate-500 font-medium truncate">{sub}</div>}
       </div>
     </div>
@@ -230,7 +230,7 @@ function SessionScheduler({
             <Calendar size={18} />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900 leading-tight">Schedule 1-on-1 Meet</h2>
+            <h2 className="text-xs font-bold text-slate-900 leading-tight">Schedule 1-on-1 Meet</h2>
             <p className="text-xs text-slate-500 mt-0.5">
               Update the meeting link directly to {student?.name || "student"}'s mobile app.
             </p>
@@ -269,7 +269,7 @@ function SessionScheduler({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm sm:text-base font-bold text-slate-900">Live Mentorship Room</h3>
+              <h3 className="text-sm sm:text-xs font-bold text-slate-900">Live Mentorship Room</h3>
               <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-brand-500 text-white shadow-sm">
                 Live
               </span>
@@ -316,7 +316,7 @@ function SessionScheduler({
               value={meetLink}
               onChange={(e) => setMeetLink(e.target.value)}
               placeholder="Paste Zoom or Google Meet URL"
-              className="w-full pl-9 pr-12 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 cp-focus-ring transition-all shadow-sm"
+              className="w-full pl-9 pr-12 py-2.5 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 cp-focus-ring transition-all shadow-sm"
             />
             <button
               type="button"
@@ -357,7 +357,7 @@ function SessionScheduler({
               <select
                 value={dateLabel}
                 onChange={(e) => setDateLabel(e.target.value)}
-                className="w-full pl-3 pr-8 py-2.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 cp-focus-ring appearance-none shadow-sm cursor-pointer"
+                className="w-full pl-3 pr-8 py-2.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 cp-focus-ring appearance-none shadow-sm cursor-pointer"
               >
                 <option value="Tomorrow">Tomorrow</option>
                 <option value="Today">Today</option>
@@ -398,7 +398,7 @@ function SessionScheduler({
               <select
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="w-full pl-3 pr-8 py-2.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 cp-focus-ring appearance-none shadow-sm cursor-pointer"
+                className="w-full pl-3 pr-8 py-2.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 cp-focus-ring appearance-none shadow-sm cursor-pointer"
               >
                 {TIME_PRESETS.map((t) => (
                   <option key={t} value={t}>{t}</option>
@@ -441,7 +441,7 @@ function SessionScheduler({
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             placeholder="e.g. Physics Strategy & Mock Test Analysis"
-            className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 cp-focus-ring transition-all shadow-sm mb-2.5"
+            className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 cp-focus-ring transition-all shadow-sm mb-2.5"
           />
           <div className="flex flex-wrap gap-2">
             {TOPIC_PRESETS.map((tp, idx) => {
@@ -576,7 +576,7 @@ function StudyLogView({ entries }) {
       <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-subtle">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-bold text-slate-900">Study Hours — Past 14 Days</h3>
+            <h3 className="text-xs font-bold text-slate-900">Study Hours — Past 14 Days</h3>
             <p className="text-xs text-slate-500">Visual trend of student study commitment</p>
           </div>
           <span className="text-xs font-bold text-brand-600 bg-brand-50 border border-brand-100 px-2.5 py-1 rounded-full">
@@ -589,7 +589,7 @@ function StudyLogView({ entries }) {
       {/* Detailed Entries Table */}
       <div className="bg-white border border-slate-200/90 rounded-2xl shadow-subtle overflow-hidden">
         <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-slate-900">Recent Study Log Entries</h3>
+          <h3 className="text-xs font-bold text-slate-900">Recent Study Log Entries</h3>
           <span className="text-xs text-slate-500">{entries.length} total entries</span>
         </div>
         <div className="divide-y divide-slate-100 max-h-96 overflow-y-auto cp-custom-scroll">
@@ -691,7 +691,7 @@ function TestAnalysisView({ tests }) {
       <div className="bg-white border border-slate-200/90 rounded-2xl shadow-subtle overflow-hidden">
         <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h3 className="text-sm font-bold text-slate-900">Academic CBT &amp; Mock Tests</h3>
+            <h3 className="text-xs font-bold text-slate-900">Academic CBT &amp; Mock Tests</h3>
             <p className="text-xs text-slate-500">Breakdown of student question accuracy and score weightage</p>
           </div>
           <div className="flex items-center gap-2">
@@ -722,7 +722,7 @@ function TestAnalysisView({ tests }) {
 
               <div className="flex items-center gap-3">
                 <div className="text-right">
-                  <div className="text-sm font-bold text-slate-900">
+                  <div className="text-xs font-bold text-slate-900">
                     {t.score} <span className="text-[11px] text-slate-400 font-normal">/ {t.maxMarks}</span>
                   </div>
                   <div className="text-[11px] font-semibold text-emerald-600">{t.accuracy}% Accuracy</div>
@@ -786,7 +786,7 @@ function AssignTasksView({ tasks = [], onSaveTasks, studentName = "student" }) {
     <div className="bg-white border border-slate-200/90 rounded-2xl shadow-subtle p-6 space-y-6">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4">
         <div>
-          <h3 className="text-base font-bold text-slate-900 leading-tight">Assign Mentee Tasks</h3>
+          <h3 className="text-xs font-bold text-slate-900 leading-tight">Assign Mentee Tasks</h3>
           <p className="text-xs text-slate-500 mt-0.5">
             Tasks you set here appear directly on {studentName}'s dashboard as mandatory weekly goals.
           </p>
@@ -803,7 +803,7 @@ function AssignTasksView({ tasks = [], onSaveTasks, studentName = "student" }) {
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
           placeholder={`Assign targeted task to ${studentName}...`}
-          className="flex-1 px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 cp-focus-ring shadow-sm"
+          className="flex-1 px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 cp-focus-ring shadow-sm"
         />
         <button
           type="submit"
@@ -952,10 +952,10 @@ export default function StudentReport({
             >
               <Icon size={16} className={sel ? "text-brand-500" : "text-slate-400"} />
               <div className="flex flex-col items-start leading-tight text-left">
-                <span className={`text-sm ${sel ? "font-bold text-brand-600" : "font-semibold text-slate-700"}`}>
+                <span className={`text-xs ${sel ? "font-bold text-brand-600" : "font-semibold text-slate-700"}`}>
                   {t.label}
                 </span>
-                <span className={`text-[10px] ${sel ? "text-brand-500/80 font-medium" : "text-slate-400"}`}>
+                <span className={`text-[9.5px] ${sel ? "text-brand-500/80 font-medium" : "text-slate-400"}`}>
                   {t.sub}
                 </span>
               </div>

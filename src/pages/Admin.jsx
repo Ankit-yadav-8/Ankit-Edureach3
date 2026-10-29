@@ -157,26 +157,9 @@ export default function Admin() {
       if (res.status === 401 || res.status === 403) throw new Error("Session expired - please log in again");
       if (!res.ok) throw new Error("Server error " + res.status);
       const data = await res.json();
-      const rawList = data.enrollments || [];
-      // Normalize Yukeeth and Yuvan price to 13999 in frontend state and persist to database
-      const list = rawList.map((p) => {
-        if (
-          (p.email === "yukeethjee@gmail.com" || p.email === "yuvanjee28@gmail.com" || /yukeeth|yuvan/i.test(p.name)) &&
-          Number(p.amount) < 1000
-        ) {
-          if (p._id && t) {
-            fetch(`${API_BASE}/api/payment/enrollments/${p._id}`, {
-              method: "PATCH",
-              headers: { "Content-Type": "application/json", "x-admin-token": t },
-              body: JSON.stringify({ amount: 13999, originalAmount: 13999 }),
-            }).catch(() => {});
-          }
-          return { ...p, amount: 13999 };
-        }
-        return p;
-      });
+      const list = Array.isArray(data.enrollments) ? data.enrollments : [];
       setPayments(list);
-      setPayTotal(data.total ?? (list.length || 0));
+      setPayTotal(data.total ?? list.length);
       setPayLoaded(true);
     } catch (e) {
       setErr(e.message);
@@ -287,6 +270,12 @@ export default function Admin() {
     }
   }
 
+  const handleUpdateAmount = useCallback((id, newAmount) => {
+    setPayments((prev) =>
+      prev.map((p) => (p._id === id ? { ...p, amount: Number(newAmount) || p.amount } : p))
+    );
+  }, []);
+
   function logout() {
     sessionStorage.removeItem(TOKEN_STORAGE);
     setToken(""); setAuthed(false);
@@ -303,7 +292,7 @@ export default function Admin() {
     fuzzyMatch(u.phone, q) ||
     fuzzyMatch(u.coaching, q)
   );
-  const filteredPayments = payments.filter((p) =>
+  const filteredPayments = (payments || []).filter((p) => p &&
     !q ||
     fuzzyMatch(p.name, q) ||
     fuzzyMatch(p.email, q) ||
@@ -311,7 +300,7 @@ export default function Admin() {
     fuzzyMatch(p.planLabel, q) ||
     fuzzyMatch(p.plan, q)
   );
-  const revenue = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+  const revenue = (payments || []).reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 
   // ── TWO-STEP LOGIN GATE (key → OTP) ───────────────────────────
   // ── TWO-STEP LOGIN GATE (key → OTP) ───────────────────────────
@@ -376,7 +365,7 @@ export default function Admin() {
             <h2 style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0f172a", fontSize: "1.7rem", margin: 0, letterSpacing: -0.5 }}>
               {onKey ? "CampusPoint Admin" : "Security Verification"}
             </h2>
-            <p style={{ color: "#64748b", fontSize: 13.5, marginTop: 6, marginBottom: 0, lineHeight: 1.4 }}>
+            <p style={{ color: "#64748b", fontSize: 12, marginTop: 6, marginBottom: 0, lineHeight: 1.4 }}>
               {onKey
                 ? "Enter your secret authorization key to proceed"
                 : <>6-digit one-time passcode sent to <strong>{otpSentTo || primaryAdminEmail}</strong></>}
@@ -427,7 +416,7 @@ export default function Admin() {
               </div>
               <div style={{ textAlign: "left" }}>
                 <div style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>2FA Inbox</div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>{primaryAdminEmail}</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#0f172a" }}>{primaryAdminEmail}</div>
               </div>
             </div>
             <span style={{
@@ -523,7 +512,7 @@ export default function Admin() {
                   autoFocus
                   style={{
                     width: "100%", height: 56, textAlign: "center",
-                    borderRadius: 14, border: "1.5px solid #e2e8f0", fontSize: 26,
+                    borderRadius: 14, border: "1.5px solid #e2e8f0", fontSize: 21,
                     letterSpacing: 10, fontWeight: 800, outline: "none", boxSizing: "border-box",
                     fontFamily: "monospace", transition: "all .2s ease",
                     background: "#ffffff", color: "#0f172a",
@@ -534,7 +523,7 @@ export default function Admin() {
               </div>
 
               {devCode && (
-                <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginBottom: 14, color: "#92400e", fontSize: 13, textAlign: "center" }}>
+                <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginBottom: 14, color: "#92400e", fontSize: 12, textAlign: "center" }}>
                   Dev mode code: <strong>{devCode}</strong>
                 </div>
               )}
@@ -570,7 +559,7 @@ export default function Admin() {
                   type="button"
                   onClick={() => { setStep("key"); setErr(""); setDevCode(""); }}
                   disabled={busy}
-                  style={{ background: "none", border: "none", color: "#64748b", fontSize: 13, cursor: "pointer", fontWeight: 600 }}
+                  style={{ background: "none", border: "none", color: "#64748b", fontSize: 12, cursor: "pointer", fontWeight: 600 }}
                 >
                   ← Back to Key
                 </button>
@@ -578,7 +567,7 @@ export default function Admin() {
                   type="button"
                   onClick={() => requestOtp(adminKey)}
                   disabled={busy}
-                  style={{ background: "none", border: "none", color: ORANGE, fontSize: 13, cursor: "pointer", fontWeight: 700 }}
+                  style={{ background: "none", border: "none", color: ORANGE, fontSize: 12, cursor: "pointer", fontWeight: 700 }}
                 >
                   Resend Code
                 </button>
@@ -595,7 +584,7 @@ export default function Admin() {
               padding: "12px 14px",
               marginTop: 18,
               color: "#991b1b",
-              fontSize: 13,
+              fontSize: 12,
               display: "flex",
               alignItems: "flex-start",
               gap: 10,
@@ -692,7 +681,7 @@ export default function Admin() {
           background: transparent;
           color: #475569;
           font-family: inherit;
-          font-size: 13.5px;
+          font-size: 12px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.16s ease;
@@ -912,7 +901,7 @@ export default function Admin() {
                   background: active ? "#fff7ed" : "transparent",
                   color: active ? "#ea580c" : "#64748b",
                   fontFamily: "inherit",
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: active ? 700 : 500,
                   cursor: "pointer",
                   transition: "all 0.15s ease",
@@ -980,7 +969,7 @@ export default function Admin() {
               background: "transparent",
               color: "#64748b",
               fontFamily: "inherit",
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: 500,
               cursor: "pointer",
               transition: "all 0.15s ease",
@@ -1007,7 +996,7 @@ export default function Admin() {
               background: "transparent",
               color: "#64748b",
               fontFamily: "inherit",
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: 500,
               cursor: "pointer",
               transition: "all 0.15s ease",
@@ -1034,7 +1023,7 @@ export default function Admin() {
               background: "transparent",
               color: "#64748b",
               fontFamily: "inherit",
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: 500,
               cursor: "pointer",
               transition: "all 0.15s ease",
@@ -1393,7 +1382,7 @@ export default function Admin() {
                     alignItems: "center",
                     justifyContent: "space-between",
                   }}>
-                    <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a" }}>Notifications</span>
+                    <span style={{ fontSize: 12, fontWeight: 800, color: "#0f172a" }}>Notifications</span>
                     <span style={{ fontSize: 11, fontWeight: 700, color: "#16a34a", background: "#f0fdf4", padding: "2px 6px", borderRadius: 10 }}>
                       Live feed
                     </span>
@@ -1696,7 +1685,7 @@ export default function Admin() {
                       <Users size={22} color={ORANGE} />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{payTotal}</div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.35rem", lineHeight: 1 }}>{payTotal}</div>
                       <div style={{ fontSize: 12, color: "rgba(255,255,255,.7)", marginTop: 4, fontWeight: 600 }}>Total Signups</div>
                     </div>
                   </div>
@@ -1707,8 +1696,8 @@ export default function Admin() {
                       <Calendar size={22} color="#16a34a" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
-                        {payments.filter(p => new Date(p.createdAt).toDateString() === new Date().toDateString()).length}
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.35rem", lineHeight: 1, color: "#0d1b3e" }}>
+                        {(payments || []).filter(p => p?.createdAt && new Date(p.createdAt).toDateString() === new Date().toDateString()).length}
                       </div>
                       <div style={{ fontSize: 12, color: "#64748b", marginTop: 4, fontWeight: 600 }}>Today Payment</div>
                     </div>
@@ -1720,7 +1709,7 @@ export default function Admin() {
                       <IndianRupee size={22} color="#16a34a" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.35rem", lineHeight: 1, color: "#0d1b3e" }}>
                         ₹{revenue.toLocaleString("en-IN")}
                       </div>
                       <div style={{ fontSize: 12, color: "#64748b", marginTop: 4, fontWeight: 600 }}>Total Payment</div>
@@ -1733,8 +1722,8 @@ export default function Admin() {
                       <Mail size={22} color="#ea580c" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#ea580c" }}>
-                        {payments.filter(p => !p.confirmationEmailSent).length}
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.35rem", lineHeight: 1, color: "#ea580c" }}>
+                        {(payments || []).filter(p => !p.confirmationEmailSent).length}
                       </div>
                       <div style={{ fontSize: 12, color: "#9a3412", marginTop: 4, fontWeight: 600 }}>Awaiting Email Approval</div>
                     </div>
@@ -1828,7 +1817,7 @@ export default function Admin() {
                     style={{ padding: "12px 16px", borderRadius: 10, border: "1px solid #e2e8f0", background: "#ffffff", textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}
                   >
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: 13, color: "#0f172a" }}>Student Directory (.csv)</div>
+                      <div style={{ fontWeight: 700, fontSize: 12, color: "#0f172a" }}>Student Directory (.csv)</div>
                       <div style={{ fontSize: 11, color: "#64748b" }}>Export all {total} registered student accounts</div>
                     </div>
                     <Download size={16} color={ORANGE} />
@@ -1838,7 +1827,7 @@ export default function Admin() {
                     style={{ padding: "12px 16px", borderRadius: 10, border: "1px solid #e2e8f0", background: "#ffffff", textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}
                   >
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: 13, color: "#0f172a" }}>Enrollments & Payments (.csv)</div>
+                      <div style={{ fontWeight: 700, fontSize: 12, color: "#0f172a" }}>Enrollments & Payments (.csv)</div>
                       <div style={{ fontSize: 11, color: "#64748b" }}>Export all {payTotal} verified transaction records</div>
                     </div>
                     <Download size={16} color={ORANGE} />
@@ -1953,33 +1942,8 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApp
                           </div>
                         </td>
                         <td style={{ padding: "11px 14px", fontSize: 11.5, color: "#475569" }}>{p.planLabel || p.plan || "-"}</td>
-                        <td style={{ padding: "11px 14px", fontSize: 12.5, color: "#0f172a", fontWeight: 800, whiteSpace: "nowrap" }} onClick={(e) => e.stopPropagation()}>
-                          <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                            <span>₹{Number(p.amount || 0).toLocaleString("en-IN")}</span>
-                            <button
-                              type="button"
-                              title="Edit price in database"
-                              onClick={() => {
-                                const val = window.prompt(`Edit payment amount for ${p.name || 'customer'}:`, p.amount || '13999');
-                                if (val !== null && val.trim() !== '') {
-                                  onUpdateAmount?.(p._id, Number(val.trim()));
-                                }
-                              }}
-                              style={{
-                                background: "none",
-                                border: "none",
-                                padding: "2px 4px",
-                                cursor: "pointer",
-                                color: "#94a3b8",
-                                fontSize: 11,
-                                borderRadius: 4,
-                              }}
-                              onMouseEnter={(e) => e.currentTarget.style.color = "#FF693D"}
-                              onMouseLeave={(e) => e.currentTarget.style.color = "#94a3b8"}
-                            >
-                              ✎
-                            </button>
-                          </div>
+                        <td style={{ padding: "9px 12px", fontSize: 11.5, color: "#0f172a", fontWeight: 700, whiteSpace: "nowrap" }}>
+                          ₹{Number(p.amount || 0).toLocaleString("en-IN")}
                         </td>
                         <td style={{ padding: "11px 14px" }} onClick={(e) => e.stopPropagation()}>
                           {p.confirmationEmailSent ? (

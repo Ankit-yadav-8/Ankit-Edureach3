@@ -183,7 +183,7 @@ function SetPassword({ token, onDone }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface-50 p-4 font-inter text-slate-800">
       <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-floating p-8">
-        <h3 className="text-lg font-bold text-slate-900 mb-2">Set Permanent Password</h3>
+        <h3 className="text-sm font-bold text-slate-900 mb-2">Set Permanent Password</h3>
         <p className="text-xs text-slate-500 mb-4">Please set a secure permanent password for your mentor account.</p>
 
         {err && (
@@ -496,7 +496,7 @@ export default function MentorDashboard() {
                 {mentor.name?.charAt(0) || "M"}
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-sm font-semibold text-slate-900 leading-tight truncate">
+                <span className="text-xs font-bold text-slate-900 leading-tight truncate">
                   {mentor.name || "Mentor"}
                 </span>
                 <span className="text-[11px] text-slate-500 font-medium truncate">
@@ -520,7 +520,7 @@ export default function MentorDashboard() {
                       setActiveTab(item.id);
                       setMobileMenuOpen(false);
                     }}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors text-left relative cursor-pointer ${
+                    className={`w-full flex items-center gap-3 px-2.5 py-1.5 rounded-lg text-xs transition-colors text-left relative cursor-pointer ${
                       active
                         ? "font-semibold text-brand-600 bg-brand-50/50"
                         : "font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900"
@@ -554,7 +554,7 @@ export default function MentorDashboard() {
                         }
                         setMobileMenuOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-left transition-colors cursor-pointer border ${
+                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-left transition-colors cursor-pointer border ${
                         isCurrent
                           ? "font-medium text-slate-900 bg-slate-100/50 border-slate-200/50"
                           : "font-medium text-slate-500 hover:bg-slate-50 border-transparent"
@@ -698,7 +698,7 @@ export default function MentorDashboard() {
                   {/* Top Welcome Strip */}
                   <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                      <h2 className="text-lg font-bold text-slate-900 leading-tight">
+                      <h2 className="text-sm font-bold text-slate-900 leading-tight">
                         Welcome back, {mentor.name} 👋
                       </h2>
                       <p className="text-xs text-slate-500 mt-1">
@@ -722,7 +722,7 @@ export default function MentorDashboard() {
                           <Users size={14} />
                         </span>
                       </div>
-                      <div className="text-2xl font-bold text-slate-900">{students.length}</div>
+                      <div className="text-xl font-bold text-slate-900">{students.length}</div>
                       <div className="text-[11px] text-emerald-600 font-semibold mt-1">100% Assigned</div>
                     </div>
 
@@ -733,7 +733,7 @@ export default function MentorDashboard() {
                           <Video size={14} />
                         </span>
                       </div>
-                      <div className="text-2xl font-bold text-slate-900">Active</div>
+                      <div className="text-xl font-bold text-slate-900">Active</div>
                       <div className="text-[11px] text-slate-500 mt-1">Ready for connecting</div>
                     </div>
 
@@ -744,7 +744,7 @@ export default function MentorDashboard() {
                           <BookOpen size={14} />
                         </span>
                       </div>
-                      <div className="text-2xl font-bold text-slate-900">3 Verified</div>
+                      <div className="text-xl font-bold text-slate-900">3 Verified</div>
                       <div className="text-[11px] text-slate-500 mt-1">Phy, Chem, Calculus</div>
                     </div>
 
@@ -755,7 +755,7 @@ export default function MentorDashboard() {
                           <Trophy size={14} />
                         </span>
                       </div>
-                      <div className="text-2xl font-bold text-slate-900">{students.length} Ranked</div>
+                      <div className="text-xl font-bold text-slate-900">{students.length} Ranked</div>
                       <div className="text-[11px] text-slate-500 mt-1">Comparative metrics</div>
                     </div>
                   </div>
@@ -764,7 +764,7 @@ export default function MentorDashboard() {
                   <div className="bg-white border border-slate-200/90 rounded-2xl shadow-subtle overflow-hidden">
                     <div className="p-5 border-b border-slate-100 flex items-center justify-between">
                       <div>
-                        <h3 className="text-sm font-bold text-slate-900">Your Student Caseload</h3>
+                        <h3 className="text-xs font-bold text-slate-900">Your Student Caseload</h3>
                         <p className="text-xs text-slate-500">Click any student to view their 1-on-1 room, study log, and test scores</p>
                       </div>
                       <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">
@@ -788,7 +788,7 @@ export default function MentorDashboard() {
                             </div>
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="text-sm font-bold text-slate-900">{s.name}</span>
+                                <span className="text-xs font-bold text-slate-900">{s.name}</span>
                                 <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
                                   {s.studentId}
                                 </span>
@@ -902,7 +902,7 @@ export default function MentorDashboard() {
                     <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-subtle space-y-4">
                       <div className="flex items-center gap-2 mb-2">
                         <BookOpen size={16} className="text-brand-500" />
-                        <h4 className="text-sm font-bold text-slate-900">Curated Question Banks</h4>
+                        <h4 className="text-xs font-bold text-slate-900">Curated Question Banks</h4>
                       </div>
 
                       <div className="space-y-3">
@@ -976,7 +976,7 @@ export default function MentorDashboard() {
                       <div className="flex items-center justify-between flex-wrap gap-2">
                         <div className="flex items-center gap-2">
                           <ClipboardList size={16} className="text-brand-500" />
-                          <h4 className="text-sm font-bold text-slate-900">All Mentees Assigned Tasks</h4>
+                          <h4 className="text-xs font-bold text-slate-900">All Mentees Assigned Tasks</h4>
                         </div>
                         <span className="text-xs font-bold text-brand-600 bg-brand-50 px-2.5 py-0.5 rounded-full">
                           {allMenteesTasks.length} Total
@@ -1099,7 +1099,7 @@ export default function MentorDashboard() {
                         {activeStudent?.name?.charAt(0) || "S"}
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-slate-900 leading-tight">
+                        <h4 className="text-xs font-bold text-slate-900 leading-tight">
                           {activeStudent?.name || "Assigned Student"}
                         </h4>
                         <p className="text-[10px] font-mono text-slate-500 mt-0.5">
@@ -1148,7 +1148,7 @@ export default function MentorDashboard() {
                       </div>
                       <span className="text-xs font-medium text-slate-600">Total Sessions</span>
                     </div>
-                    <span className="text-sm font-bold text-slate-900">
+                    <span className="text-xs font-bold text-slate-900">
                       {(report.tests?.length || 0) + (report.tasks?.length || 0) || 12}
                     </span>
                   </div>
@@ -1160,7 +1160,7 @@ export default function MentorDashboard() {
                       </div>
                       <span className="text-xs font-medium text-slate-600">Completed</span>
                     </div>
-                    <span className="text-sm font-bold text-slate-900">
+                    <span className="text-xs font-bold text-slate-900">
                       {report.tasks?.filter((t) => t.completed)?.length || 10}
                     </span>
                   </div>
@@ -1172,7 +1172,7 @@ export default function MentorDashboard() {
                       </div>
                       <span className="text-xs font-medium text-slate-600">Pending</span>
                     </div>
-                    <span className="text-sm font-bold text-slate-900">
+                    <span className="text-xs font-bold text-slate-900">
                       {report.tasks?.filter((t) => !t.completed)?.length || 2}
                     </span>
                   </div>

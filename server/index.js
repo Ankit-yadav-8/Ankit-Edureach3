@@ -23,7 +23,6 @@ import { testPostgresConnection } from "./sql/db.js";
 import { startWeeklyReportJob } from "./jobs/weeklyReport.js";
 import { startDailyReportJob } from "./jobs/dailyReport.js";
 import { backfillPhone10 } from "./jobs/backfillPhone10.js";
-import { updatePricingJob } from "./jobs/updatePricing.js";
 import { sanitizeNoSql } from "./middleware/sanitize.js";
 
 dotenv.config();
@@ -127,7 +126,7 @@ const apiLimiter       = rl({ windowMs: 60 * 1000, max: 120 });
 
 app.get("/", (_req, res) => res.send("EduReach API ✅"));
 
-// ── Health-check (used by Render keep-alive \u0026 external monitors) ─────────────
+// ── Health-check (used by Render keep-alive & external monitors) ─────────────
 app.get("/health", (_req, res) => res.json({ status: "ok", uptime: process.uptime() }));
 
 app.use("/api/auth", authLimiter, authRoutes);
@@ -156,7 +155,6 @@ app.use("/api/quiz", apiLimiter, quizRoutes);
 connectDB()
   .then(() => {
     testPostgresConnection();
-    updatePricingJob(); // Test PostgreSQL connectivity alongside MongoDB
     app.listen(PORT, "0.0.0.0", () => console.log(`🚀 Server on http://0.0.0.0:${PORT}`));
     startWeeklyReportJob(); // weekly parent progress emails (best-effort, dev-safe)
     startDailyReportJob();  // daily parent progress emails from synced data (dev-safe)
